@@ -18,22 +18,14 @@
 
 <div fxFlex="100" fxLayout="column">
     <h5>First Field</h5>
-    <mat-form-field color="accent" fxFlex="100">
-        <mat-label>Select first field</mat-label>
-        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.firstField" (selectionChange)="setSelectedProperties($event)">
-            <mat-option [value]="property.runtimeName" *ngFor="let property of currentlyConfiguredWidget.dataConfig.availableProperties">
-                <span class="pipeline-name">{{ property.runtimeName }}</span>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <sp-select-property [availableProperties]="fieldProvider.numericFields"
+                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.firstField"
+                        (changeSelectedProperty)="updateFirstField($event)">
+    </sp-select-property>
     <h5>First Field</h5>
-    <mat-form-field color="accent" fxFlex="100">
-        <mat-label>Select second field</mat-label>
-        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.secondField" (selectionChange)="setSelectedProperties($event)">
-            <mat-option [value]="property.runtimeName" *ngFor="let property of currentlyConfiguredWidget.dataConfig.availableProperties">
-                <span class="pipeline-name">{{ property.runtimeName }}</span>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <sp-select-property [availableProperties]="fieldProvider.numericFields"
+                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.secondField"
+                        (changeSelectedProperty)="updateSecondField($event)">
+    </sp-select-property>
 </div>
 

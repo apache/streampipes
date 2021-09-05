@@ -21,12 +21,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { TableWidgetModel } from './model/table-widget.model';
-import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
-import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
-import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { ResizeService } from '../../../services/resize.service';
+import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Component({
   selector: 'sp-data-explorer-table-widget',
@@ -35,21 +35,23 @@ import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalak
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetModel> implements OnInit, OnDestroy {
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   dataSource = new MatTableDataSource();
   columnNames: string[];
 
   constructor(dataLakeRestService: DatalakeRestService,
               widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService);
+              resizeService: ResizeService,
+              queryGenerator: DataViewQueryGeneratorService,
+              fieldProvider: DataExplorerFieldProviderService) {
+    super(dataLakeRestService, widgetConfigurationService, resizeService, queryGenerator, fieldProvider);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
     this.dataSource.sort = this.sort;
-    this.columnNames = this.dataExplorerWidget.dataConfig.selectedColumns.map(c => c.runtimeName);
+    this.columnNames = this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName);
   }
 
   transformData(data: DataResult) {
@@ -58,7 +60,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
       this.setShownComponents(true, false, false);
     } else {
       data.rows.forEach(row =>
-        result.push(this.createTableObject(data.headers, row))
+          result.push(this.createTableObject(data.headers, row))
       );
       this.setShownComponents(false, true, false);
     }
@@ -78,49 +80,37 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     this.dataSource.data = [];
   }
 
-
   sortData(event) {
     if (event.direction === 'asc') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
+          (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
     }
 
     if (event.direction === 'desc') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
+          (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
     }
 
     if (event.direction === '') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
+          (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
     }
   }
 
-  public refreshData() {
-    this.setShownComponents(false, false, true);
-
-    this.dataLakeRestService.getData(
-      this.dataLakeMeasure.measureName, this.buildQuery())
-      .subscribe(
-        (res: DataResult) => {
-          this.columnNames = this.dataExplorerWidget.dataConfig.selectedColumns.map(c => c.runtimeName);
-          this.dataSource.data = [...this.transformData(res)];
-        }
-      );
-  }
-
   public refreshView() {
-    this.dataSource.filter = this.dataExplorerWidget.dataConfig.searchValue;
-  }
-
-  buildQuery(): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withPaging(this.dataExplorerWidget.dataConfig.page - 1, this.dataExplorerWidget.dataConfig.limit)
-        .withColumnFilter(this.dataExplorerWidget.dataConfig.selectedColumns.map(c => c.runtimeName))
-        .build();
+    this.dataSource.filter = this.dataExplorerWidget.visualizationConfig.searchValue;
   }
 
   onResize(width: number, height: number) {
+  }
+
+  beforeDataFetched() {
+    this.setShownComponents(false, false, true);
+  }
+
+  onDataReceived(dataResults: DataResult[]) {
+    this.columnNames = this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName);
+    this.dataSource.data = [...this.transformData(dataResults[0])];
   }
 
 }

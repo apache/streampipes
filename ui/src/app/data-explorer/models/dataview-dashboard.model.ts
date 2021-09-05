@@ -16,26 +16,88 @@
  *
  */
 
-import {  GridsterConfig } from 'angular-gridster2';
+import { GridsterConfig } from 'angular-gridster2';
+import { DataLakeMeasure } from '../../core-model/gen/streampipes-model';
 
 // tslint:disable-next-line:no-empty-interface
-export interface IDataViewDashboardConfig extends GridsterConfig {}
+export interface IDataViewDashboardConfig extends GridsterConfig {
+}
 
 export interface IWidget {
-    id: string;
-    label: string;
+  id: string;
+  label: string;
 }
 
 export interface WidgetBaseAppearanceConfig {
-    backgroundColor: string;
-    textColor: string;
-    widgetTitle: string;
+  backgroundColor: string;
+  textColor: string;
+  widgetTitle: string;
 }
 
 export interface RefreshMessage {
-    widgetId: string;
-    refreshData: boolean;
-    refreshView: boolean;
+  widgetId: string;
+  refreshData: boolean;
+  refreshView: boolean;
+}
+
+export interface DataExplorerField {
+  runtimeName: string;
+  aggregation?: string;
+  measure: string;
+  fullDbName: string;
+  sourceIndex: number;
+}
+
+export interface FieldConfig {
+    runtimeName: string;
+    aggregations?: string[];
+    alias?: string;
+    selected: boolean;
+    numeric: boolean;
+}
+
+export interface SelectedFilter {
+  index: number;
+  field?: DataExplorerField;
+  operator: string;
+  value: any;
+}
+
+export interface QueryConfig {
+  selectedFilters: SelectedFilter[];
+  fields?: FieldConfig[];
+  limit?: number;
+  page?: number;
+  order?: 'ASC' | 'DESC';
+  autoAggregate?: boolean;
+  aggregationValue?: number;
+  aggregationTimeUnit?: string;
+  aggregationFunction?: string;
+}
+
+export interface SourceConfig {
+  measureName: string;
+  measure?: DataLakeMeasure;
+  queryConfig: QueryConfig;
+  queryType: 'raw' | 'aggregated' | 'single';
+  sourceType: 'pipeline' | 'measurement';
+}
+
+export interface FieldProvider {
+  primaryTimestampField?: DataExplorerField;
+  allFields: DataExplorerField[];
+  numericFields: DataExplorerField[];
+  booleanFields: DataExplorerField[];
+  dimensionFields: DataExplorerField[];
+  nonNumericFields: DataExplorerField[];
+}
+
+export interface DataExplorerDataConfig {
+  sourceConfigs: SourceConfig[];
+}
+
+export interface DataExplorerVisConfig {
+
 }
 
 

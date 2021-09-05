@@ -22,10 +22,9 @@ import { DatalakeRestService } from '../../../../platform-services/apis/datalake
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
-import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
-import { Observable } from 'rxjs';
 import { DensityChartWidgetModel } from './model/density-chart-widget.model';
+import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Component({
   selector: 'sp-data-explorer-density-chart-widget',
@@ -88,19 +87,10 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
 
   constructor(dataLakeRestService: DatalakeRestService,
               widgetConfigurationService:  WidgetConfigurationService,
-              resizeService: ResizeService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService);
-  }
-
-  refreshData() {
-    this.getQuery().subscribe(result => {
-      this.prepareData(result);
-      this.updateAppearance();
-    });
-  }
-
-  getQuery(): Observable<DataResult> {
-    return this.dataLakeRestService.getData(this.dataLakeMeasure.measureName, this.buildQuery());
+              resizeService: ResizeService,
+              dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+              fieldProvider: DataExplorerFieldProviderService) {
+    super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldProvider);
   }
 
   refreshView() {
@@ -108,10 +98,12 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
   }
 
   prepareData(result: DataResult) {
-    this.data[0].x = this.transform(result.rows, 1);
-    this.data[1].x = this.transform(result.rows, 1);
-    this.data[0].y = this.transform(result.rows, 2);
-    this.data[1].y = this.transform(result.rows, 2);
+    const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result);
+    const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result);
+    this.data[0].x = this.transform(result.rows, xIndex);
+    this.data[1].x = this.transform(result.rows, xIndex);
+    this.data[0].y = this.transform(result.rows, yIndex);
+    this.data[1].y = this.transform(result.rows, yIndex);
   }
 
   transform(rows, index: number): any[] {
@@ -122,16 +114,8 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
     this.graph.layout.paper_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
-    this.graph.layout.xaxis.title.text = this.dataExplorerWidget.dataConfig.firstField;
-    this.graph.layout.yaxis.title.text = this.dataExplorerWidget.dataConfig.secondField;
-  }
-
-  buildQuery(): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder
-        .create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withAutoAggregation('MEAN')
-        .withColumnFilter([this.dataExplorerWidget.dataConfig.firstField, this.dataExplorerWidget.dataConfig.secondField])
-        .build();
+    this.graph.layout.xaxis.title.text = this.dataExplorerWidget.visualizationConfig.firstField.fullDbName;
+    this.graph.layout.yaxis.title.text = this.dataExplorerWidget.visualizationConfig.secondField.fullDbName;
   }
 
   onResize(width: number, height: number) {
@@ -140,5 +124,12 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
     (this.graph.layout as any).height = height;
   }
 
+  beforeDataFetched() {
+  }
+
+  onDataReceived(dataResults: DataResult[]) {
+    this.prepareData(dataResults[0]);
+    this.updateAppearance();
+  }
 
 }

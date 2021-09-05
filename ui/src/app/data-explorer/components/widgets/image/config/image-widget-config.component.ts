@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {BaseWidgetConfig} from "../../base/base-widget-config";
-import {ImageWidgetModel} from "../model/image-widget.model";
+import { Component, OnInit } from '@angular/core';
+import { BaseWidgetConfig } from '../../base/base-widget-config';
+import { ImageWidgetModel } from '../model/image-widget.model';
 
 @Component({
   selector: 'sp-data-explorer-image-widget-config',

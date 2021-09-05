@@ -16,16 +16,19 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerDataConfig,
+  DataExplorerField
+} from '../../../../models/dataview-dashboard.model';
 
-export interface IndicatorChartDataConfig {
-  selectedProperty: string;
-  availableProperties: EventPropertyUnion[];
-  numberAggregation: string;
-  deltaAggregation: string;
-  showDelta: boolean;
+export interface IndicatorChartVisConfig {
+  valueField?: DataExplorerField;
+  deltaField?: DataExplorerField;
+  showDelta?: boolean;
 }
 
 export interface IndicatorChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: IndicatorChartDataConfig;
+  dataConfig: DataExplorerDataConfig;
+  visualizationConfig: IndicatorChartVisConfig;
 }

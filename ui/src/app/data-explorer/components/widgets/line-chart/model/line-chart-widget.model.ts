@@ -16,28 +16,29 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerWidgetModel,
+  EventPropertyUnion
+} from '../../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerDataConfig,
+  DataExplorerField
+} from '../../../../models/dataview-dashboard.model';
 
-export interface LineChartDataConfig {
-  selectedLineChartProperties: EventPropertyUnion[];
-  availableProperties: EventPropertyUnion[];
-  dimensionProperties: EventPropertyUnion[];
-  selectedBackgroundColorProperty: EventPropertyUnion;
-  availableNonNumericColumns: EventPropertyUnion[];
-  autoAggregate: boolean;
-  aggregationValue: number;
-  aggregationTimeUnit: string;
-  aggregationFunction: string;
-  groupValue: string;
-  showCountValue: boolean;
-  showBackgroundColorProperty: boolean;
-  yKeys: string[];
-  xKey: string;
-  backgroundColorPropertyKey: string;
-  labelingModeOn: boolean;
+export interface LineCartVisConfig {
+  selectedLineChartProperties: DataExplorerField[];
+  selectedBackgroundColorProperty?: EventPropertyUnion;
+  groupValue?: string;
+  showCountValue?: boolean;
+  showBackgroundColorProperty?: boolean;
+  yKeys: DataExplorerField[];
+  xKey?: DataExplorerField;
+  backgroundColorPropertyKey?: string;
+  labelingModeOn?: boolean;
   chartMode: string;
 }
 
 export interface LineChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: LineChartDataConfig;
+  dataConfig: DataExplorerDataConfig;
+  visualizationConfig: LineCartVisConfig;
 }

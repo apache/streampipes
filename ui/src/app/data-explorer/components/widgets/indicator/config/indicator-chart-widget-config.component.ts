@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { IndicatorChartWidgetModel } from '../model/indicator-chart-widget.model';
-import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-indicator-chart-widget-config',
@@ -29,16 +29,23 @@ import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-mo
 export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<IndicatorChartWidgetModel> implements OnInit {
 
   ngOnInit(): void {
+    super.onInit();
     this.updateWidgetConfigOptions();
   }
 
-  setSelectedProperties(selectedColumn: EventPropertyUnion) {
+  updateValue(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.valueField = field;
+    this.triggerDataRefresh();
+  }
+
+  updateDelta(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.deltaField = field;
     this.triggerDataRefresh();
   }
 
   protected updateWidgetConfigOptions() {
-    if (this.dataLakeMeasure.measureName && !this.currentlyConfiguredWidget.dataConfig.availableProperties) {
-      this.currentlyConfiguredWidget.dataConfig.availableProperties = this.getNumericProperty(this.dataLakeMeasure.eventSchema);
+    if (!this.currentlyConfiguredWidget.visualizationConfig) {
+      this.currentlyConfiguredWidget.visualizationConfig = {};
     }
   }
 

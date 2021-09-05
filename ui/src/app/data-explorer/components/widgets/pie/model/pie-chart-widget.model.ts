@@ -16,22 +16,18 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
-
-export interface FilterCondition {
-  index: number;
-  field: string;
-  operator: string;
-  condition: string;
-}
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerDataConfig,
+  DataExplorerField
+} from '../../../../models/dataview-dashboard.model';
 
 
-export interface PieChartDataConfig {
-  selectedProperty: string;
-  availableProperties: EventPropertyUnion[];
-  selectedFilters: FilterCondition[];
+export interface PieChartVisConfig {
+  selectedProperty: DataExplorerField;
 }
 
 export interface PieChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: PieChartDataConfig;
+  dataConfig: DataExplorerDataConfig;
+  visualizationConfig: PieChartVisConfig;
 }

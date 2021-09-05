@@ -18,15 +18,13 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { LineChartWidgetModel } from '../line-chart/model/line-chart-widget.model';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
-import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
-import { Observable, zip } from 'rxjs';
 import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
+import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Component({
   selector: 'sp-data-explorer-indicator-chart-widget',
@@ -79,28 +77,10 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
 
   constructor(dataLakeRestService: DatalakeRestService,
               widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService);
-  }
-
-  refreshData() {
-    if (this.dataExplorerWidget.dataConfig.showDelta) {
-      this.data[0].mode = 'number+delta';
-      zip(this.getQuery(this.dataExplorerWidget.dataConfig.numberAggregation),
-          this.getQuery(this.dataExplorerWidget.dataConfig.deltaAggregation))
-          .subscribe(result => {
-            this.prepareData(result[0], result[1]);
-          });
-    } else {
-      this.data[0].mode = 'number';
-      this.getQuery(this.dataExplorerWidget.dataConfig.numberAggregation).subscribe(result => {
-        this.prepareData(result);
-      });
-    }
-  }
-
-  getQuery(aggregation: string): Observable<DataResult> {
-    return this.dataLakeRestService.getData(this.dataLakeMeasure.measureName, this.buildQuery(aggregation));
+              resizeService: ResizeService,
+              dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+              fieldService: DataExplorerFieldProviderService) {
+    super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldService);
   }
 
   refreshView() {
@@ -108,9 +88,11 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
   }
 
   prepareData(numberResult: DataResult, deltaResult?: DataResult) {
-    this.data[0].value = numberResult.total > 0 ? numberResult.rows[0][1] : '-';
+    const valueIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.valueField, numberResult);
+    this.data[0].value = numberResult.total > 0 ? numberResult.rows[0][valueIndex] : '-';
     if (deltaResult) {
-      this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.rows[0][1] : '-';
+      const deltaIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.deltaField, numberResult);
+      this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.rows[0][deltaIndex] : '-';
     }
   }
 
@@ -120,18 +102,18 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
   }
 
-  buildQuery(aggregation: string): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withColumnFilter([this.dataExplorerWidget.dataConfig.selectedProperty])
-        .withAggregationFunction(aggregation)
-        .build();
-  }
-
   onResize(width: number, height: number) {
     this.graph.layout.autosize = false;
     (this.graph.layout as any).width = width;
     (this.graph.layout as any).height = height;
   }
 
+  beforeDataFetched() {
+    this.data[0].mode = this.dataExplorerWidget.visualizationConfig.showDelta ? 'number+delta' : 'number';
+  }
+
+  onDataReceived(dataResults: DataResult[]) {
+    this.prepareData(dataResults[0]);
+  }
 
 }

@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { EventPropertyUnion } from "../../../../../core-model/gen/streampipes-model";
+import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-select-properties',
@@ -26,29 +26,21 @@ import { EventPropertyUnion } from "../../../../../core-model/gen/streampipes-mo
 })
 export class SelectPropertiesComponent {
 
-  @Output()
-  changeSelectedProperties: EventEmitter<EventPropertyUnion[]> = new EventEmitter();
+  @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> = new EventEmitter();
 
-  @Input()
-  availableProperties: EventPropertyUnion[];
-
-  @Input()
-  selectedProperties: EventPropertyUnion[];
-
-  @Input()
-  label: string;
-
-  @Input()
-  multiple: boolean;
+  @Input() availableProperties: DataExplorerField[];
+  @Input() selectedProperties: DataExplorerField[];
+  @Input() label: string;
+  @Input() multiple: boolean;
 
   constructor() { }
 
-  triggerSelectedProperties(properties: EventPropertyUnion[]) {
-    this.changeSelectedProperties.emit(properties);
+  triggerSelectedProperties(fields: DataExplorerField[]) {
+    this.changeSelectedProperties.emit(fields);
   }
 
-  compare(available: EventPropertyUnion, selected: EventPropertyUnion) {
-    return available.runtimeName === selected.runtimeName;
+  compare(available: DataExplorerField, selected: DataExplorerField) {
+    return (available.fullDbName === selected.fullDbName);
   }
 
 }

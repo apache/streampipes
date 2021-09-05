@@ -17,10 +17,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { TableWidgetModel } from '../model/table-widget.model';
+import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-table-widget-config',
@@ -29,34 +30,32 @@ import { TableWidgetModel } from '../model/table-widget.model';
 })
 export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetModel> implements OnInit {
 
-  constructor(widgetConfigurationService: WidgetConfigurationService) {
-    super(widgetConfigurationService);
+  constructor(widgetConfigurationService: WidgetConfigurationService,
+              fieldService: DataExplorerFieldProviderService) {
+    super(widgetConfigurationService, fieldService);
   }
 
   ngOnInit(): void {
-    if (!this.currentlyConfiguredWidget.dataConfig.availableColumns) {
-      this.currentlyConfiguredWidget.dataConfig.availableColumns = [this.getTimestampProperty(this.dataLakeMeasure.eventSchema)];
-      this.currentlyConfiguredWidget.dataConfig.availableColumns =
-          this.currentlyConfiguredWidget.dataConfig.availableColumns.concat(this.getValuePropertyKeys(this.dataLakeMeasure.eventSchema));
-      this.currentlyConfiguredWidget.dataConfig.limit = 50;
-      this.currentlyConfiguredWidget.dataConfig.page = 1;
-
+    super.onInit();
+    if (!this.currentlyConfiguredWidget.visualizationConfig) {
+      this.currentlyConfiguredWidget.visualizationConfig = {} as any;
+    }
+    if (!this.currentlyConfiguredWidget.visualizationConfig.selectedColumns) {
       // Reduce selected columns when more then 6
-      this.currentlyConfiguredWidget.dataConfig.selectedColumns = this.currentlyConfiguredWidget.dataConfig.availableColumns.length > 6 ?
-          this.currentlyConfiguredWidget.dataConfig.availableColumns.slice(0, 5) : this.currentlyConfiguredWidget.dataConfig.availableColumns;
+      this.currentlyConfiguredWidget.visualizationConfig.selectedColumns = this.fieldProvider.allFields.length > 6 ?
+          this.fieldProvider.allFields.slice(0, 5) : this.fieldProvider.allFields;
       this.triggerDataRefresh();
     }
   }
 
   onFilterChange(searchValue: string): void {
-    this.currentlyConfiguredWidget.dataConfig.searchValue = searchValue.trim().toLowerCase();
+    this.currentlyConfiguredWidget.visualizationConfig.searchValue = searchValue.trim().toLowerCase();
     this.triggerViewRefresh();
     // this.dataSource.filter = searchValue.trim().toLowerCase();
   }
 
-  setSelectedColumn(selectedColumns: EventPropertyUnion[]) {
-    this.currentlyConfiguredWidget.dataConfig.selectedColumns = selectedColumns;
-    this.currentlyConfiguredWidget.dataConfig.columnNames = this.getRuntimeNames(this.currentlyConfiguredWidget.dataConfig.selectedColumns);
+  setSelectedColumn(selectedColumns: DataExplorerField[]) {
+    this.currentlyConfiguredWidget.visualizationConfig.selectedColumns = selectedColumns;
     this.triggerDataRefresh();
   }
 

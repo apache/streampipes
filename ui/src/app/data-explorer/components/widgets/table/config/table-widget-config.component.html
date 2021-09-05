@@ -21,27 +21,15 @@
         <mat-label>
             <mat-icon>search</mat-icon>
             <span>&nbsp;Search</span></mat-label>
-        <input [(ngModel)]="currentlyConfiguredWidget.dataConfig.searchValue" matInput (input)="onFilterChange($event.target.value)">
+        <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.searchValue" matInput (input)="onFilterChange($event.target.value)">
     </mat-form-field>
 
     <sp-select-properties
-            label="Select Columns"
+            label="Select Fields"
             multiple=true
             (changeSelectedProperties)="setSelectedColumn($event)"
-            [availableProperties]="currentlyConfiguredWidget.dataConfig.availableColumns"
-            [selectedProperties]="currentlyConfiguredWidget.dataConfig.selectedColumns">
+            [availableProperties]="fieldProvider.allFields"
+            [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedColumns">
     </sp-select-properties>
-
-    <mat-form-field fxFlex="100" color="accent">
-        <mat-label>
-            <span>&nbsp;Limit</span></mat-label>
-        <input [(ngModel)]="currentlyConfiguredWidget.dataConfig.limit" matInput (input)="onFilterChange($event.target.value)">
-    </mat-form-field>
-
-    <mat-form-field fxFlex="100" color="accent">
-        <mat-label>
-            <span>&nbsp;Page</span></mat-label>
-        <input [(ngModel)]="currentlyConfiguredWidget.dataConfig.page" matInput (input)="onFilterChange($event.target.value)">
-    </mat-form-field>
 </div>
 

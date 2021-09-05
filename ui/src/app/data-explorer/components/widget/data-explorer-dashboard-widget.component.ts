@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
+import { GridsterItemComponent } from 'angular-gridster2';
 import { DateRange } from '../../../core-model/datalake/DateRange';
 import { DataViewDataExplorerService } from '../../services/data-view-data-explorer.service';
 import {
@@ -26,8 +26,7 @@ import {
   DataLakeMeasure
 } from '../../../core-model/gen/streampipes-model';
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -59,8 +58,8 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>
-      = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
+  @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel>
+      = new EventEmitter<DataExplorerWidgetModel>();
 
   title = '';
   widgetLoaded = false;
@@ -90,6 +89,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   }
 
   triggerWidgetEditMode() {
-    this.configureWidgetCallback.emit({a: this.configuredWidget, b: this.dataLakeMeasure});
+    this.configureWidgetCallback.emit(this.configuredWidget);
   }
 }

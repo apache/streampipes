@@ -19,13 +19,17 @@
 import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   DataExplorerWidgetModel,
-  DataLakeMeasure,
-  EventProperty,
   EventPropertyPrimitive,
   EventPropertyUnion,
   EventSchema
 } from '../../../../core-model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import {
+  DataExplorerField,
+  FieldProvider,
+  SourceConfig
+} from '../../../models/dataview-dashboard.model';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
@@ -33,25 +37,41 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
 
   @Input() currentlyConfiguredWidget: T;
 
-  @Input()
-  dataLakeMeasure: DataLakeMeasure;
+  fieldProvider: FieldProvider;
 
-  constructor(protected widgetConfigurationService: WidgetConfigurationService) {
+  constructor(protected widgetConfigurationService: WidgetConfigurationService,
+              protected fieldService: DataExplorerFieldProviderService) { }
 
+  onInit() {
+    this.makeFields();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.dataLakeMeasure && changes.dataLakeMeasure.currentValue.measureName !== this.dataLakeMeasure.measureName) {
+    this.makeFields();
+    if (changes.currentlyConfiguredWidget) {
       this.updateWidgetConfigOptions();
     }
   }
 
+  makeFields() {
+    const sourceConfigs: SourceConfig[] = this.currentlyConfiguredWidget.dataConfig.sourceConfigs;
+    this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
+  }
+
   triggerDataRefresh() {
-    this.widgetConfigurationService.notify({ widgetId: this.currentlyConfiguredWidget._id, refreshData: true, refreshView: false });
+    this.widgetConfigurationService.notify({
+      widgetId: this.currentlyConfiguredWidget._id,
+      refreshData: true,
+      refreshView: false
+    });
   }
 
   triggerViewRefresh() {
-    this.widgetConfigurationService.notify({ widgetId: this.currentlyConfiguredWidget._id, refreshData: false, refreshView: true });
+    this.widgetConfigurationService.notify({
+      widgetId: this.currentlyConfiguredWidget._id,
+      refreshData: false,
+      refreshView: true
+    });
   }
 
 
@@ -70,7 +90,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
   getDimensionProperties(eventSchema: EventSchema) {
     const result: EventPropertyUnion[] = [];
     eventSchema.eventProperties.forEach(property => {
-      if (property.propertyScope === 'DIMENSION_PROPERTY') {
+      if (this.fieldService.isDimensionProperty(property)) {
         result.push(property);
       }
     });
@@ -88,7 +108,8 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
     result.push(b);
 
     eventSchema.eventProperties.forEach(p => {
-      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) && !this.isNumber(p)) {
+      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) &&
+          !this.fieldService.isNumber(p)) {
         result.push(p);
       }
     });
@@ -97,7 +118,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
     return result;
   }
 
-  getRuntimeNames(properties: EventPropertyUnion[]): string[] {
+  getRuntimeNames(properties: DataExplorerField[]): string[] {
     const result = [];
     properties.forEach(p => {
       result.push(p.runtimeName);
@@ -110,7 +131,8 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
     const propertyKeys: EventPropertyUnion[] = [];
 
     eventSchema.eventProperties.forEach(p => {
-      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) && this.isNumber(p)) {
+      if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) &&
+          this.fieldService.isNumber(p)) {
         propertyKeys.push(p);
       }
     });
@@ -118,39 +140,12 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
     return propertyKeys;
   }
 
-
   getTimestampProperty(eventSchema: EventSchema) {
-    const propertyKeys: string[] = [];
-
-    const result = eventSchema.eventProperties.find(p =>
-      this.isTimestamp(p)
+    return eventSchema.eventProperties.find(p =>
+        this.fieldService.isTimestamp(p)
     );
-
-    return result;
-  }
-
-  isNumber(p: EventPropertyUnion): boolean {
-    if (p instanceof EventPropertyPrimitive) {
-      const runtimeType = (p as EventPropertyPrimitive).runtimeType;
-
-      return runtimeType === 'http://schema.org/Number' ||
-        runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
-        runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
-        runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
-        runtimeType === 'https://schema.org/Number' ||
-        runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
-        runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
-        runtimeType === 'https://www.w3.org/2001/XMLSchema#integer';
-    } else {
-      return false;
-    }
-  }
-
-  public isTimestamp(p: EventProperty) {
-    return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
   }
 
   protected abstract updateWidgetConfigOptions();
-
 
 }

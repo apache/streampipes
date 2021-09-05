@@ -16,21 +16,19 @@
  *
  */
 
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
 import {
-  DataExplorerWidgetModel,
-  EventPropertyUnion
-} from '../../../../../core-model/gen/streampipes-model';
+  DataExplorerDataConfig,
+  DataExplorerField,
+  DataExplorerVisConfig
+} from '../../../../models/dataview-dashboard.model';
 
-export interface TableDataConfig {
-  availableColumns: EventPropertyUnion[];
-  selectedColumns: EventPropertyUnion[];
+export interface TableVisConfig extends DataExplorerVisConfig {
+  selectedColumns: DataExplorerField[];
   searchValue: string;
-  columnNames: string[];
-  page: number;
-  limit: number;
-  offset: number;
 }
 
 export interface TableWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: TableDataConfig;
+  dataConfig: DataExplorerDataConfig;
+  visualizationConfig: TableVisConfig;
 }

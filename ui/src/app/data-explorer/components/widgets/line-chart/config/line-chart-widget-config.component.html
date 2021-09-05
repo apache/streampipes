@@ -20,7 +20,7 @@
 
     <mat-form-field color="accent" fxFlex="100">
         <mat-label>Mode</mat-label>
-        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.chartMode" (selectionChange)="triggerViewRefresh()">
+        <mat-select [(value)]="currentlyConfiguredWidget.visualizationConfig.chartMode" (selectionChange)="triggerViewRefresh()">
             <mat-option [value]="'lines'">Line</mat-option>
             <mat-option [value]="'markers'">Dots</mat-option>
             <mat-option [value]="'lines+markers'">Line+Dots</mat-option>
@@ -32,34 +32,34 @@
             multiple=true
             class="mr-10"
             (changeSelectedProperties)="setSelectedProperties($event)"
-            [availableProperties]="currentlyConfiguredWidget.dataConfig.availableProperties"
-            [selectedProperties]="currentlyConfiguredWidget.dataConfig.selectedLineChartProperties">
+            [availableProperties]="fieldProvider.numericFields"
+            [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties">
     </sp-select-properties>
 
-    <div>
-        <mat-checkbox color="accent" [(ngModel)]="currentlyConfiguredWidget.dataConfig.autoAggregate">Auto-Aggregate
-        </mat-checkbox>
-    </div>
+<!--    <div>-->
+<!--        <mat-checkbox color="accent" [(ngModel)]="currentlyConfiguredWidget.dataConfig.autoAggregate">Auto-Aggregate-->
+<!--        </mat-checkbox>-->
+<!--    </div>-->
 
-    <sp-aggregate-configuration class="mt-10"
-            *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"
-            [(aggregationValue)]="currentlyConfiguredWidget.dataConfig.aggregationValue"
-            [(aggregationTimeUnit)]="currentlyConfiguredWidget.dataConfig.aggregationTimeUnit"
-            [(aggregationFunction)]="currentlyConfiguredWidget.dataConfig.aggregationFunction">
-    </sp-aggregate-configuration>
-
-<!--    <sp-group-configuration-->
-<!--            [dimensionProperties]="currentlyConfiguredWidget.dataConfig.dimensionProperties"-->
+<!--    <sp-aggregate-configuration class="mt-10"-->
 <!--            *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"-->
-<!--            [(groupValue)]="currentlyConfiguredWidget.dataConfig.groupValue"-->
-<!--            [(showCountValue)]="currentlyConfiguredWidget.dataConfig.showCountValue">-->
-<!--    </sp-group-configuration>-->
-    <button *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"
-            (click)="triggerDataRefresh()" mat-button mat-raised-button color="accent">
-        <mat-icon>autorenew</mat-icon>
-        <span>Reload</span>
-    </button>
-    <mat-hint *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate">Max. 3000 results will be shown.</mat-hint>
+<!--            [(aggregationValue)]="currentlyConfiguredWidget.dataConfig.aggregationValue"-->
+<!--            [(aggregationTimeUnit)]="currentlyConfiguredWidget.dataConfig.aggregationTimeUnit"-->
+<!--            [(aggregationFunction)]="currentlyConfiguredWidget.dataConfig.aggregationFunction">-->
+<!--    </sp-aggregate-configuration>-->
+
+<!--&lt;!&ndash;    <sp-group-configuration&ndash;&gt;-->
+<!--&lt;!&ndash;            [dimensionProperties]="currentlyConfiguredWidget.dataConfig.dimensionProperties"&ndash;&gt;-->
+<!--&lt;!&ndash;            *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"&ndash;&gt;-->
+<!--&lt;!&ndash;            [(groupValue)]="currentlyConfiguredWidget.dataConfig.groupValue"&ndash;&gt;-->
+<!--&lt;!&ndash;            [(showCountValue)]="currentlyConfiguredWidget.dataConfig.showCountValue">&ndash;&gt;-->
+<!--&lt;!&ndash;    </sp-group-configuration>&ndash;&gt;-->
+<!--    <button *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate"-->
+<!--            (click)="triggerDataRefresh()" mat-button mat-raised-button color="accent">-->
+<!--        <mat-icon>autorenew</mat-icon>-->
+<!--        <span>Reload</span>-->
+<!--    </button>-->
+<!--    <mat-hint *ngIf="!currentlyConfiguredWidget.dataConfig.autoAggregate">Max. 3000 results will be shown.</mat-hint>-->
 
 
     <!--    <mat-slide-toggle color="primary" [(ngModel)]="currentlyConfiguredWidget.dataConfig.labelingModeOn" (change)="toggleLabelingMode()">Label-->

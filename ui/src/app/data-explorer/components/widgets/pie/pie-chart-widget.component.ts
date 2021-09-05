@@ -22,10 +22,9 @@ import { DatalakeRestService } from '../../../../platform-services/apis/datalake
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
-import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
-import { Observable, zip } from 'rxjs';
-import { FilterCondition, PieChartWidgetModel } from './model/pie-chart-widget.model';
+import { PieChartWidgetModel } from './model/pie-chart-widget.model';
+import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Component({
   selector: 'sp-data-explorer-pie-chart-widget',
@@ -62,22 +61,10 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
 
   constructor(dataLakeRestService: DatalakeRestService,
               widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService);
-  }
-
-  refreshData() {
-    this.data[0].labels = this.dataExplorerWidget.dataConfig.selectedFilters.map(f => f.condition);
-    const queries = this.getQueries();
-    zip(...queries)
-        .subscribe(result => {
-          this.prepareData(result);
-        });
-  }
-
-  getQueries(): Observable<DataResult>[] {
-    return this.dataExplorerWidget.dataConfig.selectedFilters
-        .map(sf => this.dataLakeRestService.getData(this.dataLakeMeasure.measureName, this.buildQuery(sf)));
+              resizeService: ResizeService,
+              queryGenerator: DataViewQueryGeneratorService,
+              fieldProvider: DataExplorerFieldProviderService) {
+    super(dataLakeRestService, widgetConfigurationService, resizeService, queryGenerator, fieldProvider);
   }
 
   refreshView() {
@@ -85,14 +72,34 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
   }
 
   prepareData(results: DataResult[]) {
-    if (results.length > 0) {
-      results.forEach((result, i) => {
-        if (result.total > 0) {
-          this.data[0].values[i] = result.rows[0][1];
+    const finalLabels: string[] = [];
+    const finalValues: number[] = [];
+    const values: Map<string, number> = new Map();
+    const field = this.dataExplorerWidget.visualizationConfig.selectedProperty;
+    const index = field.sourceIndex;
+
+    if (results[index]) {
+      const rowIndex = this.getColumnIndex(field, results[index]);
+      results[index].rows.forEach(row => {
+        const value = field.fullDbName + '/' + row[rowIndex].toString();
+        if (!values.has(value)) {
+          values.set(value, 0);
         }
+        const currentVal = values.get(value);
+        values.set(value, currentVal + 1);
       });
     }
+    values.forEach((value, key) => {
+      finalLabels.push(key);
+      finalValues.push(value);
+    });
+    this.data[0].labels = finalLabels;
+    this.data[0].values = finalValues;
+  }
 
+  existsLabel(labels: string[],
+              value: string) {
+    return labels.indexOf(value) > -1;
   }
 
   updateAppearance() {
@@ -101,18 +108,19 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
   }
 
-  buildQuery(filter: FilterCondition): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder.create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withColumnFilter([this.dataExplorerWidget.dataConfig.selectedProperty])
-        .withFilters([filter])
-        .withCountOnly()
-        .build();
-  }
-
   onResize(width: number, height: number) {
     this.graph.layout.autosize = false;
     (this.graph.layout as any).width = width;
     (this.graph.layout as any).height = height;
+  }
+
+  beforeDataFetched() {
+  }
+
+  onDataReceived(dataResults: DataResult[]) {
+    console.log(this.dataExplorerWidget);
+    console.log(dataResults);
+    this.prepareData(dataResults);
   }
 
 }

@@ -18,8 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 import { DensityChartWidgetModel } from '../model/density-chart-widget.model';
+import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-density-chart-widget-config',
@@ -29,18 +29,26 @@ import { DensityChartWidgetModel } from '../model/density-chart-widget.model';
 export class DensityWidgetConfigComponent extends BaseWidgetConfig<DensityChartWidgetModel> implements OnInit {
 
   ngOnInit(): void {
+    super.onInit();
     this.updateWidgetConfigOptions();
   }
 
-  setSelectedProperties(selectedColumn: EventPropertyUnion) {
-    if (this.currentlyConfiguredWidget.dataConfig.firstField && this.currentlyConfiguredWidget.dataConfig.secondField) {
-      this.triggerDataRefresh();
-    }
+  updateFirstField(selectedField: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.firstField = selectedField;
+    this.triggerDataRefresh();
+  }
+
+  updateSecondField(selectedField: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.secondField = selectedField;
+    this.triggerDataRefresh();
   }
 
   protected updateWidgetConfigOptions() {
-    if (this.dataLakeMeasure.measureName && !this.currentlyConfiguredWidget.dataConfig.availableProperties) {
-      this.currentlyConfiguredWidget.dataConfig.availableProperties = this.getNumericProperty(this.dataLakeMeasure.eventSchema);
+    if (!this.currentlyConfiguredWidget.visualizationConfig) {
+      this.currentlyConfiguredWidget.visualizationConfig = {
+        firstField: this.fieldProvider.numericFields[0],
+        secondField: this.fieldProvider.numericFields[1]
+      };
     }
   }
 

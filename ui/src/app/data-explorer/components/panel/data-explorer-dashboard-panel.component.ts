@@ -103,8 +103,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     });
   }
 
-  prepareWidgetUpdates(): Array<Observable<any>> {
-    const promises: Array<Observable<any>> = [];
+  prepareWidgetUpdates(): Observable<any>[] {
+    const promises: Observable<any>[] = [];
     this.widgetsToUpdate.forEach((widget, key) => {
       promises.push(this.dataViewDataExplorerService.updateWidget(widget));
     });
@@ -132,10 +132,10 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.toggleGrid();
   }
 
-  updateCurrentlyConfiguredWidget(currentWidget: Tuple2<DataExplorerWidgetModel, DataLakeMeasure>) {
-    this.widgetsToUpdate.set(currentWidget.a._id, currentWidget.a);
-    this.currentlyConfiguredWidget = currentWidget.a;
-    this.dataLakeMeasure = currentWidget.b;
-    this.designerPanel.modifyWidgetMode(false);
+  updateCurrentlyConfiguredWidget(currentWidget: DataExplorerWidgetModel) {
+    this.widgetsToUpdate.set(currentWidget._id, currentWidget);
+    this.currentlyConfiguredWidget = currentWidget;
+    //this.dataLakeMeasure = currentWidget.b;
+    this.designerPanel.modifyWidgetMode(currentWidget, false);
   }
 }

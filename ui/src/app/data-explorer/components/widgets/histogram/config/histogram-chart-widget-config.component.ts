@@ -18,8 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 import { HistogramChartWidgetModel } from '../model/histogram-chart-widget.model';
+import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-histogram-chart-widget-config',
@@ -29,16 +29,20 @@ import { HistogramChartWidgetModel } from '../model/histogram-chart-widget.model
 export class HistogramWidgetConfigComponent extends BaseWidgetConfig<HistogramChartWidgetModel> implements OnInit {
 
   ngOnInit(): void {
+    super.onInit();
     this.updateWidgetConfigOptions();
   }
 
-  setSelectedProperties(selectedColumn: EventPropertyUnion) {
+  setSelectedProperties(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.selectedProperty = field;
     this.triggerDataRefresh();
   }
 
   protected updateWidgetConfigOptions() {
-    if (this.dataLakeMeasure.measureName && !this.currentlyConfiguredWidget.dataConfig.availableProperties) {
-      this.currentlyConfiguredWidget.dataConfig.availableProperties = this.getNumericProperty(this.dataLakeMeasure.eventSchema);
+    if (!this.currentlyConfiguredWidget.visualizationConfig) {
+      this.currentlyConfiguredWidget.visualizationConfig = {
+        selectedProperty: this.fieldProvider.numericFields[0]
+      };
     }
   }
 

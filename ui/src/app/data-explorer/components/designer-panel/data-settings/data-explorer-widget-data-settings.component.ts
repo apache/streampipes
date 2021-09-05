@@ -25,6 +25,8 @@ import { DataViewDataExplorerService } from '../../../services/data-view-data-ex
 import { MatSelectChange } from '@angular/material/select';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { zip } from 'rxjs';
+import { DataExplorerDataConfig, SourceConfig } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-widget-data-settings',
@@ -33,19 +35,19 @@ import { DatalakeRestService } from '../../../../platform-services/apis/datalake
 })
 export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
-  @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
+  @Input() dataConfig: DataExplorerDataConfig;
   @Input() dataLakeMeasure: DataLakeMeasure;
   @Input() newWidgetMode: boolean;
 
   @Output() createWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
-    new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+      new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
   @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> = new EventEmitter<DataLakeMeasure>();
   @Output() configureVisualizationEmitter: EventEmitter<void> = new EventEmitter<void>();
 
   availablePipelines: DataLakeMeasure[];
   availableMeasurements: DataLakeMeasure[];
 
-  sourceSelection: 'pipeline' | 'measurement' = 'pipeline';
+  step = 0;
 
   constructor(private dataExplorerService: DataViewDataExplorerService,
               private datalakeRestService: DatalakeRestService) {
@@ -53,8 +55,17 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadAvailablePipelines();
-    this.loadAvailableMeasurements();
+    this.loadPipelinesAndMeasurements();
+  }
+
+  loadPipelinesAndMeasurements() {
+    zip(this.dataExplorerService.getAllPersistedDataStreams(), this.datalakeRestService.getAllMeasurementSeries()).subscribe(response => {
+      this.availablePipelines = response[0];
+      this.availableMeasurements = response[1];
+      if (!this.dataConfig.sourceConfigs) {
+        this.addDataSource();
+      }
+    });
   }
 
   loadAvailablePipelines() {
@@ -69,20 +80,50 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     });
   }
 
-  updateMeasure(event: MatSelectChange) {
-    if (event.value !== this.dataLakeMeasure.measureName) {
-      this.dataLakeMeasure = this.findMeasure(event.value);
-      this.dataLakeMeasureChange.emit(this.dataLakeMeasure);
-    }
+  updateMeasure(sourceConfig: SourceConfig, event: MatSelectChange) {
+    sourceConfig.measure = this.findMeasure(event.value);
+    sourceConfig.queryConfig.fields = [];
+    //this.dataLakeMeasure = this.findMeasure(event.value);
+    //this.dataLakeMeasureChange.emit(this.dataLakeMeasure);
   }
 
   findMeasure(measureName) {
     return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
-      this.availableMeasurements.find(m => m.measureName === measureName);
+        this.availableMeasurements.find(m => m.measureName === measureName);
   }
 
   createWidget() {
-    this.createWidgetEmitter.emit({ a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget });
+    //this.createWidgetEmitter.emit({a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget});
   }
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  addDataSource() {
+    if (!this.dataConfig.sourceConfigs) {
+      this.dataConfig.sourceConfigs = [];
+    }
+    this.dataConfig.sourceConfigs.push(this.makeSourceConfig());
+  }
+
+  makeSourceConfig(): SourceConfig {
+    return {measureName: '',
+      queryConfig: {
+        selectedFilters: [],
+        limit: 100,
+        page: 1,
+        aggregationTimeUnit: 'd',
+        aggregationValue: 1
+      },
+      queryType: 'raw',
+      sourceType: 'pipeline'
+    };
+  }
+
+  removeSourceConfig(index: number) {
+    this.dataConfig.sourceConfigs.splice(index, 1);
+  }
+
 
 }

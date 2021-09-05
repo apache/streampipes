@@ -36,8 +36,7 @@ import {
   DataExplorerWidgetModel,
   DataLakeMeasure
 } from '../../../core-model/gen/streampipes-model';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
@@ -62,7 +61,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
-  @Output() configureWidgetCallback: EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>> = new EventEmitter<Tuple2<DataExplorerWidgetModel, DataLakeMeasure>>();
+  @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
   options: IDataViewDashboardConfig;
   loaded = false;
@@ -122,12 +121,12 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   loadWidgetConfig(widgetId: string, setCurrentlyConfigured?: boolean) {
     this.dataViewDataExplorerService.getWidget(widgetId).subscribe(response => {
       this.configuredWidgets.set(widgetId, response);
-      this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
-        this.dataLakeMeasures.set(widgetId, ps);
+      //this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
+        this.dataLakeMeasures.set(widgetId, response.dataConfig.sourceConfigs[0].measure);
         if (setCurrentlyConfigured) {
-          this.propagateWidgetSelection({a: this.configuredWidgets.get(widgetId), b: this.dataLakeMeasures.get(widgetId)});
+          this.propagateWidgetSelection(this.configuredWidgets.get(widgetId));
         }
-      });
+      //});
     });
   }
 
@@ -148,7 +147,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     this.updateCallback.emit(dashboardWidget);
   }
 
-  propagateWidgetSelection(configuredWidget: Tuple2<DataExplorerWidgetModel, DataLakeMeasure>) {
+  propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
     this.configureWidgetCallback.emit(configuredWidget);
     this.options.api.optionsChanged();
   }

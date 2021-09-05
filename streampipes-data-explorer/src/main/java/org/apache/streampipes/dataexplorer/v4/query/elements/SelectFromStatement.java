@@ -19,21 +19,35 @@
 package org.apache.streampipes.dataexplorer.v4.query.elements;
 
 import org.apache.streampipes.dataexplorer.v4.params.SelectFromStatementParams;
-import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
+
+import java.util.StringJoiner;
 
 public class SelectFromStatement extends QueryElement<SelectFromStatementParams> {
-    public SelectFromStatement(SelectFromStatementParams selectFromStatementParams) {
-        super(selectFromStatementParams);
-    }
+  public SelectFromStatement(SelectFromStatementParams selectFromStatementParams) {
+    super(selectFromStatementParams);
+  }
 
-    @Override
-    protected String buildStatement(SelectFromStatementParams selectFromStatementParams) {
-        if (selectFromStatementParams.isCountOnly()) {
-            return QueryTemplatesV4.selectCountFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
-        } else if (selectFromStatementParams.getAggregationFunction() == null) {
-            return QueryTemplatesV4.selectFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
-        } else {
-            return QueryTemplatesV4.selectAggregationFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns(), selectFromStatementParams.getAggregationFunction());
-        }
+  @Override
+  protected String buildStatement(SelectFromStatementParams params) {
+    if (params.isSelectWildcard()) {
+      return "SELECT * FROM " + params.getIndex();
+    } else {
+      StringJoiner joiner = new StringJoiner(",");
+      String queryPrefix = "SELECT ";
+      String queryAppendix = " FROM " +params.getIndex();
+
+      params.getSelectedColumns().forEach(column -> {
+        joiner.add(column.toQueryString());
+      });
+
+      return queryPrefix + joiner + queryAppendix;
     }
+//        if (selectFromStatementParams.isCountOnly()) {
+//            return QueryTemplatesV4.selectCountFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
+//        } else if (selectFromStatementParams.getAggregationFunction() == null) {
+//            return QueryTemplatesV4.selectFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
+//        } else {
+//            return QueryTemplatesV4.selectAggregationFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns(), selectFromStatementParams.getAggregationFunction());
+//        }
+  }
 }

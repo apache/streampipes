@@ -79,6 +79,12 @@ import { DensityChartWidgetComponent } from './components/widgets/density/densit
 import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
 import { PieChartWidgetComponent } from './components/widgets/pie/pie-chart-widget.component';
 import { PieWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
+import { DataViewQueryGeneratorService } from './services/data-view-query-generator.service';
+import { DataExplorerFieldProviderService } from './services/data-explorer-field-provider-service';
+import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
+import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';
+import { FilterSelectionPanelComponent } from './components/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
+import { SelectPropertyComponent } from './components/widgets/utils/select-property/select-property.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -137,6 +143,9 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerWidgetDataSettingsComponent,
     DensityChartWidgetComponent,
     DensityWidgetConfigComponent,
+    FieldSelectionPanelComponent,
+    FieldSelectionComponent,
+    FilterSelectionPanelComponent,
     GroupConfigurationComponent,
     HistogramChartWidgetComponent,
     HistogramWidgetConfigComponent,
@@ -151,6 +160,7 @@ export const MY_NATIVE_FORMATS = {
     PieChartWidgetComponent,
     PieWidgetConfigComponent,
     SelectPropertiesComponent,
+    SelectPropertyComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,
     TimeRangeSelectorComponent,
@@ -158,7 +168,9 @@ export const MY_NATIVE_FORMATS = {
   providers: [
     DatalakeRestService,
     SharedDatalakeRestService,
+    DataExplorerFieldProviderService,
     DataViewDataExplorerService,
+    DataViewQueryGeneratorService,
     ResizeService,
     ColorService,
     RefreshDashboardService,

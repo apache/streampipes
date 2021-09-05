@@ -62,7 +62,8 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
     this.addWidgetEmitter.emit({a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget});
   }
 
-  modifyWidgetMode(newWidgetMode: boolean) {
+  modifyWidgetMode(widget: DataExplorerWidgetModel, newWidgetMode: boolean) {
+    this.currentlyConfiguredWidget = widget;
     this.newWidgetMode = newWidgetMode;
   }
 

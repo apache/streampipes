@@ -26,17 +26,21 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure,
-  EventProperty
-} from '../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '../../../../core-model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
 import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
+import { DataResult } from '../../../../core-model/datalake/DataResult';
+import {
+  DataExplorerDataConfig,
+  DataExplorerField,
+  FieldProvider
+} from '../../../models/dataview-dashboard.model';
+import { zip } from 'rxjs';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Directive()
 export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges, OnDestroy {
@@ -48,13 +52,10 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   @Input() gridsterItemComponent: GridsterItemComponent;
   @Input() editMode: boolean;
 
-  @Input()
-  timeSettings: TimeSettings;
-
+  @Input() timeSettings: TimeSettings;
 
   @Input() dataViewDashboardItem: DashboardItem;
   @Input() dataExplorerWidget: T;
-  @Input() dataLakeMeasure: DataLakeMeasure;
 
   public selectedProperties: string[];
 
@@ -62,17 +63,22 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   public showData: boolean;
   public showIsLoadingData: boolean;
 
-  constructor(protected dataLakeRestService: DatalakeRestService,
-              protected widgetConfigurationService: WidgetConfigurationService,
-              protected resizeService: ResizeService) {
+  fieldProvider: FieldProvider;
 
-  }
+  protected constructor(protected dataLakeRestService: DatalakeRestService,
+                        protected widgetConfigurationService: WidgetConfigurationService,
+                        protected resizeService: ResizeService,
+                        protected dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+                        public fieldService: DataExplorerFieldProviderService) { }
 
   ngOnInit(): void {
+    const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
+    this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
     this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
       if (refreshMessage.widgetId === this.dataExplorerWidget._id) {
         if (refreshMessage.refreshData) {
-          this.refreshData();
+          this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
+          this.updateData();
         }
 
         if (refreshMessage.refreshView) {
@@ -112,20 +118,37 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     this.updateData();
   }
 
-  public isTimestamp(p: EventProperty) {
-    return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
-  }
-
   public updateData() {
-    this.refreshData();
-    this.refreshView();
+    this.beforeDataFetched();
+    const observables = this
+        .dataViewQueryGeneratorService
+        .generateObservables(
+            this.timeSettings.startTime,
+            this.timeSettings.endTime,
+            this.dataExplorerWidget.dataConfig as DataExplorerDataConfig
+        );
+    zip(...observables).subscribe(results => {
+      results.forEach((result, index) => result.sourceIndex = index);
+      this.onDataReceived(results);
+      this.refreshView();
+    });
   }
 
-  public abstract refreshData();
+  isTimestamp(field: DataExplorerField) {
+    return this.fieldProvider.primaryTimestampField && this.fieldProvider.primaryTimestampField.fullDbName === field.fullDbName;
+  }
+
+  getColumnIndex(field: DataExplorerField,
+                 data: DataResult) {
+    return data.headers.indexOf(field.fullDbName);
+  }
 
   public abstract refreshView();
 
-  public abstract onResize(width: number, height: number);
+  public abstract beforeDataFetched();
 
+  public abstract onDataReceived(dataResults: DataResult[]);
+
+  public abstract onResize(width: number, height: number);
 
 }

@@ -18,13 +18,9 @@
 
 <div fxFlex="100" fxLayout="column">
     <h5>Histogram Field</h5>
-    <mat-form-field color="accent" fxFlex="100">
-        <mat-label>Select Field</mat-label>
-        <mat-select [(value)]="currentlyConfiguredWidget.dataConfig.selectedProperty" (selectionChange)="setSelectedProperties($event)">
-            <mat-option [value]="property.runtimeName" *ngFor="let property of currentlyConfiguredWidget.dataConfig.availableProperties">
-                <span class="pipeline-name">{{ property.runtimeName }}</span>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <sp-select-property [availableProperties]="fieldProvider.numericFields"
+                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedProperty"
+                        (changeSelectedProperty)="setSelectedProperties($event)">
+    </sp-select-property>
 </div>
 

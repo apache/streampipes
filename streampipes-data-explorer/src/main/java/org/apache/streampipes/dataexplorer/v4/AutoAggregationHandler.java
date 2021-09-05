@@ -47,7 +47,7 @@ public class AutoAggregationHandler {
   }
 
   public ProvidedQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
-    checkAllArgumentsPresent();
+    //checkAllArgumentsPresent();
     try {
       DataResult newest = getSingleRecord(Order.DESC);
       DataResult oldest = getSingleRecord(Order.ASC);

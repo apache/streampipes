@@ -19,11 +19,12 @@
 @import '../../../../scss/sp/sp-dialog.scss';
 
 .designer-panel-content {
-  padding: 10px;
+  padding: 0;
+  overflow-y: auto;
 }
 
 .designer-panel-config {
-  padding: 10px;
+  padding: 0;
 }
 
 .designer-panel-title {

@@ -1,0 +1,156 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import { Injectable } from '@angular/core';
+import {
+  DataExplorerField,
+  FieldConfig,
+  FieldProvider,
+  SourceConfig
+} from '../models/dataview-dashboard.model';
+import {
+  EventProperty,
+  EventPropertyPrimitive,
+  EventPropertyUnion
+} from '../../core-model/gen/streampipes-model';
+
+
+@Injectable()
+export class DataExplorerFieldProviderService {
+
+  public generateFieldLists(sourceConfigs: SourceConfig[]): FieldProvider {
+
+    const provider: FieldProvider = {
+      allFields: [],
+      numericFields: [],
+      booleanFields: [],
+      dimensionFields: [],
+      nonNumericFields: []
+    };
+
+    sourceConfigs.forEach((sourceConfig, sourceIndex) => {
+      sourceConfig.queryConfig.fields
+          .filter(field => field.selected)
+          .forEach(field => {
+            this.addField(sourceConfig.measureName,
+                sourceConfig.measure.eventSchema.eventProperties,
+                sourceIndex,
+                field,
+                provider,
+                sourceConfig.queryType === 'aggregated' || sourceConfig.queryType === 'single');
+          });
+    });
+
+    return provider;
+  }
+
+  private addField(measure: string,
+                   eventProperties: EventPropertyUnion[],
+                   sourceIndex: number,
+                   fieldConfig: FieldConfig,
+                   provider: FieldProvider,
+                   useAggregations: boolean) {
+    const property: EventPropertyUnion = eventProperties.find(p => p.runtimeName === fieldConfig.runtimeName);
+
+    if (!useAggregations) {
+      this.addSingleField(measure, property, sourceIndex, fieldConfig, provider);
+    } else {
+      fieldConfig.aggregations.forEach(agg => this.addSingleField(measure, property, sourceIndex, fieldConfig, provider, agg));
+    }
+  }
+
+  private addSingleField(measure: string,
+                         property: EventPropertyUnion,
+                         sourceIndex: number,
+                         fieldConfig: FieldConfig,
+                         provider: FieldProvider,
+                         aggregation?: string) {
+    const field: DataExplorerField = {
+      runtimeName: fieldConfig.runtimeName,
+      measure,
+      aggregation,
+      fullDbName: this.makeFullDbName(fieldConfig, aggregation),
+      sourceIndex
+    };
+    provider.allFields.push(field);
+
+    if (this.isNumber(property) || aggregation === 'COUNT') {
+      provider.numericFields.push(field);
+    } else {
+      provider.nonNumericFields.push(field);
+    }
+
+    if (this.isBoolean(property)) {
+      provider.booleanFields.push(field);
+    }
+
+    if (this.isTimestamp(property)) {
+      provider.primaryTimestampField = field;
+    }
+
+    if (this.isDimensionProperty(property)) {
+      provider.dimensionFields.push(field);
+    }
+  }
+
+  public isDimensionProperty(p: EventProperty): boolean {
+    return p.propertyScope === 'DIMENSION_PROPERTY';
+  }
+
+  public isBoolean(p: EventPropertyUnion): boolean {
+    return this.isPrimitive(p) && (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#boolean';
+  }
+
+  public isString(p: EventPropertyUnion): boolean {
+    return this.isPrimitive(p) && (p as EventPropertyPrimitive).runtimeType === 'http://www.w3.org/2001/XMLSchema#string';
+  }
+
+  public isTimestamp(p: EventProperty) {
+    return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
+  }
+
+  isNumber(p: EventPropertyUnion): boolean {
+    if (this.isPrimitive(p)) {
+      const runtimeType = (p as EventPropertyPrimitive).runtimeType;
+
+      return runtimeType === 'http://schema.org/Number' ||
+          runtimeType === 'http://www.w3.org/2001/XMLSchema#float' ||
+          runtimeType === 'http://www.w3.org/2001/XMLSchema#double' ||
+          runtimeType === 'http://www.w3.org/2001/XMLSchema#integer' ||
+          runtimeType === 'https://schema.org/Number' ||
+          runtimeType === 'https://www.w3.org/2001/XMLSchema#float' ||
+          runtimeType === 'https://www.w3.org/2001/XMLSchema#double' ||
+          runtimeType === 'https://www.w3.org/2001/XMLSchema#integer';
+    } else {
+      return false;
+    }
+  }
+
+  private isPrimitive(property: any): boolean {
+    return property instanceof EventPropertyPrimitive ||
+        property['@class'] === 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
+  }
+
+  private makeFullDbName(fieldConfig: FieldConfig,
+                         aggregation?: string): string {
+    const prefix = aggregation ? aggregation.toLowerCase() + '_' : '';
+    return prefix + fieldConfig.runtimeName;
+  }
+
+
+}

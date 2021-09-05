@@ -22,10 +22,9 @@ import { DatalakeRestService } from '../../../../platform-services/apis/datalake
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
-import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
-import { Observable, zip } from 'rxjs';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
+import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Component({
   selector: 'sp-data-explorer-histogram-chart-widget',
@@ -60,18 +59,10 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
 
   constructor(dataLakeRestService: DatalakeRestService,
               widgetConfigurationService:  WidgetConfigurationService,
-              resizeService: ResizeService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService);
-  }
-
-  refreshData() {
-    this.getQuery().subscribe(result => {
-      this.prepareData(result);
-    });
-  }
-
-  getQuery(): Observable<DataResult> {
-    return this.dataLakeRestService.getData(this.dataLakeMeasure.measureName, this.buildQuery());
+              resizeService: ResizeService,
+              dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+              fieldProvider: DataExplorerFieldProviderService) {
+    super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldProvider);
   }
 
   refreshView() {
@@ -79,11 +70,12 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
   }
 
   prepareData(result: DataResult) {
-    this.data[0].x = this.transform(result.rows);
+    const index = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedProperty, result);
+    this.data[0].x = this.transform(result.rows, index);
   }
 
-  transform(rows): any[] {
-    return rows.map(row => row[1]);
+  transform(rows, index: number): any[] {
+    return rows.map(row => row[index]);
   }
 
   updateAppearance() {
@@ -92,18 +84,17 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
   }
 
-  buildQuery(): DatalakeQueryParameters {
-    return DatalakeQueryParameterBuilder
-        .create(this.timeSettings.startTime, this.timeSettings.endTime)
-        .withAutoAggregation('MEAN')
-        .withColumnFilter([this.dataExplorerWidget.dataConfig.selectedProperty])
-        .build();
-  }
-
   onResize(width: number, height: number) {
     this.graph.layout.autosize = false;
     (this.graph.layout as any).width = width;
     (this.graph.layout as any).height = height;
+  }
+
+  beforeDataFetched() {
+  }
+
+  onDataReceived(dataResults: DataResult[]) {
+    this.prepareData(dataResults[0]);
   }
 
 

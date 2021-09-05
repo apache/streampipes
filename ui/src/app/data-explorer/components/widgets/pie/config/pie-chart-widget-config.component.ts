@@ -18,9 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
-import { FilterCondition, PieChartWidgetModel } from '../model/pie-chart-widget.model';
-import { MatSelectChange } from '@angular/material/select';
+import { PieChartWidgetModel } from '../model/pie-chart-widget.model';
+import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-pie-chart-widget-config',
@@ -33,29 +32,16 @@ export class PieWidgetConfigComponent extends BaseWidgetConfig<PieChartWidgetMod
     this.updateWidgetConfigOptions();
   }
 
-  setSelectedProperties(selectedColumn: MatSelectChange) {
-    this.currentlyConfiguredWidget.dataConfig.selectedFilters.forEach(f => f.field = selectedColumn.value);
+  setSelectedProperty(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.selectedProperty = field;
     this.triggerDataRefresh();
   }
 
   protected updateWidgetConfigOptions() {
-    if (this.dataLakeMeasure.measureName && !this.currentlyConfiguredWidget.dataConfig.availableProperties) {
-      this.currentlyConfiguredWidget.dataConfig.availableProperties = this.dataLakeMeasure.eventSchema.eventProperties;
-      this.currentlyConfiguredWidget.dataConfig.selectedFilters = [];
+    if (!this.currentlyConfiguredWidget.visualizationConfig) {
+      this.currentlyConfiguredWidget.visualizationConfig = {
+        selectedProperty: this.fieldProvider.nonNumericFields[0]
+      };
     }
   }
-
-  addFilter() {
-    const newFilter = {
-      number: this.currentlyConfiguredWidget.dataConfig.selectedFilters.length,
-      field: this.currentlyConfiguredWidget.dataConfig.selectedProperty,
-      operator: '='
-    } as unknown as FilterCondition;
-    this.currentlyConfiguredWidget.dataConfig.selectedFilters.push(newFilter);
-  }
-
-  remove(index: number) {
-    this.currentlyConfiguredWidget.dataConfig.selectedFilters.splice(index, 1);
-  }
-
 }

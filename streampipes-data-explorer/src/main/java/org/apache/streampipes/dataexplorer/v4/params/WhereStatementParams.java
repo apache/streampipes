@@ -17,17 +17,15 @@
  */
 package org.apache.streampipes.dataexplorer.v4.params;
 
+import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class WhereStatementParams extends QueryParamsV4 {
 
   private static final String GT = ">";
   private static final String LT = "<";
-  private static final String BRACKET_OPEN = "\\[";
-  private static final String BRACKET_CLOSE = "\\]";
-
 
   private List<WhereCondition> whereConditions;
 
@@ -93,14 +91,8 @@ public class WhereStatementParams extends QueryParamsV4 {
   }
 
   private void buildConditions(String whereConditions) {
-    String[] conditions = whereConditions.split("\\],\\[");
-
-    Arrays.stream(conditions).forEach(condition -> {
-      String[] singleCondition = condition
-              .replaceAll(BRACKET_OPEN, "")
-              .replaceAll(BRACKET_CLOSE, "")
-              .split(",");
-
+    List<String[]> whereParts = DataLakeManagementUtils.buildConditions(whereConditions);
+    whereParts.forEach(singleCondition -> {
       this.whereConditions.add(new WhereCondition(singleCondition[0], singleCondition[1], singleCondition[2]));
     });
   }

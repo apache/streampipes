@@ -16,38 +16,30 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { QueryConfig } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-aggregate-configuration',
   templateUrl: './aggregate-configuration.component.html',
   styleUrls: ['./aggregate-configuration.component.css']
 })
-export class AggregateConfigurationComponent implements OnInit {
+export class AggregateConfigurationComponent {
 
-  @Input()
-  aggregationValue;
-  @Output()
-  aggregationValueChange = new EventEmitter();
+  @Input() queryConfig: QueryConfig;
 
-  @Input()
-  aggregationTimeUnit;
-  @Output()
-  aggregationTimeUnitChange = new EventEmitter();
-
-   @Input()
-   aggregationFunction;
-   @Output()
-   aggregationFunctionChange = new EventEmitter();
+  availableAggregations = [
+    {value: 'ms', label: 'Millisecond'},
+    {value: 's', label: 'Second'},
+    {value: 'm', label: 'Minute'},
+    {value: 'h', label: 'Hour'},
+    {value: 'd', label: 'Day'},
+    {value: 'w', label: 'Week'},
+    {value: 'month', label: 'Month'},
+    {value: 'year', label: 'Year'}
+  ];
 
   constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
-  onModelChange(event, type) {
-    this[`${type}Change`].emit(event);
   }
 
 }

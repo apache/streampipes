@@ -17,6 +17,7 @@
  */
 
 export class DataResult {
+    sourceIndex: number;
     measureName: string;
     total: number;
     headers: string[];

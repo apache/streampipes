@@ -20,7 +20,6 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { MatDialog } from '@angular/material/dialog';
 import { EventPropertyUnion, EventSchema } from '../../../../core-model/gen/streampipes-model';
 import { ImageWidgetModel } from './model/image-widget.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
@@ -28,6 +27,8 @@ import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
+import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -50,8 +51,10 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   constructor(
       dataLakeRestService: DatalakeRestService,
       widgetConfigurationService: WidgetConfigurationService,
-      resizeService: ResizeService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService);
+      resizeService: ResizeService,
+      dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+      fieldProvider: DataExplorerFieldProviderService) {
+    super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldProvider);
   }
 
   ngOnInit(): void {
@@ -59,7 +62,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
     this.canvasWidth = this.gridsterItemComponent.width - 20;
     this.imagePreviewHeight = this.gridsterItemComponent.width / 14;
 
-    this.availableColumns = this.getImageProperties(this.dataLakeMeasure.eventSchema);
+    this.availableColumns = this.getImageProperties(this.dataExplorerWidget.dataConfig.sourceConfigs[0].measure.eventSchema);
     this.selectedColumn = this.availableColumns[0];
     this.updateData();
   }
@@ -76,7 +79,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getData(
-        this.dataLakeMeasure.measureName, this.buildQuery())
+        this.dataExplorerWidget.dataConfig.sourceConfigs[0].measureName, this.buildQuery())
         .subscribe(
             (res: DataResult) => {
               // this.availableImageData = res;
@@ -100,5 +103,11 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   }
 
   onResize(width: number, height: number) {
+  }
+
+  beforeDataFetched() {
+  }
+
+  onDataReceived(dataResults: DataResult[]) {
   }
 }

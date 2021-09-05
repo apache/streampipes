@@ -16,14 +16,18 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerDataConfig,
+  DataExplorerField
+} from '../../../../models/dataview-dashboard.model';
 
-export interface DensityChartDataConfig {
-  firstField: string;
-  secondField: string;
-  availableProperties: EventPropertyUnion[];
+export interface DensityChartVisConfig {
+  firstField: DataExplorerField;
+  secondField: DataExplorerField;
 }
 
 export interface DensityChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DensityChartDataConfig;
+  dataConfig: DataExplorerDataConfig;
+  visualizationConfig: DensityChartVisConfig;
 }

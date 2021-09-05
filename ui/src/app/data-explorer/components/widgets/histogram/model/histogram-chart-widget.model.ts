@@ -16,13 +16,17 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerDataConfig,
+  DataExplorerField
+} from '../../../../models/dataview-dashboard.model';
 
-export interface HistogramChartDataConfig {
-  selectedProperty: string;
-  availableProperties: EventPropertyUnion[];
+export interface HistogramChartVisConfig {
+  selectedProperty: DataExplorerField;
 }
 
 export interface HistogramChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: HistogramChartDataConfig;
+  dataConfig: DataExplorerDataConfig;
+  visualizationConfig: HistogramChartVisConfig;
 }

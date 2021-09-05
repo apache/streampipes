@@ -21,21 +21,11 @@
         <sp-load-data-spinner *ngIf="showIsLoadingData" class="h-100"></sp-load-data-spinner>
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
 
-        <sp-select-label *ngIf="dataExplorerWidget.dataConfig.labelingModeOn"
-                         [enableShortCuts]="true"
-                         (labelChange)="handleLabelChange($event)">
-        </sp-select-label>
-
-        <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
+        <plotly-plot *ngIf="data !== undefined && data.length > 0 && !showNoDataInDateRange && !showIsLoadingData"
                      [divId]="dataExplorerWidget._id"
                      class="plotly-container"
-                     [class.labeling-active]="dataExplorerWidget.dataConfig.labelingModeOn"
                      [data]="data"
                      [layout]="graph.layout"
-                     [config]="graph.config"
-                     (selected)="selectDataPoints($event)"
-                     (plotlyClick)="changeLabelOfArea($event)">
-            <!--                     (relayout)="handleDefaultModeBarButtonClicks($event)"-->
-
+                     [config]="graph.config">
         </plotly-plot>
 </div>

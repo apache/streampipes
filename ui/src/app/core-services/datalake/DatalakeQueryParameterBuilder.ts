@@ -17,7 +17,10 @@
  */
 
 import { DatalakeQueryParameters } from './DatalakeQueryParameters';
-import { FilterCondition } from '../../data-explorer/components/widgets/pie/model/pie-chart-widget.model';
+import {
+  DataExplorerField,
+  FieldConfig, SelectedFilter
+} from '../../data-explorer/models/dataview-dashboard.model';
 
 export class DatalakeQueryParameterBuilder {
 
@@ -42,9 +45,8 @@ export class DatalakeQueryParameterBuilder {
     return this;
   }
 
-  public withAutoAggregation(aggregationFunction: string) {
+  public withAutoAggregation() {
     this.queryParams.autoAggregate = true;
-    this.queryParams.aggregationFunction = aggregationFunction;
 
     return this;
   }
@@ -55,10 +57,8 @@ export class DatalakeQueryParameterBuilder {
     return this;
   }
 
-  public withAggregation(aggregationFunction: string,
-                         aggregationTimeUnit: string,
+  public withAggregation(aggregationTimeUnit: string,
                          aggregationTimeValue: number) {
-    this.queryParams.aggregationFunction = aggregationFunction;
     this.queryParams.timeInterval = aggregationTimeValue + aggregationTimeUnit;
 
     return this;
@@ -104,14 +104,33 @@ export class DatalakeQueryParameterBuilder {
     return this;
   }
 
-  public withColumnFilter(columns: string[]): DatalakeQueryParameterBuilder {
-    this.queryParams.columns = columns.toString();
+  public withColumnFilter(columns: FieldConfig[],
+                          useAggregation: boolean): DatalakeQueryParameterBuilder {
+    const finalColumns = [];
+    columns.forEach(column => {
+      if (!column.alias && !useAggregation) {
+        finalColumns.push(column.runtimeName);
+      } else {
+        column.aggregations.forEach(agg => {
+          finalColumns.push('['
+              + column.runtimeName
+              + ';'
+              + agg
+              + ';'
+              + agg.toLowerCase()
+              + '_'
+              + column.runtimeName + ']');
+        });
+      }
+    });
+
+    this.queryParams.columns = finalColumns.toString();
 
     return this;
   }
 
-  public withFilters(filterConditions: FilterCondition[]): DatalakeQueryParameterBuilder {
-    const filters = filterConditions.map(f => '[' + f.field + ',' + f.operator + ',' + f.condition + ']');
+  public withFilters(filterConditions: SelectedFilter[]): DatalakeQueryParameterBuilder {
+    const filters = filterConditions.map(f => '[' + f.field.runtimeName + ';' + f.operator + ';' + f.value + ']');
     this.queryParams.filter = filters.toString();
 
     return this;

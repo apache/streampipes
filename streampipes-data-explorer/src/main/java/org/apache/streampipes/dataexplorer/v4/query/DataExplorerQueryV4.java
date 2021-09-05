@@ -72,10 +72,10 @@ public class DataExplorerQueryV4 {
 
     protected DataResult convertResult(QueryResult.Series series) {
         List<String> columns = series.getColumns();
-        for (int i = 0; i < columns.size(); i++) {
-            String replacedColumnName = replacePrefixes(columns.get(i));
-            columns.set(i, replacedColumnName);
-        }
+//        for (int i = 0; i < columns.size(); i++) {
+//            String replacedColumnName = replacePrefixes(columns.get(i));
+//            columns.set(i, replacedColumnName);
+//        }
         List<List<Object>> values = series.getValues();
 
         List<List<Object>> resultingValues = new ArrayList<>();
