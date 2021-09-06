@@ -81,6 +81,7 @@ import { FieldSelectionPanelComponent } from './components/designer-panel/data-s
 import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';
 import { FilterSelectionPanelComponent } from './components/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
 import { SelectPropertyComponent } from './components/widgets/utils/select-property/select-property.component';
+import { DataExplorerVisualisationSettingsComponent } from './components/designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -159,7 +160,8 @@ export const MY_NATIVE_FORMATS = {
     SelectPropertyComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,
-    TimeRangeSelectorComponent
+    TimeRangeSelectorComponent,
+    DataExplorerVisualisationSettingsComponent
   ],
   providers: [
     DatalakeRestService,

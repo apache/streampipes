@@ -44,79 +44,18 @@
                                                            [dataConfig]="currentlyConfiguredWidget.dataConfig"
                                                            [newWidgetMode]="newWidgetMode"
                                                            (createWidgetEmitter)="createNewWidget($event)">
-
                     </sp-data-explorer-widget-data-settings>
                 </div>
+
                 <div *ngIf="selectedIndex == 1" class="p-5">
-                    <div fxFlex="100" fxLayout="column">
-                        <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
-                            <span class="data-explorer-header">Visualization Type</span>
-                            <mat-form-field color="accent" fxFlex="100">
-                                <mat-label>Select visualization</mat-label>
-                                <mat-select [(value)]="currentlyConfiguredWidget.widgetType">
-                                    <mat-option [value]="'density-chart'">
-                                        <span class="pipeline-name">Density</span>
-                                    </mat-option>
-                                    <mat-option [value]="'histogram-chart'">
-                                        <span class="pipeline-name">Histogram</span>
-                                    </mat-option>
-                                    <mat-option [value]="'indicator-chart'">
-                                        <span class="pipeline-name">Indicator</span>
-                                    </mat-option>
-                                    <mat-option [value]="'line-chart'">
-                                        <span class="pipeline-name">Line Chart</span>
-                                    </mat-option>
-                                    <mat-option [value]="'pie-chart'">
-                                        <span class="pipeline-name">Pie Chart</span>
-                                    </mat-option>
-                                    <mat-option [value]="'table'">
-                                        <span class="pipeline-name">Table</span>
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div fxFlex="100" fxLayout="column" class="data-explorer-options-panel">
-                            <span class="data-explorer-header">Configuration</span>
-                            <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
-                                <sp-data-explorer-table-widget-config
-                                        [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-
-                                </sp-data-explorer-table-widget-config>
-                            </div>
-                            <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
-                                <sp-data-explorer-line-chart-widget-config
-                                        [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-
-                                </sp-data-explorer-line-chart-widget-config>
-                            </div>
-                            <div *ngIf="currentlyConfiguredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">
-                                <sp-data-explorer-histogram-chart-widget-config
-                                        [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-                                </sp-data-explorer-histogram-chart-widget-config>
-                            </div>
-                            <div *ngIf="currentlyConfiguredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">
-                                <sp-data-explorer-indicator-chart-widget-config
-                                        [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-                                </sp-data-explorer-indicator-chart-widget-config>
-                            </div>
-                            <div *ngIf="currentlyConfiguredWidget.widgetType === 'density-chart'" class="h-100 p-0">
-                                <sp-data-explorer-density-chart-widget-config
-                                        [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-                                </sp-data-explorer-density-chart-widget-config>
-                            </div>
-                            <div *ngIf="currentlyConfiguredWidget.widgetType === 'pie-chart'" class="h-100 p-0">
-                                <sp-data-explorer-pie-chart-widget-config
-                                        [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-                                </sp-data-explorer-pie-chart-widget-config>
-                            </div>
-                        </div>
-                    </div>
+                    <sp-explorer-visualisation-settings [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+                    </sp-explorer-visualisation-settings>
                 </div>
+
                 <div *ngIf="selectedIndex == 2" class="p-5">
                     <sp-data-explorer-widget-appearance-settings
                             [widgetId]="currentlyConfiguredWidget._id"
                             [baseAppearanceConfig]="currentlyConfiguredWidget.baseAppearanceConfig">
-
                     </sp-data-explorer-widget-appearance-settings>
                 </div>
             </div>
