@@ -32,17 +32,19 @@
                 <button mat-button
                         mat-raised-button
                         color="accent"
+                        data-cy="confirm-truncate-data-btn"
                         *ngIf="!deleteDialog"
                         (click)="truncateData()"
-                        data-cy="truncate-datalake-index">Truncate Data
+                >Truncate Data
                 </button>
                 <button
                         mat-button
                         mat-raised-button
                         color="accent"
+                        data-cy="confirm-delete-data-btn"
                         *ngIf="deleteDialog"
                         (click)="deleteData()"
-                        data-cy="truncate-datalake-index">Delete Data
+                >Delete Data
                 </button>
             </div>
         </div>

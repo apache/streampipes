@@ -60,19 +60,21 @@ export class PipelineUtils {
 
   private static configurePipeline(pipelineInput: PipelineInput) {
 
-    // Select processor
+    // Open possible elements menu
     cy.dataCy('sp-possible-elements-' + pipelineInput.dataSource, { timeout: 10000 }).click();
-    cy.dataCy('sp-compatible-elements-' + pipelineInput.processingElement.name).click();
 
-    StaticPropertyUtils.input(pipelineInput.processingElement.config);
+    // Select processor
+    if (pipelineInput.processingElement) {
+      cy.dataCy('sp-compatible-elements-' + pipelineInput.processingElement.name).click();
+      StaticPropertyUtils.input(pipelineInput.processingElement.config);
+      // Save configuration
+      cy.dataCy('sp-element-configuration-save').click();
+      // Select sink
+      cy.dataCy('sp-possible-elements-' + pipelineInput.processingElement.name, { timeout: 10000 }).click();
+    }
 
-    // Save configuration
-    cy.dataCy('sp-element-configuration-save').click();
-
-    // Select sink
-    cy.dataCy('sp-possible-elements-' + pipelineInput.processingElement.name, { timeout: 10000 }).click();
+    // Configure sink
     cy.dataCy('sp-compatible-elements-' + pipelineInput.dataSink.name).click();
-
     StaticPropertyUtils.input(pipelineInput.dataSink.config);
 
     // Save sink configuration

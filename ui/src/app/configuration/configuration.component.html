@@ -19,10 +19,12 @@
 <div fxLayout="column" fxFlex="100" class="page-container">
     <div fxLayout="row" class="p-0 sp-bg-lightgray page-container-nav">
         <div fxLayout="fill">
-            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)" color="accent">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)"
+                           color="accent">
                 <mat-tab label="Pipeline Element Configuration"></mat-tab>
                 <mat-tab label="Messaging"></mat-tab>
-                <mat-tab label="DataLake"></mat-tab>
+                <mat-tab
+                        label="DataLake"></mat-tab>
             </mat-tab-group>
         </div>
     </div>
