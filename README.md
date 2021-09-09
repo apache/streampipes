@@ -119,6 +119,7 @@ To build the ui, switch to the ``ui`` folder and perform the following steps:
 
 ```
     npm install
+    # for NPM > v7, run npm install --legacy-peer-deps
     npm run build
 ```
 
