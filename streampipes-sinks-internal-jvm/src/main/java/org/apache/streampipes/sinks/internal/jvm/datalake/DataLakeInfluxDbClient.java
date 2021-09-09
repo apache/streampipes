@@ -177,9 +177,7 @@ public class DataLakeInfluxDbClient {
             if (ep instanceof EventPropertyPrimitive) {
                 String runtimeName = ep.getRuntimeName();
 
-
-
-                if (!runtimeName.equals(timestampField.split("::")[1])) {
+                if (!timestampField.endsWith(runtimeName)) {
                     String preparedRuntimeName = DataLake.prepareString(runtimeName);
                     PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
 

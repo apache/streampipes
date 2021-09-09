@@ -76,9 +76,17 @@ public class DataLake implements EventSink<DataLakeParameters> {
     );
 
     EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
+    // Remove the timestamp field from the event schema
+    List<EventProperty> eventPropertiesWithoutTimestamp = schema.getEventProperties()
+            .stream()
+            .filter(eventProperty -> !this.timestampField.endsWith(eventProperty.getRuntimeName()))
+            .collect(Collectors.toList());
+    schema.setEventProperties(eventPropertiesWithoutTimestamp);
 
     // deep copy of event schema. Event property runtime name is changed to lower case for the schema registration
     this.eventSchema = new EventSchema(schema);
+
+
 
     schema.getEventProperties().stream().forEach(eventProperty -> {
       eventProperty.setRuntimeName(prepareString(eventProperty.getRuntimeName()));
@@ -97,7 +105,6 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
   @Override
   public void onEvent(Event event) {
-
     try {
 
       this.imageProperties.stream().forEach(eventProperty -> {
@@ -110,8 +117,6 @@ public class DataLake implements EventSink<DataLakeParameters> {
         fileRoute = fileRoute.replace("." , "_");
         event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), fileRoute);
       });
-
-      event.addField("sp_internal_label", "");
 
       influxDbClient.save(event, this.eventSchema);
     } catch (SpRuntimeException e) {
