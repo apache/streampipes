@@ -54,7 +54,7 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
     this.newWidgetMode = true;
   }
 
-  createNewWidget(event) {
+  createNewWidget() {
     this.newWidgetMode = false;
     this.addWidgetEmitter.emit({ a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget });
   }

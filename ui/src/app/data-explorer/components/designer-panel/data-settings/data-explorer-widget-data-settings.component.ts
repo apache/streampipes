@@ -37,7 +37,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   @Input() newWidgetMode: boolean;
 
   @Output() createWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
-      new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+    new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
   @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> = new EventEmitter<DataLakeMeasure>();
   @Output() configureVisualizationEmitter: EventEmitter<void> = new EventEmitter<void>();
 
@@ -59,21 +59,18 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     zip(this.dataExplorerService.getAllPersistedDataStreams(), this.datalakeRestService.getAllMeasurementSeries()).subscribe(response => {
       this.availablePipelines = response[0];
       this.availableMeasurements = response[1];
+
+      // replace pipeline event schemas. Reason: Available measures do not contain field for timestamp
+      this.availablePipelines.forEach(p => {
+        const measurement = this.availableMeasurements.find(m => {
+          return m.measureName === p.measureName;
+        });
+        p.eventSchema = measurement.eventSchema;
+      });
+
       if (!this.dataConfig.sourceConfigs) {
         this.addDataSource();
       }
-    });
-  }
-
-  loadAvailablePipelines() {
-    this.dataExplorerService.getAllPersistedDataStreams().subscribe(response => {
-      this.availablePipelines = response;
-    });
-  }
-
-  loadAvailableMeasurements() {
-    this.datalakeRestService.getAllMeasurementSeries().subscribe(response => {
-      this.availableMeasurements = response;
     });
   }
 
@@ -86,7 +83,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   findMeasure(measureName) {
     return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
-        this.availableMeasurements.find(m => m.measureName === measureName);
+      this.availableMeasurements.find(m => m.measureName === measureName);
   }
 
   createWidget() {
@@ -105,7 +102,8 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   }
 
   makeSourceConfig(): SourceConfig {
-    return {measureName: '',
+    return {
+      measureName: '',
       queryConfig: {
         selectedFilters: [],
         limit: 100,
