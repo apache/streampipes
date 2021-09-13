@@ -55,10 +55,16 @@ export class NodeAddDetailsComponent implements OnInit {
   backend: string = '';
   nodeIp: string = '';
   apiToken: string = '';
+  latitude: number;
+  longitude: number;
   storagePath: string = '/var/lib/streampipes';
   resourceUpdateFreq: string = '30';
   dockerNodePruningFreq: string = '3600';
   eventBufferSize: string = '1000';
+  associatedResourceLayer: string;
+  resourceLayers: string[] = ['edge', 'fog', 'cloud'];
+  nodeType: string;
+  nodeTypes: string[] = ['virtual','phyiscal'];
 
   dockerRunCommand: string;
 
@@ -75,30 +81,37 @@ export class NodeAddDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.dockerCommandCreated = false;
     this.advancedSettings = false;
+    this.associatedResourceLayer = 'edge';
     this.tmpTags = []
     this.getVersion();
 
     this.nodeMetadataFormGroup.addControl("backendHost", new FormControl(this.backend,
         [Validators.required,
           Validators.maxLength(40)]))
-
     this.nodeMetadataFormGroup.addControl("nodeHost", new FormControl(this.nodeIp,
         [Validators.required,
-          Validators.maxLength(15)]))
+          Validators.maxLength(40)]))
     this.nodeMetadataFormGroup.addControl("token", new FormControl(this.apiToken,
         [Validators.maxLength(80)]))
-
+    this.nodeMetadataFormGroup.addControl("latitude", new FormControl(this.latitude,
+        [Validators.required]))
+    this.nodeMetadataFormGroup.addControl("longitude", new FormControl(this.longitude,
+        [Validators.required]))
 
     this.nodeMetadataFormGroup.controls["backendHost"].valueChanges.subscribe(value => {
       this.backend = value;
     });
-
     this.nodeMetadataFormGroup.controls["nodeHost"].valueChanges.subscribe(value => {
       this.nodeIp = value;
     });
-
     this.nodeMetadataFormGroup.controls["token"].valueChanges.subscribe(value => {
       this.apiToken = value;
+    });
+    this.nodeMetadataFormGroup.controls["latitude"].valueChanges.subscribe(value => {
+      this.latitude = value;
+    });
+    this.nodeMetadataFormGroup.controls["longitude"].valueChanges.subscribe(value => {
+      this.longitude = value;
     });
 
     this.firstFormGroup = this._formBuilder.group({

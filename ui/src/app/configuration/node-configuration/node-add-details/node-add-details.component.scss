@@ -124,3 +124,13 @@ mat-slider {
   overflow-x: auto;
   white-space: nowrap;
 }
+
+.resource-layer-radio-group {
+  display: flex;
+  flex-direction: row;
+  margin: 15px 0;
+}
+
+.resource-layer-radio-button {
+  margin: 5px;
+}

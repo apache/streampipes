@@ -36,6 +36,27 @@
                         <mat-label>API token</mat-label>
                         <input [formControlName]="'token'" matInput required>
                     </mat-form-field>
+
+                    <label id="example-radio-group-label">Pick associated resource layer</label>
+                    <mat-radio-group
+                            aria-labelledby="example-radio-group-label"
+                            class="resource-layer-radio-group"
+                            [(ngModel)]="associatedResourceLayer">
+                        <mat-radio-button class="resource-layer-radio-button"
+                                          [required]="true"
+                                          *ngFor="let layer of resourceLayers"
+                                          [value]="layer">{{layer}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+
+                    <mat-form-field>
+                        <mat-label>Latitude</mat-label>
+                        <input [formControlName]="'latitude'" matInput required>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Longitude</mat-label>
+                        <input [formControlName]="'longitude'" matInput required>
+                    </mat-form-field>
                 </div>
             </form>
 
