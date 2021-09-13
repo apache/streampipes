@@ -35,7 +35,7 @@ import { DataExplorerFieldProviderService } from '../../../services/data-explore
 })
 export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetModel> implements OnInit, OnDestroy {
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   dataSource = new MatTableDataSource();
   columnNames: string[];
@@ -60,7 +60,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
       this.setShownComponents(true, false, false);
     } else {
       data.rows.forEach(row =>
-          result.push(this.createTableObject(data.headers, row))
+        result.push(this.createTableObject(data.headers, row))
       );
       this.setShownComponents(false, true, false);
     }
@@ -83,17 +83,17 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   sortData(event) {
     if (event.direction === 'asc') {
       this.dataSource.data = this.dataSource.data.sort(
-          (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
+        (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
     }
 
     if (event.direction === 'desc') {
       this.dataSource.data = this.dataSource.data.sort(
-          (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
+        (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
     }
 
     if (event.direction === '') {
       this.dataSource.data = this.dataSource.data.sort(
-          (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
+        (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
     }
   }
 
@@ -109,7 +109,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   }
 
   onDataReceived(dataResults: DataResult[]) {
-    this.columnNames = this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName);
+    this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
     this.dataSource.data = [...this.transformData(dataResults[0])];
   }
 
