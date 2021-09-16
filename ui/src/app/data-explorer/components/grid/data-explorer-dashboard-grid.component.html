@@ -28,6 +28,7 @@
                     (updateCallback)="propagateItemUpdate($event)"
                     (deleteCallback)="propagateItemRemoval($event)"
                     (configureWidgetCallback)="propagateWidgetSelection($event)"
+                    (startEditModeEmitter)="startEditMode($event)"
                     [dashboardItem]="item"
                     [configuredWidget]="configuredWidgets.get(item.id)"
                     [dataLakeMeasure]="dataLakeMeasures.get(item.id)"

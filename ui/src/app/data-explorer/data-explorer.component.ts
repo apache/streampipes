@@ -115,10 +115,6 @@ export class DataExplorerComponent implements OnInit {
     });
   }
 
-  toggleEditMode() {
-    this.editMode = !(this.editMode);
-  }
-
   updateDateRange(timeSettings: TimeSettings) {
     this.selectedDataViewDashboard.dashboardTimeSettings = timeSettings;
   }

@@ -35,6 +35,10 @@
                         <mat-icon>get_app</mat-icon>
                         <span>Download data</span>
                     </button>
+                    <button mat-menu-item (click)="startEditMode()" *ngIf="!editMode">
+                        <mat-icon>edit</mat-icon>
+                        <span>Edit Widget</span>
+                    </button>
                     <button mat-menu-item (click)="removeWidget()" *ngIf="editMode">
                         <mat-icon>clear</mat-icon>
                         <span>Delete widget</span>

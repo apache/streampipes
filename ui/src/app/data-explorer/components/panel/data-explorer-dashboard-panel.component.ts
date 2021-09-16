@@ -100,6 +100,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     });
   }
 
+  startEditMode(widgetModel: DataExplorerWidgetModel) {
+    this.editModeChange.emit(true);
+    this.updateCurrentlyConfiguredWidget(widgetModel);
+  }
+
   prepareWidgetUpdates(): Observable<any>[] {
     const promises: Observable<any>[] = [];
     this.widgetsToUpdate.forEach((widget, key) => {

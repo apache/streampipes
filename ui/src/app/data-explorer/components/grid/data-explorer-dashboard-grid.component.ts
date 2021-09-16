@@ -16,32 +16,19 @@
  *
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  ViewChildren
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
-import { IDataViewDashboardConfig, } from '../../models/dataview-dashboard.model';
+import { IDataViewDashboardConfig } from '../../models/dataview-dashboard.model';
 import { ResizeService } from '../../services/resize.service';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
 import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',
   templateUrl: './data-explorer-dashboard-grid.component.html',
-  styleUrls: ['./data-explorer-dashboard-grid.component.scss'],
+  styleUrls: ['./data-explorer-dashboard-grid.component.scss']
 })
 export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
@@ -62,6 +49,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
+  @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
   options: IDataViewDashboardConfig;
   loaded = false;
@@ -122,10 +110,10 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     this.dataViewDataExplorerService.getWidget(widgetId).subscribe(response => {
       this.configuredWidgets.set(widgetId, response);
       //this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
-        this.dataLakeMeasures.set(widgetId, response.dataConfig.sourceConfigs[0].measure);
-        if (setCurrentlyConfigured) {
-          this.propagateWidgetSelection(this.configuredWidgets.get(widgetId));
-        }
+      this.dataLakeMeasures.set(widgetId, response.dataConfig.sourceConfigs[0].measure);
+      if (setCurrentlyConfigured) {
+        this.propagateWidgetSelection(this.configuredWidgets.get(widgetId));
+      }
       //});
     });
   }
@@ -163,6 +151,10 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
         value._rev = response._rev;
       });
     });
+  }
+
+  startEditMode(value: DataExplorerWidgetModel) {
+    this.startEditModeEmitter.emit(value);
   }
 
 }

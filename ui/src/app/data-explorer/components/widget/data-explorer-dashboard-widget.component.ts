@@ -20,10 +20,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItemComponent } from 'angular-gridster2';
 import { DateRange } from '../../../core-model/datalake/DateRange';
-import {
-  DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
 import { DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
@@ -59,7 +56,8 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   @Output() deleteCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() updateCallback: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
   @Output() configureWidgetCallback: EventEmitter<DataExplorerWidgetModel>
-      = new EventEmitter<DataExplorerWidgetModel>();
+    = new EventEmitter<DataExplorerWidgetModel>();
+  @Output() startEditModeEmitter: EventEmitter<DataExplorerWidgetModel> = new EventEmitter<DataExplorerWidgetModel>();
 
   title = '';
   widgetLoaded = false;
@@ -87,6 +85,11 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
       panelClass: 'custom-dialog-container'
     });
   }
+
+  startEditMode() {
+    this.startEditModeEmitter.emit(this.configuredWidget);
+  }
+
 
   triggerWidgetEditMode() {
     this.configureWidgetCallback.emit(this.configuredWidget);

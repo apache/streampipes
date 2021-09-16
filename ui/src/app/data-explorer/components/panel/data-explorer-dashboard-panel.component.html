@@ -18,27 +18,29 @@
 
 <div fxFlex="100" fxLayout="column">
     <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
-        <mat-drawer #designerDrawer [opened]="editMode" mode="side" position="end" class="designer-panel" (opened)="triggerResize()">
+        <mat-drawer #designerDrawer [opened]="editMode" mode="side" position="end" class="designer-panel"
+                    (opened)="triggerResize()">
             <div fxLayout="column" fxFlex="100">
                 <sp-data-explorer-designer-panel #designerPanel
-                        [currentlyConfiguredWidget]="currentlyConfiguredWidget"
-                        [dataLakeMeasure]="dataLakeMeasure"
-                        (addWidgetEmitter)="addWidget($event)"
-                        fxFlex="100">
+                                                 [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                                 [dataLakeMeasure]="dataLakeMeasure"
+                                                 (addWidgetEmitter)="addWidget($event)"
+                                                 fxFlex="100">
 
                 </sp-data-explorer-designer-panel>
             </div>
         </mat-drawer>
         <mat-drawer-content class="h-100 dashboard-grid">
             <sp-data-explorer-dashboard-grid
-                #dashboardGrid
-                [editMode]="editMode"
-                [dashboard]="dashboard"
-                [timeSettings]="timeSettings"
-                (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
-                (updateCallback)="updateAndQueueItemForDeletion($event)"
-                (deleteCallback)="removeAndQueueItemForDeletion($event)"
-                class="h-100 dashboard-grid"></sp-data-explorer-dashboard-grid>
+							#dashboardGrid
+              [editMode]="editMode"
+              [dashboard]="dashboard"
+              [timeSettings]="timeSettings"
+              (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
+              (updateCallback)="updateAndQueueItemForDeletion($event)"
+              (deleteCallback)="removeAndQueueItemForDeletion($event)"
+              (startEditModeEmitter)="startEditMode($event)"
+              class="h-100 dashboard-grid"></sp-data-explorer-dashboard-grid>
         </mat-drawer-content>
     </mat-drawer-container>
 </div>
