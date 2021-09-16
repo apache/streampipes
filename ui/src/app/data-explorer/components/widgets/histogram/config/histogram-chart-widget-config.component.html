@@ -18,7 +18,7 @@
 
 <div fxFlex="100" fxLayout="column">
     <h5>Histogram Field</h5>
-    <sp-select-property [availableProperties]="fieldProvider.numericFields"
+    <sp-select-property [availableProperties]="fieldProvider.allFields"
                         [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedProperty"
                         (changeSelectedProperty)="setSelectedProperties($event)">
     </sp-select-property>

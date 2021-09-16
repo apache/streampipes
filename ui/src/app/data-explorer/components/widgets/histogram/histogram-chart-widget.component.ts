@@ -35,8 +35,8 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
 
   data = [
     {
-        x: [],
-        type: 'histogram',
+      x: [],
+      type: 'histogram'
     }
   ];
 
@@ -47,7 +47,7 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
       },
       autosize: true,
       plot_bgcolor: '#fff',
-      paper_bgcolor: '#fff',
+      paper_bgcolor: '#fff'
     },
     config: {
       modeBarButtonsToRemove: ['lasso2d', 'select2d', 'toggleSpikelines', 'toImage'],
@@ -58,7 +58,7 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
   };
 
   constructor(dataLakeRestService: DatalakeRestService,
-              widgetConfigurationService:  WidgetConfigurationService,
+              widgetConfigurationService: WidgetConfigurationService,
               resizeService: ResizeService,
               dataViewQueryGeneratorService: DataViewQueryGeneratorService,
               fieldProvider: DataExplorerFieldProviderService) {
@@ -71,7 +71,12 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
 
   prepareData(result: DataResult) {
     const index = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedProperty, result);
-    this.data[0].x = this.transform(result.rows, index);
+    const varX = this.transform(result.rows, index);
+
+    this.data = [{
+      x: varX,
+      type: 'histogram'
+    }];
   }
 
   transform(rows, index: number): any[] {

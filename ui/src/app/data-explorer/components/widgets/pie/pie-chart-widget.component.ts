@@ -48,7 +48,7 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
       },
       autosize: true,
       plot_bgcolor: '#fff',
-      paper_bgcolor: '#fff',
+      paper_bgcolor: '#fff'
     },
 
     config: {
@@ -81,7 +81,7 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
     if (results[index]) {
       const rowIndex = this.getColumnIndex(field, results[index]);
       results[index].rows.forEach(row => {
-        const value = field.fullDbName + '/' + row[rowIndex].toString();
+        const value = row[rowIndex].toString();
         if (!values.has(value)) {
           values.set(value, 0);
         }

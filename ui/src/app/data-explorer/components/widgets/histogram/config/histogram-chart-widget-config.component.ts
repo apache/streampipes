@@ -41,7 +41,7 @@ export class HistogramWidgetConfigComponent extends BaseWidgetConfig<HistogramCh
   protected updateWidgetConfigOptions() {
     if (!this.currentlyConfiguredWidget.visualizationConfig) {
       this.currentlyConfiguredWidget.visualizationConfig = {
-        selectedProperty: this.fieldProvider.numericFields[0]
+        selectedProperty: this.fieldProvider.allFields[0]
       };
     }
   }
