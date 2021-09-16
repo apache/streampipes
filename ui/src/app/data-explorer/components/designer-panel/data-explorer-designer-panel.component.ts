@@ -57,6 +57,13 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
 
   createNewWidget() {
     this.newWidgetMode = false;
+
+    // Set default name to the measure name
+    if (this.currentlyConfiguredWidget.dataConfig.sourceConfigs.length > 0) {
+      this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle =
+        this.currentlyConfiguredWidget.dataConfig.sourceConfigs[0].measureName;
+    }
+
     this.addWidgetEmitter.emit({ a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget });
   }
 
