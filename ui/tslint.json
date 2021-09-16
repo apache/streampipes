@@ -94,7 +94,7 @@
     "no-output-rename": true,
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
-    "component-class-suffix": true,
+    "component-class-suffix": [true, "Component", "Dialog"],
     "directive-class-suffix": true
   },
   "extends": ["tslint:latest", "tslint-config-prettier"]
