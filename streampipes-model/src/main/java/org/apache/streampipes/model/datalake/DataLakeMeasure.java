@@ -29,6 +29,7 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
     private EventSchema eventSchema;
     private String pipelineId;
     private String pipelineName;
+    private boolean pipelineIsRunning;
 
     public DataLakeMeasure() {
         super();
@@ -76,5 +77,13 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
     public void setPipelineName(String pipelineName) {
         this.pipelineName = pipelineName;
+    }
+
+    public boolean isPipelineIsRunning() {
+        return pipelineIsRunning;
+    }
+
+    public void setPipelineIsRunning(boolean pipelineIsRunning) {
+        this.pipelineIsRunning = pipelineIsRunning;
     }
 }

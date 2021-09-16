@@ -71,13 +71,15 @@ export class DatalakeConfigurationComponent implements OnInit {
           inUseMeasurements.forEach(inUseMeasurement => {
             if (inUseMeasurement.measureName === measurement.measureName) {
               entry.pipelines.push(inUseMeasurement.pipelineName);
-              entry.remove = false;
+              if (inUseMeasurement.pipelineIsRunning) {
+                entry.remove = false;
+              }
             }
           });
 
           // get the amount of events from the database
           const property = measurement.eventSchema.eventProperties[0];
-          const field: FieldConfig = {runtimeName: property.runtimeName, aggregations: ['COUNT'], selected: true, numeric: false };
+          const field: FieldConfig = { runtimeName: property.runtimeName, aggregations: ['COUNT'], selected: true, numeric: false };
           this.datalakeRestService.getData(
             measurement.measureName,
             this.buildQ(field)).subscribe(res => {

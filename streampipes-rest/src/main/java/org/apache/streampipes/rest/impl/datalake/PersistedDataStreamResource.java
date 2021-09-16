@@ -60,6 +60,7 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
     measure.setPipelineId(pipeline.getPipelineId());
     measure.setPipelineName(pipeline.getName());
     measure.setMeasureName(extractFieldValue(sink, MeasureFieldInternalName));
+    measure.setPipelineIsRunning(pipeline.isRunning());
 
     return measure;
   }
