@@ -52,6 +52,8 @@ export class TimeRangeSelectorComponent implements OnInit {
   ngOnInit() {
     if (!this.dateRange.startTime) {
       this.setCurrentDateRange(this.possibleTimeButtons[0]);
+    } else if (this.dateRange.dynamicSelection !== -1) {
+      this.setCurrentDateRange(this.possibleTimeButtons.find(tb => tb.offset === this.dateRange.dynamicSelection));
     }
   }
 
