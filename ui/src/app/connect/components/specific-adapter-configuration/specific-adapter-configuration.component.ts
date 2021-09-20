@@ -49,7 +49,8 @@ export class SpecificAdapterConfigurationComponent implements OnInit {
 
   constructor(
     private _formBuilder: FormBuilder
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     // initialize form for validation
@@ -57,6 +58,11 @@ export class SpecificAdapterConfigurationComponent implements OnInit {
     this.specificAdapterForm.statusChanges.subscribe((status) => {
       this.specificAdapterSettingsFormValid = this.specificAdapterForm.valid;
     });
+
+    // Go directly to event schema configuration when adapter has no configuration properties
+    if (this.adapterDescription.config.length === 0) {
+      this.specificAdapterSettingsFormValid = true;
+    }
   }
 
   public removeSelection() {
