@@ -29,6 +29,7 @@ import { DatalakeQueryParameters } from '../../../../core-services/datalake/Data
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -37,7 +38,7 @@ import { DataExplorerFieldProviderService } from '../../../services/data-explore
 })
 export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetModel> implements OnInit, OnDestroy {
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   availableColumns: EventPropertyUnion[];
   selectedColumn: EventPropertyUnion;
@@ -49,11 +50,11 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   public imagesRoutes = [];
 
   constructor(
-      dataLakeRestService: DatalakeRestService,
-      widgetConfigurationService: WidgetConfigurationService,
-      resizeService: ResizeService,
-      dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-      fieldProvider: DataExplorerFieldProviderService) {
+    dataLakeRestService: DatalakeRestService,
+    widgetConfigurationService: WidgetConfigurationService,
+    resizeService: ResizeService,
+    dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+    fieldProvider: DataExplorerFieldProviderService) {
     super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldProvider);
   }
 
@@ -79,20 +80,20 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
     this.setShownComponents(false, false, true);
 
     this.dataLakeRestService.getData(
-        this.dataExplorerWidget.dataConfig.sourceConfigs[0].measureName, this.buildQuery())
-        .subscribe(
-            (res: DataResult) => {
-              // this.availableImageData = res;
-              this.showIsLoadingData = false;
-              this.imagesRoutes = [];
-              if (res.rows !== null) {
-                const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
-                res.rows.forEach(row => {
-                  this.imagesRoutes.push(row[imageField]);
-                });
-              }
-            }
-        );
+      this.dataExplorerWidget.dataConfig.sourceConfigs[0].measureName, this.buildQuery())
+      .subscribe(
+        (res: DataResult) => {
+          // this.availableImageData = res;
+          this.showIsLoadingData = false;
+          this.imagesRoutes = [];
+          if (res.rows !== null) {
+            const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
+            res.rows.forEach(row => {
+              this.imagesRoutes.push(row[imageField]);
+            });
+          }
+        }
+      );
   }
 
   refreshView() {
@@ -109,5 +110,8 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   }
 
   onDataReceived(dataResults: DataResult[]) {
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
   }
 }
