@@ -24,6 +24,7 @@ import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { zip } from 'rxjs';
 import { DataExplorerDataConfig, SourceConfig } from '../../../models/dataview-dashboard.model';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 
 @Component({
   selector: 'sp-data-explorer-widget-data-settings',
@@ -48,7 +49,8 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   step = 0;
 
   constructor(private dataExplorerService: DataViewDataExplorerService,
-              private datalakeRestService: DatalakeRestService) {
+              private datalakeRestService: DatalakeRestService,
+              private widgetConfigService: WidgetConfigurationService) {
 
   }
 
@@ -78,17 +80,11 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   updateMeasure(sourceConfig: SourceConfig, event: MatSelectChange) {
     sourceConfig.measure = this.findMeasure(event.value);
     sourceConfig.queryConfig.fields = [];
-    //this.dataLakeMeasure = this.findMeasure(event.value);
-    //this.dataLakeMeasureChange.emit(this.dataLakeMeasure);
   }
 
   findMeasure(measureName) {
     return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
       this.availableMeasurements.find(m => m.measureName === measureName);
-  }
-
-  createWidget() {
-    //this.createWidgetEmitter.emit({a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget});
   }
 
   setStep(index: number) {
@@ -121,5 +117,8 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     this.dataConfig.sourceConfigs.splice(index, 1);
   }
 
+  triggerDataRefresh() {
+    this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
+  }
 
 }

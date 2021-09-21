@@ -85,4 +85,8 @@ public class SelectColumn {
       return field;
     }
   }
+
+  public String getOriginalField() {
+    return originalField;
+  }
 }

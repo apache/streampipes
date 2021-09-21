@@ -65,7 +65,8 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel" *ngIf="sourceConfig.measureName">
+                <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
+                     *ngIf="sourceConfig.measureName">
                     <div fxLayout="row" fxLayoutAlign="start center">
                         <span class="data-explorer-header">Query </span>
                         <mat-radio-group
@@ -97,19 +98,21 @@
                     <div fxLayout="column" fxFlex="100"
                          *ngIf="sourceConfig.queryType === 'aggregated'">
                         <div>
-                            <mat-checkbox color="accent" [(ngModel)]="sourceConfig.queryConfig.autoAggregate">
+                            <mat-checkbox color="accent" [(ngModel)]="sourceConfig.queryConfig.autoAggregate" (change)="triggerDataRefresh()">
                                 Auto-Aggregate
                             </mat-checkbox>
                         </div>
                         <sp-aggregate-configuration class="mt-10"
                                                     *ngIf="!sourceConfig.queryConfig.autoAggregate"
-                                                    [queryConfig]="sourceConfig.queryConfig">
+                                                    [queryConfig]="sourceConfig.queryConfig"
+                                                    [widgetId]="widgetId">
                         </sp-aggregate-configuration>
                     </div>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">
-                    <sp-field-selection-panel [sourceConfig]="sourceConfig" [widgetId]="widgetId"></sp-field-selection-panel>
+                    <sp-field-selection-panel [sourceConfig]="sourceConfig"
+                                              [widgetId]="widgetId"></sp-field-selection-panel>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">

@@ -19,13 +19,17 @@ package org.apache.streampipes.dataexplorer.v4;
 
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.model.Order;
+import org.apache.streampipes.dataexplorer.v4.params.SelectColumn;
 import org.apache.streampipes.model.datalake.DataResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
@@ -34,6 +38,7 @@ public class AutoAggregationHandler {
   private static final Logger LOG = LoggerFactory.getLogger(AutoAggregationHandler.class);
   private static final double MAX_RETURN_LIMIT = 2000;
   private static final String TIMESTAMP_FIELD = "time";
+  private static final String COMMA = ",";
 
   private final SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
   private final SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -106,22 +111,19 @@ public class AutoAggregationHandler {
     return Double.valueOf(v).intValue();
   }
 
-//  private long getNewestTimestamp(DataResult result) throws ParseException {
-//    return extractTimestamp(result);
-//  }
-//
-//  private long getOldestTimestamp(DataResult result) throws ParseException {
-//    return extractTimestamp(result);
-//  }
-
   private DataResult getSingleRecord(Order order) throws ParseException {
     ProvidedQueryParams singleEvent = disableAutoAgg(new ProvidedQueryParams(queryParams));
     singleEvent.remove(QP_AGGREGATION_FUNCTION);
     singleEvent.update(QP_LIMIT, 1);
     singleEvent.update(QP_ORDER, order.toValue());
+    singleEvent.update(QP_COLUMNS, transformColumns(singleEvent.getAsString(QP_COLUMNS)));
 
     return fireQuery(singleEvent);
+  }
 
+  private String transformColumns(String rawQuery) {
+    List<SelectColumn> columns = Arrays.stream(rawQuery.split(COMMA)).map(SelectColumn::fromApiQueryString).collect(Collectors.toList());
+    return columns.stream().map(SelectColumn::getOriginalField).collect(Collectors.joining(COMMA));
   }
 
   private String getSampleField(DataResult result) {

@@ -18,6 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { QueryConfig } from '../../../../models/dataview-dashboard.model';
+import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({
   selector: 'sp-aggregate-configuration',
@@ -27,6 +28,7 @@ import { QueryConfig } from '../../../../models/dataview-dashboard.model';
 export class AggregateConfigurationComponent {
 
   @Input() queryConfig: QueryConfig;
+  @Input() widgetId: string;
 
   availableAggregations = [
     {value: 'ms', label: 'Millisecond'},
@@ -39,7 +41,13 @@ export class AggregateConfigurationComponent {
     {value: 'year', label: 'Year'}
   ];
 
-  constructor() {
+  constructor(private widgetConfigService: WidgetConfigurationService) {
+  }
+
+  triggerDataRefresh() {
+    if (this.widgetId) {
+      this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
+    }
   }
 
 }
