@@ -54,6 +54,8 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   options: IDataViewDashboardConfig;
   loaded = false;
 
+  currentlyConfiguredWidgetId: string;
+
   @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
 
   constructor(private resizeService: ResizeService,
@@ -137,6 +139,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
     this.configureWidgetCallback.emit(configuredWidget);
+    this.currentlyConfiguredWidgetId = configuredWidget._id;
     this.options.api.optionsChanged();
   }
 
@@ -155,6 +158,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   startEditMode(value: DataExplorerWidgetModel) {
     this.startEditModeEmitter.emit(value);
+    this.currentlyConfiguredWidgetId = value._id;
   }
 
 }

@@ -47,6 +47,9 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   @Input()
   gridsterItemComponent: GridsterItemComponent;
 
+  @Input()
+  currentlyConfiguredWidgetId: string;
+
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
