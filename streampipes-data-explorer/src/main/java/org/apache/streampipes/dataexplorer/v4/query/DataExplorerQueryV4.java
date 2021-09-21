@@ -31,14 +31,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class DataExplorerQueryV4 {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataExplorerQueryV4.class);
-    private static final List<String> AGGREGATION_PREFIXES = Arrays.asList("mean_", "first_", "last_", "count_");
 
     protected Map<String, QueryParamsV4> params;
 
@@ -72,10 +70,6 @@ public class DataExplorerQueryV4 {
 
     protected DataResult convertResult(QueryResult.Series series) {
         List<String> columns = series.getColumns();
-//        for (int i = 0; i < columns.size(); i++) {
-//            String replacedColumnName = replacePrefixes(columns.get(i));
-//            columns.set(i, replacedColumnName);
-//        }
         List<List<Object>> values = series.getValues();
 
         List<List<Object>> resultingValues = new ArrayList<>();
@@ -91,15 +85,6 @@ public class DataExplorerQueryV4 {
 
     protected DataResult postQuery(QueryResult result) throws RuntimeException {
         return convertResult(result);
-    }
-
-    private String replacePrefixes(String columnName) {
-        for (String prefix : AGGREGATION_PREFIXES) {
-            if (columnName.startsWith(prefix)) {
-                return columnName.replaceAll(prefix, "");
-            }
-        }
-        return columnName;
     }
 
     protected List<QueryElement<?>> getQueryElements() {
