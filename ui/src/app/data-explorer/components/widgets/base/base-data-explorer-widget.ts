@@ -104,13 +104,6 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     //this.widgetConfigurationService.configurationChangedSubject.unsubscribe();
   }
 
-  // handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
-  //   console.log(addedFields);
-  //   console.log(removedFields);
-  // }
-
-  abstract handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]);
-
   public removeWidget() {
     this.removeWidgetCallback.emit(true);
   }
@@ -176,9 +169,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
                     filterFunction: (field: DataExplorerField) => boolean): DataExplorerField {
     let result = fieldSelection;
     if (removedFields.find(rf => rf.fullDbName === fieldSelection.fullDbName)) {
-      console.log(fieldSelection);
       const existingFields = availableFields.concat(addedFields);
-      console.log(existingFields);
       if (existingFields.length > 0) {
         result = existingFields.find(field => filterFunction(field));
       }
@@ -194,5 +185,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   public abstract onDataReceived(dataResults: DataResult[]);
 
   public abstract onResize(width: number, height: number);
+
+  protected abstract handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]);
 
 }

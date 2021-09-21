@@ -29,6 +29,7 @@ import { DatalakeQueryParameters } from '../../../../core-services/datalake/Data
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -109,5 +110,8 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   }
 
   onDataReceived(dataResults: DataResult[]) {
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
   }
 }
