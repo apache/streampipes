@@ -24,6 +24,8 @@ import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/ge
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
 import { DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
+import { interval, Observable } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -65,6 +67,10 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   title = '';
   widgetLoaded = false;
 
+  msCounter = interval(10);
+  timerActive = false;
+  loadingTime = 0;
+
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               private dialog: MatDialog) {
   }
@@ -93,8 +99,24 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     this.startEditModeEmitter.emit(this.configuredWidget);
   }
 
-
   triggerWidgetEditMode() {
     this.configureWidgetCallback.emit(this.configuredWidget);
+  }
+
+  startLoadingTimer() {
+    this.timerActive = true;
+    interval( 10 )
+        .pipe(takeWhile(() => this.timerActive))
+        .subscribe(value => {
+      this.loadingTime = (value * 10 / 1000);
+    });
+  }
+
+  stopLoadingTimer() {
+    this.timerActive = false;
+  }
+
+  handleTimer(start: boolean) {
+    start ? this.startLoadingTimer() : this.stopLoadingTimer();
   }
 }

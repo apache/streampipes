@@ -152,6 +152,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
     this.configuredWidgets.forEach((value, key) => {
       this.dataViewDataExplorerService.updateWidget(value).subscribe(response => {
         value._rev = response._rev;
+        this.currentlyConfiguredWidgetId = undefined;
       });
     });
   }

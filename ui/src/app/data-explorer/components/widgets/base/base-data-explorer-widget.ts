@@ -48,6 +48,9 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   @Output()
   removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
 
+  @Output()
+  timerCallback: EventEmitter<boolean> = new EventEmitter();
+
   @Input() gridsterItem: GridsterItem;
   @Input() gridsterItemComponent: GridsterItemComponent;
   @Input() editMode: boolean;
@@ -133,10 +136,12 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
             this.timeSettings.endTime,
             this.dataExplorerWidget.dataConfig as DataExplorerDataConfig
         );
+    this.timerCallback.emit(true);
     zip(...observables).subscribe(results => {
       results.forEach((result, index) => result.sourceIndex = index);
       this.onDataReceived(results);
       this.refreshView();
+      this.timerCallback.emit(false);
     });
   }
 

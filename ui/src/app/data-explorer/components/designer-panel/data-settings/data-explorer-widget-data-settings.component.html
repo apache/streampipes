@@ -71,7 +71,7 @@
                         <span class="data-explorer-header">Query </span>
                         <mat-radio-group
                                 class="selection-radio-group"
-                                [(ngModel)]="sourceConfig.queryType">
+                                [(ngModel)]="sourceConfig.queryType" (change)="triggerDataRefresh()">
                             <mat-radio-button class="selection-radio-button" [value]="'raw'">Raw
                             </mat-radio-button>
                             <mat-radio-button class="selection-radio-button" [value]="'aggregated'">Aggregated
@@ -85,14 +85,14 @@
                             <mat-label>
                                 <span>&nbsp;Limit</span>
                             </mat-label>
-                            <input [(ngModel)]="sourceConfig.queryConfig.limit" matInput>
+                            <input [(ngModel)]="sourceConfig.queryConfig.limit" matInput (change)="triggerDataRefresh()">
                         </mat-form-field>
 
                         <mat-form-field fxFlex="100" color="accent">
                             <mat-label>
                                 <span>&nbsp;Page</span>
                             </mat-label>
-                            <input [(ngModel)]="sourceConfig.queryConfig.page" matInput>
+                            <input [(ngModel)]="sourceConfig.queryConfig.page" matInput (change)="triggerDataRefresh()">
                         </mat-form-field>
                     </div>
                     <div fxLayout="column" fxFlex="100"

@@ -32,15 +32,15 @@
         </mat-drawer>
         <mat-drawer-content class="h-100 dashboard-grid">
             <sp-data-explorer-dashboard-grid
-							#dashboardGrid
-              [editMode]="editMode"
-              [dashboard]="dashboard"
-              [timeSettings]="timeSettings"
-              (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
-              (updateCallback)="updateAndQueueItemForDeletion($event)"
-              (deleteCallback)="removeAndQueueItemForDeletion($event)"
-              (startEditModeEmitter)="startEditMode($event)"
-              class="h-100 dashboard-grid"></sp-data-explorer-dashboard-grid>
+                #dashboardGrid
+                [editMode]="editMode"
+                [dashboard]="dashboard"
+                [timeSettings]="timeSettings"
+                (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
+                (updateCallback)="updateAndQueueItemForDeletion($event)"
+                (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                (startEditModeEmitter)="startEditMode($event)"
+                class="h-100 dashboard-grid"></sp-data-explorer-dashboard-grid>
         </mat-drawer-content>
     </mat-drawer-container>
 </div>

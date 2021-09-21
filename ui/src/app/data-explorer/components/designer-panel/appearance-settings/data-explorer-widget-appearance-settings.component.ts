@@ -41,6 +41,9 @@ export class DataExplorerWidgetAppearanceSettingsComponent implements OnInit {
     if (!this.baseAppearanceConfig.backgroundColor) {
       this.baseAppearanceConfig.backgroundColor = '#FFFFFF';
     }
+    if (!this.baseAppearanceConfig.textColor) {
+      this.baseAppearanceConfig.textColor = '#3e3e3e';
+    }
   }
 
   triggerViewUpdate() {

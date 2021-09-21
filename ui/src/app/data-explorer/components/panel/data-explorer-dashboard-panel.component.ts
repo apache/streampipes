@@ -55,6 +55,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
   currentlyConfiguredWidget: DataExplorerWidgetModel;
+  currentlyConfiguredWidgetId: string;
   dataLakeMeasure: DataLakeMeasure;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
