@@ -32,7 +32,7 @@
     <div fxLayout="column" class="field-scroll-panel">
         <div fxLayout="column"
              *ngFor="let field of sourceConfig.queryConfig.fields">
-            <sp-field-selection [field]="field" [sourceConfig]="sourceConfig">
+            <sp-field-selection [field]="field" [sourceConfig]="sourceConfig" [widgetId]="widgetId">
             </sp-field-selection>
         </div>
     </div>

@@ -26,6 +26,7 @@ import { WidgetConfigurationService } from '../../../services/widget-configurati
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -272,5 +273,16 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     dataResults.forEach((result, index) => {
       this.processNonGroupedData(result, index);
     });
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[],
+                      removedFields: DataExplorerField[]) {
+    this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties =
+        this.updateFieldSelection(
+            this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties,
+            addedFields,
+            removedFields,
+            (field) => field.fieldCharacteristics.numeric
+        );
   }
 }

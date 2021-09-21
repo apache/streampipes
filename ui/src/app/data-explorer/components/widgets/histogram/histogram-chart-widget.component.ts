@@ -25,6 +25,7 @@ import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-histogram-chart-widget',
@@ -100,6 +101,23 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
 
   onDataReceived(dataResults: DataResult[]) {
     this.prepareData(dataResults[0]);
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
+    this.dataExplorerWidget.visualizationConfig.selectedProperty =
+        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.selectedProperty, addedFields, removedFields);
+  }
+
+  triggerFieldUpdate(selected: DataExplorerField,
+                     addedFields: DataExplorerField[],
+                     removedFields: DataExplorerField[]): DataExplorerField {
+    return this.updateSingleField(
+        selected,
+        this.fieldProvider.allFields,
+        addedFields,
+        removedFields,
+        (field) => true
+    );
   }
 
 

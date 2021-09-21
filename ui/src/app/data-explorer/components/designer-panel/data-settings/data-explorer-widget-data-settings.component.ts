@@ -35,6 +35,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   @Input() dataConfig: DataExplorerDataConfig;
   @Input() dataLakeMeasure: DataLakeMeasure;
   @Input() newWidgetMode: boolean;
+  @Input() widgetId: string;
 
   @Output() createWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
     new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();

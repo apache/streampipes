@@ -65,11 +65,13 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   fieldProvider: FieldProvider;
 
+
   protected constructor(protected dataLakeRestService: DatalakeRestService,
                         protected widgetConfigurationService: WidgetConfigurationService,
                         protected resizeService: ResizeService,
                         protected dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-                        public fieldService: DataExplorerFieldProviderService) { }
+                        public fieldService: DataExplorerFieldProviderService) {
+  }
 
   ngOnInit(): void {
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
@@ -77,7 +79,11 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
       if (refreshMessage.widgetId === this.dataExplorerWidget._id) {
         if (refreshMessage.refreshData) {
+          const newFieldsProvider = this.fieldService.generateFieldLists(sourceConfigs);
+          const addedFields = this.fieldService.getAddedFields(this.fieldProvider.allFields, newFieldsProvider.allFields);
+          const removedFields = this.fieldService.getRemovedFields(this.fieldProvider.allFields, newFieldsProvider.allFields);
           this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
+          this.handleUpdatedFields(addedFields, removedFields);
           this.updateData();
         }
 
@@ -97,6 +103,13 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   ngOnDestroy(): void {
     //this.widgetConfigurationService.configurationChangedSubject.unsubscribe();
   }
+
+  // handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
+  //   console.log(addedFields);
+  //   console.log(removedFields);
+  // }
+
+  abstract handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]);
 
   public removeWidget() {
     this.removeWidgetCallback.emit(true);
@@ -141,6 +154,37 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   getColumnIndex(field: DataExplorerField,
                  data: DataResult) {
     return data.headers.indexOf(field.fullDbName);
+  }
+
+  protected updateFieldSelection(fieldSelection: DataExplorerField[],
+                       addedFields: DataExplorerField[],
+                       removedFields: DataExplorerField[],
+                       filterFunction: (field: DataExplorerField) => boolean): DataExplorerField[] {
+    const fields = fieldSelection.filter(field => !(removedFields.find(rm => rm.fullDbName === field.fullDbName)));
+    addedFields.forEach(field => {
+      if (filterFunction(field)) {
+        fields.push(field);
+      }
+    });
+    return fields;
+  }
+
+  protected updateSingleField(fieldSelection: DataExplorerField,
+                    availableFields: DataExplorerField[],
+                    addedFields: DataExplorerField[],
+                    removedFields: DataExplorerField[],
+                    filterFunction: (field: DataExplorerField) => boolean): DataExplorerField {
+    let result = fieldSelection;
+    if (removedFields.find(rf => rf.fullDbName === fieldSelection.fullDbName)) {
+      console.log(fieldSelection);
+      const existingFields = availableFields.concat(addedFields);
+      console.log(existingFields);
+      if (existingFields.length > 0) {
+        result = existingFields.find(field => filterFunction(field));
+      }
+    }
+
+    return result;
   }
 
   public abstract refreshView();

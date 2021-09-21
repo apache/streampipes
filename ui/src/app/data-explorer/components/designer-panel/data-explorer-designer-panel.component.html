@@ -43,6 +43,7 @@
                     <sp-data-explorer-widget-data-settings [(dataLakeMeasure)]="dataLakeMeasure"
                                                            [dataConfig]="currentlyConfiguredWidget.dataConfig"
                                                            [newWidgetMode]="newWidgetMode"
+                                                           [widgetId]="currentlyConfiguredWidget._id"
                                                            (createWidgetEmitter)="createNewWidget()">
                     </sp-data-explorer-widget-data-settings>
                 </div>

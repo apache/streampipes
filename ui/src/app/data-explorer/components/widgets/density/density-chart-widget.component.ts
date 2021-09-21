@@ -25,6 +25,7 @@ import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DensityChartWidgetModel } from './model/density-chart-widget.model';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-density-chart-widget',
@@ -130,6 +131,26 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
   onDataReceived(dataResults: DataResult[]) {
     this.prepareData(dataResults[0]);
     this.updateAppearance();
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
+    this.dataExplorerWidget.visualizationConfig.firstField =
+        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.firstField, addedFields, removedFields);
+
+    this.dataExplorerWidget.visualizationConfig.secondField =
+        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.secondField, addedFields, removedFields);
+  }
+
+  triggerFieldUpdate(selected: DataExplorerField,
+                     addedFields: DataExplorerField[],
+                     removedFields: DataExplorerField[]): DataExplorerField {
+    return this.updateSingleField(
+        selected,
+        this.fieldProvider.numericFields,
+        addedFields,
+        removedFields,
+        (field) => field.fieldCharacteristics.numeric
+    );
   }
 
 }

@@ -40,12 +40,20 @@ export interface RefreshMessage {
   refreshView: boolean;
 }
 
+export interface DataExplorerFieldCharacteristics {
+  dimension: boolean;
+  numeric: boolean;
+  binary: boolean;
+  semanticTypes: string[];
+}
+
 export interface DataExplorerField {
   runtimeName: string;
   aggregation?: string;
   measure: string;
   fullDbName: string;
   sourceIndex: number;
+  fieldCharacteristics: DataExplorerFieldCharacteristics;
 }
 
 export interface FieldConfig {

@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="row" fxLayoutAlign="start center">
-    <mat-checkbox color="accent" [(ngModel)]="field.selected">
+    <mat-checkbox color="accent" [(ngModel)]="field.selected" (change)="triggerConfigurationUpdate()">
         {{field.runtimeName}}
     </mat-checkbox>
     <div fxFlex fxLayoutAlign="end center">
@@ -26,7 +26,7 @@
                         floatLabel="never"
                         *ngIf="!(sourceConfig.queryType === 'raw')">
             <mat-label>Aggregation</mat-label>
-            <mat-select disableRipple [(ngModel)]="field.aggregations" multiple>
+            <mat-select disableRipple [(ngModel)]="field.aggregations" multiple (ngModelChange)="triggerConfigurationUpdate()">
                 <mat-option [value]="'MEAN'" *ngIf="field.numeric">
                     <span class="pipeline-name">Mean</span>
                 </mat-option>

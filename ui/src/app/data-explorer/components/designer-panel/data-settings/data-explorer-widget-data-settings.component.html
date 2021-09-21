@@ -109,7 +109,7 @@
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">
-                    <sp-field-selection-panel [sourceConfig]="sourceConfig"></sp-field-selection-panel>
+                    <sp-field-selection-panel [sourceConfig]="sourceConfig" [widgetId]="widgetId"></sp-field-selection-panel>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">

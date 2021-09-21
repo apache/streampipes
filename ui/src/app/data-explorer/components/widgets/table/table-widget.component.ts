@@ -27,6 +27,7 @@ import { WidgetConfigurationService } from '../../../services/widget-configurati
 import { ResizeService } from '../../../services/resize.service';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-table-widget',
@@ -51,7 +52,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   ngOnInit(): void {
     super.ngOnInit();
     this.dataSource.sort = this.sort;
-    this.columnNames = this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName);
+    this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
   }
 
   transformData(data: DataResult) {
@@ -111,6 +112,18 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   onDataReceived(dataResults: DataResult[]) {
     this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
     this.dataSource.data = [...this.transformData(dataResults[0])];
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[],
+                      removedFields: DataExplorerField[]) {
+    this.dataExplorerWidget.visualizationConfig.selectedColumns =
+        this.updateFieldSelection(
+            this.dataExplorerWidget.visualizationConfig.selectedColumns,
+            addedFields,
+            removedFields,
+            (field) => true
+        );
+    this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
   }
 
 }

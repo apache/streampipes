@@ -25,11 +25,12 @@
 
     <mat-checkbox [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.showDelta">Show delta indicator
     </mat-checkbox>
-
-    <h5 *ngIf="currentlyConfiguredWidget.visualizationConfig.showDelta">Delta Field</h5>
-    <sp-select-property [availableProperties]="fieldProvider.numericFields"
-                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.deltaField"
-                        (changeSelectedProperty)="updateDelta($event)">
-    </sp-select-property>
+    <div *ngIf="currentlyConfiguredWidget.visualizationConfig.showDelta">
+        <h5>Delta Field</h5>
+        <sp-select-property [availableProperties]="fieldProvider.numericFields"
+                            [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.deltaField"
+                            (changeSelectedProperty)="updateDelta($event)">
+        </sp-select-property>
+    </div>
 </div>
 

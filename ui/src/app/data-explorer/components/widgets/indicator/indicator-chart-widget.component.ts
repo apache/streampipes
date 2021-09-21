@@ -25,6 +25,7 @@ import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-indicator-chart-widget',
@@ -114,6 +115,26 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
 
   onDataReceived(dataResults: DataResult[]) {
     this.prepareData(dataResults[0]);
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
+    this.dataExplorerWidget.visualizationConfig.valueField =
+          this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.valueField, addedFields, removedFields);
+
+    this.dataExplorerWidget.visualizationConfig.deltaField =
+        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.deltaField, addedFields, removedFields);
+  }
+
+  triggerFieldUpdate(selected: DataExplorerField,
+                     addedFields: DataExplorerField[],
+                     removedFields: DataExplorerField[]): DataExplorerField {
+    return this.updateSingleField(
+        selected,
+        this.fieldProvider.numericFields,
+        addedFields,
+        removedFields,
+        (field) => field.fieldCharacteristics.numeric
+    );
   }
 
 }

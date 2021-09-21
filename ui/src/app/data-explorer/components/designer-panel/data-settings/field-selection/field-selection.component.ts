@@ -19,6 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FieldConfig, SourceConfig } from '../../../../models/dataview-dashboard.model';
 import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({
   selector: 'sp-field-selection',
@@ -29,15 +30,20 @@ export class FieldSelectionComponent implements OnInit {
 
   @Input() field: FieldConfig;
   @Input() sourceConfig: SourceConfig;
+  @Input() widgetId: string;
 
   @Output() addFieldEmitter: EventEmitter<EventPropertyUnion> = new EventEmitter<EventPropertyUnion>();
 
-  constructor() {}
+  constructor(private widgetConfigService: WidgetConfigurationService) {}
 
   ngOnInit() {
     if (!this.field.aggregations) {
       this.field.aggregations = [];
     }
+  }
+
+  triggerConfigurationUpdate() {
+    this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
   }
 
 }

@@ -20,6 +20,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FieldConfig, SourceConfig } from '../../../../models/dataview-dashboard.model';
 import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({
   selector: 'sp-field-selection-panel',
@@ -29,8 +30,10 @@ import { DataExplorerFieldProviderService } from '../../../../services/data-expl
 export class FieldSelectionPanelComponent implements OnInit {
 
   @Input() sourceConfig: SourceConfig;
+  @Input() widgetId: string;
 
-  constructor(private fieldProvider: DataExplorerFieldProviderService) {}
+  constructor(private fieldProvider: DataExplorerFieldProviderService,
+              private widgetConfigService: WidgetConfigurationService) {}
 
   ngOnInit() {
     this.applyDefaultFields();
@@ -58,6 +61,7 @@ export class FieldSelectionPanelComponent implements OnInit {
 
   selectFields(selected: boolean) {
     this.sourceConfig.queryConfig.fields.forEach(field => field.selected = selected);
+    this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
   }
 
   addField(property: EventPropertyUnion) {

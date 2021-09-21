@@ -25,6 +25,7 @@ import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { PieChartWidgetModel } from './model/pie-chart-widget.model';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-pie-chart-widget',
@@ -118,9 +119,25 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
   }
 
   onDataReceived(dataResults: DataResult[]) {
-    console.log(this.dataExplorerWidget);
-    console.log(dataResults);
     this.prepareData(dataResults);
+  }
+
+  handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
+    this.dataExplorerWidget.visualizationConfig.selectedProperty =
+        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.selectedProperty, addedFields, removedFields);
+
+  }
+
+  triggerFieldUpdate(selected: DataExplorerField,
+                     addedFields: DataExplorerField[],
+                     removedFields: DataExplorerField[]): DataExplorerField {
+    return this.updateSingleField(
+        selected,
+        this.fieldProvider.numericFields,
+        addedFields,
+        removedFields,
+        (field) => field.fieldCharacteristics.numeric
+    );
   }
 
 }

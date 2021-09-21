@@ -85,17 +85,23 @@ export class DataExplorerFieldProviderService {
       measure,
       aggregation,
       fullDbName: this.makeFullDbName(fieldConfig, aggregation),
-      sourceIndex
+      sourceIndex,
+      fieldCharacteristics: {
+        dimension: this.isDimensionProperty(property),
+        numeric: this.isNumber(property) || aggregation === 'COUNT',
+        binary: this.isBoolean(property),
+        semanticTypes: property.domainProperties
+      }
     };
     provider.allFields.push(field);
 
-    if (this.isNumber(property) || aggregation === 'COUNT') {
+    if (field.fieldCharacteristics.numeric) {
       provider.numericFields.push(field);
     } else {
       provider.nonNumericFields.push(field);
     }
 
-    if (this.isBoolean(property)) {
+    if (field.fieldCharacteristics.binary) {
       provider.booleanFields.push(field);
     }
 
@@ -103,7 +109,7 @@ export class DataExplorerFieldProviderService {
       provider.primaryTimestampField = field;
     }
 
-    if (this.isDimensionProperty(property)) {
+    if (field.fieldCharacteristics.dimension) {
       provider.dimensionFields.push(field);
     }
   }
@@ -122,6 +128,18 @@ export class DataExplorerFieldProviderService {
 
   public isTimestamp(p: EventProperty) {
     return p.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
+  }
+
+  public getAddedFields(currentFields: DataExplorerField[], newFields: DataExplorerField[]): DataExplorerField[] {
+    return this.getMissingFields(newFields, currentFields);
+  }
+
+  public getRemovedFields(currentFields: DataExplorerField[], newFields: DataExplorerField[]): DataExplorerField[] {
+    return this.getMissingFields(currentFields, newFields);
+  }
+
+  public getMissingFields(origin: DataExplorerField[], target: DataExplorerField[]): DataExplorerField[] {
+    return origin.filter(field => !(target.find(newField => newField.fullDbName === field.fullDbName)));
   }
 
   isNumber(p: EventPropertyUnion): boolean {
