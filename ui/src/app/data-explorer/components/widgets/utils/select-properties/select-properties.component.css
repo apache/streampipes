@@ -19,3 +19,10 @@
 /deep/ .mat-form-field-wrapper {
     padding-bottom: 0em;
 }
+
+.field-scroll-panel {
+    max-height: 200px;
+    overflow-y:auto;
+    overflow-x: hidden;
+}
+

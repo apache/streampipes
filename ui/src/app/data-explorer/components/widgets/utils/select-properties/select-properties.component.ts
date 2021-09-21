@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 
 @Component({
@@ -24,7 +24,7 @@ import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
   templateUrl: './select-properties.component.html',
   styleUrls: ['./select-properties.component.css']
 })
-export class SelectPropertiesComponent {
+export class SelectPropertiesComponent implements OnInit {
 
   @Output() changeSelectedProperties: EventEmitter<DataExplorerField[]> = new EventEmitter();
 
@@ -35,12 +35,40 @@ export class SelectPropertiesComponent {
 
   constructor() { }
 
-  triggerSelectedProperties(fields: DataExplorerField[]) {
-    this.changeSelectedProperties.emit(fields);
+  ngOnInit(): void {
+    if (!this.selectedProperties) {
+      this.selectedProperties = [];
+    }
   }
 
-  compare(available: DataExplorerField, selected: DataExplorerField) {
-    return (available.fullDbName === selected.fullDbName);
+  triggerSelectedProperties() {
+    this.changeSelectedProperties.emit(this.selectedProperties);
+  }
+
+  selectAllFields() {
+    this.selectFields(true);
+  }
+
+  deselectAllFields() {
+    this.selectFields(false);
+  }
+
+  selectFields(selected: boolean) {
+    this.selectedProperties = selected ? this.availableProperties : [];
+    this.triggerSelectedProperties();
+  }
+
+  isSelected(field: DataExplorerField): boolean {
+    return this.selectedProperties.find(sp => sp.fullDbName === field.fullDbName) !== undefined;
+  }
+
+  toggleFieldSelection(field: DataExplorerField) {
+    if (this.isSelected(field)) {
+      this.selectedProperties = this.selectedProperties.filter(sp => !(sp.fullDbName === field.fullDbName));
+    } else {
+      this.selectedProperties.push(field);
+    }
+    this.triggerSelectedProperties();
   }
 
 }
