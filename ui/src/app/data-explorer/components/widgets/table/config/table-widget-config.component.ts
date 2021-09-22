@@ -19,16 +19,17 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { TableWidgetModel } from '../model/table-widget.model';
+import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
   selector: 'sp-data-explorer-table-widget-config',
   templateUrl: './table-widget-config.component.html',
   styleUrls: ['./table-widget-config.component.scss']
 })
-export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetModel> implements OnInit {
+export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetModel, TableVisConfig> implements OnInit {
 
   constructor(widgetConfigurationService: WidgetConfigurationService,
               fieldService: DataExplorerFieldProviderService) {
@@ -37,15 +38,6 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
 
   ngOnInit(): void {
     super.onInit();
-    if (!this.currentlyConfiguredWidget.visualizationConfig) {
-      this.currentlyConfiguredWidget.visualizationConfig = {} as any;
-    }
-    if (!this.currentlyConfiguredWidget.visualizationConfig.selectedColumns) {
-      // Reduce selected columns when more then 6
-      this.currentlyConfiguredWidget.visualizationConfig.selectedColumns = this.fieldProvider.allFields.length > 6 ?
-          this.fieldProvider.allFields.slice(0, 5) : this.fieldProvider.allFields;
-      this.triggerDataRefresh();
-    }
   }
 
   onFilterChange(searchValue: string): void {
@@ -62,5 +54,16 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
   protected updateWidgetConfigOptions() {
   }
 
+  protected getWidgetType(): WidgetType {
+    return WidgetType.Table;
+  }
 
+  protected initWidgetConfig(): TableVisConfig {
+    return {
+      forType: this.getWidgetType(),
+      selectedColumns : this.fieldProvider.allFields.length > 6 ?
+          this.fieldProvider.allFields.slice(0, 5) : this.fieldProvider.allFields,
+      searchValue: ''
+    };
+  }
 }

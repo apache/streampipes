@@ -18,13 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { ResizeService } from '../../../services/resize.service';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { PieChartWidgetModel } from './model/pie-chart-widget.model';
-import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
@@ -59,14 +54,6 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
       responsive: true
     }
   };
-
-  constructor(dataLakeRestService: DatalakeRestService,
-              widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService,
-              queryGenerator: DataViewQueryGeneratorService,
-              fieldProvider: DataExplorerFieldProviderService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService, queryGenerator, fieldProvider);
-  }
 
   refreshView() {
     this.updateAppearance();

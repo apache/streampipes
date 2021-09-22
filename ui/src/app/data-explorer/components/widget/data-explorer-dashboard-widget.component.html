@@ -51,93 +51,96 @@
                 </mat-menu>
             </div>
         </div>
-        <div class="widget-content p-0 gridster-item-content ml-0 mr-0">
-            <div *ngIf="widgetLoaded" class="h-100">
-                <div *ngIf="configuredWidget.widgetType === 'table'" class="h-100 p-0">
-                    <sp-data-explorer-table-widget
-                            (removeWidgetCallback)="removeWidget()"
-                            [timeSettings]="timeSettings"
-                            [gridsterItem]="dashboardItem"
-                            [gridsterItemComponent]="gridsterItemComponent"
-                            [editMode]="editMode"
-                            [dataViewDashboardItem]="dashboardItem"
-                            [dataExplorerWidget]="configuredWidget"
-                            class="h-100">
-                    </sp-data-explorer-table-widget>
-                </div>
-                <div *ngIf="configuredWidget.widgetType === 'line-chart'" class="h-100 p-0">
-                    <sp-data-explorer-line-chart-widget
-                            (removeWidgetCallback)="removeWidget()"
-                            (timerCallback)="handleTimer($event)"
-                            [timeSettings]="timeSettings"
-                            [gridsterItem]="dashboardItem"
-                            [gridsterItemComponent]="gridsterItemComponent"
-                            [editMode]="editMode"
-                            [dataViewDashboardItem]="dashboardItem"
-                            [dataExplorerWidget]="configuredWidget"
-                            class="h-100">
-                    </sp-data-explorer-line-chart-widget>
-                </div>
-                <div *ngIf="configuredWidget.widgetType === 'image'" class="h-100 p-0">
-                    <sp-data-explorer-image-widget
-                            (removeWidgetCallback)="removeWidget()"
-                            [timeSettings]="timeSettings"
-                            [gridsterItem]="dashboardItem"
-                            [gridsterItemComponent]="gridsterItemComponent"
-                            [editMode]="editMode"
-                            [dataViewDashboardItem]="dashboardItem"
-                            [dataExplorerWidget]="configuredWidget"
-                            class="h-100"></sp-data-explorer-image-widget>
-                </div>
-                <div *ngIf="configuredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">
-                    <sp-data-explorer-indicator-chart-widget
-                            (removeWidgetCallback)="removeWidget()"
-                            [timeSettings]="timeSettings"
-                            [gridsterItem]="dashboardItem"
-                            [gridsterItemComponent]="gridsterItemComponent"
-                            [editMode]="editMode"
-                            [dataViewDashboardItem]="dashboardItem"
-                            [dataExplorerWidget]="configuredWidget"
-                            class="h-100">
-                    </sp-data-explorer-indicator-chart-widget>
-                </div>
-                <div *ngIf="configuredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">
-                    <sp-data-explorer-histogram-chart-widget
-                            (removeWidgetCallback)="removeWidget()"
-                            [timeSettings]="timeSettings"
-                            [gridsterItem]="dashboardItem"
-                            [gridsterItemComponent]="gridsterItemComponent"
-                            [editMode]="editMode"
-                            [dataViewDashboardItem]="dashboardItem"
-                            [dataExplorerWidget]="configuredWidget"
-                            class="h-100">
-                    </sp-data-explorer-histogram-chart-widget>
-                </div>
-                <div *ngIf="configuredWidget.widgetType === 'density-chart'" class="h-100 p-0">
-                    <sp-data-explorer-density-chart-widget
-                            (removeWidgetCallback)="removeWidget()"
-                            [timeSettings]="timeSettings"
-                            [gridsterItem]="dashboardItem"
-                            [gridsterItemComponent]="gridsterItemComponent"
-                            [editMode]="editMode"
-                            [dataViewDashboardItem]="dashboardItem"
-                            [dataExplorerWidget]="configuredWidget"
-                            class="h-100">
-                    </sp-data-explorer-density-chart-widget>
-                </div>
-                <div *ngIf="configuredWidget.widgetType === 'pie-chart'" class="h-100 p-0">
-                    <sp-data-explorer-pie-chart-widget
-                            (removeWidgetCallback)="removeWidget()"
-                            [timeSettings]="timeSettings"
-                            [gridsterItem]="dashboardItem"
-                            [gridsterItemComponent]="gridsterItemComponent"
-                            [editMode]="editMode"
-                            [dataViewDashboardItem]="dashboardItem"
-                            [dataExplorerWidget]="configuredWidget"
-                            class="h-100">
-                    </sp-data-explorer-pie-chart-widget>
-                </div>
-            </div>
+        <div class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100">
+            <ng-template widgetHost class="h-100 p-0"></ng-template>
+<!--            <div *ngIf="widgetLoaded" class="h-100">-->
+
+<!--                <div *ngIf="configuredWidget.widgetType === 'table'" class="h-100 p-0">-->
+<!--                    <sp-data-explorer-table-widget-->
+<!--                            (removeWidgetCallback)="removeWidget()"-->
+<!--                            (timerCallback)="handleTimer($event)"-->
+<!--                            [timeSettings]="timeSettings"-->
+<!--                            [gridsterItem]="dashboardItem"-->
+<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
+<!--                            [editMode]="editMode"-->
+<!--                            [dataViewDashboardItem]="dashboardItem"-->
+<!--                            [dataExplorerWidget]="configuredWidget"-->
+<!--                            class="h-100">-->
+<!--                    </sp-data-explorer-table-widget>-->
+<!--                </div>-->
+<!--                <div *ngIf="configuredWidget.widgetType === 'line-chart'" class="h-100 p-0">-->
+<!--                    <sp-data-explorer-line-chart-widget-->
+<!--                            (removeWidgetCallback)="removeWidget()"-->
+<!--                            (timerCallback)="handleTimer($event)"-->
+<!--                            [timeSettings]="timeSettings"-->
+<!--                            [gridsterItem]="dashboardItem"-->
+<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
+<!--                            [editMode]="editMode"-->
+<!--                            [dataViewDashboardItem]="dashboardItem"-->
+<!--                            [dataExplorerWidget]="configuredWidget"-->
+<!--                            class="h-100">-->
+<!--                    </sp-data-explorer-line-chart-widget>-->
+<!--                </div>-->
+<!--                <div *ngIf="configuredWidget.widgetType === 'image'" class="h-100 p-0">-->
+<!--                    <sp-data-explorer-image-widget-->
+<!--                            (removeWidgetCallback)="removeWidget()"-->
+<!--                            [timeSettings]="timeSettings"-->
+<!--                            [gridsterItem]="dashboardItem"-->
+<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
+<!--                            [editMode]="editMode"-->
+<!--                            [dataViewDashboardItem]="dashboardItem"-->
+<!--                            [dataExplorerWidget]="configuredWidget"-->
+<!--                            class="h-100"></sp-data-explorer-image-widget>-->
+<!--                </div>-->
+<!--                <div *ngIf="configuredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">-->
+<!--                    <sp-data-explorer-indicator-chart-widget-->
+<!--                            (removeWidgetCallback)="removeWidget()"-->
+<!--                            [timeSettings]="timeSettings"-->
+<!--                            [gridsterItem]="dashboardItem"-->
+<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
+<!--                            [editMode]="editMode"-->
+<!--                            [dataViewDashboardItem]="dashboardItem"-->
+<!--                            [dataExplorerWidget]="configuredWidget"-->
+<!--                            class="h-100">-->
+<!--                    </sp-data-explorer-indicator-chart-widget>-->
+<!--                </div>-->
+<!--                <div *ngIf="configuredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">-->
+<!--                    <sp-data-explorer-histogram-chart-widget-->
+<!--                            (removeWidgetCallback)="removeWidget()"-->
+<!--                            [timeSettings]="timeSettings"-->
+<!--                            [gridsterItem]="dashboardItem"-->
+<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
+<!--                            [editMode]="editMode"-->
+<!--                            [dataViewDashboardItem]="dashboardItem"-->
+<!--                            [dataExplorerWidget]="configuredWidget"-->
+<!--                            class="h-100">-->
+<!--                    </sp-data-explorer-histogram-chart-widget>-->
+<!--                </div>-->
+<!--                <div *ngIf="configuredWidget.widgetType === 'density-chart'" class="h-100 p-0">-->
+<!--                    <sp-data-explorer-density-chart-widget-->
+<!--                            (removeWidgetCallback)="removeWidget()"-->
+<!--                            [timeSettings]="timeSettings"-->
+<!--                            [gridsterItem]="dashboardItem"-->
+<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
+<!--                            [editMode]="editMode"-->
+<!--                            [dataViewDashboardItem]="dashboardItem"-->
+<!--                            [dataExplorerWidget]="configuredWidget"-->
+<!--                            class="h-100">-->
+<!--                    </sp-data-explorer-density-chart-widget>-->
+<!--                </div>-->
+<!--                <div *ngIf="configuredWidget.widgetType === 'pie-chart'" class="h-100 p-0">-->
+<!--                    <sp-data-explorer-pie-chart-widget-->
+<!--                            (removeWidgetCallback)="removeWidget()"-->
+<!--                            [timeSettings]="timeSettings"-->
+<!--                            [gridsterItem]="dashboardItem"-->
+<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
+<!--                            [editMode]="editMode"-->
+<!--                            [dataViewDashboardItem]="dashboardItem"-->
+<!--                            [dataExplorerWidget]="configuredWidget"-->
+<!--                            class="h-100">-->
+<!--                    </sp-data-explorer-pie-chart-widget>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
 </div>

@@ -18,19 +18,22 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { IndicatorChartWidgetModel } from '../model/indicator-chart-widget.model';
+import {
+  IndicatorChartVisConfig,
+  IndicatorChartWidgetModel
+} from '../model/indicator-chart-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
   selector: 'sp-data-explorer-indicator-chart-widget-config',
   templateUrl: './indicator-chart-widget-config.component.html',
   styleUrls: ['./indicator-chart-widget-config.component.scss']
 })
-export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<IndicatorChartWidgetModel> implements OnInit {
+export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<IndicatorChartWidgetModel, IndicatorChartVisConfig> implements OnInit {
 
   ngOnInit(): void {
     super.onInit();
-    this.updateWidgetConfigOptions();
   }
 
   updateValue(field: DataExplorerField) {
@@ -43,10 +46,16 @@ export class IndicatorWidgetConfigComponent extends BaseWidgetConfig<IndicatorCh
     this.triggerDataRefresh();
   }
 
-  protected updateWidgetConfigOptions() {
-    if (!this.currentlyConfiguredWidget.visualizationConfig) {
-      this.currentlyConfiguredWidget.visualizationConfig = {};
-    }
+  protected getWidgetType(): WidgetType {
+    return WidgetType.IndicatorChart;
+  }
+
+  protected initWidgetConfig(): IndicatorChartVisConfig {
+    return {
+      forType: this.getWidgetType(),
+      valueField: this.fieldProvider.numericFields.length > 0 ? this.fieldProvider.numericFields[0] : undefined,
+      showDelta: false
+    };
   }
 
 }

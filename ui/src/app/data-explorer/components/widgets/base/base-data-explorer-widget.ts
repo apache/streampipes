@@ -19,12 +19,11 @@
 import {
   Directive,
   EventEmitter,
+  HostBinding,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  Output,
-  SimpleChanges
+  Output
 } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DataExplorerWidgetModel } from '../../../../core-model/gen/streampipes-model';
@@ -39,11 +38,13 @@ import {
   DataExplorerField,
   FieldProvider
 } from '../../../models/dataview-dashboard.model';
-import { zip } from 'rxjs';
+import { Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { BaseWidgetData } from './data-explorer-widget-data';
+import { TimeSelectionService } from '../../../services/time-selection.service';
 
 @Directive()
-export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements OnInit, OnChanges, OnDestroy {
+export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements BaseWidgetData<T>, OnInit, OnDestroy {
 
   @Output()
   removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
@@ -60,6 +61,8 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   @Input() dataViewDashboardItem: DashboardItem;
   @Input() dataExplorerWidget: T;
 
+  @HostBinding('class') className = 'h-100';
+
   public selectedProperties: string[];
 
   public showNoDataInDateRange: boolean;
@@ -68,18 +71,22 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   fieldProvider: FieldProvider;
 
+  widgetConfigurationSub: Subscription;
+  resizeSub: Subscription;
+  timeSelectionSub: Subscription;
 
-  protected constructor(protected dataLakeRestService: DatalakeRestService,
-                        protected widgetConfigurationService: WidgetConfigurationService,
-                        protected resizeService: ResizeService,
-                        protected dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-                        public fieldService: DataExplorerFieldProviderService) {
+  constructor(protected dataLakeRestService: DatalakeRestService,
+              protected widgetConfigurationService: WidgetConfigurationService,
+              protected resizeService: ResizeService,
+              protected dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+              public fieldService: DataExplorerFieldProviderService,
+              protected timeSelectionService: TimeSelectionService) {
   }
 
   ngOnInit(): void {
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
-    this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
+    this.widgetConfigurationSub = this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
       if (refreshMessage.widgetId === this.dataExplorerWidget._id) {
         if (refreshMessage.refreshData) {
           const newFieldsProvider = this.fieldService.generateFieldLists(sourceConfigs);
@@ -95,16 +102,23 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
         }
       }
     });
-    this.resizeService.resizeSubject.subscribe(info => {
+    this.resizeSub = this.resizeService.resizeSubject.subscribe(info => {
       if (info.gridsterItem.id === this.dataExplorerWidget._id) {
         this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
       }
     });
+    this.timeSelectionSub = this.timeSelectionService.timeSelectionChangeSubject.subscribe(ts => {
+      this.timeSettings = ts;
+      this.updateData();
+    });
+    this.updateData();
     this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
   }
 
   ngOnDestroy(): void {
-    //this.widgetConfigurationService.configurationChangedSubject.unsubscribe();
+    this.widgetConfigurationSub.unsubscribe();
+    this.resizeSub.unsubscribe();
+    this.timeSelectionSub.unsubscribe();
   }
 
   public removeWidget() {
@@ -118,13 +132,6 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     this.showNoDataInDateRange = showNoDataInDateRange;
     this.showData = showData;
     this.showIsLoadingData = showIsLoadingData;
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.timeSettings) {
-      this.timeSettings = changes.timeSettings.currentValue;
-    }
-    this.updateData();
   }
 
   public updateData() {
@@ -155,9 +162,9 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   }
 
   protected updateFieldSelection(fieldSelection: DataExplorerField[],
-                       addedFields: DataExplorerField[],
-                       removedFields: DataExplorerField[],
-                       filterFunction: (field: DataExplorerField) => boolean): DataExplorerField[] {
+                                 addedFields: DataExplorerField[],
+                                 removedFields: DataExplorerField[],
+                                 filterFunction: (field: DataExplorerField) => boolean): DataExplorerField[] {
     const fields = fieldSelection.filter(field => !(removedFields.find(rm => rm.fullDbName === field.fullDbName)));
     addedFields.forEach(field => {
       if (filterFunction(field)) {
@@ -168,10 +175,10 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   }
 
   protected updateSingleField(fieldSelection: DataExplorerField,
-                    availableFields: DataExplorerField[],
-                    addedFields: DataExplorerField[],
-                    removedFields: DataExplorerField[],
-                    filterFunction: (field: DataExplorerField) => boolean): DataExplorerField {
+                              availableFields: DataExplorerField[],
+                              addedFields: DataExplorerField[],
+                              removedFields: DataExplorerField[],
+                              filterFunction: (field: DataExplorerField) => boolean): DataExplorerField {
     let result = fieldSelection;
     if (removedFields.find(rf => rf.fullDbName === fieldSelection.fullDbName)) {
       const existingFields = availableFields.concat(addedFields);

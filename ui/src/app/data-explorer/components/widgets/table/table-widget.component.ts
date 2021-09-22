@@ -22,11 +22,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { TableWidgetModel } from './model/table-widget.model';
-import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { ResizeService } from '../../../services/resize.service';
-import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
@@ -40,14 +35,6 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
 
   dataSource = new MatTableDataSource();
   columnNames: string[];
-
-  constructor(dataLakeRestService: DatalakeRestService,
-              widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService,
-              queryGenerator: DataViewQueryGeneratorService,
-              fieldProvider: DataExplorerFieldProviderService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService, queryGenerator, fieldProvider);
-  }
 
   ngOnInit(): void {
     super.ngOnInit();

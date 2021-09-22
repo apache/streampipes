@@ -18,19 +18,22 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { DensityChartWidgetModel } from '../model/density-chart-widget.model';
+import {
+  DensityChartVisConfig,
+  DensityChartWidgetModel
+} from '../model/density-chart-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
   selector: 'sp-data-explorer-density-chart-widget-config',
   templateUrl: './density-chart-widget-config.component.html',
   styleUrls: ['./density-chart-widget-config.component.scss']
 })
-export class DensityWidgetConfigComponent extends BaseWidgetConfig<DensityChartWidgetModel> implements OnInit {
+export class DensityWidgetConfigComponent extends BaseWidgetConfig<DensityChartWidgetModel, DensityChartVisConfig> implements OnInit {
 
   ngOnInit(): void {
     super.onInit();
-    this.updateWidgetConfigOptions();
   }
 
   updateFirstField(selectedField: DataExplorerField) {
@@ -43,13 +46,16 @@ export class DensityWidgetConfigComponent extends BaseWidgetConfig<DensityChartW
     this.triggerDataRefresh();
   }
 
-  protected updateWidgetConfigOptions() {
-    if (!this.currentlyConfiguredWidget.visualizationConfig) {
-      this.currentlyConfiguredWidget.visualizationConfig = {
-        firstField: this.fieldProvider.numericFields[0],
-        secondField: this.fieldProvider.numericFields[1]
-      };
-    }
+  protected getWidgetType(): WidgetType {
+    return WidgetType.DensityChart;
+  }
+
+  protected initWidgetConfig(): DensityChartVisConfig {
+    return {
+      forType: this.getWidgetType(),
+      firstField: this.fieldProvider.numericFields[0],
+      secondField: this.fieldProvider.numericFields[1]
+    };
   }
 
 }

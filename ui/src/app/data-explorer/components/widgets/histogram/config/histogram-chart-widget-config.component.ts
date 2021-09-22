@@ -18,19 +18,22 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { HistogramChartWidgetModel } from '../model/histogram-chart-widget.model';
+import {
+  HistogramChartVisConfig,
+  HistogramChartWidgetModel
+} from '../model/histogram-chart-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
   selector: 'sp-data-explorer-histogram-chart-widget-config',
   templateUrl: './histogram-chart-widget-config.component.html',
   styleUrls: ['./histogram-chart-widget-config.component.scss']
 })
-export class HistogramWidgetConfigComponent extends BaseWidgetConfig<HistogramChartWidgetModel> implements OnInit {
+export class HistogramWidgetConfigComponent extends BaseWidgetConfig<HistogramChartWidgetModel, HistogramChartVisConfig> implements OnInit {
 
   ngOnInit(): void {
     super.onInit();
-    this.updateWidgetConfigOptions();
   }
 
   setSelectedProperties(field: DataExplorerField) {
@@ -38,12 +41,15 @@ export class HistogramWidgetConfigComponent extends BaseWidgetConfig<HistogramCh
     this.triggerDataRefresh();
   }
 
-  protected updateWidgetConfigOptions() {
-    if (!this.currentlyConfiguredWidget.visualizationConfig) {
-      this.currentlyConfiguredWidget.visualizationConfig = {
-        selectedProperty: this.fieldProvider.allFields[0]
-      };
-    }
+  protected getWidgetType(): WidgetType {
+    return WidgetType.HistogramChart;
+  }
+
+  protected initWidgetConfig(): HistogramChartVisConfig {
+    return {
+      forType: this.getWidgetType(),
+      selectedProperty: this.fieldProvider.allFields[0]
+    };
   }
 
 }

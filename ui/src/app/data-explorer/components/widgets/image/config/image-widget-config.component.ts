@@ -18,20 +18,28 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { ImageWidgetModel } from '../model/image-widget.model';
+import { ImageWidgetModel, ImageWidgetVisConfig } from '../model/image-widget.model';
+import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
   selector: 'sp-data-explorer-image-widget-config',
   templateUrl: './image-widget-config.component.html',
   styleUrls: ['./image-widget-config.component.scss']
 })
-export class ImageWidgetConfigComponent extends BaseWidgetConfig<ImageWidgetModel> implements OnInit {
-
+export class ImageWidgetConfigComponent extends BaseWidgetConfig<ImageWidgetModel, ImageWidgetVisConfig> implements OnInit {
 
   ngOnInit(): void {
   }
 
-  protected updateWidgetConfigOptions() {
+  protected getWidgetType(): WidgetType {
+    return WidgetType.Image;
+  }
+
+  protected initWidgetConfig(): ImageWidgetVisConfig {
+    return {
+      forType: this.getWidgetType(),
+      selectedField: this.fieldProvider.allFields[0]
+    };
   }
 
 }

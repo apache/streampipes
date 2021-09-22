@@ -16,19 +16,21 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
-import {
-  DataExplorerDataConfig,
-  DataExplorerField,
-  DataExplorerVisConfig
-} from '../../../../models/dataview-dashboard.model';
+import { EventEmitter } from '@angular/core';
+import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
+import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
+import { DataExplorerWidgetModel } from '../../../../core-model/gen/streampipes-model';
 
+export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
+  removeWidgetCallback: EventEmitter<boolean>;
+  timerCallback: EventEmitter<boolean>;
 
-export interface PieChartVisConfig extends DataExplorerVisConfig {
-  selectedProperty: DataExplorerField;
-}
+  gridsterItem: GridsterItem;
+  gridsterItemComponent: GridsterItemComponent;
+  editMode: boolean;
 
-export interface PieChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: PieChartVisConfig;
+  timeSettings: TimeSettings;
+
+  dataViewDashboardItem: DashboardItem;
+  dataExplorerWidget: T;
 }

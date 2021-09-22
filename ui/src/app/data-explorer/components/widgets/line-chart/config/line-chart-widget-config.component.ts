@@ -18,18 +18,19 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { LineChartWidgetModel } from '../model/line-chart-widget.model';
+import { LineCartVisConfig, LineChartWidgetModel } from '../model/line-chart-widget.model';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget-config',
   templateUrl: './line-chart-widget-config.component.html',
   styleUrls: ['./line-chart-widget-config.component.scss']
 })
-export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWidgetModel> implements OnInit {
+export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWidgetModel, LineCartVisConfig> implements OnInit {
 
   constructor(widgetConfigurationService: WidgetConfigurationService,
               fieldService: DataExplorerFieldProviderService) {
@@ -37,7 +38,7 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
   }
 
   ngOnInit(): void {
-    this.updateWidgetConfigOptions();
+   super.onInit();
   }
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
@@ -67,15 +68,19 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
     // this.triggerViewRefresh();
   }
 
-  protected updateWidgetConfigOptions() {
-    if (!this.currentlyConfiguredWidget.visualizationConfig) {
-      this.currentlyConfiguredWidget.visualizationConfig = {
-        yKeys: [],
-        chartMode: 'lines',
-        selectedLineChartProperties: this.fieldProvider.numericFields.length > 6 ?
-            this.fieldProvider.numericFields.slice(0, 5) :
-            this.fieldProvider.numericFields
-      };
-    }
+  protected getWidgetType(): WidgetType {
+    return WidgetType.LineChart;
   }
+
+  protected initWidgetConfig(): LineCartVisConfig {
+    return {
+      forType: this.getWidgetType(),
+      yKeys: [],
+      chartMode: 'lines',
+      selectedLineChartProperties: this.fieldProvider.numericFields.length > 6 ?
+          this.fieldProvider.numericFields.slice(0, 5) :
+          this.fieldProvider.numericFields
+    };
+  }
+
 }

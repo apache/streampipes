@@ -21,24 +21,9 @@
         <span class="data-explorer-header">Visualization Type</span>
         <mat-form-field color="accent" fxFlex="100">
             <mat-label>Select visualization</mat-label>
-            <mat-select [(value)]="currentlyConfiguredWidget.widgetType">
-                <mat-option [value]="'density-chart'">
-                    <span class="pipeline-name">Density</span>
-                </mat-option>
-                <mat-option [value]="'histogram-chart'">
-                    <span class="pipeline-name">Histogram</span>
-                </mat-option>
-                <mat-option [value]="'indicator-chart'">
-                    <span class="pipeline-name">Indicator</span>
-                </mat-option>
-                <mat-option [value]="'line-chart'">
-                    <span class="pipeline-name">Line Chart</span>
-                </mat-option>
-                <mat-option [value]="'pie-chart'">
-                    <span class="pipeline-name">Pie Chart</span>
-                </mat-option>
-                <mat-option [value]="'table'">
-                    <span class="pipeline-name">Table</span>
+            <mat-select [(value)]="currentlyConfiguredWidget.widgetType" (selectionChange)="triggerWidgetTypeChange($event)">
+                <mat-option [value]="widget.id" *ngFor="let widget of availableWidgets">
+                    <span class="pipeline-name">{{widget.label}}</span>
                 </mat-option>
             </mat-select>
         </mat-form-field>
@@ -48,13 +33,11 @@
         <div *ngIf="currentlyConfiguredWidget.widgetType === 'table'" class="h-100 p-0">
             <sp-data-explorer-table-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-
             </sp-data-explorer-table-widget-config>
         </div>
         <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
             <sp-data-explorer-line-chart-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-
             </sp-data-explorer-line-chart-widget-config>
         </div>
         <div *ngIf="currentlyConfiguredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">

@@ -16,19 +16,16 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
-import {
-  DataExplorerDataConfig,
-  DataExplorerField,
-  DataExplorerVisConfig
-} from '../../../../models/dataview-dashboard.model';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { TimeSettings } from '../../dashboard/models/dashboard.model';
 
+@Injectable()
+export class TimeSelectionService {
 
-export interface PieChartVisConfig extends DataExplorerVisConfig {
-  selectedProperty: DataExplorerField;
-}
+  public timeSelectionChangeSubject: Subject<TimeSettings> = new Subject<TimeSettings>();
 
-export interface PieChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: PieChartVisConfig;
+  public notify(timeSettings: TimeSettings): void {
+    this.timeSelectionChangeSubject.next(timeSettings);
+  }
 }

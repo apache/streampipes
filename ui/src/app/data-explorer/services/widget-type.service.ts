@@ -16,19 +16,16 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
-import {
-  DataExplorerDataConfig,
-  DataExplorerField,
-  DataExplorerVisConfig
-} from '../../../../models/dataview-dashboard.model';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { WidgetTypeChangeMessage } from '../models/dataview-dashboard.model';
 
+@Injectable()
+export class WidgetTypeService {
 
-export interface PieChartVisConfig extends DataExplorerVisConfig {
-  selectedProperty: DataExplorerField;
-}
+  public widgetTypeChangeSubject: Subject<WidgetTypeChangeMessage> = new Subject<WidgetTypeChangeMessage>();
 
-export interface PieChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: PieChartVisConfig;
+  public notify(widgetTypeChangeMessage: WidgetTypeChangeMessage): void {
+    this.widgetTypeChangeSubject.next(widgetTypeChangeMessage);
+  }
 }

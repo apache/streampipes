@@ -22,13 +22,8 @@ import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { EventPropertyUnion, EventSchema } from '../../../../core-model/gen/streampipes-model';
 import { ImageWidgetModel } from './model/image-widget.model';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { ResizeService } from '../../../services/resize.service';
-import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
-import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
@@ -48,15 +43,6 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   imagePreviewHeight;
 
   public imagesRoutes = [];
-
-  constructor(
-    dataLakeRestService: DatalakeRestService,
-    widgetConfigurationService: WidgetConfigurationService,
-    resizeService: ResizeService,
-    dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-    fieldProvider: DataExplorerFieldProviderService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldProvider);
-  }
 
   ngOnInit(): void {
     this.canvasHeight = this.gridsterItemComponent.height - 240;

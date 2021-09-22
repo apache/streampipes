@@ -22,10 +22,11 @@ import {
 } from '../../../../../core-model/gen/streampipes-model';
 import {
   DataExplorerDataConfig,
-  DataExplorerField
+  DataExplorerField,
+  DataExplorerVisConfig
 } from '../../../../models/dataview-dashboard.model';
 
-export interface LineCartVisConfig {
+export interface LineCartVisConfig extends DataExplorerVisConfig {
   selectedLineChartProperties: DataExplorerField[];
   selectedBackgroundColorProperty?: EventPropertyUnion;
   groupValue?: string;

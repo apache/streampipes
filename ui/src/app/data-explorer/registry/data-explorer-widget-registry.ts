@@ -17,28 +17,11 @@
  */
 
 import { IWidget } from '../models/dataview-dashboard.model';
+import { WidgetTypeMap } from './data-explorer-widgets';
 
 export class DataExplorerWidgetRegistry {
 
-    // private static availableWidgets: WidgetConfig[] = [
-    //     new TableConfig(),
-    // ];
-    //
-    // static getAvailableWidgetTemplates(): DashboardWidgetSettings[] {
-    //     const widgetTemplates = new Array<DashboardWidgetSettings>();
-    //     this.availableWidgets.forEach(widget => widgetTemplates.push(widget.getConfig()));
-    //     return widgetTemplates;
-    // }
-
-    private static availableWidgets: IWidget[] = [
-        {id: 'table', label: 'Table'},
-        {id: 'line-chart', label: 'Line Chart'},
-        {id: 'image', label: 'Image'}
-    ];
-
     static getAvailableWidgetTemplates(): IWidget[] {
-        const widgetTemplates = new Array<IWidget>();
-        this.availableWidgets.forEach(widget => widgetTemplates.push(widget));
-        return widgetTemplates;
+        return Array.from(WidgetTypeMap.values());
     }
 }

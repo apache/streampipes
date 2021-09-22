@@ -16,19 +16,11 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
-import {
-  DataExplorerDataConfig,
-  DataExplorerField,
-  DataExplorerVisConfig
-} from '../../../../models/dataview-dashboard.model';
+import { Directive, ViewContainerRef } from '@angular/core';
 
-
-export interface PieChartVisConfig extends DataExplorerVisConfig {
-  selectedProperty: DataExplorerField;
-}
-
-export interface PieChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: PieChartVisConfig;
+@Directive({
+  selector: '[widgetHost]',
+})
+export class WidgetDirective {
+  constructor(public viewContainerRef: ViewContainerRef) { }
 }

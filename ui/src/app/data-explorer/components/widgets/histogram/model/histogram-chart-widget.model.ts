@@ -19,10 +19,11 @@
 import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
 import {
   DataExplorerDataConfig,
-  DataExplorerField
+  DataExplorerField,
+  DataExplorerVisConfig
 } from '../../../../models/dataview-dashboard.model';
 
-export interface HistogramChartVisConfig {
+export interface HistogramChartVisConfig extends DataExplorerVisConfig {
   selectedProperty: DataExplorerField;
 }
 

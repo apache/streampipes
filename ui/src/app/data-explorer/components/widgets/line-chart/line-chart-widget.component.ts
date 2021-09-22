@@ -20,12 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { ResizeService } from '../../../services/resize.service';
 import { LineChartWidgetModel } from './model/line-chart-widget.model';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
-import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
@@ -45,15 +40,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
   // this can be set to scale the line chart according to the layout
   offsetRightLineChart = 10;
-
-
-  constructor(dataLakeRestService: DatalakeRestService,
-              widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService,
-              dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-              fieldService: DataExplorerFieldProviderService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldService);
-  }
 
   updatemenus = [];
   graph = {
