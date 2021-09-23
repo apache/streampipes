@@ -18,6 +18,7 @@
 
 import { IWidget } from '../models/dataview-dashboard.model';
 import { TableWidgetComponent } from '../components/widgets/table/table-widget.component';
+import { MapWidgetComponent } from '../components/widgets/map/map-widget.component';
 import { LineChartWidgetComponent } from '../components/widgets/line-chart/line-chart-widget.component';
 import { ImageWidgetComponent } from '../components/widgets/image/image-widget.component';
 import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
@@ -27,6 +28,7 @@ import { PieChartWidgetComponent } from '../components/widgets/pie/pie-chart-wid
 
 export enum WidgetType {
   Table,
+  Map,
   LineChart,
   Image,
   IndicatorChart,
@@ -40,6 +42,11 @@ export const WidgetTypeMap = new Map<number, IWidget>([
     id: 'table',
     label: 'Table',
     componentClass: TableWidgetComponent
+  }],
+  [WidgetType.Map, {
+    id: 'map',
+    label: 'Map',
+    componentClass: MapWidgetComponent
   }],
   [WidgetType.LineChart, {
     id: 'line-chart',

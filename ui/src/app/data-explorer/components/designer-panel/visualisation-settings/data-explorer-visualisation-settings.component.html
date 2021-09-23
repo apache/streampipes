@@ -35,6 +35,11 @@
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
             </sp-data-explorer-table-widget-config>
         </div>
+        <div *ngIf="currentlyConfiguredWidget.widgetType === 'map'" class="h-100 p-0">
+            <sp-data-explorer-map-widget-config
+                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+            </sp-data-explorer-map-widget-config>
+        </div>
         <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
             <sp-data-explorer-line-chart-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
