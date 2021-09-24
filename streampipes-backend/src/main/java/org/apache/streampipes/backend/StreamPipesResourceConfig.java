@@ -101,7 +101,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(FileServingResource.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
-        register(VirtualSensor.class);
         register(VisualizablePipelineResource.class);
 
         // Serializers
