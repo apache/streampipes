@@ -69,7 +69,7 @@ export class EditorService {
     }
 
   updateDataSet(dataSet): Observable<DataSetModificationMessage> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath() + '/pipelines/update/dataset', dataSet)
+    return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipelines/update/dataset', dataSet)
         .pipe(map(data => DataSetModificationMessage.fromData(data as DataSetModificationMessage)));
   }
 
@@ -130,7 +130,7 @@ export class EditorService {
     }
 
     updateCachedCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
-      return this.http.post(this.platformServicesCommons.authUserBasePath()
+      return this.http.post(this.platformServicesCommons.apiBasePath()
           + '/pipeline-canvas-cache', pipelineCanvasMetadata);
     }
 
@@ -143,7 +143,7 @@ export class EditorService {
     }
 
     private get pipelinesResourceUrl() {
-        return this.platformServicesCommons.authUserBasePath() + '/pipelines';
+        return this.platformServicesCommons.apiBasePath() + '/pipelines';
     }
 
     announceConfiguredElement(pipelineElementDomId: string) {

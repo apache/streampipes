@@ -25,7 +25,7 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/rdfendpoints")
-public class ExtensionsServiceEndpointResource extends AbstractRestResource {
+public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -76,8 +76,9 @@ public class ExtensionsServiceEndpointResource extends AbstractRestResource {
   @Path("/items")
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
-  public Response getEndpointContents(@PathParam("username") String username) {
+  public Response getEndpointContents() {
     List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
+    String username = getAuthenticatedUsername();
 
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(endpoints);
     items.forEach(item -> item.setInstalled(isInstalled(item.getElementId(), username)));

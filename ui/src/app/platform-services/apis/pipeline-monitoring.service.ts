@@ -33,8 +33,8 @@ export class PipelineMonitoringService {
   }
 
   getPipelineMonitoringInfo(pipelineId: string): Observable<PipelineMonitoringInfo> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath()
-        + "/pipeline-monitoring/"
+    return this.http.get(this.platformServicesCommons.apiBasePath()
+        + '/pipeline-monitoring/'
         + pipelineId)
         .pipe(map(response => PipelineMonitoringInfo.fromData(response as any)));
   }
