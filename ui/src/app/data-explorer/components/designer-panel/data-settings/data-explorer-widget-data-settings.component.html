@@ -118,6 +118,11 @@
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">
                     <sp-filter-selection-panel [sourceConfig]="sourceConfig"></sp-filter-selection-panel>
                 </div>
+                <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
+                     *ngIf="sourceConfig.queryType && sourceConfig.measure">
+                    <sp-group-selection-panel [sourceConfig]="sourceConfig"
+                                              [widgetId]="widgetId"></sp-group-selection-panel>
+                </div>
                 <div>
 
                 </div>

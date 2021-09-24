@@ -19,10 +19,10 @@
 import { Injectable } from '@angular/core';
 import { DataExplorerDataConfig, SourceConfig } from '../models/dataview-dashboard.model';
 import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
-import { DataResult } from '../../core-model/datalake/DataResult';
 import { Observable } from 'rxjs';
 import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQueryParameters';
 import { DatalakeRestService } from '../../platform-services/apis/datalake-rest.service';
+import { SpQueryResult } from '../../core-model/gen/streampipes-model';
 
 
 @Injectable()
@@ -34,12 +34,12 @@ export class DataViewQueryGeneratorService {
 
   generateObservables(startTime: number,
                       endTime: number,
-                      dataConfig: DataExplorerDataConfig): Observable<DataResult>[] {
+                      dataConfig: DataExplorerDataConfig): Observable<SpQueryResult>[] {
 
     return dataConfig
-        .sourceConfigs
-        .map(sourceConfig => this.dataLakeRestService
-            .getData(sourceConfig.measureName, this.generateQuery(startTime, endTime, sourceConfig)));
+      .sourceConfigs
+      .map(sourceConfig => this.dataLakeRestService
+        .getData(sourceConfig.measureName, this.generateQuery(startTime, endTime, sourceConfig)));
   }
 
   generateQuery(startTime: number,
@@ -49,9 +49,16 @@ export class DataViewQueryGeneratorService {
     const queryConfig = sourceConfig.queryConfig;
 
     queryBuilder.withColumnFilter(
-        queryConfig.fields.filter(f => f.selected),
-        sourceConfig.queryType === 'aggregated' || sourceConfig.queryType === 'single'
+      queryConfig.fields.filter(f => f.selected),
+      sourceConfig.queryType === 'aggregated' || sourceConfig.queryType === 'single'
     );
+
+    if (sourceConfig.queryConfig.groupBy !== undefined) {
+      const selectedGroupByFields = sourceConfig.queryConfig.groupBy.filter(field => field.selected);
+      if (selectedGroupByFields.length > 0) {
+        queryBuilder.withGrouping(sourceConfig.queryConfig.groupBy);
+      }
+    }
 
     if (sourceConfig.queryType === 'single') {
       queryBuilder.withLimit(1);

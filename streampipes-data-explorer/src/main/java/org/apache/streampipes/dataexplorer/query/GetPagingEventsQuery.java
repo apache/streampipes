@@ -19,10 +19,11 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.PagingQueryParams;
 import org.apache.streampipes.dataexplorer.template.QueryTemplates;
-import org.apache.streampipes.model.datalake.DataResult;
 import org.apache.streampipes.model.datalake.PageResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.influxdb.dto.QueryResult;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class GetPagingEventsQuery extends ParameterizedDataExplorerQuery<PagingQueryParams, PageResult> {
@@ -62,10 +63,10 @@ public class GetPagingEventsQuery extends ParameterizedDataExplorerQuery<PagingQ
 
   @Override
   protected PageResult postQuery(QueryResult result) {
-    DataResult dataResult = convertResult(result);
+    SpQueryResult dataResult = convertResult(result);
     int pageSum = new GetMaxPagesQuery(PagingQueryParams.from(params.getIndex(), params.getItemsPerPage()))
             .executeQuery();
 
-    return new PageResult(dataResult.getTotal(), dataResult.getHeaders(), dataResult.getRows(), params.getPage(), pageSum);
+    return new PageResult(dataResult.getTotal(), dataResult.getHeaders(), dataResult.getAllDataSeries().get(0).getRows(), params.getPage(), pageSum, new HashMap<>());
   }
 }

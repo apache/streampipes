@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.v4;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.model.Order;
 import org.apache.streampipes.dataexplorer.v4.params.SelectColumn;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +54,8 @@ public class AutoAggregationHandler {
   public ProvidedQueryParams makeAutoAggregationQueryParams() throws IllegalArgumentException {
     //checkAllArgumentsPresent();
     try {
-      DataResult newest = getSingleRecord(Order.DESC);
-      DataResult oldest = getSingleRecord(Order.ASC);
+      SpQueryResult newest = getSingleRecord(Order.DESC);
+      SpQueryResult oldest = getSingleRecord(Order.ASC);
       if (newest.getTotal() > 0) {
         String sampleField = getSampleField(newest);
         Integer count = getCount(sampleField);
@@ -97,21 +97,21 @@ public class AutoAggregationHandler {
     countParams.update(QP_COUNT_ONLY, true);
     countParams.update(QP_COLUMNS, fieldName);
 
-    DataResult result = new DataLakeManagementV4().getData(countParams);
-    return result.getTotal() > 0 ? ((Double) result.getRows().get(0).get(1)).intValue() : 0;
+    SpQueryResult result = new DataLakeManagementV4().getData(countParams);
+    return result.getTotal() > 0 ? result.getAllDataSeries().get(0).getTotal() : 0;
   }
 
-  private DataResult fireQuery(ProvidedQueryParams params) {
+  private SpQueryResult fireQuery(ProvidedQueryParams params) {
     return dataLakeManagement.getData(params);
   }
 
-  private int getAggregationValue(DataResult newest, DataResult oldest) throws ParseException {
+  private int getAggregationValue(SpQueryResult newest, SpQueryResult oldest) throws ParseException {
     long timerange = extractTimestamp(newest) - extractTimestamp(oldest);
     double v = timerange / MAX_RETURN_LIMIT;
     return Double.valueOf(v).intValue();
   }
 
-  private DataResult getSingleRecord(Order order) throws ParseException {
+  private SpQueryResult getSingleRecord(Order order) throws ParseException {
     ProvidedQueryParams singleEvent = disableAutoAgg(new ProvidedQueryParams(queryParams));
     singleEvent.remove(QP_AGGREGATION_FUNCTION);
     singleEvent.update(QP_LIMIT, 1);
@@ -126,7 +126,7 @@ public class AutoAggregationHandler {
     return columns.stream().map(SelectColumn::getOriginalField).collect(Collectors.joining(COMMA));
   }
 
-  private String getSampleField(DataResult result) {
+  private String getSampleField(SpQueryResult result) {
     for (String column : result.getHeaders()) {
       if (!column.equals(TIMESTAMP_FIELD)) {
         return column;
@@ -135,9 +135,9 @@ public class AutoAggregationHandler {
     throw new IllegalArgumentException("No columns present");
   }
 
-  private long extractTimestamp(DataResult result) throws ParseException {
+  private long extractTimestamp(SpQueryResult result) throws ParseException {
     int timestampIndex = result.getHeaders().indexOf(TIMESTAMP_FIELD);
-    return tryParseDate(result.getRows().get(0).get(timestampIndex).toString()).getTime();
+    return tryParseDate(result.getAllDataSeries().get(0).getRows().get(0).get(timestampIndex).toString()).getTime();
   }
 
   private Date tryParseDate(String v) throws ParseException {

@@ -19,12 +19,13 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
-import org.apache.streampipes.model.datalake.DataResult;
-import org.apache.streampipes.model.datalake.GroupedDataResult;
+import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class DataExplorerQuery<OUT> {
@@ -34,7 +35,7 @@ public abstract class DataExplorerQuery<OUT> {
     DataExplorerQueryBuilder queryBuilder = DataExplorerQueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
     getQuery(queryBuilder);
     Query query = queryBuilder.toQuery();
-    QueryResult result;
+    org.influxdb.dto.QueryResult result;
     if (queryBuilder.hasTimeUnit()) {
       result = influxDB.query(query, queryBuilder.getTimeUnit());;
     } else {
@@ -47,31 +48,32 @@ public abstract class DataExplorerQuery<OUT> {
     return dataResult;
   }
 
-  protected DataResult convertResult(QueryResult result) {
+  protected SpQueryResult convertResult(org.influxdb.dto.QueryResult result) {
     if (result.getResults().get(0).getSeries() != null) {
-      return convertResult(result.getResults().get(0).getSeries().get(0));
+      DataSeries dataSeries = convertResult(result.getResults().get(0).getSeries().get(0));
+      return new SpQueryResult(1, dataSeries.getHeaders(), Arrays.asList(dataSeries));
     } else {
-      return new DataResult();
+      return new SpQueryResult();
     }
   }
 
-  protected DataResult convertResult(QueryResult.Series serie) {
+  protected DataSeries convertResult(org.influxdb.dto.QueryResult.Series serie) {
     List<String> columns = serie.getColumns();
     for (int i = 0; i < columns.size(); i++) {
       String replacedColumnName = columns.get(i).replaceAll("mean_", "");
       columns.set(i, replacedColumnName);
     }
     List values = serie.getValues();
-    return new DataResult(values.size(), columns, values);
+    return new DataSeries(values.size(), values, columns, new HashMap<>());
   }
 
-  protected GroupedDataResult convertMultiResult(QueryResult result) {
-    GroupedDataResult groupedDataResult = new GroupedDataResult();
+  protected SpQueryResult convertMultiResult(org.influxdb.dto.QueryResult result) {
+    SpQueryResult groupedDataResult = new SpQueryResult();
     if (result.getResults().get(0).getSeries() != null) {
-      for (QueryResult.Series series : result.getResults().get(0).getSeries()) {
+      for (org.influxdb.dto.QueryResult.Series series : result.getResults().get(0).getSeries()) {
         String groupName = series.getTags().entrySet().toArray()[0].toString();
-        DataResult dataResult = convertResult(series);
-        groupedDataResult.addDataResult(groupName, dataResult);
+        DataSeries dataResult = convertResult(series);
+        groupedDataResult.addDataResult(dataResult);
       }
     }
     return groupedDataResult;
@@ -80,5 +82,5 @@ public abstract class DataExplorerQuery<OUT> {
 
   protected abstract void getQuery(DataExplorerQueryBuilder queryBuilder);
 
-  protected abstract OUT postQuery(QueryResult result) throws RuntimeException;
+  protected abstract OUT postQuery(org.influxdb.dto.QueryResult result) throws RuntimeException;
 }

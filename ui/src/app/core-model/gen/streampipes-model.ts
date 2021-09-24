@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-09-16 14:42:05.
+// Generated using typescript-generator version 2.27.744 on 2021-09-24 15:10:23.
 
 export class AbstractStreamPipesEntity {
   '@class': 'org.apache.streampipes.model.base.AbstractStreamPipesEntity' | 'org.apache.streampipes.model.base.NamedStreamPipesEntity' | 'org.apache.streampipes.model.connect.adapter.AdapterDescription' | 'org.apache.streampipes.model.connect.adapter.AdapterSetDescription' | 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription' | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription' | 'org.apache.streampipes.model.connect.adapter.AdapterStreamDescription' | 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription' | 'org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription' | 'org.apache.streampipes.model.connect.adapter.AdapterDescriptionList' | 'org.apache.streampipes.model.connect.grounding.FormatDescriptionList' | 'org.apache.streampipes.model.connect.grounding.ProtocolDescription' | 'org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList' | 'org.apache.streampipes.model.graph.DataSourceDescription' | 'org.apache.streampipes.model.connect.grounding.FormatDescription' | 'org.apache.streampipes.model.SpDataStream' | 'org.apache.streampipes.model.SpDataSet' | 'org.apache.streampipes.model.base.InvocableStreamPipesEntity' | 'org.apache.streampipes.model.graph.DataProcessorInvocation' | 'org.apache.streampipes.model.graph.DataSinkInvocation' | 'org.apache.streampipes.model.base.UnnamedStreamPipesEntity' | 'org.apache.streampipes.model.connect.guess.GuessSchema' | 'org.apache.streampipes.model.connect.rules.TransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription' | 'org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription' | 'org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription' | 'org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription' | 'org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription' | 'org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription' | 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription' | 'org.apache.streampipes.model.dashboard.DashboardWidgetSettings' | 'org.apache.streampipes.model.datalake.DataLakeMeasure' | 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest' | 'org.apache.streampipes.model.runtime.RuntimeOptionsResponse' | 'org.apache.streampipes.model.staticproperty.StaticProperty' | 'org.apache.streampipes.model.staticproperty.CodeInputStaticProperty' | 'org.apache.streampipes.model.staticproperty.CollectionStaticProperty' | 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty' | 'org.apache.streampipes.model.staticproperty.DomainStaticProperty' | 'org.apache.streampipes.model.staticproperty.FileStaticProperty' | 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty' | 'org.apache.streampipes.model.staticproperty.MatchingStaticProperty' | 'org.apache.streampipes.model.staticproperty.SecretStaticProperty' | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternative' | 'org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives' | 'org.apache.streampipes.model.staticproperty.StaticPropertyGroup' | 'org.apache.streampipes.model.staticproperty.SelectionStaticProperty' | 'org.apache.streampipes.model.staticproperty.AnyStaticProperty' | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty' | 'org.apache.streampipes.model.staticproperty.OneOfStaticProperty' | 'org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty' | 'org.apache.streampipes.model.staticproperty.MappingProperty' | 'org.apache.streampipes.model.staticproperty.MappingPropertyUnary' | 'org.apache.streampipes.model.staticproperty.MappingPropertyNary' | 'org.apache.streampipes.model.ApplicationLink' | 'org.apache.streampipes.model.grounding.EventGrounding' | 'org.apache.streampipes.model.schema.EventSchema' | 'org.apache.streampipes.model.connect.guess.DomainPropertyProbabilityList' | 'org.apache.streampipes.model.staticproperty.Option' | 'org.apache.streampipes.model.grounding.TransportProtocol' | 'org.apache.streampipes.model.grounding.JmsTransportProtocol' | 'org.apache.streampipes.model.grounding.KafkaTransportProtocol' | 'org.apache.streampipes.model.grounding.MqttTransportProtocol' | 'org.apache.streampipes.model.grounding.TransportFormat' | 'org.apache.streampipes.model.quality.EventStreamQualityRequirement' | 'org.apache.streampipes.model.quality.MeasurementCapability' | 'org.apache.streampipes.model.quality.MeasurementObject' | 'org.apache.streampipes.model.schema.EventProperty' | 'org.apache.streampipes.model.schema.EventPropertyList' | 'org.apache.streampipes.model.schema.EventPropertyNested' | 'org.apache.streampipes.model.schema.EventPropertyPrimitive' | 'org.apache.streampipes.model.connect.guess.DomainPropertyProbability' | 'org.apache.streampipes.model.output.OutputStrategy' | 'org.apache.streampipes.model.output.AppendOutputStrategy' | 'org.apache.streampipes.model.output.CustomOutputStrategy' | 'org.apache.streampipes.model.output.CustomTransformOutputStrategy' | 'org.apache.streampipes.model.output.FixedOutputStrategy' | 'org.apache.streampipes.model.output.KeepOutputStrategy' | 'org.apache.streampipes.model.output.ListOutputStrategy' | 'org.apache.streampipes.model.output.TransformOutputStrategy' | 'org.apache.streampipes.model.output.UserDefinedOutputStrategy' | 'org.apache.streampipes.model.monitoring.ElementStatusInfoSettings' | 'org.apache.streampipes.model.staticproperty.SupportedProperty' | 'org.apache.streampipes.model.staticproperty.PropertyValueSpecification' | 'org.apache.streampipes.model.grounding.TopicDefinition' | 'org.apache.streampipes.model.grounding.SimpleTopicDefinition' | 'org.apache.streampipes.model.grounding.WildcardTopicDefinition' | 'org.apache.streampipes.model.quality.MeasurementProperty' | 'org.apache.streampipes.model.quality.EventStreamQualityDefinition' | 'org.apache.streampipes.model.quality.Frequency' | 'org.apache.streampipes.model.quality.Latency' | 'org.apache.streampipes.model.quality.EventPropertyQualityDefinition' | 'org.apache.streampipes.model.quality.Accuracy' | 'org.apache.streampipes.model.quality.MeasurementRange' | 'org.apache.streampipes.model.quality.Precision' | 'org.apache.streampipes.model.quality.Resolution' | 'org.apache.streampipes.model.quality.EventPropertyQualityRequirement' | 'org.apache.streampipes.model.output.PropertyRenameRule' | 'org.apache.streampipes.model.schema.ValueSpecification' | 'org.apache.streampipes.model.schema.QuantitativeValue' | 'org.apache.streampipes.model.schema.Enumeration' | 'org.apache.streampipes.model.output.TransformOperation' | 'org.apache.streampipes.model.grounding.WildcardTopicMapping';
@@ -1049,6 +1049,25 @@ export class DataProcessorType {
   }
 }
 
+export class DataSeries {
+  headers: string[];
+  rows: any[][];
+  tags: { [index: string]: string };
+  total: number;
+
+  static fromData(data: DataSeries, target?: DataSeries): DataSeries {
+    if (!data) {
+      return data;
+    }
+    const instance = target || new DataSeries();
+    instance.total = data.total;
+    instance.rows = __getCopyArrayFn(__getCopyArrayFn(__identity<any>()))(data.rows);
+    instance.tags = __getCopyObjectFn(__identity<string>())(data.tags);
+    instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
+    return instance;
+  }
+}
+
 export class Message {
   elementName: string;
   notifications: Notification[];
@@ -2061,6 +2080,22 @@ export class Option extends UnnamedStreamPipesEntity {
   }
 }
 
+export class PageResult extends DataSeries {
+  page: number;
+  pageSum: number;
+
+  static fromData(data: PageResult, target?: PageResult): PageResult {
+    if (!data) {
+      return data;
+    }
+    const instance = target || new PageResult();
+    super.fromData(data, instance);
+    instance.page = data.page;
+    instance.pageSum = data.pageSum;
+    return instance;
+  }
+}
+
 export class PersistedDataStream {
   measureName: string;
   pipelineId: string;
@@ -2769,8 +2804,27 @@ export class SpDataSet extends SpDataStream {
     instance.datasetInvocationId = data.datasetInvocationId;
     instance.correspondingPipeline = data.correspondingPipeline;
     instance.selectedEndpointUrl = data.selectedEndpointUrl;
-    instance.brokerHostname = data.brokerHostname;
     instance.actualTopicName = data.actualTopicName;
+    instance.brokerHostname = data.brokerHostname;
+    return instance;
+  }
+}
+
+export class SpQueryResult {
+  allDataSeries: DataSeries[];
+  headers: string[];
+  sourceIndex: number;
+  total: number;
+
+  static fromData(data: SpQueryResult, target?: SpQueryResult): SpQueryResult {
+    if (!data) {
+      return data;
+    }
+    const instance = target || new SpQueryResult();
+    instance.total = data.total;
+    instance.headers = __getCopyArrayFn(__identity<string>())(data.headers);
+    instance.allDataSeries = __getCopyArrayFn(DataSeries.fromData)(data.allDataSeries);
+    instance.sourceIndex = data.sourceIndex;
     return instance;
   }
 }

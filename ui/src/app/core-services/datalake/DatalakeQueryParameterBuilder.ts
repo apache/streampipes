@@ -17,10 +17,7 @@
  */
 
 import { DatalakeQueryParameters } from './DatalakeQueryParameters';
-import {
-  DataExplorerField,
-  FieldConfig, SelectedFilter
-} from '../../data-explorer/models/dataview-dashboard.model';
+import { FieldConfig, SelectedFilter } from '../../data-explorer/models/dataview-dashboard.model';
 
 export class DatalakeQueryParameterBuilder {
 
@@ -65,15 +62,9 @@ export class DatalakeQueryParameterBuilder {
     return this;
   }
 
-  public withGrouping(groupBy: string,
-                      aggregationFunction: string,
-                      aggregationTimeUnit: string,
-                      aggregationTimeValue: number): DatalakeQueryParameterBuilder {
-
-    this.queryParams.groupBy = groupBy;
-    this.queryParams.aggregationFunction = aggregationFunction;
-    this.queryParams.timeInterval = aggregationTimeValue + aggregationTimeUnit;
-
+  public withGrouping(groupBy: FieldConfig[]): DatalakeQueryParameterBuilder {
+    const groupByRuntimeNames = groupBy.map(property => property.runtimeName);
+    this.queryParams.groupBy = groupByRuntimeNames.toString();
     return this;
   }
 
@@ -114,13 +105,13 @@ export class DatalakeQueryParameterBuilder {
       } else {
         column.aggregations.forEach(agg => {
           finalColumns.push('['
-              + column.runtimeName
-              + ';'
-              + agg
-              + ';'
-              + agg.toLowerCase()
-              + '_'
-              + column.runtimeName + ']');
+            + column.runtimeName
+            + ';'
+            + agg
+            + ';'
+            + agg.toLowerCase()
+            + '_'
+            + column.runtimeName + ']');
         });
       }
     });

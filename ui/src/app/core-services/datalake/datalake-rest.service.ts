@@ -16,14 +16,11 @@
  *
  */
 
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DataResult } from '../../core-model/datalake/DataResult';
-import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
-import { PageResult } from '../../core-model/datalake/PageResult';
 import { AuthStatusService } from '../../services/auth-status.service';
-import { DataLakeMeasure } from '../../core-model/gen/streampipes-model';
+import { DataLakeMeasure, SpQueryResult } from '../../core-model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from './DatalakeQueryParameters';
 
@@ -58,11 +55,11 @@ export class DatalakeRestService {
     }));
   }
 
-  getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue): Observable<DataResult> {
+  getData(index, startDate, endDate, aggregationTimeUnit, aggregationValue): Observable<SpQueryResult> {
     const timeInterval = aggregationValue + aggregationTimeUnit;
     const url = this.dataLakeUrlV4 + '/measurements/' + index;
 
-    const queryParams: DatalakeQueryParameters =  this.getQueryParameter(
+    const queryParams: DatalakeQueryParameters = this.getQueryParameter(
       startDate,
       endDate,
       undefined,
@@ -76,18 +73,18 @@ export class DatalakeRestService {
     );
 
     // @ts-ignore
-    return this.http.get<DataResult>(url, {
+    return this.http.get<SpQueryResult>(url, {
       // @ts-ignore
-      params: queryParams,
+      params: queryParams
     });
   }
 
 
-  getGroupedData(index, startDate, endDate, aggregationTimeUnit, aggregationValue, groupingTag): Observable<DataResult> {
+  getGroupedData(index, startDate, endDate, aggregationTimeUnit, aggregationValue, groupingTag): Observable<SpQueryResult> {
     const timeInterval = aggregationValue + aggregationTimeUnit;
     const url = this.dataLakeUrlV4 + '/measurements/' + index;
 
-    const queryParams: DatalakeQueryParameters =  this.getQueryParameter(
+    const queryParams: DatalakeQueryParameters = this.getQueryParameter(
       startDate,
       endDate,
       undefined,
@@ -103,18 +100,18 @@ export class DatalakeRestService {
     // @ts-ignore
     return this.http.get<GroupedDataResult>(url, {
       // @ts-ignore
-      params: queryParams,
+      params: queryParams
     });
   }
 
   getDataAutoAggregation(index, startDate, endDate) {
-    return this.http.get<DataResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate);
+    return this.http.get<SpQueryResult>(this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' + endDate);
   }
 
   downloadRawData(index, format) {
     const url = this.dataLakeUrlV4 + '/measurements/' + index + '/download?format=' + format;
 
-    const request = new HttpRequest('GET', url,  {
+    const request = new HttpRequest('GET', url, {
       reportProgress: true,
       responseType: 'text'
     });
@@ -126,7 +123,7 @@ export class DatalakeRestService {
     const url = this.dataLakeUrlV4 + '/measurements/' + index + '/download?format=' + format +
       '&startDate=' + startDate + '&endDate=' + endDate;
 
-    const request = new HttpRequest('GET', url,  {
+    const request = new HttpRequest('GET', url, {
       reportProgress: true,
       responseType: 'text'
     });
@@ -136,7 +133,7 @@ export class DatalakeRestService {
   getDataPage(index, itemsPerPage, page) {
     const url = this.dataLakeUrlV4 + '/measurements/' + index;
 
-    const queryParams: DatalakeQueryParameters =  this.getQueryParameter(
+    const queryParams: DatalakeQueryParameters = this.getQueryParameter(
       undefined,
       undefined,
       undefined,
@@ -150,16 +147,16 @@ export class DatalakeRestService {
     );
 
     // @ts-ignore
-    return this.http.get<DataResult>(url, {
+    return this.http.get<SpQueryResult>(url, {
       // @ts-ignore
-      params: queryParams,
+      params: queryParams
     });
   }
 
   getDataPageWithoutPage(index, itemsPerPage) {
     const url = this.dataLakeUrlV4 + '/measurements/' + index;
 
-    const queryParams: DatalakeQueryParameters =  this.getQueryParameter(
+    const queryParams: DatalakeQueryParameters = this.getQueryParameter(
       undefined,
       undefined,
       undefined,
@@ -173,11 +170,12 @@ export class DatalakeRestService {
     );
 
     // @ts-ignore
-    return this.http.get<DataResult>(url, {
+    return this.http.get<SpQueryResult>(url, {
       // @ts-ignore
-      params: queryParams,
+      params: queryParams
     });
   }
+
   getImageUrl(imageRoute) {
     return this.dataLakeUrlV3 + '/data/image/' + imageRoute + '/file';
   }
@@ -196,7 +194,7 @@ export class DatalakeRestService {
 
   saveLabelsInDatabase(index, labelColumn, startDate, endDate, label, timestampColumn) {
     const request = new HttpRequest('POST', this.dataLakeUrlV3 + '/data/' + index + '/' + startDate + '/' +
-      endDate + '/labeling/' + labelColumn + '/' + timestampColumn + '?label=' + label ,  {}, {
+      endDate + '/labeling/' + labelColumn + '/' + timestampColumn + '?label=' + label, {}, {
       reportProgress: true,
       responseType: 'text'
     });

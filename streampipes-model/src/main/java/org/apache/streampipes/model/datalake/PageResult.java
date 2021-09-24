@@ -18,16 +18,20 @@
 
 package org.apache.streampipes.model.datalake;
 
-import java.util.List;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
-public class PageResult extends DataResult {
+import java.util.List;
+import java.util.Map;
+
+@TsModel
+public class PageResult extends DataSeries {
 
     private int page;
 
     private int pageSum;
 
-    public PageResult(int total, List<String> headers, List<List<Object>> rows, int page, int pageSum) {
-        super(total, headers, rows);
+    public PageResult(int total, List<String> headers, List<List<Object>> rows, int page, int pageSum, Map<String, String> tags) {
+        super(total, rows, headers, tags);
         this.page = page;
         this.pageSum = pageSum;
     }

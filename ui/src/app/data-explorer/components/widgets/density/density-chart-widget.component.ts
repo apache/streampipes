@@ -21,11 +21,11 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { DensityChartWidgetModel } from './model/density-chart-widget.model';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
+import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-density-chart-widget',
@@ -76,7 +76,7 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
       },
       autosize: true,
       plot_bgcolor: '#fff',
-      paper_bgcolor: '#fff',
+      paper_bgcolor: '#fff'
     },
     config: {
       modeBarButtonsToRemove: ['lasso2d', 'select2d', 'toggleSpikelines', 'toImage'],
@@ -87,7 +87,7 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
   };
 
   constructor(dataLakeRestService: DatalakeRestService,
-              widgetConfigurationService:  WidgetConfigurationService,
+              widgetConfigurationService: WidgetConfigurationService,
               resizeService: ResizeService,
               dataViewQueryGeneratorService: DataViewQueryGeneratorService,
               fieldProvider: DataExplorerFieldProviderService) {
@@ -98,13 +98,13 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
     this.updateAppearance();
   }
 
-  prepareData(result: DataResult) {
+  prepareData(result: SpQueryResult) {
     const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result);
     const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result);
-    this.data[0].x = this.transform(result.rows, xIndex);
-    this.data[1].x = this.transform(result.rows, xIndex);
-    this.data[0].y = this.transform(result.rows, yIndex);
-    this.data[1].y = this.transform(result.rows, yIndex);
+    this.data[0].x = this.transform(result.allDataSeries[0].rows, xIndex);
+    this.data[1].x = this.transform(result.allDataSeries[0].rows, xIndex);
+    this.data[0].y = this.transform(result.allDataSeries[0].rows, yIndex);
+    this.data[1].y = this.transform(result.allDataSeries[0].rows, yIndex);
   }
 
   transform(rows, index: number): any[] {
@@ -128,28 +128,28 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
   beforeDataFetched() {
   }
 
-  onDataReceived(dataResults: DataResult[]) {
-    this.prepareData(dataResults[0]);
+  onDataReceived(spQueryResult: SpQueryResult) {
+    this.prepareData(spQueryResult);
     this.updateAppearance();
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.firstField =
-        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.firstField, addedFields, removedFields);
+      this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.firstField, addedFields, removedFields);
 
     this.dataExplorerWidget.visualizationConfig.secondField =
-        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.secondField, addedFields, removedFields);
+      this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.secondField, addedFields, removedFields);
   }
 
   triggerFieldUpdate(selected: DataExplorerField,
                      addedFields: DataExplorerField[],
                      removedFields: DataExplorerField[]): DataExplorerField {
     return this.updateSingleField(
-        selected,
-        this.fieldProvider.numericFields,
-        addedFields,
-        removedFields,
-        (field) => field.fieldCharacteristics.numeric
+      selected,
+      this.fieldProvider.numericFields,
+      addedFields,
+      removedFields,
+      (field) => field.fieldCharacteristics.numeric
     );
   }
 

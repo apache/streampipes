@@ -19,10 +19,9 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.GroupedAggregatedTimeBoundQueryParams;
 import org.apache.streampipes.dataexplorer.template.QueryTemplates;
-import org.apache.streampipes.model.datalake.GroupedDataResult;
-import org.influxdb.dto.QueryResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-public class GetGroupedAggregatedEventsQuery extends ParameterizedDataExplorerQuery<GroupedAggregatedTimeBoundQueryParams, GroupedDataResult> {
+public class GetGroupedAggregatedEventsQuery extends ParameterizedDataExplorerQuery<GroupedAggregatedTimeBoundQueryParams, SpQueryResult> {
 
   public GetGroupedAggregatedEventsQuery(GroupedAggregatedTimeBoundQueryParams queryParams) {
     super(queryParams);
@@ -39,7 +38,7 @@ public class GetGroupedAggregatedEventsQuery extends ParameterizedDataExplorerQu
   }
 
   @Override
-  protected GroupedDataResult postQuery(QueryResult result) {
+  protected SpQueryResult postQuery(org.influxdb.dto.QueryResult result) {
     return convertMultiResult(result);
   }
 }

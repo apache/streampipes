@@ -29,7 +29,8 @@ import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
             , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate) {
 
-        DataResult result = this.dataLakeManagement.deleteData(measurementID, startDate, endDate);
+        SpQueryResult result = this.dataLakeManagement.deleteData(measurementID, startDate, endDate);
         return ok();
     }
 
@@ -129,7 +130,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     @Operation(summary = "Get data from a single measurement series by a given id", tags = {"Data Lake"},
             responses = {
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
-                    @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataResult.class)))})
+                    @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
     public Response getData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
             , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam(QP_COLUMNS) String columns
@@ -154,7 +155,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         } else {
             ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
             try {
-                DataResult result = this.dataLakeManagement.getData(sanitizedParams);
+                SpQueryResult result = this.dataLakeManagement.getData(sanitizedParams);
                 return ok(result);
             } catch (IllegalArgumentException e) {
                 return badRequest(e.getMessage());
@@ -168,7 +169,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     @Operation(summary = "Download data from a single measurement series by a given id", tags = {"Data Lake"},
             responses = {
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
-                    @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataResult.class)))})
+                    @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
     public Response downloadData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
             , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
             , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam(QP_COLUMNS) String columns

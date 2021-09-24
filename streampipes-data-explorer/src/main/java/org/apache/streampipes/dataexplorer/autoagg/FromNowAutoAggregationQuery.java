@@ -22,12 +22,12 @@ import org.apache.streampipes.dataexplorer.param.TimeUnitQueryParams;
 import org.apache.streampipes.dataexplorer.query.GetAggregatedEventsFromNowQuery;
 import org.apache.streampipes.dataexplorer.query.GetEventsFromNowQuery;
 import org.apache.streampipes.dataexplorer.query.GetNumberOfRecordsByTimeUnitQuery;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-public class FromNowAutoAggregationQuery extends AbstractAutoAggregationQuery<TimeUnitQueryParams, DataResult> {
+public class FromNowAutoAggregationQuery extends AbstractAutoAggregationQuery<TimeUnitQueryParams, SpQueryResult> {
 
   public FromNowAutoAggregationQuery(TimeUnitQueryParams params) {
-    super(params, DataResult::new);
+    super(params, SpQueryResult::new);
   }
 
   @Override
@@ -36,12 +36,12 @@ public class FromNowAutoAggregationQuery extends AbstractAutoAggregationQuery<Ti
   }
 
   @Override
-  protected DataResult getRawEvents() {
+  protected SpQueryResult getRawEvents() {
     return new GetEventsFromNowQuery(params).executeQuery();
   }
 
   @Override
-  protected DataResult getAggregatedEvents(Integer aggregationValue) {
+  protected SpQueryResult getAggregatedEvents(Integer aggregationValue) {
     return new GetAggregatedEventsFromNowQuery(AggregatedTimeUnitQueryParams
             .from(params.getIndex(), params.getTimeUnit(), params.getTimeValue(), "ms", aggregationValue))
             .executeQuery();

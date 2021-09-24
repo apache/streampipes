@@ -21,11 +21,11 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { ResizeService } from '../../../services/resize.service';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
+import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-histogram-chart-widget',
@@ -70,9 +70,9 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
     this.updateAppearance();
   }
 
-  prepareData(result: DataResult) {
+  prepareData(result: SpQueryResult) {
     const index = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedProperty, result);
-    const varX = this.transform(result.rows, index);
+    const varX = this.transform(result.allDataSeries[0].rows, index);
 
     this.data = [{
       x: varX,
@@ -99,24 +99,24 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
   beforeDataFetched() {
   }
 
-  onDataReceived(dataResults: DataResult[]) {
-    this.prepareData(dataResults[0]);
+  onDataReceived(spQueryResult: SpQueryResult) {
+    this.prepareData(spQueryResult);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.selectedProperty =
-        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.selectedProperty, addedFields, removedFields);
+      this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.selectedProperty, addedFields, removedFields);
   }
 
   triggerFieldUpdate(selected: DataExplorerField,
                      addedFields: DataExplorerField[],
                      removedFields: DataExplorerField[]): DataExplorerField {
     return this.updateSingleField(
-        selected,
-        this.fieldProvider.allFields,
-        addedFields,
-        removedFields,
-        (field) => true
+      selected,
+      this.fieldProvider.allFields,
+      addedFields,
+      removedFields,
+      (field) => true
     );
   }
 
