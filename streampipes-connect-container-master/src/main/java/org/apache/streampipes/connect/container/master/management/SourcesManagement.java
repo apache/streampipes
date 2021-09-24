@@ -77,7 +77,7 @@ public class SourcesManagement {
         WorkerRestClient.invokeSetAdapter(newUrl, decryptedAdapterDescription);
     }
 
-    public void detachAdapter(String streamId, String runningInstanceId, String username) throws AdapterException, NoServiceEndpointsAvailableException {
+    public void detachAdapter(String streamId, String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
         AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
 
         String newId = adapterDescription.getUri() + "/streams/" + runningInstanceId;
@@ -101,7 +101,7 @@ public class SourcesManagement {
 
     }
 
-    public String getAllAdaptersInstallDescription(String user) throws AdapterException {
+    public String getAllAdaptersInstallDescription() throws AdapterException {
 //        String host = getConnectHost();
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
@@ -115,7 +115,7 @@ public class SourcesManagement {
                 uri = new URI(uriString);
             } catch (URISyntaxException e) {
                 logger.error("URI for the sources endpoint is not correct: " + uriString, e);
-                throw new AdapterException("Username " + user + " not allowed");
+                throw new AdapterException("Incorrect source URI: " +uriString);
             }
 
 

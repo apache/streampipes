@@ -31,10 +31,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/connect/{username}/master/adapters/template")
+@Path("/v2/connect/master/adapters/template")
 public class AdapterTemplateResource extends AbstractAdapterResource<AdapterTemplateMasterManagement> {
 
-    private Logger logger = LoggerFactory.getLogger(AdapterTemplateResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AdapterTemplateResource.class);
 
     public AdapterTemplateResource() {
         super(AdapterTemplateMasterManagement::new);
@@ -43,14 +43,14 @@ public class AdapterTemplateResource extends AbstractAdapterResource<AdapterTemp
     @POST
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapterTemplate(AdapterDescription adapterDescription, @PathParam("username") String userName) {
+    public Response addAdapterTemplate(AdapterDescription adapterDescription) {
         try {
             String adapterTemplateId = managementService.addAdapterTemplate(adapterDescription);
-            logger.info("User: " + userName + " added adapter as adapter template");
+            LOG.info("User: " + getAuthenticatedUsername() + " added adapter as adapter template");
 
             return ok(Notifications.success(adapterTemplateId));
         } catch (AdapterException e) {
-            logger.error("Error while storing the adapter template", e);
+            LOG.error("Error while storing the adapter template", e);
             return ok(Notifications.error(e.getMessage()));
         }
     }
@@ -59,13 +59,13 @@ public class AdapterTemplateResource extends AbstractAdapterResource<AdapterTemp
     @JacksonSerialized
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAdapterTemplates(@PathParam("username") String userName) {
+    public Response getAllAdapterTemplates() {
         try {
             AdapterDescriptionList result = managementService.getAllAdapterTemplates();
 
             return ok(result);
         } catch (AdapterException e) {
-            logger.error("Error while getting all adapter templates", e);
+            LOG.error("Error while getting all adapter templates", e);
             return ok(Notifications.error(e.getMessage()));
         }
 
@@ -75,13 +75,13 @@ public class AdapterTemplateResource extends AbstractAdapterResource<AdapterTemp
     @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAdapter(@PathParam("id") String id, @PathParam("username") String userName) {
+    public Response deleteAdapter(@PathParam("id") String id) {
 
         try {
             managementService.deleteAdapterTemplates(id);
             return ok(true);
         } catch (AdapterException e) {
-            logger.error("Error while deleting adapter with id " + id, e);
+            LOG.error("Error while deleting adapter with id " + id, e);
             return fail();
         }
     }

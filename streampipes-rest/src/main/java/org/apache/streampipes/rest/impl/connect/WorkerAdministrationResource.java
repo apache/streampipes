@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
 @Path("v2/connect/{username}/master/administration")
 public class WorkerAdministrationResource extends AbstractSharedRestInterface {
 
-    private Logger LOG = LoggerFactory.getLogger(WorkerAdministrationResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WorkerAdministrationResource.class);
 
     private WorkerAdministrationManagement workerAdministrationManagement;
 

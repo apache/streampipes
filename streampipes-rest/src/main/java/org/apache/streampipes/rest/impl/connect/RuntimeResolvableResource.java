@@ -31,7 +31,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/connect/{username}/master/resolvable")
+@Path("/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
 
     private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";

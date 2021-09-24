@@ -36,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
-@Path("/v2/connect/{username}/master/guess")
+@Path("/v2/connect/master/guess")
 public class GuessResource extends AbstractAdapterResource<GuessManagement> {
 
   private static final Logger LOG = LoggerFactory.getLogger(GuessResource.class);
