@@ -55,7 +55,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(CategoryResource.class);
         register(ConsulConfig.class);
         register(ContainerProvidedOptions.class);
-        register(Couchdb.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
         register(DataLakeResourceV3.class);
