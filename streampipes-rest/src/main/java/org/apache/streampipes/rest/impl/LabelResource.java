@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
-@Path("/v2/users/{username}/labeling/label")
+@Path("/v2/labeling/label")
 public class LabelResource extends AbstractRestResource {
 
     @GET

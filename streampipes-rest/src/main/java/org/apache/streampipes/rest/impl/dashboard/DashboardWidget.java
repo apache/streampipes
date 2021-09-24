@@ -27,7 +27,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/dashboard/widgets")
+@Path("/v2/dashboard/widgets")
 public class DashboardWidget extends AbstractRestResource {
 
   @GET

@@ -27,7 +27,6 @@ import { ExtensionsServiceEndpointItem } from '../../core-model/gen/streampipes-
 @Injectable()
 export class AddService {
 
-
   constructor(private http: HttpClient,
               private authStatusService: AuthStatusService,
               private platformServicesCommons: PlatformServicesCommons) {
@@ -56,6 +55,6 @@ export class AddService {
 
   getRdfEndpointIcon(item: ExtensionsServiceEndpointItem): Observable<any> {
     return this.http.post(this.platformServicesCommons.apiBasePath()
-        + '/rdfendpoints/items/icon', item, { responseType: 'blob' });
+        + '/rdfendpoints/items/icon', item, {responseType: 'blob'});
   }
 }

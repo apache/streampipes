@@ -25,7 +25,7 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.sdk.builder.BoundPipelineElementBuilder;
 import org.apache.streampipes.sdk.builder.PipelineTemplateBuilder;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
@@ -33,7 +33,10 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URISyntaxException;
@@ -42,8 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("/v2/users/{username}/internal-pipelines")
-public class InternalPipelineTemplates extends AbstractRestResource {
+@Path("/v2/internal-pipelines")
+public class InternalPipelineTemplates extends AbstractAuthGuardedRestResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalPipelineTemplates.class);
     private Map<String, Template> templates;
@@ -76,12 +79,12 @@ public class InternalPipelineTemplates extends AbstractRestResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response generatePipeline(@PathParam("username") String username, String pipelineId) {
+    public Response generatePipeline(String pipelineId) {
         try {
             PipelineTemplateDescription pipelineTemplateDescription = templates.get(pipelineId).makeTemplate();
 
             PipelineTemplateInvocation invocation = Operations.getPipelineInvocationTemplate(getLogDataStream(), pipelineTemplateDescription);
-            PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(username, invocation, pipelineTemplateDescription);
+            PipelineOperationStatus status = Operations.handlePipelineTemplateInvocation(getAuthenticatedUsername(), invocation, pipelineTemplateDescription);
 
             return ok(status);
         } catch (URISyntaxException e) {
