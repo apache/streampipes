@@ -120,7 +120,7 @@ export class AppTransportMonitoringRestService {
     }
 
     getDeleteUrl(index: string) {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/datalake/delete/' +index;
+        return this.baseUrl + '/api/v2' + '/datalake/delete/' +index;
     }
 
     getTransportProcessesUrl(): string {
@@ -148,7 +148,7 @@ export class AppTransportMonitoringRestService {
     }
 
     private get url() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/datalake/data'
+        return this.baseUrl + '/api/v2' + '/datalake/data';
     }
 
     private get imagePath() {

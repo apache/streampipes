@@ -36,11 +36,11 @@ export class DatalakeRestService {
   }
 
   private get dataLakeUrlV3() {
-    return this.baseUrl + '/api/v3/users/' + this.authStatusService.email + '/datalake';
+    return this.baseUrl + '/api/v3' + '/datalake';
   }
 
   private get dataLakeUrlV4() {
-    return this.baseUrl + '/api/v4/users/' + this.authStatusService.email + '/datalake';
+    return this.baseUrl + '/api/v4' + '/datalake';
   }
 
 

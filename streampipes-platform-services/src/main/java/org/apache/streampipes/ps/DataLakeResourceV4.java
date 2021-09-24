@@ -47,7 +47,7 @@ class Placeholder {
 }
 
 
-@Path("v4/users/{username}/datalake")
+@Path("v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
 
     private static final Logger logger = LoggerFactory.getLogger(DataLakeResourceV4.class);
@@ -68,8 +68,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Configure the parameters of the data lake", tags = {"Data Lake"},
             responses = {@ApiResponse(responseCode = "200", description = "Configuration was successful")})
-    public Response configureMeasurement(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username,
-                                         @Parameter(in = ParameterIn.QUERY, description = "should any parameter be reset to its default value?") @DefaultValue("false") @QueryParam("resetToDefault") boolean resetToDefault,
+    public Response configureMeasurement(@Parameter(in = ParameterIn.QUERY, description = "should any parameter be reset to its default value?") @DefaultValue("false") @QueryParam("resetToDefault") boolean resetToDefault,
                                          @Parameter(in = ParameterIn.DEFAULT, description = "the configuration parameters") DataLakeConfiguration config) {
         return ok(this.dataLakeManagement.editMeasurementConfiguration(config, resetToDefault));
     }
@@ -80,8 +79,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Data from measurement series successfully removed"),
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id not found")})
-    public Response deleteData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
-            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
+    public Response deleteData(@Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
             , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") Long startDate
             , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") Long endDate) {
 
@@ -95,8 +93,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Measurement series successfully dropped from Data Lake"),
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id or related event property not found")})
-    public Response dropMeasurementSeries(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
-            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID) {
+    public Response dropMeasurementSeries(@Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID) {
 
         boolean isSuccessDataLake = this.dataLakeManagement.removeMeasurement(measurementID);
 
@@ -118,7 +115,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     @Operation(summary = "Get a list of all measurement series", tags = {"Data Lake"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "array of stored measurement series", content = @Content(array = @ArraySchema(schema = @Schema(implementation = DataLakeMeasure.class))))})
-    public Response getAll(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username) {
+    public Response getAll() {
         List<DataLakeMeasure> allMeasurements = this.dataLakeManagement.getAllMeasurements();
         return ok(allMeasurements);
     }
@@ -131,8 +128,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             responses = {
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
                     @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
-    public Response getData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
-            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
+    public Response getData(@Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
             , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam(QP_COLUMNS) String columns
             , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam(QP_START_DATE) Long startDate
             , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam(QP_END_DATE) Long endDate
@@ -170,8 +166,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             responses = {
                     @ApiResponse(responseCode = "400", description = "Measurement series with given id and requested query specification not found"),
                     @ApiResponse(responseCode = "200", description = "requested data", content = @Content(schema = @Schema(implementation = DataSeries.class)))})
-    public Response downloadData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
-            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
+    public Response downloadData(@Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
             , @Parameter(in = ParameterIn.QUERY, description = "the columns to be selected (comma-separated)") @QueryParam(QP_COLUMNS) String columns
             , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam(QP_START_DATE) Long startDate
             , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam(QP_END_DATE) Long endDate
@@ -210,8 +205,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     @Operation(summary = "Get the configuration parameters of the data lake", tags = {"Data Lake"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "configuration parameters", content = @Content(schema = @Schema(implementation = DataLakeConfiguration.class)))})
-    public Response getMeasurementConfiguration(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username,
-                                                @Parameter(in = ParameterIn.QUERY, description = "the id of a specific configuration parameter") @QueryParam("parameterID") String parameterID) {
+    public Response getMeasurementConfiguration(@Parameter(in = ParameterIn.QUERY, description = "the id of a specific configuration parameter") @QueryParam("parameterID") String parameterID) {
         return ok(this.dataLakeManagement.getDataLakeConfiguration());
     }
 
@@ -221,8 +215,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     @Operation(summary = "Label data points of the measurement series with given id", tags = {"Data Lake"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "Labeling was successful")})
-    public Response labelData(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username
-            , @Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
+    public Response labelData(@Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
             , @Parameter(in = ParameterIn.DEFAULT, description = "the label details that should be written into database") Placeholder body
 
             , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") String startDate
@@ -238,7 +231,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     @Operation(summary = "Remove all stored measurement series from Data Lake", tags = {"Data Lake"},
             responses = {
                     @ApiResponse(responseCode = "200", description = "All measurement series successfully removed")})
-    public Response removeAll(@Parameter(in = ParameterIn.PATH, description = "username", required = true) @PathParam("username") String username) {
+    public Response removeAll() {
         boolean isSuccess = this.dataLakeManagement.removeAllMeasurements();
         return Response.ok(isSuccess).build();
     }

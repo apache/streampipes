@@ -27,7 +27,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v3/users/{username}/datalake/dashboard/widgets")
+@Path("/v3/datalake/dashboard/widgets")
 public class DataLakeWidgetResource extends AbstractRestResource {
 
   @GET

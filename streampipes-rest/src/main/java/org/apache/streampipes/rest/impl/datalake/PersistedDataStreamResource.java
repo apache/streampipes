@@ -31,7 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
-@Path("/v3/users/{username}/datalake/pipelines")
+@Path("/v3/datalake/pipelines")
 public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DataLakeMeasure> {
 
   private static final String DataLakeAppId = "org.apache.streampipes.sinks.internal.jvm.datalake";

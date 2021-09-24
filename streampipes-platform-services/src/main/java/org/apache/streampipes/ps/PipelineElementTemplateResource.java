@@ -36,7 +36,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-element-templates")
+@Path("/v2/pipeline-element-templates")
 public class PipelineElementTemplateResource extends AbstractRestResource {
 
   @GET

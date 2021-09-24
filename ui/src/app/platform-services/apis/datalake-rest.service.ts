@@ -35,7 +35,7 @@ export class DatalakeRestService {
   }
 
   private get dataLakeUrl() {
-    return this.baseUrl + '/api/v4/users/' + this.authStatusService.email + '/datalake';
+    return this.baseUrl + '/api/v4' + '/datalake';
   }
 
   getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
