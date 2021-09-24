@@ -19,7 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.client.file.FileMetadata;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -28,16 +28,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
 
-@Path("/v2/users/{username}/files")
-public class PipelineElementFile extends AbstractRestResource {
+@Path("/v2/files")
+public class PipelineElementFile extends AbstractAuthGuardedRestResource {
 
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
-  public Response storeFile(@PathParam("username") String username,
-                            @FormDataParam("file_upload") InputStream uploadedInputStream,
+  public Response storeFile(@FormDataParam("file_upload") InputStream uploadedInputStream,
                             @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
     try {
-      FileMetadata metadata = FileManager.storeFile(username, fileDetail.getFileName(), uploadedInputStream);
+      FileMetadata metadata = FileManager.storeFile(getAuthenticatedUsername(), fileDetail.getFileName(), uploadedInputStream);
       return ok(metadata);
     } catch (Exception e) {
       return fail();
