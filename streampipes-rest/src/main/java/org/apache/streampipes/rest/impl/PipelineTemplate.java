@@ -25,7 +25,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.*;
@@ -34,8 +34,8 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/v2/users/{username}/pipeline-templates")
-public class PipelineTemplate extends AbstractRestResource {
+@Path("/v2/pipeline-templates")
+public class PipelineTemplate extends AbstractAuthGuardedRestResource {
 
   @GET
   @Path("/streams")
@@ -98,11 +98,10 @@ public class PipelineTemplate extends AbstractRestResource {
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response generatePipeline(@PathParam("username") String username,
-                                   PipelineTemplateInvocation pipelineTemplateInvocation) {
+  public Response generatePipeline(PipelineTemplateInvocation pipelineTemplateInvocation) {
 
     PipelineOperationStatus status = Operations
-            .handlePipelineTemplateInvocation(username, pipelineTemplateInvocation);
+            .handlePipelineTemplateInvocation(getAuthenticatedUsername(), pipelineTemplateInvocation);
 
     return ok(status);
 
