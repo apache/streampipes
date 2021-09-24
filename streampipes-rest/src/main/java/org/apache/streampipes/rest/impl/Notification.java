@@ -19,15 +19,15 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/notifications")
-public class Notification extends AbstractRestResource {
+@Path("/v2/notifications")
+public class Notification extends AbstractAuthGuardedRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,9 +42,9 @@ public class Notification extends AbstractRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/count")
-    public Response getUnreadNotificationsCount(@PathParam("username") String username) {
+    public Response getUnreadNotificationsCount() {
         return ok(getNotificationStorage()
-                .getUnreadNotificationsCount(username));
+                .getUnreadNotificationsCount(getAuthenticatedUsername()));
     }
 
     @GET

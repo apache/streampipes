@@ -16,8 +16,8 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {
   DataProcessorInvocation,
   DataSetModificationMessage,
@@ -29,14 +29,14 @@ import {
   PipelinePreviewModel,
   SpDataSet,
   SpDataStream
-} from "../../core-model/gen/streampipes-model";
-import {Observable, Subject} from "rxjs";
-import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
-import {PipelineElementConfig, PipelineElementUnion} from "../model/editor.model";
-import {PanelType} from "../../core-ui/dialog/base-dialog/base-dialog.model";
-import {DialogService} from "../../core-ui/dialog/base-dialog/base-dialog.service";
-import {HelpComponent} from "../dialog/help/help.component";
-import {map} from "rxjs/operators";
+} from '../../core-model/gen/streampipes-model';
+import { Observable, Subject } from 'rxjs';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
+import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
+import { HelpComponent } from '../dialog/help/help.component';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class EditorService {
@@ -45,32 +45,36 @@ export class EditorService {
 
     public pipelineElementConfigured$ = this.pipelineElementConfigured.asObservable();
 
-    pipelineAssemblyEmpty: boolean = true;
+    pipelineAssemblyEmpty = true;
 
     constructor(private http: HttpClient,
                 private platformServicesCommons: PlatformServicesCommons,
-                private DialogService: DialogService) {
+                private dialogService: DialogService) {
+    }
+
+    get apiBasePath() {
+      return this.platformServicesCommons.apiBasePath();
     }
 
     recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
-        return this.http.post(this.pipelinesResourceUrl +"/recommend", pipeline)
+        return this.http.post(this.pipelinesResourceUrl + '/recommend', pipeline)
             .pipe(map(data => PipelineElementRecommendationMessage.fromData(data as any)));
     }
 
     updatePartialPipeline(pipeline): Observable<PipelineModificationMessage> {
-        return this.http.post(this.pipelinesResourceUrl +"/update", pipeline)
+        return this.http.post(this.pipelinesResourceUrl + '/update', pipeline)
             .pipe(map(data => {
                 return PipelineModificationMessage.fromData(data as any);
             }));
     }
 
   updateDataSet(dataSet): Observable<DataSetModificationMessage> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath() +"/pipelines/update/dataset", dataSet)
+    return this.http.post(this.platformServicesCommons.authUserBasePath() + '/pipelines/update/dataset', dataSet)
         .pipe(map(data => DataSetModificationMessage.fromData(data as DataSetModificationMessage)));
   }
 
     getCachedPipeline(): Observable<PipelineElementConfig[]> {
-        return this.http.get(this.platformServicesCommons.authUserBasePath() + '/pipeline-cache')
+        return this.http.get(this.apiBasePath + '/pipeline-cache')
             .pipe(map(result => {
               if (result === null) {
                 return [];
@@ -83,18 +87,18 @@ export class EditorService {
     }
 
     getCachedPipelineCanvasMetadata(): Observable<PipelineCanvasMetadata> {
-      return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipeline-canvas-cache")
+      return this.http.get(this.apiBasePath + '/pipeline-canvas-cache')
           .pipe(map(response => {
             return PipelineCanvasMetadata.fromData(response as any);
       }));
     }
 
     convert(payload: any) {
-      if (payload['@class'] === "org.apache.streampipes.model.SpDataSet") {
+      if (payload['@class'] === 'org.apache.streampipes.model.SpDataSet') {
         return SpDataSet.fromData(payload as SpDataSet);
-      } else if (payload['@class'] === "org.apache.streampipes.model.SpDataStream") {
+      } else if (payload['@class'] === 'org.apache.streampipes.model.SpDataStream') {
         return SpDataStream.fromData(payload as SpDataStream);
-      } else if (payload['@class'] === "org.apache.streampipes.model.graph.DataProcessorInvocation") {
+      } else if (payload['@class'] === 'org.apache.streampipes.model.graph.DataProcessorInvocation') {
         return DataProcessorInvocation.fromData(payload as DataProcessorInvocation);
       } else {
         return DataSinkInvocation.fromData(payload as DataSinkInvocation);
@@ -102,15 +106,15 @@ export class EditorService {
     }
 
     getEpCategories() {
-        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/categories/ep");
+        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + '/categories/ep');
     }
 
     getEpaCategories() {
-        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/categories/epa");
+        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + '/categories/epa');
     }
 
     getEcCategories() {
-        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + "/categories/ec");
+        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + '/categories/ec');
     }
 
     getUserDetails(): Observable<any> {
@@ -122,24 +126,24 @@ export class EditorService {
     }
 
     updateCachedPipeline(rawPipelineModel: any) {
-        return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache", rawPipelineModel);
+        return this.http.post(this.apiBasePath + '/pipeline-cache', rawPipelineModel);
     }
 
     updateCachedCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
       return this.http.post(this.platformServicesCommons.authUserBasePath()
-          + "/pipeline-canvas-cache", pipelineCanvasMetadata)
+          + '/pipeline-canvas-cache', pipelineCanvasMetadata);
     }
 
     removePipelineFromCache() {
-        return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/pipeline-cache");
+        return this.http.delete(this.apiBasePath + '/pipeline-cache');
     }
 
     removeCanvasMetadataFromCache() {
-      return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/pipeline-canvas-cache");
+      return this.http.delete(this.apiBasePath + '/pipeline-canvas-cache');
     }
 
     private get pipelinesResourceUrl() {
-        return this.platformServicesCommons.authUserBasePath() + '/pipelines'
+        return this.platformServicesCommons.authUserBasePath() + '/pipelines';
     }
 
     announceConfiguredElement(pipelineElementDomId: string) {
@@ -151,12 +155,12 @@ export class EditorService {
     }
 
     openHelpDialog(pipelineElement: PipelineElementUnion) {
-        this.DialogService.open(HelpComponent,{
+        this.dialogService.open(HelpComponent, {
             panelType: PanelType.STANDARD_PANEL,
             title: pipelineElement.name,
-            width: "70vw",
+            width: '70vw',
             data: {
-                "pipelineElement": pipelineElement
+                'pipelineElement': pipelineElement
             }
         });
     }
@@ -167,17 +171,17 @@ export class EditorService {
     }
 
   deletePipelinePreviewRequest(previewId: string): Observable<any> {
-      return this.http.delete(this.pipelinePreviewBasePath + "/" + previewId);
+      return this.http.delete(this.pipelinePreviewBasePath + '/' + previewId);
   }
 
   getPipelinePreviewResult(previewId: string, pipelineElementDomId: string): Observable<any> {
       return this.http.get(this.pipelinePreviewBasePath
-          + "/"
+          + '/'
           + previewId
-          + "/" + pipelineElementDomId, {headers: { ignoreLoadingBar: '' }});
+          + '/' + pipelineElementDomId, {headers: { ignoreLoadingBar: '' }});
   }
 
   get pipelinePreviewBasePath() {
-      return this.platformServicesCommons.authUserBasePath() + "/pipeline-element-preview";
+      return this.apiBasePath + '/pipeline-element-preview';
   }
 }

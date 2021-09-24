@@ -16,16 +16,12 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  DataSourceDescription, PipelineCanvasMetadata, SpDataSet, SpDataStream
-} from "../../core-model/gen/streampipes-model";
-import {PlatformServicesCommons} from "./commons.service";
-import {map} from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { PipelineCanvasMetadata } from '../../core-model/gen/streampipes-model';
+import { PlatformServicesCommons } from './commons.service';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PipelineCanvasMetadataService {
@@ -46,7 +42,7 @@ export class PipelineCanvasMetadataService {
 
   updatePipelineCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
     return this.http.put(this.pipelineCanvasMetadataBasePath
-        + "/"
+        + '/'
         + pipelineCanvasMetadata.pipelineId, pipelineCanvasMetadata);
   }
 
@@ -56,10 +52,10 @@ export class PipelineCanvasMetadataService {
   }
 
   private get pipelineCanvasMetadataBasePath() {
-    return this.platformServicesCommons.authUserBasePath() + "/pipeline-canvas-metadata";
+    return this.platformServicesCommons.apiBasePath() + '/pipeline-canvas-metadata';
   }
 
   private get pipelineCanvasMetadataPipelinePath() {
-    return this.pipelineCanvasMetadataBasePath + "/pipeline/";
+    return this.pipelineCanvasMetadataBasePath + '/pipeline/';
   }
 }

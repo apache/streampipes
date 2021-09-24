@@ -26,7 +26,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-canvas-metadata")
+@Path("/v2/pipeline-canvas-metadata")
 public class PipelineCanvasMetadataResource extends AbstractRestResource {
 
   @GET

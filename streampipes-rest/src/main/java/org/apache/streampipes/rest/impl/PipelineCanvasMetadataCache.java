@@ -18,27 +18,26 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.pipeline.PipelineCanvasMetadataCacheManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-canvas-cache")
-public class PipelineCanvasMetadataCache extends AbstractRestResource {
+@Path("/v2/pipeline-canvas-cache")
+public class PipelineCanvasMetadataCache extends AbstractAuthGuardedRestResource {
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateCachedCanvasMetadata(@PathParam("username") String user,
-                                             String canvasMetadata) {
-    PipelineCanvasMetadataCacheManager.updateCachedCanvasMetadata(user, canvasMetadata);
+  public Response updateCachedCanvasMetadata(String canvasMetadata) {
+    PipelineCanvasMetadataCacheManager.updateCachedCanvasMetadata(getAuthenticatedUsername(), canvasMetadata);
     return ok();
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getCachedCanvasMetadata(@PathParam("username") String user) {
-      String result = PipelineCanvasMetadataCacheManager.getCachedCanvasMetadata(user);
+  public Response getCachedCanvasMetadata() {
+      String result = PipelineCanvasMetadataCacheManager.getCachedCanvasMetadata(getAuthenticatedUsername());
     if (result != null) {
       return ok(result);
     } else {
@@ -48,8 +47,8 @@ public class PipelineCanvasMetadataCache extends AbstractRestResource {
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  public Response removeCanvasMetadataFromCache(@PathParam("username") String user) {
-    PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(user);
+  public Response removeCanvasMetadataFromCache() {
+    PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(getAuthenticatedUsername());
     return ok();
   }
 }

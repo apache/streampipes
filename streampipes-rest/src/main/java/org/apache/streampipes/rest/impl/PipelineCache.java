@@ -18,27 +18,26 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-cache")
-public class PipelineCache extends AbstractRestResource {
+@Path("/v2/pipeline-cache")
+public class PipelineCache extends AbstractAuthGuardedRestResource {
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateCachedPipeline(@PathParam("username") String userName,
-                                       String rawPipelineModel) {
-    PipelineCacheManager.updateCachedPipeline(userName, rawPipelineModel);
+  public Response updateCachedPipeline(String rawPipelineModel) {
+    PipelineCacheManager.updateCachedPipeline(getAuthenticatedUsername(), rawPipelineModel);
     return ok();
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getCachedPipeline(@PathParam("username") String userName) {
-    String result = PipelineCacheManager.getCachedPipeline(userName);
+  public Response getCachedPipeline() {
+    String result = PipelineCacheManager.getCachedPipeline(getAuthenticatedUsername());
     if (result != null) {
       return ok(result);
     } else {
@@ -48,8 +47,8 @@ public class PipelineCache extends AbstractRestResource {
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  public Response removePipelineFromCache(@PathParam("username") String userName) {
-    PipelineCacheManager.removeCachedPipeline(userName);
+  public Response removePipelineFromCache() {
+    PipelineCacheManager.removeCachedPipeline(getAuthenticatedUsername());
     return ok();
   }
 }

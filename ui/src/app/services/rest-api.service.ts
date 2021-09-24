@@ -44,6 +44,10 @@ export class RestApi {
         return this.platformServicesCommons.authUserBasePath();
     };
 
+    urlApiBase() {
+        return this.platformServicesCommons.apiBasePath();
+    }
+
     getAssetUrl(appId) {
         return this.getServerUrl() +"/pe/" +appId +"/assets";
     }
@@ -223,15 +227,15 @@ export class RestApi {
     }
 
     getNotifications() {
-        return this.$http.get(this.urlBase() +"/notifications");
+        return this.$http.get(this.urlApiBase() +"/notifications");
     }
 
     getUnreadNotificationsCount(): Observable<any> {
-        return this.$http.get(this.urlBase() +"/notifications/count");
+        return this.$http.get(this.urlApiBase() +"/notifications/count");
     }
 
     getUnreadNotifications() {
-        return this.$http.get(this.urlBase() +"/notifications/unread");
+        return this.$http.get(this.urlApiBase() +"/notifications/unread");
     }
 
     getSepaById(elementId) {
@@ -445,15 +449,15 @@ export class RestApi {
     }
 
     getCachedPipeline() {
-        return this.$http.get(this.urlBase() + "/pipeline-cache");
+        return this.$http.get(this.urlApiBase() + "/pipeline-cache");
     }
 
     updateCachedPipeline(rawPipelineModel: any) {
-        return this.$http.post(this.urlBase() + "/pipeline-cache", rawPipelineModel);
+        return this.$http.post(this.urlApiBase() + "/pipeline-cache", rawPipelineModel);
     }
 
     removePipelineFromCache() {
-        return this.$http.delete(this.urlBase() + "/pipeline-cache");
+        return this.$http.delete(this.urlApiBase() + "/pipeline-cache");
     }
 
     getVersionInfo() {
