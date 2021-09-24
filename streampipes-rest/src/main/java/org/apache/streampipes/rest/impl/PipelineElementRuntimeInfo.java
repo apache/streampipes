@@ -31,7 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-element/runtime")
+@Path("/v2/pipeline-element/runtime")
 public class PipelineElementRuntimeInfo extends AbstractRestResource {
 
   @POST

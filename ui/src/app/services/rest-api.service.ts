@@ -101,7 +101,7 @@ export class RestApi {
     }
 
     jsonld(elementUri) {
-        return this.$http.get(this.urlBase() + '/element/' + encodeURIComponent(elementUri) + '/jsonld');
+        return this.$http.get(this.urlApiBase() + '/element/' + encodeURIComponent(elementUri) + '/jsonld');
     }
 
     configured(): Observable<any> {

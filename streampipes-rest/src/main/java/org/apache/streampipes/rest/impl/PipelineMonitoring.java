@@ -29,7 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-monitoring")
+@Path("/v2/pipeline-monitoring")
 public class PipelineMonitoring extends AbstractRestResource implements IPipelineMonitoring {
 
   @JacksonSerialized

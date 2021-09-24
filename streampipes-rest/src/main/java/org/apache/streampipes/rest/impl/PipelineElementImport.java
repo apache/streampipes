@@ -32,7 +32,7 @@ import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +46,15 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-@Path("/v2/users/{username}/element")
-public class PipelineElementImport extends AbstractRestResource {
+@Path("/v2/element")
+public class PipelineElementImport extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementImport.class);
 
   @POST
   @Path("/batch")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response addBatch(@PathParam("username") String username,
-                           @FormParam("uri") String uri,
+  public Response addBatch(@FormParam("uri") String uri,
                            @FormParam("publicElement") boolean publicElement) {
     try {
       uri = URLDecoder.decode(uri, "UTF-8");
@@ -63,7 +62,7 @@ public class PipelineElementImport extends AbstractRestResource {
       List<Message> messages = new ArrayList<>();
       if (element.isJsonArray()) {
         for (JsonElement jsonObj : element.getAsJsonArray()) {
-          messages.add(verifyAndAddElement(jsonObj.getAsString(), username, publicElement));
+          messages.add(verifyAndAddElement(jsonObj.getAsString(), getAuthenticatedUsername(), publicElement));
         }
       }
       return ok(messages);
@@ -75,13 +74,12 @@ public class PipelineElementImport extends AbstractRestResource {
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  public Response addElement(@PathParam("username") String username,
-                             @FormParam("uri") String uri,
+  public Response addElement(@FormParam("uri") String uri,
                              @FormParam("publicElement") boolean publicElement) {
-    if (!authorized(username)) {
+    if (!authorized(getAuthenticatedUsername())) {
       return ok(Notifications.error(NotificationType.UNAUTHORIZED));
     }
-    return ok(verifyAndAddElement(uri, username, publicElement));
+    return ok(verifyAndAddElement(uri, getAuthenticatedUsername(), publicElement));
   }
 
   private Message verifyAndAddElement(String uri, String username, boolean publicElement) {
@@ -91,7 +89,8 @@ public class PipelineElementImport extends AbstractRestResource {
   @PUT
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response updateElement(@PathParam("username") String username, @PathParam("id") String elementId) {
+  public Response updateElement(@PathParam("id") String elementId) {
+    String username = getAuthenticatedUsername();
     if (!authorized(username)) {
       return ok(Notifications.error(NotificationType.UNAUTHORIZED));
     }
@@ -109,8 +108,8 @@ public class PipelineElementImport extends AbstractRestResource {
   @Path("/{id}")
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  public Response deleteElement(@PathParam("username") String username, @PathParam("id") String elementId) {
-
+  public Response deleteElement(@PathParam("id") String elementId) {
+    String username = getAuthenticatedUsername();
     UserService userService = getUserService();
     IPipelineElementDescriptionStorageCache requestor = getPipelineElementRdfStorage();
     String appId;

@@ -16,24 +16,25 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import {from, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
-import {AuthStatusService} from '../../services/auth-status.service';
-import {UnitDescription} from '../model/UnitDescription';
+import { AuthStatusService } from '../../services/auth-status.service';
+import { UnitDescription } from '../model/UnitDescription';
 import {
     AdapterDescription,
-    DataSourceDescription,
     FormatDescriptionList,
     GuessSchema,
     Message,
-    ProtocolDescriptionList, SpDataStream
-} from "../../core-model/gen/streampipes-model";
+    ProtocolDescriptionList,
+    SpDataStream
+} from '../../core-model/gen/streampipes-model';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 
 @Injectable()
 export class RestService {
@@ -41,7 +42,8 @@ export class RestService {
 
     constructor(
         private http: HttpClient,
-        private authStatusService: AuthStatusService) { }
+        private authStatusService: AuthStatusService,
+        private platformServicesCommons: PlatformServicesCommons) { }
 
     addAdapter(adapter: AdapterDescription): Observable<Message> {
         return this.addAdapterDescription(adapter, '/master/adapters');
@@ -81,13 +83,13 @@ export class RestService {
 
     getSourceDetails(sourceElementId): Observable<SpDataStream> {
         return this.http
-            .get(this.makeUserDependentBaseUrl() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
+            .get(this.platformServicesCommons.apiBasePath() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
                 return SpDataStream.fromData(response as SpDataStream);
             }));
     }
 
     getRuntimeInfo(sourceDescription): Observable<any> {
-        return this.http.post(this.makeUserDependentBaseUrl() + '/pipeline-element/runtime', sourceDescription, {
+        return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipeline-element/runtime', sourceDescription, {
             headers: { ignoreLoadingBar: '' }
         });
     }
@@ -121,7 +123,7 @@ export class RestService {
             .post<UnitDescription[]>(this.host + this.authStatusService.email + '/master/unit', unitDescription)
             .pipe(map(response => {
                 const descriptions = response as UnitDescription[];
-                return descriptions.filter(entry => entry.resource != unitDescription.resource)
+                return descriptions.filter(entry => entry.resource != unitDescription.resource);
             }));
     }
 
