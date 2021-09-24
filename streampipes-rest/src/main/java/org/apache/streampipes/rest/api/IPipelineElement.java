@@ -23,16 +23,16 @@ import javax.ws.rs.core.Response;
 
 public interface IPipelineElement {
 
-	Response getAvailable(String username);
-	Response getFavorites(String username);
-	Response getOwn(String username);
+	Response getAvailable();
+	Response getFavorites();
+	Response getOwn();
 
-	Response addFavorite(String username, String elementUri);
+	Response addFavorite(String elementUri);
 
-	Response removeFavorite(String username, String elementUri);
-	Response removeOwn(String username, String elementUri);
+	Response removeFavorite(String elementUri);
+	Response removeOwn(String elementUri);
 
-	Response getElement(String username, String elementUri);
+	Response getElement(String elementUri);
 	
 	
 }
