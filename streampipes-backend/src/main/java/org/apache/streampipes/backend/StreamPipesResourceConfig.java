@@ -19,11 +19,11 @@
 package org.apache.streampipes.backend;
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
-import org.apache.streampipes.connect.container.master.rest.*;
 import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.ps.DataLakeResourceV4;
 import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
+import org.apache.streampipes.rest.impl.connect.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipelineResource;

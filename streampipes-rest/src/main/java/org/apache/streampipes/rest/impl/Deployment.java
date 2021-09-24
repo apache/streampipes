@@ -26,6 +26,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.storage.management.StorageManager;
 import org.glassfish.jersey.media.multipart.FormDataParam;

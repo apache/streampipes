@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.NotificationType;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.serializers.json.Utils;
 
 import javax.ws.rs.*;

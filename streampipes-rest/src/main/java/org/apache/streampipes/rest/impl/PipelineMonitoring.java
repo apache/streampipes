@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.monitoring.pipeline.PipelineExecutionStatusCollector;
 import org.apache.streampipes.rest.api.IPipelineMonitoring;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.GET;

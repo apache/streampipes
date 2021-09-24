@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.setup.Installer;
 import org.apache.streampipes.model.client.setup.InitialSettings;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SetupStatusMessage;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;

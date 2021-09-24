@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 

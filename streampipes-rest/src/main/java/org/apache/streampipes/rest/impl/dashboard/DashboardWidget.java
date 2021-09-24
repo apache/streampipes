@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 

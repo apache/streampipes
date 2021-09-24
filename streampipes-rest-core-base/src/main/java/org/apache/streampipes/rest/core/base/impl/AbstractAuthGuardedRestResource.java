@@ -15,17 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.container.master.rest;
+package org.apache.streampipes.rest.core.base.impl;
 
-import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
-import java.util.function.Supplier;
+public class AbstractAuthGuardedRestResource extends AbstractRestResource {
 
-public class AbstractAdapterResource<T> extends AbstractSharedRestInterface {
+  @Context
+  protected SecurityContext securityContext;
 
-  protected T managementService;
-
-  public AbstractAdapterResource(Supplier<T> managementServiceSupplier) {
-    this.managementService = managementServiceSupplier.get();
+  protected boolean isAuthenticated() {
+    return this.securityContext.getUserPrincipal() != null;
   }
+
+  protected String getAuthenticatedUsername() {
+    return this.securityContext.getUserPrincipal().getName();
+  }
+
 }

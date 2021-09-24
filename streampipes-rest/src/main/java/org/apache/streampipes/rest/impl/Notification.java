@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.*;

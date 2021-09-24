@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.pipeline.PipelineCacheManager;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

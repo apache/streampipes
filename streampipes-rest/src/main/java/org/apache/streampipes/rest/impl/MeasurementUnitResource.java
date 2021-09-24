@@ -16,6 +16,7 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.units.UnitProvider;

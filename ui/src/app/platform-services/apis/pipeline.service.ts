@@ -16,99 +16,96 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {PlatformServicesCommons} from "./commons.service";
-import {Observable} from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
+import { Observable } from 'rxjs';
 import {
   Message,
   Pipeline,
-  PipelineCategory, PipelineElementStatus,
-  PipelineOperationStatus, PipelineStatusMessage
-} from "../../core-model/gen/streampipes-model";
-import {map} from "rxjs/operators";
-import {query} from "@angular/animations";
+  PipelineCategory,
+  PipelineOperationStatus,
+  PipelineStatusMessage
+} from '../../core-model/gen/streampipes-model';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PipelineService {
 
   constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-
-  }
+              private platformServicesCommons: PlatformServicesCommons) { }
 
   getPipelineCategories(): Observable<PipelineCategory[]> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelinecategories")
+    return this.http.get(`${this.apiBasePath}/pipelinecategories`)
         .pipe(map(response => {
           return (response as any[]).map(p => PipelineCategory.fromData(p));
         }));
-  };
+  }
 
   storePipelineCategory(pipelineCategory: PipelineCategory) {
-    return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipelinecategories", pipelineCategory);
-  };
+    return this.http.post(`${this.apiBasePath}/pipelinecategories`, pipelineCategory);
+  }
 
   deletePipelineCategory(categoryId: string) {
-    return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/pipelinecategories/" + categoryId);
+    return this.http.delete(`${this.apiBasePath}/pipelinecategories/${categoryId}`);
   }
 
   startPipeline(pipelineId): Observable<PipelineOperationStatus> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId + "/start")
+    return this.http.get(`${this.apiBasePath}/pipelines/${pipelineId}/start`)
         .pipe(map(result => PipelineOperationStatus.fromData(result as PipelineOperationStatus)));
   }
 
   stopPipeline(pipelineId: string, forceStop?: boolean): Observable<PipelineOperationStatus> {
-    let queryAppendix = "";
-    if (forceStop) {
-      queryAppendix = "?forceStop=" + forceStop;
-    }
-    return this.http.get(this.platformServicesCommons.authUserBasePath()
-        + "/pipelines/" + pipelineId
-        + "/stop" + queryAppendix)
+    const queryAppendix = forceStop ? '?forceStop=' + forceStop : '';
+    return this.http.get(`${this.apiBasePath}/pipelines/${pipelineId}/stop${queryAppendix}`)
         .pipe(map(result => PipelineOperationStatus.fromData(result as PipelineOperationStatus)));
   }
 
-  getPipelineById(pipelineId): Observable<Pipeline> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId)
+  getPipelineById(pipelineId: string): Observable<Pipeline> {
+    return this.http.get(`${this.apiBasePath}/pipelines/${pipelineId}`)
         .pipe(map(response => Pipeline.fromData(response as Pipeline)));
   }
 
   storePipeline(pipeline: Pipeline): Observable<Message> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipelines", pipeline)
+    return this.http.post(`${this.apiBasePath}/pipelines`, pipeline)
         .pipe(map(response => {
           return Message.fromData(response as Message);
         }));
   }
 
   updatePipeline(pipeline: Pipeline): Observable<Message> {
-    var pipelineId = pipeline._id;
-    return this.http.put(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId, pipeline)
+    const pipelineId = pipeline._id;
+    return this.http.put(`${this.apiBasePath}/pipelines/${pipelineId}`, pipeline)
         .pipe(map(response => {
           return Message.fromData(response as Message);
         }));
   }
 
   getOwnPipelines(): Observable<Pipeline[]> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/own").pipe(map(response => {
+    return this.http.get(`${this.apiBasePath}/pipelines/own`).pipe(map(response => {
       return (response as any[]).map(p => Pipeline.fromData(p));
     }));
-  };
+  }
 
   deleteOwnPipeline(pipelineId): Observable<any> {
-    return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId);
+    return this.http.delete(`${this.apiBasePath}/pipelines/${pipelineId}`);
   }
 
   getSystemPipelines(): Observable<Pipeline[]> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/system").pipe(map(response => {
+    return this.http.get(`${this.apiBasePath}/pipelines/system`).pipe(map(response => {
       return (response as any[]).map(p => Pipeline.fromData(p));
-    }))
-  };
+    }));
+  }
 
   getPipelineStatusById(pipelineId): Observable<PipelineStatusMessage[]> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/pipelines/" + pipelineId + "/status")
+    return this.http.get(`${this.apiBasePath}/pipelines/${pipelineId}/status`)
         .pipe(map(response => {
           return (response as any[]).map(r => PipelineStatusMessage.fromData(r));
         }));
+  }
+
+  get apiBasePath() {
+    return this.platformServicesCommons.apiBasePath();
   }
 
 }

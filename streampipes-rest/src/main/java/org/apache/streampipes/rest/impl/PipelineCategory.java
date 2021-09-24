@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 
@@ -26,13 +27,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipelinecategories")
+@Path("/v2/pipelinecategories")
 public class PipelineCategory extends AbstractRestResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	public Response getCategories(@PathParam("username") String username) {
+	public Response getCategories() {
 		return ok(getPipelineCategoryStorage()
 				.getPipelineCategories());
 	}
@@ -41,7 +42,7 @@ public class PipelineCategory extends AbstractRestResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	public Response addCategory(@PathParam("username") String username, org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
+	public Response addCategory(org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
 		boolean success = getPipelineCategoryStorage()
 				.addPipelineCategory(pipelineCategory);
 		if (success) return ok(Notifications.success("Category successfully stored. "));
@@ -52,7 +53,7 @@ public class PipelineCategory extends AbstractRestResource {
 	@Path("/{categoryId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	public Response removeCategory(@PathParam("username") String username, @PathParam("categoryId") String categoryId) {
+	public Response removeCategory(@PathParam("categoryId") String categoryId) {
 		boolean success = getPipelineCategoryStorage()
 				.deletePipelineCategory(categoryId);
 		if (success) return ok(Notifications.success("Category successfully deleted. "));

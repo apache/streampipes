@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.units.UnitProvider;
 
 import javax.ws.rs.GET;

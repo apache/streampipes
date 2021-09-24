@@ -19,9 +19,10 @@
 package org.apache.streampipes.rest.impl;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.streampipes.connect.container.master.general.ResetManagement;
+import org.apache.streampipes.rest.ResetManagement;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

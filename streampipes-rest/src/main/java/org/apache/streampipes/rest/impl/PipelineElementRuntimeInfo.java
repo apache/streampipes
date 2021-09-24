@@ -21,6 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.Consumes;

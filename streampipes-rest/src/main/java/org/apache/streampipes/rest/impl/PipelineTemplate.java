@@ -25,6 +25,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateDescriptionContainer;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 
 import javax.ws.rs.*;

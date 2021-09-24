@@ -25,6 +25,7 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;

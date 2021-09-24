@@ -20,6 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.lightcouch.CouchDbClient;

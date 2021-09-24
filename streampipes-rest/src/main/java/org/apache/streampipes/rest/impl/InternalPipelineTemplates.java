@@ -25,6 +25,7 @@ import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.sdk.builder.BoundPipelineElementBuilder;
 import org.apache.streampipes.sdk.builder.PipelineTemplateBuilder;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;

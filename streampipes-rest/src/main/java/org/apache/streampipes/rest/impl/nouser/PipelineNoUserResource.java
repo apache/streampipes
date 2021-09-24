@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.nouser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.management.PipelineManagement;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.NoAuthenticationRequired;

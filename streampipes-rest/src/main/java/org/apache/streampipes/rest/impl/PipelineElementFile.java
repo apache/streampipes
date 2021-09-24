@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.client.file.FileMetadata;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 

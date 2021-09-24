@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

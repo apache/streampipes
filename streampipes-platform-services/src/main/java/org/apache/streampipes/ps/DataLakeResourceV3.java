@@ -25,7 +25,7 @@ import org.apache.streampipes.model.datalake.DataResult;
 import org.apache.streampipes.model.datalake.GroupedDataResult;
 import org.apache.streampipes.model.datalake.PageResult;
 import org.apache.streampipes.model.message.Notification;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
