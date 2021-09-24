@@ -29,7 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pe/options")
+@Path("/v2/pe/options")
 public class ContainerProvidedOptions extends AbstractRestResource {
 
   @POST

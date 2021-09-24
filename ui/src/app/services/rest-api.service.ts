@@ -201,16 +201,6 @@ export class RestApi {
         return this.$http.post(this.urlBase() +"/pipelinecategories", pipelineCategory);
     };
 
-    fetchRemoteOptions(resolvableOptionsParameterRequest) {
-        return this.$http.post(this.urlBase() +"/pe/options", resolvableOptionsParameterRequest);
-    }
-
-
-
-    updateDataSet(dataSet) {
-        return this.$http.post(this.urlBase() +"/pipelines/update/dataset", dataSet);
-    }
-
     startPipeline(pipelineId) {
         return this.$http.get(this.urlBase() +"/pipelines/" +pipelineId +"/start");
     }
@@ -363,10 +353,6 @@ export class RestApi {
 
     getActionDetailsFromOntology(uri, keepIds) {
         return this.$http.get(this.getServerUrl() + "/ontology/actions/" + encodeURIComponent(uri) +"?keepIds=" +keepIds);
-    }
-
-    getRunningVisualizations() {
-        return this.$http.get(this.getServerUrl() + "/visualizations");
     }
 
     getAllUnits() {
