@@ -29,6 +29,9 @@ export interface MapVisConfig extends DataExplorerVisConfig {
   selectedToolTipContent: DataExplorerField[];
   selectedMarkerOrTrace: string;
   selectedMarkerType: string;
+  selectedZoomValue: number;
+  useLastEventCoordinates: boolean;
+
 }
 
 export interface MapWidgetModel extends DataExplorerWidgetModel {

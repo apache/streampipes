@@ -53,10 +53,16 @@ export class MapWidgetConfigComponent extends BaseWidgetConfig<MapWidgetModel, M
     this.triggerDataRefresh();
   }
 
-  // setSelectedMarkerOrTrace(selection: string) {
-  //   this.currentlyConfiguredWidget.visualizationConfig.selectedMarkerOrTrace = selection;
-  //   this.triggerDataRefresh();
-  // }
+  setZoomValue(field: string) {
+    var fieldToNumber : number = +field;
+    this.currentlyConfiguredWidget.visualizationConfig.selectedZoomValue = fieldToNumber;
+    this.triggerDataRefresh();
+  }
+
+  setUseLastEventCoordinations(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.useLastEventCoordinates = field['checked'];
+    this.triggerDataRefresh();
+  }
 
   setSelectedToolTipContent(fields: DataExplorerField[]) {
     this.currentlyConfiguredWidget.visualizationConfig.selectedToolTipContent = fields;
@@ -78,6 +84,8 @@ export class MapWidgetConfigComponent extends BaseWidgetConfig<MapWidgetModel, M
       selectedToolTipContent: this.fieldProvider.allFields,
       selectedMarkerOrTrace: this.markerOrTrace[0],
       selectedMarkerType: this.markerType[0],
+      selectedZoomValue: 1,
+      useLastEventCoordinates: true,
     };
   }
 

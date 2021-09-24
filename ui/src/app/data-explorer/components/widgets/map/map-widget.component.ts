@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Content, icon, latLng, LatLngExpression, Map, marker, Marker, polyline, Polyline, tileLayer } from "leaflet";
+import { Content, icon, LatLng, latLng, LatLngExpression, Map, marker, Marker, polyline, Polyline, tileLayer } from "leaflet";
 import { DataResult } from '../../../../core-model/datalake/DataResult';
 
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
@@ -53,12 +53,14 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
 
   map: Map;
 
+  defaultCenter = latLng(46.879966, -121.726909);
+
   options = {
     layers: [
       tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: "© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors" })
     ],
-    zoom: 5,
-    center: latLng(46.879966, -121.726909),
+    zoom: 1,
+    center: this.defaultCenter,
   };
 
   ngOnInit(): void {
@@ -66,9 +68,6 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     this.layers = [];
     this.markerIds = [];
     this.showMarkers = true;
-
-    // this.mapWidth = 1600;
-    // this.mapHeight = 1200;
   }
 
   ngOnDestroy(): void {
@@ -81,7 +80,6 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
 
   onMapReady(map: Map) {
     this.map = map;
-    // this.map.invalidateSize();
   }
 
   makeMarker(point: LatLngExpression, markerType: string): Marker {
@@ -105,13 +103,19 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   }
 
   public refreshView() {
+    const lastCoordinate = this.getLastCoordinate(this.lastDataResults)
+
+    const zoom = this.dataExplorerWidget.visualizationConfig.selectedZoomValue
+    const currentCenter = this.defaultCenter;
+    const usedCenter = this.dataExplorerWidget.visualizationConfig.useLastEventCoordinates ?  lastCoordinate : currentCenter;
+
+    this.map.setView(usedCenter, zoom) 
     this.makeLayers(this.lastDataResults)
   }
 
   onResize(width: number, height: number) {
     this.mapWidth = width;
     this.mapHeight = height;
-    // this.map.invalidateSize();
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
@@ -123,12 +127,28 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   }
 
   onDataReceived(dataResults: DataResult[]) {
-    this.lastDataResults = dataResults
-    this.makeLayers(dataResults);    
+   this.lastDataResults = dataResults
+   this.makeLayers(dataResults);    
   }
 
   transform(rows, index: number): any[] {
     return rows.map(row => row[index]);
+  }
+
+  getLastCoordinate(dataResults: DataResult[]) {
+    if (dataResults[0]['total'] > 1) {
+      const result = dataResults[0];
+
+      const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, result);
+      const longitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLongitudeProperty, result);
+
+      const latitudeValues = this.transform(result.rows, latitudeIndex);
+      const longitudeValues = this.transform(result.rows, longitudeIndex);
+
+      return new LatLng(latitudeValues[latitudeValues.length-1], longitudeValues[longitudeValues.length-1]);
+    }
+
+    return this.defaultCenter;
   }
 
   makeLayers(dataResults: DataResult[]) {
