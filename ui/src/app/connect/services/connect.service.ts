@@ -16,7 +16,7 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   AdapterDescription,
   GenericAdapterSetDescription,

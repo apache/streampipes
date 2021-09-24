@@ -16,17 +16,16 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {AuthStatusService} from "../../services/auth-status.service";
-import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {ExtensionsServiceEndpointItem} from "../../core-model/gen/streampipes-model-client";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AuthStatusService } from '../../services/auth-status.service';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ExtensionsServiceEndpointItem } from '../../core-model/gen/streampipes-model-client';
 
 @Injectable()
 export class AddService {
-
 
   constructor(private http: HttpClient,
               private authStatusService: AuthStatusService,
@@ -34,28 +33,28 @@ export class AddService {
   }
 
   getRdfEndpoints(): Observable<any> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/rdfendpoints");
+    return this.http.get(this.platformServicesCommons.apiBasePath() + '/rdfendpoints');
   }
 
-  getRdfEndpointItems(): Observable<Array<ExtensionsServiceEndpointItem>> {
+  getRdfEndpointItems(): Observable<ExtensionsServiceEndpointItem[]> {
     return this
         .http
-        .get(this.platformServicesCommons.authUserBasePath() + "/rdfendpoints/items")
+        .get(this.platformServicesCommons.apiBasePath() + '/rdfendpoints/items')
         .pipe(map(response => {
           return (response as any[]).map(item => ExtensionsServiceEndpointItem.fromData(item));
         }));
   }
 
   addRdfEndpoint(rdfEndpoint): Observable<any> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath() + "/rdfendpoints", rdfEndpoint);
+    return this.http.post(this.platformServicesCommons.apiBasePath() + '/rdfendpoints', rdfEndpoint);
   }
 
   removeRdfEndpoint(rdfEndpointId): Observable<any> {
-    return this.http.delete(this.platformServicesCommons.authUserBasePath() + "/rdfendpoints/" + rdfEndpointId);
+    return this.http.delete(this.platformServicesCommons.apiBasePath() + '/rdfendpoints/' + rdfEndpointId);
   }
 
   getRdfEndpointIcon(item: ExtensionsServiceEndpointItem): Observable<any> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath()
-        + "/rdfendpoints/items/icon", item, { responseType: 'blob' });
+    return this.http.post(this.platformServicesCommons.apiBasePath()
+        + '/rdfendpoints/items/icon', item, {responseType: 'blob'});
   }
 }

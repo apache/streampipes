@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.rest;
+package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -34,11 +34,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/v2/connect/{username}/master/adapters")
+@Path("/v2/connect/master/adapters")
 public class AdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
-    private Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
-    private WorkerUrlProvider workerUrlProvider;
+    private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
+    private final WorkerUrlProvider workerUrlProvider;
 
     public AdapterResource() {
         super(AdapterMasterManagement::new);
@@ -48,9 +48,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @POST
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addAdapter(AdapterDescription adapterDescription,
-                               @PathParam("username") String username) {
-
+    public Response addAdapter(AdapterDescription adapterDescription) {
+        String username = getAuthenticatedUsername();
         String adapterId;
         LOG.info("User: " + username + " starts adapter " + adapterDescription.getAdapterId());
 
@@ -86,8 +85,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}/stop")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response stopAdapter(@PathParam("id") String adapterId,
-                                @PathParam("username") String username) {
+    public Response stopAdapter(@PathParam("id") String adapterId) {
         try {
             managementService.stopStreamAdapter(adapterId, getAdapterDescription(adapterId).getSelectedEndpointUrl());
             return ok(Notifications.success("Adapter started"));
@@ -101,8 +99,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}/start")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response startAdapter(@PathParam("id") String adapterId,
-                                @PathParam("username") String username) {
+    public Response startAdapter(@PathParam("id") String adapterId) {
         try {
             String workerUrl =  workerUrlProvider.getWorkerBaseUrl(getAdapterDescription(adapterId).getAppId());
             managementService.startStreamAdapter(adapterId, workerUrl);
@@ -117,8 +114,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAdapter(@PathParam("id") String adapterId,
-                                  @PathParam("username") String username) {
+    public Response deleteAdapter(@PathParam("id") String adapterId) {
 
         try {
             managementService.deleteAdapter(adapterId);

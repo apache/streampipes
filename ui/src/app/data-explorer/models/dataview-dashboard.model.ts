@@ -18,6 +18,8 @@
 
 import { GridsterConfig } from 'angular-gridster2';
 import { DataLakeMeasure } from '../../core-model/gen/streampipes-model';
+import { WidgetType } from '../registry/data-explorer-widgets';
+
 
 // tslint:disable-next-line:no-empty-interface
 export interface IDataViewDashboardConfig extends GridsterConfig {
@@ -26,12 +28,18 @@ export interface IDataViewDashboardConfig extends GridsterConfig {
 export interface IWidget {
   id: string;
   label: string;
+  componentClass: any;
 }
 
 export interface WidgetBaseAppearanceConfig {
   backgroundColor: string;
   textColor: string;
   widgetTitle: string;
+}
+
+export interface WidgetTypeChangeMessage {
+  widgetId: string;
+  newWidgetTypeId: string;
 }
 
 export interface RefreshMessage {
@@ -106,7 +114,7 @@ export interface DataExplorerDataConfig {
 }
 
 export interface DataExplorerVisConfig {
-
+  forType: WidgetType;
 }
 
 

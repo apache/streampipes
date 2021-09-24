@@ -31,7 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
-@Path("/v2/users/{username}/dashboard/pipelines")
+@Path("/v2/dashboard/pipelines")
 public class VisualizablePipelineResource extends AbstractPipelineExtractionResource<VisualizablePipeline> {
 
   private static final String DashboardAppId = "org.apache.streampipes.sinks.internal.jvm.dashboard";

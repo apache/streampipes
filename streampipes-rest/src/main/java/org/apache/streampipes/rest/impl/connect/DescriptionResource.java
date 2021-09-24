@@ -15,7 +15,7 @@
  *   limitations under the License.
  */
 
-package org.apache.streampipes.connect.container.master.rest;
+package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
-@Path("/v2/connect/{username}/master/description")
+@Path("/v2/connect/master/description")
 public class DescriptionResource extends AbstractAdapterResource<DescriptionManagement> {
 
     private static final Logger LOG = LoggerFactory.getLogger(DescriptionResource.class);
@@ -82,7 +82,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     @GET
     @Path("/{id}/assets")
     @Produces("application/zip")
-    public Response getAdapterAssets(@PathParam("id") String id, @PathParam("username") String userName) {
+    public Response getAdapterAssets(@PathParam("id") String id) {
         try {
             String result = null;
 
@@ -119,7 +119,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     @GET
     @Path("/{id}/assets/icon")
     @Produces("image/png")
-    public Response getAdapterIconAsset(@PathParam("id") String id, @PathParam("username") String userName) {
+    public Response getAdapterIconAsset(@PathParam("id") String id) {
         try {
 
             byte[] result = null;
@@ -157,7 +157,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     @GET
     @Path("/{id}/assets/documentation")
     @Produces(MediaType.TEXT_PLAIN)
-    public Response getAdapterDocumentationAsset(@PathParam("id") String id, @PathParam("username") String userName) {
+    public Response getAdapterDocumentationAsset(@PathParam("id") String id) {
         try {
             String result = null;
 

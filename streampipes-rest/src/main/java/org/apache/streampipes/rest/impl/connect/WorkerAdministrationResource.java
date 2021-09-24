@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.rest;
+package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
 @Path("v2/connect/{username}/master/administration")
 public class WorkerAdministrationResource extends AbstractSharedRestInterface {
 
-    private Logger LOG = LoggerFactory.getLogger(WorkerAdministrationResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WorkerAdministrationResource.class);
 
     private WorkerAdministrationManagement workerAdministrationManagement;
 

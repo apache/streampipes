@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.MessagingSettings;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.svcdiscovery.api.model.PeConfig;

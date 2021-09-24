@@ -29,9 +29,9 @@ import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -16,10 +16,10 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {HttpEventType, HttpResponse} from "@angular/common/http";
-import {FilesService} from "../../../platform-services/apis/files.service";
+import { Component, OnInit } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { FilesService } from '../../../platform-services/apis/files.service';
 
 @Component({
   selector: 'file-upload-dialog-component',
@@ -28,13 +28,13 @@ import {FilesService} from "../../../platform-services/apis/files.service";
 })
 export class FileUploadDialogComponent implements OnInit {
 
-  inputValue: String;
-  fileName: String;
+  inputValue: string;
+  fileName: string;
 
   selectedUploadFile: File;
 
-  hasInput: Boolean;
-  errorMessage = "Please enter a value";
+  hasInput: boolean;
+  errorMessage = 'Please enter a value';
 
   uploadStatus = 0;
 
@@ -57,7 +57,7 @@ export class FileUploadDialogComponent implements OnInit {
     if (this.selectedUploadFile !== undefined) {
       this.filesService.uploadFile(this.selectedUploadFile).subscribe(
           event => {
-            if (event.type == HttpEventType.UploadProgress) {
+            if (event.type === HttpEventType.UploadProgress) {
               this.uploadStatus = Math.round(100 * event.loaded / event.total);
             } else if (event instanceof HttpResponse) {
               this.dialogRef.close();

@@ -24,32 +24,38 @@ import {
   EventSchema
 } from '../../../../core-model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import {
-  DataExplorerField,
-  FieldProvider,
-  SourceConfig
-} from '../../../models/dataview-dashboard.model';
+import { DataExplorerField, DataExplorerVisConfig, FieldProvider, SourceConfig } from '../../../models/dataview-dashboard.model';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { WidgetType } from '../../../registry/data-explorer-widgets';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
-export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implements OnChanges {
+export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel, V extends DataExplorerVisConfig> implements OnChanges {
 
   @Input() currentlyConfiguredWidget: T;
 
   fieldProvider: FieldProvider;
 
   constructor(protected widgetConfigurationService: WidgetConfigurationService,
-              protected fieldService: DataExplorerFieldProviderService) { }
+              protected fieldService: DataExplorerFieldProviderService) {
+  }
 
   onInit() {
     this.makeFields();
+    this.checkAndInitialize();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.makeFields();
     if (changes.currentlyConfiguredWidget) {
-      this.updateWidgetConfigOptions();
+      this.checkAndInitialize();
+    }
+  }
+
+  checkAndInitialize() {
+    if (!this.currentlyConfiguredWidget.visualizationConfig ||
+      !(this.currentlyConfiguredWidget.visualizationConfig.forType === this.getWidgetType())) {
+      this.currentlyConfiguredWidget.visualizationConfig = this.initWidgetConfig();
     }
   }
 
@@ -73,7 +79,6 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
       refreshView: true
     });
   }
-
 
   getValuePropertyKeys(eventSchema: EventSchema) {
     const propertyKeys: EventPropertyUnion[] = [];
@@ -109,7 +114,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
 
     eventSchema.eventProperties.forEach(p => {
       if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) &&
-          !this.fieldService.isNumber(p)) {
+        !this.fieldService.isNumber(p)) {
         result.push(p);
       }
     });
@@ -132,7 +137,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
 
     eventSchema.eventProperties.forEach(p => {
       if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) &&
-          this.fieldService.isNumber(p)) {
+        this.fieldService.isNumber(p)) {
         propertyKeys.push(p);
       }
     });
@@ -142,10 +147,12 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel> implem
 
   getTimestampProperty(eventSchema: EventSchema) {
     return eventSchema.eventProperties.find(p =>
-        this.fieldService.isTimestamp(p)
+      this.fieldService.isTimestamp(p)
     );
   }
 
-  protected abstract updateWidgetConfigOptions();
+  protected abstract getWidgetType(): WidgetType;
+
+  protected abstract initWidgetConfig(): V;
 
 }

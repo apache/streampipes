@@ -20,13 +20,14 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.preview.PipelinePreview;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.preview.PipelinePreviewModel;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-element-preview")
+@Path("/v2/pipeline-element-preview")
 public class PipelineElementPreview extends AbstractRestResource {
 
 

@@ -18,12 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
-import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { ResizeService } from '../../../services/resize.service';
 import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
-import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
-import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
@@ -57,14 +52,6 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
       responsive: true
     }
   };
-
-  constructor(dataLakeRestService: DatalakeRestService,
-              widgetConfigurationService: WidgetConfigurationService,
-              resizeService: ResizeService,
-              dataViewQueryGeneratorService: DataViewQueryGeneratorService,
-              fieldProvider: DataExplorerFieldProviderService) {
-    super(dataLakeRestService, widgetConfigurationService, resizeService, dataViewQueryGeneratorService, fieldProvider);
-  }
 
   refreshView() {
     this.updateAppearance();

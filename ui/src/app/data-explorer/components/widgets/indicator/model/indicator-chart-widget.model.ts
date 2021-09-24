@@ -17,12 +17,9 @@
  */
 
 import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
-import {
-  DataExplorerDataConfig,
-  DataExplorerField
-} from '../../../../models/dataview-dashboard.model';
+import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-export interface IndicatorChartVisConfig {
+export interface IndicatorChartVisConfig extends DataExplorerVisConfig {
   valueField?: DataExplorerField;
   deltaField?: DataExplorerField;
   showDelta?: boolean;

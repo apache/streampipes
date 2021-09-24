@@ -24,6 +24,7 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.rest.api.IPipelineElement;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
@@ -35,8 +36,8 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/users/{username}/streams")
-public class SemanticEventProducer extends AbstractRestResource implements IPipelineElement {
+@Path("/v2/streams")
+public class SemanticEventProducer extends AbstractAuthGuardedRestResource implements IPipelineElement {
 
 	@GET
 	@Path("/available")
@@ -44,9 +45,9 @@ public class SemanticEventProducer extends AbstractRestResource implements IPipe
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response getAvailable(@PathParam("username") String username) {
+	public Response getAvailable() {
 		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
-				getUserService().getAvailableSourceUris(username));
+				getUserService().getAvailableSourceUris(getAuthenticatedUsername()));
 		return ok(seps);
 	}
 	
@@ -56,9 +57,9 @@ public class SemanticEventProducer extends AbstractRestResource implements IPipe
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response getFavorites(@PathParam("username") String username) {
+	public Response getFavorites() {
 		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
-				getUserService().getFavoriteSourceUris(username));
+				getUserService().getFavoriteSourceUris(getAuthenticatedUsername()));
 		return ok(seps);
 	}
 
@@ -68,9 +69,9 @@ public class SemanticEventProducer extends AbstractRestResource implements IPipe
 	@Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
 	@JacksonSerialized
 	@Override
-	public Response getOwn(@PathParam("username") String username) {
+	public Response getOwn() {
 		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
-				getUserService().getOwnSourceUris(username));
+				getUserService().getOwnSourceUris(getAuthenticatedUsername()));
 		List<SpDataStream> si = seps.stream().map(s -> new Cloner().mapSequence(s)).collect(Collectors.toList());
 
 		return ok(si);
@@ -82,8 +83,8 @@ public class SemanticEventProducer extends AbstractRestResource implements IPipe
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
-		getUserService().addSourceAsFavorite(username, decode(elementUri));
+	public Response addFavorite(@FormParam("uri") String elementUri) {
+		getUserService().addSourceAsFavorite(getAuthenticatedUsername(), decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 
@@ -93,8 +94,8 @@ public class SemanticEventProducer extends AbstractRestResource implements IPipe
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		getUserService().removeSourceFromFavorites(username, decode(elementUri));
+	public Response removeFavorite(@PathParam("elementUri") String elementUri) {
+		getUserService().removeSourceFromFavorites(getAuthenticatedUsername(), decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	
@@ -104,9 +105,8 @@ public class SemanticEventProducer extends AbstractRestResource implements IPipe
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response removeOwn(@PathParam("username") String username,
-														@PathParam("elementId") String elementId) {
-		getUserService().deleteOwnSource(username, elementId);
+	public Response removeOwn(@PathParam("elementId") String elementId) {
+		getUserService().deleteOwnSource(getAuthenticatedUsername(), elementId);
 		getPipelineElementRdfStorage().deleteDataStream(getPipelineElementRdfStorage().getDataStreamById(elementId));
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
@@ -116,7 +116,7 @@ public class SemanticEventProducer extends AbstractRestResource implements IPipe
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
 	@Override
-	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
+	public Response getElement(@PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		return ok(new Cloner().mapSequence(getPipelineElementRdfStorage().getDataStreamById(elementUri)));
 	}

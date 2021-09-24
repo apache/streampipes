@@ -855,6 +855,7 @@
         <module>streampipes-service-discovery-api</module>
         <module>streampipes-connect-api</module>
         <module>streampipes-service-extensions-base</module>
+        <module>streampipes-rest-core-base</module>
     </modules>
 
     <profiles>

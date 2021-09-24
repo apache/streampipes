@@ -16,11 +16,11 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
-import {AuthStatusService} from '../../services/auth-status.service';
-import {ConnectService} from './connect.service';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { AuthStatusService } from '../../services/auth-status.service';
+import { ConnectService } from './connect.service';
 import {
   AdapterDescription,
   AdapterDescriptionList,
@@ -34,13 +34,12 @@ import {
   SpDataStream,
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription
-} from "../../core-model/gen/streampipes-model";
-import {Observable, zip} from "rxjs";
-import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
+} from '../../core-model/gen/streampipes-model';
+import { Observable, zip } from 'rxjs';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 
 @Injectable()
 export class DataMarketplaceService {
-  private host = '/streampipes-backend/api/v2/connect/';
 
   constructor(
       private http: HttpClient,
@@ -49,6 +48,9 @@ export class DataMarketplaceService {
       private platformServicesCommons: PlatformServicesCommons) {
   }
 
+  get connectPath() {
+    return this.platformServicesCommons.apiBasePath() + '/connect';
+  }
 
   getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/description/adapters').pipe(map(response => {
@@ -67,12 +69,11 @@ export class DataMarketplaceService {
   requestAdapterDescriptions(path: string): Observable<AdapterDescriptionUnion[]> {
     return this.http
         .get(
-            this.host +
-            this.authStatusService.email +
+            this.connectPath +
             path
         )
         .pipe(map(response => {
-          let adapterDescriptionList: AdapterDescriptionList = AdapterDescriptionList.fromData(response as AdapterDescriptionList);
+          const adapterDescriptionList: AdapterDescriptionList = AdapterDescriptionList.fromData(response as AdapterDescriptionList);
           return adapterDescriptionList.list;
         }));
   }
@@ -80,29 +81,28 @@ export class DataMarketplaceService {
   stopAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
     return this.http.post(this.adapterMasterUrl
         + adapter.id
-        + "/stop", {})
+        + '/stop', {})
         .pipe(map(response => Message.fromData(response as any)));
   }
 
   startAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
     return this.http.post(this.adapterMasterUrl
         + adapter.id
-        + "/start", {})
-        .pipe(map(response => Message.fromData(response as any)));;
+        + '/start', {})
+        .pipe(map(response => Message.fromData(response as any)));
   }
 
   get adapterMasterUrl() {
-    return this.host
-        + this.authStatusService.email
-        + "/master/adapters/";
+    return this.connectPath
+        + '/master/adapters/';
   }
 
   deleteAdapter(adapter: AdapterDescription): Observable<Object> {
-    return this.deleteRequest(adapter, '/master/adapters/')
+    return this.deleteRequest(adapter, '/master/adapters/');
   }
 
   deleteAdapterTemplate(adapter: AdapterDescription): Observable<Object> {
-    return this.deleteRequest(adapter, '/master/adapters/template/')
+    return this.deleteRequest(adapter, '/master/adapters/template/');
   }
 
   getAdapterCategories(): Observable<Object> {
@@ -111,10 +111,9 @@ export class DataMarketplaceService {
         '/api/v2/categories/adapter');
   }
 
-  private deleteRequest(adapter: AdapterDescription, url: String) {
+  private deleteRequest(adapter: AdapterDescription, url: string) {
     return this.http.delete(
-        this.host +
-        this.authStatusService.email +
+        this.connectPath +
         url +
         adapter.id
     );
@@ -123,24 +122,23 @@ export class DataMarketplaceService {
   getProtocols(): Observable<AdapterDescriptionUnion[]> {
     return this.http
         .get(
-            this.host +
-            this.authStatusService.email +
+            this.connectPath +
             '/master/description/protocols'
         )
         .pipe(map(response => {
-          let adapterDescriptions: AdapterDescriptionUnion[] = [];
-          let protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
+          const adapterDescriptions: AdapterDescriptionUnion[] = [];
+          const protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
 
-          for (let protocol of protocols) {
+          for (const protocol of protocols) {
             let newAdapterDescription: AdapterDescriptionUnion;
             if (protocol.sourceType === 'SET') {
               newAdapterDescription = new GenericAdapterSetDescription();
-              newAdapterDescription["@class"] = "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription";
+              newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription';
               newAdapterDescription.dataSet = new SpDataSet();
               newAdapterDescription.dataSet.eventSchema = new EventSchema();
             } else if (protocol.sourceType === 'STREAM') {
               newAdapterDescription = new GenericAdapterStreamDescription();
-              newAdapterDescription["@class"] = "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription";
+              newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
               newAdapterDescription.dataStream = new SpDataStream();
               newAdapterDescription.dataStream.eventSchema = new EventSchema();
             }
@@ -185,11 +183,11 @@ export class DataMarketplaceService {
   // }
 
   getGenericAndSpecificAdapterDescriptions(): Observable<[AdapterDescriptionUnion[], AdapterDescriptionUnion[]]> {
-  return zip(this.getAdapterDescriptions(), this.getProtocols());
+    return zip(this.getAdapterDescriptions(), this.getProtocols());
   }
 
   cloneAdapterDescription(toClone: AdapterDescriptionUnion): AdapterDescriptionUnion {
-    var result: AdapterDescriptionUnion;
+    let result: AdapterDescriptionUnion;
 
     if (this.connectService.isGenericDescription(toClone)) {
       if (toClone instanceof GenericAdapterStreamDescription) {
@@ -209,7 +207,7 @@ export class DataMarketplaceService {
   }
 
   getAssetUrl(appId) {
-    return this.host + this.authStatusService.email + "/master/description/" + appId + "/assets"
+    return this.connectPath + '/master/description/' + appId + '/assets';
   }
 
   private get baseUrl() {

@@ -59,20 +59,32 @@ export class TimeRangeSelectorComponent implements OnInit {
 
   @Input()
   set dateRange(dateRange: TimeSettings) {
-    this._dateRange = dateRange;
-    this.updateTimeSettings();
+    if (!this.compare(dateRange, this._dateRange)) {
+      this._dateRange = dateRange;
+      this.updateTimeSettings();
+    }
   }
 
-  get dateRange() {
+  get dateRange(): TimeSettings {
     return this._dateRange;
   }
+
+  compare(newDateRange: TimeSettings,
+          oldDateRange: TimeSettings): boolean {
+    return newDateRange &&
+        oldDateRange &&
+        newDateRange.startTime === oldDateRange.startTime
+        && newDateRange.endTime === oldDateRange.endTime
+        && newDateRange.dynamicSelection === oldDateRange.dynamicSelection;
+  }
+
+
 
   updateTimeSettings() {
     this.startDate = new Date(this.dateRange.startTime);
     this.endDate = new Date(this.dateRange.endTime);
     this.selectedTimeButton = this.findOffset(this.dateRange.dynamicSelection);
     this.reloadData();
-    //this.setCurrentDateRange(this.selectedTimeButton);
   }
 
   findOffset(dynamicSelection: number) {
@@ -95,7 +107,7 @@ export class TimeRangeSelectorComponent implements OnInit {
     const difference = this.endDate.getTime() - this.startDate.getTime();
 
     const current = new Date().getTime();
-    this.dateRange = { startTime: current - difference, endTime: current, dynamicSelection: -1 };
+    this.dateRange = {startTime: current - difference, endTime: current, dynamicSelection: -1};
 
     this.reloadData();
   }
@@ -107,16 +119,16 @@ export class TimeRangeSelectorComponent implements OnInit {
 
     this.startDate = new Date(newStartTime);
     this.endDate = new Date(newEndTime);
-    this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
-    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1 };
+    this.selectedTimeButton = this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
+    this.dateRange = {startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1};
   }
 
   changeCustomDateRange() {
-    this.selectedTimeButton =  this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
+    this.selectedTimeButton = this.possibleTimeButtons[this.possibleTimeButtons.length - 1];
     const newStartTime = this.startDate.getTime();
     const newEndTime = this.endDate.getTime();
 
-    this.dateRange = { startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1 };
+    this.dateRange = {startTime: newStartTime, endTime: newEndTime, dynamicSelection: -1};
   }
 
   /**
@@ -128,7 +140,11 @@ export class TimeRangeSelectorComponent implements OnInit {
     const current = new Date().getTime();
     this.startDate = new Date(current - item.offset * 60000);
     this.endDate = new Date(current);
-    this.dateRange = { startTime: this.startDate.getTime(), endTime: this.endDate.getTime(), dynamicSelection: item.offset };
+    this.dateRange = {
+      startTime: this.startDate.getTime(),
+      endTime: this.endDate.getTime(),
+      dynamicSelection: item.offset
+    };
   }
 
 }

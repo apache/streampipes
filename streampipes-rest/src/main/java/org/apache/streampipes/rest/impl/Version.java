@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.info.SystemInfoProvider;
 import org.apache.streampipes.manager.info.VersionInfoProvider;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -18,18 +18,19 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { PieChartWidgetModel } from '../model/pie-chart-widget.model';
+import { PieChartVisConfig, PieChartWidgetModel } from '../model/pie-chart-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
   selector: 'sp-data-explorer-pie-chart-widget-config',
   templateUrl: './pie-chart-widget-config.component.html',
   styleUrls: ['./pie-chart-widget-config.component.scss']
 })
-export class PieWidgetConfigComponent extends BaseWidgetConfig<PieChartWidgetModel> implements OnInit {
+export class PieWidgetConfigComponent extends BaseWidgetConfig<PieChartWidgetModel, PieChartVisConfig> implements OnInit {
 
   ngOnInit(): void {
-    this.updateWidgetConfigOptions();
+    super.onInit();
   }
 
   setSelectedProperty(field: DataExplorerField) {
@@ -37,11 +38,14 @@ export class PieWidgetConfigComponent extends BaseWidgetConfig<PieChartWidgetMod
     this.triggerDataRefresh();
   }
 
-  protected updateWidgetConfigOptions() {
-    if (!this.currentlyConfiguredWidget.visualizationConfig) {
-      this.currentlyConfiguredWidget.visualizationConfig = {
-        selectedProperty: this.fieldProvider.nonNumericFields[0]
-      };
-    }
+  protected getWidgetType(): WidgetType {
+    return WidgetType.PieChart;
+  }
+
+  protected initWidgetConfig(): PieChartVisConfig {
+    return {
+      forType: this.getWidgetType(),
+      selectedProperty: this.fieldProvider.nonNumericFields[0]
+    };
   }
 }

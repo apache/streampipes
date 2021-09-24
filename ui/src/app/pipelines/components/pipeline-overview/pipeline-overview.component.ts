@@ -16,12 +16,12 @@
  *
  */
 
-import {Pipeline} from "../../../core-model/gen/streampipes-model";
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
-import {PipelineOperationsService} from "../../services/pipeline-operations.service";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import { Pipeline } from '../../../core-model/gen/streampipes-model';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { PipelineOperationsService } from '../../services/pipeline-operations.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 
 @Component({
@@ -31,10 +31,10 @@ import {MatSort} from "@angular/material/sort";
 })
 export class PipelineOverviewComponent implements OnInit {
 
-  _pipelines: Array<Pipeline>;
+  _pipelines: Pipeline[];
   _activeCategoryId: string;
 
-  filteredPipelinesAvailable: boolean = false;
+  filteredPipelinesAvailable = false;
 
   @Input()
   pipelineToStart: Pipeline;
@@ -47,7 +47,7 @@ export class PipelineOverviewComponent implements OnInit {
   dataSource: MatTableDataSource<Pipeline>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  pageSize: number = 1;
+  pageSize = 1;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -79,7 +79,7 @@ export class PipelineOverviewComponent implements OnInit {
 
   openPipelineNotificationsDialog(pipeline: Pipeline) {
     this.pipelineOperationsService.showPipelineNotificationsDialog(pipeline,
-        this.refreshPipelinesEmitter)
+        this.refreshPipelinesEmitter);
   }
 
   get pipelines() {
@@ -87,7 +87,7 @@ export class PipelineOverviewComponent implements OnInit {
   }
 
   @Input()
-  set pipelines(pipelines: Array<Pipeline>) {
+  set pipelines(pipelines: Pipeline[]) {
     this._pipelines = pipelines;
     this.addPipelinesToTable();
   }
@@ -113,7 +113,9 @@ export class PipelineOverviewComponent implements OnInit {
   }
 
   filterPipelines(): Pipeline[] {
-    let filteredPipelines: Pipeline[] = this._pipelines.filter(pipeline => !(this._activeCategoryId) || (pipeline.pipelineCategories && pipeline.pipelineCategories.some(pc => pc === this.activeCategoryId)));
+    const filteredPipelines: Pipeline[] = this._pipelines
+        .filter(pipeline => !(this._activeCategoryId) ||
+            (pipeline.pipelineCategories && pipeline.pipelineCategories.some(pc => pc === this.activeCategoryId)));
     this.filteredPipelinesAvailable = filteredPipelines.length > 0;
     return filteredPipelines.sort((a, b) => a.name.localeCompare(b.name));
   }

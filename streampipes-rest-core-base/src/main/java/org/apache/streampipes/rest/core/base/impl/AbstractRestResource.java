@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.shiro.SecurityUtils;

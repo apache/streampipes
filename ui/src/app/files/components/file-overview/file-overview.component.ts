@@ -16,14 +16,13 @@
  *
  */
 
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {FilesService} from "../../../platform-services/apis/files.service";
-import {FileMetadata} from "../../../core-model/gen/streampipes-model-client";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
-import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
-import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FilesService } from '../../../platform-services/apis/files.service';
+import { FileMetadata } from '../../../core-model/gen/streampipes-model-client';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'file-overview',
@@ -35,10 +34,10 @@ export class FileOverviewComponent implements OnInit {
   displayedColumns: string[] = ['filename', 'filetype', 'uploaded', 'action'];
 
   dataSource: MatTableDataSource<FileMetadata>;
-  filesAvailable: boolean = false;
+  filesAvailable = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  pageSize: number = 1;
+  pageSize = 1;
 
   constructor(private filesService: FilesService,
               private dialog: MatDialog) {
@@ -60,14 +59,14 @@ export class FileOverviewComponent implements OnInit {
   }
 
   deleteFile(fileMetadata: FileMetadata) {
-    let dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '500px',
       data: {
-        "title": "Do you really want to delete this file?",
-        "subtitle": "This cannot be undone.",
-        "cancelTitle": "No",
-        "okTitle": "Yes",
-        "confirmAndCancel": true
+        'title': 'Do you really want to delete this file?',
+        'subtitle': 'This cannot be undone.',
+        'cancelTitle': 'No',
+        'okTitle': 'Yes',
+        'confirmAndCancel': true
       },
     });
 
@@ -77,6 +76,6 @@ export class FileOverviewComponent implements OnInit {
           this.refreshFiles();
         });
       }
-    })
+    });
   }
 }

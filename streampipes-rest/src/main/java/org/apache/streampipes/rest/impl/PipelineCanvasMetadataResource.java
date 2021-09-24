@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.canvas.PipelineCanvasMetadata;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 
@@ -25,7 +26,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipeline-canvas-metadata")
+@Path("/v2/pipeline-canvas-metadata")
 public class PipelineCanvasMetadataResource extends AbstractRestResource {
 
   @GET

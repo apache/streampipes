@@ -16,17 +16,17 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {PipelineElementService} from "./apis/pipeline-element.service";
-import {PipelineService} from "./apis/pipeline.service";
-import {PlatformServicesCommons} from "./apis/commons.service";
-import {PipelineElementEndpointService} from "./apis/pipeline-element-endpoint.service";
-import {FilesService} from "./apis/files.service";
-import {MeasurementUnitsService} from "./apis/measurement-units.service";
-import {PipelineElementTemplateService} from "./apis/pipeline-element-template.service";
-import {PipelineMonitoringService} from "./apis/pipeline-monitoring.service";
-import {SemanticTypesService} from "./apis/semantic-types.service";
-import {PipelineCanvasMetadataService} from "./apis/pipeline-canvas-metadata.service";
+import { NgModule } from '@angular/core';
+import { PipelineElementService } from './apis/pipeline-element.service';
+import { PipelineService } from './apis/pipeline.service';
+import { PlatformServicesCommons } from './apis/commons.service';
+import { PipelineElementEndpointService } from './apis/pipeline-element-endpoint.service';
+import { FilesService } from './apis/files.service';
+import { MeasurementUnitsService } from './apis/measurement-units.service';
+import { PipelineElementTemplateService } from './apis/pipeline-element-template.service';
+import { PipelineMonitoringService } from './apis/pipeline-monitoring.service';
+import { SemanticTypesService } from './apis/semantic-types.service';
+import { PipelineCanvasMetadataService } from './apis/pipeline-canvas-metadata.service';
 
 @NgModule({
   imports: [],
@@ -38,7 +38,7 @@ import {PipelineCanvasMetadataService} from "./apis/pipeline-canvas-metadata.ser
     PipelineCanvasMetadataService,
     PipelineElementEndpointService,
     PipelineElementTemplateService,
-    //PipelineTemplateService,
+    // PipelineTemplateService,
     PipelineElementService,
     PipelineMonitoringService,
     PipelineService,

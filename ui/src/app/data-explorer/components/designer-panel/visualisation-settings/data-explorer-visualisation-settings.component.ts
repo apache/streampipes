@@ -18,6 +18,10 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { DataExplorerWidgetModel } from '../../../../core-model/gen/streampipes-model';
+import { WidgetTypeService } from '../../../services/widget-type.service';
+import { MatSelectChange } from '@angular/material/select';
+import { IWidget } from '../../../models/dataview-dashboard.model';
+import { DataExplorerWidgetRegistry } from '../../../registry/data-explorer-widget-registry';
 
 @Component({
   selector: 'sp-explorer-visualisation-settings',
@@ -28,10 +32,19 @@ export class DataExplorerVisualisationSettingsComponent implements OnInit {
 
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
 
-  constructor() {
+  constructor(private widgetTypeService: WidgetTypeService) {
   }
 
+  availableWidgets: IWidget[];
+
   ngOnInit(): void {
+    this.availableWidgets = DataExplorerWidgetRegistry.getAvailableWidgetTemplates();
+  }
+
+  triggerWidgetTypeChange(ev: MatSelectChange) {
+    this.widgetTypeService.notify(
+        {widgetId: this.currentlyConfiguredWidget._id, newWidgetTypeId: ev.value}
+    );
   }
 
 }

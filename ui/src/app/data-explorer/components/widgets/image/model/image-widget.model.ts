@@ -16,16 +16,11 @@
  *
  */
 
-import {
-  DataExplorerWidgetModel,
-  EventPropertyUnion
-} from '../../../../../core-model/gen/streampipes-model';
-import { DataExplorerDataConfig } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-export interface ImageWidgetVisConfig {
-  selectedColumns: EventPropertyUnion[];
-  searchValue: string;
-  columnNames: string[];
+export interface ImageWidgetVisConfig extends DataExplorerVisConfig {
+  selectedField: DataExplorerField;
 }
 
 export interface ImageWidgetModel extends DataExplorerWidgetModel {

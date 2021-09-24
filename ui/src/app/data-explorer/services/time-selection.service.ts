@@ -15,17 +15,17 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.container.master.rest;
 
-import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { TimeSettings } from '../../dashboard/models/dashboard.model';
 
-import java.util.function.Supplier;
+@Injectable()
+export class TimeSelectionService {
 
-public class AbstractAdapterResource<T> extends AbstractSharedRestInterface {
+  public timeSelectionChangeSubject: Subject<TimeSettings> = new Subject<TimeSettings>();
 
-  protected T managementService;
-
-  public AbstractAdapterResource(Supplier<T> managementServiceSupplier) {
-    this.managementService = managementServiceSupplier.get();
+  public notify(timeSettings: TimeSettings): void {
+    this.timeSelectionChangeSubject.next(timeSettings);
   }
 }

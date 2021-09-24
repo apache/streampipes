@@ -20,7 +20,8 @@ package org.apache.streampipes.ps;
 
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.model.message.Notification;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.GET;

@@ -23,6 +23,7 @@ import { DataExplorerDashboardPanelComponent } from './components/panel/data-exp
 import { Dashboard, TimeSettings } from '../dashboard/models/dashboard.model';
 import { Tuple2 } from '../core-model/base/Tuple2';
 import { ActivatedRoute } from '@angular/router';
+import { TimeSelectionService } from './services/time-selection.service';
 
 @Component({
   selector: 'sp-data-explorer',
@@ -46,7 +47,8 @@ export class DataExplorerComponent implements OnInit {
 
   constructor(private dataViewService: DataViewDataExplorerService,
               private refreshDashboardService: RefreshDashboardService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private timeSelectionService: TimeSelectionService) {
   }
 
 
@@ -117,6 +119,7 @@ export class DataExplorerComponent implements OnInit {
 
   updateDateRange(timeSettings: TimeSettings) {
     this.selectedDataViewDashboard.dashboardTimeSettings = timeSettings;
+    this.timeSelectionService.notify(timeSettings);
   }
 
   saveDashboard() {

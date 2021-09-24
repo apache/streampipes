@@ -16,18 +16,18 @@
  *
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {RestApi} from "../services/rest-api.service";
-import {NotificationItem, ExistingNotification} from "./model/notifications.model";
-import {ElementIconText} from "../services/get-element-icon-text.service";
-import {NotificationsService} from "./service/notifications.service";
-import {Message} from "@stomp/stompjs";
-import {Subscription} from "rxjs";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {AuthStatusService} from "../services/auth-status.service";
-import {NotificationUtils} from "./utils/notifications.utils";
-import {NotificationCountService} from "../services/notification-count-service";
-import {FreeTextStaticProperty, Pipeline} from "../core-model/gen/streampipes-model";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ExistingNotification, NotificationItem } from './model/notifications.model';
+import { ElementIconText } from '../services/get-element-icon-text.service';
+import { NotificationsService } from './service/notifications.service';
+import { Message } from '@stomp/stompjs';
+import { Subscription } from 'rxjs';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { AuthStatusService } from '../services/auth-status.service';
+import { NotificationUtils } from './utils/notifications.utils';
+import { NotificationCountService } from '../services/notification-count-service';
+import { FreeTextStaticProperty, Pipeline } from '../core-model/gen/streampipes-model';
+import { PipelineService } from '../platform-services/apis/pipeline.service';
 
 @Component({
     selector: 'notifications',
@@ -36,41 +36,41 @@ import {FreeTextStaticProperty, Pipeline} from "../core-model/gen/streampipes-mo
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
 
-    static readonly NOTIFICATIONS_APP_ID = "org.apache.streampipes.sinks.internal.jvm.notification";
-    static readonly NOTIFICATION_TOPIC_PREFIX = "org.apache.streampipes.notifications.";
-    static readonly NOTIFICATION_TITLE_KEY = "title";
+    static readonly NOTIFICATIONS_APP_ID = 'org.apache.streampipes.sinks.internal.jvm.notification';
+    static readonly NOTIFICATION_TOPIC_PREFIX = 'org.apache.streampipes.notifications.';
+    static readonly NOTIFICATION_TITLE_KEY = 'title';
 
     @ViewChild('notificationPane') private notificationContainer: ElementRef;
 
-    notifications: Array<NotificationItem> = [];
+    notifications: NotificationItem[] = [];
     unreadNotifications: any;
-    existingNotifications: Array<ExistingNotification> = [];
+    existingNotifications: ExistingNotification[] = [];
     currentlySelectedNotification: ExistingNotification;
     currentlySelectedNotificationId: string;
 
-    pipelinesWithNotificationsPresent: boolean = false;
-    notificationsLoading: boolean = false;
+    pipelinesWithNotificationsPresent = false;
+    notificationsLoading = false;
 
-    currentOffset: number = 0;
-    liveOffset: number = 0;
+    currentOffset = 0;
+    liveOffset = 0;
     previousScrollHeight: number;
 
     subscription: Subscription;
     notificationTopic: string;
 
-    newNotificationInfo: Array<boolean> = [];
+    newNotificationInfo: boolean[] = [];
 
-    newEventArriving: boolean = false;
+    newEventArriving = false;
 
-    constructor(private RestApi: RestApi,
-                private AuthStatusService: AuthStatusService,
+    constructor(private pipelineService: PipelineService,
+                private authStatusService: AuthStatusService,
                 public elementIconText: ElementIconText,
                 private notificationService: NotificationsService,
                 private rxStompService: RxStompService,
-                private NotificationCountService: NotificationCountService) {
+                private notificationCountService: NotificationCountService) {
         this.notifications = [];
         this.unreadNotifications = [];
-        this.notificationTopic = NotificationsComponent.NOTIFICATION_TOPIC_PREFIX + AuthStatusService.email;
+        this.notificationTopic = NotificationsComponent.NOTIFICATION_TOPIC_PREFIX + authStatusService.email;
     }
 
     ngOnInit() {
@@ -78,15 +78,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     }
 
     createSubscription() {
-        this.subscription = this.rxStompService.watch("/topic/" +this.notificationTopic).subscribe((message: Message) => {
+        this.subscription = this.rxStompService.watch('/topic/' + this.notificationTopic).subscribe((message: Message) => {
             let scrollToBottom = false;
             if ((this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) <= (this.notificationContainer.nativeElement.clientHeight + 10) &&
                 (this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) >= (this.notificationContainer.nativeElement.clientHeight - 10)) {
                 scrollToBottom = true;
             }
             this.newEventArriving = true;
-            let notification: NotificationItem = JSON.parse(message.body) as NotificationItem;
-            let notificationId = NotificationUtils.makeNotificationId(notification.correspondingPipelineId, notification.title);
+            const notification: NotificationItem = JSON.parse(message.body) as NotificationItem;
+            const notificationId = NotificationUtils.makeNotificationId(notification.correspondingPipelineId, notification.title);
             if (this.currentlySelectedNotificationId === notificationId) {
                 this.notifications.push(notification);
                 this.liveOffset++;
@@ -110,7 +110,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     getPipelinesWithNotifications() {
         this.notificationsLoading = true;
-        this.RestApi.getOwnPipelines().subscribe(pipelines => {
+        this.pipelineService.getOwnPipelines().subscribe(pipelines => {
             this.filterForNotifications(pipelines);
             this.notificationsLoading = false;
             if (this.existingNotifications.length > 0) {
@@ -123,15 +123,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     filterForNotifications(pipelines: Pipeline[]) {
         pipelines.forEach(pipeline => {
-           let notificationActions = pipeline.actions.filter(sink => sink.appId === NotificationsComponent.NOTIFICATIONS_APP_ID);
+           const notificationActions = pipeline.actions.filter(sink => sink.appId === NotificationsComponent.NOTIFICATIONS_APP_ID);
              notificationActions.forEach(notificationAction => {
-                let notificationName = notificationAction
+                const notificationName = notificationAction
                     .staticProperties
                     .filter(sp => sp.internalName === NotificationsComponent.NOTIFICATION_TITLE_KEY)
                     .map(sp => (sp as FreeTextStaticProperty).value)[0];
-                let pipelineName = pipeline.name;
+                const pipelineName = pipeline.name;
                 this.existingNotifications.push({notificationTitle: notificationName,
-                    pipelineName: pipelineName, pipelineId: pipeline._id, notificationId: NotificationUtils.makeNotificationId(pipeline._id, notificationName)});
+                    pipelineName, pipelineId: pipeline._id, notificationId: NotificationUtils.makeNotificationId(pipeline._id, notificationName)});
              });
         });
     }
@@ -149,17 +149,17 @@ export class NotificationsComponent implements OnInit, OnDestroy {
             } else {
                 setTimeout(() => {
                     this.notificationContainer.nativeElement.scrollTop = this.notificationContainer.nativeElement.scrollHeight - this.previousScrollHeight;
-                })
+                });
             }
-            notifications.forEach(notification => {
-                if (!notification.read) {
-                    notification.read = true;
-                    this.NotificationCountService.decreaseNotificationCount();
-                    this.notificationService.updateNotification(notification).subscribe();
+            notifications.forEach(n => {
+                if (!n.read) {
+                    n.read = true;
+                    this.notificationCountService.decreaseNotificationCount();
+                    this.notificationService.updateNotification(n).subscribe();
                 }
-            })
-        })
-    };
+            });
+        });
+    }
 
     selectNotification(notification: ExistingNotification) {
         this.notifications = [];
@@ -167,7 +167,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         this.liveOffset = 0;
         this.currentlySelectedNotification = notification;
         this.currentlySelectedNotificationId = NotificationUtils.makeNotificationIdFromNotification(notification);
-        this.NotificationCountService.lockIncreaseUpdateForId(this.currentlySelectedNotificationId);
+        this.notificationCountService.lockIncreaseUpdateForId(this.currentlySelectedNotificationId);
         this.getNotifications(notification, this.currentOffset, 10, true);
     }
 
@@ -183,6 +183,6 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
-        this.NotificationCountService.unlockIncreaseUpdate();
+        this.notificationCountService.unlockIncreaseUpdate();
     }
-};
+}

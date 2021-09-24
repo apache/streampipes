@@ -37,6 +37,7 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,20 +46,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pipelines")
+@Path("/v2/pipelines")
 public class PipelineResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger logger = LoggerFactory.getLogger(PipelineResource.class);
-
-  public Response getAvailable(String username) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public Response getFavorites(String username) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -72,8 +63,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                   mediaType = "application/json",
                                   array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
                   })})
-  public Response getOwn(@PathParam("username") String username) {
-    return ok(PipelineManager.getOwnPipelines(username));
+  public Response getOwn() {
+    return ok(PipelineManager.getOwnPipelines(getAuthenticatedUsername()));
   }
 
   @GET
@@ -86,23 +77,13 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     return ok(getPipelineStorage().getSystemPipelines());
   }
 
-  public Response addFavorite(String username, String elementUri) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  public Response removeFavorite(String username, String elementUri) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{pipelineId}/status")
   @JacksonSerialized
   @Operation(summary = "Get the pipeline status of a given pipeline",
           tags = {"Pipeline"})
-  public Response getPipelineStatus(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+  public Response getPipelineStatus(@PathParam("pipelineId") String pipelineId) {
     return ok(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
   }
 
@@ -112,7 +93,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Delete a pipeline with a given id",
           tags = {"Pipeline"})
-  public Response removeOwn(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+  public Response removeOwn(@PathParam("pipelineId") String pipelineId) {
     PipelineManager.deletePipeline(pipelineId);
     return statusMessage(Notifications.success("Pipeline deleted"));
   }
@@ -123,7 +104,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Get a specific pipeline with the given id",
           tags = {"Pipeline"})
-  public Response getElement(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+  public Response getElement(@PathParam("pipelineId") String pipelineId) {
     return ok(PipelineManager.getPipeline(pipelineId));
   }
 
@@ -133,7 +114,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Start the pipeline with the given id",
           tags = {"Pipeline"})
-  public Response start(@PathParam("username") String username, @PathParam("pipelineId") String pipelineId) {
+  public Response start(@PathParam("pipelineId") String pipelineId) {
     try {
       PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
 
@@ -150,11 +131,8 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Stop the pipeline with the given id",
           tags = {"Pipeline"})
-  public Response stop(@PathParam("username") String username,
-                       @PathParam("pipelineId") String pipelineId,
+  public Response stop(@PathParam("pipelineId") String pipelineId,
                        @QueryParam("forceStop") @DefaultValue("false") boolean forceStop) {
-    logger.info("User: " + username + " stopped pipeline: " + pipelineId);
-
     try {
       PipelineOperationStatus status = PipelineManager.stopPipeline(pipelineId, forceStop);
       return ok(status);
@@ -170,9 +148,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Store a new pipeline",
           tags = {"Pipeline"})
-  public Response addPipeline(@PathParam("username") String username, Pipeline pipeline) {
+  public Response addPipeline(Pipeline pipeline) {
 
-    String pipelineId = PipelineManager.addPipeline(username, pipeline);
+    String pipelineId = PipelineManager.addPipeline(getAuthenticatedUsername(), pipeline);
     SuccessMessage message = Notifications.success("Pipeline stored");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);
@@ -183,9 +161,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @Hidden
-  public Response recommend(@PathParam("username") String email, Pipeline pipeline) {
+  public Response recommend(Pipeline pipeline) {
     try {
-      return ok(Operations.findRecommendedElements(email, pipeline));
+      return ok(Operations.findRecommendedElements(getAuthenticatedUsername(), pipeline));
     } catch (JsonSyntaxException e) {
       return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
               e.getMessage()));
@@ -205,8 +183,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @Hidden
-  public Response updateDataSet(SpDataSet spDataSet, @PathParam("username")
-          String username) {
+  public Response updateDataSet(SpDataSet spDataSet) {
     return ok(Operations.updateDataSet(spDataSet));
   }
 
@@ -216,9 +193,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @Hidden
-  public Response update(Pipeline pipeline, @PathParam("username") String username) {
+  public Response update(Pipeline pipeline) {
     try {
-      return ok(Operations.validatePipeline(pipeline, true, username));
+      return ok(Operations.validatePipeline(pipeline, true));
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR,
               e.getMessage()));
@@ -249,8 +226,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Update an existing pipeline",
           tags = {"Pipeline"})
-  public Response overwritePipeline(@PathParam("username") String username,
-                                    @PathParam("pipelineId") String pipelineId,
+  public Response overwritePipeline(@PathParam("pipelineId") String pipelineId,
                                     Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
     if (!storedPipeline.isRunning()) {

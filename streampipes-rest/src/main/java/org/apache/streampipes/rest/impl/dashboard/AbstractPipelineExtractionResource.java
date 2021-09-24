@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.dashboard;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;

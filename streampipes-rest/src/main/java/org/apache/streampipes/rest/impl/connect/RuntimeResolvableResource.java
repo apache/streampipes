@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.rest;
+package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -31,7 +31,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/connect/{username}/master/resolvable")
+@Path("/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
 
     private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";

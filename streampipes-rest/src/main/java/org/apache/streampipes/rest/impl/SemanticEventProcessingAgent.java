@@ -24,6 +24,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElement;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
@@ -35,8 +36,8 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/users/{username}/sepas")
-public class SemanticEventProcessingAgent extends AbstractRestResource implements IPipelineElement {
+@Path("/v2/sepas")
+public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResource implements IPipelineElement {
 
 	@GET
 	@Path("/available")
@@ -44,9 +45,9 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response getAvailable(@PathParam("username") String username) {
+	public Response getAvailable() {
 		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
-				getUserService().getAvailableSepaUris(username));
+				getUserService().getAvailableSepaUris(getAuthenticatedUsername()));
 		return ok(sepas);
 	}
 	
@@ -56,9 +57,9 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response getFavorites(@PathParam("username") String username) {
+	public Response getFavorites() {
 		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
-				getUserService().getFavoriteSepaUris(username));
+				getUserService().getFavoriteSepaUris(getAuthenticatedUsername()));
 		return ok(sepas);
 	}
 
@@ -68,9 +69,9 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	@JacksonSerialized
 	@Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
 	@Override
-	public Response getOwn(@PathParam("username") String username) {
+	public Response getOwn() {
 		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
-				getUserService().getOwnSepaUris(username));
+				getUserService().getOwnSepaUris(getAuthenticatedUsername()));
 		List<DataProcessorInvocation> si = sepas
 						.stream()
 						.map(s -> new DataProcessorInvocation(new DataProcessorInvocation(s)))
@@ -85,8 +86,8 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
-		getUserService().addSepaAsFavorite(username, decode(elementUri));
+	public Response addFavorite(@FormParam("uri") String elementUri) {
+		getUserService().addSepaAsFavorite(getAuthenticatedUsername(), decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 
@@ -96,8 +97,8 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response removeFavorite(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
-		getUserService().removeSepaFromFavorites(username, decode(elementUri));
+	public Response removeFavorite(@PathParam("elementUri") String elementUri) {
+		getUserService().removeSepaFromFavorites(getAuthenticatedUsername(), decode(elementUri));
 		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	
@@ -107,9 +108,8 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response removeOwn(@PathParam("username") String username,
-														@PathParam("elementId") String elementId) {
-		getUserService().deleteOwnSepa(username, elementId);
+	public Response removeOwn(@PathParam("elementId") String elementId) {
+		getUserService().deleteOwnSepa(getAuthenticatedUsername(), elementId);
 		getPipelineElementRdfStorage().deleteDataProcessor(getPipelineElementRdfStorage().getDataProcessorById(elementId));
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
@@ -119,7 +119,7 @@ public class SemanticEventProcessingAgent extends AbstractRestResource implement
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
-	public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
+	public Response getElement(@PathParam("elementUri") String elementUri) {
 		// TODO Access rights
 		return ok(new DataProcessorInvocation(new DataProcessorInvocation(getPipelineElementRdfStorage().getDataProcessorById(elementUri))));
 	}

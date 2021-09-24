@@ -24,6 +24,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElement;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
@@ -36,8 +37,8 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/users/{username}/actions")
-public class SemanticEventConsumer extends AbstractRestResource implements IPipelineElement {
+@Path("/v2/actions")
+public class SemanticEventConsumer extends AbstractAuthGuardedRestResource implements IPipelineElement {
 
   @GET
   @Path("/available")
@@ -45,9 +46,9 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response getAvailable(@PathParam("username") String username) {
+  public Response getAvailable() {
     List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
-            getUserService().getAvailableActionUris(username));
+            getUserService().getAvailableActionUris(getAuthenticatedUsername()));
     return ok(secs);
   }
 
@@ -57,9 +58,9 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response getFavorites(@PathParam("username") String username) {
+  public Response getFavorites() {
     List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
-            getUserService().getFavoriteActionUris(username));
+            getUserService().getFavoriteActionUris(getAuthenticatedUsername()));
     return ok(secs);
   }
 
@@ -69,9 +70,9 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
   @JacksonSerialized
   @Override
-  public Response getOwn(@PathParam("username") String username) {
+  public Response getOwn() {
     List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
-            getUserService().getOwnActionUris(username));
+            getUserService().getOwnActionUris(getAuthenticatedUsername()));
     List<DataSinkInvocation> si = secs.stream().map(s -> new DataSinkInvocation(new DataSinkInvocation(s))).collect(Collectors.toList());
     return ok(si);
   }
@@ -82,8 +83,8 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response addFavorite(@PathParam("username") String username, @FormParam("uri") String elementUri) {
-    getUserService().addActionAsFavorite(username, decode(elementUri));
+  public Response addFavorite(@FormParam("uri") String elementUri) {
+    getUserService().addActionAsFavorite(getAuthenticatedUsername(), decode(elementUri));
     return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
   }
 
@@ -93,9 +94,8 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response removeFavorite(@PathParam("username") String username,
-                                 @PathParam("elementId") String elementId) {
-    getUserService().removeActionFromFavorites(username, decode(elementId));
+  public Response removeFavorite(@PathParam("elementId") String elementId) {
+    getUserService().removeActionFromFavorites(getAuthenticatedUsername(), decode(elementId));
     return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
   }
 
@@ -105,10 +105,9 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response removeOwn(@PathParam("username") String username,
-                            @PathParam("elementId") String elementId) {
+  public Response removeOwn(@PathParam("elementId") String elementId) {
     IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
-    getUserService().deleteOwnAction(username, elementId);
+    getUserService().deleteOwnAction(getAuthenticatedUsername(), elementId);
     requestor.deleteDataSink(requestor.getDataSinkById(elementId));
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
@@ -119,7 +118,7 @@ public class SemanticEventConsumer extends AbstractRestResource implements IPipe
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
-  public Response getElement(@PathParam("username") String username, @PathParam("elementUri") String elementUri) {
+  public Response getElement(@PathParam("elementUri") String elementUri) {
     return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getDataSinkById(elementUri))));
   }
 }

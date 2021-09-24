@@ -15,27 +15,12 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.model.client.user.User;
+import { Directive, ViewContainerRef } from '@angular/core';
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
-
-public class AbstractAuthGuardedRestResource extends AbstractRestResource {
-
-  @Context
-  protected SecurityContext securityContext;
-
-  protected boolean isAuthenticated() {
-    return this.securityContext.getUserPrincipal() != null;
-  }
-
-  protected String getAuthenticatedUsername() {
-    return this.securityContext.getUserPrincipal().getName();
-  }
-
-  protected User getAuthenticatedUser() {
-    return getUserStorage().getUser(getAuthenticatedUsername());
-  }
+@Directive({
+  selector: '[widgetHost]',
+})
+export class WidgetDirective {
+  constructor(public viewContainerRef: ViewContainerRef) { }
 }

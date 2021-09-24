@@ -30,6 +30,10 @@ export class PlatformServicesCommons {
     return '/streampipes-backend';
   }
 
+  apiBasePath() {
+    return this.basePath + '/api/v2';
+  }
+  
   authUserBasePath() {
     return this.basePath + '/api/v2/users/' + this.authStatusService.email;
   }

@@ -29,7 +29,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { OWL_DATE_TIME_FORMATS, OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import {
+  OWL_DATE_TIME_FORMATS,
+  OwlDateTimeModule,
+  OwlNativeDateTimeModule
+} from '@danielmoncada/angular-datetime-picker';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
@@ -72,7 +76,6 @@ import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/c
 import { HistogramChartWidgetComponent } from './components/widgets/histogram/histogram-chart-widget.component';
 import { HistogramWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
 import { DensityChartWidgetComponent } from './components/widgets/density/density-chart-widget.component';
-import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
 import { PieChartWidgetComponent } from './components/widgets/pie/pie-chart-widget.component';
 import { PieWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
 import { DataViewQueryGeneratorService } from './services/data-view-query-generator.service';
@@ -83,6 +86,10 @@ import { FilterSelectionPanelComponent } from './components/designer-panel/data-
 import { SelectPropertyComponent } from './components/widgets/utils/select-property/select-property.component';
 import { DataExplorerVisualisationSettingsComponent } from './components/designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
 import { GroupSelectionPanelComponent } from './components/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
+import { WidgetDirective } from './components/widget/widget.directive';
+import { WidgetTypeService } from './services/widget-type.service';
+import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
+import { TimeSelectionService } from './services/time-selection.service';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -93,11 +100,11 @@ export const MY_NATIVE_FORMATS = {
     minute: 'numeric',
     hour12: false
   },
-  datePickerInput: { year: 'numeric', month: 'numeric', day: 'numeric', hour12: false },
-  timePickerInput: { hour: 'numeric', minute: 'numeric', hour12: false },
-  monthYearLabel: { year: 'numeric', month: 'short', hour12: false },
-  dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric', hour12: false },
-  monthYearA11yLabel: { year: 'numeric', month: 'long', hour12: false }
+  datePickerInput: {year: 'numeric', month: 'numeric', day: 'numeric', hour12: false},
+  timePickerInput: {hour: 'numeric', minute: 'numeric', hour12: false},
+  monthYearLabel: {year: 'numeric', month: 'short', hour12: false},
+  dateA11yLabel: {year: 'numeric', month: 'long', day: 'numeric', hour12: false},
+  monthYearA11yLabel: {year: 'numeric', month: 'long', hour12: false}
 };
 
 
@@ -163,7 +170,9 @@ export const MY_NATIVE_FORMATS = {
     TableWidgetConfigComponent,
     TimeRangeSelectorComponent,
     DataExplorerVisualisationSettingsComponent,
-    GroupSelectionPanelComponent
+    GroupSelectionPanelComponent,
+    DataExplorerVisualisationSettingsComponent,
+    WidgetDirective,
   ],
   providers: [
     DatalakeRestService,
@@ -175,7 +184,9 @@ export const MY_NATIVE_FORMATS = {
     ColorService,
     RefreshDashboardService,
     SemanticTypeUtilsService,
+    TimeSelectionService,
     WidgetConfigurationService,
+    WidgetTypeService,
     {
       provide: OWL_DATE_TIME_FORMATS, useValue: MY_NATIVE_FORMATS
     }

@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -33,7 +34,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Path("/v2/users/{username}/asset-dashboards")
+@Path("/v2/asset-dashboards")
 public class AssetDashboard extends AbstractRestResource {
 
   private static final String APP_ID = "org.apache.streampipes.apps.assetdashboard";

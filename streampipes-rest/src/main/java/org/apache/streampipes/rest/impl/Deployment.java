@@ -26,6 +26,7 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.apache.streampipes.storage.management.StorageManager;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -36,7 +37,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 
 
-@Path("/v2/users/{username}/deploy")
+@Path("/v2/deploy")
 public class Deployment extends AbstractRestResource {
 
     @POST
@@ -80,8 +81,7 @@ public class Deployment extends AbstractRestResource {
     @Path("/import")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response directImport(@PathParam("username") String username,
-                                 @FormDataParam("config") String config,
+    public Response directImport(@FormDataParam("config") String config,
                                  @FormDataParam("model") String model) {
 // TODO check if this can be deleted
 //        DataSourceDescription sep = new DataSourceDescription(GsonSerializer.getGsonWithIds().fromJson(model, DataSourceDescription.class));
@@ -103,7 +103,7 @@ public class Deployment extends AbstractRestResource {
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response directUpdate(@PathParam("username") String username, @FormDataParam("config") String config, @FormDataParam("model") String model) {
+    public Response directUpdate(@FormDataParam("config") String config, @FormDataParam("model") String model) {
 
         DeploymentConfiguration deploymentConfig = fromJson(config);
 
