@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v2/users/{username}/rdfendpoints")
+@Path("/v2/rdfendpoints")
 public class ExtensionsServiceEndpointResource extends AbstractRestResource {
 
   @GET
