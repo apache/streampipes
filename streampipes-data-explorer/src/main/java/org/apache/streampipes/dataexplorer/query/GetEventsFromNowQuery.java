@@ -19,10 +19,10 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.TimeUnitQueryParams;
 import org.apache.streampipes.dataexplorer.template.QueryTemplates;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.influxdb.dto.QueryResult;
 
-public class GetEventsFromNowQuery extends ParameterizedDataExplorerQuery<TimeUnitQueryParams, DataResult> {
+public class GetEventsFromNowQuery extends ParameterizedDataExplorerQuery<TimeUnitQueryParams, SpQueryResult> {
 
   public GetEventsFromNowQuery(TimeUnitQueryParams queryParams) {
     super(queryParams);
@@ -38,7 +38,7 @@ public class GetEventsFromNowQuery extends ParameterizedDataExplorerQuery<TimeUn
   }
 
   @Override
-  protected DataResult postQuery(QueryResult result) {
+  protected SpQueryResult postQuery(QueryResult result) {
     return convertResult(result);
   }
 }

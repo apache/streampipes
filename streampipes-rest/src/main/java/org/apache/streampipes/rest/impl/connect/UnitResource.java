@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.rest;
+package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.UnitMasterManagement;
@@ -31,7 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/connect/{username}/master/unit")
+@Path("/v2/connect/master/unit")
 public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> {
 
     private static final Logger logger = LoggerFactory.getLogger(UnitResource.class);

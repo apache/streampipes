@@ -23,7 +23,7 @@ import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

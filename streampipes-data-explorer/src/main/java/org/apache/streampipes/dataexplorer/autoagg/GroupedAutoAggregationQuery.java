@@ -22,12 +22,12 @@ import org.apache.streampipes.dataexplorer.param.GroupedQueryParams;
 import org.apache.streampipes.dataexplorer.query.GetGroupedAggregatedEventsQuery;
 import org.apache.streampipes.dataexplorer.query.GetGroupedEventsQuery;
 import org.apache.streampipes.dataexplorer.query.GetNumberOfRecordsQuery;
-import org.apache.streampipes.model.datalake.GroupedDataResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-public class GroupedAutoAggregationQuery extends AbstractAutoAggregationQuery<GroupedQueryParams, GroupedDataResult> {
+public class GroupedAutoAggregationQuery extends AbstractAutoAggregationQuery<GroupedQueryParams, SpQueryResult> {
 
   public GroupedAutoAggregationQuery(GroupedQueryParams params) {
-    super(params, GroupedDataResult::new);
+    super(params, SpQueryResult::new);
   }
 
   @Override
@@ -36,12 +36,12 @@ public class GroupedAutoAggregationQuery extends AbstractAutoAggregationQuery<Gr
   }
 
   @Override
-  protected GroupedDataResult getRawEvents() {
+  protected SpQueryResult getRawEvents() {
     return new GetGroupedEventsQuery(params).executeQuery();
   }
 
   @Override
-  protected GroupedDataResult getAggregatedEvents(Integer aggregationValue) {
+  protected SpQueryResult getAggregatedEvents(Integer aggregationValue) {
     return new GetGroupedAggregatedEventsQuery(GroupedAggregatedTimeBoundQueryParams.from(params.getIndex(),
             params.getStartDate(), params.getEndDate(), "ms", aggregationValue, params.getGroupingTag())).executeQuery();
   }

@@ -24,7 +24,7 @@ import org.apache.streampipes.storage.api.IDashboardStorage;
 
 import javax.ws.rs.Path;
 
-@Path("/v3/users/{username}/datalake/dashboard")
+@Path("/v3/datalake/dashboard")
 public class DataLakeDashboardResource extends AbstractDashboardResource {
 
     protected IDashboardStorage getDashboardStorage() {

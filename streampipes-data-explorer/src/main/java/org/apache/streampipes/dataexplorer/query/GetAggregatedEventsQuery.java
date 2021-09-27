@@ -19,10 +19,10 @@ package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.dataexplorer.param.AggregatedTimeBoundQueryParams;
 import org.apache.streampipes.dataexplorer.template.QueryTemplates;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.influxdb.dto.QueryResult;
 
-public class GetAggregatedEventsQuery extends ParameterizedDataExplorerQuery<AggregatedTimeBoundQueryParams, DataResult> {
+public class GetAggregatedEventsQuery extends ParameterizedDataExplorerQuery<AggregatedTimeBoundQueryParams, SpQueryResult> {
 
   public GetAggregatedEventsQuery(AggregatedTimeBoundQueryParams queryParams) {
     super(queryParams);
@@ -39,7 +39,7 @@ public class GetAggregatedEventsQuery extends ParameterizedDataExplorerQuery<Agg
   }
 
   @Override
-  protected DataResult postQuery(QueryResult result) {
+  protected SpQueryResult postQuery(QueryResult result) {
     return convertResult(result);
   }
 }

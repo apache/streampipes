@@ -30,6 +30,7 @@ import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { FieldConfig } from '../../data-explorer/models/dataview-dashboard.model';
+import { SpQueryResult } from '../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -82,8 +83,11 @@ export class DatalakeConfigurationComponent implements OnInit {
           const field: FieldConfig = { runtimeName: property.runtimeName, aggregations: ['COUNT'], selected: true, numeric: false };
           this.datalakeRestService.getData(
             measurement.measureName,
-            this.buildQ(field)).subscribe(res => {
-            res.rows !== null ? entry.events = res.rows[0][1] : entry.events = 0;
+            this.buildQ(field)).subscribe((res: SpQueryResult) => {
+            entry.events = 0;
+            res.allDataSeries.forEach(series => {
+              entry.events = entry.events + series.total;
+            });
           });
 
           this.availableMeasurements.push(entry);

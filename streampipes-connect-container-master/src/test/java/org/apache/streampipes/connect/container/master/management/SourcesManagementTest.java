@@ -78,7 +78,7 @@ public class SourcesManagementTest {
 
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter( ID, "id1", "user");
+        sourcesManagement.detachAdapter( ID, "id1");
     }
 
     @Ignore
@@ -89,7 +89,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter(ID, "id1", "user");
+        sourcesManagement.detachAdapter(ID, "id1");
 
         verify(adapterStorage, times(1)).getAllAdapters();
         verifyStatic(WorkerRestClient.class, times(1));
@@ -104,7 +104,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
-        sourcesManagement.detachAdapter( ID, "id1", "user");
+        sourcesManagement.detachAdapter( ID, "id1");
     }
 
     @Ignore
@@ -117,7 +117,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         sourcesManagement.setConnectHost("host");
 
-        String result = sourcesManagement.getAllAdaptersInstallDescription("user@fzi.de");
+        String result = sourcesManagement.getAllAdaptersInstallDescription();
         assertEquals(getJsonString(), result);
 
     }
@@ -131,7 +131,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         sourcesManagement.setConnectHost("host");
 
-        sourcesManagement.getAllAdaptersInstallDescription(" ");
+        sourcesManagement.getAllAdaptersInstallDescription();
 
     }
 

@@ -19,21 +19,21 @@
 package org.apache.streampipes.rest.impl;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.streampipes.connect.container.master.general.ResetManagement;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.rest.ResetManagement;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/reset")
+@Path("/v2/reset")
 public class ResetResource extends AbstractAuthGuardedRestResource {
     private static final Logger logger = LoggerFactory.getLogger(ResetResource.class);
 
@@ -41,8 +41,8 @@ public class ResetResource extends AbstractAuthGuardedRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
     @Operation(summary = "Resets StreamPipes instance")
-    public Response reset(@PathParam("username") String username) {
-        ResetManagement.reset(username);
+    public Response reset() {
+        ResetManagement.reset(getAuthenticatedUsername());
         SuccessMessage message = Notifications.success("Reset of system successfully performed");
         return ok(message);
     }

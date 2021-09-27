@@ -16,28 +16,15 @@
  *
  */
 
-import {
-  Directive,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Directive, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DataExplorerWidgetModel } from '../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
 import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
-import {
-  DataExplorerDataConfig,
-  DataExplorerField,
-  FieldProvider
-} from '../../../models/dataview-dashboard.model';
+import { DataExplorerDataConfig, DataExplorerField, FieldProvider } from '../../../models/dataview-dashboard.model';
 import { Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { BaseWidgetData } from './data-explorer-widget-data';
@@ -137,16 +124,16 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   public updateData() {
     this.beforeDataFetched();
     const observables = this
-        .dataViewQueryGeneratorService
-        .generateObservables(
-            this.timeSettings.startTime,
-            this.timeSettings.endTime,
-            this.dataExplorerWidget.dataConfig as DataExplorerDataConfig
-        );
+      .dataViewQueryGeneratorService
+      .generateObservables(
+        this.timeSettings.startTime,
+        this.timeSettings.endTime,
+        this.dataExplorerWidget.dataConfig as DataExplorerDataConfig
+      );
     this.timerCallback.emit(true);
     zip(...observables).subscribe(results => {
       results.forEach((result, index) => result.sourceIndex = index);
-      this.onDataReceived(results);
+      this.onDataReceived(results[0]);
       this.refreshView();
       this.timerCallback.emit(false);
     });
@@ -157,7 +144,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   }
 
   getColumnIndex(field: DataExplorerField,
-                 data: DataResult) {
+                 data: SpQueryResult) {
     return data.headers.indexOf(field.fullDbName);
   }
 
@@ -194,7 +181,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   public abstract beforeDataFetched();
 
-  public abstract onDataReceived(dataResults: DataResult[]);
+  public abstract onDataReceived(spQueryResult: SpQueryResult);
 
   public abstract onResize(width: number, height: number);
 

@@ -91,6 +91,7 @@ import { FieldSelectionComponent } from './components/designer-panel/data-settin
 import { FilterSelectionPanelComponent } from './components/designer-panel/data-settings/filter-selection-panel/filter-selection-panel.component';
 import { SelectPropertyComponent } from './components/widgets/utils/select-property/select-property.component';
 import { DataExplorerVisualisationSettingsComponent } from './components/designer-panel/visualisation-settings/data-explorer-visualisation-settings.component';
+import { GroupSelectionPanelComponent } from './components/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { WidgetDirective } from './components/widget/widget.directive';
 import { WidgetTypeService } from './services/widget-type.service';
 import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
@@ -188,6 +189,8 @@ export const MY_NATIVE_FORMATS = {
     CalendarHeatmapWidgetConfigComponent,
     CalendarHeatmapWidgetComponent,
     TimeRangeSelectorComponent,
+    DataExplorerVisualisationSettingsComponent,
+    GroupSelectionPanelComponent,
     DataExplorerVisualisationSettingsComponent,
     WidgetDirective,
   ],

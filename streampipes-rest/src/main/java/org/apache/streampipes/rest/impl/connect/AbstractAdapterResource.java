@@ -15,10 +15,17 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.impl.connect;
 
-import {DataResult} from './DataResult';
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
-export class PageResult extends DataResult{
-    page: number;
-    pageSum: number;
+import java.util.function.Supplier;
+
+public class AbstractAdapterResource<T> extends AbstractAuthGuardedRestResource {
+
+  protected T managementService;
+
+  public AbstractAdapterResource(Supplier<T> managementServiceSupplier) {
+    this.managementService = managementServiceSupplier.get();
+  }
 }

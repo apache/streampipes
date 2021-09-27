@@ -22,7 +22,7 @@ import org.apache.streampipes.storage.api.IDashboardStorage;
 
 import javax.ws.rs.Path;
 
-@Path("/v2/users/{username}/dashboard/dashboards")
+@Path("/v2/dashboard/dashboards")
 public class Dashboard extends AbstractDashboardResource {
 
     protected IDashboardStorage getDashboardStorage() {

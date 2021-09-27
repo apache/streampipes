@@ -18,10 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import {
-  DensityChartVisConfig,
-  DensityChartWidgetModel
-} from '../model/density-chart-widget.model';
+import { DensityChartVisConfig, DensityChartWidgetModel } from '../model/density-chart-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 

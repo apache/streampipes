@@ -18,9 +18,8 @@
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { EventPropertyUnion, EventSchema } from '../../../../core-model/gen/streampipes-model';
+import { EventPropertyUnion, EventSchema, SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 import { ImageWidgetModel } from './model/image-widget.model';
 import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
@@ -68,13 +67,13 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
     this.dataLakeRestService.getData(
       this.dataExplorerWidget.dataConfig.sourceConfigs[0].measureName, this.buildQuery())
       .subscribe(
-        (res: DataResult) => {
+        (res: SpQueryResult) => {
           // this.availableImageData = res;
           this.showIsLoadingData = false;
           this.imagesRoutes = [];
-          if (res.rows !== null) {
+          if (res.allDataSeries[0].rows !== null) {
             const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
-            res.rows.forEach(row => {
+            res.allDataSeries[0].rows.forEach(row => {
               this.imagesRoutes.push(row[imageField]);
             });
           }
@@ -95,7 +94,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   beforeDataFetched() {
   }
 
-  onDataReceived(dataResults: DataResult[]) {
+  onDataReceived(spQueryResult: SpQueryResult) {
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {

@@ -58,6 +58,7 @@ public class Pipeline extends ElementComposition {
     super();
     this.actions = new ArrayList<>();
     this.pipelineNotifications = new ArrayList<>();
+    this.pipelineCategories = new ArrayList<>();
   }
 
   public List<DataSinkInvocation> getActions() {

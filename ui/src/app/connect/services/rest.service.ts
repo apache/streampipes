@@ -16,114 +16,107 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
-import {from, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-
-
-import {AuthStatusService} from '../../services/auth-status.service';
-import {UnitDescription} from '../model/UnitDescription';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { UnitDescription } from '../model/UnitDescription';
 import {
-    AdapterDescription,
-    DataSourceDescription,
-    FormatDescriptionList,
-    GuessSchema,
-    Message,
-    ProtocolDescriptionList, SpDataStream
-} from "../../core-model/gen/streampipes-model";
+  AdapterDescription,
+  FormatDescriptionList,
+  GuessSchema,
+  Message,
+  ProtocolDescriptionList,
+  SpDataStream
+} from '../../core-model/gen/streampipes-model';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 
 @Injectable()
 export class RestService {
-    private host = '/streampipes-backend/api/v2/connect/';
 
-    constructor(
-        private http: HttpClient,
-        private authStatusService: AuthStatusService) { }
+  constructor(
+      private http: HttpClient,
+      private platformServicesCommons: PlatformServicesCommons) {
+  }
 
-    addAdapter(adapter: AdapterDescription): Observable<Message> {
-        return this.addAdapterDescription(adapter, '/master/adapters');
-    }
+  get connectPath() {
+    return this.platformServicesCommons.apiBasePath() + '/connect';
+  }
 
-    addAdapterTemplate(adapter: AdapterDescription): Observable<Message> {
-        return this.addAdapterDescription(adapter, '/master/adapters/template');
-    }
+  addAdapter(adapter: AdapterDescription): Observable<Message> {
+    return this.addAdapterDescription(adapter, '/master/adapters');
+  }
 
-    addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
-        adapter.userName = this.authStatusService.email;
+  addAdapterTemplate(adapter: AdapterDescription): Observable<Message> {
+    return this.addAdapterDescription(adapter, '/master/adapters/template');
+  }
 
-        const promise = new Promise<Message>((resolve, reject) => {
-            this.http
-                .post(
-                    this.host + this.authStatusService.email + url,
-                    adapter,
-                )
-                .pipe(map(response => {
-                    const statusMessage = response as Message;
-                    resolve(statusMessage);
-                }))
-                .subscribe();
-        });
-        return from(promise);
-    }
+  addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
+    const promise = new Promise<Message>((resolve, reject) => {
+      this.http
+          .post(
+              this.connectPath + url,
+              adapter,
+          )
+          .pipe(map(response => {
+            const statusMessage = response as Message;
+            resolve(statusMessage);
+          }))
+          .subscribe();
+    });
+    return from(promise);
+  }
 
-
-    getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
-        return this.http
-            .post(this.host + this.authStatusService.email + '/master/guess/schema', adapter)
-            .pipe(map(response => {
-                return GuessSchema.fromData(response as GuessSchema);
+  getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
+    return this.http
+        .post(this.connectPath + '/master/guess/schema', adapter)
+        .pipe(map(response => {
+          return GuessSchema.fromData(response as GuessSchema);
         }));
 
-    }
+  }
 
-    getSourceDetails(sourceElementId): Observable<SpDataStream> {
-        return this.http
-            .get(this.makeUserDependentBaseUrl() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
-                return SpDataStream.fromData(response as SpDataStream);
-            }));
-    }
+  getSourceDetails(sourceElementId): Observable<SpDataStream> {
+    return this.http
+        .get(this.platformServicesCommons.apiBasePath() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
+          return SpDataStream.fromData(response as SpDataStream);
+        }));
+  }
 
-    getRuntimeInfo(sourceDescription): Observable<any> {
-        return this.http.post(this.makeUserDependentBaseUrl() + '/pipeline-element/runtime', sourceDescription, {
-            headers: { ignoreLoadingBar: '' }
-        });
-    }
+  getRuntimeInfo(sourceDescription): Observable<any> {
+    return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipeline-element/runtime', sourceDescription, {
+      headers: {ignoreLoadingBar: ''}
+    });
+  }
 
-    makeUserDependentBaseUrl() {
-        return '/streampipes-backend/api/v2/users/' + this.authStatusService.email;
-    }
+  getFormats(): Observable<FormatDescriptionList> {
+    return this.http
+        .get(
+            this.connectPath + '/master/description/formats'
+        )
+        .pipe(map(response => {
+          return FormatDescriptionList.fromData(response as FormatDescriptionList);
+        }));
+  }
 
+  getProtocols(): Observable<ProtocolDescriptionList> {
+    return this.http
+        .get(this.connectPath + 'adapter/allProtocols')
+        .pipe(map(response => {
+          return response as ProtocolDescriptionList;
+        }));
+  }
 
-    getFormats(): Observable<FormatDescriptionList> {
-        const self = this;
-        return this.http
-            .get(
-              this.host + this.authStatusService.email + '/master/description/formats'
-            )
-            .pipe(map(response => {
-                return FormatDescriptionList.fromData(response as FormatDescriptionList);
-            }));
-    }
-
-    getProtocols(): Observable<ProtocolDescriptionList> {
-        return this.http
-            .get(this.host + 'adapter/allProtocols')
-            .pipe(map(response => {
-                return response as ProtocolDescriptionList;
-            }));
-    }
-
-    getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
-        return this.http
-            .post<UnitDescription[]>(this.host + this.authStatusService.email + '/master/unit', unitDescription)
-            .pipe(map(response => {
-                const descriptions = response as UnitDescription[];
-                return descriptions.filter(entry => entry.resource != unitDescription.resource)
-            }));
-    }
+  getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
+    return this.http
+        .post<UnitDescription[]>(this.connectPath + '/master/unit', unitDescription)
+        .pipe(map(response => {
+          const descriptions = response as UnitDescription[];
+          return descriptions.filter(entry => entry.resource !== unitDescription.resource);
+        }));
+  }
 
 
 }

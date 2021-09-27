@@ -19,6 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.Consumes;
@@ -28,7 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/{username}/pe/options")
+@Path("/v2/pe/options")
 public class ContainerProvidedOptions extends AbstractRestResource {
 
   @POST

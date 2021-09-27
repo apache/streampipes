@@ -22,12 +22,12 @@ import org.apache.streampipes.dataexplorer.param.TimeBoundQueryParams;
 import org.apache.streampipes.dataexplorer.query.GetAggregatedEventsQuery;
 import org.apache.streampipes.dataexplorer.query.GetEventsQuery;
 import org.apache.streampipes.dataexplorer.query.GetNumberOfRecordsQuery;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 
-public class TimeBoundAutoAggregationQuery extends AbstractAutoAggregationQuery<TimeBoundQueryParams, DataResult> {
+public class TimeBoundAutoAggregationQuery extends AbstractAutoAggregationQuery<TimeBoundQueryParams, SpQueryResult> {
 
   public TimeBoundAutoAggregationQuery(TimeBoundQueryParams params) {
-    super(params, DataResult::new);
+    super(params, SpQueryResult::new);
   }
 
   @Override
@@ -36,12 +36,12 @@ public class TimeBoundAutoAggregationQuery extends AbstractAutoAggregationQuery<
   }
 
   @Override
-  protected DataResult getRawEvents() {
+  protected SpQueryResult getRawEvents() {
     return new GetEventsQuery(params).executeQuery();
   }
 
   @Override
-  protected DataResult getAggregatedEvents(Integer aggregationValue) {
+  protected SpQueryResult getAggregatedEvents(Integer aggregationValue) {
     return new GetAggregatedEventsQuery(AggregatedTimeBoundQueryParams.from(params.getIndex(),
             params.getStartDate(), params.getEndDate(), "ms", aggregationValue))
             .executeQuery();

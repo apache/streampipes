@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.general;
+package org.apache.streampipes.rest;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;

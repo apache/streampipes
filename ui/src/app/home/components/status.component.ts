@@ -16,29 +16,27 @@
  *
  */
 
-import {Component} from "@angular/core";
-import {RestApi} from "../../services/rest-api.service";
-import {Router} from "@angular/router";
-import {NotificationCountService} from "../../services/notification-count-service";
-import {PipelineElementService} from "../../platform-services/apis/pipeline-element.service";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NotificationCountService } from '../../services/notification-count-service';
+import { PipelineElementService } from '../../platform-services/apis/pipeline-element.service';
+import { PipelineService } from '../../platform-services/apis/pipeline.service';
 
 @Component({
     selector: 'status',
     templateUrl: './status.component.html',
     styleUrls: ['./status.component.css']
 })
-export class StatusComponent {
+export class StatusComponent implements OnInit {
 
-    pipelines: number = 0;
-    runningPipelines: number = 0;
-    installedPipelineElements: number = 0;
+    pipelines = 0;
+    runningPipelines = 0;
+    installedPipelineElements = 0;
 
     constructor(private pipelineElementService: PipelineElementService,
-                private RestApi: RestApi,
-                private Router: Router,
-                public NotificationCountService: NotificationCountService) {
-
-    }
+                private router: Router,
+                public notificationCountService: NotificationCountService,
+                private pipelineService: PipelineService) { }
 
     ngOnInit() {
         this.getPipelines();
@@ -48,7 +46,7 @@ export class StatusComponent {
     }
 
     getPipelines() {
-        this.RestApi.getOwnPipelines().subscribe(pipelines => {
+        this.pipelineService.getOwnPipelines().subscribe(pipelines => {
            this.pipelines = pipelines.length;
            this.runningPipelines = pipelines.filter(p => p.running).length;
         });
@@ -58,27 +56,27 @@ export class StatusComponent {
         this.pipelineElementService.getDataStreams().subscribe(streams => {
             this.addPipelineElementList(streams);
         });
-    };
+    }
 
     getProcessors() {
-        this.RestApi.getOwnSepas()
+        this.pipelineElementService.getDataProcessors()
             .subscribe(msg => {
                 this.addPipelineElementList(msg);
             });
-    };
+    }
 
     getSinks() {
-        this.RestApi.getOwnActions()
+        this.pipelineElementService.getDataSinks()
             .subscribe(msg => {
                this.addPipelineElementList(msg);
             });
-    };
+    }
 
     addPipelineElementList(msg) {
         this.installedPipelineElements += msg.length;
     }
 
     navigate(url: string) {
-        this.Router.navigate([url]);
+        this.router.navigate([url]);
     }
 }

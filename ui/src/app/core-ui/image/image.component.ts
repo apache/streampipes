@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {DataResult} from "../../core-model/datalake/DataResult";
+import { Component, Input, OnInit } from '@angular/core';
+import { SpQueryResult } from '../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-image',
@@ -27,7 +27,7 @@ import {DataResult} from "../../core-model/datalake/DataResult";
 export class ImageComponent implements OnInit {
 
   @Input()
-  availableImageData: DataResult;
+  availableImageData: SpQueryResult;
 
   constructor() {
 
@@ -36,7 +36,6 @@ export class ImageComponent implements OnInit {
   ngOnInit(): void {
 
   }
-
 
 
 }

@@ -17,11 +17,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
-import { GroupedDataResult } from '../../../../core-model/datalake/GroupedDataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { LineChartWidgetModel } from './model/line-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
+import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -53,7 +52,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       plot_bgcolor: '#fff',
       paper_bgcolor: '#fff',
       xaxis: {
-        type: 'date',
+        type: 'date'
       },
       yaxis: {
         fixedrange: true
@@ -98,14 +97,14 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
         }
       ],
       direction: 'left',
-      pad: {'r': 10, 't': 10},
+      pad: { 'r': 10, 't': 10 },
       showactive: true,
       type: 'buttons',
       x: 0.0,
       xanchor: 'left',
       y: 1.3,
       yanchor: 'top',
-      font: {color: this.dataExplorerWidget.baseAppearanceConfig.textColor},
+      font: { color: this.dataExplorerWidget.baseAppearanceConfig.textColor },
       bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
       bordercolor: '#000'
     }];
@@ -122,62 +121,62 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     });
   }
 
-  private processNonGroupedData(dataResult: DataResult,
-                                sourceIndex: number) {
-    if (dataResult.total === 0) {
+  private processNonGroupedData(spQueryResult: SpQueryResult
+  ) {
+    if (spQueryResult.total === 0) {
       this.setShownComponents(true, false, false);
     } else {
-      this.data = this.transformData(dataResult, sourceIndex);
+      this.data = this.transformData(spQueryResult, spQueryResult.sourceIndex);
       this.setShownComponents(false, true, false);
     }
   }
 
-  private processGroupedData(res: GroupedDataResult) {
-    if (res.total === 0) {
-      this.setShownComponents(true, false, false);
-    } else {
-      const tmp = this.transformGroupedData(res, this.fieldProvider.primaryTimestampField.runtimeName);
-      this.data = this.displayGroupedData(tmp);
+  // private processGroupedData(res: GroupedDataResult) {
+  //   if (res.total === 0) {
+  //     this.setShownComponents(true, false, false);
+  //   } else {
+  //     const tmp = this.transformGroupedData(res, this.fieldProvider.primaryTimestampField.runtimeName);
+  //     this.data = this.displayGroupedData(tmp);
+  //
+  //     this.setShownComponents(false, true, false);
+  //   }
+  // }
 
-      this.setShownComponents(false, true, false);
-    }
-  }
+  // displayGroupedData(transformedData: GroupedDataResult) {
+  //   const tmp = [];
+  //
+  //   const groupNames = Object.keys(transformedData.dataResults);
+  //   for (const groupName of groupNames) {
+  //     const value = transformedData.dataResults[groupName];
+  //     this.dataExplorerWidget.visualizationConfig.yKeys.forEach(key => {
+  //       value.rows.forEach(serie => {
+  //         if (serie.name === key) {
+  //           serie.name = groupName + ' ' + serie.name;
+  //           tmp.push(serie);
+  //         }
+  //       });
+  //     });
+  //
+  //     if (this.dataExplorerWidget.visualizationConfig.showCountValue) {
+  //       let containsCount = false;
+  //       value.rows.forEach(serie => {
+  //         if (serie.name.startsWith('count') && !containsCount) {
+  //           serie.name = groupName + ' count';
+  //           tmp.push(serie);
+  //           containsCount = true;
+  //         }
+  //       });
+  //     }
+  //   }
+  //   return tmp;
+  // }
 
-  displayGroupedData(transformedData: GroupedDataResult) {
-    const tmp = [];
-
-    const groupNames = Object.keys(transformedData.dataResults);
-    for (const groupName of groupNames) {
-      const value = transformedData.dataResults[groupName];
-      this.dataExplorerWidget.visualizationConfig.yKeys.forEach(key => {
-        value.rows.forEach(serie => {
-          if (serie.name === key) {
-            serie.name = groupName + ' ' + serie.name;
-            tmp.push(serie);
-          }
-        });
-      });
-
-      if (this.dataExplorerWidget.visualizationConfig.showCountValue) {
-        let containsCount = false;
-        value.rows.forEach(serie => {
-          if (serie.name.startsWith('count') && !containsCount) {
-            serie.name = groupName + ' count';
-            tmp.push(serie);
-            containsCount = true;
-          }
-        });
-      }
-    }
-    return tmp;
-  }
-
-  transformData(data: DataResult,
+  transformData(data: SpQueryResult,
                 sourceIndex: number): any[] {
     const columnsContainingNumbers = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
-        .filter(f => this.fieldProvider.numericFields.find(field => field.fullDbName === f.fullDbName));
+      .filter(f => this.fieldProvider.numericFields.find(field => field.fullDbName === f.fullDbName));
     const columnsContainingStrings = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
-        .filter(f => this.fieldProvider.nonNumericFields.find(field => field.fullDbName === f.fullDbName));
+      .filter(f => this.fieldProvider.nonNumericFields.find(field => field.fullDbName === f.fullDbName));
     const indexXkey = 0;
 
     const tmpLineChartTraces: any[] = [];
@@ -202,7 +201,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     });
 
     // fill line chart traces with data
-    data.rows.forEach(row => {
+    data.allDataSeries[0].rows.forEach(row => {
       this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.forEach(field => {
         const columnIndex = this.getColumnIndex(field, data);
         tmpLineChartTraces[field.fullDbName].x.push(new Date(row[indexXkey]));
@@ -212,15 +211,15 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     return Object.values(tmpLineChartTraces);
   }
 
-  transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
-    // TODO not yet supported after refactoring
-    for (const key in data.dataResults) {
-      const dataResult = data.dataResults[key];
-      this.data = this.transformData(dataResult, 0);
-    }
-
-    return data;
-  }
+  // transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
+  //   // TODO not yet supported after refactoring
+  //   for (const key in data.dataResults) {
+  //     const dataResult = data.dataResults[key];
+  //     this.data = this.transformData(dataResult, 0);
+  //   }
+  //
+  //   return data;
+  // }
 
   setStartX(startX: string) {
     this.selectedStartX = startX;
@@ -254,21 +253,22 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     this.setShownComponents(false, false, true);
   }
 
-  onDataReceived(dataResults: DataResult[]) {
+  onDataReceived(spQueryResult: SpQueryResult) {
     this.data = [];
-    dataResults.forEach((result, index) => {
-      this.processNonGroupedData(result, index);
-    });
+    this.processNonGroupedData(spQueryResult);
+    // spQueryResult.allDataSeries.forEach((result, index) => {
+    //   this.processNonGroupedData(result, index);
+    // });
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
                       removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties =
-        this.updateFieldSelection(
-            this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties,
-            addedFields,
-            removedFields,
-            (field) => field.fieldCharacteristics.numeric
-        );
+      this.updateFieldSelection(
+        this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties,
+        addedFields,
+        removedFields,
+        (field) => field.fieldCharacteristics.numeric
+      );
   }
 }

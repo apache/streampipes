@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.rest;
+package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -44,10 +44,10 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @GsonWithIds
-    public Response getAllAdaptersInstallDescription(@PathParam("username") String username) {
+    public Response getAllAdaptersInstallDescription() {
 
         try {
-            String resultingJson = managementService.getAllAdaptersInstallDescription(username);
+            String resultingJson = managementService.getAllAdaptersInstallDescription();
             return ok(resultingJson);
         } catch (AdapterException e) {
             LOG.error("Error while getting all adapter descriptions", e);
@@ -91,15 +91,14 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
     @Path("/{streamId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response detach(@PathParam("streamId") String elementId,
-                           @PathParam("runningInstanceId") String runningInstanceId,
-                           @PathParam("username") String username) {
+                           @PathParam("runningInstanceId") String runningInstanceId) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
 //        String workerUrl = new Utils().getWorkerUrlById(elementId);
 //        String newUrl = Utils.addUserNameToApi(workerUrl, username);
 
         try {
-            managementService.detachAdapter(elementId, runningInstanceId, username);
+            managementService.detachAdapter(elementId, runningInstanceId);
         } catch (AdapterException | NoServiceEndpointsAvailableException e) {
             LOG.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
             return fail();

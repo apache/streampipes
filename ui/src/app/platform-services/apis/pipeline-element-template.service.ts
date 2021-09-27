@@ -16,16 +16,16 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
   PipelineElementTemplate
-} from "../../core-model/gen/streampipes-model";
-import {PlatformServicesCommons} from "./commons.service";
-import {map} from "rxjs/operators";
+} from '../../core-model/gen/streampipes-model';
+import { PlatformServicesCommons } from './commons.service';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class PipelineElementTemplateService {
@@ -35,34 +35,33 @@ export class PipelineElementTemplateService {
 
   }
 
-  getPipelineElementTemplates(appId: string): Observable<Array<PipelineElementTemplate>> {
+  getPipelineElementTemplates(appId: string): Observable<PipelineElementTemplate[]> {
     return this.http
-        .get(this.platformServicesCommons.authUserBasePath()
-            + "/pipeline-element-templates?appId=" + appId)
+        .get(this.platformServicesCommons.apiBasePath()
+            + '/pipeline-element-templates?appId=' + appId)
         .pipe(map(data => {
-          console.log(data);
           return (data as []).map(dpi => PipelineElementTemplate.fromData(dpi));
         }));
   }
 
   getConfiguredDataProcessorForTemplate(templateId: string, invocation: DataProcessorInvocation): Observable<DataProcessorInvocation> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath()
-        + "/pipeline-element-templates/" + templateId + "/processor", invocation)
+    return this.http.post(this.platformServicesCommons.apiBasePath()
+        + '/pipeline-element-templates/' + templateId + '/processor', invocation)
         .pipe(map(response => {
           return DataProcessorInvocation.fromData(response as DataProcessorInvocation);
         }));
   }
 
   getConfiguredDataSinkForTemplate(templateId: string, invocation: DataSinkInvocation): Observable<DataSinkInvocation> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath()
-        + "/pipeline-element-templates/" + templateId + "/sink", invocation)
+    return this.http.post(this.platformServicesCommons.apiBasePath()
+        + '/pipeline-element-templates/' + templateId + '/sink', invocation)
         .pipe(map(response => {
           return DataSinkInvocation.fromData(response as DataSinkInvocation);
         }));
   }
 
   storePipelineElementTemplate(template: PipelineElementTemplate) {
-    return this.http.post(this.platformServicesCommons.authUserBasePath() + "/pipeline-element-templates", template);
+    return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipeline-element-templates', template);
   }
 
 

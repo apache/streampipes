@@ -15,10 +15,22 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.core.base.impl;
 
-import {DataResult} from './DataResult';
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
-export class GroupedDataResult {
-    total: number;
-    dataResults: Map<string, DataResult>;
+public class AbstractAuthGuardedRestResource extends AbstractRestResource {
+
+  @Context
+  protected SecurityContext securityContext;
+
+  protected boolean isAuthenticated() {
+    return this.securityContext.getUserPrincipal() != null;
+  }
+
+  protected String getAuthenticatedUsername() {
+    return this.securityContext.getUserPrincipal().getName();
+  }
+
 }

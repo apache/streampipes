@@ -31,10 +31,7 @@ import org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters;
 import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
 import org.apache.streampipes.dataexplorer.v4.query.DataExplorerQueryV4;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
-import org.apache.streampipes.model.datalake.DataLakeConfiguration;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.*;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.influxdb.dto.QueryResult;
 import org.lightcouch.CouchDbClient;
@@ -55,7 +52,7 @@ public class DataLakeManagementV4 {
         return DataExplorerUtils.getInfos();
     }
 
-    public DataResult getData(ProvidedQueryParams queryParams) throws IllegalArgumentException {
+    public SpQueryResult getData(ProvidedQueryParams queryParams) throws IllegalArgumentException {
         if (queryParams.has(QP_AUTO_AGGREGATE)) {
             queryParams = new AutoAggregationHandler(queryParams).makeAutoAggregationQueryParams();
         }
@@ -70,7 +67,7 @@ public class DataLakeManagementV4 {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        DataResult dataResult;
+        SpQueryResult dataResult;
         //JSON
         if (format.equals("json")) {
 
@@ -88,7 +85,7 @@ public class DataLakeManagementV4 {
                 dataResult = getData(params);
 
                 if (dataResult.getTotal() > 0) {
-                    for (List<Object> row : dataResult.getRows()) {
+                    for (List<Object> row : dataResult.getAllDataSeries().get(0).getRows()) {
                         if (!isFirstDataObject) {
                             outputStream.write(toBytes(","));
                         }
@@ -151,7 +148,7 @@ public class DataLakeManagementV4 {
                 }
 
                 if (dataResult.getTotal() > 0) {
-                    for (List<Object> row : dataResult.getRows()) {
+                    for (List<Object> row : dataResult.getAllDataSeries().get(0).getRows()) {
                         boolean isFirstInRow = true;
                         for (int i1 = 0; i1 < row.size(); i1++) {
                             Object element = row.get(i1);
@@ -207,11 +204,11 @@ public class DataLakeManagementV4 {
         return false;
     }
 
-    public DataResult deleteData(String measurementID) {
+    public SpQueryResult deleteData(String measurementID) {
         return this.deleteData(measurementID, null, null);
     }
 
-    public DataResult deleteData(String measurementID, Long startDate, Long endDate) {
+    public SpQueryResult deleteData(String measurementID, Long startDate, Long endDate) {
         Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getDeleteQueryParams(measurementID, startDate, endDate);
         return new DataExplorerQueryV4(queryParts).executeQuery();
     }

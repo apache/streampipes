@@ -19,10 +19,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { TableWidgetModel } from './model/table-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
+import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-table-widget',
@@ -42,14 +42,17 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
   }
 
-  transformData(data: DataResult) {
+  transformData(spQueryResult: SpQueryResult) {
     const result = [];
-    if (data.total === 0) {
+    if (spQueryResult.total === 0) {
       this.setShownComponents(true, false, false);
     } else {
-      data.rows.forEach(row =>
-        result.push(this.createTableObject(data.headers, row))
-      );
+      spQueryResult.allDataSeries.forEach(series => {
+        series.rows.forEach(row =>
+          result.push(this.createTableObject(spQueryResult.headers, row))
+        );
+      });
+
       this.setShownComponents(false, true, false);
     }
     return result;
@@ -96,20 +99,20 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     this.setShownComponents(false, false, true);
   }
 
-  onDataReceived(dataResults: DataResult[]) {
+  onDataReceived(spQueryResult: SpQueryResult) {
     this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
-    this.dataSource.data = [...this.transformData(dataResults[0])];
+    this.dataSource.data = this.transformData(spQueryResult);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
                       removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.selectedColumns =
-        this.updateFieldSelection(
-            this.dataExplorerWidget.visualizationConfig.selectedColumns,
-            addedFields,
-            removedFields,
-            (field) => true
-        );
+      this.updateFieldSelection(
+        this.dataExplorerWidget.visualizationConfig.selectedColumns,
+        addedFields,
+        removedFields,
+        (field) => true
+      );
     this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
   }
 

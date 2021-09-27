@@ -18,9 +18,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
+import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-indicator-chart-widget',
@@ -34,9 +34,9 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
       type: 'indicator',
       mode: 'number+delta',
       value: 400,
-      number: {prefix: ''},
-      delta: {position: 'top', reference: 320},
-      domain: {x: [0, 1], y: [0, 1]}
+      number: { prefix: '' },
+      delta: { position: 'top', reference: 320 },
+      domain: { x: [0, 1], y: [0, 1] }
     }
   ];
 
@@ -49,14 +49,14 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
       autosize: true,
       plot_bgcolor: '#fff',
       paper_bgcolor: '#fff',
-      margin: {t: 0, b: 0, l: 0, r: 0},
-      grid: {rows: 2, columns: 2, pattern: 'independent'},
+      margin: { t: 0, b: 0, l: 0, r: 0 },
+      grid: { rows: 2, columns: 2, pattern: 'independent' },
       template: {
         data: {
           indicator: [
             {
               mode: 'number+delta',
-              delta: {reference: 90}
+              delta: { reference: 90 }
             }
           ]
         }
@@ -75,12 +75,12 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     this.updateAppearance();
   }
 
-  prepareData(numberResult: DataResult, deltaResult?: DataResult) {
+  prepareData(numberResult: SpQueryResult, deltaResult?: SpQueryResult) {
     const valueIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.valueField, numberResult);
-    this.data[0].value = numberResult.total > 0 ? numberResult.rows[0][valueIndex] : '-';
+    this.data[0].value = numberResult.total > 0 ? numberResult.allDataSeries[0].rows[0][valueIndex] : '-';
     if (deltaResult) {
       const deltaIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.deltaField, numberResult);
-      this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.rows[0][deltaIndex] : '-';
+      this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.allDataSeries[0].rows[0][deltaIndex] : '-';
     }
   }
 
@@ -100,27 +100,27 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     this.data[0].mode = this.dataExplorerWidget.visualizationConfig.showDelta ? 'number+delta' : 'number';
   }
 
-  onDataReceived(dataResults: DataResult[]) {
-    this.prepareData(dataResults[0]);
+  onDataReceived(spQueryResult: SpQueryResult) {
+    this.prepareData(spQueryResult);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.valueField =
-          this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.valueField, addedFields, removedFields);
+      this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.valueField, addedFields, removedFields);
 
     this.dataExplorerWidget.visualizationConfig.deltaField =
-        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.deltaField, addedFields, removedFields);
+      this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.deltaField, addedFields, removedFields);
   }
 
   triggerFieldUpdate(selected: DataExplorerField,
                      addedFields: DataExplorerField[],
                      removedFields: DataExplorerField[]): DataExplorerField {
     return this.updateSingleField(
-        selected,
-        this.fieldProvider.numericFields,
-        addedFields,
-        removedFields,
-        (field) => field.fieldCharacteristics.numeric
+      selected,
+      this.fieldProvider.numericFields,
+      addedFields,
+      removedFields,
+      (field) => field.fieldCharacteristics.numeric
     );
   }
 

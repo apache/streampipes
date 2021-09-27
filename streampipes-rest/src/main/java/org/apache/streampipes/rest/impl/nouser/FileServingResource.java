@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl.nouser;
 
 import org.apache.streampipes.manager.file.FileManager;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

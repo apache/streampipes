@@ -38,7 +38,7 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
   }
 
   ngOnInit(): void {
-   super.onInit();
+    super.onInit();
   }
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
@@ -78,8 +78,8 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
       yKeys: [],
       chartMode: 'lines',
       selectedLineChartProperties: this.fieldProvider.numericFields.length > 6 ?
-          this.fieldProvider.numericFields.slice(0, 5) :
-          this.fieldProvider.numericFields
+        this.fieldProvider.numericFields.slice(0, 5) :
+        this.fieldProvider.numericFields
     };
   }
 

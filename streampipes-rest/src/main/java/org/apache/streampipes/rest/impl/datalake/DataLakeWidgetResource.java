@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.rest.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 
@@ -27,7 +27,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v3/users/{username}/datalake/dashboard/widgets")
+@Path("/v3/datalake/dashboard/widgets")
 public class DataLakeWidgetResource extends AbstractRestResource {
 
   @GET

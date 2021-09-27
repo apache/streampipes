@@ -61,8 +61,8 @@ export class TableWidgetConfigComponent extends BaseWidgetConfig<TableWidgetMode
   protected initWidgetConfig(): TableVisConfig {
     return {
       forType: this.getWidgetType(),
-      selectedColumns : this.fieldProvider.allFields.length > 6 ?
-          this.fieldProvider.allFields.slice(0, 5) : this.fieldProvider.allFields,
+      selectedColumns: this.fieldProvider.allFields.length > 6 ?
+        this.fieldProvider.allFields.slice(0, 5) : this.fieldProvider.allFields,
       searchValue: ''
     };
   }

@@ -18,9 +18,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { DataResult } from '../../../../core-model/datalake/DataResult';
 import { PieChartWidgetModel } from './model/pie-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
+import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-pie-chart-widget',
@@ -59,16 +59,17 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
     this.updateAppearance();
   }
 
-  prepareData(results: DataResult[]) {
+  prepareData(spQueryResult: SpQueryResult) {
+    const series = spQueryResult.allDataSeries[0];
     const finalLabels: string[] = [];
     const finalValues: number[] = [];
     const values: Map<string, number> = new Map();
     const field = this.dataExplorerWidget.visualizationConfig.selectedProperty;
     const index = field.sourceIndex;
 
-    if (results[index]) {
-      const rowIndex = this.getColumnIndex(field, results[index]);
-      results[index].rows.forEach(row => {
+    if (series.total[index]) {
+      const rowIndex = this.getColumnIndex(field, series.total[index]);
+      series.total[index].rows.forEach(row => {
         const value = row[rowIndex].toString();
         if (!values.has(value)) {
           values.set(value, 0);
@@ -105,13 +106,13 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
   beforeDataFetched() {
   }
 
-  onDataReceived(dataResults: DataResult[]) {
-    this.prepareData(dataResults);
+  onDataReceived(spQueryResult: SpQueryResult) {
+    this.prepareData(spQueryResult);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.selectedProperty =
-        this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.selectedProperty, addedFields, removedFields);
+      this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.selectedProperty, addedFields, removedFields);
 
   }
 
@@ -119,11 +120,11 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
                      addedFields: DataExplorerField[],
                      removedFields: DataExplorerField[]): DataExplorerField {
     return this.updateSingleField(
-        selected,
-        this.fieldProvider.numericFields,
-        addedFields,
-        removedFields,
-        (field) => field.fieldCharacteristics.numeric
+      selected,
+      this.fieldProvider.numericFields,
+      addedFields,
+      removedFields,
+      (field) => field.fieldCharacteristics.numeric
     );
   }
 

@@ -23,7 +23,8 @@ import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.dataexplorer.v4.params.*;
 import org.apache.streampipes.dataexplorer.v4.query.elements.*;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
-import org.apache.streampipes.model.datalake.DataResult;
+import org.apache.streampipes.model.datalake.DataSeries;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
@@ -44,7 +45,7 @@ public class DataExplorerQueryV4 {
         this.params = params;
     }
 
-    public DataResult executeQuery() throws RuntimeException {
+    public SpQueryResult executeQuery() throws RuntimeException {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
         List<QueryElement<?>> queryElements = getQueryElements();
 
@@ -54,21 +55,15 @@ public class DataExplorerQueryV4 {
 
         QueryResult result = influxDB.query(query);
         LOG.debug("Data Lake Query Result: " + result.toString());
-        DataResult dataResult = postQuery(result);
+
+        SpQueryResult dataResult = postQuery(result);
 
         influxDB.close();
         return dataResult;
     }
 
-    protected DataResult convertResult(QueryResult result) {
-        if (result.getResults().get(0).getSeries() != null) {
-            return convertResult(result.getResults().get(0).getSeries().get(0));
-        } else {
-            return new DataResult();
-        }
-    }
 
-    protected DataResult convertResult(QueryResult.Series series) {
+    protected DataSeries convertResult(QueryResult.Series series) {
         List<String> columns = series.getColumns();
         List<List<Object>> values = series.getValues();
 
@@ -80,11 +75,21 @@ public class DataExplorerQueryV4 {
             }
         });
 
-        return new DataResult(values.size(), columns, resultingValues);
+        return new DataSeries(values.size(), resultingValues, columns, series.getTags());
     }
 
-    protected DataResult postQuery(QueryResult result) throws RuntimeException {
-        return convertResult(result);
+    protected SpQueryResult postQuery(QueryResult queryResult) throws RuntimeException {
+        SpQueryResult result = new SpQueryResult();
+
+        if (queryResult.getResults().get(0).getSeries() != null) {
+            result.setTotal(queryResult.getResults().get(0).getSeries().size());
+            queryResult.getResults().get(0).getSeries().forEach(rs -> {
+                DataSeries series = convertResult(rs);
+                result.setHeaders(series.getHeaders());
+                result.addDataResult(series);
+            });
+        }
+        return result;
     }
 
     protected List<QueryElement<?>> getQueryElements() {

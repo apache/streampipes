@@ -65,11 +65,11 @@ export interface DataExplorerField {
 }
 
 export interface FieldConfig {
-    runtimeName: string;
-    aggregations?: string[];
-    alias?: string;
-    selected: boolean;
-    numeric: boolean;
+  runtimeName: string;
+  aggregations?: string[];
+  alias?: string;
+  selected: boolean;
+  numeric: boolean;
 }
 
 export interface SelectedFilter {
@@ -82,6 +82,7 @@ export interface SelectedFilter {
 export interface QueryConfig {
   selectedFilters: SelectedFilter[];
   fields?: FieldConfig[];
+  groupBy?: FieldConfig[];
   limit?: number;
   page?: number;
   order?: 'ASC' | 'DESC';

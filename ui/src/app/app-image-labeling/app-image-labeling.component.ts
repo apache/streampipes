@@ -17,17 +17,15 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
-import { DataLakeMeasure, EventPropertyUnion, EventSchema } from '../core-model/gen/streampipes-model';
-import { CocoFormat } from '../core-model/coco/Coco.format';
-import { DataResult } from '../core-model/datalake/DataResult';
+import { DataLakeMeasure, EventPropertyUnion, EventSchema, SpQueryResult } from '../core-model/gen/streampipes-model';
 import { DateRange } from '../core-model/datalake/DateRange';
 
 @Component({
-    selector: 'app-image-labeling',
-    templateUrl: './app-image-labeling.component.html',
-    styleUrls: ['./app-image-labeling.component.css']
+  selector: 'app-image-labeling',
+  templateUrl: './app-image-labeling.component.html',
+  styleUrls: ['./app-image-labeling.component.css']
 })
-export class AppImageLabelingComponent implements  OnInit {
+export class AppImageLabelingComponent implements OnInit {
 
   public imagesRoutes = [];
 
@@ -44,13 +42,13 @@ export class AppImageLabelingComponent implements  OnInit {
   }
 
   ngOnInit() {
-      this.appOpened.emit(true);
-        this.restService.getAllInfos().subscribe(res => {
-              this.dataLakeMeasures = res;
-              this.selectedMeasure = res[0];
-              this.updateData();
-          }
-        );
+    // this.appOpened.emit(true);
+    //   this.restService.getAllInfos().subscribe(res => {
+    //         this.dataLakeMeasures = res;
+    //         this.selectedMeasure = res[0];
+    //         this.updateData();
+    //     }
+    //   );
   }
 
   changeMeasure(newMeasure) {
@@ -65,17 +63,17 @@ export class AppImageLabelingComponent implements  OnInit {
     this.dataLakeRestService.getDataAutoAggregation(
       this.selectedMeasure.measureName, dateRange.startDate.getTime(), dateRange.endDate.getTime())
       .subscribe(
-        (res: DataResult) => {
+        (res: SpQueryResult) => {
 
-         this.imageProperty = this.getImageProperties(this.selectedMeasure.eventSchema)[0].runtimeName;
+          const series = res.allDataSeries[0];
+          this.imageProperty = this.getImageProperties(this.selectedMeasure.eventSchema)[0].runtimeName;
           // this.availableImageData = res;
           this.imagesRoutes = [];
-          if (res.rows !== null) {
+          if (series.rows !== null) {
             const imageField = res.headers.findIndex(name => name === this.imageProperty);
-            res.rows.forEach(row => {
+            series.rows.forEach(row => {
               this.imagesRoutes.push(row[imageField]);
             });
-
           }
         }
       );

@@ -16,24 +16,20 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient, HttpEvent, HttpParams, HttpRequest} from "@angular/common/http";
-import {PlatformServicesCommons} from "./commons.service";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {FileMetadata} from "../../core-model/gen/streampipes-model-client";
-import {Pipeline} from "../../core-model/gen/streampipes-model";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class MeasurementUnitsService {
 
   constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-
-  }
+              private platformServicesCommons: PlatformServicesCommons) { }
 
   getAllMeasurementUnits(): Observable<any> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath() + "/measurement-units").pipe(map(response => {
+    return this.http.get(this.platformServicesCommons.apiBasePath() + '/measurement-units').pipe(map(response => {
       return response;
     }));
   }

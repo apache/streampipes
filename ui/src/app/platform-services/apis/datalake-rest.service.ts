@@ -20,12 +20,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { AuthStatusService } from '../../services/auth-status.service';
 import { Observable } from 'rxjs';
-import { DataLakeMeasure } from '../../core-model/gen/streampipes-model';
+import { DataLakeMeasure, PageResult, SpQueryResult } from '../../core-model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
-import { DataResult } from '../../core-model/datalake/DataResult';
 import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQueryParameters';
-import { PageResult } from '../../core-model/datalake/PageResult';
-import { GroupedDataResult } from '../../core-model/datalake/GroupedDataResult';
 
 @Injectable()
 export class DatalakeRestService {
@@ -38,7 +35,7 @@ export class DatalakeRestService {
   }
 
   private get dataLakeUrl() {
-    return this.baseUrl + '/api/v4/users/' + this.authStatusService.email + '/datalake';
+    return this.baseUrl + '/api/v4' + '/datalake';
   }
 
   getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
@@ -49,55 +46,46 @@ export class DatalakeRestService {
   }
 
   getData(index: string,
-          queryParams: DatalakeQueryParameters): Observable<DataResult> {
+          queryParams: DatalakeQueryParameters): Observable<SpQueryResult> {
     const url = this.dataLakeUrl + '/measurements/' + index;
 
     // @ts-ignore
-    return this.http.get<DataResult>(url, { params: queryParams });
+    return this.http.get<SpQueryResult>(url, { params: queryParams });
   }
 
-  // getData(index, startDate, endDate, columns, aggregationFunction, aggregationTimeUnit, aggregationTimeValue): Observable<DataResult> {
-  //     const timeInterval = aggregationTimeValue + aggregationTimeUnit;
-  //
-  //     const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined, undefined,
-  //         undefined, undefined, undefined, aggregationFunction, timeInterval);
-  //
-  //     // @ts-ignore
-  //     return this.http.get<DataResult>(url, {params: queryParams});
-  // }
 
   getPagedData(index: string, itemsPerPage: number, page: number, columns?: string, order?: string): Observable<PageResult> {
     const url = this.dataLakeUrl + '/measurements/' + index;
 
     const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, undefined, undefined, page,
-        itemsPerPage, undefined, undefined, order, undefined, undefined);
+      itemsPerPage, undefined, undefined, order, undefined, undefined);
 
     // @ts-ignore
-    return this.http.get<PageResult>(url, {params: queryParams});
+    return this.http.get<PageResult>(url, { params: queryParams });
   }
 
-  getGroupedData(index: string, groupingTags: string, aggregationFunction?: string, columns?: string, startDate?: number, endDate?:
-      number, aggregationTimeUnit?: string, aggregationTimeValue?: number, order?: string, limit?: number):
-      Observable<GroupedDataResult> {
-
-    const url = this.dataLakeUrl + '/measurements/' + index;
-    let _aggregationFunction = 'mean';
-    let timeInterval = '2000ms';
-
-    if (aggregationFunction) {
-      _aggregationFunction = aggregationFunction;
-    }
-
-    if (aggregationTimeUnit && aggregationTimeValue) {
-      timeInterval = aggregationTimeValue + aggregationTimeUnit;
-    }
-
-    const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined, limit,
-        undefined, groupingTags, order, _aggregationFunction, timeInterval);
-
-    // @ts-ignore
-    return this.http.get<GroupedDataResult>(url, { params: queryParams });
-  }
+  // getGroupedData(index: string, groupingTags: string, aggregationFunction?: string, columns?: string, startDate?: number, endDate?:
+  //   number, aggregationTimeUnit?: string, aggregationTimeValue?: number, order?: string, limit?: number):
+  //   Observable<SpQueryResult> {
+  //
+  //   const url = this.dataLakeUrl + '/measurements/' + index;
+  //   let _aggregationFunction = 'mean';
+  //   let timeInterval = '2000ms';
+  //
+  //   if (aggregationFunction) {
+  //     _aggregationFunction = aggregationFunction;
+  //   }
+  //
+  //   if (aggregationTimeUnit && aggregationTimeValue) {
+  //     timeInterval = aggregationTimeValue + aggregationTimeUnit;
+  //   }
+  //
+  //   const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined, limit,
+  //     undefined, groupingTags, order, _aggregationFunction, timeInterval);
+  //
+  //   // @ts-ignore
+  //   return this.http.get<GroupedDataResult>(url, { params: queryParams });
+  // }
 
   downloadRawData(index, format) {
     const url = this.dataLakeUrl + '/measurements/' + index + '/download?format=' + format;

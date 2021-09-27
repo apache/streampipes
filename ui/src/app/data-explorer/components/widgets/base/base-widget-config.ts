@@ -24,12 +24,7 @@ import {
   EventSchema
 } from '../../../../core-model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import {
-  DataExplorerField,
-  DataExplorerVisConfig,
-  FieldProvider,
-  SourceConfig
-} from '../../../models/dataview-dashboard.model';
+import { DataExplorerField, DataExplorerVisConfig, FieldProvider, SourceConfig } from '../../../models/dataview-dashboard.model';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { WidgetType } from '../../../registry/data-explorer-widgets';
 
@@ -59,7 +54,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel, V exte
 
   checkAndInitialize() {
     if (!this.currentlyConfiguredWidget.visualizationConfig ||
-        !(this.currentlyConfiguredWidget.visualizationConfig.forType === this.getWidgetType())) {
+      !(this.currentlyConfiguredWidget.visualizationConfig.forType === this.getWidgetType())) {
       this.currentlyConfiguredWidget.visualizationConfig = this.initWidgetConfig();
     }
   }
@@ -119,7 +114,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel, V exte
 
     eventSchema.eventProperties.forEach(p => {
       if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) &&
-          !this.fieldService.isNumber(p)) {
+        !this.fieldService.isNumber(p)) {
         result.push(p);
       }
     });
@@ -142,7 +137,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel, V exte
 
     eventSchema.eventProperties.forEach(p => {
       if (!(p.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) &&
-          this.fieldService.isNumber(p)) {
+        this.fieldService.isNumber(p)) {
         propertyKeys.push(p);
       }
     });
@@ -152,7 +147,7 @@ export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel, V exte
 
   getTimestampProperty(eventSchema: EventSchema) {
     return eventSchema.eventProperties.find(p =>
-        this.fieldService.isTimestamp(p)
+      this.fieldService.isTimestamp(p)
     );
   }
 

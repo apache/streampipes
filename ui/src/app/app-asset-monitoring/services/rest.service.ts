@@ -16,65 +16,63 @@
  *
  */
 
-import {HttpClient} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {map} from "rxjs/operators";
-import {Observable} from "rxjs";
-import {AuthStatusService} from "../../services/auth-status.service";
-import {DashboardConfiguration} from "../model/dashboard-configuration.model";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AuthStatusService } from '../../services/auth-status.service';
+import { DashboardConfiguration } from '../model/dashboard-configuration.model';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 
 @Injectable()
 export class RestService {
 
+  constructor(private http: HttpClient,
+              private authStatusService: AuthStatusService,
+              private platformServicesCommons: PlatformServicesCommons) {
+  }
 
-    constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
-    }
+  getVisualizablePipelines(): Observable<any> {
+    return this.http.get('/visualizablepipeline/_all_docs?include_docs=true');
+  }
 
-    getVisualizablePipelines(): Observable<any> {
-        return this.http.get('/visualizablepipeline/_all_docs?include_docs=true');
-    }
+  getPipeline(pipelineId): Observable<any> {
+    return this.http.get('/pipeline/' + pipelineId);
+  }
 
-    getPipeline(pipelineId): Observable<any> {
-        return this.http.get('/pipeline/' + pipelineId);
-    }
-
-    storeImage(file: File): Observable<any> {
-        const data: FormData = new FormData();
-        data.append('file_upload', file, file.name);
-        return this.http.post(this.imagePath, data)
-            .pipe(map(res => {
-                return res;
-            }));
-    }
-
-    deleteDashboard(dashboardId: string) {
-        return this.http.delete(this.url + "/" +dashboardId);
-    }
-
-    storeDashboard(dashboardConfig: DashboardConfiguration) {
-        return this.http.post(this.url, dashboardConfig);
-    }
-
-    getDashboards(): Observable<DashboardConfiguration[]> {
-        return this.http.get(this.url).pipe(map(response => {
-            return response as DashboardConfiguration[];
+  storeImage(file: File): Observable<any> {
+    const data: FormData = new FormData();
+    data.append('file_upload', file, file.name);
+    return this.http.post(this.imagePath, data)
+        .pipe(map(res => {
+          return res;
         }));
-    }
+  }
 
-    getImageUrl(imageName: string): string {
-        return this.imagePath + "/" + imageName;
-    }
+  deleteDashboard(dashboardId: string) {
+    return this.http.delete(`${this.url}/${dashboardId}`);
+  }
 
-    private get baseUrl() {
-        return '/streampipes-backend';
-    }
+  storeDashboard(dashboardConfig: DashboardConfiguration) {
+    return this.http.post(this.url, dashboardConfig);
+  }
 
-    private get url() {
-        return this.baseUrl + '/api/v2/users/' + this.authStatusService.email + '/asset-dashboards'
-    }
+  getDashboards(): Observable<DashboardConfiguration[]> {
+    return this.http.get(this.url).pipe(map(response => {
+      return response as DashboardConfiguration[];
+    }));
+  }
 
-    private get imagePath() {
-        return this.url + "/images";
-    }
+  getImageUrl(imageName: string): string {
+    return `${this.imagePath}/${imageName}`;
+  }
+
+  private get url() {
+    return `${this.platformServicesCommons.apiBasePath()}/asset-dashboards`;
+  }
+
+  private get imagePath() {
+    return `${this.url}/images`;
+  }
 
 }
