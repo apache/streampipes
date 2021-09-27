@@ -19,6 +19,7 @@
 import { IWidget } from '../models/dataview-dashboard.model';
 import { TableWidgetComponent } from '../components/widgets/table/table-widget.component';
 import { MapWidgetComponent } from '../components/widgets/map/map-widget.component';
+import { CalendarHeatmapWidgetComponent } from '../components/widgets/calendar-heatmap/calendar-heatmap-widget.component';
 import { LineChartWidgetComponent } from '../components/widgets/line-chart/line-chart-widget.component';
 import { ImageWidgetComponent } from '../components/widgets/image/image-widget.component';
 import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
@@ -29,6 +30,7 @@ import { PieChartWidgetComponent } from '../components/widgets/pie/pie-chart-wid
 export enum WidgetType {
   Table,
   Map,
+  Heatmap,
   LineChart,
   Image,
   IndicatorChart,
@@ -47,6 +49,11 @@ export const WidgetTypeMap = new Map<number, IWidget>([
     id: 'map',
     label: 'Map',
     componentClass: MapWidgetComponent
+  }],
+  [WidgetType.Heatmap, {
+    id: 'calendar-heatmap',
+    label: 'Calendar Heatmap',
+    componentClass: CalendarHeatmapWidgetComponent
   }],
   [WidgetType.LineChart, {
     id: 'line-chart',
