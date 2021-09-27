@@ -25,7 +25,6 @@ import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.vocabulary.XSD;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -182,7 +181,7 @@ public class DataLakeInfluxDbClient {
                     PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
 
                     // store property as tag when he field is a dimension property
-                    if (PropertyScope.DIMENSION_PROPERTY.equals(ep.getPropertyScope())) {
+                    if ("DIMENSION_PROPERTY".equals(ep.getPropertyScope())) {
                         p.tag(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
                     } else {
                         // Store property according to property type
