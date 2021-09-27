@@ -29,6 +29,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+
 import {
   OWL_DATE_TIME_FORMATS,
   OwlDateTimeModule,
@@ -65,6 +67,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ColorService } from './components/widgets/line-chart/services/color.service';
 import { DataExplorerDesignerPanelComponent } from './components/designer-panel/data-explorer-designer-panel.component';
 import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
+import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
+import { MapWidgetConfigComponent } from './components/widgets/map/config/map-widget-config.component';
 import { DataExplorerWidgetAppearanceSettingsComponent } from './components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
 import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
 import { WidgetConfigurationService } from './services/widget-configuration.service';
@@ -111,6 +115,7 @@ export const MY_NATIVE_FORMATS = {
 @NgModule({
   imports: [
     CommonModule,
+    LeafletModule,
     CoreUiModule,
     MatTabsModule,
     GridsterModule,
@@ -132,7 +137,7 @@ export const MY_NATIVE_FORMATS = {
     MatNativeDateModule,
     MatSliderModule,
     MatSlideToggleModule,
-    MatChipsModule
+    MatChipsModule,
   ],
   declarations: [
     AggregateConfigurationComponent,
@@ -168,6 +173,8 @@ export const MY_NATIVE_FORMATS = {
     SelectPropertyComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,
+    MapWidgetConfigComponent,
+    MapWidgetComponent,
     TimeRangeSelectorComponent,
     DataExplorerVisualisationSettingsComponent,
     GroupSelectionPanelComponent,

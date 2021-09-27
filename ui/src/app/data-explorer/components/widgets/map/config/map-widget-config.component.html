@@ -1,0 +1,74 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column">
+  
+    <h5>Latitude</h5>
+    <sp-select-property [availableProperties]="fieldProvider.numericFields"
+                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedLatitudeProperty"
+                        (changeSelectedProperty)="setSelectedLatitudeProperty($event)">
+    </sp-select-property>
+
+    <h5>Longitude</h5>
+    <sp-select-property [availableProperties]="fieldProvider.numericFields"
+                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedLongitudeProperty"
+                        (changeSelectedProperty)="setSelectedLongitudeProperty($event)">
+    </sp-select-property>
+
+    <h5>Map Zoom</h5>
+    <mat-form-field fxFlex="100" color="accent">
+        <mat-label>
+            <!-- <mat-icon>Zoom</mat-icon> -->
+            <span>enter zoom value</span></mat-label>
+        <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.selectedZoomValue" matInput (input)="setZoomValue($event.target.value)">
+    </mat-form-field>
+
+    <h5>Map Focus</h5>
+    <mat-checkbox [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.useLastEventCoordinates" (change)="setUseLastEventCoordinations($event)">focus on last event
+    </mat-checkbox>
+    
+    <h5>Marker or Trace</h5>
+    <mat-form-field color="accent" fxFlex="100">
+        <!-- <mat-label>Marker or Trace</mat-label> -->
+        <mat-select [(value)]="currentlyConfiguredWidget.visualizationConfig.selectedMarkerOrTrace" (selectionChange)="triggerViewRefresh()">
+            <mat-option [value]="'marker'">Marker</mat-option>
+            <mat-option [value]="'trace'">Trace</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <h5 *ngIf="currentlyConfiguredWidget.visualizationConfig.selectedMarkerOrTrace === 'marker'">Tooltip Content</h5>
+    <sp-select-properties
+        label="Tooltip Content"
+        multiple=true
+        (changeSelectedProperties)="setSelectedToolTipContent($event)"
+        [availableProperties]="fieldProvider.allFields"
+        [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedToolTipContent" 
+        *ngIf="currentlyConfiguredWidget.visualizationConfig.selectedMarkerOrTrace === 'marker'">
+    </sp-select-properties>
+
+    <h5 *ngIf="currentlyConfiguredWidget.visualizationConfig.selectedMarkerOrTrace === 'marker'">Marker Type</h5>
+    <mat-form-field color="accent" fxFlex="100" *ngIf="currentlyConfiguredWidget.visualizationConfig.selectedMarkerOrTrace === 'marker'">
+        <!-- <mat-label>Marker Type</mat-label> -->
+        <mat-select [(value)]="currentlyConfiguredWidget.visualizationConfig.selectedMarkerType" (selectionChange)="triggerViewRefresh()">
+            <mat-option [value]="'pin'">Pin</mat-option>
+            <mat-option [value]="'car'">Car</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+</div>
+
