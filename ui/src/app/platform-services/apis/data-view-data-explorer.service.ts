@@ -65,15 +65,15 @@ export class DataViewDataExplorerService {
   }
 
   private get persistedDataStreamsUrl() {
-    return `${this.baseUrl}/api/v3/users/${this.authStatusService.email}/datalake/pipelines`;
+    return `${this.baseUrl}/api/v3/datalake/pipelines`;
   }
 
   private get dashboardUrl() {
-    return `${this.baseUrl}/api/v3/users/${this.authStatusService.email}/datalake/dashboard`;
+    return `${this.baseUrl}/api/v3/datalake/dashboard`;
   }
 
   private get dashboardWidgetUrl() {
-    return `${this.baseUrl}/api/v3/users/${this.authStatusService.email}/datalake/dashboard/widgets`;
+    return `${this.baseUrl}/api/v3/datalake/dashboard/widgets`;
   }
 
   getWidget(widgetId: string): Observable<DataExplorerWidgetModel> {

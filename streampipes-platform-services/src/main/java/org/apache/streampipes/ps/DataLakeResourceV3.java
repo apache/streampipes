@@ -20,7 +20,6 @@ package org.apache.streampipes.ps;
 
 import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
@@ -31,7 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/v3/users/{username}/datalake")
+@Path("/v3/datalake")
 public class DataLakeResourceV3 extends AbstractRestResource {
 //  private DataLakeManagementV3 dataLakeManagement;
 //
