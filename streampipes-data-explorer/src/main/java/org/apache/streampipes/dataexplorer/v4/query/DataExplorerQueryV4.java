@@ -56,7 +56,6 @@ public class DataExplorerQueryV4 {
         QueryResult result = influxDB.query(query);
         LOG.debug("Data Lake Query Result: " + result.toString());
 
-        // TODO Change result here
         SpQueryResult dataResult = postQuery(result);
 
         influxDB.close();
