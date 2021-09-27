@@ -17,12 +17,12 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Content, icon, LatLng, latLng, LatLngExpression, Map, marker, Marker, polyline, Polyline, tileLayer } from "leaflet";
-import { DataResult } from '../../../../core-model/datalake/DataResult';
+import { Content, icon, LatLng, latLng, LatLngExpression, Map, marker, Marker, polyline, Polyline, tileLayer } from 'leaflet';
 
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { MapWidgetModel } from './model/map-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
+import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-map-widget',
@@ -41,15 +41,15 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   centerMap: boolean;
 
   showMarkers = false;
-  
+
   layers: Marker[] & Polyline[];
-  
+
   markerIds: string[];
 
   mapWidth: number;
   mapHeight: number;
 
-  lastDataResults: DataResult[];
+  lastDataResults: SpQueryResult;
 
   map: Map;
 
@@ -57,10 +57,13 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
 
   options = {
     layers: [
-      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: "© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors" })
+      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors'
+      })
     ],
     zoom: 1,
-    center: this.defaultCenter,
+    center: this.defaultCenter
   };
 
   ngOnInit(): void {
@@ -83,34 +86,33 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   }
 
   makeMarker(point: LatLngExpression, markerType: string): Marker {
-    var iconUrl = ''
-    
-    if (markerType == 'pin') {
-      iconUrl = this.markerImage("Default");
+    let newIconUrl = '';
+
+    if (markerType === 'pin') {
+      newIconUrl = this.markerImage('Default');
+    } else {
+      newIconUrl = this.markerImage('Car');
     }
-    else {
-      iconUrl = this.markerImage("Car");
-    }
-    
+
     return marker(point, {
       icon: icon({
         iconSize: [25, 41],
         iconAnchor: [13, 41],
-        iconUrl: iconUrl,
+        iconUrl: newIconUrl,
         shadowUrl: 'assets/img/marker-shadow.png'
       })
     });
   }
 
   public refreshView() {
-    const lastCoordinate = this.getLastCoordinate(this.lastDataResults)
+    const lastCoordinate = this.getLastCoordinate(this.lastDataResults);
 
-    const zoom = this.dataExplorerWidget.visualizationConfig.selectedZoomValue
+    const zoom = this.dataExplorerWidget.visualizationConfig.selectedZoomValue;
     const currentCenter = this.defaultCenter;
-    const usedCenter = this.dataExplorerWidget.visualizationConfig.useLastEventCoordinates ?  lastCoordinate : currentCenter;
+    const usedCenter = this.dataExplorerWidget.visualizationConfig.useLastEventCoordinates ? lastCoordinate : currentCenter;
 
-    this.map.setView(usedCenter, zoom) 
-    this.makeLayers(this.lastDataResults)
+    this.map.setView(usedCenter, zoom);
+    this.makeLayers(this.lastDataResults);
   }
 
   onResize(width: number, height: number) {
@@ -119,76 +121,75 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
-    removedFields: DataExplorerField[]) {
+                      removedFields: DataExplorerField[]) {
   }
 
   beforeDataFetched() {
     this.setShownComponents(false, false, true);
   }
 
-  onDataReceived(dataResults: DataResult[]) {
-   this.lastDataResults = dataResults
-   this.makeLayers(dataResults);    
+  onDataReceived(spQueryResult: SpQueryResult) {
+    this.lastDataResults = spQueryResult;
+    this.makeLayers(spQueryResult);
   }
 
   transform(rows, index: number): any[] {
     return rows.map(row => row[index]);
   }
 
-  getLastCoordinate(dataResults: DataResult[]) {
-    if (dataResults[0]['total'] > 1) {
-      const result = dataResults[0];
+  getLastCoordinate(spQueryResults: SpQueryResult) {
+    if (spQueryResults.total > 0) {
+      const result = spQueryResults.allDataSeries;
 
-      const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, result);
-      const longitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLongitudeProperty, result);
+      const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, spQueryResults);
+      const longitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLongitudeProperty, spQueryResults);
 
-      const latitudeValues = this.transform(result.rows, latitudeIndex);
-      const longitudeValues = this.transform(result.rows, longitudeIndex);
+      const latitudeValues = this.transform(result[0].rows, latitudeIndex);
+      const longitudeValues = this.transform(result[0].rows, longitudeIndex);
 
-      return new LatLng(latitudeValues[latitudeValues.length-1], longitudeValues[longitudeValues.length-1]);
+      return new LatLng(latitudeValues[latitudeValues.length - 1], longitudeValues[longitudeValues.length - 1]);
     }
 
     return this.defaultCenter;
   }
 
-  makeLayers(dataResults: DataResult[]) {
-    this.layers = []
+  makeLayers(spQueryResult: SpQueryResult) {
+    this.layers = [];
 
-    if (dataResults[0]['total'] > 1) {
-      const result = dataResults[0];
+    if (spQueryResult.total > 0) {
+      const result = spQueryResult.allDataSeries[0];
 
-      const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, result);
-      const longitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLongitudeProperty, result);
+      const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, spQueryResult);
+      const longitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLongitudeProperty, spQueryResult);
 
       const latitudeValues = this.transform(result.rows, latitudeIndex);
       const longitudeValues = this.transform(result.rows, longitudeIndex);
 
-      if (this.dataExplorerWidget.visualizationConfig.selectedMarkerOrTrace == 'marker') {
-      
+      if (this.dataExplorerWidget.visualizationConfig.selectedMarkerOrTrace === 'marker') {
+
         latitudeValues.map((latitude, index) => {
           const longitude = longitudeValues[index];
-          const marker = this.makeMarker([latitude, longitude], this.dataExplorerWidget.visualizationConfig.selectedMarkerType)
-        
+          const tmpMarker = this.makeMarker([latitude, longitude], this.dataExplorerWidget.visualizationConfig.selectedMarkerType);
+
           let text = '';
           this.dataExplorerWidget.visualizationConfig.selectedToolTipContent.forEach(item => {
-            const subIndex = this.getColumnIndex(item, result);
+            const subIndex = this.getColumnIndex(item, spQueryResult);
             text = text.concat('<b>' + item.fullDbName + '</b>' + ': ' + result.rows[index][subIndex] + '<br>');
           });
 
           const content: Content = text;
-          marker.bindTooltip(content);
+          tmpMarker.bindTooltip(content);
 
-          this.layers.push(marker)
+          this.layers.push(tmpMarker);
 
         });
-      }
-      else {
+      } else {
         const coordinates = [];
         latitudeValues.map((latitude, index) => {
           coordinates.push([latitude, longitudeValues[index]]);
         });
-   
-        const poly = polyline(coordinates, {color: 'red'})
+
+        const poly = polyline(coordinates, { color: 'red' });
         this.layers.push(poly);
       }
     }
