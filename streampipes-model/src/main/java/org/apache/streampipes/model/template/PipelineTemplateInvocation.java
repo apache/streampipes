@@ -32,9 +32,6 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
 
   private String pipelineTemplateId;
 
-  //@RdfProperty(StreamPipes.HAS_PIPELINE_TEMPLATE_DESCRIPTION)
-  //@OneToOne(fetch = FetchType.EAGER,
-  //        cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private PipelineTemplateDescription pipelineTemplateDescription;
 
   private List<StaticProperty> staticProperties;

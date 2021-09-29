@@ -20,11 +20,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
-    AdapterDescriptionUnion,
-    GenericAdapterSetDescription,
-    Message,
-    SpDataStream,
-    SpecificAdapterSetDescription
+  AdapterDescriptionUnion,
+  FreeTextStaticProperty,
+  GenericAdapterSetDescription,
+  MappingPropertyUnary,
+  Message,
+  SpDataStream,
+  SpecificAdapterSetDescription
 } from '../../../core-model/gen/streampipes-model';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
@@ -93,26 +95,25 @@ export class AdapterStartedDialog implements OnInit {
           }
 
           if (this.saveInDataLake) {
-            // TODO pipeline templates are currently not working, this should be changed to use the new UI model
-            // const templateName = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
+            const templateName = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
             // x.notifications[0].title
-            // this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + "/streams", templateName)
-            //     .subscribe(res => {
-            //
-            //         res.list.forEach(property => {
-            //             if (property instanceof FreeTextStaticProperty && "domId2db_measurement" == property.internalName) {
-            //                 property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
-            //   } else if (property instanceof MappingPropertyUnary && "domId2timestamp_mapping" == property.internalName) {
-            //                 property.selectedProperty = "s0::" + this.data.dataLakeTimestampField;
-            //             }
-            //
-            //
-            //         });
-            //
-            //         res.pipelineTemplateId = templateName;
-            //         res.name = this.data.adapter.label;
-            //         this.pipelineTemplateService.createPipelineTemplateInvocation(res);
-            //     });
+            this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + '/streams', templateName)
+              .subscribe(res => {
+
+                res.list.forEach(property => {
+                  if (property instanceof FreeTextStaticProperty && 'domId2db_measurement' === property.internalName) {
+                    property.value = this.adapter.name.toLowerCase().replace(' ', '_');
+                  } else if (property instanceof MappingPropertyUnary && 'domId2timestamp_mapping' === property.internalName) {
+                    property.selectedProperty = 's0::' + this.dataLakeTimestampField;
+                  }
+
+
+                });
+
+                res.pipelineTemplateId = templateName;
+                res.name = this.data.adapter.label;
+                this.pipelineTemplateService.createPipelineTemplateInvocation(res);
+              });
           }
         }
       });
