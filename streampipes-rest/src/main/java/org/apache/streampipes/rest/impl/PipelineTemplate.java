@@ -124,7 +124,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   private SpDataStream getDataStream(String streamId) {
     return getAllDataStreams()
             .stream()
-            .filter(sp -> sp.getElementId().equals(streamId))
+            .filter(sp -> sp.getCorrespondingAdapterId().equals(streamId))
             .findFirst()
             .get();
   }

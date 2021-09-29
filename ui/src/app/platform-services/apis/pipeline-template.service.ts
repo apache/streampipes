@@ -19,7 +19,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthStatusService } from '../../services/auth-status.service';
-import { FreeTextStaticProperty, StaticPropertyUnion } from '../../core-model/gen/streampipes-model';
+import { FreeTextStaticProperty, PipelineTemplateInvocation, StaticPropertyUnion } from '../../core-model/gen/streampipes-model';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class PipelineTemplateService {
@@ -65,30 +67,33 @@ export class PipelineTemplateService {
   //         }));
   // }
 
-  // getPipelineTemplateInvocation(dataSetId: string, templateId: string): Observable<PipelineTemplateInvocation> {
-  //   return this.http
-  //     .get(this.getServerUrl() + '/api/v2/users/' + this.authStatusService.email +
-  //       '/pipeline-templates/invocation?streamId=' + dataSetId + '&templateId=' + templateId)
-  //     .pipe(map(response => {
-  //
-  //       // Currently tsonld dows not support objects that just contain one root object without an enclosing @graph array
-  //       const res = new PipelineTemplateInvocation(response['@id']);
-  //       res.dataSetId = response['sp:hasDataSetId'];
-  //       res.name = response['hasElementName'];
-  //       res.pipelineTemplateId = response['sp:hasInternalName'];
-  //
-  //       // TODO find better solution
-  //       // This will remove preconfigured values from the UI
-  //       res.list.forEach(property => {
-  //         if (this.isFreeTextStaticProperty(property)) {
-  //           if (this.asFreeTextStaticProperty(property).value !== undefined) {
-  //             this.asFreeTextStaticProperty(property).render = false;
-  //           }
-  //         }
-  //       });
-  //       return res;
-  //     }));
-  // }
+  getPipelineTemplateInvocation(dataSetId: string, templateId: string): Observable<PipelineTemplateInvocation> {
+    return this.http
+      .get(`${this.getServerUrl()}/api/v2//pipeline-templates/invocation?streamId=${dataSetId}&templateId=${templateId}`)
+      .pipe(map(data => {
+        return PipelineTemplateInvocation.fromData(data as PipelineTemplateInvocation);
+      }));
+
+    // .pipe(map(response: PipelineTemplateInvocation => {
+
+    // Currently tsonld dows not support objects that just contain one root object without an enclosing @graph array
+    // const res = new PipelineTemplateInvocation(response['@id']);
+    // res.dataSetId = response['sp:hasDataSetId'];
+    // res.name = response['hasElementName'];
+    // res.pipelineTemplateId = response['sp:hasInternalName'];
+
+    // TODO find better solution
+    // This will remove preconfigured values from the UI
+    // res.list.forEach(property => {
+    //   if (this.isFreeTextStaticProperty(property)) {
+    //     if (this.asFreeTextStaticProperty(property).value !== undefined) {
+    //       this.asFreeTextStaticProperty(property).render = false;
+    //     }
+    //   }
+    // });
+    // return res;
+    // }));
+  }
 
   isFreeTextStaticProperty(val) {
     return val instanceof FreeTextStaticProperty;
@@ -98,11 +103,11 @@ export class PipelineTemplateService {
     return val as FreeTextStaticProperty;
   }
 
-  createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
-
-    //     this.http
-    //         .post(this.getServerUrl() + '/api/v2/users/'+ this.authStatusService.email + '/pipeline-templates', res)
-    //         .subscribe();
+  createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation, pipelineName: string) {
+    invocation.kviName = pipelineName;
+    this.http
+      .post(this.getServerUrl() + '/api/v2/pipeline-templates', invocation)
+      .subscribe();
   }
 
 }

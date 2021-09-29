@@ -18,12 +18,14 @@
 package org.apache.streampipes.model.template;
 
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@TsModel
 public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
 
   private String kviName;

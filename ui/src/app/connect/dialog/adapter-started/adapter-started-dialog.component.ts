@@ -29,6 +29,7 @@ import {
   SpecificAdapterSetDescription
 } from '../../../core-model/gen/streampipes-model';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { PipelineTemplateService } from '../../../platform-services/apis/pipeline-template.service';
 
 @Component({
   selector: 'sp-dialog-adapter-started-dialog',
@@ -60,7 +61,8 @@ export class AdapterStartedDialog implements OnInit {
   constructor(
     public dialogRef: DialogRef<AdapterStartedDialog>,
     private restService: RestService,
-    private shepherdService: ShepherdService) {
+    private shepherdService: ShepherdService,
+    private pipelineTemplateService: PipelineTemplateService) {
   }
 
   ngOnInit() {
@@ -97,22 +99,22 @@ export class AdapterStartedDialog implements OnInit {
           if (this.saveInDataLake) {
             const templateName = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
             // x.notifications[0].title
-            this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + '/streams', templateName)
+            this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, templateName)
               .subscribe(res => {
 
-                res.list.forEach(property => {
+                let indexName;
+                res.staticProperties.forEach(property => {
                   if (property instanceof FreeTextStaticProperty && 'domId2db_measurement' === property.internalName) {
-                    property.value = this.adapter.name.toLowerCase().replace(' ', '_');
+                    indexName = this.adapter.name.toLowerCase().replace(' ', '_');
+                    property.value = indexName;
                   } else if (property instanceof MappingPropertyUnary && 'domId2timestamp_mapping' === property.internalName) {
                     property.selectedProperty = 's0::' + this.dataLakeTimestampField;
                   }
-
-
                 });
 
                 res.pipelineTemplateId = templateName;
-                res.name = this.data.adapter.label;
-                this.pipelineTemplateService.createPipelineTemplateInvocation(res);
+                // res.name = this.data.adapter.label;
+                this.pipelineTemplateService.createPipelineTemplateInvocation(res, indexName);
               });
           }
         }
