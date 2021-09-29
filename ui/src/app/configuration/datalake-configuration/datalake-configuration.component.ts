@@ -84,10 +84,8 @@ export class DatalakeConfigurationComponent implements OnInit {
           this.datalakeRestService.getData(
             measurement.measureName,
             this.buildQ(field)).subscribe((res: SpQueryResult) => {
-            entry.events = 0;
-            res.allDataSeries.forEach(series => {
-              entry.events = entry.events + series.total;
-            });
+            // read the count value from the result
+            entry.events = res.allDataSeries[0].rows[0][1];
           });
 
           this.availableMeasurements.push(entry);
