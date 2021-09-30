@@ -16,139 +16,132 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {Pipeline} from "../../../core-model/gen/streampipes-model";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { Pipeline } from '../../../core-model/gen/streampipes-model';
+import { PipelineService } from '../../../platform-services/apis/pipeline.service';
 
 @Component({
-    selector: 'start-all-pipelines-dialog',
-    templateUrl: './start-all-pipelines-dialog.component.html',
-    styleUrls: ['./start-all-pipelines-dialog.component.scss']
+  selector: 'sp-start-all-pipelines-dialog',
+  templateUrl: './start-all-pipelines-dialog.component.html',
+  styleUrls: ['./start-all-pipelines-dialog.component.scss']
 })
 export class StartAllPipelinesDialogComponent implements OnInit {
 
-    @Input()
-    pipelines: Pipeline[];
+  @Input()
+  pipelines: Pipeline[];
 
-    @Input()
-    activeCategory: string;
+  @Input()
+  activeCategory: string;
 
-    pipelinesToModify: Pipeline[];
-    installationStatus: any;
-    installationFinished: boolean;
-    page: string;
-    nextButton: string;
-    installationRunning: boolean;
+  pipelinesToModify: Pipeline[];
+  installationStatus: any;
+  installationFinished: boolean;
+  page: string;
+  nextButton: string;
+  installationRunning: boolean;
 
-    @Input()
-    action: boolean;
+  @Input()
+  action: boolean;
 
 
-    constructor(private DialogRef: DialogRef<StartAllPipelinesDialogComponent>,
-                private PipelineService: PipelineService) {
-        this.pipelinesToModify = [];
-        this.installationStatus = [];
-        this.installationFinished = false;
-        this.page = "preview";
-        this.nextButton = "Next";
-        this.installationRunning = false;
+  constructor(private dialogRef: DialogRef<StartAllPipelinesDialogComponent>,
+              private pipelineService: PipelineService) {
+    this.pipelinesToModify = [];
+    this.installationStatus = [];
+    this.installationFinished = false;
+    this.page = 'preview';
+    this.nextButton = 'Next';
+    this.installationRunning = false;
+  }
+
+  ngOnInit() {
+    this.getPipelinesToModify();
+    if (this.pipelinesToModify.length === 0) {
+      this.nextButton = 'Close';
+      this.page = 'installation';
     }
+  }
 
-    ngOnInit() {
-        this.getPipelinesToModify();
-        if (this.pipelinesToModify.length == 0) {
-            this.nextButton = "Close";
-            this.page = "installation";
+  close(refreshPipelines: boolean) {
+    this.dialogRef.close(refreshPipelines);
+  }
+
+  next() {
+    if (this.page === 'installation') {
+      this.close(true);
+    } else {
+      this.page = 'installation';
+      this.initiateInstallation(this.pipelinesToModify[0], 0);
+    }
+  }
+
+  getPipelinesToModify() {
+    this.pipelines.forEach(pipeline => {
+      if (pipeline.running !== this.action && this.hasCategory(pipeline)) {
+        this.pipelinesToModify.push(pipeline);
+      }
+    });
+  }
+
+  hasCategory(pipeline: Pipeline) {
+    let categoryPresent = false;
+    if (!this.activeCategory) {
+      return true;
+    } else {
+      pipeline.pipelineCategories.forEach(category => {
+        if (category === this.activeCategory) {
+          categoryPresent = true;
         }
+      });
+      return categoryPresent;
     }
+  }
 
-    close(refreshPipelines: boolean) {
-        this.DialogRef.close(refreshPipelines);
-    };
+  initiateInstallation(pipeline, index) {
+    this.installationRunning = true;
+    this.installationStatus.push({ 'name': pipeline.name, 'id': index, 'status': 'waiting' });
+    if (this.action) {
+      this.startPipeline(pipeline, index);
+    } else {
+      this.stopPipeline(pipeline, index);
+    }
+  }
 
-    next() {
-        if (this.page == "installation") {
-            this.close(true);
+  startPipeline(pipeline, index) {
+    this.pipelineService.startPipeline(pipeline._id)
+      .subscribe(data => {
+        this.installationStatus[index].status = data.success ? 'success' : 'error';
+      }, data => {
+        this.installationStatus[index].status = 'error';
+      })
+      .add(() => {
+        if (index < this.pipelinesToModify.length - 1) {
+          index++;
+          this.initiateInstallation(this.pipelinesToModify[index], index);
         } else {
-            this.page = "installation";
-            this.initiateInstallation(this.pipelinesToModify[0], 0);
+          this.nextButton = 'Close';
+          this.installationRunning = false;
         }
-    }
+      });
+  }
 
-    getPipelinesToModify() {
-        this.pipelines.forEach(pipeline => {
-            if (pipeline.running != this.action && this.hasCategory(pipeline)) {
-                this.pipelinesToModify.push(pipeline);
-            }
-        });
-    }
 
-    hasCategory(pipeline: Pipeline) {
-        var categoryPresent = false;
-        if (!this.activeCategory) return true;
-        else {
-            pipeline.pipelineCategories.forEach(category => {
-                if (category == this.activeCategory) {
-                    categoryPresent = true;
-                }
-            });
-            return categoryPresent;
-        }
-    }
-
-    initiateInstallation(pipeline, index) {
-        this.installationRunning = true;
-        this.installationStatus.push({"name": pipeline.name, "id": index, "status": "waiting"});
-        if (this.action) {
-            this.startPipeline(pipeline, index);
+  stopPipeline(pipeline, index) {
+    this.pipelineService.stopPipeline(pipeline._id)
+      .subscribe(data => {
+        this.installationStatus[index].status = data.success ? 'success' : 'error';
+      }, data => {
+        this.installationStatus[index].status = 'error';
+      })
+      .add(() => {
+        if (index < this.pipelinesToModify.length - 1) {
+          index++;
+          this.initiateInstallation(this.pipelinesToModify[index], index);
         } else {
-            this.stopPipeline(pipeline, index);
+          this.nextButton = 'Close';
+          this.installationRunning = false;
         }
-    }
-
-    startPipeline(pipeline, index) {
-        this.PipelineService.startPipeline(pipeline._id)
-            .subscribe(data => {
-                if (data.success) {
-                    this.installationStatus[index].status = "success";
-                } else {
-                    this.installationStatus[index].status = "error";
-                }
-            }, data => {
-                this.installationStatus[index].status = "error";
-            })
-            .add(() => {
-                if (index < this.pipelinesToModify.length - 1) {
-                    index++;
-                    this.initiateInstallation(this.pipelinesToModify[index], index);
-                } else {
-                    this.nextButton = "Close";
-                    this.installationRunning = false;
-                }
-            });
-    }
-    
-
-    stopPipeline(pipeline, index) {
-        this.PipelineService.stopPipeline(pipeline._id)
-            .subscribe(data => {
-                if (data.success) {
-                    this.installationStatus[index].status = "success";
-                } else {
-                    this.installationStatus[index].status = "error";
-                }
-            }, data => {
-                this.installationStatus[index].status = "error";
-            })
-            .add(() => {
-                if (index < this.pipelinesToModify.length - 1) {
-                    index++;
-                    this.initiateInstallation(this.pipelinesToModify[index], index);
-                } else {
-                    this.nextButton = "Close";
-                    this.installationRunning = false;
-                }
-            });
-    }
+      });
+  }
 }
