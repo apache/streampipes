@@ -74,7 +74,7 @@ export class PipelineTemplateService {
 
   getPipelineTemplateInvocation(dataSetId: string, templateId: string): Observable<PipelineTemplateInvocation> {
     return this.http
-      .get(`${this.getServerUrl()}/api/v2//pipeline-templates/invocation?streamId=${dataSetId}&templateId=${templateId}`)
+      .get(`${this.getServerUrl()}/api/v2/pipeline-templates/invocation?streamId=${dataSetId}&templateId=${templateId}`)
       .pipe(map(data => {
         return PipelineTemplateInvocation.fromData(data as PipelineTemplateInvocation);
       }));
