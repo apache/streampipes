@@ -21,15 +21,14 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
   AdapterDescriptionUnion,
-  FreeTextStaticProperty,
   GenericAdapterSetDescription,
-  MappingPropertyUnary,
   Message,
   SpDataStream,
   SpecificAdapterSetDescription
 } from '../../../core-model/gen/streampipes-model';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { PipelineTemplateService } from '../../../platform-services/apis/pipeline-template.service';
+import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 
 @Component({
   selector: 'sp-dialog-adapter-started-dialog',
@@ -97,24 +96,20 @@ export class AdapterStartedDialog implements OnInit {
           }
 
           if (this.saveInDataLake) {
-            const templateName = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
-            // x.notifications[0].title
-            this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, templateName)
+            const pipelineId = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
+            this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, pipelineId)
               .subscribe(res => {
 
-                let indexName;
-                res.staticProperties.forEach(property => {
-                  if (property instanceof FreeTextStaticProperty && 'domId2db_measurement' === property.internalName) {
-                    indexName = this.adapter.name.toLowerCase().replace(' ', '_');
-                    property.value = indexName;
-                  } else if (property instanceof MappingPropertyUnary && 'domId2timestamp_mapping' === property.internalName) {
-                    property.selectedProperty = 's0::' + this.dataLakeTimestampField;
-                  }
-                });
+                const indexName = this.adapter.name.toLowerCase().replace(' ', '_');
+                const pipelineInvocation = PipelineInvocationBuilder
+                  .create(res)
+                  .setName(indexName)
+                  .setTemplateId(pipelineId)
+                  .setFreeTextStaticProperty('db_measurement', indexName)
+                  .setMappingPropertyUnary('timestamp_mapping', 's0::' + this.dataLakeTimestampField)
+                  .build();
 
-                res.pipelineTemplateId = templateName;
-                // res.name = this.data.adapter.label;
-                this.pipelineTemplateService.createPipelineTemplateInvocation(res, indexName);
+                this.pipelineTemplateService.createPipelineTemplateInvocation(pipelineInvocation);
               });
           }
         }

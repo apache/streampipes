@@ -103,8 +103,7 @@ export class PipelineTemplateService {
     return val as FreeTextStaticProperty;
   }
 
-  createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation, pipelineName: string) {
-    invocation.kviName = pipelineName;
+  createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
     this.http
       .post(this.getServerUrl() + '/api/v2/pipeline-templates', invocation)
       .subscribe();
