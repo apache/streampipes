@@ -19,7 +19,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthStatusService } from '../../services/auth-status.service';
-import { FreeTextStaticProperty, PipelineTemplateInvocation, StaticPropertyUnion } from '../../core-model/gen/streampipes-model';
+import {
+  FreeTextStaticProperty,
+  PipelineOperationStatus,
+  PipelineTemplateInvocation,
+  StaticPropertyUnion
+} from '../../core-model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -103,10 +108,10 @@ export class PipelineTemplateService {
     return val as FreeTextStaticProperty;
   }
 
-  createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation) {
-    this.http
-      .post(this.getServerUrl() + '/api/v2/pipeline-templates', invocation)
-      .subscribe();
+  createPipelineTemplateInvocation(invocation: PipelineTemplateInvocation): Observable<PipelineOperationStatus> {
+    return this.http
+      .post(`${this.getServerUrl()}/api/v2/pipeline-templates`, invocation)
+      .pipe(map(result => PipelineOperationStatus.fromData(result as PipelineOperationStatus)));
   }
 
 }

@@ -16,27 +16,28 @@
  *
  */
 
-import {CategoryAlreadyInPipelinePipe} from './category-already-in-pipeline.filter';
-import {PipelineOperationsService} from "./services/pipeline-operations.service";
-import {PipelinesComponent} from "./pipelines.component";
-import {NgModule} from "@angular/core";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatButtonModule} from "@angular/material/button";
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {CommonModule} from "@angular/common";
-import {PipelineOverviewComponent} from "./components/pipeline-overview/pipeline-overview.component";
-import {PipelineStatusDialogComponent} from "./dialog/pipeline-status/pipeline-status-dialog.component";
-import {DeletePipelineDialogComponent} from "./dialog/delete-pipeline/delete-pipeline-dialog.component";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {ImportPipelineDialogComponent} from "./dialog/import-pipeline/import-pipeline-dialog.component";
-import {StartAllPipelinesDialogComponent} from "./dialog/start-all-pipelines/start-all-pipelines-dialog.component";
-import {PipelineCategoriesDialogComponent} from "./dialog/pipeline-categories/pipeline-categories-dialog.component";
-import {FormsModule} from "@angular/forms";
-import {PipelineInCategoryPipe} from "./pipeline-category.filter";
-import {MatSortModule} from "@angular/material/sort";
-import {MatTableModule} from "@angular/material/table";
-import {PipelineNotificationsComponent} from "./dialog/pipeline-notifications/pipeline-notifications.component";
+import { CategoryAlreadyInPipelinePipe } from './category-already-in-pipeline.filter';
+import { PipelineOperationsService } from './services/pipeline-operations.service';
+import { PipelinesComponent } from './pipelines.component';
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { CommonModule } from '@angular/common';
+import { PipelineOverviewComponent } from './components/pipeline-overview/pipeline-overview.component';
+import { PipelineStatusDialogComponent } from './dialog/pipeline-status/pipeline-status-dialog.component';
+import { DeletePipelineDialogComponent } from './dialog/delete-pipeline/delete-pipeline-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
+import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
+import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
+import { FormsModule } from '@angular/forms';
+import { PipelineInCategoryPipe } from './pipeline-category.filter';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { PipelineNotificationsComponent } from './dialog/pipeline-notifications/pipeline-notifications.component';
+import { CoreUiModule } from '../core-ui/core-ui.module';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import {PipelineNotificationsComponent} from "./dialog/pipeline-notifications/pi
     CommonModule,
     MatProgressSpinnerModule,
     MatSortModule,
-    MatTableModule
+    MatTableModule,
+    CoreUiModule
   ],
   declarations: [
     DeletePipelineDialogComponent,
@@ -60,7 +62,7 @@ import {PipelineNotificationsComponent} from "./dialog/pipeline-notifications/pi
     PipelineStatusDialogComponent,
     StartAllPipelinesDialogComponent,
     PipelineInCategoryPipe,
-    CategoryAlreadyInPipelinePipe,
+    CategoryAlreadyInPipelinePipe
   ],
   providers: [
     PipelineOperationsService,

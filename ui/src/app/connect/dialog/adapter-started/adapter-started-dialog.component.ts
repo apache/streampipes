@@ -23,6 +23,7 @@ import {
   AdapterDescriptionUnion,
   GenericAdapterSetDescription,
   Message,
+  PipelineOperationStatus,
   SpDataStream,
   SpecificAdapterSetDescription
 } from '../../../core-model/gen/streampipes-model';
@@ -44,6 +45,7 @@ export class AdapterStartedDialog implements OnInit {
   public runtimeData: any;
   public isSetAdapter = false;
   public isTemplate = false;
+  public pipelineOperationStatus: PipelineOperationStatus;
 
   @Input()
   storeAsTemplate: boolean;
@@ -100,16 +102,21 @@ export class AdapterStartedDialog implements OnInit {
             this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, pipelineId)
               .subscribe(res => {
 
-                const indexName = this.adapter.name.toLowerCase().replace(/ /g, '_');
+                const indexName = this.adapter.name
+                  .toLowerCase()
+                  .replace(/ /g, '_')
+                  .replace(/\./g, '_');
                 const pipelineInvocation = PipelineInvocationBuilder
                   .create(res)
-                  .setName(indexName)
+                  .setName('persist_' + indexName)
                   .setTemplateId(pipelineId)
                   .setFreeTextStaticProperty('db_measurement', indexName)
                   .setMappingPropertyUnary('timestamp_mapping', 's0::' + this.dataLakeTimestampField)
                   .build();
 
-                this.pipelineTemplateService.createPipelineTemplateInvocation(pipelineInvocation);
+                this.pipelineTemplateService.createPipelineTemplateInvocation(pipelineInvocation).subscribe(pipelineOperationStatus => {
+                  this.pipelineOperationStatus = pipelineOperationStatus;
+                });
               });
           }
         }

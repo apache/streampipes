@@ -31,7 +31,6 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 })
 export class PipelineStatusDialogComponent implements OnInit {
 
-  statusDetailsVisible: any;
   operationInProgress = true;
   forceStopActive = false;
   pipelineOperationStatus: PipelineOperationStatus;
@@ -45,7 +44,6 @@ export class PipelineStatusDialogComponent implements OnInit {
   constructor(private dialogRef: DialogRef<PipelineStatusDialogComponent>,
               private pipelineService: PipelineService,
               private shepherdService: ShepherdService) {
-    this.statusDetailsVisible = false;
   }
 
   ngOnInit(): void {
@@ -60,9 +58,6 @@ export class PipelineStatusDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  toggleStatusDetailsVisible() {
-    this.statusDetailsVisible = !(this.statusDetailsVisible);
-  }
 
   startPipeline() {
     this.pipelineService.startPipeline(this.pipelineId).subscribe(msg => {
