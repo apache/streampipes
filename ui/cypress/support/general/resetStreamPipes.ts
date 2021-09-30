@@ -16,8 +16,6 @@
  *
  */
 
-import { UserUtils } from '../utils/UserUtils';
-
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -27,5 +25,5 @@ declare global {
 }
 
 export const resetStreamPipes = () => {
-  cy.request('POST', `/streampipes-backend/api/v2/users/${UserUtils.testUserName}/reset`, {});
+  cy.request('POST', `/streampipes-backend/api/v2/reset`, {});
 };
