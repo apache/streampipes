@@ -16,65 +16,64 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {forkJoin} from "rxjs";
-import {Pipeline} from "../../../core-model/gen/streampipes-model";
+import { Component } from '@angular/core';
+import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { forkJoin } from 'rxjs';
+import { Pipeline } from '../../../core-model/gen/streampipes-model';
 
 @Component({
-    selector: 'import-pipeline-dialog',
+    selector: 'sp-import-pipeline-dialog',
     templateUrl: './import-pipeline-dialog.component.html',
     styleUrls: ['./import-pipeline-dialog.component.scss']
 })
 export class ImportPipelineDialogComponent {
 
-    isInProgress: any = false;
     currentStatus: any;
-    page = "upload-pipelines";
+    page = 'upload-pipelines';
 
     availablePipelines: Pipeline[] = [];
     selectedPipelines: Pipeline[] = [];
 
-    importing: boolean = false;
+    importing = false;
 
     pages = [{
-        type: "upload-pipelines",
-        title: "Upload",
-        description: "Upload a json file containing the pipelines to import"
+        type: 'upload-pipelines',
+        title: 'Upload',
+        description: 'Upload a json file containing the pipelines to import'
     }, {
-        type: "select-pipelines",
-        title: "Select pipelines",
-        description: "Select the pipelines to import"
+        type: 'select-pipelines',
+        title: 'Select pipelines',
+        description: 'Select the pipelines to import'
     }, {
-        type: "import-pipelines",
-        title: "Import",
-        description: ""
+        type: 'import-pipelines',
+        title: 'Import',
+        description: ''
     }];
 
-    constructor(private PipelineService: PipelineService,
-                private DialogRef: DialogRef<ImportPipelineDialogComponent>) {
+    constructor(private pipelineService: PipelineService,
+                private dialogRef: DialogRef<ImportPipelineDialogComponent>) {
     }
 
     handleFileInput(files: any) {
-        let file = files[0];
-        var aReader = new FileReader();
-        aReader.readAsText(file, "UTF-8");
+        const file = files[0];
+        const aReader = new FileReader();
+        aReader.readAsText(file, 'UTF-8');
         aReader.onload = evt => {
             this.availablePipelines = JSON.parse(aReader.result as string);
             console.log(this.availablePipelines);
-            this.page = "select-pipelines";
-        }
+            this.page = 'select-pipelines';
+        };
     }
 
     close(refreshPipelines: boolean) {
-        this.DialogRef.close(refreshPipelines);
-    };
+        this.dialogRef.close(refreshPipelines);
+    }
 
     back() {
-        if (this.page == 'select-pipelines') {
+        if (this.page === 'select-pipelines') {
             this.page = 'upload-pipelines';
-        } else if (this.page == 'import-pipelines') {
+        } else if (this.page === 'import-pipelines') {
             this.page = 'select-pipelines';
         }
     }
@@ -90,17 +89,17 @@ export class ImportPipelineDialogComponent {
 
     storePipelines() {
         console.log(this.selectedPipelines);
-         var promises = [];
+         const promises = [];
          this.selectedPipelines.forEach(pipeline => {
              pipeline._rev = undefined;
              pipeline._id = undefined;
-             promises.push(this.PipelineService.storePipeline(pipeline));
+             promises.push(this.pipelineService.storePipeline(pipeline));
          });
 
          forkJoin(promises).subscribe(results => {
              this.importing = false;
              this.close(true);
-         })
+         });
     }
 
     startImport() {
