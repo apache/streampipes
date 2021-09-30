@@ -74,11 +74,15 @@
 
             <!-- Start pipeline template to store raw events in data lake -->
             <mat-checkbox [(ngModel)]="saveInDataLake"
-                          [ngModelOptions]="{standalone: true}">Store in Datalake
+                          [ngModelOptions]="{standalone: true}"
+                          data-cy="sp-store-in-datalake">
+                Store in Datalake
             </mat-checkbox>
             <mat-form-field *ngIf="saveInDataLake">
                 <mat-label>Select Time Field</mat-label>
-                <mat-select [(ngModel)]="dataLakeTimestampField" [ngModelOptions]="{standalone: true}">
+                <mat-select [(ngModel)]="dataLakeTimestampField"
+                            [ngModelOptions]="{standalone: true}"
+                            data-cy="sp-store-in-datalake-timestamp">
                     <mat-option class="md-elevation-z1" style="background: white;"
                                 *ngFor="let timestampField of eventSchema.eventProperties | timestampFilter"
                                 [value]="timestampField.runtimeName">

@@ -92,6 +92,12 @@ export class PipelineUtils {
     cy.dataCy('sp-pipeline-dialog-close', { timeout: 10000 }).click();
   }
 
+
+  public static checkAmountOfPipelinesPipeline(amount: number) {
+    cy.visit('#/pipelines');
+    cy.dataCy('delete').should('have.length', amount);
+  }
+
   public static deletePipeline() {
     // Delete pipeline
     cy.visit('#/pipelines');

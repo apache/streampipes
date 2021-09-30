@@ -39,12 +39,11 @@ import { PipelineTemplateService } from './apis/pipeline-template.service';
     PipelineCanvasMetadataService,
     PipelineElementEndpointService,
     PipelineElementTemplateService,
-    // PipelineTemplateService,
     PipelineElementService,
     PipelineMonitoringService,
     PipelineService,
     SemanticTypesService,
-    PipelineTemplateService,
+    PipelineTemplateService
   ],
   entryComponents: []
 })

@@ -100,7 +100,7 @@ export class AdapterStartedDialog implements OnInit {
             this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, pipelineId)
               .subscribe(res => {
 
-                const indexName = this.adapter.name.toLowerCase().replace(' ', '_');
+                const indexName = this.adapter.name.toLowerCase().replace(/ /g, '_');
                 const pipelineInvocation = PipelineInvocationBuilder
                   .create(res)
                   .setName(indexName)

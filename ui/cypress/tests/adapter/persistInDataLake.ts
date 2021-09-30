@@ -16,9 +16,28 @@
  *
  */
 
-export class AdapterInput {
-  adapterType: string;
-  adapterName: string;
-  timestampProperty: string;
-  storeInDataLake: boolean;
-}
+import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { PipelineUtils } from '../../support/utils/PipelineUtils';
+
+describe('Test File Stream Adapter', () => {
+  before('Setup Test', () => {
+    cy.initStreamPipesTest();
+  });
+
+  it('Perform Test', () => {
+
+    const adapterInput = SpecificAdapterBuilder
+      .create('Machine_Data_Simulator')
+      .setName('Machine Data Simulator Test')
+      .addInput('input', 'wait-time-ms', '1000')
+      .setTimestampProperty('timestamp')
+      .setStoreInDataLake()
+      .build();
+
+    AdapterUtils.testSpecificStreamAdapter(adapterInput);
+    PipelineUtils.checkAmountOfPipelinesPipeline(1);
+  });
+
+});
+
