@@ -17,7 +17,6 @@
  */
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { StaticFileRestService } from './static-file-rest.service';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FileStaticProperty } from '../../../core-model/gen/streampipes-model';
 import { FilesService } from '../../../platform-services/apis/files.service';
@@ -53,8 +52,7 @@ export class StaticFileInputComponent extends AbstractValidatedStaticPropertyRen
 
     filesLoaded = false;
 
-    constructor(private staticFileRestService: StaticFileRestService,
-                private filesService: FilesService) {
+    constructor(private filesService: FilesService) {
         super();
 
     }

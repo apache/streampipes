@@ -53,7 +53,7 @@ export class EditorService {
     }
 
     get apiBasePath() {
-      return this.platformServicesCommons.apiBasePath();
+      return this.platformServicesCommons.apiBasePath;
     }
 
     recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
@@ -69,7 +69,7 @@ export class EditorService {
     }
 
   updateDataSet(dataSet): Observable<DataSetModificationMessage> {
-    return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipelines/update/dataset', dataSet)
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/pipelines/update/dataset', dataSet)
         .pipe(map(data => DataSetModificationMessage.fromData(data as DataSetModificationMessage)));
   }
 
@@ -106,23 +106,15 @@ export class EditorService {
     }
 
     getEpCategories() {
-        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + '/categories/ep');
+        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/ep');
     }
 
     getEpaCategories() {
-        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + '/categories/epa');
+        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/epa');
     }
 
     getEcCategories() {
-        return this.http.get(this.platformServicesCommons.unauthenticatedBasePath + '/categories/ec');
-    }
-
-    getUserDetails(): Observable<any> {
-        return this.http.get(this.platformServicesCommons.authUserBasePath());
-    }
-
-    updateUserDetails(user) {
-        return this.http.put(this.platformServicesCommons.authUserBasePath(), user);
+        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/ec');
     }
 
     updateCachedPipeline(rawPipelineModel: any) {
@@ -130,7 +122,7 @@ export class EditorService {
     }
 
     updateCachedCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
-      return this.http.post(this.platformServicesCommons.apiBasePath()
+      return this.http.post(this.platformServicesCommons.apiBasePath
           + '/pipeline-canvas-cache', pipelineCanvasMetadata);
     }
 
@@ -143,7 +135,7 @@ export class EditorService {
     }
 
     private get pipelinesResourceUrl() {
-        return this.platformServicesCommons.apiBasePath() + '/pipelines';
+        return this.platformServicesCommons.apiBasePath + '/pipelines';
     }
 
     announceConfiguredElement(pipelineElementDomId: string) {

@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.user.management.service.TokenService;
 
@@ -29,13 +29,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.stream.Collectors;
 
-@Path("/v2/users/{email}")
-public class User extends AbstractRestResource {
+@Path("/v2/users/profile")
+public class UserProfile extends AbstractAuthGuardedRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserDetails(@PathParam("email") String email) {
-        org.apache.streampipes.model.client.user.User user = getUser(email);
+    public Response getUserDetails() {
+        org.apache.streampipes.model.client.user.User user = getUser(getAuthenticatedUsername());
         user.setPassword("");
 
         if (user != null) {
@@ -48,10 +48,10 @@ public class User extends AbstractRestResource {
     @Path("/appearance/mode/{darkMode}")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateAppearanceMode(@PathParam("email") String email,
-                                         @PathParam("darkMode") boolean darkMode) {
-        if (email != null) {
-            org.apache.streampipes.model.client.user.User user = getUser(email);
+    public Response updateAppearanceMode(@PathParam("darkMode") boolean darkMode) {
+        String authenticatedUserId = getAuthenticatedUsername();
+        if (authenticatedUserId != null) {
+            org.apache.streampipes.model.client.user.User user = getUser(authenticatedUserId);
             user.setDarkMode(darkMode);
             getUserStorage().updateUser(user);
 
@@ -65,7 +65,8 @@ public class User extends AbstractRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUserDetails(org.apache.streampipes.model.client.user.User user) {
-        if (user != null) {
+        String authenticatedUserId = getAuthenticatedUsername();
+        if (user != null && authenticatedUserId.equals(user.getEmail())) {
             org.apache.streampipes.model.client.user.User existingUser = getUser(user.getEmail());
             user.setPassword(existingUser.getPassword());
             user.setUserApiTokens(existingUser
@@ -94,8 +95,8 @@ public class User extends AbstractRestResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @JacksonSerialized
-    public Response createNewApiToken(@PathParam("email") String email, RawUserApiToken rawToken) {
-        RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(email, rawToken);
+    public Response createNewApiToken(RawUserApiToken rawToken) {
+        RawUserApiToken generatedToken = new TokenService().createAndStoreNewToken(getAuthenticatedUsername(), rawToken);
         return ok(generatedToken);
     }
 }

@@ -18,16 +18,11 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.VirtualSensor;
+import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-
-import org.apache.shiro.SecurityUtils;
 import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,19 +58,6 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
                 .stream()
                 .filter(p -> p.getCreatedByUser().equals(SYSTEM_USER))
                 .collect(Collectors.toList());
-    }
-
-    public List<Pipeline> getAllUserPipelines() {
-        CouchDbClient dbClientUser = Utils.getCouchDbUserClient();
-        List<Pipeline> pipelines = new ArrayList<>();
-        if (SecurityUtils.getSubject().isAuthenticated()) {
-            String username = SecurityUtils.getSubject().getPrincipal().toString();
-            JsonArray pipelineIds = dbClientUser.view("users/pipelines").key(username).query(JsonObject.class).get(0).get("value").getAsJsonArray();
-            for (JsonElement id : pipelineIds) {
-                pipelines.add(getPipeline(id.getAsString()));
-            }
-        }
-        return pipelines;
     }
 
     @Override

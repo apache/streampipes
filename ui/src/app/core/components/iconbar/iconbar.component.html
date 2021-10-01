@@ -31,8 +31,8 @@
         <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar iconbar-size"
                 (click)="go('notifications')"
                 matTooltip="Notifications" matTooltipPosition="right">
-            <mat-icon [matBadge]="NotificationCountService.unreadNotificationCount"
-                      [matBadgeHidden]="NotificationCountService.unreadNotificationCount == 0"
+            <mat-icon [matBadge]="notificationCountService.unreadNotificationCount"
+                      [matBadgeHidden]="notificationCountService.unreadNotificationCount == 0"
                       [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'">chat
             </mat-icon>
         </button>

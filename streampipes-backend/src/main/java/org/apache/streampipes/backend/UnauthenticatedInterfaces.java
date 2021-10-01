@@ -15,15 +15,24 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.backend;
 
-import * as $ from "jquery";
+import java.util.Arrays;
+import java.util.Collection;
 
-export class InitTooltips {
-    constructor() {}
+public class UnauthenticatedInterfaces {
 
-    initTooltips() {
-        return function () {
-            (<any>$('.tt')).tooltip();
-        }
-    };
+  public static Collection<String> get() {
+    return Arrays.asList(
+            "/api/v2/setup/configured",
+            "/api/v2/auth/login",
+            "/api/auth/**",
+            "/oauth2/**",
+            "/api/all",
+            "/error",
+            "/",
+            "/streampipes-backend/",
+            "/streampipes-backend/index.html"
+            );
+  }
 }

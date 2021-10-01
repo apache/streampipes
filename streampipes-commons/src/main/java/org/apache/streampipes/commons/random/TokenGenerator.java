@@ -15,21 +15,20 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.commons.random;
 
-import {Injectable} from '@angular/core';
+import java.security.SecureRandom;
+import java.util.Base64;
 
-@Injectable()
-export class AuthStatusService {
+public class TokenGenerator {
 
-    user: any;
-    email: string;
-    username: string;
-    token: string;
-    authenticated: boolean = false;
-    configured: boolean = false;
-    darkMode: boolean = false;
+  private static final SecureRandom secureRandom = new SecureRandom();
+  private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
 
-    constructor() {
-    }
+  public static String generateNewToken() {
+    byte[] randomBytes = new byte[24];
+    secureRandom.nextBytes(randomBytes);
+    return base64Encoder.encodeToString(randomBytes);
+  }
 
 }

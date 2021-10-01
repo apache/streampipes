@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.NotificationType;
@@ -42,7 +41,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
 
   @GET
   @Path("/available")
-  @RequiresAuthentication
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
@@ -54,7 +52,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
 
   @GET
   @Path("/favorites")
-  @RequiresAuthentication
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
@@ -66,7 +63,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
 
   @GET
   @Path("/own")
-  @RequiresAuthentication
   @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
   @JacksonSerialized
   @Override
@@ -79,7 +75,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
 
   @POST
   @Path("/favorites")
-  @RequiresAuthentication
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
@@ -90,7 +85,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
 
   @DELETE
   @Path("/favorites/{elementId}")
-  @RequiresAuthentication
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override
@@ -101,7 +95,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
 
   @DELETE
   @Path("/own/{elementId}")
-  @RequiresAuthentication
   @Produces(MediaType.APPLICATION_JSON)
   @GsonWithIds
   @Override

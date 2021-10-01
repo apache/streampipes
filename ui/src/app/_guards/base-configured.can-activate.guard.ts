@@ -22,26 +22,24 @@ import {
   Router,
   RouterStateSnapshot,
   UrlTree
-} from "@angular/router";
-import {Observable} from "rxjs";
-import {AuthService} from "../services/auth.service";
+} from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 export abstract class BaseConfiguredCanActivateGuard implements CanActivate {
 
-  constructor(protected Router: Router,
-              protected AuthService: AuthService) {
-
-  }
+  constructor(protected router: Router,
+              protected authService: AuthService) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return new Promise((resolve) => this.AuthService.checkConfiguration().subscribe((configured) => {
+    return new Promise((resolve) => this.authService.checkConfiguration().subscribe((configured) => {
       if (!configured) {
         resolve(this.onIsUnconfigured());
       } else {
         resolve(this.onIsConfigured());
       }
     }, error => {
-      let url = this.Router.parseUrl('startup');
+      const url = this.router.parseUrl('startup');
       resolve(url);
     }));
   }

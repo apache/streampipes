@@ -29,7 +29,7 @@ export class MeasurementUnitsService {
               private platformServicesCommons: PlatformServicesCommons) { }
 
   getAllMeasurementUnits(): Observable<any> {
-    return this.http.get(this.platformServicesCommons.apiBasePath() + '/measurement-units').pipe(map(response => {
+    return this.http.get(this.platformServicesCommons.apiBasePath + '/measurement-units').pipe(map(response => {
       return response;
     }));
   }

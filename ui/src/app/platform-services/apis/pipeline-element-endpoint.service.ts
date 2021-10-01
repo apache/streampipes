@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {PlatformServicesCommons} from "./commons.service";
-import {Observable} from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
+import { Observable } from 'rxjs';
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -32,21 +32,21 @@ export class PipelineElementEndpointService {
     const payload = new HttpParams()
         .set('uri', elementUri)
         .set('publicElement', ispublic);
-    return this.http.post(this.platformServicesCommons.apiBasePath() + "/element", payload);
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/element', payload);
   }
 
   addBatch(elementUris, ispublic): Observable<any> {
     const payload = new HttpParams()
         .set('uri', elementUris)
         .set('publicElement', ispublic);
-    return this.http.post(this.platformServicesCommons.apiBasePath() + "/element/batch", payload);
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/element/batch', payload);
   }
 
   update(elementUri): Observable<any> {
-    return this.http.put(this.platformServicesCommons.apiBasePath() + "/element/" + encodeURIComponent(elementUri), undefined);
+    return this.http.put(this.platformServicesCommons.apiBasePath + '/element/' + encodeURIComponent(elementUri), undefined);
   }
 
   del(elementUri): Observable<any> {
-    return this.http.delete(this.platformServicesCommons.apiBasePath() + "/element/" + encodeURIComponent(elementUri));
+    return this.http.delete(this.platformServicesCommons.apiBasePath + '/element/' + encodeURIComponent(elementUri));
   }
 }

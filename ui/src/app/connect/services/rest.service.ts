@@ -32,7 +32,7 @@ import {
   SpDataStream
 } from '../../core-model/gen/streampipes-model';
 import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
-import { AuthStatusService } from '../../services/auth-status.service';
+import { AuthService } from '../../services/auth.service';
 
 @Injectable()
 export class RestService {
@@ -40,11 +40,11 @@ export class RestService {
   constructor(
       private http: HttpClient,
       private platformServicesCommons: PlatformServicesCommons,
-      private authStatusService: AuthStatusService) {
+      private authService: AuthService) {
   }
 
   get connectPath() {
-    return this.platformServicesCommons.apiBasePath() + '/connect';
+    return this.platformServicesCommons.apiBasePath + '/connect';
   }
 
   addAdapter(adapter: AdapterDescription): Observable<Message> {
@@ -56,7 +56,7 @@ export class RestService {
   }
 
   addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
-    adapter.userName = this.authStatusService.email;
+    adapter.userName = this.authService.getCurrentUser().email;
     const promise = new Promise<Message>((resolve, reject) => {
       this.http
           .post(
@@ -83,13 +83,13 @@ export class RestService {
 
   getSourceDetails(sourceElementId): Observable<SpDataStream> {
     return this.http
-        .get(this.platformServicesCommons.apiBasePath() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
+        .get(this.platformServicesCommons.apiBasePath + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
           return SpDataStream.fromData(response as SpDataStream);
         }));
   }
 
   getRuntimeInfo(sourceDescription): Observable<any> {
-    return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipeline-element/runtime', sourceDescription, {
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/pipeline-element/runtime', sourceDescription, {
       headers: {ignoreLoadingBar: ''}
     });
   }

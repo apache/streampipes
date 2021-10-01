@@ -16,10 +16,11 @@
  *
  */
 
+
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-07-19 21:39:30.
+// Generated using typescript-generator version 2.27.744 on 2021-09-30 14:45:03.
 
 export class Element {
     elementId: string;
@@ -194,6 +195,29 @@ export class UserApiToken {
         const instance = target || new UserApiToken();
         instance.tokenId = data.tokenId;
         instance.tokenName = data.tokenName;
+        return instance;
+    }
+}
+
+export class UserInfo {
+    darkMode: boolean;
+    displayName: string;
+    email: string;
+    roles: string[];
+    showTutorial: boolean;
+    userId: string;
+
+    static fromData(data: UserInfo, target?: UserInfo): UserInfo {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new UserInfo();
+        instance.userId = data.userId;
+        instance.displayName = data.displayName;
+        instance.email = data.email;
+        instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
+        instance.showTutorial = data.showTutorial;
+        instance.darkMode = data.darkMode;
         return instance;
     }
 }

@@ -20,6 +20,9 @@ package org.apache.streampipes.config.backend;
 
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.random.TokenGenerator;
+import org.apache.streampipes.config.backend.model.LocalAuthConfig;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
@@ -67,6 +70,7 @@ public enum BackendConfig {
             "Default Messaging Settings");
 
     config.register(BackendConfigKeys.ENCRYPTION_KEY, randomKey(), "A random secret key");
+    config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()), "Local authentication settings");
   }
 
   private String makeAssetLocation() {
@@ -156,14 +160,6 @@ public enum BackendConfig {
     config.setString(BackendConfigKeys.KAFKA_HOST, s);
   }
 
-  public void setZookeeperHost(String s) {
-    config.setString(BackendConfigKeys.ZOOKEEPER_HOST, s);
-  }
-
-  public void setJmsHost(String s) {
-    config.setString(BackendConfigKeys.JMS_HOST, s);
-  }
-
   public void setMessagingSettings(MessagingSettings settings) {
     config.setObject(BackendConfigKeys.MESSAGING_SETTINGS, settings);
   }
@@ -182,10 +178,6 @@ public enum BackendConfig {
 
   public String getElasticsearchProtocol() {
     return config.getString(BackendConfigKeys.ELASTICSEARCH_PROTOCOL);
-  }
-
-  public String getElasticsearchURL() {
-    return getElasticsearchProtocol()+ "://" + getElasticsearchHost() + ":" + getElasticsearchPort();
   }
 
   public String getKafkaRestHost() {
@@ -240,7 +232,20 @@ public enum BackendConfig {
     return config.getString(BackendConfigKeys.ENCRYPTION_KEY);
   }
 
+  public LocalAuthConfig getLocalAuthConfig() {
+    return config.getObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.class, LocalAuthConfig.fromDefaults(getJwtSecret()));
+  }
 
+  private String getJwtSecret() {
+    if (Envs.SP_JWT_SECRET.exists()) {
+      return Envs.SP_JWT_SECRET.getValue();
+    } else {
+      return makeDefaultJwtSecret();
+    }
+  }
 
+  private String makeDefaultJwtSecret() {
+    return TokenGenerator.generateNewToken();
+  }
 
 }

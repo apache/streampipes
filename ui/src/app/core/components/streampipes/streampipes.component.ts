@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {AuthStatusService} from "../../../services/auth-status.service";
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'streampipes',
@@ -26,11 +26,14 @@ import {AuthStatusService} from "../../../services/auth-status.service";
 })
 export class StreampipesComponent implements OnInit {
 
-  constructor(public authStatusService: AuthStatusService) {
+  darkMode: boolean;
+
+  constructor(public authService: AuthService) {
 
   }
 
   ngOnInit(): void {
+    this.authService.darkMode$.subscribe(dm => this.darkMode = dm);
   }
 
 

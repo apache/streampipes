@@ -16,13 +16,11 @@
  *
  */
 
-import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {Component, Inject} from "@angular/core";
-import {RestApi} from "../../../services/rest-api.service";
-import {AuthStatusService} from "../../../services/auth-status.service";
-import {FormGroup} from "@angular/forms";
-import {LoginService} from "../../services/login.service";
-import {Router} from "@angular/router";
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { Component } from '@angular/core';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
     selector: 'login',
@@ -35,45 +33,34 @@ export class LoginComponent {
     credentials: any;
 
     constructor(private loginService: LoginService,
-                private Router: Router,
-                private AuthStatusService: AuthStatusService,
-                private ShepherdService: ShepherdService) {
+                private router: Router,
+                private shepherdService: ShepherdService,
+                private authService: AuthService) {
         this.loading = false;
         this.authenticationFailed = false;
         this.credentials = {};
     }
 
-    openDocumentation(){
+    openDocumentation() {
        window.open('https://streampipes.apache.org/docs', '_blank');
-    };
+    }
 
     logIn() {
         this.authenticationFailed = false;
         this.loading = true;
         this.loginService.login(this.credentials)
             .subscribe(response => { // success
+                    this.authService.login(response);
                     this.loading = false;
-                    if (response.success) {
-                        this.AuthStatusService.username = response.info.authc.principal.username;
-                        this.AuthStatusService.email = response.info.authc.principal.email;
-                        this.AuthStatusService.token = response.token;
-                        this.AuthStatusService.authenticated = true;
-                        this.Router.navigateByUrl("");
-                    }
-                    else {
-                        this.AuthStatusService.authenticated = false;
-                        this.authenticationFailed = true;
-                    }
-
+                    this.router.navigate(['']);
                 }, response => { // error
                     this.loading = false;
-                    this.AuthStatusService.authenticated = false;
                     this.authenticationFailed = true;
                 }
-            )
-    };
+            );
+    }
 
     setSheperdServiceDelay() {
-        //this.ShepherdService.setTimeWaitMillies(100);
+        // this.ShepherdService.setTimeWaitMillies(100);
     }
-};
+}

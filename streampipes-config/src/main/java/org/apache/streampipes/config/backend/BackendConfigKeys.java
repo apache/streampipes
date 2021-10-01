@@ -45,6 +45,7 @@ public class BackendConfigKeys {
   public static final String INFLUX_DATA_BASE = "SP_INFLUX_DATA_BASE";
   public static final String MESSAGING_SETTINGS = "SP_MESSAGING_SETTINGS";
 
+  public static final String LOCAL_AUTH_CONFIG = "SP_LOCAL_AUTH_CONFIG";
   public static final String ENCRYPTION_KEY = "SP_ENCRYPTION_KEY";
 
 

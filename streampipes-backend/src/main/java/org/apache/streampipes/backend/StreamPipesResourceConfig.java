@@ -43,12 +43,14 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 
 import javax.ws.rs.ApplicationPath;
+import java.util.Collections;
 
 @Configuration
 @ApplicationPath("/api")
 public class StreamPipesResourceConfig extends ResourceConfig {
 
     public StreamPipesResourceConfig() {
+        setProperties(Collections.singletonMap("jersey.config.server.response.setStatusOverSendError", true));
         register(Authentication.class);
         register(AssetDashboard.class);
         register(AutoComplete.class);
@@ -90,7 +92,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(SemanticEventProducer.class);
         register(Setup.class);
         register(ResetResource.class);
-        register(User.class);
+        register(UserProfile.class);
         register(Version.class);
         register(PipelineElementAsset.class);
         register(DataLakeDashboardResource.class);

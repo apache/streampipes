@@ -16,30 +16,30 @@
  *
  */
 
-import {Component, Inject, OnInit} from "@angular/core";
-import {EditorService} from "./services/editor.service";
+import { Component, OnInit } from '@angular/core';
+import { EditorService } from './services/editor.service';
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
   DataSourceDescription,
   SpDataSet,
   SpDataStream
-} from "../core-model/gen/streampipes-model";
-import {PipelineElementService} from "../platform-services/apis/pipeline-element.service";
+} from '../core-model/gen/streampipes-model';
+import { PipelineElementService } from '../platform-services/apis/pipeline-element.service';
 import {
-    PipelineElementConfig, PipelineElementIdentifier,
-    PipelineElementType,
-    PipelineElementUnion, TabsModel
-} from "./model/editor.model";
-import {PipelineElementTypeUtils} from "./utils/editor.utils";
-import {AuthStatusService} from "../services/auth-status.service";
-import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
-import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
-import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
-import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
-import {ShepherdService} from "../services/tour/shepherd.service";
-import {ActivatedRoute} from "@angular/router";
-import {EditorConstants} from "./constants/editor.constants";
+  PipelineElementConfig,
+  PipelineElementIdentifier,
+  PipelineElementUnion,
+  TabsModel
+} from './model/editor.model';
+import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
+import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
+import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
+import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
+import { ShepherdService } from '../services/tour/shepherd.service';
+import { ActivatedRoute } from '@angular/router';
+import { EditorConstants } from './constants/editor.constants';
+import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'editor',
@@ -48,7 +48,7 @@ import {EditorConstants} from "./constants/editor.constants";
 })
 export class EditorComponent implements OnInit {
 
-    selectedIndex: number = 1;
+    selectedIndex = 1;
     activeType: PipelineElementIdentifier = EditorConstants.DATA_STREAM_IDENTIFIER;
     activeShorthand: string;
 
@@ -58,56 +58,56 @@ export class EditorComponent implements OnInit {
     availableDataSinks: DataSinkInvocation[] = [];
 
     allElements: PipelineElementUnion[] = [];
-    currentElements: Array<(SpDataStream | DataProcessorInvocation | DataSinkInvocation)> = [];
+    currentElements: (SpDataStream | DataProcessorInvocation | DataSinkInvocation)[] = [];
 
     rawPipelineModel: PipelineElementConfig[] = [];
     currentModifiedPipelineId: string;
 
     elementsLoaded = [false, false, false];
-    allElementsLoaded: boolean = false;
+    allElementsLoaded = false;
 
-    requiredStreamForTutorialAppId: any = "org.apache.streampipes.sources.simulator.flowrate1";
-    requiredProcessorForTutorialAppId: any = "org.apache.streampipes.processors.filters.jvm.numericalfilter";
-    requiredSinkForTutorialAppId: any = "org.apache.streampipes.sinks.internal.jvm.dashboard";
+    requiredStreamForTutorialAppId: any = 'org.apache.streampipes.sources.simulator.flowrate1';
+    requiredProcessorForTutorialAppId: any = 'org.apache.streampipes.processors.filters.jvm.numericalfilter';
+    requiredSinkForTutorialAppId: any = 'org.apache.streampipes.sinks.internal.jvm.dashboard';
     missingElementsForTutorial: any = [];
 
-    pipelineCanvasMaximized: boolean = false;
+    pipelineCanvasMaximized = false;
 
-    isTutorialOpen: boolean = false;
+    isTutorialOpen = false;
 
     tabs: TabsModel[] = [
         {
             title: 'Data Sets',
             type: EditorConstants.DATA_SET_IDENTIFIER,
-            shorthand: "set"
+            shorthand: 'set'
         },
         {
             title: 'Data Streams',
             type: EditorConstants.DATA_STREAM_IDENTIFIER,
-            shorthand: "stream"
+            shorthand: 'stream'
         },
         {
             title: 'Data Processors',
             type: EditorConstants.DATA_PROCESSOR_IDENTIFIER,
-            shorthand: "sepa"
+            shorthand: 'sepa'
         },
         {
             title: 'Data Sinks',
             type: EditorConstants.DATA_SINK_IDENTIFIER,
-            shorthand: "action"
+            shorthand: 'action'
         }
     ];
 
     constructor(private editorService: EditorService,
                 private pipelineElementService: PipelineElementService,
-                private AuthStatusService: AuthStatusService,
+                private authService: AuthService,
                 private dialogService: DialogService,
                 private shepherdService: ShepherdService,
-                private ActivatedRoute: ActivatedRoute) {
+                private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit() {
-        this.ActivatedRoute.queryParams.subscribe(params => {
+        this.activatedRoute.queryParams.subscribe(params => {
             if (params['pipeline']) {
                 this.currentModifiedPipelineId = params['pipeline'];
             }
@@ -118,7 +118,7 @@ export class EditorComponent implements OnInit {
             this.afterPipelineElementLoaded(0);
         });
         this.pipelineElementService.getDataStreams().subscribe(streams => {
-            //let allStreams = this.collectStreams(sources);
+            // let allStreams = this.collectStreams(sources);
             this.availableDataStreams = streams.filter(s => !(s instanceof SpDataSet));
             this.availableDataSets = streams
                 .filter(s => s instanceof SpDataSet)
@@ -133,7 +133,7 @@ export class EditorComponent implements OnInit {
             this.availableDataSinks = sinks;
             this.allElements = this.allElements.concat(this.availableDataSinks);
             this.afterPipelineElementLoaded(2);
-        })
+        });
 
     }
 
@@ -146,28 +146,23 @@ export class EditorComponent implements OnInit {
     }
 
     checkForTutorial() {
-        if (this.AuthStatusService.email != undefined) {
-            this.editorService
-                .getUserDetails()
-                .subscribe(user => {
-                    if ((!user.hideTutorial) && !this.isTutorialOpen) {
-                        if (this.requiredPipelineElementsForTourPresent()) {
-                            this.isTutorialOpen = true;
-                            this.dialogService.open(WelcomeTourComponent, {
-                                panelType: PanelType.STANDARD_PANEL,
-                                title: "Welcome to StreamPipes",
-                                data: {
-                                    "user": user
-                                }
-                            });
-                        }
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser.showTutorial && !this.isTutorialOpen) {
+            if (this.requiredPipelineElementsForTourPresent()) {
+                this.isTutorialOpen = true;
+                this.dialogService.open(WelcomeTourComponent, {
+                    panelType: PanelType.STANDARD_PANEL,
+                    title: 'Welcome to StreamPipes',
+                    data: {
+                        'user': currentUser.displayName
                     }
                 });
+            }
         }
     }
 
-    collectStreams(sources: Array<DataSourceDescription>): SpDataStream[] {
-        let streams: SpDataStream[] = [];
+    collectStreams(sources: DataSourceDescription[]): SpDataStream[] {
+        const streams: SpDataStream[] = [];
         sources.forEach(source => {
             source.spDataStreams.forEach(stream => {
                 streams.push(stream);
@@ -176,16 +171,16 @@ export class EditorComponent implements OnInit {
         return streams;
     }
 
-    selectPipelineElements(index : number) {
+    selectPipelineElements(index: number) {
         this.selectedIndex = index;
         this.activeType = this.tabs[index].type;
         this.activeShorthand = this.tabs[index].shorthand;
         this.currentElements = this.allElements
-            .filter(pe => pe["@class"] === this.activeType)
+            .filter(pe => pe['@class'] === this.activeType)
             .sort((a, b) => {
                 return a.name.localeCompare(b.name);
             });
-        this.shepherdService.trigger("select-" +this.activeShorthand);
+        this.shepherdService.trigger('select-' + this.activeShorthand);
     }
 
     startCreatePipelineTour() {
@@ -194,20 +189,20 @@ export class EditorComponent implements OnInit {
         } else {
             this.missingElementsForTutorial = [];
             if (!this.requiredStreamForTourPresent()) {
-                this.missingElementsForTutorial.push({"name" : "Flow Rate 1", "appId" : this.requiredStreamForTutorialAppId });
+                this.missingElementsForTutorial.push({'name' : 'Flow Rate 1', 'appId' : this.requiredStreamForTutorialAppId });
             }
             if (!this.requiredProcessorForTourPresent()) {
-                this.missingElementsForTutorial.push({"name" : "Numerical Filter", "appId" : this.requiredProcessorForTutorialAppId});
+                this.missingElementsForTutorial.push({'name' : 'Numerical Filter', 'appId' : this.requiredProcessorForTutorialAppId});
             }
             if (!this.requiredSinkForTourPresent()) {
-                this.missingElementsForTutorial.push({"name" : "Dashboard Sink", "appId" : this.requiredSinkForTutorialAppId});
+                this.missingElementsForTutorial.push({'name' : 'Dashboard Sink', 'appId' : this.requiredSinkForTutorialAppId});
             }
 
             this.dialogService.open(MissingElementsForTutorialComponent, {
                 panelType: PanelType.STANDARD_PANEL,
-                title: "Tutorial requires pipeline elements",
+                title: 'Tutorial requires pipeline elements',
                 data: {
-                    "missingElementsForTutorial": this.missingElementsForTutorial
+                    'missingElementsForTutorial': this.missingElementsForTutorial
                 }
             });
         }

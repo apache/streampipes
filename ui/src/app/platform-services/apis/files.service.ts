@@ -41,7 +41,7 @@ export class FilesService {
       reportProgress: true,
     };
 
-    const req = new HttpRequest('POST', this.platformServicesCommons.apiBasePath() + '/files', data, options);
+    const req = new HttpRequest('POST', this.platformServicesCommons.apiBasePath + '/files', data, options);
     return this.http.request(req);
   }
 
@@ -51,13 +51,13 @@ export class FilesService {
       requiredFiletypeAppendix = '?filetypes=' + requiredFiletypes.join();
     }
     return this.http
-        .get(this.platformServicesCommons.apiBasePath() + '/files' + requiredFiletypeAppendix)
+        .get(this.platformServicesCommons.apiBasePath + '/files' + requiredFiletypeAppendix)
         .pipe(map(response => {
           return (response as any[]).map(fm => FileMetadata.fromData(fm));
         }));
   }
 
   deleteFile(fileId: string) {
-    return this.http.delete(this.platformServicesCommons.apiBasePath() + '/files/' + fileId);
+    return this.http.delete(this.platformServicesCommons.apiBasePath + '/files/' + fileId);
   }
 }

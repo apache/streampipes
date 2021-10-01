@@ -60,22 +60,22 @@ export class PipelineElementService {
   }
 
   getDocumentation(appId) {
-    return this.http.get(this.platformServicesCommons.unauthenticatedBasePath
+    return this.http.get(this.platformServicesCommons.apiBasePath
         + '/pe/'
         + appId
         + '/assets/documentation', {responseType: 'text'});
   }
 
   private get dataProcessorsUrl(): string {
-    return this.platformServicesCommons.apiBasePath() + '/sepas';
+    return this.platformServicesCommons.apiBasePath + '/sepas';
   }
 
   private get dataStreamsUrl(): string {
-    return this.platformServicesCommons.apiBasePath() + '/streams';
+    return this.platformServicesCommons.apiBasePath + '/streams';
   }
 
   private get dataSinksUrl(): string {
-    return this.platformServicesCommons.apiBasePath() + '/actions';
+    return this.platformServicesCommons.apiBasePath + '/actions';
   }
 
 }

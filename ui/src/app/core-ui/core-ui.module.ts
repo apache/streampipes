@@ -66,7 +66,6 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
 import { StaticRuntimeResolvableAnyInputComponent } from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
 import { StaticRuntimeResolvableOneOfInputComponent } from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
 import { RuntimeResolvableService } from './static-properties/static-runtime-resolvable-input/runtime-resolvable.service';
-import { StaticFileRestService } from './static-properties/static-file-input/static-file-rest.service';
 import { DisplayRecommendedPipe } from './static-properties/filter/display-recommended.pipe';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
@@ -148,7 +147,6 @@ import { AddToCollectionComponent } from './static-properties/static-collection/
     LabelingModeService,
     DialogService,
     RuntimeResolvableService,
-    StaticFileRestService
   ],
   entryComponents: [],
   exports: [

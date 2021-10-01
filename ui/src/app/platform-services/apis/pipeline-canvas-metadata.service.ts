@@ -52,7 +52,7 @@ export class PipelineCanvasMetadataService {
   }
 
   private get pipelineCanvasMetadataBasePath() {
-    return this.platformServicesCommons.apiBasePath() + '/pipeline-canvas-metadata';
+    return this.platformServicesCommons.apiBasePath + '/pipeline-canvas-metadata';
   }
 
   private get pipelineCanvasMetadataPipelinePath() {

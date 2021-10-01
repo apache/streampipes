@@ -19,8 +19,6 @@
 package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
@@ -107,19 +105,17 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     return statusMessage(new ErrorMessage(notifications));
   }
 
-  protected String getCurrentUsername() throws AuthenticationException {
-    if (SecurityUtils.getSubject().isAuthenticated()) {
-      return SecurityUtils.getSubject().getPrincipal().toString();
-    }
-    throw new AuthenticationException("Not authenticated");
-  }
+//  protected String getCurrentUsername() throws AuthenticationException {
+//    if (SecurityContext.getSubject().isAuthenticated()) {
+//      return SecurityUtils.getSubject().getPrincipal().toString();
+//    }
+//    throw new AuthenticationException("Not authenticated");
+//  }
 
   protected boolean authorized(String username) {
-    return username.equals(SecurityUtils.getSubject().getPrincipal().toString());
-  }
-
-  protected boolean isAuthenticated() {
-    return SecurityUtils.getSubject().isAuthenticated();
+    // TODO SEC
+    //return username.equals(SecurityUtils.getSubject().getPrincipal().toString());
+    return true;
   }
 
   @SuppressWarnings("deprecation")
@@ -138,6 +134,10 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     return builder
             .entity(message)
             .build();
+  }
+
+  protected Response unauthorized() {
+    return Response.status(Response.Status.UNAUTHORIZED).build();
   }
 
   protected ISpKvManagement getKeyValueStore() {

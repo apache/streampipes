@@ -20,7 +20,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { AuthStatusService } from '../../services/auth-status.service';
 import { Dashboard } from '../models/dashboard.model';
 import { MeasurementUnit } from '../../core-model/measurement-unit/MeasurementUnit';
 import {
@@ -35,7 +34,6 @@ export class DashboardService {
 
 
   constructor(private http: HttpClient,
-              private authStatusService: AuthStatusService,
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
@@ -94,7 +92,7 @@ export class DashboardService {
   }
 
   private get baseUrl() {
-    return this.platformServicesCommons.apiBasePath();
+    return this.platformServicesCommons.apiBasePath;
   }
 
   private get measurementUnitsUrl() {

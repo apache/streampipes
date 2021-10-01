@@ -105,7 +105,7 @@ export class PipelineService {
   }
 
   get apiBasePath() {
-    return this.platformServicesCommons.apiBasePath();
+    return this.platformServicesCommons.apiBasePath;
   }
 
 }

@@ -16,9 +16,12 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { AuthStatusService } from '../../services/auth-status.service';
 import { Observable } from 'rxjs';
-import { ExistingNotification, NotificationCount, NotificationItem } from '../model/notifications.model';
+import {
+    ExistingNotification,
+    NotificationCount,
+    NotificationItem
+} from '../model/notifications.model';
 import { Injectable } from '@angular/core';
 import { NotificationUtils } from '../utils/notifications.utils';
 import { map } from 'rxjs/operators';
@@ -28,7 +31,6 @@ import { PlatformServicesCommons } from '../../platform-services/apis/commons.se
 export class NotificationsService {
 
     constructor(private http: HttpClient,
-                private authStatusService: AuthStatusService,
                 private platformServicesCommons: PlatformServicesCommons) {
     }
 
@@ -59,6 +61,6 @@ export class NotificationsService {
     }
 
     private get notificationUrl() {
-        return this.platformServicesCommons.apiBasePath() + '/notifications';
+        return this.platformServicesCommons.apiBasePath + '/notifications';
     }
 }

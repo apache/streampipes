@@ -20,13 +20,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 
 import { CustomMaterialModule } from './CustomMaterial/custom-material.module';
-import { AuthStatusService } from './services/auth-status.service';
 
 import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
@@ -56,6 +55,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { PlatformServicesModule } from "./platform-services/platform.module";
 import { ServicesModule } from "./services/services.module";
 import { ApidocsModule } from "./apidocs/apidocs.module";
+import { HttpInterceptorProvider } from './http-interceptor';
 
 import * as $ from 'jquery';
 
@@ -91,9 +91,9 @@ import * as $ from 'jquery';
         {{/modulesActive}}
     ],
     providers: [
-        AuthStatusService,
         AuthService,
         NotificationCountService,
+        { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
         { provide: Logger, useClass: ConsoleLogService },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
         {

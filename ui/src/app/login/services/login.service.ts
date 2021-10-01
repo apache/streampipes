@@ -16,10 +16,10 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {PlatformServicesCommons} from "../../platform-services/apis/commons.service";
-import {Observable} from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class LoginService {
@@ -29,10 +29,16 @@ export class LoginService {
   }
 
   login(credentials): Observable<any> {
-    return this.http.post(this.platformServicesCommons.unauthenticatedBasePath + "/admin/login", credentials);
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/auth/login', credentials);
+  }
+
+  renewToken(): Observable<any> {
+    return this.http.get(this.platformServicesCommons.apiBasePath + '/auth/token/renew', {
+      headers: { ignoreLoadingBar: '' }
+    });
   }
 
   setupInstall(setup, installationStep): Observable<any> {
-    return this.http.post(this.platformServicesCommons.unauthenticatedBasePath + "/setup/install/" +installationStep, setup);
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/setup/install/' + installationStep, setup);
   }
 }

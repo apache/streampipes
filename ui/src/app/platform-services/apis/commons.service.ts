@@ -16,26 +16,19 @@
  *
  */
 
-import {AuthStatusService} from "../../services/auth-status.service";
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PlatformServicesCommons {
 
-  constructor(private authStatusService: AuthStatusService) {
-
-  }
+  constructor() { }
 
   get basePath(): string {
     return '/streampipes-backend';
   }
 
-  apiBasePath() {
+  get apiBasePath() {
     return this.basePath + '/api/v2';
-  }
-  
-  authUserBasePath() {
-    return this.basePath + '/api/v2/users/' + this.authStatusService.email;
   }
 
   get unauthenticatedBasePath() {

@@ -16,11 +16,11 @@
  *
  */
 
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {RestApi} from "../../../services/rest-api.service";
-import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {Component} from "@angular/core";
-import {AppConstants} from "../../../services/app.constants";
+import { DialogRef } from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { RestApi } from "../../../services/rest-api.service";
+import { ShepherdService } from "../../../services/tour/shepherd.service";
+import { Component } from "@angular/core";
+import { AppConstants } from "../../../services/app.constants";
 
 @Component({
   selector: 'welcome-tour',
@@ -51,5 +51,5 @@ export class WelcomeTourComponent {
 
   close() {
     this.DialogRef.close();
-  };
+  }
 }

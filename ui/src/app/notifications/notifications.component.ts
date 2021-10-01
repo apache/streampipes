@@ -23,11 +23,11 @@ import { NotificationsService } from './service/notifications.service';
 import { Message } from '@stomp/stompjs';
 import { Subscription } from 'rxjs';
 import { RxStompService } from '@stomp/ng2-stompjs';
-import { AuthStatusService } from '../services/auth-status.service';
 import { NotificationUtils } from './utils/notifications.utils';
 import { NotificationCountService } from '../services/notification-count-service';
 import { FreeTextStaticProperty, Pipeline } from '../core-model/gen/streampipes-model';
 import { PipelineService } from '../platform-services/apis/pipeline.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'notifications',
@@ -62,15 +62,15 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
     newEventArriving = false;
 
-    constructor(private pipelineService: PipelineService,
-                private authStatusService: AuthStatusService,
+    constructor(private authService: AuthService,
+                private pipelineService: PipelineService,
                 public elementIconText: ElementIconText,
                 private notificationService: NotificationsService,
                 private rxStompService: RxStompService,
                 private notificationCountService: NotificationCountService) {
         this.notifications = [];
         this.unreadNotifications = [];
-        this.notificationTopic = NotificationsComponent.NOTIFICATION_TOPIC_PREFIX + authStatusService.email;
+        this.notificationTopic = NotificationsComponent.NOTIFICATION_TOPIC_PREFIX + this.authService.getCurrentUser().email;
     }
 
     ngOnInit() {

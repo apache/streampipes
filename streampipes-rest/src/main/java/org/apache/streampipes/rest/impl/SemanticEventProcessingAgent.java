@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.message.NotificationType;
@@ -41,7 +40,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 
 	@GET
 	@Path("/available")
-	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
@@ -53,7 +51,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 	
 	@GET
 	@Path("/favorites")
-	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
@@ -65,7 +62,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 
 	@GET
 	@Path("/own")
-	@RequiresAuthentication
 	@JacksonSerialized
 	@Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
 	@Override
@@ -82,7 +78,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 
 	@POST
 	@Path("/favorites")
-	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
@@ -93,7 +88,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 
 	@DELETE
 	@Path("/favorites/{elementUri}")
-	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override
@@ -104,7 +98,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 	
 	@DELETE
 	@Path("/own/{elementId}")
-	@RequiresAuthentication
 	@Produces(MediaType.APPLICATION_JSON)
 	@GsonWithIds
 	@Override

@@ -16,47 +16,49 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {ProfileService} from "../../profile.service";
-import {User} from "../../../core-model/gen/streampipes-model-client";
-import {BasicProfileSettings} from "../basic-profile-settings";
-import {AppConstants} from "../../../services/app.constants";
-import {AuthStatusService} from "../../../services/auth-status.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ProfileService } from '../../profile.service';
+import { BasicProfileSettings } from '../basic-profile-settings';
+import { AppConstants } from '../../../services/app.constants';
+import { AuthService } from '../../../services/auth.service';
+import { JwtTokenStorageService } from '../../../services/jwt-token-storage.service';
 
 @Component({
   selector: 'general-profile-settings',
   templateUrl: './general-profile-settings.component.html',
   styleUrls: ['./general-profile-settings.component.scss']
 })
-export class GeneralProfileSettingsComponent extends BasicProfileSettings implements OnInit {
+export class GeneralProfileSettingsComponent extends BasicProfileSettings implements OnInit, OnDestroy {
 
-  darkMode: boolean = false;
-  originalDarkMode: boolean = false;
-  darkModeChanged: boolean = false;
+  darkMode = false;
+  originalDarkMode = false;
+  darkModeChanged = false;
 
-  constructor(private authStatusService: AuthStatusService,
+  constructor(private authService: AuthService,
               profileService: ProfileService,
-              appConstants: AppConstants) {
-    super(profileService, appConstants);
+              appConstants: AppConstants,
+              tokenService: JwtTokenStorageService) {
+    super(profileService, appConstants, tokenService);
   }
 
   ngOnInit(): void {
-    this.darkMode = this.authStatusService.darkMode;
-    this.originalDarkMode = this.authStatusService.darkMode;
+    this.authService.darkMode$.subscribe(darkMode => this.darkMode = darkMode);
     this.receiveUserData();
   }
 
   ngOnDestroy(): void {
     if (!this.darkModeChanged) {
-      this.authStatusService.darkMode = this.originalDarkMode;
+      this.authService.darkMode$.next(this.originalDarkMode);
     }
   }
 
   changeModePreview(value: boolean) {
-    this.authStatusService.darkMode = value;
+    this.authService.darkMode$.next(value);
   }
 
   onUserDataReceived() {
+    this.originalDarkMode = this.userData.darkMode;
+    this.authService.darkMode$.next(this.userData.darkMode);
   }
 
   updateAppearanceMode() {

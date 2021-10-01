@@ -28,7 +28,6 @@ import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children
 import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
 import {StartupComponent} from "./login/components/startup/startup.component";
 import {AlreadyConfiguredCanActivateGuard} from "./_guards/already-configured.can-activate.guard";
-import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
 import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
 import {ProfileComponent} from "./profile/profile.component";
@@ -46,7 +45,7 @@ import { ConfigurationComponent } from './configuration/configuration.component'
 
 const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
-  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard],
+  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard],
   data: {animation: 'LoginPage'}},
   { path: 'setup', component: SetupComponent, canActivate: [AlreadyConfiguredCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
@@ -76,7 +75,6 @@ const routes: Routes = [
       AuthCanActivateChildrenGuard,
       AlreadyConfiguredCanActivateGuard,
       ConfiguredCanActivateGuard,
-      LoggedInCanActivateGuard
   ]
 })
 export class AppRoutingModule { }

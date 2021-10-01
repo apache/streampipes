@@ -16,18 +16,17 @@
  *
  */
 
-import {HttpClient} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {map} from "rxjs/operators";
-import {Observable} from "rxjs";
-import {AuthStatusService} from "../../services/auth-status.service";
-import {ActivityDetectionModel} from "../model/activity-detection.model";
-import {ParcelInfoModel} from "../model/parcel-info.model";
-import {ParcelInfoEventModel} from "../model/parcel-info-event.model";
-import {OldEventModel} from "../model/old-event.model";
-import {TransportProcessEventModel} from "../model/transport-process-event.model";
-import {TransportProcessModel} from "../model/transport-process.model";
-import {OpenBoxModel} from "../model/open-box.model";
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { map } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { ActivityDetectionModel } from "../model/activity-detection.model";
+import { ParcelInfoModel } from "../model/parcel-info.model";
+import { ParcelInfoEventModel } from "../model/parcel-info-event.model";
+import { OldEventModel } from "../model/old-event.model";
+import { TransportProcessEventModel } from "../model/transport-process-event.model";
+import { TransportProcessModel } from "../model/transport-process.model";
+import { OpenBoxModel } from "../model/open-box.model";
 
 @Injectable()
 export class AppTransportMonitoringRestService {
@@ -36,7 +35,7 @@ export class AppTransportMonitoringRestService {
     startTimestampDefault: number = 0;
     endTimestampDefault: number = 2653100861941;
 
-    constructor(private http: HttpClient, private authStatusService: AuthStatusService) {
+    constructor(private http: HttpClient) {
     }
 
     getTransportProcesses(): Observable<TransportProcessEventModel[]> {

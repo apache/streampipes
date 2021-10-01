@@ -28,28 +28,28 @@ import java.util.Set;
 @TsModel
 public class User {
 
-	private @SerializedName("_id") String userId;
+	protected @SerializedName("_id") String userId;
 	protected @SerializedName("_rev") String rev;
 	protected String email;
 
-	private String username;
-	private String fullName;
-	private String password;
-	
-	private List<Element> ownSources;
-	private List<Element> ownSepas;
-	private List<Element> ownActions;
-	
-	private List<String> preferredSources;
-	private List<String> preferredSepas;
-	private List<String> preferredActions;
+	protected String username;
+	protected String fullName;
+	protected String password;
 
-	private List<UserApiToken> userApiTokens;
+	protected List<Element> ownSources;
+	protected List<Element> ownSepas;
+	protected List<Element> ownActions;
 
-	private boolean hideTutorial;
-	private boolean darkMode = false;
+	protected List<String> preferredSources;
+	protected List<String> preferredSepas;
+	protected List<String> preferredActions;
 
-	private Set<Role> roles;	
+	protected List<UserApiToken> userApiTokens;
+
+	protected boolean hideTutorial;
+	protected boolean darkMode = false;
+
+	protected Set<Role> roles;
 
 	public User() {
 		this.hideTutorial = false;

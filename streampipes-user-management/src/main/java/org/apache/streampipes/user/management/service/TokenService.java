@@ -18,7 +18,6 @@
 package org.apache.streampipes.user.management.service;
 
 import com.google.gson.JsonObject;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.User;
 import org.apache.streampipes.storage.api.IUserStorage;
@@ -27,6 +26,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.TokenUtil;
 import org.lightcouch.CouchDbClient;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 
 public class TokenService {
@@ -50,11 +50,11 @@ public class TokenService {
             .getUserStorageAPI();
   }
 
-  public User findUserForToken(String token) {
+  public User findUserForToken(String token) throws UserPrincipalNotFoundException {
     CouchDbClient dbClient = Utils.getCouchDbUserClient();
     List<JsonObject> users = dbClient.view("users/token").key(token).includeDocs(true).query(JsonObject.class);
     if (users.size() != 1) {
-      throw new AuthenticationException("None or too many users with matching token");
+      throw new UserPrincipalNotFoundException("None or too many users with matching token");
     }
     return getUserStorage().getUser(users.get(0).get("email").getAsString());
   }

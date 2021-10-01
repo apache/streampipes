@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.rest.interceptor;
 
-import org.apache.streampipes.rest.authentication.StreamPipesFilter;
 import org.apache.streampipes.rest.shared.annotation.NoAuthenticationRequired;
 
 import javax.ws.rs.container.DynamicFeature;
@@ -30,7 +29,7 @@ public class AuthenticationInterceptor implements DynamicFeature {
   @Override
   public void configure(ResourceInfo resourceInfo, FeatureContext context) {
     if (!resourceInfo.getResourceMethod().isAnnotationPresent(NoAuthenticationRequired.class)) {
-      context.register(StreamPipesFilter.class);
+      //context.register(StreamPipesFilter.class);
     }
   }
 }

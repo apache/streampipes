@@ -18,7 +18,6 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthStatusService } from '../../services/auth-status.service';
 import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -28,33 +27,32 @@ import { ExtensionsServiceEndpointItem } from '../../core-model/gen/streampipes-
 export class AddService {
 
   constructor(private http: HttpClient,
-              private authStatusService: AuthStatusService,
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
   getRdfEndpoints(): Observable<any> {
-    return this.http.get(this.platformServicesCommons.apiBasePath() + '/rdfendpoints');
+    return this.http.get(this.platformServicesCommons.apiBasePath + '/rdfendpoints');
   }
 
   getRdfEndpointItems(): Observable<ExtensionsServiceEndpointItem[]> {
     return this
         .http
-        .get(this.platformServicesCommons.apiBasePath() + '/rdfendpoints/items')
+        .get(this.platformServicesCommons.apiBasePath + '/rdfendpoints/items')
         .pipe(map(response => {
           return (response as any[]).map(item => ExtensionsServiceEndpointItem.fromData(item));
         }));
   }
 
   addRdfEndpoint(rdfEndpoint): Observable<any> {
-    return this.http.post(this.platformServicesCommons.apiBasePath() + '/rdfendpoints', rdfEndpoint);
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/rdfendpoints', rdfEndpoint);
   }
 
   removeRdfEndpoint(rdfEndpointId): Observable<any> {
-    return this.http.delete(this.platformServicesCommons.apiBasePath() + '/rdfendpoints/' + rdfEndpointId);
+    return this.http.delete(this.platformServicesCommons.apiBasePath + '/rdfendpoints/' + rdfEndpointId);
   }
 
   getRdfEndpointIcon(item: ExtensionsServiceEndpointItem): Observable<any> {
-    return this.http.post(this.platformServicesCommons.apiBasePath()
+    return this.http.post(this.platformServicesCommons.apiBasePath
         + '/rdfendpoints/items/icon', item, {responseType: 'blob'});
   }
 }
