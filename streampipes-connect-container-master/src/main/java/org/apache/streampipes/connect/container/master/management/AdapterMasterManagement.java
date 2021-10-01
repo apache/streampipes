@@ -143,11 +143,18 @@ public class AdapterMasterManagement {
     AdapterDescription ad = adapterStorage.getAdapter(id);
 
     if (isStreamAdapter) {
-      stopStreamAdapter(id, ad.getSelectedEndpointUrl());
+      try {
+        stopStreamAdapter(id, ad.getSelectedEndpointUrl());
+      } catch (AdapterException e) {
+        LOG.info("Could not stop adapter: " + id);
+        LOG.info(e.toString());
+      }
     }
+
     String username = ad.getUserName();
 
     adapterStorage.deleteAdapter(id);
+    LOG.info("Successfully deleted adapter: " + id);
 
     UserService userService = getUserService();
     IPipelineElementDescriptionStorageCache requestor = StorageManager.INSTANCE.getPipelineElementStorage();
