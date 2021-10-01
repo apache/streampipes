@@ -140,7 +140,7 @@ public class SourcesManagement {
         AdapterDescription adapterDescription = null;
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         for (AdapterDescription a : allAdapters) {
-            if (a.getUri().endsWith(id)) {
+            if (a.getAdapterId().equals(id)) {
                 adapterDescription = a;
             }
         }
@@ -182,7 +182,7 @@ public class SourcesManagement {
 
         ds.setName(adapterDescription.getName());
         ds.setDescription(adapterDescription.getDescription());
-        ds.setCorrespondingAdapterId(adapterDescription.getAdapterId());
+        ds.setCorrespondingAdapterId(adapterDescription.getAppId());
         ds.setInternallyManaged(true);
 
         ds.setUri(url);

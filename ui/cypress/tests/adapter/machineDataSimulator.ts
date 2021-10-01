@@ -29,10 +29,23 @@ describe('Test Random Data Simulator Stream Adapter', () => {
       .create('Machine_Data_Simulator')
       .setName('Machine Data Simulator Test')
       .addInput('input', 'wait-time-ms', '1000')
+      .setTimestampProperty('timestamp')
+      .setStoreInDataLake()
       .build();
 
     AdapterUtils.testSpecificStreamAdapter(adapterInput);
-    AdapterUtils.deleteAdapter();
+
+    // const adapterInput1 = SpecificAdapterBuilder
+    //   .create('Machine_Data_Simulator')
+    //   .setName('Machine Data Simulator Test 2')
+    //   .addInput('input', 'wait-time-ms', '1000')
+    //   .addInput('radio', 'selected-simulator-option', 'pressure')
+    //   .setTimestampProperty('timestamp')
+    //   .setStoreInDataLake()
+    //   .build();
+    //
+    // AdapterUtils.testSpecificStreamAdapter(adapterInput1);
+    // AdapterUtils.deleteAdapter();
   });
 
 });

@@ -19,10 +19,14 @@
 <div id="formWrapper" fxFlex="100" fxLayout="column">
     <div fxFlex fxLayout="column" class="content">
         <div>
-            <mat-radio-group  *ngIf="staticProperty.alternatives.length > 1"
-                    class="radio-group" (change)="radioSelectionChange($event)" required>
-                <mat-radio-button *ngFor="let alternative of staticProperty.alternatives" class="radio-button"
-                                  [value]="alternative" [checked]="alternative.selected" [matTooltip]="alternative.description">
+            <mat-radio-group *ngIf="staticProperty.alternatives.length > 1"
+                             class="radio-group" (change)="radioSelectionChange($event)" required>
+                <mat-radio-button class="radio-button"
+                                  *ngFor="let alternative of staticProperty.alternatives"
+                                  [value]="alternative"
+                                  [checked]="alternative.selected"
+                                  [matTooltip]="alternative.description"
+                                  [attr.data-cy]="alternative.label">
                     <label style="font-weight: normal;">
                         {{alternative.label}}
                     </label>

@@ -102,13 +102,13 @@ public class AdapterMasterManagement {
 
     // start when stream adapter
     if (ad instanceof AdapterStreamDescription) {
-      // TODO
       WorkerRestClient.invokeStreamAdapter(endpointUrl, adapterId);
       LOG.info("Start adapter");
     }
 
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
-    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
+    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getAdapterId());
+    storedDescription.setCorrespondingAdapterId(adapterId);
     installDataSource(storedDescription, username);
 
     return storedDescription.getElementId();

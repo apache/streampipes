@@ -31,6 +31,7 @@ import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { PipelineTemplateService } from '../../../platform-services/apis/pipeline-template.service';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 
+
 @Component({
   selector: 'sp-dialog-adapter-started-dialog',
   templateUrl: './adapter-started-dialog.component.html',
@@ -98,7 +99,9 @@ export class AdapterStartedDialog implements OnInit {
 
           if (this.saveInDataLake) {
             const pipelineId = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
-            this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, pipelineId)
+            console.log(x.notifications[0].title);
+            console.log(this.adapter);
+            this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title, pipelineId)
               .subscribe(res => {
 
                 const pipelineName = 'Persist ' + this.adapter.name;
@@ -109,9 +112,10 @@ export class AdapterStartedDialog implements OnInit {
                   .replace(/\./g, '');
 
                 // Ensure that index name is no number
-                if (!Number.isNaN(indexName)) {
+                if (this.isNumber(indexName)) {
                   indexName = 'sp' + indexName;
                 }
+
                 const pipelineInvocation = PipelineInvocationBuilder
                   .create(res)
                   .setName(pipelineName)
@@ -140,4 +144,9 @@ export class AdapterStartedDialog implements OnInit {
     this.shepherdService.trigger('confirm_adapter_started_button');
   }
 
+  private isNumber(value: string | number): boolean {
+    return ((value != null) &&
+      (value !== '') &&
+      !isNaN(Number(value.toString())));
+  }
 }
