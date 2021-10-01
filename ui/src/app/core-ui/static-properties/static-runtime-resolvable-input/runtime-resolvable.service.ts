@@ -17,10 +17,7 @@
  */
 
 import { Observable } from 'rxjs';
-import {
-  RuntimeOptionsRequest,
-  RuntimeOptionsResponse
-} from '../../../core-model/gen/streampipes-model';
+import { RuntimeOptionsRequest, RuntimeOptionsResponse } from '../../../core-model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from '../../../platform-services/apis/commons.service';
@@ -36,9 +33,9 @@ export class RuntimeResolvableService {
 
   fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest: RuntimeOptionsRequest, adapterId: string): Observable<RuntimeOptionsResponse> {
     const url: string = '/streampipes-backend/api/v2/connect/'
-        + 'master/resolvable/'
-        + encodeURIComponent(adapterId)
-        + '/configurations';
+      + 'master/resolvable/'
+      + encodeURIComponent(adapterId)
+      + '/configurations';
     return this.fetchRemoteOptions(url, resolvableOptionsParameterRequest);
   }
 
@@ -50,9 +47,9 @@ export class RuntimeResolvableService {
   fetchRemoteOptions(url, resolvableOptionsParameterRequest) {
     resolvableOptionsParameterRequest['@class'] = 'org.apache.streampipes.model.runtime.RuntimeOptionsRequest';
     return this.http.post(url, resolvableOptionsParameterRequest)
-        .pipe(map(response => {
-          return RuntimeOptionsResponse.fromData(response as RuntimeOptionsResponse);
-        }));
+      .pipe(map(response => {
+        return RuntimeOptionsResponse.fromData(response as RuntimeOptionsResponse);
+      }));
   }
 
 }

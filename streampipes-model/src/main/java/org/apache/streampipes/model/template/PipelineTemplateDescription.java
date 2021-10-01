@@ -19,11 +19,13 @@ package org.apache.streampipes.model.template;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@TsModel
 public class PipelineTemplateDescription extends NamedStreamPipesEntity {
 
   //@RdfProperty(RDFS.LABEL)

@@ -16,21 +16,9 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
-import { EventPropertyUnion } from '../../core-model/gen/streampipes-model';
-
-@Pipe({
-  name: 'timestampFilter',
-  pure: false
-})
-export class TimestampPipe implements PipeTransform {
-  transform(items: EventPropertyUnion[]): any {
-    return items.filter(item => {
-      if (item.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
+.success-message {
+  text-align: center;
+  font-size: 14pt;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }

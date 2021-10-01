@@ -16,11 +16,11 @@
  *
  */
 
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { PlatformServicesCommons } from "./commons.service";
-import { map } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class SemanticTypesService {
@@ -30,9 +30,10 @@ export class SemanticTypesService {
 
   }
 
-  getSemanticTypes(text: string): Observable<Array<string>> {
-    return this.http.get(this.platformServicesCommons.apiBasePath + "/autocomplete/semantic-type?text=" + text).pipe(map(response => {
-      return response as Array<string>;
+  getSemanticTypes(text: string): Observable<string[]> {
+    return this.http.get(this.platformServicesCommons.apiBasePath +
+        '/autocomplete/semantic-type?text=' + text).pipe(map(response => {
+      return response as string[];
     }));
   }
 

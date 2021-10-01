@@ -17,7 +17,8 @@
  */
 
 export class AdapterInput {
-    adapterType: string;
-    adapterName: string;
-    timestampProperty: string;
+  adapterType: string;
+  adapterName: string;
+  timestampProperty: string;
+  storeInDataLake: boolean;
 }

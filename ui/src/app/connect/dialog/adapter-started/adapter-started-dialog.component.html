@@ -18,47 +18,58 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxLayout="column" *ngIf="!adapterInstalled">
-            <div fxLayoutAlign="center" >
-                <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" color="accent">Loading</mat-spinner>
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+            <div fxLayout="column" *ngIf="!adapterInstalled">
+                <div fxLayoutAlign="center">
+                    <mat-spinner fxLayoutAlign="center" style="margin: 10px 0 5px 0" color="accent">Loading
+                    </mat-spinner>
+                </div>
+                <div fxLayoutAlign="center">
+                    <h3>Please wait while your new adapter is being generated...</h3>
+                </div>
             </div>
-            <div fxLayoutAlign="center">
-                <h3>Please wait while your new adapter is being generated...</h3>
-            </div>
-        </div>
-        <div fxLayout="column" *ngIf="adapterInstalled">
+            <div fxLayout="column" *ngIf="adapterInstalled">
 
-            <div *ngIf="adapterStatus.success">
-                <div *ngIf="!isSetAdapter && !isTemplate">
+                <div *ngIf="adapterStatus.success">
+                    <div *ngIf="!isSetAdapter && !isTemplate">
+                        <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
+                            <i class="material-icons">done</i>
+                            <span>&nbsp;Your new data stream is now available in the pipeline editor.</span>
+                        </div>
+                    </div>
+                    <div *ngIf="isSetAdapter">
+                        <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row"
+                             data-cy="sp-connect-adapter-set-success">
+                            <i class="material-icons">done</i>
+                            <span>&nbsp;Your new data set is now available in the pipeline editor.</span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="isTemplate">
+                        <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
+                            <i class="material-icons">done</i>
+                            <span>Template created. You or other users can now create adapters based on this template.</span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!isSetAdapter && !isTemplate">
+                        <pipeline-element-runtime-info [streamDescription]="streamDescription"
+                                                       [pollingActive]="pollingActive"></pipeline-element-runtime-info>
+                    </div>
+
+                </div>
+                <div *ngIf="!adapterStatus.success">
                     <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
-                        <i class="material-icons">done</i>
-                        <span>&nbsp;Your new data stream is now available in the pipeline editor.</span>
+                        <i class="material-icons">error</i>
+                        <span>Something went wrong during the adapter installation.</span>
                     </div>
                 </div>
-                <div *ngIf="isSetAdapter">
-                    <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row" data-cy="sp-connect-adapter-set-success">
-                        <i class="material-icons">done</i>
-                        <span>&nbsp;Your new data set is now available in the pipeline editor.</span>
-                    </div>
-                </div>
-
-                <div *ngIf="isTemplate">
-                    <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
-                        <i class="material-icons">done</i>
-                        <span>Template created. You or other users can now create adapters based on this template.</span>
-                    </div>
-                </div>
-
-                <div *ngIf="!isSetAdapter && !isTemplate">
-                    <pipeline-element-runtime-info [streamDescription]="streamDescription" [pollingActive]="pollingActive"></pipeline-element-runtime-info>
-                </div>
-
             </div>
-            <div *ngIf="!adapterStatus.success">
-                <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
-                    <i class="material-icons">error</i>
-                    <span>Something went wrong during the adapter installation.</span>
-                </div>
+
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+                <sp-pipeline-started-status
+                        [pipelineOperationStatus]="pipelineOperationStatus">
+                </sp-pipeline-started-status>
             </div>
         </div>
     </div>

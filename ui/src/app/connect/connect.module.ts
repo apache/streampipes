@@ -96,6 +96,7 @@ import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/del
     MatInputModule,
     MatFormFieldModule,
     MatSliderModule,
+    CoreUiModule,
     TreeModule.forRoot()
   ],
   exports: [

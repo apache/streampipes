@@ -20,13 +20,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { RestService } from '../../services/rest.service';
 import {
-    AdapterDescriptionUnion,
-    GenericAdapterSetDescription,
-    Message,
-    SpDataStream,
-    SpecificAdapterSetDescription
+  AdapterDescriptionUnion,
+  GenericAdapterSetDescription,
+  Message,
+  PipelineOperationStatus,
+  SpDataStream,
+  SpecificAdapterSetDescription
 } from '../../../core-model/gen/streampipes-model';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { PipelineTemplateService } from '../../../platform-services/apis/pipeline-template.service';
+import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 
 @Component({
   selector: 'sp-dialog-adapter-started-dialog',
@@ -42,6 +45,7 @@ export class AdapterStartedDialog implements OnInit {
   public runtimeData: any;
   public isSetAdapter = false;
   public isTemplate = false;
+  public pipelineOperationStatus: PipelineOperationStatus;
 
   @Input()
   storeAsTemplate: boolean;
@@ -58,7 +62,8 @@ export class AdapterStartedDialog implements OnInit {
   constructor(
     public dialogRef: DialogRef<AdapterStartedDialog>,
     private restService: RestService,
-    private shepherdService: ShepherdService) {
+    private shepherdService: ShepherdService,
+    private pipelineTemplateService: PipelineTemplateService) {
   }
 
   ngOnInit() {
@@ -93,26 +98,26 @@ export class AdapterStartedDialog implements OnInit {
           }
 
           if (this.saveInDataLake) {
-            // TODO pipeline templates are currently not working, this should be changed to use the new UI model
-            // const templateName = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
-            // x.notifications[0].title
-            // this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title + "/streams", templateName)
-            //     .subscribe(res => {
-            //
-            //         res.list.forEach(property => {
-            //             if (property instanceof FreeTextStaticProperty && "domId2db_measurement" == property.internalName) {
-            //                 property.value = this.data.adapter.label.toLowerCase().replace(" ", "_");
-            //   } else if (property instanceof MappingPropertyUnary && "domId2timestamp_mapping" == property.internalName) {
-            //                 property.selectedProperty = "s0::" + this.data.dataLakeTimestampField;
-            //             }
-            //
-            //
-            //         });
-            //
-            //         res.pipelineTemplateId = templateName;
-            //         res.name = this.data.adapter.label;
-            //         this.pipelineTemplateService.createPipelineTemplateInvocation(res);
-            //     });
+            const pipelineId = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
+            this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, pipelineId)
+              .subscribe(res => {
+
+                const indexName = this.adapter.name
+                  .toLowerCase()
+                  .replace(/ /g, '_')
+                  .replace(/\./g, '_');
+                const pipelineInvocation = PipelineInvocationBuilder
+                  .create(res)
+                  .setName('persist_' + indexName)
+                  .setTemplateId(pipelineId)
+                  .setFreeTextStaticProperty('db_measurement', indexName)
+                  .setMappingPropertyUnary('timestamp_mapping', 's0::' + this.dataLakeTimestampField)
+                  .build();
+
+                this.pipelineTemplateService.createPipelineTemplateInvocation(pipelineInvocation).subscribe(pipelineOperationStatus => {
+                  this.pipelineOperationStatus = pipelineOperationStatus;
+                });
+              });
           }
         }
       });

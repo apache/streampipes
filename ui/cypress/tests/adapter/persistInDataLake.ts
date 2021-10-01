@@ -16,21 +16,28 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
-import { EventPropertyUnion } from '../../core-model/gen/streampipes-model';
+import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { PipelineUtils } from '../../support/utils/PipelineUtils';
 
-@Pipe({
-  name: 'timestampFilter',
-  pure: false
-})
-export class TimestampPipe implements PipeTransform {
-  transform(items: EventPropertyUnion[]): any {
-    return items.filter(item => {
-      if (item.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-}
+describe('Test File Stream Adapter', () => {
+  before('Setup Test', () => {
+    cy.initStreamPipesTest();
+  });
+
+  it('Perform Test', () => {
+
+    const adapterInput = SpecificAdapterBuilder
+      .create('Machine_Data_Simulator')
+      .setName('Machine Data Simulator Test')
+      .addInput('input', 'wait-time-ms', '1000')
+      .setTimestampProperty('timestamp')
+      .setStoreInDataLake()
+      .build();
+
+    AdapterUtils.testSpecificStreamAdapter(adapterInput);
+    PipelineUtils.checkAmountOfPipelinesPipeline(1);
+  });
+
+});
+
