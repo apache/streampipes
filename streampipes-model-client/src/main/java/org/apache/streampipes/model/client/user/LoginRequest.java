@@ -18,23 +18,33 @@
 
 package org.apache.streampipes.model.client.user;
 
-import java.util.ArrayList;
-import java.util.List;
+public class LoginRequest {
 
-public class ShiroAuthenticationResponseFactory {
+	private String username;
+	private String password;
 
-	public static ShiroAuthenticationResponse create(User user)
-	{
-		Authc authc = new Authc(new Principal(user.getEmail(), ""), new Credentials(user.getEmail()));
-		List<String> roles = new ArrayList<>();
-		user.getRoles().forEach(r -> roles.add(r.toString()));
-		Authz authz = new Authz(roles, new ArrayList<>());
-		
-		Info info = new Info();
-		info.setAuthc(authc);
-		info.setAuthz(authz);
-		ShiroAuthenticationResponse response = new ShiroAuthenticationResponse(info);
-		
-		return response;
+	public LoginRequest() {
+
 	}
+	
+	public LoginRequest(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	
 }

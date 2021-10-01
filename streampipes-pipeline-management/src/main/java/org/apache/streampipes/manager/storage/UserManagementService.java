@@ -20,7 +20,7 @@ package org.apache.streampipes.manager.storage;
 
 import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.model.client.user.User;
+import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -32,10 +32,10 @@ import java.util.Set;
 public class UserManagementService {
 
   public Boolean registerUser(RegistrationData data, Set<Role> roles) {
-    User user = new User(data.getEmail(), data.getPassword(), roles);
 
     try {
       String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
+      UserAccount user = UserAccount.from(data.getEmail(), encryptedPassword, roles);
       user.setPassword(encryptedPassword);
       getUserStorage().storeUser(user);
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
@@ -45,9 +45,9 @@ public class UserManagementService {
     return true;
   }
 
-  public static void setHideTutorial(String email, boolean hideTutorial) {
+  public static void setHideTutorial(String principalName, boolean hideTutorial) {
     IUserStorage userService = getUserStorage();
-    User user = userService.getUser(email);
+    UserAccount user = userService.getUserAccount(principalName);
     user.setHideTutorial(hideTutorial);
     userService.updateUser(user);
   }

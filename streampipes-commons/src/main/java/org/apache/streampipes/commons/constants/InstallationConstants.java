@@ -15,30 +15,13 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.commons.constants;
 
-package org.apache.streampipes.model.client.user;
+public class InstallationConstants {
 
-public class Authc {
-
-	private Principal principal;
-	private Credentials credentials;
-	
-	public Authc(Principal principal, Credentials credentials) {
-		super();
-		this.principal = principal;
-		this.credentials = credentials;
-	}
-	
-	public Principal getPrincipal() {
-		return principal;
-	}
-	public void setPrincipal(Principal principal) {
-		this.principal = principal;
-	}
-	public Credentials getCredentials() {
-		return credentials;
-	}
-	public void setCredentials(Credentials credentials) {
-		this.credentials = credentials;
-	}
+  public static final String INITIAL_ADMIN_USER_DEFAULT = "admin";
+  public static final String INITIAL_ADMIN_PW_DEFAULT = "admin";
+  public static final String INITIAL_CLIENT_USER_DEFAULT = "sp-service-client";
+  public static final String INITIAL_CLIENT_SECRET_DEFAULT = "my-apache-streampipes-secret-key-change-me";
+  public static final boolean INSTALL_PIPELINE_ELEMENTS = true;
 }

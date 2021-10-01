@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
+import org.apache.streampipes.serializers.json.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
-import org.apache.streampipes.serializers.json.GsonSerializer;
 
 public class Utils {
 
@@ -111,7 +111,7 @@ public class Utils {
   }
 
   public static CouchDbClient getCouchDbUserClient() {
-    return getCouchDbGsonClient("users");
+    return getCouchDbPrincipalClient("users");
   }
 
   public static CouchDbClient getCouchDbInternalUsersClient() {
@@ -149,6 +149,12 @@ public class Utils {
   private static CouchDbClient getCouchDbGsonClient(String dbname) {
     CouchDbClient dbClient = new CouchDbClient(props(dbname));
     dbClient.setGsonBuilder(GsonSerializer.getGsonBuilder());
+    return dbClient;
+  }
+
+  private static CouchDbClient getCouchDbPrincipalClient(String dbname) {
+    CouchDbClient dbClient = new CouchDbClient(props(dbname));
+    dbClient.setGsonBuilder(GsonSerializer.getPrincipalGsonBuilder());
     return dbClient;
   }
 

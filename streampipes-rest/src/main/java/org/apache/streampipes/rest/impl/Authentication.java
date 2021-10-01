@@ -28,7 +28,6 @@ import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
-import org.apache.streampipes.user.management.model.LocalUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -52,7 +51,7 @@ public class Authentication extends AbstractRestResource {
   @JacksonSerialized
   @POST
   @Path("/login")
-  public Response doLogin(ShiroAuthenticationRequest token) {
+  public Response doLogin(LoginRequest token) {
     try {
       org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token.getUsername(), token.getPassword()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -97,11 +96,11 @@ public class Authentication extends AbstractRestResource {
 
   private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
     String jwt = new JwtTokenProvider().createToken(auth);
-    LocalUser localUser = (LocalUser) auth.getPrincipal();
+    UserAccount localUser = (UserAccount) auth.getPrincipal();
     return JwtAuthenticationResponse.from(jwt, toUserInfo(localUser));
   }
 
-  private UserInfo toUserInfo(LocalUser localUser) {
+  private UserInfo toUserInfo(UserAccount localUser) {
     UserInfo userInfo = new UserInfo();
     userInfo.setUserId("id");
     userInfo.setEmail(localUser.getEmail());

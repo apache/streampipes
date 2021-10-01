@@ -17,10 +17,12 @@
  */
 package org.apache.streampipes.backend;
 
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.container.base.BaseNetworkingConfig;
 import org.apache.streampipes.container.base.StreamPipesServiceBase;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.notifications.NotificationListener;
@@ -90,12 +92,31 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+    if (!isConfigured()) {
+      doInitialSetup();
+    }
+
+    new NotificationListener().contextInitialized(null);
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
     healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
             HEALTH_CHECK_INTERVAL,
             HEALTH_CHECK_INTERVAL,
             HEALTH_CHECK_UNIT);
+
+  }
+
+  private boolean isConfigured() {
+    return BackendConfig.INSTANCE.isConfigured();
+  }
+
+  private void doInitialSetup() {
+    LOG.info("\n\n**********\n\nWelcome to Apache StreamPipes!\n\n**********\n\n");
+    LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
+
+    BackendConfig.INSTANCE.updateSetupStatus(true);
+    new AutoInstallation().startAutoInstallation();
+    BackendConfig.INSTANCE.updateSetupStatus(false);
   }
 
   private void schedulePipelineStart(Pipeline pipeline, boolean restartOnReboot) {

@@ -20,34 +20,22 @@ package org.apache.streampipes.model.client.setup;
 
 public class InitialSettings {
 
-
-	private String adminEmail;
+	private String adminUser;
 	private String adminPassword;
+	private String initialServiceAccountName;
+	private String initialServiceAccountSecret;
 	private Boolean installPipelineElements;
 
-	public InitialSettings(String adminEmail, String adminPassword, Boolean installPipelineElements) {
-		this.adminEmail = adminEmail;
-		this.adminPassword = adminPassword;
-		this.installPipelineElements = installPipelineElements;
-	}
-
 	public InitialSettings() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public String getAdminPassword() {
 		return adminPassword;
 	}
+
 	public void setAdminPassword(String adminPassword) {
 		this.adminPassword = adminPassword;
-	}
-
-	public String getAdminEmail() {
-		return adminEmail;
-	}
-
-	public void setAdminEmail(String adminEmail) {
-		this.adminEmail = adminEmail;
 	}
 
 	public Boolean getInstallPipelineElements() {
@@ -56,5 +44,29 @@ public class InitialSettings {
 
 	public void setInstallPipelineElements(Boolean installPipelineElements) {
 		this.installPipelineElements = installPipelineElements;
+	}
+
+	public String getAdminUser() {
+		return adminUser;
+	}
+
+	public void setAdminUser(String adminUser) {
+		this.adminUser = adminUser;
+	}
+
+	public String getInitialServiceAccountName() {
+		return initialServiceAccountName;
+	}
+
+	public void setInitialServiceAccountName(String initialServiceAccountName) {
+		this.initialServiceAccountName = initialServiceAccountName;
+	}
+
+	public String getInitialServiceAccountSecret() {
+		return initialServiceAccountSecret;
+	}
+
+	public void setInitialServiceAccountSecret(String initialServiceAccountSecret) {
+		this.initialServiceAccountSecret = initialServiceAccountSecret;
 	}
 }

@@ -18,14 +18,15 @@
 
 package org.apache.streampipes.manager.storage;
 
-import org.lightcouch.CouchDbClient;
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.pipeline.Pipeline;
-import org.apache.streampipes.model.client.user.User;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.lightcouch.CouchDbClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
+    Principal user = getPrincipal(username);
     user.addOwnSource(elementId, publicElement);
     userStorage.updateUser(user);
   }
@@ -86,7 +87,7 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
+    Principal user = getPrincipal(username);
     user.addOwnAction(elementId, publicElement);
     userStorage.updateUser(user);
   }
@@ -95,14 +96,14 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
+    Principal user = getPrincipal(username);
     user.addOwnSepa(elementId, publicElement);
     userStorage.updateUser(user);
   }
 
   public void deleteOwnAction(String username, String actionId) {
     if (checkUser(username)) {
-      User user = userStorage.getUser(username);
+      Principal user = getPrincipal(username);
       user.getOwnActions().removeIf(a -> a.getElementId().equals(actionId));
       userStorage.updateUser(user);
       //TODO remove actions from other users
@@ -111,7 +112,7 @@ public class UserService {
 
   public void deleteOwnSource(String username, String sourceId) {
     if (checkUser(username)) {
-      User user = userStorage.getUser(username);
+      Principal user = getPrincipal(username);
       user.getOwnSources().removeIf(a -> a.getElementId().equals(sourceId));
       userStorage.updateUser(user);
     }
@@ -119,7 +120,7 @@ public class UserService {
 
   public void deleteOwnSepa(String username, String sepaId) {
     if (checkUser(username)) {
-      User user = userStorage.getUser(username);
+      Principal user = getPrincipal(username);
       user.getOwnSepas().removeIf(a -> a.getElementId().equals(sepaId));
       userStorage.updateUser(user);
     }
@@ -133,8 +134,8 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
-    user.addPreferredSepa(elementId);
+    UserAccount user = getUserAccount(username);
+    user.addPreferredDataProcessor(elementId);
     userStorage.updateUser(user);
   }
 
@@ -142,8 +143,8 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
-    user.addPreferredAction(elementId);
+    UserAccount user = getUserAccount(username);
+    user.addPreferredDataSink(elementId);
     userStorage.updateUser(user);
   }
 
@@ -151,8 +152,8 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
-    user.addPreferredSource(elementId);
+    UserAccount user = getUserAccount(username);
+    user.addPreferredDataStream(elementId);
     userStorage.updateUser(user);
   }
 
@@ -161,8 +162,8 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
-    user.removePreferredSepa(elementId);
+    UserAccount user = getUserAccount(username);
+    user.removePreferredDataProcessor(elementId);
     dbClient.update(user);
     dbClient.shutdown();
   }
@@ -172,8 +173,8 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
-    user.removePreferredAction(elementId);
+    UserAccount user = getUserAccount(username);
+    user.removePreferredDataSink(elementId);
     dbClient.update(user);
     dbClient.shutdown();
   }
@@ -183,8 +184,8 @@ public class UserService {
     if (!checkUser(username)) {
       return;
     }
-    User user = userStorage.getUser(username);
-    user.removePreferredSource(elementId);
+    UserAccount user = getUserAccount(username);
+    user.removePreferredDataStream(elementId);
     dbClient.update(user);
     dbClient.shutdown();
   }
@@ -198,35 +199,35 @@ public class UserService {
   }
 
   public List<String> getFavoriteActionUris(String username) {
-    return userStorage.getUser(username).getPreferredActions();
+    return getUserAccount(username).getPreferredDataSinks();
   }
 
-  public List<String> getAvailableActionUris(String email) {
-    List<String> actions = new ArrayList<>(getOwnActionUris(email));
+  public List<String> getAvailableActionUris(String principalName) {
+    List<String> actions = new ArrayList<>(getOwnActionUris(principalName));
     userStorage
             .getAllUsers()
             .stream()
-            .filter(u -> !(u.getEmail().equals(email)))
+            .filter(u -> !(u.getPrincipalName().equals(principalName)))
             .map(u -> u.getOwnActions().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(actions::addAll);
     return actions;
   }
 
-  public List<String> getOwnSepaUris(String email) {
-    return userStorage.getUser(email).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
+  public List<String> getOwnSepaUris(String username) {
+    return userStorage.getUser(username).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
   }
 
-  public List<String> getAvailableSepaUris(String email) {
-    List<String> sepas = new ArrayList<>(getOwnSepaUris(email));
+  public List<String> getAvailableSepaUris(String principalName) {
+    List<String> sepas = new ArrayList<>(getOwnSepaUris(principalName));
     userStorage
             .getAllUsers()
             .stream()
-            .filter(u -> !(u.getEmail().equals(email)))
+            .filter(u -> !(u.getPrincipalName().equals(principalName)))
             .map(u -> u.getOwnSepas().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(sepas::addAll);
     return sepas;
   }
 
-  public List<String> getFavoriteSepaUris(String email) {
-    return userStorage.getUser(email).getPreferredSepas();
+  public List<String> getFavoriteSepaUris(String principalName) {
+    return getUserAccount(principalName).getPreferredDataProcessors();
   }
 
   public List<String> getOwnSourceUris(String email) {
@@ -238,12 +239,12 @@ public class UserService {
             .collect(Collectors.toList());
   }
 
-  public List<String> getAvailableSourceUris(String email) {
-    List<String> sources = new ArrayList<>(getOwnSepaUris(email));
+  public List<String> getAvailableSourceUris(String principalName) {
+    List<String> sources = new ArrayList<>(getOwnSepaUris(principalName));
     userStorage
             .getAllUsers()
             .stream()
-            .filter(u -> !(u.getEmail().equals(email)))
+            .filter(u -> !(u.getPrincipalName().equals(principalName)))
             .map(u -> u.getOwnSources()
                     .stream()
                     .filter(p -> p.isPublicElement())
@@ -254,7 +255,15 @@ public class UserService {
   }
 
   public List<String> getFavoriteSourceUris(String username) {
-    return userStorage.getUser(username).getPreferredSources();
+    return getUserAccount(username).getPreferredDataStreams();
+  }
+
+  public UserAccount getUserAccount(String principalName) {
+    return (UserAccount) getPrincipal(principalName);
+  }
+
+  private Principal getPrincipal(String principalName) {
+    return userStorage.getUser(principalName);
   }
 
   private IUserStorage userStorage() {

@@ -56,6 +56,8 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
     config.register(BackendConfigKeys.IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
+    config.register(BackendConfigKeys.IS_SETUP_RUNNING, false, "Boolean that indicates whether the initial setup " +
+            "is currently running");
     config.register(BackendConfigKeys.ASSETS_DIR, makeAssetLocation(), "The directory where " +
             "pipeline element assets are stored.");
     config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(), "The directory where " +
@@ -234,6 +236,14 @@ public enum BackendConfig {
 
   public LocalAuthConfig getLocalAuthConfig() {
     return config.getObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.class, LocalAuthConfig.fromDefaults(getJwtSecret()));
+  }
+
+  public boolean isSetupRunning() {
+    return config.getBoolean(BackendConfigKeys.IS_SETUP_RUNNING);
+  }
+
+  public void updateSetupStatus(boolean status) {
+    config.setBoolean(BackendConfigKeys.IS_SETUP_RUNNING, status);
   }
 
   private String getJwtSecret() {

@@ -23,18 +23,19 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.streampipes.model.*;
-import org.apache.streampipes.model.connect.rules.value.*;
-import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.*;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
@@ -53,6 +54,13 @@ public class GsonSerializer {
     builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
     builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
 //    builder.registerTypeHierarchyAdapter(TransformationRuleDescription.class, new AdapterSerializer());
+
+    return builder;
+  }
+
+  public static GsonBuilder getPrincipalGsonBuilder() {
+    GsonBuilder builder = getGsonBuilder();
+    builder.registerTypeHierarchyAdapter(Principal.class, new PrincipalDeserializer());
 
     return builder;
   }

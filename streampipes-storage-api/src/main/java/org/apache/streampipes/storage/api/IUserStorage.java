@@ -17,18 +17,28 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.user.User;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.ServiceAccount;
+import org.apache.streampipes.model.client.user.UserAccount;
 
 import java.util.List;
 
 public interface IUserStorage {
-  List<User> getAllUsers();
+  List<Principal> getAllUsers();
 
-  User getUser(String email);
+  List<UserAccount> getAllUserAccounts();
 
-  void storeUser(User user);
+  List<ServiceAccount> getAllServiceAccounts();
 
-  void updateUser(User user);
+  Principal getUser(String principalName);
+
+  UserAccount getUserAccount(String principalName);
+
+  ServiceAccount getServiceAccount(String principalName);
+
+  void storeUser(Principal user);
+
+  void updateUser(Principal user);
 
   boolean emailExists(String email);
 

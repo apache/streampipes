@@ -18,13 +18,36 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.model.message.Message;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public interface InstallationStep {
+public abstract class InstallationStep {
 
-	List<Message> install();
+	public static final Logger LOG = LoggerFactory.getLogger(InstallationStep.class);
 
-	String getTitle();
+	private int errorCount = 0;
+
+	public abstract void install();
+
+	public abstract String getTitle();
+
+	public void logSuccess(String info) {
+		LOG.info(info);
+	}
+
+	public void logFailure(String error) {
+		errorCount++;
+		LOG.error(error);
+	}
+
+	public void logFailure(String error, Exception e) {
+		errorCount++;
+		LOG.error(error, e);
+	}
+
+	public int getErrorCount() {
+		return errorCount;
+	}
+
 }

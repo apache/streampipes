@@ -18,7 +18,6 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthStatusService } from '../../services/auth-status.service';
 import {
   FreeTextStaticProperty,
   PipelineOperationStatus,
@@ -32,8 +31,7 @@ import { Observable } from 'rxjs';
 export class PipelineTemplateService {
 
   constructor(
-    private http: HttpClient,
-    private authStatusService: AuthStatusService
+    private http: HttpClient
   ) {
   }
 

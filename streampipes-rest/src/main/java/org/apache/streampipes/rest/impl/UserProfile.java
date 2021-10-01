@@ -19,6 +19,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.client.user.RawUserApiToken;
+import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -35,7 +36,7 @@ public class UserProfile extends AbstractAuthGuardedRestResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserDetails() {
-        org.apache.streampipes.model.client.user.User user = getUser(getAuthenticatedUsername());
+        UserAccount user = getUser(getAuthenticatedUsername());
         user.setPassword("");
 
         if (user != null) {
@@ -51,7 +52,7 @@ public class UserProfile extends AbstractAuthGuardedRestResource {
     public Response updateAppearanceMode(@PathParam("darkMode") boolean darkMode) {
         String authenticatedUserId = getAuthenticatedUsername();
         if (authenticatedUserId != null) {
-            org.apache.streampipes.model.client.user.User user = getUser(authenticatedUserId);
+            UserAccount user = getUser(authenticatedUserId);
             user.setDarkMode(darkMode);
             getUserStorage().updateUser(user);
 
@@ -64,10 +65,10 @@ public class UserProfile extends AbstractAuthGuardedRestResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUserDetails(org.apache.streampipes.model.client.user.User user) {
+    public Response updateUserDetails(UserAccount user) {
         String authenticatedUserId = getAuthenticatedUsername();
         if (user != null && authenticatedUserId.equals(user.getEmail())) {
-            org.apache.streampipes.model.client.user.User existingUser = getUser(user.getEmail());
+            UserAccount existingUser = getUser(user.getEmail());
             user.setPassword(existingUser.getPassword());
             user.setUserApiTokens(existingUser
                     .getUserApiTokens()
@@ -86,8 +87,8 @@ public class UserProfile extends AbstractAuthGuardedRestResource {
         }
     }
 
-    private org.apache.streampipes.model.client.user.User getUser(String email) {
-        return getUserStorage().getUser(email);
+    private UserAccount getUser(String email) {
+        return getUserStorage().getUserAccount(email);
     }
 
     @POST

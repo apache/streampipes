@@ -3,7 +3,6 @@ package org.apache.streampipes.rest.filter;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
-import org.apache.streampipes.user.management.model.LocalUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,7 +42,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			if (StringUtils.hasText(jwt) && tokenProvider.validateJwtToken(jwt)) {
 				String username = tokenProvider.getUserIdFromToken(jwt);
 
-				UserDetails userDetails = new LocalUser(userStorage.getUser(username));
+				UserDetails userDetails = userStorage.getUser(username);
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

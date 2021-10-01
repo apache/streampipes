@@ -18,47 +18,65 @@
 
 package org.apache.streampipes.manager.setup;
 
-import org.apache.streampipes.model.message.Message;
-import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.model.client.user.User;
+import org.apache.streampipes.model.client.user.ServiceAccount;
+import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class UserRegistrationInstallationStep implements InstallationStep {
+public class UserRegistrationInstallationStep extends InstallationStep {
 
-	private String adminEmail;
-	private String adminPassword;
-	private Set<Role> roles;
+	private final String adminEmail;
+	private final String adminPassword;
+	private final String initialServiceAccountName;
+	private final String initialServiceAccountSecret;
+	private final Set<Role> roles;
 	
-	public UserRegistrationInstallationStep(String adminEmail, String adminPassword) {
+	public UserRegistrationInstallationStep(String adminEmail,
+																					String adminPassword,
+																					String initialServiceAccountName,
+																					String initialServiceAccountSecret) {
 		this.adminEmail = adminEmail;
 		this.adminPassword = adminPassword;
+		this.initialServiceAccountName = initialServiceAccountName;
+		this.initialServiceAccountSecret = initialServiceAccountSecret;
 		roles = new HashSet<>();
 		roles.add(Role.SYSTEM_ADMINISTRATOR);
 		roles.add(Role.USER_DEMO);
 	}
 
 	@Override
-	public List<Message> install() {
+	public void install() {
 
 		try {
-			String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
-			StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(new User(adminEmail,
-							encryptedPassword, roles));
-			return Arrays.asList(Notifications.success(getTitle()));
-		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			e.printStackTrace();
-			return Arrays.asList(Notifications.error("Could not encrypt password"));
-		}
+			addAdminUser();
+			addServiceUser();
 
+			logSuccess(getTitle());
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			logFailure("Could not encrypt password");
+		}
+	}
+
+	private void addAdminUser() throws NoSuchAlgorithmException, InvalidKeySpecException {
+		String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
+		UserAccount user = UserAccount.from(adminEmail, encryptedPassword, roles);
+		storePrincipal(user);
+	}
+
+	private void addServiceUser() {
+		ServiceAccount serviceAccount = ServiceAccount.from(initialServiceAccountName, initialServiceAccountSecret, roles);
+		storePrincipal(serviceAccount);
+	}
+
+	private void storePrincipal(Principal principal) {
+		StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().storeUser(principal);
 	}
 
 	@Override

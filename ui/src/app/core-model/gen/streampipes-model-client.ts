@@ -16,11 +16,10 @@
  *
  */
 
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-09-30 14:45:03.
+// Generated using typescript-generator version 2.27.744 on 2021-10-01 13:23:19.
 
 export class Element {
     elementId: string;
@@ -99,6 +98,10 @@ export class FileMetadata {
     }
 }
 
+export interface GrantedAuthority {
+    authority: string;
+}
+
 export class MatchingResultMessage {
     description: string;
     matchingSuccessful: boolean;
@@ -122,6 +125,51 @@ export class MatchingResultMessage {
     }
 }
 
+export class Principal implements UserDetails {
+    accountEnabled: boolean;
+    accountExpired: boolean;
+    accountLocked: boolean;
+    accountNonExpired: boolean;
+    accountNonLocked: boolean;
+    authorities: GrantedAuthority[];
+    credentialsNonExpired: boolean;
+    enabled: boolean;
+    ownActions: Element[];
+    ownSepas: Element[];
+    ownSources: Element[];
+    password: string;
+    principalId: string;
+    principalName: string;
+    rev: string;
+    roles: Role[];
+    username: string;
+
+    static fromData(data: Principal, target?: Principal): Principal {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Principal();
+        instance.enabled = data.enabled;
+        instance.password = data.password;
+        instance.username = data.username;
+        instance.authorities = __getCopyArrayFn(__identity<GrantedAuthority>())(data.authorities);
+        instance.accountNonExpired = data.accountNonExpired;
+        instance.credentialsNonExpired = data.credentialsNonExpired;
+        instance.accountNonLocked = data.accountNonLocked;
+        instance.principalId = data.principalId;
+        instance.rev = data.rev;
+        instance.accountEnabled = data.accountEnabled;
+        instance.accountLocked = data.accountLocked;
+        instance.accountExpired = data.accountExpired;
+        instance.principalName = data.principalName;
+        instance.ownSources = __getCopyArrayFn(Element.fromData)(data.ownSources);
+        instance.ownSepas = __getCopyArrayFn(Element.fromData)(data.ownSepas);
+        instance.ownActions = __getCopyArrayFn(Element.fromData)(data.ownActions);
+        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        return instance;
+    }
+}
+
 export class RawUserApiToken {
     hashedToken: string;
     rawToken: string;
@@ -141,45 +189,30 @@ export class RawUserApiToken {
     }
 }
 
-export class User {
+export class UserAccount extends Principal {
     darkMode: boolean;
     email: string;
     fullName: string;
     hideTutorial: boolean;
-    ownActions: Element[];
-    ownSepas: Element[];
-    ownSources: Element[];
-    password: string;
-    preferredActions: string[];
-    preferredSepas: string[];
-    preferredSources: string[];
-    rev: string;
-    roles: Role[];
+    preferredDataProcessors: string[];
+    preferredDataSinks: string[];
+    preferredDataStreams: string[];
     userApiTokens: UserApiToken[];
-    userId: string;
-    username: string;
 
-    static fromData(data: User, target?: User): User {
+    static fromData(data: UserAccount, target?: UserAccount): UserAccount {
         if (!data) {
             return data;
         }
-        const instance = target || new User();
-        instance.userId = data.userId;
-        instance.rev = data.rev;
+        const instance = target || new UserAccount();
+        super.fromData(data, instance);
         instance.email = data.email;
-        instance.username = data.username;
         instance.fullName = data.fullName;
-        instance.password = data.password;
-        instance.ownSources = __getCopyArrayFn(Element.fromData)(data.ownSources);
-        instance.ownSepas = __getCopyArrayFn(Element.fromData)(data.ownSepas);
-        instance.ownActions = __getCopyArrayFn(Element.fromData)(data.ownActions);
-        instance.preferredSources = __getCopyArrayFn(__identity<string>())(data.preferredSources);
-        instance.preferredSepas = __getCopyArrayFn(__identity<string>())(data.preferredSepas);
-        instance.preferredActions = __getCopyArrayFn(__identity<string>())(data.preferredActions);
+        instance.preferredDataStreams = __getCopyArrayFn(__identity<string>())(data.preferredDataStreams);
+        instance.preferredDataProcessors = __getCopyArrayFn(__identity<string>())(data.preferredDataProcessors);
+        instance.preferredDataSinks = __getCopyArrayFn(__identity<string>())(data.preferredDataSinks);
         instance.userApiTokens = __getCopyArrayFn(UserApiToken.fromData)(data.userApiTokens);
         instance.hideTutorial = data.hideTutorial;
         instance.darkMode = data.darkMode;
-        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
         return instance;
     }
 }
@@ -197,6 +230,16 @@ export class UserApiToken {
         instance.tokenName = data.tokenName;
         return instance;
     }
+}
+
+export interface UserDetails {
+    accountNonExpired: boolean;
+    accountNonLocked: boolean;
+    authorities: GrantedAuthority[];
+    credentialsNonExpired: boolean;
+    enabled: boolean;
+    password: string;
+    username: string;
 }
 
 export class UserInfo {

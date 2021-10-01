@@ -17,9 +17,7 @@
  */
 package org.apache.streampipes.user.management.service;
 
-import org.apache.streampipes.model.client.user.User;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.user.management.model.LocalUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,8 +26,6 @@ public class SpUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    User user = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(s);
-    LocalUser localUser = new LocalUser(user);
-    return new LocalUser(localUser);
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(s);
   }
 }

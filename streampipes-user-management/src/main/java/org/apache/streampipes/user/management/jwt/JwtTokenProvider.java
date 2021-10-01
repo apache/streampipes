@@ -1,22 +1,15 @@
 package org.apache.streampipes.user.management.jwt;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.WeakKeyException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.LocalAuthConfig;
-import org.apache.streampipes.user.management.model.LocalUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.springframework.security.core.Authentication;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 public class JwtTokenProvider {
 
-	private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
 	private BackendConfig config;
 
 	public JwtTokenProvider() {
@@ -24,45 +17,18 @@ public class JwtTokenProvider {
 	}
 
 	public String createToken(Authentication authentication) {
-		LocalUser userPrincipal = (LocalUser) authentication.getPrincipal();
+		Principal userPrincipal = (Principal) authentication.getPrincipal();
 		Date tokenExpirationDate = makeExpirationDate();
-		SecretKey key = Keys.hmacShaKeyFor(tokenSecret().getBytes(StandardCharsets.UTF_8));
 
-		return Jwts
-						.builder()
-						.setSubject(userPrincipal.getEmail())
-						.setIssuedAt(new Date())
-						.setExpiration(tokenExpirationDate)
-				.signWith(key).compact();
+		return JwtTokenUtils.makeJwtToken(userPrincipal.getPrincipalName(), tokenSecret(), tokenExpirationDate);
 	}
 
 	public String getUserIdFromToken(String token) {
-		Claims claims = jwtParser().parseClaimsJws(token).getBody();
-		return claims.getSubject();
+		return JwtTokenUtils.getUserIdFromToken(tokenSecret(), token);
 	}
 
 	public boolean validateJwtToken(String jwtToken) {
-		try {
-			jwtParser().parseClaimsJws(jwtToken);
-			return true;
-		} catch (MalformedJwtException ex) {
-			LOG.error("Invalid JWT token");
-		} catch (ExpiredJwtException ex) {
-			LOG.error("Expired JWT token");
-		} catch (UnsupportedJwtException ex) {
-			LOG.error("Unsupported JWT token");
-		} catch (IllegalArgumentException ex) {
-			LOG.error("JWT claims are empty.");
-		} catch (WeakKeyException ex) {
-			LOG.error("Weak Key");
-		}
-		return false;
-	}
-
-	private JwtParser jwtParser() {
-		return Jwts.parserBuilder()
-						.setSigningKey(tokenSecret().getBytes(StandardCharsets.UTF_8))
-						.build();
+		return JwtTokenUtils.validateJwtToken(tokenSecret(), jwtToken);
 	}
 
 	private String tokenSecret() {

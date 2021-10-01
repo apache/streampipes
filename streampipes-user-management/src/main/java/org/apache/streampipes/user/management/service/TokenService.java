@@ -17,29 +17,24 @@
  */
 package org.apache.streampipes.user.management.service;
 
-import com.google.gson.JsonObject;
 import org.apache.streampipes.model.client.user.RawUserApiToken;
-import org.apache.streampipes.model.client.user.User;
+import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.TokenUtil;
-import org.lightcouch.CouchDbClient;
-
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-import java.util.List;
 
 public class TokenService {
 
-  public RawUserApiToken createAndStoreNewToken(String email, RawUserApiToken baseToken) {
-    User user = getUserStorage().getUser(email);
+  public RawUserApiToken createAndStoreNewToken(String email,
+                                                RawUserApiToken baseToken) {
+    UserAccount user = getUserStorage().getUserAccount(email);
     RawUserApiToken generatedToken = TokenUtil.createToken(baseToken.getTokenName());
     storeToken(user, generatedToken);
     generatedToken.setHashedToken("");
     return generatedToken;
   }
 
-  private void storeToken(User user, RawUserApiToken generatedToken) {
+  private void storeToken(UserAccount user, RawUserApiToken generatedToken) {
     user.getUserApiTokens().add(TokenUtil.toUserToken(generatedToken));
     getUserStorage().updateUser(user);
   }
@@ -48,14 +43,5 @@ public class TokenService {
     return StorageDispatcher.INSTANCE
             .getNoSqlStore()
             .getUserStorageAPI();
-  }
-
-  public User findUserForToken(String token) throws UserPrincipalNotFoundException {
-    CouchDbClient dbClient = Utils.getCouchDbUserClient();
-    List<JsonObject> users = dbClient.view("users/token").key(token).includeDocs(true).query(JsonObject.class);
-    if (users.size() != 1) {
-      throw new UserPrincipalNotFoundException("None or too many users with matching token");
-    }
-    return getUserStorage().getUser(users.get(0).get("email").getAsString());
   }
 }

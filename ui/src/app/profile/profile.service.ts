@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { PlatformServicesCommons } from '../platform-services/apis/commons.service';
 import { HttpClient } from '@angular/common/http';
-import { RawUserApiToken, User } from '../core-model/gen/streampipes-model-client';
+import { RawUserApiToken, UserAccount } from '../core-model/gen/streampipes-model-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Message } from '../core-model/gen/streampipes-model';
@@ -32,13 +32,13 @@ export class ProfileService {
 
   }
 
-  getUserProfile(): Observable<User> {
+  getUserProfile(): Observable<UserAccount> {
     return this.http.get(this.profilePath).pipe(map(response => {
-      return User.fromData(response as any);
+      return UserAccount.fromData(response as any);
     }));
   }
 
-  updateUserProfile(userData: User): Observable<Message> {
+  updateUserProfile(userData: UserAccount): Observable<Message> {
     return this.http.put(this.profilePath, userData).pipe(map(response => {
       return Message.fromData(response as any);
     }));
