@@ -1,8 +1,11 @@
 package org.apache.streampipes.rest.filter;
 
+import org.apache.streampipes.commons.constants.HttpConstants;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
+import org.apache.streampipes.user.management.service.TokenService;
+import org.apache.streampipes.user.management.util.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,10 +23,8 @@ import java.io.IOException;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-
-	private JwtTokenProvider tokenProvider;
-
-	private IUserStorage userStorage;
+	private final JwtTokenProvider tokenProvider;
+	private final IUserStorage userStorage;
 
 	private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
@@ -40,27 +41,49 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			String jwt = getJwtFromRequest(request);
 
 			if (StringUtils.hasText(jwt) && tokenProvider.validateJwtToken(jwt)) {
-				String username = tokenProvider.getUserIdFromToken(jwt);
-
-				UserDetails userDetails = userStorage.getUser(username);
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+					String username = tokenProvider.getUserIdFromToken(jwt);
+					applySuccessfulAuth(request, username);
+			} else {
+				String apiKey = getApiKeyFromRequest(request);
+				String apiUser = getApiUserFromRequest(request);
+				if (StringUtils.hasText(apiKey) && StringUtils.hasText(apiUser)) {
+					String hashedToken = TokenUtil.hashToken(apiKey);
+					boolean hasValidToken = new TokenService().hasValidToken(apiUser, hashedToken);
+					if (hasValidToken) {
+						applySuccessfulAuth(request, apiUser);
+					}
+				}
 			}
 		} catch (Exception ex) {
 			logger.error("Could not set user authentication in security context", ex);
 		}
 
 		filterChain.doFilter(request, response);
-
 	}
 
+	private void applySuccessfulAuth(HttpServletRequest request,
+																	 String username) {
+		UserDetails userDetails = userStorage.getUser(username);
+		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
+
+
 	private String getJwtFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+		String bearerToken = request.getHeader(HttpConstants.AUTHORIZATION);
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(HttpConstants.BEARER)) {
 			return bearerToken.substring(7);
 		}
 		return null;
+	}
+
+	private String getApiKeyFromRequest(HttpServletRequest request) {
+		return request.getHeader(HttpConstants.X_API_KEY);
+	}
+
+	private String getApiUserFromRequest(HttpServletRequest request) {
+		return request.getHeader(HttpConstants.X_API_USER);
 	}
 }

@@ -57,7 +57,7 @@ public class PipelineElementTemplateApi extends AbstractClientApi<PipelineElemen
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())
+    return StreamPipesApiPath.fromBaseApiPath()
             .addToPath("pipeline-element-templates");
   }
 }

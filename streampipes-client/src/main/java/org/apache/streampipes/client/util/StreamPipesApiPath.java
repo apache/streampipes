@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.client.util;
 
-import org.apache.streampipes.client.StreamPipesCredentials;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,16 +28,9 @@ public class StreamPipesApiPath {
   private static final List<String> BaseApiPathV2 = Arrays.asList("streampipes-backend", "api", "v2");
 
   public static StreamPipesApiPath fromBaseApiPath() {
-    return new StreamPipesApiPath(BaseApiPathV2);
+    List<String> initialPaths = new ArrayList<>(BaseApiPathV2);
+    return new StreamPipesApiPath(initialPaths);
   }
-
-  public static StreamPipesApiPath fromUserApiPath(StreamPipesCredentials credentials) {
-    List<String> authPath = new ArrayList<>();
-    authPath.addAll(BaseApiPathV2);
-    authPath.addAll(Arrays.asList("users", credentials.getUsername()));
-    return new StreamPipesApiPath(authPath);
-  }
-
 
   private StreamPipesApiPath(List<String> initialPathItems) {
     this.pathItems = initialPathItems;

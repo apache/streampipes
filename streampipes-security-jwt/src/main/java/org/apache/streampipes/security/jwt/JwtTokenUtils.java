@@ -51,16 +51,37 @@ public class JwtTokenUtils {
     return claims.getSubject();
   }
 
+  public static String getUserIdFromToken(String token,
+                                          SigningKeyResolver resolver) {
+    return jwtParser(resolver).parseClaimsJws(token).getBody().getSubject();
+  }
+
   private static JwtParser jwtParser(String tokenSecret) {
     return Jwts.parserBuilder()
             .setSigningKey(tokenSecret.getBytes(StandardCharsets.UTF_8))
             .build();
   }
 
+  private static JwtParser jwtParser(SigningKeyResolver resolver) {
+    return Jwts.parserBuilder()
+            .setSigningKeyResolver(resolver)
+            .build();
+  }
+
+  public static boolean validateJwtToken(String jwtToken,
+                                         SigningKeyResolver resolver) {
+    return validateJwtToken(jwtParser(resolver), jwtToken);
+  }
+
   public static boolean validateJwtToken(String tokenSecret,
                                          String jwtToken) {
+    return validateJwtToken(jwtParser(tokenSecret), jwtToken);
+  }
+
+  private static boolean validateJwtToken(JwtParser parser,
+                                          String jwtToken) {
     try {
-      jwtParser(tokenSecret).parseClaimsJws(jwtToken);
+      parser.parseClaimsJws(jwtToken);
       return true;
     } catch (MalformedJwtException ex) {
       LOG.error("Invalid JWT token");

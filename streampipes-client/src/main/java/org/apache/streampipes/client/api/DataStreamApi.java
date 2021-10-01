@@ -92,7 +92,7 @@ public class DataStreamApi extends AbstractClientApi<SpDataStream> implements CR
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())
+    return StreamPipesApiPath.fromBaseApiPath()
             .addToPath("streams")
             .addToPath("own");
   }

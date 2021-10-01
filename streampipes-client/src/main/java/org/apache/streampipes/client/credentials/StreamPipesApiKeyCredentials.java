@@ -15,36 +15,38 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.http.header;
+package org.apache.streampipes.client.credentials;
 
 import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
+import org.apache.streampipes.client.http.header.Headers;
 
-import static org.apache.streampipes.commons.constants.HttpConstants.*;
+import java.util.Arrays;
+import java.util.List;
 
-public class Headers {
+public class StreamPipesApiKeyCredentials implements CredentialsProvider {
 
-  public static Header authorizationBearer(String bearerToken) {
-    return makeHeader(AUTHORIZATION, BEARER + bearerToken);
+  private String username;
+  private String apiKey;
+
+  public StreamPipesApiKeyCredentials(String username,
+                                       String apiKey) {
+    this.username = username;
+    this.apiKey = apiKey;
   }
 
-  public static Header xApiKey(String apiKey) {
-    return makeHeader(X_API_KEY, apiKey);
+  public String getUsername() {
+    return username;
   }
 
-  public static Header xApiUser(String apiUser) {
-    return makeHeader(X_API_USER, apiUser);
+  public String getApiKey() {
+    return apiKey;
   }
 
-  public static Header acceptJson() {
-    return makeHeader(ACCEPT, APPLICATION_JSON_TYPE);
-  }
-
-  private static Header makeHeader(String name, String value) {
-    return new BasicHeader(name, value);
-  }
-
-  public static Header contentTypeJson() {
-    return makeHeader(CONTENT_TYPE, APPLICATION_JSON_TYPE);
+  @Override
+  public List<Header> makeHeaders() {
+    return Arrays.asList(
+            Headers.xApiUser(username),
+            Headers.xApiKey(apiKey)
+    );
   }
 }

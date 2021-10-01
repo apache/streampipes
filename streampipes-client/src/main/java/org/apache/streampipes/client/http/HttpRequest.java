@@ -35,10 +35,10 @@ import java.util.StringJoiner;
 
 public abstract class HttpRequest<SO, DSO, DT> {
 
-  private StreamPipesClientConfig clientConfig;
-  private StreamPipesApiPath apiPath;
-  private ObjectMapper objectMapper;
-  private Serializer<SO, DSO, DT> serializer;
+  private final StreamPipesClientConfig clientConfig;
+  private final StreamPipesApiPath apiPath;
+  private final ObjectMapper objectMapper;
+  private final Serializer<SO, DSO, DT> serializer;
 
   public HttpRequest(StreamPipesClientConfig clientConfig,
                      StreamPipesApiPath apiPath,
@@ -50,8 +50,7 @@ public abstract class HttpRequest<SO, DSO, DT> {
   }
 
   protected Header[] standardHeaders() {
-    List<Header> headers = new ArrayList<>();
-    headers.add(Headers.auth(clientConfig.getCredentials()));
+    List<Header> headers = new ArrayList<>(clientConfig.getCredentials().makeHeaders());
     headers.add(Headers.acceptJson());
     return headers.toArray(new Header[0]);
   }

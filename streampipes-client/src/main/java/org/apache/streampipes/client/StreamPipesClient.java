@@ -18,6 +18,7 @@
 package org.apache.streampipes.client;
 
 import org.apache.streampipes.client.api.*;
+import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -41,7 +42,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
    * @param httpsDisabled Set true if the instance is not served over HTTPS
    */
   public static StreamPipesClient create(String streamPipesHost,
-                                         StreamPipesCredentials credentials,
+                                         CredentialsProvider credentials,
                                          boolean httpsDisabled) {
     return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, httpsDisabled);
   }
@@ -52,7 +53,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
    * @param credentials The credentials object
    */
   public static StreamPipesClient create(String streamPipesHost,
-                                         StreamPipesCredentials credentials) {
+                                         CredentialsProvider credentials) {
     return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, false);
   }
 
@@ -64,7 +65,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
    */
   public static StreamPipesClient create(String streamPipesHost,
                                          Integer streamPipesPort,
-                                         StreamPipesCredentials credentials) {
+                                         CredentialsProvider credentials) {
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, false);
   }
 
@@ -77,14 +78,14 @@ public class StreamPipesClient implements SupportsPipelineApi,
    */
   public static StreamPipesClient create(String streamPipesHost,
                                          Integer streamPipesPort,
-                                         StreamPipesCredentials credentials,
+                                         CredentialsProvider credentials,
                                          boolean httpsDisabled) {
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, httpsDisabled);
   }
 
   private StreamPipesClient(String streamPipesHost,
                             Integer streamPipesPort,
-                            StreamPipesCredentials credentials,
+                            CredentialsProvider credentials,
                             boolean httpsDisabled) {
     this.config = new StreamPipesClientConfig(credentials, streamPipesHost, streamPipesPort, httpsDisabled);
     this.registerDataFormat(new JsonDataFormatFactory());
@@ -100,7 +101,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
     this.config.addDataFormat(spDataFormatFactory);
   }
 
-  public StreamPipesCredentials getCredentials() {
+  public CredentialsProvider getCredentials() {
     return config.getCredentials();
   }
 

@@ -34,6 +34,19 @@ public class TokenService {
     return generatedToken;
   }
 
+  public boolean hasValidToken(String apiUser,
+                               String hashedToken) {
+    UserAccount userAccount = getUserStorage().getUserAccount(apiUser);
+    if (userAccount == null) {
+      return false;
+    } else {
+      return userAccount
+              .getUserApiTokens()
+              .stream()
+              .anyMatch(t -> t.getHashedToken().equals(hashedToken));
+    }
+  }
+
   private void storeToken(UserAccount user, RawUserApiToken generatedToken) {
     user.getUserApiTokens().add(TokenUtil.toUserToken(generatedToken));
     getUserStorage().updateUser(user);

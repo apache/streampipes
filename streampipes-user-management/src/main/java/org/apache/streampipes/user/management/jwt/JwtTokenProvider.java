@@ -24,11 +24,16 @@ public class JwtTokenProvider {
 	}
 
 	public String getUserIdFromToken(String token) {
-		return JwtTokenUtils.getUserIdFromToken(tokenSecret(), token);
+		return JwtTokenUtils.getUserIdFromToken(token, new SpKeyResolver(tokenSecret()));
 	}
 
 	public boolean validateJwtToken(String jwtToken) {
-		return JwtTokenUtils.validateJwtToken(tokenSecret(), jwtToken);
+		return JwtTokenUtils.validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret()));
+	}
+
+	public boolean validateJwtToken(String tokenSecret,
+																	String jwtToken) {
+		return JwtTokenUtils.validateJwtToken(tokenSecret, jwtToken);
 	}
 
 	private String tokenSecret() {

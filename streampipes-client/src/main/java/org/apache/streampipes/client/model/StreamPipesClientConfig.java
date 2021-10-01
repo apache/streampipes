@@ -18,7 +18,7 @@
 package org.apache.streampipes.client.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.streampipes.client.StreamPipesCredentials;
+import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -27,14 +27,14 @@ import java.util.List;
 
 public class StreamPipesClientConfig {
 
-  private StreamPipesCredentials credentials;
+  private CredentialsProvider credentials;
   private String streamPipesHost;
   private Integer streamPipesPort;
   private ObjectMapper serializer;
   private boolean httpsDisabled;
   private List<SpDataFormatFactory> registeredDataFormats;
 
-  public StreamPipesClientConfig(StreamPipesCredentials credentials,
+  public StreamPipesClientConfig(CredentialsProvider credentials,
                                  String streamPipesHost,
                                  Integer streamPipesPort,
                                  boolean httpsDisabled) {
@@ -46,7 +46,7 @@ public class StreamPipesClientConfig {
     this.registeredDataFormats = new ArrayList<>();
   }
 
-  public StreamPipesCredentials getCredentials() {
+  public CredentialsProvider getCredentials() {
     return credentials;
   }
 

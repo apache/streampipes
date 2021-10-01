@@ -37,7 +37,7 @@ public class DataProcessorApi extends AbstractClientApi<DataProcessorInvocation>
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())
+    return StreamPipesApiPath.fromBaseApiPath()
             .addToPath("sepas")
             .addToPath("own");
   }
