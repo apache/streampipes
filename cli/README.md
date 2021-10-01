@@ -188,7 +188,7 @@ We can simply use `streampipes add` command to populate relevant Docker Compose 
 streampipes add my-processor
 
 # add new pipeline element with custom image and ports
-streampipes add my-processor --image myrepo/myprocessor:0.67.0 --ports 8090:8090 --ports 8091:8091
+streampipes add my-processor --image myrepo/myprocessor:0.68.0 --ports 8090:8090 --ports 8091:8091
 
 # [Optional] add new pipeline element and persistently store service in environment (here: lite) and activate service in current environment (.spenv)
 streampipes add my-processor --store lite --activate
