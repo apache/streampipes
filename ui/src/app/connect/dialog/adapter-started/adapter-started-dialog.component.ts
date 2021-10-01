@@ -83,7 +83,6 @@ export class AdapterStartedDialog implements OnInit {
 
       const newAdapter = this.adapter;
       this.restService.addAdapter(this.adapter).subscribe(x => {
-        this.adapterInstalled = true;
         this.adapterStatus = x;
         if (x.success) {
 
@@ -102,13 +101,20 @@ export class AdapterStartedDialog implements OnInit {
             this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, pipelineId)
               .subscribe(res => {
 
-                const indexName = this.adapter.name
+                const pipelineName = 'Persist ' + this.adapter.name;
+
+                let indexName = this.adapter.name
                   .toLowerCase()
-                  .replace(/ /g, '_')
-                  .replace(/\./g, '_');
+                  .replace(/ /g, '')
+                  .replace(/\./g, '');
+
+                // Ensure that index name is no number
+                if (!Number.isNaN(indexName)) {
+                  indexName = 'sp' + indexName;
+                }
                 const pipelineInvocation = PipelineInvocationBuilder
                   .create(res)
-                  .setName('persist_' + indexName)
+                  .setName(pipelineName)
                   .setTemplateId(pipelineId)
                   .setFreeTextStaticProperty('db_measurement', indexName)
                   .setMappingPropertyUnary('timestamp_mapping', 's0::' + this.dataLakeTimestampField)
@@ -116,8 +122,11 @@ export class AdapterStartedDialog implements OnInit {
 
                 this.pipelineTemplateService.createPipelineTemplateInvocation(pipelineInvocation).subscribe(pipelineOperationStatus => {
                   this.pipelineOperationStatus = pipelineOperationStatus;
+                  this.adapterInstalled = true;
                 });
               });
+          } else {
+            this.adapterInstalled = true;
           }
         }
       });
