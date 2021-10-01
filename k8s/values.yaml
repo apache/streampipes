@@ -15,7 +15,7 @@
 
 # lite or full (default: lite)
 deployment: lite
-pullPolicy: "Always"
+pullPolicy: "IfNotPresent"
 persistentVolumeReclaimPolicy: "Retain"
 persistentVolumeAccessModes: "ReadWriteOnce"
 
