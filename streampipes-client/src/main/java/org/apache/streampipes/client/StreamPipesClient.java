@@ -19,7 +19,9 @@ package org.apache.streampipes.client;
 
 import org.apache.streampipes.client.api.*;
 import org.apache.streampipes.client.credentials.CredentialsProvider;
+import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -34,6 +36,14 @@ public class StreamPipesClient implements SupportsPipelineApi,
   private static final Integer SP_DEFAULT_PORT = 80;
 
   private StreamPipesClientConfig config;
+
+  /**
+   * Create a new StreamPipes API client with a runtime connection resolver
+   * @param connectionConfig A ClientConnectionConfigResolver providing connection details
+   */
+  public static StreamPipesClient create(ClientConnectionUrlResolver connectionConfig) {
+    return new StreamPipesClient(connectionConfig);
+  }
 
   /**
    * Create a new StreamPipes API client with default port and custom HTTPS settings
@@ -83,14 +93,18 @@ public class StreamPipesClient implements SupportsPipelineApi,
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, httpsDisabled);
   }
 
+  private StreamPipesClient(ClientConnectionUrlResolver connectionConfig) {
+    this.config = new StreamPipesClientConfig(connectionConfig);
+    this.registerDataFormat(new JsonDataFormatFactory());
+    this.registerDataFormat(new FstDataFormatFactory());
+    this.registerDataFormat(new CborDataFormatFactory());
+  }
+
   private StreamPipesClient(String streamPipesHost,
                             Integer streamPipesPort,
                             CredentialsProvider credentials,
                             boolean httpsDisabled) {
-    this.config = new StreamPipesClientConfig(credentials, streamPipesHost, streamPipesPort, httpsDisabled);
-    this.registerDataFormat(new JsonDataFormatFactory());
-    this.registerDataFormat(new FstDataFormatFactory());
-    this.registerDataFormat(new CborDataFormatFactory());
+    this(new StreamPipesClientConnectionConfig(credentials, streamPipesHost, streamPipesPort, httpsDisabled));
   }
 
   /**
@@ -102,11 +116,15 @@ public class StreamPipesClient implements SupportsPipelineApi,
   }
 
   public CredentialsProvider getCredentials() {
-    return config.getCredentials();
+    return config.getConnectionConfig().getCredentials();
   }
 
   public StreamPipesClientConfig getConfig() {
     return config;
+  }
+
+  public ClientConnectionUrlResolver getConnectionConfig() {
+    return config.getConnectionConfig();
   }
 
   /**
@@ -152,5 +170,9 @@ public class StreamPipesClient implements SupportsPipelineApi,
   @Override
   public DataProcessorApi processors() {
     return new DataProcessorApi(config);
+  }
+
+  public CustomRequestApi customRequest() {
+    return new CustomRequestApi(config);
   }
 }

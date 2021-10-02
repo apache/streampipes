@@ -29,7 +29,7 @@ import org.apache.streampipes.model.message.Message;
 import java.net.URLEncoder;
 import java.util.List;
 
-public class DataStreamApi extends AbstractClientApi<SpDataStream> implements CRUDApi<String, SpDataStream> {
+public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implements CRUDApi<String, SpDataStream> {
 
   public DataStreamApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, SpDataStream.class);

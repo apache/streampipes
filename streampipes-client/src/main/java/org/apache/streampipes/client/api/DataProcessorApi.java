@@ -29,7 +29,7 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
 import java.util.List;
 
-public class DataProcessorApi extends AbstractClientApi<DataProcessorInvocation> implements CRUDApi<String, DataProcessorInvocation>{
+public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvocation> implements CRUDApi<String, DataProcessorInvocation>{
 
   public DataProcessorApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataProcessorInvocation.class);

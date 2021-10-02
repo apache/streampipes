@@ -27,7 +27,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v3/noauth/datalake")
+@Path("/v3/datalake/measure")
 public class DataLakeNoUserResourceV3 extends AbstractRestResource {
 
     private DataLakeNoUserManagementV3 dataLakeManagement;

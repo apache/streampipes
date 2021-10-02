@@ -28,7 +28,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 
 import java.util.List;
 
-public class DataSinkApi extends AbstractClientApi<DataSinkInvocation> implements CRUDApi<String, DataSinkInvocation> {
+public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation> implements CRUDApi<String, DataSinkInvocation> {
 
   public DataSinkApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataSinkInvocation.class);

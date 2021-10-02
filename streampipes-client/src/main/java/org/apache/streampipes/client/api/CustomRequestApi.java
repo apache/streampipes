@@ -15,27 +15,19 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.backend;
+package org.apache.streampipes.client.api;
 
-import java.util.Arrays;
-import java.util.Collection;
+import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-public class UnauthenticatedInterfaces {
+public class CustomRequestApi extends AbstractClientApi {
 
-  public static Collection<String> get() {
-    return Arrays.asList(
-            "/api/v2/setup/configured",
-            "/api/v2/auth/login",
-            "/api/v2/pe/*/assets/icon",
-            "/api/v2/connect/master/description/*/assets/icon",
-            "/api/v2/connect/*/master/administration/**",
-            "/api/auth/**",
-            "/oauth2/**",
-            "/api/all",
-            "/error",
-            "/",
-            "/streampipes-backend/",
-            "/streampipes-backend/index.html"
-            );
+  public CustomRequestApi(StreamPipesClientConfig clientConfig) {
+    super(clientConfig);
   }
+
+  public <T> void sendPost(String apiPath, T payload) {
+    post(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
+  }
+
 }

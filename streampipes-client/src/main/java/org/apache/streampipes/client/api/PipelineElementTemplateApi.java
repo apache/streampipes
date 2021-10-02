@@ -23,7 +23,7 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 
 import java.util.List;
 
-public class PipelineElementTemplateApi extends AbstractClientApi<PipelineElementTemplate>
+public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineElementTemplate>
         implements CRUDApi<String, PipelineElementTemplate> {
 
   public PipelineElementTemplateApi(StreamPipesClientConfig clientConfig) {

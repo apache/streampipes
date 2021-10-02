@@ -15,27 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.backend;
+package org.apache.streampipes.client.model;
 
-import java.util.Arrays;
-import java.util.Collection;
+import org.apache.streampipes.client.credentials.CredentialsProvider;
 
-public class UnauthenticatedInterfaces {
+public interface ClientConnectionUrlResolver {
 
-  public static Collection<String> get() {
-    return Arrays.asList(
-            "/api/v2/setup/configured",
-            "/api/v2/auth/login",
-            "/api/v2/pe/*/assets/icon",
-            "/api/v2/connect/master/description/*/assets/icon",
-            "/api/v2/connect/*/master/administration/**",
-            "/api/auth/**",
-            "/oauth2/**",
-            "/api/all",
-            "/error",
-            "/",
-            "/streampipes-backend/",
-            "/streampipes-backend/index.html"
-            );
-  }
+  CredentialsProvider getCredentials();
+
+  String getBaseUrl();
 }

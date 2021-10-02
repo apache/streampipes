@@ -15,27 +15,25 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.backend;
+package org.apache.streampipes.client.model;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.StringJoiner;
 
-public class UnauthenticatedInterfaces {
+public interface ClientConnectionConfigResolver extends ClientConnectionUrlResolver {
 
-  public static Collection<String> get() {
-    return Arrays.asList(
-            "/api/v2/setup/configured",
-            "/api/v2/auth/login",
-            "/api/v2/pe/*/assets/icon",
-            "/api/v2/connect/master/description/*/assets/icon",
-            "/api/v2/connect/*/master/administration/**",
-            "/api/auth/**",
-            "/oauth2/**",
-            "/api/all",
-            "/error",
-            "/",
-            "/streampipes-backend/",
-            "/streampipes-backend/index.html"
-            );
+  String getStreamPipesHost();
+
+  Integer getStreamPipesPort();
+
+  boolean isHttpsDisabled();
+
+  default String getBaseUrl() {
+    StringJoiner joiner = new StringJoiner("");
+    String protocol = isHttpsDisabled() ? "http://" : "https://";
+    joiner.add(protocol + getStreamPipesHost()
+            + ":"
+            + getStreamPipesPort());
+
+    return joiner.toString();
   }
 }

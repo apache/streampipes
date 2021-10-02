@@ -25,6 +25,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.wrapper.params.binding.BindingParams;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
+import org.apache.streampipes.wrapper.utils.StreamPipesClientResolver;
 
 public abstract class PipelineElementDeclarer<B extends BindingParams, EPR extends
         PipelineElementRuntime, I
@@ -39,7 +40,7 @@ public abstract class PipelineElementDeclarer<B extends BindingParams, EPR exten
       elementId = graph.getElementId();
       ConfigExtractor configExtractor = makeConfigExtractor(serviceId);
       // TODO add StreamPipes Client support
-      StreamPipesClient streamPipesClient = null;
+      StreamPipesClient streamPipesClient = new StreamPipesClientResolver().makeStreamPipesClientInstance();
       epRuntime = getRuntime(graph, getExtractor(graph), configExtractor, streamPipesClient);
       epRuntime.bindRuntime();
       return new Response(graph.getElementId(), true);
