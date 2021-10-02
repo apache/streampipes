@@ -31,6 +31,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
+import org.apache.streampipes.sinks.brokers.jvm.mqtt.MqttPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.nats.NatsController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarController;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
@@ -55,6 +56,7 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
                     new RestController(),
                     new BufferRestController(),
                     new RabbitMqController(),
+                    new MqttPublisherSink(),
                     new WebsocketServerSink(),
                     new PulsarController(),
                     new NatsController())

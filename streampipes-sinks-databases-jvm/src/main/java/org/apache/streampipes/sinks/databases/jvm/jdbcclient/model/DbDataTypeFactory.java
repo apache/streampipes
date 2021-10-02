@@ -44,7 +44,7 @@ public class DbDataTypeFactory {
                 return DbDataTypes.INT64;
             case MY_SQL:
             case POSTGRESQL:
-                return  DbDataTypes.BIG_INT;
+                return  DbDataTypes.BIGINT;
         }
         throw new SpRuntimeException("Database engine " + sqlEngine + " does not support long values.");
     }
@@ -216,7 +216,8 @@ public class DbDataTypeFactory {
             case REAL:
             case DATETIME:
                 return Datatypes.Float;
-            case BIG_INT:
+            case BIGINT:
+            case TINYINT:
             case INT64:
                 return Datatypes.Long;
             case INT:

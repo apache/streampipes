@@ -21,8 +21,6 @@ package org.apache.streampipes.sinks.databases.jvm.jdbcclient.model;
 
 public enum DbDataTypes {
 
-
-
     BOOL("BOOL"),
     BOOLEAN("BOOLEAN"),
     TEXT("TEXT"),
@@ -32,7 +30,8 @@ public enum DbDataTypes {
     DOUBLE_PRECISION("DOUBLE PRECISION"),
     FLOAT("FLOAT"),
     REAL("REAL"),
-    BIG_INT("BIGINT"),
+    BIGINT("BIGINT"),
+    TINYINT("TINYINT"),
     INT64("INT64"),
     INT32("INT32"),
     INT("INT"),
