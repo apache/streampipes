@@ -42,13 +42,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
 
   @Override
   public String getBaseUrl() {
-    String endpoint = findClientServices().get(0);
-    System.out.println(endpoint);
-    return endpoint;
-  }
-
-  private String findClientService() {
-    return findClientServices().get(0);
+    return findClientServices().size() > 0 ? findClientServices().get(0) : "";
   }
 
   private String getClientApiUser() {
