@@ -33,6 +33,10 @@ export class AdapterUtils {
 
     AdapterUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
 
+    if (adapterConfiguration.timestampProperty) {
+      AdapterUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
+    }
+
     AdapterUtils.finishEventSchemaConfiguration();
 
     AdapterUtils.startStreamAdapter(adapterConfiguration);
