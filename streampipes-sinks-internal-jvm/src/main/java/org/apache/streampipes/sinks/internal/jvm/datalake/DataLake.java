@@ -19,16 +19,12 @@
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
@@ -91,7 +87,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
     schema.getEventProperties().stream().forEach(eventProperty -> {
       eventProperty.setRuntimeName(prepareString(eventProperty.getRuntimeName()));
     });
-    registerAtDataLake(parameters.getMeasurementName(), schema);
+    registerAtDataLake(parameters.getMeasurementName(), schema, runtimeContext.getStreamPipesClient());
 
     imageProperties = schema.getEventProperties().stream()
             .filter(eventProperty -> eventProperty.getDomainProperties() != null &&
@@ -150,24 +146,12 @@ public class DataLake implements EventSink<DataLakeParameters> {
    * @param eventSchema
    * @throws SpRuntimeException
    */
-  private void registerAtDataLake(String measure, EventSchema eventSchema) throws SpRuntimeException {
-    String url = SinksInternalJvmConfig.INSTANCE.getStreamPipesBackendUrl();
-
-    try {
-      String json = JacksonSerializer.getObjectMapper().writeValueAsString(eventSchema);
-      StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
-      HttpResponse response = Request.Post(url + "/streampipes-backend/api/v3/noauth/datalake/" + measure)
-              .addHeader("Content-type", "application/json")
-              .body(stringEntity)
-              .execute()
-              .returnResponse();
-      if (response.getStatusLine().getStatusCode() == 409) {
-        throw new SpRuntimeException("The measurement '" + measure +"' is already registered as Data lake with different Event schema");
-      }
-    } catch (IOException e) {
-      LOG.error(e.toString());
-    }
-
+  private void registerAtDataLake(String measure,
+                                  EventSchema eventSchema,
+                                  StreamPipesClient client) throws SpRuntimeException {
+      client
+        .customRequest()
+        .sendPost("api/v3/datalake/measure/" + measure, eventSchema);
   }
 
   public static String prepareString(String s) {
