@@ -16,6 +16,10 @@
  *
  */
 
+:host {
+  width: 100%;
+}
+
 .split-section-title {
   font-weight: bold;
   font-size: 16pt;
@@ -28,4 +32,5 @@
 .split-section {
   border-right: 2px solid gray;
   margin-right: 15px;
+  padding-right: 5px;
 }

@@ -16,52 +16,48 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" style="margin-top:40px;">
-    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
-        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
-            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h4>Datalake Settings</h4>
-                <span flex></span>
-            </div>
-        </div>
+<div fxLayout="row" class="page-container-padding">
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <sp-split-section title="Data Lake Settings"
+                          subtitle="Truncate and delete persisted data streams">
+            <div fxFlex="100" fxLayout="column">
+                <div class="subsection-title">Existing data lake indices</div>
+                <table
+                        fxFlex="100"
+                        mat-table
+                        data-cy="datalake-settings"
+                        [dataSource]="dataSource"
+                        style="width: 100%;"
+                        matSort>
 
-        <div fxFlex="100" class="sp-blue-border">
-            <table
-                    fxFlex="100"
-                    mat-table
-                    data-cy="datalake-settings"
-                    [dataSource]="dataSource"
-                    style="width: 100%;"
-                    matSort>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+                        <td mat-cell *matCellDef="let configurationEntry">
+                            <h4 style="margin-bottom:0px;">{{configurationEntry.name}}</h4>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
-                    <td mat-cell *matCellDef="let configurationEntry">
-                        <h4 style="margin-bottom:0px;">{{configurationEntry.name}}</h4>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="pipeline">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef>Related Pipeline</th>
+                        <td mat-cell *matCellDef="let configurationEntry">
+                            {{configurationEntry.pipelines}}
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="pipeline">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef>Related Pipeline</th>
-                    <td mat-cell *matCellDef="let configurationEntry">
-                        {{configurationEntry.pipelines}}
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="events">
+                        <th mat-header-cell mat-sort-header *matHeaderCellDef># Events</th>
+                        <td
+                                mat-cell
+                                data-cy="datalake-number-of-events"
+                                *matCellDef="let configurationEntry">
+                            {{configurationEntry.events | number}}
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="events">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef># Events</th>
-                    <td
-                            mat-cell
-                            data-cy="datalake-number-of-events"
-                            *matCellDef="let configurationEntry">
-                        {{configurationEntry.events | number}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="truncate">
-                    <th mat-header-cell *matHeaderCellDef>Truncate</th>
-                    <td mat-cell *matCellDef="let configurationEntry">
-                        <div fxLayout="row">
+                    <ng-container matColumnDef="truncate">
+                        <th mat-header-cell *matHeaderCellDef>Truncate</th>
+                        <td mat-cell *matCellDef="let configurationEntry">
+                            <div fxLayout="row">
                             <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
                                     <button color="accent"
                                             mat-button
@@ -73,14 +69,14 @@
                                         <i class="material-icons">local_fire_department</i>
                                     </button>
                                 </span>
-                        </div>
-                    </td>
-                </ng-container>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="remove">
-                    <th mat-header-cell *matHeaderCellDef>Remove</th>
-                    <td mat-cell *matCellDef="let configurationEntry">
-                        <div fxLayout="row">
+                    <ng-container matColumnDef="remove">
+                        <th mat-header-cell *matHeaderCellDef>Remove</th>
+                        <td mat-cell *matCellDef="let configurationEntry">
+                            <div fxLayout="row">
                             <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
                                     <button color="accent"
                                             mat-button
@@ -93,20 +89,22 @@
                                         <i class="material-icons">delete</i>
                                     </button>
                                 </span>
-                        </div>
-                    </td>
-                </ng-container>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-            </table>
-        </div>
-        <div fxFlex="100" fxLayoutAlign="end end">
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="20"></mat-paginator>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="availableMeasurements.length == 0">
-            <h5>(no stored measurements)</h5>
-        </div>
+                </table>
+            </div>
+            <div fxFlex="100" fxLayoutAlign="end end">
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="20"></mat-paginator>
+            </div>
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="availableMeasurements.length == 0">
+                <h5>(no stored measurements)</h5>
+            </div>
+        </sp-split-section>
     </div>
 </div>
+

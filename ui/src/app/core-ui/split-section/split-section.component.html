@@ -16,12 +16,14 @@
   ~
   -->
 
-<div fxLayout="row" fxFlex="100">
-    <div fxFlex="300px" fxLayout="column" class="split-section">
-        <div class="split-section-title">{{title}}</div>
-        <div class="split-section-description">{{subtitle}}</div>
-    </div>
-    <div fxFill fxLayout="column">
-        <ng-content></ng-content>
+<div fxFlex="100" fxLayout="column">
+    <div fxLayout="row">
+        <div fxFlex="300px" fxLayout="column" class="split-section">
+            <div class="split-section-title">{{title}}</div>
+            <div class="split-section-description">{{subtitle}}</div>
+        </div>
+        <div fxFlex fxLayout="column">
+            <ng-content></ng-content>
+        </div>
     </div>
 </div>

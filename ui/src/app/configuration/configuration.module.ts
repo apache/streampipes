@@ -44,6 +44,8 @@ import { DatalakeRestService } from '../core-services/datalake/datalake-rest.ser
 import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -56,9 +58,11 @@ import { SecurityConfigurationComponent } from './security-configuration/securit
     MatIconModule,
     MatInputModule,
     MatCheckboxModule,
+    MatDividerModule,
     MatTooltipModule,
     FormsModule,
-    DragDropModule
+    DragDropModule,
+    CoreUiModule
   ],
   declarations: [
     ConfigurationComponent,
