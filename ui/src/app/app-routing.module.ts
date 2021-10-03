@@ -32,6 +32,8 @@ import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {ApidocsComponent} from "./apidocs/apidocs.component";
+import { PageName } from './_enums/page-name.enum';
+import { PageAuthGuard } from './_guards/page-auth.can-active.guard';
 
 import { EditorComponent } from './editor/editor.component';
 import { PipelinesComponent } from './pipelines/pipelines.component';
@@ -52,20 +54,20 @@ const routes: Routes = [
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
-      { path: 'editor', component: EditorComponent },
-      { path: 'pipelines', component: PipelinesComponent },
-      { path: 'connect', component: ConnectComponent },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'dataexplorer', component: DataExplorerComponent },
-      { path: 'app-overview', component: AppOverviewComponent },
-      { path: 'add', component: AddComponent },
-      { path: 'files', component: FilesComponent },
-      { path: 'configuration', component: ConfigurationComponent },
+      { path: 'editor', component: EditorComponent, data: { authPageNames: [PageName.PIPELINE_EDITOR]}},
+      { path: 'pipelines', component: PipelinesComponent, data: { authPageNames: [PageName.PIPELINE_OVERVIEW]}},
+      { path: 'connect', component: ConnectComponent, data: { authPageNames: [PageName.CONNECT]}},
+      { path: 'dashboard', component: DashboardComponent, data: { authPageNames: [PageName.DASHBOARD]}},
+      { path: 'dataexplorer', component: DataExplorerComponent, data: { authPageNames: [PageName.DATA_EXPLORER]}},
+      { path: 'app-overview', component: AppOverviewComponent, data: { authPageNames: [PageName.APPS]}},
+      { path: 'add', component: AddComponent, data: { authPageNames: [PageName.INSTALL_PIPELINE_ELEMENTS]}},
+      { path: 'files', component: FilesComponent, data: { authPageNames: [PageName.FILE_UPLOAD]}},
+      { path: 'configuration', component: ConfigurationComponent, data: { authPageNames: [PageName.SETTINGS]}},
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent },
       { path: 'profile', component: ProfileComponent},
-    ], canActivateChild: [AuthCanActivateChildrenGuard] }
+    ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard] }
 ];
 
 @NgModule({
@@ -75,6 +77,7 @@ const routes: Routes = [
       AuthCanActivateChildrenGuard,
       AlreadyConfiguredCanActivateGuard,
       ConfiguredCanActivateGuard,
+      PageAuthGuard
   ]
 })
 export class AppRoutingModule { }

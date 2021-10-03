@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @TsModel
 public class UserAccount extends Principal {
@@ -162,7 +163,6 @@ public class UserAccount extends Principal {
 		this.hideTutorial = hideTutorial;
 	}
 
-
 	public boolean isDarkMode() {
 		return darkMode;
 	}
@@ -173,7 +173,7 @@ public class UserAccount extends Principal {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return roles.stream().map(Enum::toString).map(r -> (GrantedAuthority) () -> r).collect(Collectors.toList());
 	}
 
 	@Override

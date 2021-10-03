@@ -28,6 +28,7 @@ spEditor:
   icon: 'dashboard'
   homeImage: '/assets/img/home/editor.png'
   admin: false
+  pageNames: 'PageName.PIPELINE_EDITOR'
 spConnect:
   ng5: True
   ng1_templateUrl: ''
@@ -42,6 +43,7 @@ spConnect:
   icon: 'power'
   homeImage: '/assets/img/home/editor.png'
   admin: False
+  pageNames: 'PageName.CONNECT'
 spPipelines:
   ng5: True
   ng1_templateUrl: ''
@@ -56,6 +58,7 @@ spPipelines:
   icon: 'play_arrow'
   homeImage: '/assets/img/home/pipelines.png'
   admin: False
+  pageNames: 'PageName.PIPELINE_OVERVIEW'
 spSensors:
   ng5: False
   ng1_templateUrl: '../sensors/sensors.html'
@@ -83,6 +86,7 @@ spAdd:
   icon: 'cloud_download'
   homeImage: '/assets/img/home/add.png'
   admin: True
+  pageNames: 'PageName.INSTALL_PIPELINE_ELEMENTS'
 spConfiguration:
   ng5: True
   ng1_templateUrl: ''
@@ -97,6 +101,7 @@ spConfiguration:
   description: 'In the configuration module, basic StreamPipes settings and services can be configured.'
   icon: 'settings'
   homeImage: '/assets/img/home/configuration.png'
+  pageNames: 'PageName.SETTINGS'
   admin: True
 spAppOverview:
   ng5: True
@@ -113,6 +118,7 @@ spAppOverview:
   icon: 'apps'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+  pageNames: 'PageName.APPS'
 spDashboard:
   ng5: True
   ng1_templateUrl: ''
@@ -128,6 +134,7 @@ spDashboard:
   icon: 'insert_chart'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+  pageNames: 'PageName.DASHBOARD'
 spDataExplorer:
   ng5: True
   ng1_templateUrl: ''
@@ -143,6 +150,7 @@ spDataExplorer:
   icon: 'search'
   homeImage: '/assets/img/home/configuration.png'
   admin: false
+  pageNames: 'PageName.DATA_EXPLORER'
 spFiles:
   ng5: True
   ng1_templateUrl: ''
@@ -158,3 +166,4 @@ spFiles:
   icon: 'folder'
   homeImage: '/assets/img/home/configuration.png'
   admin: true
+  pageNames: 'PageName.FILE_UPLOAD'

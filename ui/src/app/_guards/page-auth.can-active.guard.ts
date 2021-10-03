@@ -16,17 +16,20 @@
  *
  */
 
-package org.apache.streampipes.model.client.user;
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { PageName } from '../_enums/page-name.enum';
+import { Injectable } from '@angular/core';
 
-public enum Role {
-  ADMIN,
-  PIPELINE_ADMIN,
-  DASHBOARD_ADMIN,
-  DATA_EXPLORER_ADMIN,
-  CONNECT_ADMIN,
-  DASHBOARD_USER,
-  DATA_EXPLORER_USER,
-  PIPELINE_USER,
-  APP_USER
+@Injectable()
+export class PageAuthGuard implements CanActivateChild {
 
+  constructor(private router: Router,
+              private authService: AuthService) {}
+
+  canActivateChild(activatedRouteSnapshot: ActivatedRouteSnapshot): boolean {
+    const pageNames: PageName[] = activatedRouteSnapshot.data.authPageNames;
+
+    return this.authService.isAnyAccessGranted(pageNames);
+  }
 }

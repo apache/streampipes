@@ -69,6 +69,7 @@ for (let module of config.modules) {
         ng5_componentPath: modules[module]['ng5_componentPath'],
         path: modules[module]['path'],
         link: modules[module]['link'],
+        pageNames: modules[module]['pageNames'],
         url: modules[module]['url'],
         title: modules[module]['title'],
         icon: modules[module]['icon'],

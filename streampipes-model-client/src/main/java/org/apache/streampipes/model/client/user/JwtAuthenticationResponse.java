@@ -3,17 +3,13 @@ package org.apache.streampipes.model.client.user;
 public class JwtAuthenticationResponse {
 
 	private String accessToken;
-	private UserInfo userInfo;
 
-	public static JwtAuthenticationResponse from(String accessToken,
-																							 UserInfo userInfo) {
-		return new JwtAuthenticationResponse(accessToken, userInfo);
+	public static JwtAuthenticationResponse from(String accessToken) {
+		return new JwtAuthenticationResponse(accessToken);
 	}
 
-	private JwtAuthenticationResponse(String accessToken,
-																		UserInfo userInfo) {
+	private JwtAuthenticationResponse(String accessToken) {
 		this.accessToken = accessToken;
-		this.userInfo = userInfo;
 	}
 
 	public String getAccessToken() {
@@ -24,11 +20,4 @@ public class JwtAuthenticationResponse {
 		this.accessToken = accessToken;
 	}
 
-	public UserInfo getUserInfo() {
-		return userInfo;
-	}
-
-	public void setUserInfo(UserInfo userInfo) {
-		this.userInfo = userInfo;
-	}
 }

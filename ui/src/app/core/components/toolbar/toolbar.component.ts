@@ -47,8 +47,8 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
               private profileService: ProfileService,
               private restApi: RestApi,
               private overlay: OverlayContainer,
-              private authService: AuthService) {
-    super(router);
+              authService: AuthService) {
+    super(authService, router);
   }
 
   ngOnInit(): void {
@@ -89,23 +89,18 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   }
 
   openInfo() {
-    this.Router.navigate(['info']);
+    this.router.navigate(['info']);
     this.activePage = 'Info';
   }
 
   openProfile() {
-    this.Router.navigate(['profile']);
+    this.router.navigate(['profile']);
     this.activePage = 'Profile';
   }
 
   logout() {
     this.authService.logout();
-    this.Router.navigate(['login']);
-    // this.RestApi.logout().subscribe(() => {
-    //   this.AuthStatusService.user = undefined;
-    //   this.AuthStatusService.authenticated = false;
-    //   this.Router.navigateByUrl('login');
-    // });
+    this.router.navigate(['login']);
   }
 
   getVersion() {

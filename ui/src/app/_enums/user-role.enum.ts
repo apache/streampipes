@@ -16,9 +16,7 @@
  *
  */
 
-package org.apache.streampipes.model.client.user;
-
-public enum Role {
+export enum UserRole {
   ADMIN,
   PIPELINE_ADMIN,
   DASHBOARD_ADMIN,
@@ -28,5 +26,4 @@ public enum Role {
   DATA_EXPLORER_USER,
   PIPELINE_USER,
   APP_USER
-
 }

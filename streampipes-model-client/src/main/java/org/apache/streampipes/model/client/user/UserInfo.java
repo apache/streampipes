@@ -21,6 +21,7 @@ package org.apache.streampipes.model.client.user;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.List;
+import java.util.Set;
 
 @TsModel
 public class UserInfo {
@@ -28,7 +29,7 @@ public class UserInfo {
   private String userId;
   private String displayName;
   private String email;
-  private List<String> roles;
+  private Set<String> roles;
   private boolean showTutorial;
   private boolean darkMode;
 
@@ -59,11 +60,11 @@ public class UserInfo {
     this.email = email;
   }
 
-  public List<String> getRoles() {
+  public Set<String> getRoles() {
     return roles;
   }
 
-  public void setRoles(List<String> roles) {
+  public void setRoles(Set<String> roles) {
     this.roles = roles;
   }
 

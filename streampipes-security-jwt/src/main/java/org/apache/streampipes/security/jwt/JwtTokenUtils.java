@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Map;
 
 public class JwtTokenUtils {
 
@@ -35,6 +36,23 @@ public class JwtTokenUtils {
                                     String tokenSecret,
                                     Date expirationDate) {
 
+    return prepareJwtToken(subject, tokenSecret, expirationDate).compact();
+
+  }
+
+  public static String makeJwtToken(String subject,
+                                    String tokenSecret,
+                                    Map<String, Object> claims,
+                                    Date expirationDate) {
+
+    JwtBuilder builder = prepareJwtToken(subject, tokenSecret, expirationDate);
+
+    return builder.addClaims(claims).compact();
+  }
+
+  private static JwtBuilder prepareJwtToken(String subject,
+                                            String tokenSecret,
+                                            Date expirationDate) {
     SecretKey key = Keys.hmacShaKeyFor(tokenSecret.getBytes(StandardCharsets.UTF_8));
 
     return Jwts
@@ -42,7 +60,7 @@ public class JwtTokenUtils {
             .setSubject(subject)
             .setIssuedAt(new Date())
             .setExpiration(expirationDate)
-            .signWith(key).compact();
+            .signWith(key);
   }
 
   public static String getUserIdFromToken(String tokenSecret,

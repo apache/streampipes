@@ -34,7 +34,7 @@ export class HomeComponent {
                 private sanitizer: DomSanitizer,
                 private router: Router,
                 public appConstants: AppConstants) {
-        this.serviceLinks = this.homeService.getServiceLinks();
+        this.serviceLinks = this.homeService.getFilteredServiceLinks();
     }
 
     getBackground(url) {

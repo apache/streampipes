@@ -55,8 +55,7 @@ public class Authentication extends AbstractRestResource {
     try {
       org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token.getUsername(), token.getPassword()));
       SecurityContextHolder.getContext().setAuthentication(authentication);
-      JwtAuthenticationResponse tokenResp = makeJwtResponse(authentication);
-      return ok(tokenResp);
+      return processAuth(authentication);
     } catch (BadCredentialsException e) {
       return unauthorized();
     }
@@ -70,8 +69,7 @@ public class Authentication extends AbstractRestResource {
   public Response doLogin() {
     try {
       org.springframework.security.core.Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-      JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
-      return ok(tokenResp);
+      return processAuth(auth);
     } catch (BadCredentialsException e) {
       return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
     }
@@ -94,18 +92,20 @@ public class Authentication extends AbstractRestResource {
     }
   }
 
-  private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
-    String jwt = new JwtTokenProvider().createToken(auth);
-    UserAccount localUser = (UserAccount) auth.getPrincipal();
-    return JwtAuthenticationResponse.from(jwt, toUserInfo(localUser));
+  private Response processAuth(org.springframework.security.core.Authentication auth) {
+    Principal principal = (Principal) auth.getPrincipal();
+    if (principal instanceof UserAccount) {
+      JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
+      return ok(tokenResp);
+    } else {
+      throw new BadCredentialsException("Could not create auth token");
+    }
   }
 
-  private UserInfo toUserInfo(UserAccount localUser) {
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUserId("id");
-    userInfo.setEmail(localUser.getEmail());
-    userInfo.setDisplayName(localUser.getUsername());
-    userInfo.setShowTutorial(!localUser.isHideTutorial());
-    return userInfo;
+  private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
+    String jwt = new JwtTokenProvider().createToken(auth);
+    return JwtAuthenticationResponse.from(jwt);
   }
+
+
 }

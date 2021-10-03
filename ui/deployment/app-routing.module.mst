@@ -32,6 +32,8 @@ import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {ApidocsComponent} from "./apidocs/apidocs.component";
+import { PageName } from './_enums/page-name.enum';
+import { PageAuthGuard } from './_guards/page-auth.can-active.guard';
 
 {{#modulesActive}}
 {{#ng5}}
@@ -50,14 +52,14 @@ const routes: Routes = [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       {{#modulesActive}}
       {{#ng5}}
-      { path: '{{{link}}}', component: {{{ng5_component}}} },
+      { path: '{{{link}}}', component: {{{ng5_component}}}, data: { authPageNames: [{{{pageNames}}}]}},
       {{/ng5}}
       {{/modulesActive}}
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent },
       { path: 'profile', component: ProfileComponent},
-    ], canActivateChild: [AuthCanActivateChildrenGuard] }
+    ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard] }
 ];
 
 @NgModule({
@@ -67,6 +69,7 @@ const routes: Routes = [
       AuthCanActivateChildrenGuard,
       AlreadyConfiguredCanActivateGuard,
       ConfiguredCanActivateGuard,
+      PageAuthGuard
   ]
 })
 export class AppRoutingModule { }

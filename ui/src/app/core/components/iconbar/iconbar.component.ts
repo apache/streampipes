@@ -34,9 +34,9 @@ export class IconbarComponent extends BaseNavigationComponent implements OnInit 
   unreadNotifications = 0;
 
   constructor(router: Router,
-              private authService: AuthService,
+              authService: AuthService,
               public notificationCountService: NotificationCountService) {
-    super(router);
+    super(authService, router);
   }
 
   ngOnInit(): void {
