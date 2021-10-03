@@ -18,40 +18,30 @@
 
 <div fxLayout="row" class="page-container-padding">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="profileLoaded">
-        <div fxLayout="row" fxFlex="100">
-            <div fxFlex="300px" fxLayout="column" class="profile-section">
-                <div class="settings-title">Main Settings</div>
-                <div class="settings-description">Manage your basic profile settings here.</div>
-            </div>
-            <div fxFill fxLayout="column">
-                <mat-form-field fxFlex>
-                    <mat-label>Email</mat-label>
-                    <input [(ngModel)]="userData.email" matInput type="email" name="email" disabled/>
-                    <mat-hint>Your mail address can't be changed currently.</mat-hint>
-                </mat-form-field>
-                <mat-form-field fxFlex>
-                    <mat-label>Username</mat-label>
-                    <input [(ngModel)]="userData.username" matInput/>
-                </mat-form-field>
-                <mat-form-field fxFlex>
-                    <mat-label>Full Name</mat-label>
-                    <input [(ngModel)]="userData.fullName" matInput/>
-                </mat-form-field>
-                <div>
-                    <button mat-button mat-raised-button color="accent"
+        <sp-split-section title="Main Settings" subtitle="Manage your basic profile settings here.">
+            <mat-form-field fxFlex>
+                <mat-label>Email</mat-label>
+                <input [(ngModel)]="userData.email" matInput type="email" name="email" disabled/>
+                <mat-hint>Your mail address can't be changed currently.</mat-hint>
+            </mat-form-field>
+            <mat-form-field fxFlex>
+                <mat-label>Username</mat-label>
+                <input [(ngModel)]="userData.username" matInput/>
+            </mat-form-field>
+            <mat-form-field fxFlex>
+                <mat-label>Full Name</mat-label>
+                <input [(ngModel)]="userData.fullName" matInput/>
+            </mat-form-field>
+            <div>
+                <button mat-button mat-raised-button color="accent"
                         (click)="saveProfileSettings()">
-                        Update profile
-                    </button>
-                </div>
+                    Update profile
+                </button>
             </div>
-        </div>
+        </sp-split-section>
         <mat-divider></mat-divider>
         <div fxLayout="row" fxFlex="100" class="mt-30">
-            <div fxFlex="300px" fxLayout="column" class="profile-section">
-                <div class="settings-title">Appearance</div>
-                <div class="settings-description">Change the appearance of your {{appConstants.APP_NAME}} installation</div>
-            </div>
-            <div fxFill fxLayout="column">
+            <sp-split-section title="Appearance" subtitle="Change the appearance of your {{appConstants.APP_NAME}} installation">
                 <label id="radio-group-label">Color Scheme</label>
                 <mat-radio-group [(ngModel)]="darkMode"
                                  aria-labelledby="radio-group-label"
@@ -65,7 +55,7 @@
                         Save color scheme
                     </button>
                 </div>
-            </div>
+            </sp-split-section>
         </div>
     </div>
 

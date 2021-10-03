@@ -29,6 +29,7 @@ import {GeneralProfileSettingsComponent} from "./components/general/general-prof
 import {ProfileService} from "./profile.service";
 import {MatDividerModule} from "@angular/material/divider";
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { CoreUiModule } from '../core-ui/core-ui.module';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     CustomMaterialModule,
     CommonModule,
     ClipboardModule,
+    CoreUiModule,
   ],
   declarations: [
     GeneralProfileSettingsComponent,

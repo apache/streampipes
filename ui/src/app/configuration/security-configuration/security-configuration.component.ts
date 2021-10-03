@@ -16,16 +16,15 @@
  *
  */
 
-.title-section {
-  width: 300px;
-}
+import { Component, OnInit } from '@angular/core';
 
-.appearance-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-}
+@Component({
+  selector: 'sp-security-configuration',
+  templateUrl: './security-configuration.component.html',
+  styleUrls: ['./security-configuration.component.scss']
+})
+export class SecurityConfigurationComponent implements OnInit {
+  ngOnInit(): void {
+  }
 
-.appearance-radio-button {
-  margin: 5px;
 }

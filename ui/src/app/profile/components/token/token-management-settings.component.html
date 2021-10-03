@@ -18,73 +18,63 @@
 
 <div fxLayout="row" class="page-container-padding">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="profileLoaded">
-        <div fxLayout="row" fxFlex="100">
-            <div fxFlex="300px" fxLayout="column" class="profile-section">
-                <div class="settings-title">API Keys</div>
-                <div class="settings-description">Manage your API keys for third-party application access to
-                    {{appConstants.APP_NAME}}.
+        <sp-split-section title="API Keys" subtitle="Manage your API keys for third-party application access to
+                    {{appConstants.APP_NAME}}">
+            <div fxLayout="column" class="subsection">
+                <div class="subsection-title">New API key</div>
+                <mat-form-field fxFlex color="accent">
+                    <mat-label>Name</mat-label>
+                    <input [(ngModel)]="newTokenName" matInput/>
+                </mat-form-field>
+                <div>
+                    <button mat-button mat-raised-button color="accent"
+                            (click)="requestNewKey()">
+                        Create new API key
+                    </button>
                 </div>
             </div>
-            <div fxFill fxLayout="column">
-                <div fxLayout="column" class="subsection">
-                    <div class="subsection-title">New API key</div>
-                    <mat-form-field fxFlex color="accent">
-                        <mat-label>Name</mat-label>
-                        <input [(ngModel)]="newTokenName" matInput/>
-                    </mat-form-field>
-                    <div>
-                        <button mat-button mat-raised-button color="accent"
-                                (click)="requestNewKey()">
-                            Create new API key
-                        </button>
+            <div fxLayout="column" class="subsection mt-10" *ngIf="newTokenCreated">
+                <div class="subsection-title">Key created</div>
+                <div class="subsection-small">Your new API key has been created. Please copy the key now - you won't be able to see the key again.</div>
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="new-token">
+                    <div class="token-name">{{newlyCreatedToken.tokenName}}</div>
+                    <div class="displayed-token">
+                        {{newlyCreatedToken.rawToken}}
                     </div>
+                    <button mat-button mat-raised-button color="accent"
+                            [cdkCopyToClipboard]="newlyCreatedToken.rawToken">
+                        Copy
+                    </button>
                 </div>
-                <div fxLayout="column" class="subsection mt-10" *ngIf="newTokenCreated">
-                    <div class="subsection-title">Key created</div>
-                    <div class="subsection-small">Your new API key has been created. Please copy the key now - you won't be able to see the key again.</div>
-                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="new-token">
-                        <div class="token-name">{{newlyCreatedToken.tokenName}}</div>
-                        <div class="displayed-token">
-                            {{newlyCreatedToken.rawToken}}
-                        </div>
-                        <button mat-button mat-raised-button color="accent"
-                                [cdkCopyToClipboard]="newlyCreatedToken.rawToken">
-                            Copy
-                        </button>
-                    </div>
-                </div>
-                <mat-divider class="divider"></mat-divider>
-                <div fxLayout="column" class="subsection mt-10">
-                    <div class="subsection-title">Existing API keys</div>
-                    <div *ngIf="userData.userApiTokens.length == 0">(no keys available)</div>
-                    <table mat-table [dataSource]="apiKeyDataSource" class="mat-elevation-z0" *ngIf="userData.userApiTokens.length > 0">
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef> Name</th>
-                            <td mat-cell *matCellDef="let element"> {{element.tokenName}} </td>
-                        </ng-container>
+            </div>
+            <mat-divider class="divider"></mat-divider>
+            <div fxLayout="column" class="subsection mt-10">
+                <div class="subsection-title">Existing API keys</div>
+                <div *ngIf="userData.userApiTokens.length == 0">(no keys available)</div>
+                <table mat-table [dataSource]="apiKeyDataSource" class="mat-elevation-z0" *ngIf="userData.userApiTokens.length > 0">
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.tokenName}} </td>
+                    </ng-container>
 
-                        <!-- Name Column -->
-                        <ng-container matColumnDef="action">
-                            <th mat-header-cell *matHeaderCellDef> Action</th>
-                            <td mat-cell *matCellDef="let element">
-                                <div fxLayout="end end">
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div fxLayout="end end">
                                 <button mat-button mat-raised-button color="warn"
                                         (click)="revokeApiKey(element)">
                                     Revoke
                                 </button>
-                                </div>
-                            </td>
-                        </ng-container>
+                            </div>
+                        </td>
+                    </ng-container>
 
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-                </div>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
             </div>
-            <div fxFill fxLayout="column">
-            </div>
-        </div>
+        </sp-split-section>
         <mat-divider></mat-divider>
     </div>
-
 </div>

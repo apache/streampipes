@@ -79,6 +79,7 @@ import { BarchartWidgetComponent } from './widget/barchart/barchart-widget.compo
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
+import { SplitSectionComponent } from './split-section/split-section.component';
 
 @NgModule({
   imports: [
@@ -117,6 +118,7 @@ import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-stat
     ImageViewerComponent,
     StandardDialogComponent,
     PanelDialogComponent,
+    SplitSectionComponent,
     StaticAnyInput,
     StaticPropertyComponent,
     StaticFreeInputComponent,
@@ -178,7 +180,8 @@ import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-stat
     StatusWidgetComponent,
     BarchartWidgetComponent,
     ErrorHintComponent,
-    PipelineStartedStatusComponent
+    PipelineStartedStatusComponent,
+    SplitSectionComponent
   ]
 })
 export class CoreUiModule {

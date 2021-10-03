@@ -16,16 +16,19 @@
  *
  */
 
-.title-section {
-  width: 300px;
-}
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-.appearance-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-}
+@Component({
+  selector: 'sp-split-section',
+  templateUrl: './split-section.component.html',
+  styleUrls: ['./split-section.component.scss']
+})
+export class SplitSectionComponent {
 
-.appearance-radio-button {
-  margin: 5px;
+  @Input()
+  title: string;
+
+  @Input()
+  subtitle: string;
+
 }

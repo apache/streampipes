@@ -43,6 +43,7 @@ import { DatalakeConfigurationComponent } from './datalake-configuration/datalak
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ConsulConfigsNumberComponent,
     DeleteDatalakeIndexComponent,
     PipelineElementConfigurationComponent,
+    SecurityConfigurationComponent,
     MessagingConfigurationComponent,
     DatalakeConfigurationComponent
   ],
