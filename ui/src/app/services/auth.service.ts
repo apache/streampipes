@@ -55,7 +55,6 @@ export class AuthService {
     public login(data) {
         const jwtHelper: JwtHelperService = new JwtHelperService({});
         const decodedToken = jwtHelper.decodeToken(data.accessToken);
-        console.log(decodedToken);
         this.tokenStorage.saveToken(data.accessToken);
         this.tokenStorage.saveUser(decodedToken.user);
         this.authToken$.next(data.accessToken);
@@ -145,14 +144,10 @@ export class AuthService {
         if (!result) {
             this.router.navigate(['']);
         }
-        console.log(pageNames);
-        console.log(result);
         return result;
     }
 
     isAccessGranted(pageName: PageName) {
-        console.log(pageName);
-        console.log(this.hasRole(UserRole.ADMIN));
         if (this.hasRole(UserRole.ADMIN)) {
             return true;
         }

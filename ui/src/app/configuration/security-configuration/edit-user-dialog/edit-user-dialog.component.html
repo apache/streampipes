@@ -1,0 +1,89 @@
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content">
+        <div fxFlex="100" fxLayout="column" class="p-15">
+            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+                <div class="general-options-panel" fxLayout="column">
+                    <span class="general-options-header">Basics</span>
+                    <mat-form-field color="accent">
+                        <mat-label>Username</mat-label>
+                        <input formControlName="username" fxFlex
+                               matInput
+                               required>
+                    </mat-form-field>
+                    <mat-form-field color="accent" *ngIf="isUserAccount">
+                        <mat-label>Full Name</mat-label>
+                        <input formControlName="fullName" fxFlex
+                               matInput
+                               required>
+                    </mat-form-field>
+                    <mat-form-field color="accent" *ngIf="isUserAccount">
+                        <mat-label>Email</mat-label>
+                        <input formControlName="email" fxFlex
+                               matInput
+                               required>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="column" class="general-options-panel" *ngIf="!editMode && isUserAccount">
+                    <span class="general-options-header">Password</span>
+                    <mat-form-field color="accent">
+                        <mat-label>Initial password</mat-label>
+                        <input formControlName="password" fxFlex
+                               matInput
+                               required>
+                    </mat-form-field>
+                    <mat-form-field color="accent">
+                        <mat-label>Repeat password</mat-label>
+                        <input formControlName="repeatPassword" fxFlex
+                               matInput
+                               required>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="column" class="general-options-panel" *ngIf="!isUserAccount">
+                    <span class="general-options-header">Authentication</span>
+                    <mat-form-field color="accent">
+                        <mat-label>Client Secret</mat-label>
+                        <input formControlName="clientSecret" fxFlex
+                               matInput
+                               required>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="column" class="general-options-panel">
+                    <span class="general-options-header">Groups</span>
+<!--                    <mat-checkbox *ngFor="let role of availableRoles" [value]="role"-->
+<!--                                  [checked]="user.roles.indexOf(role) > -1" (change)="changeRoleAssignment($event)">-->
+<!--                        {{role}}-->
+<!--                    </mat-checkbox>-->
+                </div>
+                <div fxLayout="column" class="general-options-panel">
+                    <span class="general-options-header">Roles</span>
+                <mat-checkbox *ngFor="let role of availableRoles" [value]="role"
+                              [checked]="user.roles.indexOf(role) > -1" (change)="changeRoleAssignment($event)">
+                    {{role}}
+                </mat-checkbox>
+                </div>
+                <div fxLayout="column" class="general-options-panel">
+                    <span class="general-options-header">Account</span>
+                    <mat-checkbox formControlName="accountEnabled">
+                        Enabled
+                    </mat-checkbox>
+                    <mat-checkbox formControlName="accountLocked">
+                        Locked
+                    </mat-checkbox>
+                </div>
+            </form>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+        <div fxLayout="row">
+            <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
+                    [disabled]="!parentForm.valid || clonedUser.roles.length == 0"
+                    data-cy="sp-element-edit-user-save">
+                <i class="material-icons">save</i><span>&nbsp;Save</span>
+            </button>
+            <button mat-button mat-raised-button class="mat-basic" (click)="close(false)">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>

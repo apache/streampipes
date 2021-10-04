@@ -35,7 +35,7 @@ public abstract class Principal implements UserDetails {
 	private boolean accountLocked;
 	private boolean accountExpired;
 
-	private String principalName;
+	protected String username;
 
 	protected List<Element> ownSources;
 	protected List<Element> ownSepas;
@@ -135,12 +135,8 @@ public abstract class Principal implements UserDetails {
 		this.accountExpired = accountExpired;
 	}
 
-	public String getPrincipalName() {
-		return principalName;
-	}
-
-	public void setPrincipalName(String principalName) {
-		this.principalName = principalName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public void setOwnSources(List<Element> ownSources) {
@@ -193,7 +189,7 @@ public abstract class Principal implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return principalName;
+		return username;
 	}
 
 

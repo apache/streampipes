@@ -17,11 +17,14 @@
  */
 package org.apache.streampipes.model.client.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Set;
 
+@TsModel
 public class ServiceAccount extends Principal {
 
   private String clientSecret;
@@ -30,7 +33,7 @@ public class ServiceAccount extends Principal {
                                  String clientSecret,
                                  Set<Role> roles) {
     ServiceAccount account = new ServiceAccount();
-    account.setPrincipalName(serviceAccountName);
+    account.setUsername(serviceAccountName);
     account.setClientSecret(clientSecret);
     account.setRoles(roles);
     account.setAccountEnabled(true);
@@ -51,6 +54,7 @@ public class ServiceAccount extends Principal {
     this.clientSecret = clientSecret;
   }
 
+  @JsonIgnore
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return null;
@@ -61,8 +65,4 @@ public class ServiceAccount extends Principal {
     return null;
   }
 
-  @Override
-  public String getUsername() {
-    return null;
-  }
 }

@@ -32,32 +32,33 @@ export class ProfileService {
 
   }
 
-  getUserProfile(): Observable<UserAccount> {
-    return this.http.get(this.profilePath).pipe(map(response => {
+  getUserProfile(username: string): Observable<UserAccount> {
+    return this.http.get(this.profilePath + '/' + username).pipe(map(response => {
       return UserAccount.fromData(response as any);
     }));
   }
 
   updateUserProfile(userData: UserAccount): Observable<Message> {
-    return this.http.put(this.profilePath, userData).pipe(map(response => {
+    return this.http.put(this.profilePath + '/' + userData.username, userData).pipe(map(response => {
       return Message.fromData(response as any);
     }));
   }
 
-  updateAppearanceMode(darkMode: boolean): Observable<Message> {
-    return this.http.put(`${this.profilePath}/appearance/mode/${darkMode}`, {}).pipe(map(response => {
+  updateAppearanceMode(username, darkMode: boolean): Observable<Message> {
+    return this.http.put(`${this.profilePath}/${username}/appearance/mode/${darkMode}`, {}).pipe(map(response => {
       return Message.fromData(response as any);
     }));
   }
 
-  requestNewApiToken(baseToken: RawUserApiToken): Observable<RawUserApiToken> {
-    return this.http.post(this.profilePath + '/tokens', baseToken)
+  requestNewApiToken(username: string,
+                     baseToken: RawUserApiToken): Observable<RawUserApiToken> {
+    return this.http.post(this.profilePath + '/' + username + '/tokens', baseToken)
         .pipe(map(response => {
           return RawUserApiToken.fromData(response as any);
         }));
   }
 
   private get profilePath(): string {
-    return this.platformServicesCommons.apiBasePath + '/users/profile';
+    return this.platformServicesCommons.apiBasePath + '/users';
   }
 }

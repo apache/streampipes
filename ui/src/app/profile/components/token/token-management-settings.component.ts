@@ -16,10 +16,10 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {BasicProfileSettings} from "../basic-profile-settings";
-import {RawUserApiToken, UserApiToken} from "../../../core-model/gen/streampipes-model-client";
-import {MatTableDataSource} from "@angular/material/table";
+import { Component, OnInit } from "@angular/core";
+import { BasicProfileSettings } from "../basic-profile-settings";
+import { RawUserApiToken, UserApiToken } from "../../../core-model/gen/streampipes-model-client";
+import { MatTableDataSource } from "@angular/material/table";
 
 @Component({
   selector: 'token-management-settings',
@@ -41,7 +41,7 @@ export class TokenManagementSettingsComponent extends BasicProfileSettings imple
 
   requestNewKey() {
     let baseToken: RawUserApiToken = this.makeBaseToken();
-    this.profileService.requestNewApiToken(baseToken).subscribe(result => {
+    this.profileService.requestNewApiToken(this.userData.username, baseToken).subscribe(result => {
       this.newlyCreatedToken = result;
       this.newTokenCreated = true;
       this.newTokenName = "";
@@ -60,7 +60,7 @@ export class TokenManagementSettingsComponent extends BasicProfileSettings imple
     this.userData.userApiTokens.splice(removeIndex, 1);
     this.profileService.updateUserProfile(this.userData).subscribe(response => {
       this.receiveUserData();
-    })
+    });
   }
 
   onUserDataReceived() {

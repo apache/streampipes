@@ -16,18 +16,32 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ServiceAccount } from '../../../core-model/gen/streampipes-model-client';
+import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'sp-security-configuration',
-  templateUrl: './security-configuration.component.html',
-  styleUrls: ['./security-configuration.component.scss']
+  selector: 'sp-security-service-config',
+  templateUrl: './security-service-config.component.html',
+  styleUrls: ['./security-service-config.component.scss']
 })
-export class SecurityConfigurationComponent implements OnInit {
+export class SecurityServiceConfigComponent extends AbstractSecurityPrincipalConfig<ServiceAccount> {
 
-  constructor() {}
 
-  ngOnInit(): void {
+  displayedColumns: string[] = ['username', 'edit'];
+
+  getObservable(): Observable<ServiceAccount[]> {
+    return this.userService.getAllServiceAccounts();
   }
+
+  editService(account: ServiceAccount) {
+    this.openEditDialog(account, true);
+  }
+
+  getNewInstance(): ServiceAccount {
+    return new ServiceAccount();
+  }
+
 
 }

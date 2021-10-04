@@ -21,6 +21,7 @@ import { UserAccount } from '../../core-model/gen/streampipes-model-client';
 import { Directive } from '@angular/core';
 import { AppConstants } from '../../services/app.constants';
 import { JwtTokenStorageService } from '../../services/jwt-token-storage.service';
+import { AuthService } from '../../services/auth.service';
 
 @Directive()
 export abstract class BasicProfileSettings {
@@ -32,13 +33,14 @@ export abstract class BasicProfileSettings {
 
   constructor(protected profileService: ProfileService,
               public appConstants: AppConstants,
-              private tokenService: JwtTokenStorageService) {
+              private tokenService: JwtTokenStorageService,
+              protected authService: AuthService) {
 
   }
 
   receiveUserData() {
     this.profileService
-        .getUserProfile()
+        .getUserProfile(this.authService.user$.getValue().username)
         .subscribe(userData => {
           this.userData = userData;
           this.onUserDataReceived();

@@ -45,9 +45,9 @@ public class UserManagementService {
     return true;
   }
 
-  public static void setHideTutorial(String principalName, boolean hideTutorial) {
+  public static void setHideTutorial(String username, boolean hideTutorial) {
     IUserStorage userService = getUserStorage();
-    UserAccount user = userService.getUserAccount(principalName);
+    UserAccount user = userService.getUserAccount(username);
     user.setHideTutorial(hideTutorial);
     userService.updateUser(user);
   }

@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.storage.api;
 
-package org.apache.streampipes.model.client.security;
+import org.apache.streampipes.model.client.user.Group;
 
-public class Role {
+public interface IUserGroupStorage extends CRUDStorage<String, Group> {
 }

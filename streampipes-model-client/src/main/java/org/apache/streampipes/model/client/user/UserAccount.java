@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.client.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -32,7 +33,6 @@ public class UserAccount extends Principal {
 
 	protected String email;
 	protected String fullName;
-	protected String username;
 	protected String password;
 
 	protected List<String> preferredDataStreams;
@@ -48,7 +48,7 @@ public class UserAccount extends Principal {
 																 String encryptedPassword,
 																 Set<Role> roles) {
 		UserAccount account = new UserAccount();
-		account.setPrincipalName(username);
+		account.setUsername(username);
 		account.setPassword(encryptedPassword);
 		account.setRoles(roles);
 		account.setAccountEnabled(true);
@@ -171,6 +171,7 @@ public class UserAccount extends Principal {
 		this.darkMode = darkMode;
 	}
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles.stream().map(Enum::toString).map(r -> (GrantedAuthority) () -> r).collect(Collectors.toList());

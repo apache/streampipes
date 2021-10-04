@@ -202,12 +202,12 @@ public class UserService {
     return getUserAccount(username).getPreferredDataSinks();
   }
 
-  public List<String> getAvailableActionUris(String principalName) {
-    List<String> actions = new ArrayList<>(getOwnActionUris(principalName));
+  public List<String> getAvailableActionUris(String username) {
+    List<String> actions = new ArrayList<>(getOwnActionUris(username));
     userStorage
             .getAllUsers()
             .stream()
-            .filter(u -> !(u.getPrincipalName().equals(principalName)))
+            .filter(u -> !(u.getUsername().equals(username)))
             .map(u -> u.getOwnActions().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(actions::addAll);
     return actions;
   }
@@ -216,18 +216,18 @@ public class UserService {
     return userStorage.getUser(username).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
   }
 
-  public List<String> getAvailableSepaUris(String principalName) {
-    List<String> sepas = new ArrayList<>(getOwnSepaUris(principalName));
+  public List<String> getAvailableSepaUris(String username) {
+    List<String> sepas = new ArrayList<>(getOwnSepaUris(username));
     userStorage
             .getAllUsers()
             .stream()
-            .filter(u -> !(u.getPrincipalName().equals(principalName)))
+            .filter(u -> !(u.getUsername().equals(username)))
             .map(u -> u.getOwnSepas().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(sepas::addAll);
     return sepas;
   }
 
-  public List<String> getFavoriteSepaUris(String principalName) {
-    return getUserAccount(principalName).getPreferredDataProcessors();
+  public List<String> getFavoriteSepaUris(String username) {
+    return getUserAccount(username).getPreferredDataProcessors();
   }
 
   public List<String> getOwnSourceUris(String email) {
@@ -239,12 +239,12 @@ public class UserService {
             .collect(Collectors.toList());
   }
 
-  public List<String> getAvailableSourceUris(String principalName) {
-    List<String> sources = new ArrayList<>(getOwnSepaUris(principalName));
+  public List<String> getAvailableSourceUris(String username) {
+    List<String> sources = new ArrayList<>(getOwnSepaUris(username));
     userStorage
             .getAllUsers()
             .stream()
-            .filter(u -> !(u.getPrincipalName().equals(principalName)))
+            .filter(u -> !(u.getUsername().equals(username)))
             .map(u -> u.getOwnSources()
                     .stream()
                     .filter(p -> p.isPublicElement())
@@ -258,12 +258,12 @@ public class UserService {
     return getUserAccount(username).getPreferredDataStreams();
   }
 
-  public UserAccount getUserAccount(String principalName) {
-    return (UserAccount) getPrincipal(principalName);
+  public UserAccount getUserAccount(String username) {
+    return (UserAccount) getPrincipal(username);
   }
 
-  private Principal getPrincipal(String principalName) {
-    return userStorage.getUser(principalName);
+  private Principal getPrincipal(String username) {
+    return userStorage.getUser(username);
   }
 
   private IUserStorage userStorage() {

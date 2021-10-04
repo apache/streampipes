@@ -34,11 +34,11 @@ export class GeneralProfileSettingsComponent extends BasicProfileSettings implem
   originalDarkMode = false;
   darkModeChanged = false;
 
-  constructor(private authService: AuthService,
+  constructor(authService: AuthService,
               profileService: ProfileService,
               appConstants: AppConstants,
               tokenService: JwtTokenStorageService) {
-    super(profileService, appConstants, tokenService);
+    super(profileService, appConstants, tokenService, authService);
   }
 
   ngOnInit(): void {
@@ -62,7 +62,7 @@ export class GeneralProfileSettingsComponent extends BasicProfileSettings implem
   }
 
   updateAppearanceMode() {
-    this.profileService.updateAppearanceMode(this.darkMode).subscribe(response => {
+    this.profileService.updateAppearanceMode(this.userData.username, this.darkMode).subscribe(response => {
       this.darkModeChanged = true;
     });
   }

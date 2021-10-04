@@ -16,3 +16,21 @@
   ~
   -->
 
+<div fxLayout="column" class="page-container-padding">
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <sp-split-section title="User Accounts"
+                          subtitle="Add and edit user accounts">
+            <div class="subsection-title">Existing user accounts</div>
+            <sp-security-user-config></sp-security-user-config>
+        </sp-split-section>
+    </div>
+    <mat-divider></mat-divider>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
+        <sp-split-section title="Service Accounts"
+                          subtitle="Add and edit service accounts">
+            <div class="subsection-title">Existing service accounts</div>
+            <sp-security-service-config></sp-security-service-config>
+        </sp-split-section>
+    </div>
+    <mat-divider></mat-divider>
+</div>

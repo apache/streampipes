@@ -20,13 +20,12 @@ package org.apache.streampipes.model.client.user;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import java.util.List;
 import java.util.Set;
 
 @TsModel
 public class UserInfo {
 
-  private String userId;
+  private String username;
   private String displayName;
   private String email;
   private Set<String> roles;
@@ -36,12 +35,12 @@ public class UserInfo {
   public UserInfo() {
   }
 
-  public String getUserId() {
-    return userId;
+  public String getUsername() {
+    return username;
   }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   public String getDisplayName() {

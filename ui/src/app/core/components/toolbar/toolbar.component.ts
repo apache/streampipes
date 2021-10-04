@@ -55,7 +55,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
     this.getVersion();
     this.authService.user$.subscribe(user => {
       this.userEmail = user.displayName;
-      this.profileService.getUserProfile().subscribe(userInfo => {
+      this.profileService.getUserProfile(user.username).subscribe(userInfo => {
         this.darkMode = this.authService.darkMode$.getValue();
         this.modifyAppearance(userInfo.darkMode);
       });

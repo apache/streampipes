@@ -93,6 +93,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(Setup.class);
         register(ResetResource.class);
         register(UserProfile.class);
+        register(UserResource.class);
         register(Version.class);
         register(PipelineElementAsset.class);
         register(DataLakeDashboardResource.class);
@@ -104,6 +105,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DashboardWidget.class);
         register(Dashboard.class);
         register(VisualizablePipelineResource.class);
+        register(UserGroupResource.class);
 
         // Serializers
         register(GsonWithIdProvider.class);

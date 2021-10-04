@@ -15,36 +15,53 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.api;
+package org.apache.streampipes.model.client.user;
 
-import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.ServiceAccount;
-import org.apache.streampipes.model.client.user.UserAccount;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public interface IUserStorage {
-  List<Principal> getAllUsers();
+public class Group {
 
-  List<UserAccount> getAllUserAccounts();
+  protected @SerializedName("_id") String groupId;
+  protected @SerializedName("_rev") String rev;
 
-  List<ServiceAccount> getAllServiceAccounts();
+  private String groupName;
 
-  Principal getUser(String username);
+  private List<Role> roles;
 
-  UserAccount getUserAccount(String username);
+  public Group() {
+  }
 
-  ServiceAccount getServiceAccount(String username);
+  public String getGroupId() {
+    return groupId;
+  }
 
-  void storeUser(Principal user);
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
+  }
 
-  void updateUser(Principal user);
+  public String getRev() {
+    return rev;
+  }
 
-  boolean emailExists(String email);
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
 
-  boolean checkUser(String username);
+  public String getGroupName() {
+    return groupName;
+  }
 
-  void deleteUser(String principalId);
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
 
-  Principal getUserById(String principalId);
+  public List<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
+  }
 }

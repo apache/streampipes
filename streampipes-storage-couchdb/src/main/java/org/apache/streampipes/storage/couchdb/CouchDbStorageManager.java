@@ -38,6 +38,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public ICategoryStorage getCategoryStorageAPI() { return new CategoryStorageImpl(); }
 
   @Override
+  public IUserGroupStorage getUserGroupStorage() {
+    return new UserGroupStorageImpl();
+  }
+
+  @Override
   public ILabelStorage getLabelStorageAPI() { return new LabelStorageImpl(); }
 
   @Override

@@ -16,7 +16,13 @@
  *
  */
 
-package org.apache.streampipes.model.client.security;
+@import '../../../../scss/sp/sp-dialog.scss';
 
-public class User {
+.form-field .mat-form-field-wrapper {
+  margin-bottom: -1.25em;
+}
+
+
+.form-field .mat-form-field-infix {
+  border-top: 0;
 }

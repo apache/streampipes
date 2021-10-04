@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './shared/configuration.service';
@@ -46,6 +46,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MatDividerModule } from '@angular/material/divider';
+import { SecurityUserConfigComponent } from './security-configuration/security-user-configuration/security-user-config.component';
+import { SecurityServiceConfigComponent } from './security-configuration/security-service-configuration/security-service-config.component';
+import { EditUserDialogComponent } from './security-configuration/edit-user-dialog/edit-user-dialog.component';
+import { PlatformServicesModule } from '../platform-services/platform.module';
 
 @NgModule({
   imports: [
@@ -62,7 +66,9 @@ import { MatDividerModule } from '@angular/material/divider';
     MatTooltipModule,
     FormsModule,
     DragDropModule,
-    CoreUiModule
+    CoreUiModule,
+    ReactiveFormsModule,
+    PlatformServicesModule,
   ],
   declarations: [
     ConfigurationComponent,
@@ -73,8 +79,11 @@ import { MatDividerModule } from '@angular/material/divider';
     ConsulConfigsBooleanComponent,
     ConsulConfigsNumberComponent,
     DeleteDatalakeIndexComponent,
+    EditUserDialogComponent,
     PipelineElementConfigurationComponent,
     SecurityConfigurationComponent,
+    SecurityUserConfigComponent,
+    SecurityServiceConfigComponent,
     MessagingConfigurationComponent,
     DatalakeConfigurationComponent
   ],

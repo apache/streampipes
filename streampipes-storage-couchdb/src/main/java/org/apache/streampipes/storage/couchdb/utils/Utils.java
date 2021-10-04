@@ -76,6 +76,10 @@ public class Utils {
     return getCouchDbGsonClient("pipeline");
   }
 
+  public static CouchDbClient getCouchDbUserGroupStorage() {
+    return getCouchDbGsonClient("usergroup");
+  }
+
   public static CouchDbClient getCouchDbSepaInvocationClient() {
     return getCouchDbGsonClient("invocation");
   }

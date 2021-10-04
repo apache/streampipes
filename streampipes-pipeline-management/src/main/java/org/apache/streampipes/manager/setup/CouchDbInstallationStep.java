@@ -146,10 +146,10 @@ public class CouchDbInstallationStep extends InstallationStep {
       Map<String, MapReduce> views = new HashMap<>();
 
       MapReduce passwordFunction = new MapReduce();
-      passwordFunction.setMap("function(doc) { if(doc.principalName && doc.principalType === 'USER_ACCOUNT' && doc.password) { emit(doc.principalName, doc.password); } }");
+      passwordFunction.setMap("function(doc) { if(doc.username && doc.principalType === 'USER_ACCOUNT' && doc.password) { emit(doc.username, doc.password); } }");
 
       MapReduce usernameFunction = new MapReduce();
-      usernameFunction.setMap("function(doc) { if(doc.principalName) { emit(doc.principalName, doc); } }");
+      usernameFunction.setMap("function(doc) { if(doc.username) { emit(doc.username, doc); } }");
 
       MapReduce tokenFunction = new MapReduce();
       tokenFunction.setMap("function(doc) { if (doc.userApiTokens) { doc.userApiTokens.forEach(function(token) { emit(token.hashedToken, doc.email); });}}");

@@ -58,8 +58,8 @@ public class SpKeyResolver implements SigningKeyResolver {
     return null;
   }
 
-  private Principal getPrincipal(String principalName) {
-    return userStorage.getUser(principalName);
+  private Principal getPrincipal(String username) {
+    return userStorage.getUser(username);
   }
 
   private boolean isRealUser(Principal principal) {

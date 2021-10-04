@@ -36,7 +36,7 @@ public class JwtTokenProvider {
 		Date tokenExpirationDate = makeExpirationDate();
 		Map<String, Object> claims = makeClaims(userPrincipal, roles);
 
-		return JwtTokenUtils.makeJwtToken(userPrincipal.getPrincipalName(), tokenSecret(), claims, tokenExpirationDate);
+		return JwtTokenUtils.makeJwtToken(userPrincipal.getUsername(), tokenSecret(), claims, tokenExpirationDate);
 	}
 
 	private Map<String, Object> makeClaims(Principal principal,
@@ -76,7 +76,7 @@ public class JwtTokenProvider {
 	private UserInfo toUserInfo(UserAccount localUser,
 															Set<String> roles) {
 		UserInfo userInfo = new UserInfo();
-		userInfo.setUserId("id");
+		userInfo.setUsername(localUser.getUsername());
 		userInfo.setEmail(localUser.getEmail());
 		userInfo.setDisplayName(localUser.getUsername());
 		userInfo.setShowTutorial(!localUser.isHideTutorial());

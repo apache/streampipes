@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-10-01 13:23:19.
+// Generated using typescript-generator version 2.27.744 on 2021-10-04 22:00:31.
 
 export class Element {
     elementId: string;
@@ -139,7 +139,7 @@ export class Principal implements UserDetails {
     ownSources: Element[];
     password: string;
     principalId: string;
-    principalName: string;
+    principalType: PrincipalType;
     rev: string;
     roles: Role[];
     username: string;
@@ -153,19 +153,19 @@ export class Principal implements UserDetails {
         instance.password = data.password;
         instance.username = data.username;
         instance.authorities = __getCopyArrayFn(__identity<GrantedAuthority>())(data.authorities);
+        instance.accountNonLocked = data.accountNonLocked;
         instance.accountNonExpired = data.accountNonExpired;
         instance.credentialsNonExpired = data.credentialsNonExpired;
-        instance.accountNonLocked = data.accountNonLocked;
         instance.principalId = data.principalId;
         instance.rev = data.rev;
         instance.accountEnabled = data.accountEnabled;
         instance.accountLocked = data.accountLocked;
         instance.accountExpired = data.accountExpired;
-        instance.principalName = data.principalName;
         instance.ownSources = __getCopyArrayFn(Element.fromData)(data.ownSources);
         instance.ownSepas = __getCopyArrayFn(Element.fromData)(data.ownSepas);
         instance.ownActions = __getCopyArrayFn(Element.fromData)(data.ownActions);
         instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        instance.principalType = data.principalType;
         return instance;
     }
 }
@@ -185,6 +185,20 @@ export class RawUserApiToken {
         instance.hashedToken = data.hashedToken;
         instance.tokenName = data.tokenName;
         instance.tokenId = data.tokenId;
+        return instance;
+    }
+}
+
+export class ServiceAccount extends Principal {
+    clientSecret: string;
+
+    static fromData(data: ServiceAccount, target?: ServiceAccount): ServiceAccount {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new ServiceAccount();
+        super.fromData(data, instance);
+        instance.clientSecret = data.clientSecret;
         return instance;
     }
 }
@@ -248,14 +262,14 @@ export class UserInfo {
     email: string;
     roles: string[];
     showTutorial: boolean;
-    userId: string;
+    username: string;
 
     static fromData(data: UserInfo, target?: UserInfo): UserInfo {
         if (!data) {
             return data;
         }
         const instance = target || new UserInfo();
-        instance.userId = data.userId;
+        instance.username = data.username;
         instance.displayName = data.displayName;
         instance.email = data.email;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
@@ -265,7 +279,9 @@ export class UserInfo {
     }
 }
 
-export type Role = "SYSTEM_ADMINISTRATOR" | "MANAGER" | "OPERATOR" | "DIMENSION_OPERATOR" | "USER_DEMO" | "BUSINESS_ANALYST";
+export type PrincipalType = "USER_ACCOUNT" | "SERVICE_ACCOUNT";
+
+export type Role = "ADMIN" | "PIPELINE_ADMIN" | "DASHBOARD_ADMIN" | "DATA_EXPLORER_ADMIN" | "CONNECT_ADMIN" | "DASHBOARD_USER" | "DATA_EXPLORER_USER" | "PIPELINE_USER" | "APP_USER";
 
 function __getCopyArrayFn<T>(itemCopyFn: (item: T) => T): (array: T[]) => T[] {
     return (array: T[]) => __copyArray(array, itemCopyFn);

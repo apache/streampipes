@@ -35,98 +35,111 @@ import java.util.stream.Collectors;
 /**
  * User Storage.
  * Handles operations on user including user-specified pipelines.
- *
- *
  */
 public class UserStorage extends AbstractDao<Principal> implements IUserStorage {
 
-    Logger LOG = LoggerFactory.getLogger(UserStorage.class);
+  Logger LOG = LoggerFactory.getLogger(UserStorage.class);
 
-    public UserStorage() {
-        super(Utils::getCouchDbUserClient, Principal.class);
+  public UserStorage() {
+    super(Utils::getCouchDbUserClient, Principal.class);
+  }
+
+  @Override
+  public List<Principal> getAllUsers() {
+    List<Principal> users = couchDbClientSupplier
+            .get()
+            .view("users/username")
+            .includeDocs(true)
+            .query(Principal.class);
+    return new ArrayList<>(users);
+  }
+
+  @Override
+  public List<UserAccount> getAllUserAccounts() {
+    return getAllUsers()
+            .stream()
+            .filter(u -> u instanceof UserAccount)
+            .map(u -> (UserAccount) u)
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<ServiceAccount> getAllServiceAccounts() {
+    return getAllUsers()
+            .stream()
+            .filter(u -> u instanceof ServiceAccount)
+            .map(u -> (ServiceAccount) u)
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  public Principal getUser(String username) {
+    // TODO improve
+    CouchDbClient couchDbClient = couchDbClientSupplier.get();
+    List<Principal> users = couchDbClient
+            .view("users/username")
+            .key(username)
+            .includeDocs(true)
+            .query(Principal.class);
+    if (users.size() != 1) {
+      LOG.error("None or to many users with matching username");
     }
+    return users.size() > 0 ? users.get(0) : null;
+  }
 
-    @Override
-    public List<Principal> getAllUsers()
-    {
-      List<Principal> users = findAll();
-    	return new ArrayList<>(users);
-    }
+  @Override
+  public UserAccount getUserAccount(String username) {
+    return (UserAccount) getUser(username);
+  }
 
-    @Override
-    public List<UserAccount> getAllUserAccounts() {
-        return findAll()
-                .stream()
-                .filter(u -> u instanceof UserAccount)
-                .map(u -> (UserAccount) u)
-                .collect(Collectors.toList());
-    }
+  @Override
+  public ServiceAccount getServiceAccount(String username) {
+    return (ServiceAccount) getUser(username);
+  }
 
-    @Override
-    public List<ServiceAccount> getAllServiceAccounts() {
-        return findAll()
-                .stream()
-                .filter(u -> u instanceof ServiceAccount)
-                .map(u -> (ServiceAccount) u)
-                .collect(Collectors.toList());
-    }
+  @Override
+  public void storeUser(Principal user) {
+    persist(user);
+  }
 
-    @Override
-    public Principal getUser(String principalName) {
-        // TODO improve
-        CouchDbClient couchDbClient = couchDbClientSupplier.get();
-        List<Principal> users = couchDbClient.view("users/username").key(principalName).includeDocs(true).query(Principal.class);
-        if (users.size() != 1) {
-            LOG.error("None or to many users with matching username");
-        }
-        return users.get(0);
-    }
+  @Override
+  public void updateUser(Principal user) {
+    update(user);
+  }
 
-    @Override
-    public UserAccount getUserAccount(String principalName) {
-        return (UserAccount) getUser(principalName);
-    }
+  @Override
+  public boolean emailExists(String email) {
+    List<UserAccount> users = getAllUserAccounts();
+    return users
+            .stream()
+            .filter(u -> u.getEmail() != null)
+            .anyMatch(u -> u.getEmail().equals(email));
+  }
 
-    @Override
-    public ServiceAccount getServiceAccount(String principalName) {
-        return (ServiceAccount) getUser(principalName);
-    }
+  /**
+   * @param username
+   * @return True if user exists exactly once, false otherwise
+   */
+  @Override
+  public boolean checkUser(String username) {
+    List<Principal> users = couchDbClientSupplier
+            .get()
+            .view("users/username")
+            .key(username)
+            .includeDocs(true)
+            .query(Principal.class);
 
-    @Override
-    public void storeUser(Principal user) {
-        persist(user);
-    }
+    return users.size() == 1;
+  }
 
-    @Override
-    public void updateUser(Principal user) {
-        update(user);
-    }
+  @Override
+  public void deleteUser(String principalId) {
+    delete(principalId);
+  }
 
-    @Override
-    public boolean emailExists(String email)
-    {
-    	List<UserAccount> users = getAllUserAccounts();
-    	return users
-                .stream()
-                .filter(u -> u.getEmail() != null)
-                .anyMatch(u -> u.getEmail().equals(email));
-    }
-
-    /**
-    *
-    * @param username
-    * @return True if user exists exactly once, false otherwise
-    */
-   @Override
-   public boolean checkUser(String username) {
-       List<Principal> users = couchDbClientSupplier
-               .get()
-               .view("users/username")
-               .key(username)
-               .includeDocs(true)
-               .query(Principal.class);
-
-       return users.size() == 1;
-   }
+  @Override
+  public Principal getUserById(String principalId) {
+    return findWithNullIfEmpty(principalId);
+  }
 
 }
