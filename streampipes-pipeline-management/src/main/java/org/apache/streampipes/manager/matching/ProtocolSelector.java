@@ -29,6 +29,7 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.node.management.NodeManagement;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -71,15 +72,38 @@ public class ProtocolSelector extends GroundingSelector {
                     .getEventGrounding()
                     .getTransportProtocol();
         } else {
-            if(sourceInvocableOnEdgeNode()) {
-                for (SpEdgeNodeProtocol p: prioritizedEdgeProtocols) {
-                    // use edge node protocol
-                    if (matches(p, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
-                        return mqttTransportProtocolForEdge();
-                    } else if (matches(p, KafkaTransportProtocol.class) && supportsProtocol(KafkaTransportProtocol.class)) {
-                        return kafkaTransportProtocolForEdge();
+            if(sourceInvocableManagedByNodeController()) {
+                InvocableStreamPipesEntity invocableStreamPipesEntity = (InvocableStreamPipesEntity ) source;
+
+                boolean isEdgeOrFog = NodeManagement.getInstance().getAllNodes().stream()
+                        .filter(n -> n.getNodeControllerId()
+                                .equals(invocableStreamPipesEntity.getDeploymentTargetNodeId()))
+                        .anyMatch(n -> n.getStaticNodeMetadata().getType().equals("edge") ||
+                                n.getStaticNodeMetadata().getType().equals("fog"));
+
+                if (isEdgeOrFog) {
+                    for (SpEdgeNodeProtocol p: prioritizedEdgeProtocols) {
+                        // use edge node protocol
+                        if (matches(p, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
+                            return mqttTransportProtocolForEdge();
+                        } else if (matches(p, KafkaTransportProtocol.class) && supportsProtocol(KafkaTransportProtocol.class)) {
+                            return kafkaTransportProtocolForEdge();
+                        }
+                    }
+                } else {
+                    for(SpProtocol p: prioritizedProtocols) {
+                        if (matches(p, KafkaTransportProtocol.class) && supportsProtocol(KafkaTransportProtocol.class)) {
+                            return kafkaTransportProtocol();
+                        } else if (matches(p, JmsTransportProtocol.class) && supportsProtocol(JmsTransportProtocol.class)) {
+                            return jmsTransportProtocol();
+                        } else if (matches(p, MqttTransportProtocol.class) && supportsProtocol(MqttTransportProtocol.class)) {
+                            return mqttTransportProtocol();
+                        } else {
+                            throw new IllegalArgumentException("Transport protocol not found: " + p.getProtocolClass());
+                        }
                     }
                 }
+
             } else {
                 for(SpProtocol p: prioritizedProtocols) {
                     if (matches(p, KafkaTransportProtocol.class) && supportsProtocol(KafkaTransportProtocol.class)) {
@@ -149,7 +173,7 @@ public class ProtocolSelector extends GroundingSelector {
         }
     }
 
-    private boolean sourceInvocableOnEdgeNode() {
+    private boolean sourceInvocableManagedByNodeController() {
         return ((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId() != null &&
                 !((InvocableStreamPipesEntity) source).getDeploymentTargetNodeId().equals("default");
     }

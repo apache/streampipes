@@ -64,8 +64,15 @@ public class DockerContainerDeclarerSingleton {
     }
 
     public List<DockerContainer> getAutoDeploymentDockerContainers() {
-        if ("kafka".equals(NodeConfiguration.getNodeBrokerProtocol())) {
-            remove(DockerMosquittoContainer.SP_SVC_MOSQUITTO_ID);
+//        if ("kafka".equals(NodeConfiguration.getNodeBrokerProtocol())) {
+//            remove(DockerMosquittoContainer.SP_SVC_MOSQUITTO_ID);
+//        } else {
+//            remove(DockerKafkaContainer.SP_SVC_KAFKA_ID, DockerZookeeperContainer.SP_SVC_ZOOKEEPER_ID);
+//        }
+        if ("cloud".equals(NodeConfiguration.getNodeType())) {
+            remove(DockerMosquittoContainer.SP_SVC_MOSQUITTO_ID,
+                    DockerKafkaContainer.SP_SVC_KAFKA_ID,
+                    DockerZookeeperContainer.SP_SVC_ZOOKEEPER_ID);
         } else {
             remove(DockerKafkaContainer.SP_SVC_KAFKA_ID, DockerZookeeperContainer.SP_SVC_ZOOKEEPER_ID);
         }

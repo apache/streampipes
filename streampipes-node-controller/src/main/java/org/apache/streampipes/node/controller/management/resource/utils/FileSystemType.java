@@ -23,7 +23,8 @@ public enum FileSystemType {
     DISK("/dev/disk"),
     ROOT("/dev/root"),
     MMCBLK("/dev/mmcblk0p1"),
-    SDB("/dev/sdb");
+    SDB("/dev/sdb"),
+    MAPPER("/dev/mapper");
 
     private final String name;
 

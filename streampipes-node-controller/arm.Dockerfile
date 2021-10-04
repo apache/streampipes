@@ -27,7 +27,11 @@ ENV CONSUL_LOCATION consul
 
 COPY --from=build-dev /usr/bin/qemu-arm-static /usr/bin
 RUN set -ex; \
-    apt -y update; \
+    #apt -y update; \
+        apt update && apt upgrade; \
+        apt -y install gnupg2; \
+        apt-key adv --recv-key --keyserver keyserver.ubuntu.com 648ACFD622F3D138; \
+        apt-key adv --recv-key --keyserver keyserver.ubuntu.com 0E98404D386FA1D9; \
     apt -y --no-install-recommends install libjffi-jni curl; \
     apt clean; \
     rm -rf /tmp/apache-* /var/lib/apt/lists/*

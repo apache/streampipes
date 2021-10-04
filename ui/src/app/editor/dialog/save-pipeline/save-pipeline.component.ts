@@ -222,17 +222,17 @@ export class SavePipelineComponent implements OnInit {
         })
       })
 
-      // this.tmpPipeline.actions.forEach(actions => {
-      //   this.deploymentOptions[actions.appId] = [];
-      //
-      //   filteredNodes.forEach(filteredNode => {
-      //
-      //     if (filteredNode.supportedElements.length != 0 &&
-      //         filteredNode.supportedElements.some(appId => appId === actions.appId)) {
-      //       this.deploymentOptions[actions.appId].push(filteredNode);
-      //     }
-      //   })
-      // })
+      this.tmpPipeline.actions.forEach(actions => {
+        this.deploymentOptions[actions.appId] = [];
+
+        filteredNodes.forEach(filteredNode => {
+
+          if (filteredNode.supportedElements.length != 0 &&
+              filteredNode.supportedElements.some(appId => appId === actions.appId)) {
+            this.deploymentOptions[actions.appId].push(filteredNode);
+          }
+        })
+      })
 
     } else {
       this.addAppIds(this.tmpPipeline.sepas, this.edgeNodes);

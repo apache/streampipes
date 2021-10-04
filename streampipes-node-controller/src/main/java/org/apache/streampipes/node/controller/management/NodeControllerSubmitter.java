@@ -81,7 +81,7 @@ public abstract class NodeControllerSubmitter {
                 LOG.info("Start janitor manager");
                 JanitorManager.getInstance().run();
 
-                // TODO: remove after evaluation tests
+                //TODO: remove after evaluation tests
                 LOG.info("Start docker stats collector");
                 DockerStatsCollector.getInstance().run();
             }

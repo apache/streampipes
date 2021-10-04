@@ -59,6 +59,7 @@ export class NodeConfigurationDetailsComponent implements OnInit {
     ];
 
   deviceTypes = [
+    {value: 'gpsmodule', viewValue: 'GPS module'},
     {value: 'sensor', viewValue: 'Sensor'},
     {value: 'actuator', viewValue: 'Actuator'},
     {value: 'camera', viewValue: 'Camera'},

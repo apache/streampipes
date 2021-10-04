@@ -59,7 +59,7 @@ public class DataSinkPipelineElementResource extends InvocablePipelineElementRes
             protocol.setBrokerHostname("localhost");
             if (graph.getDeploymentTargetNodeId().equals("default")) {
                 if (protocol instanceof KafkaTransportProtocol) {
-                    ((KafkaTransportProtocol) protocol).setKafkaPort(9095);
+                    ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
                 }
             } else {
                 if (protocol instanceof KafkaTransportProtocol) {

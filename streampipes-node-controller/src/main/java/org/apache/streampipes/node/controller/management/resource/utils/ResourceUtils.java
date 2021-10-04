@@ -78,6 +78,9 @@ public class ResourceUtils {
             addDiskUsage(diskUsage, f);
         } else if (volume.contains(FileSystemType.SDB.getName())){
             addDiskUsage(diskUsage, f);
+        } else if (volume.contains(FileSystemType.MAPPER.getName())) {
+            // block devices
+            addDiskUsage(diskUsage, f);
         }
     }
 

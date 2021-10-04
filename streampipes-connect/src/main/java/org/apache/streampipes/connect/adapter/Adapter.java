@@ -26,6 +26,7 @@ import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.node.management.NodeManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
@@ -165,36 +166,49 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
     private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) throws AdapterException {
 
-        if (adapterDescription.getDeploymentTargetNodeId() != null) {
-            // use edge protocol
-            SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
-                    .getMessagingSettings()
-                    .getPrioritizedEdgeProtocols()
-                    .get(0);
+        if (adapterManagedByNodeController(adapterDescription)) {
 
-            if (GroundingService.isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
-                return new SendToMqttAdapterSink(adapterDescription);
-            } else if (GroundingService.isEdgeProtocol(edgeNodeProtocol, KafkaTransportProtocol.class)) {
-                return new SendToKafkaAdapterSink(adapterDescription);
+            if (isEdgeOrFogNodeTarget(adapterDescription)) {
+                return createSendToEdgeOrFogBrokerAdapterSink(adapterDescription);
             } else {
-                throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
+                return createSendToCloudBrokerAdapterSink(adapterDescription);
             }
 
         } else {
-            SpProtocol prioritizedProtocol = BackendConfig.INSTANCE
-                    .getMessagingSettings()
-                    .getPrioritizedProtocols()
-                    .get(0);
+            return createSendToCloudBrokerAdapterSink(adapterDescription);
+        }
+    }
 
-            if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-                return new SendToJmsAdapterSink(adapterDescription);
-            }
-            else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
-                return new SendToKafkaAdapterSink(adapterDescription);
-            }
-            else {
-                return new SendToMqttAdapterSink(adapterDescription);
-            }
+    private SendToBrokerAdapterSink<?> createSendToCloudBrokerAdapterSink(AdapterDescription adapterDescription) {
+        SpProtocol prioritizedProtocol = BackendConfig.INSTANCE
+                .getMessagingSettings()
+                .getPrioritizedProtocols()
+                .get(0);
+
+        if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+            return new SendToJmsAdapterSink(adapterDescription);
+        }
+        else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
+            return new SendToKafkaAdapterSink(adapterDescription);
+        }
+        else {
+            return new SendToMqttAdapterSink(adapterDescription);
+        }
+    }
+
+    private SendToBrokerAdapterSink<?> createSendToEdgeOrFogBrokerAdapterSink(AdapterDescription adapterDescription) throws AdapterException {
+        // use edge protocol
+        SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
+                .getMessagingSettings()
+                .getPrioritizedEdgeProtocols()
+                .get(0);
+
+        if (GroundingService.isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
+            return new SendToMqttAdapterSink(adapterDescription);
+        } else if (GroundingService.isEdgeProtocol(edgeNodeProtocol, KafkaTransportProtocol.class)) {
+            return new SendToKafkaAdapterSink(adapterDescription);
+        } else {
+            throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
         }
     }
 
@@ -233,6 +247,17 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
     public boolean isDebug() {
         return debug;
+    }
+
+    private static boolean adapterManagedByNodeController(AdapterDescription desc) {
+        return desc.getDeploymentTargetNodeId() != null && !desc.getDeploymentTargetNodeId().equals("default");
+    }
+
+    private static boolean isEdgeOrFogNodeTarget(AdapterDescription desc) {
+        return NodeManagement.getInstance().getAllNodes().stream()
+                .filter(n -> n.getNodeControllerId().equals(desc.getDeploymentTargetNodeId()))
+                .anyMatch(n -> n.getStaticNodeMetadata().getType().equals("edge") ||
+                        n.getStaticNodeMetadata().getType().equals("fog"));
     }
 
 }

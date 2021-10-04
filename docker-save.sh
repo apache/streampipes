@@ -24,12 +24,12 @@ docker_bundled_edge_tar=bundled-edge-img.tar
 docker_bundled_edge_arm_tar=bundled-edge-img-armv7.tar
 docker_bundled_edge_aarch64_tar=bundled-edge-img-aarch64.tar
 docker_bundled_core_tar=bundled-core-img.tar
+docker_bundled_cloud_tar=bundled-cloud-img.tar
 
 docker_img_edge=(
 $repo/node-controller:$version \
 $repo/extensions-all-jvm:$version \
 eclipse-mosquitto:1.6.12 )
-
 
 docker_img_edge_arm=(
 $repo/node-controller:$version-armv7 \
@@ -50,6 +50,11 @@ fogsyio/kafka:2.2.0 \
 fogsyio/zookeeper:3.4.13 \
 fogsyio/influxdb:1.7 )
 
+docker_img_cloud=(
+$repo/node-controller:$version \
+$repo/extensions-all-jvm:$version
+)
+
 docker_save_bundle(){
   echo "Start saving Docker images to tar ..."
   create_dir_if_not_exists
@@ -67,6 +72,9 @@ docker_save_bundle(){
   elif [ "$1" == "core" ]; then
       echo "Save core images to tar ..."
       docker save ${docker_img_core[@]} -o $dir/$docker_bundled_core_tar
+  elif [ "$1" == "cloud" ]; then
+      echo "Save cloud images to tar ..."
+      docker save ${docker_img_cloud[@]} -o $dir/$docker_bundled_cloud_tar
   else
       echo "Save all images to tar ..."
       docker save ${docker_img_edge[@]} -o $dir/$docker_bundled_edge_tar
@@ -88,6 +96,7 @@ Usage: ./docker-save.sh core
        ./docker-save.sh edge
        ./docker-save.sh edge armv7
        ./docker-save.sh edge aarch64
+       ./docker-save.sh cloud
 EOF
 }
 

@@ -60,12 +60,12 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
         this.consumer = consumerSupplier.get();
         this.producer = producerSupplier.get();
 
-        this.relayInfo = relayInfo();
-        this.metrics = new RelayMetrics(relayInfo.c, sourceProtocol, targetProtocol, eventRelayStrategy);
-
         if ("true".equals(System.getenv("SP_DEBUG"))) {
             modifyProtocolForDebugging();
         }
+
+        this.relayInfo = relayInfo();
+        this.metrics = new RelayMetrics(relayInfo.c, sourceProtocol, targetProtocol, eventRelayStrategy);
     }
 
     protected abstract void modifyProtocolForDebugging();

@@ -22,7 +22,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
-import org.apache.streampipes.container.util.ConsulUtil;
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.matching.output.OutputSchemaFactory;
@@ -38,6 +37,7 @@ import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.output.OutputStrategy;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.node.management.NodeManagement;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.storage.api.INodeInfoStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -101,10 +101,15 @@ public class InvocationGraphBuilder {
           else if (defaultDeploymentTarget(t) && source instanceof DataProcessorInvocation) {
             // target runs on cloud node: use central cloud broker, e.g. kafka
             connectSourceToTarget((DataProcessorInvocation) source, t, inputGrounding, false);
-          }
-          else {
-            // target runs on other edge node: use target edge node broker
-            connectSourceToTarget((DataProcessorInvocation) source, t, inputGrounding, true);
+          } else {
+
+            if (isEdgeOrFogNodeTarget(t)) {
+              // target runs on other edge node: use target edge node broker
+              connectSourceToTarget((DataProcessorInvocation) source, t, inputGrounding, true);
+            } else {
+              // target rungs on cloud node managed by node controller
+              connectSourceToTarget((DataProcessorInvocation) source, t, inputGrounding, false);
+            }
           }
 
         } else {
@@ -124,10 +129,13 @@ public class InvocationGraphBuilder {
             t.getInputStreams()
                     .get(getIndex(source.getDOM(),t))
                     .setEventGrounding(eg);
-          } else if (targetInvocableOnEdgeNode(t)) {
+          } else if (targetInvocableManagedByNodeController(t)) {
+
+            boolean isEdgeOrFog = isEdgeOrFogNodeTarget(t);
+
             // case 2: target on other edge node -> relay + target node broker
             // use unique topic for target in case we have multiple source stream relays to the target
-            EventGrounding eg = generateRelayGrounding(inputGrounding,t,true);
+            EventGrounding eg = generateRelayGrounding(inputGrounding,t,isEdgeOrFog);
             String oldTopic = extractTopic(eg);
             eg.getTransportProtocol().getTopicDefinition().setActualTopicName(oldTopic + "."
                     + this.pipelineId);
@@ -165,8 +173,15 @@ public class InvocationGraphBuilder {
                     .get(getRelayIndex((DataProcessorInvocation) source, t)));
   }
 
-  private boolean targetInvocableOnEdgeNode(InvocableStreamPipesEntity t) {
+  private boolean targetInvocableManagedByNodeController(InvocableStreamPipesEntity t) {
     return t.getDeploymentTargetNodeId() != null && !t.getDeploymentTargetNodeId().equals(DEFAULT_TAG);
+  }
+
+  private boolean isEdgeOrFogNodeTarget(InvocableStreamPipesEntity t) {
+    return NodeManagement.getInstance().getAllNodes().stream()
+            .filter(n -> n.getNodeControllerId().equals(t.getDeploymentTargetNodeId()))
+            .anyMatch(n -> n.getStaticNodeMetadata().getType().equals("edge") ||
+                    n.getStaticNodeMetadata().getType().equals("fog"));
   }
 
   private boolean defaultDeploymentTarget(InvocableStreamPipesEntity t) {

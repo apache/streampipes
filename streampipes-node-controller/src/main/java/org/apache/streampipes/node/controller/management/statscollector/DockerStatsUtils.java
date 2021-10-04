@@ -18,9 +18,13 @@
 package org.apache.streampipes.node.controller.management.statscollector;
 
 import com.spotify.docker.client.messages.ContainerStats;
+import com.spotify.docker.client.messages.NetworkStats;
+import org.apache.streampipes.model.Tuple2;
 
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class DockerStatsUtils {
 
@@ -48,6 +52,17 @@ public class DockerStatsUtils {
             cpuPercent = (cpuDelta / systemDelta) * (numCores * 100F);
         }
         return cpuPercent;
+    }
+
+    public static Tuple2<Long,Long> calculateNetworkIo(ContainerStats containerStats) {
+        Map<String, NetworkStats> networks = containerStats.networks();
+        AtomicLong rx = new AtomicLong(0L);
+        AtomicLong tx = new AtomicLong(0L);
+        networks.values().forEach(n -> {
+            rx.addAndGet(n.rxBytes());
+            tx.addAndGet(n.txBytes());
+        });
+        return new Tuple2<>(rx.longValue(),tx.longValue());
     }
 
     public static String humanReadableByteCountBin(long bytes) {

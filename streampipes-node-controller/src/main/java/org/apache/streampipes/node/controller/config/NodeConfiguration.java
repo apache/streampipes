@@ -55,6 +55,7 @@ public final class NodeConfiguration {
     private static int gpuCores;
     private static String gpuType;
     private static int dockerPruningFreqSecs;
+    private static int dockerStatsCollectFreqSecs;
     private static int resourceMonitorFreqSecs;
     private static int relayEventBufferSize;
     private static String consulHost;
@@ -239,6 +240,14 @@ public final class NodeConfiguration {
 
     public static void setDockerPruningFreqSecs(int dockerPruningFreqSecs) {
         NodeConfiguration.dockerPruningFreqSecs = dockerPruningFreqSecs;
+    }
+
+    public static int getDockerStatsCollectFreqSecs() {
+        return dockerStatsCollectFreqSecs;
+    }
+
+    public static void setDockerStatsCollectFreqSecs(int dockerStatsCollectFreqSecs) {
+        NodeConfiguration.dockerStatsCollectFreqSecs = dockerStatsCollectFreqSecs;
     }
 
     public static int getResourceMonitorFreqSecs() {
@@ -463,6 +472,10 @@ public final class NodeConfiguration {
                 case DOCKER_PRUNING_FREQ:
                     configMap.put(envKey, value);
                     setDockerPruningFreqSecs(Integer.parseInt(value));
+                    break;
+                case DOCKER_STATS_COLLECT_FREQ:
+                    configMap.put(envKey, value);
+                    setDockerStatsCollectFreqSecs(Integer.parseInt(value));
                     break;
                 case RESOURCE_UPDATE_FREQ:
                     configMap.put(envKey, value);

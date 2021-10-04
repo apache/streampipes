@@ -23,8 +23,6 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpEdgeNodeProtocol;
 import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.connect.adapter.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.model.grounding.EventGrounding;
@@ -35,6 +33,7 @@ import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.node.NodeInfoDescription;
+import org.apache.streampipes.node.management.NodeManagement;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.Collections;
@@ -92,60 +91,73 @@ public class GroundingService {
         String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
         TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
-        if (adapterDescription.getDeploymentTargetNodeId() != null) {
+        if (adapterManagedByNodeController(adapterDescription)) {
 
-            String nodeControllerId = extractNodeControllerId(adapterDescription);
-            SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
-                    .getMessagingSettings()
-                    .getPrioritizedEdgeProtocols()
-                    .get(0);
-
-            if (isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
-                MqttTransportProtocol brokerTransportProtocol =
-                        (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
-                brokerTransportProtocol.setTopicDefinition(topicDefinition);
-
-                eventGrounding.setTransportProtocol(brokerTransportProtocol);
-
-            } else if (isEdgeProtocol(edgeNodeProtocol, KafkaTransportProtocol.class)) {
-                KafkaTransportProtocol brokerTransportProtocol =
-                        (KafkaTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
-                brokerTransportProtocol.setTopicDefinition(topicDefinition);
-
-                eventGrounding.setTransportProtocol(brokerTransportProtocol);
+            if (isEdgeOrFogNodeTarget(adapterDescription)) {
+                createEdgeOrFogGrounding(eventGrounding, topicDefinition, adapterDescription);
             } else {
-                throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
+                createCloudProtocol(eventGrounding, topicDefinition);
             }
 
         } else {
-            SpProtocol prioritizedProtocol =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
-
-            if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-                eventGrounding.setTransportProtocol(
-                        makeJmsTransportProtocol(
-                                BackendConfig.INSTANCE.getJmsHost(),
-                                BackendConfig.INSTANCE.getJmsPort(),
-                                topicDefinition));
-            } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
-                eventGrounding.setTransportProtocol(
-                        makeKafkaTransportProtocol(
-                                BackendConfig.INSTANCE.getKafkaHost(),
-                                BackendConfig.INSTANCE.getKafkaPort(),
-                                topicDefinition));
-            } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
-                eventGrounding.setTransportProtocol(
-                        makeMqttTransportProtocol(
-                                BackendConfig.INSTANCE.getMqttHost(),
-                                BackendConfig.INSTANCE.getMqttPort(),
-                                topicDefinition));
-            }
+            createCloudProtocol(eventGrounding, topicDefinition);
         }
 
         eventGrounding.setTransportFormats(Collections
                 .singletonList(TransportFormatGenerator.getTransportFormat()));
 
         return eventGrounding;
+    }
+
+    private static void createEdgeOrFogGrounding(EventGrounding eventGrounding, TopicDefinition topicDefinition,
+                                                 AdapterDescription adapterDescription) throws AdapterException {
+        String nodeControllerId = extractNodeControllerId(adapterDescription);
+        SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
+                .getMessagingSettings()
+                .getPrioritizedEdgeProtocols()
+                .get(0);
+
+        if (isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
+            MqttTransportProtocol brokerTransportProtocol =
+                    (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+            brokerTransportProtocol.setTopicDefinition(topicDefinition);
+
+            eventGrounding.setTransportProtocol(brokerTransportProtocol);
+
+        } else if (isEdgeProtocol(edgeNodeProtocol, KafkaTransportProtocol.class)) {
+            KafkaTransportProtocol brokerTransportProtocol =
+                    (KafkaTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+            brokerTransportProtocol.setTopicDefinition(topicDefinition);
+
+            eventGrounding.setTransportProtocol(brokerTransportProtocol);
+        } else {
+            throw new AdapterException("Edge node protocol not supported. " + edgeNodeProtocol);
+        }
+    }
+
+    private static void createCloudProtocol(EventGrounding eventGrounding, TopicDefinition topicDefinition) {
+        SpProtocol prioritizedProtocol =
+                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
+        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+            eventGrounding.setTransportProtocol(
+                    makeJmsTransportProtocol(
+                            BackendConfig.INSTANCE.getJmsHost(),
+                            BackendConfig.INSTANCE.getJmsPort(),
+                            topicDefinition));
+        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
+            eventGrounding.setTransportProtocol(
+                    makeKafkaTransportProtocol(
+                            BackendConfig.INSTANCE.getKafkaHost(),
+                            BackendConfig.INSTANCE.getKafkaPort(),
+                            topicDefinition));
+        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+            eventGrounding.setTransportProtocol(
+                    makeMqttTransportProtocol(
+                            BackendConfig.INSTANCE.getMqttHost(),
+                            BackendConfig.INSTANCE.getMqttPort(),
+                            topicDefinition));
+        }
     }
 
     private static String extractNodeControllerId(AdapterDescription adapterDescription) {
@@ -211,5 +223,16 @@ public class GroundingService {
 
     private static Optional<NodeInfoDescription> getNodeInfoDescriptionForId(String id){
         return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getNode(id);
+    }
+
+    private static boolean adapterManagedByNodeController(AdapterDescription desc) {
+        return desc.getDeploymentTargetNodeId() != null && !desc.getDeploymentTargetNodeId().equals("default");
+    }
+
+    private static boolean isEdgeOrFogNodeTarget(AdapterDescription desc) {
+        return NodeManagement.getInstance().getAllNodes().stream()
+                .filter(n -> n.getNodeControllerId().equals(desc.getDeploymentTargetNodeId()))
+                .anyMatch(n -> n.getStaticNodeMetadata().getType().equals("edge") ||
+                        n.getStaticNodeMetadata().getType().equals("fog"));
     }
 }
