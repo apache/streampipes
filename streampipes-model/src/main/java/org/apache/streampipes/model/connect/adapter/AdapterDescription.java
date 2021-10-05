@@ -42,8 +42,6 @@ import java.util.List;
 @TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
-//    private String adapterId;
-
     private String userName;
 
     private EventGrounding eventGrounding;
@@ -60,6 +58,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     private long createdAt;
 
+    //  Is used to store where the adapter is running to stop it
     private String selectedEndpointUrl;
 
     private String correspondingServiceGroup;

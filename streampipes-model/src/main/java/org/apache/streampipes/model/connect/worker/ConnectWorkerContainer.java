@@ -27,6 +27,7 @@ import org.apache.streampipes.model.util.ElementIdGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ConnectWorkerContainer extends UnnamedStreamPipesEntity {
 
     private @SerializedName("_rev") String rev;

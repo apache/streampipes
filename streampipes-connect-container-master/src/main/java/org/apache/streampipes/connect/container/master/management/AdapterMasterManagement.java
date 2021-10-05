@@ -23,6 +23,7 @@ import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
@@ -36,9 +37,12 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
 import org.apache.streampipes.storage.management.StorageManager;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -138,22 +142,27 @@ public class AdapterMasterManagement {
     throw new AdapterException("Could not find adapter with id: " + id);
   }
 
+  /**
+   * First the adapter is stopped removed, then the according data source is deleted
+   * @param elementId
+   * @throws AdapterException
+   */
   public void deleteAdapter(String elementId) throws AdapterException {
     // IF Stream adapter delete it
     boolean isStreamAdapter = isStreamAdapter(elementId);
-    AdapterDescription ad = adapterStorage.getAdapter(elementId);
 
     if (isStreamAdapter) {
       try {
-        stopStreamAdapter(elementId, ad.getSelectedEndpointUrl());
+        stopStreamAdapter(elementId);
       } catch (AdapterException e) {
         LOG.info("Could not stop adapter: " + elementId);
         LOG.info(e.toString());
       }
     }
 
-    String username = ad.getUserName();
 
+    AdapterDescription ad = adapterStorage.getAdapter(elementId);
+    String username = ad.getUserName();
     adapterStorage.deleteAdapter(elementId);
     LOG.info("Successfully deleted adapter: " + elementId);
 
@@ -185,35 +194,55 @@ public class AdapterMasterManagement {
     WorkerRestClient.stopSetAdapter(baseUrl, ad);
   }
 
-  public void stopStreamAdapter(String elementId, String baseUrl) throws AdapterException {
+  public void stopStreamAdapter(String elementId) throws AdapterException {
     AdapterDescription ad = adapterStorage.getAdapter(elementId);
 
     if (!isStreamAdapter(elementId)) {
       throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
     } else {
-      WorkerRestClient.stopStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+      WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), (AdapterStreamDescription) ad);
     }
   }
 
-  public void startStreamAdapter(String adapterId, String baseUrl) throws AdapterException {
-    AdapterDescription ad = adapterStorage.getAdapter(adapterId);
-    if (!isStreamAdapter(adapterId)) {
-      throw new AdapterException("Adapter " + adapterId + "is not a stream adapter.");
-    } else {
-      ad.setSelectedEndpointUrl(baseUrl);
-      adapterStorage.updateAdapter(ad);
-      WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+  public void startStreamAdapter(String elementId) throws AdapterException {
+    // TODO ensure that adapter is not started twice
+
+    AdapterDescription ad = adapterStorage.getAdapter(elementId);
+    try {
+      String endpointUrl = findEndpointUrl(ad);
+      URI uri = new URI(endpointUrl);
+      String baseUrl = uri.getScheme() + "://" + uri.getAuthority();
+      if (!isStreamAdapter(elementId)) {
+        throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
+      } else {
+        ad.setSelectedEndpointUrl(baseUrl);
+        adapterStorage.updateAdapter(ad);
+        WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+      }
+    } catch (NoServiceEndpointsAvailableException e) {
+      e.printStackTrace();
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
     }
+
+
   }
 
   public boolean isStreamAdapter(String id) {
-    AdapterDescription ad = adapterStorage.getAdapter(id);
+    AdapterDescription adapterDescription = adapterStorage.getAdapter(id);
+    return isStreamAdapter(adapterDescription);
+  }
 
-    return ad instanceof AdapterStreamDescription;
+  public boolean isStreamAdapter(AdapterDescription adapterDescription) {
+    return adapterDescription instanceof AdapterStreamDescription;
   }
 
   private IAdapterStorage getAdapterStorage() {
     return new AdapterStorageImpl();
   }
 
+  private String findEndpointUrl(AdapterDescription adapterDescription) throws NoServiceEndpointsAvailableException {
+    SpServiceUrlProvider serviceUrlProvider = SpServiceUrlProvider.ADAPTER;
+    return new ExtensionsServiceEndpointGenerator(adapterDescription.getAppId(), serviceUrlProvider).getEndpointResourceUrl();
+  }
 }

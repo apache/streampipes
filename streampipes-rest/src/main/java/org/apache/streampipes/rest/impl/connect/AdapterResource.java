@@ -87,9 +87,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopAdapter(@PathParam("id") String adapterId) throws NoServiceEndpointsAvailableException {
         try {
-            AdapterDescription adapterDescription = getAdapterDescription(adapterId);
-            String workerBaseUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
-            managementService.stopStreamAdapter(adapterId, workerBaseUrl);
+            managementService.stopStreamAdapter(adapterId);
             return ok(Notifications.success("Adapter started"));
         } catch (AdapterException e) {
             LOG.error("Could not stop adapter with id " +adapterId, e);
@@ -103,10 +101,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     public Response startAdapter(@PathParam("id") String adapterId) {
         try {
-            String workerUrl =  workerUrlProvider.getWorkerBaseUrl(getAdapterDescription(adapterId).getAppId());
-            managementService.startStreamAdapter(adapterId, workerUrl);
+            managementService.startStreamAdapter(adapterId);
             return ok(Notifications.success("Adapter stopped"));
-        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+        } catch (AdapterException e) {
             LOG.error("Could not start adapter with id " +adapterId, e);
             return ok(Notifications.error(e.getMessage()));
         }
