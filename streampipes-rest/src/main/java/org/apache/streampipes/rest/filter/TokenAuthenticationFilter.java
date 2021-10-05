@@ -1,16 +1,21 @@
 package org.apache.streampipes.rest.filter;
 
 import org.apache.streampipes.commons.constants.HttpConstants;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.ServiceAccount;
+import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
+import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.apache.streampipes.user.management.model.ServiceAccountDetails;
+import org.apache.streampipes.user.management.model.UserAccountDetails;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -63,7 +68,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
 	private void applySuccessfulAuth(HttpServletRequest request,
 																	 String username) {
-		UserDetails userDetails = userStorage.getUser(username);
+		Principal user = userStorage.getUser(username);
+		PrincipalUserDetails<?> userDetails = user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) : new ServiceAccountDetails((ServiceAccount) user);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 		authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

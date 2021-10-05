@@ -6,6 +6,7 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserInfo;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
+import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -26,7 +27,7 @@ public class JwtTokenProvider {
 	}
 
 	public String createToken(Authentication authentication) {
-		Principal userPrincipal = (Principal) authentication.getPrincipal();
+		Principal userPrincipal = ((PrincipalUserDetails<?>)authentication.getPrincipal()).getDetails();
 		Set<String> roles = authentication
 						.getAuthorities()
 						.stream()

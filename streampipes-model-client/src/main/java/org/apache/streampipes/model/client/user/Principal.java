@@ -19,14 +19,13 @@
 package org.apache.streampipes.model.client.user;
 
 import com.google.gson.annotations.SerializedName;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class Principal implements UserDetails {
+public abstract class Principal {
 
 	protected @SerializedName("_id") String principalId;
 	protected @SerializedName("_rev") String rev;
@@ -177,30 +176,7 @@ public abstract class Principal implements UserDetails {
 		this.groups = groups;
 	}
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return !this.isAccountExpired();
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return !this.isAccountLocked();
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return this.isAccountEnabled();
-	}
-
-	@Override
 	public String getUsername() {
 		return username;
 	}
-
-
 }

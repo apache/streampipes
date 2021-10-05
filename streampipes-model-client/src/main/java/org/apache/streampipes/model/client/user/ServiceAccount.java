@@ -17,11 +17,8 @@
  */
 package org.apache.streampipes.model.client.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
 import java.util.Set;
 
 @TsModel
@@ -52,17 +49,6 @@ public class ServiceAccount extends Principal {
 
   public void setClientSecret(String clientSecret) {
     this.clientSecret = clientSecret;
-  }
-
-  @JsonIgnore
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return null;
-  }
-
-  @Override
-  public String getPassword() {
-    return null;
   }
 
 }

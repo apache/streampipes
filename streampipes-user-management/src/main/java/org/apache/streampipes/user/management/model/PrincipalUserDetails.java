@@ -15,23 +15,50 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.user.management.service;
+package org.apache.streampipes.user.management.model;
 
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.ServiceAccount;
-import org.apache.streampipes.model.client.user.UserAccount;
-import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.apache.streampipes.user.management.model.ServiceAccountDetails;
-import org.apache.streampipes.user.management.model.UserAccountDetails;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class SpUserDetailsService implements UserDetailsService {
+public abstract class PrincipalUserDetails<T extends Principal> implements UserDetails {
+
+  protected T details;
+
+  public PrincipalUserDetails(T details) {
+    this.details = details;
+  }
+
+  public T getDetails() {
+    return details;
+  }
+
+  public void setDetails(T details) {
+    this.details = details;
+  }
 
   @Override
-  public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    Principal user = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI().getUser(s);
-    return user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) : new ServiceAccountDetails((ServiceAccount) user);
+  public boolean isAccountNonExpired() {
+    return !this.details.isAccountExpired();
   }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return !this.details.isAccountLocked();
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return this.details.isAccountEnabled();
+  }
+
+  @Override
+  public String getUsername() {
+    return this.details.getUsername();
+  }
+
 }

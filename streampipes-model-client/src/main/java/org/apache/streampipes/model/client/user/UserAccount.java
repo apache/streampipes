@@ -18,15 +18,11 @@
 
 package org.apache.streampipes.model.client.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @TsModel
 public class UserAccount extends Principal {
@@ -171,16 +167,7 @@ public class UserAccount extends Principal {
 		this.darkMode = darkMode;
 	}
 
-	@JsonIgnore
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles.stream().map(Enum::toString).map(r -> (GrantedAuthority) () -> r).collect(Collectors.toList());
-	}
-
-	@Override
 	public String getPassword() {
 		return password;
 	}
-
-
 }

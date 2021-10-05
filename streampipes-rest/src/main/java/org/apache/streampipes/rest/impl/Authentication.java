@@ -28,6 +28,7 @@ import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
+import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -93,7 +94,7 @@ public class Authentication extends AbstractRestResource {
   }
 
   private Response processAuth(org.springframework.security.core.Authentication auth) {
-    Principal principal = (Principal) auth.getPrincipal();
+    Principal principal = ((PrincipalUserDetails<?>) auth.getPrincipal()).getDetails();
     if (principal instanceof UserAccount) {
       JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
       return ok(tokenResp);
