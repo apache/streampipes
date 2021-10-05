@@ -52,6 +52,7 @@ import { EditUserDialogComponent } from './security-configuration/edit-user-dial
 import { PlatformServicesModule } from '../platform-services/platform.module';
 import { SecurityUserGroupConfigComponent } from './security-configuration/user-group-configuration/user-group-configuration.component';
 import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
+import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';
 
 @NgModule({
   imports: [
@@ -83,6 +84,7 @@ import { EditGroupDialogComponent } from './security-configuration/edit-group-di
     DeleteDatalakeIndexComponent,
     EditUserDialogComponent,
     EditGroupDialogComponent,
+    EmailConfigurationComponent,
     PipelineElementConfigurationComponent,
     SecurityConfigurationComponent,
     SecurityUserConfigComponent,

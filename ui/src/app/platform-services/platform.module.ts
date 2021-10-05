@@ -30,12 +30,15 @@ import { PipelineCanvasMetadataService } from './apis/pipeline-canvas-metadata.s
 import { PipelineTemplateService } from './apis/pipeline-template.service';
 import { UserService } from './apis/user.service';
 import { UserGroupService } from './apis/user-group.service';
+import { MailConfigService } from './apis/mail-config.service';
 
 @NgModule({
-  imports: [],
+  imports: [
+  ],
   declarations: [],
   providers: [
     FilesService,
+    MailConfigService,
     MeasurementUnitsService,
     PlatformServicesCommons,
     PipelineCanvasMetadataService,

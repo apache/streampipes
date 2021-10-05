@@ -23,6 +23,7 @@ import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.ps.DataLakeResourceV4;
 import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
+import org.apache.streampipes.rest.impl.admin.EmailConfigurationResource;
 import org.apache.streampipes.rest.impl.connect.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
@@ -63,6 +64,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataLakeNoUserResourceV3.class);
         register(DataStream.class);
         register(Deployment.class);
+        register(EmailConfigurationResource.class);
         register(ExtensionsServiceEndpointResource.class);
         register(FileServingResource.class);
         register(InternalPipelineTemplates.class);

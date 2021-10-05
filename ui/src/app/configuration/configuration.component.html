@@ -22,6 +22,7 @@
             <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)"
                            color="accent">
                 <mat-tab label="DataLake"></mat-tab>
+                <mat-tab label="Mail"></mat-tab>
                 <mat-tab label="Messaging"></mat-tab>
                 <mat-tab label="Pipeline Element Configuration"></mat-tab>
                 <mat-tab label="Security"></mat-tab>
@@ -33,13 +34,16 @@
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 0">
         <sp-datalake-configuration fxFlex="100"></sp-datalake-configuration>
     </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 1">
+        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 1">
+            <sp-email-configuration fxFlex="100"></sp-email-configuration>
+        </div>
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 2">
         <messaging-configuration fxFlex="100"></messaging-configuration>
     </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 2">
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 3">
         <pipeline-element-configuration fxFlex="100"></pipeline-element-configuration>
     </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 3">
+    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 4">
         <sp-security-configuration fxFlex="100"></sp-security-configuration>
     </div>
     </div>
