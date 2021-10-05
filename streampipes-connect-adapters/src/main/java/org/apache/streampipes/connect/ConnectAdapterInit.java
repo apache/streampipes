@@ -35,15 +35,15 @@ import org.apache.streampipes.connect.adapters.simulator.random.RandomDataStream
 import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
-import org.apache.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.apache.streampipes.connect.protocol.set.FileProtocol;
 import org.apache.streampipes.connect.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.protocol.stream.*;
 import org.apache.streampipes.connect.protocol.stream.pulsar.PulsarProtocol;
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 
-public class ConnectAdapterInit extends AdapterWorkerContainer {
+public class ConnectAdapterInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new ConnectAdapterInit().init();
