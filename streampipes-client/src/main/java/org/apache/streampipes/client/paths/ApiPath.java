@@ -15,23 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
+package org.apache.streampipes.client.paths;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.simplejavamail.api.email.Email;
+public class ApiPath {
 
-public class MailTester extends AbstractMailer{
-
-  public void sendTestMail(EmailConfig emailConfig) {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
-  }
-
-  private Email makeTestMail(EmailConfig emailConfig) {
-    return baseEmail(emailConfig)
-            .withSubject("Hello from Apache StreamPipes")
-            .appendText("Your email configuration is working!")
-            .to(emailConfig.getTestRecipientAddress())
-            .buildEmail();
-  }
-
+  public static String EMAIL_RESOURCE = "api/v2/mail";
 }

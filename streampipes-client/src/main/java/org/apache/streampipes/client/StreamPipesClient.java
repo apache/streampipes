@@ -22,10 +22,12 @@ import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
+import org.apache.streampipes.client.paths.ApiPath;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.apache.streampipes.model.mail.SpEmail;
 
 public class StreamPipesClient implements SupportsPipelineApi,
         SupportsPipelineElementTemplateApi,
@@ -174,5 +176,10 @@ public class StreamPipesClient implements SupportsPipelineApi,
 
   public CustomRequestApi customRequest() {
     return new CustomRequestApi(config);
+  }
+
+  public void deliverEmail(SpEmail email) {
+    CustomRequestApi api = customRequest();
+    api.sendPost(ApiPath.EMAIL_RESOURCE, email);
   }
 }

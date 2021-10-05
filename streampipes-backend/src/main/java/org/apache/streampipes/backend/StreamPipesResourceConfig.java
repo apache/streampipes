@@ -65,6 +65,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataStream.class);
         register(Deployment.class);
         register(EmailConfigurationResource.class);
+        register(EmailResource.class);
         register(ExtensionsServiceEndpointResource.class);
         register(FileServingResource.class);
         register(InternalPipelineTemplates.class);
