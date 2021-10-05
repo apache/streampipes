@@ -42,6 +42,7 @@ public abstract class Principal implements UserDetails {
 	protected List<Element> ownActions;
 
 	protected Set<Role> roles;
+	protected Set<String> groups;
 
 	private PrincipalType principalType;
 
@@ -51,6 +52,7 @@ public abstract class Principal implements UserDetails {
 		this.ownSepas = new ArrayList<>();
 		this.ownSources = new ArrayList<>();
 		this.roles = new HashSet<>();
+		this.groups = new HashSet<>();
 	}
 
 	public List<Element> getOwnSources() {
@@ -165,6 +167,14 @@ public abstract class Principal implements UserDetails {
 
 	public void setPrincipalType(PrincipalType principalType) {
 		this.principalType = principalType;
+	}
+
+	public Set<String> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<String> groups) {
+		this.groups = groups;
 	}
 
 	@Override

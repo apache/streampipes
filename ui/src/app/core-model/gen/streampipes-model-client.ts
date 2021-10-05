@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-10-04 22:00:31.
+// Generated using typescript-generator version 2.27.744 on 2021-10-05 10:08:33.
 
 export class Element {
     elementId: string;
@@ -102,6 +102,25 @@ export interface GrantedAuthority {
     authority: string;
 }
 
+export class Group {
+    groupId: string;
+    groupName: string;
+    rev: string;
+    roles: Role[];
+
+    static fromData(data: Group, target?: Group): Group {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Group();
+        instance.groupId = data.groupId;
+        instance.rev = data.rev;
+        instance.groupName = data.groupName;
+        instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        return instance;
+    }
+}
+
 export class MatchingResultMessage {
     description: string;
     matchingSuccessful: boolean;
@@ -134,6 +153,7 @@ export class Principal implements UserDetails {
     authorities: GrantedAuthority[];
     credentialsNonExpired: boolean;
     enabled: boolean;
+    groups: string[];
     ownActions: Element[];
     ownSepas: Element[];
     ownSources: Element[];
@@ -150,12 +170,12 @@ export class Principal implements UserDetails {
         }
         const instance = target || new Principal();
         instance.enabled = data.enabled;
-        instance.password = data.password;
         instance.username = data.username;
-        instance.authorities = __getCopyArrayFn(__identity<GrantedAuthority>())(data.authorities);
-        instance.accountNonLocked = data.accountNonLocked;
+        instance.password = data.password;
         instance.accountNonExpired = data.accountNonExpired;
+        instance.accountNonLocked = data.accountNonLocked;
         instance.credentialsNonExpired = data.credentialsNonExpired;
+        instance.authorities = __getCopyArrayFn(__identity<GrantedAuthority>())(data.authorities);
         instance.principalId = data.principalId;
         instance.rev = data.rev;
         instance.accountEnabled = data.accountEnabled;
@@ -165,6 +185,7 @@ export class Principal implements UserDetails {
         instance.ownSepas = __getCopyArrayFn(Element.fromData)(data.ownSepas);
         instance.ownActions = __getCopyArrayFn(Element.fromData)(data.ownActions);
         instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
+        instance.groups = __getCopyArrayFn(__identity<string>())(data.groups);
         instance.principalType = data.principalType;
         return instance;
     }

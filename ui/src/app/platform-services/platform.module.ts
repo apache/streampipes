@@ -29,6 +29,7 @@ import { SemanticTypesService } from './apis/semantic-types.service';
 import { PipelineCanvasMetadataService } from './apis/pipeline-canvas-metadata.service';
 import { PipelineTemplateService } from './apis/pipeline-template.service';
 import { UserService } from './apis/user.service';
+import { UserGroupService } from './apis/user-group.service';
 
 @NgModule({
   imports: [],
@@ -45,7 +46,8 @@ import { UserService } from './apis/user.service';
     PipelineService,
     SemanticTypesService,
     PipelineTemplateService,
-    UserService
+    UserService,
+    UserGroupService
   ],
   entryComponents: []
 })

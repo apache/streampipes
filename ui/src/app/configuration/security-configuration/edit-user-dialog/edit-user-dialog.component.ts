@@ -1,6 +1,25 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 import { AfterViewInit, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import {
+  Group,
   Role,
   ServiceAccount,
   UserAccount
@@ -17,6 +36,7 @@ import {
 import { UserRole } from '../../../_enums/user-role.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { UserService } from '../../../platform-services/apis/user.service';
+import { UserGroupService } from '../../../platform-services/apis/user-group.service';
 
 @Component({
   selector: 'sp-edit-user-dialog',
@@ -24,7 +44,7 @@ import { UserService } from '../../../platform-services/apis/user.service';
   styleUrls: ['./edit-user-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class EditUserDialogComponent implements OnInit, AfterViewInit {
+export class EditUserDialogComponent implements OnInit {
 
   @Input()
   user: any;
@@ -37,17 +57,19 @@ export class EditUserDialogComponent implements OnInit, AfterViewInit {
   clonedUser: UserAccount | ServiceAccount;
 
   availableRoles: string[];
+  availableGroups: Group[] = [];
 
   constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
               private fb: FormBuilder,
-              private userService: UserService) {
-  }
-
-  ngAfterViewInit(): void {
+              private userService: UserService,
+              private userGroupService: UserGroupService) {
   }
 
   ngOnInit(): void {
     this.availableRoles = Object.values(UserRole).filter(value => typeof value === 'string') as string[];
+    this.userGroupService.getAllUserGroups().subscribe(response => {
+      this.availableGroups = response;
+    });
     this.clonedUser = this.user instanceof UserAccount ? UserAccount.fromData(this.user, new UserAccount()) : ServiceAccount.fromData(this.user, new ServiceAccount());
     this.isUserAccount = this.user instanceof UserAccount;
     this.parentForm = this.fb.group({});
@@ -120,6 +142,14 @@ export class EditUserDialogComponent implements OnInit, AfterViewInit {
 
   close(refresh: boolean) {
     this.dialogRef.close(refresh);
+  }
+
+  changeGroupAssignment(event: MatCheckboxChange) {
+    if (this.clonedUser.groups.indexOf(event.source.value) > -1) {
+      this.clonedUser.groups.splice(this.clonedUser.groups.indexOf(event.source.value), 1);
+    } else {
+      this.clonedUser.groups.push(event.source.value);
+    }
   }
 
   changeRoleAssignment(event: MatCheckboxChange) {

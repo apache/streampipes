@@ -50,6 +50,8 @@ import { SecurityUserConfigComponent } from './security-configuration/security-u
 import { SecurityServiceConfigComponent } from './security-configuration/security-service-configuration/security-service-config.component';
 import { EditUserDialogComponent } from './security-configuration/edit-user-dialog/edit-user-dialog.component';
 import { PlatformServicesModule } from '../platform-services/platform.module';
+import { SecurityUserGroupConfigComponent } from './security-configuration/user-group-configuration/user-group-configuration.component';
+import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
 
 @NgModule({
   imports: [
@@ -80,12 +82,14 @@ import { PlatformServicesModule } from '../platform-services/platform.module';
     ConsulConfigsNumberComponent,
     DeleteDatalakeIndexComponent,
     EditUserDialogComponent,
+    EditGroupDialogComponent,
     PipelineElementConfigurationComponent,
     SecurityConfigurationComponent,
     SecurityUserConfigComponent,
+    SecurityUserGroupConfigComponent,
     SecurityServiceConfigComponent,
     MessagingConfigurationComponent,
-    DatalakeConfigurationComponent
+    DatalakeConfigurationComponent,
   ],
   providers: [
     ConfigurationService,

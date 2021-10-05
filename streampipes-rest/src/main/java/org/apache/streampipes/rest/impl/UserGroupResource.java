@@ -24,7 +24,7 @@ import org.apache.streampipes.storage.api.IUserGroupStorage;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/users/groups")
+@Path("/v2/usergroups")
 public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   @GET

@@ -18,9 +18,13 @@
 package org.apache.streampipes.model.client.user;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@TsModel
 public class Group {
 
   protected @SerializedName("_id") String groupId;
@@ -28,9 +32,10 @@ public class Group {
 
   private String groupName;
 
-  private List<Role> roles;
+  private Set<Role> roles;
 
   public Group() {
+    this.roles = new HashSet<>();
   }
 
   public String getGroupId() {
@@ -57,11 +62,11 @@ public class Group {
     this.groupName = groupName;
   }
 
-  public List<Role> getRoles() {
+  public Set<Role> getRoles() {
     return roles;
   }
 
-  public void setRoles(List<Role> roles) {
+  public void setRoles(Set<Role> roles) {
     this.roles = roles;
   }
 }
