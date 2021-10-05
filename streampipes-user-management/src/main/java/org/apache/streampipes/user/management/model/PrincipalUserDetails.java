@@ -18,14 +18,24 @@
 package org.apache.streampipes.user.management.model;
 
 import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Set;
 
 public abstract class PrincipalUserDetails<T extends Principal> implements UserDetails {
 
   protected T details;
+  private Set<Role> allRoles;
 
   public PrincipalUserDetails(T details) {
     this.details = details;
+    this.allRoles = this.details.getRoles();
+    details.getGroups().forEach(groupId -> {
+      Set<Role> groupRoles = StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage().getElementById(groupId).getRoles();
+      allRoles.addAll(groupRoles);
+    });
   }
 
   public T getDetails() {

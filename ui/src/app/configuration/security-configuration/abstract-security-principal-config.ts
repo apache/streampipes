@@ -68,6 +68,7 @@ export abstract class AbstractSecurityPrincipalConfig<T extends (UserAccount | S
   createUser() {
     const principal = this.getNewInstance();
     principal.roles = [];
+    principal.groups = [];
     this.openEditDialog(principal, false);
   }
 

@@ -55,6 +55,14 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
     Group group = getUserGroupStorage().getElementById(groupId);
     if (group != null) {
       getUserGroupStorage().deleteElement(group);
+
+      // TODO remove group from all users
+      getUserStorage().getAllUsers().forEach(user -> {
+        if (user.getGroups().contains(groupId)) {
+          user.getGroups().remove(groupId);
+          getUserStorage().updateUser(user);
+        }
+      });
       return ok();
     } else {
       return badRequest();

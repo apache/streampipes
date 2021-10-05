@@ -95,7 +95,7 @@
     <div class="sp-dialog-actions">
         <div fxLayout="row">
             <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
-                    [disabled]="!parentForm.valid || clonedUser.roles.length == 0"
+                    [disabled]="!parentForm.valid"
                     data-cy="sp-element-edit-user-save">
                 <i class="material-icons">save</i><span>&nbsp;Save</span>
             </button>
