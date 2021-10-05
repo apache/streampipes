@@ -36,7 +36,7 @@ public class ConnectWorkerRegistrationService {
     while (!connected) {
       List<String> coreServices = getConnectMasterUrl();
       if (coreServices.size() > 0) {
-        String masterUrl = getConnectMasterUrl().get(0) + "/streampipes-backend";
+        String masterUrl = coreServices.get(0) + "/streampipes-backend";
         LOG.info("Trying to connect to master: " + masterUrl);
         connected = MasterRestClient.register(masterUrl,
                 new ConnectWorkerDescriptionProvider().getContainerDescription(serviceGroup));

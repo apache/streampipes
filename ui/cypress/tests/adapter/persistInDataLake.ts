@@ -31,7 +31,7 @@ describe('Test File Stream Adapter', () => {
       .create('Machine_Data_Simulator')
       .setName('Machine Data Simulator Test')
       .addInput('input', 'wait-time-ms', '1000')
-      .setTimestampProperty('timestamp')
+      .setTimestampProperty('Timestamp')
       .setStoreInDataLake()
       .build();
 

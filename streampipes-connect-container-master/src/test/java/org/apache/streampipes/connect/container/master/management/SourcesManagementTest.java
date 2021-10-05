@@ -138,9 +138,7 @@ public class SourcesManagementTest {
     private List<AdapterDescription> getAdapterDescriptionList() {
         GenericAdapterSetDescription adapterSetDescription = new GenericAdapterSetDescription();
 
-        adapterSetDescription.setUri(ID);
-        adapterSetDescription.setId(ID);
-
+        adapterSetDescription.setElementId(ID);
 
         return Arrays.asList(adapterSetDescription);
     }

@@ -58,7 +58,7 @@ public class WorkerRestClientTest {
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
         when(WorkerPaths.class, "getStreamStopPath").thenReturn(expectedUrl);
         GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
-        description.setId("id1");
+        description.setElementId("id1");
 
         WorkerRestClient.stopStreamAdapter("", description);
 
@@ -73,7 +73,7 @@ public class WorkerRestClientTest {
         when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
 
         GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
-        description.setId("id1");
+        description.setElementId("id1");
 
         WorkerRestClient.stopStreamAdapter("", description);
 
@@ -88,7 +88,7 @@ public class WorkerRestClientTest {
         when(WorkerPaths.class, "getSetInvokePath").thenReturn(expectedUrl);
 
         GenericAdapterSetDescription description = new GenericAdapterSetDescription();
-        description.setId("id1");
+        description.setElementId("id1");
         WorkerRestClient.invokeSetAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
@@ -113,7 +113,7 @@ public class WorkerRestClientTest {
         when(WorkerPaths.class, "getSetStopPath").thenReturn(expectedUrl);
 
         GenericAdapterSetDescription description = new GenericAdapterSetDescription();
-        description.setId("id1");
+        description.setElementId("id1");
         WorkerRestClient.stopSetAdapter("", description);
 
         verifyStatic(WorkerRestClient.class, times(1));
@@ -127,7 +127,7 @@ public class WorkerRestClientTest {
         when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
 
         GenericAdapterSetDescription description = new GenericAdapterSetDescription();
-        description.setId("id1");
+        description.setElementId("id1");
         WorkerRestClient.stopSetAdapter("", description);
 
     }

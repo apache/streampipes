@@ -34,9 +34,8 @@ public abstract class AdapterStreamDescription extends AdapterDescription {
         super();
     }
 
-    public AdapterStreamDescription(String uri, String name, String description) {
-        super(uri, name, description);
-        setAdapterId(uri);
+    public AdapterStreamDescription(String elementId, String name, String description) {
+        super(elementId, name, description);
     }
 
     public AdapterStreamDescription(AdapterStreamDescription other) {

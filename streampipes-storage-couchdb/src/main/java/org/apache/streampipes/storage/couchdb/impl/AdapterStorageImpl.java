@@ -65,7 +65,7 @@ public class AdapterStorageImpl extends AbstractDao<AdapterDescription> implemen
     public void deleteAdapter(String adapterId) {
 
         AdapterDescription adapterDescription = getAdapter(adapterId);
-        couchDbClientSupplier.get().remove(adapterDescription.getId(), adapterDescription.getRev());
+        couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
 
     }
 }

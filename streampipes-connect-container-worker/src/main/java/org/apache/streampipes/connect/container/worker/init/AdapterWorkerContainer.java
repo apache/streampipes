@@ -33,6 +33,7 @@ import java.util.List;
 @Configuration
 @EnableAutoConfiguration
 @Import({AdapterWorkerContainerResourceConfig.class})
+@Deprecated
 public abstract class AdapterWorkerContainer extends StreamPipesExtensionsServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterWorkerContainer.class);

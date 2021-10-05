@@ -52,8 +52,6 @@ public class AdapterTemplateMasterManagement {
         String uri = adapterDescription.getUri() + UUID.randomUUID().toString();
         adapterDescription.setUri(uri);
         adapterDescription.setElementId(uri);
-        adapterDescription.setAdapterId(uri);
-
 
         if (adapterDescription instanceof GenericAdapterSetDescription) {
             String id = ((GenericAdapterSetDescription) adapterDescription).getFormatDescription().getElementId();
@@ -84,7 +82,7 @@ public class AdapterTemplateMasterManagement {
         }
 
         this.adapterTemplateStorage.storeAdapterTemplate(adapterDescription);
-        return adapterDescription.getId();
+        return adapterDescription.getElementId();
     }
 
 

@@ -54,16 +54,16 @@ public class WorkerRestClient {
         String url = endpointUrl + WorkerPaths.getStreamInvokePath();
 
         startAdapter(url, adapterStreamDescription);
-        updateStreamAdapterStatus(adapterStreamDescription.getId(), true);
+        updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
     }
 
     public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         String url = baseUrl + WorkerPaths.getStreamStopPath();
 
-        AdapterDescription ad = getAdapterDescriptionById(new AdapterStorageImpl(), adapterStreamDescription.getUri());
+        AdapterDescription ad = getAdapterDescriptionById(new AdapterStorageImpl(), adapterStreamDescription.getElementId());
 
         stopAdapter(ad, url);
-        updateStreamAdapterStatus(adapterStreamDescription.getId(), false);
+        updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
     }
 
     public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
@@ -200,7 +200,7 @@ public class WorkerRestClient {
         AdapterDescription adapterDescription = null;
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         for (AdapterDescription a : allAdapters) {
-            if (a.getUri().endsWith(id)) {
+            if (a.getElementId().endsWith(id)) {
                 adapterDescription = a;
             }
         }

@@ -49,7 +49,6 @@ public class AdapterMasterManagementTest {
         AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
-        String id = "http://t.id";
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
         adapterMasterManagement.getAdapter("id2");

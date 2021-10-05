@@ -41,6 +41,7 @@ public class WorkerAdministrationManagement {
         this.adapterMasterManagement = new AdapterMasterManagement();
     }
 
+    // TODO refactor and test this function
     public void register(ConnectWorkerContainer connectWorker) {
         // Check if already registered
 
@@ -48,12 +49,14 @@ public class WorkerAdministrationManagement {
                 this.connectionWorkerContainerStorage.getAllConnectWorkerContainers();
 
         boolean alreadyRegistered = false;
+
+        // Delete old description if it was registred before
         for (ConnectWorkerContainer c : allConnectWorkerContainers) {
             if (c.getServiceGroup().equals(connectWorker.getServiceGroup())) {
                 boolean adaptersChanged = false;
 
                 for (AdapterDescription a : c.getAdapters()) {
-                    if (connectWorker.getAdapters().stream().noneMatch(ad -> ad.getAdapterId().equals(a.getAdapterId()))) {
+                    if (connectWorker.getAdapters().stream().noneMatch(ad -> ad.getElementId().equals(a.getElementId()))) {
                         adaptersChanged = true;
                     }
                 }
@@ -73,6 +76,7 @@ public class WorkerAdministrationManagement {
             }
         }
 
+        // TODO I am not sure if this is correct
         // IF NOT REGISTERED
         // Store Connect Worker in DB
         if (!alreadyRegistered) {

@@ -42,14 +42,7 @@ import java.util.List;
 @TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
-//    @RdfProperty("sp:couchDBId")
-//    @JsonProperty("couchDBId")
-//    private @SerializedName("_id") String id;
-//
-//    @JsonProperty("_rev")
-//    private @SerializedName("_rev") String rev;
-
-    private String adapterId;
+//    private String adapterId;
 
     private String userName;
 
@@ -88,8 +81,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms,tpMqtt));
     }
 
-    public AdapterDescription(String uri, String name, String description) {
-        super(uri, name, description);
+    public AdapterDescription(String elementId, String name, String description) {
+        super(elementId, name, description);
         this.rules = new ArrayList<>();
         this.category = new ArrayList<>();
     }
@@ -97,7 +90,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public AdapterDescription(AdapterDescription other) {
         super(other);
-        this.adapterId = other.getAdapterId();
+//        this.adapterId = other.getAdapterId();
         //this.id = other.getId();
         //this.rev = other.getRev();
         this.config = new Cloner().staticProperties(other.getConfig());
@@ -112,30 +105,13 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
-
-
-    public String getId() {
-        return this.elementId;
-    }
-
-    public void setId(String id) {
-        this.elementId = id;
-    }
-
+    // TODO check if it can be deleted
     public String getRev() {
         return this.rev;
     }
 
     public void setRev(String rev) {
         this.rev = rev;
-    }
-
-    public String getAdapterId() {
-        return adapterId;
-    }
-
-    public void setAdapterId(String adapterId) {
-        this.adapterId = adapterId;
     }
 
     public String getUserName() {

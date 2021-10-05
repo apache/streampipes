@@ -65,6 +65,6 @@ public class AdapterTemplateStorageImpl extends AbstractDao<AdapterDescription> 
   @Override
   public void deleteAdapterTemplate(String adapterId) {
     AdapterDescription adapterDescription = getAdapterTemplate(adapterId);
-    couchDbClientSupplier.get().remove(adapterDescription.getId(), adapterDescription.getRev());
+    couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
   }
 }

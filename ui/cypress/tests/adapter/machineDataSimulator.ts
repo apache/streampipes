@@ -29,8 +29,8 @@ describe('Test Random Data Simulator Stream Adapter', () => {
       .create('Machine_Data_Simulator')
       .setName('Machine Data Simulator Test')
       .addInput('input', 'wait-time-ms', '1000')
-      .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
+      // .setTimestampProperty('Timestamp')
+      // .setStoreInDataLake()
       .build();
 
     AdapterUtils.testSpecificStreamAdapter(adapterInput);

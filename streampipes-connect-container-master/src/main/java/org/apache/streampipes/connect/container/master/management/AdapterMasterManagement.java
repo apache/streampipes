@@ -97,6 +97,7 @@ public class AdapterMasterManagement {
 
     AdapterDescription encryptedAdapterDescription =
             new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
+
     // store in db
     String adapterId = adapterStorage.storeAdapter(encryptedAdapterDescription);
 
@@ -107,7 +108,7 @@ public class AdapterMasterManagement {
     }
 
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
-    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getAdapterId());
+    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
     storedDescription.setCorrespondingAdapterId(adapterId);
     installDataSource(storedDescription, username);
 
@@ -128,7 +129,7 @@ public class AdapterMasterManagement {
 
     if (allAdapters != null && id != null) {
       for (AdapterDescription ad : allAdapters) {
-        if (id.equals(ad.getId())) {
+        if (id.equals(ad.getElementId())) {
           return ad;
         }
       }
@@ -137,24 +138,24 @@ public class AdapterMasterManagement {
     throw new AdapterException("Could not find adapter with id: " + id);
   }
 
-  public void deleteAdapter(String id) throws AdapterException {
-    //        // IF Stream adapter delete it
-    boolean isStreamAdapter = isStreamAdapter(id);
-    AdapterDescription ad = adapterStorage.getAdapter(id);
+  public void deleteAdapter(String elementId) throws AdapterException {
+    // IF Stream adapter delete it
+    boolean isStreamAdapter = isStreamAdapter(elementId);
+    AdapterDescription ad = adapterStorage.getAdapter(elementId);
 
     if (isStreamAdapter) {
       try {
-        stopStreamAdapter(id, ad.getSelectedEndpointUrl());
+        stopStreamAdapter(elementId, ad.getSelectedEndpointUrl());
       } catch (AdapterException e) {
-        LOG.info("Could not stop adapter: " + id);
+        LOG.info("Could not stop adapter: " + elementId);
         LOG.info(e.toString());
       }
     }
 
     String username = ad.getUserName();
 
-    adapterStorage.deleteAdapter(id);
-    LOG.info("Successfully deleted adapter: " + id);
+    adapterStorage.deleteAdapter(elementId);
+    LOG.info("Successfully deleted adapter: " + elementId);
 
     UserService userService = getUserService();
     IPipelineElementDescriptionStorageCache requestor = StorageManager.INSTANCE.getPipelineElementStorage();
@@ -184,11 +185,11 @@ public class AdapterMasterManagement {
     WorkerRestClient.stopSetAdapter(baseUrl, ad);
   }
 
-  public void stopStreamAdapter(String adapterId, String baseUrl) throws AdapterException {
-    AdapterDescription ad = adapterStorage.getAdapter(adapterId);
+  public void stopStreamAdapter(String elementId, String baseUrl) throws AdapterException {
+    AdapterDescription ad = adapterStorage.getAdapter(elementId);
 
-    if (!isStreamAdapter(adapterId)) {
-      throw new AdapterException("Adapter " + adapterId + "is not a stream adapter.");
+    if (!isStreamAdapter(elementId)) {
+      throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
     } else {
       WorkerRestClient.stopStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
     }

@@ -27,7 +27,8 @@ import {
   AdapterDescriptionUnion,
   EventSchema,
   GenericAdapterSetDescription,
-  GenericAdapterStreamDescription, Message,
+  GenericAdapterStreamDescription,
+  Message,
   ProtocolDescription,
   ProtocolDescriptionList,
   SpDataSet,
@@ -42,19 +43,21 @@ import { PlatformServicesCommons } from '../../platform-services/apis/commons.se
 export class DataMarketplaceService {
 
   constructor(
-      private http: HttpClient,
-      private authStatusService: AuthStatusService,
-      private connectService: ConnectService,
-      private platformServicesCommons: PlatformServicesCommons) {
+    private http: HttpClient,
+    private authStatusService: AuthStatusService,
+    private connectService: ConnectService,
+    private platformServicesCommons: PlatformServicesCommons) {
   }
 
   get connectPath() {
-    return this.platformServicesCommons.apiBasePath() + '/connect';
+    return `${this.platformServicesCommons.apiBasePath()}/connect`;
   }
 
   getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/description/adapters').pipe(map(response => {
-      return (response as any[]).map(resp => AdapterDescription.fromDataUnion(resp)).filter(ad => this.connectService.isSpecificDescription(ad));
+      return (response as any[])
+        .map(resp => AdapterDescription.fromDataUnion(resp))
+        .filter(ad => this.connectService.isSpecificDescription(ad));
     }));
   }
 
@@ -68,101 +71,98 @@ export class DataMarketplaceService {
 
   requestAdapterDescriptions(path: string): Observable<AdapterDescriptionUnion[]> {
     return this.http
-        .get(
-            this.connectPath +
-            path
-        )
-        .pipe(map(response => {
-          const adapterDescriptionList: AdapterDescriptionList = AdapterDescriptionList.fromData(response as AdapterDescriptionList);
-          return adapterDescriptionList.list;
-        }));
+      .get(
+        this.connectPath +
+        path
+      )
+      .pipe(map(response => {
+        const adapterDescriptionList: AdapterDescriptionList = AdapterDescriptionList.fromData(response as AdapterDescriptionList);
+        return adapterDescriptionList.list;
+      }));
   }
 
   stopAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
     return this.http.post(this.adapterMasterUrl
-        + adapter.id
-        + '/stop', {})
-        .pipe(map(response => Message.fromData(response as any)));
+      + adapter.elementId
+      + '/stop', {})
+      .pipe(map(response => Message.fromData(response as any)));
   }
 
   startAdapter(adapter: AdapterDescriptionUnion): Observable<Message> {
     return this.http.post(this.adapterMasterUrl
-        + adapter.id
-        + '/start', {})
-        .pipe(map(response => Message.fromData(response as any)));
+      + adapter.elementId
+      + '/start', {})
+      .pipe(map(response => Message.fromData(response as any)));
   }
 
   get adapterMasterUrl() {
-    return this.connectPath
-        + '/master/adapters/';
+    return `${this.connectPath}/master/adapters/`;
   }
 
-  deleteAdapter(adapter: AdapterDescription): Observable<Object> {
+  deleteAdapter(adapter: AdapterDescription): Observable<any> {
     return this.deleteRequest(adapter, '/master/adapters/');
   }
 
-  deleteAdapterTemplate(adapter: AdapterDescription): Observable<Object> {
+  deleteAdapterTemplate(adapter: AdapterDescription): Observable<any> {
     return this.deleteRequest(adapter, '/master/adapters/template/');
   }
 
-  getAdapterCategories(): Observable<Object> {
+  getAdapterCategories(): Observable<any> {
     return this.http.get(
-        this.baseUrl +
-        '/api/v2/categories/adapter');
+      `${this.baseUrl}/api/v2/categories/adapter`);
   }
 
   private deleteRequest(adapter: AdapterDescription, url: string) {
     return this.http.delete(
-        this.connectPath +
-        url +
-        adapter.id
+      this.connectPath +
+      url +
+      adapter.elementId
     );
   }
 
   getProtocols(): Observable<AdapterDescriptionUnion[]> {
     return this.http
-        .get(
-            this.connectPath +
-            '/master/description/protocols'
-        )
-        .pipe(map(response => {
-          const adapterDescriptions: AdapterDescriptionUnion[] = [];
-          const protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
+      .get(
+        `${this.connectPath}/master/description/protocols`
+      )
+      .pipe(map(response => {
+        const adapterDescriptions: AdapterDescriptionUnion[] = [];
+        const protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
 
-          for (const protocol of protocols) {
-            let newAdapterDescription: AdapterDescriptionUnion;
-            if (protocol.sourceType === 'SET') {
-              newAdapterDescription = new GenericAdapterSetDescription();
-              newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription';
-              newAdapterDescription.dataSet = new SpDataSet();
-              newAdapterDescription.dataSet.eventSchema = new EventSchema();
-            } else if (protocol.sourceType === 'STREAM') {
-              newAdapterDescription = new GenericAdapterStreamDescription();
-              newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
-              newAdapterDescription.dataStream = new SpDataStream();
-              newAdapterDescription.dataStream.eventSchema = new EventSchema();
-            }
-            newAdapterDescription.appId = protocol.appId;
-            newAdapterDescription.name = protocol.name;
-            newAdapterDescription.description = protocol.description;
-            newAdapterDescription.iconUrl = protocol.iconUrl;
-            newAdapterDescription.uri = newAdapterDescription.elementId;
-            newAdapterDescription.category = protocol.category;
-            newAdapterDescription.includedAssets = protocol.includedAssets;
-            newAdapterDescription.includesAssets = protocol.includesAssets;
-            newAdapterDescription.includedLocales = protocol.includedLocales;
-            newAdapterDescription.includesLocales = protocol.includesLocales;
-
-            if (
-                newAdapterDescription instanceof GenericAdapterSetDescription ||
-                newAdapterDescription instanceof GenericAdapterStreamDescription
-            ) {
-              newAdapterDescription.protocolDescription = protocol;
-            }
-            adapterDescriptions.push(newAdapterDescription);
+        for (const protocol of protocols) {
+          let newAdapterDescription: AdapterDescriptionUnion;
+          if (protocol.sourceType === 'SET') {
+            newAdapterDescription = new GenericAdapterSetDescription();
+            newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription';
+            newAdapterDescription.dataSet = new SpDataSet();
+            newAdapterDescription.dataSet.eventSchema = new EventSchema();
+          } else if (protocol.sourceType === 'STREAM') {
+            newAdapterDescription = new GenericAdapterStreamDescription();
+            newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
+            newAdapterDescription.dataStream = new SpDataStream();
+            newAdapterDescription.dataStream.eventSchema = new EventSchema();
           }
-          return adapterDescriptions;
-        }));
+          newAdapterDescription.appId = protocol.appId;
+          newAdapterDescription.name = protocol.name;
+          newAdapterDescription.description = protocol.description;
+          newAdapterDescription.iconUrl = protocol.iconUrl;
+          newAdapterDescription.uri = newAdapterDescription.elementId;
+          newAdapterDescription.category = protocol.category;
+          newAdapterDescription.includedAssets = protocol.includedAssets;
+          newAdapterDescription.includesAssets = protocol.includesAssets;
+          newAdapterDescription.includedLocales = protocol.includedLocales;
+          newAdapterDescription.includesLocales = protocol.includesLocales;
+
+          if (
+            newAdapterDescription instanceof GenericAdapterSetDescription ||
+            newAdapterDescription instanceof GenericAdapterStreamDescription
+          ) {
+            newAdapterDescription.protocolDescription = protocol;
+          }
+          adapterDescriptions.push(newAdapterDescription);
+        }
+        return adapterDescriptions;
+      }));
   }
 
   // sortStaticProperties(sp: StaticProperty) {
@@ -207,7 +207,7 @@ export class DataMarketplaceService {
   }
 
   getAssetUrl(appId) {
-    return this.connectPath + '/master/description/' + appId + '/assets';
+    return `${this.connectPath}/master/description/${appId}/assets`;
   }
 
   private get baseUrl() {

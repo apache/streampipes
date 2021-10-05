@@ -51,7 +51,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     public Response addAdapter(AdapterDescription adapterDescription) {
         String username = getAuthenticatedUsername();
         String adapterId;
-        LOG.info("User: " + username + " starts adapter " + adapterDescription.getAdapterId());
+        LOG.info("User: " + username + " starts adapter " + adapterDescription.getElementId());
 
         try {
             String workerBaseUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
@@ -116,13 +116,13 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAdapter(@PathParam("id") String adapterId) {
+    public Response deleteAdapter(@PathParam("id") String elementId) {
 
         try {
-            managementService.deleteAdapter(adapterId);
+            managementService.deleteAdapter(elementId);
             return ok(Notifications.success("Adapter deleted."));
         } catch (AdapterException e) {
-            LOG.error("Error while deleting adapter with id " + adapterId, e);
+            LOG.error("Error while deleting adapter with id " + elementId, e);
             return ok(Notifications.error(e.getMessage()));
         }
     }

@@ -65,7 +65,7 @@ public class GuessResource extends AbstractSharedRestInterface {
           logger.error("Error while parsing events: ", e);
           return serverError(Notifications.error(e.getMessage()));
       } catch (Exception e) {
-          logger.error("Error while guess schema for AdapterDescription: " + adapterDescription.getAdapterId(), e);
+          logger.error("Error while guess schema for AdapterDescription: " + adapterDescription.getElementId(), e);
           return serverError(Notifications.error(e.getMessage()));
       }
 
