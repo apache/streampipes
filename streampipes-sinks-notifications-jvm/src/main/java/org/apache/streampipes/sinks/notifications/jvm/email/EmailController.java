@@ -36,6 +36,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
   private static final String TO_EMAIL_ADRESS = "to_email";
   private static final String EMAIL_SUBJECT = "email_subject";
   private static final String EMAIL_CONTENT = "email_content";
+  private static final String SILENT_PERIOD = "silent-period";
 
 
   @Override
@@ -51,6 +52,7 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
             .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT))
+            .requiredIntegerParameter(Labels.withId(SILENT_PERIOD))
             .build();
   }
 
@@ -60,8 +62,9 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
     String toEmail = extractor.singleValueParameter(TO_EMAIL_ADRESS, String.class);
     String subject = extractor.singleValueParameter(EMAIL_SUBJECT, String.class);
     String content = extractor.singleValueParameter(EMAIL_CONTENT, String.class);
+    Integer silentPeriod = extractor.singleValueParameter(SILENT_PERIOD, Integer.class);
 
-    EmailParameters params = new EmailParameters(graph, toEmail, subject, content);
+    EmailParameters params = new EmailParameters(graph, toEmail, subject, content, silentPeriod);
 
     return new ConfiguredEventSink<>(params, EmailPublisher::new);
   }

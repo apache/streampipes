@@ -26,12 +26,18 @@ public class EmailParameters extends EventSinkBindingParams {
     private String toEmailAddress;
     private String subject;
     private String content;
+    private Integer silentPeriod;
 
-    public EmailParameters(DataSinkInvocation graph, String toEmailAddress, String subject, String content) {
+    public EmailParameters(DataSinkInvocation graph,
+                           String toEmailAddress,
+                           String subject,
+                           String content,
+                           Integer silentPeriod) {
         super(graph);
         this.toEmailAddress = toEmailAddress;
         this.subject = subject;
         this.content = content;
+        this.silentPeriod = silentPeriod;
     }
 
     public String getToEmailAddress() {
@@ -44,5 +50,9 @@ public class EmailParameters extends EventSinkBindingParams {
 
     public String getContent() {
         return content;
+    }
+
+    public Integer getSilentPeriod() {
+        return silentPeriod;
     }
 }

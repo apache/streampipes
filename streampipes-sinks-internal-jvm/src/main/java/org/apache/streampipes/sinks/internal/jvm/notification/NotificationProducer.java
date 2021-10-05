@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -65,7 +66,7 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
     notification.setId(UUID.randomUUID().toString());
     notification.setRead(false);
     notification.setTitle(title);
-    notification.setMessage(replacePlaceholders(inputEvent, content));
+    notification.setMessage(PlaceholderExtractor.replacePlaceholders(inputEvent, content));
     notification.setCreatedAt(currentDate);
     notification.setCreatedAtTimestamp(currentDate.getTime());
     notification.setCorrespondingPipelineId(correspondingPipelineId);
@@ -81,10 +82,4 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
     this.publisher.disconnect();
   }
 
-  private String replacePlaceholders(Event event, String content) {
-    for(String key: event.getRaw().keySet()) {
-      content = content.replaceAll(HASHTAG + key + HASHTAG, event.getRaw().get(key).toString());
-    }
-    return content;
-  }
 }

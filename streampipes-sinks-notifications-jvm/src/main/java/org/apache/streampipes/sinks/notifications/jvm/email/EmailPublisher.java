@@ -18,87 +18,53 @@
 
 package org.apache.streampipes.sinks.notifications.jvm.email;
 
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.model.mail.SpEmail;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.runtime.EventConverter;
-import org.apache.streampipes.sinks.notifications.jvm.config.ConfigKeys;
+import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.util.Map;
-import java.util.Properties;
+import java.time.Instant;
+import java.util.Collections;
 
 public class EmailPublisher implements EventSink<EmailParameters> {
 
-    private static Logger LOG;
+    private SpEmail preparedEmail;
+    private long silentPeriodInSeconds;
+    private long lastMailEpochSecond = -1;
 
-    private MimeMessage message;
-    private String content;
+    private String originalContent;
+
+    private StreamPipesClient client;
 
     @Override
     public void onInvocation(EmailParameters parameters, EventSinkRuntimeContext runtimeContext) {
-        LOG = parameters.getGraph().getLogger(EmailPublisher.class);
-        SpConfig config = runtimeContext.getConfigStore().getConfig();
-        String from = config.getString(ConfigKeys.EMAIL_FROM);
-        String to = parameters.getToEmailAddress();
-        String subject = parameters.getSubject();
-        this.content = parameters.getContent();
-        String username = config.getString(ConfigKeys.EMAIL_USERNAME);
-        String password = config.getString(ConfigKeys.EMAIL_PASSWORD);
-        String host = config.getString(ConfigKeys.EMAIL_SMTP_HOST);
-        int port = config.getInteger(ConfigKeys.EMAIL_SMTP_PORT);
-        boolean starttls = config.getBoolean(ConfigKeys.EMAIL_STARTTLS);
-        boolean ssl = config.getBoolean(ConfigKeys.EMAIL_SLL);
+        this.preparedEmail = new SpEmail();
+        this.preparedEmail.setRecipients(Collections.singletonList(parameters.getToEmailAddress()));
+        this.preparedEmail.setSubject(parameters.getSubject());
 
-        Properties properties = new Properties();
-        properties.setProperty("mail.smtp.host", host);
-        properties.setProperty("mail.smtp.port", String.valueOf(port));
-
-        if (starttls) {
-            properties.put("mail.smtp.starttls.enable", "true");
-        }
-        if (ssl) {
-            properties.put("mail.smtp.ssl.enable", "true");
-        }
-        properties.put("mail.smtp.auth", "true");
-
-        Session session = Session.getDefaultInstance(properties, new Authenticator() {
-
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
-
-        try {
-            this.message = new MimeMessage(session);
-            this.message.setFrom(new InternetAddress(from));
-            this.message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            this.message.setSubject(subject);
-        } catch (MessagingException e) {
-           LOG.error(e.toString());
-        }
+        this.silentPeriodInSeconds = parameters.getSilentPeriod() * 60;
+        this.client = runtimeContext.getStreamPipesClient();
+        this.originalContent = parameters.getContent();
     }
 
     @Override
     public void onEvent(Event inputEvent) {
-        String contentWithValues = this.content;
-        Map<String, Object> inputMap = new EventConverter(inputEvent).toMap();
-        try {
-            for (Map.Entry entry: inputMap.entrySet()) {
-                contentWithValues = contentWithValues.replaceAll("#" + entry.getKey() + "#",
-                        entry.getValue().toString());
-            }
-            this.message.setContent(contentWithValues, "text/html; charset=utf-8");
-            Transport.send(message);
-            LOG.info("Sent notifaction email");
-        } catch (MessagingException e) {
-            LOG.error(e.toString());
+        if (shouldSendMail()) {
+            String message = PlaceholderExtractor.replacePlaceholders(inputEvent, this.originalContent);
+            this.preparedEmail.setMessage(message);
+            this.client.deliverEmail(this.preparedEmail);
+            this.lastMailEpochSecond = Instant.now().getEpochSecond();
+        }
+    }
+
+    private boolean shouldSendMail() {
+        if (this.lastMailEpochSecond == -1) {
+            return true;
+        } else {
+            return Instant.now().getEpochSecond() >= (this.lastMailEpochSecond + this.silentPeriodInSeconds);
         }
     }
 

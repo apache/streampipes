@@ -33,6 +33,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-pipeline-elements-shared</artifactId>
+            <version>0.69.0-SNAPSHOT</version>
+        </dependency>
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
