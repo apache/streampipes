@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.node.controller.management.offloading.strategies.policies;
 
+import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +65,8 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
                 for(T value : this.history){
                     if(value.compareTo(this.threshold) > 0){
                         numViolations++;
+                        Object[] line = {"policy violation #" + numViolations};
+                        EvaluationLogger.getInstance().logMQTT("Offloading", line);
                     }
                 }
                 break;
@@ -71,6 +74,8 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
                 for(T value : this.history){
                     if(value.compareTo(this.threshold) < 0){
                         numViolations++;
+                        Object[] line = {"policy violation #" + numViolations};
+                        EvaluationLogger.getInstance().logMQTT("Offloading", line);
                     }
                 }
                 break;

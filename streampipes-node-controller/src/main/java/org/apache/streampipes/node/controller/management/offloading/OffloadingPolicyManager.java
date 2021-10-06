@@ -70,7 +70,7 @@ public class OffloadingPolicyManager {
             //Currently uses the first violated policy. Could be extended to take the degree of policy violation into
             // account
             //TODO: Remove Logger after debugging
-            Object[] line = {System.currentTimeMillis() ,"offloading triggered", violatedPolicies.get(0).getOffloadingPolicy().getClass().getSimpleName()};
+            Object[] line = {"offloading triggered", violatedPolicies.get(0).getOffloadingPolicy().getClass().getSimpleName()};
             EvaluationLogger.getInstance().logMQTT("Offloading", line);
             triggerOffloading(violatedPolicies.get(0));
         }
@@ -80,7 +80,7 @@ public class OffloadingPolicyManager {
 
     private void triggerOffloading(OffloadingStrategy strategy){
         InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select(this.unsuccessfullyTriedEntities);
-        Object[] line = {System.currentTimeMillis() ,"entity to offload selected"};
+        Object[] line = {"entity to offload selected"};
         EvaluationLogger.getInstance().logMQTT("Offloading", line);
         if(offloadEntity != null){
             Response resp = PipelineElementManager.getInstance().offload(offloadEntity);
@@ -88,7 +88,7 @@ public class OffloadingPolicyManager {
             String appId = offloadEntity.getAppId();
             String pipelineName = offloadEntity.getCorrespondingPipeline();
 
-            Object[] line_done = {System.currentTimeMillis() ,"offloading done", strategy.getOffloadingPolicy().getClass().getSimpleName(), appId};
+            Object[] line_done = {"offloading done", strategy.getOffloadingPolicy().getClass().getSimpleName(), appId};
             EvaluationLogger.getInstance().logMQTT("Offloading", line_done);
 
             if(resp.isSuccess()){

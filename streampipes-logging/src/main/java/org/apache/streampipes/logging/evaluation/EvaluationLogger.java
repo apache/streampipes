@@ -28,6 +28,7 @@ public class EvaluationLogger {
     private static EvaluationLogger instance = null;
     private final MQTT mqtt;
     private final BlockingConnection connection;
+    private final String deviceId;
 
     public static EvaluationLogger getInstance(){
         if(instance==null) instance = new EvaluationLogger();
@@ -36,6 +37,12 @@ public class EvaluationLogger {
 
     private EvaluationLogger(){
         String loggingUrl = System.getenv("SP_LOGGING_MQTT_URL");
+        String nodeId = System.getenv("SP_LOGGING_MQTT_URL");
+        if (nodeId != null){
+            this.deviceId = nodeId;
+        }else {
+            this.deviceId = "default";
+        }
         mqtt = new MQTT();
         try {
             mqtt.setHost(loggingUrl);
@@ -51,16 +58,27 @@ public class EvaluationLogger {
     }
 
     public void logMQTT(String topic, Object[] elements){
+        String message = System.currentTimeMillis() + "," + this.deviceId + ",";
+        for(Object element:elements)
+            message += element + ",";
+        message = message.substring(0, message.length()-1);
+        publish(topic, message);
+    }
+
+    public void logHeader(String topic, Object[] elements){
         String message = "";
         for(Object element:elements)
             message += element + ",";
-        if (message.length() > 0) {
+        if (message.length() > 0)
             message = message.substring(0, message.length()-1);
-            try {
-                connection.publish(topic, message.getBytes(StandardCharsets.UTF_8), QoS.AT_LEAST_ONCE, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        publish(topic, message);
+    }
+
+    private void publish(String topic, String message){
+        try {
+            connection.publish(topic, message.getBytes(StandardCharsets.UTF_8), QoS.AT_LEAST_ONCE, false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

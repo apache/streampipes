@@ -117,7 +117,7 @@ public class GenericTest implements Test{
                             sp.setValue(Float.toString(this.reconfigurableValue++));
                         }
                     }));
-            line = new Object[]{System.currentTimeMillis(), "Reconfiguration triggered", nrRuns, (this.reconfigurableValue - 1), true};
+            line = new Object[]{"Reconfiguration triggered", nrRuns, (this.reconfigurableValue - 1), true};
             System.out.println("Reconfiguration triggered with value " + (this.reconfigurableValue-1));
             PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
             System.out.println(message.getTitle());
