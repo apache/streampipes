@@ -21,8 +21,6 @@ public interface INoSqlStorage {
 
   IAdapterStorage getAdapterStorage();
 
-  IAdapterTemplateStorage getAdapterTemplateStorage();
-
   ICategoryStorage getCategoryStorageAPI();
 
   ILabelStorage getLabelStorageAPI();

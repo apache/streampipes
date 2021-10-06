@@ -23,6 +23,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.List;
 
+@Deprecated
 public interface IAdapterTemplateStorage {
     List<AdapterDescription> getAllAdapterTemplates();
 

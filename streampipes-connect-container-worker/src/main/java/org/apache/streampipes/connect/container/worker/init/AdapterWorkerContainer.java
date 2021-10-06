@@ -50,7 +50,7 @@ public abstract class AdapterWorkerContainer extends StreamPipesExtensionsServic
 
   @Override
   public void afterServiceRegistered(SpServiceDefinition serviceDef) {
-    new ConnectWorkerRegistrationService().registerWorker(serviceDef.getServiceGroup());
+    new ConnectWorkerRegistrationService().registerWorker(serviceDef);
   }
 
   @Override

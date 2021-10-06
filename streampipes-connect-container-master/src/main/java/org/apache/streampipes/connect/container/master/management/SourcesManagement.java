@@ -33,7 +33,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.sdk.helpers.SupportedProtocols;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,17 +47,17 @@ public class SourcesManagement {
 
     private Logger logger = LoggerFactory.getLogger(SourcesManagement.class);
 
-    private AdapterStorageImpl adapterStorage;
+    private AdapterInstanceStorageImpl adapterStorage;
     private WorkerUrlProvider workerUrlProvider;
     private String connectHost = null;
 
-    public SourcesManagement(AdapterStorageImpl adapterStorage) {
+    public SourcesManagement(AdapterInstanceStorageImpl adapterStorage) {
       this.adapterStorage = adapterStorage;
       this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     public SourcesManagement() {
-       this(new AdapterStorageImpl());
+       this(new AdapterInstanceStorageImpl());
     }
 
     public void addAdapter(String streamId, SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {

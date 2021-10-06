@@ -31,7 +31,7 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@ public class WorkerRestClient {
     public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         String url = baseUrl + WorkerPaths.getStreamStopPath();
 
-        AdapterDescription ad = getAdapterDescriptionById(new AdapterStorageImpl(), adapterStreamDescription.getElementId());
+        AdapterDescription ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
 
         stopAdapter(ad, url);
         updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
@@ -196,7 +196,7 @@ public class WorkerRestClient {
     }
 
 
-    private static AdapterDescription getAdapterDescriptionById(AdapterStorageImpl adapterStorage, String id) {
+    private static AdapterDescription getAdapterDescriptionById(AdapterInstanceStorageImpl adapterStorage, String id) {
         AdapterDescription adapterDescription = null;
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         for (AdapterDescription a : allAdapters) {

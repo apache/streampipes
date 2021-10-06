@@ -22,7 +22,7 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class AdapterHealthCheck {
 
     public void checkAndRestoreAdapters() {
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
-        IAdapterStorage adapterStorage = new AdapterStorageImpl();
+        IAdapterStorage adapterStorage = new AdapterInstanceStorageImpl();
 
 
         // Get all adapters

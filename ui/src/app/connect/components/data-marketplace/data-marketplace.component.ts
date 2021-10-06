@@ -91,10 +91,10 @@ export class DataMarketplaceComponent implements OnInit {
     this.adapterDescriptions = [];
 
     this.dataMarketplaceService
-      .getGenericAndSpecificAdapterDescriptions()
+      .getAdapterDescriptions()
       .subscribe((allAdapters) => {
-        this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[0]);
-        this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[1]);
+        this.adapterDescriptions = allAdapters;
+        // this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[1]);
         this.adapterDescriptions
           .sort((a, b) => a.name.localeCompare(b.name));
         this.filteredAdapterDescriptions = this.adapterDescriptions;
@@ -105,16 +105,16 @@ export class DataMarketplaceComponent implements OnInit {
         this.adapterLoadingError = true;
       });
 
-    this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
-      adapterTemplates.forEach((adapterTemplate) => {
-        (adapterTemplate as any).isTemplate = true;
-      });
-
-      this.adapterDescriptions = this.adapterDescriptions.concat(adapterTemplates);
-      this.adapterDescriptions
-        .sort((a, b) => a.name.localeCompare(b.name));
-      this.filteredAdapterDescriptions = this.adapterDescriptions;
-    });
+    // this.dataMarketplaceService.getAdapterTemplates().subscribe(adapterTemplates => {
+    //   adapterTemplates.forEach((adapterTemplate) => {
+    //     (adapterTemplate as any).isTemplate = true;
+    //   });
+    //
+    //   this.adapterDescriptions = this.adapterDescriptions.concat(adapterTemplates);
+    //   this.adapterDescriptions
+    //     .sort((a, b) => a.name.localeCompare(b.name));
+    //   this.filteredAdapterDescriptions = this.adapterDescriptions;
+    // });
   }
 
   getAdaptersRunning(): void {

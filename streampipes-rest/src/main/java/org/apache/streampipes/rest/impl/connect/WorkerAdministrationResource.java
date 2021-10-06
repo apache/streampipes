@@ -51,7 +51,7 @@ public class WorkerAdministrationResource extends AbstractSharedRestInterface {
         // Change this to List<AdapterDescription>
         // How do I store the available AdapterDescriptions when there is no ConnectWorkerContainer
 //        LOG.info("Worker container: " + connectWorkerContainer.getServiceGroup() + " was detected");
-//        this.workerAdministrationManagement.register(connectWorkerContainer);
+        this.workerAdministrationManagement.register(availableAdapterDescription);
         System.out.println(availableAdapterDescription);
 
         return ok(Notifications.success("Worker Container successfully added"));

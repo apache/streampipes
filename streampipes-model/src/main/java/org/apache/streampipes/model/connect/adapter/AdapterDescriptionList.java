@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TsModel
+@Deprecated
 public class AdapterDescriptionList extends NamedStreamPipesEntity {
 
     private List<AdapterDescription> list;

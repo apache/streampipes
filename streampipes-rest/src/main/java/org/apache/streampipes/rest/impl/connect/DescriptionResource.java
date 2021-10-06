@@ -22,7 +22,6 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
@@ -36,6 +35,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Optional;
 
 @Path("/v2/connect/master/description")
@@ -59,6 +59,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
         return ok(result);
     }
 
+    @Deprecated
     @GET
     @JacksonSerialized
     @Path("/protocols")
@@ -74,7 +75,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     @Path("/adapters")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAdapters() {
-        AdapterDescriptionList result = managementService.getAdapters();
+        List<AdapterDescription> result = managementService.getAdapters();
 
         return ok(result);
     }

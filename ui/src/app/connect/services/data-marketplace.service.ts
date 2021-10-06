@@ -23,20 +23,14 @@ import { AuthStatusService } from '../../services/auth-status.service';
 import { ConnectService } from './connect.service';
 import {
   AdapterDescription,
-  AdapterDescriptionList,
   AdapterDescriptionUnion,
-  EventSchema,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
   Message,
-  ProtocolDescription,
-  ProtocolDescriptionList,
-  SpDataSet,
-  SpDataStream,
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription
 } from '../../core-model/gen/streampipes-model';
-import { Observable, zip } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 
 @Injectable()
@@ -54,19 +48,12 @@ export class DataMarketplaceService {
   }
 
   getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {
-    return this.requestAdapterDescriptions('/master/description/adapters').pipe(map(response => {
-      return (response as any[])
-        .map(resp => AdapterDescription.fromDataUnion(resp))
-        .filter(ad => this.connectService.isSpecificDescription(ad));
-    }));
+    return this.requestAdapterDescriptions('/master/description/adapters');
+
   }
 
   getAdapters(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/adapters');
-  }
-
-  getAdapterTemplates(): Observable<AdapterDescriptionUnion[]> {
-    return this.requestAdapterDescriptions('/master/adapters/template/all');
   }
 
   requestAdapterDescriptions(path: string): Observable<AdapterDescriptionUnion[]> {
@@ -76,8 +63,7 @@ export class DataMarketplaceService {
         path
       )
       .pipe(map(response => {
-        const adapterDescriptionList: AdapterDescriptionList = AdapterDescriptionList.fromData(response as AdapterDescriptionList);
-        return adapterDescriptionList.list;
+        return (response as any[]).map(p => AdapterDescription.fromDataUnion(p));
       }));
   }
 
@@ -120,50 +106,53 @@ export class DataMarketplaceService {
     );
   }
 
-  getProtocols(): Observable<AdapterDescriptionUnion[]> {
-    return this.http
-      .get(
-        `${this.connectPath}/master/description/protocols`
-      )
-      .pipe(map(response => {
-        const adapterDescriptions: AdapterDescriptionUnion[] = [];
-        const protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
-
-        for (const protocol of protocols) {
-          let newAdapterDescription: AdapterDescriptionUnion;
-          if (protocol.sourceType === 'SET') {
-            newAdapterDescription = new GenericAdapterSetDescription();
-            newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription';
-            newAdapterDescription.dataSet = new SpDataSet();
-            newAdapterDescription.dataSet.eventSchema = new EventSchema();
-          } else if (protocol.sourceType === 'STREAM') {
-            newAdapterDescription = new GenericAdapterStreamDescription();
-            newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
-            newAdapterDescription.dataStream = new SpDataStream();
-            newAdapterDescription.dataStream.eventSchema = new EventSchema();
-          }
-          newAdapterDescription.appId = protocol.appId;
-          newAdapterDescription.name = protocol.name;
-          newAdapterDescription.description = protocol.description;
-          newAdapterDescription.iconUrl = protocol.iconUrl;
-          newAdapterDescription.uri = newAdapterDescription.elementId;
-          newAdapterDescription.category = protocol.category;
-          newAdapterDescription.includedAssets = protocol.includedAssets;
-          newAdapterDescription.includesAssets = protocol.includesAssets;
-          newAdapterDescription.includedLocales = protocol.includedLocales;
-          newAdapterDescription.includesLocales = protocol.includesLocales;
-
-          if (
-            newAdapterDescription instanceof GenericAdapterSetDescription ||
-            newAdapterDescription instanceof GenericAdapterStreamDescription
-          ) {
-            newAdapterDescription.protocolDescription = protocol;
-          }
-          adapterDescriptions.push(newAdapterDescription);
-        }
-        return adapterDescriptions;
-      }));
-  }
+  /**
+   * @deprecated The method should not be used
+   */
+  // getProtocols(): Observable<AdapterDescriptionUnion[]> {
+  //   return this.http
+  //     .get(
+  //       `${this.connectPath}/master/description/protocols`
+  //     )
+  //     .pipe(map(response => {
+  //       const adapterDescriptions: AdapterDescriptionUnion[] = [];
+  //       const protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
+  //
+  //       for (const protocol of protocols) {
+  //         let newAdapterDescription: AdapterDescriptionUnion;
+  //         if (protocol.sourceType === 'SET') {
+  //           newAdapterDescription = new GenericAdapterSetDescription();
+  //           newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription';
+  //           newAdapterDescription.dataSet = new SpDataSet();
+  //           newAdapterDescription.dataSet.eventSchema = new EventSchema();
+  //         } else if (protocol.sourceType === 'STREAM') {
+  //           newAdapterDescription = new GenericAdapterStreamDescription();
+  //           newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
+  //           newAdapterDescription.dataStream = new SpDataStream();
+  //           newAdapterDescription.dataStream.eventSchema = new EventSchema();
+  //         }
+  //         newAdapterDescription.appId = protocol.appId;
+  //         newAdapterDescription.name = protocol.name;
+  //         newAdapterDescription.description = protocol.description;
+  //         newAdapterDescription.iconUrl = protocol.iconUrl;
+  //         newAdapterDescription.uri = newAdapterDescription.elementId;
+  //         newAdapterDescription.category = protocol.category;
+  //         newAdapterDescription.includedAssets = protocol.includedAssets;
+  //         newAdapterDescription.includesAssets = protocol.includesAssets;
+  //         newAdapterDescription.includedLocales = protocol.includedLocales;
+  //         newAdapterDescription.includesLocales = protocol.includesLocales;
+  //
+  //         if (
+  //           newAdapterDescription instanceof GenericAdapterSetDescription ||
+  //           newAdapterDescription instanceof GenericAdapterStreamDescription
+  //         ) {
+  //           newAdapterDescription.protocolDescription = protocol;
+  //         }
+  //         adapterDescriptions.push(newAdapterDescription);
+  //       }
+  //       return adapterDescriptions;
+  //     }));
+  // }
 
   // sortStaticProperties(sp: StaticProperty) {
   //   if (sp instanceof AlternativesStaticProperty) {
@@ -182,9 +171,9 @@ export class DataMarketplaceService {
   //   }
   // }
 
-  getGenericAndSpecificAdapterDescriptions(): Observable<[AdapterDescriptionUnion[], AdapterDescriptionUnion[]]> {
-    return zip(this.getAdapterDescriptions(), this.getProtocols());
-  }
+  // getGenericAndSpecificAdapterDescriptions(): Observable<[AdapterDescriptionUnion[], AdapterDescriptionUnion[]]> {
+  //   return zip(this.getAdapterDescriptions(), this.getProtocols());
+  // }
 
   cloneAdapterDescription(toClone: AdapterDescriptionUnion): AdapterDescriptionUnion {
     let result: AdapterDescriptionUnion;

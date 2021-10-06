@@ -23,7 +23,6 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
@@ -117,7 +116,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
         try {
             managementService.deleteAdapter(elementId);
-            return ok(Notifications.success("Adapter deleted."));
+            return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
         } catch (AdapterException e) {
             LOG.error("Error while deleting adapter with id " + elementId, e);
             return ok(Notifications.error(e.getMessage()));
@@ -129,9 +128,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAdapters() {
         try {
-            List<AdapterDescription> allAdapterDescription = managementService.getAllAdapters();
-            AdapterDescriptionList result = new AdapterDescriptionList();
-            result.setList(allAdapterDescription);
+            // TODO get all invoced adapters
+            List<AdapterDescription> result = managementService.getAllAdapterInstances();
 
             return ok(result);
         } catch (AdapterException e) {

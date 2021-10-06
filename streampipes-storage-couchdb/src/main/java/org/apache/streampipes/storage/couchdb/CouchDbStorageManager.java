@@ -26,12 +26,7 @@ public enum CouchDbStorageManager implements INoSqlStorage {
 
   @Override
   public IAdapterStorage getAdapterStorage() {
-    return new AdapterStorageImpl();
-  }
-
-  @Override
-  public IAdapterTemplateStorage getAdapterTemplateStorage() {
-    return new AdapterTemplateStorageImpl();
+    return new AdapterDescriptionStorageImpl();
   }
 
   @Override

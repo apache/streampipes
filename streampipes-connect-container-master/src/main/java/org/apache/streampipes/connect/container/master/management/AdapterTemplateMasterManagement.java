@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 
+@Deprecated
 public class AdapterTemplateMasterManagement {
 
     private IAdapterTemplateStorage adapterTemplateStorage;

@@ -19,10 +19,14 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.connect.container.master.health.AdapterHealthCheck;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class WorkerAdministrationManagement {
 
@@ -31,18 +35,34 @@ public class WorkerAdministrationManagement {
     private ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage;
     private AdapterMasterManagement adapterMasterManagement;
 
+    private IAdapterStorage adapterStorage;
+
     private AdapterHealthCheck adapterHealthCheck;
 
     public WorkerAdministrationManagement() {
         this.connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
         this.adapterMasterManagement = new AdapterMasterManagement();
         this.adapterHealthCheck = new AdapterHealthCheck();
+        this.adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterStorage();
     }
 
-    public void register(ConnectWorkerContainer connectWorker) {
-        // TODO how do I register the protocols and adapters of a worker?
+    public void register(List<AdapterDescription> availableAdapterDescription) {
 
-        this.adapterHealthCheck.checkAndRestoreAdapters();
+        List<AdapterDescription> alreadyRegisteredAdapters = this.adapterStorage.getAllAdapters();
+
+        availableAdapterDescription.forEach(adapterDescription -> {
+
+            // only install once adapter description per service group
+            boolean alreadyInstalled = alreadyRegisteredAdapters
+                    .stream()
+                    .anyMatch(a -> a.getAppId().equals(adapterDescription.getAppId()) && a.getCorrespondingServiceGroup().equals(adapterDescription.getCorrespondingServiceGroup()));
+            if (!alreadyInstalled) {
+                this.adapterStorage.storeAdapter(adapterDescription);
+            }
+        });
+
+//        this.adapterHealthCheck.checkAndRestoreAdapters();
+
 
         // Check if already registered
 

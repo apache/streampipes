@@ -31,6 +31,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Deprecated
 @Path("/v2/connect/master/adapters/template")
 public class AdapterTemplateResource extends AbstractAdapterResource<AdapterTemplateMasterManagement> {
 

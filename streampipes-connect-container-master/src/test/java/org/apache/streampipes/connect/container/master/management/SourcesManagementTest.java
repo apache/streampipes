@@ -22,7 +22,7 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -56,7 +56,7 @@ public class SourcesManagementTest {
     @Ignore
     @Test
     public void addAdapterSuccess() throws Exception {
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any());
@@ -72,7 +72,7 @@ public class SourcesManagementTest {
     @Ignore
     @Test(expected = AdapterException.class)
     public void addAdapterFail() throws Exception {
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
 
@@ -84,7 +84,7 @@ public class SourcesManagementTest {
     @Ignore
     @Test
     public void detachAdapterSuccess() throws Exception {
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
@@ -99,7 +99,7 @@ public class SourcesManagementTest {
     @Ignore
     @Test(expected = AdapterException.class)
     public void detachAdapterFail() throws Exception {
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
@@ -111,7 +111,7 @@ public class SourcesManagementTest {
     @Test
     public void getAllAdaptersInstallDescriptionSuccess() throws Exception {
 
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
 
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
@@ -124,9 +124,8 @@ public class SourcesManagementTest {
 
     @Test(expected = AdapterException.class)
     public void getAllAdaptersInstallDescriptionFail() throws Exception {
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         AdapterDescription adapterDescription = new GenericAdapterSetDescription();
-        adapterDescription.setUri(" ");
         when(adapterStorage.getAllAdapters()).thenReturn(Arrays.asList(adapterDescription));
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         sourcesManagement.setConnectHost("host");

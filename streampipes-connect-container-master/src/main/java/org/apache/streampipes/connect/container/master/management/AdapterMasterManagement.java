@@ -35,7 +35,8 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.management.StorageManager;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
@@ -53,20 +54,21 @@ public class AdapterMasterManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-  private IAdapterStorage adapterStorage;
+  private IAdapterStorage adapterInstanceStorage;
   private WorkerUrlProvider workerUrlProvider;
 
   public AdapterMasterManagement() {
-    this.adapterStorage = getAdapterStorage();
+    this.adapterInstanceStorage = getAdapterInstanceStorage();
+    this.adapterDescriptionStorage = new AdapterDescriptionStorageImpl();
     this.workerUrlProvider = new WorkerUrlProvider();
   }
 
   public AdapterMasterManagement(IAdapterStorage adapterStorage) {
-    this.adapterStorage = adapterStorage;
+    this.adapterInstanceStorage = adapterStorage;
   }
 
   public void startAllStreamAdapters(ConnectWorkerContainer connectWorkerContainer) throws AdapterException, NoServiceEndpointsAvailableException {
-    IAdapterStorage adapterStorage = getAdapterStorage();
+    IAdapterStorage adapterStorage = getAdapterInstanceStorage();
     List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
 
     for (AdapterDescription ad : allAdapters) {
@@ -97,13 +99,12 @@ public class AdapterMasterManagement {
     ad.setElementId(ad.getElementId() + ":" + uuid);
     ad.setCreatedAt(System.currentTimeMillis());
     ad.setSelectedEndpointUrl(endpointUrl);
-    ad.setCorrespondingServiceGroup(new WorkerUrlProvider().getWorkerServiceGroup(ad.getAppId()));
 
     AdapterDescription encryptedAdapterDescription =
             new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
 
     // store in db
-    String adapterId = adapterStorage.storeAdapter(encryptedAdapterDescription);
+    String adapterId = adapterInstanceStorage.storeAdapter(encryptedAdapterDescription);
 
     // start when stream adapter
     if (ad instanceof AdapterStreamDescription) {
@@ -129,7 +130,7 @@ public class AdapterMasterManagement {
   }
 
   public AdapterDescription getAdapter(String id) throws AdapterException {
-    List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+    List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
 
     if (allAdapters != null && id != null) {
       for (AdapterDescription ad : allAdapters) {
@@ -161,9 +162,9 @@ public class AdapterMasterManagement {
     }
 
 
-    AdapterDescription ad = adapterStorage.getAdapter(elementId);
+    AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
     String username = ad.getUserName();
-    adapterStorage.deleteAdapter(elementId);
+    adapterInstanceStorage.deleteAdapter(elementId);
     LOG.info("Successfully deleted adapter: " + elementId);
 
     UserService userService = getUserService();
@@ -176,9 +177,9 @@ public class AdapterMasterManagement {
     }
   }
 
-  public List<AdapterDescription> getAllAdapters() throws AdapterException {
+  public List<AdapterDescription> getAllAdapterInstances() throws AdapterException {
 
-    List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
+    List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
 
     if (allAdapters == null) {
       throw new AdapterException("Could not get all adapters");
@@ -187,7 +188,18 @@ public class AdapterMasterManagement {
     return allAdapters;
   }
 
-  public void stopSetAdapter(String adapterId, String baseUrl, AdapterStorageImpl adapterStorage) throws AdapterException {
+  public List<AdapterDescription> getAllAdapterDescriptions() throws AdapterException {
+
+    List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
+
+    if (allAdapters == null) {
+      throw new AdapterException("Could not get all adapters");
+    }
+
+    return allAdapters;
+  }
+
+  public void stopSetAdapter(String adapterId, String baseUrl, AdapterInstanceStorageImpl adapterStorage) throws AdapterException {
 
     AdapterSetDescription ad = (AdapterSetDescription) adapterStorage.getAdapter(adapterId);
 
@@ -195,7 +207,7 @@ public class AdapterMasterManagement {
   }
 
   public void stopStreamAdapter(String elementId) throws AdapterException {
-    AdapterDescription ad = adapterStorage.getAdapter(elementId);
+    AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
 
     if (!isStreamAdapter(elementId)) {
       throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
@@ -207,7 +219,7 @@ public class AdapterMasterManagement {
   public void startStreamAdapter(String elementId) throws AdapterException {
     // TODO ensure that adapter is not started twice
 
-    AdapterDescription ad = adapterStorage.getAdapter(elementId);
+    AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
     try {
       String endpointUrl = findEndpointUrl(ad);
       URI uri = new URI(endpointUrl);
@@ -216,7 +228,7 @@ public class AdapterMasterManagement {
         throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
       } else {
         ad.setSelectedEndpointUrl(baseUrl);
-        adapterStorage.updateAdapter(ad);
+        adapterInstanceStorage.updateAdapter(ad);
 
         AdapterDescription decryptedAdapterDescription =
                 new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
@@ -232,7 +244,7 @@ public class AdapterMasterManagement {
   }
 
   public boolean isStreamAdapter(String id) {
-    AdapterDescription adapterDescription = adapterStorage.getAdapter(id);
+    AdapterDescription adapterDescription = adapterInstanceStorage.getAdapter(id);
     return isStreamAdapter(adapterDescription);
   }
 
@@ -240,8 +252,8 @@ public class AdapterMasterManagement {
     return adapterDescription instanceof AdapterStreamDescription;
   }
 
-  private IAdapterStorage getAdapterStorage() {
-    return new AdapterStorageImpl();
+  private IAdapterStorage getAdapterInstanceStorage() {
+    return new AdapterInstanceStorageImpl();
   }
 
   private String findEndpointUrl(AdapterDescription adapterDescription) throws NoServiceEndpointsAvailableException {

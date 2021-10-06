@@ -68,7 +68,7 @@ public class ResetManagement {
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
 
         try {
-            List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapters();
+            List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
             allAdapters.forEach(adapterDescription -> {
                 try {
                     adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());

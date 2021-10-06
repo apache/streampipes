@@ -19,14 +19,15 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
 import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.storage.api.IAdapterStorage;
+import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.Optional;
 
 public class DescriptionManagement {
 
+    @Deprecated
     public ProtocolDescriptionList getProtocols() {
         ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
 
@@ -61,22 +63,13 @@ public class DescriptionManagement {
         return result;
     }
 
-    public AdapterDescriptionList getAdapters() {
-        ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
-
-        List<ConnectWorkerContainer> allWorkerContainter = connectionWorkerContainerStorage.getAllConnectWorkerContainers();
-
-        AdapterDescriptionList result = new AdapterDescriptionList();
-
-        for (ConnectWorkerContainer connectWorkerContainer : allWorkerContainter) {
-           result.getList().addAll(connectWorkerContainer.getAdapters());
-        }
-
-        return result;
+    public List<AdapterDescription> getAdapters() {
+        IAdapterStorage adapterStorage = new AdapterDescriptionStorageImpl();
+        return adapterStorage.getAllAdapters();
     }
 
     public Optional<AdapterDescription> getAdapter(String id) {
-        return getAdapters().getList().stream()
+        return getAdapters().stream()
                 .filter(desc -> desc.getAppId().equals(id))
                 .findFirst();
     }

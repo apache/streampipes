@@ -18,6 +18,7 @@
 package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
+import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class ConnectWorkerRegistrationService {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerRegistrationService.class);
 
-  public void registerWorker(String serviceGroup) {
+  public void registerWorker(SpServiceDefinition serviceDef) {
     boolean connected = false;
 
     while (!connected) {
@@ -39,7 +40,7 @@ public class ConnectWorkerRegistrationService {
         String masterUrl = coreServices.get(0) + "/streampipes-backend";
         LOG.info("Trying to connect to master: " + masterUrl);
         connected = MasterRestClient.register(masterUrl,
-                new ConnectWorkerDescriptionProvider().getContainerDescription(serviceGroup));
+                new ConnectWorkerDescriptionProvider().getContainerDescription(serviceDef.getServiceGroup()));
 
         if (connected) {
           LOG.info("Successfully connected to master: " + masterUrl + " Worker is now running.");

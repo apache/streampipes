@@ -28,8 +28,6 @@ import org.apache.streampipes.storage.api.IConnectWorkerContainerStorage;
 import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
-import java.util.List;
-
 public class WorkerUrlProvider {
 
   private IConnectWorkerContainerStorage connectWorkerContainerStorage;
@@ -81,18 +79,7 @@ public class WorkerUrlProvider {
   }
 
   private ExtensionsServiceEndpointGenerator getEndpointGenerator(String appId) {
-    SpServiceUrlProvider provider = null;
-    List<ConnectWorkerContainer> allConnectWorkerContainer = this.connectWorkerContainerStorage.getAllConnectWorkerContainers();
-
-    for (ConnectWorkerContainer connectWorkerContainer : allConnectWorkerContainer) {
-      if (connectWorkerContainer.getProtocols().stream().anyMatch(p -> p.getAppId().equals(appId))) {
-        provider = SpServiceUrlProvider.PROTOCOL;
-      } else if (connectWorkerContainer.getAdapters().stream().anyMatch(a -> a.getAppId().equals(appId))) {
-        provider = SpServiceUrlProvider.ADAPTER;
-      }
-    }
-
-    return new ExtensionsServiceEndpointGenerator(appId, provider);
+    return new ExtensionsServiceEndpointGenerator(appId, SpServiceUrlProvider.ADAPTER);
   }
 
 }

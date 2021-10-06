@@ -61,6 +61,9 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     //  Is used to store where the adapter is running to stop it
     private String selectedEndpointUrl;
 
+    /**
+     * This is used to identify all the service within the service group the adapter can be invoked in
+     */
     private String correspondingServiceGroup;
 
     public AdapterDescription() {

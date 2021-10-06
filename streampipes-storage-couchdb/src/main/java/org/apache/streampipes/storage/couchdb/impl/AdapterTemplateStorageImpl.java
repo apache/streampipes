@@ -30,9 +30,10 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public class AdapterTemplateStorageImpl extends AbstractDao<AdapterDescription> implements IAdapterTemplateStorage {
 
-  Logger LOG = LoggerFactory.getLogger(AdapterStorageImpl.class);
+  Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class);
 
   private static final String SYSTEM_USER = "system";
 

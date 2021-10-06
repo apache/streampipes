@@ -77,7 +77,7 @@ public class WelcomePageMaster extends AbstractAdapterResource<AdapterMasterMana
 	private void getAllRunningAdapters(HtmlCanvas canvas) throws IOException {
 
 		try {
-			for (AdapterDescription ad : managementService.getAllAdapters()) {
+			for (AdapterDescription ad : managementService.getAllAdapterDescriptions()) {
 				canvas.li().write(ad.getElementId())._li();
 				canvas.ul().li().write("Kafka Topic: " + GroundingService.extractTopic(ad))._li()._ul();
 			}

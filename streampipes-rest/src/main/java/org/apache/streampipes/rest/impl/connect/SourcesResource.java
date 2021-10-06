@@ -75,13 +75,13 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
     public Response addAdapter(@PathParam("streamId") String elementId,
                                SpDataSet dataSet) {
 
-        String responseMessage = "Instance of data set " + dataSet.getUri() + " successfully started";
+        String responseMessage = "Instance of data set " + dataSet.getElementId() + " successfully started";
 
         try {
             managementService.addAdapter(elementId,  dataSet);
         } catch (AdapterException | NoServiceEndpointsAvailableException e) {
-            LOG.error("Could not set data set instance: " + dataSet.getUri(), e);
-            return ok(Notifications.error("Could not set data set instance: " + dataSet.getUri()));
+            LOG.error("Could not set data set instance: " + dataSet.getElementId(), e);
+            return ok(Notifications.error("Could not set data set instance: " + dataSet.getElementId()));
         }
 
         return ok(Notifications.success(responseMessage));

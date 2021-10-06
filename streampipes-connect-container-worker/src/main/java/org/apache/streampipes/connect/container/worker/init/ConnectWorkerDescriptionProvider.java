@@ -44,6 +44,7 @@ public class ConnectWorkerDescriptionProvider {
     List<AdapterDescription> adapters = new ArrayList<>();
     for (IAdapter<?> a : DeclarersSingleton.getInstance().getAllAdapters()) {
       AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel());
+      desc.setCorrespondingServiceGroup(serviceGroup);
       adapters.add(desc);
     }
 
@@ -54,11 +55,13 @@ public class ConnectWorkerDescriptionProvider {
         GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
         desc.setAppId(protocolDescription.getAppId());
         desc.setProtocolDescription(protocolDescription);
+        desc.setCorrespondingServiceGroup(serviceGroup);
         adapters.add(desc);
       } else if (protocolDescription instanceof ProtocolSetDescription) {
         GenericAdapterSetDescription desc = new GenericAdapterSetDescription();
         desc.setAppId(protocolDescription.getAppId());
         desc.setProtocolDescription(protocolDescription);
+        desc.setCorrespondingServiceGroup(serviceGroup);
         adapters.add(desc);
       }
     }
