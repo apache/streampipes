@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
@@ -31,6 +31,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("v2/connect/{username}/master/administration")
 public class WorkerAdministrationResource extends AbstractSharedRestInterface {
@@ -46,9 +47,12 @@ public class WorkerAdministrationResource extends AbstractSharedRestInterface {
     @POST
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addWorkerContainer(ConnectWorkerContainer connectWorkerContainer) {
-        LOG.info("Worker container: " + connectWorkerContainer.getServiceGroup() + " was detected");
-        this.workerAdministrationManagement.register(connectWorkerContainer);
+    public Response addWorkerContainer(List<AdapterDescription> availableAdapterDescription) {
+        // Change this to List<AdapterDescription>
+        // How do I store the available AdapterDescriptions when there is no ConnectWorkerContainer
+//        LOG.info("Worker container: " + connectWorkerContainer.getServiceGroup() + " was detected");
+//        this.workerAdministrationManagement.register(connectWorkerContainer);
+        System.out.println(availableAdapterDescription);
 
         return ok(Notifications.success("Worker Container successfully added"));
     }

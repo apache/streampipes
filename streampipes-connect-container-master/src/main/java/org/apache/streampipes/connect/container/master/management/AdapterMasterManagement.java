@@ -217,7 +217,10 @@ public class AdapterMasterManagement {
       } else {
         ad.setSelectedEndpointUrl(baseUrl);
         adapterStorage.updateAdapter(ad);
-        WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) ad);
+
+        AdapterDescription decryptedAdapterDescription =
+                new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
+        WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) decryptedAdapterDescription);
       }
     } catch (NoServiceEndpointsAvailableException e) {
       e.printStackTrace();

@@ -23,8 +23,11 @@ import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.model.connect.grounding.ProtocolSetDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolStreamDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +39,7 @@ public class ConnectWorkerDescriptionProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectWorkerDescriptionProvider.class);
 
-  public ConnectWorkerContainer getContainerDescription(String serviceGroup) {
+  public List<AdapterDescription> getContainerDescription(String serviceGroup) {
 
     List<AdapterDescription> adapters = new ArrayList<>();
     for (IAdapter<?> a : DeclarersSingleton.getInstance().getAllAdapters()) {
@@ -44,13 +47,23 @@ public class ConnectWorkerDescriptionProvider {
       adapters.add(desc);
     }
 
-    List<ProtocolDescription> protocols = new ArrayList<>();
     for (IProtocol p : DeclarersSingleton.getInstance().getAllProtocols()) {
-      ProtocolDescription desc = (ProtocolDescription) rewrite(p.declareModel());
-      protocols.add(desc);
+      ProtocolDescription protocolDescription = (ProtocolDescription) rewrite(p.declareModel());
+
+      if (protocolDescription instanceof ProtocolStreamDescription) {
+        GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
+        desc.setAppId(protocolDescription.getAppId());
+        desc.setProtocolDescription(protocolDescription);
+        adapters.add(desc);
+      } else if (protocolDescription instanceof ProtocolSetDescription) {
+        GenericAdapterSetDescription desc = new GenericAdapterSetDescription();
+        desc.setAppId(protocolDescription.getAppId());
+        desc.setProtocolDescription(protocolDescription);
+        adapters.add(desc);
+      }
     }
 
-    return new ConnectWorkerContainer(serviceGroup, protocols, adapters);
+    return adapters;
   }
 
   private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity) {

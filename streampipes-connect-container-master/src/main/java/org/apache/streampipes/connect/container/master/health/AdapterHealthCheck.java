@@ -40,11 +40,10 @@ public class AdapterHealthCheck {
         List<AdapterDescription> allRunningInstancesAdaperDescription = adapterStorage.getAllAdapters();
 
         // Group them by worker
-//        AdapterDescription decryptedAdapterDescription =
-//                new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
 
         for (AdapterDescription adapterDescription : allRunningInstancesAdaperDescription) {
             try {
+
                 adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
             } catch (AdapterException e) {
                 e.printStackTrace();

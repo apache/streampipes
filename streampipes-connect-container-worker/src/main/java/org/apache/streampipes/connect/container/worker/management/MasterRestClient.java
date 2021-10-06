@@ -20,23 +20,24 @@ package org.apache.streampipes.connect.container.worker.management;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MasterRestClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(MasterRestClient.class);
 
-    public static boolean register(String baseUrl, ConnectWorkerContainer connectWorkerContainer) {
+    public static boolean register(String baseUrl, List<AdapterDescription> allAvailableAdapters) {
 
         String url = baseUrl + "/api/v2/connect/admin@streampipes.org/master/administration";
 
         try {
-            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(connectWorkerContainer);
+            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(allAvailableAdapters);
 
             Request.Post(url)
                     .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
