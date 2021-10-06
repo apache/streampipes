@@ -144,6 +144,8 @@ public class MigrationPipelineGenerator {
                 .filter(dp -> dp.getDeploymentRunningInstanceId().equals(entityToMigrate.getDeploymentRunningInstanceId()))
                 .findFirst();
 
+        if (!originalInvocation.isPresent())
+            return null;
         int index = correspondingPipeline.getSepas().indexOf(originalInvocation.get());
 
         Pipeline targetPipeline;

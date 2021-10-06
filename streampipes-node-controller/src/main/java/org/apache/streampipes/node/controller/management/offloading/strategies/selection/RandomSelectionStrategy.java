@@ -19,16 +19,20 @@
 package org.apache.streampipes.node.controller.management.offloading.strategies.selection;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class RandomSelectionStrategy implements SelectionStrategy{
 
     @Override
     public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities) {
-        List<InvocableStreamPipesEntity> instances = RunningInvocableInstances.INSTANCE.getAll();
+        //Sinks cannot be migrated atm
+        List<InvocableStreamPipesEntity> instances = RunningInvocableInstances.INSTANCE.getAll().stream().
+                filter(e -> e instanceof DataProcessorInvocation).collect(Collectors.toList());
         if(instances.size() == 0)
             return null;
         return instances.get(new Random().nextInt(instances.size()));
