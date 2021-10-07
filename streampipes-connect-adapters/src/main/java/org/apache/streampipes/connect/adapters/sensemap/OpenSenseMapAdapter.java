@@ -207,7 +207,6 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
         eventSchema.setEventProperties(allProperties);
         guessSchema.setEventSchema(eventSchema);
-        guessSchema.setPropertyProbabilityList(new ArrayList<>());
         return guessSchema;
     }
 
