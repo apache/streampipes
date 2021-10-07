@@ -89,8 +89,6 @@ export class AdapterStartedDialog implements OnInit {
 
         if (this.saveInDataLake) {
           const pipelineId = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
-          console.log(x.notifications[0].title);
-          console.log(this.adapter);
           this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title, pipelineId)
             .subscribe(res => {
 
@@ -124,7 +122,6 @@ export class AdapterStartedDialog implements OnInit {
         }
       }
     });
-
   }
 
   onCloseConfirm() {

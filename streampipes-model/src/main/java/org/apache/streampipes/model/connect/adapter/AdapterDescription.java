@@ -92,9 +92,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public AdapterDescription(AdapterDescription other) {
         super(other);
-//        this.adapterId = other.getAdapterId();
-        //this.id = other.getId();
-        //this.rev = other.getRev();
         this.config = new Cloner().staticProperties(other.getConfig());
         this.userName = other.getUserName();
         this.rules = other.getRules();
@@ -107,7 +104,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
-    // TODO check if it can be deleted
     public String getRev() {
         return this.rev;
     }

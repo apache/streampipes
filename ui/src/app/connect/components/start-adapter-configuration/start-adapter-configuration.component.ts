@@ -85,8 +85,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
   saveInDataLake = false;
   dataLakeTimestampField: string;
 
-  isSetAdapter = false;
-
 
   constructor(
     private dialogService: DialogService,
@@ -104,7 +102,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     if (this.adapterDescription instanceof GenericAdapterSetDescription ||
       this.adapterDescription instanceof SpecificAdapterSetDescription) {
-      this.isSetAdapter = true;
     }
 
     // Auto selection of timestamp field for datalake
