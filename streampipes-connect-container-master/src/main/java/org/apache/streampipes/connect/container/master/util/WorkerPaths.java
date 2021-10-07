@@ -20,7 +20,6 @@ package org.apache.streampipes.connect.container.master.util;
 public class WorkerPaths {
 
   private static final String WorkerMainPath = "/api/v1/worker";
-  private static final String Slash = "/";
 
   public static String getStreamInvokePath() {
     return WorkerMainPath + "/stream/invoke";
@@ -40,22 +39,6 @@ public class WorkerPaths {
 
   public static String getRuntimeResolvablePath(String elementId) {
     return WorkerMainPath + "/resolvable/" + elementId + "/configurations";
-  }
-
-  public static String getAdaptersPath() {
-    return WorkerMainPath +  "/adapters";
-  }
-
-  public static String getProtocolsPath() {
-    return WorkerMainPath + "/protocols";
-  }
-
-  public static String getAdaptersPath(String appId) {
-    return getAdaptersPath() + Slash + appId;
-  }
-
-  public static String getProtocolsPath(String appId) {
-    return getProtocolsPath() + Slash + appId;
   }
 
   public static String getGuessSchemaPath() {
