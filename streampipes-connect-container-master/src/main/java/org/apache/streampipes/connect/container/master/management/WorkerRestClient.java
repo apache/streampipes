@@ -41,7 +41,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.UUID;
 
 public class WorkerRestClient {
 
@@ -84,9 +83,9 @@ public class WorkerRestClient {
             logger.info("Trying to start adapter on endpoint: " + url);
 
             // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
-            if (ad.getUri() == null) {
-                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
-            }
+//            if (ad.getUri() == null) {
+//                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
+//            }
 
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 

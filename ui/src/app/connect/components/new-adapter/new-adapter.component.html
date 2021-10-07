@@ -74,10 +74,10 @@
         <mat-step>
             <ng-template matStepLabel>Define Event Schema</ng-template>
             <sp-event-schema #eschema fxLayout="column" fxFlex="100"
-                              [(isEditable)]="isEditable"
-                              [adapterDescription]="adapter"
-                              [(eventSchema)]="eventSchema"
-                              [(oldEventSchema)]="oldEventSchema"
+                             [(isEditable)]="isEditable"
+                             [adapterDescription]="adapter"
+                             [(eventSchema)]="eventSchema"
+                             [(oldEventSchema)]="oldEventSchema"
                              (clickNextEmitter)="clickEventSchemaNextButtonButton()"
                              (goBackEmitter)="goBack()"
                              (removeSelectionEmitter)="removeSelection()">
@@ -88,6 +88,7 @@
             <ng-template matStepLabel>Start Adapter</ng-template>
             <sp-start-adapter-configuration
                     [adapterDescription]="adapter"
+                    [eventSchema]="eventSchema"
                     (removeSelectionEmitter)="removeSelection()"
                     (goBackEmitter)="goBack()"
                     (adapterStartedEmitter)="adapterWasStarted()">

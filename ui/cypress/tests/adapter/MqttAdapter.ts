@@ -17,7 +17,11 @@
  */
 
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
+import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
+import { PipelineUtils } from '../../support/utils/PipelineUtils';
 
 describe('Test Random Data Simulator Stream Adapter', () => {
   before('Setup Test', () => {
@@ -25,27 +29,41 @@ describe('Test Random Data Simulator Stream Adapter', () => {
   });
 
   it('Perform Test', () => {
-    const adapterInput = SpecificAdapterBuilder
+    const simulatorAdapterName = 'simulator';
+
+
+    const machineAdapter = SpecificAdapterBuilder
       .create('Machine_Data_Simulator')
-      .setName('Machine Data Simulator Test')
+      .setName(simulatorAdapterName)
       .addInput('input', 'wait-time-ms', '1000')
-      .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
       .build();
 
-    AdapterUtils.testSpecificStreamAdapter(adapterInput);
+    AdapterUtils.testSpecificStreamAdapter(machineAdapter);
 
-    // const adapterInput1 = SpecificAdapterBuilder
-    //   .create('Machine_Data_Simulator')
-    //   .setName('Machine Data Simulator Test 2')
-    //   .addInput('input', 'wait-time-ms', '1000')
-    //   .addInput('radio', 'selected-simulator-option', 'pressure')
-    //   .setTimestampProperty('timestamp')
-    //   .setStoreInDataLake()
-    //   .build();
-    //
-    // AdapterUtils.testSpecificStreamAdapter(adapterInput1);
-    // AdapterUtils.deleteAdapter();
+    const topicname = 'cypresstopic';
+    const pipelineInput = PipelineBuilder.create('Pipeline Test')
+      .addSource(simulatorAdapterName)
+      .addSink(
+        PipelineElementBuilder.create('mqtt_publisher')
+          .addInput('input', 'host', 'localhost')
+          .addInput('input', 'topic', topicname)
+          .build())
+      .build();
+
+    PipelineUtils.testPipeline(pipelineInput);
+
+    const adapterInput = GenericAdapterBuilder
+      .create('MQTT')
+      .setName('Adapter Mqtt')
+      .setTimestampProperty('timestamp')
+      .setStoreInDataLake()
+      .addProtocolInput('select', 'Unauthenticated', 'check')
+      .addProtocolInput('input', 'broker_url', 'tcp://localhost:1883')
+      .addProtocolInput('input', 'topic', topicname)
+      .setFormat('json_object')
+      .build();
+
+    AdapterUtils.testGenericStreamAdapter(adapterInput);
   });
 
 });

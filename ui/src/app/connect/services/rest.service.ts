@@ -32,13 +32,15 @@ import {
   SpDataStream
 } from '../../core-model/gen/streampipes-model';
 import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { AuthStatusService } from '../../services/auth-status.service';
 
 @Injectable()
 export class RestService {
 
   constructor(
       private http: HttpClient,
-      private platformServicesCommons: PlatformServicesCommons) {
+      private platformServicesCommons: PlatformServicesCommons,
+      private authStatusService: AuthStatusService) {
   }
 
   get connectPath() {
@@ -54,6 +56,7 @@ export class RestService {
   }
 
   addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
+    adapter.userName = this.authStatusService.email;
     const promise = new Promise<Message>((resolve, reject) => {
       this.http
           .post(

@@ -24,7 +24,7 @@
     <div class="sp-blue-border padding" style="padding: 15px; margin-bottom: 2%;">
         <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
             <mat-form-field color="accent">
-                <input matInput id="input-AdapterName"  [ngModelOptions]="{standalone: true}" placeholder="Adapter Name"
+                <input matInput id="input-AdapterName" [ngModelOptions]="{standalone: true}" placeholder="Adapter Name"
                        [(ngModel)]="adapterDescription.name" data-cy="sp-adapter-name">
             </mat-form-field>
             <mat-form-field color="accent">
@@ -45,7 +45,8 @@
 
 
             <mat-checkbox [(ngModel)]="removeDuplicates"
-                          [ngModelOptions]="{standalone: true}">Remove Duplicates</mat-checkbox>
+                          [ngModelOptions]="{standalone: true}">Remove Duplicates
+            </mat-checkbox>
             <mat-form-field *ngIf="removeDuplicates">
                 <input matInput id="input-removeDuplicatesTime"
                        [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window"
@@ -72,31 +73,35 @@
             </mat-form-field>
 
             <!-- Start pipeline template to store raw events in data lake -->
-            <!--<mat-checkbox *ngIf="timestampPropertiesInSchema.length == 0"-->
-            <!--[disabled]="timestampPropertiesInSchema.length == 0" [(ngModel)]="saveInDataLake"-->
-            <!--[ngModelOptions]="{standalone: true}">Store in Datalake (Timestamp required)</mat-checkbox>-->
-            <!--<mat-checkbox *ngIf="timestampPropertiesInSchema.length > 0" [(ngModel)]="saveInDataLake"-->
-            <!--[ngModelOptions]="{standalone: true}">Store in Datalake</mat-checkbox>-->
-            <!--<mat-form-field *ngIf="saveInDataLake">-->
-            <!--<mat-label>Select Time Field</mat-label>-->
-            <!--<mat-select [(ngModel)]="dataLakeTimestampField" [ngModelOptions]="{standalone: true}">-->
-            <!--<mat-option class="md-elevation-z1" style="background: white;"-->
-            <!--*ngFor="let timestampField of eventSchema.eventProperties | timestampFilter"-->
-            <!--[value]="timestampField.runTimeName">-->
-            <!--{{timestampField.runTimeName}}-->
-            <!--</mat-option>-->
-            <!--</mat-select>-->
-            <!--</mat-form-field>-->
+            <mat-checkbox [(ngModel)]="saveInDataLake"
+                          [ngModelOptions]="{standalone: true}"
+                          data-cy="sp-store-in-datalake">
+                Store in Datalake
+            </mat-checkbox>
+            <mat-form-field *ngIf="saveInDataLake">
+                <mat-label>Select Time Field</mat-label>
+                <mat-select [(ngModel)]="dataLakeTimestampField"
+                            [ngModelOptions]="{standalone: true}"
+                            data-cy="sp-store-in-datalake-timestamp">
+                    <mat-option class="md-elevation-z1" style="background: white;"
+                                *ngFor="let timestampField of eventSchema.eventProperties | timestampFilter"
+                                [value]="timestampField.runtimeName">
+                        {{timestampField.runtimeName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
 
             <mat-checkbox *ngIf="isSetAdapter" [(ngModel)]="adapterDescription.stopPipeline"
-                          [ngModelOptions]="{standalone: true}">Stop pipeline when replay is completed</mat-checkbox>
+                          [ngModelOptions]="{standalone: true}">Stop pipeline when replay is completed
+            </mat-checkbox>
 
         </div>
     </div>
 
     <div fxLayoutAlign="end">
         <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-        <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
+        <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back
+        </button>
         <button [disabled]="startAdapterSettingsFormValid" mat-raised-button
                 id="button-saveTemplate" color="accent" (click)="saveTemplate()" mat-button
                 style="margin-left:10px;">

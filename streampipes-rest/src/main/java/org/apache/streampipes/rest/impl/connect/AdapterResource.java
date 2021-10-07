@@ -85,9 +85,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}/stop")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response stopAdapter(@PathParam("id") String adapterId) {
+    public Response stopAdapter(@PathParam("id") String adapterId) throws NoServiceEndpointsAvailableException {
         try {
-            managementService.stopStreamAdapter(adapterId, getAdapterDescription(adapterId).getSelectedEndpointUrl());
+            AdapterDescription adapterDescription = getAdapterDescription(adapterId);
+            String workerBaseUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
+            managementService.stopStreamAdapter(adapterId, workerBaseUrl);
             return ok(Notifications.success("Adapter started"));
         } catch (AdapterException e) {
             LOG.error("Could not stop adapter with id " +adapterId, e);

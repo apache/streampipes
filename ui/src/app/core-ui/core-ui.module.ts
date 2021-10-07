@@ -79,6 +79,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BarchartWidgetComponent } from './widget/barchart/barchart-widget.component';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
+import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
 
 @NgModule({
   imports: [
@@ -135,7 +136,8 @@ import { AddToCollectionComponent } from './static-properties/static-collection/
     StatusWidgetComponent,
     LabelListItemComponent,
     ErrorHintComponent,
-    AddToCollectionComponent
+    AddToCollectionComponent,
+    PipelineStartedStatusComponent
   ],
   providers: [
     MatDatepickerModule,
@@ -177,7 +179,8 @@ import { AddToCollectionComponent } from './static-properties/static-collection/
     ImageViewerComponent,
     StatusWidgetComponent,
     BarchartWidgetComponent,
-    ErrorHintComponent
+    ErrorHintComponent,
+    PipelineStartedStatusComponent
   ]
 })
 export class CoreUiModule {

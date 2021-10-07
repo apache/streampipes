@@ -50,11 +50,11 @@ public class PipelineTemplateGenerator {
 
     List<PipelineTemplate> allPipelineTemplates = new ArrayList<>();
 
-    allPipelineTemplates.add(new DashboardPipelineTemplate());
-    allPipelineTemplates.add(new ElasticsearchPipelineTemplate());
+//    allPipelineTemplates.add(new DashboardPipelineTemplate());
+//    allPipelineTemplates.add(new ElasticsearchPipelineTemplate());
     allPipelineTemplates.add(new DataLakePipelineTemplate());
-    allPipelineTemplates.add(new FilterPipelineTemplate());
-    allPipelineTemplates.add(new FilterElasticSearchPipelineTemplate());
+//    allPipelineTemplates.add(new FilterPipelineTemplate());
+//    allPipelineTemplates.add(new FilterElasticSearchPipelineTemplate());
 //    allPipelineTemplates.add(new DelmeExamplePipelineTemplate());
 
 

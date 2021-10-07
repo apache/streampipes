@@ -16,8 +16,8 @@
  *
  */
 
-import {AuthStatusService} from "../../services/auth-status.service";
-import {Injectable} from "@angular/core";
+import { AuthStatusService } from '../../services/auth-status.service';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PlatformServicesCommons {
@@ -33,7 +33,7 @@ export class PlatformServicesCommons {
   apiBasePath() {
     return this.basePath + '/api/v2';
   }
-  
+
   authUserBasePath() {
     return this.basePath + '/api/v2/users/' + this.authStatusService.email;
   }
