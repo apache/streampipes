@@ -17,7 +17,7 @@
   -->
 
 <div [className]="className" fxFlex="100"
- fxLayout="column">
+     fxLayout="column">
     <div fxLayout="column">
         <div class="type" fxLayout="column" fxLayoutAlign="start start">
             <div class="type-data" fxLayout="row" fxLayoutAlign="start start">
@@ -36,20 +36,6 @@
     <div fxLayout="row">
         <div fxFlex="70" class="description" fxLayoutAlign="start start">
             <p [innerHTML]="adapter.description"></p>
-        </div>
-        <div fxFlex="30" fxLayout="row" fxLayoutAlign="end end" *ngIf="$any(adapter).isTemplate" class="delete">
-            <button id="{{ 'share-template-' + adapterLabel }}" matTooltip="Share Adapter Template" color="secondary" mat-fab (click)="shareAdapterTemplate(adapter); $event.stopPropagation()">
-                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDBId)">
-                    share
-                </i>
-            </button>
-            <button id="{{ 'delete-template-' + adapterLabel }}" matTooltip="Delete Adapter Template" color="primary" mat-fab (click)="deleteAdapterTemplate(adapter); $event.stopPropagation()" [disabled]="deleteInProgress(adapter.couchDBId)">
-                <i class="material-icons" *ngIf="!deleteInProgress(adapter.couchDBId)">
-                    delete
-                </i>
-                <mat-spinner *ngIf="deleteInProgress(adapter.couchDBId)" [diameter]="20" fxLayoutAlign="center"></mat-spinner>
-            </button>
-
         </div>
     </div>
 </div>

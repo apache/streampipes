@@ -89,10 +89,6 @@ export class DataMarketplaceService {
     return this.deleteRequest(adapter, '/master/adapters/');
   }
 
-  deleteAdapterTemplate(adapter: AdapterDescription): Observable<any> {
-    return this.deleteRequest(adapter, '/master/adapters/template/');
-  }
-
   getAdapterCategories(): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/api/v2/categories/adapter`);
@@ -105,75 +101,6 @@ export class DataMarketplaceService {
       adapter.elementId
     );
   }
-
-  /**
-   * @deprecated The method should not be used
-   */
-  // getProtocols(): Observable<AdapterDescriptionUnion[]> {
-  //   return this.http
-  //     .get(
-  //       `${this.connectPath}/master/description/protocols`
-  //     )
-  //     .pipe(map(response => {
-  //       const adapterDescriptions: AdapterDescriptionUnion[] = [];
-  //       const protocols: ProtocolDescription[] = (ProtocolDescriptionList.fromData(response as ProtocolDescriptionList)).list;
-  //
-  //       for (const protocol of protocols) {
-  //         let newAdapterDescription: AdapterDescriptionUnion;
-  //         if (protocol.sourceType === 'SET') {
-  //           newAdapterDescription = new GenericAdapterSetDescription();
-  //           newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription';
-  //           newAdapterDescription.dataSet = new SpDataSet();
-  //           newAdapterDescription.dataSet.eventSchema = new EventSchema();
-  //         } else if (protocol.sourceType === 'STREAM') {
-  //           newAdapterDescription = new GenericAdapterStreamDescription();
-  //           newAdapterDescription['@class'] = 'org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription';
-  //           newAdapterDescription.dataStream = new SpDataStream();
-  //           newAdapterDescription.dataStream.eventSchema = new EventSchema();
-  //         }
-  //         newAdapterDescription.appId = protocol.appId;
-  //         newAdapterDescription.name = protocol.name;
-  //         newAdapterDescription.description = protocol.description;
-  //         newAdapterDescription.iconUrl = protocol.iconUrl;
-  //         newAdapterDescription.uri = newAdapterDescription.elementId;
-  //         newAdapterDescription.category = protocol.category;
-  //         newAdapterDescription.includedAssets = protocol.includedAssets;
-  //         newAdapterDescription.includesAssets = protocol.includesAssets;
-  //         newAdapterDescription.includedLocales = protocol.includedLocales;
-  //         newAdapterDescription.includesLocales = protocol.includesLocales;
-  //
-  //         if (
-  //           newAdapterDescription instanceof GenericAdapterSetDescription ||
-  //           newAdapterDescription instanceof GenericAdapterStreamDescription
-  //         ) {
-  //           newAdapterDescription.protocolDescription = protocol;
-  //         }
-  //         adapterDescriptions.push(newAdapterDescription);
-  //       }
-  //       return adapterDescriptions;
-  //     }));
-  // }
-
-  // sortStaticProperties(sp: StaticProperty) {
-  //   if (sp instanceof AlternativesStaticProperty) {
-  //     sp.alternatives.sort((a, b) => a.index - b.index);
-  //     sp.alternatives.forEach(a => {
-  //       if (a.staticProperty instanceof GroupStaticProperty) {
-  //         a.staticProperty.staticProperties.sort((a, b) => a.index - b.index);
-  //       } else if (a.staticProperty instanceof CollectionStaticProperty) {
-  //         this.sortStaticProperties((<CollectionStaticProperty> a.staticProperty).staticPropertyTemplate)
-  //       }
-  //     })
-  //   } else if (sp instanceof GroupStaticProperty) {
-  //       sp.staticProperties.sort((a, b) => a.index - b.index);
-  //   } else if (sp instanceof CollectionStaticProperty) {
-  //       this.sortStaticProperties((<CollectionStaticProperty> sp).staticPropertyTemplate)
-  //   }
-  // }
-
-  // getGenericAndSpecificAdapterDescriptions(): Observable<[AdapterDescriptionUnion[], AdapterDescriptionUnion[]]> {
-  //   return zip(this.getAdapterDescriptions(), this.getProtocols());
-  // }
 
   cloneAdapterDescription(toClone: AdapterDescriptionUnion): AdapterDescriptionUnion {
     let result: AdapterDescriptionUnion;

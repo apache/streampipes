@@ -28,10 +28,12 @@ import org.apache.streampipes.model.SpDataSet;
 public abstract class AdapterSetDescription extends AdapterDescription {
 
     public AdapterSetDescription() {
+        this.dataSet = new SpDataSet();
     }
 
     public AdapterSetDescription(String uri, String name, String description) {
         super(uri, name, description);
+        this.dataSet = new SpDataSet();
     }
 
     public AdapterSetDescription(AdapterSetDescription other) {

@@ -32,7 +32,6 @@ import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-start
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
-import { TimestampPipe } from '../../filter/timestamp.pipe';
 import { ConnectService } from '../../services/connect.service';
 
 @Component({
@@ -93,8 +92,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     private dialogService: DialogService,
     private shepherdService: ShepherdService,
     private connectService: ConnectService,
-    private _formBuilder: FormBuilder,
-    private timestampPipe: TimestampPipe) {
+    private _formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -118,7 +116,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
   }
 
-  public triggerDialog(storeAsTemplate: boolean) {
+  public triggerDialog(directlyStartAdapter: boolean) {
     if (this.removeDuplicates) {
       const removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
       removeDuplicates['@class'] = 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
@@ -139,7 +137,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
       width: '70vw',
       data: {
         'adapter': this.adapterDescription,
-        'storeAsTemplate': storeAsTemplate,
+        'directlyStartAdapter': directlyStartAdapter,
         'saveInDataLake': this.saveInDataLake,
         'dataLakeTimestampField': this.dataLakeTimestampField
       }
@@ -152,11 +150,11 @@ export class StartAdapterConfigurationComponent implements OnInit {
     });
   }
 
-  public saveTemplate() {
+  public startAdapter() {
     this.triggerDialog(true);
   }
 
-  public startAdapter() {
+  public createAdapter() {
     this.triggerDialog(false);
   }
 

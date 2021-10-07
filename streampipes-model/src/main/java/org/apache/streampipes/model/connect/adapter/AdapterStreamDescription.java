@@ -32,10 +32,12 @@ public abstract class AdapterStreamDescription extends AdapterDescription {
 
     public AdapterStreamDescription() {
         super();
+        this.dataStream = new SpDataStream();
     }
 
     public AdapterStreamDescription(String elementId, String name, String description) {
         super(elementId, name, description);
+        this.dataStream = new SpDataStream();
     }
 
     public AdapterStreamDescription(AdapterStreamDescription other) {
