@@ -18,41 +18,13 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
-import org.apache.streampipes.storage.api.IConnectWorkerContainerStorage;
-import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 public class WorkerUrlProvider {
 
-  private IConnectWorkerContainerStorage connectWorkerContainerStorage;
 
-  public WorkerUrlProvider() {
-      this.connectWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
-  }
-
-  public String getWorkerUrlForAdapter(AdapterDescription adapterDescription) throws NoServiceEndpointsAvailableException {
-    String id = "";
-
-    if (adapterDescription instanceof GenericAdapterDescription) {
-      id = ((GenericAdapterDescription) (adapterDescription)).getProtocolDescription().getAppId();
-    } else {
-      id = adapterDescription.getAppId();
-    }
-
-    return getWorkerUrl(id);
-  }
-
-  public String getWorkerUrlForProtocol(ProtocolDescription protocolDescription) throws NoServiceEndpointsAvailableException {
-    String id =  protocolDescription.getAppId();
-
-    return getWorkerUrl(id);
-  }
+  public WorkerUrlProvider() {}
 
   public String getWorkerUrl(String appId) throws NoServiceEndpointsAvailableException {
     return getEndpointGenerator(appId).getEndpointResourceUrl();
@@ -60,22 +32,6 @@ public class WorkerUrlProvider {
 
   public String getWorkerBaseUrl(String appId) throws NoServiceEndpointsAvailableException {
     return getEndpointGenerator(appId).getEndpointBaseUrl();
-  }
-
-  public String getWorkerServiceGroup(String appId) throws AdapterException {
-    return this.connectWorkerContainerStorage
-            .getAllConnectWorkerContainers()
-            .stream()
-            .filter(c -> hasProtocolOrAdapter(c, appId))
-            .findFirst()
-            .map(ConnectWorkerContainer::getServiceGroup)
-            .orElseThrow(AdapterException::new);
-  }
-
-  private boolean hasProtocolOrAdapter(ConnectWorkerContainer c,
-                                       String appId) {
-    return c.getAdapters().stream().anyMatch(a -> a.getAppId().equals(appId)) ||
-            c.getProtocols().stream().anyMatch(p -> p.getAppId().equals(appId));
   }
 
   private ExtensionsServiceEndpointGenerator getEndpointGenerator(String appId) {

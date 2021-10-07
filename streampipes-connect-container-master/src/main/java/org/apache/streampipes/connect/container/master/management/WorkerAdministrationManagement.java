@@ -35,7 +35,7 @@ public class WorkerAdministrationManagement {
     private ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage;
     private AdapterMasterManagement adapterMasterManagement;
 
-    private IAdapterStorage adapterStorage;
+    private IAdapterStorage adapterDescriptionStorage;
 
     private AdapterHealthCheck adapterHealthCheck;
 
@@ -43,12 +43,12 @@ public class WorkerAdministrationManagement {
         this.connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
         this.adapterMasterManagement = new AdapterMasterManagement();
         this.adapterHealthCheck = new AdapterHealthCheck();
-        this.adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterStorage();
+        this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
     }
 
     public void register(List<AdapterDescription> availableAdapterDescription) {
 
-        List<AdapterDescription> alreadyRegisteredAdapters = this.adapterStorage.getAllAdapters();
+        List<AdapterDescription> alreadyRegisteredAdapters = this.adapterDescriptionStorage.getAllAdapters();
 
         availableAdapterDescription.forEach(adapterDescription -> {
 
@@ -57,7 +57,7 @@ public class WorkerAdministrationManagement {
                     .stream()
                     .anyMatch(a -> a.getAppId().equals(adapterDescription.getAppId()) && a.getCorrespondingServiceGroup().equals(adapterDescription.getCorrespondingServiceGroup()));
             if (!alreadyInstalled) {
-                this.adapterStorage.storeAdapter(adapterDescription);
+                this.adapterDescriptionStorage.storeAdapter(adapterDescription);
             }
         });
 

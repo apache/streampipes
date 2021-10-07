@@ -30,12 +30,10 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
-import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.management.StorageManager;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
@@ -59,7 +57,6 @@ public class AdapterMasterManagement {
 
   public AdapterMasterManagement() {
     this.adapterInstanceStorage = getAdapterInstanceStorage();
-    this.adapterDescriptionStorage = new AdapterDescriptionStorageImpl();
     this.workerUrlProvider = new WorkerUrlProvider();
   }
 
@@ -67,80 +64,64 @@ public class AdapterMasterManagement {
     this.adapterInstanceStorage = adapterStorage;
   }
 
-  public void startAllStreamAdapters(ConnectWorkerContainer connectWorkerContainer) throws AdapterException, NoServiceEndpointsAvailableException {
-    IAdapterStorage adapterStorage = getAdapterInstanceStorage();
-    List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
-
-    for (AdapterDescription ad : allAdapters) {
-
-      if (ad instanceof AdapterStreamDescription) {
-        AdapterDescription decryptedAdapterDescription =
-                new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
-
-        if (decryptedAdapterDescription.getCorrespondingServiceGroup().equals(connectWorkerContainer.getServiceGroup())) {
-          String wUrl = workerUrlProvider.getWorkerBaseUrl(decryptedAdapterDescription.getAppId());
-          WorkerRestClient.invokeStreamAdapter(wUrl, (AdapterStreamDescription) decryptedAdapterDescription);
-        }
-
-      }
-    }
-  }
-
   public String addAdapter(AdapterDescription ad,
-                           String endpointUrl,
                            String username)
           throws AdapterException {
 
-    // Add EventGrounding to AdapterDescription
-    EventGrounding eventGrounding = GroundingService.createEventGrounding();
-    ad.setEventGrounding(eventGrounding);
-
-    String uuid = UUID.randomUUID().toString();
-    ad.setElementId(ad.getElementId() + ":" + uuid);
-    ad.setCreatedAt(System.currentTimeMillis());
-    ad.setSelectedEndpointUrl(endpointUrl);
-
-    AdapterDescription encryptedAdapterDescription =
-            new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
-
-    // store in db
-    String adapterId = adapterInstanceStorage.storeAdapter(encryptedAdapterDescription);
-
-    // start when stream adapter
-    if (ad instanceof AdapterStreamDescription) {
-      WorkerRestClient.invokeStreamAdapter(endpointUrl, adapterId);
-      LOG.info("Start adapter");
-    }
-
-    LOG.info("Install source (source URL: {} in backend", ad.getElementId());
-    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
-    storedDescription.setCorrespondingAdapterId(adapterId);
-    installDataSource(storedDescription, username);
-
-    return storedDescription.getElementId();
-  }
-
-  public void installDataSource(SpDataStream stream, String username) throws AdapterException {
     try {
-      new DataStreamVerifier(stream).verifyAndAdd(username, true, true);
-    } catch (SepaParseException e) {
-      LOG.error("Error while installing data source: {}", stream.getElementId(), e);
-      throw new AdapterException();
+      // Create elementId for adapter
+      String uuid = UUID.randomUUID().toString();
+      ad.setElementId(ad.getElementId() + ":" + uuid);
+      ad.setCreatedAt(System.currentTimeMillis());
+
+      // Find worker to execute adapter
+      String selectedEndpointUrl = workerUrlProvider.getWorkerBaseUrl(ad.getAppId());
+      ad.setSelectedEndpointUrl(selectedEndpointUrl);
+
+      // Add EventGrounding to AdapterDescription
+      EventGrounding eventGrounding = GroundingService.createEventGrounding();
+      ad.setEventGrounding(eventGrounding);
+
+      // Encrypt adapter description to store it in db
+      AdapterDescription encryptedAdapterDescription =
+              new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
+
+      // store in db
+      encryptedAdapterDescription.setRev(null);
+      String adapterId = adapterInstanceStorage.storeAdapter(encryptedAdapterDescription);
+
+      // start when stream adapter
+      if (ad instanceof AdapterStreamDescription) {
+        WorkerRestClient.invokeStreamAdapter(selectedEndpointUrl, adapterId);
+        LOG.info("Start adapter");
+      }
+
+      // Create stream
+      SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
+      storedDescription.setCorrespondingAdapterId(adapterId);
+      installDataSource(storedDescription, username);
+      LOG.info("Install source (source URL: {} in backend", ad.getElementId());
+
+      return storedDescription.getElementId();
+    } catch (NoServiceEndpointsAvailableException e) {
+      throw new AdapterException("Could not find a worker for adapter " + ad.getAppId(), e);
     }
+
   }
 
-  public AdapterDescription getAdapter(String id) throws AdapterException {
+
+  public AdapterDescription getAdapter(String elementId) throws AdapterException {
     List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
 
-    if (allAdapters != null && id != null) {
+    if (allAdapters != null && elementId != null) {
       for (AdapterDescription ad : allAdapters) {
-        if (id.equals(ad.getElementId())) {
+        if (elementId.equals(ad.getElementId())) {
           return ad;
         }
       }
     }
 
-    throw new AdapterException("Could not find adapter with id: " + id);
+    throw new AdapterException("Could not find adapter with id: " + elementId);
   }
 
   /**
@@ -243,14 +224,24 @@ public class AdapterMasterManagement {
 
   }
 
-  public boolean isStreamAdapter(String id) {
+  private void installDataSource(SpDataStream stream, String username) throws AdapterException {
+    try {
+      new DataStreamVerifier(stream).verifyAndAdd(username, true, true);
+    } catch (SepaParseException e) {
+      LOG.error("Error while installing data source: {}", stream.getElementId(), e);
+      throw new AdapterException();
+    }
+  }
+
+  private boolean isStreamAdapter(String id) {
     AdapterDescription adapterDescription = adapterInstanceStorage.getAdapter(id);
     return isStreamAdapter(adapterDescription);
   }
 
-  public boolean isStreamAdapter(AdapterDescription adapterDescription) {
+  private boolean isStreamAdapter(AdapterDescription adapterDescription) {
     return adapterDescription instanceof AdapterStreamDescription;
   }
+
 
   private IAdapterStorage getAdapterInstanceStorage() {
     return new AdapterInstanceStorageImpl();

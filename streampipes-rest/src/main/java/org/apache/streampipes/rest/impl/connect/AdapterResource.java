@@ -21,7 +21,6 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -37,11 +36,9 @@ import java.util.List;
 public class AdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
-    private final WorkerUrlProvider workerUrlProvider;
 
     public AdapterResource() {
         super(AdapterMasterManagement::new);
-        this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     @POST
@@ -53,9 +50,8 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
         LOG.info("User: " + username + " starts adapter " + adapterDescription.getElementId());
 
         try {
-            String workerBaseUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
-            adapterId = managementService.addAdapter(adapterDescription, workerBaseUrl, username);
-        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+            adapterId = managementService.addAdapter(adapterDescription, username);
+        } catch (AdapterException e) {
             LOG.error("Error while starting adapter with id " + adapterDescription.getAppId(), e);
             return ok(Notifications.error(e.getMessage()));
         }

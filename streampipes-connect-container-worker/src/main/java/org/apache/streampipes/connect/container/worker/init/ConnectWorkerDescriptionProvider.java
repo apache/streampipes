@@ -26,8 +26,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolSetDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolStreamDescription;
+import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,14 +50,22 @@ public class ConnectWorkerDescriptionProvider {
     for (IProtocol p : DeclarersSingleton.getInstance().getAllProtocols()) {
       ProtocolDescription protocolDescription = (ProtocolDescription) rewrite(p.declareModel());
 
-      if (protocolDescription instanceof ProtocolStreamDescription) {
+      if (protocolDescription.getSourceType().equals(AdapterSourceType.STREAM.toString())) {
         GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
+        desc.setName(protocolDescription.getName());
+        desc.setDescription(protocolDescription.getDescription());
+        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
+        desc.setElementId(protocolDescription.getElementId());
         desc.setAppId(protocolDescription.getAppId());
         desc.setProtocolDescription(protocolDescription);
         desc.setCorrespondingServiceGroup(serviceGroup);
         adapters.add(desc);
-      } else if (protocolDescription instanceof ProtocolSetDescription) {
+      } else if (protocolDescription.getSourceType().equals(AdapterSourceType.SET.toString())) {
         GenericAdapterSetDescription desc = new GenericAdapterSetDescription();
+        desc.setName(protocolDescription.getName());
+        desc.setDescription(protocolDescription.getDescription());
+        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
+        desc.setElementId(protocolDescription.getElementId());
         desc.setAppId(protocolDescription.getAppId());
         desc.setProtocolDescription(protocolDescription);
         desc.setCorrespondingServiceGroup(serviceGroup);

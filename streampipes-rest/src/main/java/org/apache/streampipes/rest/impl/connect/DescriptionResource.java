@@ -23,7 +23,6 @@ import org.apache.streampipes.connect.container.master.management.DescriptionMan
 import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
@@ -90,15 +89,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-                String workerUrl = workerUrlProvider.getWorkerUrlForAdapter(adapterDescription);
-
-                result = managementService.getAssets(workerUrl);
-            }
-
-            Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
-            if (protocolDescriptionOptional.isPresent()) {
-                ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
-                String workerUrl = workerUrlProvider.getWorkerUrlForProtocol(protocolDescription);
+                String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
 
                 result = managementService.getAssets(workerUrl);
             }
@@ -128,15 +119,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-                String workerUrl = workerUrlProvider.getWorkerUrlForAdapter(adapterDescription);
-
-                result = managementService.getIconAsset(workerUrl);
-            }
-
-            Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
-            if (protocolDescriptionOptional.isPresent()) {
-                ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
-                String workerUrl = workerUrlProvider.getWorkerUrlForProtocol(protocolDescription);
+                String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
 
                 result = managementService.getIconAsset(workerUrl);
             }
@@ -165,15 +148,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             Optional<AdapterDescription> adapterDescriptionOptional = managementService.getAdapter(id);
             if (adapterDescriptionOptional.isPresent()) {
                 AdapterDescription adapterDescription = adapterDescriptionOptional.get();
-                String workerUrl = workerUrlProvider.getWorkerUrlForAdapter(adapterDescription);
-
-                result =  managementService.getDocumentationAsset(workerUrl);
-            }
-
-            Optional<ProtocolDescription> protocolDescriptionOptional  = managementService.getProtocol(id);
-            if (protocolDescriptionOptional.isPresent()) {
-                ProtocolDescription protocolDescription = protocolDescriptionOptional.get();
-                String workerUrl = workerUrlProvider.getWorkerUrlForProtocol(protocolDescription);
+                String workerUrl = workerUrlProvider.getWorkerUrl(adapterDescription.getAppId());
 
                 result =  managementService.getDocumentationAsset(workerUrl);
             }

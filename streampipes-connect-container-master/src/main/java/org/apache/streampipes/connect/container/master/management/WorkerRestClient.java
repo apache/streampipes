@@ -46,8 +46,8 @@ public class WorkerRestClient {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerRestClient.class);
 
-    public static void invokeStreamAdapter(String endpointUrl, String adapterId) throws AdapterException {
-        invokeStreamAdapter(endpointUrl, (AdapterStreamDescription) getAndDecryptAdapter(adapterId));
+    public static void invokeStreamAdapter(String endpointUrl, String elementId) throws AdapterException {
+        invokeStreamAdapter(endpointUrl, (AdapterStreamDescription) getAndDecryptAdapter(elementId));
     }
 
     public static void invokeStreamAdapter(String endpointUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
@@ -234,7 +234,7 @@ public class WorkerRestClient {
     }
 
     private static IAdapterStorage getAdapterStorage() {
-        return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterStorage();
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
     }
 }
 
