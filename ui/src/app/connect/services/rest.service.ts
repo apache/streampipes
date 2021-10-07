@@ -23,7 +23,7 @@ import { HttpClient } from '@angular/common/http';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
-import { AdapterDescription, FormatDescriptionList, GuessSchema, Message, SpDataStream } from '../../core-model/gen/streampipes-model';
+import { AdapterDescription, FormatDescription, GuessSchema, Message, SpDataStream } from '../../core-model/gen/streampipes-model';
 import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 import { AuthStatusService } from '../../services/auth-status.service';
 
@@ -63,7 +63,7 @@ export class RestService {
 
   getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
     return this.http
-      .post(this.connectPath + '/master/guess/schema', adapter)
+      .post(`${this.connectPath}/master/guess/schema`, adapter)
       .pipe(map(response => {
         return GuessSchema.fromData(response as GuessSchema);
       }));
@@ -72,30 +72,28 @@ export class RestService {
 
   getSourceDetails(sourceElementId): Observable<SpDataStream> {
     return this.http
-      .get(this.platformServicesCommons.apiBasePath() + '/streams/' + encodeURIComponent(sourceElementId)).pipe(map(response => {
+      .get(`${this.platformServicesCommons.apiBasePath()}/streams/${encodeURIComponent(sourceElementId)}`).pipe(map(response => {
         return SpDataStream.fromData(response as SpDataStream);
       }));
   }
 
   getRuntimeInfo(sourceDescription): Observable<any> {
-    return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipeline-element/runtime', sourceDescription, {
+    return this.http.post(`${this.platformServicesCommons.apiBasePath()}/pipeline-element/runtime`, sourceDescription, {
       headers: { ignoreLoadingBar: '' }
     });
   }
 
-  getFormats(): Observable<FormatDescriptionList> {
+  getFormats(): Observable<FormatDescription[]> {
     return this.http
-      .get(
-        this.connectPath + '/master/description/formats'
-      )
+      .get(`${this.connectPath}/master/description/formats`)
       .pipe(map(response => {
-        return FormatDescriptionList.fromData(response as FormatDescriptionList);
+        return (response as any[]).map(f => FormatDescription.fromData(f));
       }));
   }
 
   getFittingUnits(unitDescription: UnitDescription): Observable<UnitDescription[]> {
     return this.http
-      .post<UnitDescription[]>(this.connectPath + '/master/unit', unitDescription)
+      .post<UnitDescription[]>(`${this.connectPath}/master/unit`, unitDescription)
       .pipe(map(response => {
         const descriptions = response as UnitDescription[];
         return descriptions.filter(entry => entry.resource !== unitDescription.resource);

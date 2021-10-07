@@ -22,60 +22,35 @@ import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterDescriptionStorageImpl;
-import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class DescriptionManagement {
 
-    @Deprecated
-    public ProtocolDescriptionList getProtocols() {
-        ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
-
-        List<ConnectWorkerContainer> allWorkerContainter = connectionWorkerContainerStorage.getAllConnectWorkerContainers();
-
-        ProtocolDescriptionList result = new ProtocolDescriptionList();
-
-        for (ConnectWorkerContainer connectWorkerContainer : allWorkerContainter) {
-            result.getList().addAll(connectWorkerContainer.getProtocols());
-        }
-
-        return result;
-    }
-
-    public FormatDescriptionList getFormats() {
+    public List<FormatDescription> getFormats() {
         Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
 
-        FormatDescriptionList result = new FormatDescriptionList();
-
+        List<FormatDescription> result = new ArrayList<>();
         for (IFormat f : allFormats.values()) {
-           result.getList().add(f.declareModel());
+           result.add(f.declareModel());
         }
 
         return result;
     }
 
     public List<AdapterDescription> getAdapters() {
-        IAdapterStorage adapterStorage = new AdapterDescriptionStorageImpl();
+        IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
         return adapterStorage.getAllAdapters();
     }
 
     public Optional<AdapterDescription> getAdapter(String id) {
         return getAdapters().stream()
-                .filter(desc -> desc.getAppId().equals(id))
-                .findFirst();
-    }
-
-    public Optional<ProtocolDescription> getProtocol(String id) {
-        return getProtocols().getList().stream()
                 .filter(desc -> desc.getAppId().equals(id))
                 .findFirst();
     }

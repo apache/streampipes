@@ -36,17 +36,17 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/worker")
-public class WorkerResource extends AbstractSharedRestInterface {
+public class AdapterWorkerResource extends AbstractSharedRestInterface {
 
-    private static final Logger logger = LoggerFactory.getLogger(WorkerResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerResource.class);
 
     private AdapterWorkerManagement adapterManagement;
 
-    public WorkerResource() {
+    public AdapterWorkerResource() {
         adapterManagement = new AdapterWorkerManagement();
     }
 
-    public WorkerResource(AdapterWorkerManagement adapterManagement) {
+    public AdapterWorkerResource(AdapterWorkerManagement adapterManagement) {
         this.adapterManagement = adapterManagement;
     }
 

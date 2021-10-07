@@ -28,13 +28,12 @@ public class AdapterServiceResourceProvider implements ExtensionsResourceProvide
 
   @Override
   public List<Class<?>> getResourceClasses() {
-    return Arrays.asList(WelcomePageWorker.class,
+    return Arrays.asList(
             GuessResource.class,
             RuntimeResolvableResource.class,
-            WorkerResource.class,
+            AdapterWorkerResource.class,
             MultiPartFeature.class,
-            AdapterResource.class,
-            ProtocolResource.class,
+            AdapterAssetResource.class,
             HttpServerAdapterResource.class);
   }
 }

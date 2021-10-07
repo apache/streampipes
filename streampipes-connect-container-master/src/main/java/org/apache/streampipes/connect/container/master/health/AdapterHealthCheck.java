@@ -22,7 +22,7 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
 import java.util.List;
 
@@ -33,31 +33,26 @@ public class AdapterHealthCheck {
 
     public void checkAndRestoreAdapters() {
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
-        IAdapterStorage adapterStorage = new AdapterInstanceStorageImpl();
+
+        IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterInstanceStorage();
 
 
         // Get all adapters
         List<AdapterDescription> allRunningInstancesAdaperDescription = adapterStorage.getAllAdapters();
 
-        // Group them by worker
-
         for (AdapterDescription adapterDescription : allRunningInstancesAdaperDescription) {
-            try {
-
-                adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
-            } catch (AdapterException e) {
-                e.printStackTrace();
-            }
-
-        }
 
         // Ask worker if they are up and running
 
         // If not
 
-            // Find a worker to run them
-
             // Invoke the adapters
+            try {
+                adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
+            } catch (AdapterException e) {
+                e.printStackTrace();
+            }
+        }
 
    }
 

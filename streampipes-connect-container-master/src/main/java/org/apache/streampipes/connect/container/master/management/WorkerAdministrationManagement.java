@@ -61,7 +61,7 @@ public class WorkerAdministrationManagement {
             }
         });
 
-//        this.adapterHealthCheck.checkAndRestoreAdapters();
+        this.adapterHealthCheck.checkAndRestoreAdapters();
 
 
         // Check if already registered

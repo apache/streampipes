@@ -65,7 +65,7 @@ public class AdapterUtils {
         if (adapterDescription instanceof GenericAdapterStreamDescription) {
            adapter = (IAdapter<?>) new GenericDataStreamAdapter().getInstance((GenericAdapterStreamDescription) adapterDescription);
         } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-            adapter = (IAdapter<?>) new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
+            adapter = new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
         }
 
         IProtocol protocol = null;

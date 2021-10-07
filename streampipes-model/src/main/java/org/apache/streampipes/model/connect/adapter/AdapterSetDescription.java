@@ -43,8 +43,6 @@ public abstract class AdapterSetDescription extends AdapterDescription {
 
     private SpDataSet dataSet;
 
-    private boolean stopPipeline;
-
     public SpDataSet getDataSet() {
         return dataSet;
     }
@@ -53,11 +51,4 @@ public abstract class AdapterSetDescription extends AdapterDescription {
         this.dataSet = dataSet;
     }
 
-    public boolean isStopPipeline() {
-        return stopPipeline;
-    }
-
-    public void setStopPipeline(boolean stopPipeline) {
-        this.stopPipeline = stopPipeline;
-    }
 }

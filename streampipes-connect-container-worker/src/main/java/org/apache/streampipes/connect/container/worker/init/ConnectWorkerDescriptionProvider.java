@@ -32,7 +32,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class ConnectWorkerDescriptionProvider {
 
@@ -40,40 +42,19 @@ public class ConnectWorkerDescriptionProvider {
 
   public List<AdapterDescription> getContainerDescription(String serviceGroup) {
 
-    List<AdapterDescription> adapters = new ArrayList<>();
-    for (IAdapter<?> a : DeclarersSingleton.getInstance().getAllAdapters()) {
-      AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel());
-      desc.setCorrespondingServiceGroup(serviceGroup);
-      adapters.add(desc);
-    }
+    List<AdapterDescription> allAdapterDescriptions = new ArrayList<>();
+    allAdapterDescriptions.addAll(getSpecificAdapterDescriptions(serviceGroup));
+    allAdapterDescriptions.addAll(getGenericAdapterDescriptions(serviceGroup));
 
-    for (IProtocol p : DeclarersSingleton.getInstance().getAllProtocols()) {
-      ProtocolDescription protocolDescription = (ProtocolDescription) rewrite(p.declareModel());
+    return allAdapterDescriptions;
+  }
 
-      if (protocolDescription.getSourceType().equals(AdapterSourceType.STREAM.toString())) {
-        GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
-        desc.setName(protocolDescription.getName());
-        desc.setDescription(protocolDescription.getDescription());
-        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
-        desc.setElementId(protocolDescription.getElementId());
-        desc.setAppId(protocolDescription.getAppId());
-        desc.setProtocolDescription(protocolDescription);
-        desc.setCorrespondingServiceGroup(serviceGroup);
-        adapters.add(desc);
-      } else if (protocolDescription.getSourceType().equals(AdapterSourceType.SET.toString())) {
-        GenericAdapterSetDescription desc = new GenericAdapterSetDescription();
-        desc.setName(protocolDescription.getName());
-        desc.setDescription(protocolDescription.getDescription());
-        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
-        desc.setElementId(protocolDescription.getElementId());
-        desc.setAppId(protocolDescription.getAppId());
-        desc.setProtocolDescription(protocolDescription);
-        desc.setCorrespondingServiceGroup(serviceGroup);
-        adapters.add(desc);
-      }
-    }
-
-    return adapters;
+  public Optional<AdapterDescription> getAdapterDescription(String appId) {
+    List<AdapterDescription> allAdapterDescriptions = getContainerDescription("");
+    return allAdapterDescriptions
+            .stream()
+            .filter(ad -> ad.getAppId().equals(appId))
+            .findFirst();
   }
 
   private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity) {
@@ -87,5 +68,50 @@ public class ConnectWorkerDescriptionProvider {
       }
     }
     return entity;
+  }
+
+  private List<AdapterDescription> getSpecificAdapterDescriptions(String serviceGroup) {
+    List<AdapterDescription> result = new ArrayList<>();
+    for (IAdapter<?> a : DeclarersSingleton.getInstance().getAllAdapters()) {
+      AdapterDescription desc = (AdapterDescription) rewrite(a.declareModel());
+      desc.setCorrespondingServiceGroup(serviceGroup);
+      result.add(desc);
+    }
+
+    return result;
+  }
+
+  private List<AdapterDescription> getGenericAdapterDescriptions(String serviceGroup) {
+    List<AdapterDescription> result = new ArrayList<>();
+
+    Collection<IProtocol> allProtocols = DeclarersSingleton.getInstance().getAllProtocols();
+
+    for (IProtocol p : allProtocols) {
+      ProtocolDescription protocolDescription = (ProtocolDescription) rewrite(p.declareModel());
+
+      if (protocolDescription.getSourceType().equals(AdapterSourceType.STREAM.toString())) {
+        GenericAdapterStreamDescription desc = new GenericAdapterStreamDescription();
+        desc.setName(protocolDescription.getName());
+        desc.setDescription(protocolDescription.getDescription());
+        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
+        desc.setElementId(protocolDescription.getElementId());
+        desc.setAppId(protocolDescription.getAppId());
+        desc.setProtocolDescription(protocolDescription);
+        desc.setCorrespondingServiceGroup(serviceGroup);
+        result.add(desc);
+      } else if (protocolDescription.getSourceType().equals(AdapterSourceType.SET.toString())) {
+        GenericAdapterSetDescription desc = new GenericAdapterSetDescription();
+        desc.setName(protocolDescription.getName());
+        desc.setDescription(protocolDescription.getDescription());
+        desc.setIncludedAssets(protocolDescription.getIncludedAssets());
+        desc.setElementId(protocolDescription.getElementId());
+        desc.setAppId(protocolDescription.getAppId());
+        desc.setProtocolDescription(protocolDescription);
+        desc.setCorrespondingServiceGroup(serviceGroup);
+        result.add(desc);
+      }
+    }
+
+    return result;
   }
 }

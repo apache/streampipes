@@ -28,13 +28,13 @@ public enum RunningAdapterInstances {
 
     private final Map<String, IAdapter<?>> runningInstances = new HashMap<>();
 
-    public void addAdapter(String id, IAdapter<?> adapter) {
-        runningInstances.put(id, adapter);
+    public void addAdapter(String elementId, IAdapter<?> adapter) {
+        runningInstances.put(elementId, adapter);
     }
 
-    public IAdapter<?> removeAdapter(String id) {
-        IAdapter<?> result = runningInstances.get(id);
-        runningInstances.remove(id);
+    public IAdapter<?> removeAdapter(String elementId) {
+        IAdapter<?> result = runningInstances.get(elementId);
+        runningInstances.remove(elementId);
         return result;
     }
 

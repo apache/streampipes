@@ -22,8 +22,7 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescriptionList;
+import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,18 +52,7 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
     @Path("/formats")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFormats() {
-        FormatDescriptionList result = managementService.getFormats();
-
-        return ok(result);
-    }
-
-    @Deprecated
-    @GET
-    @JacksonSerialized
-    @Path("/protocols")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getProtocols() {
-        ProtocolDescriptionList result = managementService.getProtocols();
+        List<FormatDescription> result = managementService.getFormats();
 
         return ok(result);
     }
