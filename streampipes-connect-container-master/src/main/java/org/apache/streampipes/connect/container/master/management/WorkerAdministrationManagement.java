@@ -22,7 +22,6 @@ import org.apache.streampipes.connect.container.master.health.AdapterHealthCheck
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
-import org.apache.streampipes.storage.couchdb.impl.ConnectionWorkerContainerStorageImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +31,6 @@ public class WorkerAdministrationManagement {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-    private ConnectionWorkerContainerStorageImpl connectionWorkerContainerStorage;
     private AdapterMasterManagement adapterMasterManagement;
 
     private IAdapterStorage adapterDescriptionStorage;
@@ -40,7 +38,6 @@ public class WorkerAdministrationManagement {
     private AdapterHealthCheck adapterHealthCheck;
 
     public WorkerAdministrationManagement() {
-        this.connectionWorkerContainerStorage = new ConnectionWorkerContainerStorageImpl();
         this.adapterMasterManagement = new AdapterMasterManagement();
         this.adapterHealthCheck = new AdapterHealthCheck();
         this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
