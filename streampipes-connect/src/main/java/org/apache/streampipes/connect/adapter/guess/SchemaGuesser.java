@@ -18,115 +18,16 @@
 
 package org.apache.streampipes.connect.adapter.guess;
 
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
-import org.apache.streampipes.model.connect.guess.DomainPropertyProbability;
-import org.apache.streampipes.model.connect.guess.DomainPropertyProbabilityList;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.serializers.json.GsonSerializer;
-
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class SchemaGuesser {
 
-    public static int port = 80;
-
-    public static GuessSchema guessSchma(EventSchema eventSchema, List<Map<String, Object>> nElements) {
+    public static GuessSchema guessSchma(EventSchema eventSchema) {
         GuessSchema result = new GuessSchema();
 
-//        List<DomainPropertyProbabilityList> allDomainPropertyProbabilities = getDomainPropertyProbabitlyList(eventSchema.getEventProperties(), nElements, new ArrayList<>());
-
         result.setEventSchema(eventSchema);
-        result.setPropertyProbabilityList(new ArrayList<>());
-
 
         return result;
     }
-
-    private static List<DomainPropertyProbabilityList> getDomainPropertyProbabitlyList(List<EventProperty> eventProperties,
-                                                                                List<Map<String, Object>> nEventsParsed,
-                                                                                List<String> keys) {
-
-        List<DomainPropertyProbabilityList> result = new ArrayList<>();
-        for (EventProperty ep : eventProperties) {
-            if (ep instanceof EventPropertyNested) {
-                List<EventProperty> li = ((EventPropertyNested) ep).getEventProperties();
-                keys.add(ep.getRuntimeName());
-                result.addAll(getDomainPropertyProbabitlyList(li, nEventsParsed, keys));
-            } else {
-                List<Object> tmp = new ArrayList<>();
-                for (Map<String, Object> event : nEventsParsed) {
-                    Map<String, Object> subEvent = event;
-                    for (String k : keys) {
-                        subEvent = (Map<String, Object>) subEvent.get(k);
-                    }
-
-                    if (subEvent != null) {
-                        tmp.add(subEvent.get(ep.getRuntimeName()));
-                    }
-                }
-
-                DomainPropertyProbabilityList resultList = getDomainPropertyProbability(tmp.toArray());
-                resultList.setRuntimeName(ep.getRuntimeName());
-                result.add(resultList);
-            }
-
-        }
-
-        return result;
-    }
-
-    /**
-     * TODO replace this method, change python API to variables of DomainPropertyProbabilityList
-     * @param objects
-     * @return
-     */
-    public static PropertyGuessResults requestProbabilitiesObject(Object[] objects) {
-
-        String probabilitiesJsonString = requestProbabilitiesString(objects);
-        PropertyGuessResults res = GsonSerializer.getGsonWithIds().fromJson(probabilitiesJsonString,
-                PropertyGuessResults.class);
-        return res;
-    }
-
-    public static String requestProbabilitiesString(Object[] objects) {
-        String httpRequestBody = GsonSerializer.getGsonWithIds()
-                    .toJson(objects);
-
-        String httpResp = "{\"result\": []}";
-
-        try {
-            httpResp = Request.Post("http://localhost:" + port +"/predict")
-                        .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                        .bodyForm(Form.form().add("X", httpRequestBody).build()).execute().returnContent().asString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return httpResp;
-    }
-
-    public static DomainPropertyProbabilityList getDomainPropertyProbability(Object[] sampleData) {
-        PropertyGuessResults pgr = requestProbabilitiesObject(sampleData);
-
-        DomainPropertyProbabilityList result = new DomainPropertyProbabilityList();
-
-
-        for (PropertyGuesses pg : pgr.getResult()) {
-            Double d = pg.getProbability();
-            result.addDomainPropertyProbability(new DomainPropertyProbability(pg.getClazz(), d.toString()));
-        }
-
-
-        return result;
-    }
-
 }

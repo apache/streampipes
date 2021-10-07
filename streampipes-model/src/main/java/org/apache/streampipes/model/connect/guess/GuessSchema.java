@@ -22,36 +22,19 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @TsModel
 public class GuessSchema extends UnnamedStreamPipesEntity {
 
     public EventSchema eventSchema;
 
-    public List<DomainPropertyProbabilityList> propertyProbabilityList;
-
     public GuessSchema() {
         super();
-        this.propertyProbabilityList = new ArrayList<>();
-
-
     }
 
-    public GuessSchema(EventSchema schema, List<DomainPropertyProbabilityList> propertyProbabilityList) {
-        super();
-        this.eventSchema = schema;
-        this.propertyProbabilityList = propertyProbabilityList;
+    public GuessSchema(GuessSchema other) {
+        super(other);
+        this.eventSchema = other.getEventSchema() != null ? new EventSchema(other.getEventSchema()) : null;
     }
-
-	public GuessSchema(GuessSchema other) {
-		super(other);
-		this.eventSchema = other.getEventSchema() != null ? new EventSchema(other.getEventSchema()) : null;
-	}
-
-
-
     public EventSchema getEventSchema() {
         return eventSchema;
     }
@@ -60,11 +43,4 @@ public class GuessSchema extends UnnamedStreamPipesEntity {
         this.eventSchema = eventSchema;
     }
 
-    public List<DomainPropertyProbabilityList> getPropertyProbabilityList() {
-        return propertyProbabilityList;
-    }
-
-    public void setPropertyProbabilityList(List<DomainPropertyProbabilityList> propertyProbabilityList) {
-        this.propertyProbabilityList = propertyProbabilityList;
-    }
 }
