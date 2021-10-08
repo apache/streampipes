@@ -93,6 +93,7 @@ public class OffloadingPolicyManager {
 
             if(resp.isSuccess()){
                 LOG.info("Successfully offloaded: {} of pipeline: {}", appId, pipelineName);
+                strategy.getOffloadingPolicy().reset();
             } else{
                 LOG.warn("Failed to offload: {} of pipeline: {}", appId, pipelineName);
                 unsuccessfullyTriedEntities.add(offloadEntity);
