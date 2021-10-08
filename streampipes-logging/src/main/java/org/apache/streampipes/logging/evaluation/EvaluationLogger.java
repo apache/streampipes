@@ -37,7 +37,7 @@ public class EvaluationLogger {
 
     private EvaluationLogger(){
         String loggingUrl = System.getenv("SP_LOGGING_MQTT_URL");
-        String nodeId = System.getenv("SP_LOGGING_MQTT_URL");
+        String nodeId = System.getenv("SP_NODE_CONTROLLER_ID");
         if (nodeId != null){
             this.deviceId = nodeId;
         }else {

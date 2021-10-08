@@ -54,6 +54,17 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
         if(!this.history.offer(value)) {
             this.history.poll();
             this.history.offer(value);
+            //Only for logging; can be removed later
+            if(value.compareTo(this.threshold) > 0){
+                int numViolations = 0;
+                for(T val : this.history){
+                    if(val.compareTo(this.threshold) > 0){
+                        numViolations++;
+                    }
+                }
+                Object[] line = {"policy violation #" + numViolations};
+                EvaluationLogger.getInstance().logMQTT("Offloading", line);
+            }
         }
     }
 
@@ -65,8 +76,6 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
                 for(T value : this.history){
                     if(value.compareTo(this.threshold) > 0){
                         numViolations++;
-                        Object[] line = {"policy violation #" + numViolations};
-                        EvaluationLogger.getInstance().logMQTT("Offloading", line);
                     }
                 }
                 break;
@@ -74,8 +83,6 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
                 for(T value : this.history){
                     if(value.compareTo(this.threshold) < 0){
                         numViolations++;
-                        Object[] line = {"policy violation #" + numViolations};
-                        EvaluationLogger.getInstance().logMQTT("Offloading", line);
                     }
                 }
                 break;
