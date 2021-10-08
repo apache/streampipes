@@ -1,0 +1,10 @@
+org.apache.streampipes.connect.iiot.protocol.set.file.title=File Set
+org.apache.streampipes.connect.iiot.protocol.set.file.description=Reads the content from a local file.
+
+interval-key.title=Interval [ms]
+interval-key.description=Define waiting time between the files
+
+filePath.title=File
+filePath.description=File Path
+
+

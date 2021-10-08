@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.protocol.stream;
+package org.apache.streampipes.connect.iiot.protocol.stream;
 
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.fusesource.mqtt.client.*;
+import org.apache.streampipes.messaging.InternalEventProcessor;
 
 public class MqttConsumer implements Runnable {
 
