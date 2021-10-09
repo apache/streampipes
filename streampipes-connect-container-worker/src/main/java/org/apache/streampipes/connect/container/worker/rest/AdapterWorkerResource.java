@@ -28,10 +28,7 @@ import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -49,6 +46,16 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
     public AdapterWorkerResource(AdapterWorkerManagement adapterManagement) {
         this.adapterManagement = adapterManagement;
     }
+
+    // get all running instances
+    @GET
+    @JacksonSerialized
+    @Path("/running")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRunningAdapterInstances() {
+        return ok(adapterManagement.getAllRunningAdapterInstances());
+    }
+
 
     @POST
     @JacksonSerialized

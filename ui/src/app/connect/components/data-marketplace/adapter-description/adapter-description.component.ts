@@ -85,15 +85,6 @@ export class AdapterDescriptionComponent implements OnInit {
     });
   }
 
-  deleteAdapterTemplate(adapter: AdapterDescription): void {
-    this.adapterToDelete = adapter.elementId;
-    this.dataMarketplaceService.deleteAdapterTemplate(adapter).subscribe(res => {
-      this.adapterToDelete = undefined;
-      this.updateAdapterEmitter.emit();
-      this.deleting = false;
-    });
-  }
-
   createTemplate(adapter: AdapterDescription): void {
     this.createTemplateEmitter.emit(adapter);
   }

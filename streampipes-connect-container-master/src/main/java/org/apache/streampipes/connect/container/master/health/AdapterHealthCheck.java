@@ -20,31 +20,51 @@ package org.apache.streampipes.connect.container.master.health;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
+import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
-import java.util.List;
+import java.util.*;
 
 public class AdapterHealthCheck {
 
     public AdapterHealthCheck() {
     }
 
+    // TODO how can I test this code?
     public void checkAndRestoreAdapters() {
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
 
         IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterInstanceStorage();
 
+        List<AdapterDescription> allAdapersToRecover = new ArrayList<>();
 
         // Get all adapters
         List<AdapterDescription> allRunningInstancesAdaperDescription = adapterStorage.getAllAdapters();
 
-        for (AdapterDescription adapterDescription : allRunningInstancesAdaperDescription) {
+        Map<String, List<AdapterDescription>> groupByWorker = new HashMap<>();
+        allRunningInstancesAdaperDescription.forEach(ad -> {
+            String selectedEndpointUrl = ad.getSelectedEndpointUrl();
+            if (groupByWorker.containsKey(selectedEndpointUrl)) {
+                groupByWorker.get(selectedEndpointUrl).add(ad);
+            } else {
+                List<AdapterDescription> tmp = Arrays.asList(ad);
+                groupByWorker.put(selectedEndpointUrl, tmp);
+            }
+        });
 
-        // Ask worker if they are up and running
+        groupByWorker.keySet().forEach(adapterEndpointUrl -> {
+            try {
+                List<AdapterDescription> allRunningInstancesOfOneWorker = WorkerRestClient.getAllRunningAdapterInstanceDescriptions("");
+                // TODO Remove all running adapters from allRunningInstancesAdaperDescription
+            } catch (AdapterException e) {
+                e.printStackTrace();
+            }
+        });
 
-        // If not
+        for (AdapterDescription adapterDescription : allAdapersToRecover) {
+            // TODO how do I know there is a worker to start them?
 
             // Invoke the adapters
             try {

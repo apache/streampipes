@@ -28,15 +28,21 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+
 public class AdapterWorkerManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+
+    public Collection<AdapterDescription> getAllRunningAdapterInstances() {
+        return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
+    }
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
        IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
 
-        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter);
+        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter, adapterStreamDescription);
         adapter.startAdapter();
     }
 
@@ -48,7 +54,7 @@ public class AdapterWorkerManagement {
 
         IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
 
-        RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getElementId(), adapter);
+        RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getElementId(), adapter, adapterSetDescription);
 
         adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
 

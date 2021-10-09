@@ -78,14 +78,28 @@ public class WorkerRestClient {
         stopAdapter(adapterSetDescription, url);
     }
 
+    public static List<AdapterDescription> getAllRunningAdapterInstanceDescriptions(String url) throws AdapterException {
+        // Stop execution of adapter
+        try {
+            logger.info("Requesting all running adapter description instances: " + url);
+
+            String responseString = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            List<AdapterDescription> result = JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
+
+            return result;
+        } catch (IOException e) {
+            logger.error("List of running adapters could not be fetched", e);
+            throw new AdapterException("Adapter was not stopped successfully with url: " + url);
+        }
+    }
+
     public static void startAdapter(String url, AdapterDescription ad) throws AdapterException {
         try {
             logger.info("Trying to start adapter on endpoint: " + url);
-
-            // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
-//            if (ad.getUri() == null) {
-//                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
-//            }
 
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
@@ -107,7 +121,7 @@ public class WorkerRestClient {
     public static void stopAdapter(AdapterDescription ad,
                                    String url) throws AdapterException {
 
-        // Stop execution of adatper
+        // Stop execution of adapter
         try {
             logger.info("Trying to stopAdapter adapter on endpoint: " + url);
 
