@@ -18,27 +18,23 @@
 
 package org.apache.streampipes.connect.container.worker.management;
 
-import static org.junit.Assert.*;
-
+import org.apache.streampipes.connect.RunningAdapterInstances;
+import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.container.worker.utils.Utils;
+import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.apache.streampipes.connect.RunningAdapterInstances;
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
-import org.apache.streampipes.connect.container.worker.utils.Utils;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
-import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
-import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ AdapterRegistry.class })
@@ -64,7 +60,7 @@ public class AdapterWorkerManagementTest {
     @Test
     public void stopStreamAdapterSuccess() throws AdapterException {
         TestAdapter testAdapter = getTestAdapterInstance();
-        RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter);
+        RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
         AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
         adapterWorkerManagement.stopStreamAdapter(Utils.getMinimalStreamAdapter());
 
@@ -92,7 +88,7 @@ public class AdapterWorkerManagementTest {
     public void stopSetAdapterSuccess() throws AdapterException {
         TestAdapter testAdapter = getTestAdapterInstance();
 
-        RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter);
+        RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
         AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
         adapterWorkerManagement.stopSetAdapter(Utils.getMinimalSetAdapter());
 

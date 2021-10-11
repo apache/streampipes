@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.container.worker.utils;
 
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
@@ -31,33 +30,8 @@ import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescript
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class AdapterUtils {
     private static final Logger logger = LoggerFactory.getLogger(AdapterUtils .class);
-
-    public static String stopPipeline(String url) {
-        logger.info("Send stopAdapter pipeline request on URL: " + url);
-
-        String result = "";
-        try {
-            result = Request.Get(url)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            result = e.getMessage();
-        }
-
-        logger.info("Successfully stopped pipeline");
-
-        return result;
-    }
-
-    public static String getUrl(String baseUrl, String pipelineId) {
-        return "http://" +baseUrl + "api/v2/pipelines/" + pipelineId + "/stopAdapter";
-    }
 
     public static IAdapter setAdapter(AdapterDescription adapterDescription) {
         IAdapter adapter = null;
@@ -65,7 +39,7 @@ public class AdapterUtils {
         if (adapterDescription instanceof GenericAdapterStreamDescription) {
            adapter = (IAdapter<?>) new GenericDataStreamAdapter().getInstance((GenericAdapterStreamDescription) adapterDescription);
         } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-            adapter = (IAdapter<?>) new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
+            adapter = new GenericDataSetAdapter().getInstance((GenericAdapterSetDescription) adapterDescription);
         }
 
         IProtocol protocol = null;

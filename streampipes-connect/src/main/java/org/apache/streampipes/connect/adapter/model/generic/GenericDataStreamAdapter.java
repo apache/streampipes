@@ -46,8 +46,8 @@ public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStrea
     @Override
     public GenericAdapterStreamDescription declareModel() {
         GenericAdapterStreamDescription adapterDescription = new GenericAdapterStreamDescription();
-        adapterDescription.setAdapterId(GenericAdapterStreamDescription.ID);
-        adapterDescription.setUri(GenericAdapterStreamDescription.ID);
+//        adapterDescription.setAdapterId(GenericAdapterStreamDescription.ID);
+//        adapterDescription.setUri(GenericAdapterStreamDescription.ID);
         adapterDescription.setAppId(GenericAdapterStreamDescription.ID);
         return adapterDescription;
     }

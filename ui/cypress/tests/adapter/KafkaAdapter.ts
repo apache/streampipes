@@ -23,7 +23,7 @@ import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+describe('Test Kafka Integration', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
   });
@@ -58,7 +58,6 @@ describe('Test Random Data Simulator Stream Adapter', () => {
       .create('Apache_Kafka')
       .setName('Kafka4')
       .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
       .addProtocolInput('select', 'Unauthenticated', 'check')
       .addProtocolInput('input', 'host', 'localhost')
       .addProtocolInput('input', 'port', '9094')

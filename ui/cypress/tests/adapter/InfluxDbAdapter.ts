@@ -22,7 +22,7 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+describe('Test InfluxDB Integration', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
   });
@@ -59,8 +59,6 @@ describe('Test Random Data Simulator Stream Adapter', () => {
     const adapterInput = SpecificAdapterBuilder
       .create('InfluxDB_Stream_Adapter')
       .setName('InfluxDB Adapter')
-      .setTimestampProperty('time')
-      .setStoreInDataLake()
       .addInput('input', 'influxDbHost', 'http://localhost')
       .addInput('input', 'influxDbPort', '8086')
       .addInput('input', 'influxDbDatabase', 'sp')

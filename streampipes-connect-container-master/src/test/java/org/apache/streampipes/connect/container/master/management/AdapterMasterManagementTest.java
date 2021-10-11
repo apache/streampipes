@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.container.master.management;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class AdapterMasterManagementTest {
 
     @Test(expected = AdapterException.class)
     public void getAdapterFailNull() throws AdapterException {
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
@@ -46,10 +46,9 @@ public class AdapterMasterManagementTest {
     @Test(expected = AdapterException.class)
     public void getAdapterFail() throws AdapterException {
         List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
-        String id = "http://t.id";
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
         adapterMasterManagement.getAdapter("id2");
@@ -58,25 +57,24 @@ public class AdapterMasterManagementTest {
     @Test
     public void getAllAdaptersSuccess() throws AdapterException {
         List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
-        List<AdapterDescription> result = adapterMasterManagement.getAllAdapters();
+        List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();
 
         assertEquals(1, result.size());
-        assertEquals(GenericAdapterStreamDescription.ID, result.get(0).getUri());
     }
 
     @Test(expected = AdapterException.class)
     public void getAllAdaptersFail() throws AdapterException {
-        AdapterStorageImpl adapterStorage = mock(AdapterStorageImpl.class);
+        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
 
-        adapterMasterManagement.getAllAdapters();
+        adapterMasterManagement.getAllAdapterInstances();
 
     }
 }

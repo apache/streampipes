@@ -16,49 +16,49 @@
  *
  */
 
-import {Component} from '@angular/core';
-import {RestService} from "../../services/rest.service";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { Component } from '@angular/core';
+import { RestService } from '../../services/rest.service';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
-    selector: 'sp-dialog-adapter-started-dialog',
-    templateUrl: './adapter-upload-dialog.html',
-    styleUrls: ['./adapter-upload-dialog.component.scss'],
+  selector: 'sp-dialog-adapter-started-dialog',
+  templateUrl: './adapter-upload-dialog.html',
+  styleUrls: ['./adapter-upload-dialog.component.scss']
 })
 export class AdapterUploadDialog {
 
-    private selectedUploadFile: File;
-    uploaded: boolean = false;
+  private selectedUploadFile: File;
+  uploaded: boolean = false;
 
-    constructor(private dialogRef: DialogRef<AdapterUploadDialog>,
-        private restService: RestService) {
+  constructor(private dialogRef: DialogRef<AdapterUploadDialog>,
+              private restService: RestService) {
 
-    }
+  }
 
-    ngOnInit() {
-    }
+  ngOnInit() {
+  }
 
-    handleFileInput(files: any) {
-        this.selectedUploadFile = files[0];
+  handleFileInput(files: any) {
+    this.selectedUploadFile = files[0];
 
-        let fileReader = new FileReader();
-        fileReader.onload = (e) => {
-            this.uploaded = true;
+    let fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      this.uploaded = true;
 
-            var jsonString: any = fileReader.result;
-            let allTemplates: any[] = JSON.parse(jsonString);
+      var jsonString: any = fileReader.result;
+      let allTemplates: any[] = JSON.parse(jsonString);
 
-            allTemplates.forEach(adapterTemplate => {
-                this.restService.addAdapterTemplate(adapterTemplate).subscribe(x => {
-                });
-            });
+      // allTemplates.forEach(adapterTemplate => {
+      //     this.restService.addAdapterTemplate(adapterTemplate).subscribe(x => {
+      //     });
+      // });
 
-        }
-        fileReader.readAsText(this.selectedUploadFile);
-    }
+    };
+    fileReader.readAsText(this.selectedUploadFile);
+  }
 
-    onCloseConfirm() {
-        this.dialogRef.close();
-    }
+  onCloseConfirm() {
+    this.dialogRef.close();
+  }
 
 }

@@ -18,16 +18,13 @@
 
 package org.apache.streampipes.connect.container.worker.management;
 
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.RunningAdapterInstances;
-import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.apache.streampipes.connect.api.IAdapter;
-import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,103 +34,45 @@ public class AdapterWorkerManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 
-    public Collection<IProtocol> getAllProtocols() {
-        return DeclarersSingleton.getInstance().getAllProtocols();
-    }
-
-    public IProtocol getProtocol(String id) {
-        return DeclarersSingleton.getInstance().getProtocol(id);
-    }
-
-    public Collection<IAdapter> getAllAdapters() {
-        return DeclarersSingleton.getInstance().getAllAdapters();
-    }
-
-    public IAdapter<?> getAdapter(String id) {
-        return DeclarersSingleton.getInstance().getAdapter(id);
+    public Collection<AdapterDescription> getAllRunningAdapterInstances() {
+        return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
     }
 
     public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
-
-//        Adapter adapter = AdapterDeclarerSingleton.getInstance().getAdapter(adapterStreamDescription.getAppId());
        IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
 
-        IProtocol protocol = null;
-        if (adapterStreamDescription instanceof GenericAdapterStreamDescription) {
-            //TODO Need to check with ElementId?
-            //protocol = AdapterDeclarerSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getElementId());
-            protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
-            if (protocol == null) {
-                protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterStreamDescription) adapterStreamDescription).getProtocolDescription().getAppId());
-            }
-            ((GenericAdapter) adapter).setProtocol(protocol);
-        }
-
-        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getUri(), adapter);
+        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter, adapterStreamDescription);
         adapter.startAdapter();
-
     }
 
     public void stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         stopAdapter(adapterStreamDescription);
-
     }
 
-    public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
+    public void invokeSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
 
         IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
 
-        IProtocol protocol = null;
-        if (adapterSetDescription instanceof GenericAdapterSetDescription) {
-            protocol = DeclarersSingleton.getInstance().getProtocol(((GenericAdapterSetDescription) adapterSetDescription).getProtocolDescription().getAppId());
-            ((GenericAdapter) adapter).setProtocol(protocol);
-        }
-
-        SpDataSet dataSet = adapterSetDescription.getDataSet();
-
-        RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getUri(), adapter);
+        RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getElementId(), adapter, adapterSetDescription);
 
         adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
 
-        // Set adapters run the whole set in one thread, once all data is processed the corresponding pipeline is stopped
-        Runnable r = () -> {
-            try {
-                adapter.startAdapter();
-            } catch (AdapterException e) {
-                e.printStackTrace();
-            }
-
-            if (adapterSetDescription.isStopPipeline()) {
-
-                try {
-                    Thread.sleep(20000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // TODO Service Discovery
-                String url = AdapterUtils.getUrl(BackendConfig.INSTANCE.getBackendApiUrl(), dataSet.getCorrespondingPipeline());
-                String result = AdapterUtils.stopPipeline(url);
-                logger.info(result);
-
-            }
-        };
-
-        new Thread(r).start();
+        adapter.startAdapter();
     }
 
-    public void stopSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
+    public void stopSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
         stopAdapter(adapterSetDescription);
     }
 
     private void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
 
-        String adapterUri = adapterDescription.getUri();
+        String elementId = adapterDescription.getElementId();
 
-        IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(adapterUri);
+        IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
         if (adapter == null) {
-            throw new AdapterException("Adapter with id " + adapterUri + " was not found in this container and cannot be stopped.");
+            throw new AdapterException("Adapter with id " + elementId + " was not found in this container and cannot be stopped.");
         }
 
         adapter.stopAdapter();

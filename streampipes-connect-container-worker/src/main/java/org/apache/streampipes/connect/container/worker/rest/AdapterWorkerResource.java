@@ -28,27 +28,33 @@ import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/api/v1/worker")
-public class WorkerResource extends AbstractSharedRestInterface {
+public class AdapterWorkerResource extends AbstractSharedRestInterface {
 
-    private static final Logger logger = LoggerFactory.getLogger(WorkerResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerResource.class);
 
     private AdapterWorkerManagement adapterManagement;
 
-    public WorkerResource() {
+    public AdapterWorkerResource() {
         adapterManagement = new AdapterWorkerManagement();
     }
 
-    public WorkerResource(AdapterWorkerManagement adapterManagement) {
+    public AdapterWorkerResource(AdapterWorkerManagement adapterManagement) {
         this.adapterManagement = adapterManagement;
     }
+
+    @GET
+    @JacksonSerialized
+    @Path("/running")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRunningAdapterInstances() {
+        return ok(adapterManagement.getAllRunningAdapterInstances());
+    }
+
 
     @POST
     @JacksonSerialized
@@ -99,11 +105,11 @@ public class WorkerResource extends AbstractSharedRestInterface {
         try {
             adapterManagement.invokeSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
-            logger.error("Error while starting adapter with id " + adapterSetDescription.getUri(), e);
+            logger.error("Error while starting adapter with id " + adapterSetDescription.getElementId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        String responseMessage = "Set adapter with id " + adapterSetDescription.getUri() + " successfully started";
+        String responseMessage = "Set adapter with id " + adapterSetDescription.getElementId() + " successfully started";
 
         logger.info(responseMessage);
         return ok(Notifications.success(responseMessage));
@@ -119,11 +125,11 @@ public class WorkerResource extends AbstractSharedRestInterface {
         try {
              adapterManagement.stopSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
-            logger.error("Error while stopping adapter with id " + adapterSetDescription.getUri(), e);
+            logger.error("Error while stopping adapter with id " + adapterSetDescription.getElementId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        String responseMessage = "Set adapter with id " + adapterSetDescription.getUri() + " successfully stopped";
+        String responseMessage = "Set adapter with id " + adapterSetDescription.getElementId() + " successfully stopped";
 
         logger.info(responseMessage);
         return ok(Notifications.success(responseMessage));

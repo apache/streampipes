@@ -30,8 +30,7 @@ public class Utils {
     public static AdapterStreamDescription getMinimalStreamAdapter() {
         AdapterStreamDescription result = new GenericAdapterStreamDescription();
         String id = "http://t.de/";
-        result.setUri(id);
-        result.setId(id);
+        result.setElementId(id);
         result.setRules(new ArrayList<>());
 
         return result;
@@ -40,8 +39,7 @@ public class Utils {
     public static AdapterSetDescription getMinimalSetAdapter() {
         AdapterSetDescription result = new GenericAdapterSetDescription();
         String id = "http://t.de/";
-        result.setUri(id);
-        result.setId(id);
+        result.setElementId(id);
 
         return result;
     }

@@ -18,7 +18,6 @@
 
 import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
 import { ProcessorTest } from '../../support/model/ProcessorTest';
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
 
 const allTests = Cypress.env('processingElements');
 

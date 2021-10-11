@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -55,7 +54,7 @@ public class GuessResource extends AbstractSharedRestInterface {
   @JacksonSerialized
   @Path("/schema")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response guessSchema(AdapterDescription adapterDescription, @PathParam("username") String userName) {
+  public Response guessSchema(AdapterDescription adapterDescription) {
 
       try {
           GuessSchema result = guessManagement.guessSchema(adapterDescription);
@@ -65,7 +64,7 @@ public class GuessResource extends AbstractSharedRestInterface {
           logger.error("Error while parsing events: ", e);
           return serverError(Notifications.error(e.getMessage()));
       } catch (Exception e) {
-          logger.error("Error while guess schema for AdapterDescription: " + adapterDescription.getAdapterId(), e);
+          logger.error("Error while guess schema for AdapterDescription: " + adapterDescription.getElementId(), e);
           return serverError(Notifications.error(e.getMessage()));
       }
 

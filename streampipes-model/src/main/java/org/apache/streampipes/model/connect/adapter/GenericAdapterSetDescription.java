@@ -39,7 +39,7 @@ public class GenericAdapterSetDescription extends AdapterSetDescription implemen
 
     public GenericAdapterSetDescription() {
         super(ID, "GenericAdapterSetDescription", "");
-        setAdapterId(ID);
+//        setAdapterId(ID);
     }
 
 

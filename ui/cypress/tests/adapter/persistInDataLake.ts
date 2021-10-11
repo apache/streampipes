@@ -17,8 +17,8 @@
  */
 
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
+import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 
 describe('Test File Stream Adapter', () => {
   before('Setup Test', () => {
@@ -27,15 +27,19 @@ describe('Test File Stream Adapter', () => {
 
   it('Perform Test', () => {
 
-    const adapterInput = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName('Machine Data Simulator Test')
-      .addInput('input', 'wait-time-ms', '1000')
+    const adapterInput = GenericAdapterBuilder
+      .create('File_Stream')
+      .setName('File Stream Adapter Test')
       .setTimestampProperty('timestamp')
       .setStoreInDataLake()
+      .addProtocolInput('input', 'speed', '1')
+      .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
+      .setFormat('csv')
+      .addFormatInput('input', 'delimiter', ';')
+      .addFormatInput('checkbox', 'header', 'check')
       .build();
 
-    AdapterUtils.testSpecificStreamAdapter(adapterInput);
+    AdapterUtils.testGenericStreamAdapter(adapterInput);
     PipelineUtils.checkAmountOfPipelinesPipeline(1);
   });
 
