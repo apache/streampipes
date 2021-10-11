@@ -65,9 +65,9 @@ public class WorkerRestClient {
         updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
     }
 
-    public static void invokeSetAdapter(String baseUrl,
+    public static void invokeSetAdapter(String endpointUrl,
                                         AdapterSetDescription adapterSetDescription) throws AdapterException {
-        String url = baseUrl + WorkerPaths.getSetInvokePath();
+        String url = endpointUrl + WorkerPaths.getSetInvokePath();
 
         startAdapter(url, adapterSetDescription);
     }

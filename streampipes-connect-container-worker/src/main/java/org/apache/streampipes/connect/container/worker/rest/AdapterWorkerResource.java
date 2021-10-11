@@ -105,11 +105,11 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
         try {
             adapterManagement.invokeSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
-            logger.error("Error while starting adapter with id " + adapterSetDescription.getUri(), e);
+            logger.error("Error while starting adapter with id " + adapterSetDescription.getElementId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        String responseMessage = "Set adapter with id " + adapterSetDescription.getUri() + " successfully started";
+        String responseMessage = "Set adapter with id " + adapterSetDescription.getElementId() + " successfully started";
 
         logger.info(responseMessage);
         return ok(Notifications.success(responseMessage));
@@ -125,11 +125,11 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
         try {
              adapterManagement.stopSetAdapter(adapterSetDescription);
         } catch (AdapterException e) {
-            logger.error("Error while stopping adapter with id " + adapterSetDescription.getUri(), e);
+            logger.error("Error while stopping adapter with id " + adapterSetDescription.getElementId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
 
-        String responseMessage = "Set adapter with id " + adapterSetDescription.getUri() + " successfully stopped";
+        String responseMessage = "Set adapter with id " + adapterSetDescription.getElementId() + " successfully stopped";
 
         logger.info(responseMessage);
         return ok(Notifications.success(responseMessage));

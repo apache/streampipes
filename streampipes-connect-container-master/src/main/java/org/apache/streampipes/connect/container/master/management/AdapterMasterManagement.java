@@ -23,7 +23,7 @@ import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
-import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
@@ -36,14 +36,13 @@ import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.management.StorageManager;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.apache.streampipes.manager.storage.UserManagementService.getUserService;
 
@@ -92,7 +91,7 @@ public class AdapterMasterManagement {
     }
 
     // Create stream
-    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
+    SpDataStream storedDescription = new SourcesManagement().createAdapterDataStream(ad);
     storedDescription.setCorrespondingAdapterId(elementId);
     installDataSource(storedDescription, username);
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
@@ -116,37 +115,43 @@ public class AdapterMasterManagement {
   }
 
   /**
-   * First the adapter is stopped removed, then the according data source is deleted
+   * First the adapter is stopped removed, then the corresponding data source is deleted
    * @param elementId
    * @throws AdapterException
    */
   public void deleteAdapter(String elementId) throws AdapterException {
-    // IF Stream adapter delete it
-    boolean isStreamAdapter = isStreamAdapter(elementId);
 
-    if (isStreamAdapter) {
+    // Stop stream adapter
+    if (isStreamAdapter(elementId)) {
       try {
         stopStreamAdapter(elementId);
       } catch (AdapterException e) {
-        LOG.info("Could not stop adapter: " + elementId);
-        LOG.info(e.toString());
+        LOG.info("Could not stop adapter: " + elementId, e);
       }
     }
 
-
+    // Delete adapter
     AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
-    String username = ad.getUserName();
     adapterInstanceStorage.deleteAdapter(elementId);
     LOG.info("Successfully deleted adapter: " + elementId);
 
+    // Delete data stream
     UserService userService = getUserService();
     IPipelineElementDescriptionStorageCache requestor = StorageManager.INSTANCE.getPipelineElementStorage();
-
-    if (requestor.getDataStreamById(ad.getElementId()) != null) {
-      requestor.deleteDataStream(requestor.getDataStreamById(ad.getElementId()));
-      userService.deleteOwnSource(username, ad.getElementId());
+    List<SpDataStream> streamsToDelete = requestor
+            .getAllDataStreams()
+            .stream()
+            .filter(spDataStream -> spDataStream.getCorrespondingAdapterId().equals(elementId))
+            .collect(Collectors.toList());
+    String username = ad.getUserName();
+    if (streamsToDelete.size() > 0) {
+      SpDataStream streamToDelete = streamsToDelete.get(0);
+      requestor.deleteDataStream(streamToDelete);
+      userService.deleteOwnSource(username, streamToDelete.getElementId());
       requestor.refreshDataSourceCache();
+      LOG.info("Successfully deleted data stream: " + streamToDelete.getElementId());
     }
+
   }
 
   public List<AdapterDescription> getAllAdapterInstances() throws AdapterException {
@@ -200,7 +205,7 @@ public class AdapterMasterManagement {
 
       try {
         // Find endpoint to start adapter on
-        String baseUrl = findEndpointUrl(ad.getAppId());
+        String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
 
         // Update selected endpoint URL of adapter
         ad.setSelectedEndpointUrl(baseUrl);
@@ -242,11 +247,4 @@ public class AdapterMasterManagement {
     return new AdapterInstanceStorageImpl();
   }
 
-  private String findEndpointUrl(String appId) throws NoServiceEndpointsAvailableException, URISyntaxException {
-    SpServiceUrlProvider serviceUrlProvider = SpServiceUrlProvider.ADAPTER;
-    String endpointUrl = new ExtensionsServiceEndpointGenerator(appId, serviceUrlProvider).getEndpointResourceUrl();
-    URI uri = new URI(endpointUrl);
-    String baseUrl = uri.getScheme() + "://" + uri.getAuthority();
-    return baseUrl;
-  }
 }

@@ -35,7 +35,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -61,7 +60,7 @@ public class SourcesManagementTest {
         SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
         doNothing().when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any());
 
-        sourcesManagement.addAdapter(ID, new SpDataSet());
+        sourcesManagement.addSetAdapter(new SpDataSet());
 
         verify(adapterStorage, times(1)).getAllAdapters();
         verifyStatic(WorkerRestClient.class, times(1));
@@ -105,32 +104,6 @@ public class SourcesManagementTest {
         org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
 
         sourcesManagement.detachAdapter( ID, "id1");
-    }
-
-    @Ignore
-    @Test
-    public void getAllAdaptersInstallDescriptionSuccess() throws Exception {
-
-        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
-
-        SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
-
-        String result = sourcesManagement.getAllAdaptersInstallDescription();
-        assertEquals(getJsonString(), result);
-
-    }
-
-    @Ignore
-    @Test(expected = AdapterException.class)
-    public void getAllAdaptersInstallDescriptionFail() throws Exception {
-        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-        AdapterDescription adapterDescription = new GenericAdapterSetDescription();
-        when(adapterStorage.getAllAdapters()).thenReturn(Arrays.asList(adapterDescription));
-        SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
-
-        sourcesManagement.getAllAdaptersInstallDescription();
-
     }
 
     private List<AdapterDescription> getAdapterDescriptionList() {
