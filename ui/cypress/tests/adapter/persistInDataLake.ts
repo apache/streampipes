@@ -19,10 +19,12 @@
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
+import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 
 describe('Test File Stream Adapter', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
+    FileManagementUtils.addFile('fileTest/random.csv');
   });
 
   it('Perform Test', () => {
