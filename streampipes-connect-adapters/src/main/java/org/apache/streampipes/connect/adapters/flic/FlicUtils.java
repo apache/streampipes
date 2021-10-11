@@ -58,7 +58,6 @@ public class FlicUtils {
 
         eventSchema.setEventProperties(allProperties);
         guessSchema.setEventSchema(eventSchema);
-        guessSchema.setPropertyProbabilityList(new ArrayList<>());
         return guessSchema;
     }
 

@@ -16,6 +16,7 @@
 name: Build and Deploy Extensions
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev

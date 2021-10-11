@@ -38,7 +38,6 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -141,7 +140,6 @@ public class NswTrafficCameraAdapter extends PullAdapter {
 
     GuessSchema guessSchema = new GuessSchema();
     guessSchema.setEventSchema(schema);
-    guessSchema.setPropertyProbabilityList(Collections.emptyList());
 
     return guessSchema;
   }

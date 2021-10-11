@@ -19,6 +19,10 @@
 package org.apache.streampipes.connect;
 
 import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
+import org.apache.streampipes.connect.adapters.gdelt.GdeltAdapter;
+import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
+import org.apache.streampipes.connect.adapters.iex.IexCloudStockAdapter;
+import org.apache.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
 import org.apache.streampipes.connect.adapters.image.set.ImageSetAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
@@ -27,12 +31,12 @@ import org.apache.streampipes.connect.adapters.simulator.random.RandomDataStream
 import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
-import org.apache.streampipes.connect.container.worker.init.AdapterWorkerContainer;
 import org.apache.streampipes.connect.protocol.stream.*;
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 
-public class ConnectAdapterInit extends AdapterWorkerContainer {
+public class ConnectAdapterInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new ConnectAdapterInit().init();
@@ -43,10 +47,10 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
     return SpServiceDefinitionBuilder.create("connect-worker-main",
             "StreamPipes Connect Worker Main",
             "",8000)
-//            .registerAdapter(new GdeltAdapter())
-//            .registerAdapter(new CoindeskBitcoinAdapter())
-//            .registerAdapter(new IexCloudNewsAdapter())
-//            .registerAdapter(new IexCloudStockAdapter())
+            .registerAdapter(new GdeltAdapter())
+            .registerAdapter(new CoindeskBitcoinAdapter())
+            .registerAdapter(new IexCloudNewsAdapter())
+            .registerAdapter(new IexCloudStockAdapter())
             .registerAdapter(new RandomDataSetAdapter())
             .registerAdapter(new RandomDataStreamAdapter())
             .registerAdapter(new SlackAdapter())
@@ -55,7 +59,7 @@ public class ConnectAdapterInit extends AdapterWorkerContainer {
             .registerAdapter(new ImageStreamAdapter())
             .registerAdapter(new ImageSetAdapter())
             .registerAdapter(new IssAdapter())
-//            .registerAdapter(new FlicMQTTAdapter())
+            .registerAdapter(new FlicMQTTAdapter())
             .registerAdapter(new HDFSProtocol())
             .build();
   }

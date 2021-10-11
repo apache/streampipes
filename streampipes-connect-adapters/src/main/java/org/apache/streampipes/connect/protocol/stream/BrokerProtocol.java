@@ -50,7 +50,7 @@ public abstract class BrokerProtocol extends Protocol {
     List<byte[]> eventByte = getNByteElements(1);
     EventSchema eventSchema = parser.getEventSchema(eventByte);
 
-    return SchemaGuesser.guessSchma(eventSchema, getNElements(1));
+    return SchemaGuesser.guessSchma(eventSchema);
   }
 
   @Override

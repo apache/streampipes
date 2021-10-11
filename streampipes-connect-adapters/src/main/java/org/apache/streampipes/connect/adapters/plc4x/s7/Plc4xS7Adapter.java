@@ -157,7 +157,6 @@ public class Plc4xS7Adapter extends PullAdapter {
 
         eventSchema.setEventProperties(allProperties);
         guessSchema.setEventSchema(eventSchema);
-        guessSchema.setPropertyProbabilityList(new ArrayList<>());
         return guessSchema;
     }
 
