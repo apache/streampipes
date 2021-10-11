@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.connect.adapters.generic;
 
-import org.junit.Test;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -25,12 +24,11 @@ import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.junit.Test;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class UtilTest {
-
 
     @Test
     public void getEventSchemaStreamDescription() {
@@ -42,14 +40,6 @@ public class UtilTest {
     }
 
     @Test
-    public void getEventSchemaNullStreamDescription() {
-        GenericAdapterStreamDescription adapter = new GenericAdapterStreamDescription();
-        adapter.setDataStream(new SpDataStream());
-
-        assertNull(Util.getEventSchema((GenericAdapterDescription) adapter));
-    }
-
-    @Test
     public void getEventSchemaSetDescription() {
         GenericAdapterSetDescription adapter = new GenericAdapterSetDescription();
         adapter.setDataSet(new SpDataSet());
@@ -58,11 +48,4 @@ public class UtilTest {
         assertTrue(Util.getEventSchema((GenericAdapterDescription) adapter) instanceof EventSchema);
     }
 
-    @Test
-    public void getEventSchemaNullSetDescription() {
-        GenericAdapterSetDescription adapter = new GenericAdapterSetDescription();
-        adapter.setDataSet(new SpDataSet());
-
-        assertNull(Util.getEventSchema((GenericAdapterDescription) adapter));
-    }
 }
