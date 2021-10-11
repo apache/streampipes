@@ -41,10 +41,9 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{streamId}")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addSetAdapter(@PathParam("streamId") String streamId,
-                               SpDataSet dataSet) {
+    public Response addSetAdapter(SpDataSet dataSet) {
 
         String responseMessage = "Instance of data set " + dataSet.getElementId() + " successfully started";
 

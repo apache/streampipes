@@ -79,12 +79,14 @@ public class AdapterHealthCheck {
         Map<String, List<AdapterDescription>> groupByWorker = new HashMap<>();
         allRunningInstancesAdapterDescription.values().forEach(ad -> {
             String selectedEndpointUrl = ad.getSelectedEndpointUrl();
-            if (groupByWorker.containsKey(selectedEndpointUrl)) {
-                groupByWorker.get(selectedEndpointUrl).add(ad);
-            } else {
-                List<AdapterDescription> tmp = new ArrayList<>();
-                tmp.add(ad);
-                groupByWorker.put(selectedEndpointUrl, tmp);
+            if (selectedEndpointUrl != null) {
+                if (groupByWorker.containsKey(selectedEndpointUrl)) {
+                    groupByWorker.get(selectedEndpointUrl).add(ad);
+                } else {
+                    List<AdapterDescription> tmp = new ArrayList<>();
+                    tmp.add(ad);
+                    groupByWorker.put(selectedEndpointUrl, tmp);
+                }
             }
         });
 
