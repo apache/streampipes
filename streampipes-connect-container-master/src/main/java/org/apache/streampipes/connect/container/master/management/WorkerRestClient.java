@@ -37,27 +37,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * This client can be used to interact with the adapter workers executing the adapter instances
+ */
 public class WorkerRestClient {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerRestClient.class);
 
-    public static void invokeStreamAdapter(String endpointUrl, String elementId) throws AdapterException {
-        invokeStreamAdapter(endpointUrl, (AdapterStreamDescription) getAndDecryptAdapter(elementId));
-    }
-
-    public static void invokeStreamAdapter(String endpointUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+    public static void invokeStreamAdapter(String endpointUrl,
+                                           String elementId) throws AdapterException {
+        AdapterStreamDescription adapterStreamDescription =  (AdapterStreamDescription) getAndDecryptAdapter(elementId);
         String url = endpointUrl + WorkerPaths.getStreamInvokePath();
 
         startAdapter(url, adapterStreamDescription);
         updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
     }
 
-    public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+    public static void stopStreamAdapter(String baseUrl,
+                                         AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         String url = baseUrl + WorkerPaths.getStreamStopPath();
 
         AdapterDescription ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
@@ -79,7 +78,6 @@ public class WorkerRestClient {
     }
 
     public static List<AdapterDescription> getAllRunningAdapterInstanceDescriptions(String url) throws AdapterException {
-        // Stop execution of adapter
         try {
             logger.info("Requesting all running adapter description instances: " + url);
 
@@ -93,7 +91,7 @@ public class WorkerRestClient {
             return result;
         } catch (IOException e) {
             logger.error("List of running adapters could not be fetched", e);
-            throw new AdapterException("Adapter was not stopped successfully with url: " + url);
+            throw new AdapterException("List of running adapters could not be fetched from: " + url);
         }
     }
 
@@ -220,14 +218,6 @@ public class WorkerRestClient {
         }
 
         return adapterDescription;
-    }
-
-    private static String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
-        }
     }
 
     private static void updateStreamAdapterStatus(String adapterId,

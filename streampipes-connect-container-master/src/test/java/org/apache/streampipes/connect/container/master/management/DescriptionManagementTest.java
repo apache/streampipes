@@ -57,7 +57,6 @@ public class DescriptionManagementTest {
         List<FormatDescription> result = descriptionManagement.getFormats();
 
         assertNotNull(result);
-        assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(JsonFormat.ID, result.get(0).getAppId());
     }

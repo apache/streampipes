@@ -48,11 +48,8 @@ public class WorkerAdministrationResource extends AbstractSharedRestInterface {
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
     public Response addWorkerContainer(List<AdapterDescription> availableAdapterDescription) {
-        // Change this to List<AdapterDescription>
-        // How do I store the available AdapterDescriptions when there is no ConnectWorkerContainer
-//        LOG.info("Worker container: " + connectWorkerContainer.getServiceGroup() + " was detected");
+
         this.workerAdministrationManagement.register(availableAdapterDescription);
-        System.out.println(availableAdapterDescription);
 
         return ok(Notifications.success("Worker Container successfully added"));
     }

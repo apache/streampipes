@@ -47,17 +47,17 @@ import java.util.UUID;
 
 import static org.apache.streampipes.manager.storage.UserManagementService.getUserService;
 
-
+/**
+ * This class is responsible for managing all the adapter instances which are executed on worker nodes
+ */
 public class AdapterMasterManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
   private IAdapterStorage adapterInstanceStorage;
-  private WorkerUrlProvider workerUrlProvider;
 
   public AdapterMasterManagement() {
     this.adapterInstanceStorage = getAdapterInstanceStorage();
-    this.workerUrlProvider = new WorkerUrlProvider();
   }
 
   public AdapterMasterManagement(IAdapterStorage adapterStorage) {
@@ -68,45 +68,36 @@ public class AdapterMasterManagement {
                            String username)
           throws AdapterException {
 
-    try {
-      // Create elementId for adapter
-      String uuid = UUID.randomUUID().toString();
-      ad.setElementId(ad.getElementId() + ":" + uuid);
-      ad.setCreatedAt(System.currentTimeMillis());
+    // Create elementId for adapter
+    // TODO centralized provisioning of element id
+    String uuid = UUID.randomUUID().toString();
+    ad.setElementId(ad.getElementId() + ":" + uuid);
+    ad.setCreatedAt(System.currentTimeMillis());
 
-      // Find worker to execute adapter
-      String selectedEndpointUrl = workerUrlProvider.getWorkerBaseUrl(ad.getAppId());
-      ad.setSelectedEndpointUrl(selectedEndpointUrl);
+    // Add EventGrounding to AdapterDescription
+    EventGrounding eventGrounding = GroundingService.createEventGrounding();
+    ad.setEventGrounding(eventGrounding);
 
-      // Add EventGrounding to AdapterDescription
-      EventGrounding eventGrounding = GroundingService.createEventGrounding();
-      ad.setEventGrounding(eventGrounding);
+    // Encrypt adapter description to store it in db
+    AdapterDescription encryptedAdapterDescription =
+            new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
 
-      // Encrypt adapter description to store it in db
-      AdapterDescription encryptedAdapterDescription =
-              new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
+    // store in db
+    encryptedAdapterDescription.setRev(null);
+    String elementId = adapterInstanceStorage.storeAdapter(encryptedAdapterDescription);
 
-      // store in db
-      encryptedAdapterDescription.setRev(null);
-      String adapterId = adapterInstanceStorage.storeAdapter(encryptedAdapterDescription);
-
-      // start when stream adapter
-      if (ad instanceof AdapterStreamDescription) {
-        WorkerRestClient.invokeStreamAdapter(selectedEndpointUrl, adapterId);
-        LOG.info("Start adapter");
-      }
-
-      // Create stream
-      SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
-      storedDescription.setCorrespondingAdapterId(adapterId);
-      installDataSource(storedDescription, username);
-      LOG.info("Install source (source URL: {} in backend", ad.getElementId());
-
-      return storedDescription.getElementId();
-    } catch (NoServiceEndpointsAvailableException e) {
-      throw new AdapterException("Could not find a worker for adapter " + ad.getAppId(), e);
+    // start when stream adapter
+    if (ad instanceof AdapterStreamDescription) {
+      startStreamAdapter(elementId);
     }
 
+    // Create stream
+    SpDataStream storedDescription = new SourcesManagement().getAdapterDataStream(ad.getElementId());
+    storedDescription.setCorrespondingAdapterId(elementId);
+    installDataSource(storedDescription, username);
+    LOG.info("Install source (source URL: {} in backend", ad.getElementId());
+
+    return storedDescription.getElementId();
   }
 
 
@@ -180,9 +171,9 @@ public class AdapterMasterManagement {
     return allAdapters;
   }
 
-  public void stopSetAdapter(String adapterId, String baseUrl, AdapterInstanceStorageImpl adapterStorage) throws AdapterException {
+  public void stopSetAdapter(String elementId, String baseUrl, AdapterInstanceStorageImpl adapterStorage) throws AdapterException {
 
-    AdapterSetDescription ad = (AdapterSetDescription) adapterStorage.getAdapter(adapterId);
+    AdapterSetDescription ad = (AdapterSetDescription) adapterStorage.getAdapter(elementId);
 
     WorkerRestClient.stopSetAdapter(baseUrl, ad);
   }
@@ -198,30 +189,31 @@ public class AdapterMasterManagement {
   }
 
   public void startStreamAdapter(String elementId) throws AdapterException {
-    // TODO ensure that adapter is not started twice
 
     AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
-    try {
-      String endpointUrl = findEndpointUrl(ad);
-      URI uri = new URI(endpointUrl);
-      String baseUrl = uri.getScheme() + "://" + uri.getAuthority();
-      if (!isStreamAdapter(elementId)) {
-        throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
-      } else {
+
+    if (!isStreamAdapter(ad)) {
+      throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
+    } else {
+
+      try {
+        // Find endpoint to start adapter on
+        String baseUrl = findEndpointUrl(ad.getAppId());
+
+        // Update selected endpoint URL of adapter
         ad.setSelectedEndpointUrl(baseUrl);
         adapterInstanceStorage.updateAdapter(ad);
 
-        AdapterDescription decryptedAdapterDescription =
-                new AdapterEncryptionService(new Cloner().adapterDescription(ad)).decrypt();
-        WorkerRestClient.invokeStreamAdapter(baseUrl, (AdapterStreamDescription) decryptedAdapterDescription);
+        // Invoke adapter instance
+        WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
+
+        LOG.info("Started adapter " + elementId + " on: " + baseUrl);
+      } catch (NoServiceEndpointsAvailableException e) {
+        e.printStackTrace();
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
       }
-    } catch (NoServiceEndpointsAvailableException e) {
-      e.printStackTrace();
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
     }
-
-
   }
 
   private void installDataSource(SpDataStream stream, String username) throws AdapterException {
@@ -247,8 +239,11 @@ public class AdapterMasterManagement {
     return new AdapterInstanceStorageImpl();
   }
 
-  private String findEndpointUrl(AdapterDescription adapterDescription) throws NoServiceEndpointsAvailableException {
+  private String findEndpointUrl(String appId) throws NoServiceEndpointsAvailableException, URISyntaxException {
     SpServiceUrlProvider serviceUrlProvider = SpServiceUrlProvider.ADAPTER;
-    return new ExtensionsServiceEndpointGenerator(adapterDescription.getAppId(), serviceUrlProvider).getEndpointResourceUrl();
+    String endpointUrl = new ExtensionsServiceEndpointGenerator(appId, serviceUrlProvider).getEndpointResourceUrl();
+    URI uri = new URI(endpointUrl);
+    String baseUrl = uri.getScheme() + "://" + uri.getAuthority();
+    return baseUrl;
   }
 }

@@ -37,6 +37,10 @@ public class WorkerPaths {
     return WorkerMainPath + "/set/stop";
   }
 
+  public static String getRunningAdaptersPath() {
+    return WorkerMainPath + "/running";
+  }
+
   public static String getRuntimeResolvablePath(String elementId) {
     return WorkerMainPath + "/resolvable/" + elementId + "/configurations";
   }

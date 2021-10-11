@@ -50,7 +50,7 @@ public class AdapterWorkerManagement {
         stopAdapter(adapterStreamDescription);
     }
 
-    public void invokeSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
+    public void invokeSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
 
         IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
 
@@ -61,7 +61,7 @@ public class AdapterWorkerManagement {
         adapter.startAdapter();
     }
 
-    public void stopSetAdapter (AdapterSetDescription adapterSetDescription) throws AdapterException {
+    public void stopSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
         stopAdapter(adapterSetDescription);
     }
 

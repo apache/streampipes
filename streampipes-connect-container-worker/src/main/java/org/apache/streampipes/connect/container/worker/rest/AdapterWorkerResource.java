@@ -47,7 +47,6 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
         this.adapterManagement = adapterManagement;
     }
 
-    // get all running instances
     @GET
     @JacksonSerialized
     @Path("/running")

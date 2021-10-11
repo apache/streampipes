@@ -21,7 +21,9 @@ package org.apache.streampipes.connect.container.master.health;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
+import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
@@ -29,51 +31,96 @@ import java.util.*;
 
 public class AdapterHealthCheck {
 
+    private IAdapterStorage adapterStorage;
+    private AdapterMasterManagement adapterMasterManagement;
+
     public AdapterHealthCheck() {
+        this.adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterInstanceStorage();
+        this.adapterMasterManagement = new AdapterMasterManagement();
     }
 
-    // TODO how can I test this code?
+    public AdapterHealthCheck(IAdapterStorage adapterStorage, AdapterMasterManagement adapterMasterManagement) {
+        this.adapterStorage = adapterStorage;
+        this.adapterMasterManagement = adapterMasterManagement;
+    }
+
+    /**
+     * In this method it is checked which adapters are currently running. Then it calls all workers to validate if the adapter instance is
+     * still running as expected. If the adapter is not running anymore a new worker instance is invoked.
+     */
     public void checkAndRestoreAdapters() {
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
-
-        IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterInstanceStorage();
-
-        List<AdapterDescription> allAdapersToRecover = new ArrayList<>();
-
         // Get all adapters
-        List<AdapterDescription> allRunningInstancesAdaperDescription = adapterStorage.getAllAdapters();
+        Map<String, AdapterDescription> allRunningInstancesAdapterDescriptions = this.getAllRunningInstancesAdapterDescriptions();
+
+        // Get all worker containers that run adapters
+        Map<String, List<AdapterDescription>> groupByWorker = this.getAllWorkersWithAdapters(allRunningInstancesAdapterDescriptions);
+
+        // Get adapters that are not running anymore
+        Map<String, AdapterDescription> allAdaptersToRecover = this.getAdaptersToRecover(groupByWorker, allRunningInstancesAdapterDescriptions);
+
+        // Recover Adapters
+        this.recoverAdapters(allAdaptersToRecover);
+    }
+
+    public Map<String, AdapterDescription> getAllRunningInstancesAdapterDescriptions() {
+        Map<String, AdapterDescription> result = new HashMap<>();
+        List<AdapterDescription> allRunningInstancesAdapterDescription = this.adapterStorage.getAllAdapters();
+        allRunningInstancesAdapterDescription.forEach(adapterDescription -> {
+            result.put(adapterDescription.getElementId(), adapterDescription);
+        });
+
+        return result;
+    }
+
+    public Map<String, List<AdapterDescription>> getAllWorkersWithAdapters(
+            Map<String, AdapterDescription> allRunningInstancesAdapterDescription) {
 
         Map<String, List<AdapterDescription>> groupByWorker = new HashMap<>();
-        allRunningInstancesAdaperDescription.forEach(ad -> {
+        allRunningInstancesAdapterDescription.values().forEach(ad -> {
             String selectedEndpointUrl = ad.getSelectedEndpointUrl();
             if (groupByWorker.containsKey(selectedEndpointUrl)) {
                 groupByWorker.get(selectedEndpointUrl).add(ad);
             } else {
-                List<AdapterDescription> tmp = Arrays.asList(ad);
+                List<AdapterDescription> tmp = new ArrayList<>();
+                tmp.add(ad);
                 groupByWorker.put(selectedEndpointUrl, tmp);
             }
         });
 
+        return groupByWorker;
+    }
+
+    public Map<String, AdapterDescription> getAdaptersToRecover(
+            Map<String, List<AdapterDescription>> groupByWorker,
+            Map<String, AdapterDescription> allRunningInstancesAdapterDescription) {
         groupByWorker.keySet().forEach(adapterEndpointUrl -> {
             try {
-                List<AdapterDescription> allRunningInstancesOfOneWorker = WorkerRestClient.getAllRunningAdapterInstanceDescriptions("");
-                // TODO Remove all running adapters from allRunningInstancesAdaperDescription
+                List<AdapterDescription> allRunningInstancesOfOneWorker = WorkerRestClient.getAllRunningAdapterInstanceDescriptions(adapterEndpointUrl + WorkerPaths.getRunningAdaptersPath());
+                allRunningInstancesOfOneWorker.forEach(adapterDescription -> {
+                    allRunningInstancesAdapterDescription.remove(adapterDescription.getElementId());
+                });
             } catch (AdapterException e) {
                 e.printStackTrace();
             }
         });
 
-        for (AdapterDescription adapterDescription : allAdapersToRecover) {
-            // TODO how do I know there is a worker to start them?
+        return allRunningInstancesAdapterDescription;
+    }
 
+
+    public boolean recoverAdapters(Map<String, AdapterDescription> adaptersToRecover) {
+        for (AdapterDescription adapterDescription : adaptersToRecover.values()) {
             // Invoke the adapters
             try {
-                adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
+                if (adapterDescription instanceof AdapterStreamDescription) {
+                    this.adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
+                }
             } catch (AdapterException e) {
                 e.printStackTrace();
             }
         }
 
-   }
+        return true;
+    }
 
 }

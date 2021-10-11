@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -80,7 +79,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}/stop")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response stopAdapter(@PathParam("id") String adapterId) throws NoServiceEndpointsAvailableException {
+    public Response stopAdapter(@PathParam("id") String adapterId) {
         try {
             managementService.stopStreamAdapter(adapterId);
             return ok(Notifications.success("Adapter started"));
@@ -124,7 +123,6 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAdapters() {
         try {
-            // TODO get all invoced adapters
             List<AdapterDescription> result = managementService.getAllAdapterInstances();
 
             return ok(result);

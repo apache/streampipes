@@ -94,9 +94,6 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
                            @PathParam("runningInstanceId") String runningInstanceId) {
         String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
 
-//        String workerUrl = new Utils().getWorkerUrlById(elementId);
-//        String newUrl = Utils.addUserNameToApi(workerUrl, username);
-
         try {
             managementService.detachAdapter(elementId, runningInstanceId);
         } catch (AdapterException | NoServiceEndpointsAvailableException e) {

@@ -31,14 +31,11 @@ public class WorkerAdministrationManagement {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-    private AdapterMasterManagement adapterMasterManagement;
-
     private IAdapterStorage adapterDescriptionStorage;
 
     private AdapterHealthCheck adapterHealthCheck;
 
     public WorkerAdministrationManagement() {
-        this.adapterMasterManagement = new AdapterMasterManagement();
         this.adapterHealthCheck = new AdapterHealthCheck();
         this.adapterDescriptionStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
     }
@@ -59,61 +56,5 @@ public class WorkerAdministrationManagement {
         });
 
         this.adapterHealthCheck.checkAndRestoreAdapters();
-
-
-        // Check if already registered
-
-//        List<ConnectWorkerContainer> allConnectWorkerContainers =
-//                this.connectionWorkerContainerStorage.getAllConnectWorkerContainers();
-//
-//        boolean alreadyRegistered = false;
-//
-//        // Delete old description if it was registred before
-//        for (ConnectWorkerContainer c : allConnectWorkerContainers) {
-//            if (c.getServiceGroup().equals(connectWorker.getServiceGroup())) {
-//                boolean adaptersChanged = false;
-//
-//                for (AdapterDescription a : c.getAdapters()) {
-//                    if (connectWorker.getAdapters().stream().noneMatch(ad -> ad.getElementId().equals(a.getElementId()))) {
-//                        adaptersChanged = true;
-//                    }
-//                }
-//
-//                for (ProtocolDescription p : c.getProtocols()) {
-//                    if (connectWorker.getProtocols().stream().noneMatch(pr -> pr.getAppId().equals(p.getAppId()))) {
-//                        adaptersChanged = true;
-//                    }
-//                }
-//
-//                if (!adaptersChanged) {
-//                    alreadyRegistered = true;
-//                } else {
-//                    LOG.info("Remove old connect worker: " + connectWorker.getServiceGroup());
-//                    this.connectionWorkerContainerStorage.deleteConnectWorkerContainer(c.getId());
-//                }
-//            }
-//        }
-//
-//
-//
-//        // TODO I am not sure if this is correct
-//        // IF NOT REGISTERED
-//        // Store Connect Worker in DB
-//        if (!alreadyRegistered) {
-//            this.connectionWorkerContainerStorage.storeConnectWorkerContainer(connectWorker);
-//            LOG.info("Stored new connect worker: " + connectWorker.getServiceGroup() + " in database");
-//        } else {
-//            try {
-//                this.adapterMasterManagement.startAllStreamAdapters(connectWorker);
-//            } catch (AdapterException e) {
-//                LOG.error("Could not start adapters on worker: " + connectWorker.getServiceGroup());
-//            } catch (NoServiceEndpointsAvailableException e) {
-//                LOG.error("Could not start adapter due to missing endpoint");
-//            }
-//        }
     }
-
-
-
-
 }

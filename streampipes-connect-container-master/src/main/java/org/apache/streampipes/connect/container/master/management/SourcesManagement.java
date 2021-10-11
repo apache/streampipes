@@ -49,7 +49,6 @@ public class SourcesManagement {
 
     private AdapterInstanceStorageImpl adapterStorage;
     private WorkerUrlProvider workerUrlProvider;
-    private String connectHost = null;
 
     public SourcesManagement(AdapterInstanceStorageImpl adapterStorage) {
       this.adapterStorage = adapterStorage;
@@ -100,7 +99,6 @@ public class SourcesManagement {
     }
 
     public String getAllAdaptersInstallDescription() throws AdapterException {
-//        String host = getConnectHost();
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         List<Description> allAdapterDescriptions = new ArrayList<>();
@@ -183,12 +181,6 @@ public class SourcesManagement {
         ds.setCorrespondingAdapterId(adapterDescription.getAppId());
         ds.setInternallyManaged(true);
 
-        ds.setUri(url);
-
         return ds;
-    }
-
-    public void setConnectHost(String connectHost) {
-        this.connectHost = connectHost;
     }
 }

@@ -34,8 +34,7 @@ import javax.ws.rs.core.Response;
 @Path("/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
 
-    private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
-    private WorkerUrlProvider workerUrlProvider;
+    private final WorkerUrlProvider workerUrlProvider;
 
     public RuntimeResolvableResource() {
         super(WorkerAdministrationManagement::new);
@@ -48,7 +47,6 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response fetchConfigurations(@PathParam("id") String appId,
-                                        @PathParam("username") String username,
                                         RuntimeOptionsRequest runtimeOptionsRequest) {
 
         // TODO add solution for formats
