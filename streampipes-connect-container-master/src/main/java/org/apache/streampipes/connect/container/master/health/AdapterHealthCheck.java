@@ -39,7 +39,8 @@ public class AdapterHealthCheck {
         this.adapterMasterManagement = new AdapterMasterManagement();
     }
 
-    public AdapterHealthCheck(IAdapterStorage adapterStorage, AdapterMasterManagement adapterMasterManagement) {
+    public AdapterHealthCheck(IAdapterStorage adapterStorage,
+                              AdapterMasterManagement adapterMasterManagement) {
         this.adapterStorage = adapterStorage;
         this.adapterMasterManagement = adapterMasterManagement;
     }

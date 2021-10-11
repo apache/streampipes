@@ -171,7 +171,9 @@ public class AdapterMasterManagement {
     return allAdapters;
   }
 
-  public void stopSetAdapter(String elementId, String baseUrl, AdapterInstanceStorageImpl adapterStorage) throws AdapterException {
+  public void stopSetAdapter(String elementId,
+                             String baseUrl,
+                             AdapterInstanceStorageImpl adapterStorage) throws AdapterException {
 
     AdapterSetDescription ad = (AdapterSetDescription) adapterStorage.getAdapter(elementId);
 
@@ -216,7 +218,8 @@ public class AdapterMasterManagement {
     }
   }
 
-  private void installDataSource(SpDataStream stream, String username) throws AdapterException {
+  private void installDataSource(SpDataStream stream,
+                                 String username) throws AdapterException {
     try {
       new DataStreamVerifier(stream).verifyAndAdd(username, true, true);
     } catch (SepaParseException e) {

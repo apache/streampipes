@@ -59,14 +59,15 @@ public class SourcesManagement {
        this(new AdapterInstanceStorageImpl());
     }
 
-    public void addAdapter(String streamId, SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
+    public void addAdapter(String streamId,
+                           SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
 
 
         String newUrl = getAdapterUrl(streamId);
         AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
         adapterDescription.setDataSet(dataSet);
 
-        String newId = adapterDescription.getUri() + "/streams/" + dataSet.getDatasetInvocationId();
+        String newId = adapterDescription.getElementId() + "/streams/" + dataSet.getDatasetInvocationId();
         adapterDescription.setElementId(newId);
 
         AdapterSetDescription decryptedAdapterDescription =
@@ -75,10 +76,11 @@ public class SourcesManagement {
         WorkerRestClient.invokeSetAdapter(newUrl, decryptedAdapterDescription);
     }
 
-    public void detachAdapter(String streamId, String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
+    public void detachAdapter(String streamId,
+                              String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
         AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
 
-        String newId = adapterDescription.getUri() + "/streams/" + runningInstanceId;
+        String newId = adapterDescription.getElementId() + "/streams/" + runningInstanceId;
         adapterDescription.setElementId(newId);
 
         String newUrl = getAdapterUrl(streamId);
@@ -107,7 +109,7 @@ public class SourcesManagement {
             URI uri;
             String uriString = null;
             try {
-                uriString = ad.getUri();
+                uriString = ad.getElementId();
                 uri = new URI(uriString);
             } catch (URISyntaxException e) {
                 logger.error("URI for the sources endpoint is not correct: " + uriString, e);
@@ -149,7 +151,6 @@ public class SourcesManagement {
 
     public SpDataStream getAdapterDataStream(String id) throws AdapterException {
 
-//        AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
         // get all Adapters and check id
         AdapterDescription adapterDescription = getAdapterDescriptionById(id);
 
@@ -163,18 +164,8 @@ public class SourcesManagement {
             ((SpDataSet) ds).setSupportedGrounding(eg);
         } else {
             ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
-
-
-//            String topic = adapterDescription.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
-//
-//            TransportProtocol tp = Protocols.kafka(BackendConfig.INSTANCE.getKafkaHost(), BackendConfig.INSTANCE.getKafkaPort(), topic);
-//            EventGrounding eg = new EventGrounding();
-//            eg.setTransportProtocol(tp);
-//
             ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
         }
-
-        String url = adapterDescription.getUri();
 
         ds.setName(adapterDescription.getName());
         ds.setDescription(adapterDescription.getDescription());

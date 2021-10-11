@@ -65,13 +65,15 @@ public class WorkerRestClient {
         updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
     }
 
-    public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
+    public static void invokeSetAdapter(String baseUrl,
+                                        AdapterSetDescription adapterSetDescription) throws AdapterException {
         String url = baseUrl + WorkerPaths.getSetInvokePath();
 
         startAdapter(url, adapterSetDescription);
     }
 
-    public static void stopSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
+    public static void stopSetAdapter(String baseUrl,
+                                      AdapterSetDescription adapterSetDescription) throws AdapterException {
         String url = baseUrl + WorkerPaths.getSetStopPath();
 
         stopAdapter(adapterSetDescription, url);
@@ -95,7 +97,8 @@ public class WorkerRestClient {
         }
     }
 
-    public static void startAdapter(String url, AdapterDescription ad) throws AdapterException {
+    public static void startAdapter(String url,
+                                    AdapterDescription ad) throws AdapterException {
         try {
             logger.info("Trying to start adapter on endpoint: " + url);
 

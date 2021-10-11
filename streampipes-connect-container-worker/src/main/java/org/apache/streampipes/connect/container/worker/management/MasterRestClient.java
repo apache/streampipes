@@ -32,7 +32,8 @@ public class MasterRestClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(MasterRestClient.class);
 
-    public static boolean register(String baseUrl, List<AdapterDescription> allAvailableAdapters) {
+    public static boolean register(String baseUrl,
+                                   List<AdapterDescription> allAvailableAdapters) {
 
         String url = baseUrl + "/api/v2/connect/admin@streampipes.org/master/administration";
 
