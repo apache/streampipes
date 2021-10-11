@@ -11,7 +11,7 @@ import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdap
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataStreamAdapter;
-import org.apache.streampipes.connect.container.worker.init.AdapterWorkerContainer;
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.connect.iiot.protocol.set.FileProtocol;
 import org.apache.streampipes.connect.iiot.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.*;
@@ -19,7 +19,7 @@ import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 
-public class ConnectAdapterIiotInit extends AdapterWorkerContainer{
+public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter{
 	public static void main(String[] args) {
 		new ConnectAdapterIiotInit().init();
 	}
