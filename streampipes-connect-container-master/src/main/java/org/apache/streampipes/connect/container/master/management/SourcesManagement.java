@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -99,6 +100,7 @@ public class SourcesManagement {
             ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
         }
 
+        ds.setElementId("urn:fzi.de:eventstream:" + RandomStringUtils.randomAlphabetic(6));
         ds.setName(adapterDescription.getName());
         ds.setDescription(adapterDescription.getDescription());
         ds.setCorrespondingAdapterId(adapterDescription.getElementId());
