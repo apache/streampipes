@@ -31,7 +31,6 @@ describe('Test File Stream Adapter', () => {
       .create('File_Stream')
       .setName('File Stream Adapter Test')
       .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
       .addProtocolInput('input', 'speed', '1')
       .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
       .setFormat('csv')

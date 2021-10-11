@@ -58,16 +58,15 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
     }
 
     @DELETE
-    @Path("/{streamId}/{runningInstanceId}")
+    @Path("{adapterId}/{runningInstanceId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response detach(@PathParam("streamId") String elementId,
-                           @PathParam("runningInstanceId") String runningInstanceId) {
-        String responseMessage = "Instance of set id: " + elementId  + " with instance id: "+ runningInstanceId + " successfully started";
+    public Response detach(@PathParam("adapterId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+        String responseMessage = "Instance id: "+ runningInstanceId + " successfully started";
 
         try {
             managementService.detachAdapter(elementId, runningInstanceId);
         } catch (AdapterException | NoServiceEndpointsAvailableException e) {
-            LOG.error("Could not set set id "+ elementId  + " with instance id: "+ runningInstanceId, e);
+            LOG.error("Could not detach instance id: "+ runningInstanceId, e);
             return fail();
         }
 

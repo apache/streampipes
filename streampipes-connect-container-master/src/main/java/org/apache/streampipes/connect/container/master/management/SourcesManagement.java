@@ -37,18 +37,15 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.List;
 
 public class SourcesManagement {
 
     private Logger logger = LoggerFactory.getLogger(SourcesManagement.class);
 
     private AdapterInstanceStorageImpl adapterInstanceStorage;
-    private WorkerUrlProvider workerUrlProvider;
 
     public SourcesManagement(AdapterInstanceStorageImpl adapterStorage) {
       this.adapterInstanceStorage = adapterStorage;
-      this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     public SourcesManagement() {
@@ -70,48 +67,19 @@ public class SourcesManagement {
     }
 
     /**
-     * @param streamId
      * @param runningInstanceId
      * @throws AdapterException
      * @throws NoServiceEndpointsAvailableException
      */
-    public void detachAdapter(String streamId,
-                              String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
-        AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
-
-        String newId = adapterDescription.getElementId() + "/streams/" + runningInstanceId;
-        adapterDescription.setElementId(newId);
-
-        String newUrl = getAdapterUrl(streamId);
-        WorkerRestClient.stopSetAdapter(newUrl, adapterDescription);
-    }
-
-    private String getAdapterUrl(String streamId) throws NoServiceEndpointsAvailableException {
-        String appId = "";
-        List<AdapterDescription> adapterDescriptions = this.adapterInstanceStorage.getAllAdapters();
-        for (AdapterDescription ad : adapterDescriptions) {
-            if (ad.getElementId().contains(streamId)) {
-                appId = ad.getAppId();
-            }
+    public void detachAdapter(String elementId, String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
+        AdapterSetDescription ad = (AdapterSetDescription) getAndDecryptAdapter(elementId);
+        try {
+            String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
+            ad.setElementId(ad.getElementId() + "/streams/" + runningInstanceId);
+            WorkerRestClient.stopSetAdapter(baseUrl, ad);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-
-        return workerUrlProvider.getWorkerBaseUrl(appId);
-
-    }
-
-    private AdapterDescription getAdapterDescriptionById(String id) {
-        AdapterDescription adapterDescription = null;
-        List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
-        for (AdapterDescription a : allAdapters) {
-            if (a.getElementId().equals(id)) {
-                adapterDescription = a;
-            }
-        }
-        AdapterDescription decryptedAdapterDescription =
-                new AdapterEncryptionService(new Cloner()
-                        .adapterDescription(adapterDescription)).decrypt();
-
-        return decryptedAdapterDescription;
     }
 
     public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription) {
@@ -120,8 +88,10 @@ public class SourcesManagement {
         if (adapterDescription instanceof AdapterSetDescription) {
             ds = ((AdapterSetDescription) adapterDescription).getDataSet();
             EventGrounding eg = new EventGrounding();
-            eg.setTransportProtocols(Arrays.asList(SupportedProtocols.kafka(), SupportedProtocols.jms(),
-                    SupportedProtocols.mqtt()));
+            eg.setTransportProtocols(
+                    Arrays.asList(SupportedProtocols.kafka(),
+                            SupportedProtocols.jms(),
+                            SupportedProtocols.mqtt()));
             eg.setTransportFormats(Arrays.asList(TransportFormatGenerator.getTransportFormat()));
             ((SpDataSet) ds).setSupportedGrounding(eg);
         } else {

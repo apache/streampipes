@@ -124,7 +124,7 @@ public class WorkerRestClient {
 
         // Stop execution of adapter
         try {
-            logger.info("Trying to stopAdapter adapter on endpoint: " + url);
+            logger.info("Trying to stop adapter on endpoint: " + url);
 
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 

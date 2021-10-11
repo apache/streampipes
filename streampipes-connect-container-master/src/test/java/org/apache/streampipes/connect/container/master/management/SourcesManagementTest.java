@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
@@ -66,44 +65,6 @@ public class SourcesManagementTest {
         verifyStatic(WorkerRestClient.class, times(1));
         WorkerRestClient.invokeSetAdapter(eq("/"), any());
 
-    }
-
-    @Ignore
-    @Test(expected = AdapterException.class)
-    public void addAdapterFail() throws Exception {
-        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
-        SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
-
-        org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
-
-        sourcesManagement.detachAdapter( ID, "id1");
-    }
-
-    @Ignore
-    @Test
-    public void detachAdapterSuccess() throws Exception {
-        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
-        SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
-        doNothing().when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
-
-        sourcesManagement.detachAdapter(ID, "id1");
-
-        verify(adapterStorage, times(1)).getAllAdapters();
-        verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopSetAdapter(eq("/"), any());
-    }
-
-    @Ignore
-    @Test(expected = AdapterException.class)
-    public void detachAdapterFail() throws Exception {
-        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
-        SourcesManagement sourcesManagement = new SourcesManagement(adapterStorage);
-        org.powermock.api.mockito.PowerMockito.doThrow(new AdapterException()).when(WorkerRestClient.class, "stopSetAdapter", anyString(), any());
-
-        sourcesManagement.detachAdapter( ID, "id1");
     }
 
     private List<AdapterDescription> getAdapterDescriptionList() {

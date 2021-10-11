@@ -28,7 +28,6 @@ import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
@@ -174,15 +173,6 @@ public class AdapterMasterManagement {
     }
 
     return allAdapters;
-  }
-
-  public void stopSetAdapter(String elementId,
-                             String baseUrl,
-                             AdapterInstanceStorageImpl adapterStorage) throws AdapterException {
-
-    AdapterSetDescription ad = (AdapterSetDescription) adapterStorage.getAdapter(elementId);
-
-    WorkerRestClient.stopSetAdapter(baseUrl, ad);
   }
 
   public void stopStreamAdapter(String elementId) throws AdapterException {
