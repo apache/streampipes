@@ -16,12 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import Konva from "konva";
-import {WebsocketService} from "../../services/websocket.service";
-import {DashboardConfiguration} from "../../model/dashboard-configuration.model";
-import {RestService} from "../../services/rest.service";
+import Konva from 'konva';
+import { WebsocketService } from '../../services/websocket.service';
+import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
+import { RestService } from '../../services/rest.service';
 
 interface Window {
     Image: any;
@@ -61,13 +61,13 @@ export class ViewAssetComponent {
     }
 
     updateMeasurements() {
-        let dynamicShapes = this.mainCanvasStage.find(".dynamic-text");
+        const dynamicShapes = this.mainCanvasStage.find('.dynamic-text');
         dynamicShapes.forEach(ds => {
-            let monitoredField = ds.text();
+            const monitoredField = ds.text();
            this.websocketService.connect(ds.attrs.brokerUrl, ds.attrs.topic).subscribe(msg => {
                ds.text(msg[monitoredField]);
                this.mainCanvasStage.draw();
-           })
+           });
         });
     }
 
@@ -76,10 +76,10 @@ export class ViewAssetComponent {
         image.src = this.restService.getImageUrl(this.dashboardConfig.imageInfo.imageName);
         this.dashboardConfig.imageInfo.image = image;
         image.onload = () => {
-            let imageCanvas = new Konva.Image(this.dashboardConfig.imageInfo);
+            const imageCanvas = new Konva.Image(this.dashboardConfig.imageInfo);
             this.backgroundImageLayer.add(imageCanvas);
             this.backgroundImageLayer.draw();
-        }
+        };
     }
 
     closeDashboard() {

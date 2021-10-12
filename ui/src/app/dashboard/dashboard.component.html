@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
+    <div class="fixed-height" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
     <dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
                         (reloadDashboardsEmitter)="getDashboards()"
                         [dashboards]="dashboards"
