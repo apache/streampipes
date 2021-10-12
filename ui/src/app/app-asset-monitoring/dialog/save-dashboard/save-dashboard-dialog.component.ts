@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RestService } from '../../services/rest.service';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { ImageInfo } from '../../model/image-info.model';
@@ -29,7 +29,7 @@ import Stage = Konva.Stage;
     templateUrl: 'save-dashboard-dialog.component.html',
     styleUrls: ['./save-dashboard-dialog.component.scss'],
 })
-export class SaveDashboardDialogComponent {
+export class SaveDashboardDialogComponent implements OnInit {
 
     dashboardName: string;
     dashboardDescription: string;
@@ -40,9 +40,22 @@ export class SaveDashboardDialogComponent {
     @Input()
     file: File;
 
+    @Input()
+    editMode: boolean;
+
+    @Input()
+    dashboardConfig: DashboardConfiguration;
+
     constructor(
         private dialogRef: DialogRef<SaveDashboardDialogComponent>,
         private restService: RestService) {
+    }
+
+    ngOnInit() {
+        if (this.editMode) {
+            this.dashboardName = this.dashboardConfig.dashboardName;
+            this.dashboardDescription = this.dashboardConfig.dashboardDescription;
+        }
     }
 
     cancel() {
@@ -51,8 +64,10 @@ export class SaveDashboardDialogComponent {
 
     save() {
         // save image
-        this.restService.storeImage(this.file).subscribe(response => {
-        });
+        if (this.file) {
+            this.restService.storeImage(this.file).subscribe(response => {
+            });
+        }
 
         // save dashboard
         const imageInfo = this.makeImageInfo();
@@ -60,9 +75,19 @@ export class SaveDashboardDialogComponent {
         dashboardConfig.dashboardName = this.dashboardName;
         dashboardConfig.dashboardDescription = this.dashboardDescription;
         dashboardConfig.imageInfo = imageInfo;
-        dashboardConfig.imageInfo.imageName = this.file.name;
+        dashboardConfig.imageInfo.draggable = false;
+        if (this.file) {
+            dashboardConfig.imageInfo.imageName = this.file.name;
+        }
 
-        this.restService.storeDashboard(dashboardConfig).subscribe(response => {
+        if (this.editMode) {
+            dashboardConfig.dashboardId = this.dashboardConfig.dashboardId;
+        }
+
+        const observable = this.editMode ?
+            this.restService.updateDashboard(dashboardConfig) :
+            this.restService.storeDashboard(dashboardConfig);
+        observable.subscribe(response => {
             this.dialogRef.close();
         });
     }

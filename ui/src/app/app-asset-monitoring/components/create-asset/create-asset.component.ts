@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import Konva from 'konva';
 import { AddPipelineDialogComponent } from '../../dialog/add-pipeline/add-pipeline-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,6 +25,8 @@ import { SelectedVisualizationData } from '../../model/selected-visualization-da
 import { SaveDashboardDialogComponent } from '../../dialog/save-dashboard/save-dashboard-dialog.component';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
+import { RestService } from '../../services/rest.service';
 
 interface Window {
     Image: any;
@@ -37,7 +39,7 @@ declare const window: Window;
     templateUrl: './create-asset.component.html',
     styleUrls: ['./create-asset.component.css']
 })
-export class CreateAssetComponent {
+export class CreateAssetComponent implements AfterViewInit {
 
     fileName: any;
     selectedUploadFile: File;
@@ -53,33 +55,72 @@ export class CreateAssetComponent {
 
     backgroundImagePresent = false;
     measurementPresent = false;
+    editMode = false;
+
+    @Input()
+    dashboardConfig: DashboardConfiguration;
 
     @Output() dashboardClosed = new EventEmitter<boolean>();
 
+    keyboardListenerActive = true;
+
     constructor(public dialog: MatDialog,
                 public shapeService: ShapeService,
-                private dialogService: DialogService) {
+                private dialogService: DialogService,
+                private restService: RestService) {
     }
 
     ngAfterViewInit() {
         const width = 1400;
         const height = 900;
-        this.mainCanvasStage = new Konva.Stage({
-            container: 'asset-configuration-board-canvas',
-            width,
-            height
-        });
+        if (!this.dashboardConfig) {
+            this.mainCanvasStage = new Konva.Stage({
+                container: 'asset-configuration-board-canvas',
+                width,
+                height
+            });
+            this.initLayers();
+        } else {
+            this.editMode = true;
+            this.makeEditable();
+            this.mainCanvasStage = Konva.Node.create(this.dashboardConfig, 'asset-configuration-board-canvas');
+            this.mainCanvasStage.draw();
+
+            this.backgroundImageLayer = this.mainCanvasStage.children[0];
+            this.mainLayer = this.mainCanvasStage.children[1];
+            const groups = this.mainLayer.getChildren().find('Group');
+            groups.forEach(g => {
+               const id = this.makeId();
+               g.id(id);
+               g.setDraggable(true);
+               this.addTransformerToShape(id, g);
+            });
+            this.makeClickable();
+            this.showImage();
+            this.backgroundImageLayer.moveToBottom();
+            this.mainCanvasStage.draw();
+            this.measurementPresent = true;
+        }
 
         const container = this.mainCanvasStage.container();
         container.focus();
+    }
 
-        this.initLayers();
+    makeEditable() {
+        this.dashboardConfig.imageInfo.draggable = true;
+        this.dashboardConfig.imageInfo.id = this.IMAGE_ID;
     }
 
     initLayers() {
         this.mainLayer = new Konva.Layer();
         this.backgroundImageLayer = new Konva.Layer();
 
+        this.makeClickable();
+        this.mainCanvasStage.add(this.backgroundImageLayer);
+        this.mainCanvasStage.add(this.mainLayer);
+    }
+
+    makeClickable() {
         this.backgroundImageLayer.on('click', evt => {
             this.currentlySelectedShape = evt.target;
         });
@@ -90,8 +131,6 @@ export class CreateAssetComponent {
             }
             this.currentlySelectedShape = parentElement;
         });
-        this.mainCanvasStage.add(this.backgroundImageLayer);
-        this.mainCanvasStage.add(this.mainLayer);
     }
 
     handleFileInput(event: any) {
@@ -103,7 +142,7 @@ export class CreateAssetComponent {
         image.onload = () => {
             const desiredWidth = Math.min(this.mainCanvasStage.width(), image.width);
             const aspectRatio = image.width / image.height;
-            const desiredHeight = desiredWidth * aspectRatio;
+            const desiredHeight = image.width > image.height ? desiredWidth / aspectRatio : desiredWidth * aspectRatio;
             const imageCanvas = new Konva.Image({
                 image,
                 width: desiredWidth,
@@ -114,13 +153,7 @@ export class CreateAssetComponent {
                 id: this.IMAGE_ID
             });
 
-            this.backgroundImageLayer.add(imageCanvas);
-            this.backgroundImageLayer.draw();
-
-            const tr = this.getNewTransformer(this.IMAGE_ID);
-            this.backgroundImageLayer.add(tr);
-            tr.attachTo(imageCanvas);
-            this.backgroundImageLayer.draw();
+            this.addImageTransformer(imageCanvas);
             this.currentlySelectedShape = imageCanvas;
         };
 
@@ -129,8 +162,19 @@ export class CreateAssetComponent {
 
         reader.readAsDataURL(this.selectedUploadFile);
         event.target.value = null;
-        this.backgroundImagePresent = true;
 
+    }
+
+    addImageTransformer(imageCanvas: any) {
+        this.backgroundImageLayer.add(imageCanvas);
+        this.backgroundImageLayer.draw();
+
+        const tr = this.getNewTransformer(this.IMAGE_ID);
+        this.backgroundImageLayer.add(tr);
+        tr.attachTo(imageCanvas);
+        this.backgroundImageLayer.moveToBottom();
+        this.backgroundImageLayer.draw();
+        this.backgroundImagePresent = true;
     }
 
     prepareDashboard() {
@@ -140,11 +184,12 @@ export class CreateAssetComponent {
             width: '50vw',
             data: {
                 dashboardCanvas: this.mainCanvasStage as any,
-                file: this.selectedUploadFile
+                file: this.selectedUploadFile,
+                editMode: this.editMode,
+                dashboardConfig: this.dashboardConfig
             }
         });
         dialogRef.afterClosed().subscribe(closed => {
-            console.log('close');
             this.dashboardClosed.emit(true);
         });
     }
@@ -158,6 +203,7 @@ export class CreateAssetComponent {
     }
 
     openAddPipelineDialog(): void {
+        this.keyboardListenerActive = false;
         const dialogRef = this.dialogService.open(AddPipelineDialogComponent, {
             panelType: PanelType.SLIDE_IN_PANEL,
             title: 'Add visualization',
@@ -167,41 +213,43 @@ export class CreateAssetComponent {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log(result);
             if (result) {
                 this.addNewVisulizationItem(result);
                 this.measurementPresent = true;
                 this.mainLayer.draw();
             }
+            this.keyboardListenerActive = true;
         });
     }
 
     @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        const delta = 4;
-        if (event.code === 'Delete') {
-            const id = this.currentlySelectedShape.id();
-            this.mainCanvasStage.findOne('#' + id + '-transformer').destroy();
-            this.currentlySelectedShape.destroy();
-            if (id === this.IMAGE_ID) {
-                this.backgroundImagePresent = false;
-            } else {
-                const remainingElementIds = this.mainLayer.find('Group');
-                if (remainingElementIds.length === 0) {
-                    this.measurementPresent = false;
+        if (this.keyboardListenerActive) {
+            const delta = 4;
+            if (event.code === 'Delete') {
+                const id = this.currentlySelectedShape.id();
+                this.mainCanvasStage.findOne('#' + id + '-transformer').destroy();
+                this.currentlySelectedShape.destroy();
+                if (id === this.IMAGE_ID) {
+                    this.backgroundImagePresent = false;
+                } else {
+                    const remainingElementIds = this.mainLayer.find('Group');
+                    if (remainingElementIds.length === 0) {
+                        this.measurementPresent = false;
+                    }
                 }
+            } else if (event.code === 'ArrowLeft') {
+                this.currentlySelectedShape.x(this.currentlySelectedShape.x() - delta);
+            } else if (event.code === 'ArrowRight') {
+                this.currentlySelectedShape.x(this.currentlySelectedShape.x() + delta);
+            } else if (event.code === 'ArrowDown') {
+                this.currentlySelectedShape.y(this.currentlySelectedShape.y() + delta);
+            } else if (event.code === 'ArrowUp') {
+                this.currentlySelectedShape.y(this.currentlySelectedShape.y() - delta);
             }
-        } else if (event.code === 'ArrowLeft') {
-            this.currentlySelectedShape.x(this.currentlySelectedShape.x() - delta);
-        } else if (event.code === 'ArrowRight') {
-            this.currentlySelectedShape.x(this.currentlySelectedShape.x() + delta);
-        } else if (event.code === 'ArrowDown') {
-            this.currentlySelectedShape.y(this.currentlySelectedShape.y() + delta);
-        } else if (event.code === 'ArrowUp') {
-            this.currentlySelectedShape.y(this.currentlySelectedShape.y() - delta);
+            this.backgroundImageLayer.draw();
+            this.mainLayer.draw();
         }
-        this.backgroundImageLayer.draw();
-        this.mainLayer.draw();
     }
 
     addNewVisulizationItem(visualizationConfig) {
@@ -209,11 +257,15 @@ export class CreateAssetComponent {
         const id = this.makeId();
         visGroup.id(id);
         this.mainLayer.add(visGroup);
+        this.addTransformerToShape(id, visGroup);
+    }
+
+    addTransformerToShape(id: string, visGroup: any) {
         const tr = this.getNewTransformer(id);
         this.mainLayer.add(tr);
         tr.attachTo(visGroup);
-        this.mainLayer.draw();
-        this.currentlySelectedShape = visGroup;
+        //this.mainLayer.draw();
+        //this.currentlySelectedShape = visGroup;
     }
 
     getNewTransformer(id: string): Konva.Transformer {
@@ -237,6 +289,16 @@ export class CreateAssetComponent {
         }
 
         return text;
+    }
+
+    showImage() {
+        const image = new window.Image();
+        image.src = this.restService.getImageUrl(this.dashboardConfig.imageInfo.imageName);
+        this.dashboardConfig.imageInfo.image = image;
+        image.onload = () => {
+            const imageCanvas = new Konva.Image(this.dashboardConfig.imageInfo);
+            this.addImageTransformer(imageCanvas);
+        };
     }
 
 }

@@ -38,6 +38,7 @@ export class ViewAssetComponent {
 
     @Input() dashboardConfig: DashboardConfiguration;
     @Output() dashboardClosed = new EventEmitter<boolean>();
+    @Output() editDashboardEmitter = new EventEmitter<DashboardConfiguration>();
 
     mainCanvasStage: any;
     mainLayer: any;
@@ -84,6 +85,10 @@ export class ViewAssetComponent {
 
     closeDashboard() {
         this.dashboardClosed.emit(true);
+    }
+
+    editDashboard() {
+        this.editDashboardEmitter.emit(this.dashboardConfig);
     }
 
 }
