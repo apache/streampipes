@@ -13,20 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[environment:full]
-ui
-backend
-connect-adapters
-connect-adapters-iiot
-activemq
-consul
-couchdb
-jobmanager
-taskmanager
-zookeeper
-kafka
-influxdb
-sources-watertank-simulator
-sources-vehicle-simulator
-pipeline-elements-all-jvm
-pipeline-elements-all-flink
+version: "3.4"
+services:
+  connect-adapters-iiot:
+    ports:
+      - "8002:8090"

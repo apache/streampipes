@@ -13,29 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "3.4"
-services:
-  connect-worker-main:
-    image: ${SP_DOCKER_REGISTRY}/connect-worker:${SP_VERSION}
-    depends_on:
-      - consul
-      - couchdb
-    environment:
-      - SP_BACKEND_HOST=backend
-      - SP_CONNECT_CONTAINER_WORKER_HOST=connect-worker-main
-    volumes:
-      - connect:/data/
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "1"
-    networks:
-      spnet:
-
-volumes:
-  connect:
-
-networks:
-  spnet:
-    external: true
+apiVersion: v1
+kind: Service
+metadata:
+  name: connect-adapters
+spec:
+  selector:
+    app: connect-adapters
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8001

@@ -13,20 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[environment:full]
-ui
-backend
-connect-adapters
-connect-adapters-iiot
-activemq
-consul
-couchdb
-jobmanager
-taskmanager
-zookeeper
-kafka
-influxdb
-sources-watertank-simulator
-sources-vehicle-simulator
-pipeline-elements-all-jvm
-pipeline-elements-all-flink
+apiVersion: v1
+kind: Service
+metadata:
+  name: connect-adapters-iiot
+spec:
+  selector:
+    app: connect-adapters-iiot
+  ports:
+    - name: main
+      protocol: TCP
+      port: 8090
+      targetPort: 8002

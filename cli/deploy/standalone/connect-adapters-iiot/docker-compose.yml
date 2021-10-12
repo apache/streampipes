@@ -15,6 +15,26 @@
 
 version: "3.4"
 services:
-  connect-worker-main:
-    ports:
-      - "8098:8098"
+  connect-adapters-iiot:
+    image: ${SP_DOCKER_REGISTRY}/connect-adapters-iiot:${SP_VERSION}
+    depends_on:
+      - consul
+    environment:
+      - SP_BACKEND_HOST=backend
+      - SP_CONNECT_CONTAINER_WORKER_HOST=connect-adapters-iiot
+    volumes:
+      - connect:/data/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    networks:
+      spnet:
+
+volumes:
+  connect:
+
+networks:
+  spnet:
+    external: true

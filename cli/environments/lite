@@ -16,7 +16,7 @@
 [environment:lite]
 ui
 backend
-connect-worker-main
+connect-adapters-iiot
 activemq
 consul
 couchdb

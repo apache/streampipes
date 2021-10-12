@@ -17,7 +17,7 @@
 activemq
 backend
 consul
-connect-worker-main
+connect-adapters-iiot
 couchdb
 kafka
 ui

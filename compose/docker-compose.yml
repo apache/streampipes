@@ -38,14 +38,13 @@ services:
     networks:
       spnet:
 
-  connect-worker-main:
-    image: "${SP_DOCKER_REGISTRY}/connect-worker:${SP_VERSION}"
+  connect-adapters-iiot:
+    image: "${SP_DOCKER_REGISTRY}/connect-adapters-iiot:${SP_VERSION}"
     depends_on:
       - consul
-      - couchdb
     environment:
       - SP_BACKEND_HOST=backend
-      - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
+      - SP_CONNECT_CONTAINER_WORKER=connect-adapters
     volumes:
       - connect:/data/
     logging: *default-logging

@@ -13,20 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[environment:full]
-ui
-backend
-connect-adapters
-connect-adapters-iiot
-activemq
-consul
-couchdb
-jobmanager
-taskmanager
-zookeeper
-kafka
-influxdb
-sources-watertank-simulator
-sources-vehicle-simulator
-pipeline-elements-all-jvm
-pipeline-elements-all-flink
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connect-adapters-iiot
+spec:
+  selector:
+    matchLabels:
+      app: connect-adapters-iiot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: connect-adapters-iiot
+    spec:         
+      containers:
+        - name: connect-adapters-iiot
+          image: {{ .Values.streampipes.registry }}/connect-adapters-iiot:{{ .Values.streampipes.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 8090

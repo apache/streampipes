@@ -20,6 +20,6 @@ consul
 zookeeper
 couchdb
 influxdb
-connect-worker-main
+connect-adapters-iiot
 pipeline-elements-all-jvm
 ui

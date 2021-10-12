@@ -13,15 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: connect-worker-main
+  name: connect-adapters
 spec:
   selector:
-    app: connect-worker
-  ports:
-    - name: main
-      protocol: TCP
-      port: 8098
-      targetPort: 8098
+    matchLabels:
+      app: connect-adapters
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: connect-adapters
+    spec:         
+      containers:
+        - name: connect-adapters
+          image: {{ .Values.streampipes.registry }}/connect-adapters:{{ .Values.streampipes.version }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 8090

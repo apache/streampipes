@@ -13,23 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: connect-worker
-spec:
-  selector:
-    matchLabels:
-      app: connect-worker
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: connect-worker
-    spec:         
-      containers:
-        - name: connect-worker
-          image: {{ .Values.streampipes.registry }}/connect-worker:{{ .Values.streampipes.version }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
-          ports:
-            - containerPort: 8098
+version: "3.4"
+services:
+  connect-adapters:
+    ports:
+      - "8001:8090"
