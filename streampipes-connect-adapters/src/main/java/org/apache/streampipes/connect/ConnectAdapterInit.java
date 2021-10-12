@@ -29,6 +29,7 @@ import org.apache.streampipes.connect.adapters.iss.IssAdapter;
 import org.apache.streampipes.connect.adapters.simulator.random.RandomDataSetAdapter;
 import org.apache.streampipes.connect.adapters.simulator.random.RandomDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
+import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
 import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
@@ -43,9 +44,9 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("connect-worker-main",
+    return SpServiceDefinitionBuilder.create("connect-adapter",
             "StreamPipes Connect Worker Main",
-            "",8002)
+            "",8090)
             .registerAdapter(new GdeltAdapter())
             .registerAdapter(new CoindeskBitcoinAdapter())
             .registerAdapter(new IexCloudNewsAdapter())
@@ -59,6 +60,7 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
             .registerAdapter(new ImageSetAdapter())
             .registerAdapter(new IssAdapter())
             .registerAdapter(new FlicMQTTAdapter())
+            .registerAdapter(new TISensorTag())
 //            .registerAdapter(new HDFSProtocol())
             .build();
   }

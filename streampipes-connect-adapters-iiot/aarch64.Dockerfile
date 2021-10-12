@@ -18,7 +18,7 @@ FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
 
-EXPOSE 8099
+EXPOSE 8090
 
 COPY qemu-aarch64-static /usr/bin
 COPY target/streampipes-connect-adapters-iiot.jar /streampipes-connect-adapters-iiot.jar

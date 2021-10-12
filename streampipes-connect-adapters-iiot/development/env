@@ -15,6 +15,7 @@
 
 # Those parameters are used by IntelliJ to set the default consul parameters for development
 
+SP_PORT=8002
 SP_CONNECT_CONTAINER_WORKER_HOST=host.docker.internal
 SP_CONNECT_CONTAINER_HOST=host.docker.internal
 SP_CONNECT_CONTAINER_MASTER_HOST=localhost
