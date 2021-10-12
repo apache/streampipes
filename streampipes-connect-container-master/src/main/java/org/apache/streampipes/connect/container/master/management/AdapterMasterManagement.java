@@ -140,7 +140,7 @@ public class AdapterMasterManagement {
     List<SpDataStream> streamsToDelete = requestor
             .getAllDataStreams()
             .stream()
-            .filter(spDataStream -> spDataStream.getCorrespondingAdapterId().equals(elementId))
+            .filter(spDataStream -> elementId.equals(spDataStream.getCorrespondingAdapterId()))
             .collect(Collectors.toList());
     String username = ad.getUserName();
     if (streamsToDelete.size() > 0) {
