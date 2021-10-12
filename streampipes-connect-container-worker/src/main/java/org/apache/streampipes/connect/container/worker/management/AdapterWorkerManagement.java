@@ -58,7 +58,16 @@ public class AdapterWorkerManagement {
 
         adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
 
-        adapter.startAdapter();
+        // Start a thread to start a set adapter
+        Runnable r = () -> {
+            try {
+                adapter.startAdapter();
+            } catch (AdapterException e) {
+                e.printStackTrace();
+            }
+        };
+
+        new Thread(r).start();
     }
 
     public void stopSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {

@@ -47,7 +47,7 @@ public class HttpRequestBuilder {
     try {
       String jsonDocument = toJson();
       Response httpResp =
-              Request.Post(endpointUrl).bodyString(jsonDocument, ContentType.APPLICATION_JSON).connectTimeout(100000).execute();
+              Request.Post(endpointUrl).bodyString(jsonDocument, ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());
