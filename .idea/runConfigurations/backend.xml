@@ -3,6 +3,7 @@
     <module name="streampipes-backend" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="org.apache.streampipes.backend.StreamPipesBackendApplication" />
     <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
     <envs>
       <env name="SP_COUCHDB_HOST" value="localhost" />
       <env name="SP_BACKEND_HOST" value="localhost" />

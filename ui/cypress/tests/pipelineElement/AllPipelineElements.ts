@@ -16,22 +16,19 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
-
 const allTests = Cypress.env('processingElements');
 
-allTests.forEach(test => {
-
-  describe('Test Processor ' + test['name'], () => {
-    before('Setup Test', () => {
-      cy.initStreamPipesTest();
-    });
-
-    it('Perform Test', () => {
-      const processorTest = test as ProcessorTest;
-      ProcessingElementTestUtils.testElement(processorTest);
-    });
-
-  });
-});
+// allTests.forEach(test => {
+//
+//   describe('Test Processor ' + test['name'], () => {
+//     before('Setup Test', () => {
+//       cy.initStreamPipesTest();
+//     });
+//
+//     it('Perform Test', () => {
+//       const processorTest = test as ProcessorTest;
+//       ProcessingElementTestUtils.testElement(processorTest);
+//     });
+//
+//   });
+// });
