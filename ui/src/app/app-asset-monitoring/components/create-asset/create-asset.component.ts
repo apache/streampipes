@@ -16,13 +16,15 @@
  *
  */
 
-import {Component, EventEmitter, HostListener, Output} from "@angular/core";
-import Konva from "konva";
-import {AddPipelineDialogComponent} from "../../dialog/add-pipeline/add-pipeline-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {ShapeService} from "../../services/shape.service";
-import {SelectedVisualizationData} from "../../model/selected-visualization-data.model";
-import {SaveDashboardDialogComponent} from "../../dialog/save-dashboard/save-dashboard-dialog.component";
+import { Component, EventEmitter, HostListener, Output } from '@angular/core';
+import Konva from 'konva';
+import { AddPipelineDialogComponent } from '../../dialog/add-pipeline/add-pipeline-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ShapeService } from '../../services/shape.service';
+import { SelectedVisualizationData } from '../../model/selected-visualization-data.model';
+import { SaveDashboardDialogComponent } from '../../dialog/save-dashboard/save-dashboard-dialog.component';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 
 interface Window {
     Image: any;
@@ -46,27 +48,29 @@ export class CreateAssetComponent {
 
     currentlySelectedShape: any;
 
-    IMAGE_ID: string = "main-image";
+    IMAGE_ID = 'main-image';
     selectedVisualizationData: SelectedVisualizationData;
 
-    backgroundImagePresent: boolean = false;
-    measurementPresent: boolean = false;
+    backgroundImagePresent = false;
+    measurementPresent = false;
 
     @Output() dashboardClosed = new EventEmitter<boolean>();
 
-    constructor(public dialog: MatDialog, public shapeService: ShapeService) {
+    constructor(public dialog: MatDialog,
+                public shapeService: ShapeService,
+                private dialogService: DialogService) {
     }
 
     ngAfterViewInit() {
-        var width = 1200;
-        var height = 900;
+        const width = 1400;
+        const height = 900;
         this.mainCanvasStage = new Konva.Stage({
             container: 'asset-configuration-board-canvas',
-            width: width,
-            height: height
+            width,
+            height
         });
 
-        let container = this.mainCanvasStage.container();
+        const container = this.mainCanvasStage.container();
         container.focus();
 
         this.initLayers();
@@ -81,7 +85,7 @@ export class CreateAssetComponent {
         });
         this.mainLayer.on('click', evt => {
             let parentElement = evt.target.getParent();
-            while(!parentElement.id()) {
+            while (!parentElement.id()) {
                 parentElement = parentElement.getParent();
             }
             this.currentlySelectedShape = parentElement;
@@ -91,16 +95,19 @@ export class CreateAssetComponent {
     }
 
     handleFileInput(event: any) {
-        let files: any = event.target.files;
+        const files: any = event.target.files;
         this.selectedUploadFile = files[0];
         this.fileName = this.selectedUploadFile.name;
 
         const image = new window.Image();
         image.onload = () => {
-            let imageCanvas = new Konva.Image({
-                image: image,
-                width: image.width,
-                height: image.height,
+            const desiredWidth = Math.min(this.mainCanvasStage.width(), image.width);
+            const aspectRatio = image.width / image.height;
+            const desiredHeight = desiredWidth * aspectRatio;
+            const imageCanvas = new Konva.Image({
+                image,
+                width: desiredWidth,
+                height: desiredHeight,
                 x: 0,
                 y: 0,
                 draggable: true,
@@ -110,7 +117,7 @@ export class CreateAssetComponent {
             this.backgroundImageLayer.add(imageCanvas);
             this.backgroundImageLayer.draw();
 
-            var tr = this.getNewTransformer(this.IMAGE_ID);
+            const tr = this.getNewTransformer(this.IMAGE_ID);
             this.backgroundImageLayer.add(tr);
             tr.attachTo(imageCanvas);
             this.backgroundImageLayer.draw();
@@ -127,14 +134,17 @@ export class CreateAssetComponent {
     }
 
     prepareDashboard() {
-        const dialogRef = this.dialog.open(SaveDashboardDialogComponent, {
-            width: '70%',
-            height: '500px',
-            panelClass: 'custom-dialog-container',
-            data: {dashboardCanvas: this.mainCanvasStage as any, file: this.selectedUploadFile}
+        const dialogRef = this.dialogService.open(SaveDashboardDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Save asset dashboard',
+            width: '50vw',
+            data: {
+                dashboardCanvas: this.mainCanvasStage as any,
+                file: this.selectedUploadFile
+            }
         });
         dialogRef.afterClosed().subscribe(closed => {
-            console.log("close");
+            console.log('close');
             this.dashboardClosed.emit(true);
         });
     }
@@ -148,13 +158,16 @@ export class CreateAssetComponent {
     }
 
     openAddPipelineDialog(): void {
-        const dialogRef = this.dialog.open(AddPipelineDialogComponent, {
-            width: '70%',
-            height: '500px',
-            panelClass: 'custom-dialog-container'
+        const dialogRef = this.dialogService.open(AddPipelineDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Add visualization',
+            width: '50vw',
+            data: {
+            }
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
             if (result) {
                 this.addNewVisulizationItem(result);
                 this.measurementPresent = true;
@@ -166,25 +179,25 @@ export class CreateAssetComponent {
     @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         const delta = 4;
-        if (event.code == "Delete") {
-            let id = this.currentlySelectedShape.id();
-            this.mainCanvasStage.findOne("#" +id + "-transformer").destroy();
+        if (event.code === 'Delete') {
+            const id = this.currentlySelectedShape.id();
+            this.mainCanvasStage.findOne('#' + id + '-transformer').destroy();
             this.currentlySelectedShape.destroy();
             if (id === this.IMAGE_ID) {
                 this.backgroundImagePresent = false;
             } else {
-                let remainingElementIds = this.mainLayer.find("Group");
+                const remainingElementIds = this.mainLayer.find('Group');
                 if (remainingElementIds.length === 0) {
                     this.measurementPresent = false;
                 }
             }
-        } else if (event.code == "ArrowLeft") {
+        } else if (event.code === 'ArrowLeft') {
             this.currentlySelectedShape.x(this.currentlySelectedShape.x() - delta);
-        } else if (event.code == "ArrowRight") {
+        } else if (event.code === 'ArrowRight') {
             this.currentlySelectedShape.x(this.currentlySelectedShape.x() + delta);
-        } else if (event.code == "ArrowDown") {
+        } else if (event.code === 'ArrowDown') {
             this.currentlySelectedShape.y(this.currentlySelectedShape.y() + delta);
-        } else if (event.code == "ArrowUp") {
+        } else if (event.code === 'ArrowUp') {
             this.currentlySelectedShape.y(this.currentlySelectedShape.y() - delta);
         }
         this.backgroundImageLayer.draw();
@@ -192,11 +205,11 @@ export class CreateAssetComponent {
     }
 
     addNewVisulizationItem(visualizationConfig) {
-        let visGroup = this.shapeService.makeNewMeasurementShape(visualizationConfig);
-        let id = this.makeId();
+        const visGroup = this.shapeService.makeNewMeasurementShape(visualizationConfig);
+        const id = this.makeId();
         visGroup.id(id);
         this.mainLayer.add(visGroup);
-        let tr = this.getNewTransformer(id);
+        const tr = this.getNewTransformer(id);
         this.mainLayer.add(tr);
         tr.attachTo(visGroup);
         this.mainLayer.draw();
@@ -211,16 +224,17 @@ export class CreateAssetComponent {
             borderStroke: 'green',
             borderDash: [3, 3],
             keepRatio: true,
-            id: id + "-transformer"
+            id: id + '-transformer'
         });
     }
 
     makeId() {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let text = '';
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-        for (var i = 0; i < 6; i++)
+        for (let i = 0; i < 6; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
 
         return text;
     }
