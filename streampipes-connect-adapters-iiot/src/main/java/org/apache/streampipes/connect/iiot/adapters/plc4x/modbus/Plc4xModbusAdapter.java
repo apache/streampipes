@@ -215,7 +215,6 @@ public class Plc4xModbusAdapter extends PullAdapter{
 
 		eventSchema.setEventProperties(allProperties);
 		guessSchema.setEventSchema(eventSchema);
-		guessSchema.setPropertyProbabilityList(new ArrayList<>());
 		return guessSchema;
 	}
 

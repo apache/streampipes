@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
 import org.apache.streampipes.connect.adapters.flic.FlicMQTTAdapter;
 import org.apache.streampipes.connect.adapters.gdelt.GdeltAdapter;
-import org.apache.streampipes.connect.adapters.coindesk.CoindeskBitcoinAdapter;
-import org.apache.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.apache.streampipes.connect.adapters.iex.IexCloudNewsAdapter;
+import org.apache.streampipes.connect.adapters.iex.IexCloudStockAdapter;
 import org.apache.streampipes.connect.adapters.image.set.ImageSetAdapter;
 import org.apache.streampipes.connect.adapters.image.stream.ImageStreamAdapter;
 import org.apache.streampipes.connect.adapters.iss.IssAdapter;
@@ -31,7 +31,6 @@ import org.apache.streampipes.connect.adapters.simulator.random.RandomDataStream
 import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
-import org.apache.streampipes.connect.protocol.stream.*;
 import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
@@ -46,7 +45,7 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("connect-worker-main",
             "StreamPipes Connect Worker Main",
-            "",8000)
+            "",8002)
             .registerAdapter(new GdeltAdapter())
             .registerAdapter(new CoindeskBitcoinAdapter())
             .registerAdapter(new IexCloudNewsAdapter())
@@ -60,7 +59,7 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
             .registerAdapter(new ImageSetAdapter())
             .registerAdapter(new IssAdapter())
             .registerAdapter(new FlicMQTTAdapter())
-            .registerAdapter(new HDFSProtocol())
+//            .registerAdapter(new HDFSProtocol())
             .build();
   }
 

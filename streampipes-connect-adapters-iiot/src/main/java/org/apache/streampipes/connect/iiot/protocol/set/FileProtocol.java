@@ -125,7 +125,7 @@ public class FileProtocol extends Protocol {
 
             EventSchema eventSchema = parser.getEventSchema(dataByte);
 
-            GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(20));
+            GuessSchema result = SchemaGuesser.guessSchma(eventSchema);
 
             return result;
         } catch (FileNotFoundException e) {

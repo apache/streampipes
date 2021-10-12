@@ -202,7 +202,6 @@ public class RosBridgeAdapter extends SpecificDataStreamAdapter implements Resol
         GuessSchema guessSchema = new GuessSchema();
 
         guessSchema.setEventSchema(eventSchema);
-        guessSchema.setPropertyProbabilityList(new ArrayList<>());
         return guessSchema;
     }
 

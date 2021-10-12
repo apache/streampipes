@@ -91,7 +91,6 @@ public class Plc4xPassiveAdapter extends SpecificDataStreamAdapter {
 
         eventSchema.setEventProperties(allProperties);
         guessSchema.setEventSchema(eventSchema);
-        guessSchema.setPropertyProbabilityList(new ArrayList<>());
         return guessSchema;
     }
 

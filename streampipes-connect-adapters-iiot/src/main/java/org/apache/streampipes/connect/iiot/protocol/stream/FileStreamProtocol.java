@@ -211,7 +211,7 @@ public class FileStreamProtocol extends Protocol {
 
     EventSchema eventSchema = parser.getEventSchema(dataByte);
 
-    GuessSchema result = SchemaGuesser.guessSchma(eventSchema, getNElements(2));
+    GuessSchema result = SchemaGuesser.guessSchma(eventSchema);
 
     return result;
   }

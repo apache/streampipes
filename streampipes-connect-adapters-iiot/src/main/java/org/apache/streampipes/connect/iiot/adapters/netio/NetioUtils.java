@@ -155,7 +155,6 @@ public class NetioUtils {
 
         eventSchema.setEventProperties(allProperties);
         guessSchema.setEventSchema(eventSchema);
-        guessSchema.setPropertyProbabilityList(new ArrayList<>());
         return guessSchema;
     }
 
