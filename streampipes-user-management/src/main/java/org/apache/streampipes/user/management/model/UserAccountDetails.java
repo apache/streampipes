@@ -18,20 +18,11 @@
 package org.apache.streampipes.user.management.model;
 
 import org.apache.streampipes.model.client.user.UserAccount;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class UserAccountDetails extends PrincipalUserDetails<UserAccount> {
 
   public UserAccountDetails(UserAccount details) {
     super(details);
-  }
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return details.getRoles().stream().map(Enum::toString).map(r -> (GrantedAuthority) () -> r).collect(Collectors.toList());
   }
 
   @Override

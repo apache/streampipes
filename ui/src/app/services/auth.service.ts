@@ -26,7 +26,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
 import { PageName } from '../_enums/page-name.enum';
-import { UserRole } from '../_enums/user-role.enum';
+import { RoleModel } from '../_models/auth.model';
 
 @Injectable()
 export class AuthService {
@@ -56,6 +56,7 @@ export class AuthService {
         const jwtHelper: JwtHelperService = new JwtHelperService({});
         const decodedToken = jwtHelper.decodeToken(data.accessToken);
         this.tokenStorage.saveToken(data.accessToken);
+        console.log(decodedToken.user);
         this.tokenStorage.saveUser(decodedToken.user);
         this.authToken$.next(data.accessToken);
         this.user$.next(decodedToken.user);
@@ -123,13 +124,13 @@ export class AuthService {
         return this.getCurrentUser().roles;
     }
 
-    public hasRole(role: UserRole): boolean {
-        return this.getUserRoles().includes(UserRole[role]);
+    public hasRole(role: RoleModel): boolean {
+        return this.getUserRoles().includes(role);
     }
 
-    public hasAnyRole(roles: UserRole[]): boolean {
+    public hasAnyRole(roles: RoleModel[]): boolean {
         if (Array.isArray(roles)) {
-            return roles.reduce((aggregator: false, role: UserRole) => aggregator || this.hasRole(role), false);
+            return roles.reduce((aggregator: false, role: RoleModel) => aggregator || this.hasRole(role), false);
         }
 
         return false;
@@ -148,30 +149,30 @@ export class AuthService {
     }
 
     isAccessGranted(pageName: PageName) {
-        if (this.hasRole(UserRole.ADMIN)) {
+        if (this.hasRole('ROLE_ADMIN')) {
             return true;
         }
         switch (pageName) {
             case PageName.HOME:
                 return true;
             case PageName.PIPELINE_EDITOR:
-                return this.hasAnyRole([UserRole.PIPELINE_ADMIN]);
+                return this.hasAnyRole([]);
             case PageName.PIPELINE_OVERVIEW:
-                return this.hasAnyRole([UserRole.PIPELINE_ADMIN]);
+                return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
             case PageName.CONNECT:
-                return this.hasAnyRole([UserRole.CONNECT_ADMIN]);
+                return this.hasAnyRole(['ROLE_CONNECT_ADMIN']);
             case PageName.DASHBOARD:
-                return this.hasAnyRole([UserRole.DASHBOARD_USER, UserRole.DASHBOARD_ADMIN]);
+                return this.hasAnyRole(['ROLE_DASHBOARD_USER', 'ROLE_DASHBOARD_ADMIN']);
             case PageName.DATA_EXPLORER:
-                return this.hasAnyRole([UserRole.DATA_EXPLORER_ADMIN, UserRole.DATA_EXPLORER_USER]);
+                return this.hasAnyRole(['ROLE_DATA_EXPLORER_ADMIN', 'ROLE_DATA_EXPLORER_USER']);
             case PageName.APPS:
-                return this.hasAnyRole([UserRole.APP_USER]);
+                return this.hasAnyRole(['ROLE_APP_USER']);
             case PageName.FILE_UPLOAD:
-                return this.hasAnyRole([UserRole.CONNECT_ADMIN, UserRole.PIPELINE_ADMIN]);
+                return this.hasAnyRole(['ROLE_CONNECT_ADMIN', 'ROLE_PIPELINE_ADMIN']);
             case PageName.INSTALL_PIPELINE_ELEMENTS:
-                return this.hasAnyRole([UserRole.ADMIN]);
+                return this.hasAnyRole(['ROLE_ADMIN']);
             case PageName.SETTINGS:
-                return this.hasAnyRole([UserRole.ADMIN]);
+                return this.hasAnyRole(['ROLE_ADMIN']);
             default:
                 return true;
         }

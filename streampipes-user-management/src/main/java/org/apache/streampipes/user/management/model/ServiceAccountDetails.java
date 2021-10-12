@@ -17,24 +17,13 @@
  */
 package org.apache.streampipes.user.management.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.client.user.ServiceAccount;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class ServiceAccountDetails extends PrincipalUserDetails<ServiceAccount> {
 
 
   public ServiceAccountDetails(ServiceAccount details) {
     super(details);
-  }
-
-  @JsonIgnore
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return details.getRoles().stream().map(Enum::toString).map(r -> (GrantedAuthority) () -> r).collect(Collectors.toList());
   }
 
   @Override

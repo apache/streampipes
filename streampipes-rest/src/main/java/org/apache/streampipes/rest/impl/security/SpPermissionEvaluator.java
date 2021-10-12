@@ -15,15 +15,26 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.impl.security;
 
-export enum UserRole {
-  ROLE_ADMIN = 'ROLE_ADMIN',
-  ROLE_PIPELINE_ADMIN = 'ROLE_PIPELINE_ADMIN',
-  ROLE_DASHBOARD_ADMIN = 'ROLE_DASHBOARD_ADMIN',
-  ROLE_DATA_EXPLORER_ADMIN = 'ROLE_DATA_EXPLORER_ADMIN',
-  ROLE_CONNECT_ADMIN = 'ROLE_CONNECT_ADMIN',
-  ROLE_DASHBOARD_USER = 'ROLE_DASHBOARD_USER',
-  ROLE_DATA_EXPLORER_USER = 'ROLE_DATA_EXPLORER_USER',
-  ROLE_PIPELINE_USER = 'ROLE_PIPELINE_USER',
-  ROLE_APP_USER = 'ROLE_APP_USER'
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.Authentication;
+
+import java.io.Serializable;
+
+@Configuration
+public class SpPermissionEvaluator implements PermissionEvaluator {
+
+  @Override
+  public boolean hasPermission(Authentication authentication, Object o, Object o1) {
+
+    return true;
+  }
+
+  @Override
+  public boolean hasPermission(Authentication authentication, Serializable serializable, String s, Object o) {
+
+    return true;
+  }
 }

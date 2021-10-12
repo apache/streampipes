@@ -28,6 +28,7 @@ import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.storage.couchdb.utils.Filter;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -35,6 +36,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 @Path("/v2/streams")
 public class SemanticEventProducer extends AbstractAuthGuardedRestResource implements IPipelineElement {
 

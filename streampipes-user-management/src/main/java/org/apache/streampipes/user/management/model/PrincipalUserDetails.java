@@ -17,25 +17,24 @@
  */
 package org.apache.streampipes.user.management.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.user.management.util.AuthorityBuilder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class PrincipalUserDetails<T extends Principal> implements UserDetails {
 
   protected T details;
-  private Set<Role> allRoles;
+  private Set<String> allAuthorities;
 
   public PrincipalUserDetails(T details) {
     this.details = details;
-    this.allRoles = this.details.getRoles();
-    details.getGroups().forEach(groupId -> {
-      Set<Role> groupRoles = StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage().getElementById(groupId).getRoles();
-      allRoles.addAll(groupRoles);
-    });
+    this.allAuthorities = new AuthorityBuilder(details).buildAllAuthorities();
   }
 
   public T getDetails() {
@@ -69,6 +68,12 @@ public abstract class PrincipalUserDetails<T extends Principal> implements UserD
   @Override
   public String getUsername() {
     return this.details.getUsername();
+  }
+
+  @JsonIgnore
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return allAuthorities.stream().map(r -> (GrantedAuthority) () -> r).collect(Collectors.toList());
   }
 
 }

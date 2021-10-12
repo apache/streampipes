@@ -23,6 +23,8 @@ import { UserRole } from '../../../_enums/user-role.enum';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { UserGroupService } from '../../../platform-services/apis/user-group.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { RoleDescription } from '../../../_models/auth.model';
+import { AvailableRolesService } from '../../../services/available-roles.service';
 
 @Component({
   selector: 'sp-edit-group-dialog',
@@ -39,15 +41,16 @@ export class EditGroupDialogComponent implements OnInit {
   editMode: boolean;
 
   parentForm: FormGroup;
-  availableRoles: string[];
+  availableRoles: RoleDescription[];
   clonedGroup: Group;
 
   constructor(private fb: FormBuilder,
+              private availableRolesService: AvailableRolesService,
               private dialogRef: DialogRef<EditGroupDialogComponent>,
               private userGroupService: UserGroupService) {}
 
   ngOnInit(): void {
-    this.availableRoles = Object.values(UserRole).filter(value => typeof value === 'string') as string[];
+    this.availableRoles = this.availableRolesService.getAvailableRoles();
     this.clonedGroup = Group.fromData(this.group, new Group());
     this.parentForm = this.fb.group({});
     this.parentForm.addControl('groupName', new FormControl(this.clonedGroup.groupName, Validators.required));

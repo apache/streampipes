@@ -15,15 +15,12 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.rest.impl.admin;
 
-export enum UserRole {
-  ROLE_ADMIN = 'ROLE_ADMIN',
-  ROLE_PIPELINE_ADMIN = 'ROLE_PIPELINE_ADMIN',
-  ROLE_DASHBOARD_ADMIN = 'ROLE_DASHBOARD_ADMIN',
-  ROLE_DATA_EXPLORER_ADMIN = 'ROLE_DATA_EXPLORER_ADMIN',
-  ROLE_CONNECT_ADMIN = 'ROLE_CONNECT_ADMIN',
-  ROLE_DASHBOARD_USER = 'ROLE_DASHBOARD_USER',
-  ROLE_DATA_EXPLORER_USER = 'ROLE_DATA_EXPLORER_USER',
-  ROLE_PIPELINE_USER = 'ROLE_PIPELINE_USER',
-  ROLE_APP_USER = 'ROLE_APP_USER'
+import javax.ws.rs.Path;
+
+@Path("/v2/admin/permissions")
+public class PermissionResource {
+
+
 }

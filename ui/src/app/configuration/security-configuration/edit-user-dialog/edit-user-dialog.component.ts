@@ -37,6 +37,8 @@ import { UserRole } from '../../../_enums/user-role.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { UserService } from '../../../platform-services/apis/user.service';
 import { UserGroupService } from '../../../platform-services/apis/user-group.service';
+import { RoleDescription } from '../../../_models/auth.model';
+import { AvailableRolesService } from '../../../services/available-roles.service';
 
 @Component({
   selector: 'sp-edit-user-dialog',
@@ -56,17 +58,18 @@ export class EditUserDialogComponent implements OnInit {
   parentForm: FormGroup;
   clonedUser: UserAccount | ServiceAccount;
 
-  availableRoles: string[];
+  availableRoles: RoleDescription[];
   availableGroups: Group[] = [];
 
   constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
+              private availableRolesService: AvailableRolesService,
               private fb: FormBuilder,
               private userService: UserService,
               private userGroupService: UserGroupService) {
   }
 
   ngOnInit(): void {
-    this.availableRoles = Object.values(UserRole).filter(value => typeof value === 'string') as string[];
+    this.availableRoles = this.availableRolesService.availableRoles;
     this.userGroupService.getAllUserGroups().subscribe(response => {
       this.availableGroups = response;
     });
@@ -83,7 +86,7 @@ export class EditUserDialogComponent implements OnInit {
       this.parentForm.addControl('clientSecret', new FormControl(this.clonedUser.clientSecret));
     }
 
-    if (!this.editMode && this.isUserAccount) {
+    if (!this.editMode && this.clonedUser instanceof UserAccount) {
       this.parentForm.addControl('password', new FormControl(this.clonedUser.password, Validators.required));
       this.parentForm.addControl('repeatPassword', new FormControl());
       this.parentForm.setValidators(this.checkPasswords);
@@ -96,14 +99,13 @@ export class EditUserDialogComponent implements OnInit {
       if (this.clonedUser instanceof UserAccount) {
         this.clonedUser.email = v.email;
         this.clonedUser.fullName = v.fullName;
+        if (!this.editMode) {
+          this.clonedUser.password = v.password;
+        }
       } else {
         this.clonedUser.clientSecret = v.clientSecret;
       }
-      if (!this.editMode) {
-        this.clonedUser.password = v.password;
-      }
     });
-
   }
 
   checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {

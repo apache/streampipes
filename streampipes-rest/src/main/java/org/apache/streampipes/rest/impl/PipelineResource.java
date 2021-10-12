@@ -38,14 +38,19 @@ import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.impl.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
+@Component
 @Path("/v2/pipelines")
 public class PipelineResource extends AbstractAuthGuardedRestResource {
 
@@ -63,8 +68,11 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                   mediaType = "application/json",
                                   array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
                   })})
-  public Response getOwn() {
-    return ok(PipelineManager.getOwnPipelines(getAuthenticatedUsername()));
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public List<Pipeline> getOwn() {
+    return PipelineManager.getAllPipelines();
+    //return ok(PipelineManager.getOwnPipelines(getAuthenticatedUsername()));
+
   }
 
   @GET
@@ -73,6 +81,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Get all system pipelines assigned to the current user",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   public Response getSystemPipelines() {
     return ok(getPipelineStorage().getSystemPipelines());
   }
@@ -83,6 +92,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Get the pipeline status of a given pipeline",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   public Response getPipelineStatus(@PathParam("pipelineId") String pipelineId) {
     return ok(PipelineStatusManager.getPipelineStatus(pipelineId, 5));
   }
@@ -93,6 +103,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Delete a pipeline with a given id",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_PRIVILEGE)
   public Response removeOwn(@PathParam("pipelineId") String pipelineId) {
     PipelineManager.deletePipeline(pipelineId);
     return statusMessage(Notifications.success("Pipeline deleted"));
@@ -104,6 +115,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Get a specific pipeline with the given id",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
   public Response getElement(@PathParam("pipelineId") String pipelineId) {
     return ok(PipelineManager.getPipeline(pipelineId));
   }
@@ -114,6 +126,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Start the pipeline with the given id",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_UPDATE_PIPELINE_PRIVILEGE)
   public Response start(@PathParam("pipelineId") String pipelineId) {
     try {
       PipelineOperationStatus status = PipelineManager.startPipeline(pipelineId);
@@ -131,6 +144,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Stop the pipeline with the given id",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_UPDATE_PIPELINE_PRIVILEGE)
   public Response stop(@PathParam("pipelineId") String pipelineId,
                        @QueryParam("forceStop") @DefaultValue("false") boolean forceStop) {
     try {
@@ -148,6 +162,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Store a new pipeline",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_CREATE_PIPELINE_PRIVILEGE)
   public Response addPipeline(Pipeline pipeline) {
 
     String pipelineId = PipelineManager.addPipeline(getAuthenticatedUsername(), pipeline);
@@ -161,6 +176,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @Hidden
+  @PreAuthorize(AuthConstants.HAS_CREATE_PIPELINE_PRIVILEGE)
   public Response recommend(Pipeline pipeline) {
     try {
       return ok(Operations.findRecommendedElements(getAuthenticatedUsername(), pipeline));
@@ -183,6 +199,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @Hidden
+  @PreAuthorize(AuthConstants.HAS_CREATE_PIPELINE_PRIVILEGE)
   public Response updateDataSet(SpDataSet spDataSet) {
     return ok(Operations.updateDataSet(spDataSet));
   }
@@ -193,6 +210,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @Hidden
+  @PreAuthorize(AuthConstants.HAS_CREATE_PIPELINE_PRIVILEGE)
   public Response update(Pipeline pipeline) {
     try {
       return ok(Operations.validatePipeline(pipeline, true));
@@ -226,6 +244,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Operation(summary = "Update an existing pipeline",
           tags = {"Pipeline"})
+  @PreAuthorize(AuthConstants.HAS_UPDATE_PIPELINE_PRIVILEGE)
   public Response overwritePipeline(@PathParam("pipelineId") String pipelineId,
                                     Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);

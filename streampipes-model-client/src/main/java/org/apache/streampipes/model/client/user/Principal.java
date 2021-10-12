@@ -39,6 +39,7 @@ public abstract class Principal {
 	protected List<Element> ownSources;
 	protected List<Element> ownSepas;
 	protected List<Element> ownActions;
+	protected Set<String> objectPermissions;
 
 	protected Set<Role> roles;
 	protected Set<String> groups;
@@ -52,6 +53,7 @@ public abstract class Principal {
 		this.ownSources = new ArrayList<>();
 		this.roles = new HashSet<>();
 		this.groups = new HashSet<>();
+		this.objectPermissions = new HashSet<>();
 	}
 
 	public List<Element> getOwnSources() {
@@ -178,5 +180,13 @@ public abstract class Principal {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public Set<String> getObjectPermissions() {
+		return objectPermissions;
+	}
+
+	public void setObjectPermissions(Set<String> objectPermissions) {
+		this.objectPermissions = objectPermissions;
 	}
 }

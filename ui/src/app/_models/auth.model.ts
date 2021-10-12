@@ -16,14 +16,13 @@
  *
  */
 
-export enum UserRole {
-  ROLE_ADMIN = 'ROLE_ADMIN',
-  ROLE_PIPELINE_ADMIN = 'ROLE_PIPELINE_ADMIN',
-  ROLE_DASHBOARD_ADMIN = 'ROLE_DASHBOARD_ADMIN',
-  ROLE_DATA_EXPLORER_ADMIN = 'ROLE_DATA_EXPLORER_ADMIN',
-  ROLE_CONNECT_ADMIN = 'ROLE_CONNECT_ADMIN',
-  ROLE_DASHBOARD_USER = 'ROLE_DASHBOARD_USER',
-  ROLE_DATA_EXPLORER_USER = 'ROLE_DATA_EXPLORER_USER',
-  ROLE_PIPELINE_USER = 'ROLE_PIPELINE_USER',
-  ROLE_APP_USER = 'ROLE_APP_USER'
+import { Privilege, Role } from '../core-model/gen/streampipes-model-client';
+import { UserRole } from '../_enums/user-role.enum';
+
+export type RoleModel = Privilege | Role;
+
+export interface RoleDescription {
+  role: UserRole;
+  roleTitle: string;
+  roleDescription: string;
 }

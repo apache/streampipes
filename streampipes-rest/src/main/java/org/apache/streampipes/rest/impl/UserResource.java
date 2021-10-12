@@ -184,7 +184,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   }
 
   private boolean isAdmin() {
-    return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ADMIN.name()));
+    return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ROLE_ADMIN.name()));
   }
 
   private void updateUser(UserAccount existingUser, UserAccount user) {

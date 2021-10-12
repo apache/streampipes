@@ -25,6 +25,7 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.rest.impl.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -54,7 +56,12 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({StreamPipesResourceConfig.class, WelcomePageController.class, WebSecurityConfig.class})
+@Import({StreamPipesResourceConfig.class,
+        WelcomePageController.class,
+        WebSecurityConfig.class,
+        SpPermissionEvaluator.class
+})
+@ComponentScan({"org.apache.streampipes.rest.*"})
 public class StreamPipesBackendApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesBackendApplication.class.getCanonicalName());

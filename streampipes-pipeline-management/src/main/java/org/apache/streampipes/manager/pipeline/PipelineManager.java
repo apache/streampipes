@@ -41,6 +41,14 @@ public class PipelineManager {
     }
 
     /**
+     * Returns all pipelines
+     * @return all pipelines
+     */
+    public static List<Pipeline> getAllPipelines() {
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+    }
+
+    /**
      * Returns the stored pipeline with the given pipeline Id
      * @param pipelineId
      * @return pipeline

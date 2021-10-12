@@ -47,7 +47,7 @@ public class UserRegistrationInstallationStep extends InstallationStep {
 		this.initialServiceAccountName = initialServiceAccountName;
 		this.initialServiceAccountSecret = initialServiceAccountSecret;
 		roles = new HashSet<>();
-		roles.add(Role.ADMIN);
+		roles.add(Role.ROLE_ADMIN);
 	}
 
 	@Override

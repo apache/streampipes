@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-10-05 10:08:33.
+// Generated using typescript-generator version 2.27.744 on 2021-10-12 09:29:49.
 
 export class Element {
     elementId: string;
@@ -98,10 +98,6 @@ export class FileMetadata {
     }
 }
 
-export interface GrantedAuthority {
-    authority: string;
-}
-
 export class Group {
     groupId: string;
     groupName: string;
@@ -144,20 +140,15 @@ export class MatchingResultMessage {
     }
 }
 
-export class Principal implements UserDetails {
+export class Principal {
     accountEnabled: boolean;
     accountExpired: boolean;
     accountLocked: boolean;
-    accountNonExpired: boolean;
-    accountNonLocked: boolean;
-    authorities: GrantedAuthority[];
-    credentialsNonExpired: boolean;
-    enabled: boolean;
     groups: string[];
+    objectPermissions: string[];
     ownActions: Element[];
     ownSepas: Element[];
     ownSources: Element[];
-    password: string;
     principalId: string;
     principalType: PrincipalType;
     rev: string;
@@ -169,21 +160,16 @@ export class Principal implements UserDetails {
             return data;
         }
         const instance = target || new Principal();
-        instance.enabled = data.enabled;
-        instance.username = data.username;
-        instance.password = data.password;
-        instance.accountNonExpired = data.accountNonExpired;
-        instance.accountNonLocked = data.accountNonLocked;
-        instance.credentialsNonExpired = data.credentialsNonExpired;
-        instance.authorities = __getCopyArrayFn(__identity<GrantedAuthority>())(data.authorities);
         instance.principalId = data.principalId;
         instance.rev = data.rev;
         instance.accountEnabled = data.accountEnabled;
         instance.accountLocked = data.accountLocked;
         instance.accountExpired = data.accountExpired;
+        instance.username = data.username;
         instance.ownSources = __getCopyArrayFn(Element.fromData)(data.ownSources);
         instance.ownSepas = __getCopyArrayFn(Element.fromData)(data.ownSepas);
         instance.ownActions = __getCopyArrayFn(Element.fromData)(data.ownActions);
+        instance.objectPermissions = __getCopyArrayFn(__identity<string>())(data.objectPermissions);
         instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
         instance.groups = __getCopyArrayFn(__identity<string>())(data.groups);
         instance.principalType = data.principalType;
@@ -229,6 +215,7 @@ export class UserAccount extends Principal {
     email: string;
     fullName: string;
     hideTutorial: boolean;
+    password: string;
     preferredDataProcessors: string[];
     preferredDataSinks: string[];
     preferredDataStreams: string[];
@@ -242,6 +229,7 @@ export class UserAccount extends Principal {
         super.fromData(data, instance);
         instance.email = data.email;
         instance.fullName = data.fullName;
+        instance.password = data.password;
         instance.preferredDataStreams = __getCopyArrayFn(__identity<string>())(data.preferredDataStreams);
         instance.preferredDataProcessors = __getCopyArrayFn(__identity<string>())(data.preferredDataProcessors);
         instance.preferredDataSinks = __getCopyArrayFn(__identity<string>())(data.preferredDataSinks);
@@ -265,16 +253,6 @@ export class UserApiToken {
         instance.tokenName = data.tokenName;
         return instance;
     }
-}
-
-export interface UserDetails {
-    accountNonExpired: boolean;
-    accountNonLocked: boolean;
-    authorities: GrantedAuthority[];
-    credentialsNonExpired: boolean;
-    enabled: boolean;
-    password: string;
-    username: string;
 }
 
 export class UserInfo {
@@ -302,7 +280,9 @@ export class UserInfo {
 
 export type PrincipalType = "USER_ACCOUNT" | "SERVICE_ACCOUNT";
 
-export type Role = "ADMIN" | "PIPELINE_ADMIN" | "DASHBOARD_ADMIN" | "DATA_EXPLORER_ADMIN" | "CONNECT_ADMIN" | "DASHBOARD_USER" | "DATA_EXPLORER_USER" | "PIPELINE_USER" | "APP_USER";
+export type Privilege = "PRIVILEGE_CREATE_PIPELINE" | "PRIVILEGE_READ_PIPELINE" | "PRIVILEGE_UPDATE_PIPELINE" | "PRIVILEGE_DELETE_PIPELINE" | "PRIVILEGE_CREATE_ADAPTER" | "PRIVILEGE_READ_ADAPTER" | "PRIVILEGE_UPDATE_ADAPTER" | "PRIVILEGE_DELETE_ADAPTER" | "PRIVILEGE_CREATE_PIPELINE_ELEMENT" | "PRIVILEGE_READ_PIPELINE_ELEMENT" | "PRIVILEGE_UPDATE_PIPELINE_ELEMENT" | "PRIVILEGE_DELETE_PIPELINE_ELEMENT" | "PRIVILEGE_CREATE_DASHBOARD" | "PRIVILEGE_READ_DASHBOARD" | "PRIVILEGE_UPDATE_DASHBOARD" | "PRIVILEGE_DELETE_DASHBOARD" | "PRIVILEGE_CREATE_DASHBOARD_WIDGET" | "PRIVILEGE_READ_DASHBOARD_WIDGET" | "PRIVILEGE_UPDATE_DASHBOARD_WIDGET" | "PRIVILEGE_DELETE_DASHBOARD_WIDGET" | "PRIVILEGE_CREATE_DATA_EXPLORER_VIEW" | "PRIVILEGE_READ_DATA_EXPLORER_VIEW" | "PRIVILEGE_UPDATE_DATA_EXPLORER_VIEW" | "PRIVILEGE_DELETE_DATA_EXPLORER_VIEW" | "PRIVILEGE_CREATE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_READ_DATA_EXPLORER_WIDGET" | "PRIVILEGE_UPDATE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_READ_APPS" | "PRIVILEGE_UPDATE_APPS" | "PRIVILEGE_READ_NOTIFICATIONS" | "PRIVILEGE_READ_FILES" | "PRIVILEGE_CREATE_FILES" | "PRIVILEGE_UPDATE_FILES" | "PRIVILEGE_DELETE_FILES";
+
+export type Role = "ROLE_ADMIN" | "ROLE_PIPELINE_ADMIN" | "ROLE_DASHBOARD_ADMIN" | "ROLE_DATA_EXPLORER_ADMIN" | "ROLE_CONNECT_ADMIN" | "ROLE_DASHBOARD_USER" | "ROLE_DATA_EXPLORER_USER" | "ROLE_PIPELINE_USER" | "ROLE_APP_USER";
 
 function __getCopyArrayFn<T>(itemCopyFn: (item: T) => T): (array: T[]) => T[] {
     return (array: T[]) => __copyArray(array, itemCopyFn);
