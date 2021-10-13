@@ -56,9 +56,32 @@ export class ViewAssetComponent {
         this.backgroundImageLayer = new Konva.Layer();
         this.showImage();
         this.mainCanvasStage.add(this.backgroundImageLayer);
+        const labels = this.mainCanvasStage.find('Label');
+        labels.each(label => {
+           label.on('mouseenter', () => this.onMouseEnter(label));
+            label.on('mouseleave', () => this.onMouseLeave(label));
+           label.on('click', () => this.onLinkClicked(label));
+        });
+
         this.backgroundImageLayer.moveToBottom();
         this.mainCanvasStage.draw();
         this.updateMeasurements();
+    }
+
+    onMouseEnter(label) {
+        label.children[0].attrs.fontStyle = 'bold';
+        this.mainCanvasStage.draw();
+    }
+
+    onMouseLeave(label) {
+        label.children[0].attrs.fontStyle = 'normal';
+        this.mainCanvasStage.draw();
+    }
+
+    onLinkClicked(label) {
+        const href = label.children[0].attrs.hyperlink;
+        const newWindow = label.children[0].attrs.newWindow;
+        newWindow ? (window as any).open(href) : (window as any).location.href = href;
     }
 
     updateMeasurements() {

@@ -20,7 +20,10 @@ import {Injectable} from "@angular/core";
 
 
 import Konva from "konva";
-import {SelectedVisualizationData} from "../model/selected-visualization-data.model";
+import {
+    HyperlinkConfig,
+    SelectedVisualizationData
+} from "../model/selected-visualization-data.model";
 
 @Injectable()
 export class ShapeService {
@@ -29,22 +32,50 @@ export class ShapeService {
 
     }
 
+    makeNewHyperlinkGroup(hyperlinkConfig: HyperlinkConfig) {
+        const group = this.makeGroup(true);
+        group.add(this.makeHyperlinkLabel(hyperlinkConfig));
+        return group;
+    }
+
+    makeHyperlinkLabel(hyperlinkConfig: HyperlinkConfig): Konva.Label {
+        const label = new Konva.Label({
+            x: 200,
+            y: 40,
+        });
+        label.add(this.makeHyperlinkText(hyperlinkConfig));
+        return label;
+    }
+
+    makeHyperlinkText(hyperlinkConfig: HyperlinkConfig): Konva.Text {
+        const settings: any = {
+            text: hyperlinkConfig.linkLabel,
+            width: 200,
+            height: 20,
+            hyperlink: hyperlinkConfig.linkHref,
+            newWindow: hyperlinkConfig.newWindow,
+            textDecoration: 'underline',
+            fill: '#1b1464',
+        };
+        return new Konva.Text(settings);
+    }
+
     makeNewMeasurementShape(visualizationConfig: SelectedVisualizationData): Konva.Group {
-        let visualizationGroup = this.makeGroup(true);
+        const visualizationGroup = this.makeGroup(true);
         visualizationGroup.add(this.makeLabelGroup(visualizationConfig));
         visualizationGroup.add(this.makeMeasurementGroup(visualizationConfig));
         return visualizationGroup;
     }
 
     makeLabelGroup(config: SelectedVisualizationData): Konva.Group {
-        let labelGroup = this.makeGroup(false);
+        const labelGroup = this.makeGroup(false);
         labelGroup.add(this.makeRect(config.labelBackgroundColor, 120, 40, 120, 20));
         labelGroup.add(this.makeText(config, config.label, config.labelTextColor, 120, 45, 120, 20, false))
         return labelGroup;
     }
 
     makeMeasurementGroup(config: SelectedVisualizationData): Konva.Group {
-        let measurementGroup = this.makeGroup(false);
+        const measurementGroup = this.makeGroup(false);
         measurementGroup.add(this.makeRect(config.measurementBackgroundColor, 120, 60, 120, 40));
         measurementGroup.add(this.makeText(config, config.measurement, config.measurementTextColor, 120, 65, 120, 40, true))
         return measurementGroup;

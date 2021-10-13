@@ -27,6 +27,7 @@ import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { RestService } from '../../services/rest.service';
+import { AddLinkDialogComponent } from '../../dialog/add-link/add-link-dialog.component';
 
 interface Window {
     Image: any;
@@ -214,9 +215,29 @@ export class CreateAssetComponent implements AfterViewInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
-                this.addNewVisulizationItem(result);
+                const visGroup = this.shapeService.makeNewMeasurementShape(result);
+                this.addNewVisulizationItem(visGroup);
                 this.measurementPresent = true;
                 this.mainLayer.draw();
+            }
+            this.keyboardListenerActive = true;
+        });
+    }
+
+    openAddLinkDialog() {
+        this.keyboardListenerActive = false;
+        const dialogRef = this.dialogService.open(AddLinkDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Add link',
+            width: '50vw',
+            data: {
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                console.log(result);
+                this.addNewVisulizationItem(result);
             }
             this.keyboardListenerActive = true;
         });
@@ -252,8 +273,7 @@ export class CreateAssetComponent implements AfterViewInit {
         }
     }
 
-    addNewVisulizationItem(visualizationConfig) {
-        const visGroup = this.shapeService.makeNewMeasurementShape(visualizationConfig);
+    addNewVisulizationItem(visGroup) {
         const id = this.makeId();
         visGroup.id(id);
         this.mainLayer.add(visGroup);
@@ -264,8 +284,8 @@ export class CreateAssetComponent implements AfterViewInit {
         const tr = this.getNewTransformer(id);
         this.mainLayer.add(tr);
         tr.attachTo(visGroup);
-        //this.mainLayer.draw();
-        //this.currentlySelectedShape = visGroup;
+        this.mainLayer.draw();
+        this.currentlySelectedShape = visGroup;
     }
 
     getNewTransformer(id: string): Konva.Transformer {

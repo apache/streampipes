@@ -16,20 +16,8 @@
  *
  */
 
-export interface SelectedVisualizationData {
-    labelBackgroundColor: string;
-    labelTextColor: string;
-    measurementBackgroundColor: string;
-    measurementTextColor: string;
-    visualizationId: string;
-    measurement: string;
-    label: string;
-    brokerUrl: string;
-    topic: string;
-}
+@import '../../../../scss/sp/sp-dialog.scss';
 
-export interface HyperlinkConfig {
-    linkLabel: string;
-    linkHref: string;
-    newWindow: boolean;
+.mr-10 {
+  margin-right: 10px;
 }
