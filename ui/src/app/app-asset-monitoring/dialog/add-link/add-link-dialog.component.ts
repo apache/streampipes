@@ -30,6 +30,7 @@ export class AddLinkDialogComponent implements OnInit {
 
   linkLabel: string;
   linkHref: string;
+  labelFontSize = 12;
   newWindow = false;
 
   constructor(private dialogRef: DialogRef<AddLinkDialogComponent>,
@@ -46,6 +47,7 @@ export class AddLinkDialogComponent implements OnInit {
     const hyperlinkConfig: HyperlinkConfig = {
       linkLabel: this.linkLabel,
       linkHref: this.linkHref,
+      labelFontSize: this.labelFontSize,
       newWindow: this.newWindow
     };
 

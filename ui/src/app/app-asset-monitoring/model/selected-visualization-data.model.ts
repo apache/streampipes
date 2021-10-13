@@ -31,5 +31,6 @@ export interface SelectedVisualizationData {
 export interface HyperlinkConfig {
     linkLabel: string;
     linkHref: string;
+    labelFontSize: number;
     newWindow: boolean;
 }
