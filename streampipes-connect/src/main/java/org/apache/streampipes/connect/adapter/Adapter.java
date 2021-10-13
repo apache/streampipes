@@ -168,7 +168,7 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
         if (adapterManagedByNodeController(adapterDescription)) {
 
-            if (isEdgeOrFogNodeTarget(adapterDescription)) {
+            if (NodeControllerService.isEdgeOrFogNode(adapterDescription)) {
                 return createSendToEdgeOrFogBrokerAdapterSink(adapterDescription);
             } else {
                 return createSendToCloudBrokerAdapterSink(adapterDescription);
@@ -251,13 +251,6 @@ public abstract class Adapter<T extends AdapterDescription> implements Connector
 
     private static boolean adapterManagedByNodeController(AdapterDescription desc) {
         return desc.getDeploymentTargetNodeId() != null && !desc.getDeploymentTargetNodeId().equals("default");
-    }
-
-    private static boolean isEdgeOrFogNodeTarget(AdapterDescription desc) {
-        return NodeManagement.getInstance().getAllNodes().stream()
-                .filter(n -> n.getNodeControllerId().equals(desc.getDeploymentTargetNodeId()))
-                .anyMatch(n -> n.getStaticNodeMetadata().getType().equals("edge") ||
-                        n.getStaticNodeMetadata().getType().equals("fog"));
     }
 
 }
