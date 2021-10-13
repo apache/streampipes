@@ -38,6 +38,8 @@ public abstract class AbstractStreamPipesDockerContainer {
 
     public List<ContainerEnvVar> generateStreamPipesNodeEnvs() {
         return new ArrayList<>(Arrays.asList(
+                toEnv(EnvConfigParam.NODE_TYPE.getEnvironmentKey(),
+                        NodeConfiguration.getNodeType()),
                 toEnv(EnvConfigParam.NODE_CONTROLLER_ID.getEnvironmentKey(),
                         NodeConfiguration.getNodeControllerId()),
                 toEnv(EnvConfigParam.NODE_CONTROLLER_CONTAINER_HOST.getEnvironmentKey(),

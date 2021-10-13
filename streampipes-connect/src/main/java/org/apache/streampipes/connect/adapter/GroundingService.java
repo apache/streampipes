@@ -93,7 +93,7 @@ public class GroundingService {
 
         if (adapterManagedByNodeController(adapterDescription)) {
 
-            if (isEdgeOrFogNodeTarget(adapterDescription)) {
+            if (NodeControllerService.isEdgeOrFogNode(adapterDescription)) {
                 createEdgeOrFogGrounding(eventGrounding, topicDefinition, adapterDescription);
             } else {
                 createCloudProtocol(eventGrounding, topicDefinition);
@@ -111,7 +111,7 @@ public class GroundingService {
 
     private static void createEdgeOrFogGrounding(EventGrounding eventGrounding, TopicDefinition topicDefinition,
                                                  AdapterDescription adapterDescription) throws AdapterException {
-        String nodeControllerId = extractNodeControllerId(adapterDescription);
+
         SpEdgeNodeProtocol edgeNodeProtocol = BackendConfig.INSTANCE
                 .getMessagingSettings()
                 .getPrioritizedEdgeProtocols()
@@ -119,14 +119,14 @@ public class GroundingService {
 
         if (isEdgeProtocol(edgeNodeProtocol, MqttTransportProtocol.class)) {
             MqttTransportProtocol brokerTransportProtocol =
-                    (MqttTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+                    (MqttTransportProtocol) NodeControllerService.getNodeTransportProtocol(adapterDescription);
             brokerTransportProtocol.setTopicDefinition(topicDefinition);
 
             eventGrounding.setTransportProtocol(brokerTransportProtocol);
 
         } else if (isEdgeProtocol(edgeNodeProtocol, KafkaTransportProtocol.class)) {
             KafkaTransportProtocol brokerTransportProtocol =
-                    (KafkaTransportProtocol) getNodeBrokerTransportProtocol(nodeControllerId);
+                    (KafkaTransportProtocol) NodeControllerService.getNodeTransportProtocol(adapterDescription);
             brokerTransportProtocol.setTopicDefinition(topicDefinition);
 
             eventGrounding.setTransportProtocol(brokerTransportProtocol);
@@ -213,26 +213,8 @@ public class GroundingService {
         protocol.setTopicDefinition(topicDefinition);
     }
 
-    private static TransportProtocol getNodeBrokerTransportProtocol(String id) {
-        Optional<NodeInfoDescription> nodeInfoDescription = getNodeInfoDescriptionForId(id);
-        if (nodeInfoDescription.isPresent()) {
-            return nodeInfoDescription.get().getNodeBroker().getNodeTransportProtocol();
-        }
-        throw new SpRuntimeException("Could not find node description for id: " + id);
-    }
-
-    private static Optional<NodeInfoDescription> getNodeInfoDescriptionForId(String id){
-        return StorageDispatcher.INSTANCE.getNoSqlStore().getNodeStorage().getNode(id);
-    }
-
     private static boolean adapterManagedByNodeController(AdapterDescription desc) {
         return desc.getDeploymentTargetNodeId() != null && !desc.getDeploymentTargetNodeId().equals("default");
     }
 
-    private static boolean isEdgeOrFogNodeTarget(AdapterDescription desc) {
-        return NodeManagement.getInstance().getAllNodes().stream()
-                .filter(n -> n.getNodeControllerId().equals(desc.getDeploymentTargetNodeId()))
-                .anyMatch(n -> n.getStaticNodeMetadata().getType().equals("edge") ||
-                        n.getStaticNodeMetadata().getType().equals("fog"));
-    }
 }
