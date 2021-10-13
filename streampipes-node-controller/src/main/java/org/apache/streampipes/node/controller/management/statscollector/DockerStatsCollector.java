@@ -72,7 +72,7 @@ public class DockerStatsCollector {
                 "netTxHumanReadable"
         };
 
-        EvaluationLogger.getInstance().logMQTT(LOGGING_TOPIC, header);
+        EvaluationLogger.getInstance().logHeader(LOGGING_TOPIC, header);
     }
 
     private final Runnable collect = () -> {

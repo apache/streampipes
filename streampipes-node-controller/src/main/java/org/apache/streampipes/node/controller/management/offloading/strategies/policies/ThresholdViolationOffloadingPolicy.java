@@ -62,8 +62,7 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
                         numViolations++;
                     }
                 }
-                Object[] line = {"policy violation #" + numViolations};
-                EvaluationLogger.getInstance().logMQTT("Offloading", line);
+                EvaluationLogger.getInstance().logMQTT("Offloading", "policy violation #" + numViolations);
             }
         }
     }

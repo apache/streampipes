@@ -103,8 +103,7 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
             return status;
         }
         long start_target_duration = System.nanoTime() - before_start_target;
-        Object[] line_start_target = {"start target element","",start_target_duration,start_target_duration/1000000000.0};
-        logger.logMQTT("Migration", line_start_target);
+        logger.logMQTT("Migration", "start target element","",start_target_duration,start_target_duration/1000000000.0);
 
         // Stop relays from origin predecessor
         long downtime_beginning = System.nanoTime();
@@ -114,8 +113,7 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
             return status;
         }
         long stop_relays_origin_duration = System.nanoTime() - downtime_beginning;
-        Object[] line_stop_relay = {"stop relay from origin","",stop_relays_origin_duration,stop_relays_origin_duration/1000000000.0};
-        logger.logMQTT("Migration", line_stop_relay);
+        logger.logMQTT("Migration", "stop relay from origin","",stop_relays_origin_duration,stop_relays_origin_duration/1000000000.0);
 
         // Start relays to target after migration
         long before_start_relay_target = System.nanoTime();
@@ -125,12 +123,10 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
             return status;
         }
         long start_relay_target_duration = System.nanoTime() - before_start_relay_target;
-        Object[] line_start_relay = {"start relay to target","",start_relay_target_duration,start_relay_target_duration/1000000000.0};
-        logger.logMQTT("Migration", line_start_relay);
+        logger.logMQTT("Migration", "start relay to target","",start_relay_target_duration,start_relay_target_duration/1000000000.0);
 
         long downtime = System.nanoTime() - downtime_beginning;
-        Object[] line_downtime = {"downtime", "", downtime, downtime/1000000000.0};
-        logger.logMQTT("Migration", line_downtime);
+        logger.logMQTT("Migration", "downtime", "", downtime, downtime/1000000000.0);
 
         //Stop origin and associated relay
         long before_stop_origin = System.nanoTime();
@@ -140,8 +136,7 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
             return status;
         }
         long stop_origin_duration = System.nanoTime() - before_stop_origin;
-        Object[] line_stop_origin = {"stop origin element","",stop_origin_duration,stop_origin_duration/1000000000.0};
-        logger.logMQTT("Migration", line_stop_origin);
+        logger.logMQTT("Migration", "stop origin element","",stop_origin_duration,stop_origin_duration/1000000000.0);
 
         List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
         graphs.addAll(pipeline.getActions());

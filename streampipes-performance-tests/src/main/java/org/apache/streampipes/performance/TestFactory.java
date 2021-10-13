@@ -42,7 +42,7 @@ public class TestFactory {
                 logger.logHeader("Reconfiguration", header_reconfigure);
                 return getReconfigurationTest();
             case "Offloading":
-                Object[] header_offloading = {"timestampInMillis", "deviceId", "event"};
+                Object[] header_offloading = {"timestampInMillis", "deviceId", "event", "policy", "selectedProcessor"};
                 logger.logHeader("Offloading", header_offloading);
                 return getOffloadingTest();
             default:
