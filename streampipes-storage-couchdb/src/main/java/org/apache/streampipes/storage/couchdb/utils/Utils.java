@@ -68,8 +68,12 @@ public class Utils {
     return getCouchDbGsonClient("assetdashboard");
   }
 
-  public static CouchDbClient getCouchDbAdapterClient() {
-    return getCouchDbAdapterClient("adapter");
+  public static CouchDbClient getCouchDbAdapterInstanceClient() {
+    return getCouchDbAdapterClient("adapterinstance");
+  }
+
+  public static CouchDbClient getCouchDbAdapterDescriptionClient() {
+    return getCouchDbAdapterClient("adapterdescription");
   }
 
   public static CouchDbClient getCouchDbPipelineClient() {

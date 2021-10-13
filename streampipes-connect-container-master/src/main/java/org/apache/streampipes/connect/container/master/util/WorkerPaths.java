@@ -17,10 +17,16 @@
  */
 package org.apache.streampipes.connect.container.master.util;
 
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public class WorkerPaths {
 
   private static final String WorkerMainPath = "/api/v1/worker";
-  private static final String Slash = "/";
 
   public static String getStreamInvokePath() {
     return WorkerMainPath + "/stream/invoke";
@@ -38,31 +44,25 @@ public class WorkerPaths {
     return WorkerMainPath + "/set/stop";
   }
 
+  public static String getRunningAdaptersPath() {
+    return WorkerMainPath + "/running";
+  }
+
   public static String getRuntimeResolvablePath(String elementId) {
     return WorkerMainPath + "/resolvable/" + elementId + "/configurations";
-  }
-
-  public static String getAdaptersPath() {
-    return WorkerMainPath +  "/adapters";
-  }
-
-  public static String getProtocolsPath() {
-    return WorkerMainPath + "/protocols";
-  }
-
-  public static String getAdaptersPath(String appId) {
-    return getAdaptersPath() + Slash + appId;
-  }
-
-  public static String getProtocolsPath(String appId) {
-    return getProtocolsPath() + Slash + appId;
   }
 
   public static String getGuessSchemaPath() {
     return WorkerMainPath + "/guess/schema";
   }
 
-
+  public static String findEndpointUrl(String appId) throws NoServiceEndpointsAvailableException, URISyntaxException {
+    SpServiceUrlProvider serviceUrlProvider = SpServiceUrlProvider.ADAPTER;
+    String endpointUrl = new ExtensionsServiceEndpointGenerator(appId, serviceUrlProvider).getEndpointResourceUrl();
+    URI uri = new URI(endpointUrl);
+    String baseUrl = uri.getScheme() + "://" + uri.getAuthority();
+    return baseUrl;
+  }
 
 
 }

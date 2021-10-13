@@ -36,7 +36,6 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription im
 
     public GenericAdapterStreamDescription() {
         super(ID, "GenericAdapterStreamDescription", "");
-        setAdapterId(ID);
     }
 
     public GenericAdapterStreamDescription(FormatDescription formatDescription, ProtocolStreamDescription protocolDescription) {

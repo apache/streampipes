@@ -26,7 +26,6 @@ import org.apache.streampipes.model.util.Cloner;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class FormatDescription extends NamedStreamPipesEntity {
 
     private List<StaticProperty> config;
@@ -51,7 +50,6 @@ public class FormatDescription extends NamedStreamPipesEntity {
         this.config = new Cloner().staticProperties(other.getConfig());
     }
 
-
     public void addConfig(StaticProperty sp) {
         this.config.add(sp);
     }
@@ -63,50 +61,6 @@ public class FormatDescription extends NamedStreamPipesEntity {
     public void setConfig(List<StaticProperty> config) {
         this.config = config;
     }
-
-
-
-
-
-
-
-
-//   public static void main(String... args) {
-//        FormatDescription f = new FormatDescription("", "","");
-//        FreeTextStaticProperty fts = new FreeTextStaticProperty("internal_name_value", "label_value",
-//                "description value");
-//        FreeTextStaticProperty fts1 = new FreeTextStaticProperty("internal_name_value1", "label_value1",
-//                "description value1");
-//        f.addConfig(fts);
-////        f.addConfig(fts1);
-//
-//        ProtocolDescription p = new ProtocolDescription("", "","");
-//        FreeTextStaticProperty fts2 = new FreeTextStaticProperty("internal_name_value2", "label_value2",
-//                "description value2");
-//
-//        p.addConfig(fts2);
-//
-//        AdapterDescription a = new AdapterDescription();
-//        a.setFormatDescription(f);
-//        a.setProtocolDescription(p);
-//
-//        JsonLdTransformer jsonLdTransformer = new JsonLdTransformer();
-//        try {
-//            System.out.println(Utils.asString(jsonLdTransformer.toJsonLd(a)));
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (InvalidRdfException e) {
-//            e.printStackTrace();
-//        } catch (RDFHandlerException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
 
     @Override
     public String toString() {

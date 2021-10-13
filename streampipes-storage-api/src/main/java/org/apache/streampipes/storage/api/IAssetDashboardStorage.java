@@ -29,5 +29,7 @@ public interface IAssetDashboardStorage {
 
   void storeAssetDashboard(AssetDashboardConfig assetDashboardConfig);
 
+  void updateAssetDashboard(AssetDashboardConfig assetDashboardConfig);
+
   void deleteAssetDashboard(String dashboardId);
 }

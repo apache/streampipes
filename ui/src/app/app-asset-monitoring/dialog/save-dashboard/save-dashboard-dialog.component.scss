@@ -16,20 +16,17 @@
  *
  */
 
-package org.apache.streampipes.storage.api;
+@import '../../../../scss/sp/sp-dialog.scss';
 
-import org.apache.streampipes.model.connect.worker.ConnectWorkerContainer;
+.element-margin {
+    margin-top:10px;
+    margin-bottom:10px;
+}
 
-import java.util.List;
+.mr-10 {
+    margin-right: 10px;
+}
 
-public interface IConnectWorkerContainerStorage {
-    List<ConnectWorkerContainer> getAllConnectWorkerContainers();
-
-    void storeConnectWorkerContainer(ConnectWorkerContainer connectWorkerContainer);
-
-    void updateConnectWorkerContainer(ConnectWorkerContainer connectWorkerContainer);
-
-    ConnectWorkerContainer getConnectWorkerContainer(String connectWorkerContainerId);
-
-    void deleteConnectWorkerContainer(String connectWorkerContainerId);
+.dialog-margin-bottom {
+    margin-bottom: 10px;
 }

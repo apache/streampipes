@@ -126,7 +126,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         // Connect Master
         register(WelcomePageMaster.class);
         register(AdapterResource.class);
-        register(AdapterTemplateResource.class);
         register(DescriptionResource.class);
         register(SourcesResource.class);
         register(GuessResource.class);

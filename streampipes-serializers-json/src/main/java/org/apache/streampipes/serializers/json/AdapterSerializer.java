@@ -54,8 +54,8 @@ public class AdapterSerializer implements JsonSerializer<AdapterDescription>, Js
       result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
       result.add("field_type", new JsonPrimitive(src.getClass().getCanonicalName()));
       result.add("properties", GsonSerializer.getGson().toJsonTree(src));
-      if (src.getId() != null) {
-        result.add("_id", new JsonPrimitive(src.getId()));
+      if (src.getElementId() != null) {
+        result.add("_id", new JsonPrimitive(src.getElementId()));
       }
       if (src.getRev() != null) {
         result.add("_rev", new JsonPrimitive(src.getRev()));

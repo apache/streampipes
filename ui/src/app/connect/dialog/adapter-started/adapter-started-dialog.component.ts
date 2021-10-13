@@ -31,6 +31,7 @@ import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { PipelineTemplateService } from '../../../platform-services/apis/pipeline-template.service';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 
+
 @Component({
   selector: 'sp-dialog-adapter-started-dialog',
   templateUrl: './adapter-started-dialog.component.html',
@@ -48,7 +49,7 @@ export class AdapterStartedDialog implements OnInit {
   public pipelineOperationStatus: PipelineOperationStatus;
 
   @Input()
-  storeAsTemplate: boolean;
+  directlyStartAdapter: boolean;
 
   @Input()
   adapter: AdapterDescriptionUnion;
@@ -71,58 +72,56 @@ export class AdapterStartedDialog implements OnInit {
   }
 
   startAdapter() {
-    if (this.storeAsTemplate) {
+    const newAdapter = this.adapter;
+    this.restService.addAdapter(this.adapter).subscribe(x => {
+      this.adapterStatus = x;
+      if (x.success) {
 
-      this.restService.addAdapterTemplate(this.adapter).subscribe(x => {
-        this.adapterStatus = x as Message;
-        this.isTemplate = true;
-        this.adapterInstalled = true;
-      });
-
-    } else {
-
-      const newAdapter = this.adapter;
-      this.restService.addAdapter(this.adapter).subscribe(x => {
-        this.adapterInstalled = true;
-        this.adapterStatus = x;
-        if (x.success) {
-
-          // Start preview on streams and message for sets
-          if (newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof SpecificAdapterSetDescription) {
-            this.isSetAdapter = true;
-          } else {
-            this.restService.getSourceDetails(x.notifications[0].title).subscribe(st => {
-              this.streamDescription = st;
-              this.pollingActive = true;
-            });
-          }
-
-          if (this.saveInDataLake) {
-            const pipelineId = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
-            this.pipelineTemplateService.getPipelineTemplateInvocation(this.adapter.adapterId, pipelineId)
-              .subscribe(res => {
-
-                const indexName = this.adapter.name
-                  .toLowerCase()
-                  .replace(/ /g, '_')
-                  .replace(/\./g, '_');
-                const pipelineInvocation = PipelineInvocationBuilder
-                  .create(res)
-                  .setName('persist_' + indexName)
-                  .setTemplateId(pipelineId)
-                  .setFreeTextStaticProperty('db_measurement', indexName)
-                  .setMappingPropertyUnary('timestamp_mapping', 's0::' + this.dataLakeTimestampField)
-                  .build();
-
-                this.pipelineTemplateService.createPipelineTemplateInvocation(pipelineInvocation).subscribe(pipelineOperationStatus => {
-                  this.pipelineOperationStatus = pipelineOperationStatus;
-                });
-              });
-          }
+        // Start preview on streams and message for sets
+        if (newAdapter instanceof GenericAdapterSetDescription || newAdapter instanceof SpecificAdapterSetDescription) {
+          this.isSetAdapter = true;
+        } else {
+          this.restService.getSourceDetails(x.notifications[0].title).subscribe(st => {
+            this.streamDescription = st;
+            this.pollingActive = true;
+          });
         }
-      });
 
-    }
+        if (this.saveInDataLake) {
+          const pipelineId = 'org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate';
+          this.pipelineTemplateService.getPipelineTemplateInvocation(x.notifications[0].title, pipelineId)
+            .subscribe(res => {
+
+              const pipelineName = 'Persist ' + this.adapter.name;
+
+              let indexName = this.adapter.name
+                .toLowerCase()
+                .replace(/ /g, '')
+                .replace(/\./g, '');
+
+              // Ensure that index name is no number
+              if (this.isNumber(indexName)) {
+                indexName = 'sp' + indexName;
+              }
+
+              const pipelineInvocation = PipelineInvocationBuilder
+                .create(res)
+                .setName(pipelineName)
+                .setTemplateId(pipelineId)
+                .setFreeTextStaticProperty('db_measurement', indexName)
+                .setMappingPropertyUnary('timestamp_mapping', 's0::' + this.dataLakeTimestampField)
+                .build();
+
+              this.pipelineTemplateService.createPipelineTemplateInvocation(pipelineInvocation).subscribe(pipelineOperationStatus => {
+                this.pipelineOperationStatus = pipelineOperationStatus;
+                this.adapterInstalled = true;
+              });
+            });
+        } else {
+          this.adapterInstalled = true;
+        }
+      }
+    });
   }
 
   onCloseConfirm() {
@@ -131,4 +130,9 @@ export class AdapterStartedDialog implements OnInit {
     this.shepherdService.trigger('confirm_adapter_started_button');
   }
 
+  private isNumber(value: string | number): boolean {
+    return ((value != null) &&
+      (value !== '') &&
+      !isNaN(Number(value.toString())));
+  }
 }

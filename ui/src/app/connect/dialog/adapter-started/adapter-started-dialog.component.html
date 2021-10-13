@@ -28,7 +28,13 @@
                     <h3>Please wait while your new adapter is being generated...</h3>
                 </div>
             </div>
-            <div fxLayout="column" *ngIf="adapterInstalled">
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" *ngIf="adapterInstalled">
+
+                <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+                    <sp-pipeline-started-status
+                            [pipelineOperationStatus]="pipelineOperationStatus">
+                    </sp-pipeline-started-status>
+                </div>
 
                 <div *ngIf="adapterStatus.success">
                     <div *ngIf="!isSetAdapter && !isTemplate">
@@ -66,11 +72,7 @@
                 </div>
             </div>
 
-            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-                <sp-pipeline-started-status
-                        [pipelineOperationStatus]="pipelineOperationStatus">
-                </sp-pipeline-started-status>
-            </div>
+
         </div>
     </div>
     <mat-divider></mat-divider>

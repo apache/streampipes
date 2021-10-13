@@ -68,12 +68,12 @@ public class ResetManagement {
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
 
         try {
-            List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapters();
+            List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
             allAdapters.forEach(adapterDescription -> {
                 try {
-                    adapterMasterManagement.deleteAdapter(adapterDescription.getId());
+                    adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());
                 } catch (AdapterException e) {
-                    logger.error("Failed to delete adapter with id: " + adapterDescription.getAdapterId(), e);
+                    logger.error("Failed to delete adapter with id: " + adapterDescription.getElementId(), e);
                 }
             });
         } catch (AdapterException e) {

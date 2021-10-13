@@ -30,13 +30,11 @@ public abstract class AdapterDescriptionBuilder<BU extends
 
   protected AdapterDescriptionBuilder(String id, T element) {
     super(id, element);
-    this.elementDescription.setAdapterId(id);
   }
 
   protected AdapterDescriptionBuilder(String id, String label, String description,
                                    T adapterTypeInstance) {
     super(id, label, description, adapterTypeInstance);
-    this.elementDescription.setAdapterId(id);
   }
 
   public AdapterDescriptionBuilder<BU, T> category(AdapterType... categories) {
@@ -47,4 +45,11 @@ public abstract class AdapterDescriptionBuilder<BU extends
                     .collect(Collectors.toList()));
     return me();
   }
+
+  public AdapterDescriptionBuilder<BU, T> elementId(String elementId) {
+    this.elementDescription.setElementId(elementId);
+    return me();
+  }
+
+
 }

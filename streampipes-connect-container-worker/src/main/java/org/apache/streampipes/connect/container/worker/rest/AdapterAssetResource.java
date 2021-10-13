@@ -19,9 +19,10 @@ package org.apache.streampipes.connect.container.worker.rest;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import org.apache.streampipes.connect.container.worker.management.AdapterWorkerManagement;
+import org.apache.streampipes.connect.container.worker.init.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.util.AssetsUtil;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 
 import javax.ws.rs.GET;
@@ -32,15 +33,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.Optional;
 
 @Path("/api/v1/worker/adapters")
-public class AdapterResource extends AbstractSharedRestInterface {
+public class AdapterAssetResource extends AbstractSharedRestInterface {
 
-    private AdapterWorkerManagement adapterWorkerManagement;
+    private ConnectWorkerDescriptionProvider connectWorkerDescriptionProvider;
 
-    public AdapterResource() {
-        this.adapterWorkerManagement = new AdapterWorkerManagement();
+    public AdapterAssetResource() {
+        this.connectWorkerDescriptionProvider = new ConnectWorkerDescriptionProvider();
     }
 
 
@@ -48,13 +49,18 @@ public class AdapterResource extends AbstractSharedRestInterface {
     @Path("/{id}/assets")
     @Produces("application/zip")
     public Response getAssets(@PathParam("id") String id) {
-        List<String> includedAssets = this.adapterWorkerManagement.getAdapter(id).declareModel().getIncludedAssets();
-        try {
-            return ok(new AssetZipGenerator(id, includedAssets).makeZip());
-        } catch (IOException e) {
-            e.printStackTrace();
+        Optional<AdapterDescription> adapterDescription = this.connectWorkerDescriptionProvider.getAdapterDescription(id);
+        if (adapterDescription.isPresent()) {
+            try {
+                return ok(new AssetZipGenerator(id, adapterDescription.get().getIncludedAssets()).makeZip());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return fail();
+            }
+        } else {
             return fail();
         }
+
     }
 
     @GET

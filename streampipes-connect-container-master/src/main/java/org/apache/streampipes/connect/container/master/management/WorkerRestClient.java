@@ -31,62 +31,76 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.UUID;
 
+/**
+ * This client can be used to interact with the adapter workers executing the adapter instances
+ */
 public class WorkerRestClient {
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerRestClient.class);
 
-    public static void invokeStreamAdapter(String endpointUrl, String adapterId) throws AdapterException {
-        invokeStreamAdapter(endpointUrl, (AdapterStreamDescription) getAndDecryptAdapter(adapterId));
-    }
-
-    public static void invokeStreamAdapter(String endpointUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+    public static void invokeStreamAdapter(String endpointUrl,
+                                           String elementId) throws AdapterException {
+        AdapterStreamDescription adapterStreamDescription =  (AdapterStreamDescription) getAndDecryptAdapter(elementId);
         String url = endpointUrl + WorkerPaths.getStreamInvokePath();
 
         startAdapter(url, adapterStreamDescription);
-        updateStreamAdapterStatus(adapterStreamDescription.getId(), true);
+        updateStreamAdapterStatus(adapterStreamDescription.getElementId(), true);
     }
 
-    public static void stopStreamAdapter(String baseUrl, AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+    public static void stopStreamAdapter(String baseUrl,
+                                         AdapterStreamDescription adapterStreamDescription) throws AdapterException {
         String url = baseUrl + WorkerPaths.getStreamStopPath();
 
-        AdapterDescription ad = getAdapterDescriptionById(new AdapterStorageImpl(), adapterStreamDescription.getUri());
+        AdapterDescription ad = getAdapterDescriptionById(new AdapterInstanceStorageImpl(), adapterStreamDescription.getElementId());
 
         stopAdapter(ad, url);
-        updateStreamAdapterStatus(adapterStreamDescription.getId(), false);
+        updateStreamAdapterStatus(adapterStreamDescription.getElementId(), false);
     }
 
-    public static void invokeSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
-        String url = baseUrl + WorkerPaths.getSetInvokePath();
+    public static void invokeSetAdapter(String endpointUrl,
+                                        AdapterSetDescription adapterSetDescription) throws AdapterException {
+        String url = endpointUrl + WorkerPaths.getSetInvokePath();
 
         startAdapter(url, adapterSetDescription);
     }
 
-    public static void stopSetAdapter(String baseUrl, AdapterSetDescription adapterSetDescription) throws AdapterException {
+    public static void stopSetAdapter(String baseUrl,
+                                      AdapterSetDescription adapterSetDescription) throws AdapterException {
         String url = baseUrl + WorkerPaths.getSetStopPath();
 
         stopAdapter(adapterSetDescription, url);
     }
 
-    public static void startAdapter(String url, AdapterDescription ad) throws AdapterException {
+    public static List<AdapterDescription> getAllRunningAdapterInstanceDescriptions(String url) throws AdapterException {
+        try {
+            logger.info("Requesting all running adapter description instances: " + url);
+
+            String responseString = Request.Get(url)
+                    .connectTimeout(1000)
+                    .socketTimeout(100000)
+                    .execute().returnContent().asString();
+
+            List<AdapterDescription> result = JacksonSerializer.getObjectMapper().readValue(responseString, List.class);
+
+            return result;
+        } catch (IOException e) {
+            logger.error("List of running adapters could not be fetched", e);
+            throw new AdapterException("List of running adapters could not be fetched from: " + url);
+        }
+    }
+
+    public static void startAdapter(String url,
+                                    AdapterDescription ad) throws AdapterException {
         try {
             logger.info("Trying to start adapter on endpoint: " + url);
-
-            // this ensures that all adapters have a valid uri otherwise the json-ld serializer fails
-            if (ad.getUri() == null) {
-                ad.setUri("https://streampipes.org/adapter/" + UUID.randomUUID());
-            }
 
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
@@ -108,9 +122,9 @@ public class WorkerRestClient {
     public static void stopAdapter(AdapterDescription ad,
                                    String url) throws AdapterException {
 
-        // Stop execution of adatper
+        // Stop execution of adapter
         try {
-            logger.info("Trying to stopAdapter adapter on endpoint: " + url);
+            logger.info("Trying to stop adapter on endpoint: " + url);
 
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
@@ -197,24 +211,16 @@ public class WorkerRestClient {
     }
 
 
-    private static AdapterDescription getAdapterDescriptionById(AdapterStorageImpl adapterStorage, String id) {
+    private static AdapterDescription getAdapterDescriptionById(AdapterInstanceStorageImpl adapterStorage, String id) {
         AdapterDescription adapterDescription = null;
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
         for (AdapterDescription a : allAdapters) {
-            if (a.getUri().endsWith(id)) {
+            if (a.getElementId().endsWith(id)) {
                 adapterDescription = a;
             }
         }
 
         return adapterDescription;
-    }
-
-    private static String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
-        }
     }
 
     private static void updateStreamAdapterStatus(String adapterId,
@@ -235,7 +241,7 @@ public class WorkerRestClient {
     }
 
     private static IAdapterStorage getAdapterStorage() {
-        return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterStorage();
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
     }
 }
 

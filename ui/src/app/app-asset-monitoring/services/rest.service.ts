@@ -55,6 +55,10 @@ export class RestService {
     return this.http.post(this.url, dashboardConfig);
   }
 
+  updateDashboard(dashboardConfig: DashboardConfiguration) {
+    return this.http.put(this.url + '/' + dashboardConfig.dashboardId, dashboardConfig);
+  }
+
   getDashboards(): Observable<DashboardConfiguration[]> {
     return this.http.get(this.url).pipe(map(response => {
       return response as DashboardConfiguration[];

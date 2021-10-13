@@ -20,6 +20,7 @@ package org.apache.streampipes.model.client.assetdashboard;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Map;
 
 public class AssetDashboardConfig {
 
@@ -29,7 +30,7 @@ public class AssetDashboardConfig {
   private String dashboardName;
   private String dashboardDescription;
   private ImageInfo imageInfo;
-  private CanvasAttributes attrs;
+  private Map<String, Object> attrs;
   private String className;
   private List<CanvasElement> children;
 
@@ -52,11 +53,11 @@ public class AssetDashboardConfig {
     this.dashboardDescription = dashboardDescription;
   }
 
-  public CanvasAttributes getAttrs() {
+  public Map<String, Object> getAttrs() {
     return attrs;
   }
 
-  public void setAttrs(CanvasAttributes attrs) {
+  public void setAttrs(Map<String, Object> attrs) {
     this.attrs = attrs;
   }
 

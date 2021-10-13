@@ -38,6 +38,10 @@ public class CanvasAttributes {
   private String topic;
   private String name;
 
+  private String hyperlink;
+  private boolean newWindow;
+  private String fontStyle;
+
   public CanvasAttributes() {
   }
 
@@ -167,5 +171,29 @@ public class CanvasAttributes {
 
   public void setFontSize(String fontSize) {
     this.fontSize = fontSize;
+  }
+
+  public String getHyperlink() {
+    return hyperlink;
+  }
+
+  public void setHyperlink(String hyperlink) {
+    this.hyperlink = hyperlink;
+  }
+
+  public boolean isNewWindow() {
+    return newWindow;
+  }
+
+  public void setNewWindow(boolean newWindow) {
+    this.newWindow = newWindow;
+  }
+
+  public String getFontStyle() {
+    return fontStyle;
+  }
+
+  public void setFontStyle(String fontStyle) {
+    this.fontStyle = fontStyle;
   }
 }

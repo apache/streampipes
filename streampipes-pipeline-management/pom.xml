@@ -42,7 +42,7 @@
             <artifactId>streampipes-container</artifactId>
             <version>0.69.0-SNAPSHOT</version>
         </dependency>
-              <dependency>
+        <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-cbor</artifactId>
             <version>0.69.0-SNAPSHOT</version>

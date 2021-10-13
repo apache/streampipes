@@ -16,7 +16,7 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
+<div fxLayout="column" class="page-container page-container-connect">
     <div fxLayout="row" class="sp-tab-bg">
         <div fxLayoutAlign="end center" fxLayout="fill" class="page-container-nav"
              style="padding-right:10px; width:100%;min-height:50px;line-height:24px;margin-bottom:1px;">
@@ -47,10 +47,12 @@
             </mat-card>
         </div>
     </div>
+    <div class="fixed-height" fxLayout="column" fxFlex="100">
     <app-asset-monitoring (appOpened)="appOpened($event)"
                           *ngIf="currentlySelectedApp === apps[0].appId"></app-asset-monitoring>
     <app-image-labeling (appOpened)="appOpened($event)"
                           *ngIf="currentlySelectedApp === apps[1].appId"></app-image-labeling>
+    </div>
 <!--    <app-new-app (appOpened)="appOpened($event)"-->
 <!--                          *ngIf="currentlySelectedApp === apps[2].appId"></app-new-app>-->
 </div>

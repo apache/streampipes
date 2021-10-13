@@ -47,8 +47,8 @@ public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescr
     @Override
     public GenericAdapterSetDescription declareModel() {
         GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
-        adapterDescription.setAdapterId(GenericAdapterSetDescription.ID);
-        adapterDescription.setUri(GenericAdapterSetDescription.ID);
+//        adapterDescription.setAdapterId(GenericAdapterSetDescription.ID);
+//        adapterDescription.setUri(GenericAdapterSetDescription.ID);
         adapterDescription.setAppId(GenericAdapterSetDescription.ID);
         return adapterDescription;
     }

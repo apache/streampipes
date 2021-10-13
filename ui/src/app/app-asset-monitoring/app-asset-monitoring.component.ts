@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, Output} from '@angular/core';
-import {DashboardConfiguration} from "./model/dashboard-configuration.model";
+import { Component, EventEmitter, Output } from '@angular/core';
+import { DashboardConfiguration } from "./model/dashboard-configuration.model";
 
 @Component({
     selector: 'app-asset-monitoring',
@@ -52,6 +52,11 @@ export class AppAssetMonitoringComponent {
     closeDashboard(dashboardClosed: boolean) {
         this.dashboardSelected = false;
         this.selectedIndex = 0;
+    }
+
+    editDashboard(dashboardConfig: DashboardConfiguration) {
+        this.selectedDashboard = dashboardConfig;
+        this.selectedIndex = 1;
     }
 
 }

@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.container.master.management;
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
 import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.model.connect.grounding.FormatDescriptionList;
+import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -31,6 +31,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -53,12 +54,11 @@ public class DescriptionManagementTest {
 
         DescriptionManagement descriptionManagement = new DescriptionManagement();
 
-        FormatDescriptionList result = descriptionManagement.getFormats();
+        List<FormatDescription> result = descriptionManagement.getFormats();
 
         assertNotNull(result);
-        assertNotNull(result.getList());
-        assertEquals(1, result.getList().size());
-        assertEquals(JsonFormat.ID, result.getList().get(0).getAppId());
+        assertEquals(1, result.size());
+        assertEquals(JsonFormat.ID, result.get(0).getAppId());
     }
 
 }

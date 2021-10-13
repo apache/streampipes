@@ -25,10 +25,7 @@ import org.lightcouch.DesignDocument;
 import org.lightcouch.DesignDocument.MapReduce;
 import org.lightcouch.Response;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CouchDbInstallationStep extends InstallationStep {
 
@@ -36,8 +33,7 @@ public class CouchDbInstallationStep extends InstallationStep {
   private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database " +
           "'notifications'...";
   private static final String PREPARING_USERS_TEXT = "Preparing database 'users'...";
-  private static List<String> initRdfEndpointPorts =
-          Collections.singletonList("8099/api/v1/master/sources/");
+  private static List<String> initRdfEndpointPorts = new ArrayList<>();
 
   public CouchDbInstallationStep() {
 
