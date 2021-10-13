@@ -135,7 +135,7 @@ public class HDFSProtocol extends Protocol {
             dataByte.addAll(dataByte);
         }
         EventSchema eventSchema = parser.getEventSchema(dataByte);
-        result = SchemaGuesser.guessSchma(eventSchema, getNElements(n));
+        result = SchemaGuesser.guessSchma(eventSchema);
 
 
         return result;

@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.connect.protocol.stream;
 
-import org.fusesource.mqtt.client.*;
 import org.apache.streampipes.messaging.InternalEventProcessor;
+import org.fusesource.mqtt.client.*;
 
 public class MqttConsumer implements Runnable {
 

@@ -60,6 +60,7 @@
         <module>streampipes-pipeline-elements-all-flink</module>
         <module>streampipes-processors-change-detection-jvm</module>
         <module>streampipes-extensions-all-jvm</module>
+        <module>streampipes-connect-adapters-iiot</module>
     </modules>
 
     <properties>

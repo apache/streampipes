@@ -18,7 +18,7 @@ FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
 
-EXPOSE 8099
+EXPOSE 8090
 
 COPY target/streampipes-connect-adapters.jar  /streampipes-connect-adapters.jar
 
