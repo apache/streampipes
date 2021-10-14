@@ -22,7 +22,7 @@ import { PipelineElementBuilder } from '../../support/builder/PipelineElementBui
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+describe('Test MySQL Integration', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
   });
@@ -32,7 +32,7 @@ describe('Test Random Data Simulator Stream Adapter', () => {
 
     AdapterUtils.addMachineDataSimulator(simulatorAdapterName);
 
-    const topicname = 'cypresstopic';
+    const topicname = 'cypresstopic1';
     const pipelineInput = PipelineBuilder.create('Pipeline Test')
       .addSource(simulatorAdapterName)
       .addSink(
@@ -51,7 +51,6 @@ describe('Test Random Data Simulator Stream Adapter', () => {
       .create('MySql_Stream_Adapter')
       .setName('MySQL Adapter')
       .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
       .addInput('input', 'mysqlHost', 'localhost')
       .addInput('input', 'mysqlUser', 'root')
       .addInput('input', 'mysqlPassword', '7uc4rAymrPhxv6a5')

@@ -75,7 +75,7 @@
 <!--        </div>-->
     </div>
 
-    <div class="page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
+    <div fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
         <sp-data-explorer-dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
                                              (reloadDashboardsEmitter)="getDashboards()"
                                              [dataViewDashboards]="dataViewDashboards"

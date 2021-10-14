@@ -40,6 +40,7 @@ import {SaveDashboardDialogComponent} from "./dialog/save-dashboard/save-dashboa
 import {AssetDashboardOverviewComponent} from "./components/dashboard-overview/dashboard-overview.component";
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 import {streamPipesStompConfig} from "../dashboard/services/websocket.config";
+import { AddLinkDialogComponent } from './dialog/add-link/add-link-dialog.component';
 
 @NgModule({
     imports: [
@@ -56,6 +57,7 @@ import {streamPipesStompConfig} from "../dashboard/services/websocket.config";
         AppAssetMonitoringComponent,
         CreateAssetComponent,
         ViewAssetComponent,
+        AddLinkDialogComponent,
         AddPipelineDialogComponent,
         SaveDashboardDialogComponent,
         AssetDashboardOverviewComponent

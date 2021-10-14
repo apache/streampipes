@@ -77,6 +77,7 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   public SpDataStream() {
     super(prefix + RandomStringUtils.randomAlphabetic(6));
+    this.eventSchema = new EventSchema();
   }
 
 

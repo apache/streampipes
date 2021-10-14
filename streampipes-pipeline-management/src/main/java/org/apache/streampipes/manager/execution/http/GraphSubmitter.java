@@ -124,7 +124,7 @@ public class GraphSubmitter {
   }
 
   private PipelineElementStatus performDetach(SpDataSet dataset) {
-    String endpointUrl = dataset.getSelectedEndpointUrl() + "/" + dataset.getDatasetInvocationId();
+    String endpointUrl = dataset.getSelectedEndpointUrl() + "/" + dataset.getCorrespondingAdapterId() + "/" + dataset.getDatasetInvocationId();
     return new HttpRequestBuilder(dataset, endpointUrl).detach();
   }
 }

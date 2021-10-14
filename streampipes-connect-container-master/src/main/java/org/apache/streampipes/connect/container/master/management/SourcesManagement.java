@@ -18,13 +18,12 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
-import org.apache.streampipes.container.html.JSONGenerator;
-import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -33,164 +32,86 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.sdk.helpers.SupportedProtocols;
-import org.apache.streampipes.storage.couchdb.impl.AdapterStorageImpl;
+import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class SourcesManagement {
 
     private Logger logger = LoggerFactory.getLogger(SourcesManagement.class);
 
-    private AdapterStorageImpl adapterStorage;
-    private WorkerUrlProvider workerUrlProvider;
-    private String connectHost = null;
+    private AdapterInstanceStorageImpl adapterInstanceStorage;
 
-    public SourcesManagement(AdapterStorageImpl adapterStorage) {
-      this.adapterStorage = adapterStorage;
-      this.workerUrlProvider = new WorkerUrlProvider();
+    public SourcesManagement(AdapterInstanceStorageImpl adapterStorage) {
+      this.adapterInstanceStorage = adapterStorage;
     }
 
     public SourcesManagement() {
-       this(new AdapterStorageImpl());
+       this(new AdapterInstanceStorageImpl());
     }
 
-    public void addAdapter(String streamId, SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
+    public void addSetAdapter(SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
 
+        AdapterSetDescription ad = (AdapterSetDescription) getAndDecryptAdapter(dataSet.getCorrespondingAdapterId());
+        ad.setDataSet(dataSet);
+        ad.setElementId(ad.getElementId() + "/streams/" + dataSet.getDatasetInvocationId());
 
-        String newUrl = getAdapterUrl(streamId);
-        AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
-        adapterDescription.setDataSet(dataSet);
-
-        String newId = adapterDescription.getUri() + "/streams/" + dataSet.getDatasetInvocationId();
-        adapterDescription.setUri(newId);
-        adapterDescription.setId(newId);
-
-        AdapterSetDescription decryptedAdapterDescription =
-                (AdapterSetDescription) new Cloner().adapterDescription(adapterDescription);
-
-        WorkerRestClient.invokeSetAdapter(newUrl, decryptedAdapterDescription);
-    }
-
-    public void detachAdapter(String streamId, String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
-        AdapterSetDescription adapterDescription = (AdapterSetDescription) getAdapterDescriptionById(streamId);
-
-        String newId = adapterDescription.getUri() + "/streams/" + runningInstanceId;
-        adapterDescription.setUri(newId);
-        adapterDescription.setId(newId);
-
-        String newUrl = getAdapterUrl(streamId);
-        WorkerRestClient.stopSetAdapter(newUrl, adapterDescription);
-    }
-
-    private String getAdapterUrl(String streamId) throws NoServiceEndpointsAvailableException {
-        String appId = "";
-        List<AdapterDescription> adapterDescriptions = this.adapterStorage.getAllAdapters();
-        for (AdapterDescription ad : adapterDescriptions) {
-            if (ad.getElementId().contains(streamId)) {
-                appId = ad.getAppId();
-            }
+        try {
+            String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
+            WorkerRestClient.invokeSetAdapter(baseUrl, ad);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-
-        return workerUrlProvider.getWorkerBaseUrl(appId);
-
     }
 
-    public String getAllAdaptersInstallDescription() throws AdapterException {
-//        String host = getConnectHost();
-
-        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
-        List<Description> allAdapterDescriptions = new ArrayList<>();
-
-        for (AdapterDescription ad : allAdapters) {
-            URI uri;
-            String uriString = null;
-            try {
-                uriString = ad.getUri();
-                uri = new URI(uriString);
-            } catch (URISyntaxException e) {
-                logger.error("URI for the sources endpoint is not correct: " + uriString, e);
-                throw new AdapterException("Incorrect source URI: " +uriString);
-            }
-
-
-            List<Description> streams = new ArrayList<>();
-            Description d = new Description(ad.getName(), "", uri.toString());
-            d.setType("set");
-            streams.add(d);
-            DataSourceDescriptionHtml dsd = new DataSourceDescriptionHtml("Adapter Stream",
-                    "This stream is generated by an StreamPipes Connect adapter. ID of adapter: " + ad.getId(), uri.toString(), streams);
-            dsd.setType("source");
-            dsd.setAppId(ad.getAppId());
-            dsd.setEditable(!(ad.isInternallyManaged()));
-            allAdapterDescriptions.add(dsd);
+    /**
+     * @param runningInstanceId
+     * @throws AdapterException
+     * @throws NoServiceEndpointsAvailableException
+     */
+    public void detachAdapter(String elementId, String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
+        AdapterSetDescription ad = (AdapterSetDescription) getAndDecryptAdapter(elementId);
+        try {
+            String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
+            ad.setElementId(ad.getElementId() + "/streams/" + runningInstanceId);
+            WorkerRestClient.stopSetAdapter(baseUrl, ad);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
-
-        JSONGenerator json = new JSONGenerator(allAdapterDescriptions);
-
-        return json.buildJson();
     }
 
-    private AdapterDescription getAdapterDescriptionById(String id) {
-        AdapterDescription adapterDescription = null;
-        List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
-        for (AdapterDescription a : allAdapters) {
-            if (a.getAdapterId().equals(id)) {
-                adapterDescription = a;
-            }
-        }
-        AdapterDescription decryptedAdapterDescription =
-                new AdapterEncryptionService(new Cloner()
-                        .adapterDescription(adapterDescription)).decrypt();
-
-        return decryptedAdapterDescription;
-    }
-
-    public SpDataStream getAdapterDataStream(String id) throws AdapterException {
-
-//        AdapterDescription adapterDescription = new AdapterStorageImpl().getAdapter(id);
-        // get all Adapters and check id
-        AdapterDescription adapterDescription = getAdapterDescriptionById(id);
+    public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription) {
 
         SpDataStream ds;
         if (adapterDescription instanceof AdapterSetDescription) {
             ds = ((AdapterSetDescription) adapterDescription).getDataSet();
             EventGrounding eg = new EventGrounding();
-            eg.setTransportProtocols(Arrays.asList(SupportedProtocols.kafka(), SupportedProtocols.jms(),
-                    SupportedProtocols.mqtt()));
+            eg.setTransportProtocols(
+                    Arrays.asList(SupportedProtocols.kafka(),
+                            SupportedProtocols.jms(),
+                            SupportedProtocols.mqtt()));
             eg.setTransportFormats(Arrays.asList(TransportFormatGenerator.getTransportFormat()));
             ((SpDataSet) ds).setSupportedGrounding(eg);
         } else {
             ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
-
-
-//            String topic = adapterDescription.getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
-//
-//            TransportProtocol tp = Protocols.kafka(BackendConfig.INSTANCE.getKafkaHost(), BackendConfig.INSTANCE.getKafkaPort(), topic);
-//            EventGrounding eg = new EventGrounding();
-//            eg.setTransportProtocol(tp);
-//
             ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
         }
 
-        String url = adapterDescription.getUri();
-
+        ds.setElementId("urn:fzi.de:eventstream:" + RandomStringUtils.randomAlphabetic(6));
         ds.setName(adapterDescription.getName());
         ds.setDescription(adapterDescription.getDescription());
-        ds.setCorrespondingAdapterId(adapterDescription.getAppId());
+        ds.setCorrespondingAdapterId(adapterDescription.getElementId());
         ds.setInternallyManaged(true);
-
-        ds.setUri(url);
 
         return ds;
     }
 
-    public void setConnectHost(String connectHost) {
-        this.connectHost = connectHost;
+    private AdapterDescription getAndDecryptAdapter(String adapterId) {
+        AdapterDescription adapter = this.adapterInstanceStorage.getAdapter(adapterId);
+        return new AdapterEncryptionService(new Cloner().adapterDescription(adapter)).decrypt();
     }
+
 }

@@ -19,7 +19,8 @@
 <div fxLayout="column" fxFlex="100" class="page-container page-container-padding page-container-connect">
     <div fxLayout="row" style="padding:0px;" class="sp-tab-bg">
         <div fxLayout="fill" class="page-container-nav">
-            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)" color="accent">
+            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)"
+                           color="accent">
                 <mat-tab label="Data Marketplace">
                 </mat-tab>
                 <mat-tab id="all-adapters" label="My Adapters">
@@ -65,13 +66,6 @@
             </mat-form-field>
         </div>
         <span fxFlex></span>
-
-        <mat-icon class="icon-style" matTooltip="Download All Adapter Templates" (click)="downloadAllAdapterTemplates()"
-                  style="margin-right: 15px; cursor: pointer;">cloud_download
-        </mat-icon>
-        <mat-icon class="icon-style" matTooltip="Upload Adapter Templates" (click)="uploadAdapterTemplates()"
-                  style="margin-right: 15px; cursor: pointer;">cloud_upload
-        </mat-icon>
 
     </div>
     <div class="container-fluid marketplace-container" *ngIf="adapterLoadingError" fxFlex="100"

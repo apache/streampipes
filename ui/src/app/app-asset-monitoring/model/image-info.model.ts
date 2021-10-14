@@ -26,4 +26,6 @@ export interface ImageInfo {
     scaleY: number;
     rotation: number;
     image: any;
+    draggable: boolean;
+    id: string;
 }

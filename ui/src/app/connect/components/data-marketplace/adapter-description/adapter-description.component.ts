@@ -16,21 +16,21 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {ConnectService} from '../../../services/connect.service';
-import {DataMarketplaceService} from "../../../services/data-marketplace.service";
-import {AdapterExportDialog} from '../../../dialog/adapter-export/adapter-export-dialog.component';
-import {MatDialog} from '@angular/material/dialog';
-import {AdapterDescription} from "../../../../core-model/gen/streampipes-model";
-import {PanelType} from "../../../../core-ui/dialog/base-dialog/base-dialog.model";
-import {DialogService} from "../../../../core-ui/dialog/base-dialog/base-dialog.service";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ConnectService } from '../../../services/connect.service';
+import { DataMarketplaceService } from '../../../services/data-marketplace.service';
+import { AdapterExportDialog } from '../../../dialog/adapter-export/adapter-export-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AdapterDescription } from '../../../../core-model/gen/streampipes-model';
+import { PanelType } from '../../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../../core-ui/dialog/base-dialog/base-dialog.service';
 
 @Component({
   selector: 'sp-adapter-description',
   templateUrl: './adapter-description.component.html',
-  styleUrls: ['./adapter-description.component.scss'],
+  styleUrls: ['./adapter-description.component.scss']
 })
-export class AdapterDescriptionComponent {
+export class AdapterDescriptionComponent implements OnInit {
 
   @Input()
   adapter: AdapterDescription;
@@ -42,25 +42,28 @@ export class AdapterDescriptionComponent {
   createTemplateEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
 
   adapterToDelete: string;
-  deleting: boolean = false;
-  className: string = "";
-  isDataSetDescription: boolean = false;
-  isDataStreamDescription: boolean = false;
-  isRunningAdapter: boolean = false;
+  deleting = false;
+  className = '';
+  isDataSetDescription = false;
+  isDataStreamDescription = false;
+  isRunningAdapter = false;
   adapterLabel: string;
 
   constructor(private connectService: ConnectService,
               private dataMarketplaceService: DataMarketplaceService,
               private dialogService: DialogService,
-              public dialog: MatDialog) {}
+              public dialog: MatDialog) {
+  }
 
   ngOnInit() {
-    if (this.adapter.name == null) this.adapter.name = "";
-      this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
-      this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-      this.isRunningAdapter = (this.adapter.id != undefined && !(this.adapter as any).isTemplate);
-      this.adapterLabel = this.adapter.name.split(' ').join('_');
-      this.className = this.getClassName();
+    if (this.adapter.name == null) {
+      this.adapter.name = '';
+    }
+    this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
+    this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
+    this.isRunningAdapter = (this.adapter.elementId !== undefined && !(this.adapter as any).isTemplate);
+    this.adapterLabel = this.adapter.name.split(' ').join('_');
+    this.className = this.getClassName();
   }
 
   isGenericDescription(): boolean {
@@ -72,36 +75,27 @@ export class AdapterDescriptionComponent {
   }
 
   shareAdapterTemplate(adapter: AdapterDescription): void {
-    this.dialogService.open(AdapterExportDialog,{
+    this.dialogService.open(AdapterExportDialog, {
       panelType: PanelType.STANDARD_PANEL,
-      title: "Export adapter template",
-      width: "50vw",
+      title: 'Export adapter template',
+      width: '50vw',
       data: {
-        "adapter": adapter
+        'adapter': adapter
       }
     });
   }
 
-  deleteAdapterTemplate(adapter: AdapterDescription): void {
-      this.adapterToDelete = adapter.id;
-      this.dataMarketplaceService.deleteAdapterTemplate(adapter).subscribe(res => {
-          this.adapterToDelete = undefined;
-          this.updateAdapterEmitter.emit();
-          this.deleting = false;
-      });
-  }
-
   createTemplate(adapter: AdapterDescription): void {
-      this.createTemplateEmitter.emit(adapter);
+    this.createTemplateEmitter.emit(adapter);
   }
 
   getClassName() {
-    let className = this.isRunningAdapter ? "adapter-box" : "adapter-description-box";
+    let className = this.isRunningAdapter ? 'adapter-box' : 'adapter-description-box';
 
     if (this.isDataSetDescription) {
-      className += " adapter-box-set";
+      className += ' adapter-box-set';
     } else {
-      className +=" adapter-box-stream";
+      className += ' adapter-box-stream';
     }
 
     return className;
@@ -112,11 +106,11 @@ export class AdapterDescriptionComponent {
   }
 
   getIconUrl() {
-    //TODO Use "this.adapter.includesAssets" if boolean demoralizing is working
+    // TODO Use "this.adapter.includesAssets" if boolean demoralizing is working
     if (this.adapter.includedAssets.length > 0) {
-      return this.dataMarketplaceService.getAssetUrl(this.adapter.appId) + "/icon";
+      return this.dataMarketplaceService.getAssetUrl(this.adapter.appId) + '/icon';
     } else {
-      return 'assets/img/connect/' + this.adapter.iconUrl;
+      return `assets/img/connect/${this.adapter.iconUrl}`;
     }
   }
 }

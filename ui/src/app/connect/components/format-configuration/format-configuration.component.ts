@@ -70,13 +70,14 @@ export class FormatConfigurationComponent implements OnInit {
 
   constructor(
     private restService: RestService,
-    private _formBuilder: FormBuilder) { }
+    private _formBuilder: FormBuilder) {
+  }
 
   ngOnInit(): void {
 
     // fetch all available formats from backend
     this.restService.getFormats().subscribe(res => {
-      this.allFormats = res.list;
+      this.allFormats = res;
     });
 
     // initialize form for validation

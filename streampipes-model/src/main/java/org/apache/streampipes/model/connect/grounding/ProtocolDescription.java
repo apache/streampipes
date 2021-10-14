@@ -29,8 +29,6 @@ import java.util.List;
 @TsModel
 public class ProtocolDescription extends NamedStreamPipesEntity {
 
-
-    //Remove for new classes
     @Deprecated
     String sourceType;
 

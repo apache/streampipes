@@ -31,8 +31,7 @@ import java.util.*;
 
 public class CouchDbInstallationStep implements InstallationStep {
 
-    private static List<String> initRdfEndpointPorts =
-            Collections.singletonList("8099/api/v1/master/sources/");
+    private static List<String> initRdfEndpointPorts = new ArrayList<>();
     private static final String initRdfEndpointHost = "http://localhost:";
 
     private static final String PREPARING_NOTIFICATIONS_TEXT = "Preparing database " +

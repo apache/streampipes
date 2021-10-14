@@ -16,39 +16,37 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.guess;
+@import '../../../../scss/sp/sp-dialog.scss';
 
-import com.google.gson.annotations.SerializedName;
+.element-margin {
+    margin-top:10px;
+    margin-bottom:10px;
+}
 
-public class PropertyGuesses {
+.mat-radio-button {
+    padding: 10px;
+}
 
-    @SerializedName("class")
-    private String clazz;
+.mat-radio-button {
+    padding: 10px;
+}
 
-    private double probability;
+.pipeline-avatar {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    color:white;
+}
 
+.list-item:hover {
+    background: var(--color-bg-1);
+    cursor: pointer;
+}
 
-    public PropertyGuesses() {
-    }
+.list-item {
+    border-bottom: 1px solid #BDBDBD;
+}
 
-    public PropertyGuesses(String clazz, double probability) {
-        this.clazz = clazz;
-        this.probability = probability;
-    }
-
-    public String getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
-    }
-
-    public double getProbability() {
-        return probability;
-    }
-
-    public void setProbability(double probability) {
-        this.probability = probability;
-    }
+.mr-10 {
+    margin-right: 10px;
 }

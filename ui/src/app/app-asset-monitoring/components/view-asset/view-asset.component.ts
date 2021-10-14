@@ -16,12 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import Konva from "konva";
-import {WebsocketService} from "../../services/websocket.service";
-import {DashboardConfiguration} from "../../model/dashboard-configuration.model";
-import {RestService} from "../../services/rest.service";
+import Konva from 'konva';
+import { WebsocketService } from '../../services/websocket.service';
+import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
+import { RestService } from '../../services/rest.service';
 
 interface Window {
     Image: any;
@@ -38,6 +38,7 @@ export class ViewAssetComponent {
 
     @Input() dashboardConfig: DashboardConfiguration;
     @Output() dashboardClosed = new EventEmitter<boolean>();
+    @Output() editDashboardEmitter = new EventEmitter<DashboardConfiguration>();
 
     mainCanvasStage: any;
     mainLayer: any;
@@ -55,19 +56,42 @@ export class ViewAssetComponent {
         this.backgroundImageLayer = new Konva.Layer();
         this.showImage();
         this.mainCanvasStage.add(this.backgroundImageLayer);
+        const labels = this.mainCanvasStage.find('Label');
+        labels.each(label => {
+           label.on('mouseenter', () => this.onMouseEnter(label));
+            label.on('mouseleave', () => this.onMouseLeave(label));
+           label.on('click', () => this.onLinkClicked(label));
+        });
+
         this.backgroundImageLayer.moveToBottom();
         this.mainCanvasStage.draw();
         this.updateMeasurements();
     }
 
+    onMouseEnter(label) {
+        label.children[0].attrs.fontStyle = 'bold';
+        this.mainCanvasStage.draw();
+    }
+
+    onMouseLeave(label) {
+        label.children[0].attrs.fontStyle = 'normal';
+        this.mainCanvasStage.draw();
+    }
+
+    onLinkClicked(label) {
+        const href = label.children[0].attrs.hyperlink;
+        const newWindow = label.children[0].attrs.newWindow;
+        newWindow ? (window as any).open(href) : (window as any).location.href = href;
+    }
+
     updateMeasurements() {
-        let dynamicShapes = this.mainCanvasStage.find(".dynamic-text");
+        const dynamicShapes = this.mainCanvasStage.find('.dynamic-text');
         dynamicShapes.forEach(ds => {
-            let monitoredField = ds.text();
+            const monitoredField = ds.text();
            this.websocketService.connect(ds.attrs.brokerUrl, ds.attrs.topic).subscribe(msg => {
                ds.text(msg[monitoredField]);
                this.mainCanvasStage.draw();
-           })
+           });
         });
     }
 
@@ -76,14 +100,18 @@ export class ViewAssetComponent {
         image.src = this.restService.getImageUrl(this.dashboardConfig.imageInfo.imageName);
         this.dashboardConfig.imageInfo.image = image;
         image.onload = () => {
-            let imageCanvas = new Konva.Image(this.dashboardConfig.imageInfo);
+            const imageCanvas = new Konva.Image(this.dashboardConfig.imageInfo);
             this.backgroundImageLayer.add(imageCanvas);
             this.backgroundImageLayer.draw();
-        }
+        };
     }
 
     closeDashboard() {
         this.dashboardClosed.emit(true);
+    }
+
+    editDashboard() {
+        this.editDashboardEmitter.emit(this.dashboardConfig);
     }
 
 }

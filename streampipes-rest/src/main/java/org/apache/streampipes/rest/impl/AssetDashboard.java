@@ -20,6 +20,8 @@ package org.apache.streampipes.rest.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.streampipes.model.client.assetdashboard.AssetDashboardConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.storage.api.IAssetDashboardStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -44,6 +46,17 @@ public class AssetDashboard extends AbstractRestResource {
   @Path("/{dashboardId}")
   public Response getAssetDashboard(@PathParam("dashboardId") String dashboardId) {
     return ok(getNoSqlStorage().getAssetDashboardStorage().getAssetDashboard(dashboardId));
+  }
+
+  @PUT
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/{dashboardId}")
+  public Response updateAssetDashboard(@PathParam("dashboardId") String dashboardId,
+                                       AssetDashboardConfig dashboardConfig) {
+    AssetDashboardConfig dashboard = getAssetDashboardStorage().getAssetDashboard(dashboardId);
+    dashboardConfig.setRev(dashboard.getRev());
+    getNoSqlStorage().getAssetDashboardStorage().updateAssetDashboard(dashboardConfig);
+    return ok();
   }
 
   @GET
@@ -111,5 +124,9 @@ public class AssetDashboard extends AbstractRestResource {
 
   private String getTargetFile(String filename) {
     return getTargetDirectory() + File.separator + filename;
+  }
+
+  private IAssetDashboardStorage getAssetDashboardStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getAssetDashboardStorage();
   }
 }

@@ -16,16 +16,16 @@
  *
  */
 
-import {Component, EventEmitter, Output} from "@angular/core";
-import {RestService} from "../../services/rest.service";
-import {DashboardConfiguration} from "../../model/dashboard-configuration.model";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { RestService } from '../../services/rest.service';
+import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 
 @Component({
     selector: 'asset-dashboard-overview',
     templateUrl: './dashboard-overview.component.html',
     styleUrls: ['./dashboard-overview.component.css']
 })
-export class AssetDashboardOverviewComponent {
+export class AssetDashboardOverviewComponent implements OnInit {
 
     @Output() selectedDashboard = new EventEmitter<DashboardConfiguration>();
 
@@ -45,8 +45,9 @@ export class AssetDashboardOverviewComponent {
 
     getDashboards() {
         this.restService.getDashboards().subscribe(response => {
+            console.log(response);
             this.dashboardConfigs = response;
-        })
+        });
     }
 
     openDashboard(dashboardConfig: DashboardConfiguration) {
@@ -56,6 +57,6 @@ export class AssetDashboardOverviewComponent {
     deleteDashboard(dashboardId: string) {
         this.restService.deleteDashboard(dashboardId).subscribe(response => {
             this.getDashboards();
-        })
+        });
     }
 }

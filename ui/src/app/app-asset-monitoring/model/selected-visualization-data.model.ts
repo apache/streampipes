@@ -27,3 +27,10 @@ export interface SelectedVisualizationData {
     brokerUrl: string;
     topic: string;
 }
+
+export interface HyperlinkConfig {
+    linkLabel: string;
+    linkHref: string;
+    labelFontSize: number;
+    newWindow: boolean;
+}

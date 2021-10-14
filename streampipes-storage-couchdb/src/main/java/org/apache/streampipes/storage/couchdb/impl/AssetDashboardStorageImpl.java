@@ -46,6 +46,11 @@ public class AssetDashboardStorageImpl extends AbstractDao<AssetDashboardConfig>
   }
 
   @Override
+  public void updateAssetDashboard(AssetDashboardConfig assetDashboardConfig) {
+    update(assetDashboardConfig);
+  }
+
+  @Override
   public void deleteAssetDashboard(String dashboardId) {
     delete(dashboardId);
   }

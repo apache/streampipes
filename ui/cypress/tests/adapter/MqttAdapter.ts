@@ -23,7 +23,7 @@ import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+describe('Test MQTT Integration', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
   });
@@ -56,7 +56,6 @@ describe('Test Random Data Simulator Stream Adapter', () => {
       .create('MQTT')
       .setName('Adapter Mqtt')
       .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
       .addProtocolInput('select', 'Unauthenticated', 'check')
       .addProtocolInput('input', 'broker_url', 'tcp://localhost:1883')
       .addProtocolInput('input', 'topic', topicname)

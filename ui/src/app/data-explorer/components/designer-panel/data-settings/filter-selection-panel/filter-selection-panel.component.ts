@@ -17,11 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import {
-  FieldConfig,
-  SelectedFilter,
-  SourceConfig
-} from '../../../../models/dataview-dashboard.model';
+import { FieldConfig, SelectedFilter, SourceConfig } from '../../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-filter-selection-panel',
@@ -31,6 +27,7 @@ import {
 export class FilterSelectionPanelComponent {
 
   @Input() sourceConfig: SourceConfig;
+  @Input() widgetId: string;
 
   constructor() {
   }

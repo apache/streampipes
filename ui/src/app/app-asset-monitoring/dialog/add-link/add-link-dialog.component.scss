@@ -16,14 +16,8 @@
  *
  */
 
-package org.apache.streampipes.connect.container.master.util;
+@import '../../../../scss/sp/sp-dialog.scss';
 
-public class Utils {
-
-    public static String addUserNameToApi(String url, String userName) {
-        return url;
-        //return  url + "/api/v1/" + userName + "/";
-    }
-
-
+.mr-10 {
+  margin-right: 10px;
 }

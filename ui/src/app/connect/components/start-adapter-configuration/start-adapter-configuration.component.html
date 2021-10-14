@@ -90,11 +90,6 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-
-            <mat-checkbox *ngIf="isSetAdapter" [(ngModel)]="adapterDescription.stopPipeline"
-                          [ngModelOptions]="{standalone: true}">Stop pipeline when replay is completed
-            </mat-checkbox>
-
         </div>
     </div>
 
@@ -103,9 +98,9 @@
         <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back
         </button>
         <button [disabled]="startAdapterSettingsFormValid" mat-raised-button
-                id="button-saveTemplate" color="accent" (click)="saveTemplate()" mat-button
+                id="button-saveTemplate" color="accent" (click)="createAdapter()" mat-button
                 style="margin-left:10px;">
-            Save as Template
+            Create Adapter
         </button>
         <button [disabled]="startAdapterSettingsFormValid" mat-raised-button id="button-startAdapter"
                 color="accent" (click)="startAdapter()" mat-button style="margin-left:10px;">

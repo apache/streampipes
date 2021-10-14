@@ -17,9 +17,12 @@
  */
 
 .asset-view-canvas {
-    width:1200px;
+    width:1400px;
     height:900px;
     border: 2px solid rgb(27, 20, 100);
     margin: 20px auto;
+}
 
+.mr-10 {
+    margin-right: 10px;
 }

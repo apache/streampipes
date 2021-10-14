@@ -48,6 +48,7 @@ public class SpDataSet extends SpDataStream {
 
   public SpDataSet() {
     super();
+    this.eventSchema = new EventSchema();
   }
 
   public SpDataSet(SpDataSet other) {

@@ -28,9 +28,9 @@
         </div>
     </div>
 
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
+    <div fxLayout="column" fxFlex="100">
         <asset-dashboard-overview *ngIf="selectedIndex == 0 && !dashboardSelected" fxFlex="100" (selectedDashboard)="openDashboard($event)"></asset-dashboard-overview>
-        <view-asset fxFlex="100" *ngIf="selectedIndex == 0 && dashboardSelected" [dashboardConfig]="selectedDashboard" (dashboardClosed)="closeDashboard($event)"></view-asset>
-        <create-asset *ngIf="selectedIndex == 1" fxFlex="100" (dashboardClosed)="closeDashboard($event)"></create-asset>
+        <view-asset fxFlex="100" *ngIf="selectedIndex == 0 && dashboardSelected" [dashboardConfig]="selectedDashboard" (dashboardClosed)="closeDashboard($event)" (editDashboardEmitter)="editDashboard($event)"></view-asset>
+        <create-asset *ngIf="selectedIndex == 1" fxFlex="100" (dashboardClosed)="closeDashboard($event)" [dashboardConfig]="selectedDashboard"></create-asset>
     </div>
 </div>
