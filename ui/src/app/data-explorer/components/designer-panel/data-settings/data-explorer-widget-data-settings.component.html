@@ -85,7 +85,8 @@
                             <mat-label>
                                 <span>&nbsp;Limit</span>
                             </mat-label>
-                            <input [(ngModel)]="sourceConfig.queryConfig.limit" matInput (change)="triggerDataRefresh()">
+                            <input [(ngModel)]="sourceConfig.queryConfig.limit" matInput
+                                   (change)="triggerDataRefresh()">
                         </mat-form-field>
 
                         <mat-form-field fxFlex="100" color="accent">
@@ -98,7 +99,8 @@
                     <div fxLayout="column" fxFlex="100"
                          *ngIf="sourceConfig.queryType === 'aggregated'">
                         <div>
-                            <mat-checkbox color="accent" [(ngModel)]="sourceConfig.queryConfig.autoAggregate" (change)="triggerDataRefresh()">
+                            <mat-checkbox color="accent" [(ngModel)]="sourceConfig.queryConfig.autoAggregate"
+                                          (change)="triggerDataRefresh()">
                                 Auto-Aggregate
                             </mat-checkbox>
                         </div>
@@ -116,7 +118,8 @@
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">
-                    <sp-filter-selection-panel [sourceConfig]="sourceConfig"></sp-filter-selection-panel>
+                    <sp-filter-selection-panel [sourceConfig]="sourceConfig"
+                                               [widgetId]="widgetId"></sp-filter-selection-panel>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">

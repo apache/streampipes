@@ -20,7 +20,7 @@
     <span class="data-explorer-header">Filter</span>
     <div>
         <button mat-button mat-raised-button color="accent" class="small-button"
-                (click)="addFilter(sourceConfig)"
+                (click)="addFilter()"
                 style="margin-right:10px;margin-bottom: 15px;">Add Filter
         </button>
     </div>
@@ -30,13 +30,19 @@
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                 <mat-form-field color="accent" class="w-50-px mr-15">
                     <mat-label>Field</mat-label>
-                    <mat-select [(value)]="filter.field" [compareWith]="compare">
-                        <mat-option *ngFor="let field of sourceConfig.queryConfig.fields" [value]="field">{{field.runtimeName}}</mat-option>
+                    <mat-select
+                            [(value)]="filter.field"
+                            (selectionChange)="updateWidget()"
+                            [compareWith]="compare">
+                        <mat-option *ngFor="let field of sourceConfig.queryConfig.fields"
+                                    [value]="field">{{field.runtimeName}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field color="accent" class="w-50-px mr-15">
                     <mat-label>Operator</mat-label>
-                    <mat-select [(value)]="filter.operator">
+                    <mat-select
+                            [(value)]="filter.operator"
+                            (selectionChange)="updateWidget()">
                         <mat-option [value]="'='">
                             <span class="pipeline-name">=</span>
                         </mat-option>
@@ -52,11 +58,16 @@
                         <mat-option [value]="'>'">
                             <span class="pipeline-name">></span>
                         </mat-option>
+                        <mat-option [value]="'!='">
+                            <span class="pipeline-name">!=</span>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field color="accent" class="w-50-px mr-15">
                     <mat-label>Value</mat-label>
-                    <input matInput [(ngModel)]="filter.value">
+                    <input matInput
+                           [(ngModel)]="filter.value"
+                           (change)="updateWidget()">
                 </mat-form-field>
                 <button mat-icon-button color="accent"
                         (click)="remove(sourceConfig, filter.index)">
