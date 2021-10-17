@@ -42,7 +42,7 @@ describe('Test Table View in Data Explorer', () => {
 
     DataLakeUtils.dataConfigSelectAllFields();
 
-    DataLakeUtils.clickNextButton();
+    DataLakeUtils.selectVisualizationConfig();
 
     DataLakeUtils.selectVisualizationType('Table');
 
