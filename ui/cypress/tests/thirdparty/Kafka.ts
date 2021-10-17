@@ -16,12 +16,10 @@
  *
  */
 
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineUtils } from '../../support/utils/PipelineUtils';
+import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
+import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 
 describe('Test Kafka Integration', () => {
   before('Setup Test', () => {
@@ -29,32 +27,16 @@ describe('Test Kafka Integration', () => {
   });
 
   it('Perform Test', () => {
-    const simulatorAdapterName = 'simulator';
+    const topicName = 'cypresstopic';
 
-
-    const machineAdapter = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName(simulatorAdapterName)
-      .addInput('input', 'wait-time-ms', '1000')
+    const sink: PipelineElementInput = PipelineElementBuilder.create('kafka_publisher')
+      .addInput('select', 'Unauthenticated', 'check')
+      .addInput('input', 'host', 'localhost')
+      .addInput('input', 'port', '{backspace}{backspace}{backspace}{backspace}9094')
+      .addInput('input', 'topic', topicName)
       .build();
 
-    AdapterUtils.testSpecificStreamAdapter(machineAdapter);
-
-    const topicname = 'cypresstopic';
-    const pipelineInput = PipelineBuilder.create('Pipeline Test')
-      .addSource(simulatorAdapterName)
-      .addSink(
-        PipelineElementBuilder.create('kafka_publisher')
-          .addInput('select', 'Unauthenticated', 'check')
-          .addInput('input', 'host', 'localhost')
-          .addInput('input', 'port', '{backspace}{backspace}{backspace}{backspace}9094')
-          .addInput('input', 'topic', topicname)
-          .build())
-      .build();
-
-    PipelineUtils.testPipeline(pipelineInput);
-
-    const adapterInput = GenericAdapterBuilder
+    const adapter = GenericAdapterBuilder
       .create('Apache_Kafka')
       .setName('Kafka4')
       .setTimestampProperty('timestamp')
@@ -62,11 +44,11 @@ describe('Test Kafka Integration', () => {
       .addProtocolInput('input', 'host', 'localhost')
       .addProtocolInput('input', 'port', '9094')
       .addProtocolInput('click', 'sp-reload', '')
-      .addProtocolInput('select', topicname, 'check')
+      .addProtocolInput('select', topicName, 'check')
       .setFormat('json_object')
       .build();
 
-    AdapterUtils.testGenericStreamAdapter(adapterInput);
+    ThirdPartyIntegrationUtils.runTest(sink, adapter);
   });
 
 });
