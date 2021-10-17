@@ -20,6 +20,7 @@
     <span class="data-explorer-header">Filter</span>
     <div>
         <button mat-button mat-raised-button color="accent" class="small-button"
+                data-cy="design-panel-data-settings-add-filter"
                 (click)="addFilter()"
                 style="margin-right:10px;margin-bottom: 15px;">Add Filter
         </button>
@@ -33,7 +34,8 @@
                     <mat-select
                             [(value)]="filter.field"
                             (selectionChange)="updateWidget()"
-                            [compareWith]="compare">
+                            [compareWith]="compare"
+                            data-cy="design-panel-data-settings-filter-field">
                         <mat-option *ngFor="let field of sourceConfig.queryConfig.fields"
                                     [value]="field">{{field.runtimeName}}</mat-option>
                     </mat-select>
@@ -42,7 +44,8 @@
                     <mat-label>Operator</mat-label>
                     <mat-select
                             [(value)]="filter.operator"
-                            (selectionChange)="updateWidget()">
+                            (selectionChange)="updateWidget()"
+                            data-cy="design-panel-data-settings-filter-operator">
                         <mat-option [value]="'='">
                             <span class="pipeline-name">=</span>
                         </mat-option>
@@ -67,10 +70,12 @@
                     <mat-label>Value</mat-label>
                     <input matInput
                            [(ngModel)]="filter.value"
-                           (change)="updateWidget()">
+                           (change)="updateWidget()"
+                           data-cy="design-panel-data-settings-filter-value">
                 </mat-form-field>
                 <button mat-icon-button color="accent"
-                        (click)="remove(sourceConfig, filter.index)">
+                        (click)="remove(sourceConfig, filter.index)"
+                        data-cy="design-panel-data-settings-remove-filter">
                     <i class="material-icons">remove</i>
                 </button>
             </div>

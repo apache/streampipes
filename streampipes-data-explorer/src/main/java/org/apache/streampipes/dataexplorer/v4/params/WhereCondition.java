@@ -41,4 +41,16 @@ public class WhereCondition {
             .add(condition)
             .toString();
   }
+
+  public String getField() {
+    return field;
+  }
+
+  public String getOperator() {
+    return operator;
+  }
+
+  public String getCondition() {
+    return condition;
+  }
 }

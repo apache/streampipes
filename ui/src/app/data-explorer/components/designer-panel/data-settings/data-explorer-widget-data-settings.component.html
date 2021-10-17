@@ -48,8 +48,10 @@
                     <mat-form-field color="accent" fxFlex="100" *ngIf="sourceConfig.sourceType == 'pipeline'">
                         <mat-label>Data Explorer Sinks</mat-label>
                         <mat-select [(value)]="sourceConfig.measureName"
-                                    (selectionChange)="updateMeasure(sourceConfig, $event)">
-                            <mat-option [value]="pipeline.measureName" *ngFor="let pipeline of availablePipelines">
+                                    (selectionChange)="updateMeasure(sourceConfig, $event)"
+                                    data-cy="data-explorer-select-data-set">
+                            <mat-option *ngFor="let pipeline of availablePipelines"
+                                        [value]="pipeline.measureName">
                                 <span class="pipeline-name">{{ pipeline.pipelineName }}</span>&nbsp;&nbsp;{{ pipeline.measureName }}
                             </mat-option>
                         </mat-select>

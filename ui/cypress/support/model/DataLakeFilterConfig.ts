@@ -16,11 +16,14 @@
  *
  */
 
-package org.apache.streampipes.rest;
+export class DataLakeFilterConfig {
+  field: string;
+  value: string;
+  operator: string | '<' | '>' | '=' | '!=';
 
-public class Mock {
-  public static int PORT = 8042;
-
-  public static String HOST = "http://localhost:" + PORT;
-
+  constructor(field: string, value: string, operator: string) {
+    this.field = field;
+    this.value = value;
+    this.operator = operator;
+  }
 }

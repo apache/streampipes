@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.dataexplorer.v4.params;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
 
 import java.util.ArrayList;
@@ -92,9 +93,20 @@ public class WhereStatementParams extends QueryParamsV4 {
 
   private void buildConditions(String whereConditions) {
     List<String[]> whereParts = DataLakeManagementUtils.buildConditions(whereConditions);
+    // Add single quotes to strings except for true and false
     whereParts.forEach(singleCondition -> {
-      this.whereConditions.add(new WhereCondition(singleCondition[0], singleCondition[1], singleCondition[2]));
+
+      this.whereConditions.add(new WhereCondition(singleCondition[0], singleCondition[1], this.returnCondition(singleCondition[2])));
     });
+  }
+
+  private String returnCondition(String inputCondition) {
+    if (NumberUtils.isCreatable(inputCondition) || Boolean.parseBoolean(inputCondition)) {
+      return inputCondition;
+    } else {
+      return "'" + inputCondition + "'";
+    }
+
   }
 
   public List<WhereCondition> getWhereConditions() {
