@@ -142,17 +142,29 @@ public class CouchDbInstallationStep extends InstallationStep {
       Map<String, MapReduce> views = new HashMap<>();
 
       MapReduce passwordFunction = new MapReduce();
-      passwordFunction.setMap("function(doc) { if(doc.username && doc.principalType === 'USER_ACCOUNT' && doc.password) { emit(doc.username, doc.password); } }");
+      passwordFunction.setMap("function(doc) { if(doc.properties.username && doc.properties.principalType === 'USER_ACCOUNT' && doc.properties.password) { emit(doc.properties.username, doc.properties.password); } }");
 
       MapReduce usernameFunction = new MapReduce();
-      usernameFunction.setMap("function(doc) { if(doc.username) { emit(doc.username, doc); } }");
+      usernameFunction.setMap("function(doc) { if(doc.properties.username) { emit(doc.properties.username, doc); } }");
+
+      MapReduce permissionFunction = new MapReduce();
+      permissionFunction.setMap("function(doc) { if(doc.$type === 'permission') { emit(doc._id, doc); } }");
+
+      MapReduce groupFunction = new MapReduce();
+      groupFunction.setMap("function(doc) { if(doc.$type === 'group') { emit(doc._id, doc); } }");
 
       MapReduce tokenFunction = new MapReduce();
-      tokenFunction.setMap("function(doc) { if (doc.userApiTokens) { doc.userApiTokens.forEach(function(token) { emit(token.hashedToken, doc.email); });}}");
+      tokenFunction.setMap("function(doc) { if (doc.properties.userApiTokens) { doc.properties.userApiTokens.forEach(function(token) { emit(token.properties.hashedToken, doc.properties.email); });}}");
+
+      MapReduce userPermissionFunction = new MapReduce();
+      userPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; i < doc.allowedSids.length; i++) {emit(doc.allowedSids[i],doc)}}}");
 
       views.put("password", passwordFunction);
       views.put("username", usernameFunction);
+      views.put("groups", groupFunction);
+      views.put("permissions", permissionFunction);
       views.put("token", tokenFunction);
+      views.put("userpermissions", userPermissionFunction);
 
       userDocument.setViews(views);
       Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);

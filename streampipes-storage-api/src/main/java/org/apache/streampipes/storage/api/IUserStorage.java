@@ -17,13 +17,12 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.ServiceAccount;
-import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.client.user.*;
 
 import java.util.List;
 
 public interface IUserStorage {
+
   List<Principal> getAllUsers();
 
   List<UserAccount> getAllUserAccounts();
@@ -47,4 +46,5 @@ public interface IUserStorage {
   void deleteUser(String principalId);
 
   Principal getUserById(String principalId);
+
 }

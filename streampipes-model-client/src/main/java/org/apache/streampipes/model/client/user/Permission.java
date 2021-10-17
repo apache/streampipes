@@ -19,34 +19,35 @@ package org.apache.streampipes.model.client.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@TsModel
-public class Group {
+public class Permission {
 
-  protected @SerializedName("_id") String groupId;
+  protected @SerializedName("_id") String permissionId;
   protected @SerializedName("_rev") String rev;
 
   @JsonIgnore
-  private String $type = "group";
+  private String $type = "permission";
 
-  private String groupName;
+  private String objectInstanceId;
+  private String objectClassName;
 
-  private Set<Role> roles;
+  private String ownerSid;
 
-  public Group() {
-    this.roles = new HashSet<>();
+  private List<String> allowedSids;
+
+  public Permission() {
+    this.allowedSids = new ArrayList<>();
   }
 
-  public String getGroupId() {
-    return groupId;
+  public String getPermissionId() {
+    return permissionId;
   }
 
-  public void setGroupId(String groupId) {
-    this.groupId = groupId;
+  public void setPermissionId(String permissionId) {
+    this.permissionId = permissionId;
   }
 
   public String getRev() {
@@ -57,20 +58,40 @@ public class Group {
     this.rev = rev;
   }
 
-  public String getGroupName() {
-    return groupName;
+  public String getObjectInstanceId() {
+    return objectInstanceId;
   }
 
-  public void setGroupName(String groupName) {
-    this.groupName = groupName;
+  public void setObjectInstanceId(String objectInstanceId) {
+    this.objectInstanceId = objectInstanceId;
   }
 
-  public Set<Role> getRoles() {
-    return roles;
+  public String getObjectClassName() {
+    return objectClassName;
   }
 
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
+  public void setObjectClassName(String objectClassName) {
+    this.objectClassName = objectClassName;
+  }
+
+  public String getOwnerSid() {
+    return ownerSid;
+  }
+
+  public void setOwnerSid(String ownerSid) {
+    this.ownerSid = ownerSid;
+  }
+
+  public void addAllowedSid(String sid) {
+    this.allowedSids.add(sid);
+  }
+
+  public List<String> getAllowedSids() {
+    return allowedSids;
+  }
+
+  public void setAllowedSids(List<String> allowedSids) {
+    this.allowedSids = allowedSids;
   }
 
   public String get$type() {

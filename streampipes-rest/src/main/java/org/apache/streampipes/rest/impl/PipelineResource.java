@@ -42,6 +42,7 @@ import org.apache.streampipes.rest.impl.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -68,11 +69,10 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                   mediaType = "application/json",
                                   array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
                   })})
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
   public List<Pipeline> getOwn() {
     return PipelineManager.getAllPipelines();
-    //return ok(PipelineManager.getOwnPipelines(getAuthenticatedUsername()));
-
   }
 
   @GET
@@ -165,7 +165,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_CREATE_PIPELINE_PRIVILEGE)
   public Response addPipeline(Pipeline pipeline) {
 
-    String pipelineId = PipelineManager.addPipeline(getAuthenticatedUsername(), pipeline);
+    String pipelineId = PipelineManager.addPipeline(getAuthenticatedUserSid(), pipeline);
     SuccessMessage message = Notifications.success("Pipeline stored");
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);

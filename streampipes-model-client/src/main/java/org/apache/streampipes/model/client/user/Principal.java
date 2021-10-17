@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.client.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public abstract class Principal {
 
 	protected @SerializedName("_id") String principalId;
 	protected @SerializedName("_rev") String rev;
+
+	@JsonIgnore
+	private String $type = "principal";
 
 	private boolean accountEnabled;
 	private boolean accountLocked;
@@ -188,5 +192,13 @@ public abstract class Principal {
 
 	public void setObjectPermissions(Set<String> objectPermissions) {
 		this.objectPermissions = objectPermissions;
+	}
+
+	public String get$type() {
+		return $type;
+	}
+
+	public void set$type(String $type) {
+		this.$type = $type;
 	}
 }

@@ -18,16 +18,19 @@
 
 package org.apache.streampipes.manager.pipeline;
 
+import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.permission.PermissionManager;
 import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class PipelineManager {
 
@@ -59,16 +62,19 @@ public class PipelineManager {
 
     /**
      * Adds a new pipeline for the user with the username to the storage
-     * @param username
+     * @param principalSid the ID of the owner principal
      * @param pipeline
      * @return the pipelineId
      */
-    public static String addPipeline(String username, Pipeline pipeline) {
+    public static String addPipeline(String principalSid, Pipeline pipeline) {
 
         // call by reference bad smell
-        String pipelineId = UUID.randomUUID().toString();
-        preparePipelineBasics(username, pipeline, pipelineId);
+        String pipelineId = UUIDGenerator.generateUuid();
+        preparePipelineBasics(principalSid, pipeline, pipelineId);
         Operations.storePipeline(pipeline);
+
+        Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
+        getPermissionStorage().addPermission(permission);
 
         return pipelineId;
     }
@@ -120,5 +126,9 @@ public class PipelineManager {
 
     private static IPipelineStorage getPipelineStorage() {
         return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+    }
+
+    private static IPermissionStorage getPermissionStorage() {
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
     }
 }

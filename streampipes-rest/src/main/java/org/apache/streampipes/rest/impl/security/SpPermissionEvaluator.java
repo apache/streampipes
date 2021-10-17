@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.impl.security;
 
+import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -27,14 +28,18 @@ import java.io.Serializable;
 public class SpPermissionEvaluator implements PermissionEvaluator {
 
   @Override
-  public boolean hasPermission(Authentication authentication, Object o, Object o1) {
+  public boolean hasPermission(Authentication authentication, Object o, Object permission) {
+    String objectInstanceId = (String) o;
 
-    return true;
+    return getUserDetails(authentication).getAllObjectPermissions().contains(objectInstanceId);
   }
 
   @Override
-  public boolean hasPermission(Authentication authentication, Serializable serializable, String s, Object o) {
+  public boolean hasPermission(Authentication authentication, Serializable serializable, String s, Object permission) {
+    return getUserDetails(authentication).getAllObjectPermissions().contains(serializable.toString());
+  }
 
-    return true;
+  private PrincipalUserDetails<?> getUserDetails(Authentication authentication) {
+    return (PrincipalUserDetails<?>) authentication.getPrincipal();
   }
 }

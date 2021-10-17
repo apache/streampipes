@@ -19,7 +19,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.info.SystemInfoProvider;
 import org.apache.streampipes.manager.info.VersionInfoProvider;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/info")
-public class Version extends AbstractRestResource {
+public class Version extends AbstractAuthGuardedRestResource {
 
   @GET
   @Path("/versions")

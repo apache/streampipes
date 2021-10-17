@@ -24,12 +24,12 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AuthorityBuilder {
+public class GrantedAuthoritiesBuilder {
 
   private Set<String> allAuthorities;
   private Principal principal;
 
-  public AuthorityBuilder(Principal principal) {
+  public GrantedAuthoritiesBuilder(Principal principal) {
     this.allAuthorities = new HashSet<>();
     this.principal = principal;
   }

@@ -43,5 +43,6 @@ public class AuthConstants {
   public static final String HAS_UPDATE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_UPDATE_PIPELINE_VALUE + Q + BE2;
   public static final String HAS_DELETE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_VALUE + Q + BE2;
 
+  public static final String IS_AUTHENTICATED = "isAuthenticated()";
 
 }

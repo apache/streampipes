@@ -15,32 +15,25 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
+package org.apache.streampipes.storage.api;
 
-import org.lightcouch.CouchDbClient;
+import org.apache.streampipes.model.client.user.Permission;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Set;
 
-public class FindAllCommand<T> extends DbCommand<List<T>, T> {
+public interface IPermissionStorage {
 
-  private String viewName;
+  List<Permission> getAllPermissions();
 
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
-                        Class<T> clazz,
-                        String viewName) {
-    super(couchDbClient, clazz);
-    this.viewName = viewName;
-  }
+  Permission getPermissionById(String permissionId);
 
-  @Override
-  protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    List<T> allResults = couchDbClient
-            .view(viewName)
-            .includeDocs(true)
-            .query(clazz);
+  void addPermission(Permission permission);
 
-    return allResults != null ? allResults : Collections.emptyList();
-  }
+  void updatePermission(Permission permission);
+
+  void deletePermission(String permissionId);
+
+  Set<String> getObjectPermissions(List<String> sids);
+
 }

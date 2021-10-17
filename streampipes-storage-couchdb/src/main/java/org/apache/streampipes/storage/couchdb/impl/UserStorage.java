@@ -22,13 +22,11 @@ import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
+import org.apache.streampipes.storage.couchdb.dao.CrudViewDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,22 +34,18 @@ import java.util.stream.Collectors;
  * User Storage.
  * Handles operations on user including user-specified pipelines.
  */
-public class UserStorage extends AbstractDao<Principal> implements IUserStorage {
+public class UserStorage extends CrudViewDao implements IUserStorage {
 
-  Logger LOG = LoggerFactory.getLogger(UserStorage.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UserStorage.class);
+  private static final String viewName = "users/username";
 
   public UserStorage() {
-    super(Utils::getCouchDbUserClient, Principal.class);
+    super(Utils::getCouchDbUserClient);
   }
 
   @Override
   public List<Principal> getAllUsers() {
-    List<Principal> users = couchDbClientSupplier
-            .get()
-            .view("users/username")
-            .includeDocs(true)
-            .query(Principal.class);
-    return new ArrayList<>(users);
+    return findAll(viewName, Principal.class);
   }
 
   @Override
@@ -74,13 +68,7 @@ public class UserStorage extends AbstractDao<Principal> implements IUserStorage 
 
   @Override
   public Principal getUser(String username) {
-    // TODO improve
-    CouchDbClient couchDbClient = couchDbClientSupplier.get();
-    List<Principal> users = couchDbClient
-            .view("users/username")
-            .key(username)
-            .includeDocs(true)
-            .query(Principal.class);
+    List<Principal> users = findByKey(viewName, username, Principal.class);
     if (users.size() != 1) {
       LOG.error("None or to many users with matching username");
     }
@@ -99,12 +87,12 @@ public class UserStorage extends AbstractDao<Principal> implements IUserStorage 
 
   @Override
   public void storeUser(Principal user) {
-    persist(user);
+    persist(user, Principal.class);
   }
 
   @Override
   public void updateUser(Principal user) {
-    update(user);
+    update(user, Principal.class);
   }
 
   @Override
@@ -122,24 +110,19 @@ public class UserStorage extends AbstractDao<Principal> implements IUserStorage 
    */
   @Override
   public boolean checkUser(String username) {
-    List<Principal> users = couchDbClientSupplier
-            .get()
-            .view("users/username")
-            .key(username)
-            .includeDocs(true)
-            .query(Principal.class);
+    List<Principal> users = findByKey(viewName, username, Principal.class);
 
     return users.size() == 1;
   }
 
   @Override
   public void deleteUser(String principalId) {
-    delete(principalId);
+    delete(principalId, Principal.class);
   }
 
   @Override
   public Principal getUserById(String principalId) {
-    return findWithNullIfEmpty(principalId);
+    return findWithNullIfEmpty(principalId, Principal.class);
   }
 
 }

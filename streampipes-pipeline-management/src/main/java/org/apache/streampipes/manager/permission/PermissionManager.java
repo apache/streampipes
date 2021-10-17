@@ -15,32 +15,18 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
+package org.apache.streampipes.manager.permission;
 
-import org.lightcouch.CouchDbClient;
+import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.client.user.PermissionBuilder;
+import org.apache.streampipes.model.pipeline.Pipeline;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
+public class PermissionManager {
 
-public class FindAllCommand<T> extends DbCommand<List<T>, T> {
-
-  private String viewName;
-
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
-                        Class<T> clazz,
-                        String viewName) {
-    super(couchDbClient, clazz);
-    this.viewName = viewName;
-  }
-
-  @Override
-  protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    List<T> allResults = couchDbClient
-            .view(viewName)
-            .includeDocs(true)
-            .query(clazz);
-
-    return allResults != null ? allResults : Collections.emptyList();
+  public Permission makePermission(Pipeline pipeline,
+                                   String ownerSid) {
+    return PermissionBuilder
+            .create(pipeline.getPipelineId(), pipeline.getClass(), ownerSid)
+            .build();
   }
 }

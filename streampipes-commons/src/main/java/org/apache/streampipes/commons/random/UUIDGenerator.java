@@ -15,32 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
+package org.apache.streampipes.commons.random;
 
-import org.lightcouch.CouchDbClient;
+import java.util.UUID;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
+public class UUIDGenerator {
 
-public class FindAllCommand<T> extends DbCommand<List<T>, T> {
-
-  private String viewName;
-
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
-                        Class<T> clazz,
-                        String viewName) {
-    super(couchDbClient, clazz);
-    this.viewName = viewName;
-  }
-
-  @Override
-  protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    List<T> allResults = couchDbClient
-            .view(viewName)
-            .includeDocs(true)
-            .query(clazz);
-
-    return allResults != null ? allResults : Collections.emptyList();
+  public static String generateUuid() {
+    return UUID.randomUUID().toString().replace("-", "");
   }
 }

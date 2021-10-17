@@ -19,7 +19,8 @@ package org.apache.streampipes.user.management.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.user.management.util.AuthorityBuilder;
+import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
+import org.apache.streampipes.user.management.util.GrantedPermissionsBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,10 +32,12 @@ public abstract class PrincipalUserDetails<T extends Principal> implements UserD
 
   protected T details;
   private Set<String> allAuthorities;
+  private Set<String> allObjectPermissions;
 
   public PrincipalUserDetails(T details) {
     this.details = details;
-    this.allAuthorities = new AuthorityBuilder(details).buildAllAuthorities();
+    this.allAuthorities = new GrantedAuthoritiesBuilder(details).buildAllAuthorities();
+    this.allObjectPermissions = new GrantedPermissionsBuilder(details).buildAllPermissions();
   }
 
   public T getDetails() {
@@ -76,4 +79,8 @@ public abstract class PrincipalUserDetails<T extends Principal> implements UserD
     return allAuthorities.stream().map(r -> (GrantedAuthority) () -> r).collect(Collectors.toList());
   }
 
+  @JsonIgnore
+  public Set<String> getAllObjectPermissions() {
+    return allObjectPermissions;
+  }
 }

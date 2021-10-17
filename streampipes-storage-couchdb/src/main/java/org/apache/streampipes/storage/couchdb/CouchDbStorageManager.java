@@ -135,4 +135,9 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public IPipelineElementDescriptionStorageCache getPipelineElementDescriptionStorage() {
     return new PipelineElementDescriptionStorageImpl();
   }
+
+  @Override
+  public IPermissionStorage getPermissionStorage() {
+    return new PermissionStorageImpl();
+  }
 }

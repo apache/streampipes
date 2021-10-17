@@ -19,28 +19,23 @@ package org.apache.streampipes.storage.couchdb.dao;
 
 import org.lightcouch.CouchDbClient;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FindAllCommand<T> extends DbCommand<List<T>, T> {
+public class CrudViewDao extends CrudDao {
 
-  private String viewName;
-
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
-                        Class<T> clazz,
-                        String viewName) {
-    super(couchDbClient, clazz);
-    this.viewName = viewName;
+  public CrudViewDao(Supplier<CouchDbClient> couchDbClientSupplier) {
+    super(couchDbClientSupplier);
   }
 
-  @Override
-  protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    List<T> allResults = couchDbClient
+  public <T> List<T> findByKey(String viewName,
+                              String key,
+                              Class<T> clazz) {
+    return couchDbClientSupplier
+            .get()
             .view(viewName)
+            .key(key)
             .includeDocs(true)
             .query(clazz);
-
-    return allResults != null ? allResults : Collections.emptyList();
   }
 }

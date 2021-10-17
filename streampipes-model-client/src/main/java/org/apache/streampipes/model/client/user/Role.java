@@ -30,17 +30,15 @@ public enum Role {
 
   ROLE_PIPELINE_ADMIN(
           Constants.ROLE_PIPELINE_ADMIN_VALUE,
-          Privilege.PRIVILEGE_CREATE_PIPELINE,
           Privilege.PRIVILEGE_READ_PIPELINE,
-          Privilege.PRIVILEGE_UPDATE_PIPELINE,
+          Privilege.PRIVILEGE_WRITE_PIPELINE,
           Privilege.PRIVILEGE_DELETE_PIPELINE
   ),
 
   ROLE_DASHBOARD_ADMIN(
           Constants.ROLE_DASHBOARD_ADMIN_VALUE,
-          Privilege.PRIVILEGE_CREATE_DASHBOARD,
           Privilege.PRIVILEGE_READ_DASHBOARD,
-          Privilege.PRIVILEGE_UPDATE_DASHBOARD,
+          Privilege.PRIVILEGE_WRITE_DASHBOARD,
           Privilege.PRIVILEGE_DELETE_DASHBOARD
   ),
 

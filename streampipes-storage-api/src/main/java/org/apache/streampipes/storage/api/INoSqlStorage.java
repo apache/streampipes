@@ -65,4 +65,6 @@ public interface INoSqlStorage {
 
   IPipelineElementDescriptionStorageCache getPipelineElementDescriptionStorage();
 
+  IPermissionStorage getPermissionStorage();
+
 }

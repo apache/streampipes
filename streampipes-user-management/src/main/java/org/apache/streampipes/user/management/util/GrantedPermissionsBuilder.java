@@ -15,32 +15,36 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.storage.couchdb.dao;
+package org.apache.streampipes.user.management.util;
 
-import org.lightcouch.CouchDbClient;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.Set;
 
-public class FindAllCommand<T> extends DbCommand<List<T>, T> {
+public class GrantedPermissionsBuilder {
 
-  private String viewName;
+  private Principal principal;
 
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
-                        Class<T> clazz,
-                        String viewName) {
-    super(couchDbClient, clazz);
-    this.viewName = viewName;
+  public GrantedPermissionsBuilder(Principal principal) {
+    this.principal = principal;
   }
 
-  @Override
-  protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    List<T> allResults = couchDbClient
-            .view(viewName)
-            .includeDocs(true)
-            .query(clazz);
+  public Set<String> buildAllPermissions() {
+    Set<String> sids = extractSids();
 
-    return allResults != null ? allResults : Collections.emptyList();
+    return StorageDispatcher
+            .INSTANCE
+            .getNoSqlStore()
+            .getPermissionStorage()
+            .getObjectPermissions(new ArrayList<>(sids));
+  }
+
+  private Set<String> extractSids() {
+    Set<String> groupSids = principal.getGroups();
+    groupSids.add(principal.getPrincipalId());
+
+    return groupSids;
   }
 }
