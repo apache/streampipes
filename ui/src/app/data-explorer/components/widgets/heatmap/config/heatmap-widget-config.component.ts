@@ -19,22 +19,19 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { CalendarHeatmapVisConfig, CalendarHeatmapWidgetModel } from '../model/calendar-heatmap-widget.model';
+import { HeatmapVisConfig, HeatmapWidgetModel } from '../model/heatmap-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-calendar-heatmap-widget-config',
-  templateUrl: './calendar-heatmap-widget-config.component.html',
-  styleUrls: ['./calendar-heatmap-widget-config.component.scss']
+  selector: 'sp-data-explorer-heatmap-widget-config',
+  templateUrl: './heatmap-widget-config.component.html',
+  styleUrls: ['./heatmap-widget-config.component.scss']
 })
-export class CalendarHeatmapWidgetConfigComponent extends BaseWidgetConfig<CalendarHeatmapWidgetModel, CalendarHeatmapVisConfig> implements OnInit {
+export class HeatmapWidgetConfigComponent extends BaseWidgetConfig<HeatmapWidgetModel, HeatmapVisConfig> implements OnInit {
 
-  markerOrTrace : string[];
-  markerType: string[];
-
-  constructor(widgetConfigurationService: WidgetConfigurationService,
+   constructor(widgetConfigurationService: WidgetConfigurationService,
               fieldService: DataExplorerFieldProviderService) {
     super(widgetConfigurationService, fieldService);
   }
@@ -43,8 +40,8 @@ export class CalendarHeatmapWidgetConfigComponent extends BaseWidgetConfig<Calen
     super.onInit();
   }
 
-  setSelectedDayProperty(field: DataExplorerField) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedDayProperty = field;
+  setShowLabelsProperty(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.showLabelsProperty = field['checked'];
     this.triggerDataRefresh();
   }
 
@@ -57,11 +54,11 @@ export class CalendarHeatmapWidgetConfigComponent extends BaseWidgetConfig<Calen
     return WidgetType.Heatmap;
   }
 
-  protected initWidgetConfig(): CalendarHeatmapVisConfig {
+  protected initWidgetConfig(): HeatmapVisConfig {
     return {
       forType: this.getWidgetType(),
-      selectedDayProperty: this.fieldProvider.numericFields[0],
       selectedHeatProperty: this.fieldProvider.numericFields[1],
+      showLabelsProperty: false,
     };
   }
 

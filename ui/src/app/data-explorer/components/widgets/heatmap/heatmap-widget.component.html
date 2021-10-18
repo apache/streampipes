@@ -16,20 +16,11 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-  
-    <h5>Day</h5>
-    <sp-select-property [availableProperties]="fieldProvider.numericFields"
-                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedDayProperty"
-                        (changeSelectedProperty)="setSelectedDayProperty($event)">
-    </sp-select-property>
-
-    <h5>Heat Value</h5>
-    <sp-select-property [availableProperties]="fieldProvider.numericFields"
-                        [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedHeatProperty"
-                        (changeSelectedProperty)="setSelectedHeatProperty($event)">
-    </sp-select-property>
-
-
+  <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel">
+    <div class="value-panel">
+      <div echarts [options]="option" [ngStyle]="{'width': currentWidth, 'height': currentHeight}"
+           (chartInit)="onChartInit($event)" [merge]= "dynamic" >
+      </div>
+  </div>
 </div>
 

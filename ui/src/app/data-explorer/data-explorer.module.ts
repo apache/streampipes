@@ -69,8 +69,8 @@ import { DataExplorerDesignerPanelComponent } from './components/designer-panel/
 import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
 import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
 import { MapWidgetConfigComponent } from './components/widgets/map/config/map-widget-config.component';
-import { CalendarHeatmapWidgetComponent } from './components/widgets/calendar-heatmap/calendar-heatmap-widget.component';
-import { CalendarHeatmapWidgetConfigComponent } from './components/widgets/calendar-heatmap/config/calendar-heatmap-widget-config.component';
+import { HeatmapWidgetComponent } from './components/widgets/heatmap/heatmap-widget.component';
+import { HeatmapWidgetConfigComponent } from './components/widgets/heatmap/config/heatmap-widget-config.component';
 import { DataExplorerWidgetAppearanceSettingsComponent } from './components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
 import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
 import { WidgetConfigurationService } from './services/widget-configuration.service';
@@ -96,7 +96,7 @@ import { WidgetDirective } from './components/widget/widget.directive';
 import { WidgetTypeService } from './services/widget-type.service';
 import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
 import { TimeSelectionService } from './services/time-selection.service';
-import {NgxEchartsModule} from "ngx-echarts";
+import { NgxEchartsModule } from 'ngx-echarts';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -186,8 +186,8 @@ export const MY_NATIVE_FORMATS = {
     TableWidgetConfigComponent,
     MapWidgetConfigComponent,
     MapWidgetComponent,
-    CalendarHeatmapWidgetConfigComponent,
-    CalendarHeatmapWidgetComponent,
+    HeatmapWidgetConfigComponent,
+    HeatmapWidgetComponent,
     TimeRangeSelectorComponent,
     DataExplorerVisualisationSettingsComponent,
     GroupSelectionPanelComponent,

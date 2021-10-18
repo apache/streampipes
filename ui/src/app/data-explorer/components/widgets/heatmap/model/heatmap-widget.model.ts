@@ -23,12 +23,12 @@ import {
   DataExplorerVisConfig
 } from '../../../../models/dataview-dashboard.model';
 
-export interface CalendarHeatmapVisConfig extends DataExplorerVisConfig {
-  selectedDayProperty: DataExplorerField;
+export interface HeatmapVisConfig extends DataExplorerVisConfig {
+  showLabelsProperty: boolean;
   selectedHeatProperty: DataExplorerField;
 }
 
-export interface CalendarHeatmapWidgetModel extends DataExplorerWidgetModel {
+export interface HeatmapWidgetModel extends DataExplorerWidgetModel {
   dataConfig: DataExplorerDataConfig;
-  visualizationConfig: CalendarHeatmapVisConfig;
+  visualizationConfig: HeatmapVisConfig;
 }
