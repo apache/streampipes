@@ -134,7 +134,6 @@ export class AdapterUtils {
   }
 
   private static markPropertyAsDimension(propertyName: string) {
-    console.log('property-scope-' + propertyName);
     cy.dataCy('property-scope-' + propertyName)
       .click()
       .get('.mat-option-text')

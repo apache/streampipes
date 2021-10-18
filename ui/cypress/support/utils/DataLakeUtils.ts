@@ -31,6 +31,7 @@ export class DataLakeUtils {
       .create('File_Set')
       .setName(name)
       .setTimestampProperty('timestamp')
+      .addDimensionProperty('randomtext')
       .setFormat('csv')
       .addFormatInput('input', 'delimiter', ';')
       .addFormatInput('checkbox', 'header', 'check');

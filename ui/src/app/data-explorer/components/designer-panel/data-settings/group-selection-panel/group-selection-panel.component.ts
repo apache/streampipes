@@ -71,4 +71,9 @@ export class GroupSelectionPanelComponent implements OnInit {
     this.sourceConfig.queryConfig.groupBy.push(selection);
   }
 
+  triggerConfigurationUpdate() {
+    this.widgetConfigService.notify({ widgetId: this.widgetId, refreshData: true, refreshView: true });
+  }
+
+
 }

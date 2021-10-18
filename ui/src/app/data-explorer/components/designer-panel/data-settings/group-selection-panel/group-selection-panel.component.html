@@ -32,8 +32,12 @@
     <div fxLayout="column" class="field-scroll-panel">
         <div fxLayout="column"
              *ngFor="let groupByField of sourceConfig.queryConfig.groupBy">
-            <sp-field-selection [field]="groupByField" [sourceConfig]="sourceConfig" [widgetId]="widgetId">
-            </sp-field-selection>
+            <mat-checkbox [(ngModel)]="groupByField.selected"
+                          [attr.data-cy]="'data-explorer-group-by-'+ groupByField.runtimeName"
+                          (change)="triggerConfigurationUpdate()"
+                          color="accent">
+                {{groupByField.runtimeName}}
+            </mat-checkbox>
         </div>
     </div>
 </div>
