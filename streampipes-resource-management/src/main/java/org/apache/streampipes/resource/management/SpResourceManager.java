@@ -15,20 +15,27 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.resource.management;
 
-package org.apache.streampipes.rest.api;
+public class SpResourceManager {
 
+  public AdapterResourceManager manageAdapters() {
+    return new AdapterResourceManager();
+  }
 
-import javax.ws.rs.core.Response;
+  public DashboardResourceManager manageDashboards() {
+    return new DashboardResourceManager();
+  }
 
-public interface IPipelineElement {
+  public DataExplorerResourceManager manageDataExplorer() {
+    return new DataExplorerResourceManager();
+  }
 
-	Response getAvailable();
-	Response getOwn();
+  public PipelineElementResourceManager managePipelineElements() {
+    return new PipelineElementResourceManager();
+  }
 
-	Response removeOwn(String elementUri);
-
-	Response getElement(String elementUri);
-	
-	
+  public PipelineResourceManager managePipelines() {
+    return new PipelineResourceManager();
+  }
 }

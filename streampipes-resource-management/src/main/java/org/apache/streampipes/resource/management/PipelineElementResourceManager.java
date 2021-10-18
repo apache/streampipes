@@ -15,20 +15,7 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.resource.management;
 
-package org.apache.streampipes.rest.api;
-
-
-import javax.ws.rs.core.Response;
-
-public interface IPipelineElement {
-
-	Response getAvailable();
-	Response getOwn();
-
-	Response removeOwn(String elementUri);
-
-	Response getElement(String elementUri);
-	
-	
+public class PipelineElementResourceManager {
 }

@@ -16,20 +16,22 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.impl.admin;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.MessagingSettings;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
+import org.apache.streampipes.rest.security.AuthConstants;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.svcdiscovery.api.model.PeConfig;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
+import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -46,7 +48,8 @@ public class ConsulConfig extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response getAllServiceConfigs() {
     LOG.info("Request for all service configs");
     Map<String, String> peServices = getServiceDiscovery().getExtensionsServiceGroups();
@@ -78,13 +81,13 @@ public class ConsulConfig extends AbstractRestResource {
       peConfigs.add(peConfig);
     }
 
-    String json = new Gson().toJson(peConfigs);
-    return Response.ok(json).build();
+    return ok(peConfigs);
   }
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response saveServiceConfig(PeConfig peConfig) {
 
     ISpKvManagement keyValueStore = getKeyValueStore();
@@ -139,7 +142,8 @@ public class ConsulConfig extends AbstractRestResource {
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response deleteService(String serviceName) {
     LOG.info("Request to delete a service config");
     getServiceDiscovery().deregisterService(serviceName);
@@ -148,8 +152,9 @@ public class ConsulConfig extends AbstractRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   @Path("/messaging")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response getMessagingSettings() {
     return ok(BackendConfig.INSTANCE.getMessagingSettings());
   }
@@ -157,8 +162,9 @@ public class ConsulConfig extends AbstractRestResource {
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   @Path("messaging")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response updateMessagingSettings(MessagingSettings messagingSettings) {
     BackendConfig.INSTANCE.setMessagingSettings(messagingSettings);
     return ok();

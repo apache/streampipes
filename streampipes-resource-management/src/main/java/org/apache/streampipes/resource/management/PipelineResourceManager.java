@@ -15,21 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.interceptor;
+package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.rest.shared.annotation.NoAuthenticationRequired;
-
-import javax.ws.rs.container.DynamicFeature;
-import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.FeatureContext;
-
-public class AuthenticationInterceptor implements DynamicFeature {
-
-
-  @Override
-  public void configure(ResourceInfo resourceInfo, FeatureContext context) {
-    if (!resourceInfo.getResourceMethod().isAnnotationPresent(NoAuthenticationRequired.class)) {
-      //context.register(StreamPipesFilter.class);
-    }
-  }
+public class PipelineResourceManager {
 }

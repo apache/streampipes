@@ -20,7 +20,6 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
@@ -50,17 +49,6 @@ public class SemanticEventProducer extends AbstractAuthGuardedRestResource imple
 				getUserService().getAvailableSourceUris(getAuthenticatedUsername()));
 		return ok(seps);
 	}
-	
-	@GET
-	@Path("/favorites")
-	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
-	public Response getFavorites() {
-		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
-				getUserService().getFavoriteSourceUris(getAuthenticatedUsername()));
-		return ok(seps);
-	}
 
 	@GET
 	@Path("/own")
@@ -75,26 +63,6 @@ public class SemanticEventProducer extends AbstractAuthGuardedRestResource imple
 		return ok(si);
 	}
 
-	@POST
-	@Path("/favorites")
-	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
-	public Response addFavorite(@FormParam("uri") String elementUri) {
-		getUserService().addSourceAsFavorite(getAuthenticatedUsername(), decode(elementUri));
-		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
-	}
-
-	@DELETE
-	@Path("/favorites/{elementUri}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
-	public Response removeFavorite(@PathParam("elementUri") String elementUri) {
-		getUserService().removeSourceFromFavorites(getAuthenticatedUsername(), decode(elementUri));
-		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
-	}
-	
 	@DELETE
 	@Path("/own/{elementId}")
 	@Produces(MediaType.APPLICATION_JSON)

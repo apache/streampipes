@@ -21,7 +21,6 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
@@ -48,17 +47,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 				getUserService().getAvailableSepaUris(getAuthenticatedUsername()));
 		return ok(sepas);
 	}
-	
-	@GET
-	@Path("/favorites")
-	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
-	public Response getFavorites() {
-		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
-				getUserService().getFavoriteSepaUris(getAuthenticatedUsername()));
-		return ok(sepas);
-	}
 
 	@GET
 	@Path("/own")
@@ -74,26 +62,6 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 						.collect(Collectors.toList());
 
 		return ok(si);
-	}
-
-	@POST
-	@Path("/favorites")
-	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
-	public Response addFavorite(@FormParam("uri") String elementUri) {
-		getUserService().addSepaAsFavorite(getAuthenticatedUsername(), decode(elementUri));
-		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
-	}
-
-	@DELETE
-	@Path("/favorites/{elementUri}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
-	public Response removeFavorite(@PathParam("elementUri") String elementUri) {
-		getUserService().removeSepaFromFavorites(getAuthenticatedUsername(), decode(elementUri));
-		return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
 	}
 	
 	@DELETE

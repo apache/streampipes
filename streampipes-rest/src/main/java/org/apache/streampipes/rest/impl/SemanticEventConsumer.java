@@ -21,7 +21,6 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
@@ -51,17 +50,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
   }
 
   @GET
-  @Path("/favorites")
-  @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  @Override
-  public Response getFavorites() {
-    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
-            getUserService().getFavoriteActionUris(getAuthenticatedUsername()));
-    return ok(secs);
-  }
-
-  @GET
   @Path("/own")
   @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
   @JacksonSerialized
@@ -71,26 +59,6 @@ public class SemanticEventConsumer extends AbstractAuthGuardedRestResource imple
             getUserService().getOwnActionUris(getAuthenticatedUsername()));
     List<DataSinkInvocation> si = secs.stream().map(s -> new DataSinkInvocation(new DataSinkInvocation(s))).collect(Collectors.toList());
     return ok(si);
-  }
-
-  @POST
-  @Path("/favorites")
-  @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  @Override
-  public Response addFavorite(@FormParam("uri") String elementUri) {
-    getUserService().addActionAsFavorite(getAuthenticatedUsername(), decode(elementUri));
-    return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
-  }
-
-  @DELETE
-  @Path("/favorites/{elementId}")
-  @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  @Override
-  public Response removeFavorite(@PathParam("elementId") String elementId) {
-    getUserService().removeActionFromFavorites(getAuthenticatedUsername(), decode(elementId));
-    return statusMessage(Notifications.success(NotificationType.OPERATION_SUCCESS));
   }
 
   @DELETE

@@ -25,7 +25,7 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.impl.security.SpPermissionEvaluator;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;

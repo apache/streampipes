@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl.security;
+package org.apache.streampipes.rest.security;
 
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.springframework.context.annotation.Configuration;

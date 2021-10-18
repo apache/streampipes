@@ -20,13 +20,9 @@ package org.apache.streampipes.rest.impl;
 
 import com.google.gson.JsonObject;
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.model.client.setup.InitialSettings;
-import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -49,24 +45,4 @@ public class Setup extends AbstractRestResource {
       return ok(obj.toString());
     }
   }
-
-  @PUT
-  @Path("/configuration")
-  @GsonWithIds
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateConfiguration(InitialSettings settings) {
-    try {
-      // TODO implement update consul configs
-//			ConfigurationManager
-//                    .storeWebappConfigurationToProperties(
-//                            new File(ConfigurationManager.getStreamPipesConfigFullPath()),
-//                           new File(ConfigurationManager.getStreamPipesConfigFileLocation()),
-//                            settings);
-      return ok(Notifications.success("Configuration updated"));
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ok(Notifications.error("Error"));
-    }
-  }
-
 }

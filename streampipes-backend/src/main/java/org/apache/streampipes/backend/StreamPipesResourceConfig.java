@@ -23,7 +23,9 @@ import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.ps.DataLakeResourceV4;
 import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
+import org.apache.streampipes.rest.impl.admin.ConsulConfig;
 import org.apache.streampipes.rest.impl.admin.EmailConfigurationResource;
+import org.apache.streampipes.rest.impl.admin.UserGroupResource;
 import org.apache.streampipes.rest.impl.connect.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
@@ -34,7 +36,6 @@ import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.datalake.PersistedDataStreamResource;
 import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
-import org.apache.streampipes.rest.impl.nouser.PipelineNoUserResource;
 import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
@@ -53,7 +54,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
     public StreamPipesResourceConfig() {
         setProperties(Collections.singletonMap("jersey.config.server.response.setStatusOverSendError", true));
         register(Authentication.class);
-        register(AssetDashboard.class);
+        register(AssetDashboardResource.class);
         register(AutoComplete.class);
         register(CategoryResource.class);
         register(ConsulConfig.class);
@@ -68,12 +69,10 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(EmailResource.class);
         register(ExtensionsServiceEndpointResource.class);
         register(FileServingResource.class);
-        register(InternalPipelineTemplates.class);
         register(LabelResource.class);
         register(MeasurementUnitResource.class);
         register(Notification.class);
         register(OntologyMeasurementUnit.class);
-        register(OntologyPipelineElement.class);
         register(PersistedDataStreamResource.class);
         register(PipelineCanvasMetadataCache.class);
         register(PipelineCanvasMetadataResource.class);
@@ -87,7 +86,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(PipelineElementPreview.class);
         register(PipelineElementRuntimeInfo.class);
         register(PipelineMonitoring.class);
-        register(PipelineNoUserResource.class);
         register(PipelineTemplate.class);
         register(PipelineResource.class);
         register(SemanticEventConsumer.class);

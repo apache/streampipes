@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl.security;
+package org.apache.streampipes.rest.security;
 
 import static org.apache.streampipes.model.client.user.Privilege.Constants.*;
 import static org.apache.streampipes.model.client.user.Role.Constants.*;
@@ -39,8 +39,7 @@ public class AuthConstants {
   public static final String IS_DASHBOARD_USER_ROLE = HAS_ANY_ROLE + ROLE_DASHBOARD_USER_VALUE + Q + BE;
 
   public static final String HAS_READ_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_VALUE + Q + BE2;
-  public static final String HAS_CREATE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_CREATE_PIPELINE_VALUE + Q + BE2;
-  public static final String HAS_UPDATE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_UPDATE_PIPELINE_VALUE + Q + BE2;
+  public static final String HAS_WRITE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_PIPELINE_VALUE + Q + BE2;
   public static final String HAS_DELETE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_VALUE + Q + BE2;
 
   public static final String IS_AUTHENTICATED = "isAuthenticated()";

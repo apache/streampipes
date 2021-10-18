@@ -37,7 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Path("/v2/asset-dashboards")
-public class AssetDashboard extends AbstractRestResource {
+public class AssetDashboardResource extends AbstractRestResource {
 
   private static final String APP_ID = "org.apache.streampipes.apps.assetdashboard";
 

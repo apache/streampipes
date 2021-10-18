@@ -15,11 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Group;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.storage.api.IUserGroupStorage;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -28,11 +30,13 @@ import javax.ws.rs.core.Response;
 public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   @GET
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response getAllUserGroups() {
     return ok(getUserGroupStorage().getAll());
   }
 
   @POST
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response addUserGroup(Group group) {
     getUserGroupStorage().createElement(group);
     return ok();
@@ -40,6 +44,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   @PUT
   @Path("{groupId}")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response updateUserGroup(@PathParam("groupId") String groupId,
                                   Group group) {
     if (!groupId.equals(group.getGroupId())) {
@@ -51,6 +56,7 @@ public class UserGroupResource extends AbstractAuthGuardedRestResource {
 
   @DELETE
   @Path("{groupId}")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response deleteUserGroup(@PathParam("groupId") String groupId) {
     Group group = getUserGroupStorage().getElementById(groupId);
     if (group != null) {
