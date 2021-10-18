@@ -26,19 +26,26 @@ import { DataLakeFilterConfig } from '../model/DataLakeFilterConfig';
 export class DataLakeUtils {
 
 
+  public static getDataLakeTestSetAdapter(name: string, storeInDataLake: boolean = true) {
+    const adapterBuilder = GenericAdapterBuilder
+      .create('File_Set')
+      .setName(name)
+      .setTimestampProperty('timestamp')
+      .setFormat('csv')
+      .addFormatInput('input', 'delimiter', ';')
+      .addFormatInput('checkbox', 'header', 'check');
+
+    if (storeInDataLake) {
+      adapterBuilder.setStoreInDataLake();
+    }
+    return adapterBuilder.build();
+  }
+
   public static loadDataIntoDataLake(dataSet: string) {
     // Create adapter with dataset
     FileManagementUtils.addFile(dataSet);
 
-    const adapter = GenericAdapterBuilder
-      .create('File_Set')
-      .setName('datalake_configuration')
-      .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
-      .setFormat('csv')
-      .addFormatInput('input', 'delimiter', ';')
-      .addFormatInput('checkbox', 'header', 'check')
-      .build();
+    const adapter = this.getDataLakeTestSetAdapter('datalake_configuration');
     AdapterUtils.addGenericSetAdapter(adapter);
 
     // Wait till data is stored

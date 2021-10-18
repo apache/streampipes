@@ -71,6 +71,13 @@ export class AdapterUtils {
 
     AdapterUtils.configureFormat(adapterConfiguration);
 
+
+    if (adapterConfiguration.dimensionProperties.length > 0) {
+      adapterConfiguration.dimensionProperties.forEach(dimensionPropertyName => {
+        AdapterUtils.markPropertyAsDimension(dimensionPropertyName);
+      });
+    }
+
     AdapterUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
 
     AdapterUtils.finishEventSchemaConfiguration();
@@ -125,6 +132,16 @@ export class AdapterUtils {
     // Click next
     cy.dataCy('sp-format-selection-next-button').contains('Next').parent().click();
   }
+
+  private static markPropertyAsDimension(propertyName: string) {
+    console.log('property-scope-' + propertyName);
+    cy.dataCy('property-scope-' + propertyName)
+      .click()
+      .get('.mat-option-text')
+      .contains('Dimension')
+      .click();
+  }
+
 
   private static markPropertyAsTimestamp(propertyName: string) {
     // Mark property as timestamp
