@@ -48,8 +48,10 @@
                     <mat-form-field color="accent" fxFlex="100" *ngIf="sourceConfig.sourceType == 'pipeline'">
                         <mat-label>Data Explorer Sinks</mat-label>
                         <mat-select [(value)]="sourceConfig.measureName"
-                                    (selectionChange)="updateMeasure(sourceConfig, $event)">
-                            <mat-option [value]="pipeline.measureName" *ngFor="let pipeline of availablePipelines">
+                                    (selectionChange)="updateMeasure(sourceConfig, $event)"
+                                    data-cy="data-explorer-select-data-set">
+                            <mat-option *ngFor="let pipeline of availablePipelines"
+                                        [value]="pipeline.measureName">
                                 <span class="pipeline-name">{{ pipeline.pipelineName }}</span>&nbsp;&nbsp;{{ pipeline.measureName }}
                             </mat-option>
                         </mat-select>
@@ -85,7 +87,8 @@
                             <mat-label>
                                 <span>&nbsp;Limit</span>
                             </mat-label>
-                            <input [(ngModel)]="sourceConfig.queryConfig.limit" matInput (change)="triggerDataRefresh()">
+                            <input [(ngModel)]="sourceConfig.queryConfig.limit" matInput
+                                   (change)="triggerDataRefresh()">
                         </mat-form-field>
 
                         <mat-form-field fxFlex="100" color="accent">
@@ -98,7 +101,8 @@
                     <div fxLayout="column" fxFlex="100"
                          *ngIf="sourceConfig.queryType === 'aggregated'">
                         <div>
-                            <mat-checkbox color="accent" [(ngModel)]="sourceConfig.queryConfig.autoAggregate" (change)="triggerDataRefresh()">
+                            <mat-checkbox color="accent" [(ngModel)]="sourceConfig.queryConfig.autoAggregate"
+                                          (change)="triggerDataRefresh()">
                                 Auto-Aggregate
                             </mat-checkbox>
                         </div>
@@ -116,7 +120,8 @@
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">
-                    <sp-filter-selection-panel [sourceConfig]="sourceConfig"></sp-filter-selection-panel>
+                    <sp-filter-selection-panel [sourceConfig]="sourceConfig"
+                                               [widgetId]="widgetId"></sp-filter-selection-panel>
                 </div>
                 <div fxLayout="column" fxFlex="100" class="data-explorer-options-panel"
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">

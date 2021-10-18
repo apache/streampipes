@@ -122,8 +122,16 @@ export class DatalakeQueryParameterBuilder {
   }
 
   public withFilters(filterConditions: SelectedFilter[]): DatalakeQueryParameterBuilder {
-    const filters = filterConditions.map(f => '[' + f.field.runtimeName + ';' + f.operator + ';' + f.value + ']');
-    this.queryParams.filter = filters.toString();
+    const filters = [];
+    filterConditions.forEach(filter => {
+      if (filter.field && filter.value && filter.operator) {
+        filters.push('[' + filter.field.runtimeName + ';' + filter.operator + ';' + filter.value + ']');
+      }
+    });
+
+    if (filters.length > 0) {
+      this.queryParams.filter = filters.toString();
+    }
 
     return this;
   }

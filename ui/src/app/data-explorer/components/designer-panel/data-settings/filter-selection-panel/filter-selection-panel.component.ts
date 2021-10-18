@@ -18,6 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { FieldConfig, SelectedFilter, SourceConfig } from '../../../../models/dataview-dashboard.model';
+import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({
   selector: 'sp-filter-selection-panel',
@@ -29,20 +30,36 @@ export class FilterSelectionPanelComponent {
   @Input() sourceConfig: SourceConfig;
   @Input() widgetId: string;
 
-  constructor() {
+  constructor(private widgetConfigService: WidgetConfigurationService) {
   }
 
-  addFilter(sourceConfig: SourceConfig) {
+  addFilter() {
     const newFilter: SelectedFilter = {
-      index: sourceConfig.queryConfig.selectedFilters.length,
+      index: this.sourceConfig.queryConfig.selectedFilters.length,
       operator: '=',
       value: ''
     };
-    sourceConfig.queryConfig.selectedFilters.push(newFilter);
+    this.sourceConfig.queryConfig.selectedFilters.push(newFilter);
+    this.widgetConfigService.notify({ widgetId: this.widgetId, refreshData: true, refreshView: true });
+    this.updateWidget();
   }
 
   remove(sourceConfig: any, index: number) {
     sourceConfig.queryConfig.selectedFilters.splice(index, 1);
+    this.updateWidget();
+  }
+
+  updateWidget() {
+    let update = true;
+    this.sourceConfig.queryConfig.selectedFilters.forEach(filter => {
+      if (!filter.field || !filter.value || !filter.operator) {
+        update = false;
+      }
+    });
+
+    if (update) {
+      this.widgetConfigService.notify({ widgetId: this.widgetId, refreshData: true, refreshView: true });
+    }
   }
 
   compare(available: FieldConfig, selected: FieldConfig) {

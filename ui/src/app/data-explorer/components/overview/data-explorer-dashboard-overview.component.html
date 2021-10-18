@@ -21,13 +21,15 @@
     <div fxFlex="100" fxLayout="column">
         <div fxLayout="row" class="fixed-height options-bar page-container-nav sp-tab-bg">
             <div fxLayoutAlign="start center" fxLayout="row" class="pl-10">
-                <button mat-button mat-raised-button color="accent" (click)="openNewDataViewDialog()" class="mr-10">
+                <button mat-button mat-raised-button color="accent"
+                        data-cy="open-new-data-view-dialog"
+                        (click)="openNewDataViewDialog()" class="mr-10">
                     <i class="material-icons">add</i>
                     <span>New Data View</span>
                 </button>
-<!--                <button mat-button mat-raised-button color="accent" (click)="openEditLabelView()">-->
-<!--                    Edit Labels-->
-<!--                </button>-->
+                <!--                <button mat-button mat-raised-button color="accent" (click)="openEditLabelView()">-->
+                <!--                    Edit Labels-->
+                <!--                </button>-->
             </div>
         </div>
     </div>
@@ -67,6 +69,7 @@
                         <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                             <div fxLayout="row">
                                 <button mat-button mat-icon-button color="accent"
+                                        data-cy="edit-data-view"
                                         (click)="showDashboard(element, true)">
                                     <i class="material-icons">edit</i>
                                 </button>

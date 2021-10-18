@@ -20,7 +20,9 @@
     <div fxLayout="row" class="sp-tab-bg designer-panel-header">
         <div fxLayoutAlign="start center" class="designer-panel-title">Widget Configuration</div>
         <div fxFlex fxLayoutAlign="end end">
-            <button mat-button mat-icon-button (click)="addWidget()" matTooltip="New widget">
+            <button mat-button mat-icon-button
+                    data-cy="add-new-widget"
+                    (click)="addWidget()" matTooltip="New widget">
                 <mat-icon>add</mat-icon>
             </button>
         </div>
@@ -31,9 +33,9 @@
         </div>
         <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
                        class="small">
-            <mat-tab label="Data"></mat-tab>
-            <mat-tab label="Visualization"></mat-tab>
-            <mat-tab label="Appearance"></mat-tab>
+            <mat-tab data-cy="designer-panel-data-config" label="Data"></mat-tab>
+            <mat-tab data-cy="designer-panel-visualization-config" label="Visualization"></mat-tab>
+            <mat-tab data-cy="designer-panel-appearance-config" label="Appearance"></mat-tab>
         </mat-tab-group>
 
         <div fxFlex="100" fxLayout="column">
@@ -63,7 +65,9 @@
             <mat-divider *ngIf="newWidgetMode"></mat-divider>
             <div fxLayout="row" fxLayoutAlign="center end" class="mt-10 actions-align-right p-15"
                  *ngIf="newWidgetMode">
-                <button mat-button mat-raised-button color="accent" *ngIf="newWidgetMode && selectedIndex == 0"
+                <button mat-button mat-raised-button color="accent"
+                        data-cy="data-explorer-select-data-set-next-btn"
+                        *ngIf="newWidgetMode && selectedIndex == 0"
                         (click)="selectedIndex = 1">
                     Next
                 </button>
@@ -71,7 +75,9 @@
                         (click)="selectedIndex = 0" style="margin-right: 10px;">
                     Back
                 </button>
-                <button *ngIf="newWidgetMode && selectedIndex == 1" mat-button mat-raised-button color="accent"
+                <button mat-button mat-raised-button color="accent"
+                        data-cy="data-explorer-select-data-set-create-btn"
+                        *ngIf="newWidgetMode && selectedIndex == 1"
                         (click)="createNewWidget()">
                     Create
                 </button>

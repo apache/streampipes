@@ -16,27 +16,20 @@
  *
  */
 
-import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
-import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
-
-const adapterName = 'datalake_configuration';
-const pipelineName = 'Datalake Configuration Test';
-const dataLakeIndex = 'configurationtest';
+import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 
 describe('Test Truncate data in datalake', () => {
 
   before('Setup Test', () => {
-    prepareTest();
+    cy.initStreamPipesTest();
+    DataLakeUtils.loadRandomDataSetIntoDataLake();
   });
 
   it('Perform Test', () => {
 
-    goToDatalakeConfiguration();
+    DataLakeUtils.goToDatalakeConfiguration();
 
     // Check if amount of events is correct
     cy.dataCy('datalake-number-of-events', { timeout: 10000 })
@@ -61,15 +54,16 @@ describe('Test Truncate data in datalake', () => {
 });
 
 describe('Delete data in datalake', () => {
-  before('Setup Test', () => {
-    prepareTest();
 
+  before('Setup Test', () => {
+    cy.initStreamPipesTest();
+    DataLakeUtils.loadRandomDataSetIntoDataLake();
     PipelineUtils.deletePipeline();
   });
 
   it('Perform Test', () => {
 
-    goToDatalakeConfiguration();
+    DataLakeUtils.goToDatalakeConfiguration();
 
     // Check if amount of events is correct
     cy.dataCy('datalake-number-of-events', { timeout: 10000 })
@@ -91,36 +85,3 @@ describe('Delete data in datalake', () => {
 
 });
 
-const goToDatalakeConfiguration = () => {
-  cy.visit('#/configuration');
-  cy.get('div').contains('DataLake').parent().click();
-};
-
-const prepareTest = () => {
-  cy.initStreamPipesTest();
-  // Create adapter with dataset
-  FileManagementUtils.addFile('fileTest/random.csv');
-  const adapter = GenericAdapterBuilder
-    .create('File_Set')
-    .setName(adapterName)
-    .setTimestampProperty('timestamp')
-    .setFormat('csv')
-    .addFormatInput('input', 'delimiter', ';')
-    .addFormatInput('checkbox', 'header', 'check')
-    .build();
-  AdapterUtils.addGenericSetAdapter(adapter);
-
-  // Create pipeline to store dataset in datalake
-  const pipelineInput = PipelineBuilder.create(pipelineName)
-    .addSource(adapterName)
-    .addSourceType('set')
-    .addSink(
-      PipelineElementBuilder.create('data_lake')
-        .addInput('input', 'db_measurement', dataLakeIndex)
-        .build())
-    .build();
-  PipelineUtils.addPipeline(pipelineInput);
-
-  // Wait till data is stored
-  cy.wait(10000);
-};

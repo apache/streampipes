@@ -17,10 +17,9 @@
  */
 
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
-import { PipelineUtils } from '../../support/utils/PipelineUtils';
+import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
+import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 
 describe('Test MySQL Integration', () => {
   before('Setup Test', () => {
@@ -28,26 +27,17 @@ describe('Test MySQL Integration', () => {
   });
 
   it('Perform Test', () => {
-    const simulatorAdapterName = 'simulator';
+    const dbName = 'cypressDatabase';
 
-    AdapterUtils.addMachineDataSimulator(simulatorAdapterName);
-
-    const topicname = 'cypresstopic1';
-    const pipelineInput = PipelineBuilder.create('Pipeline Test')
-      .addSource(simulatorAdapterName)
-      .addSink(
-        PipelineElementBuilder.create('mysql_database')
-          .addInput('input', 'host', 'localhost')
-          .addInput('input', 'user', 'root')
-          .addInput('input', 'password', '7uc4rAymrPhxv6a5')
-          .addInput('input', 'db', 'sp')
-          .addInput('input', 'table', topicname)
-          .build())
+    const sink: PipelineElementInput = PipelineElementBuilder.create('mysql_database')
+      .addInput('input', 'host', 'localhost')
+      .addInput('input', 'user', 'root')
+      .addInput('input', 'password', '7uc4rAymrPhxv6a5')
+      .addInput('input', 'db', 'sp')
+      .addInput('input', 'table', dbName)
       .build();
 
-    PipelineUtils.testPipeline(pipelineInput);
-
-    const adapterInput = SpecificAdapterBuilder
+    const adapter = SpecificAdapterBuilder
       .create('MySql_Stream_Adapter')
       .setName('MySQL Adapter')
       .setTimestampProperty('timestamp')
@@ -55,10 +45,10 @@ describe('Test MySQL Integration', () => {
       .addInput('input', 'mysqlUser', 'root')
       .addInput('input', 'mysqlPassword', '7uc4rAymrPhxv6a5')
       .addInput('input', 'mysqlDatabase', 'sp')
-      .addInput('input', 'mysqlTable', topicname)
+      .addInput('input', 'mysqlTable', dbName)
       .build();
 
-    AdapterUtils.testSpecificStreamAdapter(adapterInput);
+    ThirdPartyIntegrationUtils.runTest(sink, adapter);
   });
 
 });
