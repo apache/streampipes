@@ -84,8 +84,7 @@ public class InvocableEntityResource extends AbstractResource {
         //TODO: Remove Logger after debugging
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
         EvaluationLogger logger = EvaluationLogger.getInstance();
-        Object[] line = {"Element detached"};
-        logger.logMQTT("Offloading", line);
+        logger.logMQTT("Offloading", "Element detached");
         Response resp = PipelineElementManager.getInstance().detach(graph, runningInstanceId);
         RunningInvocableInstances.INSTANCE.remove(runningInstanceId);
 
@@ -114,8 +113,7 @@ public class InvocableEntityResource extends AbstractResource {
                     .get(0))
                     .getValue();
         }
-        Object[] line = {"reconfiguration request received", nrRuns++, value};
-        logger.logMQTT("Reconfiguration", line);
+        logger.logMQTT("Reconfiguration", "reconfiguration request received", nrRuns++, value);
         InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
         return ok(PipelineElementManager.getInstance().reconfigure(graph, reconfigurationEntity));
     }

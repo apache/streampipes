@@ -98,7 +98,7 @@ public class GenericTest implements Test{
             PipelineOperationStatus migrationMessage = client.pipelines().migrate(pipeline);
             long migrationDuration = System.nanoTime() - beforeMigration;
             if(testType.equals("Migration")){
-                line = new Object[]{System.currentTimeMillis(), "Migration duration", nrRuns, migrationDuration, migrationDuration/1000000000.0,migrationNodes.a, migrationNodes.b, true};
+                line = new Object[]{"Migration duration", nrRuns, migrationDuration, migrationDuration/1000000000.0,migrationNodes.a, migrationNodes.b, true};
             }
             System.out.println(migrationMessage.getTitle());
             if (!migrationMessage.isSuccess()) {
@@ -108,7 +108,8 @@ public class GenericTest implements Test{
         }
         //Reconfiguration
         if (shouldBeReconfigured) {
-            pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
+            if (testType.equals("Reconfiguration"))
+                pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
                     .filter(FreeTextStaticProperty.class::isInstance)
                     .map(FreeTextStaticProperty.class::cast)
                     .filter(FreeTextStaticProperty::isReconfigurable)
@@ -117,6 +118,16 @@ public class GenericTest implements Test{
                             sp.setValue(Float.toString(this.reconfigurableValue++));
                         }
                     }));
+            else if (testType.equals("Offloading"))
+                pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
+                        .filter(FreeTextStaticProperty.class::isInstance)
+                        .map(FreeTextStaticProperty.class::cast)
+                        .filter(FreeTextStaticProperty::isReconfigurable)
+                        .forEach(sp -> {
+                            if (sp.getInternalName().equals("load")) {
+                                sp.setValue(Float.toString(0.9f));
+                            }
+                        }));
             line = new Object[]{"Reconfiguration triggered", nrRuns, (this.reconfigurableValue - 1), true};
             System.out.println("Reconfiguration triggered with value " + (this.reconfigurableValue-1));
             PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);

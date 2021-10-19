@@ -34,7 +34,7 @@ public class TestFactory {
             case "Latency":
                 return getLatencyTest();
             case "Migration":
-                Object[] header_migration = {"timestampInMillis", "deviceId", "event", "numberOfRuns", "durationInNanos", "durationInSecs", "originNode", "targetNode"};
+                Object[] header_migration = {"timestampInMillis", "deviceId", "event", "numberOfRuns", "durationInNanos", "durationInSecs", "originNode", "targetNode", "success"};
                 logger.logHeader("Migration", header_migration);
                 return getMigrationTest();
             case "Reconfiguration":
@@ -42,7 +42,7 @@ public class TestFactory {
                 logger.logHeader("Reconfiguration", header_reconfigure);
                 return getReconfigurationTest();
             case "Offloading":
-                Object[] header_offloading = {"timestampInMillis", "deviceId", "event"};
+                Object[] header_offloading = {"timestampInMillis", "deviceId", "event", "policy", "selectedProcessor"};
                 logger.logHeader("Offloading", header_offloading);
                 return getOffloadingTest();
             default:
@@ -73,7 +73,7 @@ public class TestFactory {
 
     public static Test getOffloadingTest(){
         return new GenericTest(getPipelineName(), false, false,
-                true, 20000, 600000);
+                true, 20000, 1500000);
     }
 
     //Helpers

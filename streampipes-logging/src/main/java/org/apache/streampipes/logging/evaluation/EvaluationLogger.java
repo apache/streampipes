@@ -26,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 
 public class EvaluationLogger {
     private static EvaluationLogger instance = null;
-    private final MQTT mqtt;
     private final BlockingConnection connection;
     private final String deviceId;
 
@@ -37,13 +36,13 @@ public class EvaluationLogger {
 
     private EvaluationLogger(){
         String loggingUrl = System.getenv("SP_LOGGING_MQTT_URL");
-        String nodeId = System.getenv("SP_LOGGING_MQTT_URL");
+        String nodeId = System.getenv("SP_NODE_CONTROLLER_ID");
         if (nodeId != null){
             this.deviceId = nodeId;
         }else {
             this.deviceId = "default";
         }
-        mqtt = new MQTT();
+        MQTT mqtt = new MQTT();
         try {
             mqtt.setHost(loggingUrl);
         } catch (URISyntaxException e) {
@@ -57,21 +56,29 @@ public class EvaluationLogger {
         }
     }
 
-    public void logMQTT(String topic, Object[] elements){
+    /**public void logMQTT(String topic, Object[] elements){
         String message = System.currentTimeMillis() + "," + this.deviceId + ",";
         for(Object element:elements)
             message += element + ",";
         message = message.substring(0, message.length()-1);
         publish(topic, message);
+    }**/
+
+    public void logMQTT(String topic, Object ... elements){
+        StringBuilder message = new StringBuilder(System.currentTimeMillis() + "," + this.deviceId + ",");
+        for(Object element:elements)
+            message.append(element).append(",");
+        message = new StringBuilder(message.substring(0, message.length() - 1));
+        publish(topic, message.toString());
     }
 
     public void logHeader(String topic, Object[] elements){
-        String message = "";
+        StringBuilder message = new StringBuilder();
         for(Object element:elements)
-            message += element + ",";
+            message.append(element).append(",");
         if (message.length() > 0)
-            message = message.substring(0, message.length()-1);
-        publish(topic, message);
+            message = new StringBuilder(message.substring(0, message.length() - 1));
+        publish(topic, message.toString());
     }
 
     private void publish(String topic, String message){
