@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.iiot.protocol.stream;
+package org.apache.streampipes.pe.shared.config.Mqqt;
 
 import org.fusesource.mqtt.client.*;
 import org.apache.streampipes.messaging.InternalEventProcessor;

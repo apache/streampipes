@@ -16,9 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.protocol.stream;
-
-import org.apache.streampipes.model.graph.DataSinkInvocation;
+package org.apache.streampipes.pe.shared.config.Kafka;
 
 public class KafkaConfig {
 

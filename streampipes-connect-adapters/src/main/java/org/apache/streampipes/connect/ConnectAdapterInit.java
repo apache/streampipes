@@ -46,7 +46,7 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("connect-adapter",
             "StreamPipes Connect Worker Main",
-            "",8090)
+            "",8001)
             .registerAdapter(new GdeltAdapter())
             .registerAdapter(new CoindeskBitcoinAdapter())
             .registerAdapter(new IexCloudNewsAdapter())

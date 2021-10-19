@@ -19,15 +19,14 @@
 package org.apache.streampipes.connect.iiot.adapters.netio;
 
 import com.google.gson.Gson;
-import org.apache.streampipes.connect.iiot.utils.MqttConnectUtils;
+
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioAllPowerOutputs;
 import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioPowerOutput;
-import org.apache.streampipes.connect.iiot.protocol.stream.MqttConfig;
-import org.apache.streampipes.connect.iiot.protocol.stream.MqttConsumer;
+import org.apache.streampipes.pe.shared.config.Mqqt.*;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;

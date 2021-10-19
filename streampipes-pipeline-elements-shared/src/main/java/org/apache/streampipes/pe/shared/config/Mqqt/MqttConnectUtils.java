@@ -16,9 +16,9 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.utils;
+package org.apache.streampipes.pe.shared.config.Mqqt;
 
-import org.apache.streampipes.connect.iiot.protocol.stream.MqttConfig;
+import org.apache.streampipes.pe.shared.config.Mqqt.MqttConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
