@@ -5,7 +5,6 @@
       <env name="SP_DATA_LOCATION" value="./test_data/" />
       <env name="SP_DEBUG" value="true" />
       <env name="SP_DEBUG_CONNECT" value="false" />
-      <env name="SP_HOST" value="172.17.0.1" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.connect.ConnectAdapterInit" />
     <module name="streampipes-connect-adapters" />
