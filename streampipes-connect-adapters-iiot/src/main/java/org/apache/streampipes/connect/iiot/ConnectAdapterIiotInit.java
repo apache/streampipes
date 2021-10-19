@@ -47,7 +47,7 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
 		return SpServiceDefinitionBuilder.create("connect-adapter-iiot",
 						"StreamPipes connect worker containing adapters relevant for the IIoT",
 						"",
-						8090)
+						8001)
 				.registerAdapter(new MySqlStreamAdapter())
 				.registerAdapter(new MySqlSetAdapter())
 				.registerAdapter(new MachineDataStreamAdapter())

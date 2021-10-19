@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.protocol.stream;
+package org.apache.streampipes.pe.shared.config.Mqqt;
 
 public class MqttConfig {
 
