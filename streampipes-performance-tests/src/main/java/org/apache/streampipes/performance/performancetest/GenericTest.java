@@ -70,6 +70,11 @@ public class GenericTest implements Test{
 
         String testType = System.getenv("TEST_TYPE");
         Object[] line = null;
+
+        if (testType.equals("Reconfiguration") && nrRuns == 0){
+            executeOffloading();
+            return;
+        }
         //Start Pipeline
         if (!pipeline.isRunning()) {
             long beforeStart = System.nanoTime();
@@ -167,6 +172,43 @@ public class GenericTest implements Test{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void executeOffloading(){
+        if (!pipeline.isRunning()) {
+            PipelineOperationStatus startMessage = client.pipelines().start(pipeline);
+            System.out.println(startMessage.getTitle());
+            if (startMessage.isSuccess()) {
+                pipeline.setRunning(true);
+            }
+        }
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        float[] reconfigurationValues = {0, 0, 0, 0, 0, 1, 2, 3, 4, 5};
+
+        for(int i = 0; i<200; i++){
+
+            float reconfigurationValue = reconfigurationValues[i%10];
+            pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
+                    .filter(FreeTextStaticProperty.class::isInstance)
+                    .map(FreeTextStaticProperty.class::cast)
+                    .filter(FreeTextStaticProperty::isReconfigurable)
+                    .forEach(sp -> {
+                        if (sp.getInternalName().equals("i-am-reconfigurable")) {
+                            sp.setValue(Float.toString(reconfigurationValue));
+                        }
+                    }));
+
+            PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
+            System.out.println(message.getTitle());
+        }
+
+
     }
 
 
