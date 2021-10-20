@@ -45,7 +45,7 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
     private final EventRelayStrategy eventRelayStrategy;
     private final ArrayList<byte[]> eventBuffer = new ArrayList<>();
 
-    private final int EVENT_BUFFER_SIZE = NodeConfiguration.getRelayEventBufferSize();
+    private final int EVENT_BUFFER_SIZE = NodeConfiguration.getEventRelayBufferSize();
     private final Tuple3<String, Integer, String> relayInfo;
     private boolean isBuffering = false;
 
@@ -79,6 +79,14 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
 
     @Override
     public void publish(byte[] event) {
+        if (NodeConfiguration.isEventRelayTargetBrokerCheckEnabled()) {
+            publishWithCheck(event);
+        } else {
+            publishWithoutCheck(event);
+        }
+    }
+
+    private void publishWithCheck(byte[] event) {
         // check if target broker can be reached
         if (isTargetBrokerAlive()) {
 
@@ -91,7 +99,7 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
                     // TODO: send buffered event should run independent of callback
                     // send buffered events & clear buffer
                     LOG.info("Re-established connection to broker={}:{}. Resent buffered events for topic={} " +
-                            "(buffer_size={}, num_dropped_events={})", relayInfo.a, relayInfo.b,
+                                    "(buffer_size={}, num_dropped_events={})", relayInfo.a, relayInfo.b,
                             relayInfo.c, eventBuffer.size(), metrics.getNumDroppedEvents());
 
                     // add current event from callback
@@ -135,6 +143,12 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
                         relayInfo.c);
             }
         }
+    }
+
+    //TODO: Delete after testing
+    private void publishWithoutCheck(byte[] event) {
+        producer.publish(event);
+        metrics.increaseNumRelayedEvents();
     }
 
     @Override

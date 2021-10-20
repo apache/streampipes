@@ -69,6 +69,8 @@ public class GenericTest implements Test{
     public void execute(int nrRuns) {
 
         String testType = System.getenv("TEST_TYPE");
+        String offloadingThreshold = System.getenv("OFFLOADING_THRESHOLD");
+
         Object[] line = null;
         //Start Pipeline
         if (!pipeline.isRunning()) {
@@ -125,7 +127,7 @@ public class GenericTest implements Test{
                         .filter(FreeTextStaticProperty::isReconfigurable)
                         .forEach(sp -> {
                             if (sp.getInternalName().equals("load")) {
-                                sp.setValue(Float.toString(0.9f));
+                                sp.setValue(offloadingThreshold != null ? offloadingThreshold : "0.9");
                             }
                         }));
             line = new Object[]{"Reconfiguration triggered", nrRuns, (this.reconfigurableValue - 1), true};

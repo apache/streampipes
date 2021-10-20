@@ -57,10 +57,13 @@ public final class NodeConfiguration {
     private static int dockerPruningFreqSecs;
     private static int dockerStatsCollectFreqSecs;
     private static int resourceMonitorFreqSecs;
-    private static int relayEventBufferSize;
+    private static int eventRelayBufferSize;
+    private static boolean eventRelayTargetBrokerCheckEnabled;
     private static String consulHost;
     private static boolean autoOffloadingActivated;
     private static OffloadingStrategyType autoOffloadingStrategy;
+    private static float autoOffloadingThresholdInPercent;
+    private static int autoOffloadingMaxNumViolations;
     private static String nodeStoragePath;
     private static String loggingMqttUrl;
 
@@ -258,12 +261,20 @@ public final class NodeConfiguration {
         NodeConfiguration.resourceMonitorFreqSecs = resourceMonitorFreqSecs;
     }
 
-    public static int getRelayEventBufferSize() {
-        return relayEventBufferSize;
+    public static int getEventRelayBufferSize() {
+        return eventRelayBufferSize;
     }
 
-    public static void setRelayEventBufferSize(int relayEventBufferSize) {
-        NodeConfiguration.relayEventBufferSize = relayEventBufferSize;
+    public static void setEventRelayBufferSize(int eventRelayBufferSize) {
+        NodeConfiguration.eventRelayBufferSize = eventRelayBufferSize;
+    }
+
+    public static boolean isEventRelayTargetBrokerCheckEnabled() {
+        return eventRelayTargetBrokerCheckEnabled;
+    }
+
+    public static void setEventRelayTargetBrokerCheckEnabled(boolean eventRelayTargetBrokerCheckEnabled) {
+        NodeConfiguration.eventRelayTargetBrokerCheckEnabled = eventRelayTargetBrokerCheckEnabled;
     }
 
     public static String getConsulHost() {
@@ -300,6 +311,22 @@ public final class NodeConfiguration {
 
     public static void setAutoOffloadingStrategy(OffloadingStrategyType autoOffloadingStrategy) {
         NodeConfiguration.autoOffloadingStrategy = autoOffloadingStrategy;
+    }
+
+    public static float getAutoOffloadingThresholdInPercent() {
+        return autoOffloadingThresholdInPercent;
+    }
+
+    public static void setAutoOffloadingThresholdInPercent(float autoOffloadingThresholdInPercent) {
+        NodeConfiguration.autoOffloadingThresholdInPercent = autoOffloadingThresholdInPercent;
+    }
+
+    public static int getAutoOffloadingMaxNumViolations() {
+        return autoOffloadingMaxNumViolations;
+    }
+
+    public static void setAutoOffloadingMaxNumViolations(int autoOffloadingMaxNumViolations) {
+        NodeConfiguration.autoOffloadingMaxNumViolations = autoOffloadingMaxNumViolations;
     }
 
     public static String getNodeStoragePath() {
@@ -460,7 +487,6 @@ public final class NodeConfiguration {
                         break;
                     }
                     break;
-
                 case BACKEND_PORT:
                     if (!System.getenv().containsKey(EnvConfigParam.BACKEND_URL.getEnvironmentKey())) {
                         configMap.put(envKey, value);
@@ -468,7 +494,6 @@ public final class NodeConfiguration {
                         break;
                     }
                     break;
-
                 case DOCKER_PRUNING_FREQ:
                     configMap.put(envKey, value);
                     setDockerPruningFreqSecs(Integer.parseInt(value));
@@ -483,8 +508,11 @@ public final class NodeConfiguration {
                     break;
                 case EVENT_RELAY_BUFFER_SIZE:
                     configMap.put(envKey, value);
-                    setRelayEventBufferSize(Integer.parseInt(value));
+                    setEventRelayBufferSize(Integer.parseInt(value));
                     break;
+                case EVENT_RELAY_TARGET_BROKER_CHECK_ENABLED:
+                    configMap.put(envKey, value);
+                    setEventRelayTargetBrokerCheckEnabled(Boolean.parseBoolean(value));
                 case NODE_GPU_ACCESS:
                     configMap.put(envKey, value);
                     setGpuAccelerated(Boolean.parseBoolean(value));
@@ -535,6 +563,14 @@ public final class NodeConfiguration {
                 case AUTO_OFFLOADING_STRATEGY:
                     configMap.put(envKey, value);
                     setAutoOffloadingStrategy(OffloadingStrategyType.fromString(value));
+                    break;
+                case AUTO_OFFLOADING_THRESHOLD_IN_PERCENT:
+                    configMap.put(envKey, value);
+                    setAutoOffloadingThresholdInPercent(Float.parseFloat(value));
+                    break;
+                case AUTO_OFFLOADING_MAX_NUM_VIOLATIONS:
+                    configMap.put(envKey, value);
+                    setAutoOffloadingMaxNumViolations(Integer.parseInt(value));
                     break;
                 case NODE_STORAGE_PATH:
                     configMap.put(envKey, value);
