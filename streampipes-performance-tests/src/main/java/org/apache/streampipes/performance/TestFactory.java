@@ -58,7 +58,7 @@ public class TestFactory {
 
     public static Test getLatencyTest(){
         return new GenericTest(getPipelineName(), true, false,
-                false, 0, 30000);
+                false, 0, 600000);
     }
 
     public static Test getMigrationTest(){
