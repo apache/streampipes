@@ -23,19 +23,18 @@ import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 describe('Test Table View in Data Explorer', () => {
 
   before('Setup Test', () => {
-    cy.login();
-    // cy.initStreamPipesTest();
-    // DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+    cy.initStreamPipesTest();
+    DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
   });
 
   it('Perform Test', () => {
 
     DataLakeUtils.goToDatalake();
 
-    // DataLakeUtils.createAndEditDataView();
+    DataLakeUtils.createAndEditDataView();
     // Click edit button
-    cy.dataCy('edit-data-view')
-      .click();
+    // cy.dataCy('edit-data-view')
+    //   .click();
 
     // TODO Set Time Range
     cy.dataCy('1_year')
