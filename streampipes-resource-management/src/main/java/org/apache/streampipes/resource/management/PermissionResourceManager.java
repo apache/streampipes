@@ -15,24 +15,27 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl.admin;
+package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.storage.api.IPermissionStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import java.util.List;
 
-@Path("/v2/admin/permissions")
-public class PermissionResource extends AbstractRestResource {
+public class PermissionResourceManager {
 
-  @GET
-  @Path("{objectInstanceId}")
-  public List<Permission> getPermissionForObject(@PathParam("objectInstanceId") String objectInstanceId) {
-    return getSpResourceManager().managePermissions().findForObjectId(objectInstanceId);
+  private final IPermissionStorage db;
+
+  public PermissionResourceManager() {
+    this.db = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
   }
 
+  public List<Permission> findAll() {
+    return db.getAllPermissions();
+  }
 
+  public List<Permission> findForObjectId(String objectInstanceId) {
+    return db.getUserPermissionsForObject(objectInstanceId);
+  }
 }

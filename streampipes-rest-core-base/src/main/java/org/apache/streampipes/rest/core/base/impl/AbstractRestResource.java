@@ -26,6 +26,7 @@ import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.storage.api.*;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -146,6 +147,10 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected ISpServiceDiscovery getServiceDiscovery() {
     return SpServiceDiscovery.getServiceDiscovery();
+  }
+
+  protected SpResourceManager getSpResourceManager() {
+    return new SpResourceManager();
   }
 
 }

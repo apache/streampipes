@@ -25,6 +25,7 @@ import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.admin.ConsulConfig;
 import org.apache.streampipes.rest.impl.admin.EmailConfigurationResource;
+import org.apache.streampipes.rest.impl.admin.PermissionResource;
 import org.apache.streampipes.rest.impl.admin.UserGroupResource;
 import org.apache.streampipes.rest.impl.connect.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
@@ -73,6 +74,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(MeasurementUnitResource.class);
         register(Notification.class);
         register(OntologyMeasurementUnit.class);
+        register(PermissionResource.class);
         register(PersistedDataStreamResource.class);
         register(PipelineCanvasMetadataCache.class);
         register(PipelineCanvasMetadataResource.class);

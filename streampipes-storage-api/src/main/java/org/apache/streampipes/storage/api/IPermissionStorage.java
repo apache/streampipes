@@ -36,4 +36,6 @@ public interface IPermissionStorage {
 
   Set<String> getObjectPermissions(List<String> sids);
 
+  List<Permission> getUserPermissionsForObject(String objectInstanceId);
+
 }

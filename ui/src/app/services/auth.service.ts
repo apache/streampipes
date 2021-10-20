@@ -32,7 +32,7 @@ import { RoleModel } from '../_models/auth.model';
 export class AuthService {
 
     public authToken$: BehaviorSubject<string> = new BehaviorSubject<string>(undefined);
-    public user$: BehaviorSubject<any> = new BehaviorSubject<any>(undefined);
+    public user$: BehaviorSubject<UserInfo> = new BehaviorSubject<UserInfo>(undefined);
     public isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     public darkMode$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -56,7 +56,6 @@ export class AuthService {
         const jwtHelper: JwtHelperService = new JwtHelperService({});
         const decodedToken = jwtHelper.decodeToken(data.accessToken);
         this.tokenStorage.saveToken(data.accessToken);
-        console.log(decodedToken.user);
         this.tokenStorage.saveUser(decodedToken.user);
         this.authToken$.next(data.accessToken);
         this.user$.next(decodedToken.user);

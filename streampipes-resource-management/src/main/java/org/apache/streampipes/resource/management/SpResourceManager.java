@@ -38,4 +38,8 @@ public class SpResourceManager {
   public PipelineResourceManager managePipelines() {
     return new PipelineResourceManager();
   }
+
+  public PermissionResourceManager managePermissions() {
+    return new PermissionResourceManager();
+  }
 }

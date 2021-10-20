@@ -69,6 +69,8 @@
               }
             },
             "development": {
+              "sourceMap": true,
+              "optimization": false,
               "customWebpackConfig": {
                 "path": "./webpack.partial.dev.js"
               }

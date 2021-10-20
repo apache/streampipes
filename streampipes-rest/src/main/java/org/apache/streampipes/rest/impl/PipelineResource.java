@@ -40,11 +40,8 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -55,8 +52,6 @@ import java.util.List;
 @Component
 @Path("/v2/pipelines")
 public class PipelineResource extends AbstractAuthGuardedRestResource {
-
-  private static final Logger logger = LoggerFactory.getLogger(PipelineResource.class);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
@@ -146,7 +141,6 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Operation(summary = "Stop the pipeline with the given id",
           tags = {"Pipeline"})
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  @PreFilter("hasPermission(pipelineId, 'WRITE')")
   public Response stop(@PathParam("pipelineId") String pipelineId,
                        @QueryParam("forceStop") @DefaultValue("false") boolean forceStop) {
     try {

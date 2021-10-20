@@ -56,10 +56,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @JacksonSerialized
-  @Path("{username}")
+  @Path("{principalId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getUserDetails(@PathParam("username") String username) {
-    Principal principal = getPrincipal(username);
+  public Response getUserDetails(@PathParam("principalId") String principalId) {
+    Principal principal = getPrincipalById(principalId);
     removeCredentials(principal);
 
     if (principal != null) {

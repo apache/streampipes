@@ -157,7 +157,10 @@ public class CouchDbInstallationStep extends InstallationStep {
       tokenFunction.setMap("function(doc) { if (doc.properties.userApiTokens) { doc.properties.userApiTokens.forEach(function(token) { emit(token.properties.hashedToken, doc.properties.email); });}}");
 
       MapReduce userPermissionFunction = new MapReduce();
-      userPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; i < doc.allowedSids.length; i++) {emit(doc.allowedSids[i],doc)}}}");
+      userPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; i < doc.grantedAuthorities.length; i++) {emit(doc.grantedAuthorities[i].sid,doc)}}}");
+
+      MapReduce objectPermissionFunction = new MapReduce();
+      objectPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.objectInstanceId, doc);}}");
 
       views.put("password", passwordFunction);
       views.put("username", usernameFunction);
@@ -165,6 +168,7 @@ public class CouchDbInstallationStep extends InstallationStep {
       views.put("permissions", permissionFunction);
       views.put("token", tokenFunction);
       views.put("userpermissions", userPermissionFunction);
+      views.put("objectpermissions", objectPermissionFunction);
 
       userDocument.setViews(views);
       Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);

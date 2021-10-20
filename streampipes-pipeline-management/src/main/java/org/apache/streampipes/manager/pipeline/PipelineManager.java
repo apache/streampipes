@@ -66,7 +66,8 @@ public class PipelineManager {
      * @param pipeline
      * @return the pipelineId
      */
-    public static String addPipeline(String principalSid, Pipeline pipeline) {
+    public static String addPipeline(String principalSid,
+                                     Pipeline pipeline) {
 
         // call by reference bad smell
         String pipelineId = UUIDGenerator.generateUuid();

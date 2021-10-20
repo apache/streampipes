@@ -26,25 +26,11 @@ import java.security.spec.InvalidKeySpecException;
 
 public class StreamPipesCredentialsMatcher implements PasswordEncoder {
 
-//  @Override
-//  public boolean doCredentialsMatch(AuthenticationToken authenticationToken, AuthenticationInfo authenticationInfo) {
-//    try {
-//      return PasswordUtil.validatePassword(new String((char[]) authenticationToken
-//                      .getCredentials()),
-//              authenticationInfo
-//              .getCredentials().toString());
-//    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-//      return false;
-//    }
-//  }
-
   @Override
   public String encode(CharSequence charSequence) {
     try {
       return PasswordUtil.encryptPassword(charSequence.toString());
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (InvalidKeySpecException e) {
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       e.printStackTrace();
     }
     return null;
@@ -54,9 +40,7 @@ public class StreamPipesCredentialsMatcher implements PasswordEncoder {
   public boolean matches(CharSequence charSequence, String s) {
     try {
       return PasswordUtil.validatePassword(charSequence.toString(), s);
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    } catch (InvalidKeySpecException e) {
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       e.printStackTrace();
     }
     return false;

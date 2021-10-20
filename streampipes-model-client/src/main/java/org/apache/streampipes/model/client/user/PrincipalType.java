@@ -20,5 +20,6 @@ package org.apache.streampipes.model.client.user;
 public enum PrincipalType {
 
   USER_ACCOUNT,
-  SERVICE_ACCOUNT
+  SERVICE_ACCOUNT,
+  GROUP
 }

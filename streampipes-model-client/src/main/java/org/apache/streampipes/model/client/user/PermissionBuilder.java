@@ -40,8 +40,8 @@ public class PermissionBuilder {
     this.permission.setOwnerSid(ownerSid);
   }
 
-  public PermissionBuilder with(String sid) {
-    this.permission.addAllowedSid(sid);
+  public PermissionBuilder with(PermissionEntry permissionEntry) {
+    this.permission.addPermissionEntry(permissionEntry);
     return this;
   }
 

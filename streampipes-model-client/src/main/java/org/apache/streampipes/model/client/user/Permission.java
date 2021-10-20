@@ -19,10 +19,12 @@ package org.apache.streampipes.model.client.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@TsModel
 public class Permission {
 
   protected @SerializedName("_id") String permissionId;
@@ -33,13 +35,14 @@ public class Permission {
 
   private String objectInstanceId;
   private String objectClassName;
+  private boolean publicElement;
 
   private String ownerSid;
 
-  private List<String> allowedSids;
+  private List<PermissionEntry> grantedAuthorities;
 
   public Permission() {
-    this.allowedSids = new ArrayList<>();
+    this.grantedAuthorities = new ArrayList<>();
   }
 
   public String getPermissionId() {
@@ -82,16 +85,16 @@ public class Permission {
     this.ownerSid = ownerSid;
   }
 
-  public void addAllowedSid(String sid) {
-    this.allowedSids.add(sid);
+  public void addPermissionEntry(PermissionEntry permissionEntry) {
+    this.grantedAuthorities.add(permissionEntry);
   }
 
-  public List<String> getAllowedSids() {
-    return allowedSids;
+  public List<PermissionEntry> getGrantedAuthorities() {
+    return grantedAuthorities;
   }
 
-  public void setAllowedSids(List<String> allowedSids) {
-    this.allowedSids = allowedSids;
+  public void setGrantedAuthorities(List<PermissionEntry> grantedAuthorities) {
+    this.grantedAuthorities = grantedAuthorities;
   }
 
   public String get$type() {
@@ -100,5 +103,13 @@ public class Permission {
 
   public void set$type(String $type) {
     this.$type = $type;
+  }
+
+  public boolean isPublicElement() {
+    return publicElement;
+  }
+
+  public void setPublicElement(boolean publicElement) {
+    this.publicElement = publicElement;
   }
 }

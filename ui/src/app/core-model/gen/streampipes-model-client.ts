@@ -1,25 +1,7 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-10-12 09:29:49.
+// Generated using typescript-generator version 2.27.744 on 2021-10-19 16:24:30.
 
 export class Element {
     elementId: string;
@@ -136,6 +118,46 @@ export class MatchingResultMessage {
         instance.offerSubject = data.offerSubject;
         instance.requirementSubject = data.requirementSubject;
         instance.reasonText = data.reasonText;
+        return instance;
+    }
+}
+
+export class Permission {
+    grantedAuthorities: PermissionEntry[];
+    objectClassName: string;
+    objectInstanceId: string;
+    ownerSid: string;
+    permissionId: string;
+    publicElement: boolean;
+    rev: string;
+
+    static fromData(data: Permission, target?: Permission): Permission {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new Permission();
+        instance.permissionId = data.permissionId;
+        instance.rev = data.rev;
+        instance.objectInstanceId = data.objectInstanceId;
+        instance.objectClassName = data.objectClassName;
+        instance.publicElement = data.publicElement;
+        instance.ownerSid = data.ownerSid;
+        instance.grantedAuthorities = __getCopyArrayFn(PermissionEntry.fromData)(data.grantedAuthorities);
+        return instance;
+    }
+}
+
+export class PermissionEntry {
+    principalType: PrincipalType;
+    sid: string;
+
+    static fromData(data: PermissionEntry, target?: PermissionEntry): PermissionEntry {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new PermissionEntry();
+        instance.sid = data.sid;
+        instance.principalType = data.principalType;
         return instance;
     }
 }
@@ -278,9 +300,9 @@ export class UserInfo {
     }
 }
 
-export type PrincipalType = "USER_ACCOUNT" | "SERVICE_ACCOUNT";
+export type PrincipalType = "USER_ACCOUNT" | "SERVICE_ACCOUNT" | "GROUP";
 
-export type Privilege = "PRIVILEGE_CREATE_PIPELINE" | "PRIVILEGE_READ_PIPELINE" | "PRIVILEGE_UPDATE_PIPELINE" | "PRIVILEGE_DELETE_PIPELINE" | "PRIVILEGE_CREATE_ADAPTER" | "PRIVILEGE_READ_ADAPTER" | "PRIVILEGE_UPDATE_ADAPTER" | "PRIVILEGE_DELETE_ADAPTER" | "PRIVILEGE_CREATE_PIPELINE_ELEMENT" | "PRIVILEGE_READ_PIPELINE_ELEMENT" | "PRIVILEGE_UPDATE_PIPELINE_ELEMENT" | "PRIVILEGE_DELETE_PIPELINE_ELEMENT" | "PRIVILEGE_CREATE_DASHBOARD" | "PRIVILEGE_READ_DASHBOARD" | "PRIVILEGE_UPDATE_DASHBOARD" | "PRIVILEGE_DELETE_DASHBOARD" | "PRIVILEGE_CREATE_DASHBOARD_WIDGET" | "PRIVILEGE_READ_DASHBOARD_WIDGET" | "PRIVILEGE_UPDATE_DASHBOARD_WIDGET" | "PRIVILEGE_DELETE_DASHBOARD_WIDGET" | "PRIVILEGE_CREATE_DATA_EXPLORER_VIEW" | "PRIVILEGE_READ_DATA_EXPLORER_VIEW" | "PRIVILEGE_UPDATE_DATA_EXPLORER_VIEW" | "PRIVILEGE_DELETE_DATA_EXPLORER_VIEW" | "PRIVILEGE_CREATE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_READ_DATA_EXPLORER_WIDGET" | "PRIVILEGE_UPDATE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_READ_APPS" | "PRIVILEGE_UPDATE_APPS" | "PRIVILEGE_READ_NOTIFICATIONS" | "PRIVILEGE_READ_FILES" | "PRIVILEGE_CREATE_FILES" | "PRIVILEGE_UPDATE_FILES" | "PRIVILEGE_DELETE_FILES";
+export type Privilege = "PRIVILEGE_READ_PIPELINE" | "PRIVILEGE_WRITE_PIPELINE" | "PRIVILEGE_DELETE_PIPELINE" | "PRIVILEGE_READ_ADAPTER" | "PRIVILEGE_WRITE_ADAPTER" | "PRIVILEGE_DELETE_ADAPTER" | "PRIVILEGE_READ_PIPELINE_ELEMENT" | "PRIVILEGE_WRITE_PIPELINE_ELEMENT" | "PRIVILEGE_DELETE_PIPELINE_ELEMENT" | "PRIVILEGE_READ_DASHBOARD" | "PRIVILEGE_WRITE_DASHBOARD" | "PRIVILEGE_DELETE_DASHBOARD" | "PRIVILEGE_READ_DASHBOARD_WIDGET" | "PRIVILEGE_WRITE_DASHBOARD_WIDGET" | "PRIVILEGE_DELETE_DASHBOARD_WIDGET" | "PRIVILEGE_READ_DATA_EXPLORER_VIEW" | "PRIVILEGE_WRITE_DATA_EXPLORER_VIEW" | "PRIVILEGE_DELETE_DATA_EXPLORER_VIEW" | "PRIVILEGE_READ_DATA_EXPLORER_WIDGET" | "PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_READ_APPS" | "PRIVILEGE_WRITE_APPS" | "PRIVILEGE_READ_NOTIFICATIONS" | "PRIVILEGE_READ_FILES" | "PRIVILEGE_WRITE_FILES" | "PRIVILEGE_DELETE_FILES";
 
 export type Role = "ROLE_ADMIN" | "ROLE_PIPELINE_ADMIN" | "ROLE_DASHBOARD_ADMIN" | "ROLE_DATA_EXPLORER_ADMIN" | "ROLE_CONNECT_ADMIN" | "ROLE_DASHBOARD_USER" | "ROLE_DATA_EXPLORER_USER" | "ROLE_PIPELINE_USER" | "ROLE_APP_USER";
 

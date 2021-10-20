@@ -21,7 +21,11 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { ServiceAccount, UserAccount } from '../../core-model/gen/streampipes-model-client';
+import {
+  Principal,
+  ServiceAccount,
+  UserAccount
+} from '../../core-model/gen/streampipes-model-client';
 
 @Injectable()
 export class UserService {
@@ -62,6 +66,17 @@ export class UserService {
 
   public deleteUser(principalId: string): Observable<any> {
     return this.http.delete(`${this.usersPath}/${principalId}`);
+  }
+
+  public getUserById(principalId: string): Observable<UserAccount | ServiceAccount> {
+    return this.http.get(`${this.usersPath}/${principalId}`)
+        .pipe(map(response => {
+          if ((response as any).principalType === 'USER_ACCOUNT') {
+            return UserAccount.fromData(response as any);
+          } else {
+            return ServiceAccount.fromData(response as any);
+          }
+        }));
   }
 
   private get usersPath() {

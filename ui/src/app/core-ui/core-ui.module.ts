@@ -80,6 +80,7 @@ import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
 import { SplitSectionComponent } from './split-section/split-section.component';
+import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 
 @NgModule({
   imports: [
@@ -116,6 +117,7 @@ import { SplitSectionComponent } from './split-section/split-section.component';
     ImageBarComponent,
     ImageAnnotationsComponent,
     ImageViewerComponent,
+    ObjectPermissionDialogComponent,
     StandardDialogComponent,
     PanelDialogComponent,
     SplitSectionComponent,
