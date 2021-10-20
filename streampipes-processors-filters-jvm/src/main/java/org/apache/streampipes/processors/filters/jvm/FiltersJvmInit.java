@@ -28,6 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.BooleanFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
 import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitController;
@@ -52,6 +53,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
             "",
             8090)
             .registerPipelineElements(
+                    new BooleanFilterProcessor(),
                     new TextFilterController(),
                     new NumericalFilterController(),
                     new ThresholdDetectionController(),
