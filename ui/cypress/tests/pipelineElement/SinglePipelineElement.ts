@@ -22,7 +22,7 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testName = 'projection1';
+  const testName = 'booleanFilter2';
 
   const processorTest = test as ProcessorTest;
 
