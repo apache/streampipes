@@ -29,6 +29,8 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 })
 export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWidgetModel> implements OnInit {
 
+  presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
+
   data: any[] = undefined;
   advancedSettingsActive = false;
   showBackgroundColorProperty = true;
@@ -235,6 +237,17 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
     if (this.data) {
       this.data.forEach(d => d.mode = this.dataExplorerWidget.visualizationConfig.chartMode);
+      this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.map((p, index) => {
+                    if (this.data[index] !== undefined) {
+                      this.data[index]['marker'] = {'color' : ''};
+
+                      if (!(p.runtimeName in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
+                        this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName] = this.presetColors[index];
+                      }
+
+                      this.data[index].marker.color = this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName];
+                    }
+                    });
     }
   }
 

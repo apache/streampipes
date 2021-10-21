@@ -57,6 +57,7 @@ import { AggregateConfigurationComponent } from './components/widgets/utils/aggr
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
+import { SelectColorPropertiesComponent } from './components/widgets/utils/select-color-properties/select-color-properties.component';
 import { DataExplorerComponent } from './data-explorer.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { DataViewDataExplorerService } from '../platform-services/apis/data-view-data-explorer.service';
@@ -181,6 +182,7 @@ export const MY_NATIVE_FORMATS = {
     PieChartWidgetComponent,
     PieWidgetConfigComponent,
     SelectPropertiesComponent,
+    SelectColorPropertiesComponent,
     SelectPropertyComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,
