@@ -32,13 +32,10 @@ describe('Test Table View in Data Explorer', () => {
     DataLakeUtils.goToDatalake();
 
     DataLakeUtils.createAndEditDataView();
-    // Click edit button
-    // cy.dataCy('edit-data-view')
-    //   .click();
 
-    // TODO Set Time Range
-    cy.dataCy('1_year')
-      .click();
+    DataLakeUtils.selectTimeRange(
+      new Date(2020, 10, 20, 22, 44),
+      new Date(2021, 10, 20, 22, 44));
 
     DataLakeUtils.addNewWidget();
 

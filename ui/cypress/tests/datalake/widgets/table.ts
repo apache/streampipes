@@ -48,9 +48,9 @@ describe('Test Table View in Data Explorer', () => {
 
     DataLakeUtils.clickCreateButton();
 
-    // TODO Set Time Range
-    cy.dataCy('1_year')
-      .click();
+    DataLakeUtils.selectTimeRange(
+      new Date(2020, 10, 20, 22, 44),
+      new Date(2021, 10, 20, 22, 44));
 
     cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 10);
     // Validate that X lines are available

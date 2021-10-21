@@ -33,6 +33,7 @@
                         color="accent">
             <mat-label>From</mat-label>
             <input matInput
+                   data-cy="time-range-from"
                    [owlDateTime]="dt1"
                    [owlDateTimeTrigger]="dt1"
                    [(ngModel)]="startDate"
@@ -42,6 +43,7 @@
         <mat-form-field appearance="standard" class="end-date form-field-margin form-field-size-smaller" color="accent">
             <mat-label>To</mat-label>
             <input matInput
+                   data-cy="time-range-to"
                    [owlDateTime]="dt2"
                    [owlDateTimeTrigger]="dt2"
                    [(ngModel)]="endDate"

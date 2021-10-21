@@ -174,6 +174,21 @@ export class DataLakeUtils {
     });
   }
 
+  public static selectTimeRange(from: Date, to: Date) {
+    DataLakeUtils.setTimeInput('time-range-from', from);
+    DataLakeUtils.setTimeInput('time-range-to', to);
+  }
+
+  private static setTimeInput(selector: string, value: Date) {
+    cy.dataCy(selector)
+      .click();
+    cy.wait(500);
+    cy.get('.owl-dt-control-button-content').contains('Set').click({ 'force': true });
+    cy.dataCy(selector)
+      .clear()
+      .type(`${value.toLocaleString()}{enter}`);
+  }
+
   private static resultEqual(actual: string, expected: string) {
     const expectedResult = DataLakeUtils.parseCsv(expected);
     const actualResult = DataLakeUtils.parseCsv(actual);
