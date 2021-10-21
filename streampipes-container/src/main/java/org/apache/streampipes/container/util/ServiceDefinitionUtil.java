@@ -62,7 +62,7 @@ public class ServiceDefinitionUtil {
   public static List<SpServiceTag> extractAppIdsFromProtocols(Collection<IProtocol> protocols) {
     return protocols
             .stream()
-            .map(p -> SpServiceTag.create(SpServiceTagPrefix.PROTOCOL, p.declareModel().getAppId()))
+            .map(p -> SpServiceTag.create(SpServiceTagPrefix.ADAPTER, p.declareModel().getAppId()))
             .collect(Collectors.toList());
   }
 }

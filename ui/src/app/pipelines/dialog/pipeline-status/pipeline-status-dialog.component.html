@@ -1,5 +1,4 @@
-<!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+<!-- ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
   ~ this work for additional information regarding copyright ownership.
   ~ The ASF licenses this file to You under the Apache License, Version 2.0
@@ -18,68 +17,41 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="operationInProgress">
-            <div fxLayoutAlign="center" >
-                <mat-spinner color="accent"
-                             [diameter]="50"
-                             fxLayoutAlign="center"
-                             style="margin: 10px 0 5px 0" >{{action == 0 ? "Starting..." : "Stopping"}}
-                </mat-spinner>
-            </div>
-            <div fxLayoutAlign="center">
-                <h3>Please wait while the pipeline is {{action == 0 ? "starting..." : "stopping"}}...</h3>
-            </div>
-        </div>
-        <div *ngIf="!operationInProgress && forceStopActive" fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-                <div fxLayout="row">
-                    <mat-icon color="accent">done</mat-icon>
-                    <span>&nbsp;Forced stop successful</span>
+        <div class="sp-dialog-content p-15" fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" *ngIf="operationInProgress">
+                <div fxFlex="100" fxLayoutAlign="center center">
+                    <mat-spinner color="accent"
+                                 [diameter]="50"
+                                 fxLayoutAlign="center"
+                                 style="margin: 10px 0 5px 0">{{action == 0 ? "Starting..." : "Stopping"}}
+                    </mat-spinner>
                 </div>
-            </div>
-        </div>
-        <div *ngIf="!operationInProgress && !forceStopActive" fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
-            <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="column" data-cy="sp-pipeline-started-dialog">
-                <div fxLayout="row">
-                    <mat-icon color="accent" *ngIf="pipelineOperationStatus.success">done</mat-icon>
-                    <mat-icon style="color: red;" *ngIf="!pipelineOperationStatus.success">error</mat-icon>
-                    <span>&nbsp;{{pipelineOperationStatus.title}}.</span>
+                <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                    <h3>Please wait while the pipeline is {{action == 0 ? "starting..." : "stopping"}}...</h3>
                 </div>
-                <span *ngIf="action == 1 && !pipelineOperationStatus.success" class="message-small">You can perform a forced stop, which will stop and reset the pipeline status.</span>
-            </div>
-            <div fxLayout="row">
-                <button mat-button mat-raised-button class="mat-basic" (click)="toggleStatusDetailsVisible()">
-                    <div *ngIf="!statusDetailsVisible">Show Details</div>
-                    <div *ngIf="statusDetailsVisible">Hide Details</div>
-                </button>
-                <button mat-button mat-raised-button class="ml-10" color="accent" (click)="forceStopPipeline()" *ngIf="action == 1 && !pipelineOperationStatus.success">
-                    <div>Force stop</div>
-                </button>
             </div>
 
-            <div fxFlex="100" fxLayout="column" *ngIf="statusDetailsVisible" class="w-100">
-                <div fxFlex="100" fxLayout="column" class="mat-elevation-z1 mt-10" *ngFor="let msg of pipelineOperationStatus.elementStatus">
-                    <div fxFlex="100" fxLayout="column" class="p-15">
-                        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                            <mat-icon color="accent" *ngIf="msg.success">done</mat-icon>
-                            <mat-icon style="color:red;" *ngIf="!msg.success">warning</mat-icon>
-                            <div fxFlex="100" fxLayout="column" class="ml-5">
-                                <span><b>{{msg.elementName}}</b></span>
-                                <small>{{msg.elementId.substr(0, msg.elementId.lastIndexOf("/"))}}</small>
-                            </div>
-                        </div>
-                        <div>
-                            <div fxFlex="100" fxLayout="column" *ngIf="msg.optionalMessage" class="mt-10">
-                                <div class="error-message">
-                                    {{msg.optionalMessage}}
-                                </div>
-                            </div>
-                        </div>
+            <div *ngIf="!operationInProgress && forceStopActive" fxLayout="column" fxLayoutAlign="center center"
+                 fxFlex="100">
+                <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                    <div fxLayout="row">
+                        <mat-icon color="accent">done</mat-icon>
+                        <span>&nbsp;Forced stop successful</span>
                     </div>
                 </div>
             </div>
+
+            <sp-pipeline-started-status
+                    *ngIf="!operationInProgress && !forceStopActive"
+                    [pipelineOperationStatus]="pipelineOperationStatus"
+                    [action]="action"
+                    (forceStopPipelineEmitter)="forceStopPipeline()"
+                    fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
+            </sp-pipeline-started-status>
+
         </div>
     </div>
+
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
         <button mat-button mat-raised-button class="mat-basic"

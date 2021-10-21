@@ -42,15 +42,6 @@ import java.util.List;
 @TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
-//    @RdfProperty("sp:couchDBId")
-//    @JsonProperty("couchDBId")
-//    private @SerializedName("_id") String id;
-//
-//    @JsonProperty("_rev")
-//    private @SerializedName("_rev") String rev;
-
-    private String adapterId;
-
     private String userName;
 
     private EventGrounding eventGrounding;
@@ -67,8 +58,12 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     private long createdAt;
 
+    //  Is used to store where the adapter is running to stop it
     private String selectedEndpointUrl;
 
+    /**
+     * This is used to identify all the service within the service group the adapter can be invoked in
+     */
     private String correspondingServiceGroup;
 
     public AdapterDescription() {
@@ -88,8 +83,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms,tpMqtt));
     }
 
-    public AdapterDescription(String uri, String name, String description) {
-        super(uri, name, description);
+    public AdapterDescription(String elementId, String name, String description) {
+        super(elementId, name, description);
         this.rules = new ArrayList<>();
         this.category = new ArrayList<>();
     }
@@ -97,9 +92,6 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public AdapterDescription(AdapterDescription other) {
         super(other);
-        this.adapterId = other.getAdapterId();
-        //this.id = other.getId();
-        //this.rev = other.getRev();
         this.config = new Cloner().staticProperties(other.getConfig());
         this.userName = other.getUserName();
         this.rules = other.getRules();
@@ -112,30 +104,12 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
-
-
-    public String getId() {
-        return this.elementId;
-    }
-
-    public void setId(String id) {
-        this.elementId = id;
-    }
-
     public String getRev() {
         return this.rev;
     }
 
     public void setRev(String rev) {
         this.rev = rev;
-    }
-
-    public String getAdapterId() {
-        return adapterId;
-    }
-
-    public void setAdapterId(String adapterId) {
-        this.adapterId = adapterId;
     }
 
     public String getUserName() {

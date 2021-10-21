@@ -34,6 +34,7 @@ import org.springframework.context.annotation.Import;
 import java.net.UnknownHostException;
 import java.util.List;
 
+@Deprecated
 @Configuration
 @EnableAutoConfiguration
 @Import({ PipelineElementContainerResourceConfig.class })

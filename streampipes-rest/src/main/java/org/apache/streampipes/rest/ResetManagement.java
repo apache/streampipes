@@ -30,6 +30,9 @@ import org.apache.streampipes.model.client.file.FileMetadata;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.storage.api.IDashboardStorage;
+import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,12 +71,12 @@ public class ResetManagement {
         AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement();
 
         try {
-            List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapters();
+            List<AdapterDescription> allAdapters = adapterMasterManagement.getAllAdapterInstances();
             allAdapters.forEach(adapterDescription -> {
                 try {
-                    adapterMasterManagement.deleteAdapter(adapterDescription.getId());
+                    adapterMasterManagement.deleteAdapter(adapterDescription.getElementId());
                 } catch (AdapterException e) {
-                    logger.error("Failed to delete adapter with id: " + adapterDescription.getAdapterId(), e);
+                    logger.error("Failed to delete adapter with id: " + adapterDescription.getElementId(), e);
                 }
             });
         } catch (AdapterException e) {
@@ -95,6 +98,18 @@ public class ResetManagement {
             if (isSuccessDataLake) {
                 dataLakeManagementV4.removeEventProperty(measurement.getMeasureName());
             }
+        });
+
+        // Remove all data views widgets
+        IDataExplorerWidgetStorage widgetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerWidgetStorage();
+        widgetStorage.getAllDataExplorerWidgets().forEach(widget -> {
+           widgetStorage.deleteDataExplorerWidget(widget.getId());
+        });
+
+        // Remove all data views
+        IDashboardStorage dataLakeDashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
+        dataLakeDashboardStorage.getAllDashboards().forEach(dashboard  -> {
+            dataLakeDashboardStorage.deleteDashboard(dashboard.getCouchDbId());
         });
 
         logger.info("Resetting the system was completed");

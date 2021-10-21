@@ -19,8 +19,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AdapterDescriptionUnion,
-  EventRateTransformationRuleDescription, GenericAdapterSetDescription,
-  RemoveDuplicatesTransformationRuleDescription, SpecificAdapterSetDescription
+  EventProperty,
+  EventRateTransformationRuleDescription,
+  EventSchema,
+  GenericAdapterSetDescription,
+  RemoveDuplicatesTransformationRuleDescription,
+  SpecificAdapterSetDescription
 } from '../../../core-model/gen/streampipes-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
@@ -28,6 +32,7 @@ import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-start
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { ConnectService } from '../../services/connect.service';
 
 @Component({
   selector: 'sp-start-adapter-configuration',
@@ -40,6 +45,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
    * Adapter description the selected format is added to
    */
   @Input() adapterDescription: AdapterDescriptionUnion;
+
+  @Input() eventSchema: EventSchema;
 
   /**
    * Cancels the adapter configuration process
@@ -65,6 +72,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
   startAdapterSettingsFormValid = false;
 
+  timestampPropertiesInSchema: EventProperty[] = [];
 
   // preprocessing rule variables
   removeDuplicates = false;
@@ -77,13 +85,13 @@ export class StartAdapterConfigurationComponent implements OnInit {
   saveInDataLake = false;
   dataLakeTimestampField: string;
 
-  isSetAdapter = false;
-
 
   constructor(
     private dialogService: DialogService,
     private shepherdService: ShepherdService,
-    private _formBuilder: FormBuilder) { }
+    private connectService: ConnectService,
+    private _formBuilder: FormBuilder) {
+  }
 
   ngOnInit(): void {
     // initialize form for validation
@@ -93,12 +101,19 @@ export class StartAdapterConfigurationComponent implements OnInit {
     });
 
     if (this.adapterDescription instanceof GenericAdapterSetDescription ||
-                                              this.adapterDescription instanceof SpecificAdapterSetDescription) {
-      this.isSetAdapter = true;
+      this.adapterDescription instanceof SpecificAdapterSetDescription) {
     }
 
+    // Auto selection of timestamp field for datalake
+    // const eventSchema = this.connectService.getEventSchema(this.adapterDescription);
+    // this.timestampPropertiesInSchema = this.timestampPipe.transform(eventSchema.eventProperties, '');
+    // if (this.timestampPropertiesInSchema.length > 0) {
+    //   this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runtimeName;
+    // }
+
   }
-  public triggerDialog(storeAsTemplate: boolean) {
+
+  public triggerDialog(directlyStartAdapter: boolean) {
     if (this.removeDuplicates) {
       const removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
       removeDuplicates['@class'] = 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
@@ -119,7 +134,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
       width: '70vw',
       data: {
         'adapter': this.adapterDescription,
-        'storeAsTemplate': storeAsTemplate,
+        'directlyStartAdapter': directlyStartAdapter,
         'saveInDataLake': this.saveInDataLake,
         'dataLakeTimestampField': this.dataLakeTimestampField
       }
@@ -132,11 +147,11 @@ export class StartAdapterConfigurationComponent implements OnInit {
     });
   }
 
-  public saveTemplate() {
+  public startAdapter() {
     this.triggerDialog(true);
   }
 
-  public startAdapter() {
+  public createAdapter() {
     this.triggerDialog(false);
   }
 
@@ -147,4 +162,5 @@ export class StartAdapterConfigurationComponent implements OnInit {
   public goBack() {
     this.goBackEmitter.emit();
   }
+
 }

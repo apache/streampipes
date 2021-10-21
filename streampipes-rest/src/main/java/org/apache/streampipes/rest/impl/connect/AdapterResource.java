@@ -18,12 +18,9 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
-import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
-import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.adapter.AdapterDescriptionList;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
@@ -38,11 +35,9 @@ import java.util.List;
 public class AdapterResource extends AbstractAdapterResource<AdapterMasterManagement> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterResource.class);
-    private final WorkerUrlProvider workerUrlProvider;
 
     public AdapterResource() {
         super(AdapterMasterManagement::new);
-        this.workerUrlProvider = new WorkerUrlProvider();
     }
 
     @POST
@@ -51,12 +46,11 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     public Response addAdapter(AdapterDescription adapterDescription) {
         String username = getAuthenticatedUsername();
         String adapterId;
-        LOG.info("User: " + username + " starts adapter " + adapterDescription.getAdapterId());
+        LOG.info("User: " + username + " starts adapter " + adapterDescription.getElementId());
 
         try {
-            String workerBaseUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
-            adapterId = managementService.addAdapter(adapterDescription, workerBaseUrl, username);
-        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+            adapterId = managementService.addAdapter(adapterDescription, username);
+        } catch (AdapterException e) {
             LOG.error("Error while starting adapter with id " + adapterDescription.getAppId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
@@ -87,7 +81,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopAdapter(@PathParam("id") String adapterId) {
         try {
-            managementService.stopStreamAdapter(adapterId, getAdapterDescription(adapterId).getSelectedEndpointUrl());
+            managementService.stopStreamAdapter(adapterId);
             return ok(Notifications.success("Adapter started"));
         } catch (AdapterException e) {
             LOG.error("Could not stop adapter with id " +adapterId, e);
@@ -101,10 +95,9 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     public Response startAdapter(@PathParam("id") String adapterId) {
         try {
-            String workerUrl =  workerUrlProvider.getWorkerBaseUrl(getAdapterDescription(adapterId).getAppId());
-            managementService.startStreamAdapter(adapterId, workerUrl);
+            managementService.startStreamAdapter(adapterId);
             return ok(Notifications.success("Adapter stopped"));
-        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
+        } catch (AdapterException e) {
             LOG.error("Could not start adapter with id " +adapterId, e);
             return ok(Notifications.error(e.getMessage()));
         }
@@ -114,13 +107,13 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteAdapter(@PathParam("id") String adapterId) {
+    public Response deleteAdapter(@PathParam("id") String elementId) {
 
         try {
-            managementService.deleteAdapter(adapterId);
-            return ok(Notifications.success("Adapter deleted."));
+            managementService.deleteAdapter(elementId);
+            return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
         } catch (AdapterException e) {
-            LOG.error("Error while deleting adapter with id " + adapterId, e);
+            LOG.error("Error while deleting adapter with id " + elementId, e);
             return ok(Notifications.error(e.getMessage()));
         }
     }
@@ -130,9 +123,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAdapters() {
         try {
-            List<AdapterDescription> allAdapterDescription = managementService.getAllAdapters();
-            AdapterDescriptionList result = new AdapterDescriptionList();
-            result.setList(allAdapterDescription);
+            List<AdapterDescription> result = managementService.getAllAdapterInstances();
 
             return ok(result);
         } catch (AdapterException e) {

@@ -33,6 +33,7 @@ describe('Test Random Data Simulator Stream Adapter', () => {
 
     AdapterUtils.testSpecificStreamAdapter(adapterInput);
     AdapterUtils.deleteAdapter();
+
   });
 
 });

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.connect.container.master.util;
 
-import org.apache.streampipes.manager.secret.SecretProvider;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -56,10 +55,12 @@ public class AdapterEncryptionService {
   }
 
   private void encrypt(List<StaticProperty> staticProperties) {
-    SecretProvider.getEncryptionService(ad.getUserName()).applyConfig(staticProperties);
+    // TODO uncomment
+//    SecretProvider.getEncryptionService(ad.getUserName()).applyConfig(staticProperties);
   }
 
   private void decrypt(List<StaticProperty> staticProperties) {
-    SecretProvider.getDecryptionService(ad.getUserName()).applyConfig(staticProperties);
+    // TODO uncomment
+//    SecretProvider.getDecryptionService(ad.getUserName()).applyConfig(staticProperties);
   }
 }

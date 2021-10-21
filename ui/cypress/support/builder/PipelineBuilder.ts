@@ -42,6 +42,7 @@ export class PipelineBuilder {
 
         return this;
     }
+
     public addProcessingElement(processingElement: PipelineElementInput) {
         this.pipeline.processingElement = processingElement;
 

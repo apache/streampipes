@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.sdk.builder.adapter;
 
-import org.apache.streampipes.model.connect.guess.DomainPropertyProbabilityList;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -28,11 +27,9 @@ import java.util.List;
 public class GuessSchemaBuilder {
 
   private List<EventProperty> eventProperties;
-  private List<DomainPropertyProbabilityList> domainPropertyProbabilitiesList;
 
   private GuessSchemaBuilder() {
     this.eventProperties = new ArrayList<>();
-    this.domainPropertyProbabilitiesList = new ArrayList<>();
   }
 
   /**
@@ -48,12 +45,6 @@ public class GuessSchemaBuilder {
     return this;
   }
 
-  public GuessSchemaBuilder domainPropertyProbability(DomainPropertyProbabilityList domainPropertyProbabilityList) {
-    this.domainPropertyProbabilitiesList.add(domainPropertyProbabilityList);
-
-    return this;
-  }
-
   public GuessSchema build() {
     GuessSchema guessSchema = new GuessSchema();
     EventSchema eventSchema = new EventSchema();
@@ -65,7 +56,6 @@ public class GuessSchemaBuilder {
     eventSchema.setEventProperties(eventProperties);
 
     guessSchema.setEventSchema(eventSchema);
-    guessSchema.setPropertyProbabilityList(domainPropertyProbabilitiesList);
 
     return guessSchema;
   }

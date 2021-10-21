@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {Pipeline, PipelineCategory} from "../../../core-model/gen/streampipes-model";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { Component, Input, OnInit } from '@angular/core';
+import { Pipeline, PipelineCategory } from '../../../core-model/gen/streampipes-model';
+import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
-    selector: 'pipeline-categories-dialog',
+    selector: 'sp-pipeline-categories-dialog',
     templateUrl: './pipeline-categories-dialog.component.html',
     styleUrls: ['./pipeline-categories-dialog.component.scss']
 })
@@ -45,17 +45,16 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     @Input()
     systemPipelines: Pipeline[];
 
-    //getPipelineCategories;
+    // getPipelineCategories;
 
     constructor(private pipelineService: PipelineService,
-                private dialogRef: DialogRef<PipelineCategoriesDialogComponent>)
-    {
+                private dialogRef: DialogRef<PipelineCategoriesDialogComponent>) {
         this.addSelected = false;
         this.addPipelineToCategorySelected = [];
         this.categoryDetailsVisible = [];
-        this.selectedPipelineId = "";
-        //this.getPipelineCategories = getPipelineCategories;
-        //this.refreshPipelines = refreshPipelines;
+        this.selectedPipelineId = '';
+        // this.getPipelineCategories = getPipelineCategories;
+        // this.refreshPipelines = refreshPipelines;
 
     }
 
@@ -71,14 +70,14 @@ export class PipelineCategoriesDialogComponent implements OnInit {
 
     addPipelineToCategory(pipelineCategory) {
         console.log(pipelineCategory);
-        var pipeline = this.findPipeline(this.selectedPipelineId);
-        if (pipeline['pipelineCategories'] == undefined) pipeline['pipelineCategories'] = [];
+        const pipeline = this.findPipeline(this.selectedPipelineId);
+        if (pipeline['pipelineCategories'] === undefined) { pipeline['pipelineCategories'] = []; }
         pipeline['pipelineCategories'].push(pipelineCategory._id);
         this.storeUpdatedPipeline(pipeline);
     }
 
     removePipelineFromCategory(pipeline, categoryId) {
-        var index = pipeline.pipelineCategories.indexOf(categoryId);
+        const index = pipeline.pipelineCategories.indexOf(categoryId);
         pipeline.pipelineCategories.splice(index, 1);
         this.storeUpdatedPipeline(pipeline);
     }
@@ -86,16 +85,16 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     storeUpdatedPipeline(pipeline) {
         this.pipelineService.updatePipeline(pipeline)
             .subscribe(msg => {
-                //this.refreshPipelines();
-                //this.getPipelineCategories();
+                // this.refreshPipelines();
+                // this.getPipelineCategories();
                 this.fetchPipelineCategories();
             });
     }
 
     findPipeline(pipelineId) {
-        var matchedPipeline = {};
+        let matchedPipeline = {};
         this.pipelines.forEach(pipeline => {
-            if (pipeline._id == pipelineId) {
+            if (pipeline._id === pipelineId) {
                 matchedPipeline = pipeline;
             }
         });
@@ -103,7 +102,7 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     }
 
     addPipelineCategory() {
-        let newCategory: any = {};
+        const newCategory: any = {};
         newCategory.categoryName = this.newCategoryName;
         newCategory.categoryDescription = this.newCategoryDescription;
         this.pipelineService.storePipelineCategory(newCategory)
@@ -118,7 +117,7 @@ export class PipelineCategoriesDialogComponent implements OnInit {
             .subscribe(pipelineCategories => {
                 this.pipelineCategories = pipelineCategories;
             });
-    };
+    }
 
     fetchPipelines() {
 
@@ -139,8 +138,8 @@ export class PipelineCategoriesDialogComponent implements OnInit {
 
     showAddInput() {
         this.addSelected = true;
-        this.newCategoryName = "";
-        this.newCategoryDescription = "";
+        this.newCategoryName = '';
+        this.newCategoryDescription = '';
     }
 
     close() {

@@ -22,40 +22,45 @@ import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
 export class SpecificAdapterBuilder {
 
 
-    specificAdapterInput: SpecificAdapterInput;
+  specificAdapterInput: SpecificAdapterInput;
 
-    constructor(type: string) {
-        this.specificAdapterInput = new SpecificAdapterInput();
-        this.specificAdapterInput.adapterType = type;
-        this.specificAdapterInput.adapterConfiguration = [];
-    }
+  constructor(type: string) {
+    this.specificAdapterInput = new SpecificAdapterInput();
+    this.specificAdapterInput.adapterType = type;
+    this.specificAdapterInput.adapterConfiguration = [];
+  }
 
-    public static create(name: string) {
-        return new SpecificAdapterBuilder(name);
-    }
+  public static create(name: string) {
+    return new SpecificAdapterBuilder(name);
+  }
 
-    public setName(name: string) {
-        this.specificAdapterInput.adapterName = name;
-        return this;
-    }
+  public setName(name: string) {
+    this.specificAdapterInput.adapterName = name;
+    return this;
+  }
 
-    public setTimestampProperty(timestsmpProperty: string) {
-        this.specificAdapterInput.timestampProperty = timestsmpProperty;
-        return this;
-    }
+  public setTimestampProperty(timestsmpProperty: string) {
+    this.specificAdapterInput.timestampProperty = timestsmpProperty;
+    return this;
+  }
 
-    public addInput(type: string, selector: string, value: string) {
-        const  userInput = new UserInput();
-        userInput.type = type;
-        userInput.selector = selector;
-        userInput.value = value;
+  public setStoreInDataLake() {
+    this.specificAdapterInput.storeInDataLake = true;
+    return this;
+  }
 
-        this.specificAdapterInput.adapterConfiguration.push(userInput);
+  public addInput(type: string, selector: string, value: string) {
+    const userInput = new UserInput();
+    userInput.type = type;
+    userInput.selector = selector;
+    userInput.value = value;
 
-        return this;
-    }
+    this.specificAdapterInput.adapterConfiguration.push(userInput);
 
-    build() {
-        return this.specificAdapterInput;
-    }
+    return this;
+  }
+
+  build() {
+    return this.specificAdapterInput;
+  }
 }

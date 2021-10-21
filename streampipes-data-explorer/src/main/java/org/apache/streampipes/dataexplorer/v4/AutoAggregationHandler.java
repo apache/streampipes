@@ -98,7 +98,8 @@ public class AutoAggregationHandler {
     countParams.update(QP_COLUMNS, fieldName);
 
     SpQueryResult result = new DataLakeManagementV4().getData(countParams);
-    return result.getTotal() > 0 ? result.getAllDataSeries().get(0).getTotal() : 0;
+    
+    return result.getTotal() > 0 ? ((Double) result.getAllDataSeries().get(0).getRows().get(0).get(1)).intValue() : 0;
   }
 
   private SpQueryResult fireQuery(ProvidedQueryParams params) {

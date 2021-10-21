@@ -20,12 +20,11 @@ package org.apache.streampipes.connect.container.master.management;
 
 import com.github.jqudt.Unit;
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
-import org.apache.streampipes.units.UnitCollector;
 import org.apache.streampipes.units.UnitProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,11 +33,9 @@ import java.util.List;
 public class UnitMasterManagement {
 
     private static final Logger logger = LoggerFactory.getLogger(UnitMasterManagement.class);
-    private UnitCollector unitCollector;
     private Gson gson;
 
     public UnitMasterManagement() {
-        this.unitCollector = new UnitCollector();
         gson = new Gson();
     }
 

@@ -32,7 +32,8 @@ public enum HttpServerAdapterManagement {
     this.httpServerAdapters = new HashMap<>();
   }
 
-  public void addAdapter(String endpointId, InternalEventProcessor<byte[]> callback) {
+  public void addAdapter(String endpointId,
+                         InternalEventProcessor<byte[]> callback) {
     this.httpServerAdapters.put(endpointId, callback);
   }
 

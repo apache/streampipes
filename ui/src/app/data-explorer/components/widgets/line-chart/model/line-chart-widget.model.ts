@@ -30,6 +30,7 @@ export interface LineCartVisConfig extends DataExplorerVisConfig {
   backgroundColorPropertyKey?: string;
   labelingModeOn?: boolean;
   chartMode: string;
+  chosenColor: { [id: string]: string; };
 }
 
 export interface LineChartWidgetModel extends DataExplorerWidgetModel {

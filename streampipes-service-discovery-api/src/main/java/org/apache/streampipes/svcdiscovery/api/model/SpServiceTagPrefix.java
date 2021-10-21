@@ -21,7 +21,6 @@ public enum SpServiceTagPrefix {
   SYSTEM("sys"),
   SP_GROUP("spgroup"),
   ADAPTER("adapter"),
-  PROTOCOL("protocol"),
   DATA_STREAM("dstream"),
   DATA_PROCESSOR("dprocessor"),
   DATA_SINK("dsink"),

@@ -16,33 +16,21 @@
  *
  */
 
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
-  AdapterDescription,
-  AdapterDescriptionUnion,
-  EventProperty,
-  EventSchema,
-  GenericAdapterSetDescription,
-  GenericAdapterStreamDescription,
-  SpecificAdapterSetDescription,
-  SpecificAdapterStreamDescription,
-  TransformationRuleDescriptionUnion
+    AdapterDescriptionUnion,
+    EventSchema,
+    GenericAdapterSetDescription,
+    GenericAdapterStreamDescription,
+    SpecificAdapterSetDescription,
+    SpecificAdapterStreamDescription,
+    TransformationRuleDescriptionUnion
 } from '../../../core-model/gen/streampipes-model';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Logger } from '../../../shared/logger/default-log.service';
 import { ConnectService } from '../../services/connect.service';
-import { TimestampPipe } from '../../filter/timestamp.pipe';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { RestService } from '../../services/rest.service';
 import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
@@ -50,231 +38,201 @@ import { TransformationRuleService } from '../../services/transformation-rule.se
 import { IconService } from '../../services/icon.service';
 
 @Component({
-    selector: 'sp-new-adapter',
-    templateUrl: './new-adapter.component.html',
-    styleUrls: ['./new-adapter.component.scss'],
+  selector: 'sp-new-adapter',
+  templateUrl: './new-adapter.component.html',
+  styleUrls: ['./new-adapter.component.scss']
 })
 export class NewAdapterComponent implements OnInit, AfterViewInit {
 
-    selectedUploadFile: File;
-    fileName;
-    isGenericAdapter = false;
-    isDataSetDescription = false;
-    isDataStreamDescription = false;
+  selectedUploadFile: File;
+  fileName;
+  isGenericAdapter = false;
+  isDataSetDescription = false;
+  isDataStreamDescription = false;
 
-    dataLakeTimestampField: string;
+  dataLakeTimestampField: string;
 
-    @Input()
-    adapter: AdapterDescriptionUnion;
+  @Input()
+  adapter: AdapterDescriptionUnion;
 
-    @Output()
-    removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
+  @Output()
+  removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    @Output()
-    updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-
-    @ViewChild('stepper', { static: true }) myStepper: MatStepper;
+  @Output()
+  updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
 
-    protocolConfigurationValid: boolean;
-    formatConfigurationValid: boolean;
-
-    eventSchema: EventSchema;
-    oldEventSchema: EventSchema;
-
-    timestampPropertiesInSchema: EventProperty[] = [];
-
-    hasInput: boolean[];
-
-    // indicates whether user uses a template or not
-    fromTemplate = false;
-
-    // deactivates all edit functions when user starts a template
-    isEditable = true;
-
-    @ViewChild(EventSchemaComponent, { static: true })
-    private eventSchemaComponent: EventSchemaComponent;
+  @ViewChild('stepper', { static: true }) myStepper: MatStepper;
 
 
-    completedStaticProperty: ConfigurationInfo;
+  protocolConfigurationValid: boolean;
+  formatConfigurationValid: boolean;
 
-    isPreviewEnabled = false;
-
-    parentForm: FormGroup;
-    genericAdapterSettingsFormValid = false;
-    viewInitialized = false;
-
-    constructor(
-        private logger: Logger,
-        private restService: RestService,
-        private transformationRuleService: TransformationRuleService,
-        private shepherdService: ShepherdService,
-        private connectService: ConnectService,
-        private _formBuilder: FormBuilder,
-        private iconService: IconService,
-        private timestampPipe: TimestampPipe,
-        private changeDetectorRef: ChangeDetectorRef) { }
-
-    handleFileInput(files: any) {
-        this.selectedUploadFile = files[0];
-        this.fileName = this.selectedUploadFile.name;
-
-        this.iconService.toBase64(this.selectedUploadFile)
-            .then(
-                data => {
-                    this.adapter.icon = (data as string);
-                }
-            );
-    }
-
-    ngOnInit() {
-
-        this.parentForm = this._formBuilder.group({
-        });
+  eventSchema: EventSchema;
+  oldEventSchema: EventSchema;
 
 
-        this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
-        this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
-        this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-        this.formatConfigurationValid = false;
+  hasInput: boolean[];
+
+  // indicates whether user uses a template or not
+  fromTemplate = false;
+
+  // deactivates all edit functions when user starts a template
+  isEditable = true;
+
+  @ViewChild(EventSchemaComponent, { static: true })
+  private eventSchemaComponent: EventSchemaComponent;
 
 
-        // this.startAdapterFormGroup = this._formBuilder.group({
-        //     startAdapterFormCtrl: ['', Validators.required]
-        // });
+  completedStaticProperty: ConfigurationInfo;
 
-        this.protocolConfigurationValid = false;
+  isPreviewEnabled = false;
 
-        this.eventSchema = this.getEventSchema(this.adapter);
+  parentForm: FormGroup;
+  genericAdapterSettingsFormValid = false;
+  viewInitialized = false;
 
-        if (this.eventSchema.eventProperties.length > 0) {
+  constructor(
+    private logger: Logger,
+    private restService: RestService,
+    private transformationRuleService: TransformationRuleService,
+    private shepherdService: ShepherdService,
+    private connectService: ConnectService,
+    private _formBuilder: FormBuilder,
+    private iconService: IconService,
+    private changeDetectorRef: ChangeDetectorRef) {
+  }
 
-            // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
-            // step 2. Can be removed when a better solution is found.
-            setTimeout(() => {
-                this.goForward();
-                this.goForward();
-            }, 1);
+  handleFileInput(files: any) {
+    this.selectedUploadFile = files[0];
+    this.fileName = this.selectedUploadFile.name;
 
-            this.fromTemplate = true;
-            this.isEditable = false;
-            this.oldEventSchema = this.eventSchema;
+    this.iconService.toBase64(this.selectedUploadFile)
+      .then(
+        data => {
+          this.adapter.icon = (data as string);
         }
+      );
+  }
 
-        // this.parentForm.statusChanges.subscribe((status) => {
-        //     this.genericadapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
-        // });
-    }
+  ngOnInit() {
 
-    ngAfterViewInit() {
-        this.viewInitialized = true;
-        // this.genericAdapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
-        this.changeDetectorRef.detectChanges();
-    }
+    this.parentForm = this._formBuilder.group({});
 
 
-    removeSelection() {
-        this.removeSelectionEmitter.emit();
-    }
+    this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
+    this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
+    this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
+    this.formatConfigurationValid = false;
 
-    clickProtocolSettingsNextButton() {
-        this.shepherdService.trigger('specific-settings-next-button');
+
+    // this.startAdapterFormGroup = this._formBuilder.group({
+    //     startAdapterFormCtrl: ['', Validators.required]
+    // });
+
+    this.protocolConfigurationValid = false;
+
+    this.eventSchema = this.connectService.getEventSchema(this.adapter);
+
+    if (this.eventSchema.eventProperties.length > 0) {
+
+      // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
+      // step 2. Can be removed when a better solution is found.
+      setTimeout(() => {
         this.goForward();
-    }
-
-    clickSpecificSettingsNextButton() {
-        this.shepherdService.trigger('specific-settings-next-button');
-        this.guessEventSchema();
         this.goForward();
+      }, 1);
+
+      this.fromTemplate = true;
+      this.isEditable = false;
+      this.oldEventSchema = this.eventSchema;
     }
 
-    clickEventSchemaNextButtonButton() {
-        if (this.isEditable) {
-            this.setSchema();
-        }
+    // this.parentForm.statusChanges.subscribe((status) => {
+    //     this.genericadapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
+    // });
+  }
 
-        // Auto selection of timestamp field for datalake
-        this.timestampPropertiesInSchema = this.timestampPipe.transform(this.eventSchema.eventProperties, '');
-        if (this.timestampPropertiesInSchema.length > 0) {
-            this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runtimeName;
-        }
+  ngAfterViewInit() {
+    this.viewInitialized = true;
+    // this.genericAdapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
+    this.changeDetectorRef.detectChanges();
+  }
 
-        this.shepherdService.trigger('event-schema-next-button');
-        this.goForward();
+
+  removeSelection() {
+    this.removeSelectionEmitter.emit();
+  }
+
+  clickProtocolSettingsNextButton() {
+    this.shepherdService.trigger('specific-settings-next-button');
+    this.goForward();
+  }
+
+  clickSpecificSettingsNextButton() {
+    this.shepherdService.trigger('specific-settings-next-button');
+    this.guessEventSchema();
+    this.goForward();
+  }
+
+  clickEventSchemaNextButtonButton() {
+    if (this.isEditable) {
+      this.setSchema();
     }
 
-    clickFormatSelectionNextButton() {
-        this.shepherdService.trigger('format-selection-next-button');
-        this.guessEventSchema();
-        this.goForward();
+
+    this.shepherdService.trigger('event-schema-next-button');
+    this.goForward();
+  }
+
+  clickFormatSelectionNextButton() {
+    this.shepherdService.trigger('format-selection-next-button');
+    this.guessEventSchema();
+    this.goForward();
+  }
+
+  guessEventSchema() {
+    const eventSchema: EventSchema = this.connectService.getEventSchema(this.adapter);
+    if (eventSchema.eventProperties.length === 0) {
+      this.eventSchemaComponent.guessSchema();
+    } else {
+      this.oldEventSchema = eventSchema;
+    }
+  }
+
+  public setSchema() {
+
+    if (this.adapter instanceof GenericAdapterSetDescription) {
+      (this.adapter as GenericAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
+    } else if (this.adapter instanceof SpecificAdapterSetDescription) {
+      (this.adapter as SpecificAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
+    } else if (this.adapter instanceof GenericAdapterStreamDescription) {
+      (this.adapter as GenericAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
+    } else if (this.adapter instanceof SpecificAdapterStreamDescription) {
+      (this.adapter as SpecificAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
+    } else {
+      console.log('Error: Adapter type is unknown');
     }
 
-    guessEventSchema() {
-        const eventSchema: EventSchema = this.getEventSchema(this.adapter);
-        if (eventSchema.eventProperties.length === 0) {
-            this.eventSchemaComponent.guessSchema();
-        } else {
-            this.oldEventSchema = eventSchema;
-        }
-    }
 
-    getEventSchema(adapter: AdapterDescription): EventSchema {
-        let eventSchema: EventSchema;
+    this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
 
-        if (adapter instanceof GenericAdapterSetDescription) {
-            eventSchema = (adapter as GenericAdapterSetDescription).dataSet.eventSchema || new EventSchema();
-        } else if (adapter instanceof SpecificAdapterSetDescription) {
-            eventSchema = (adapter as SpecificAdapterSetDescription).dataSet.eventSchema || new EventSchema();
-        } else if (adapter instanceof GenericAdapterStreamDescription) {
-            eventSchema = (adapter as GenericAdapterStreamDescription).dataStream.eventSchema || new EventSchema();
-        } else if (adapter instanceof SpecificAdapterStreamDescription) {
-            eventSchema = (adapter as SpecificAdapterStreamDescription).dataStream.eventSchema || new EventSchema();
-        } else {
-            eventSchema = new EventSchema();
-        }
+    this.transformationRuleService.setNewEventSchema(this.eventSchema);
+    const transformationRules: TransformationRuleDescriptionUnion[] =
+      this.transformationRuleService.getTransformationRuleDescriptions();
+    this.adapter.rules = transformationRules;
+  }
 
-        if (eventSchema && eventSchema.eventProperties && eventSchema.eventProperties.length > 0) {
-            return eventSchema;
-        } else {
-            eventSchema.eventProperties = [];
-            return eventSchema;
-        }
-    }
+  goBack() {
+    this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
+  }
 
-    public setSchema() {
+  goForward() {
+    this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
+  }
 
-        if (this.adapter instanceof  GenericAdapterSetDescription) {
-            (this.adapter as GenericAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
-        } else if (this.adapter instanceof SpecificAdapterSetDescription) {
-            (this.adapter as SpecificAdapterSetDescription).dataSet.eventSchema = this.eventSchema;
-        } else if (this.adapter instanceof GenericAdapterStreamDescription) {
-            (this.adapter as GenericAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
-        } else if (this.adapter instanceof SpecificAdapterStreamDescription) {
-            (this.adapter as SpecificAdapterStreamDescription).dataStream.eventSchema = this.eventSchema;
-        } else {
-            console.log('Error: Adapter type is unknown');
-        }
-
-
-        this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
-
-        this.transformationRuleService.setNewEventSchema(this.eventSchema);
-        const transformationRules: TransformationRuleDescriptionUnion[] =
-          this.transformationRuleService.getTransformationRuleDescriptions();
-        this.adapter.rules = transformationRules;
-    }
-
-    goBack() {
-        this.myStepper.selectedIndex = this.myStepper.selectedIndex - 1;
-    }
-
-    goForward() {
-        this.myStepper.selectedIndex = this.myStepper.selectedIndex + 1;
-    }
-
-    public adapterWasStarted() {
-        this.updateAdapterEmitter.emit();
-        this.removeSelectionEmitter.emit();
-    }
+  public adapterWasStarted() {
+    this.updateAdapterEmitter.emit();
+    this.removeSelectionEmitter.emit();
+  }
 }

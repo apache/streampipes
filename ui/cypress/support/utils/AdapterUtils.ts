@@ -21,6 +21,7 @@ import { StaticPropertyUtils } from './StaticPropertyUtils';
 import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
 import { GenericAdapterInput } from '../model/GenericAdapterInput';
 import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
+import { AdapterInput } from '../model/AdapterInput';
 
 export class AdapterUtils {
 
@@ -32,9 +33,13 @@ export class AdapterUtils {
 
     AdapterUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
 
+    if (adapterConfiguration.timestampProperty) {
+      AdapterUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
+    }
+
     AdapterUtils.finishEventSchemaConfiguration();
 
-    AdapterUtils.startStreamAdapter(adapterConfiguration.adapterName);
+    AdapterUtils.startStreamAdapter(adapterConfiguration);
 
   }
 
@@ -48,13 +53,13 @@ export class AdapterUtils {
   public static addGenericStreamAdapter(adapterConfiguration: GenericAdapterInput) {
     AdapterUtils.addGenericAdapter(adapterConfiguration);
 
-    AdapterUtils.startStreamAdapter(adapterConfiguration.adapterName);
+    AdapterUtils.startStreamAdapter(adapterConfiguration);
   }
 
   public static addGenericSetAdapter(adapterConfiguration: GenericAdapterInput) {
     AdapterUtils.addGenericAdapter(adapterConfiguration);
 
-    AdapterUtils.startSetAdapter(adapterConfiguration.adapterName);
+    AdapterUtils.startSetAdapter(adapterConfiguration);
   }
 
   private static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
@@ -87,7 +92,7 @@ export class AdapterUtils {
 
     AdapterUtils.finishEventSchemaConfiguration();
 
-    AdapterUtils.startStreamAdapter(configuration.adapterName);
+    AdapterUtils.startStreamAdapter(configuration);
 
   }
 
@@ -142,21 +147,26 @@ export class AdapterUtils {
     cy.get('#event-schema-next-button').click();
   }
 
-  private static startStreamAdapter(name) {
-    AdapterUtils.startAdapter(name, 'sp-connect-adapter-live-preview');
+  private static startStreamAdapter(adapterInput: AdapterInput) {
+    AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-live-preview');
   }
 
-  private static startSetAdapter(name) {
-    AdapterUtils.startAdapter(name, 'sp-connect-adapter-set-success');
+  private static startSetAdapter(adapterInput: AdapterInput) {
+    AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-set-success');
   }
 
-  private static startAdapter(name , successElement) {
+  private static startAdapter(adapterInput: AdapterInput, successElement) {
     // Set adapter name
-    cy.dataCy('sp-adapter-name').type(name);
+    cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
+
+    if (adapterInput.storeInDataLake) {
+      cy.dataCy('sp-store-in-datalake').children().click();
+      cy.dataCy('sp-store-in-datalake-timestamp').click().get('mat-option').contains(adapterInput.timestampProperty).click();
+    }
 
     // Start adapter
     cy.get('#button-startAdapter').click();
-    cy.dataCy(successElement , { timeout: 10000 }).should('be.visible');
+    cy.dataCy(successElement, { timeout: 10000 }).should('be.visible');
 
     // Close adapter preview
     cy.get('button').contains('Close').parent().click();
@@ -170,7 +180,7 @@ export class AdapterUtils {
     cy.dataCy('delete').should('have.length', 1);
     cy.dataCy('delete').click();
     cy.dataCy('delete-adapter').click();
-    cy.dataCy('adapter-deletion-in-progress' , { timeout: 10000 }).should('be.visible');
+    cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should('be.visible');
     cy.dataCy('delete', { timeout: 20000 }).should('have.length', 0);
     // });
   }

@@ -18,21 +18,22 @@
 package org.apache.streampipes.model.client.assetdashboard;
 
 import java.util.List;
+import java.util.Map;
 
 public class CanvasElement {
 
-  private CanvasAttributes attrs;
+  private Map<String, Object> attrs;
   private String className;
   private List<CanvasElement> children;
 
   public CanvasElement() {
   }
 
-  public CanvasAttributes getAttrs() {
+  public Map<String, Object> getAttrs() {
     return attrs;
   }
 
-  public void setAttrs(CanvasAttributes attrs) {
+  public void setAttrs(Map<String, Object> attrs) {
     this.attrs = attrs;
   }
 

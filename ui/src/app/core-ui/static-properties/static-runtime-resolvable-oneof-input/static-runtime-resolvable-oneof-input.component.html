@@ -19,8 +19,10 @@
 <div id="formWrapper" fxFlex="100" fxLayout="column">
     <div>
         <button mat-button mat-raised-button color="accent" class="small-button"
+                data-cy="sp-reload"
                 (click)="loadOptionsFromRestApi()"
-                style="margin-right:10px;margin-left:10px;" [disabled]="!showOptions">
+                [disabled]="!showOptions"
+                style="margin-right:10px;margin-left:10px;">
             <span>Reload</span>
         </button>
     </div>
@@ -28,7 +30,9 @@
         <div fxFlex fxLayout="row">
             <div fxLayout="column" *ngIf="showOptions || staticProperty.options" style="margin-left: 10px">
                 <mat-radio-button *ngFor="let option of staticProperty.options"
-                                  (click)="select(option.elementId)" [checked]="option.selected">
+                                  (click)="select(option.elementId)"
+                                  [attr.data-cy]="option.name"
+                                  [checked]="option.selected">
                     <label style="font-weight: normal">
                         {{option.name}}
                     </label>

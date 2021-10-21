@@ -16,16 +16,14 @@
  *
  */
 
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {Pipeline, PipelineOperationStatus} from "../../../core-model/gen/streampipes-model";
-import {Component, Input, OnInit} from "@angular/core";
-import {PipelineAction} from "../../model/pipeline-model";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
-import {ShepherdService} from "../../../services/tour/shepherd.service";
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { Pipeline } from '../../../core-model/gen/streampipes-model';
+import { Component, Input, OnInit } from '@angular/core';
+import { PipelineService } from '../../../platform-services/apis/pipeline.service';
 
 
 @Component({
-  selector: 'pipeline-notifications',
+  selector: 'sp-pipeline-notifications',
   templateUrl: './pipeline-notifications.component.html',
   styleUrls: ['./pipeline-notifications.component.scss']
 })
@@ -43,8 +41,8 @@ export class PipelineNotificationsComponent implements OnInit {
 
   acknowledgeAndClose() {
     this.pipeline.pipelineNotifications = [];
-    if (this.pipeline.healthStatus === "REQUIRES_ATTENTION") {
-      this.pipeline.healthStatus = "OK";
+    if (this.pipeline.healthStatus === 'REQUIRES_ATTENTION') {
+      this.pipeline.healthStatus = 'OK';
     }
     this.pipelineService.updatePipeline(this.pipeline).subscribe(msg => {
       this.dialogRef.close();

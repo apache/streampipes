@@ -27,6 +27,7 @@ import { PipelineElementTemplateService } from './apis/pipeline-element-template
 import { PipelineMonitoringService } from './apis/pipeline-monitoring.service';
 import { SemanticTypesService } from './apis/semantic-types.service';
 import { PipelineCanvasMetadataService } from './apis/pipeline-canvas-metadata.service';
+import { PipelineTemplateService } from './apis/pipeline-template.service';
 
 @NgModule({
   imports: [],
@@ -38,11 +39,11 @@ import { PipelineCanvasMetadataService } from './apis/pipeline-canvas-metadata.s
     PipelineCanvasMetadataService,
     PipelineElementEndpointService,
     PipelineElementTemplateService,
-    // PipelineTemplateService,
     PipelineElementService,
     PipelineMonitoringService,
     PipelineService,
-    SemanticTypesService
+    SemanticTypesService,
+    PipelineTemplateService
   ],
   entryComponents: []
 })

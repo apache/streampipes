@@ -28,10 +28,12 @@ import org.apache.streampipes.model.SpDataSet;
 public abstract class AdapterSetDescription extends AdapterDescription {
 
     public AdapterSetDescription() {
+        this.dataSet = new SpDataSet();
     }
 
     public AdapterSetDescription(String uri, String name, String description) {
         super(uri, name, description);
+        this.dataSet = new SpDataSet();
     }
 
     public AdapterSetDescription(AdapterSetDescription other) {
@@ -41,8 +43,6 @@ public abstract class AdapterSetDescription extends AdapterDescription {
 
     private SpDataSet dataSet;
 
-    private boolean stopPipeline;
-
     public SpDataSet getDataSet() {
         return dataSet;
     }
@@ -51,11 +51,4 @@ public abstract class AdapterSetDescription extends AdapterDescription {
         this.dataSet = dataSet;
     }
 
-    public boolean isStopPipeline() {
-        return stopPipeline;
-    }
-
-    public void setStopPipeline(boolean stopPipeline) {
-        this.stopPipeline = stopPipeline;
-    }
 }
