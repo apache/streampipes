@@ -26,19 +26,27 @@ import { DataLakeFilterConfig } from '../model/DataLakeFilterConfig';
 export class DataLakeUtils {
 
 
+  public static getDataLakeTestSetAdapter(name: string, storeInDataLake: boolean = true) {
+    const adapterBuilder = GenericAdapterBuilder
+      .create('File_Set')
+      .setName(name)
+      .setTimestampProperty('timestamp')
+      .addDimensionProperty('randomtext')
+      .setFormat('csv')
+      .addFormatInput('input', 'delimiter', ';')
+      .addFormatInput('checkbox', 'header', 'check');
+
+    if (storeInDataLake) {
+      adapterBuilder.setStoreInDataLake();
+    }
+    return adapterBuilder.build();
+  }
+
   public static loadDataIntoDataLake(dataSet: string) {
     // Create adapter with dataset
     FileManagementUtils.addFile(dataSet);
 
-    const adapter = GenericAdapterBuilder
-      .create('File_Set')
-      .setName('datalake_configuration')
-      .setTimestampProperty('timestamp')
-      .setStoreInDataLake()
-      .setFormat('csv')
-      .addFormatInput('input', 'delimiter', ';')
-      .addFormatInput('checkbox', 'header', 'check')
-      .build();
+    const adapter = this.getDataLakeTestSetAdapter('datalake_configuration');
     AdapterUtils.addGenericSetAdapter(adapter);
 
     // Wait till data is stored
@@ -164,6 +172,21 @@ export class DataLakeUtils {
         DataLakeUtils.resultEqual(actualResultString, expectedResultString);
       });
     });
+  }
+
+  public static selectTimeRange(from: Date, to: Date) {
+    DataLakeUtils.setTimeInput('time-range-from', from);
+    DataLakeUtils.setTimeInput('time-range-to', to);
+  }
+
+  private static setTimeInput(selector: string, value: Date) {
+    cy.dataCy(selector)
+      .click();
+    cy.wait(500);
+    cy.get('.owl-dt-control-button-content').contains('Set').click({ 'force': true });
+    cy.dataCy(selector)
+      .clear()
+      .type(`${value.toLocaleString()}{enter}`);
   }
 
   private static resultEqual(actual: string, expected: string) {

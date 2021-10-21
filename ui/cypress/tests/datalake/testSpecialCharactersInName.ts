@@ -16,29 +16,55 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
+import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
+import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
+import { PipelineUtils } from '../../support/utils/PipelineUtils';
+import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 
 
 describe('Test Table View in Data Explorer', () => {
 
   before('Setup Test', () => {
-    cy.login();
-    // cy.initStreamPipesTest();
-    // DataLakeUtils.loadRandomDataSetIntoDataLake();
+    cy.initStreamPipesTest();
   });
 
   it('Perform Test', () => {
 
+    FileManagementUtils.addFile('fileTest/random.csv');
+
+    // TODO this test must be fixed and extended with more special characters
+    const dataLakeName = 'specialCharacters';
+    const adapterName = 'adaptername';
+    // Add Adpater
+
+    const adapter = DataLakeUtils.getDataLakeTestSetAdapter(adapterName, false);
+    AdapterUtils.addGenericSetAdapter(adapter);
+
+    const pipelineInput = PipelineBuilder.create(dataLakeName)
+      .addSource(adapterName)
+      .addSourceType('set')
+      .addSink(
+        PipelineElementBuilder.create('data_lake')
+          .addInput('input', 'db_measurement', dataLakeName)
+          .build())
+      .build();
+
+    PipelineUtils.testPipeline(pipelineInput);
+
+    // Wait till data is stored
+    cy.wait(10000);
+
+    // Build Pipeline
+
     DataLakeUtils.goToDatalake();
 
-    // DataLakeUtils.createAndEditDataView();
-    // Click edit button
-    cy.dataCy('edit-data-view')
-      .click();
+    DataLakeUtils.createAndEditDataView();
 
     DataLakeUtils.addNewWidget();
 
-    DataLakeUtils.selectDataSet('Persist');
+    DataLakeUtils.selectDataSet(dataLakeName);
 
     DataLakeUtils.dataConfigSelectAllFields();
 
@@ -53,7 +79,6 @@ describe('Test Table View in Data Explorer', () => {
       new Date(2021, 10, 20, 22, 44));
 
     cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 10);
-    // Validate that X lines are available
 
   });
 

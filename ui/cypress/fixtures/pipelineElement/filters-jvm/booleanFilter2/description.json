@@ -1,0 +1,15 @@
+{
+  "name": "boolean_filter",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "boolean-mapping",
+      "value": "randomboolean"
+    },
+    {
+      "type": "radio",
+      "selector": "value",
+      "value": "False"
+    }
+  ]
+}

@@ -23,12 +23,14 @@
         </b>
         <mat-icon *ngIf="timestampProperty"
                   style="font-size: 15px; padding: 4px;">
-            access_time</mat-icon>
+            access_time
+        </mat-icon>
         <p style="margin: 0px 10px 10px;" *ngIf="isList">[List]</p>
     </div>
 
     <div fxFlex="15" *ngIf="isPrimitive">
-        <mat-select [(ngModel)]="node.data.propertyScope">
+        <mat-select [(ngModel)]="node.data.propertyScope"
+                    [attr.data-cy]="'property-scope-' + label">
             <mat-option value="MEASUREMENT_PROPERTY">Measurement</mat-option>
             <mat-option value="DIMENSION_PROPERTY">Dimension</mat-option>
             <mat-option value="HEADER_PROPERTY">Header</mat-option>

@@ -16,14 +16,13 @@
  *
  */
 
-import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
+import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 
 describe('Test Table View in Data Explorer', () => {
 
   before('Setup Test', () => {
-    // cy.login();
     cy.initStreamPipesTest();
     DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
   });
@@ -33,13 +32,10 @@ describe('Test Table View in Data Explorer', () => {
     DataLakeUtils.goToDatalake();
 
     DataLakeUtils.createAndEditDataView();
-    // Click edit button
-    // cy.dataCy('edit-data-view')
-    //   .click();
 
-    // TODO Set Time Range
-    cy.dataCy('1_year')
-      .click();
+    DataLakeUtils.selectTimeRange(
+      new Date(2020, 10, 20, 22, 44),
+      new Date(2021, 10, 20, 22, 44));
 
     DataLakeUtils.addNewWidget();
 
@@ -54,45 +50,60 @@ describe('Test Table View in Data Explorer', () => {
     DataLakeUtils.clickCreateButton();
 
     // Validate that X lines are available
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 10);
-
-    /**
-     * Test filter configuration
-     */
+    checkTableRows(10);
 
     // Go back to data configuration
     DataLakeUtils.selectDataConfig();
 
-    // Test number
+    /**
+     * Test filter configuration
+     */
+      // Test number
     let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 2);
+    checkTableRows(2);
     DataLakeUtils.dataConfigRemoveFilter();
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 10);
+    checkTableRows(10);
 
     // Test number greater then
     filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 5);
+    checkTableRows(5);
     DataLakeUtils.dataConfigRemoveFilter();
 
     // Test number smaller then
     filterConfig = new DataLakeFilterConfig('randomnumber', '50', '<');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 5);
+    checkTableRows(5);
     DataLakeUtils.dataConfigRemoveFilter();
 
     // Test boolean
     filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 6);
+    checkTableRows(6);
     DataLakeUtils.dataConfigRemoveFilter();
 
     // Test string
     filterConfig = new DataLakeFilterConfig('randomtext', 'a', '=');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 4);
+    checkTableRows(4);
     DataLakeUtils.dataConfigRemoveFilter();
+
+    /**
+     * Test groupBy configuration
+     */
+    // Select group by option
+    cy.dataCy('data-explorer-group-by-randomtext').children().click();
+    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).first().contains('a');
+    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).last().contains('c');
+    checkTableRows(10);
+    cy.dataCy('data-explorer-group-by-randomtext').children().click();
+
   });
+
+  const checkTableRows = (numberOfRows: number) => {
+    cy.dataCy('data-explorer-table-row-timestamp', { timeout: 10000 }).should('have.length', numberOfRows);
+  };
+
 
 });

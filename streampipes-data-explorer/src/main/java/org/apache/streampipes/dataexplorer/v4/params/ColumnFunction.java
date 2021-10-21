@@ -25,7 +25,8 @@ public enum ColumnFunction {
   COUNT("COUNT"),
   FIRST("FIRST"),
   LAST("LAST"),
-  MODE("MODE");
+  MODE("MODE"),
+  SUM("SUM");
 
   private String dbName;
 

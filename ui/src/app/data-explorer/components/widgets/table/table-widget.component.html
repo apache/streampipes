@@ -39,7 +39,7 @@
                         <label class="column-header">Timestamp</label>
                     </th>
                     <td mat-cell
-                        data-cy="data-explorer-table-row"
+                        data-cy="data-explorer-table-row-timestamp"
                         *matCellDef="let row" style="text-align: left;">
                         {{row['time'] | date:'yyyy-MM-dd HH:mm:ss.SSS'}}
                     </td>
@@ -54,7 +54,9 @@
                         [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
                         <label class="column-header">{{element.fullDbName}}</label>
                     </th>
-                    <td mat-cell *matCellDef="let row" style="text-align: left;">
+                    <td mat-cell *matCellDef="let row"
+                        [attr.data-cy]="'data-explorer-table-row-'+ element.fullDbName"
+                        style="text-align: left;">
                         {{row[element.fullDbName]}}
                     </td>
                 </div>
