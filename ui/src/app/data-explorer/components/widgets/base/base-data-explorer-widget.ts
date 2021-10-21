@@ -133,7 +133,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
     this.timerCallback.emit(true);
     zip(...observables).subscribe(results => {
       results.forEach((result, index) => result.sourceIndex = index);
-      this.onDataReceived(results[0]);
+      this.onDataReceived(results);
       this.refreshView();
       this.timerCallback.emit(false);
     });
@@ -181,7 +181,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   public abstract beforeDataFetched();
 
-  public abstract onDataReceived(spQueryResult: SpQueryResult);
+  public abstract onDataReceived(spQueryResult: SpQueryResult[]);
 
   public abstract onResize(width: number, height: number);
 
