@@ -16,24 +16,19 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import {
+  DataExplorerDataConfig,
+  DataExplorerField,
+  DataExplorerVisConfig
+} from '../../../../models/dataview-dashboard.model';
 
-export interface LineCartVisConfig extends DataExplorerVisConfig {
-  selectedLineChartProperties: DataExplorerField[];
-  selectedBackgroundColorProperty?: EventPropertyUnion;
-  groupValue?: string;
-  showCountValue?: boolean;
-  showBackgroundColorProperty?: boolean;
-  yKeys: DataExplorerField[];
-  xKey?: DataExplorerField;
-  backgroundColorPropertyKey?: string;
-  labelingModeOn?: boolean;
-  chartMode: string;
-  chosenColor: { [id: string]: string; };
+export interface HeatmapVisConfig extends DataExplorerVisConfig {
+  showLabelsProperty: boolean;
+  selectedHeatProperty: DataExplorerField;
 }
 
-export interface LineChartWidgetModel extends DataExplorerWidgetModel {
+export interface HeatmapWidgetModel extends DataExplorerWidgetModel {
   dataConfig: DataExplorerDataConfig;
-  visualizationConfig: LineCartVisConfig;
+  visualizationConfig: HeatmapVisConfig;
 }

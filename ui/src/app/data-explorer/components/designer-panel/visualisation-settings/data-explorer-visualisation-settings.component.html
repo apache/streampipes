@@ -43,6 +43,11 @@
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
             </sp-data-explorer-map-widget-config>
         </div>
+        <div *ngIf="currentlyConfiguredWidget.widgetType === 'heatmap'" class="h-100 p-0">
+            <sp-data-explorer-heatmap-widget-config
+                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+            </sp-data-explorer-heatmap-widget-config>
+        </div>
         <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
             <sp-data-explorer-line-chart-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">

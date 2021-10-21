@@ -37,13 +37,15 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
     super(widgetConfigurationService, fieldService);
   }
 
+  presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
+
   ngOnInit(): void {
     super.onInit();
   }
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
     this.currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties = selectedColumns;
-    //this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
+    // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
     this.triggerDataRefresh();
   }
 
@@ -73,13 +75,18 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
   }
 
   protected initWidgetConfig(): LineCartVisConfig {
+    const colors = {};
+    this.fieldProvider.numericFields.map((field, index) => {
+      colors[field.runtimeName] = this.presetColors[index];
+    });
     return {
       forType: this.getWidgetType(),
       yKeys: [],
       chartMode: 'lines',
       selectedLineChartProperties: this.fieldProvider.numericFields.length > 6 ?
         this.fieldProvider.numericFields.slice(0, 5) :
-        this.fieldProvider.numericFields
+        this.fieldProvider.numericFields,
+      chosenColor: colors,
     };
   }
 

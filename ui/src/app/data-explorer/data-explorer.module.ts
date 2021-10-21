@@ -57,6 +57,7 @@ import { AggregateConfigurationComponent } from './components/widgets/utils/aggr
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
+import { SelectColorPropertiesComponent } from './components/widgets/utils/select-color-properties/select-color-properties.component';
 import { DataExplorerComponent } from './data-explorer.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { DataViewDataExplorerService } from '../platform-services/apis/data-view-data-explorer.service';
@@ -69,6 +70,8 @@ import { DataExplorerDesignerPanelComponent } from './components/designer-panel/
 import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
 import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
 import { MapWidgetConfigComponent } from './components/widgets/map/config/map-widget-config.component';
+import { HeatmapWidgetComponent } from './components/widgets/heatmap/heatmap-widget.component';
+import { HeatmapWidgetConfigComponent } from './components/widgets/heatmap/config/heatmap-widget-config.component';
 import { DataExplorerWidgetAppearanceSettingsComponent } from './components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
 import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
 import { WidgetConfigurationService } from './services/widget-configuration.service';
@@ -94,6 +97,7 @@ import { WidgetDirective } from './components/widget/widget.directive';
 import { WidgetTypeService } from './services/widget-type.service';
 import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
 import { TimeSelectionService } from './services/time-selection.service';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -138,6 +142,14 @@ export const MY_NATIVE_FORMATS = {
     MatSliderModule,
     MatSlideToggleModule,
     MatChipsModule,
+    NgxEchartsModule.forRoot({
+      /**
+       * This will import all modules from echarts.
+       * If you only need custom modules,
+       * please refer to [Custom Build] section.
+       */
+      echarts: () => import('echarts'),
+    }),
   ],
   declarations: [
     AggregateConfigurationComponent,
@@ -170,11 +182,14 @@ export const MY_NATIVE_FORMATS = {
     PieChartWidgetComponent,
     PieWidgetConfigComponent,
     SelectPropertiesComponent,
+    SelectColorPropertiesComponent,
     SelectPropertyComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,
     MapWidgetConfigComponent,
     MapWidgetComponent,
+    HeatmapWidgetConfigComponent,
+    HeatmapWidgetComponent,
     TimeRangeSelectorComponent,
     DataExplorerVisualisationSettingsComponent,
     GroupSelectionPanelComponent,
