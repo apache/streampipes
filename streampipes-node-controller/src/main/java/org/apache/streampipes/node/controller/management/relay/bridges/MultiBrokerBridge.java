@@ -31,6 +31,9 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Supplier;
 
 public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends TransportProtocol> implements EventRelay {
@@ -43,11 +46,13 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
     private final EventConsumer<T1> consumer;
     private final EventProducer<T2> producer;
     private final EventRelayStrategy eventRelayStrategy;
-    private final ArrayList<byte[]> eventBuffer = new ArrayList<>();
+    private final Queue<byte[]> eventBuffer = new ArrayBlockingQueue<>(NodeConfiguration.getEventRelayBufferSize());
+    //private CircularFifoBuffer buffer = new CircularFifoBuffer(NodeConfiguration.getEventRelayBufferSize());
 
     private final int EVENT_BUFFER_SIZE = NodeConfiguration.getEventRelayBufferSize();
     private final Tuple3<String, Integer, String> relayInfo;
     private boolean isBuffering = false;
+    private boolean targetAlive = true;
 
     public MultiBrokerBridge(TransportProtocol sourceProtocol, TransportProtocol targetProtocol,
                              String eventRelayStrategy, Supplier<EventConsumer<T1>> consumerSupplier,
@@ -87,40 +92,21 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
     }
 
     private void publishWithCheck(byte[] event) {
+
+        if (targetAlive && !isTargetBrokerAlive()){
+            targetAlive = false;
+            startAliveThread();
+        }
         // check if target broker can be reached
-        if (isTargetBrokerAlive()) {
+        if (targetAlive) {
 
-            if (eventRelayStrategy == EventRelayStrategy.BUFFER) {
-                if (eventBuffer.isEmpty()) {
-                    // send events to upstream
-                    producer.publish(event);
-                    metrics.increaseNumRelayedEvents();
-                } else {
-                    // TODO: send buffered event should run independent of callback
-                    // send buffered events & clear buffer
-                    LOG.info("Re-established connection to broker={}:{}. Resent buffered events for topic={} " +
-                                    "(buffer_size={}, num_dropped_events={})", relayInfo.a, relayInfo.b,
-                            relayInfo.c, eventBuffer.size(), metrics.getNumDroppedEvents());
-
-                    // add current event from callback
-                    eventBuffer.add(event);
-                    eventBuffer.forEach(e -> {
-                        try{
-                            producer.publish(e);
-                            metrics.increaseNumRelayedEvents();
-                        }  catch (Exception ex) {
-                            LOG.error(ex.toString());
-                        }
-                    });
-                    eventBuffer.clear();
-                    metrics.clearNumDroppedEvents();
-                    isBuffering = false;
-                }
-            } else if (eventRelayStrategy == EventRelayStrategy.PURGE) {
-                // send events to upstream
-                producer.publish(event);
-                metrics.increaseNumRelayedEvents();
+            if(!eventBuffer.isEmpty()){
+                publishBufferedEvents(eventBuffer);
+                publishEvent(event);
+            }else{
+                publishEvent(event);
             }
+
         } else {
             //
             if (eventRelayStrategy == EventRelayStrategy.BUFFER) {
@@ -130,17 +116,9 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
                             , relayInfo.c);
                     isBuffering = true;
                 }
-
-                if (eventBuffer.size() != EVENT_BUFFER_SIZE) {
-                    eventBuffer.add(event);
-                } else {
-                    // evict oldest event
-                    eventBuffer.remove(0);
-                    metrics.increaseNumDroppedEvents();
-                }
+                bufferEvent(event);
             } else if (eventRelayStrategy == EventRelayStrategy.PURGE) {
-                LOG.info("Connection issue to broker={}:{}. Purge events for topic={}", relayInfo.a, relayInfo.b,
-                        relayInfo.c);
+                purgeEvent(event);
             }
         }
     }
@@ -150,6 +128,45 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
         producer.publish(event);
         metrics.increaseNumRelayedEvents();
     }
+
+    private void publishEvent(byte[] event){
+        producer.publish(event);
+        metrics.increaseNumRelayedEvents();
+    }
+
+    private synchronized void bufferEvent(byte[] event){
+        if (!eventBuffer.offer(event)){
+            eventBuffer.poll();
+            eventBuffer.offer(event);
+            metrics.increaseNumDroppedEvents();
+        }
+    }
+
+    private void purgeEvent(byte[] event){
+        LOG.info("Connection issue to broker={}:{}. Purge events for topic={}", relayInfo.a, relayInfo.b,
+                relayInfo.c);
+    }
+
+    private synchronized void publishBufferedEvents(Queue<byte[]> eventBuffer){
+        LOG.info("Re-established connection to broker={}:{}. Resent buffered events for topic={} " +
+                        "(buffer_size={}, num_dropped_events={})", relayInfo.a, relayInfo.b,
+                relayInfo.c, eventBuffer.size(), metrics.getNumDroppedEvents());
+
+        // add current event from callback
+        eventBuffer.forEach(e -> {
+            try{
+                producer.publish(e);
+                metrics.increaseNumRelayedEvents();
+            }  catch (Exception ex) {
+                LOG.error(ex.toString());
+            }
+        });
+        eventBuffer.clear();
+        metrics.clearNumDroppedEvents();
+        isBuffering = false;
+    }
+
+
 
     @Override
     public void stop() throws SpRuntimeException {
@@ -168,7 +185,7 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
         return producer.isConnected();
     }
 
-    public RelayMetrics getRelayMerics() {
+    public RelayMetrics getRelayMetrics() {
         return metrics;
     }
 
@@ -203,5 +220,21 @@ public abstract class MultiBrokerBridge<T1 extends TransportProtocol, T2 extends
             return ((KafkaTransportProtocol) tp).getKafkaPort();
         }
         throw new SpRuntimeException("Transport protocol not valid");
+    }
+
+    private void startAliveThread(){
+        LOG.info("Alive Thread started.");
+        Thread th = new Thread(){
+            public synchronized void run(){
+                boolean isAlive = false;
+                while (!isAlive){
+                    if(isTargetBrokerAlive())
+                        isAlive = true;
+                }
+                publishBufferedEvents(eventBuffer);
+                targetAlive = true;
+            }
+        };
+        th.start();
     }
 }

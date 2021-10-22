@@ -42,6 +42,6 @@ public class EventRelay extends AbstractEventRelay {
     }
 
     public RelayMetrics getRelayMetrics() {
-        return this.multiBrokerBridge.getRelayMerics();
+        return this.multiBrokerBridge.getRelayMetrics();
     }
 }

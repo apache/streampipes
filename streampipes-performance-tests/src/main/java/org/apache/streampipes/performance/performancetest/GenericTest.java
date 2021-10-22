@@ -73,8 +73,8 @@ public class GenericTest implements Test{
 
         Object[] line = null;
 
-        if (testType.equals("Reconfiguration") && nrRuns == 0){
-            executeOffloading();
+        if (testType.equals("Reconfiguration")){
+            executeReconfiguration();
             return;
         }
         //Start Pipeline
@@ -176,7 +176,7 @@ public class GenericTest implements Test{
         }
     }
 
-    private void executeOffloading(){
+    private void executeReconfiguration(){
         if (!pipeline.isRunning()) {
             PipelineOperationStatus startMessage = client.pipelines().start(pipeline);
             System.out.println(startMessage.getTitle());
@@ -205,9 +205,13 @@ public class GenericTest implements Test{
                             sp.setValue(Float.toString(reconfigurationValue));
                         }
                     }));
-
-            PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
-            System.out.println(message.getTitle());
+            EvaluationLogger.getInstance().logMQTT("Reconfiguration", "Reconfiguration triggered", 0, reconfigurationValue);
+            client.pipelines().reconfigure(pipeline);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
 
