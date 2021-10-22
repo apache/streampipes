@@ -21,7 +21,7 @@ public class ValueChangeController extends StreamPipesDataProcessor {
 	private static final String IS_CHANGED = "isChanged";
 
 
-	private double initValue;
+	private float initValue;
 
 	@Override
 	public DataProcessorDescription declareModel() {
