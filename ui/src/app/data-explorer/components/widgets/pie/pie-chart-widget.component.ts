@@ -59,8 +59,8 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
     this.updateAppearance();
   }
 
-  prepareData(spQueryResult: SpQueryResult) {
-    const series = spQueryResult.allDataSeries[0];
+  prepareData(spQueryResult: SpQueryResult[]) {
+    const series = spQueryResult[0].allDataSeries[0];
     const finalLabels: string[] = [];
     const finalValues: number[] = [];
     const values: Map<string, number> = new Map();
@@ -106,7 +106,7 @@ export class PieChartWidgetComponent extends BaseDataExplorerWidget<PieChartWidg
   beforeDataFetched() {
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
   }
 

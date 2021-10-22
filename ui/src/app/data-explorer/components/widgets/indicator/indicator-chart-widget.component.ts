@@ -75,12 +75,12 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     this.updateAppearance();
   }
 
-  prepareData(numberResult: SpQueryResult, deltaResult?: SpQueryResult) {
-    const valueIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.valueField, numberResult);
-    this.data[0].value = numberResult.total > 0 ? numberResult.allDataSeries[0].rows[0][valueIndex] : '-';
+  prepareData(numberResult: SpQueryResult[], deltaResult?: SpQueryResult) {
+    const valueIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.valueField, numberResult[0]);
+    this.data[0].value = numberResult[0].total > 0 ? numberResult[0].allDataSeries[0].rows[0][valueIndex] : '-';
     if (deltaResult) {
-      const deltaIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.deltaField, numberResult);
-      this.data[0].delta.reference = numberResult.total > 0 ? deltaResult.allDataSeries[0].rows[0][deltaIndex] : '-';
+      const deltaIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.deltaField, numberResult[0]);
+      this.data[0].delta.reference = numberResult[0].total > 0 ? deltaResult.allDataSeries[0].rows[0][deltaIndex] : '-';
     }
   }
 
@@ -100,7 +100,7 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<Indica
     this.data[0].mode = this.dataExplorerWidget.visualizationConfig.showDelta ? 'number+delta' : 'number';
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
   }
 
