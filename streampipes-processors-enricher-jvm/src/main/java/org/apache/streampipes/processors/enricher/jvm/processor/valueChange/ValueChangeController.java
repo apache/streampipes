@@ -17,17 +17,19 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class ValueChangeController extends StreamPipesDataProcessor {
 	private static final String CHANGEVALUE_MAPPING = "changevalue-mapping";
+	private static final String USER_INPUT_MAPPING = "user-input-mapping";
 	private static final String IS_CHANGED = "isChanged";
 
-	private boolean isValueChanged = false;
+
 	private double initValue;
 
 	@Override
 	public DataProcessorDescription declareModel() {
-		return ProcessingElementBuilder.create("org.apache.streampipes.enricher.jvm.valueChange","ValueChange","A value change data processor which return a boolean on data change")
-				.category(DataProcessorType.TRANSFORM)
+		return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valueChange","ValueChange","A value change data processor which return a boolean on data change")
+				.category(DataProcessorType.ENRICH)
 				.withAssets(Assets.DOCUMENTATION, Assets.ICON)
 				.withLocales(Locales.EN)
+				.requiredFloatParameter(Labels.withId(USER_INPUT_MAPPING))
 				.requiredStream(StreamRequirementsBuilder
 						.create()
 						.requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
@@ -41,16 +43,17 @@ public class ValueChangeController extends StreamPipesDataProcessor {
 
 	@Override
 	public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-		String initValue = processorParams.extractor().mappingPropertyValue(CHANGEVALUE_MAPPING);
-		this.initValue = Double.parseDouble(initValue);
+		this.initValue = processorParams.extractor().singleValueParameter(USER_INPUT_MAPPING,Float.class);
 	}
 
 	@Override
 	public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
-		Double currValue = event.getFieldBySelector(IS_CHANGED).getAsPrimitive().getAsDouble();
+		float currValue = event.getFieldBySelector(CHANGEVALUE_MAPPING).getAsPrimitive().getAsFloat();
 		if(currValue == this.initValue)
 			event.addField(IS_CHANGED,false);
-		event.addField(IS_CHANGED,true);
+		else
+			event.addField(IS_CHANGED,true);
+		spOutputCollector.collect(event);
 	}
 
 	@Override
