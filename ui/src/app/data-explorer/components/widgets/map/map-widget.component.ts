@@ -128,9 +128,9 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     this.setShownComponents(false, false, true);
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
-    this.lastDataResults = spQueryResult;
-    this.makeLayers(spQueryResult);
+  onDataReceived(spQueryResult: SpQueryResult[]) {
+    this.lastDataResults = spQueryResult[0];
+    this.makeLayers(spQueryResult[0]);
   }
 
   transform(rows, index: number): any[] {
@@ -159,7 +159,7 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     if (spQueryResult.total > 0) {
       const result = spQueryResult.allDataSeries[0];
 
-      for (var i = 0; i <= spQueryResult.allDataSeries.length-1; i++) {
+      for (var i = 0; i <= spQueryResult.allDataSeries.length - 1; i++) {
 
         const result = spQueryResult.allDataSeries[i];
 
