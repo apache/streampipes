@@ -36,7 +36,7 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class NumericalFilterController extends StreamPipesDataProcessor {
+public class NumericalFilterProcessor extends StreamPipesDataProcessor {
 
   private static final String NUMBER_MAPPING = "number-mapping";
   private static final String VALUE = "value";
