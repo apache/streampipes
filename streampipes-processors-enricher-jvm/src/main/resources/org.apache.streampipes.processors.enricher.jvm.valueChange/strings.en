@@ -1,0 +1,5 @@
+org.apache.streampipes.processors.enricher.jvm.valueChange.title=Value Change
+org.apache.streampipes.processors.enricher.jvm.valueChange.description=The processing element should be able to detect when a numeric property change from one configured value to another
+
+valueChange.title=Value Change
+valueChange.description=The unit in which the size of the event should be added
