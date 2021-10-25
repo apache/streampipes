@@ -15,44 +15,59 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class ValueChangeController extends StreamPipesDataProcessor {
-	private static final String CHANGEVALUE_MAPPING = "changevalue-mapping";
-	private static final String USER_INPUT_MAPPING = "user-input-mapping";
+public class ValueChangeProcessor extends StreamPipesDataProcessor {
+	private static final String CHANGE_VALUE_MAPPING_ID = "change-value-mapping";
+	private static final String FROM_PROPERTY_VALUE_ID = "from-property-value";
+	private static final String TO_PROPERTY_VALUE_ID = "to-property-value";
+	private static final String IS_CHANGED_ID = "is-changed";
 	private static final String IS_CHANGED = "isChanged";
 
-
-	private float initValue;
+	private String  mappingProperty;
+	private float userDefinedFrom;
+	private float userDefinedTo;
+	private float lastValueOfEvent;
 
 	@Override
 	public DataProcessorDescription declareModel() {
-		return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valueChange","ValueChange","A value change data processor which return a boolean on data change")
+		return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valueChange")
 				.category(DataProcessorType.ENRICH)
 				.withAssets(Assets.DOCUMENTATION, Assets.ICON)
 				.withLocales(Locales.EN)
-				.requiredFloatParameter(Labels.withId(USER_INPUT_MAPPING))
+				.requiredFloatParameter(Labels.withId(FROM_PROPERTY_VALUE_ID))
+				.requiredFloatParameter(Labels.withId(TO_PROPERTY_VALUE_ID))
 				.requiredStream(StreamRequirementsBuilder
 						.create()
 						.requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-							Labels.withId(CHANGEVALUE_MAPPING),
+							Labels.withId(CHANGE_VALUE_MAPPING_ID),
 							PropertyScope.NONE)
 						.build())
-				.outputStrategy(OutputStrategies.append(EpProperties.booleanEp(Labels.withId(IS_CHANGED),
-					IS_CHANGED,SO.Boolean)))
+				.outputStrategy(OutputStrategies.append(
+						EpProperties.booleanEp(Labels.withId(IS_CHANGED_ID), IS_CHANGED, SO.Boolean)))
 				.build();
 	}
 
 	@Override
 	public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-		this.initValue = processorParams.extractor().singleValueParameter(USER_INPUT_MAPPING,Float.class);
+		this.lastValueOfEvent = Float.MAX_VALUE;
+		this.userDefinedFrom = processorParams.extractor().singleValueParameter(FROM_PROPERTY_VALUE_ID, Float.class);
+		this.userDefinedTo = processorParams.extractor().singleValueParameter(TO_PROPERTY_VALUE_ID, Float.class);
+		this.mappingProperty = processorParams.extractor().mappingPropertyValue(CHANGE_VALUE_MAPPING_ID);
 	}
 
 	@Override
 	public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
-		float currValue = event.getFieldBySelector(CHANGEVALUE_MAPPING).getAsPrimitive().getAsFloat();
-		if(currValue == this.initValue)
+		float thisValue = event.getFieldBySelector(mappingProperty).getAsPrimitive().getAsFloat();
+		if (this.lastValueOfEvent != Float.MAX_VALUE) {
+			if (this.lastValueOfEvent == this.userDefinedFrom && thisValue  == this.userDefinedTo) {
+				event.addField(IS_CHANGED,true);
+			} else {
+				event.addField(IS_CHANGED,false);
+			}
+		} else {
 			event.addField(IS_CHANGED,false);
-		else
-			event.addField(IS_CHANGED,true);
+		}
+
+		this.lastValueOfEvent =  thisValue;
 		spOutputCollector.collect(event);
 	}
 

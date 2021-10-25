@@ -13,10 +13,11 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
+
   ~
   -->
 
-## Size Measure
+## Value Change
 
 <p align="center"> 
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
@@ -26,7 +27,7 @@
 
 ## Description
 
-Measures the size of an incoming event and appends this number to the event by serializing it.
+The processing element should be able to detect when a numeric property change from one configured value to another.
 
 ***
 

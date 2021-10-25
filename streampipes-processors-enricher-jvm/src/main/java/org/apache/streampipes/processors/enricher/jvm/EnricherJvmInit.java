@@ -30,7 +30,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.enricher.jvm.processor.jseval.JSEvalController;
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
-import org.apache.streampipes.processors.enricher.jvm.processor.valueChange.ValueChangeController;
+import org.apache.streampipes.processors.enricher.jvm.processor.valueChange.ValueChangeProcessor;
 
 public class EnricherJvmInit extends StandaloneModelSubmitter {
 
@@ -46,7 +46,7 @@ public class EnricherJvmInit extends StandaloneModelSubmitter {
             8090)
             .registerPipelineElements(new SizeMeasureController(),
                     new JSEvalController(),
-                    new ValueChangeController())
+                    new ValueChangeProcessor())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),
