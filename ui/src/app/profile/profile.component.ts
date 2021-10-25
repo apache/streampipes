@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'profile',
@@ -25,7 +25,7 @@ import {Component, OnInit} from "@angular/core";
 })
 export class ProfileComponent implements OnInit {
 
-  selectedIndex: number = 0;
+  selectedIndex = 0;
 
   ngOnInit(): void {
   }

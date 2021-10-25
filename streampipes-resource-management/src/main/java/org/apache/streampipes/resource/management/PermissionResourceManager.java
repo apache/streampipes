@@ -38,4 +38,8 @@ public class PermissionResourceManager {
   public List<Permission> findForObjectId(String objectInstanceId) {
     return db.getUserPermissionsForObject(objectInstanceId);
   }
+
+  public void update(Permission permission) {
+    db.updatePermission(permission);
+  }
 }

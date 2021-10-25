@@ -25,17 +25,18 @@
                     <span class="general-options-header">Basics</span>
                     <mat-form-field color="accent">
                         <mat-label>Owner</mat-label>
-                        <input formControlName="owner" fxFlex
-                               matInput
+                        <mat-select formControlName="owner" fxFlex
                                required>
+                            <mat-option *ngFor="let user of allUsers" [value]="user.principalId">{{user.username}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
                     <mat-checkbox formControlName="publicElement">
                         Public Element
                     </mat-checkbox>
                 </div>
-                <div fxLayout="column" class="general-options-panel">
+                <div fxLayout="column" class="general-options-panel" *ngIf="!(permission.publicElement)">
                     <span class="general-options-header">Users</span>
-                    <mat-form-field class="example-chip-list" appearance="fill">
+                    <mat-form-field class="example-chip-list" color="accent">
                         <mat-label>Authorized Users</mat-label>
                         <mat-chip-list #chipList aria-label="User selection">
                             <mat-chip
@@ -49,7 +50,7 @@
                                 </button>
                             </mat-chip>
                             <input
-                                    placeholder="User Selection"
+                                    placeholder="Add"
                                     #userInput
                                     [formControl]="userCtrl"
                                     [matAutocomplete]="auto"
@@ -60,6 +61,37 @@
                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="userSelected($event)">
                             <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
                                 {{user.username}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+                <div fxLayout="column" class="general-options-panel" *ngIf="!(permission.publicElement)">
+                    <span class="general-options-header">Groups</span>
+                    <mat-form-field class="example-chip-list" color="accent">
+                        <mat-label>Authorized Groups</mat-label>
+                        <mat-chip-list #chipList aria-label="Group selection">
+                            <mat-chip
+                                    *ngFor="let group of grantedGroupAuthorities"
+                                    selectable="true"
+                                    removable="true"
+                                    (removed)="removeGroup(group)">
+                                {{group.groupName}}
+                                <button matChipRemove>
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                            </mat-chip>
+                            <input
+                                    placeholder="Add"
+                                    #groupInput
+                                    [formControl]="groupCtrl"
+                                    [matAutocomplete]="auto"
+                                    [matChipInputFor]="chipList"
+                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    (matChipInputTokenEnd)="addGroup($event)">
+                        </mat-chip-list>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="groupSelected($event)">
+                            <mat-option *ngFor="let group of filteredGroups | async" [value]="group">
+                                {{group.groupName}}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>

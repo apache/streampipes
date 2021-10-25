@@ -21,6 +21,7 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.util.List;
@@ -29,9 +30,18 @@ import java.util.List;
 public class PermissionResource extends AbstractRestResource {
 
   @GET
-  @Path("{objectInstanceId}")
+  @Path("objects/{objectInstanceId}")
   public List<Permission> getPermissionForObject(@PathParam("objectInstanceId") String objectInstanceId) {
     return getSpResourceManager().managePermissions().findForObjectId(objectInstanceId);
+  }
+
+  @PUT
+  @Path("{permissionId}")
+  public void updatePermission(@PathParam("permissionId") String permissionId,
+                               Permission permission) {
+    if (permissionId.equals(permission.getPermissionId())) {
+      getSpResourceManager().managePermissions().update(permission);
+    }
   }
 
 

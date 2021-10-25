@@ -33,7 +33,7 @@ export class ProfileService {
   }
 
   getUserProfile(username: string): Observable<UserAccount> {
-    return this.http.get(this.profilePath + '/' + username).pipe(map(response => {
+    return this.http.get(this.profilePath + '/username/' + username).pipe(map(response => {
       return UserAccount.fromData(response as any);
     }));
   }

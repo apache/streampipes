@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.rest.security;
 
+import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
@@ -30,16 +31,31 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
   @Override
   public boolean hasPermission(Authentication authentication, Object o, Object permission) {
     String objectInstanceId = (String) o;
+    PrincipalUserDetails<?> userDetails = getUserDetails(authentication);
+    if (isAdmin(userDetails)) {
+      return true;
+    }
 
     return getUserDetails(authentication).getAllObjectPermissions().contains(objectInstanceId);
   }
 
   @Override
   public boolean hasPermission(Authentication authentication, Serializable serializable, String s, Object permission) {
+    PrincipalUserDetails<?> userDetails = getUserDetails(authentication);
+    if (isAdmin(userDetails)) {
+      return true;
+    }
     return getUserDetails(authentication).getAllObjectPermissions().contains(serializable.toString());
   }
 
   private PrincipalUserDetails<?> getUserDetails(Authentication authentication) {
     return (PrincipalUserDetails<?>) authentication.getPrincipal();
+  }
+
+  private boolean isAdmin(PrincipalUserDetails<?> userDetails) {
+    return userDetails
+            .getAuthorities()
+            .stream()
+            .anyMatch(a -> a.getAuthority().equals(Role.Constants.ROLE_ADMIN_VALUE));
   }
 }

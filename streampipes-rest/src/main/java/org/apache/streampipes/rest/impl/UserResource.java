@@ -69,6 +69,21 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     }
   }
 
+  @GET
+  @JacksonSerialized
+  @Path("username/{username}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getUserDetailsByName(@PathParam("username") String username) {
+    Principal principal = getPrincipal(username);
+    removeCredentials(principal);
+
+    if (principal != null) {
+      return ok(principal);
+    } else {
+      return statusMessage(Notifications.error("User not found"));
+    }
+  }
+
   @DELETE
   @JacksonSerialized
   @Path("{principalId}")

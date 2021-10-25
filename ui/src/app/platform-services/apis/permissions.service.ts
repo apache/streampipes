@@ -38,9 +38,12 @@ export class PermissionsService {
 
 
   public getPermissionsForObject(objectInstanceId: string): Observable<Permission[]> {
-      return this.http.get(`${this.permissionsBasePath}/${objectInstanceId}`).pipe(map(response => response as Permission[]));
+      return this.http.get(`${this.permissionsBasePath}/objects/${objectInstanceId}`).pipe(map(response => response as Permission[]));
   }
 
+  public updatePermission(permission: Permission): Observable<any> {
+    return this.http.put(`${this.permissionsBasePath}/${permission.permissionId}`, permission);
+  }
 
   get permissionsBasePath() {
     return `${this.platformServicesCommons.apiBasePath}/admin/permissions`;
