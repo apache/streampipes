@@ -60,7 +60,7 @@ public class NumericalFilterProcessor extends StreamPipesDataProcessor {
             .outputStrategy(OutputStrategies.keep())
             .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
                     ">=", "==", "!="))
-            .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
+            .requiredFloatParameter(Labels.withId(VALUE))
             .build();
 
   }
