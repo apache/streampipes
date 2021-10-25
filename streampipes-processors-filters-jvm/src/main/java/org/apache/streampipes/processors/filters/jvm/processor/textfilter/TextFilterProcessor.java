@@ -71,8 +71,6 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
     this.filterProperty = processorParams.extractor().mappingPropertyValue(MAPPING_PROPERTY_ID);
 
     logger.info("Text Property: " + filterProperty);
-
-
   }
 
   @Override
@@ -88,8 +86,9 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
       satisfiesFilter = (value.contains(this.keyword));
     }
 
-    if(satisfiesFilter)
+    if(satisfiesFilter) {
       spOutputCollector.collect(event);
+    }
   }
 
   @Override
