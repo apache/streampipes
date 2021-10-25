@@ -22,7 +22,7 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testName = 'valueChange1';
+  const testName = 'thresholdDetection1';
 
   const processorTest = test as ProcessorTest;
 

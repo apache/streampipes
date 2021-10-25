@@ -1,0 +1,20 @@
+{
+  "name": "threshold_detector",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "number-mapping",
+      "value": "randomnumber"
+    },
+    {
+      "type": "radio",
+      "selector": "operation",
+      "value": "\\>"
+    },
+    {
+      "type": "input",
+      "selector": "value",
+      "value": "50"
+    }
+  ]
+}
