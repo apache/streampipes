@@ -27,7 +27,6 @@ import { EChartsOption } from 'echarts';
 import { ECharts } from 'echarts/core';
 
 
-
 @Component({
   selector: 'sp-data-explorer-heatmap-widget',
   templateUrl: './heatmap-widget.component.html',
@@ -57,15 +56,15 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
-    removedFields: DataExplorerField[]) {
+                      removedFields: DataExplorerField[]) {
   }
 
   beforeDataFetched() {
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResult: SpQueryResult[]) {
     const dataBundle = this.convertData(spQueryResult);
-    if ( Object.keys(this.option).length > 0 ) {
+    if (Object.keys(this.option).length > 0) {
       this.setOptions(dataBundle[0], dataBundle[1], dataBundle[2], dataBundle[3], dataBundle[4]);
     }
   }
@@ -78,18 +77,18 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
   applySize(width: number, height: number) {
     if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width: width, height: height});
+      this.eChartsInstance.resize({ width: width, height: height });
     }
   }
 
-  convertData(spQueryResult: SpQueryResult) {
+  convertData(spQueryResult: SpQueryResult[]) {
 
     let min = 1000000;
     let max = -100000;
 
-    const result = spQueryResult.allDataSeries;
+    const result = spQueryResult[0].allDataSeries;
     const xAxisData = this.transform(result[0].rows, 0); // always time.
-    const heatIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedHeatProperty, spQueryResult);
+    const heatIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedHeatProperty, spQueryResult[0]);
 
     const yAxisData = [];
     const contentData = [];
@@ -98,7 +97,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
       let groupedVal = index.toString();
 
-      if ( groupedList['tags'] != null) {
+      if (groupedList['tags'] != null) {
         Object.entries(groupedList['tags']).forEach(
           ([key, value]) => {
             groupedVal = value;

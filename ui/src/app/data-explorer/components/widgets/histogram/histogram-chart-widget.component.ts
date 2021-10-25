@@ -57,9 +57,9 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
     this.updateAppearance();
   }
 
-  prepareData(result: SpQueryResult) {
-    const index = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedProperty, result);
-    const varX = this.transform(result.allDataSeries[0].rows, index);
+  prepareData(result: SpQueryResult[]) {
+    const index = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedProperty, result[0]);
+    const varX = this.transform(result[0].allDataSeries[0].rows, index);
 
     this.data = [{
       x: varX,
@@ -86,7 +86,7 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
   beforeDataFetched() {
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
   }
 

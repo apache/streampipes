@@ -123,15 +123,15 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     });
   }
 
-  private processNonGroupedData(spQueryResult: SpQueryResult
-  ) {
-    if (spQueryResult.total === 0) {
-      this.setShownComponents(true, false, false);
-    } else {
-      this.data = this.transformData(spQueryResult, spQueryResult.sourceIndex);
-      this.setShownComponents(false, true, false);
-    }
-  }
+  // private processNonGroupedData(spQueryResult: SpQueryResult
+  // ) {
+  //   if (spQueryResult.total === 0) {
+  //     this.setShownComponents(true, false, false);
+  //   } else {
+  //     this.data = this.transformData(spQueryResult, spQueryResult.sourceIndex);
+  //     this.setShownComponents(false, true, false);
+  //   }
+  // }
 
   // private processGroupedData(res: GroupedDataResult) {
   //   if (res.total === 0) {
@@ -238,16 +238,16 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     if (this.data) {
       this.data.forEach(d => d.mode = this.dataExplorerWidget.visualizationConfig.chartMode);
       this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.map((p, index) => {
-                    if (this.data[index] !== undefined) {
-                      this.data[index]['marker'] = {'color' : ''};
+        if (this.data[index] !== undefined) {
+          this.data[index]['marker'] = { 'color': '' };
 
-                      if (!(p.runtimeName in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
-                        this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName] = this.presetColors[index];
-                      }
+          if (!(p.runtimeName in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
+            this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName] = this.presetColors[index];
+          }
 
-                      this.data[index].marker.color = this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName];
-                    }
-                    });
+          this.data[index].marker.color = this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName];
+        }
+      });
     }
   }
 
@@ -266,9 +266,19 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     this.setShownComponents(false, false, true);
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResults: SpQueryResult[]) {
     this.data = [];
-    this.processNonGroupedData(spQueryResult);
+
+    // if (spQueryResult.total === 0) {
+    this.setShownComponents(true, false, false);
+    // } else {
+    spQueryResults.forEach(spQueryResult => {
+      this.data = this.data.concat(this.transformData(spQueryResult, spQueryResult.sourceIndex));
+    });
+    this.setShownComponents(false, true, false);
+    // }
+
+    // this.processNonGroupedData(spQueryResult);
     // spQueryResult.allDataSeries.forEach((result, index) => {
     //   this.processNonGroupedData(result, index);
     // });

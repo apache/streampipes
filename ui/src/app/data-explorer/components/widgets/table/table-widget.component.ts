@@ -99,9 +99,13 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
     this.setShownComponents(false, false, true);
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResults: SpQueryResult[]) {
     this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
-    this.dataSource.data = this.transformData(spQueryResult);
+    this.dataSource.data = [];
+    spQueryResults.forEach(spQueryResult => {
+      this.dataSource.data = this.dataSource.data.concat(this.transformData(spQueryResult));
+    });
+
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],

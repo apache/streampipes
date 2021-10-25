@@ -94,7 +94,7 @@ export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetMode
   beforeDataFetched() {
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResult: SpQueryResult[]) {
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
