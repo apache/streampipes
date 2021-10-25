@@ -18,22 +18,26 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.projection;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.List;
 
-public class ProjectionController extends StandaloneEventProcessingDeclarer<ProjectionParameters> {
+public class ProjectionProcessor extends StreamPipesDataProcessor {
+
+  private List<String> outputKeys;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -50,14 +54,18 @@ public class ProjectionController extends StandaloneEventProcessingDeclarer<Proj
   }
 
   @Override
-  public ConfiguredEventProcessor<ProjectionParameters>
-  onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+   this.outputKeys = processorParams.extractor().outputKeySelectors();
 
-    List<String> outputKeySelectors = extractor.outputKeySelectors();
+  }
 
-    ProjectionParameters staticParam = new ProjectionParameters(
-            graph, outputKeySelectors);
+  @Override
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    event.getSubset(this.outputKeys);
+  }
 
-    return new ConfiguredEventProcessor<>(staticParam, Projection::new);
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }
