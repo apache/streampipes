@@ -18,27 +18,33 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.textfilter;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class TextFilterController extends StandaloneEventProcessingDeclarer<TextFilterParameters> {
+public class TextFilterProcessor extends StreamPipesDataProcessor {
 
   private static final String KEYWORD_ID = "keyword";
   private static final String OPERATION_ID = "operation";
   private static final String MAPPING_PROPERTY_ID = "text";
+
+  private String keyword;
+  private StringOperator stringOperator;
+  private String filterProperty;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -59,20 +65,35 @@ public class TextFilterController extends StandaloneEventProcessingDeclarer<Text
   }
 
   @Override
-  public ConfiguredEventProcessor<TextFilterParameters> onInvocation
-          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
-
-    String keyword = extractor.singleValueParameter(KEYWORD_ID, String.class);
-    String operation = extractor.selectedSingleValue(OPERATION_ID, String.class);
-    String filterProperty = extractor.mappingPropertyValue(MAPPING_PROPERTY_ID);
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.keyword = processorParams.extractor().singleValueParameter(KEYWORD_ID,String.class);
+    this.stringOperator = StringOperator.valueOf(processorParams.extractor().selectedSingleValue(OPERATION_ID,String.class));
+    this.filterProperty = processorParams.extractor().mappingPropertyValue(MAPPING_PROPERTY_ID);
 
     logger.info("Text Property: " + filterProperty);
-
-    TextFilterParameters staticParam = new TextFilterParameters(sepa,
-            keyword,
-            StringOperator.valueOf(operation),
-            filterProperty);
-
-    return new ConfiguredEventProcessor<>(staticParam, TextFilter::new);
   }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    Boolean satisfiesFilter = false;
+    String value = event.getFieldBySelector(this.filterProperty)
+            .getAsPrimitive()
+            .getAsString();
+
+    if (this.stringOperator == StringOperator.MATCHES) {
+      satisfiesFilter = (value.equals(this.keyword));
+    } else if (this.stringOperator == StringOperator.CONTAINS) {
+      satisfiesFilter = (value.contains(this.keyword));
+    }
+
+    if(satisfiesFilter) {
+      spOutputCollector.collect(event);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
+
 }
