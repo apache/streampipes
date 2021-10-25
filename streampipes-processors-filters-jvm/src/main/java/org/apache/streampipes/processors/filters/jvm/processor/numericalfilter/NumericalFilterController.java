@@ -18,27 +18,33 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.numericalfilter;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class NumericalFilterController extends StandaloneEventProcessingDeclarer<NumericalFilterParameters> {
+public class NumericalFilterController extends StreamPipesDataProcessor {
 
   private static final String NUMBER_MAPPING = "number-mapping";
   private static final String VALUE = "value";
   private static final String OPERATION = "operation";
+
+  private double threshold;
+  private NumericalOperator numericalOperator;
+  private String filterProperty;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -60,11 +66,9 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
   }
 
   @Override
-  public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation
-          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
-    Double threshold = extractor.singleValueParameter(VALUE, Double.class);
-    String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
-
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.threshold = processorParams.extractor().singleValueParameter(VALUE,Double.class);
+    String stringOperation = processorParams.extractor().selectedSingleValue(OPERATION,String.class);
     String operation = "GT";
 
     if (stringOperation.equals("<=")) {
@@ -79,13 +83,42 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
       operation = "IE";
     }
 
-    String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
+    this.numericalOperator = NumericalOperator.valueOf(operation);
 
-    NumericalFilterParameters staticParam = new NumericalFilterParameters(sepa,
-            threshold,
-            NumericalOperator.valueOf(operation),
-            filterProperty);
+    this.filterProperty = processorParams.extractor().mappingPropertyValue(NUMBER_MAPPING);
 
-    return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    Boolean satisfiesFilter = false;
+
+    Double value = event.getFieldBySelector(this.filterProperty).getAsPrimitive()
+            .getAsDouble();
+
+    Double threshold = this.threshold;
+
+    if (this.numericalOperator == NumericalOperator.EQ) {
+      satisfiesFilter = (Math.abs(value - threshold) < 0.000001);
+    } else if (this.numericalOperator == NumericalOperator.GE) {
+      satisfiesFilter = (value >= threshold);
+    } else if (this.numericalOperator == NumericalOperator.GT) {
+      satisfiesFilter = value > threshold;
+    } else if (this.numericalOperator == NumericalOperator.LE) {
+      satisfiesFilter = (value <= threshold);
+    } else if (this.numericalOperator == NumericalOperator.LT) {
+      satisfiesFilter = (value < threshold);
+    } else if (this.numericalOperator == NumericalOperator.IE) {
+      satisfiesFilter = (Math.abs(value - threshold) > 0.000001);
+    }
+
+    if (satisfiesFilter) {
+      spOutputCollector.collect(event);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
   }
 }
