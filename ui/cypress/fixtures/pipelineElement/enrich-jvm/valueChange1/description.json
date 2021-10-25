@@ -1,0 +1,20 @@
+{
+  "name": "value_change",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "change-value-mapping",
+      "value": "numberlist"
+    },
+    {
+      "type": "input",
+      "selector": "from-property-value",
+      "value": "3"
+    },
+    {
+      "type": "input",
+      "selector": "to-property-value",
+      "value": "4"
+    }
+  ]
+}
