@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/actions")
-public class SemanticEventConsumer extends AbstractAuthGuardedRestResource implements IPipelineElement {
+public class DataSinkResource extends AbstractAuthGuardedRestResource implements IPipelineElement {
 
   @GET
   @Path("/available")

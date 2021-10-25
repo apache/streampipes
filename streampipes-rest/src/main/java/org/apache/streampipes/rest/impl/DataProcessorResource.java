@@ -23,7 +23,6 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.rest.api.IPipelineElement;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
 import org.apache.streampipes.storage.couchdb.utils.Filter;
@@ -35,12 +34,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/sepas")
-public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResource implements IPipelineElement {
+public class DataProcessorResource extends AbstractAuthGuardedRestResource implements IPipelineElement {
 
 	@GET
 	@Path("/available")
 	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
+	@JacksonSerialized
 	@Override
 	public Response getAvailable() {
 		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
@@ -67,7 +66,7 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 	@DELETE
 	@Path("/own/{elementId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
+	@JacksonSerialized
 	@Override
 	public Response removeOwn(@PathParam("elementId") String elementId) {
 		getUserService().deleteOwnSepa(getAuthenticatedUsername(), elementId);
@@ -78,7 +77,7 @@ public class SemanticEventProcessingAgent extends AbstractAuthGuardedRestResourc
 	@Path("/{elementUri}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
+	@JacksonSerialized
 	@Override
 	public Response getElement(@PathParam("elementUri") String elementUri) {
 		// TODO Access rights

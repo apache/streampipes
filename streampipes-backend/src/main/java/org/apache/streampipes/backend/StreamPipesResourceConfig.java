@@ -90,9 +90,9 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(PipelineMonitoring.class);
         register(PipelineTemplate.class);
         register(PipelineResource.class);
-        register(SemanticEventConsumer.class);
-        register(SemanticEventProcessingAgent.class);
-        register(SemanticEventProducer.class);
+        register(DataSinkResource.class);
+        register(DataProcessorResource.class);
+        register(DataStreamResource.class);
         register(Setup.class);
         register(ResetResource.class);
         register(UserProfile.class);

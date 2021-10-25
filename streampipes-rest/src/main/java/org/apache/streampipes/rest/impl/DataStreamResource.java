@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Path("/v2/streams")
-public class SemanticEventProducer extends AbstractAuthGuardedRestResource implements IPipelineElement {
+public class DataStreamResource extends AbstractAuthGuardedRestResource implements IPipelineElement {
 
 	@GET
 	@Path("/available")
