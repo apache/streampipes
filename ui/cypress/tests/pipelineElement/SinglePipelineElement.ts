@@ -22,11 +22,11 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testName = 'booleanFilter2';
+  const testNames = ['textFilter1', 'projection1', 'thresholdDetection1'];
 
   const processorTest = test as ProcessorTest;
 
-  if (processorTest.name === testName) {
+  if (testNames.includes(processorTest.name)) {
 
     describe('Test Processor ' + test.dir, () => {
       before('Setup Test', () => {
