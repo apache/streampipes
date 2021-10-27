@@ -45,6 +45,7 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
     this.currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties = selectedColumns;
+    console.log(selectedColumns);
     // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
     this.triggerDataRefresh();
   }
@@ -77,7 +78,7 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
   protected initWidgetConfig(): LineCartVisConfig {
     const colors = {};
     this.fieldProvider.numericFields.map((field, index) => {
-      colors[field.runtimeName] = this.presetColors[index];
+      colors[field.runtimeName + field.sourceIndex] = this.presetColors[index];
     });
     return {
       forType: this.getWidgetType(),

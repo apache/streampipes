@@ -21,6 +21,7 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { LineChartWidgetModel } from './model/line-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { strictEqual } from 'assert';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -175,17 +176,19 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
 
   transformData(data: SpQueryResult,
                 sourceIndex: number): any[] {
-    const columnsContainingNumbers = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
-      .filter(f => this.fieldProvider.numericFields.find(field => field.fullDbName === f.fullDbName));
-    const columnsContainingStrings = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
-      .filter(f => this.fieldProvider.nonNumericFields.find(field => field.fullDbName === f.fullDbName));
+
+    let columnsContainingNumbers = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
+      .filter(f => this.fieldProvider.numericFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
+
+      const columnsContainingStrings = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
+      .filter(f => this.fieldProvider.nonNumericFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
     const indexXkey = 0;
 
     const tmpLineChartTraces: any[] = [];
     // create line chart traces according to column type
     columnsContainingNumbers.forEach(key => {
       const headerName = data.headers[this.getColumnIndex(key, data)];
-      tmpLineChartTraces[key.fullDbName] = {
+      tmpLineChartTraces[key.fullDbName + sourceIndex.toString()] = {
         type: 'scatter',
         mode: this.dataExplorerWidget.visualizationConfig.chartMode,
         name: headerName,
@@ -195,19 +198,25 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       };
     });
 
+    console.log(tmpLineChartTraces)
+
     columnsContainingStrings.forEach(key => {
       const headerName = data.headers[key.fullDbName];
-      tmpLineChartTraces[key.fullDbName] = {
+      tmpLineChartTraces[key.fullDbName + sourceIndex.toString()] = {
         name: headerName, x: [], y: []
       };
     });
 
     // fill line chart traces with data
+
     data.allDataSeries[0].rows.forEach(row => {
       this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.forEach(field => {
-        const columnIndex = this.getColumnIndex(field, data);
-        tmpLineChartTraces[field.fullDbName].x.push(new Date(row[indexXkey]));
-        tmpLineChartTraces[field.fullDbName].y.push(row[columnIndex]);
+        if (field.sourceIndex === data.sourceIndex) {
+          const columnIndex = this.getColumnIndex(field, data);
+          console.log('trying to axxess ' + field.fullDbName + sourceIndex.toString());
+          tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].x.push(new Date(row[indexXkey]));
+          tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].y.push(row[columnIndex]);
+        }
       });
     });
     return Object.values(tmpLineChartTraces);
@@ -237,15 +246,18 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
     if (this.data) {
       this.data.forEach(d => d.mode = this.dataExplorerWidget.visualizationConfig.chartMode);
-      this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.map((p, index) => {
+      this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.map((field, index) => {
         if (this.data[index] !== undefined) {
           this.data[index]['marker'] = { 'color': '' };
 
-          if (!(p.runtimeName in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
-            this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName] = this.presetColors[index];
+          const name = field.runtimeName + field.sourceIndex.toString();
+
+          if (!(name in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
+            this.dataExplorerWidget.visualizationConfig.chosenColor[name] = this.presetColors[index];
           }
 
-          this.data[index].marker.color = this.dataExplorerWidget.visualizationConfig.chosenColor[p.runtimeName];
+          this.data[index].marker.color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
+
         }
       });
     }
@@ -272,7 +284,7 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     // if (spQueryResult.total === 0) {
     this.setShownComponents(true, false, false);
     // } else {
-    spQueryResults.forEach(spQueryResult => {
+    spQueryResults.map((spQueryResult, index) => {
       this.data = this.data.concat(this.transformData(spQueryResult, spQueryResult.sourceIndex));
     });
     this.setShownComponents(false, true, false);

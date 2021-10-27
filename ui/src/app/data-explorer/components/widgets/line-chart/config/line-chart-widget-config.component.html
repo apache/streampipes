@@ -27,25 +27,6 @@
         </mat-select>
     </mat-form-field>
 
-    <!-- <sp-select-properties
-            label="Select Properties"
-            multiple=true
-            (changeSelectedProperties)="setSelectedProperties($event)"
-            [availableProperties]="fieldProvider.numericFields"
-            [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties">
-    </sp-select-properties>
-
-    <mat-form-field color="accent" *ngFor="let field of fieldProvider.numericFields" fxFlex="100">
-        <b>{{field.runtimeName}}</b>
-        <input matInput
-            [(colorPicker)]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName]"
-            [style.background]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName]" required
-            [cpPosition]="'bottom'"
-            [cpPresetColors]="presetColors"
-            (colorPickerSelect)="triggerDataRefresh()"
-            autocomplete="off"/>
-    </mat-form-field> -->
-
     <sp-select-color-properties
         label="Select Properties"
         multiple=true
