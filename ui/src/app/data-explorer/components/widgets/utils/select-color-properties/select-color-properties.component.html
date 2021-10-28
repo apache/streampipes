@@ -39,8 +39,8 @@
         <div fxFlex fxLayoutAlign="end center" *ngIf="isSelected(field)">
             <mat-form-field color="accent" fxFlex="100">
                 <input matInput
-                    [(colorPicker)]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName]"
-                    [style.background]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName]" required
+                    [(colorPicker)]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]"
+                    [style.background]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]" required
                     [cpPosition]="'bottom'"
                     [cpPresetColors]="presetColors"
                     (colorPickerSelect)="triggerDataRefresh()"

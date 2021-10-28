@@ -65,12 +65,12 @@ export class SelectColorPropertiesComponent implements OnInit {
   }
 
   isSelected(field: DataExplorerField): boolean {
-    return this.selectedProperties.find(sp => sp.fullDbName === field.fullDbName) !== undefined;
+    return this.selectedProperties.find(sp => sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex) !== undefined;
   }
 
   toggleFieldSelection(field: DataExplorerField) {
     if (this.isSelected(field)) {
-      this.selectedProperties = this.selectedProperties.filter(sp => !(sp.fullDbName === field.fullDbName));
+      this.selectedProperties = this.selectedProperties.filter(sp => !(sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex));
     } else {
       this.selectedProperties.push(field);
     }
