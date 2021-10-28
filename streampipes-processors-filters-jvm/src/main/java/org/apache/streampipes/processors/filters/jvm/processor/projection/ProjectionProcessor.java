@@ -56,12 +56,11 @@ public class ProjectionProcessor extends StreamPipesDataProcessor {
   @Override
   public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
    this.outputKeys = processorParams.extractor().outputKeySelectors();
-
   }
 
   @Override
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
-    event.getSubset(this.outputKeys);
+    spOutputCollector.collect(event.getSubset(outputKeys));
   }
 
   @Override
