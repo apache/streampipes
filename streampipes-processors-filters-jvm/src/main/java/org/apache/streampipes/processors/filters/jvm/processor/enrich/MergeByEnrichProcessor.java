@@ -17,23 +17,31 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.enrich;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.processors.filters.jvm.config.FiltersJvmConfig;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.model.runtime.EventFactory;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.List;
 
-public class MergeByEnrichController extends StandaloneEventProcessingDeclarer<MergeByEnrichParameters> {
+public class MergeByEnrichProcessor extends StreamPipesDataProcessor {
 
   private static final String SELECT_STREAM = "select-stream";
+
+  private List<String> outputKeySelectors;
+  private String selectedStream;
+  private EventSchema outputSchema;
+  private Event eventBuffer;
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -56,16 +64,43 @@ public class MergeByEnrichController extends StandaloneEventProcessingDeclarer<M
   }
 
   @Override
-  public ConfiguredEventProcessor<MergeByEnrichParameters>
-  onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
 
-    List<String> outputKeySelectors = extractor.outputKeySelectors();
+    this.selectedStream = processorParams.extractor().selectedSingleValue(SELECT_STREAM, String.class);
 
-    String selectedStream = extractor.selectedSingleValue(SELECT_STREAM, String.class);
+    this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
 
-    MergeByEnrichParameters staticParam = new MergeByEnrichParameters(
-            graph, outputKeySelectors, selectedStream);
+    if (this.selectedStream.equals("Stream 1")) {
+      this.selectedStream = "s0";
+    } else {
+      this.selectedStream = "s1";
+    }
 
-    return new ConfiguredEventProcessor<>(staticParam, MergeByEnrich::new);
+    this.eventBuffer = null;
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    String streamId = event.getSourceInfo().getSelectorPrefix();
+
+    // Enrich the selected stream and store last event of other stream
+    if (this.selectedStream.equals(streamId)) {
+      if (this.eventBuffer != null) {
+        Event result = mergeEvents(event, this.eventBuffer);
+        spOutputCollector.collect(result);
+      }
+    } else {
+      this.eventBuffer = event;
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
+
+  private Event mergeEvents(Event e1, Event e2) {
+    return EventFactory.fromEvents(e1, e2, outputSchema).getSubset(outputKeySelectors);
   }
 }

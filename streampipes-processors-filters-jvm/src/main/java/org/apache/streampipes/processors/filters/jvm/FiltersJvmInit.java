@@ -30,7 +30,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.BooleanFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
-import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
+import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitController;
 import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterProcessor;
@@ -58,7 +58,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
                     new NumericalFilterProcessor(),
                     new ThresholdDetectionProcessor(),
                     new ProjectionProcessor(),
-                    new MergeByEnrichController(),
+                    new MergeByEnrichProcessor(),
                     new MergeByTimeProcessor(),
                     new MergeBySchemaProcessor(),
                     new ComposeController(),
