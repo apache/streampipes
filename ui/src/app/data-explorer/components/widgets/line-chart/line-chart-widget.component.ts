@@ -22,6 +22,7 @@ import { LineChartWidgetModel } from './model/line-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 import { strictEqual } from 'assert';
+import { V } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'sp-data-explorer-line-chart-widget',
@@ -177,16 +178,21 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   transformData(data: SpQueryResult,
                 sourceIndex: number): any[] {
 
-    let columnsContainingNumbers = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
-      .filter(f => this.fieldProvider.numericFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
+    const numericPlusBooleanFields = this.fieldProvider.numericFields.concat(this.fieldProvider.booleanFields);
 
-      const columnsContainingStrings = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
-      .filter(f => this.fieldProvider.nonNumericFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
+    const columnsContainingNumbersPlusBooleans = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
+      .filter(f => numericPlusBooleanFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
+
+    
+  
+    // const columnsContainingStrings = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
+    //   .filter(f => this.fieldProvider.nonNumericFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
+ 
     const indexXkey = 0;
 
     const tmpLineChartTraces: any[] = [];
     // create line chart traces according to column type
-    columnsContainingNumbers.forEach(key => {
+    columnsContainingNumbersPlusBooleans.forEach(key => {
       const headerName = data.headers[this.getColumnIndex(key, data)];
       tmpLineChartTraces[key.fullDbName + sourceIndex.toString()] = {
         type: 'scatter',
@@ -198,14 +204,12 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       };
     });
 
-    console.log(tmpLineChartTraces)
-
-    columnsContainingStrings.forEach(key => {
-      const headerName = data.headers[key.fullDbName];
-      tmpLineChartTraces[key.fullDbName + sourceIndex.toString()] = {
-        name: headerName, x: [], y: []
-      };
-    });
+    // columnsContainingStrings.forEach(key => {
+    //   const headerName = data.headers[key.fullDbName];
+    //   tmpLineChartTraces[key.fullDbName + sourceIndex.toString()] = {
+    //     name: headerName, x: [], y: []
+    //   };
+    // });
 
     // fill line chart traces with data
 
@@ -213,12 +217,23 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.forEach(field => {
         if (field.sourceIndex === data.sourceIndex) {
           const columnIndex = this.getColumnIndex(field, data);
-          console.log('trying to axxess ' + field.fullDbName + sourceIndex.toString());
+
+          let value = row[columnIndex];
+          if (this.fieldProvider.booleanFields.find(f => field.fullDbName === f.fullDbName 
+                      && f.sourceIndex === data.sourceIndex) !== undefined) {
+            if (value === true) {
+              value = 1;
+            } else {
+              value = 0;
+            }
+          }
+
           tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].x.push(new Date(row[indexXkey]));
-          tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].y.push(row[columnIndex]);
+          tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].y.push(value);
         }
       });
     });
+
     return Object.values(tmpLineChartTraces);
   }
 

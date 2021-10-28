@@ -31,7 +31,7 @@
         label="Select Properties"
         multiple=true
         (changeSelectedProperties)="setSelectedProperties($event)"
-        [availableProperties]="fieldProvider.numericFields"
+        [availableProperties]="fieldProvider.numericFields.concat(fieldProvider.booleanFields)"
         [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties"
         [currentlyConfiguredWidget]="currentlyConfiguredWidget">
 
