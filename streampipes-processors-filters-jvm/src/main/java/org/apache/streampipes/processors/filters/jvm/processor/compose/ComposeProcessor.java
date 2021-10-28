@@ -17,44 +17,72 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.compose;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.runtime.EventProcessor;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Compose implements EventProcessor<ComposeParameters> {
+public class ComposeProcessor extends StreamPipesDataProcessor {
 
+  private List<String> outputKeySelectors;
   private Map<String, Event> lastEvents;
   private EventSchema outputSchema;
-  private List<String> outputKeySelectors;
-
 
   @Override
-  public void onInvocation(ComposeParameters composeParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-    this.outputSchema = composeParameters.getGraph().getOutputStream().getEventSchema();
-    this.outputKeySelectors = composeParameters.getOutputKeySelectors();
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.compose")
+            .category(DataProcessorType.TRANSFORM)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .requiredStream(StreamRequirementsBuilder
+                    .create()
+                    .requiredProperty(EpRequirements.anyProperty())
+                    .build())
+            .outputStrategy(OutputStrategies.custom(true))
+            .build();
+  }
+
+  @Override
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
+    this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
     this.lastEvents = new HashMap<>();
   }
 
   @Override
-  public void onDetach() {
-    this.lastEvents.clear();
-  }
-
-  @Override
-  public void onEvent(Event event, SpOutputCollector spOutputCollector) {
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
     this.lastEvents.put(event.getSourceInfo().getSelectorPrefix(), event);
     if (lastEvents.size() == 2) {
       spOutputCollector.collect(buildOutEvent(event.getSourceInfo().getSelectorPrefix()));
     }
   }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    this.lastEvents.clear();
+  }
+
 
   private Event buildOutEvent(String currentSelectorPrefix) {
     return EventFactory.fromEvents(lastEvents.get(currentSelectorPrefix), lastEvents.get
