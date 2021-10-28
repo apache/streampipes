@@ -80,13 +80,14 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
     this.fieldProvider.numericFields.map((field, index) => {
       colors[field.runtimeName + field.sourceIndex] = this.presetColors[index];
     });
+    const numericPlusBooleanFields = this.fieldProvider.numericFields.concat(this.fieldProvider.booleanFields);
     return {
       forType: this.getWidgetType(),
       yKeys: [],
       chartMode: 'lines',
-      selectedLineChartProperties: this.fieldProvider.numericFields.length > 6 ?
-        this.fieldProvider.numericFields.slice(0, 5) :
-        this.fieldProvider.numericFields,
+      selectedLineChartProperties: numericPlusBooleanFields.length > 6 ?
+      numericPlusBooleanFields.slice(0, 5) :
+      numericPlusBooleanFields,
       chosenColor: colors,
     };
   }
