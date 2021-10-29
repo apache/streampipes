@@ -51,7 +51,7 @@ import { DataExplorerDashboardPanelComponent } from './components/panel/data-exp
 import { TimeRangeSelectorComponent } from './components/time-selector/timeRangeSelector.component';
 import { DataExplorerDashboardWidgetComponent } from './components/widget/data-explorer-dashboard-widget.component';
 import { ImageWidgetComponent } from './components/widgets/image/image-widget.component';
-import { LineChartWidgetComponent } from './components/widgets/line-chart/line-chart-widget.component';
+import { TimeSeriesChartWidgetComponent } from './components/widgets/time-series-chart/time-series-chart-widget.component';
 import { TableWidgetComponent } from './components/widgets/table/table-widget.component';
 import { AggregateConfigurationComponent } from './components/widgets/utils/aggregate-configuration/aggregate-configuration.component';
 import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-spinner/load-data-spinner.component';
@@ -65,7 +65,7 @@ import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { ColorService } from './components/widgets/line-chart/services/color.service';
+import { ColorService } from './components/widgets/time-series-chart/services/color.service';
 import { DataExplorerDesignerPanelComponent } from './components/designer-panel/data-explorer-designer-panel.component';
 import { TableWidgetConfigComponent } from './components/widgets/table/config/table-widget-config.component';
 import { MapWidgetComponent } from './components/widgets/map/map-widget.component';
@@ -75,7 +75,7 @@ import { HeatmapWidgetConfigComponent } from './components/widgets/heatmap/confi
 import { DataExplorerWidgetAppearanceSettingsComponent } from './components/designer-panel/appearance-settings/data-explorer-widget-appearance-settings.component';
 import { DataExplorerWidgetDataSettingsComponent } from './components/designer-panel/data-settings/data-explorer-widget-data-settings.component';
 import { WidgetConfigurationService } from './services/widget-configuration.service';
-import { LineChartWidgetConfigComponent } from './components/widgets/line-chart/config/line-chart-widget-config.component';
+import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
 import { DatalakeRestService } from '../platform-services/apis/datalake-rest.service';
 import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
@@ -175,8 +175,8 @@ export const MY_NATIVE_FORMATS = {
     ImageWidgetConfigComponent,
     IndicatorChartWidgetComponent,
     IndicatorWidgetConfigComponent,
-    LineChartWidgetComponent,
-    LineChartWidgetConfigComponent,
+    TimeSeriesChartWidgetComponent,
+    TimeSeriesChartWidgetConfigComponent,
     LoadDataSpinnerComponent,
     NoDataInDateRangeComponent,
     PieChartWidgetComponent,
