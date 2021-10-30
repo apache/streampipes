@@ -19,7 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
-import { LineChartWidgetModel } from '../../line-chart/model/line-chart-widget.model';
+import { TimeSeriesChartWidgetModel } from '../../time-series-chart/model/time-series-chart-widget.model';
 
 
 @Component({
@@ -35,7 +35,7 @@ export class SelectColorPropertiesComponent implements OnInit {
   @Input() selectedProperties: DataExplorerField[];
   @Input() label: string;
   @Input() multiple: boolean;
-  @Input() currentlyConfiguredWidget: LineChartWidgetModel;
+  @Input() currentlyConfiguredWidget: TimeSeriesChartWidgetModel;
 
   constructor(protected widgetConfigurationService: WidgetConfigurationService) { }
 
@@ -70,7 +70,9 @@ export class SelectColorPropertiesComponent implements OnInit {
 
   toggleFieldSelection(field: DataExplorerField) {
     if (this.isSelected(field)) {
-      this.selectedProperties = this.selectedProperties.filter(sp => !(sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex));
+      this.selectedProperties = this.selectedProperties.filter(
+              sp => !(sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex)
+      );
     } else {
       this.selectedProperties.push(field);
     }
@@ -86,6 +88,11 @@ export class SelectColorPropertiesComponent implements OnInit {
   }
   getColor(field: DataExplorerField) {
     return '#000000';
+  }
+
+  onFilterChange(searchValue: string, field: DataExplorerField): void {
+    this.currentlyConfiguredWidget.visualizationConfig.displayName[field.runtimeName + field.sourceIndex.toString()] = searchValue;
+    this.triggerDataRefresh();
   }
 
 }

@@ -45,7 +45,16 @@
                     [cpPresetColors]="presetColors"
                     (colorPickerSelect)="triggerDataRefresh()"
                     autocomplete="off"/>
-            </mat-form-field> -->
+                <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.displayName[field.runtimeName + field.sourceIndex.toString()]" matInput (input)="onFilterChange($event.target.value, field)">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-select [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType[field.runtimeName + field.sourceIndex.toString()]" (selectionChange)="triggerDataRefresh()">
+                        <mat-option [value]="'lines'">Line</mat-option>
+                        <mat-option [value]="'markers'">Scatter</mat-option>
+                        <mat-option [value]="'lines+markers'">Scattered Line</mat-option>               
+                        <mat-option [value]="'bar'">Bar</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </mat-form-field>
         </div>
 
       

@@ -18,18 +18,16 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { LineChartWidgetModel } from './model/line-chart-widget.model';
+import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
-import { strictEqual } from 'assert';
-import { V } from '@angular/cdk/keycodes';
 
 @Component({
-  selector: 'sp-data-explorer-line-chart-widget',
-  templateUrl: './line-chart-widget.component.html',
-  styleUrls: ['./line-chart-widget.component.css']
+  selector: 'sp-data-explorer-time-series-chart-widget',
+  templateUrl: './time-series-chart-widget.component.html',
+  styleUrls: ['./time-series-chart-widget.component.css']
 })
-export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWidgetModel> implements OnInit {
+export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeSeriesChartWidgetModel> implements OnInit {
 
   presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
 
@@ -63,14 +61,9 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       },
       updatemenus: this.updatemenus,
 
-      // setting hovermode to 'closest'
       hovermode: 'closest',
-      // adding shapes for displaying labeled time intervals
       shapes: [],
-      // box selection with fixed height
       selectdirection: 'h',
-
-      // default dragmode is zoom
       dragmode: 'zoom'
     },
     config: {
@@ -78,7 +71,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
       displaylogo: false
     }
   };
-
 
   ngOnInit(): void {
     this.updatemenus = [{
@@ -125,56 +117,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     });
   }
 
-  // private processNonGroupedData(spQueryResult: SpQueryResult
-  // ) {
-  //   if (spQueryResult.total === 0) {
-  //     this.setShownComponents(true, false, false);
-  //   } else {
-  //     this.data = this.transformData(spQueryResult, spQueryResult.sourceIndex);
-  //     this.setShownComponents(false, true, false);
-  //   }
-  // }
-
-  // private processGroupedData(res: GroupedDataResult) {
-  //   if (res.total === 0) {
-  //     this.setShownComponents(true, false, false);
-  //   } else {
-  //     const tmp = this.transformGroupedData(res, this.fieldProvider.primaryTimestampField.runtimeName);
-  //     this.data = this.displayGroupedData(tmp);
-  //
-  //     this.setShownComponents(false, true, false);
-  //   }
-  // }
-
-  // displayGroupedData(transformedData: GroupedDataResult) {
-  //   const tmp = [];
-  //
-  //   const groupNames = Object.keys(transformedData.dataResults);
-  //   for (const groupName of groupNames) {
-  //     const value = transformedData.dataResults[groupName];
-  //     this.dataExplorerWidget.visualizationConfig.yKeys.forEach(key => {
-  //       value.rows.forEach(serie => {
-  //         if (serie.name === key) {
-  //           serie.name = groupName + ' ' + serie.name;
-  //           tmp.push(serie);
-  //         }
-  //       });
-  //     });
-  //
-  //     if (this.dataExplorerWidget.visualizationConfig.showCountValue) {
-  //       let containsCount = false;
-  //       value.rows.forEach(serie => {
-  //         if (serie.name.startsWith('count') && !containsCount) {
-  //           serie.name = groupName + ' count';
-  //           tmp.push(serie);
-  //           containsCount = true;
-  //         }
-  //       });
-  //     }
-  //   }
-  //   return tmp;
-  // }
-
   transformData(data: SpQueryResult,
                 sourceIndex: number): any[] {
 
@@ -183,35 +125,20 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     const columnsContainingNumbersPlusBooleans = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
       .filter(f => numericPlusBooleanFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
 
-    
-  
-    // const columnsContainingStrings = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
-    //   .filter(f => this.fieldProvider.nonNumericFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
- 
     const indexXkey = 0;
 
     const tmpLineChartTraces: any[] = [];
-    // create line chart traces according to column type
-    columnsContainingNumbersPlusBooleans.forEach(key => {
-      const headerName = data.headers[this.getColumnIndex(key, data)];
-      tmpLineChartTraces[key.fullDbName + sourceIndex.toString()] = {
+    columnsContainingNumbersPlusBooleans.forEach(field => {
+      const headerName = data.headers[this.getColumnIndex(field, data)];
+      tmpLineChartTraces[field.fullDbName + sourceIndex.toString()] = {
         type: 'scatter',
-        mode: this.dataExplorerWidget.visualizationConfig.chartMode,
+        mode: 'Line',
         name: headerName,
         connectgaps: false,
         x: [],
         y: []
       };
     });
-
-    // columnsContainingStrings.forEach(key => {
-    //   const headerName = data.headers[key.fullDbName];
-    //   tmpLineChartTraces[key.fullDbName + sourceIndex.toString()] = {
-    //     name: headerName, x: [], y: []
-    //   };
-    // });
-
-    // fill line chart traces with data
 
     data.allDataSeries[0].rows.forEach(row => {
       this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.forEach(field => {
@@ -237,16 +164,6 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     return Object.values(tmpLineChartTraces);
   }
 
-  // transformGroupedData(data: GroupedDataResult, xKey: string): GroupedDataResult {
-  //   // TODO not yet supported after refactoring
-  //   for (const key in data.dataResults) {
-  //     const dataResult = data.dataResults[key];
-  //     this.data = this.transformData(dataResult, 0);
-  //   }
-  //
-  //   return data;
-  // }
-
   setStartX(startX: string) {
     this.selectedStartX = startX;
   }
@@ -260,9 +177,8 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
     this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
     if (this.data) {
-      this.data.forEach(d => d.mode = this.dataExplorerWidget.visualizationConfig.chartMode);
       this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.map((field, index) => {
-        if (this.data[index] !== undefined) {
+      if (this.data[index] !== undefined) {
           this.data[index]['marker'] = { 'color': '' };
 
           const name = field.runtimeName + field.sourceIndex.toString();
@@ -271,11 +187,35 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
             this.dataExplorerWidget.visualizationConfig.chosenColor[name] = this.presetColors[index];
           }
 
+          if (!(name in this.dataExplorerWidget.visualizationConfig.displayName)) {
+            this.dataExplorerWidget.visualizationConfig.displayName[name] = field.fullDbName;
+          }
+
+          if (!(name in this.dataExplorerWidget.visualizationConfig.displayType)) {
+            this.dataExplorerWidget.visualizationConfig.displayType[name] = 'lines';
+          }
+
           this.data[index].marker.color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
+          this.data[index].name = this.dataExplorerWidget.visualizationConfig.displayName[name];
+
+          let displayType = 'scatter';
+          let displayMode = 'lines';
+
+          const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
+
+          if (setType !== 'bar') {
+              displayMode = setType;
+          } else {
+            displayType = 'bar';
+          }
+
+          this.data[index].type = displayType;
+          this.data[index].mode = displayMode;
 
         }
       });
     }
+
   }
 
   refreshView() {
@@ -296,19 +236,11 @@ export class LineChartWidgetComponent extends BaseDataExplorerWidget<LineChartWi
   onDataReceived(spQueryResults: SpQueryResult[]) {
     this.data = [];
 
-    // if (spQueryResult.total === 0) {
     this.setShownComponents(true, false, false);
-    // } else {
     spQueryResults.map((spQueryResult, index) => {
       this.data = this.data.concat(this.transformData(spQueryResult, spQueryResult.sourceIndex));
     });
     this.setShownComponents(false, true, false);
-    // }
-
-    // this.processNonGroupedData(spQueryResult);
-    // spQueryResult.allDataSeries.forEach((result, index) => {
-    //   this.processNonGroupedData(result, index);
-    // });
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],

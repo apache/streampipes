@@ -19,7 +19,7 @@
 import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-export interface LineCartVisConfig extends DataExplorerVisConfig {
+export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
   selectedLineChartProperties: DataExplorerField[];
   selectedBackgroundColorProperty?: EventPropertyUnion;
   groupValue?: string;
@@ -29,11 +29,12 @@ export interface LineCartVisConfig extends DataExplorerVisConfig {
   xKey?: DataExplorerField;
   backgroundColorPropertyKey?: string;
   labelingModeOn?: boolean;
-  chartMode: string;
   chosenColor: { [id: string]: string; };
+  displayName: { [id: string]: string; };
+  displayType: { [id: string]: string; };
 }
 
-export interface LineChartWidgetModel extends DataExplorerWidgetModel {
+export interface TimeSeriesChartWidgetModel extends DataExplorerWidgetModel {
   dataConfig: DataExplorerDataConfig;
-  visualizationConfig: LineCartVisConfig;
+  visualizationConfig: TimeSeriesChartVisConfig;
 }
