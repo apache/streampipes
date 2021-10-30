@@ -25,7 +25,7 @@ import { TimeSeriesChartWidgetModel } from '../../time-series-chart/model/time-s
 @Component({
   selector: 'sp-select-color-properties',
   templateUrl: './select-color-properties.component.html',
-  styleUrls: ['./select-color-properties.component.css']
+  styleUrls: ['./select-color-properties.component.scss']
 })
 export class SelectColorPropertiesComponent implements OnInit {
 
@@ -37,7 +37,8 @@ export class SelectColorPropertiesComponent implements OnInit {
   @Input() multiple: boolean;
   @Input() currentlyConfiguredWidget: TimeSeriesChartWidgetModel;
 
-  constructor(protected widgetConfigurationService: WidgetConfigurationService) { }
+  constructor(protected widgetConfigurationService: WidgetConfigurationService) {
+  }
 
   presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
 
@@ -71,7 +72,7 @@ export class SelectColorPropertiesComponent implements OnInit {
   toggleFieldSelection(field: DataExplorerField) {
     if (this.isSelected(field)) {
       this.selectedProperties = this.selectedProperties.filter(
-              sp => !(sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex)
+        sp => !(sp.fullDbName === field.fullDbName && sp.sourceIndex === field.sourceIndex)
       );
     } else {
       this.selectedProperties.push(field);
@@ -86,6 +87,7 @@ export class SelectColorPropertiesComponent implements OnInit {
       refreshView: true
     });
   }
+
   getColor(field: DataExplorerField) {
     return '#000000';
   }

@@ -25,7 +25,7 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 @Component({
   selector: 'sp-data-explorer-time-series-chart-widget',
   templateUrl: './time-series-chart-widget.component.html',
-  styleUrls: ['./time-series-chart-widget.component.css']
+  styleUrls: ['./time-series-chart-widget.component.scss']
 })
 export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeSeriesChartWidgetModel> implements OnInit {
 
@@ -146,8 +146,8 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
           const columnIndex = this.getColumnIndex(field, data);
 
           let value = row[columnIndex];
-          if (this.fieldProvider.booleanFields.find(f => field.fullDbName === f.fullDbName 
-                      && f.sourceIndex === data.sourceIndex) !== undefined) {
+          if (this.fieldProvider.booleanFields.find(f => field.fullDbName === f.fullDbName
+            && f.sourceIndex === data.sourceIndex) !== undefined) {
             if (value === true) {
               value = 1;
             } else {
@@ -178,7 +178,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
     if (this.data) {
       this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.map((field, index) => {
-      if (this.data[index] !== undefined) {
+        if (this.data[index] !== undefined) {
           this.data[index]['marker'] = { 'color': '' };
 
           const name = field.runtimeName + field.sourceIndex.toString();
@@ -204,7 +204,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
           const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
 
           if (setType !== 'bar') {
-              displayMode = setType;
+            displayMode = setType;
           } else {
             displayType = 'bar';
           }

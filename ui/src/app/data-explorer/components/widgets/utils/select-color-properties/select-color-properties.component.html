@@ -30,33 +30,44 @@
             </button>
         </div>
     </div>
-    <div *ngFor="let field of availableProperties" fxLayout="column" class="field-scroll-panel">
-
+    <div style="margin-left: 1px; margin-right: 1px;" *ngFor="let field of availableProperties" fxLayout="column"
+         class="field-scroll-panel">
         <mat-checkbox color="accent" [checked]="isSelected(field)" (change)="toggleFieldSelection(field)">
             <b>{{field.runtimeName}}</b>
-            {{'(' +(field.aggregation ? field.aggregation + ', ': '') + field.measure +')'}}
+            {{'(' + (field.aggregation ? field.aggregation + ', ' : '') + field.measure + ')'}}
         </mat-checkbox>
         <div fxFlex fxLayoutAlign="end center" *ngIf="isSelected(field)">
-            <mat-form-field color="accent" fxFlex="100">
+            <mat-form-field class="marginColorField"
+                            color="accent"
+                            fxFlex="60">
+                <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.displayName[field.runtimeName + field.sourceIndex.toString()]"
+                       matInput (input)="onFilterChange($event.target.value, field)"/>
+            </mat-form-field>
+            <mat-form-field class="marginColorField"
+                            color="accent"
+                            fxFlex="35">
+                <mat-select
+                        [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType[field.runtimeName + field.sourceIndex.toString()]"
+                        (selectionChange)="triggerDataRefresh()">
+                    <mat-option [value]="'lines'">Line</mat-option>
+                    <mat-option [value]="'markers'">Scatter</mat-option>
+                    <mat-option [value]="'lines+markers'">Scattered Line</mat-option>
+                    <mat-option [value]="'bar'">Bar</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field
+                    class="marginColorFieldRight"
+                    color="accent"
+                    fxFlex="5">
                 <input matInput
-                    [(colorPicker)]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]"
-                    [style.background]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]" required
-                    [cpPosition]="'bottom'"
-                    [cpPresetColors]="presetColors"
-                    (colorPickerSelect)="triggerDataRefresh()"
-                    autocomplete="off"/>
-                <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.displayName[field.runtimeName + field.sourceIndex.toString()]" matInput (input)="onFilterChange($event.target.value, field)">
-                <mat-form-field color="accent" fxFlex="100">
-                    <mat-select [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType[field.runtimeName + field.sourceIndex.toString()]" (selectionChange)="triggerDataRefresh()">
-                        <mat-option [value]="'lines'">Line</mat-option>
-                        <mat-option [value]="'markers'">Scatter</mat-option>
-                        <mat-option [value]="'lines+markers'">Scattered Line</mat-option>               
-                        <mat-option [value]="'bar'">Bar</mat-option>
-                    </mat-select>
-                </mat-form-field>
+                       [(colorPicker)]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]"
+                       [style.background]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]"
+                       required
+                       [cpPosition]="'bottom'"
+                       [cpPresetColors]="presetColors"
+                       (colorPickerSelect)="triggerDataRefresh()"
+                       autocomplete="off"/>
             </mat-form-field>
         </div>
-
-      
     </div>
 </div>
