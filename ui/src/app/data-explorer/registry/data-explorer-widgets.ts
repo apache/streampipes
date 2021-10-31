@@ -19,7 +19,8 @@
 import { IWidget } from '../models/dataview-dashboard.model';
 import { TableWidgetComponent } from '../components/widgets/table/table-widget.component';
 import { MapWidgetComponent } from '../components/widgets/map/map-widget.component';
-import { LineChartWidgetComponent } from '../components/widgets/line-chart/line-chart-widget.component';
+import { HeatmapWidgetComponent } from '../components/widgets/heatmap/heatmap-widget.component';
+import { TimeSeriesChartWidgetComponent } from '../components/widgets/time-series-chart/time-series-chart-widget.component';
 import { ImageWidgetComponent } from '../components/widgets/image/image-widget.component';
 import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
 import { HistogramChartWidgetComponent } from '../components/widgets/histogram/histogram-chart-widget.component';
@@ -29,6 +30,7 @@ import { PieChartWidgetComponent } from '../components/widgets/pie/pie-chart-wid
 export enum WidgetType {
   Table,
   Map,
+  Heatmap,
   LineChart,
   Image,
   IndicatorChart,
@@ -48,10 +50,15 @@ export const WidgetTypeMap = new Map<number, IWidget>([
     label: 'Map',
     componentClass: MapWidgetComponent
   }],
+  [WidgetType.Heatmap, {
+    id: 'heatmap',
+    label: 'Heatmap',
+    componentClass: HeatmapWidgetComponent
+  }],
   [WidgetType.LineChart, {
-    id: 'line-chart',
-    label: 'Line',
-    componentClass: LineChartWidgetComponent
+    id: 'time-series-chart',
+    label: 'Time Series',
+    componentClass: TimeSeriesChartWidgetComponent
   }],
   [WidgetType.Image, {id: 'image', label: 'Image', componentClass: ImageWidgetComponent}],
   [WidgetType.IndicatorChart, {

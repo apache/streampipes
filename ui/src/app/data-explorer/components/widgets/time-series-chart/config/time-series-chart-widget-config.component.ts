@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { LineCartVisConfig, LineChartWidgetModel } from '../model/line-chart-widget.model';
+import { TimeSeriesChartVisConfig, TimeSeriesChartWidgetModel } from '../model/time-series-chart-widget.model';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
@@ -26,16 +26,18 @@ import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-line-chart-widget-config',
-  templateUrl: './line-chart-widget-config.component.html',
-  styleUrls: ['./line-chart-widget-config.component.scss']
+  selector: 'sp-data-explorer-time-series-chart-widget-config',
+  templateUrl: './time-series-chart-widget-config.component.html',
+  styleUrls: ['./time-series-chart-widget-config.component.scss']
 })
-export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWidgetModel, LineCartVisConfig> implements OnInit {
+export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<TimeSeriesChartWidgetModel, TimeSeriesChartVisConfig> implements OnInit {
 
   constructor(widgetConfigurationService: WidgetConfigurationService,
               fieldService: DataExplorerFieldProviderService) {
     super(widgetConfigurationService, fieldService);
   }
+
+  presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
 
   ngOnInit(): void {
     super.onInit();
@@ -43,7 +45,8 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
     this.currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties = selectedColumns;
-    //this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
+    console.log(selectedColumns);
+    // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
     this.triggerDataRefresh();
   }
 
@@ -58,12 +61,6 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
     this.triggerDataRefresh();
   }
 
-  // handlingAdvancedToggleChange() {
-  //   this.currentlyConfiguredWidget.dataConfig.showBackgroundColorProperty =
-  //     !this.currentlyConfiguredWidget.dataConfig.showBackgroundColorProperty;
-  //   this.triggerDataRefresh();
-  // }
-
   toggleLabelingMode() {
     // this.triggerViewRefresh();
   }
@@ -72,14 +69,30 @@ export class LineChartWidgetConfigComponent extends BaseWidgetConfig<LineChartWi
     return WidgetType.LineChart;
   }
 
-  protected initWidgetConfig(): LineCartVisConfig {
+  protected initWidgetConfig(): TimeSeriesChartVisConfig {
+    const numericPlusBooleanFields = this.fieldProvider.numericFields.concat(this.fieldProvider.booleanFields);
+
+    const colors = {};
+    const names = {};
+    const dTypes = {};
+
+    numericPlusBooleanFields.map((field, index) => {
+      colors[field.runtimeName + field.sourceIndex] = this.presetColors[index];
+      names[field.runtimeName + field.sourceIndex] = field.fullDbName;
+      dTypes[field.runtimeName  + field.sourceIndex] = 'lines';
+    });
+
+
+
     return {
       forType: this.getWidgetType(),
       yKeys: [],
-      chartMode: 'lines',
-      selectedLineChartProperties: this.fieldProvider.numericFields.length > 6 ?
-        this.fieldProvider.numericFields.slice(0, 5) :
-        this.fieldProvider.numericFields
+      selectedLineChartProperties: numericPlusBooleanFields.length > 6 ?
+      numericPlusBooleanFields.slice(0, 5) :
+      numericPlusBooleanFields,
+      chosenColor: colors,
+      displayName: names,
+      displayType: dTypes,
     };
   }
 

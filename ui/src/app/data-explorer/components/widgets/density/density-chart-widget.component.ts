@@ -85,13 +85,13 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
     this.updateAppearance();
   }
 
-  prepareData(result: SpQueryResult) {
-    const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result);
-    const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result);
-    this.data[0].x = this.transform(result.allDataSeries[0].rows, xIndex);
-    this.data[1].x = this.transform(result.allDataSeries[0].rows, xIndex);
-    this.data[0].y = this.transform(result.allDataSeries[0].rows, yIndex);
-    this.data[1].y = this.transform(result.allDataSeries[0].rows, yIndex);
+  prepareData(result: SpQueryResult[]) {
+    const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result[0]);
+    const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result[0]);
+    this.data[0].x = this.transform(result[0].allDataSeries[0].rows, xIndex);
+    this.data[1].x = this.transform(result[0].allDataSeries[0].rows, xIndex);
+    this.data[0].y = this.transform(result[0].allDataSeries[0].rows, yIndex);
+    this.data[1].y = this.transform(result[0].allDataSeries[0].rows, yIndex);
   }
 
   transform(rows, index: number): any[] {
@@ -115,7 +115,7 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
   beforeDataFetched() {
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
+  onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
     this.updateAppearance();
   }

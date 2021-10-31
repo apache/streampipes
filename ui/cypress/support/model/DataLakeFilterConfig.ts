@@ -16,23 +16,14 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+export class DataLakeFilterConfig {
+  field: string;
+  value: string;
+  operator: string | '<' | '>' | '=' | '!=';
 
-export interface LineCartVisConfig extends DataExplorerVisConfig {
-  selectedLineChartProperties: DataExplorerField[];
-  selectedBackgroundColorProperty?: EventPropertyUnion;
-  groupValue?: string;
-  showCountValue?: boolean;
-  showBackgroundColorProperty?: boolean;
-  yKeys: DataExplorerField[];
-  xKey?: DataExplorerField;
-  backgroundColorPropertyKey?: string;
-  labelingModeOn?: boolean;
-  chartMode: string;
-}
-
-export interface LineChartWidgetModel extends DataExplorerWidgetModel {
-  dataConfig: DataExplorerDataConfig;
-  visualizationConfig: LineCartVisConfig;
+  constructor(field: string, value: string, operator: string) {
+    this.field = field;
+    this.value = value;
+    this.operator = operator;
+  }
 }

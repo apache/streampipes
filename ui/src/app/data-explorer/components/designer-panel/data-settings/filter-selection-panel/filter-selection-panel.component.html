@@ -20,7 +20,8 @@
     <span class="data-explorer-header">Filter</span>
     <div>
         <button mat-button mat-raised-button color="accent" class="small-button"
-                (click)="addFilter(sourceConfig)"
+                data-cy="design-panel-data-settings-add-filter"
+                (click)="addFilter()"
                 style="margin-right:10px;margin-bottom: 15px;">Add Filter
         </button>
     </div>
@@ -30,13 +31,21 @@
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
                 <mat-form-field color="accent" class="w-50-px mr-15">
                     <mat-label>Field</mat-label>
-                    <mat-select [(value)]="filter.field" [compareWith]="compare">
-                        <mat-option *ngFor="let field of sourceConfig.queryConfig.fields" [value]="field">{{field.runtimeName}}</mat-option>
+                    <mat-select
+                            [(value)]="filter.field"
+                            (selectionChange)="updateWidget()"
+                            [compareWith]="compare"
+                            data-cy="design-panel-data-settings-filter-field">
+                        <mat-option *ngFor="let field of sourceConfig.queryConfig.fields"
+                                    [value]="field">{{field.runtimeName}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field color="accent" class="w-50-px mr-15">
                     <mat-label>Operator</mat-label>
-                    <mat-select [(value)]="filter.operator">
+                    <mat-select
+                            [(value)]="filter.operator"
+                            (selectionChange)="updateWidget()"
+                            data-cy="design-panel-data-settings-filter-operator">
                         <mat-option [value]="'='">
                             <span class="pipeline-name">=</span>
                         </mat-option>
@@ -52,14 +61,21 @@
                         <mat-option [value]="'>'">
                             <span class="pipeline-name">></span>
                         </mat-option>
+                        <mat-option [value]="'!='">
+                            <span class="pipeline-name">!=</span>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field color="accent" class="w-50-px mr-15">
                     <mat-label>Value</mat-label>
-                    <input matInput [(ngModel)]="filter.value">
+                    <input matInput
+                           [(ngModel)]="filter.value"
+                           (change)="updateWidget()"
+                           data-cy="design-panel-data-settings-filter-value">
                 </mat-form-field>
                 <button mat-icon-button color="accent"
-                        (click)="remove(sourceConfig, filter.index)">
+                        (click)="remove(sourceConfig, filter.index)"
+                        data-cy="design-panel-data-settings-remove-filter">
                     <i class="material-icons">remove</i>
                 </button>
             </div>

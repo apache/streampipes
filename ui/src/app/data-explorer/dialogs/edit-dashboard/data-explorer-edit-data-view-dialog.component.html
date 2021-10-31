@@ -22,7 +22,9 @@
             <div fxFlex="100" fxLayout="column" style="margin:5px;width:100%">
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Data View Name</mat-label>
-                    <input matInput [(ngModel)]="dashboard.name">
+                    <input matInput
+                           data-cy="data-view-name"
+                           [(ngModel)]="dashboard.name">
                 </mat-form-field>
                 <mat-form-field class="full-width" color="accent">
                     <mat-label>Description</mat-label>
@@ -39,7 +41,9 @@
                 (click)="onCancel()">
             Close
         </button>
-        <button mat-button mat-raised-button color="accent" (click)="onSave()">
+        <button mat-button mat-raised-button color="accent"
+                data-cy="save-data-view"
+                (click)="onSave()">
             {{createMode ? 'Create' : 'Save'}}
         </button>
     </div>

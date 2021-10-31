@@ -43,6 +43,11 @@ export class GenericAdapterBuilder {
     return this;
   }
 
+  public addDimensionProperty(dimensionPropertyName: string) {
+    this.genericAdapterInput.dimensionProperties.push(dimensionPropertyName);
+    return this;
+  }
+
   public setStoreInDataLake() {
     this.genericAdapterInput.storeInDataLake = true;
     return this;

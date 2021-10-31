@@ -21,7 +21,10 @@
         <span class="data-explorer-header">Visualization Type</span>
         <mat-form-field color="accent" fxFlex="100">
             <mat-label>Select visualization</mat-label>
-            <mat-select [(value)]="currentlyConfiguredWidget.widgetType" (selectionChange)="triggerWidgetTypeChange($event)">
+            <mat-select
+                    [(value)]="currentlyConfiguredWidget.widgetType"
+                    (selectionChange)="triggerWidgetTypeChange($event)"
+                    data-cy="data-explorer-select-visualization-type">
                 <mat-option [value]="widget.id" *ngFor="let widget of availableWidgets">
                     <span class="pipeline-name">{{widget.label}}</span>
                 </mat-option>
@@ -40,10 +43,15 @@
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
             </sp-data-explorer-map-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'line-chart'" class="h-100 p-0">
-            <sp-data-explorer-line-chart-widget-config
+        <div *ngIf="currentlyConfiguredWidget.widgetType === 'heatmap'" class="h-100 p-0">
+            <sp-data-explorer-heatmap-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-            </sp-data-explorer-line-chart-widget-config>
+            </sp-data-explorer-heatmap-widget-config>
+        </div>
+        <div *ngIf="currentlyConfiguredWidget.widgetType === 'time-series-chart'" class="h-100 p-0">
+            <sp-data-explorer-time-series-chart-widget-config
+                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+            </sp-data-explorer-time-series-chart-widget-config>
         </div>
         <div *ngIf="currentlyConfiguredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">
             <sp-data-explorer-histogram-chart-widget-config

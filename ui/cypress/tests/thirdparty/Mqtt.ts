@@ -16,12 +16,10 @@
  *
  */
 
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineUtils } from '../../support/utils/PipelineUtils';
+import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
+import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 
 describe('Test MQTT Integration', () => {
   before('Setup Test', () => {
@@ -29,40 +27,25 @@ describe('Test MQTT Integration', () => {
   });
 
   it('Perform Test', () => {
-    const simulatorAdapterName = 'simulator';
+    const topicName = 'cypresstopic';
 
+    const sink: PipelineElementInput =
+      PipelineElementBuilder.create('mqtt_publisher')
+        .addInput('input', 'host', 'localhost')
+        .addInput('input', 'topic', topicName)
+        .build();
 
-    const machineAdapter = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName(simulatorAdapterName)
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
-
-    AdapterUtils.testSpecificStreamAdapter(machineAdapter);
-
-    const topicname = 'cypresstopic';
-    const pipelineInput = PipelineBuilder.create('Pipeline Test')
-      .addSource(simulatorAdapterName)
-      .addSink(
-        PipelineElementBuilder.create('mqtt_publisher')
-          .addInput('input', 'host', 'localhost')
-          .addInput('input', 'topic', topicname)
-          .build())
-      .build();
-
-    PipelineUtils.testPipeline(pipelineInput);
-
-    const adapterInput = GenericAdapterBuilder
+    const adapter = GenericAdapterBuilder
       .create('MQTT')
       .setName('Adapter Mqtt')
       .setTimestampProperty('timestamp')
       .addProtocolInput('select', 'Unauthenticated', 'check')
       .addProtocolInput('input', 'broker_url', 'tcp://localhost:1883')
-      .addProtocolInput('input', 'topic', topicname)
+      .addProtocolInput('input', 'topic', topicName)
       .setFormat('json_object')
       .build();
 
-    AdapterUtils.testGenericStreamAdapter(adapterInput);
+    ThirdPartyIntegrationUtils.runTest(sink, adapter);
   });
 
 });

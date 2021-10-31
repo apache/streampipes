@@ -60,6 +60,10 @@ export class DataViewQueryGeneratorService {
       }
     }
 
+    if (queryConfig.selectedFilters.length > 0) {
+      queryBuilder.withFilters(queryConfig.selectedFilters);
+    }
+
     if (sourceConfig.queryType === 'single') {
       queryBuilder.withLimit(1);
     } else if (sourceConfig.queryType === 'raw') {

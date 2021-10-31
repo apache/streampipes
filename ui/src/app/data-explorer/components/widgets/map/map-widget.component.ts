@@ -128,9 +128,9 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     this.setShownComponents(false, false, true);
   }
 
-  onDataReceived(spQueryResult: SpQueryResult) {
-    this.lastDataResults = spQueryResult;
-    this.makeLayers(spQueryResult);
+  onDataReceived(spQueryResult: SpQueryResult[]) {
+    this.lastDataResults = spQueryResult[0];
+    this.makeLayers(spQueryResult[0]);
   }
 
   transform(rows, index: number): any[] {
@@ -159,38 +159,43 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     if (spQueryResult.total > 0) {
       const result = spQueryResult.allDataSeries[0];
 
-      const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, spQueryResult);
-      const longitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLongitudeProperty, spQueryResult);
+      for (var i = 0; i <= spQueryResult.allDataSeries.length - 1; i++) {
 
-      const latitudeValues = this.transform(result.rows, latitudeIndex);
-      const longitudeValues = this.transform(result.rows, longitudeIndex);
+        const result = spQueryResult.allDataSeries[i];
 
-      if (this.dataExplorerWidget.visualizationConfig.selectedMarkerOrTrace === 'marker') {
+        const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, spQueryResult);
+        const longitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLongitudeProperty, spQueryResult);
 
-        latitudeValues.map((latitude, index) => {
-          const longitude = longitudeValues[index];
-          const tmpMarker = this.makeMarker([latitude, longitude], this.dataExplorerWidget.visualizationConfig.selectedMarkerType);
+        const latitudeValues = this.transform(result.rows, latitudeIndex);
+        const longitudeValues = this.transform(result.rows, longitudeIndex);
 
-          let text = '';
-          this.dataExplorerWidget.visualizationConfig.selectedToolTipContent.forEach(item => {
-            const subIndex = this.getColumnIndex(item, spQueryResult);
-            text = text.concat('<b>' + item.fullDbName + '</b>' + ': ' + result.rows[index][subIndex] + '<br>');
+        if (this.dataExplorerWidget.visualizationConfig.selectedMarkerOrTrace === 'marker') {
+
+          latitudeValues.map((latitude, index) => {
+            const longitude = longitudeValues[index];
+            const tmpMarker = this.makeMarker([latitude, longitude], this.dataExplorerWidget.visualizationConfig.selectedMarkerType);
+
+            let text = '<b>Time</b>' + ': ' + result.rows[index][0] + '<br>';
+            this.dataExplorerWidget.visualizationConfig.selectedToolTipContent.forEach(item => {
+              const subIndex = this.getColumnIndex(item, spQueryResult);
+              text = text.concat('<b>' + item.fullDbName + '</b>' + ': ' + result.rows[index][subIndex] + '<br>');
+            });
+
+            const content: Content = text;
+            tmpMarker.bindTooltip(content);
+
+            this.layers.push(tmpMarker);
+
+          });
+        } else {
+          const coordinates = [];
+          latitudeValues.map((latitude, index) => {
+            coordinates.push([latitude, longitudeValues[index]]);
           });
 
-          const content: Content = text;
-          tmpMarker.bindTooltip(content);
-
-          this.layers.push(tmpMarker);
-
-        });
-      } else {
-        const coordinates = [];
-        latitudeValues.map((latitude, index) => {
-          coordinates.push([latitude, longitudeValues[index]]);
-        });
-
-        const poly = polyline(coordinates, { color: 'red' });
-        this.layers.push(poly);
+          const poly = polyline(coordinates, { color: 'red' });
+          this.layers.push(poly);
+        }
       }
     }
   }

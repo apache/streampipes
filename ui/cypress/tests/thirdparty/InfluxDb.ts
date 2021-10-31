@@ -17,10 +17,9 @@
  */
 
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
-import { PipelineUtils } from '../../support/utils/PipelineUtils';
+import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
+import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 
 describe('Test InfluxDB Integration', () => {
   before('Setup Test', () => {
@@ -28,47 +27,33 @@ describe('Test InfluxDB Integration', () => {
   });
 
   it('Perform Test', () => {
-    const simulatorAdapterName = 'simulator';
+    const dbName = 'cypresstestdb';
 
-    const machineAdapter = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName(simulatorAdapterName)
-      .addInput('input', 'wait-time-ms', '1000')
+    const sink: PipelineElementInput = PipelineElementBuilder.create('influxdb')
+      .addInput('input', 'db_host', 'http://localhost')
+      .addInput('input', 'db_name', 'sp')
+      .addInput('input', 'db_measurement', dbName)
+      .addInput('input', 'db_user', 'sp')
+      .addInput('input', 'db_password', 'default')
+      .addInput('input', 'batch_interval_actions', '2')
+      .addInput('input', 'max_flush_duration', '{backspace}{backspace}{backspace}{backspace}500')
+      .addInput('drop-down', 'timestamp_mapping', 'timestamp')
       .build();
 
-    AdapterUtils.testSpecificStreamAdapter(machineAdapter);
-
-    const topicname = 'cypresstopic';
-    const pipelineInput = PipelineBuilder.create('Pipeline Test')
-      .addSource(simulatorAdapterName)
-      .addSink(
-        PipelineElementBuilder.create('influxdb')
-          .addInput('input', 'db_host', 'http://localhost')
-          .addInput('input', 'db_name', 'sp')
-          .addInput('input', 'db_measurement', topicname)
-          .addInput('input', 'db_user', 'sp')
-          .addInput('input', 'db_password', 'default')
-          .addInput('input', 'batch_interval_actions', '2')
-          .addInput('input', 'max_flush_duration', '{backspace}{backspace}{backspace}{backspace}500')
-          .addInput('drop-down', 'timestamp_mapping', 'timestamp')
-          .build())
-      .build();
-
-    PipelineUtils.testPipeline(pipelineInput);
-
-    const adapterInput = SpecificAdapterBuilder
+    const adapter = SpecificAdapterBuilder
       .create('InfluxDB_Stream_Adapter')
       .setName('InfluxDB Adapter')
       .addInput('input', 'influxDbHost', 'http://localhost')
       .addInput('input', 'influxDbPort', '8086')
       .addInput('input', 'influxDbDatabase', 'sp')
-      .addInput('input', 'influxDbMeasurement', topicname)
+      .addInput('input', 'influxDbMeasurement', dbName)
       .addInput('input', 'influxDbUsername', 'sp')
       .addInput('input', 'influxDbPassword', 'default')
       .addInput('input', 'pollingInterval', '200')
       .build();
 
-    AdapterUtils.testSpecificStreamAdapter(adapterInput);
+    ThirdPartyIntegrationUtils.runTest(sink, adapter);
+
   });
 
 });

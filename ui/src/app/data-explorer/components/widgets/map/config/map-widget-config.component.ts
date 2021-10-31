@@ -31,7 +31,7 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
 })
 export class MapWidgetConfigComponent extends BaseWidgetConfig<MapWidgetModel, MapVisConfig> implements OnInit {
 
-  markerOrTrace : string[];
+  markerOrTrace: string[];
   markerType: string[];
 
   constructor(widgetConfigurationService: WidgetConfigurationService,
@@ -54,7 +54,7 @@ export class MapWidgetConfigComponent extends BaseWidgetConfig<MapWidgetModel, M
   }
 
   setZoomValue(field: string) {
-    var fieldToNumber : number = +field;
+    const fieldToNumber: number = +field;
     this.currentlyConfiguredWidget.visualizationConfig.selectedZoomValue = fieldToNumber;
     this.triggerDataRefresh();
   }
@@ -75,8 +75,8 @@ export class MapWidgetConfigComponent extends BaseWidgetConfig<MapWidgetModel, M
 
   protected initWidgetConfig(): MapVisConfig {
     this.markerOrTrace = ['marker', 'trace'];
-    this.markerType = ['pin', 'car']
-    
+    this.markerType = ['pin', 'car'];
+
     return {
       forType: this.getWidgetType(),
       selectedLatitudeProperty: this.fieldProvider.numericFields[0],
