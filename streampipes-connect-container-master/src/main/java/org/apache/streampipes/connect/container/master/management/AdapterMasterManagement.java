@@ -18,32 +18,28 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
-import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.resource.management.AdapterResourceManager;
+import org.apache.streampipes.resource.management.DataStreamResourceManager;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.IAdapterStorage;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
-import org.apache.streampipes.storage.management.StorageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static org.apache.streampipes.manager.storage.UserManagementService.getUserService;
 
 /**
  * This class is responsible for managing all the adapter instances which are executed on worker nodes
@@ -52,37 +48,37 @@ public class AdapterMasterManagement {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
 
-  private IAdapterStorage adapterInstanceStorage;
+  private final IAdapterStorage adapterInstanceStorage;
+  private final AdapterResourceManager adapterResourceManager;
 
   public AdapterMasterManagement() {
     this.adapterInstanceStorage = getAdapterInstanceStorage();
+    this.adapterResourceManager = new SpResourceManager().manageAdapters();
   }
 
-  public AdapterMasterManagement(IAdapterStorage adapterStorage) {
+  public AdapterMasterManagement(IAdapterStorage adapterStorage,
+                                 AdapterResourceManager adapterResourceManager) {
     this.adapterInstanceStorage = adapterStorage;
+    this.adapterResourceManager = adapterResourceManager;
   }
 
   public String addAdapter(AdapterDescription ad,
-                           String username)
+                           String principalSid)
           throws AdapterException {
 
     // Create elementId for adapter
     // TODO centralized provisioning of element id
+    String dataStreamElementId = "urn:streampipes.apache.org:eventstream:" + RandomStringUtils.randomAlphabetic(6);
     String uuid = UUID.randomUUID().toString();
     ad.setElementId(ad.getElementId() + ":" + uuid);
     ad.setCreatedAt(System.currentTimeMillis());
+    ad.setCorrespondingDataStreamElementId(dataStreamElementId);
 
     // Add EventGrounding to AdapterDescription
     EventGrounding eventGrounding = GroundingService.createEventGrounding();
     ad.setEventGrounding(eventGrounding);
 
-    // Encrypt adapter description to store it in db
-    AdapterDescription encryptedAdapterDescription =
-            new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
-
-    // store in db
-    encryptedAdapterDescription.setRev(null);
-    String elementId = adapterInstanceStorage.storeAdapter(encryptedAdapterDescription);
+    String elementId = this.adapterResourceManager.encryptAndCreate(ad, principalSid, true);
 
     // start when stream adapter
     if (ad instanceof AdapterStreamDescription) {
@@ -90,9 +86,9 @@ public class AdapterMasterManagement {
     }
 
     // Create stream
-    SpDataStream storedDescription = new SourcesManagement().createAdapterDataStream(ad);
+    SpDataStream storedDescription = new SourcesManagement().createAdapterDataStream(ad, dataStreamElementId);
     storedDescription.setCorrespondingAdapterId(elementId);
-    installDataSource(storedDescription, username);
+    installDataSource(storedDescription, principalSid, true);
     LOG.info("Install source (source URL: {} in backend", ad.getElementId());
 
     return storedDescription.getElementId();
@@ -115,7 +111,7 @@ public class AdapterMasterManagement {
 
   /**
    * First the adapter is stopped removed, then the corresponding data source is deleted
-   * @param elementId
+   * @param elementId: The elementId of the adapter instance
    * @throws AdapterException
    */
   public void deleteAdapter(String elementId) throws AdapterException {
@@ -129,28 +125,15 @@ public class AdapterMasterManagement {
       }
     }
 
+    AdapterDescription adapter = adapterInstanceStorage.getAdapter(elementId);
     // Delete adapter
-    AdapterDescription ad = adapterInstanceStorage.getAdapter(elementId);
-    adapterInstanceStorage.deleteAdapter(elementId);
+    adapterResourceManager.delete(elementId);
     LOG.info("Successfully deleted adapter: " + elementId);
 
     // Delete data stream
-    UserService userService = getUserService();
-    IPipelineElementDescriptionStorageCache requestor = StorageManager.INSTANCE.getPipelineElementStorage();
-    List<SpDataStream> streamsToDelete = requestor
-            .getAllDataStreams()
-            .stream()
-            .filter(spDataStream -> elementId.equals(spDataStream.getCorrespondingAdapterId()))
-            .collect(Collectors.toList());
-    String username = ad.getUserName();
-    if (streamsToDelete.size() > 0) {
-      SpDataStream streamToDelete = streamsToDelete.get(0);
-      requestor.deleteDataStream(streamToDelete);
-      userService.deleteOwnSource(username, streamToDelete.getElementId());
-      requestor.refreshDataSourceCache();
-      LOG.info("Successfully deleted data stream: " + streamToDelete.getElementId());
-    }
-
+    DataStreamResourceManager resourceManager = new SpResourceManager().manageDataStreams();
+    resourceManager.delete(adapter.getCorrespondingDataStreamElementId());
+    LOG.info("Successfully deleted data stream: " + adapter.getCorrespondingDataStreamElementId());
   }
 
   public List<AdapterDescription> getAllAdapterInstances() throws AdapterException {
@@ -205,18 +188,17 @@ public class AdapterMasterManagement {
         WorkerRestClient.invokeStreamAdapter(baseUrl, elementId);
 
         LOG.info("Started adapter " + elementId + " on: " + baseUrl);
-      } catch (NoServiceEndpointsAvailableException e) {
-        e.printStackTrace();
-      } catch (URISyntaxException e) {
+      } catch (NoServiceEndpointsAvailableException | URISyntaxException e) {
         e.printStackTrace();
       }
     }
   }
 
   private void installDataSource(SpDataStream stream,
-                                 String username) throws AdapterException {
+                                 String principalSid,
+                                 boolean publicElement) throws AdapterException {
     try {
-      new DataStreamVerifier(stream).verifyAndAdd(username, true);
+      new DataStreamVerifier(stream).verifyAndAdd(principalSid, publicElement);
     } catch (SepaParseException e) {
       LOG.error("Error while installing data source: {}", stream.getElementId(), e);
       throw new AdapterException();
@@ -231,7 +213,6 @@ public class AdapterMasterManagement {
   private boolean isStreamAdapter(AdapterDescription adapterDescription) {
     return adapterDescription instanceof AdapterStreamDescription;
   }
-
 
   private IAdapterStorage getAdapterInstanceStorage() {
     return new AdapterInstanceStorageImpl();

@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.container.master.management;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.resource.management.AdapterResourceManager;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.junit.Test;
 
@@ -36,9 +37,10 @@ public class AdapterMasterManagementTest {
     @Test(expected = AdapterException.class)
     public void getAdapterFailNull() throws AdapterException {
         AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
+        AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
 
         adapterMasterManagement.getAdapter("id2");
     }
@@ -47,9 +49,10 @@ public class AdapterMasterManagementTest {
     public void getAdapterFail() throws AdapterException {
         List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
         AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
+        AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
 
         adapterMasterManagement.getAdapter("id2");
     }
@@ -58,9 +61,10 @@ public class AdapterMasterManagementTest {
     public void getAllAdaptersSuccess() throws AdapterException {
         List<AdapterDescription> adapterDescriptions = Arrays.asList(new GenericAdapterStreamDescription());
         AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
+        AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
 
         List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();
 
@@ -70,9 +74,10 @@ public class AdapterMasterManagementTest {
     @Test(expected = AdapterException.class)
     public void getAllAdaptersFail() throws AdapterException {
         AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
+        AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
 
         adapterMasterManagement.getAllAdapterInstances();
 

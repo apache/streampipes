@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -31,6 +29,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.resource.utils.AdapterEncryptionService;
 import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.slf4j.Logger;
@@ -83,7 +82,8 @@ public class SourcesManagement {
         }
     }
 
-    public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription) {
+    public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription,
+                                                String dataStreamElementId) {
 
         SpDataStream ds;
         if (adapterDescription instanceof AdapterSetDescription) {
@@ -100,7 +100,7 @@ public class SourcesManagement {
             ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
         }
 
-        ds.setElementId("urn:fzi.de:eventstream:" + RandomStringUtils.randomAlphabetic(6));
+        ds.setElementId(dataStreamElementId);
         ds.setName(adapterDescription.getName());
         ds.setDescription(adapterDescription.getDescription());
         ds.setCorrespondingAdapterId(adapterDescription.getElementId());

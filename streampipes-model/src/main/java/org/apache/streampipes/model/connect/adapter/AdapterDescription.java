@@ -66,6 +66,11 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
      */
     private String correspondingServiceGroup;
 
+    /**
+     * This is the identifier of the data stream that is associated with the adapter
+     */
+    private String correspondingDataStreamElementId;
+
     public AdapterDescription() {
         super();
         this.rules = new ArrayList<>();
@@ -101,6 +106,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.createdAt = other.getCreatedAt();
         this.selectedEndpointUrl = other.getSelectedEndpointUrl();
         this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
+        this.correspondingDataStreamElementId = other.getCorrespondingDataStreamElementId();
         if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
 
@@ -231,5 +237,13 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
     public void setCorrespondingServiceGroup(String correspondingServiceGroup) {
         this.correspondingServiceGroup = correspondingServiceGroup;
+    }
+
+    public String getCorrespondingDataStreamElementId() {
+        return correspondingDataStreamElementId;
+    }
+
+    public void setCorrespondingDataStreamElementId(String correspondingDataStreamElementId) {
+        this.correspondingDataStreamElementId = correspondingDataStreamElementId;
     }
 }

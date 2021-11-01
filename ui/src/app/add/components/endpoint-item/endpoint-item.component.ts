@@ -151,7 +151,7 @@ export class EndpointItemComponent implements OnInit {
     const dialogRef = this.dialogService.open(ObjectPermissionDialogComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
       title: 'Manage permissions',
-      width: '70vw',
+      width: '50vw',
       data: {
         'objectInstanceId': elementId,
         'headerTitle': 'Manage permissions for pipeline element ' + elementName

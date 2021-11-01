@@ -63,7 +63,7 @@ export class PropertyRestrictionController {
     }
 
     makeElementName() {
-        return "urn:fzi.de:sepa:" + this.randomString();
+        return "urn:streampipes.apache.org:sepa:" + this.randomString();
     }
 
     randomString() {

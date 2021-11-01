@@ -18,6 +18,7 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -39,6 +40,18 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
 
   public void create(Permission permission) {
     db.addPermission(permission);
+  }
+
+  public void createDefault(String objectInstanceId,
+                            Class<?> objectInstanceClass,
+                            String ownerSid,
+                            boolean publicElement) {
+    Permission permission = PermissionBuilder
+            .create(objectInstanceId, objectInstanceClass, ownerSid)
+            .publicElement(publicElement)
+            .build();
+
+    create(permission);
   }
 
   public void update(Permission permission) {

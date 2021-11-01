@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.container.master.management;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
+import org.apache.streampipes.resource.utils.AdapterEncryptionService;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;

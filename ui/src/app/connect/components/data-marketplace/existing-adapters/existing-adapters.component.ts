@@ -27,6 +27,7 @@ import { DialogService } from '../../../../core-ui/dialog/base-dialog/base-dialo
 import { DeleteAdapterDialogComponent } from '../../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ObjectPermissionDialogComponent } from '../../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -88,6 +89,25 @@ export class ExistingAdaptersComponent implements OnInit {
     }
   }
 
+  showPermissionsDialog(adapter: AdapterDescriptionUnion) {
+
+    const dialogRef = this.dialogService.open(ObjectPermissionDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Manage permissions',
+      width: '50vw',
+      data: {
+        'objectInstanceId': adapter.correspondingDataStreamElementId,
+        'headerTitle': 'Manage permissions for adapter ' + adapter.name
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(refresh => {
+      if (refresh) {
+        this.updateAdapterEmitter.emit();
+      }
+    });
+  }
+
   deleteAdapter(adapter: AdapterDescriptionUnion): void {
     const dialogRef: DialogRef<DeleteAdapterDialogComponent> = this.dialogService.open(DeleteAdapterDialogComponent, {
       panelType: PanelType.STANDARD_PANEL,
@@ -103,7 +123,7 @@ export class ExistingAdaptersComponent implements OnInit {
         this.updateAdapterEmitter.emit();
       }
     });
-  };
+  }
 
   createTemplate(adapter: AdapterDescriptionUnion): void {
     this.createTemplateEmitter.emit(adapter);

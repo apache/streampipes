@@ -25,7 +25,7 @@ import {
   AdapterDescriptionUnion,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
-  Message,
+  Message, SpDataStream, SpDataStreamUnion,
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription
 } from '../../core-model/gen/streampipes-model';
