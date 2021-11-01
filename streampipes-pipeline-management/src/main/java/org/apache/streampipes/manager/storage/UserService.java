@@ -20,13 +20,10 @@ package org.apache.streampipes.manager.storage;
 
 import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-import org.lightcouch.CouchDbClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +76,7 @@ public class UserService {
       return;
     }
     Principal user = getPrincipal(username);
-    user.addOwnSource(elementId, publicElement);
+    //user.addOwnSource(elementId, publicElement);
     userStorage.updateUser(user);
   }
 
@@ -88,7 +85,7 @@ public class UserService {
       return;
     }
     Principal user = getPrincipal(username);
-    user.addOwnAction(elementId, publicElement);
+    //user.addOwnAction(elementId, publicElement);
     userStorage.updateUser(user);
   }
 
@@ -97,14 +94,14 @@ public class UserService {
       return;
     }
     Principal user = getPrincipal(username);
-    user.addOwnSepa(elementId, publicElement);
+    //user.addOwnSepa(elementId, publicElement);
     userStorage.updateUser(user);
   }
 
   public void deleteOwnAction(String username, String actionId) {
     if (checkUser(username)) {
       Principal user = getPrincipal(username);
-      user.getOwnActions().removeIf(a -> a.getElementId().equals(actionId));
+      //user.getOwnActions().removeIf(a -> a.getElementId().equals(actionId));
       userStorage.updateUser(user);
       //TODO remove actions from other users
     }
@@ -113,7 +110,7 @@ public class UserService {
   public void deleteOwnSource(String username, String sourceId) {
     if (checkUser(username)) {
       Principal user = getPrincipal(username);
-      user.getOwnSources().removeIf(a -> a.getElementId().equals(sourceId));
+      //user.getOwnSources().removeIf(a -> a.getElementId().equals(sourceId));
       userStorage.updateUser(user);
     }
   }
@@ -121,154 +118,44 @@ public class UserService {
   public void deleteOwnSepa(String username, String sepaId) {
     if (checkUser(username)) {
       Principal user = getPrincipal(username);
-      user.getOwnSepas().removeIf(a -> a.getElementId().equals(sepaId));
+      //user.getOwnSepas().removeIf(a -> a.getElementId().equals(sepaId));
       userStorage.updateUser(user);
     }
   }
 
-  /**
-   * Favorites
-   */
-
-  public void addSepaAsFavorite(String username, String elementId) {
-    if (!checkUser(username)) {
-      return;
-    }
-    UserAccount user = getUserAccount(username);
-    user.addPreferredDataProcessor(elementId);
-    userStorage.updateUser(user);
-  }
-
-  public void addActionAsFavorite(String username, String elementId) {
-    if (!checkUser(username)) {
-      return;
-    }
-    UserAccount user = getUserAccount(username);
-    user.addPreferredDataSink(elementId);
-    userStorage.updateUser(user);
-  }
-
-  public void addSourceAsFavorite(String username, String elementId) {
-    if (!checkUser(username)) {
-      return;
-    }
-    UserAccount user = getUserAccount(username);
-    user.addPreferredDataStream(elementId);
-    userStorage.updateUser(user);
-  }
-
-  public void removeSepaFromFavorites(String username, String elementId) {
-    CouchDbClient dbClient = Utils.getCouchDbUserClient();
-    if (!checkUser(username)) {
-      return;
-    }
-    UserAccount user = getUserAccount(username);
-    user.removePreferredDataProcessor(elementId);
-    dbClient.update(user);
-    dbClient.shutdown();
-  }
-
-  public void removeActionFromFavorites(String username, String elementId) {
-    CouchDbClient dbClient = Utils.getCouchDbUserClient();
-    if (!checkUser(username)) {
-      return;
-    }
-    UserAccount user = getUserAccount(username);
-    user.removePreferredDataSink(elementId);
-    dbClient.update(user);
-    dbClient.shutdown();
-  }
-
-  public void removeSourceFromFavorites(String username, String elementId) {
-    CouchDbClient dbClient = Utils.getCouchDbUserClient();
-    if (!checkUser(username)) {
-      return;
-    }
-    UserAccount user = getUserAccount(username);
-    user.removePreferredDataStream(elementId);
-    dbClient.update(user);
-    dbClient.shutdown();
-  }
 
   /**
    * Get actions/sepas/sources
    */
 
   public List<String> getOwnActionUris(String username) {
-    return userStorage.getUser(username).getOwnActions().stream().map(r -> r.getElementId()).collect(Collectors.toList());
-  }
-
-  public List<String> getFavoriteActionUris(String username) {
-    return getUserAccount(username).getPreferredDataSinks();
-  }
-
-  public List<String> getAvailableActionUris(String username) {
-    List<String> actions = new ArrayList<>(getOwnActionUris(username));
-    userStorage
-            .getAllUsers()
-            .stream()
-            .filter(u -> !(u.getUsername().equals(username)))
-            .map(u -> u.getOwnActions().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(actions::addAll);
-    return actions;
+    // TODO permissions
+    return new ArrayList<>();
+    //return userStorage.getUser(username).getOwnActions().stream().map(r -> r.getElementId()).collect(Collectors.toList());
   }
 
   public List<String> getOwnSepaUris(String username) {
-    return userStorage.getUser(username).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
+    // TODO Permissions
+    return new ArrayList<>();
+    //return userStorage.getUser(username).getOwnSepas().stream().map(r -> r.getElementId()).collect(Collectors.toList());
   }
 
-  public List<String> getAvailableSepaUris(String username) {
-    List<String> sepas = new ArrayList<>(getOwnSepaUris(username));
-    userStorage
-            .getAllUsers()
-            .stream()
-            .filter(u -> !(u.getUsername().equals(username)))
-            .map(u -> u.getOwnSepas().stream().filter(p -> p.isPublicElement()).map(p -> p.getElementId()).collect(Collectors.toList())).forEach(sepas::addAll);
-    return sepas;
-  }
-
-  public List<String> getFavoriteSepaUris(String username) {
-    return getUserAccount(username).getPreferredDataProcessors();
-  }
 
   public List<String> getOwnSourceUris(String email) {
-    return userStorage
-            .getUser(email)
-            .getOwnSources()
-            .stream()
-            .map(r -> r.getElementId())
-            .collect(Collectors.toList());
-  }
-
-  public List<String> getAvailableSourceUris(String username) {
-    List<String> sources = new ArrayList<>(getOwnSepaUris(username));
-    userStorage
-            .getAllUsers()
-            .stream()
-            .filter(u -> !(u.getUsername().equals(username)))
-            .map(u -> u.getOwnSources()
-                    .stream()
-                    .filter(p -> p.isPublicElement())
-                    .map(p -> p.getElementId())
-                    .collect(Collectors.toList()))
-            .forEach(sources::addAll);
-    return sources;
-  }
-
-  public List<String> getFavoriteSourceUris(String username) {
-    return getUserAccount(username).getPreferredDataStreams();
-  }
-
-  public UserAccount getUserAccount(String username) {
-    return (UserAccount) getPrincipal(username);
+    // TODO permissions
+    return new ArrayList<>();
+//    return userStorage
+//            .getUser(email)
+//            .getOwnSources()
+//            .stream()
+//            .map(r -> r.getElementId())
+//            .collect(Collectors.toList());
   }
 
   private Principal getPrincipal(String username) {
     return userStorage.getUser(username);
   }
 
-  private IUserStorage userStorage() {
-    return getStorageManager().getUserStorageAPI();
-  }
 
   /**
    * @param username

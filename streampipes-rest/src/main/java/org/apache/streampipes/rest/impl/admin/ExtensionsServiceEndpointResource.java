@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
@@ -26,9 +26,12 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -39,6 +42,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/rdfendpoints")
+@Component
+@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestResource {
 
   @GET
@@ -81,7 +86,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     String username = getAuthenticatedUsername();
 
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(endpoints);
-    items.forEach(item -> item.setInstalled(isInstalled(item.getElementId(), username)));
+    items.forEach(item -> item.setInstalled(isInstalled(item.getElementId())));
 
     // also add installed elements that are currently not running or available
     items.addAll(getAllDataStreamEndpoints(username, items));
@@ -111,22 +116,23 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     return new EndpointFetcher().getEndpoints();
   }
 
-  private boolean isInstalled(String elementId, String username) {
-    return getAllUserElements(username)
+  private boolean isInstalled(String elementId) {
+    return getAllPipelineElements()
             .stream()
             .anyMatch(e -> e.equals(elementId));
   }
 
-  private List<String> getAllUserElements(String username) {
+  private List<String> getAllPipelineElements() {
     List<String> elementUris = new ArrayList<>();
-    elementUris.addAll(getAllDataStreamUris(username));
-    elementUris.addAll(getAllDataProcessorUris(username));
-    elementUris.addAll(getAllDataSinkUris(username));
+    elementUris.addAll(getAllDataStreamUris());
+    elementUris.addAll(getAllDataProcessorUris());
+    elementUris.addAll(getAllDataSinkUris());
     return elementUris;
   }
 
-  private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(String username, List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllDataStreamUris(username)
+  private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(String username,
+                                                                        List<ExtensionsServiceEndpointItem> existingItems) {
+    return getAllDataStreamUris()
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
             .map(s -> getPipelineElementStorage().getDataStreamById(s))
@@ -134,8 +140,9 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
             .collect(Collectors.toList());
   }
 
-  private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(String username, List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllDataProcessorUris(username)
+  private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(String username,
+                                                                           List<ExtensionsServiceEndpointItem> existingItems) {
+    return getAllDataProcessorUris()
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
             .map(s -> getPipelineElementStorage().getDataProcessorById(s))
@@ -144,7 +151,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(String username, List<ExtensionsServiceEndpointItem> existingItems) {
-    return getAllDataSinkUris(username)
+    return getAllDataSinkUris()
             .stream()
             .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
             .map(s -> getPipelineElementStorage().getDataSinkById(s))
@@ -168,16 +175,16 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
     return endpoint;
   }
 
-  private List<String> getAllDataStreamUris(String username) {
-    return getUserService().getOwnSourceUris(username);
+  private List<String> getAllDataStreamUris() {
+    return getSpResourceManager().manageDataStreams().findAllIdsOnly();
   }
 
-  private List<String> getAllDataProcessorUris(String username) {
-    return getUserService().getOwnSepaUris(username);
+  private List<String> getAllDataProcessorUris() {
+    return getSpResourceManager().manageDataProcessors().findAllIdsOnly();
   }
 
-  private List<String> getAllDataSinkUris(String username) {
-    return getUserService().getOwnActionUris(username);
+  private List<String> getAllDataSinkUris() {
+    return getSpResourceManager().manageDataSinks().findAllIdsOnly();
   }
 
   private IExtensionsServiceEndpointStorage getRdfEndpointStorage() {

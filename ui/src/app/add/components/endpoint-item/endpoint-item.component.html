@@ -49,6 +49,10 @@
                             <mat-icon>refresh</mat-icon>
                             <span>&nbsp;Update</span>
                         </button>
+                        <button mat-menu-item (click)="showPermissionsDialog(item.elementId, item.name)" [disabled]="!item.available">
+                            <mat-icon>share</mat-icon>
+                            <span>&nbsp;Manage permissions</span>
+                        </button>
                     </mat-menu>
                 </div>
             </div>

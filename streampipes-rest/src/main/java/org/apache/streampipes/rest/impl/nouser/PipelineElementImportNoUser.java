@@ -55,7 +55,7 @@ public class PipelineElementImportNoUser extends AbstractRestResource {
   private Message verifyAndAddElement(String uri,
                                       String username,
                                       boolean publicElement) {
-    return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement, true);
+    return new EndpointItemParser().parseAndAddEndpointItem(uri, username, publicElement);
   }
 
   @Path("/delete")

@@ -16,72 +16,69 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.rest.api.IPipelineElement;
+import org.apache.streampipes.resource.management.DataProcessorResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.storage.couchdb.utils.Filter;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("/v2/sepas")
-public class DataProcessorResource extends AbstractAuthGuardedRestResource implements IPipelineElement {
+@Component
+public class DataProcessorResource extends AbstractAuthGuardedRestResource {
 
 	@GET
 	@Path("/available")
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
-	public Response getAvailable() {
-		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
-				getUserService().getAvailableSepaUris(getAuthenticatedUsername()));
-		return ok(sepas);
+	@PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+	@PostFilter("hasPermission(filterObject.elementId, 'READ')")
+	public List<DataProcessorDescription> getAvailable() {
+		return getDataProcessorResourceManager().findAll();
 	}
 
 	@GET
 	@Path("/own")
 	@JacksonSerialized
-	@Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
-	@Override
-	public Response getOwn() {
-		List<DataProcessorDescription> sepas = Filter.byUri(getPipelineElementRdfStorage().getAllDataProcessors(),
-				getUserService().getOwnSepaUris(getAuthenticatedUsername()));
-		List<DataProcessorInvocation> si = sepas
-						.stream()
-						.map(s -> new DataProcessorInvocation(new DataProcessorInvocation(s)))
-						.collect(Collectors.toList());
-
-		return ok(si);
+	@Produces({MediaType.APPLICATION_JSON})
+	@PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+	@PostFilter("hasPermission(filterObject.belongsTo, 'READ')")
+	public List<DataProcessorInvocation> getOwn() {
+		return getDataProcessorResourceManager().findAllAsInvocation();
 	}
 	
 	@DELETE
 	@Path("/own/{elementId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
+	@PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
 	public Response removeOwn(@PathParam("elementId") String elementId) {
-		getUserService().deleteOwnSepa(getAuthenticatedUsername(), elementId);
-		getPipelineElementRdfStorage().deleteDataProcessor(getPipelineElementRdfStorage().getDataProcessorById(elementId));
+		getDataProcessorResourceManager().delete(elementId);
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 
-	@Path("/{elementUri}")
+	@Path("/{elementId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
-	public Response getElement(@PathParam("elementUri") String elementUri) {
-		// TODO Access rights
-		return ok(new DataProcessorInvocation(new DataProcessorInvocation(getPipelineElementRdfStorage().getDataProcessorById(elementUri))));
+	@PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+	public DataProcessorInvocation getElement(@PathParam("elementId") String elementId) {
+		return getDataProcessorResourceManager().findAsInvocation(elementId);
+	}
+
+	private DataProcessorResourceManager getDataProcessorResourceManager() {
+		return getSpResourceManager().manageDataProcessors();
 	}
 
 }

@@ -16,72 +16,69 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.rest.api.IPipelineElement;
+import org.apache.streampipes.resource.management.DataStreamResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.storage.couchdb.utils.Filter;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Path("/v2/streams")
-public class DataStreamResource extends AbstractAuthGuardedRestResource implements IPipelineElement {
+public class DataStreamResource extends AbstractAuthGuardedRestResource {
 
 	@GET
 	@Path("/available")
 	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
-	public Response getAvailable() {
-		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
-				getUserService().getAvailableSourceUris(getAuthenticatedUsername()));
-		return ok(seps);
+	@JacksonSerialized
+	@PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+	@PostFilter("hasPermission(filterObject.elementId, 'READ')")
+	public List<SpDataStream> getAvailable() {
+		return getDataStreamResourceManager().findAll();
 	}
 
 	@GET
 	@Path("/own")
 	@Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
 	@JacksonSerialized
-	@Override
-	public Response getOwn() {
-		List<SpDataStream> seps = Filter.byUri(getPipelineElementRdfStorage().getAllDataStreams(),
-				getUserService().getOwnSourceUris(getAuthenticatedUsername()));
-		List<SpDataStream> si = seps.stream().map(s -> new Cloner().mapSequence(s)).collect(Collectors.toList());
-
-		return ok(si);
+	@PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+	@PostFilter("hasPermission(filterObject.elementId, 'READ')")
+	public List<SpDataStream> getOwn() {
+		return getDataStreamResourceManager().findAllAsInvocation();
 	}
 
 	@DELETE
 	@Path("/own/{elementId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@GsonWithIds
-	@Override
+	@JacksonSerialized
+	@PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
 	public Response removeOwn(@PathParam("elementId") String elementId) {
-		getUserService().deleteOwnSource(getAuthenticatedUsername(), elementId);
-		getPipelineElementRdfStorage().deleteDataStream(getPipelineElementRdfStorage().getDataStreamById(elementId));
+		getDataStreamResourceManager().delete(elementId);
 		return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
 	}
 	
-	@Path("/{elementUri}")
+	@Path("/{elementId}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@JacksonSerialized
-	@Override
-	public Response getElement(@PathParam("elementUri") String elementUri) {
-		// TODO Access rights
-		return ok(new Cloner().mapSequence(getPipelineElementRdfStorage().getDataStreamById(elementUri)));
+	@PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+	public SpDataStream getElement(@PathParam("elementId") String elementId) {
+		return getDataStreamResourceManager().findAsInvocation(elementId);
+	}
+
+	private DataStreamResourceManager getDataStreamResourceManager() {
+		return getSpResourceManager().manageDataStreams();
 	}
 
 }

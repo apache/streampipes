@@ -43,7 +43,7 @@ public class PipelineElementInstallationStep extends InstallationStep {
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
     for(ExtensionsServiceEndpointItem item : items) {
       statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
-              username, true, false));
+              username, true));
     }
 
     if (statusMessages.stream().allMatch(Message::isSuccess)) {

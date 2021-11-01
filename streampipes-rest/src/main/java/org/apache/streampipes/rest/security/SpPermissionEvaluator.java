@@ -17,39 +17,51 @@
  */
 package org.apache.streampipes.rest.security;
 
+import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Configuration
 public class SpPermissionEvaluator implements PermissionEvaluator {
 
   @Override
-  public boolean hasPermission(Authentication authentication, Object o, Object permission) {
+  public boolean hasPermission(Authentication auth, Object o, Object permission) {
     String objectInstanceId = (String) o;
-    PrincipalUserDetails<?> userDetails = getUserDetails(authentication);
+    PrincipalUserDetails<?> userDetails = getUserDetails(auth);
     if (isAdmin(userDetails)) {
       return true;
     }
 
-    return getUserDetails(authentication).getAllObjectPermissions().contains(objectInstanceId);
+    return hasPermission(auth, objectInstanceId);
   }
 
   @Override
-  public boolean hasPermission(Authentication authentication, Serializable serializable, String s, Object permission) {
-    PrincipalUserDetails<?> userDetails = getUserDetails(authentication);
+  public boolean hasPermission(Authentication auth, Serializable serializable, String s, Object permission) {
+    PrincipalUserDetails<?> userDetails = getUserDetails(auth);
     if (isAdmin(userDetails)) {
       return true;
     }
-    return getUserDetails(authentication).getAllObjectPermissions().contains(serializable.toString());
+    return hasPermission(auth, serializable.toString());
+  }
+
+  private boolean hasPermission(Authentication auth, String objectInstanceId) {
+    return isPublicElement(objectInstanceId) || getUserDetails(auth).getAllObjectPermissions().contains(objectInstanceId);
   }
 
   private PrincipalUserDetails<?> getUserDetails(Authentication authentication) {
     return (PrincipalUserDetails<?>) authentication.getPrincipal();
+  }
+
+  private boolean isPublicElement(String objectInstanceId) {
+    List<Permission> permissions = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().getUserPermissionsForObject(objectInstanceId);
+    return permissions.size() > 0 && permissions.get(0).isPublicElement();
   }
 
   private boolean isAdmin(PrincipalUserDetails<?> userDetails) {

@@ -91,14 +91,14 @@ public class Operations {
     return new DataSetGroundingSelector(dataSet).selectGrounding();
   }
 
-  public static Message verifyAndAddElement(String graphData, String username,
-                                            boolean publicElement, boolean refreshCache) throws SepaParseException {
-    return new TypeExtractor(graphData).getTypeVerifier().verifyAndAdd(username, publicElement,
-            refreshCache);
+  public static Message verifyAndAddElement(String graphData,
+                                            String username,
+                                            boolean publicElement) throws SepaParseException {
+    return new TypeExtractor(graphData).getTypeVerifier().verifyAndAdd(username, publicElement);
   }
 
-  public static Message verifyAndUpdateElement(String graphData, String username) throws SepaParseException {
-    return new TypeExtractor(graphData).getTypeVerifier().verifyAndUpdate(username);
+  public static Message verifyAndUpdateElement(String graphData) throws SepaParseException {
+    return new TypeExtractor(graphData).getTypeVerifier().verifyAndUpdate();
   }
 
   public static PipelineElementRecommendationMessage findRecommendedElements(String email, Pipeline partialPipeline) throws NoSuitableSepasAvailableException {

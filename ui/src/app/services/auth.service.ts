@@ -155,7 +155,7 @@ export class AuthService {
             case PageName.HOME:
                 return true;
             case PageName.PIPELINE_EDITOR:
-                return this.hasAnyRole([]);
+                return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
             case PageName.PIPELINE_OVERVIEW:
                 return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
             case PageName.CONNECT:

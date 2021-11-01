@@ -17,5 +17,12 @@
  */
 package org.apache.streampipes.resource.management;
 
-public class AbstractResourceManager {
+public class AbstractResourceManager<T> {
+
+  protected T db;
+
+  public AbstractResourceManager(T db) {
+    this.db = db;
+  }
+
 }

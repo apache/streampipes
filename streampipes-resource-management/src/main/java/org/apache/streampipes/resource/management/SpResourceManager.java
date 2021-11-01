@@ -31,8 +31,16 @@ public class SpResourceManager {
     return new DataExplorerResourceManager();
   }
 
-  public PipelineElementResourceManager managePipelineElements() {
-    return new PipelineElementResourceManager();
+  public DataProcessorResourceManager manageDataProcessors() {
+    return new DataProcessorResourceManager();
+  }
+
+  public DataSinkResourceManager manageDataSinks() {
+    return new DataSinkResourceManager();
+  }
+
+  public DataStreamResourceManager manageDataStreams() {
+    return new DataStreamResourceManager();
   }
 
   public PipelineResourceManager managePipelines() {

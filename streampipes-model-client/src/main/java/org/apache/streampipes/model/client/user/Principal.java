@@ -21,7 +21,6 @@ package org.apache.streampipes.model.client.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,9 +39,6 @@ public abstract class Principal {
 
 	protected String username;
 
-	protected List<Element> ownSources;
-	protected List<Element> ownSepas;
-	protected List<Element> ownActions;
 	protected Set<String> objectPermissions;
 
 	protected Set<Role> roles;
@@ -52,51 +48,11 @@ public abstract class Principal {
 
 	public Principal(PrincipalType principalType) {
 		this.principalType = principalType;
-		this.ownActions = new ArrayList<>();
-		this.ownSepas = new ArrayList<>();
-		this.ownSources = new ArrayList<>();
 		this.roles = new HashSet<>();
 		this.groups = new HashSet<>();
 		this.objectPermissions = new HashSet<>();
 	}
 
-	public List<Element> getOwnSources() {
-		return ownSources;
-	}
-
-	public void addOwnSource(String source, boolean publicElement) {
-		if (this.ownSources == null) this.ownSources = new ArrayList<>();
-		this.ownSources.add(new Element(source, publicElement));
-	}
-
-	public List<Element> getOwnSepas() {
-		return ownSepas;
-	}
-
-	public void addOwnSepa(String sepa, boolean publicElement) {
-		if (this.ownSepas == null) this.ownSepas = new ArrayList<>();
-		this.ownSepas.add(new Element(sepa, publicElement));
-	}
-
-	public List<Element> getOwnActions() {
-		return ownActions;
-	}
-
-	public void addOwnAction(String action, boolean publicElement) {
-		this.ownActions.add(new Element(action, publicElement));
-	}
-
-	public void removeAction(String action) {
-		this.ownActions.remove(find(action, ownActions));
-	}
-
-	public void removeSepa(String sepa) {
-		this.ownSepas.remove(find(sepa, ownSepas));
-	}
-
-	public void removeSource(String source) {
-		this.ownSources.remove(find(source, ownSources));
-	}
 
 	public String getRev() {
 		return rev;
@@ -144,18 +100,6 @@ public abstract class Principal {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public void setOwnSources(List<Element> ownSources) {
-		this.ownSources = ownSources;
-	}
-
-	public void setOwnSepas(List<Element> ownSepas) {
-		this.ownSepas = ownSepas;
-	}
-
-	public void setOwnActions(List<Element> ownActions) {
-		this.ownActions = ownActions;
 	}
 
 	public Set<Role> getRoles() {

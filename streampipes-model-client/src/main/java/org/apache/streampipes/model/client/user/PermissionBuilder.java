@@ -42,6 +42,13 @@ public class PermissionBuilder {
 
   public PermissionBuilder with(PermissionEntry permissionEntry) {
     this.permission.addPermissionEntry(permissionEntry);
+
+    return this;
+  }
+
+  public PermissionBuilder publicElement(boolean publicElement) {
+    this.permission.setPublicElement(publicElement);
+
     return this;
   }
 

@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.resource.management;
 
-package org.apache.streampipes.rest.api;
+import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.storage.api.IDataSinkStorage;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
+public class DataSinkResourceManager extends AbstractPipelineElementResourceManager<IDataSinkStorage, DataSinkDescription, DataSinkInvocation> {
 
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+  public DataSinkResourceManager() {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataSinkStorage());
+  }
 
-import javax.ws.rs.core.Response;
-
-public interface IPipelineElement<T extends NamedStreamPipesEntity> {
-
-	Response getAvailable();
-	Response getOwn();
-
-	Response removeOwn(String elementUri);
-
-	Response getElement(String elementUri);
-	
-	
+  @Override
+  protected DataSinkInvocation toInvocation(DataSinkDescription description) {
+    return new DataSinkInvocation(description);
+  }
 }

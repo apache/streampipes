@@ -32,7 +32,8 @@ public enum Role {
           Constants.ROLE_PIPELINE_ADMIN_VALUE,
           Privilege.PRIVILEGE_READ_PIPELINE,
           Privilege.PRIVILEGE_WRITE_PIPELINE,
-          Privilege.PRIVILEGE_DELETE_PIPELINE
+          Privilege.PRIVILEGE_DELETE_PIPELINE,
+          Privilege.PRIVILEGE_READ_PIPELINE_ELEMENT
   ),
 
   ROLE_DASHBOARD_ADMIN(
@@ -59,7 +60,8 @@ public enum Role {
 
   ROLE_PIPELINE_USER(
           Constants.ROLE_PIPELINE_USER_VALUE,
-          Privilege.PRIVILEGE_READ_PIPELINE
+          Privilege.PRIVILEGE_READ_PIPELINE,
+          Privilege.PRIVILEGE_READ_PIPELINE_ELEMENT
   ),
 
   ROLE_APP_USER(Constants.ROLE_APP_USER_VALUE);

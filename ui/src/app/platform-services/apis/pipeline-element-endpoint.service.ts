@@ -35,13 +35,6 @@ export class PipelineElementEndpointService {
     return this.http.post(this.platformServicesCommons.apiBasePath + '/element', payload);
   }
 
-  addBatch(elementUris, ispublic): Observable<any> {
-    const payload = new HttpParams()
-        .set('uri', elementUris)
-        .set('publicElement', ispublic);
-    return this.http.post(this.platformServicesCommons.apiBasePath + '/element/batch', payload);
-  }
-
   update(elementUri): Observable<any> {
     return this.http.put(this.platformServicesCommons.apiBasePath + '/element/' + encodeURIComponent(elementUri), undefined);
   }

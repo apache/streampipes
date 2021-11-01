@@ -67,4 +67,10 @@ public interface INoSqlStorage {
 
   IPermissionStorage getPermissionStorage();
 
+  IDataProcessorStorage getDataProcessorStorage();
+
+  IDataSinkStorage getDataSinkStorage();
+
+  IDataStreamStorage getDataStreamStorage();
+
 }

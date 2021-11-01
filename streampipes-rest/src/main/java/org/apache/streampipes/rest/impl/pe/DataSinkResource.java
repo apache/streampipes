@@ -16,70 +16,69 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.rest.impl.pe;
 
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.message.NotificationType;
-import org.apache.streampipes.rest.api.IPipelineElement;
+import org.apache.streampipes.resource.management.DataSinkResourceManager;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
-import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
-import org.apache.streampipes.storage.couchdb.utils.Filter;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("/v2/actions")
-public class DataSinkResource extends AbstractAuthGuardedRestResource implements IPipelineElement {
+@Component
+public class DataSinkResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @Path("/available")
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  @Override
-  public Response getAvailable() {
-    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
-            getUserService().getAvailableActionUris(getAuthenticatedUsername()));
-    return ok(secs);
+  @JacksonSerialized
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.elementId, 'READ')")
+  public List<DataSinkDescription> getAvailable() {
+    return getDataSinkResourceManager().findAll();
   }
 
   @GET
   @Path("/own")
   @Produces({MediaType.APPLICATION_JSON, SpMediaType.JSONLD})
   @JacksonSerialized
-  @Override
-  public Response getOwn() {
-    List<DataSinkDescription> secs = Filter.byUri(getPipelineElementRdfStorage().getAllDataSinks(),
-            getUserService().getOwnActionUris(getAuthenticatedUsername()));
-    List<DataSinkInvocation> si = secs.stream().map(s -> new DataSinkInvocation(new DataSinkInvocation(s))).collect(Collectors.toList());
-    return ok(si);
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.belongsTo, 'READ')")
+  public List<DataSinkInvocation> getOwn() {
+    return getDataSinkResourceManager().findAllAsInvocation();
   }
 
   @DELETE
   @Path("/own/{elementId}")
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  @Override
+  @JacksonSerialized
+  @PreAuthorize(AuthConstants.HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE)
   public Response removeOwn(@PathParam("elementId") String elementId) {
-    IPipelineElementDescriptionStorage requestor = getPipelineElementRdfStorage();
-    getUserService().deleteOwnAction(getAuthenticatedUsername(), elementId);
-    requestor.deleteDataSink(requestor.getDataSinkById(elementId));
+    getDataSinkResourceManager().delete(elementId);
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
 
-
-  @Path("/{elementUri}")
+  @Path("/{elementId}")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
-  @Override
-  public Response getElement(@PathParam("elementUri") String elementUri) {
-    return ok(new DataSinkInvocation(new DataSinkInvocation(getPipelineElementRdfStorage().getDataSinkById(elementUri))));
+  @JacksonSerialized
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_ELEMENT_PRIVILEGE)
+  public DataSinkInvocation getElement(@PathParam("elementId") String elementId) {
+    return getDataSinkResourceManager().findAsInvocation(elementId);
+  }
+
+  private DataSinkResourceManager getDataSinkResourceManager() {
+    return getSpResourceManager().manageDataSinks();
   }
 }

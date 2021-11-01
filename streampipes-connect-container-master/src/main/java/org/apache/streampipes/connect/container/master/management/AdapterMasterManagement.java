@@ -216,7 +216,7 @@ public class AdapterMasterManagement {
   private void installDataSource(SpDataStream stream,
                                  String username) throws AdapterException {
     try {
-      new DataStreamVerifier(stream).verifyAndAdd(username, true, true);
+      new DataStreamVerifier(stream).verifyAndAdd(username, true);
     } catch (SepaParseException e) {
       LOG.error("Error while installing data source: {}", stream.getElementId(), e);
       throw new AdapterException();

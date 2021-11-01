@@ -23,12 +23,10 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
 
-public class PermissionResourceManager {
-
-  private final IPermissionStorage db;
+public class PermissionResourceManager extends AbstractResourceManager<IPermissionStorage> {
 
   public PermissionResourceManager() {
-    this.db = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage());
   }
 
   public List<Permission> findAll() {
@@ -39,7 +37,15 @@ public class PermissionResourceManager {
     return db.getUserPermissionsForObject(objectInstanceId);
   }
 
+  public void create(Permission permission) {
+    db.addPermission(permission);
+  }
+
   public void update(Permission permission) {
     db.updatePermission(permission);
+  }
+
+  public void delete(Permission permission) {
+    db.deletePermission(permission.getPermissionId());
   }
 }
