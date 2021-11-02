@@ -17,14 +17,11 @@
  */
 package org.apache.streampipes.resource.management;
 
-import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.resource.utils.AdapterEncryptionService;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
-
-import java.util.List;
 
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
@@ -32,30 +29,19 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage());
   }
 
-  public String encryptAndCreate(AdapterDescription ad,
-                                 String principalSid,
-                                 boolean publicElement) {
+  public String encryptAndCreate(AdapterDescription ad) {
     // Encrypt adapter description to store it in db
     AdapterDescription encryptedAdapterDescription =
             new AdapterEncryptionService(new Cloner().adapterDescription(ad)).encrypt();
 
     // store in db
     encryptedAdapterDescription.setRev(null);
-    String elementId = db.storeAdapter(encryptedAdapterDescription);
-    //new PermissionResourceManager().createDefault(elementId, AdapterDescription.class, principalSid, publicElement);
-    return elementId;
+    return db.storeAdapter(encryptedAdapterDescription);
   }
 
   public void delete(String elementId) {
-    AdapterDescription ad = db.getAdapter(elementId);
-    //deletePermissions(ad);
     db.deleteAdapter(elementId);
   }
 
-  private void deletePermissions(AdapterDescription description) {
-    SpResourceManager manager = new SpResourceManager();
-    List<Permission> permissions = manager.managePermissions().findForObjectId(description.getElementId());
-    permissions.forEach(permission -> manager.managePermissions().delete(permission));
-  }
 
 }

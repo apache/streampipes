@@ -17,5 +17,11 @@
  */
 package org.apache.streampipes.resource.management;
 
-public class DataExplorerResourceManager {
+import org.apache.streampipes.storage.management.StorageDispatcher;
+
+public class DataExplorerResourceManager extends AbstractDashboardResourceManager {
+
+  public DataExplorerResourceManager() {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage());
+  }
 }

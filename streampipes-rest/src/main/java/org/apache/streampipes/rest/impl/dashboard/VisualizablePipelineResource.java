@@ -21,7 +21,11 @@ package org.apache.streampipes.rest.impl.dashboard;
 import org.apache.streampipes.model.dashboard.VisualizablePipeline;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,8 +34,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.List;
 
 @Path("/v2/dashboard/pipelines")
+@Component
 public class VisualizablePipelineResource extends AbstractPipelineExtractionResource<VisualizablePipeline> {
 
   private static final String DashboardAppId = "org.apache.streampipes.sinks.internal.jvm.dashboard";
@@ -40,8 +46,10 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getVisualizablePipelines() {
-    return ok(extract(new ArrayList<>(), DashboardAppId));
+  @PreAuthorize(AuthConstants.HAS_READ_DASHBOARD_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  public List<VisualizablePipeline> getVisualizablePipelines() {
+    return extract(new ArrayList<>(), DashboardAppId);
   }
 
   @GET

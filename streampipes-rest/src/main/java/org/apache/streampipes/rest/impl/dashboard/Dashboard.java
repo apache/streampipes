@@ -18,14 +18,34 @@
 
 package org.apache.streampipes.rest.impl.dashboard;
 
-import org.apache.streampipes.storage.api.IDashboardStorage;
+import org.apache.streampipes.model.client.user.Privilege;
+import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/v2/dashboard/dashboards")
+@Component
 public class Dashboard extends AbstractDashboardResource {
 
-    protected IDashboardStorage getDashboardStorage() {
-        return getNoSqlStorage().getDashboardStorage();
+    @Override
+    protected AbstractDashboardResourceManager getResourceManager() {
+        return getSpResourceManager().manageDashboards();
+    }
+
+    @Override
+    public String getWriteRoles() {
+        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE;
+    }
+
+    @Override
+    public String getReadRoles() {
+        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE;
+    }
+
+    @Override
+    public String getDeleteRoles() {
+        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_DELETE_DASHBOARD_VALUE;
     }
 }

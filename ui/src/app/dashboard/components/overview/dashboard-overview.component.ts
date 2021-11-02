@@ -16,14 +16,17 @@
  *
  */
 
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
-import {Dashboard} from "../../models/dashboard.model";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
-import {DashboardService} from "../../services/dashboard.service";
-import {EditDashboardDialogComponent} from "../../dialogs/edit-dashboard/edit-dashboard-dialog.component";
-import {Tuple2} from "../../../core-model/base/Tuple2";
-import {Router} from "@angular/router";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Dashboard } from '../../models/dashboard.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { DashboardService } from '../../services/dashboard.service';
+import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { Router } from '@angular/router';
+import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 
 @Component({
     selector: 'dashboard-overview',
@@ -32,16 +35,17 @@ import {Router} from "@angular/router";
 })
 export class DashboardOverviewComponent implements OnInit {
 
-    @Input() dashboards: Array<Dashboard>;
+    @Input() dashboards: Dashboard[];
     @Output() reloadDashboardsEmitter = new EventEmitter<void>();
     @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
 
     dataSource = new MatTableDataSource<Dashboard>();
-    displayedColumns: string[] = ['name', 'open', 'openWindow', 'settings', 'edit', 'delete'];
+    displayedColumns: string[] = ['name', 'open', 'openWindow', 'settings', 'edit', 'permissions', 'delete'];
 
     constructor(private dashboardService: DashboardService,
                 public dialog: MatDialog,
-                private Router: Router) {
+                private router: Router,
+                private dialogService: DialogService) {
 
     }
 
@@ -50,7 +54,7 @@ export class DashboardOverviewComponent implements OnInit {
     }
 
     openNewDashboardDialog() {
-        let dashboard = {} as Dashboard;
+        const dashboard = {} as Dashboard;
         dashboard.widgets = [];
 
         this.openDashboardModificationDialog(true, dashboard);
@@ -81,16 +85,35 @@ export class DashboardOverviewComponent implements OnInit {
     }
 
     showDashboard(dashboard: Dashboard, openInEditMode: boolean) {
-        let data: Tuple2<Dashboard, boolean> = {} as Tuple2<Dashboard, boolean>;
+        const data: Tuple2<Dashboard, boolean> = {} as Tuple2<Dashboard, boolean>;
         data.a = dashboard;
         data.b = openInEditMode;
         this.selectDashboardEmitter.emit(data);
     }
 
     openExternalDashboard(dashboard: Dashboard) {
-        let href = this.Router.createUrlTree(['standalone', dashboard._id]);
+        const href = this.router.createUrlTree(['standalone', dashboard._id]);
         // TODO fixes bug that hashing strategy is ignored by createUrlTree
-        window.open("#" + href.toString(), "_blank");
+        window.open('#' + href.toString(), '_blank');
+    }
+
+    showPermissionsDialog(dashboard: Dashboard) {
+
+        const dialogRef = this.dialogService.open(ObjectPermissionDialogComponent, {
+            panelType: PanelType.SLIDE_IN_PANEL,
+            title: 'Manage permissions',
+            width: '50vw',
+            data: {
+                'objectInstanceId': dashboard._id,
+                'headerTitle': 'Manage permissions for dashboard ' + dashboard.name
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(refresh => {
+            if (refresh) {
+                this.reloadDashboardsEmitter.emit();
+            }
+        });
     }
 
 }

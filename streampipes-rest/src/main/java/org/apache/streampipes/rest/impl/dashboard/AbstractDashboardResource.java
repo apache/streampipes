@@ -19,51 +19,72 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.dashboard.DashboardModel;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.storage.api.IDashboardStorage;
+import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
-public abstract class AbstractDashboardResource extends AbstractRestResource {
+public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getAllDashboards() {
-    return ok(getDashboardStorage().getAllDashboards());
+  @JacksonSerialized
+  @PreAuthorize("hasAnyAuthority(#root.this.getReadRoles())")
+  @PostFilter("hasPermission(filterObject.couchDbId, 'READ')")
+  public List<DashboardModel> getAllDashboards() {
+    return getResourceManager().findAll();
   }
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  public Response getDashboard(@PathParam("dashboardId") String dashboardId) {
-    return ok(getDashboardStorage().getDashboard(dashboardId));
+  @PreAuthorize("hasAnyAuthority(#root.this.getReadRoles()) and hasPermission(#dashboardId, 'READ')")
+  public DashboardModel getDashboard(@PathParam("dashboardId") String dashboardId) {
+    return getResourceManager().find(dashboardId);
   }
 
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  public Response modifyDashboard(DashboardModel dashboardModel) {
-    getDashboardStorage().updateDashboard(dashboardModel);
-    return ok(getDashboardStorage().getDashboard(dashboardModel.getCouchDbId()));
+  @PreAuthorize("hasAnyAuthority(#root.this.getWriteRoles()) and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
+  public DashboardModel modifyDashboard(DashboardModel dashboardModel) {
+    getResourceManager().update(dashboardModel);
+    return getResourceManager().find(dashboardModel.getCouchDbId());
   }
 
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
+  @PreAuthorize("hasAnyAuthority(#root.this.getDeleteRoles()) and hasPermission(#dashboardId, 'DELETE')")
   public Response deleteDashboard(@PathParam("dashboardId") String dashboardId) {
-    getDashboardStorage().deleteDashboard(dashboardId);
+    getResourceManager().delete(dashboardId);
     return ok();
   }
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize("hasAnyAuthority(#root.this.getWriteRoles())")
   public Response createDashboard(DashboardModel dashboardModel) {
-    getDashboardStorage().storeDashboard(dashboardModel);
+    getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
     return ok();
   }
 
-  protected abstract IDashboardStorage getDashboardStorage();
+  protected abstract AbstractDashboardResourceManager getResourceManager();
+
+  /**
+   * Do not delete these abstract methods below - required by Spring SPEL (see above)
+   */
+
+  public abstract String getWriteRoles();
+
+  public abstract String getReadRoles();
+
+  public abstract String getDeleteRoles();
 
 }

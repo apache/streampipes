@@ -78,7 +78,7 @@ public class AdapterMasterManagement {
     EventGrounding eventGrounding = GroundingService.createEventGrounding();
     ad.setEventGrounding(eventGrounding);
 
-    String elementId = this.adapterResourceManager.encryptAndCreate(ad, principalSid, true);
+    String elementId = this.adapterResourceManager.encryptAndCreate(ad);
 
     // start when stream adapter
     if (ad instanceof AdapterStreamDescription) {
