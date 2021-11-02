@@ -30,7 +30,8 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
   templateUrl: './time-series-chart-widget-config.component.html',
   styleUrls: ['./time-series-chart-widget-config.component.scss']
 })
-export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<TimeSeriesChartWidgetModel, TimeSeriesChartVisConfig> implements OnInit {
+export class TimeSeriesChartWidgetConfigComponent
+       extends BaseWidgetConfig<TimeSeriesChartWidgetModel, TimeSeriesChartVisConfig> implements OnInit {
 
   constructor(widgetConfigurationService: WidgetConfigurationService,
               fieldService: DataExplorerFieldProviderService) {
@@ -44,7 +45,7 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<TimeS
   }
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
-    this.currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties = selectedColumns;
+    this.currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties = selectedColumns;
     console.log(selectedColumns);
     // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
     this.triggerDataRefresh();
@@ -87,7 +88,7 @@ export class TimeSeriesChartWidgetConfigComponent extends BaseWidgetConfig<TimeS
     return {
       forType: this.getWidgetType(),
       yKeys: [],
-      selectedLineChartProperties: numericPlusBooleanFields.length > 6 ?
+      selectedTimeSeriesChartProperties: numericPlusBooleanFields.length > 6 ?
       numericPlusBooleanFields.slice(0, 5) :
       numericPlusBooleanFields,
       chosenColor: colors,

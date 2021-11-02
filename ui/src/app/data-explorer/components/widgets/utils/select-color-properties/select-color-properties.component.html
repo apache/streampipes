@@ -30,13 +30,19 @@
             </button>
         </div>
     </div>
-    <div style="margin-left: 1px; margin-right: 1px;" *ngFor="let field of availableProperties" fxLayout="column"
+    <div style="margin-left: 1px; margin-right: 1px;" 
+         *ngFor="let field of availableProperties" 
+         fxLayout="column"
          class="field-scroll-panel">
-        <mat-checkbox color="accent" [checked]="isSelected(field)" (change)="toggleFieldSelection(field)">
+        <mat-checkbox color="accent" 
+                      [checked]="isSelected(field)" 
+                      (change)="toggleFieldSelection(field)">
             <b>{{field.runtimeName}}</b>
             {{'(' + (field.aggregation ? field.aggregation + ', ' : '') + field.measure + ')'}}
         </mat-checkbox>
-        <div fxFlex fxLayoutAlign="end center" *ngIf="isSelected(field)">
+        <div fxFlex 
+             fxLayoutAlign="end center" 
+             *ngIf="isSelected(field)">
             <mat-form-field class="marginColorField"
                             color="accent"
                             fxFlex="60">

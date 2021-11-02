@@ -20,7 +20,7 @@ import { DataExplorerWidgetModel, EventPropertyUnion } from '../../../../../core
 import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
-  selectedLineChartProperties: DataExplorerField[];
+  selectedTimeSeriesChartProperties: DataExplorerField[];
   selectedBackgroundColorProperty?: EventPropertyUnion;
   groupValue?: string;
   showCountValue?: boolean;

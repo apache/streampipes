@@ -122,7 +122,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
 
     const numericPlusBooleanFields = this.fieldProvider.numericFields.concat(this.fieldProvider.booleanFields);
 
-    const columnsContainingNumbersPlusBooleans = this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties
+    const columnsContainingNumbersPlusBooleans = this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties
       .filter(f => numericPlusBooleanFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
 
     const indexXkey = 0;
@@ -141,7 +141,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     });
 
     data.allDataSeries[0].rows.forEach(row => {
-      this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.forEach(field => {
+      this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(field => {
         if (field.sourceIndex === data.sourceIndex) {
           const columnIndex = this.getColumnIndex(field, data);
 
@@ -177,7 +177,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
     if (this.data) {
-      this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties.map((field, index) => {
+      this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.map((field, index) => {
         if (this.data[index] !== undefined) {
           this.data[index]['marker'] = { 'color': '' };
 
@@ -245,9 +245,9 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
 
   handleUpdatedFields(addedFields: DataExplorerField[],
                       removedFields: DataExplorerField[]) {
-    this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties =
+    this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties =
       this.updateFieldSelection(
-        this.dataExplorerWidget.visualizationConfig.selectedLineChartProperties,
+        this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties,
         addedFields,
         removedFields,
         (field) => field.fieldCharacteristics.numeric
