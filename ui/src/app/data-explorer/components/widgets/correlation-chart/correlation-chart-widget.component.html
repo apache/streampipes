@@ -22,11 +22,12 @@
     <sp-load-data-spinner *ngIf="showIsLoadingData" class="h-100"></sp-load-data-spinner>
     <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
 
-    <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
-                 [divId]="dataExplorerWidget._id"
-                 class="plotly-container"
-                 [data]="data"
-                 [layout]="graph.layout"
-                 [config]="graph.config">
-    </plotly-plot>
+      <plotly-plot *ngIf="data !== undefined && !showNoDataInDateRange && !showIsLoadingData"
+                  [divId]="dataExplorerWidget._id"
+                  class="plotly-container"
+                  [data]="data"
+                  [layout]="graph.layout"
+                  [config]="graph.config">
+      </plotly-plot>
+
 </div>

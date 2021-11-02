@@ -24,7 +24,7 @@ import { TimeSeriesChartWidgetComponent } from '../components/widgets/time-serie
 import { ImageWidgetComponent } from '../components/widgets/image/image-widget.component';
 import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
 import { HistogramChartWidgetComponent } from '../components/widgets/histogram/histogram-chart-widget.component';
-import { DensityChartWidgetComponent } from '../components/widgets/density/density-chart-widget.component';
+import { CorrelationChartWidgetComponent } from '../components/widgets/correlation-chart/correlation-chart-widget.component';
 import { PieChartWidgetComponent } from '../components/widgets/pie/pie-chart-widget.component';
 
 export enum WidgetType {
@@ -35,7 +35,7 @@ export enum WidgetType {
   Image,
   IndicatorChart,
   HistogramChart,
-  DensityChart,
+  CorrelationChart,
   PieChart
 }
 
@@ -71,10 +71,10 @@ export const WidgetTypeMap = new Map<number, IWidget>([
     label: 'Histogram',
     componentClass: HistogramChartWidgetComponent
   }],
-  [WidgetType.DensityChart, {
-    id: 'density-chart',
-    label: 'Density',
-    componentClass: DensityChartWidgetComponent
+  [WidgetType.CorrelationChart, {
+    id: 'correlation-chart',
+    label: 'Correlation',
+    componentClass: CorrelationChartWidgetComponent
   }],
   [WidgetType.PieChart, {
     id: 'pie-chart',

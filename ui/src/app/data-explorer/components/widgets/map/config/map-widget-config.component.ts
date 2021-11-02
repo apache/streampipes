@@ -19,8 +19,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
+import { MapVisConfig, MapWidgetModel } from '../model/map-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 

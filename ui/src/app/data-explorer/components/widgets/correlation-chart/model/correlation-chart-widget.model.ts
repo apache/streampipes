@@ -19,12 +19,13 @@
 import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
 import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
-export interface DensityChartVisConfig extends DataExplorerVisConfig {
+export interface CorrelationChartVisConfig extends DataExplorerVisConfig {
   firstField: DataExplorerField;
   secondField: DataExplorerField;
+  displayType: string;
 }
 
-export interface DensityChartWidgetModel extends DataExplorerWidgetModel {
+export interface CorrelationChartWidgetModel extends DataExplorerWidgetModel {
   dataConfig: DataExplorerDataConfig;
-  visualizationConfig: DensityChartVisConfig;
+  visualizationConfig: CorrelationChartVisConfig;
 }
