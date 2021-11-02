@@ -16,8 +16,8 @@
  *
  */
 
-import {Component} from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { Component } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
     templateUrl: './configuration.component.html',
@@ -32,7 +32,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 })
 export class ConfigurationComponent {
 
-    selectedIndex: number = 0;
+    selectedIndex = 0;
 
     constructor() {
     }

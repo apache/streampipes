@@ -32,12 +32,14 @@ import { UserService } from './apis/user.service';
 import { UserGroupService } from './apis/user-group.service';
 import { MailConfigService } from './apis/mail-config.service';
 import { PermissionsService } from './apis/permissions.service';
+import { GeneralConfigService } from './apis/general-config.service';
 
 @NgModule({
   imports: [],
   declarations: [],
   providers: [
     FilesService,
+    GeneralConfigService,
     MailConfigService,
     MeasurementUnitsService,
     PermissionsService,

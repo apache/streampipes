@@ -53,6 +53,7 @@ import { PlatformServicesModule } from '../platform-services/platform.module';
 import { SecurityUserGroupConfigComponent } from './security-configuration/user-group-configuration/user-group-configuration.component';
 import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
 import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';
+import { GeneralConfigurationComponent } from './general-configuration/general-configuration.component';
 
 @NgModule({
   imports: [
@@ -85,6 +86,7 @@ import { EmailConfigurationComponent } from './email-configuration/email-configu
     EditUserDialogComponent,
     EditGroupDialogComponent,
     EmailConfigurationComponent,
+    GeneralConfigurationComponent,
     PipelineElementConfigurationComponent,
     SecurityConfigurationComponent,
     SecurityUserConfigComponent,

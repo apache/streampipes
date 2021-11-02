@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { EmailConfig } from '../../platform-services/email-config.model';
+import { EmailConfig } from '../../platform-services/model/email-config.model';
 import { MailConfigService } from '../../platform-services/apis/mail-config.service';
 
 @Component({

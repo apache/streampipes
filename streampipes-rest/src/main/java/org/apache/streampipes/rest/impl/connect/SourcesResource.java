@@ -41,7 +41,6 @@ public class SourcesResource extends AbstractAdapterResource<SourcesManagement> 
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addSetAdapter(SpDataSet dataSet) {
 

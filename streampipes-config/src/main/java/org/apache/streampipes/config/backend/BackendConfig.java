@@ -23,6 +23,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.random.TokenGenerator;
 import org.apache.streampipes.config.backend.model.EmailConfig;
+import org.apache.streampipes.config.backend.model.GeneralConfig;
 import org.apache.streampipes.config.backend.model.LocalAuthConfig;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
@@ -75,6 +76,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.ENCRYPTION_KEY, randomKey(), "A random secret key");
     config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()), "Local authentication settings");
     config.registerObject(BackendConfigKeys.EMAIL_CONFIG, EmailConfig.fromDefaults(), "Email settings");
+    config.registerObject(BackendConfigKeys.GENERAL_CONFIG, new GeneralConfig(), "General settings");
   }
 
   private String makeAssetLocation() {
@@ -246,6 +248,14 @@ public enum BackendConfig {
 
   public void updateEmailConfig(EmailConfig emailConfig) {
     config.setObject(BackendConfigKeys.EMAIL_CONFIG, emailConfig);
+  }
+
+  public GeneralConfig getGeneralConfig() {
+    return config.getObject(BackendConfigKeys.GENERAL_CONFIG, GeneralConfig.class, new GeneralConfig());
+  }
+
+  public void updateGeneralConfig(GeneralConfig generalConfig) {
+    config.setObject(BackendConfigKeys.GENERAL_CONFIG, generalConfig);
   }
 
   public boolean isSetupRunning() {

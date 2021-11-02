@@ -49,6 +49,7 @@ public class BackendConfigKeys {
   public static final String LOCAL_AUTH_CONFIG = "SP_LOCAL_AUTH_CONFIG";
   public static final String ENCRYPTION_KEY = "SP_ENCRYPTION_KEY";
   public static final String EMAIL_CONFIG = "SP_EMAIL_CONFIG";
+  public static final String GENERAL_CONFIG = "SP_GENERAL_CONFIG";
 
 
   public static final String SERVICE_NAME = "SP_SERVICE_NAME";

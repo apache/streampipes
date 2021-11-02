@@ -18,50 +18,35 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.apache.streampipes.mail.MailTester;
+import org.apache.streampipes.config.backend.model.GeneralConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
-import org.simplejavamail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/v2/admin/mail-config")
-public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
+@Path("/v2/admin/general-config")
+public class GeneralConfigurationResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response getMailConfiguration() {
-    return ok(BackendConfig.INSTANCE.getEmailConfig());
+  public GeneralConfig getGeneralConfiguration() {
+    return BackendConfig.INSTANCE.getGeneralConfig();
   }
 
   @PUT
   @JacksonSerialized
   @Consumes(MediaType.APPLICATION_JSON)
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response updateMailConfiguration(EmailConfig config) {
-    config.setEmailConfigured(true);
-    BackendConfig.INSTANCE.updateEmailConfig(config);
+  public Response updateGeneralConfiguration(GeneralConfig config) {
+    config.setConfigured(true);
+    BackendConfig.INSTANCE.updateGeneralConfig(config);
 
     return ok();
-  }
-
-  @POST
-  @Path("/test")
-  @Consumes(MediaType.APPLICATION_JSON)
-  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
-  public Response sendTestMail(EmailConfig config) {
-    try {
-      new MailTester().sendTestMail(config);
-      return ok();
-    } catch (MailException e) {
-      return badRequest(e);
-    }
   }
 }

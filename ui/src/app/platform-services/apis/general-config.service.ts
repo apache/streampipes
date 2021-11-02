@@ -21,32 +21,27 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { Group } from '../../core-model/gen/streampipes-model-client';
-import { EmailConfig } from '../model/email-config.model';
+import { GeneralConfigModel } from '../model/general-config.model';
 
 @Injectable()
-export class MailConfigService {
+export class GeneralConfigService {
 
   constructor(private http: HttpClient,
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
-  getMailConfig(): Observable<EmailConfig> {
+  getGeneralConfig(): Observable<GeneralConfigModel> {
     return this.http
-        .get(this.mailConfigPath)
-        .pipe(map(response => response as EmailConfig));
+        .get(this.generalConfigPath)
+        .pipe(map(response => response as GeneralConfigModel));
   }
 
-  updateMailConfig(config: EmailConfig): Observable<any> {
-    return this.http.put(this.mailConfigPath, config);
+  updateGeneralConfig(config: GeneralConfigModel): Observable<any> {
+    return this.http.put(this.generalConfigPath, config);
   }
 
-  sendTestMail(config: EmailConfig) {
-    return this.http.post(`${this.mailConfigPath}/test`, config);
-  }
-
-  private get mailConfigPath() {
-    return this.platformServicesCommons.apiBasePath + '/admin/mail-config';
+  private get generalConfigPath() {
+    return this.platformServicesCommons.apiBasePath + '/admin/general-config';
   }
 
 }
