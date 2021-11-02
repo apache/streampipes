@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 public enum Role {
   ROLE_ADMIN(Constants.ROLE_ADMIN_VALUE),
 
+  ROLE_SERVICE_ADMIN(Constants.ROLE_SERVICE_ADMIN_VALUE),
+
   ROLE_PIPELINE_ADMIN(
           Constants.ROLE_PIPELINE_ADMIN_VALUE,
           Privilege.PRIVILEGE_READ_PIPELINE,
@@ -85,6 +87,7 @@ public enum Role {
 
   public static final class Constants {
     public static final String ROLE_ADMIN_VALUE = "ROLE_ADMIN";
+    public static final String ROLE_SERVICE_ADMIN_VALUE = "ROLE_SERVICE_ADMIN";
     public static final String ROLE_PIPELINE_ADMIN_VALUE = "ROLE_PIPELINE_ADMIN";
     public static final String ROLE_DASHBOARD_ADMIN_VALUE = "ROLE_DASHBOARD_ADMIN";
     public static final String ROLE_DATA_EXPLORER_ADMIN_VALUE = "ROLE_DATA_EXPLORER_ADMIN";

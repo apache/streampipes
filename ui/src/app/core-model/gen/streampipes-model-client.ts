@@ -18,22 +18,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-10-19 16:24:30.
-
-export class Element {
-    elementId: string;
-    publicElement: boolean;
-
-    static fromData(data: Element, target?: Element): Element {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new Element();
-        instance.elementId = data.elementId;
-        instance.publicElement = data.publicElement;
-        return instance;
-    }
-}
+// Generated using typescript-generator version 2.27.744 on 2021-11-02 20:08:48.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;
@@ -185,9 +170,6 @@ export class Principal {
     accountLocked: boolean;
     groups: string[];
     objectPermissions: string[];
-    ownActions: Element[];
-    ownSepas: Element[];
-    ownSources: Element[];
     principalId: string;
     principalType: PrincipalType;
     rev: string;
@@ -205,9 +187,6 @@ export class Principal {
         instance.accountLocked = data.accountLocked;
         instance.accountExpired = data.accountExpired;
         instance.username = data.username;
-        instance.ownSources = __getCopyArrayFn(Element.fromData)(data.ownSources);
-        instance.ownSepas = __getCopyArrayFn(Element.fromData)(data.ownSepas);
-        instance.ownActions = __getCopyArrayFn(Element.fromData)(data.ownActions);
         instance.objectPermissions = __getCopyArrayFn(__identity<string>())(data.objectPermissions);
         instance.roles = __getCopyArrayFn(__identity<Role>())(data.roles);
         instance.groups = __getCopyArrayFn(__identity<string>())(data.groups);
@@ -321,7 +300,7 @@ export type PrincipalType = "USER_ACCOUNT" | "SERVICE_ACCOUNT" | "GROUP";
 
 export type Privilege = "PRIVILEGE_READ_PIPELINE" | "PRIVILEGE_WRITE_PIPELINE" | "PRIVILEGE_DELETE_PIPELINE" | "PRIVILEGE_READ_ADAPTER" | "PRIVILEGE_WRITE_ADAPTER" | "PRIVILEGE_DELETE_ADAPTER" | "PRIVILEGE_READ_PIPELINE_ELEMENT" | "PRIVILEGE_WRITE_PIPELINE_ELEMENT" | "PRIVILEGE_DELETE_PIPELINE_ELEMENT" | "PRIVILEGE_READ_DASHBOARD" | "PRIVILEGE_WRITE_DASHBOARD" | "PRIVILEGE_DELETE_DASHBOARD" | "PRIVILEGE_READ_DASHBOARD_WIDGET" | "PRIVILEGE_WRITE_DASHBOARD_WIDGET" | "PRIVILEGE_DELETE_DASHBOARD_WIDGET" | "PRIVILEGE_READ_DATA_EXPLORER_VIEW" | "PRIVILEGE_WRITE_DATA_EXPLORER_VIEW" | "PRIVILEGE_DELETE_DATA_EXPLORER_VIEW" | "PRIVILEGE_READ_DATA_EXPLORER_WIDGET" | "PRIVILEGE_WRITE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_DELETE_DATA_EXPLORER_WIDGET" | "PRIVILEGE_READ_APPS" | "PRIVILEGE_WRITE_APPS" | "PRIVILEGE_READ_NOTIFICATIONS" | "PRIVILEGE_READ_FILES" | "PRIVILEGE_WRITE_FILES" | "PRIVILEGE_DELETE_FILES";
 
-export type Role = "ROLE_ADMIN" | "ROLE_PIPELINE_ADMIN" | "ROLE_DASHBOARD_ADMIN" | "ROLE_DATA_EXPLORER_ADMIN" | "ROLE_CONNECT_ADMIN" | "ROLE_DASHBOARD_USER" | "ROLE_DATA_EXPLORER_USER" | "ROLE_PIPELINE_USER" | "ROLE_APP_USER";
+export type Role = "ROLE_ADMIN" | "ROLE_SERVICE_ADMIN" | "ROLE_PIPELINE_ADMIN" | "ROLE_DASHBOARD_ADMIN" | "ROLE_DATA_EXPLORER_ADMIN" | "ROLE_CONNECT_ADMIN" | "ROLE_DASHBOARD_USER" | "ROLE_DATA_EXPLORER_USER" | "ROLE_PIPELINE_USER" | "ROLE_APP_USER";
 
 function __getCopyArrayFn<T>(itemCopyFn: (item: T) => T): (array: T[]) => T[] {
     return (array: T[]) => __copyArray(array, itemCopyFn);

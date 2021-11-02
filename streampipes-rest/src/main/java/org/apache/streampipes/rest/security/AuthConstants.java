@@ -30,7 +30,7 @@ public class AuthConstants {
   private static final String BE2 = "))";
   private static final String OR = " or ";
 
-  public static final String IS_ADMIN_ROLE = HAS_ANY_AUTHORITY + ROLE_ADMIN_VALUE + Q + BE;
+  public static final String IS_ADMIN_ROLE = HAS_ANY_AUTHORITY + ROLE_ADMIN_VALUE + Q + ", '" + ROLE_SERVICE_ADMIN_VALUE +Q + BE;
 
   public static final String IS_PIPELINE_ADMIN_ROLE = HAS_ANY_ROLE + ROLE_PIPELINE_ADMIN_VALUE + Q + BE;
   public static final String IS_PIPELINE_USER_ROLE = HAS_ANY_ROLE + ROLE_PIPELINE_USER_VALUE + Q + BE;
@@ -54,6 +54,8 @@ public class AuthConstants {
 
   public static final String HAS_WRITE_DASHBOARD_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DASHBOARD_VALUE + Q + BE2;
   public static final String HAS_READ_DASHBOARD_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_DASHBOARD_VALUE + Q + BE2;
+
+  public static final String HAS_READ_FILE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_FILES_VALUE + Q + BE2;
 
   public static final String IS_AUTHENTICATED = "isAuthenticated()";
 
