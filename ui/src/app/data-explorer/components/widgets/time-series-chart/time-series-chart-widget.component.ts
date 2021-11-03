@@ -148,11 +148,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
           let value = row[columnIndex];
           if (this.fieldProvider.booleanFields.find(f => field.fullDbName === f.fullDbName
             && f.sourceIndex === data.sourceIndex) !== undefined) {
-            if (value === true) {
-              value = 1;
-            } else {
-              value = 0;
-            }
+            value = value === true ? 1 : 0;
           }
 
           tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].x.push(new Date(row[indexXkey]));

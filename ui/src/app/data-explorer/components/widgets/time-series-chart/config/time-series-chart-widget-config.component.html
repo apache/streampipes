@@ -21,7 +21,7 @@
     <sp-select-color-properties
         (changeSelectedProperties)="setSelectedProperties($event)"
         [availableProperties]="fieldProvider.numericFields.concat(fieldProvider.booleanFields)"
-        [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedLineChartProperties"
+        [selectedProperties]="currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties"
         [currentlyConfiguredWidget]="currentlyConfiguredWidget">
     </sp-select-color-properties>
 
