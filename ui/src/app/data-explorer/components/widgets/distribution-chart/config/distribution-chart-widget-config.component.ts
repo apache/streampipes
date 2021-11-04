@@ -18,16 +18,17 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { PieChartVisConfig, PieChartWidgetModel } from '../model/pie-chart-widget.model';
+import { DistributionChartVisConfig, DistributionChartWidgetModel } from '../model/distribution-chart-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-pie-chart-widget-config',
-  templateUrl: './pie-chart-widget-config.component.html',
-  styleUrls: ['./pie-chart-widget-config.component.scss']
+  selector: 'sp-data-explorer-distribution-chart-widget-config',
+  templateUrl: './distribution-chart-widget-config.component.html',
+  styleUrls: ['./distribution-chart-widget-config.component.scss']
 })
-export class PieWidgetConfigComponent extends BaseWidgetConfig<PieChartWidgetModel, PieChartVisConfig> implements OnInit {
+export class DistributionWidgetConfigComponent
+       extends BaseWidgetConfig<DistributionChartWidgetModel, DistributionChartVisConfig> implements OnInit {
 
   ngOnInit(): void {
     super.onInit();
@@ -38,14 +39,26 @@ export class PieWidgetConfigComponent extends BaseWidgetConfig<PieChartWidgetMod
     this.triggerDataRefresh();
   }
 
-  protected getWidgetType(): WidgetType {
-    return WidgetType.PieChart;
+  updateDisplayType(selectedType: string) {
+    this.currentlyConfiguredWidget.visualizationConfig.displayType = selectedType;
+    this.triggerDataRefresh();
   }
 
-  protected initWidgetConfig(): PieChartVisConfig {
+  updateRoundingValue(selectedType: number) {
+    this.currentlyConfiguredWidget.visualizationConfig.roundingValue = selectedType;
+    this.triggerDataRefresh();
+  }
+
+  protected getWidgetType(): WidgetType {
+    return WidgetType.DistributionChart;
+  }
+
+  protected initWidgetConfig(): DistributionChartVisConfig {
     return {
       forType: this.getWidgetType(),
-      selectedProperty: this.fieldProvider.nonNumericFields[0]
+      selectedProperty: this.fieldProvider.nonNumericFields[0],
+      displayType: 'histogram',
+      roundingValue: 0.1,
     };
   }
 }

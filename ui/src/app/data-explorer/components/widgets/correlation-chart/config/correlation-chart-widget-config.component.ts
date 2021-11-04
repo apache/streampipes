@@ -27,7 +27,8 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
   templateUrl: './correlation-chart-widget-config.component.html',
   styleUrls: ['./correlation-chart-widget-config.component.scss']
 })
-export class CorrelationWidgetConfigComponent extends BaseWidgetConfig<CorrelationChartWidgetModel, CorrelationChartVisConfig> implements OnInit {
+export class CorrelationWidgetConfigComponent
+       extends BaseWidgetConfig<CorrelationChartWidgetModel, CorrelationChartVisConfig> implements OnInit {
 
   ngOnInit(): void {
     super.onInit();

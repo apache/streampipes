@@ -23,9 +23,8 @@ import { HeatmapWidgetComponent } from '../components/widgets/heatmap/heatmap-wi
 import { TimeSeriesChartWidgetComponent } from '../components/widgets/time-series-chart/time-series-chart-widget.component';
 import { ImageWidgetComponent } from '../components/widgets/image/image-widget.component';
 import { IndicatorChartWidgetComponent } from '../components/widgets/indicator/indicator-chart-widget.component';
-import { HistogramChartWidgetComponent } from '../components/widgets/histogram/histogram-chart-widget.component';
 import { CorrelationChartWidgetComponent } from '../components/widgets/correlation-chart/correlation-chart-widget.component';
-import { PieChartWidgetComponent } from '../components/widgets/pie/pie-chart-widget.component';
+import { DistributionChartWidgetComponent } from '../components/widgets/distribution-chart/distribution-chart-widget.component';
 
 export enum WidgetType {
   Table,
@@ -34,9 +33,8 @@ export enum WidgetType {
   LineChart,
   Image,
   IndicatorChart,
-  HistogramChart,
   CorrelationChart,
-  PieChart
+  DistributionChart
 }
 
 export const WidgetTypeMap = new Map<number, IWidget>([
@@ -66,19 +64,14 @@ export const WidgetTypeMap = new Map<number, IWidget>([
     label: 'Indicator',
     componentClass: IndicatorChartWidgetComponent
   }],
-  [WidgetType.HistogramChart, {
-    id: 'histogram-chart',
-    label: 'Histogram',
-    componentClass: HistogramChartWidgetComponent
-  }],
   [WidgetType.CorrelationChart, {
     id: 'correlation-chart',
-    label: 'Correlation',
+    label: '2D Correlation',
     componentClass: CorrelationChartWidgetComponent
   }],
-  [WidgetType.PieChart, {
-    id: 'pie-chart',
-    label: 'Pie Chart',
-    componentClass: PieChartWidgetComponent
+  [WidgetType.DistributionChart, {
+    id: 'distribution-chart',
+    label: 'Distribution',
+    componentClass: DistributionChartWidgetComponent
   }],
 ]);

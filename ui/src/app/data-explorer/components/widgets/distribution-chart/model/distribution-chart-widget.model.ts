@@ -20,11 +20,13 @@ import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampip
 import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 
-export interface PieChartVisConfig extends DataExplorerVisConfig {
+export interface DistributionChartVisConfig extends DataExplorerVisConfig {
   selectedProperty: DataExplorerField;
+  displayType: string;
+  roundingValue: number;
 }
 
-export interface PieChartWidgetModel extends DataExplorerWidgetModel {
+export interface DistributionChartWidgetModel extends DataExplorerWidgetModel {
   dataConfig: DataExplorerDataConfig;
-  visualizationConfig: PieChartVisConfig;
+  visualizationConfig: DistributionChartVisConfig;
 }
