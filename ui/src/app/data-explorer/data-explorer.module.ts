@@ -80,11 +80,9 @@ import { ImageWidgetConfigComponent } from './components/widgets/image/config/im
 import { DatalakeRestService } from '../platform-services/apis/datalake-rest.service';
 import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
-import { HistogramChartWidgetComponent } from './components/widgets/histogram/histogram-chart-widget.component';
-import { HistogramWidgetConfigComponent } from './components/widgets/histogram/config/histogram-chart-widget-config.component';
-import { DensityChartWidgetComponent } from './components/widgets/density/density-chart-widget.component';
-import { PieChartWidgetComponent } from './components/widgets/pie/pie-chart-widget.component';
-import { PieWidgetConfigComponent } from './components/widgets/pie/config/pie-chart-widget-config.component';
+import { CorrelationChartWidgetComponent } from './components/widgets/correlation-chart/correlation-chart-widget.component';
+import { DistributionChartWidgetComponent } from './components/widgets/distribution-chart/distribution-chart-widget.component';
+import { DistributionWidgetConfigComponent } from './components/widgets/distribution-chart/config/distribution-chart-widget-config.component';
 import { DataViewQueryGeneratorService } from './services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from './services/data-explorer-field-provider-service';
 import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
@@ -95,7 +93,7 @@ import { DataExplorerVisualisationSettingsComponent } from './components/designe
 import { GroupSelectionPanelComponent } from './components/designer-panel/data-settings/group-selection-panel/group-selection-panel.component';
 import { WidgetDirective } from './components/widget/widget.directive';
 import { WidgetTypeService } from './services/widget-type.service';
-import { DensityWidgetConfigComponent } from './components/widgets/density/config/density-chart-widget-config.component';
+import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
 import { TimeSelectionService } from './services/time-selection.service';
 import { NgxEchartsModule } from 'ngx-echarts';
 
@@ -163,14 +161,12 @@ export const MY_NATIVE_FORMATS = {
     DataExplorerEditDataViewDialogComponent,
     DataExplorerWidgetAppearanceSettingsComponent,
     DataExplorerWidgetDataSettingsComponent,
-    DensityChartWidgetComponent,
-    DensityWidgetConfigComponent,
+    CorrelationChartWidgetComponent,
+    CorrelationWidgetConfigComponent,
     FieldSelectionPanelComponent,
     FieldSelectionComponent,
     FilterSelectionPanelComponent,
     GroupConfigurationComponent,
-    HistogramChartWidgetComponent,
-    HistogramWidgetConfigComponent,
     ImageWidgetComponent,
     ImageWidgetConfigComponent,
     IndicatorChartWidgetComponent,
@@ -179,8 +175,8 @@ export const MY_NATIVE_FORMATS = {
     TimeSeriesChartWidgetConfigComponent,
     LoadDataSpinnerComponent,
     NoDataInDateRangeComponent,
-    PieChartWidgetComponent,
-    PieWidgetConfigComponent,
+    DistributionChartWidgetComponent,
+    DistributionWidgetConfigComponent,
     SelectPropertiesComponent,
     SelectColorPropertiesComponent,
     SelectPropertyComponent,

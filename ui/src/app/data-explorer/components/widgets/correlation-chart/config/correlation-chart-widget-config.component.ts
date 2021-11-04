@@ -18,16 +18,17 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
-import { DensityChartVisConfig, DensityChartWidgetModel } from '../model/density-chart-widget.model';
+import { CorrelationChartVisConfig, CorrelationChartWidgetModel } from '../model/correlation-chart-widget.model';
 import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({
-  selector: 'sp-data-explorer-density-chart-widget-config',
-  templateUrl: './density-chart-widget-config.component.html',
-  styleUrls: ['./density-chart-widget-config.component.scss']
+  selector: 'sp-data-explorer-correlation-chart-widget-config',
+  templateUrl: './correlation-chart-widget-config.component.html',
+  styleUrls: ['./correlation-chart-widget-config.component.scss']
 })
-export class DensityWidgetConfigComponent extends BaseWidgetConfig<DensityChartWidgetModel, DensityChartVisConfig> implements OnInit {
+export class CorrelationWidgetConfigComponent
+       extends BaseWidgetConfig<CorrelationChartWidgetModel, CorrelationChartVisConfig> implements OnInit {
 
   ngOnInit(): void {
     super.onInit();
@@ -43,15 +44,21 @@ export class DensityWidgetConfigComponent extends BaseWidgetConfig<DensityChartW
     this.triggerDataRefresh();
   }
 
-  protected getWidgetType(): WidgetType {
-    return WidgetType.DensityChart;
+  updateDisplayType(selectedType: string) {
+    this.currentlyConfiguredWidget.visualizationConfig.displayType = selectedType;
+    this.triggerDataRefresh();
   }
 
-  protected initWidgetConfig(): DensityChartVisConfig {
+  protected getWidgetType(): WidgetType {
+    return WidgetType.CorrelationChart;
+  }
+
+  protected initWidgetConfig(): CorrelationChartVisConfig {
     return {
       forType: this.getWidgetType(),
       firstField: this.fieldProvider.numericFields[0],
-      secondField: this.fieldProvider.numericFields[1]
+      secondField: this.fieldProvider.numericFields[1],
+      displayType: 'Scatter',
     };
   }
 
