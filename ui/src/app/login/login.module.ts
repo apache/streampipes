@@ -35,6 +35,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LoginService } from './services/login.service';
 import { AppRoutingModule } from '../app-routing.module';
+import { AuthBoxComponent } from './components/auth-box/auth-box.component';
+import { RestorePasswordComponent } from './components/restore-password/restore-password.component';
+import { RegisterComponent } from './components/register/register.component';
 
 @NgModule({
   imports: [
@@ -55,7 +58,10 @@ import { AppRoutingModule } from '../app-routing.module';
     MatProgressBarModule,
   ],
   declarations: [
+    AuthBoxComponent,
     LoginComponent,
+    RegisterComponent,
+    RestorePasswordComponent,
     SetupComponent,
     StartupComponent,
   ],

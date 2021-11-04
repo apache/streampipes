@@ -78,7 +78,6 @@ public class JwtTokenProvider {
 															Set<String> roles) {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUsername(localUser.getUsername());
-		userInfo.setEmail(localUser.getEmail());
 		userInfo.setDisplayName(localUser.getUsername());
 		userInfo.setShowTutorial(!localUser.isHideTutorial());
 		userInfo.setRoles(roles);

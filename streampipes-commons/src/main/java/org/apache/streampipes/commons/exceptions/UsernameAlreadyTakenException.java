@@ -15,52 +15,18 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.commons.exceptions;
 
-package org.apache.streampipes.model.client.user;
+public class UsernameAlreadyTakenException extends SpException{
+  public UsernameAlreadyTakenException(String message) {
+    super(message);
+  }
 
-import java.util.List;
+  public UsernameAlreadyTakenException(Throwable cause) {
+    super(cause);
+  }
 
-public class RegistrationData {
-
-	private String username;
-	private String password;
-	private Role role;
-	
-	private List<String> roles;
-	
-	public RegistrationData()
-	{
-		
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public List<String> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role selectedRole) {
-		this.role = selectedRole;
-	}
-	
-	
+  public UsernameAlreadyTakenException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

@@ -17,23 +17,28 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.guard';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+  UrlTree
+} from '@angular/router';
+import { LoginService } from '../login/services/login.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
-export class AlreadyConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
+export class RegistrationAllowedCanActivateGuard implements CanActivate {
 
-  constructor(router: Router,
-              authService: AuthService) {
-    super(router, authService);
+  constructor(private router: Router,
+              private loginService: LoginService) {
   }
 
-  onIsConfigured(): boolean | UrlTree {
-    return this.router.parseUrl('login');
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return this.loginService.fetchLoginSettings().pipe(map(config => {
+      return config.allowSelfRegistration ? true : this.router.parseUrl('register');
+    }));
   }
 
-  onIsUnconfigured(): boolean | UrlTree {
-    return true;
-  }
 }

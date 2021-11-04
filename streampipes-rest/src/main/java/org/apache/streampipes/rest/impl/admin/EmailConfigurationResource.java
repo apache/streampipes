@@ -60,7 +60,7 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
     try {
       new MailTester().sendTestMail(config);
       return ok();
-    } catch (MailException e) {
+    } catch (MailException | IllegalArgumentException e) {
       return badRequest(e);
     }
   }

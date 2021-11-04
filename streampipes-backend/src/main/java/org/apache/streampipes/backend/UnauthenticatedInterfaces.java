@@ -26,6 +26,8 @@ public class UnauthenticatedInterfaces {
     return Arrays.asList(
             "/api/v2/setup/configured",
             "/api/v2/auth/login",
+            "/api/v2/auth/register",
+            "/api/v2/auth/settings",
             "/api/v2/pe/*/assets/icon",
             "/api/v2/connect/master/description/*/assets/icon",
             "/api/v2/connect/*/master/administration/**",

@@ -101,10 +101,23 @@
                     <i class="material-icons">save</i><span>&nbsp;Save</span>
                 </button>
                 <button mat-button mat-raised-button class="mat-basic" (click)="sendTestMail()" style="margin-right:10px;"
-                        [disabled]="!parentForm.valid"
+                        [disabled]="!parentForm.valid || sendingTestMailInProgress"
                         data-cy="sp-element-email-config-test">
                     <span>Send Test Mail</span>
                 </button>
+                </div>
+                <div fxLayout="column" *ngIf="attemptSendingTestMail">
+                    <div fxLayout="row" *ngIf="sendingTestMailInProgress">
+                        <mat-progress-spinner diameter="10"></mat-progress-spinner>
+                        <h5>Trying to send test mail test mail...</h5>
+                    </div>
+                    <div fxLayout="row">
+                        <h5 *ngIf="!sendingTestMailInProgress && sendingTestMailSuccess">Success</h5>
+                        <div fxLayout="column" *ngIf="!sendingTestMailInProgress && !sendingTestMailSuccess">
+                            Failure
+                            <h5>{{sendingEmailErrorMessage}}</h5>
+                        </div>
+                    </div>
                 </div>
             </form>
         </sp-split-section>

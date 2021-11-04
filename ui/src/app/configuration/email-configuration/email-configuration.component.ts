@@ -34,6 +34,11 @@ export class EmailConfigurationComponent implements OnInit {
   formReady = false;
   defaultRecipient = '';
 
+  attemptSendingTestMail = false;
+  sendingTestMailInProgress = false;
+  sendingTestMailSuccess = false;
+  sendingEmailErrorMessage = '';
+
   constructor(private fb: FormBuilder,
               private mailConfigService: MailConfigService) {}
 
@@ -102,11 +107,17 @@ export class EmailConfigurationComponent implements OnInit {
   }
 
   sendTestMail() {
+    this.sendingEmailErrorMessage = '';
+    this.attemptSendingTestMail = true;
+    this.sendingTestMailInProgress = true;
     this.mailConfig.testRecipientAddress = this.defaultRecipient;
     this.mailConfigService.sendTestMail(this.mailConfig).subscribe(result => {
-      console.log(result);
+      this.sendingTestMailInProgress = false;
+      this.sendingTestMailSuccess = true;
     }, error => {
-
+      this.sendingTestMailInProgress = false;
+      this.sendingTestMailSuccess = false;
+      this.sendingEmailErrorMessage = error.error.localizedMessage;
     });
   }
 

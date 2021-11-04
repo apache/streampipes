@@ -20,7 +20,6 @@ package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
-import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
@@ -60,7 +59,7 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
   }
 
   protected UserService getUserService() {
-    return UserManagementService.getUserService();
+    return new UserService(getUserStorage());
   }
 
   protected IVisualizationStorage getVisualizationStorage() {

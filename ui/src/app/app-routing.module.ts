@@ -34,6 +34,10 @@ import {ProfileComponent} from "./profile/profile.component";
 import {ApidocsComponent} from "./apidocs/apidocs.component";
 import { PageName } from './_enums/page-name.enum';
 import { PageAuthGuard } from './_guards/page-auth.can-active.guard';
+import { RegisterComponent } from './login/components/register/register.component';
+import { RestorePasswordComponent } from './login/components/restore-password/restore-password.component';
+import { RegistrationAllowedCanActivateGuard } from './_guards/registration-allowed.can-activate.guard';
+import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-password-allowed.can-activate.guard';
 
 import { EditorComponent } from './editor/editor.component';
 import { PipelinesComponent } from './pipelines/pipelines.component';
@@ -49,7 +53,8 @@ const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard],
   data: {animation: 'LoginPage'}},
-  { path: 'setup', component: SetupComponent, canActivate: [AlreadyConfiguredCanActivateGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
+  { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
@@ -77,6 +82,8 @@ const routes: Routes = [
       AuthCanActivateChildrenGuard,
       AlreadyConfiguredCanActivateGuard,
       ConfiguredCanActivateGuard,
+      RegistrationAllowedCanActivateGuard,
+      RestorePasswordAllowedCanActivateGuard,
       PageAuthGuard
   ]
 })

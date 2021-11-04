@@ -17,12 +17,19 @@
  */
 package org.apache.streampipes.config.backend.model;
 
+import java.util.List;
+
 public class GeneralConfig {
 
   private String protocol;
   private String hostname;
   private int port;
   private boolean configured;
+
+  private boolean allowSelfRegistration;
+  private boolean allowPasswordRecovery;
+
+  private List<String> defaultUserRoles;
 
   public GeneralConfig() {
   }
@@ -63,5 +70,29 @@ public class GeneralConfig {
 
   public void setConfigured(boolean configured) {
     this.configured = configured;
+  }
+
+  public boolean isAllowSelfRegistration() {
+    return allowSelfRegistration;
+  }
+
+  public void setAllowSelfRegistration(boolean allowSelfRegistration) {
+    this.allowSelfRegistration = allowSelfRegistration;
+  }
+
+  public boolean isAllowPasswordRecovery() {
+    return allowPasswordRecovery;
+  }
+
+  public void setAllowPasswordRecovery(boolean allowPasswordRecovery) {
+    this.allowPasswordRecovery = allowPasswordRecovery;
+  }
+
+  public List<String> getDefaultUserRoles() {
+    return defaultUserRoles;
+  }
+
+  public void setDefaultUserRoles(List<String> defaultUserRoles) {
+    this.defaultUserRoles = defaultUserRoles;
   }
 }

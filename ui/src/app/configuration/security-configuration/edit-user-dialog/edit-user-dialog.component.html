@@ -22,9 +22,15 @@
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
                     <span class="general-options-header">Basics</span>
-                    <mat-form-field color="accent">
+                    <mat-form-field color="accent" *ngIf="!isUserAccount">
                         <mat-label>Username</mat-label>
                         <input formControlName="username" fxFlex
+                               matInput
+                               required>
+                    </mat-form-field>
+                    <mat-form-field color="accent" *ngIf="isUserAccount">
+                        <mat-label>Email</mat-label>
+                        <input formControlName="username" fxFlex type="email"
                                matInput
                                required>
                     </mat-form-field>
@@ -34,12 +40,7 @@
                                matInput
                                required>
                     </mat-form-field>
-                    <mat-form-field color="accent" *ngIf="isUserAccount">
-                        <mat-label>Email</mat-label>
-                        <input formControlName="email" fxFlex
-                               matInput
-                               required>
-                    </mat-form-field>
+
                 </div>
                 <div fxLayout="column" class="general-options-panel" *ngIf="!editMode && isUserAccount">
                     <span class="general-options-header">Password</span>

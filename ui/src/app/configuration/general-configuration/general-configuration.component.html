@@ -18,11 +18,13 @@
 
 <div fxLayout="column" class="page-container-padding">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="formReady">
-        <sp-split-section title="Host and Port"
-                          subtitle="Basic accessibility settings">
-            <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+        <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
+            <sp-split-section title="Host and Port"
+                              subtitle="Basic accessibility settings">
                 <div class="subsection-title">Host and Port</div>
-                <div class="warning mb-10" *ngIf="!generalConfig.configured">These are default values - to use features such as email you need to store these values once.</div>
+                <div class="warning mb-10" *ngIf="!generalConfig.configured">These are default values - to use features
+                    such as email you need to store these values once.
+                </div>
                 <div fxLayout="column" fxFlex="100">
                     <div fxLayout="row">
                         <div>
@@ -54,8 +56,36 @@
                         <i class="material-icons">save</i><span>&nbsp;Save</span>
                     </button>
                 </div>
-            </form>
-        </sp-split-section>
+            </sp-split-section>
+            <mat-divider></mat-divider>
+            <sp-split-section title="Registration"
+                              subtitle="Registration process">
+                <div class="warning mb-10" *ngIf="!generalConfig.configured || !mailConfig.emailConfigured">Requires valid
+                    mail server settings and basic host settings.
+                </div>
+                <mat-checkbox [disabled]="!generalConfig.configured || !mailConfig.emailConfigured"
+                              formControlName="allowSelfRegistration">Allow self-registration
+                </mat-checkbox>
+                <div *ngIf="generalConfig.allowSelfRegistration" class="mt-10 mb-10">
+                    <h5>Default roles for new users</h5>
+                    <mat-select formControlName="defaultUserRoles" [multiple]="true">
+                        <mat-option *ngFor="let role of availableRoles" [value]="role.role">{{role.roleTitle}}</mat-option>
+                    </mat-select>
+                </div>
+                <mat-checkbox [disabled]="!generalConfig.configured || !mailConfig.emailConfigured"
+                              formControlName="allowPasswordRecovery">Allow self-service password recovery
+                </mat-checkbox>
+
+                <div class="mt-10">
+                    <button mat-button mat-raised-button color="accent" (click)="updateConfig()"
+                            style="margin-right:10px;"
+                            [disabled]="!generalConfig.configured || !mailConfig.emailConfigured"
+                            data-cy="sp-element-general-registration-config-save">
+                        <i class="material-icons">save</i><span>&nbsp;Save</span>
+                    </button>
+                </div>
+            </sp-split-section>
+        </form>
     </div>
-    <mat-divider></mat-divider>
+
 </div>

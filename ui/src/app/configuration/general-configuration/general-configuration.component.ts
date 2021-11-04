@@ -20,6 +20,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GeneralConfigService } from '../../platform-services/apis/general-config.service';
 import { GeneralConfigModel } from '../../platform-services/model/general-config.model';
+import { MailConfigService } from '../../platform-services/apis/mail-config.service';
+import { zip } from 'rxjs';
+import { EmailConfig } from '../../platform-services/model/email-config.model';
+import { AvailableRolesService } from '../../services/available-roles.service';
+import { RoleDescription } from '../../_models/auth.model';
+import { UserRole } from '../../_enums/user-role.enum';
 
 @Component({
   selector: 'sp-general-configuration',
@@ -32,31 +38,47 @@ export class GeneralConfigurationComponent implements OnInit {
   formReady = false;
 
   generalConfig: GeneralConfigModel;
+  mailConfig: EmailConfig;
+
+  availableRoles: RoleDescription[];
 
   constructor(private fb: FormBuilder,
-              private generalConfigService: GeneralConfigService) {}
+              private generalConfigService: GeneralConfigService,
+              private mailConfigService: MailConfigService,
+              private availableRolesService: AvailableRolesService) {}
 
   ngOnInit(): void {
-    this.generalConfigService.getGeneralConfig().subscribe(config => {
-      if (config.configured) {
-        this.generalConfig = config;
+    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== UserRole.ROLE_ADMIN);
+    zip(this.generalConfigService.getGeneralConfig(), this.mailConfigService.getMailConfig()).subscribe(configs => {
+      if (configs[0].configured) {
+        this.generalConfig = configs[0];
       } else {
         this.generalConfig = {
           configured: false,
           hostname: window.location.hostname,
           port: window.location.port as unknown as number,
-          protocol: window.location.protocol.replace(':', '') as unknown as 'http' | 'https'
+          protocol: window.location.protocol.replace(':', '') as unknown as 'http' | 'https',
+          allowSelfRegistration: false,
+          allowPasswordRecovery: false,
+          defaultUserRoles: [UserRole.ROLE_PIPELINE_USER]
         };
       }
+      this.mailConfig = configs[1];
       this.parentForm = this.fb.group({});
       this.parentForm.addControl('protocol', new FormControl(this.generalConfig.protocol, Validators.required));
       this.parentForm.addControl('port', new FormControl(this.generalConfig.port, Validators.required));
       this.parentForm.addControl('hostname', new FormControl(this.generalConfig.hostname, Validators.required));
-
+      this.parentForm.addControl('allowSelfRegistration', new FormControl(this.generalConfig.allowSelfRegistration));
+      this.parentForm.addControl('allowPasswordRecovery', new FormControl(this.generalConfig.allowPasswordRecovery));
+      this.parentForm.addControl('defaultUserRoles', new FormControl([UserRole.ROLE_PIPELINE_USER], Validators.required));
       this.parentForm.valueChanges.subscribe(v => {
         this.generalConfig.protocol = v.protocol;
         this.generalConfig.port = v.port;
         this.generalConfig.hostname = v.hostname;
+        this.generalConfig.allowPasswordRecovery = v.allowPasswordRecovery;
+        this.generalConfig.allowSelfRegistration = v.allowSelfRegistration;
+        this.generalConfig.defaultUserRoles = v.defaultUserRoles.map(r => UserRole[r]);
+        console.log(this.generalConfig);
       });
 
       this.formReady = true;

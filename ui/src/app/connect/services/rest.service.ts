@@ -45,7 +45,7 @@ export class RestService {
   }
 
   addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
-    adapter.userName = this.authService.getCurrentUser().email;
+    adapter.userName = this.authService.getCurrentUser().username;
     const promise = new Promise<Message>((resolve, reject) => {
       this.http
         .post(

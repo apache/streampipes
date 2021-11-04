@@ -16,16 +16,23 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 import { Observable } from 'rxjs';
+import { LoginModel } from '../components/login/login.model';
+import { map } from 'rxjs/operators';
+import { RegistrationModel } from '../components/register/registration.model';
 
 @Injectable()
 export class LoginService {
 
   constructor(private http: HttpClient,
               private platformServicesCommons: PlatformServicesCommons) {
+  }
+
+  fetchLoginSettings(): Observable<LoginModel> {
+    return this.http.get(`${this.platformServicesCommons.apiBasePath}/auth/settings`).pipe(map(res => res as LoginModel));
   }
 
   login(credentials): Observable<any> {
@@ -41,4 +48,14 @@ export class LoginService {
   setupInstall(setup, installationStep): Observable<any> {
     return this.http.post(this.platformServicesCommons.apiBasePath + '/setup/install/' + installationStep, setup);
   }
+
+  registerUser(registrationData: RegistrationModel) {
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/auth/register', registrationData);
+  }
+
+  sendRestorePasswordLink(email: string): Observable<any> {
+    return this.http.post(`${this.platformServicesCommons.apiBasePath}/auth/restore/${email}`, {});
+  }
+
+
 }

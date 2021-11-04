@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.pipeline;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.permission.PermissionManager;
-import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -40,7 +40,7 @@ public class PipelineManager {
      * @return all pipelines
      */
     public static List<Pipeline> getOwnPipelines(String username) {
-        return UserManagementService.getUserService().getOwnPipelines(username);
+        return new UserService(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI()).getOwnPipelines(username);
     }
 
     /**

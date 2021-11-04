@@ -50,7 +50,7 @@ export class IconbarComponent extends BaseNavigationComponent implements OnInit 
     const passcode = 'admin';
     const websocketProtocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
     const brokerUrl = websocketProtocol + '://' + window.location.hostname + ':' + window.location.port + '/streampipes/ws';
-    const inputTopic = '/topic/org.apache.streampipes.notifications.' + this.authService.getCurrentUser().email;
+    const inputTopic = '/topic/org.apache.streampipes.notifications.' + this.authService.getCurrentUser().username;
 
     const stompClient = new Client({
       brokerURL: brokerUrl,

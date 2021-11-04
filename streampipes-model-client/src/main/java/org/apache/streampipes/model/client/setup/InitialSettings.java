@@ -20,7 +20,7 @@ package org.apache.streampipes.model.client.setup;
 
 public class InitialSettings {
 
-	private String adminUser;
+	private String adminEmail;
 	private String adminPassword;
 	private String initialServiceAccountName;
 	private String initialServiceAccountSecret;
@@ -46,12 +46,12 @@ public class InitialSettings {
 		this.installPipelineElements = installPipelineElements;
 	}
 
-	public String getAdminUser() {
-		return adminUser;
+	public String getAdminEmail() {
+		return adminEmail;
 	}
 
-	public void setAdminUser(String adminUser) {
-		this.adminUser = adminUser;
+	public void setAdminEmail(String adminEmail) {
+		this.adminEmail = adminEmail;
 	}
 
 	public String getInitialServiceAccountName() {

@@ -27,7 +27,6 @@ import java.util.Set;
 @TsModel
 public class UserAccount extends Principal {
 
-	protected String email;
 	protected String fullName;
 	protected String password;
 
@@ -60,14 +59,6 @@ public class UserAccount extends Principal {
 		this.preferredDataProcessors = new ArrayList<>();
 		this.preferredDataSinks = new ArrayList<>();
 		this.preferredDataStreams = new ArrayList<>();
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public void setPassword(String password) {

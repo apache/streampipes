@@ -80,7 +80,6 @@ export class EditUserDialogComponent implements OnInit {
     this.parentForm.addControl('accountEnabled', new FormControl(this.clonedUser.accountEnabled));
     this.parentForm.addControl('accountLocked', new FormControl(this.clonedUser.accountLocked));
     if (this.clonedUser instanceof UserAccount) {
-      this.parentForm.addControl('email', new FormControl(this.clonedUser.email));
       this.parentForm.addControl('fullName', new FormControl(this.clonedUser.fullName));
     } else {
       this.parentForm.addControl('clientSecret', new FormControl(this.clonedUser.clientSecret));
@@ -97,7 +96,6 @@ export class EditUserDialogComponent implements OnInit {
       this.clonedUser.accountLocked = v.accountLocked;
       this.clonedUser.accountEnabled = v.accountEnabled;
       if (this.clonedUser instanceof UserAccount) {
-        this.clonedUser.email = v.email;
         this.clonedUser.fullName = v.fullName;
         if (!this.editMode) {
           this.clonedUser.password = v.password;

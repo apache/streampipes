@@ -16,51 +16,22 @@
  *
  */
 
-package org.apache.streampipes.model.client.user;
+import { Component, OnInit } from '@angular/core';
 
-import java.util.List;
+@Component({
+  selector: 'sp-auth-box',
+  templateUrl: './auth-box.component.html',
+  styleUrls: ['./auth-box.component.scss']
+})
+export class AuthBoxComponent implements OnInit {
 
-public class RegistrationData {
 
-	private String username;
-	private String password;
-	private Role role;
-	
-	private List<String> roles;
-	
-	public RegistrationData()
-	{
-		
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  ngOnInit(): void {
+  }
 
-	public List<String> getRoles() {
-		return roles;
-	}
+  openDocumentation() {
+    window.open('https://streampipes.apache.org/docs', '_blank');
+  }
 
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role selectedRole) {
-		this.role = selectedRole;
-	}
-	
-	
 }

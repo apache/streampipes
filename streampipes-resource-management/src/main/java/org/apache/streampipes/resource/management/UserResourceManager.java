@@ -16,8 +16,9 @@
  *
  */
 
-package org.apache.streampipes.manager.storage;
+package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.model.client.user.RegistrationData;
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.UserAccount;
@@ -27,17 +28,28 @@ import org.apache.streampipes.user.management.util.PasswordUtil;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class UserManagementService {
+public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
-  public Boolean registerUser(RegistrationData data, Set<Role> roles) {
+  public UserResourceManager() {
+    super(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
+  }
+
+  public boolean registerUser(RegistrationData data) throws UsernameAlreadyTakenException {
 
     try {
+      if (db.checkUser(data.getUsername())) {
+        throw new UsernameAlreadyTakenException("Username already taken");
+      }
       String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
-      UserAccount user = UserAccount.from(data.getEmail(), encryptedPassword, roles);
+      List<Role> roles = data.getRoles().stream().map(Role::valueOf).collect(Collectors.toList());
+      UserAccount user = UserAccount.from(data.getUsername(), encryptedPassword, new HashSet<>(roles));
+      user.setUsername(data.getUsername());
       user.setPassword(encryptedPassword);
-      getUserStorage().storeUser(user);
+      db.storeUser(user);
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       return false;
     }
@@ -52,12 +64,12 @@ public class UserManagementService {
     userService.updateUser(user);
   }
 
-  public static UserService getUserService() {
-    return new UserService(getUserStorage());
-  }
-
   public static IUserStorage getUserStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
   }
 
+  public void sendPasswordRecoveryLink(String username) {
+    // send a password recovery link to the user
+
+  }
 }

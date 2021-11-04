@@ -24,7 +24,7 @@ import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
 import org.apache.streampipes.manager.matching.InvocationGraphBuilder;
 import org.apache.streampipes.manager.matching.v2.StreamMatch;
-import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.util.PipelineVerificationUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
@@ -153,7 +153,7 @@ public class ElementRecommender {
   }
 
   private List<ConsumableStreamPipesEntity> getAllSepas() {
-    List<String> userObjects = UserManagementService.getUserService().getOwnSepaUris(email);
+    List<String> userObjects = getUserService().getOwnSepaUris(email);
     return getTripleStore()
             .getAllDataProcessors()
             .stream()
@@ -164,7 +164,7 @@ public class ElementRecommender {
 
 
   private List<ConsumableStreamPipesEntity> getAllSecs() {
-    List<String> userObjects = UserManagementService.getUserService().getOwnActionUris(email);
+    List<String> userObjects = getUserService().getOwnActionUris(email);
     return getTripleStore()
             .getAllDataSinks()
             .stream()
@@ -228,5 +228,9 @@ public class ElementRecommender {
         return Optional.empty();
       }
     }
+  }
+
+  private UserService getUserService() {
+    return new UserService(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
   }
 }

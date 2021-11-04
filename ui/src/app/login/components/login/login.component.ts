@@ -17,33 +17,54 @@
  */
 
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { LoginModel } from './login.model';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'login',
-    templateUrl: './login.component.html'
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
-    loading: any;
-    authenticationFailed: any;
+    parentForm: FormGroup;
+    configReady = false;
+    loading: boolean;
+    authenticationFailed: boolean;
     credentials: any;
+
+    loginSettings: LoginModel;
 
     constructor(private loginService: LoginService,
                 private router: Router,
                 private shepherdService: ShepherdService,
-                private authService: AuthService) {
+                private authService: AuthService,
+                private fb: FormBuilder) {
         this.loading = false;
         this.authenticationFailed = false;
         this.credentials = {};
     }
 
-    openDocumentation() {
-       window.open('https://streampipes.apache.org/docs', '_blank');
+    ngOnInit() {
+      this.loginService.fetchLoginSettings().subscribe(result => {
+        this.loginSettings = result;
+        this.configReady = true;
+        this.parentForm = this.fb.group({});
+        this.parentForm.addControl('username', new FormControl('', Validators.required));
+        this.parentForm.addControl('password', new FormControl('', Validators.required));
+
+        this.parentForm.valueChanges.subscribe(v => {
+          this.credentials.username = v.username;
+          this.credentials.password = v.password;
+        });
+      });
     }
+
+
 
     logIn() {
         this.authenticationFailed = false;

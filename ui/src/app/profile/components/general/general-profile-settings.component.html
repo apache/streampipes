@@ -21,12 +21,8 @@
         <sp-split-section title="Main Settings" subtitle="Manage your basic profile settings here.">
             <mat-form-field fxFlex>
                 <mat-label>Email</mat-label>
-                <input [(ngModel)]="userData.email" matInput type="email" name="email" disabled/>
+                <input [(ngModel)]="userData.username" matInput type="email" name="email" disabled/>
                 <mat-hint>Your mail address can't be changed currently.</mat-hint>
-            </mat-form-field>
-            <mat-form-field fxFlex>
-                <mat-label>Username</mat-label>
-                <input [(ngModel)]="userData.username" matInput/>
             </mat-form-field>
             <mat-form-field fxFlex>
                 <mat-label>Full Name</mat-label>

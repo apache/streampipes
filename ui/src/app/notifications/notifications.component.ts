@@ -70,7 +70,7 @@ export class NotificationsComponent implements OnInit, OnDestroy {
                 private notificationCountService: NotificationCountService) {
         this.notifications = [];
         this.unreadNotifications = [];
-        this.notificationTopic = NotificationsComponent.NOTIFICATION_TOPIC_PREFIX + this.authService.getCurrentUser().email;
+        this.notificationTopic = NotificationsComponent.NOTIFICATION_TOPIC_PREFIX + this.authService.getCurrentUser().username;
     }
 
     ngOnInit() {

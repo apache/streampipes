@@ -65,8 +65,9 @@ public enum NotificationType {
 	INSTALLATION_SUCCESSFUL("Installation successful", ""), 
 	
 	PROPERTY_FILE_WRITTEN("Writing properties file...", ""), 
-	ADMIN_USER_CREATED("Creating admin user...", "");
+	ADMIN_USER_CREATED("Creating admin user...", ""),
 
+	PASSWORD_RECOVERY_LINK_SENT("Check your mail inbox for instructions how to reset your password", "");
 
 	private final String title;
 	private final String description;

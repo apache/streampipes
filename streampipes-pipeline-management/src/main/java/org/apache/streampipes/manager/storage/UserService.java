@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.storage;
 
-import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.INoSqlStorage;
@@ -44,69 +43,6 @@ public class UserService {
             .collect(Collectors.toList());
   }
 
-  public Pipeline getPipeline(String username, String pipelineId) throws ElementNotFoundException {
-    return StorageDispatcher
-            .INSTANCE
-            .getNoSqlStore()
-            .getPipelineStorageAPI()
-            .getAllPipelines()
-            .stream()
-            .filter(p -> p.getPipelineId().equals(pipelineId))
-            .findFirst()
-            .orElseThrow(ElementNotFoundException::new);
-  }
-
-  /**
-   * Own Elements
-   */
-
-  public void addOwnPipeline(String username, Pipeline pipeline) {
-
-    if (!checkUser(username)) {
-      return;
-    }
-//        User user = userStorage.getUser(username);
-//        user.addOwnPipeline(pipeline);
-//        userStorage.updateUser(user);
-    StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().storePipeline(pipeline);
-  }
-
-  public void addOwnSource(String username, String elementId, boolean publicElement) {
-    if (!checkUser(username)) {
-      return;
-    }
-    Principal user = getPrincipal(username);
-    //user.addOwnSource(elementId, publicElement);
-    userStorage.updateUser(user);
-  }
-
-  public void addOwnAction(String username, String elementId, boolean publicElement) {
-    if (!checkUser(username)) {
-      return;
-    }
-    Principal user = getPrincipal(username);
-    //user.addOwnAction(elementId, publicElement);
-    userStorage.updateUser(user);
-  }
-
-  public void addOwnSepa(String username, String elementId, boolean publicElement) {
-    if (!checkUser(username)) {
-      return;
-    }
-    Principal user = getPrincipal(username);
-    //user.addOwnSepa(elementId, publicElement);
-    userStorage.updateUser(user);
-  }
-
-  public void deleteOwnAction(String username, String actionId) {
-    if (checkUser(username)) {
-      Principal user = getPrincipal(username);
-      //user.getOwnActions().removeIf(a -> a.getElementId().equals(actionId));
-      userStorage.updateUser(user);
-      //TODO remove actions from other users
-    }
-  }
-
   public void deleteOwnSource(String username, String sourceId) {
     if (checkUser(username)) {
       Principal user = getPrincipal(username);
@@ -114,15 +50,6 @@ public class UserService {
       userStorage.updateUser(user);
     }
   }
-
-  public void deleteOwnSepa(String username, String sepaId) {
-    if (checkUser(username)) {
-      Principal user = getPrincipal(username);
-      //user.getOwnSepas().removeIf(a -> a.getElementId().equals(sepaId));
-      userStorage.updateUser(user);
-    }
-  }
-
 
   /**
    * Get actions/sepas/sources

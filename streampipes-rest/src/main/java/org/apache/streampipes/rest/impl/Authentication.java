@@ -18,7 +18,9 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
+import org.apache.streampipes.config.backend.BackendConfig;
+import org.apache.streampipes.config.backend.model.GeneralConfig;
 import org.apache.streampipes.model.client.user.*;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
@@ -38,8 +40,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("/v2/auth")
 public class Authentication extends AbstractRestResource {
@@ -82,15 +84,42 @@ public class Authentication extends AbstractRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response doRegister(RegistrationData data) {
-
-    Set<Role> roles = new HashSet<>();
-    roles.add(data.getRole());
-    if (getUserStorage().emailExists(data.getEmail())) {
-      return ok(Notifications.error("This email address already exists. Please choose another address."));
-    } else {
-      new UserManagementService().registerUser(data, roles);
-      return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
+    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
+    if (!config.isAllowSelfRegistration()) {
+      throw new WebApplicationException(Response.Status.FORBIDDEN);
     }
+    data.setRoles(config.getDefaultUserRoles());
+    try {
+      getSpResourceManager().manageUsers().registerUser(data);
+      return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
+    } catch (UsernameAlreadyTakenException e) {
+      return badRequest(Notifications.error("This email address already exists. Please choose another address."));
+    }
+  }
+
+  @Path("restore/{username}")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response sendPasswordRecoveryLink(@PathParam("username") String username) {
+    try {
+      getSpResourceManager().manageUsers().sendPasswordRecoveryLink(username);
+      return ok(new SuccessMessage(NotificationType.PASSWORD_RECOVERY_LINK_SENT.uiNotification()));
+    } catch (Exception e) {
+      return badRequest(Notifications.error("The username you entered is not registered."));
+    }
+  }
+
+  @Path("settings")
+  @GET
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAuthSettings() {
+    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
+    Map<String, Object> response = new HashMap<>();
+    response.put("allowSelfRegistration", config.isAllowSelfRegistration());
+    response.put("allowPasswordRecovery", config.isAllowPasswordRecovery());
+
+    return ok(response);
   }
 
   private Response processAuth(org.springframework.security.core.Authentication auth) {

@@ -54,7 +54,7 @@ public class AutoInstallation {
   private InitialSettings collectInitialSettings() {
     InitialSettings settings = new InitialSettings();
     settings.setInstallPipelineElements(autoInstallPipelineElements());
-    settings.setAdminUser(findAdminUser());
+    settings.setAdminEmail(findAdminUser());
     settings.setAdminPassword(findAdminPassword());
     settings.setInitialServiceAccountName(findServiceAccountName());
     settings.setInitialServiceAccountSecret(findServiceAccountSecret());
@@ -86,8 +86,8 @@ public class AutoInstallation {
 
   private String findAdminUser() {
     return getStringOrDefault(
-            Envs.SP_INITIAL_ADMIN_USER.getEnvVariableName(),
-            InstallationConstants.INITIAL_ADMIN_USER_DEFAULT
+            Envs.SP_INITIAL_ADMIN_EMAIL.getEnvVariableName(),
+            InstallationConstants.INITIAL_ADMIN_EMAIL_DEFAULT
     );
   }
 

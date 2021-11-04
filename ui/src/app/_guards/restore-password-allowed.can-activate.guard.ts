@@ -16,51 +16,27 @@
  *
  */
 
-package org.apache.streampipes.model.client.user;
+import { Injectable } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+  UrlTree
+} from '@angular/router';
+import { LoginService } from '../login/services/login.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import java.util.List;
+@Injectable()
+export class RestorePasswordAllowedCanActivateGuard implements CanActivate {
 
-public class RegistrationData {
+  constructor(private router: Router,
+              private loginService: LoginService) {
+  }
 
-	private String username;
-	private String password;
-	private Role role;
-	
-	private List<String> roles;
-	
-	public RegistrationData()
-	{
-		
-	}
-	
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return this.loginService.fetchLoginSettings().pipe(map(config => config.allowPasswordRecovery ? true : this.router.parseUrl('login')));
+  }
 
-	public List<String> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role selectedRole) {
-		this.role = selectedRole;
-	}
-	
-	
 }

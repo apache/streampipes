@@ -95,15 +95,6 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
     update(user, Principal.class);
   }
 
-  @Override
-  public boolean emailExists(String email) {
-    List<UserAccount> users = getAllUserAccounts();
-    return users
-            .stream()
-            .filter(u -> u.getEmail() != null)
-            .anyMatch(u -> u.getEmail().equals(email));
-  }
-
   /**
    * @param username
    * @return True if user exists exactly once, false otherwise

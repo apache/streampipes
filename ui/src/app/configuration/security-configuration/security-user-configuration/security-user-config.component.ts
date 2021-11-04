@@ -29,7 +29,7 @@ import { Observable } from 'rxjs';
 export class SecurityUserConfigComponent extends AbstractSecurityPrincipalConfig<UserAccount> {
 
 
-  displayedColumns: string[] = ['username', 'fullName', 'email', 'edit'];
+  displayedColumns: string[] = ['username', 'fullName', 'edit'];
 
 
   getObservable(): Observable<UserAccount[]> {

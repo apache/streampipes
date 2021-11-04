@@ -18,7 +18,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-11-02 20:08:48.
+// Generated using typescript-generator version 2.27.744 on 2021-11-04 13:01:00.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;
@@ -230,7 +230,6 @@ export class ServiceAccount extends Principal {
 
 export class UserAccount extends Principal {
     darkMode: boolean;
-    email: string;
     fullName: string;
     hideTutorial: boolean;
     password: string;
@@ -245,7 +244,6 @@ export class UserAccount extends Principal {
         }
         const instance = target || new UserAccount();
         super.fromData(data, instance);
-        instance.email = data.email;
         instance.fullName = data.fullName;
         instance.password = data.password;
         instance.preferredDataStreams = __getCopyArrayFn(__identity<string>())(data.preferredDataStreams);
@@ -276,7 +274,6 @@ export class UserApiToken {
 export class UserInfo {
     darkMode: boolean;
     displayName: string;
-    email: string;
     roles: string[];
     showTutorial: boolean;
     username: string;
@@ -288,7 +285,6 @@ export class UserInfo {
         const instance = target || new UserInfo();
         instance.username = data.username;
         instance.displayName = data.displayName;
-        instance.email = data.email;
         instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
         instance.showTutorial = data.showTutorial;
         instance.darkMode = data.darkMode;

@@ -39,8 +39,6 @@ public interface IUserStorage {
 
   void updateUser(Principal user);
 
-  boolean emailExists(String email);
-
   boolean checkUser(String username);
 
   void deleteUser(String principalId);

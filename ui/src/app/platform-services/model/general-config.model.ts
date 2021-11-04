@@ -21,4 +21,7 @@ export interface GeneralConfigModel {
   port: number;
   protocol: 'http' | 'https';
   configured: boolean;
+  allowPasswordRecovery: boolean;
+  allowSelfRegistration: boolean;
+  defaultUserRoles: string[];
 }

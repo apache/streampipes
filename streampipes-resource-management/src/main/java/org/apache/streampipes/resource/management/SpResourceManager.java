@@ -50,4 +50,8 @@ public class SpResourceManager {
   public PermissionResourceManager managePermissions() {
     return new PermissionResourceManager();
   }
+
+  public UserResourceManager manageUsers() {
+    return new UserResourceManager();
+  }
 }

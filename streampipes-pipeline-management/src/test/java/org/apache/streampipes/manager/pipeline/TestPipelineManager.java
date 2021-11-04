@@ -18,7 +18,7 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.test.generator.pipeline.DummyPipelineGenerator;
@@ -36,7 +36,7 @@ import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
-        UserManagementService.class,
+        UserResourceManager.class,
         PipelineManager.class,
         Operations.class})
 public class TestPipelineManager {
@@ -44,7 +44,7 @@ public class TestPipelineManager {
   @Before
   public void before() {
     PowerMockito.mockStatic(
-            UserManagementService.class);
+            UserResourceManager.class);
   }
 
   @Test
