@@ -21,6 +21,12 @@
             <groupId>org.simplejavamail</groupId>
             <artifactId>simple-java-mail</artifactId>
         </dependency>
+
+        <!-- Third-party dependencies -->
+        <dependency>
+            <groupId>com.j2html</groupId>
+            <artifactId>j2html</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

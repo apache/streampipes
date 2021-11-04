@@ -48,6 +48,7 @@ import { AppOverviewComponent } from './app-overview/app-overview.component';
 import { AddComponent } from './add/add.component';
 import { FilesComponent } from './files/files.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
+import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
 
 const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
@@ -55,6 +56,7 @@ const routes: Routes = [
   data: {animation: 'LoginPage'}},
   { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
+  { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [

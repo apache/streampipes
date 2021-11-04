@@ -27,11 +27,12 @@ import {
 } from '@angular/forms';
 import { RegistrationModel } from './registration.model';
 import { LoginService } from '../../services/login.service';
+import { checkPasswords } from '../../utils/check-password';
 
 @Component({
   selector: 'sp-register-user',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['../login/login.component.scss']
 })
 export class RegisterComponent implements OnInit {
 
@@ -52,21 +53,11 @@ export class RegisterComponent implements OnInit {
     this.parentForm.addControl('username', new FormControl('', Validators.required));
     this.parentForm.addControl('password', new FormControl('', Validators.required));
     this.parentForm.addControl('repeatPassword', new FormControl('', Validators.required));
-    this.parentForm.setValidators(this.checkPasswords);
+    this.parentForm.setValidators(checkPasswords);
 
     this.parentForm.valueChanges.subscribe((v) => {
       this.registrationData = {username: v.username, password: v.password};
     });
-  }
-
-  checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {
-    const pass = group.get('password');
-    const confirmPass = group.get('repeatPassword');
-
-    if (!pass || !confirmPass) {
-      return null;
-    }
-    return pass.value === confirmPass.value ? null : { notMatching: true };
   }
 
   registerUser() {
@@ -75,15 +66,11 @@ export class RegisterComponent implements OnInit {
     this.loginService.registerUser(this.registrationData).subscribe(response => {
       this.registrationInProcess = false;
       this.registrationSuccess = true;
-      console.log("success");
     }, error => {
       this.registrationInProcess = false;
       this.registrationSuccess = false;
       this.registrationError = error.error.notifications[0].title;
-    console.log(error);
     });
   }
-
-
 }
 

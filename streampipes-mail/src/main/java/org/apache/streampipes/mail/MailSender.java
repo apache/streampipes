@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.mail;
 
+import org.apache.streampipes.mail.template.AccountActiviationMailTemplate;
+import org.apache.streampipes.mail.template.PasswordRecoveryMailTemplate;
+import org.apache.streampipes.mail.utils.MailUtils;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.simplejavamail.api.email.Email;
 
@@ -31,4 +34,27 @@ public class MailSender extends AbstractMailer {
 
     deliverMail(email);
   }
+
+  public void sendAccountActivationMail(String recipientAddress,
+                                         String activationCode) {
+    Email email = baseEmail()
+            .withSubject(MailUtils.extractAppName() + " - Account Activation")
+            .appendTextHTML(new AccountActiviationMailTemplate(activationCode).generateTemplate())
+            .to(recipientAddress)
+            .buildEmail();
+
+    deliverMail(email);
+  }
+
+  public void sendPasswordRecoveryMail(String recipientAddress,
+                                        String recoveryCode) {
+    Email email = baseEmail()
+            .withSubject(MailUtils.extractAppName() + " - Password Recovery")
+            .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode).generateTemplate())
+            .to(recipientAddress)
+            .buildEmail();
+
+    deliverMail(email);
+  }
+
 }

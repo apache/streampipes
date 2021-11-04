@@ -15,24 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
+package org.apache.streampipes.mail.template.part;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.apache.streampipes.mail.template.TestMailTemplate;
+import j2html.tags.Tag;
 import org.apache.streampipes.mail.utils.MailUtils;
-import org.simplejavamail.api.email.Email;
 
-public class MailTester extends AbstractMailer {
+import static j2html.TagCreator.a;
 
-  public void sendTestMail(EmailConfig emailConfig) {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
+public class LinkPart extends AbstractPart{
+
+  private final String path;
+  private final String text;
+
+  public LinkPart(String path,
+                  String text) {
+    this.path = path;
+    this.text = text;
   }
 
-  private Email makeTestMail(EmailConfig emailConfig) {
-    return baseEmail(emailConfig)
-            .withSubject("Hello from " + MailUtils.extractAppName())
-            .appendTextHTML(new TestMailTemplate().generateTemplate())
-            .to(emailConfig.getTestRecipientAddress())
-            .buildEmail();
+  @Override
+  public Tag<?> toTag() {
+    return a().withHref(makeFullPath()).withText(text);
+  }
+
+  private String makeFullPath() {
+    return MailUtils.extractBaseUrl() + path;
   }
 }

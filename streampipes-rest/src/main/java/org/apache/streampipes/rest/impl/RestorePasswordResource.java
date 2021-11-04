@@ -17,6 +17,44 @@
  */
 package org.apache.streampipes.rest.impl;
 
-public class RestorePasswordResource {
+import org.apache.streampipes.model.client.user.RegistrationData;
+import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+@Path("/v2/restore-password")
+public class RestorePasswordResource extends AbstractRestResource {
+
+  @GET
+  @Path("{recoveryCode}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response checkTokenValidity(@PathParam("recoveryCode") String recoveryCode) {
+    try {
+      getSpResourceManager().manageUsers().checkPasswordRecoveryCode(recoveryCode);
+      return ok();
+    } catch (IllegalArgumentException e) {
+      return badRequest();
+    }
+  }
+
+  @POST
+  @Path("{recoveryCode}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response changePassword(@PathParam("recoveryCode") String recoveryCode,
+                                 RegistrationData registrationData) {
+    try {
+      getSpResourceManager().manageUsers().changePassword(recoveryCode, registrationData);
+      return ok();
+    } catch (IllegalArgumentException e) {
+      return badRequest();
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+      return fail();
+    }
+  }
 
 }

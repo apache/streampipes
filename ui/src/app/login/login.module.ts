@@ -38,6 +38,8 @@ import { AppRoutingModule } from '../app-routing.module';
 import { AuthBoxComponent } from './components/auth-box/auth-box.component';
 import { RestorePasswordComponent } from './components/restore-password/restore-password.component';
 import { RegisterComponent } from './components/register/register.component';
+import { RestorePasswordService } from './services/restore-password.service';
+import { SetNewPasswordComponent } from './components/set-new-password/set-new-password.component';
 
 @NgModule({
   imports: [
@@ -62,11 +64,13 @@ import { RegisterComponent } from './components/register/register.component';
     LoginComponent,
     RegisterComponent,
     RestorePasswordComponent,
+    SetNewPasswordComponent,
     SetupComponent,
     StartupComponent,
   ],
   providers: [
-    LoginService
+    LoginService,
+    RestorePasswordService
   ],
   entryComponents: [
     LoginComponent,

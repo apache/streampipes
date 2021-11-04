@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.GeneralConfig;
@@ -104,8 +105,10 @@ public class Authentication extends AbstractRestResource {
     try {
       getSpResourceManager().manageUsers().sendPasswordRecoveryLink(username);
       return ok(new SuccessMessage(NotificationType.PASSWORD_RECOVERY_LINK_SENT.uiNotification()));
+    } catch (UserNotFoundException e) {
+      return ok();
     } catch (Exception e) {
-      return badRequest(Notifications.error("The username you entered is not registered."));
+      return badRequest();
     }
   }
 

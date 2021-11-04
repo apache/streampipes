@@ -15,31 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.backend;
 
-import java.util.Arrays;
-import java.util.Collection;
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-public class UnauthenticatedInterfaces {
+export let checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {
+  const pass = group.get('password');
+  const confirmPass = group.get('repeatPassword');
 
-  public static Collection<String> get() {
-    return Arrays.asList(
-            "/api/v2/setup/configured",
-            "/api/v2/auth/login",
-            "/api/v2/auth/register",
-            "/api/v2/auth/settings",
-            "/api/v2/auth/restore/*",
-            "/api/v2/restore-password/*",
-            "/api/v2/pe/*/assets/icon",
-            "/api/v2/connect/master/description/*/assets/icon",
-            "/api/v2/connect/*/master/administration/**",
-            "/api/auth/**",
-            "/oauth2/**",
-            "/api/all",
-            "/error",
-            "/",
-            "/streampipes-backend/",
-            "/streampipes-backend/index.html"
-            );
+  if (!pass || !confirmPass) {
+    return null;
   }
-}
+  return pass.value === confirmPass.value ? null : { notMatching: true };
+};

@@ -15,24 +15,32 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
+package org.apache.streampipes.mail.template;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.apache.streampipes.mail.template.TestMailTemplate;
-import org.apache.streampipes.mail.utils.MailUtils;
-import org.simplejavamail.api.email.Email;
+import j2html.tags.ContainerTag;
+import org.apache.streampipes.mail.template.part.LinkPart;
 
-public class MailTester extends AbstractMailer {
+import static j2html.TagCreator.*;
 
-  public void sendTestMail(EmailConfig emailConfig) {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
+public class AccountActiviationMailTemplate extends AbstractMailTemplate {
+
+  private final String activationCode;
+
+  public AccountActiviationMailTemplate(String activationCode) {
+    this.activationCode = activationCode;
   }
 
-  private Email makeTestMail(EmailConfig emailConfig) {
-    return baseEmail(emailConfig)
-            .withSubject("Hello from " + MailUtils.extractAppName())
-            .appendTextHTML(new TestMailTemplate().generateTemplate())
-            .to(emailConfig.getTestRecipientAddress())
-            .buildEmail();
+  @Override
+  protected String getTitle() {
+    return "Account Activation";
+  }
+
+  @Override
+  protected ContainerTag getContent() {
+    return div(makeBodyText()).withClass("mail-body-text");
+  }
+
+  private ContainerTag makeBodyText() {
+    return div(span("Activate your account "), new LinkPart("/activate?" +this.activationCode, "here").toTag());
   }
 }

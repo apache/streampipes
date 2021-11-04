@@ -18,10 +18,12 @@
 
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
-import org.apache.streampipes.model.client.user.RegistrationData;
-import org.apache.streampipes.model.client.user.Role;
-import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.mail.MailSender;
+import org.apache.streampipes.model.client.user.*;
+import org.apache.streampipes.model.util.ElementIdGenerator;
+import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -36,6 +38,17 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   public UserResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI());
+  }
+
+  public static void setHideTutorial(String username, boolean hideTutorial) {
+    IUserStorage userService = getUserStorage();
+    UserAccount user = userService.getUserAccount(username);
+    user.setHideTutorial(hideTutorial);
+    userService.updateUser(user);
+  }
+
+  public static IUserStorage getUserStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
   }
 
   public boolean registerUser(RegistrationData data) throws UsernameAlreadyTakenException {
@@ -57,19 +70,42 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     return true;
   }
 
-  public static void setHideTutorial(String username, boolean hideTutorial) {
-    IUserStorage userService = getUserStorage();
-    UserAccount user = userService.getUserAccount(username);
-    user.setHideTutorial(hideTutorial);
-    userService.updateUser(user);
-  }
-
-  public static IUserStorage getUserStorage() {
-    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
-  }
-
-  public void sendPasswordRecoveryLink(String username) {
+  public void sendPasswordRecoveryLink(String username) throws UserNotFoundException {
     // send a password recovery link to the user
+    if (db.checkUser(username)) {
+      String recoveryCode = ElementIdGenerator.makeRecoveryToken();
+      storeRecoveryCode(username, recoveryCode);
+      new MailSender().sendPasswordRecoveryMail(username, recoveryCode);
+    }
+  }
 
+  public void checkPasswordRecoveryCode(String recoveryCode) {
+    IPasswordRecoveryTokenStorage tokenStorage = getPasswordRecoveryTokenStorage();
+    PasswordRecoveryToken token = tokenStorage.getElementById(recoveryCode);
+    if (token == null) {
+      throw new IllegalArgumentException("Invalid recovery code");
+    }
+  }
+
+  public void changePassword(String recoveryCode,
+                             RegistrationData data) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    checkPasswordRecoveryCode(recoveryCode);
+    PasswordRecoveryToken token = getPasswordRecoveryTokenStorage().getElementById(recoveryCode);
+    Principal user = db.getUser(token.getUsername());
+    if (user instanceof UserAccount) {
+      String encryptedPassword = PasswordUtil.encryptPassword(data.getPassword());
+      ((UserAccount) user).setPassword(encryptedPassword);
+      db.updateUser(user);
+      getPasswordRecoveryTokenStorage().deleteElement(token);
+    }
+  }
+
+  private void storeRecoveryCode(String username,
+                                 String recoveryCode) {
+    getPasswordRecoveryTokenStorage().createElement(PasswordRecoveryToken.create(recoveryCode, username));
+  }
+
+  private IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPasswordRecoveryTokenStorage();
   }
 }

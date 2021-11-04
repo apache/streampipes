@@ -15,24 +15,34 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
+package org.apache.streampipes.mail.template.part;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.apache.streampipes.mail.template.TestMailTemplate;
-import org.apache.streampipes.mail.utils.MailUtils;
-import org.simplejavamail.api.email.Email;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
+import j2html.tags.ContainerTag;
 
-public class MailTester extends AbstractMailer {
+import java.io.IOException;
 
-  public void sendTestMail(EmailConfig emailConfig) {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
+import static j2html.TagCreator.*;
+
+public class HeaderPart extends AbstractPart {
+
+  private String title;
+
+  public HeaderPart(String title) {
+    this.title = title;
   }
 
-  private Email makeTestMail(EmailConfig emailConfig) {
-    return baseEmail(emailConfig)
-            .withSubject("Hello from " + MailUtils.extractAppName())
-            .appendTextHTML(new TestMailTemplate().generateTemplate())
-            .to(emailConfig.getTestRecipientAddress())
-            .buildEmail();
+  @Override
+  public ContainerTag toTag() {
+    return head(title(title), style(readCssFileFromResources()));
+  }
+
+  private String readCssFileFromResources() {
+    try {
+      return Resources.toString(Resources.getResource("style.css"), Charsets.UTF_8);
+    } catch (IOException e) {
+      return "";
+    }
   }
 }

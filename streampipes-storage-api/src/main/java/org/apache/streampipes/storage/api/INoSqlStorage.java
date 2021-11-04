@@ -73,4 +73,6 @@ public interface INoSqlStorage {
 
   IDataStreamStorage getDataStreamStorage();
 
+  IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage();
+
 }

@@ -15,18 +15,28 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.mail.template.part;
 
-.info-box {
-  padding: 8px;
-  border-radius: 5px;
-}
+import j2html.tags.Tag;
+import org.apache.streampipes.mail.utils.MailUtils;
 
-.register-error {
-  background: #ffa2a2;
-  color: #3e3e3e;
-}
+import static j2html.TagCreator.div;
+import static j2html.TagCreator.img;
 
-.register-success {
-  background: #a2ffa2;
-  color: #3e3e3e;
+public class LogoPart extends AbstractPart {
+
+  private static final String LOGO_PATH = "/assets/img/login/logo.png";
+
+  private final String baseUrl;
+
+  public LogoPart() {
+    this.baseUrl = MailUtils.extractBaseUrl();
+  }
+
+  @Override
+  public Tag<?> toTag() {
+    return div(
+            img().withSrc(baseUrl + LOGO_PATH).withClass("logo"))
+            .withClass("logo");
+  }
 }

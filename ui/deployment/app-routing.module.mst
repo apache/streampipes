@@ -38,6 +38,7 @@ import { RegisterComponent } from './login/components/register/register.componen
 import { RestorePasswordComponent } from './login/components/restore-password/restore-password.component';
 import { RegistrationAllowedCanActivateGuard } from './_guards/registration-allowed.can-activate.guard';
 import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-password-allowed.can-activate.guard';
+import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
 
 {{#modulesActive}}
 {{#ng5}}
@@ -51,6 +52,7 @@ const routes: Routes = [
   data: {animation: 'LoginPage'}},
   { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
+  { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [

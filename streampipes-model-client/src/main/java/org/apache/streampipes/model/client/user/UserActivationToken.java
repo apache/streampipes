@@ -15,24 +15,31 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
+package org.apache.streampipes.model.client.user;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.apache.streampipes.mail.template.TestMailTemplate;
-import org.apache.streampipes.mail.utils.MailUtils;
-import org.simplejavamail.api.email.Email;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class MailTester extends AbstractMailer {
+public class UserActivationToken extends AbstractMailToken {
 
-  public void sendTestMail(EmailConfig emailConfig) {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
+  @JsonIgnore
+  private String $type = "user-activation";
+
+  public static UserActivationToken create(String token, String username) {
+    UserActivationToken userActivationToken = new UserActivationToken();
+    userActivationToken.setToken(token);
+    userActivationToken.setUsername(username);
+
+    return userActivationToken;
   }
 
-  private Email makeTestMail(EmailConfig emailConfig) {
-    return baseEmail(emailConfig)
-            .withSubject("Hello from " + MailUtils.extractAppName())
-            .appendTextHTML(new TestMailTemplate().generateTemplate())
-            .to(emailConfig.getTestRecipientAddress())
-            .buildEmail();
+  public UserActivationToken() {
+  }
+
+  public String get$type() {
+    return $type;
+  }
+
+  public void set$type(String $type) {
+    this.$type = $type;
   }
 }

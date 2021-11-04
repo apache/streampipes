@@ -15,24 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail;
+package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.config.backend.model.EmailConfig;
-import org.apache.streampipes.mail.template.TestMailTemplate;
-import org.apache.streampipes.mail.utils.MailUtils;
-import org.simplejavamail.api.email.Email;
+import org.apache.streampipes.model.client.user.PasswordRecoveryToken;
 
-public class MailTester extends AbstractMailer {
+public interface IPasswordRecoveryTokenStorage extends CRUDStorage<String, PasswordRecoveryToken> {
 
-  public void sendTestMail(EmailConfig emailConfig) {
-    deliverMail(emailConfig, makeTestMail(emailConfig));
-  }
 
-  private Email makeTestMail(EmailConfig emailConfig) {
-    return baseEmail(emailConfig)
-            .withSubject("Hello from " + MailUtils.extractAppName())
-            .appendTextHTML(new TestMailTemplate().generateTemplate())
-            .to(emailConfig.getTestRecipientAddress())
-            .buildEmail();
-  }
 }

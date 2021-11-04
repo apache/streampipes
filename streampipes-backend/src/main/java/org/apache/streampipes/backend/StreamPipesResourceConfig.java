@@ -97,6 +97,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataStreamResource.class);
         register(Setup.class);
         register(ResetResource.class);
+        register(RestorePasswordResource.class);
         register(UserProfile.class);
         register(UserResource.class);
         register(Version.class);
