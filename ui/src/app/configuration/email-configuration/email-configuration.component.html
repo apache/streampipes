@@ -109,10 +109,10 @@
                 <div fxLayout="column" *ngIf="attemptSendingTestMail">
                     <div fxLayout="row" *ngIf="sendingTestMailInProgress">
                         <mat-progress-spinner diameter="10"></mat-progress-spinner>
-                        <h5>Trying to send test mail test mail...</h5>
+                        <h5>Trying to send test mail...</h5>
                     </div>
                     <div fxLayout="row">
-                        <h5 *ngIf="!sendingTestMailInProgress && sendingTestMailSuccess">Success</h5>
+                        <h5 *ngIf="!sendingTestMailInProgress && sendingTestMailSuccess">Success - please check your mail inbox.</h5>
                         <div fxLayout="column" *ngIf="!sendingTestMailInProgress && !sendingTestMailSuccess">
                             Failure
                             <h5>{{sendingEmailErrorMessage}}</h5>

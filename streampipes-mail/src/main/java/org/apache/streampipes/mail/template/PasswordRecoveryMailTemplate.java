@@ -17,10 +17,12 @@
  */
 package org.apache.streampipes.mail.template;
 
-import j2html.tags.ContainerTag;
+import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
 import org.apache.streampipes.mail.template.part.LinkPart;
+import org.apache.streampipes.mail.template.part.MailTemplatePart;
+import org.apache.streampipes.mail.utils.MailUtils;
 
-import static j2html.TagCreator.*;
+import java.util.Map;
 
 public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
 
@@ -36,11 +38,25 @@ public class PasswordRecoveryMailTemplate extends AbstractMailTemplate {
   }
 
   @Override
-  protected ContainerTag getContent() {
-    return div(makeBodyText()).withClass("mail-body-text");
+  protected String getPreHeader() {
+    return "Restore your " + MailUtils.extractAppName() + " password";
   }
 
-  private ContainerTag makeBodyText() {
-    return div(span("Reset your password "), new LinkPart("/#/set-new-password?recoveryCode=" +this.recoveryCode, "here").toTag());
+  @Override
+  protected void addPlaceholders(Map<String, String> placeholders) {
+    placeholders.put(DefaultPlaceholders.LINK.key(), makeLink());
+    placeholders.put(DefaultPlaceholders.MANUAL.key(), "Click the button below to reset your account password. If you didn't request a new password, you can safely delete this email.");
+    placeholders.put(DefaultPlaceholders.BUTTON_TEXT.key(), "Reset your password");
+    placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(), "If that doesn't work, copy and paste the following link in your browser:");
+  }
+
+  @Override
+  protected void addTemplateParts(Map<String, MailTemplatePart> templateParts) {
+    templateParts.put(DefaultPlaceholders.INNER.key(), MailTemplatePart.MAIL_TEMPLATE_INNER_BUTTON);
+    templateParts.put(DefaultPlaceholders.FOOTER.key(), MailTemplatePart.MAIL_TEMPLATE_FOOTER);
+  }
+
+  private String makeLink() {
+    return new LinkPart("/#/set-new-password?recoveryCode=" +this.recoveryCode).generate();
   }
 }

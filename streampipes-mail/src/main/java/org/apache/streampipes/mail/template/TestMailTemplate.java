@@ -17,18 +17,13 @@
  */
 package org.apache.streampipes.mail.template;
 
-import j2html.tags.ContainerTag;
+import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
+import org.apache.streampipes.mail.template.part.MailTemplatePart;
+import org.apache.streampipes.mail.utils.MailUtils;
 
-import static j2html.TagCreator.div;
+import java.util.Map;
 
 public class TestMailTemplate extends AbstractMailTemplate{
-
-
-  public static void main(String[] args) {
-
-    String test = new AccountActiviationMailTemplate("asd").generateTemplate();
-    System.out.println(test);
-  }
 
   @Override
   protected String getTitle() {
@@ -36,7 +31,22 @@ public class TestMailTemplate extends AbstractMailTemplate{
   }
 
   @Override
-  protected ContainerTag getContent() {
-    return div().withText("This is a test mail").withClass("mail-body-text");
+  protected String getPreHeader() {
+    return "Your " + MailUtils.extractAppName() + " mail configuration is working!";
   }
+
+  @Override
+  protected void addPlaceholders(Map<String, String> placeholders) {
+    placeholders.put(DefaultPlaceholders.TEXT.key(), makeText());
+  }
+
+  @Override
+  protected void addTemplateParts(Map<String, MailTemplatePart> templateParts) {
+    templateParts.put(DefaultPlaceholders.INNER.key(), MailTemplatePart.MAIL_TEMPLATE_INNER_PLAIN);
+  }
+
+  private String makeText() {
+    return "This is a test mail - if you receive this mail, your mail configuration is working.";
+  }
+
 }

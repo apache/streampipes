@@ -15,34 +15,13 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.mail.template.part;
 
-body {
-    font-family: Roboto, Arial, Helvetica, sans-serif;
-    padding: 15px;
-    --color-primary: #39b54a;
-    --color-accent: #1b1464;
+import org.apache.streampipes.mail.utils.MailUtils;
+
+public class BaseUrlPart extends AbstractPart {
+  @Override
+  public String generate() {
+    return MailUtils.extractBaseUrl();
+  }
 }
-
-.mail-title {
-    font-weight: bold;
-    font-size:14pt;
-    color: var(--color-primary);
-    margin-top: 15px;
-}
-
-.mail-body-text {
-    font-size: 11pt;
-    font-weight: normal;
-}
-
-.logo {
-    height: 50px;
-    max-height: 50px;
-}
-
-.divider {
-    border: 1px solid var(--color-accent);
-    margin: 10px 0;
-}
-
-

@@ -17,28 +17,17 @@
  */
 package org.apache.streampipes.mail.template.part;
 
-import j2html.tags.Tag;
 import org.apache.streampipes.mail.utils.MailUtils;
 
-import static j2html.TagCreator.a;
-
-public class LinkPart extends AbstractPart{
+public class LinkPart extends AbstractPart {
 
   private final String path;
-  private final String text;
 
-  public LinkPart(String path,
-                  String text) {
+  public LinkPart(String path) {
     this.path = path;
-    this.text = text;
   }
 
-  @Override
-  public Tag<?> toTag() {
-    return a().withHref(makeFullPath()).withText(text);
-  }
-
-  private String makeFullPath() {
+  public String generate() {
     return MailUtils.extractBaseUrl() + path;
   }
 }

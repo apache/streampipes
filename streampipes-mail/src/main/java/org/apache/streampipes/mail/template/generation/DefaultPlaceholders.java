@@ -15,9 +15,31 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail.template.part;
+package org.apache.streampipes.mail.template.generation;
 
-public abstract class AbstractPart {
+public enum DefaultPlaceholders {
 
-  public abstract String generate();
+  TITLE("TITLE"),
+  PREHEADER("PREHEADER"),
+  FOOTER("FOOTER"),
+  FOOTER_TEXT("FOOTER_TEXT"),
+  INNER("INNER"),
+
+  BUTTON_TEXT("BUTTON_TEXT"),
+  MANUAL("MANUAL"),
+  LINK("LINK"),
+  LINK_DESCRIPTION("LINK_DESCRIPTION"),
+  TEXT("TEXT"),
+  LOGO("LOGO"),
+  BASE_URL("BASE_URL");
+
+  private String placeholderKey;
+
+  DefaultPlaceholders(String placeholderKey) {
+    this.placeholderKey = placeholderKey;
+  }
+
+  public String key() {
+    return placeholderKey;
+  }
 }

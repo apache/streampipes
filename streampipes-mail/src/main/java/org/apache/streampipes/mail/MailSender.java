@@ -23,6 +23,8 @@ import org.apache.streampipes.mail.utils.MailUtils;
 import org.apache.streampipes.model.mail.SpEmail;
 import org.simplejavamail.api.email.Email;
 
+import java.io.IOException;
+
 public class MailSender extends AbstractMailer {
 
   public void sendEmail(SpEmail mail) {
@@ -36,7 +38,7 @@ public class MailSender extends AbstractMailer {
   }
 
   public void sendAccountActivationMail(String recipientAddress,
-                                         String activationCode) {
+                                         String activationCode) throws IOException {
     Email email = baseEmail()
             .withSubject(MailUtils.extractAppName() + " - Account Activation")
             .appendTextHTML(new AccountActiviationMailTemplate(activationCode).generateTemplate())
@@ -47,7 +49,7 @@ public class MailSender extends AbstractMailer {
   }
 
   public void sendPasswordRecoveryMail(String recipientAddress,
-                                        String recoveryCode) {
+                                        String recoveryCode) throws IOException {
     Email email = baseEmail()
             .withSubject(MailUtils.extractAppName() + " - Password Recovery")
             .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode).generateTemplate())

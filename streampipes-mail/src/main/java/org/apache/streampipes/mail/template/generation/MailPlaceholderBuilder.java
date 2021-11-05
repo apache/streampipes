@@ -15,34 +15,35 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail.template.part;
+package org.apache.streampipes.mail.template.generation;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import j2html.tags.ContainerTag;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.io.IOException;
+public class MailPlaceholderBuilder {
 
-import static j2html.TagCreator.*;
+  private Map<String, String> placeholders;
 
-public class HeaderPart extends AbstractPart {
-
-  private String title;
-
-  public HeaderPart(String title) {
-    this.title = title;
+  public static MailPlaceholderBuilder create(String title) {
+    return new MailPlaceholderBuilder(title);
   }
 
-  @Override
-  public ContainerTag toTag() {
-    return head(title(title), style(readCssFileFromResources()));
+  private MailPlaceholderBuilder(String title) {
+    this.placeholders = new HashMap<>();
+    this.placeholders.put(DefaultPlaceholders.TITLE.key(), title);
   }
 
-  private String readCssFileFromResources() {
-    try {
-      return Resources.toString(Resources.getResource("style.css"), Charsets.UTF_8);
-    } catch (IOException e) {
-      return "";
-    }
+  public MailPlaceholderBuilder add(String key, String value) {
+    this.placeholders.put(key, value);
+
+    return this;
+  }
+
+  public MailPlaceholderBuilder add(DefaultPlaceholders key, String value) {
+    return add(key.key(), value);
+  }
+
+  public Map<String, String> build() {
+    return placeholders;
   }
 }

@@ -17,7 +17,20 @@
  */
 package org.apache.streampipes.mail.template.part;
 
-public abstract class AbstractPart {
+public enum MailTemplatePart {
 
-  public abstract String generate();
+  MAIL_TEMPLATE_OUTER("mail-template-outer.html"),
+  MAIL_TEMPLATE_INNER_BUTTON("mail-template-inner-button.html"),
+  MAIL_TEMPLATE_INNER_PLAIN("mail-template-inner-plain.html"),
+  MAIL_TEMPLATE_FOOTER("mail-template-footer.html");
+
+  private String templateFilename;
+
+  MailTemplatePart(String templateFilename) {
+    this.templateFilename = templateFilename;
+  }
+
+  public String getTemplateFilename() {
+    return this.templateFilename;
+  }
 }

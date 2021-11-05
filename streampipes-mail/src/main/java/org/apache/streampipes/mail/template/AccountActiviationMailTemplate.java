@@ -17,10 +17,13 @@
  */
 package org.apache.streampipes.mail.template;
 
-import j2html.tags.ContainerTag;
+import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
 import org.apache.streampipes.mail.template.part.LinkPart;
+import org.apache.streampipes.mail.template.part.MailTemplatePart;
+import org.apache.streampipes.mail.utils.MailUtils;
 
-import static j2html.TagCreator.*;
+import java.io.IOException;
+import java.util.Map;
 
 public class AccountActiviationMailTemplate extends AbstractMailTemplate {
 
@@ -36,16 +39,29 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   }
 
   @Override
-  protected ContainerTag getContent() {
-    return div(makeBodyText()).withClass("mail-body-text");
+  protected String getPreHeader() {
+    return "Activate your " + MailUtils.extractAppName() + " account";
   }
 
-  private ContainerTag makeBodyText() {
-    return div(span("Activate your account "), new LinkPart("/#/activate-account?activationCode=" +this.activationCode, "here").toTag());
+  @Override
+  protected void addPlaceholders(Map<String, String> placeholders) {
+    placeholders.put(DefaultPlaceholders.LINK.key(), makeLink());
+    placeholders.put(DefaultPlaceholders.MANUAL.key(), "Click on the button below to activate your account. If you didn't create an account, you can safely delete this message.");
+    placeholders.put(DefaultPlaceholders.BUTTON_TEXT.key(), "Activate your account");
+    placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(), "If that doesn't work, copy and paste the following link in your browser:");
   }
 
-  public static void main(String[] args) {
-    String template = new AccountActiviationMailTemplate("23").generateTemplate();
+  @Override
+  protected void addTemplateParts(Map<String, MailTemplatePart> templateParts) {
+    templateParts.put(DefaultPlaceholders.INNER.key(), MailTemplatePart.MAIL_TEMPLATE_INNER_BUTTON);
+  }
+
+  private String makeLink() {
+    return new LinkPart("/#/activate-account?activationCode=" +this.activationCode).generate();
+  }
+
+  public static void main(String[] args) throws IOException {
+    String template = new PasswordRecoveryMailTemplate("asd").generateTemplate();
     System.out.println(template);
   }
 }

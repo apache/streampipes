@@ -29,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 @Path("/v2/admin/mail-config")
 public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
@@ -60,7 +61,7 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
     try {
       new MailTester().sendTestMail(config);
       return ok();
-    } catch (MailException | IllegalArgumentException e) {
+    } catch (MailException | IllegalArgumentException | IOException e) {
       return badRequest(e);
     }
   }

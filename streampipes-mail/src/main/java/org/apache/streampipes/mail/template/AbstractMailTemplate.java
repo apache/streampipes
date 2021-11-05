@@ -17,26 +17,40 @@
  */
 package org.apache.streampipes.mail.template;
 
-import j2html.tags.ContainerTag;
-import org.apache.streampipes.mail.template.part.HeaderPart;
+import org.apache.streampipes.mail.template.generation.DefaultPlaceholders;
+import org.apache.streampipes.mail.template.generation.MailTemplateBuilder;
+import org.apache.streampipes.mail.template.part.BaseUrlPart;
 import org.apache.streampipes.mail.template.part.LogoPart;
+import org.apache.streampipes.mail.template.part.MailTemplatePart;
 
-import static j2html.TagCreator.*;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractMailTemplate {
 
   protected abstract String getTitle();
 
-  protected abstract ContainerTag getContent();
+  protected abstract String getPreHeader();
 
+  protected abstract void addPlaceholders(Map<String, String> placeholders);
 
-  public String generateTemplate() {
-    return html(
-      new HeaderPart(getTitle()).toTag(),
-            body(new LogoPart().toTag(),
-                    hr().withClass("divider"),
-                    h1(getTitle()).withClass("mail-title"),
-                    getContent())
-    ).renderFormatted();
+  protected abstract void addTemplateParts(Map<String, MailTemplatePart> templateParts);
+
+  public String generateTemplate() throws IOException {
+    Map<String, MailTemplatePart> templateParts = new HashMap<>();
+    Map<String, String> placeholders = new HashMap<>();
+    addTemplateParts(templateParts);
+    addPlaceholders(placeholders);
+
+    return MailTemplateBuilder.create(MailTemplatePart.MAIL_TEMPLATE_OUTER)
+            .addSubpart(DefaultPlaceholders.FOOTER, MailTemplatePart.MAIL_TEMPLATE_FOOTER)
+            .addSubparts(templateParts)
+            .withPlaceholder(DefaultPlaceholders.TITLE, getTitle())
+            .withPlaceholder(DefaultPlaceholders.PREHEADER, getPreHeader())
+            .withPlaceholder(DefaultPlaceholders.LOGO, new LogoPart().generate())
+            .withPlaceholder(DefaultPlaceholders.BASE_URL, new BaseUrlPart().generate())
+            .withPlaceholders(placeholders)
+            .generateHtmlTemplate();
   }
 }

@@ -22,13 +22,15 @@ import org.apache.streampipes.mail.template.TestMailTemplate;
 import org.apache.streampipes.mail.utils.MailUtils;
 import org.simplejavamail.api.email.Email;
 
+import java.io.IOException;
+
 public class MailTester extends AbstractMailer {
 
-  public void sendTestMail(EmailConfig emailConfig) {
+  public void sendTestMail(EmailConfig emailConfig) throws IOException {
     deliverMail(emailConfig, makeTestMail(emailConfig));
   }
 
-  private Email makeTestMail(EmailConfig emailConfig) {
+  private Email makeTestMail(EmailConfig emailConfig) throws IOException {
     return baseEmail(emailConfig)
             .withSubject("Hello from " + MailUtils.extractAppName())
             .appendTextHTML(new TestMailTemplate().generateTemplate())

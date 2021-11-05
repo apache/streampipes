@@ -17,8 +17,12 @@
  */
 package org.apache.streampipes.mail.utils;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.GeneralConfig;
+
+import java.io.IOException;
 
 public class MailUtils {
 
@@ -30,5 +34,9 @@ public class MailUtils {
 
   public static String extractAppName() {
     return BackendConfig.INSTANCE.getGeneralConfig().getAppName();
+  }
+
+  public static String readResourceFileToString(String filename) throws IOException {
+    return Resources.toString(Resources.getResource(filename), Charsets.UTF_8);
   }
 }

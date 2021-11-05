@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashSet;
@@ -66,7 +67,7 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
       user.setAccountEnabled(false);
       db.storeUser(user);
       createTokenAndSendActivationMail(data.getUsername());
-    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
       return false;
     }
 
@@ -87,19 +88,19 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     }
   }
 
-  private void createTokenAndSendActivationMail(String username) {
+  private void createTokenAndSendActivationMail(String username) throws IOException {
     String activationCode = ElementIdGenerator.makeRecoveryToken();
     storeActivationCode(username, activationCode);
   }
 
   private void storeActivationCode(String username,
-                                   String activationCode) {
+                                   String activationCode) throws IOException {
     UserActivationToken token = UserActivationToken.create(activationCode, username);
     getUserActivationTokenStorage().createElement(token);
     new MailSender().sendAccountActivationMail(username, activationCode);
   }
 
-  public void sendPasswordRecoveryLink(String username) throws UserNotFoundException {
+  public void sendPasswordRecoveryLink(String username) throws UserNotFoundException, IOException {
     // send a password recovery link to the user
     if (db.checkUser(username)) {
       String recoveryCode = ElementIdGenerator.makeRecoveryToken();
