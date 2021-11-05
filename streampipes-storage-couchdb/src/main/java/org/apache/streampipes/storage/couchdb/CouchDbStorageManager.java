@@ -160,4 +160,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
     return new PasswordRecoveryTokenImpl();
   }
+
+  @Override
+  public IUserActivationTokenStorage getUserActivationTokenStorage() {
+    return new UserActivationTokenImpl();
+  }
+
+
 }

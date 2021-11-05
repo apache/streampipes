@@ -75,4 +75,5 @@ public interface INoSqlStorage {
 
   IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage();
 
+  IUserActivationTokenStorage getUserActivationTokenStorage();
 }

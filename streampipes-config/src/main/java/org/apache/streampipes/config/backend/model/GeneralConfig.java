@@ -21,6 +21,7 @@ import java.util.List;
 
 public class GeneralConfig {
 
+  private String appName;
   private String protocol;
   private String hostname;
   private int port;
@@ -94,5 +95,13 @@ public class GeneralConfig {
 
   public void setDefaultUserRoles(List<String> defaultUserRoles) {
     this.defaultUserRoles = defaultUserRoles;
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public void setAppName(String appName) {
+    this.appName = appName;
   }
 }

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.mail.template.part;
 
+import j2html.attributes.Attribute;
 import j2html.tags.Tag;
 import org.apache.streampipes.mail.utils.MailUtils;
 
@@ -36,7 +37,7 @@ public class LogoPart extends AbstractPart {
   @Override
   public Tag<?> toTag() {
     return div(
-            img().withSrc(baseUrl + LOGO_PATH).withClass("logo"))
+            img().withSrc(baseUrl + LOGO_PATH).withClass("logo").attr(new Attribute("height", "50px")))
             .withClass("logo");
   }
 }

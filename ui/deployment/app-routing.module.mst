@@ -39,6 +39,7 @@ import { RestorePasswordComponent } from './login/components/restore-password/re
 import { RegistrationAllowedCanActivateGuard } from './_guards/registration-allowed.can-activate.guard';
 import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-password-allowed.can-activate.guard';
 import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
+import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 
 {{#modulesActive}}
 {{#ng5}}
@@ -51,6 +52,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard],
   data: {animation: 'LoginPage'}},
   { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
+  { path: 'activate-account', component: ActivateAccountComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },

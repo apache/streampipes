@@ -15,20 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail.utils;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.GeneralConfig;
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { Observable } from 'rxjs';
 
-public class MailUtils {
+@Injectable()
+export class AccountActivationService {
 
-  public static String extractBaseUrl() {
-    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
+  constructor(private http: HttpClient,
+              private platformServicesCommons: PlatformServicesCommons) {
 
-    return config.getProtocol() + "://" + config.getHostname() + ":" + config.getPort();
   }
 
-  public static String extractAppName() {
-    return BackendConfig.INSTANCE.getGeneralConfig().getAppName();
+  activateAccount(activationToken: string): Observable<any> {
+    return this.http.get(`${this.platformServicesCommons.apiBasePath}/activate-account/${activationToken}`);
   }
+
 }

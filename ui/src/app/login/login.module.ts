@@ -40,6 +40,8 @@ import { RestorePasswordComponent } from './components/restore-password/restore-
 import { RegisterComponent } from './components/register/register.component';
 import { RestorePasswordService } from './services/restore-password.service';
 import { SetNewPasswordComponent } from './components/set-new-password/set-new-password.component';
+import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
+import { AccountActivationService } from './services/account-activation.service';
 
 @NgModule({
   imports: [
@@ -60,6 +62,7 @@ import { SetNewPasswordComponent } from './components/set-new-password/set-new-p
     MatProgressBarModule,
   ],
   declarations: [
+    ActivateAccountComponent,
     AuthBoxComponent,
     LoginComponent,
     RegisterComponent,
@@ -69,6 +72,7 @@ import { SetNewPasswordComponent } from './components/set-new-password/set-new-p
     StartupComponent,
   ],
   providers: [
+    AccountActivationService,
     LoginService,
     RestorePasswordService
   ],

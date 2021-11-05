@@ -17,13 +17,26 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public class UserRegistrationResource extends AbstractAuthGuardedRestResource {
+@Path("/v2/activate-account")
+public class AccountActivationResource extends AbstractAuthGuardedRestResource {
 
-  public Response registerUser() {
-   return ok();
+  @GET
+  @Path("{recoveryCode}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  public Response activateUserAccount(@PathParam("recoveryCode") String recoveryCode) {
+    try {
+      getSpResourceManager().manageUsers().activateAccount(recoveryCode);
+      return ok();
+    } catch (UserNotFoundException e) {
+      return badRequest();
+    }
   }
 }

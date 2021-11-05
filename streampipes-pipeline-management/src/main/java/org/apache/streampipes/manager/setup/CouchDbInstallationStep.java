@@ -162,6 +162,13 @@ public class CouchDbInstallationStep extends InstallationStep {
       MapReduce objectPermissionFunction = new MapReduce();
       objectPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.objectInstanceId, doc);}}");
 
+      MapReduce userActivationFunction = new MapReduce();
+      userActivationFunction.setMap("function(doc) { if (doc.$type === 'user-activation') {emit(doc._id, doc);}}");
+
+      MapReduce passwordRecoveryFunction = new MapReduce();
+      passwordRecoveryFunction.setMap("function(doc) { if (doc.$type === 'password-recovery') {emit(doc._id, doc);}}");
+
+
       views.put("password", passwordFunction);
       views.put("username", usernameFunction);
       views.put("groups", groupFunction);
@@ -169,6 +176,8 @@ public class CouchDbInstallationStep extends InstallationStep {
       views.put("token", tokenFunction);
       views.put("userpermissions", userPermissionFunction);
       views.put("objectpermissions", objectPermissionFunction);
+      views.put("user-activation", userActivationFunction);
+      views.put("password-recovery", passwordRecoveryFunction);
 
       userDocument.setViews(views);
       Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);

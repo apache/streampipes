@@ -55,6 +55,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
 
     public StreamPipesResourceConfig() {
         setProperties(Collections.singletonMap("jersey.config.server.response.setStatusOverSendError", true));
+        register(AccountActivationResource.class);
         register(Authentication.class);
         register(AssetDashboardResource.class);
         register(AutoComplete.class);

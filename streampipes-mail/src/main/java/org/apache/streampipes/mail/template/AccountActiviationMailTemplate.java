@@ -41,6 +41,11 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   }
 
   private ContainerTag makeBodyText() {
-    return div(span("Activate your account "), new LinkPart("/activate?" +this.activationCode, "here").toTag());
+    return div(span("Activate your account "), new LinkPart("/#/activate-account?activationCode=" +this.activationCode, "here").toTag());
+  }
+
+  public static void main(String[] args) {
+    String template = new AccountActiviationMailTemplate("23").generateTemplate();
+    System.out.println(template);
   }
 }

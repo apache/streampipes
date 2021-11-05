@@ -19,12 +19,19 @@
 <div fxLayout="column" class="page-container-padding">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="formReady">
         <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
-            <sp-split-section title="Host and Port"
-                              subtitle="Basic accessibility settings">
+            <div class="warning mb-10" *ngIf="!generalConfig.configured">These are default values - to use features
+                such as email you need to store these values once.
+            </div>
+            <sp-split-section title="Basic"
+                              subtitle="Basic settings">
+                <div class="subsection-title">App Name</div>
+                <mat-form-field color="accent" class="ml-10">
+                    <mat-label>App Name</mat-label>
+                    <input formControlName="appName" fxFlex
+                           matInput
+                           required>
+                </mat-form-field>
                 <div class="subsection-title">Host and Port</div>
-                <div class="warning mb-10" *ngIf="!generalConfig.configured">These are default values - to use features
-                    such as email you need to store these values once.
-                </div>
                 <div fxLayout="column" fxFlex="100">
                     <div fxLayout="row">
                         <div>

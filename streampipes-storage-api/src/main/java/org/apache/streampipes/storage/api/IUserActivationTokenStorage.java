@@ -15,20 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.mail.utils;
+package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.model.GeneralConfig;
+import org.apache.streampipes.model.client.user.UserActivationToken;
 
-public class MailUtils {
-
-  public static String extractBaseUrl() {
-    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
-
-    return config.getProtocol() + "://" + config.getHostname() + ":" + config.getPort();
-  }
-
-  public static String extractAppName() {
-    return BackendConfig.INSTANCE.getGeneralConfig().getAppName();
-  }
+public interface IUserActivationTokenStorage extends CRUDStorage<String, UserActivationToken> {
 }

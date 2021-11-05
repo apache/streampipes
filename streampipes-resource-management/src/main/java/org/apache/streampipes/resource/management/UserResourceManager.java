@@ -24,6 +24,7 @@ import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.client.user.*;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.storage.api.IPasswordRecoveryTokenStorage;
+import org.apache.streampipes.storage.api.IUserActivationTokenStorage;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
@@ -62,12 +63,40 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
       UserAccount user = UserAccount.from(data.getUsername(), encryptedPassword, new HashSet<>(roles));
       user.setUsername(data.getUsername());
       user.setPassword(encryptedPassword);
+      user.setAccountEnabled(false);
       db.storeUser(user);
+      createTokenAndSendActivationMail(data.getUsername());
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
       return false;
     }
 
     return true;
+  }
+
+  public void activateAccount(String activationCode) throws UserNotFoundException {
+    UserActivationToken token = getUserActivationTokenStorage().getElementById(activationCode);
+    if (token != null) {
+      Principal user = db.getUser(token.getUsername());
+      if (user instanceof UserAccount) {
+        user.setAccountEnabled(true);
+        db.updateUser(user);
+        getUserActivationTokenStorage().deleteElement(token);
+      }
+    } else {
+      throw new UserNotFoundException("User or token not found");
+    }
+  }
+
+  private void createTokenAndSendActivationMail(String username) {
+    String activationCode = ElementIdGenerator.makeRecoveryToken();
+    storeActivationCode(username, activationCode);
+  }
+
+  private void storeActivationCode(String username,
+                                   String activationCode) {
+    UserActivationToken token = UserActivationToken.create(activationCode, username);
+    getUserActivationTokenStorage().createElement(token);
+    new MailSender().sendAccountActivationMail(username, activationCode);
   }
 
   public void sendPasswordRecoveryLink(String username) throws UserNotFoundException {
@@ -108,4 +137,10 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
   private IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getPasswordRecoveryTokenStorage();
   }
+
+  private IUserActivationTokenStorage getUserActivationTokenStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getUserActivationTokenStorage();
+  }
+
+
 }

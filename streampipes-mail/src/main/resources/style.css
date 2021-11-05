@@ -32,11 +32,12 @@ body {
 
 .mail-body-text {
     font-size: 11pt;
+    font-weight: normal;
 }
 
 .logo {
-    height: 40px;
-    max-height: 40px;
+    height: 50px;
+    max-height: 50px;
 }
 
 .divider {

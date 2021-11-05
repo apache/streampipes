@@ -24,4 +24,5 @@ export interface GeneralConfigModel {
   allowPasswordRecovery: boolean;
   allowSelfRegistration: boolean;
   defaultUserRoles: string[];
+  appName: string;
 }

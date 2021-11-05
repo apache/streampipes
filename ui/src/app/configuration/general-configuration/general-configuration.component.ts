@@ -26,6 +26,7 @@ import { EmailConfig } from '../../platform-services/model/email-config.model';
 import { AvailableRolesService } from '../../services/available-roles.service';
 import { RoleDescription } from '../../_models/auth.model';
 import { UserRole } from '../../_enums/user-role.enum';
+import { AppConstants } from '../../services/app.constants';
 
 @Component({
   selector: 'sp-general-configuration',
@@ -45,7 +46,8 @@ export class GeneralConfigurationComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private generalConfigService: GeneralConfigService,
               private mailConfigService: MailConfigService,
-              private availableRolesService: AvailableRolesService) {}
+              private availableRolesService: AvailableRolesService,
+              private appConstants: AppConstants) {}
 
   ngOnInit(): void {
     this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== UserRole.ROLE_ADMIN);
@@ -60,11 +62,13 @@ export class GeneralConfigurationComponent implements OnInit {
           protocol: window.location.protocol.replace(':', '') as unknown as 'http' | 'https',
           allowSelfRegistration: false,
           allowPasswordRecovery: false,
-          defaultUserRoles: [UserRole.ROLE_PIPELINE_USER]
+          defaultUserRoles: [UserRole.ROLE_PIPELINE_USER],
+          appName: this.appConstants.APP_NAME,
         };
       }
       this.mailConfig = configs[1];
       this.parentForm = this.fb.group({});
+      this.parentForm.addControl('appName', new FormControl(this.generalConfig.appName, Validators.required));
       this.parentForm.addControl('protocol', new FormControl(this.generalConfig.protocol, Validators.required));
       this.parentForm.addControl('port', new FormControl(this.generalConfig.port, Validators.required));
       this.parentForm.addControl('hostname', new FormControl(this.generalConfig.hostname, Validators.required));
@@ -72,6 +76,7 @@ export class GeneralConfigurationComponent implements OnInit {
       this.parentForm.addControl('allowPasswordRecovery', new FormControl(this.generalConfig.allowPasswordRecovery));
       this.parentForm.addControl('defaultUserRoles', new FormControl([UserRole.ROLE_PIPELINE_USER], Validators.required));
       this.parentForm.valueChanges.subscribe(v => {
+        this.generalConfig.appName = v.appName;
         this.generalConfig.protocol = v.protocol;
         this.generalConfig.port = v.port;
         this.generalConfig.hostname = v.hostname;

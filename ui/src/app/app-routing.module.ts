@@ -49,12 +49,14 @@ import { AddComponent } from './add/add.component';
 import { FilesComponent } from './files/files.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
 import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
+import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 
 const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
   { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard],
   data: {animation: 'LoginPage'}},
   { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
+  { path: 'activate-account', component: ActivateAccountComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
   { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
