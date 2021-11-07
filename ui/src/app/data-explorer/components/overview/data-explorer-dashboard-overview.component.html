@@ -76,6 +76,17 @@
                             </div>
                         </td>
                     </ng-container>
+                    <ng-container matColumnDef="permissions" *ngIf="isAdmin">
+                        <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Permissions</th>
+                        <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row">
+                                <button mat-button mat-icon-button color="accent"
+                                        (click)="showPermissionsDialog(element)">
+                                    <i class="material-icons">share</i>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
 
                     <ng-container matColumnDef="delete">
                         <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delete</th>

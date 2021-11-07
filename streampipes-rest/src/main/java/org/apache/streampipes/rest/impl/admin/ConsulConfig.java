@@ -32,6 +32,7 @@ import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v2/consul")
+@Component
 public class ConsulConfig extends AbstractRestResource {
 
   private static Logger LOG = LoggerFactory.getLogger(ConsulConfig.class);

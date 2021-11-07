@@ -28,6 +28,8 @@ import { DeleteAdapterDialogComponent } from '../../../dialog/delete-adapter-dia
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../../core-ui/object-permission-dialog/object-permission-dialog.component';
+import { UserRole } from '../../../../_enums/user-role.enum';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -54,14 +56,19 @@ export class ExistingAdaptersComponent implements OnInit {
   displayedColumns: string[] = ['start', 'name', 'adapterBase', 'adapterType', 'lastModified', 'action'];
 
   dataSource: MatTableDataSource<AdapterDescriptionUnion>;
+  isAdmin = false;
 
   constructor(public connectService: ConnectService,
               private dataMarketplaceService: DataMarketplaceService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private authService: AuthService) {
 
   }
 
   ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+    });
     this.dataSource = new MatTableDataSource(this.existingAdapters);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;

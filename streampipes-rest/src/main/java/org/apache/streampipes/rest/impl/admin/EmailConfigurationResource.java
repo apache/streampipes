@@ -25,6 +25,7 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.simplejavamail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -32,6 +33,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("/v2/admin/mail-config")
+@Component
 public class EmailConfigurationResource extends AbstractAuthGuardedRestResource {
 
   @GET

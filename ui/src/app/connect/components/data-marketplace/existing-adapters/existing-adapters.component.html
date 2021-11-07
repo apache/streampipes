@@ -103,7 +103,7 @@
                             class="material-icons">content_copy</i>
                     </button>
                 </span>
-                        <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">
+                        <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
                     <button color="accent" mat-button mat-icon-button matTooltip="Manage permissions"
                             matTooltipPosition="above" (click)="showPermissionsDialog(adapter)"><i
                             class="material-icons">share</i>

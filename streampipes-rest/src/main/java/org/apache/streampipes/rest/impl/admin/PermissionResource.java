@@ -18,7 +18,10 @@
 package org.apache.streampipes.rest.impl.admin;
 
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -27,18 +30,22 @@ import javax.ws.rs.PathParam;
 import java.util.List;
 
 @Path("/v2/admin/permissions")
-public class PermissionResource extends AbstractRestResource {
+@Component
+public class PermissionResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @Path("objects/{objectInstanceId}")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public List<Permission> getPermissionForObject(@PathParam("objectInstanceId") String objectInstanceId) {
     return getSpResourceManager().managePermissions().findForObjectId(objectInstanceId);
   }
 
   @PUT
   @Path("{permissionId}")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public void updatePermission(@PathParam("permissionId") String permissionId,
                                Permission permission) {
+    System.out.println(getAuthenticatedUsername());
     if (permissionId.equals(permission.getPermissionId())) {
       getSpResourceManager().managePermissions().update(permission);
     }
