@@ -18,21 +18,23 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { HistogramChartWidgetModel } from './model/histogram-chart-widget.model';
+import { DistributionChartWidgetModel } from './model/distribution-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
-  selector: 'sp-data-explorer-histogram-chart-widget',
-  templateUrl: './histogram-chart-widget.component.html',
-  styleUrls: ['./histogram-chart-widget.component.scss']
+  selector: 'sp-data-explorer-distribution-chart-widget',
+  templateUrl: './distribution-chart-widget.component.html',
+  styleUrls: ['./distribution-chart-widget.component.scss']
 })
-export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<HistogramChartWidgetModel> implements OnInit {
+export class DistributionChartWidgetComponent extends BaseDataExplorerWidget<DistributionChartWidgetModel> implements OnInit {
 
   data = [
     {
       x: [],
-      type: 'histogram'
+      values: [],
+      labels: [],
+      type: 'pie'
     }
   ];
 
@@ -45,6 +47,7 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
       plot_bgcolor: '#fff',
       paper_bgcolor: '#fff'
     },
+
     config: {
       modeBarButtonsToRemove: ['lasso2d', 'select2d', 'toggleSpikelines', 'toImage'],
       displaylogo: false,
@@ -57,18 +60,56 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
     this.updateAppearance();
   }
 
-  prepareData(result: SpQueryResult[]) {
-    const index = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedProperty, result[0]);
-    const varX = this.transform(result[0].allDataSeries[0].rows, index);
-
-    this.data = [{
-      x: varX,
-      type: 'histogram'
-    }];
-  }
-
   transform(rows, index: number): any[] {
     return rows.map(row => row[index]);
+  }
+
+  prepareData(spQueryResult: SpQueryResult[]) {
+    const series = spQueryResult[0];
+    const finalLabels: string[] = [];
+    const finalValues: number[] = [];
+    const values: Map<string, number> = new Map();
+    const field = this.dataExplorerWidget.visualizationConfig.selectedProperty;
+    const index = this.getColumnIndex(field, series);
+    const histoValues: number[] = [];
+
+    if (series.total > 0) {
+      const colValues = this.transform(series.allDataSeries[0].rows, index);
+      colValues.forEach(value => {
+
+      histoValues.push(value);
+
+      if (field.fieldCharacteristics.numeric) {
+        const roundingValue = this.dataExplorerWidget.visualizationConfig.roundingValue;
+        value = Math.round(value / roundingValue) * roundingValue;
+      }
+
+      if (!values.has(value)) {
+        values.set(value, 0);
+      }
+      const currentVal = values.get(value);
+      values.set(value, currentVal + 1);
+
+      });
+    }
+    values.forEach((value, key) => {
+      finalLabels.push(key);
+      finalValues.push(value);
+    });
+
+    if (this.dataExplorerWidget.visualizationConfig.displayType === 'pie') {
+      this.data[0].values = finalValues;
+      this.data[0].labels = finalLabels;
+      this.data[0].type = 'pie';
+    } else {
+      this.data[0].x = histoValues;
+      this.data[0].type = 'histogram';
+    }
+  }
+
+  existsLabel(labels: string[],
+              value: string) {
+    return labels.indexOf(value) > -1;
   }
 
   updateAppearance() {
@@ -93,6 +134,7 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.selectedProperty =
       this.triggerFieldUpdate(this.dataExplorerWidget.visualizationConfig.selectedProperty, addedFields, removedFields);
+
   }
 
   triggerFieldUpdate(selected: DataExplorerField,
@@ -100,12 +142,11 @@ export class HistogramChartWidgetComponent extends BaseDataExplorerWidget<Histog
                      removedFields: DataExplorerField[]): DataExplorerField {
     return this.updateSingleField(
       selected,
-      this.fieldProvider.allFields,
+      this.fieldProvider.numericFields,
       addedFields,
       removedFields,
-      (field) => true
+      (field) => field.fieldCharacteristics.numeric
     );
   }
-
 
 }

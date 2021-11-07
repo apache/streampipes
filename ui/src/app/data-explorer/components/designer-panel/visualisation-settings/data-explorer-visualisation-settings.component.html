@@ -53,25 +53,20 @@
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
             </sp-data-explorer-time-series-chart-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">
-            <sp-data-explorer-histogram-chart-widget-config
-                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-            </sp-data-explorer-histogram-chart-widget-config>
-        </div>
         <div *ngIf="currentlyConfiguredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">
             <sp-data-explorer-indicator-chart-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
             </sp-data-explorer-indicator-chart-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'density-chart'" class="h-100 p-0">
-            <sp-data-explorer-density-chart-widget-config
+        <div *ngIf="currentlyConfiguredWidget.widgetType === 'correlation-chart'" class="h-100 p-0">
+            <sp-data-explorer-correlation-chart-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-            </sp-data-explorer-density-chart-widget-config>
+            </sp-data-explorer-correlation-chart-widget-config>
         </div>
-        <div *ngIf="currentlyConfiguredWidget.widgetType === 'pie-chart'" class="h-100 p-0">
-            <sp-data-explorer-pie-chart-widget-config
+        <div *ngIf="currentlyConfiguredWidget.widgetType === 'distribution-chart'" class="h-100 p-0">
+            <sp-data-explorer-distribution-chart-widget-config
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
-            </sp-data-explorer-pie-chart-widget-config>
+            </sp-data-explorer-distribution-chart-widget-config>
         </div>
     </div>
 </div>

@@ -18,16 +18,16 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
-import { DensityChartWidgetModel } from './model/density-chart-widget.model';
+import { CorrelationChartWidgetModel } from './model/correlation-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
 @Component({
-  selector: 'sp-data-explorer-density-chart-widget',
-  templateUrl: './density-chart-widget.component.html',
-  styleUrls: ['./density-chart-widget.component.scss']
+  selector: 'sp-data-explorer-correlation-chart-widget',
+  templateUrl: './correlation-chart-widget.component.html',
+  styleUrls: ['./correlation-chart-widget.component.scss']
 })
-export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityChartWidgetModel> implements OnInit {
+export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<CorrelationChartWidgetModel> implements OnInit {
 
   data = [
     {
@@ -89,9 +89,18 @@ export class DensityChartWidgetComponent extends BaseDataExplorerWidget<DensityC
     const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result[0]);
     const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result[0]);
     this.data[0].x = this.transform(result[0].allDataSeries[0].rows, xIndex);
-    this.data[1].x = this.transform(result[0].allDataSeries[0].rows, xIndex);
     this.data[0].y = this.transform(result[0].allDataSeries[0].rows, yIndex);
-    this.data[1].y = this.transform(result[0].allDataSeries[0].rows, yIndex);
+    if (this.dataExplorerWidget.visualizationConfig.displayType === 'Density') {
+      this.data[1].x = this.transform(result[0].allDataSeries[0].rows, xIndex);
+      this.data[1].y = this.transform(result[0].allDataSeries[0].rows, yIndex);
+      this.data[0].marker.size = 2;
+      this.data[0].marker.opacity = 0.4;
+    } else {
+      this.data[1].x = [];
+      this.data[1].y = [];
+      this.data[0].marker.size = 5;
+      this.data[0].marker.opacity = 1.;
+    }
   }
 
   transform(rows, index: number): any[] {

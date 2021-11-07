@@ -33,8 +33,6 @@ export class SelectColorPropertiesComponent implements OnInit {
 
   @Input() availableProperties: DataExplorerField[];
   @Input() selectedProperties: DataExplorerField[];
-  @Input() label: string;
-  @Input() multiple: boolean;
   @Input() currentlyConfiguredWidget: TimeSeriesChartWidgetModel;
 
   constructor(protected widgetConfigurationService: WidgetConfigurationService) {
@@ -86,10 +84,6 @@ export class SelectColorPropertiesComponent implements OnInit {
       refreshData: true,
       refreshView: true
     });
-  }
-
-  getColor(field: DataExplorerField) {
-    return '#000000';
   }
 
   onFilterChange(searchValue: string, field: DataExplorerField): void {

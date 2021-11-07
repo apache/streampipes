@@ -15,3 +15,18 @@
  * limitations under the License.
  *
  */
+
+import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+
+
+export interface DistributionChartVisConfig extends DataExplorerVisConfig {
+  selectedProperty: DataExplorerField;
+  displayType: string;
+  roundingValue: number;
+}
+
+export interface DistributionChartWidgetModel extends DataExplorerWidgetModel {
+  dataConfig: DataExplorerDataConfig;
+  visualizationConfig: DistributionChartVisConfig;
+}
