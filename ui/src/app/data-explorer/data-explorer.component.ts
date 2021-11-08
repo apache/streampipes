@@ -24,6 +24,8 @@ import { Dashboard, TimeSettings } from '../dashboard/models/dashboard.model';
 import { Tuple2 } from '../core-model/base/Tuple2';
 import { ActivatedRoute } from '@angular/router';
 import { TimeSelectionService } from './services/time-selection.service';
+import { AuthService } from '../services/auth.service';
+import { UserPrivilege } from '../_enums/user-privilege.enum';
 
 @Component({
   selector: 'sp-data-explorer',
@@ -43,16 +45,25 @@ export class DataExplorerComponent implements OnInit {
 
   routeParams: any;
 
+  hasDataExplorerWritePrivileges = false;
+  hasDataExplorerDeletePrivileges = false;
+
   @ViewChild('dashboardPanel') dashboardPanel: DataExplorerDashboardPanelComponent;
 
   constructor(private dataViewService: DataViewDataExplorerService,
               private refreshDashboardService: RefreshDashboardService,
               private route: ActivatedRoute,
-              private timeSelectionService: TimeSelectionService) {
+              private timeSelectionService: TimeSelectionService,
+              private authService: AuthService,
+              private dashboardService: DataViewDataExplorerService) {
   }
 
 
   public ngOnInit() {
+    this.authService.user$.subscribe(user => {
+      this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
+      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
+    });
     this.route.queryParams.subscribe(params => {
       this.routeParams = { startTime: params['startTime'], endTime: params['endTime'], dashboardId: params['dashboardId'] };
       this.getDashboards();
@@ -128,5 +139,11 @@ export class DataExplorerComponent implements OnInit {
 
   triggerEditMode() {
     this.editMode = true;
+  }
+
+  deleteDashboard(dashboard: Dashboard) {
+    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
+      this.getDashboards();
+    });
   }
 }

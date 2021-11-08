@@ -31,7 +31,7 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="triggerEditMode()" *ngIf="!editMode">
+                        <button mat-menu-item (click)="triggerEditMode()" *ngIf="!editMode && hasDataExplorerWritePrivileges">
                             <mat-icon>edit</mat-icon>
                             <span>Edit dashboard</span>
                         </button>
@@ -47,7 +47,7 @@
                             <mat-icon>alarm_off</mat-icon>
                             <span>Hide time range selector</span>
                         </button>
-                        <button mat-menu-item>
+                        <button mat-menu-item *ngIf="hasDataExplorerDeletePrivileges" (click)="deleteDashboard(selectedDataViewDashboard)">
                             <mat-icon>clear</mat-icon>
                             <span>Delete dashboard</span>
                         </button>
