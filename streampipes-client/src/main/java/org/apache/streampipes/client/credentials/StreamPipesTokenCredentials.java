@@ -57,7 +57,6 @@ public class StreamPipesTokenCredentials implements CredentialsProvider {
   @Override
   public List<Header> makeHeaders() {
     String jwtToken = makeJwtToken();
-    System.out.println(jwtToken);
     return Collections.singletonList(Headers.authorizationBearer(jwtToken));
   }
 }

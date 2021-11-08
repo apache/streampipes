@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl.datalake;
 
 import org.apache.streampipes.dataexplorer.DataLakeNoUserManagementV3;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
@@ -28,11 +28,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v3/datalake/measure")
-public class DataLakeNoUserResourceV3 extends AbstractRestResource {
+public class DataLakeMeasureResourceV3 extends AbstractAuthGuardedRestResource {
 
     private DataLakeNoUserManagementV3 dataLakeManagement;
 
-    public DataLakeNoUserResourceV3() {
+    public DataLakeMeasureResourceV3() {
         this.dataLakeManagement = new DataLakeNoUserManagementV3();
     }
 

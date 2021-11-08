@@ -29,7 +29,7 @@ import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipelineResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
-import org.apache.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
+import org.apache.streampipes.rest.impl.datalake.DataLakeMeasureResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.datalake.PersistedDataStreamResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
@@ -63,7 +63,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DashboardWidget.class);
         register(Dashboard.class);
         register(DataLakeResourceV3.class);
-        register(DataLakeNoUserResourceV3.class);
+        register(DataLakeMeasureResourceV3.class);
         register(DataStream.class);
         register(Deployment.class);
         register(EmailConfigurationResource.class);
@@ -103,7 +103,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataLakeDashboardResource.class);
         register(DataLakeWidgetResource.class);
         register(DataLakeResourceV3.class);
-        register(DataLakeNoUserResourceV3.class);
+        register(DataLakeMeasureResourceV3.class);
         register(PipelineElementFile.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
