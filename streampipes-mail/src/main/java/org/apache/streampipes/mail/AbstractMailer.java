@@ -20,6 +20,7 @@ package org.apache.streampipes.mail;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.mail.config.MailConfigurationBuilder;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.email.EmailPopulatingBuilder;
 import org.simplejavamail.api.email.Recipient;
@@ -41,7 +42,20 @@ public class AbstractMailer {
   }
 
   protected EmailConfig getEmailConfig() {
-    return BackendConfig.INSTANCE.getEmailConfig();
+
+    EmailConfig config = BackendConfig.INSTANCE.getEmailConfig();
+    if (config.isSmtpPassEncrypted()) {
+      config.setSmtpPassword(SecretEncryptionManager.decrypt(config.getSmtpPassword()));
+      config.setSmtpPassEncrypted(false);
+    }
+
+    if (config.isProxyPassEncrypted()) {
+      config.setProxyPassword(SecretEncryptionManager.decrypt(config.getProxyPassword()));
+      config.setProxyPassEncrypted(false);
+    }
+
+    return config;
+
   }
 
   protected void deliverMail(Email email) {

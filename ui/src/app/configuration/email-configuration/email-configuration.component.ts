@@ -81,7 +81,10 @@ export class EmailConfigurationComponent implements OnInit {
       this.mailConfig.transportStrategy = v.transport;
       if (this.mailConfig.usesAuthentication) {
         this.mailConfig.smtpUsername = v.smtpUsername;
-        this.mailConfig.smtpPassword = v.smtpPassword;
+        if (this.mailConfig.smtpPassword !== v.smtpPassword) {
+          this.mailConfig.smtpPassword = v.smtpPassword;
+          this.mailConfig.smtpPassEncrypted = false;
+        }
       }
       this.mailConfig.usesProxy = v.usesProxy;
       if (this.mailConfig.usesProxy) {
@@ -91,7 +94,10 @@ export class EmailConfigurationComponent implements OnInit {
       this.mailConfig.usesProxyAuthentication = v.usesProxyAuthentication;
       if (this.mailConfig.usesProxyAuthentication) {
         this.mailConfig.proxyUser = v.proxyUsername;
-        this.mailConfig.proxyPassword = v.proxyPassword;
+        if (this.mailConfig.proxyPassword !== v.proxyPassword) {
+          this.mailConfig.proxyPassword = v.proxyPassword;
+          this.mailConfig.proxyPassEncrypted = false;
+        }
       }
       this.mailConfig.senderAddress = v.senderAddress;
       this.mailConfig.senderName = v.senderName;

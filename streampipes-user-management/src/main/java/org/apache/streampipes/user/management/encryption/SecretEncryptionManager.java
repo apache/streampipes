@@ -23,16 +23,14 @@ import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.iv.RandomIvGenerator;
 
-import java.security.GeneralSecurityException;
-
 
 public class SecretEncryptionManager {
 
-  public static String encrypt(String property) throws GeneralSecurityException {
+  public static String encrypt(String property) {
     return getEncryptor().encrypt(property);
   }
 
-  public static String decrypt(String property) throws GeneralSecurityException {
+  public static String decrypt(String property) {
     return getEncryptor().decrypt(property);
   }
 

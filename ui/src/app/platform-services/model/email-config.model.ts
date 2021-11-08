@@ -41,4 +41,7 @@ export interface EmailConfig {
   proxyPassword: string;
 
   testRecipientAddress: string;
+
+  smtpPassEncrypted: boolean;
+  proxyPassEncrypted: boolean;
 }
