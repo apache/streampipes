@@ -146,7 +146,7 @@ export class AdapterUtils {
     // Mark property as timestamp
     cy.get('#event-schema-next-button').should('be.disabled');
     // Edit timestamp
-    cy.dataCy('edit-' + propertyName).click();
+    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
 
     // Mark as timestamp
     cy.dataCy('sp-mark-as-timestamp').children().click();

@@ -6,5 +6,7 @@
   },
   "baseUrl": "http://localhost:8082",
   "trashAssetsBeforeRuns": false,
-  "videoCompression": false
+  "videoCompression": false,
+  "viewportWidth": 1920,
+  "viewportHeight": 1080
 }

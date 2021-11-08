@@ -32,13 +32,15 @@
                         <mat-label>Email</mat-label>
                         <input formControlName="username" fxFlex type="email"
                                matInput
-                               required>
+                               required
+                               data-cy="new-user-email">
                     </mat-form-field>
                     <mat-form-field color="accent" *ngIf="isUserAccount">
                         <mat-label>Full Name</mat-label>
                         <input formControlName="fullName" fxFlex
                                matInput
-                               required>
+                               required
+                               data-cy="new-user-full-name">
                     </mat-form-field>
 
                 </div>
@@ -48,13 +50,15 @@
                         <mat-label>Initial password</mat-label>
                         <input formControlName="password" fxFlex
                                matInput
-                               required>
+                               required
+                               data-cy="new-user-password">
                     </mat-form-field>
                     <mat-form-field color="accent">
                         <mat-label>Repeat password</mat-label>
                         <input formControlName="repeatPassword" fxFlex
                                matInput
-                               required>
+                               required
+                               data-cy="new-user-password-repeat">
                     </mat-form-field>
                 </div>
                 <div fxLayout="column" class="general-options-panel" *ngIf="!isUserAccount">
@@ -69,23 +73,28 @@
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Groups</span>
                     <mat-checkbox *ngFor="let group of availableGroups" [value]="group.groupId"
-                                  [checked]="user.groups.indexOf(group.groupId) > -1" (change)="changeGroupAssignment($event)">
+                                  [checked]="user.groups.indexOf(group.groupId) > -1"
+                                  (change)="changeGroupAssignment($event)">
                         {{group.groupName}}
                     </mat-checkbox>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Roles</span>
-                <mat-checkbox *ngFor="let role of availableRoles" [value]="role.role"
-                              [checked]="user.roles.indexOf(role.role) > -1" (change)="changeRoleAssignment($event)">
-                    {{role.roleTitle}}
-                </mat-checkbox>
+                    <mat-checkbox *ngFor="let role of availableRoles" [value]="role.role"
+                                  [checked]="user.roles.indexOf(role.role) > -1"
+                                  (change)="changeRoleAssignment($event)"
+                                  [attr.data-cy]="'role-' + role.role">
+                        {{role.roleTitle}}
+                    </mat-checkbox>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Account</span>
-                    <mat-checkbox formControlName="accountEnabled">
+                    <mat-checkbox formControlName="accountEnabled"
+                                  data-cy="new-user-enabled">
                         Enabled
                     </mat-checkbox>
-                    <mat-checkbox formControlName="accountLocked">
+                    <mat-checkbox formControlName="accountLocked"
+                                  data-cy="new-user-locked">
                         Locked
                     </mat-checkbox>
                 </div>

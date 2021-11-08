@@ -32,24 +32,30 @@
     </div>
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 0">
-        <sp-general-configuration fxFlex="100"></sp-general-configuration>
-    </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 1">
-        <sp-datalake-configuration fxFlex="100"></sp-datalake-configuration>
-    </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 2">
-        <sp-email-configuration fxFlex="100"></sp-email-configuration>
-    </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 3">
-        <messaging-configuration fxFlex="100"></messaging-configuration>
-    </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 4">
-        <pipeline-element-configuration fxFlex="100"></pipeline-element-configuration>
-    </div>
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="selectedIndex == 5">
-        <sp-security-configuration fxFlex="100"></sp-security-configuration>
-    </div>
+        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
+             *ngIf="selectedIndex == 0">
+            <sp-general-configuration fxFlex="100"></sp-general-configuration>
+        </div>
+        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
+             *ngIf="selectedIndex == 1">
+            <sp-datalake-configuration fxFlex="100"></sp-datalake-configuration>
+        </div>
+        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
+             *ngIf="selectedIndex == 2">
+            <sp-email-configuration fxFlex="100"></sp-email-configuration>
+        </div>
+        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
+             *ngIf="selectedIndex == 3">
+            <messaging-configuration fxFlex="100"></messaging-configuration>
+        </div>
+        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
+             *ngIf="selectedIndex == 4">
+            <pipeline-element-configuration fxFlex="100"></pipeline-element-configuration>
+        </div>
+        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
+             *ngIf="selectedIndex == 5">
+            <sp-security-configuration fxFlex="100"></sp-security-configuration>
+        </div>
     </div>
 
 </div>
