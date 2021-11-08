@@ -31,6 +31,8 @@ describe('Test Random Data Simulator Stream Adapter', () => {
       .addInput('input', 'wait-time-ms', '1000')
       .build();
 
+
+    cy.visit('#/connect');
     AdapterUtils.testSpecificStreamAdapter(adapterInput);
     AdapterUtils.deleteAdapter();
 

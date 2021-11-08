@@ -25,5 +25,11 @@ declare global {
 }
 
 export const resetStreamPipes = () => {
-  cy.request('POST', `/streampipes-backend/api/v2/reset`, {});
+  cy.request({
+    method: 'POST',
+    url: '/streampipes-backend/api/v2/reset',
+    auth: {
+      bearer: window.localStorage.getItem('auth-token')
+    }
+  });
 };

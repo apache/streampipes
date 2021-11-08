@@ -19,30 +19,14 @@
 import { UserUtils } from '../../support/utils/UserUtils';
 
 
-describe('Install StreamPipes', () => {
-  let isSetupPage: boolean;
+describe('Login and logout of StreamPipes', () => {
 
   it('Perform Test', () => {
-
     cy.visit('#/login');
-
-    // This wait ensures that the installation site is completely loaded
-    // If a better solution is found this wait can be removed
-    // The test should work for both cases either when the system is already installed and when it should be installed
-    cy.wait(10000);
-
-    cy.url({ timeout: 60000 }).then(($route) => {
-      isSetupPage = ($route.endsWith('setup')) ? true : false;
-      if (isSetupPage) {
-        cy.get('input[name="email"]').type(UserUtils.testUserName);
-        cy.get('input[name="password"]').type(UserUtils.testUserPassword);
-
-        cy.get('button').contains('Install').parent().click();
-
-        cy.dataCy('sp-button-finish-installation', { timeout: 240000 }).should('be.visible');
-        cy.dataCy('sp-button-finish-installation').click();
-      }
-    });
+    cy.dataCy('login-email').type(UserUtils.testUserName);
+    cy.dataCy('login-password').type(UserUtils.testUserPassword);
+    cy.dataCy('login-button').click();
+    cy.logout();
   });
 
 });
