@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.client.http;
 
 import org.apache.http.HttpEntity;
@@ -25,27 +26,21 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 
 import java.io.IOException;
 
-public class DeleteRequest<DSO, DT> extends HttpRequest<Void, DSO, DT> {
+public class BinaryGetRequest extends HttpRequest<Void, byte[], byte[]> {
 
-  private Class<DSO> responseClass;
+    public BinaryGetRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Serializer<Void, byte[], byte[]> serializer) {
+        super(clientConfig, apiPath, serializer);
+    }
 
-  public DeleteRequest(StreamPipesClientConfig clientConfig,
-                       StreamPipesApiPath apiPath,
-                       Class<DSO> responseClass,
-                       Serializer<Void, DSO, DT> serializer) {
-    super(clientConfig, apiPath, serializer);
-    this.responseClass = responseClass;
-  }
+    @Override
+    protected Request makeRequest(Serializer<Void, byte[], byte[]> serializer) {
+        return Request
+                .Get(makeUrl())
+                .setHeaders(standardHeaders());
+    }
 
-  @Override
-  protected Request makeRequest(Serializer<Void, DSO, DT> serializer) {
-    return Request
-            .Delete(makeUrl())
-            .setHeaders(standardJsonHeaders());
-  }
-
-  @Override
-  protected DT afterRequest(Serializer<Void, DSO, DT> serializer, HttpEntity entity) throws IOException {
-    return serializer.deserialize(entityAsString(entity), responseClass);
-  }
+    @Override
+    protected byte[] afterRequest(Serializer<Void, byte[], byte[]> serializer, HttpEntity entity) throws IOException {
+        return entityAsByteArray(entity);
+    }
 }

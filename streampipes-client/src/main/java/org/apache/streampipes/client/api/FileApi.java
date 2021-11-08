@@ -15,25 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.rest.impl.nouser;
 
-import org.apache.streampipes.manager.file.FileManager;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+package org.apache.streampipes.client.api;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import org.apache.streampipes.client.http.BinaryGetRequest;
+import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-@Path("/v2/noauth/files")
-public class FileServingResource extends AbstractRestResource {
+public class FileApi extends AbstractClientApi {
 
-  @GET
-  @Path("/{filename}")
-  @Produces(MediaType.APPLICATION_OCTET_STREAM)
-  public Response getFile(@PathParam("filename") String filename) {
-    return ok(FileManager.getFile(filename));
-  }
+    public FileApi(StreamPipesClientConfig clientConfig) {
+        super(clientConfig);
+    }
+
+    public byte[] getFileContent(String fileName) {
+       return new BinaryGetRequest(clientConfig, getBaseResourcePath(fileName), null).executeRequest();
+    }
+
+    protected StreamPipesApiPath getBaseResourcePath(String fileName) {
+        return StreamPipesApiPath.fromBaseApiPath()
+                .addToPath("files")
+                .addToPath(fileName);
+    }
 }

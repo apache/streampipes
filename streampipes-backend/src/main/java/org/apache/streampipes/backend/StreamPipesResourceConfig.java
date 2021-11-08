@@ -32,12 +32,10 @@ import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.datalake.PersistedDataStreamResource;
-import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.pe.DataProcessorResource;
 import org.apache.streampipes.rest.impl.pe.DataSinkResource;
 import org.apache.streampipes.rest.impl.pe.DataStreamResource;
-import org.apache.streampipes.rest.impl.admin.PipelineElementImport;
 import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
@@ -71,7 +69,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(EmailConfigurationResource.class);
         register(EmailResource.class);
         register(ExtensionsServiceEndpointResource.class);
-        register(FileServingResource.class);
         register(GeneralConfigurationResource.class);
         register(LabelResource.class);
         register(MeasurementUnitResource.class);
@@ -108,7 +105,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataLakeResourceV3.class);
         register(DataLakeNoUserResourceV3.class);
         register(PipelineElementFile.class);
-        register(FileServingResource.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
         register(VisualizablePipelineResource.class);

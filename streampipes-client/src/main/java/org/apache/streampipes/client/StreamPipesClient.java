@@ -186,4 +186,8 @@ public class StreamPipesClient implements SupportsPipelineApi,
     CustomRequestApi api = customRequest();
     api.sendPost(ApiPath.EMAIL_RESOURCE, email);
   }
+
+  public FileApi fileApi() {
+    return new FileApi(config);
+  }
 }
