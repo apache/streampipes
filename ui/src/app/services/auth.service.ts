@@ -171,6 +171,8 @@ export class AuthService {
                 return this.hasAnyRole(['ROLE_CONNECT_ADMIN', 'ROLE_PIPELINE_ADMIN']);
             case PageName.INSTALL_PIPELINE_ELEMENTS:
                 return this.hasAnyRole(['ROLE_ADMIN']);
+            case PageName.NOTIFICATIONS:
+                return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
             case PageName.SETTINGS:
                 return this.hasAnyRole(['ROLE_ADMIN']);
             default:
