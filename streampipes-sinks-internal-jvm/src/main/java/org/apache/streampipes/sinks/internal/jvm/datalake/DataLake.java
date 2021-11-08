@@ -25,7 +25,8 @@ import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -58,13 +59,21 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
     this.timestampField = parameters.getTimestampField();
 
+    SpConfig configStore = runtimeContext.getConfigStore().getConfig();
+
+    String influxHost = configStore.getString(ConfigKeys.DATA_LAKE_PROTOCOL) + "://" + configStore.getString(ConfigKeys.DATA_LAKE_HOST);
+    Integer influxPort = configStore.getInteger(ConfigKeys.DATA_LAKE_PORT);
+    String databaseName = configStore.getString(ConfigKeys.DATA_LAKE_DATABASE_NAME);
+    String user = configStore.getString(ConfigKeys.DATA_LAKE_USERNAME);
+    String password = configStore.getString(ConfigKeys.DATA_LAKE_PASSWORD);
+
     this.influxDbClient = new DataLakeInfluxDbClient(
-            parameters.getInfluxDbHost(),
-            parameters.getInfluxDbPort(),
-            parameters.getDatabaseName(),
+            influxHost,
+            influxPort,
+            databaseName,
             parameters.getMeasurementName(),
-            parameters.getUsername(),
-            parameters.getPassword(),
+            user,
+            password,
             parameters.getTimestampField(),
             parameters.getBatchSize(),
             parameters.getFlushDuration(),
@@ -95,7 +104,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
                     eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
             .collect(Collectors.toList());
 
-    imageDirectory = SinksInternalJvmConfig.INSTANCE.getImageStorageLocation() + parameters.getMeasurementName() + "/";
+    imageDirectory = configStore.getString(ConfigKeys.IMAGE_STORAGE_LOCATION) + parameters.getMeasurementName() + "/";
 
   }
 
