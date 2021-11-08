@@ -15,13 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.utils;
+package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.util.StreamPipesApiPath;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-public class StreamPipesClientResolver {
+import java.util.List;
 
-  public StreamPipesClient makeStreamPipesClientInstance() {
-    return StreamPipesClient.create(new StreamPipesClientRuntimeConnectionResolver());
+public class AdminApi extends AbstractClientApi {
+
+  public AdminApi(StreamPipesClientConfig clientConfig) {
+    super(clientConfig);
+  }
+
+  public void registerAdapters(List<AdapterDescription> adapters) {
+    post(getConnectPath(), adapters);
+  }
+
+  private StreamPipesApiPath getConnectPath() {
+    return StreamPipesApiPath
+            .fromBaseApiPath()
+            .addToPath("connect")
+            .addToPath("master")
+            .addToPath("administration");
   }
 }

@@ -38,6 +38,8 @@ import { RegisterComponent } from './login/components/register/register.componen
 import { RestorePasswordComponent } from './login/components/restore-password/restore-password.component';
 import { RegistrationAllowedCanActivateGuard } from './_guards/registration-allowed.can-activate.guard';
 import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-password-allowed.can-activate.guard';
+import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
+import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 
 import { EditorComponent } from './editor/editor.component';
 import { PipelinesComponent } from './pipelines/pipelines.component';
@@ -48,8 +50,6 @@ import { AppOverviewComponent } from './app-overview/app-overview.component';
 import { AddComponent } from './add/add.component';
 import { FilesComponent } from './files/files.component';
 import { ConfigurationComponent } from './configuration/configuration.component';
-import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
-import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 
 const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
@@ -86,9 +86,9 @@ const routes: Routes = [
       AuthCanActivateChildrenGuard,
       AlreadyConfiguredCanActivateGuard,
       ConfiguredCanActivateGuard,
+      PageAuthGuard,
       RegistrationAllowedCanActivateGuard,
       RestorePasswordAllowedCanActivateGuard,
-      PageAuthGuard
   ]
 })
 export class AppRoutingModule { }

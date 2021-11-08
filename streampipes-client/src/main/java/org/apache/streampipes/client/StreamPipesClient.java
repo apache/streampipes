@@ -178,6 +178,10 @@ public class StreamPipesClient implements SupportsPipelineApi,
     return new CustomRequestApi(config);
   }
 
+  public AdminApi adminApi() {
+    return new AdminApi(config);
+  }
+
   public void deliverEmail(SpEmail email) {
     CustomRequestApi api = customRequest();
     api.sendPost(ApiPath.EMAIL_RESOURCE, email);

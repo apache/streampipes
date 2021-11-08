@@ -25,7 +25,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.wrapper.params.binding.BindingParams;
 import org.apache.streampipes.wrapper.runtime.PipelineElementRuntime;
-import org.apache.streampipes.wrapper.utils.StreamPipesClientResolver;
+import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 
 public abstract class PipelineElementDeclarer<B extends BindingParams, EPR extends
         PipelineElementRuntime, I

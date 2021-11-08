@@ -18,41 +18,28 @@
 
 package org.apache.streampipes.connect.container.worker.management;
 
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MasterRestClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(MasterRestClient.class);
 
-    public static boolean register(String baseUrl,
-                                   List<AdapterDescription> allAvailableAdapters) {
-
-        String url = baseUrl + "/api/v2/connect/admin@streampipes.org/master/administration";
+    public static boolean register(List<AdapterDescription> allAvailableAdapters) {
 
         try {
-            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(allAvailableAdapters);
-
-            Request.Post(url)
-                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
+            StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+            client.adminApi().registerAdapters(allAvailableAdapters);
             return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOG.info("Could not connect to " + url);
+        } catch (Exception e) {
+            LOG.info("Could not register adapter at url " , e);
+            return false;
         }
-
-        return false;
     }
 
 }

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.wrapper.utils;
+package org.apache.streampipes.service.extensions.base.client;
 
 import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.client.credentials.StreamPipesTokenCredentials;
