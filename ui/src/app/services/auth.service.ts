@@ -124,7 +124,7 @@ export class AuthService {
     }
 
     public hasRole(role: RoleModel): boolean {
-        return this.getUserRoles().includes(role);
+        return this.getUserRoles().includes('ROLE_ADMIN') || this.getUserRoles().includes(role);
     }
 
     public hasAnyRole(roles: RoleModel[]): boolean {

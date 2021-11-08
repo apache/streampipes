@@ -28,7 +28,7 @@
                 </div>
                 <div fxFlex fxLayoutAlign="end center" class="mr-20">
                 <button mat-button mat-icon-button color="accent"
-                        *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">
+                        *ngIf="selectedIndex > 0 && hasDashboardWritePrivileges" (click)="toggleEditMode()" [disabled]="editMode">
                     <i class="material-icons">edit</i>
                 </button>
                 </div>

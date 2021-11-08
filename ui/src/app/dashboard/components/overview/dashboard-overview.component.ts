@@ -29,6 +29,7 @@ import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
   selector: 'dashboard-overview',
@@ -45,6 +46,8 @@ export class DashboardOverviewComponent implements OnInit {
   displayedColumns: string[] = [];
 
   isAdmin = false;
+  hasDashboardWritePrivileges = false;
+  hasDashboardDeletePrivileges = false;
 
   constructor(private dashboardService: DashboardService,
               public dialog: MatDialog,
@@ -57,9 +60,9 @@ export class DashboardOverviewComponent implements OnInit {
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-      this.displayedColumns = this.isAdmin ?
-          ['name', 'open', 'openWindow', 'settings', 'edit', 'permissions', 'delete'] :
-          this.displayedColumns = ['name', 'open', 'openWindow', 'settings', 'edit', 'delete'];
+      this.hasDashboardWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DASHBOARD);
+      this.hasDashboardDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DASHBOARD);
+      this.displayedColumns = ['name', 'actions'];
 
     });
     this.dataSource.data = this.dashboards;
