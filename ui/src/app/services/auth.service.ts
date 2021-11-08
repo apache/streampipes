@@ -135,13 +135,14 @@ export class AuthService {
         return false;
     }
 
-    isAnyAccessGranted(pageNames: PageName[]): boolean {
+    isAnyAccessGranted(pageNames: PageName[],
+                       redirect?: boolean): boolean {
         if (!pageNames || pageNames.length === 0) {
             return true;
         }
 
         const result = pageNames.some(pageName => this.isAccessGranted(pageName));
-        if (!result) {
+        if (!result && redirect) {
             this.router.navigate(['']);
         }
         return result;
