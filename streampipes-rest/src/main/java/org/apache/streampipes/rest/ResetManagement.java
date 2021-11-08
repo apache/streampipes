@@ -61,7 +61,7 @@ public class ResetManagement {
         PipelineCanvasMetadataCacheManager.removeCanvasMetadataFromCache(username);
 
         // Stop and delete all pipelines
-        List<Pipeline> allPipelines = PipelineManager.getOwnPipelines(username);
+        List<Pipeline> allPipelines = PipelineManager.getAllPipelines();
         allPipelines.forEach(pipeline -> {
             PipelineManager.stopPipeline(pipeline.getPipelineId(), true);
             PipelineManager.deletePipeline(pipeline.getPipelineId());
