@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.iiot.protocol.set;
 
 
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
@@ -27,6 +26,7 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -41,7 +41,9 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +100,7 @@ public class FileProtocol extends Protocol {
         }
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         try {
-            InputStream dataInputStream = getFileInputStream();
+            InputStream dataInputStream = FileProtocolUtils.getFileInputStream(this.selectedFilename);
             if(dataInputStream != null) {
                 parser.parse(dataInputStream, stk);
             } else {
@@ -120,7 +122,7 @@ public class FileProtocol extends Protocol {
     public GuessSchema getGuessSchema() throws ParseException {
 
         try {
-            InputStream targetStream = getFileInputStream();
+            InputStream targetStream = FileProtocolUtils.getFileInputStream(this.selectedFilename);
             List<byte[]> dataByte = parser.parseNEvents(targetStream, 20);
 
             EventSchema eventSchema = parser.getEventSchema(dataByte);
@@ -133,45 +135,6 @@ public class FileProtocol extends Protocol {
         }
     }
 
-    private InputStream getFileInputStream() throws FileNotFoundException {
-        if (!isFilePresent()) {
-            try {
-                storeFileLocally();
-            } catch (IOException e) {
-                throw new ParseException("Could not receive file");
-            }
-        }
-
-        return new FileInputStream(makeFileLoc(this.selectedFilename));
-    }
-
-    private boolean isFilePresent() {
-        File file = new File(makeFileLoc(selectedFilename));
-        return file.exists();
-    }
-
-    private void storeFileLocally() throws IOException {
-        File storageDir = new File(makeServiceStorageDir());
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
-        }
-
-        File file = new File(makeFileLoc(selectedFilename));
-
-        Request.Get(fileFetchUrl).execute().saveContent(file);
-    }
-
-    private String makeServiceStorageDir() {
-        return System.getProperty("user.home")
-                + File.separator
-                + ".streampipes"
-                + File.separator
-                + "service";
-    }
-
-    private String makeFileLoc(String filename) {
-        return makeServiceStorageDir() + File.separator + filename;
-    }
 
     @Override
     public List<Map<String, Object>> getNElements(int n) throws ParseException {
@@ -179,7 +142,7 @@ public class FileProtocol extends Protocol {
 
         List<byte[]> dataByteArray = new ArrayList<>();
         try {
-            InputStream dataInputStream = getFileInputStream();
+            InputStream dataInputStream = FileProtocolUtils.getFileInputStream(this.selectedFilename);
             dataByteArray = parser.parseNEvents(dataInputStream, n);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
