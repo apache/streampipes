@@ -29,11 +29,8 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
-
-import java.util.List;
 
 public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakeParameters> {
 
@@ -64,21 +61,16 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
     measureName = DataLake.prepareString(measureName);
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
 
-    String hostname = SinksInternalJvmConfig.INSTANCE.getDataLakeProtocol() + "://" + SinksInternalJvmConfig.INSTANCE.getDataLakeHost();
-    Integer port = SinksInternalJvmConfig.INSTANCE.getDataLakePort();
-    String dbName = SinksInternalJvmConfig.INSTANCE.getDataLakeDatabaseName();
-    String user = SinksInternalJvmConfig.INSTANCE.getDataLakeUsername();
-    String password = SinksInternalJvmConfig.INSTANCE.getDataLakePassword();
+//    String hostname = SinksInternalJvmConfig.INSTANCE.getDataLakeProtocol() + "://" + SinksInternalJvmConfig.INSTANCE.getDataLakeHost();
+//    Integer port = SinksInternalJvmConfig.INSTANCE.getDataLakePort();
+//    String dbName = SinksInternalJvmConfig.INSTANCE.getDataLakeDatabaseName();
+//    String user = SinksInternalJvmConfig.INSTANCE.getDataLakeUsername();
+//    String password = SinksInternalJvmConfig.INSTANCE.getDataLakePassword();
     Integer batch_size = 2000;
     Integer flush_duration = 500;
 
     DataLakeParameters params = new DataLakeParameters(graph,
-            hostname,
-            port,
-            dbName,
             measureName,
-            user,
-            password,
             timestampField,
             batch_size,
             flush_duration);
