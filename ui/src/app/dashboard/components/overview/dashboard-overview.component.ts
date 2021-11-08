@@ -76,12 +76,15 @@ export class DashboardOverviewComponent implements OnInit {
   }
 
   openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-    const dialogRef = this.dialog.open(EditDashboardDialogComponent, {
-      width: '70%',
-      panelClass: 'custom-dialog-container'
+    const dialogRef = this.dialogService.open(EditDashboardDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: createMode ? 'New Dashboard' : 'Edit Dashboard',
+      width: '50vw',
+      data: {
+        'createMode': createMode,
+        'dashboard': dashboard
+      }
     });
-    dialogRef.componentInstance.createMode = createMode;
-    dialogRef.componentInstance.dashboard = dashboard;
 
     dialogRef.afterClosed().subscribe(result => {
       this.reloadDashboardsEmitter.emit();
