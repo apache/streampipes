@@ -19,6 +19,8 @@ package org.apache.streampipes.rest.security;
 
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
+import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.springframework.context.annotation.Configuration;
@@ -27,19 +29,31 @@ import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Configuration
 public class SpPermissionEvaluator implements PermissionEvaluator {
 
   @Override
   public boolean hasPermission(Authentication auth, Object o, Object permission) {
-    String objectInstanceId = (String) o;
     PrincipalUserDetails<?> userDetails = getUserDetails(auth);
-    if (isAdmin(userDetails)) {
-      return true;
+    if (o instanceof PipelineElementRecommendationMessage) {
+      return isAdmin(userDetails) || filterRecommendation(auth, (PipelineElementRecommendationMessage) o);
+    } else {
+      String objectInstanceId = (String) o;
+      if (isAdmin(userDetails)) {
+        return true;
+      }
+      return hasPermission(auth, objectInstanceId);
     }
+  }
 
-    return hasPermission(auth, objectInstanceId);
+  private boolean filterRecommendation(Authentication auth, PipelineElementRecommendationMessage message) {
+    Predicate<PipelineElementRecommendation> isForbidden = r -> !hasPermission(auth, r.getElementId());
+    message.getRecommendedElements().removeIf(isForbidden);
+    message.getPossibleElements().removeIf(isForbidden);
+
+    return true;
   }
 
   @Override

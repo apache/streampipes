@@ -45,7 +45,6 @@ public class PermissionResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public void updatePermission(@PathParam("permissionId") String permissionId,
                                Permission permission) {
-    System.out.println(getAuthenticatedUsername());
     if (permissionId.equals(permission.getPermissionId())) {
       getSpResourceManager().managePermissions().update(permission);
     }

@@ -41,6 +41,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -174,7 +175,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Hidden
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  //@PostAuthorize("@recommendationFilter.hasPermission(auth, filterObject)")
+  @PostAuthorize("hasPermission(returnObject, 'READ')")
   public PipelineElementRecommendationMessage recommend(Pipeline pipeline) {
     try {
       return Operations.findRecommendedElements(pipeline);
