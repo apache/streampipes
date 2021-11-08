@@ -15,16 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.secret;
+package org.apache.streampipes.resource.management.secret;
 
-public class SecretProvider {
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-  public static SecretService getEncryptionService(String username) {
-    return new SecretService(username, new SecretEncrypter()) {
-    };
+import java.security.GeneralSecurityException;
+
+public class SecretEncrypter implements ISecretHandler {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SecretEncrypter.class);
+  @Override
+  public String apply(String extractedValue) {
+    try {
+      return SecretEncryptionManager.encrypt(extractedValue);
+    } catch (GeneralSecurityException e) {
+      LOG.error("Could not encrypt value, returning original value");
+      return extractedValue;
+    }
   }
 
-  public static SecretService getDecryptionService(String username) {
-    return new SecretService(username, new SecretDecrypter());
+  @Override
+  public boolean shouldApply(boolean encrypted) {
+    return !encrypted;
   }
 }

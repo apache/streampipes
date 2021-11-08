@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.secret;
+package org.apache.streampipes.resource.management.secret;
 
 public interface ISecretHandler {
 
-  String apply(String username, String extractedValue);
+  String apply(String extractedValue);
 
   boolean shouldApply(boolean encrypted);
 

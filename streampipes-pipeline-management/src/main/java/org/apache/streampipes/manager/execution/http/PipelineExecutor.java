@@ -25,7 +25,7 @@ import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableExce
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.manager.secret.SecretProvider;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -183,11 +183,11 @@ public class PipelineExecutor {
   }
 
   private void decryptSecrets(List<InvocableStreamPipesEntity> graphs) {
-    SecretProvider.getDecryptionService(pipeline.getCreatedByUser()).apply(graphs);
+    SecretProvider.getDecryptionService().apply(graphs);
   }
 
   private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {
-    SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(graphs);
+    SecretProvider.getEncryptionService().apply(graphs);
   }
 
   public PipelineOperationStatus stopPipeline() {

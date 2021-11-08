@@ -73,7 +73,6 @@ public enum BackendConfig {
     config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
             "Default Messaging Settings");
 
-    config.register(BackendConfigKeys.ENCRYPTION_KEY, randomKey(), "A random secret key");
     config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()), "Local authentication settings");
     config.registerObject(BackendConfigKeys.EMAIL_CONFIG, EmailConfig.fromDefaults(), "Email settings");
     config.registerObject(BackendConfigKeys.GENERAL_CONFIG, new GeneralConfig(), "General settings");
@@ -232,10 +231,6 @@ public enum BackendConfig {
 
   public String getInfluxDatabaseName() {
     return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
-  }
-
-  public String getEncryptionKey() {
-    return config.getString(BackendConfigKeys.ENCRYPTION_KEY);
   }
 
   public LocalAuthConfig getLocalAuthConfig() {

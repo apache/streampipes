@@ -15,18 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.secret;
+package org.apache.streampipes.resource.management.secret;
 
 import org.apache.streampipes.model.staticproperty.*;
 
 public class SecretVisitor implements StaticPropertyVisitor {
 
-  private String username;
   private ISecretHandler secretHandler;
 
-  public SecretVisitor(String username,
-                       ISecretHandler secretHandler) {
-    this.username = username;
+  public SecretVisitor(ISecretHandler secretHandler) {
     this.secretHandler = secretHandler;
   }
 
@@ -88,7 +85,7 @@ public class SecretVisitor implements StaticPropertyVisitor {
   @Override
   public void visit(SecretStaticProperty secretStaticProperty) {
     if (secretHandler.shouldApply(secretStaticProperty.getEncrypted())) {
-      String newValue = secretHandler.apply(username, secretStaticProperty.getValue());
+      String newValue = secretHandler.apply(secretStaticProperty.getValue());
       secretStaticProperty.setValue(newValue);
       secretStaticProperty.setEncrypted(!secretStaticProperty.getEncrypted());
     }

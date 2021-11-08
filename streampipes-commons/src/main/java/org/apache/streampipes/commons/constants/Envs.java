@@ -30,7 +30,8 @@ public enum Envs {
   SP_INITIAL_CLIENT_SECRET("SP_INITIAL_CLIENT_SECRET"),
   SP_SETUP_INSTALL_PIPELINE_ELEMENTS("SP_SETUP_INSTALL_PIPELINE_ELEMENTS"),
   SP_CLIENT_USER("SP_CLIENT_USER"),
-  SP_CLIENT_SECRET("SP_CLIENT_SECRET");
+  SP_CLIENT_SECRET("SP_CLIENT_SECRET"),
+  SP_ENCRYPTION_PASSCODE("SP_ENCRYPTION_PASSCODE");
 
   private final String envVariableName;
 
@@ -56,6 +57,10 @@ public enum Envs {
 
   public String getEnvVariableName() {
     return envVariableName;
+  }
+
+  public String getValueOrDefault(String defaultValue) {
+    return this.exists() ? this.getValue() : defaultValue;
   }
 
 }

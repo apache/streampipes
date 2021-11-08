@@ -15,9 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.secret;
+package org.apache.streampipes.resource.management.secret;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
@@ -27,14 +29,23 @@ public class SecretService {
 
   private SecretVisitor visitor;
 
-  public SecretService(String username,
-                       ISecretHandler secretHandler) {
-    this.visitor = new SecretVisitor(username, secretHandler);
+  public SecretService(ISecretHandler secretHandler) {
+    this.visitor = new SecretVisitor(secretHandler);
   }
 
   public void apply(Pipeline pipeline) {
     pipeline.getSepas().forEach(this::apply);
     pipeline.getActions().forEach(this::apply);
+  }
+
+  public void apply(AdapterDescription adapterDescription) {
+    if (adapterDescription.getConfig() != null) {
+      applyConfig(adapterDescription.getConfig());
+    }
+
+    if (adapterDescription instanceof GenericAdapterDescription) {
+     applyConfig(((GenericAdapterDescription) adapterDescription).getProtocolDescription().getConfig());
+    }
   }
 
   public void apply(List<InvocableStreamPipesEntity> graphs) {

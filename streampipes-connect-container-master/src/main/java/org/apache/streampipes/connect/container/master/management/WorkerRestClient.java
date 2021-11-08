@@ -21,7 +21,6 @@ package org.apache.streampipes.connect.container.master.management;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.resource.utils.AdapterEncryptionService;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
@@ -29,6 +28,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.util.Cloner;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
@@ -231,13 +231,15 @@ public class WorkerRestClient {
     }
 
     private static void encryptAndUpdateAdapter(AdapterDescription adapter) {
-        AdapterDescription encryptedDescription = new AdapterEncryptionService(new Cloner().adapterDescription(adapter)).encrypt();
+        AdapterDescription encryptedDescription = new Cloner().adapterDescription(adapter);
+        SecretProvider.getEncryptionService().apply(encryptedDescription);
         getAdapterStorage().updateAdapter(encryptedDescription);
     }
 
     private static AdapterDescription getAndDecryptAdapter(String adapterId) {
         AdapterDescription adapter = getAdapterStorage().getAdapter(adapterId);
-        return new AdapterEncryptionService(new Cloner().adapterDescription(adapter)).decrypt();
+        SecretProvider.getDecryptionService().apply(adapter);
+        return adapter;
     }
 
     private static IAdapterStorage getAdapterStorage() {

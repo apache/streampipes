@@ -21,7 +21,7 @@ import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.client.credentials.StreamPipesTokenCredentials;
 import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.commons.constants.Envs;
-import org.apache.streampipes.commons.constants.InstallationConstants;
+import org.apache.streampipes.commons.constants.DefaultEnvValues;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
@@ -49,7 +49,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
     if (Envs.SP_CLIENT_USER.exists()) {
       return Envs.SP_CLIENT_USER.getValue();
     } else {
-      return InstallationConstants.INITIAL_CLIENT_USER_DEFAULT;
+      return DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT;
     }
   }
 
@@ -57,7 +57,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
     if (Envs.SP_CLIENT_SECRET.exists()) {
       return Envs.SP_CLIENT_SECRET.getValue();
     } else {
-      return InstallationConstants.INITIAL_CLIENT_SECRET_DEFAULT;
+      return DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT;
     }
   }
 

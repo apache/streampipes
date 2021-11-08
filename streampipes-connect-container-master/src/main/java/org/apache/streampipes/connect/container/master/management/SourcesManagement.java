@@ -28,8 +28,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.util.Cloner;
-import org.apache.streampipes.resource.utils.AdapterEncryptionService;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.slf4j.Logger;
@@ -111,7 +110,8 @@ public class SourcesManagement {
 
     private AdapterDescription getAndDecryptAdapter(String adapterId) {
         AdapterDescription adapter = this.adapterInstanceStorage.getAdapter(adapterId);
-        return new AdapterEncryptionService(new Cloner().adapterDescription(adapter)).decrypt();
+        SecretProvider.getDecryptionService().apply(adapter);
+        return adapter;
     }
 
 }

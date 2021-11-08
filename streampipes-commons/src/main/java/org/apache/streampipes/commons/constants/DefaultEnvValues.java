@@ -15,29 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.secret;
+package org.apache.streampipes.commons.constants;
 
-import org.apache.streampipes.user.management.encryption.CredentialsManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class DefaultEnvValues {
 
-import java.security.GeneralSecurityException;
+  public static final String INITIAL_ADMIN_EMAIL_DEFAULT = "admin@streampipes.apache.org";
+  public static final String INITIAL_ADMIN_PW_DEFAULT = "admin";
+  public static final String INITIAL_CLIENT_USER_DEFAULT = "sp-service-client";
+  public static final String INITIAL_CLIENT_SECRET_DEFAULT = "my-apache-streampipes-secret-key-change-me";
+  public static final boolean INSTALL_PIPELINE_ELEMENTS = true;
 
-public class SecretEncrypter implements ISecretHandler {
-
-  private static final Logger LOG = LoggerFactory.getLogger(SecretEncrypter.class);
-  @Override
-  public String apply(String username, String extractedValue) {
-    try {
-      return CredentialsManager.encrypt(username, extractedValue);
-    } catch (GeneralSecurityException e) {
-      LOG.error("Could not encrypt value, returning original value");
-      return extractedValue;
-    }
-  }
-
-  @Override
-  public boolean shouldApply(boolean encrypted) {
-    return !encrypted;
-  }
+  public static final String DEFAULT_ENCRYPTION_PASSCODE = "eGgemyGBoILAu3xckoIp";
 }
