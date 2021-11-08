@@ -39,7 +39,6 @@ public class SecretEncryptionManager {
   private static StringEncryptor getEncryptor() {
     StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
     encryptor.setPassword(Envs.SP_ENCRYPTION_PASSCODE.getValueOrDefault(DefaultEnvValues.DEFAULT_ENCRYPTION_PASSCODE));
-    encryptor.setAlgorithm("PBEWithHMACSHA512AndAES_256");
     encryptor.setIvGenerator(new RandomIvGenerator());
 
     return encryptor;
