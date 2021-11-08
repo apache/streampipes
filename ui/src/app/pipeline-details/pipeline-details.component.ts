@@ -16,11 +16,14 @@
  *
  */
 
-import {Component, Inject, OnInit} from "@angular/core";
-import {PipelineService} from "../platform-services/apis/pipeline.service";
-import {Pipeline} from "../core-model/gen/streampipes-model";
-import {PipelineElementUnion} from "../editor/model/editor.model";
-import {ActivatedRoute} from "@angular/router";
+import { Component, Inject, OnInit } from '@angular/core';
+import { PipelineService } from '../platform-services/apis/pipeline.service';
+import { Pipeline } from '../core-model/gen/streampipes-model';
+import { PipelineElementUnion } from '../editor/model/editor.model';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { UserRole } from '../_enums/user-role.enum';
+import { UserPrivilege } from '../_enums/user-privilege.enum';
 
 @Component({
     selector: 'pipeline-details',
@@ -31,17 +34,25 @@ export class PipelineDetailsComponent implements OnInit {
 
     currentPipeline: string;
     pipeline: Pipeline;
-    pipelineAvailable: boolean = false;
+    pipelineAvailable = false;
 
-    selectedIndex: number = 0;
+    selectedIndex = 0;
     selectedElement: PipelineElementUnion;
 
-    constructor(private ActivatedRoute: ActivatedRoute,
-                private pipelineService: PipelineService) {
+    hasPipelineWritePrivileges = false;
+    hasPipelineDeletePrivileges = false;
+
+    constructor(private activatedRoute: ActivatedRoute,
+                private pipelineService: PipelineService,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
-        this.ActivatedRoute.queryParams.subscribe(params => {
+        this.authService.user$.subscribe(user => {
+            this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
+            this.hasPipelineDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_PIPELINE);
+        });
+        this.activatedRoute.queryParams.subscribe(params => {
             if (params['pipeline']) {
                 this.currentPipeline = params['pipeline'];
                 this.loadPipeline();
