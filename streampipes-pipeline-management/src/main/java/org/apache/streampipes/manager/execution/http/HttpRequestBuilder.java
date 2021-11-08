@@ -25,8 +25,11 @@ import org.apache.http.entity.ContentType;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 
@@ -47,7 +50,11 @@ public class HttpRequestBuilder {
     try {
       String jsonDocument = toJson();
       Response httpResp =
-              Request.Post(endpointUrl).bodyString(jsonDocument, ContentType.APPLICATION_JSON).connectTimeout(10000).execute();
+              Request.Post(endpointUrl)
+                      .addHeader("Authorization", getAuthToken())
+                      .bodyString(jsonDocument, ContentType.APPLICATION_JSON)
+                      .connectTimeout(10000)
+                      .execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error(e.getMessage());
@@ -79,5 +86,10 @@ public class HttpRequestBuilder {
 
   private PipelineElementStatus convert(org.apache.streampipes.model.Response response) {
     return new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(), response.getOptionalMessage());
+  }
+
+  private String getAuthToken() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    return "Bearer " + new JwtTokenProvider().createToken(auth);
   }
 }
