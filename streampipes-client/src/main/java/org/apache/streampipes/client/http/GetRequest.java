@@ -41,7 +41,7 @@ public class GetRequest<DSO, DT> extends HttpRequest<Void, DSO, DT> {
   protected Request makeRequest(Serializer<Void, DSO, DT> serializer) {
     return Request
             .Get(makeUrl())
-            .setHeaders(standardHeaders());
+            .setHeaders(standardJsonHeaders());
   }
 
   @Override

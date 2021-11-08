@@ -18,7 +18,7 @@
 package org.apache.streampipes.manager.file;
 
 import org.apache.commons.io.input.BOMInputStream;
-import org.apache.streampipes.model.client.file.FileMetadata;
+import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;

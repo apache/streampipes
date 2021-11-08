@@ -51,14 +51,19 @@ public abstract class HttpRequest<SO, DSO, DT> {
     this.serializer = serializer;
   }
 
-  protected Header[] standardHeaders() {
+  protected Header[] standardJsonHeaders() {
     List<Header> headers = new ArrayList<>(connectionConfig.getCredentials().makeHeaders());
     headers.add(Headers.acceptJson());
     return headers.toArray(new Header[0]);
   }
 
+  protected Header[] standardHeaders() {
+    List<Header> headers = new ArrayList<>(connectionConfig.getCredentials().makeHeaders());
+    return headers.toArray(new Header[0]);
+  }
+
   protected Header[] standardPostHeaders() {
-    List<Header> headers = new ArrayList<>(Arrays.asList(standardHeaders()));
+    List<Header> headers = new ArrayList<>(Arrays.asList(standardJsonHeaders()));
     headers.add(Headers.contentTypeJson());
     return headers.toArray(new Header[0]);
   }
@@ -99,6 +104,10 @@ public abstract class HttpRequest<SO, DSO, DT> {
 
   protected String entityAsString(HttpEntity entity) throws IOException {
     return EntityUtils.toString(entity);
+  }
+
+  protected byte[] entityAsByteArray(HttpEntity entity) throws IOException {
+    return EntityUtils.toByteArray(entity);
   }
 
   protected abstract Request makeRequest(Serializer<SO, DSO, DT> serializer);

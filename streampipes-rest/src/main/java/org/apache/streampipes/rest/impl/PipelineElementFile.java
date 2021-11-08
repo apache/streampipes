@@ -18,7 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.file.FileManager;
-import org.apache.streampipes.model.client.file.FileMetadata;
+import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -63,5 +63,11 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
     return ok(FileManager.getAllFiles(filetypes));
   }
 
+  @GET
+  @Path("/{filename}")
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  public Response getFile(@PathParam("filename") String filename) {
+    return ok(FileManager.getFile(filename));
+  }
 
 }

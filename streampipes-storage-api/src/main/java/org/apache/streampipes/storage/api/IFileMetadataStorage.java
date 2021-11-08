@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.file.FileMetadata;
+import org.apache.streampipes.model.file.FileMetadata;
 
 import java.util.List;
 

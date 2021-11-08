@@ -19,7 +19,7 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.model.client.file.FileMetadata;
+import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
