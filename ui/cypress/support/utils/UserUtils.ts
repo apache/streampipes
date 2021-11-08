@@ -17,6 +17,6 @@
  */
 
 export class UserUtils {
-  public static testUserName = 'test@streampipes.apache.org';
-  public static testUserPassword = '1234';
+  public static testUserName = 'admin@streampipes.apache.org';
+  public static testUserPassword = 'admin';
 }

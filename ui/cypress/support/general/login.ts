@@ -17,26 +17,27 @@
  */
 
 import { UserUtils } from '../utils/UserUtils';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 declare global {
-    namespace Cypress {
-        interface Chainable {
-            /**
-             * Login into streampipes with standard test user
-             * @example cy.login();
-             */
-            login: typeof login;
-        }
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Login into streampipes with standard test user
+       * @example cy.login();
+       */
+      login: typeof login;
     }
+  }
 }
 
 export const login = () => {
-    Cypress.Cookies.defaults({
-        preserve: 'JSESSIONID'
-    });
-
-    cy.request('POST', '/streampipes-backend/api/v2/admin/login', {
-        username: UserUtils.testUserName,
-        password: UserUtils.testUserPassword
-    });
+  cy.request('POST', '/streampipes-backend/api/v2/auth/login', {
+    username: UserUtils.testUserName,
+    password: UserUtils.testUserPassword
+  }).then(res => {
+    const decodedToken = new JwtHelperService({}).decodeToken(res.body.accessToken);
+    window.localStorage.setItem('auth-user', JSON.stringify(decodedToken.user));
+    window.localStorage.setItem('auth-token', res.body.accessToken);
+  });
 };

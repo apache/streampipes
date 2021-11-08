@@ -25,15 +25,30 @@
             <div fxFlex="100" fxLayout="column">
                 <mat-form-field fxFlex color="accent">
                     <mat-label>Email</mat-label>
-                    <input formControlName="username" matInput name="username" class="sp" required/>
+                    <input formControlName="username"
+                           matInput
+                           name="username"
+                           class="sp"
+                           required
+                           data-cy="login-email"/>
                 </mat-form-field>
                 <mat-form-field fxFlex color="accent">
                     <mat-label>Password</mat-label>
-                    <input formControlName="password" matInput name="password" type="password" class="sp" required/>
+                    <input formControlName="password"
+                           matInput
+                           name="password"
+                           type="password"
+                           class="sp"
+                           required
+                           data-cy="login-password"/>
                 </mat-form-field>
             </div>
             <div class="form-actions" style="margin-top:20px;">
-                <button mat-button mat-raised-button color="accent" (click)="logIn()"
+                <button mat-button
+                        mat-raised-button
+                        color="accent"
+                        data-cy="login-button"
+                        (click)="logIn()"
                         [disabled]="!parentForm.valid || loading">
                     <span *ngIf="loading">Logging in...</span>
                     <span *ngIf="!loading">Login</span>
