@@ -39,6 +39,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -56,11 +57,9 @@ public class ElementRecommender {
   private static final Logger LOG = LoggerFactory.getLogger(ElementRecommender.class);
 
   private Pipeline pipeline;
-  private String email;
   private PipelineElementRecommendationMessage recommendationMessage;
 
-  public ElementRecommender(String email, Pipeline partialPipeline) {
-    this.email = email;
+  public ElementRecommender(Pipeline partialPipeline) {
     this.pipeline = partialPipeline;
     this.recommendationMessage = new PipelineElementRecommendationMessage();
   }
@@ -153,7 +152,7 @@ public class ElementRecommender {
   }
 
   private List<ConsumableStreamPipesEntity> getAllSepas() {
-    List<String> userObjects = getUserService().getOwnSepaUris(email);
+    List<String> userObjects = new SpResourceManager().manageDataProcessors().findAllIdsOnly();
     return getTripleStore()
             .getAllDataProcessors()
             .stream()
@@ -164,7 +163,7 @@ public class ElementRecommender {
 
 
   private List<ConsumableStreamPipesEntity> getAllSecs() {
-    List<String> userObjects = getUserService().getOwnActionUris(email);
+    List<String> userObjects = new SpResourceManager().manageDataSinks().findAllIdsOnly();
     return getTripleStore()
             .getAllDataSinks()
             .stream()

@@ -36,6 +36,7 @@ import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -173,19 +174,20 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Hidden
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
-  public Response recommend(Pipeline pipeline) {
+  //@PostAuthorize("@recommendationFilter.hasPermission(auth, filterObject)")
+  public PipelineElementRecommendationMessage recommend(Pipeline pipeline) {
     try {
-      return ok(Operations.findRecommendedElements(getAuthenticatedUsername(), pipeline));
+      return Operations.findRecommendedElements(pipeline);
     } catch (JsonSyntaxException e) {
-      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
-              e.getMessage()));
+      throw new WebApplicationException(badRequest(new Notification(NotificationType.UNKNOWN_ERROR,
+              e.getMessage())));
     } catch (NoSuitableSepasAvailableException e) {
-      return constructErrorMessage(new Notification(NotificationType.NO_SEPA_FOUND,
-              e.getMessage()));
+      throw new WebApplicationException(badRequest(new Notification(NotificationType.NO_SEPA_FOUND,
+              e.getMessage())));
     } catch (Exception e) {
       e.printStackTrace();
-      return constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
-              e.getMessage()));
+      throw new WebApplicationException(serverError(constructErrorMessage(new Notification(NotificationType.UNKNOWN_ERROR,
+              e.getMessage()))));
     }
   }
 

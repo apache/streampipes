@@ -15,21 +15,16 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.resource.management;
+package org.apache.streampipes.rest.security;
 
-import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.SpDataStream;
-import org.apache.streampipes.storage.api.IDataStreamStorage;
-import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
-public class DataStreamResourceManager extends AbstractPipelineElementResourceManager<IDataStreamStorage, SpDataStream, SpDataStream> {
+@Component("recommendationFilter")
+public class RecommendationMessageFilter {
 
-  public DataStreamResourceManager() {
-    super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataStreamStorage());
+  public boolean hasPermission(Authentication auth) {
+    return true;
   }
 
-  @Override
-  protected SpDataStream toInvocation(SpDataStream description) {
-    return description instanceof SpDataSet ? new SpDataSet((SpDataSet) description) : new SpDataStream(description);
-  }
 }
