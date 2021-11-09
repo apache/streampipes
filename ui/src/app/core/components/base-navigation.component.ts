@@ -17,7 +17,7 @@
  */
 
 
-import { NavigationEnd, Router } from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 import { PageName } from '../../_enums/page-name.enum';
 import { AuthService } from '../../services/auth.service';
 
@@ -105,6 +105,7 @@ export abstract class BaseNavigationComponent {
   ];
 
   notificationsVisible = false;
+
 
   constructor(protected authService: AuthService,
                 protected router: Router) {
