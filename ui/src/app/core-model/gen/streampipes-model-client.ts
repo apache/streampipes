@@ -18,7 +18,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-11-04 13:01:00.
+// Generated using typescript-generator version 2.27.744 on 2021-11-08 19:00:56.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;
@@ -51,33 +51,6 @@ export class ExtensionsServiceEndpointItem {
         instance.editable = data.editable;
         instance.available = data.available;
         instance.streams = __getCopyArrayFn(ExtensionsServiceEndpointItem.fromData)(data.streams);
-        return instance;
-    }
-}
-
-export class FileMetadata {
-    createdAt: number;
-    createdByUser: string;
-    fileId: string;
-    filetype: string;
-    internalFilename: string;
-    lastModified: number;
-    originalFilename: string;
-    rev: string;
-
-    static fromData(data: FileMetadata, target?: FileMetadata): FileMetadata {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new FileMetadata();
-        instance.fileId = data.fileId;
-        instance.rev = data.rev;
-        instance.internalFilename = data.internalFilename;
-        instance.originalFilename = data.originalFilename;
-        instance.filetype = data.filetype;
-        instance.createdAt = data.createdAt;
-        instance.lastModified = data.lastModified;
-        instance.createdByUser = data.createdByUser;
         return instance;
     }
 }

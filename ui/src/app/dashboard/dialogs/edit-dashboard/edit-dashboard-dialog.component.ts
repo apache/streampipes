@@ -16,28 +16,27 @@
  *
  */
 
-import {Component} from "@angular/core";
-import {MatDialogRef} from "@angular/material/dialog";
-import {DashboardService} from "../../services/dashboard.service";
-import {Dashboard} from "../../models/dashboard.model";
+import { Component, Input } from "@angular/core";
+import { DashboardService } from "../../services/dashboard.service";
+import { Dashboard } from "../../models/dashboard.model";
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
     selector: 'edit-dashboard-dialog-component',
     templateUrl: './edit-dashboard-dialog.component.html',
-    styleUrls: ['./edit-dashboard-dialog.component.css']
+    styleUrls: ['./edit-dashboard-dialog.component.scss']
 })
 export class EditDashboardDialogComponent {
 
+    @Input()
     createMode: boolean;
+
+    @Input()
     dashboard: Dashboard;
 
     constructor(
-        public dialogRef: MatDialogRef<EditDashboardDialogComponent>,
+        public dialogRef: DialogRef<EditDashboardDialogComponent>,
         private dashboardService: DashboardService) {
-    }
-
-    ngOnInit() {
-
     }
 
     onCancel(): void {
@@ -52,7 +51,4 @@ export class EditDashboardDialogComponent {
         }
         this.dialogRef.close();
     }
-
-
-
 }

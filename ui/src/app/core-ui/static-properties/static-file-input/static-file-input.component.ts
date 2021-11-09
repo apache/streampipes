@@ -18,9 +18,8 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { FileStaticProperty } from '../../../core-model/gen/streampipes-model';
+import { FileStaticProperty, FileMetadata } from '../../../core-model/gen/streampipes-model';
 import { FilesService } from '../../../platform-services/apis/files.service';
-import { FileMetadata } from '../../../core-model/gen/streampipes-model-client';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { FormControl, ValidatorFn, Validators } from '@angular/forms';

@@ -27,6 +27,7 @@ import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.s
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-overview',
@@ -45,6 +46,9 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
   editLabels: boolean;
   isAdmin = false;
 
+  hasDataExplorerWritePrivileges = false;
+  hasDataExplorerDeletePrivileges = false;
+
   constructor(private dashboardService: DataViewDataExplorerService,
               public dialogService: DialogService,
               private authService: AuthService) {
@@ -53,10 +57,10 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
+      this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
+      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-      this.displayedColumns = this.isAdmin ?
-          ['name', 'open', 'edit', 'permissions', 'delete'] :
-          this.displayedColumns = ['name', 'open', 'edit', 'delete'];
+      this.displayedColumns = ['name', 'actions'];
 
     });
     this.dataSource.data = this.dataViewDashboards;

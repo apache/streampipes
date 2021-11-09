@@ -16,15 +16,15 @@
  *
  */
 
-import {RestApi} from "../services/rest-api.service";
-import {ChangeDetectorRef, Component, OnInit} from "@angular/core";
-import {AddService} from "./services/add.service";
-import {DialogRef} from "../core-ui/dialog/base-dialog/dialog-ref";
-import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
-import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
-import {AddEndpointComponent} from "./dialogs/add-endpoint/add-endpoint.component";
-import {EndpointInstallationComponent} from "./dialogs/endpoint-installation/endpoint-installation.component";
-import {ExtensionsServiceEndpointItem} from "../core-model/gen/streampipes-model-client";
+import { RestApi } from '../services/rest-api.service';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AddService } from './services/add.service';
+import { DialogRef } from '../core-ui/dialog/base-dialog/dialog-ref';
+import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
+import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
+import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
+import { ExtensionsServiceEndpointItem } from '../core-model/gen/streampipes-model-client';
 
 @Component({
     selector: 'add',
@@ -38,19 +38,19 @@ export class AddComponent implements OnInit {
     endpointItems: ExtensionsServiceEndpointItem[];
     endpointItemsLoadingComplete: boolean;
     selectedTab: string;
-    availableTypes: Array<string> = ["all", "set", "stream", "sepa", "action"];
+    availableTypes: string[] = ['all', 'set', 'stream', 'sepa', 'action'];
 
-    selectedCategoryIndex: number = 0;
+    selectedCategoryIndex = 0;
 
     selectedEndpointItems: any[] = [];
 
-    _filterTerm: string = "";
-    _selectedInstallationStatus: string = "all";
+    _filterTerm = '';
+    _selectedInstallationStatus = 'all';
 
-    constructor(private RestApi: RestApi,
-                private AddService: AddService,
-                private DialogService: DialogService,
-                private ChangeDetectorRef: ChangeDetectorRef) {
+    constructor(private restApi: RestApi,
+                private addService: AddService,
+                private dialogService: DialogService,
+                private changeDetectorRef: ChangeDetectorRef) {
         this.results = [];
         this.loading = false;
         this.endpointItems = [];
@@ -59,7 +59,7 @@ export class AddComponent implements OnInit {
 
     ngOnInit() {
         this.getEndpointItems();
-        this.selectedTab = "all";
+        this.selectedTab = 'all';
     }
 
     toggleSelected(endpointItem) {
@@ -87,7 +87,7 @@ export class AddComponent implements OnInit {
         this.selectedEndpointItems = [];
         this.endpointItems.forEach(item => {
             if (item.editable) {
-                if (item.type === this.selectedTab || this.selectedTab == 'all') {
+                if (item.type === this.selectedTab || this.selectedTab === 'all') {
                     (item as any).selected = selected;
                     if (selected) {
                         this.selectedEndpointItems.push(item.uri);
@@ -95,28 +95,28 @@ export class AddComponent implements OnInit {
                 }
             }
         });
-        this.ChangeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
     }
 
     getTitle(selectedTab) {
         if (selectedTab === 'source') {
-            return "Data Sources";
+            return 'Data Sources';
         } else if (selectedTab === 'sepa') {
-            return "Processing Elements";
+            return 'Processing Elements';
         } else if (selectedTab === 'action') {
-            return "Data Sinks";
+            return 'Data Sinks';
         } else if (selectedTab === 'all') {
-            return "All Pipeline Elements";
+            return 'All Pipeline Elements';
         } else {
-            return "Marketplace";
+            return 'Marketplace';
         }
     }
 
     showManageRdfEndpointsDialog() {
-        let dialogRef: DialogRef<AddEndpointComponent> = this.DialogService.open(AddEndpointComponent, {
+        const dialogRef: DialogRef<AddEndpointComponent> = this.dialogService.open(AddEndpointComponent, {
             panelType: PanelType.STANDARD_PANEL,
-            title: "Manage Endpoints",
-            width: "70vw",
+            title: 'Manage Endpoints',
+            width: '70vw',
             data: {
 
             }
@@ -125,14 +125,13 @@ export class AddComponent implements OnInit {
             if (data) {
                 this.getEndpointItems();
             }
-        })
+        });
     }
 
     getEndpointItems() {
         this.endpointItemsLoadingComplete = false;
-        this.AddService.getRdfEndpointItems()
+        this.addService.getRdfEndpointItems()
             .subscribe(endpointItems => {
-                console.log(endpointItems);
                 this.endpointItems = endpointItems;
                 this.endpointItemsLoadingComplete = true;
             });
@@ -147,10 +146,10 @@ export class AddComponent implements OnInit {
     }
 
     getSelectedElements(install) {
-        let elementsToInstall = [];
+        const elementsToInstall = [];
 
         this.endpointItems.forEach(item => {
-            if (item.type === this.selectedTab || this.selectedTab == 'all') {
+            if (item.type === this.selectedTab || this.selectedTab === 'all') {
                 if (item.installed === !install && (item as any).selected) {
                     elementsToInstall.push(item);
                 }
@@ -165,20 +164,20 @@ export class AddComponent implements OnInit {
     }
 
     installElements(endpointItems, install) {
-        let dialogRef: DialogRef<EndpointInstallationComponent> = this.DialogService.open(EndpointInstallationComponent, {
+        const dialogRef: DialogRef<EndpointInstallationComponent> = this.dialogService.open(EndpointInstallationComponent, {
             panelType: PanelType.STANDARD_PANEL,
-            title: "Installation",
-            width: "70vw",
+            title: 'Installation',
+            width: '70vw',
             data: {
-                "install": install,
-                "endpointItemsToInstall": endpointItems
+                'install': install,
+                'endpointItemsToInstall': endpointItems
             }
         });
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 this.getEndpointItems();
             }
-        })
+        });
     }
 
     set filterTerm(filterTerm: string) {

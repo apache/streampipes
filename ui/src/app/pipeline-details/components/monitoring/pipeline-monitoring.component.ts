@@ -16,15 +16,18 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   DataProcessorInvocation, DataSinkInvocation,
   Pipeline, PipelineElementMonitoringInfo,
   PipelineMonitoringInfo,
   SpDataSet, SpDataStream
-} from "../../../core-model/gen/streampipes-model";
-import {PipelineMonitoringService} from "../../../platform-services/apis/pipeline-monitoring.service";
-import {PipelineOperationsService} from "../../../pipelines/services/pipeline-operations.service";
+} from '../../../core-model/gen/streampipes-model';
+import { PipelineMonitoringService } from '../../../platform-services/apis/pipeline-monitoring.service';
+import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../_enums/user-role.enum';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
   selector: 'pipeline-monitoring',
@@ -39,19 +42,25 @@ export class PipelineMonitoringComponent implements OnInit, OnDestroy {
   reloadPipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   pipelineMonitoringInfo: PipelineMonitoringInfo;
-  pipelineMonitoringInfoAvailable: boolean = false;
+  pipelineMonitoringInfoAvailable = false;
 
   allElements: (SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation)[] = [];
 
-  autoRefresh: boolean = true;
+  autoRefresh = true;
 
   pipelineElementMonitoringInfo: Map<string, PipelineElementMonitoringInfo>;
 
+  hasPipelineWritePrivileges = false;
+
   constructor(private pipelineMonitoringService: PipelineMonitoringService,
-              private pipelineOperationsService: PipelineOperationsService) {
+              private pipelineOperationsService: PipelineOperationsService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
+    });
     this.collectAllElements();
     this.checkMonitoringInfoCollection();
   }
@@ -77,14 +86,14 @@ export class PipelineMonitoringComponent implements OnInit, OnDestroy {
           this.pipelineMonitoringInfo = monitoringInfo;
           monitoringInfo.pipelineElementMonitoringInfo.forEach(info => {
             this.pipelineElementMonitoringInfo.set(info.pipelineElementId, info);
-          })
+          });
           this.pipelineMonitoringInfoAvailable = true;
           if (this.autoRefresh) {
             setTimeout(() => {
               this.refreshMonitoringInfo();
             }, 5000);
           }
-        })
+        });
   }
 
   selectElement(pipelineElement) {

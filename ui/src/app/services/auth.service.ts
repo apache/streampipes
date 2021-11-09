@@ -124,7 +124,7 @@ export class AuthService {
     }
 
     public hasRole(role: RoleModel): boolean {
-        return this.getUserRoles().includes(role);
+        return this.getUserRoles().includes('ROLE_ADMIN') || this.getUserRoles().includes(role);
     }
 
     public hasAnyRole(roles: RoleModel[]): boolean {
@@ -135,13 +135,14 @@ export class AuthService {
         return false;
     }
 
-    isAnyAccessGranted(pageNames: PageName[]): boolean {
+    isAnyAccessGranted(pageNames: PageName[],
+                       redirect?: boolean): boolean {
         if (!pageNames || pageNames.length === 0) {
             return true;
         }
 
         const result = pageNames.some(pageName => this.isAccessGranted(pageName));
-        if (!result) {
+        if (!result && redirect) {
             this.router.navigate(['']);
         }
         return result;
@@ -170,6 +171,8 @@ export class AuthService {
                 return this.hasAnyRole(['ROLE_CONNECT_ADMIN', 'ROLE_PIPELINE_ADMIN']);
             case PageName.INSTALL_PIPELINE_ELEMENTS:
                 return this.hasAnyRole(['ROLE_ADMIN']);
+            case PageName.NOTIFICATIONS:
+                return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
             case PageName.SETTINGS:
                 return this.hasAnyRole(['ROLE_ADMIN']);
             default:

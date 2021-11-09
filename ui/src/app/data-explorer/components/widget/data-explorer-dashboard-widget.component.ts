@@ -41,6 +41,8 @@ import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-
 import { WidgetDirective } from './widget.directive';
 import { BaseWidgetData } from '../widgets/base/data-explorer-widget-data';
 import { WidgetTypeService } from '../../services/widget-type.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -86,15 +88,23 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   timerActive = false;
   loadingTime = 0;
 
+  hasDataExplorerWritePrivileges = false;
+  hasDataExplorerDeletePrivileges = false;
+
   @ViewChild(WidgetDirective, {static: true}) widgetHost!: WidgetDirective;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               private dialog: MatDialog,
               private componentFactoryResolver: ComponentFactoryResolver,
-              private widgetTypeService: WidgetTypeService) {
+              private widgetTypeService: WidgetTypeService,
+              private authService: AuthService) {
   }
 
   ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
+      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
+    });
     this.widgetLoaded = true;
     this.title = this.dataLakeMeasure.measureName;
     this.widgetTypeService.widgetTypeChangeSubject.subscribe(typeChange => {

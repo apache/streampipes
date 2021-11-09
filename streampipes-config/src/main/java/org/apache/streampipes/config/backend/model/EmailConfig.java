@@ -45,7 +45,8 @@ public class EmailConfig {
 
   private String testRecipientAddress;
 
-  private boolean encrypted;
+  private boolean smtpPassEncrypted;
+  private boolean proxyPassEncrypted;
 
   public static EmailConfig fromDefaults() {
     EmailConfig config = new EmailConfig();
@@ -186,11 +187,19 @@ public class EmailConfig {
     this.testRecipientAddress = testRecipientAddress;
   }
 
-  public boolean isEncrypted() {
-    return encrypted;
+  public boolean isSmtpPassEncrypted() {
+    return smtpPassEncrypted;
   }
 
-  public void setEncrypted(boolean encrypted) {
-    this.encrypted = encrypted;
+  public void setSmtpPassEncrypted(boolean smtpPassEncrypted) {
+    this.smtpPassEncrypted = smtpPassEncrypted;
+  }
+
+  public boolean isProxyPassEncrypted() {
+    return proxyPassEncrypted;
+  }
+
+  public void setProxyPassEncrypted(boolean proxyPassEncrypted) {
+    this.proxyPassEncrypted = proxyPassEncrypted;
   }
 }

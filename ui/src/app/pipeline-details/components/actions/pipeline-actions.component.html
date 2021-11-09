@@ -52,6 +52,7 @@
             <div fxFlex="30">
                 <button mat-button mat-raised-button color="accent"
                         matTooltip="Delete Pipeline" matTooltipPosition="above"
+                        *ngIf="hasPipelineDeletePrivileges"
                         (click)="pipelineOperationsService.showDeleteDialog(pipeline, reloadPipelineEmitter, this.switchToPipelineView)">
                     <mat-icon>delete</mat-icon>
                     <span>&nbsp;Delete</span>

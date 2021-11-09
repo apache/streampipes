@@ -30,6 +30,6 @@ export class PageAuthGuard implements CanActivateChild {
   canActivateChild(activatedRouteSnapshot: ActivatedRouteSnapshot): boolean {
     const pageNames: PageName[] = activatedRouteSnapshot.data.authPageNames;
 
-    return this.authService.isAnyAccessGranted(pageNames);
+    return this.authService.isAnyAccessGranted(pageNames, true);
   }
 }

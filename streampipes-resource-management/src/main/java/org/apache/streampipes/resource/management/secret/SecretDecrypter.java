@@ -19,23 +19,12 @@ package org.apache.streampipes.resource.management.secret;
 
 
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.security.GeneralSecurityException;
 
 public class SecretDecrypter implements ISecretHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SecretDecrypter.class);
-
   @Override
   public String apply(String extractedValue) {
-    try {
-      return SecretEncryptionManager.decrypt(extractedValue);
-    } catch (GeneralSecurityException e) {
-      LOG.error("Could not decrypt value, returning original value");
-      return extractedValue;
-    }
+    return SecretEncryptionManager.decrypt(extractedValue);
   }
 
   @Override

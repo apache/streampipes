@@ -17,7 +17,7 @@
  */
 
 
-import {NavigationEnd, Router} from "@angular/router";
+import { NavigationEnd, Router } from "@angular/router";
 import { PageName } from '../../_enums/page-name.enum';
 import { AuthService } from '../../services/auth.service';
 
@@ -104,6 +104,8 @@ export abstract class BaseNavigationComponent {
     },
   ];
 
+  notificationsVisible = false;
+
   constructor(protected authService: AuthService,
                 protected router: Router) {
 
@@ -113,6 +115,7 @@ export abstract class BaseNavigationComponent {
       this.authService.user$.subscribe(user => {
         this.menu.forEach(m => m.visible = this.isNavItemVisible(m.pageNames));
         this.admin.forEach(m => m.visible = this.isNavItemVisible(m.pageNames));
+        this.notificationsVisible = this.isNavItemVisible([PageName.NOTIFICATIONS]);
       });
       this.activePage = this.router.url.replace('/', '');
       this.activePageName = this.getPageTitle(this.activePage);

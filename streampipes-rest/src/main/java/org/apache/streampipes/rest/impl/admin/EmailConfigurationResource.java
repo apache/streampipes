@@ -23,6 +23,7 @@ import org.apache.streampipes.mail.MailTester;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.simplejavamail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,15 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response updateMailConfiguration(EmailConfig config) {
     config.setEmailConfigured(true);
+    if (!config.isProxyPassEncrypted()) {
+      config.setProxyPassword(SecretEncryptionManager.encrypt(config.getProxyPassword()));
+      config.setProxyPassEncrypted(true);
+    }
+
+    if (!config.isSmtpPassEncrypted()) {
+      config.setSmtpPassword(SecretEncryptionManager.encrypt(config.getSmtpPassword()));
+      config.setSmtpPassEncrypted(true);
+    }
     BackendConfig.INSTANCE.updateEmailConfig(config);
 
     return ok();

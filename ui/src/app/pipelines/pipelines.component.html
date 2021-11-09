@@ -33,10 +33,10 @@
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
         <div fxLayout="row">
             <button class="mr-10" mat-button mat-raised-button color="accent" (click)="startAllPipelines(true)"
-                       [disabled]="checkCurrentSelectionStatus(false)">Start all pipelines
+                       [disabled]="checkCurrentSelectionStatus(false)" *ngIf="hasPipelineWritePrivileges">Start all pipelines
             </button>
             <button mat-button mat-raised-button color="accent" (click)="startAllPipelines(false)"
-                       [disabled]="checkCurrentSelectionStatus(true)">Stop all pipelines
+                       [disabled]="checkCurrentSelectionStatus(true)" *ngIf="hasPipelineWritePrivileges">Stop all pipelines
             </button>
         </div>
         <div class="assemblyOptions sp-blue-bg mt-20" style="padding:5px;">
