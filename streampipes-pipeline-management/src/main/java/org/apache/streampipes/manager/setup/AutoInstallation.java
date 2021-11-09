@@ -72,14 +72,14 @@ public class AutoInstallation {
 
   private String findServiceAccountSecret() {
     return getStringOrDefault(
-            Envs.SP_INITIAL_CLIENT_SECRET.getEnvVariableName(),
+            Envs.SP_INITIAL_SERVICE_USER_SECRET.getEnvVariableName(),
             DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT
     );
   }
 
   private String findServiceAccountName() {
     return getStringOrDefault(
-            Envs.SP_INITIAL_CLIENT_USER.getEnvVariableName(),
+            Envs.SP_INITIAL_SERVICE_USER.getEnvVariableName(),
             DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT
             );
   }
