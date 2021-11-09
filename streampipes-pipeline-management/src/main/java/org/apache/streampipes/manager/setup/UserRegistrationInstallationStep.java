@@ -36,16 +36,19 @@ public class UserRegistrationInstallationStep extends InstallationStep {
 	private final String adminPassword;
 	private final String initialServiceAccountName;
 	private final String initialServiceAccountSecret;
+	private final String initialAdminUserSid;
 	private final Set<Role> roles;
 	
 	public UserRegistrationInstallationStep(String adminEmail,
 																					String adminPassword,
 																					String initialServiceAccountName,
-																					String initialServiceAccountSecret) {
+																					String initialServiceAccountSecret,
+																					String initialAdminUserSid) {
 		this.adminEmail = adminEmail;
 		this.adminPassword = adminPassword;
 		this.initialServiceAccountName = initialServiceAccountName;
 		this.initialServiceAccountSecret = initialServiceAccountSecret;
+		this.initialAdminUserSid = initialAdminUserSid;
 		roles = new HashSet<>();
 		roles.add(Role.ROLE_ADMIN);
 	}
@@ -66,6 +69,7 @@ public class UserRegistrationInstallationStep extends InstallationStep {
 	private void addAdminUser() throws NoSuchAlgorithmException, InvalidKeySpecException {
 		String encryptedPassword = PasswordUtil.encryptPassword(adminPassword);
 		UserAccount user = UserAccount.from(adminEmail, encryptedPassword, roles);
+		user.setPrincipalId(initialAdminUserSid);
 		storePrincipal(user);
 	}
 

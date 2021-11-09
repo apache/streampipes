@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.client.setup;
 
+import org.apache.streampipes.commons.random.UUIDGenerator;
+
 public class InitialSettings {
 
 	private String adminEmail;
@@ -25,9 +27,10 @@ public class InitialSettings {
 	private String initialServiceAccountName;
 	private String initialServiceAccountSecret;
 	private Boolean installPipelineElements;
+	private String initialAdminUserSid;
 
 	public InitialSettings() {
-
+		this.initialAdminUserSid = UUIDGenerator.generateUuid();
 	}
 
 	public String getAdminPassword() {
@@ -68,5 +71,13 @@ public class InitialSettings {
 
 	public void setInitialServiceAccountSecret(String initialServiceAccountSecret) {
 		this.initialServiceAccountSecret = initialServiceAccountSecret;
+	}
+
+	public String getInitialAdminUserSid() {
+		return initialAdminUserSid;
+	}
+
+	public void setInitialAdminUserSid(String initialAdminUserSid) {
+		this.initialAdminUserSid = initialAdminUserSid;
 	}
 }

@@ -29,12 +29,13 @@ import java.util.List;
 
 public class PipelineElementInstallationStep extends InstallationStep {
 
-  private ExtensionsServiceEndpoint endpoint;
-  private String username;
+  private final ExtensionsServiceEndpoint endpoint;
+  private final String principalSid;
 
-  public PipelineElementInstallationStep(ExtensionsServiceEndpoint endpoint, String username) {
+  public PipelineElementInstallationStep(ExtensionsServiceEndpoint endpoint,
+                                         String principalSid) {
     this.endpoint = endpoint;
-    this.username = username;
+    this.principalSid = principalSid;
   }
 
   @Override
@@ -43,7 +44,7 @@ public class PipelineElementInstallationStep extends InstallationStep {
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
     for(ExtensionsServiceEndpointItem item : items) {
       statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
-              username, true));
+              principalSid, true));
     }
 
     if (statusMessages.stream().allMatch(Message::isSuccess)) {

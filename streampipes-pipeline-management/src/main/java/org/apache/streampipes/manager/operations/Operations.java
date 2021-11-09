@@ -92,9 +92,9 @@ public class Operations {
   }
 
   public static Message verifyAndAddElement(String graphData,
-                                            String username,
+                                            String principalSid,
                                             boolean publicElement) throws SepaParseException {
-    return new TypeExtractor(graphData).getTypeVerifier().verifyAndAdd(username, publicElement);
+    return new TypeExtractor(graphData).getTypeVerifier().verifyAndAdd(principalSid, publicElement);
   }
 
   public static Message verifyAndUpdateElement(String graphData) throws SepaParseException {
