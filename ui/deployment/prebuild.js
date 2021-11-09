@@ -112,4 +112,9 @@ if (process.env.FAVICON_LOC !== undefined) {
     fs.writeFileSync('src/assets/img/favicon/favicon-96x96.png', fs.readFileSync(process.env.FAVICON_LOC));
 }
 
+if (process.env.CONSTANTS_FILE !== undefined) {
+    console.log('Using custom-provided constants file ' + process.env.CONSTANTS_FILE);
+    fs.writeFileSync('src/app/services/app.constants.ts', fs.readFileSync(process.env.CONSTANTS_FILE, 'utf8'));
+}
+
 console.log('Pre-Build finished.');
