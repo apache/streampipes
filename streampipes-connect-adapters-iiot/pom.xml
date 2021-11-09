@@ -42,6 +42,11 @@
             <artifactId>streampipes-pipeline-elements-shared</artifactId>
             <version>${streampipes.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-client</artifactId>
+            <version>${streampipes.version}</version>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>
