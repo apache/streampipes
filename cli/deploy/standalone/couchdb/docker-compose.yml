@@ -16,7 +16,7 @@
 version: "3.4"
 services:
   couchdb:
-    image: fogsyio/couchdb:2.3.1
+    image: couchdb:2.3.1
     volumes:
       - couchdb:/opt/couchdb/data
     logging:
