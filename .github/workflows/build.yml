@@ -33,7 +33,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
-          node-version: '13.x'
+          node-version: '16.x'
       - name: Build with Maven
         run: mvn clean install javadoc:aggregate
       - name: Set env variables for Docker builds
