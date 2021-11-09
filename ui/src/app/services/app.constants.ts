@@ -22,5 +22,6 @@ import {Injectable} from "@angular/core";
 export class AppConstants {
 
   public readonly APP_NAME = "Apache StreamPipes";
+  public readonly APP_TITLE = "Apache StreamPipes - Self-Service IIoT Toolbox";
   public readonly EMAIL = "dev@streampipes.apache.org";
 }

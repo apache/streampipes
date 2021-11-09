@@ -16,9 +16,11 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {RouterOutlet} from "@angular/router";
-import {slideInAnimation} from "./animation";
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { slideInAnimation } from './animation';
+import { Title } from '@angular/platform-browser';
+import { AppConstants } from './services/app.constants';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +29,13 @@ import {slideInAnimation} from "./animation";
 })
 export class AppComponent implements OnInit {
 
+  constructor(private titleService: Title,
+              private appConstants: AppConstants) {
+
+  }
+
   ngOnInit(): void {
+    this.titleService.setTitle(this.appConstants.APP_TITLE);
   }
 
   prepareRoute(outlet: RouterOutlet) {
