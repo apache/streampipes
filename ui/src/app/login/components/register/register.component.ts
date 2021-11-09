@@ -54,6 +54,13 @@ export class RegisterComponent implements OnInit {
     this.parentForm.addControl('password', new FormControl('', Validators.required));
     this.parentForm.addControl('repeatPassword', new FormControl('', Validators.required));
     this.parentForm.setValidators(checkPasswords);
+
+    this.parentForm.valueChanges.subscribe(v => {
+      this.registrationData = {
+        username: v.username,
+        password: v.password
+      };
+    });
   }
 
   registerUser() {
