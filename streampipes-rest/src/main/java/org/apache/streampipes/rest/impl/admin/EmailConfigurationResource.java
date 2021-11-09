@@ -51,12 +51,12 @@ public class EmailConfigurationResource extends AbstractAuthGuardedRestResource 
   @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response updateMailConfiguration(EmailConfig config) {
     config.setEmailConfigured(true);
-    if (!config.isProxyPassEncrypted()) {
+    if (!config.isProxyPassEncrypted() && config.isUsesProxyAuthentication()) {
       config.setProxyPassword(SecretEncryptionManager.encrypt(config.getProxyPassword()));
       config.setProxyPassEncrypted(true);
     }
 
-    if (!config.isSmtpPassEncrypted()) {
+    if (!config.isSmtpPassEncrypted() && config.isUsesAuthentication()) {
       config.setSmtpPassword(SecretEncryptionManager.encrypt(config.getSmtpPassword()));
       config.setSmtpPassEncrypted(true);
     }

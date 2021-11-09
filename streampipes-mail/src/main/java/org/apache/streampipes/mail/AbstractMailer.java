@@ -42,20 +42,22 @@ public class AbstractMailer {
   }
 
   protected EmailConfig getEmailConfig() {
-
     EmailConfig config = BackendConfig.INSTANCE.getEmailConfig();
-    if (config.isSmtpPassEncrypted()) {
+    return getDecryptedEmailConfig(config);
+  }
+
+  protected EmailConfig getDecryptedEmailConfig(EmailConfig config) {
+    if (config.isSmtpPassEncrypted() && config.isUsesAuthentication()) {
       config.setSmtpPassword(SecretEncryptionManager.decrypt(config.getSmtpPassword()));
       config.setSmtpPassEncrypted(false);
     }
 
-    if (config.isProxyPassEncrypted()) {
+    if (config.isProxyPassEncrypted() && config.isUsesProxyAuthentication()) {
       config.setProxyPassword(SecretEncryptionManager.decrypt(config.getProxyPassword()));
       config.setProxyPassEncrypted(false);
     }
 
     return config;
-
   }
 
   protected void deliverMail(Email email) {
@@ -63,7 +65,8 @@ public class AbstractMailer {
   }
 
   protected void deliverMail(EmailConfig config, Email email) {
-    Mailer mailer = getMailer(config);
+    EmailConfig decryptedConfig = getDecryptedEmailConfig(config);
+    Mailer mailer = getMailer(decryptedConfig);
     mailer.sendMail(email);
   }
 
