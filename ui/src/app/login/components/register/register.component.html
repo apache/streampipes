@@ -27,6 +27,7 @@
                     <mat-label>Email</mat-label>
                     <input formControlName="username" fxFlex
                            matInput>
+                    <mat-error *ngIf="parentForm.controls.username.errors">Must be an email address.</mat-error>
                 </mat-form-field>
                 <mat-form-field color="accent">
                     <mat-label>Initial password</mat-label>
@@ -42,6 +43,7 @@
                            matInput
                            required>
                 </mat-form-field>
+                <mat-error *ngIf="parentForm.hasError('notMatching')">Passwords do not match.</mat-error>
                 <div class="form-actions" style="margin-top:20px;">
                     <button mat-button mat-raised-button color="accent" (click)="registerUser()"
                             [disabled]="!parentForm.valid" *ngIf="!registrationSuccess">

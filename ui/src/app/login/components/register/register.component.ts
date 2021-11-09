@@ -50,14 +50,10 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('username', new FormControl('', Validators.required));
+    this.parentForm.addControl('username', new FormControl('', [Validators.required, Validators.email]));
     this.parentForm.addControl('password', new FormControl('', Validators.required));
     this.parentForm.addControl('repeatPassword', new FormControl('', Validators.required));
     this.parentForm.setValidators(checkPasswords);
-
-    this.parentForm.valueChanges.subscribe((v) => {
-      this.registrationData = {username: v.username, password: v.password};
-    });
   }
 
   registerUser() {

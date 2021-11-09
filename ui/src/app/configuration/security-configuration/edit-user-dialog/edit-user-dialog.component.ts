@@ -61,6 +61,8 @@ export class EditUserDialogComponent implements OnInit {
   availableRoles: RoleDescription[];
   availableGroups: Group[] = [];
 
+  registrationError: string;
+
   constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
               private availableRolesService: AvailableRolesService,
               private fb: FormBuilder,
@@ -77,6 +79,9 @@ export class EditUserDialogComponent implements OnInit {
     this.isUserAccount = this.user instanceof UserAccount;
     this.parentForm = this.fb.group({});
     this.parentForm.addControl('username', new FormControl(this.clonedUser.username, Validators.required));
+    if (this.isUserAccount) {
+      this.parentForm.controls['username'].setValidators([Validators.required, Validators.email]);
+    }
     this.parentForm.addControl('accountEnabled', new FormControl(this.clonedUser.accountEnabled));
     this.parentForm.addControl('accountLocked', new FormControl(this.clonedUser.accountLocked));
     if (this.clonedUser instanceof UserAccount) {
@@ -117,6 +122,7 @@ export class EditUserDialogComponent implements OnInit {
   }
 
   save() {
+    this.registrationError = undefined;
     if (this.editMode) {
       if (this.isUserAccount) {
         this.userService.updateUser(this.clonedUser as UserAccount).subscribe(() => {
@@ -131,10 +137,14 @@ export class EditUserDialogComponent implements OnInit {
       if (this.isUserAccount) {
         this.userService.createUser(this.clonedUser as UserAccount).subscribe(() => {
           this.close(true);
+        }, error => {
+          this.registrationError = error.error.notifications[0].title;
         });
       } else {
         this.userService.createServiceAccount(this.clonedUser as ServiceAccount).subscribe(() => {
           this.close(true);
+        }, error => {
+          this.registrationError = error.error.notifications[0].title;
         });
       }
     }

@@ -22,6 +22,7 @@
             <form [formGroup]="parentForm" fxFlex="100" fxLayout="column">
                 <div class="general-options-panel" fxLayout="column">
                     <span class="general-options-header">Basics</span>
+                    <mat-error *ngIf="registrationError">{{registrationError}}</mat-error>
                     <mat-form-field color="accent" *ngIf="!isUserAccount">
                         <mat-label>Username</mat-label>
                         <input formControlName="username" fxFlex
@@ -34,6 +35,7 @@
                                matInput
                                required
                                data-cy="new-user-email">
+                        <mat-error>Must be a valid email address.</mat-error>
                     </mat-form-field>
                     <mat-form-field color="accent" *ngIf="isUserAccount">
                         <mat-label>Full Name</mat-label>
@@ -42,7 +44,6 @@
                                required
                                data-cy="new-user-full-name">
                     </mat-form-field>
-
                 </div>
                 <div fxLayout="column" class="general-options-panel" *ngIf="!editMode && isUserAccount">
                     <span class="general-options-header">Password</span>
@@ -62,6 +63,7 @@
                                required
                                data-cy="new-user-password-repeat">
                     </mat-form-field>
+                    <mat-error *ngIf="parentForm.hasError('notMatching')">Passwords do not match.</mat-error>
                 </div>
                 <div fxLayout="column" class="general-options-panel" *ngIf="!isUserAccount">
                     <span class="general-options-header">Authentication</span>
