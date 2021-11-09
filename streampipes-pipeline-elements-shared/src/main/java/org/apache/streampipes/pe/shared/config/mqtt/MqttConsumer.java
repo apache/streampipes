@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.pe.shared.config.Mqqt;
+package org.apache.streampipes.pe.shared.config.mqtt;
 
 import org.fusesource.mqtt.client.*;
 import org.apache.streampipes.messaging.InternalEventProcessor;

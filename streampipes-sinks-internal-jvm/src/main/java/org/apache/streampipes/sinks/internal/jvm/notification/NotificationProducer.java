@@ -24,7 +24,9 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.apache.streampipes.pe.shared.PlaceholderExtractor;
+import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
@@ -45,16 +47,17 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
 
 
   @Override
-  public void onInvocation(NotificationParameters parameters, EventSinkRuntimeContext runtimeContext) throws
+  public void onInvocation(NotificationParameters parameters, EventSinkRuntimeContext context) throws
           SpRuntimeException {
     this.gson = new Gson();
     this.title = parameters.getTitle();
     this.content = parameters.getContent();
     this.correspondingPipelineId = parameters.getGraph().getCorrespondingPipeline();
     this.correspondingUser = parameters.getGraph().getCorrespondingUser();
+    SpConfig configStore = context.getConfigStore().getConfig();
     this.publisher = new ActiveMQPublisher(
-            SinksInternalJvmConfig.INSTANCE.getJmsHost(),
-            SinksInternalJvmConfig.INSTANCE.getJmsPort(),
+            configStore.getString(ConfigKeys.JMS_HOST),
+            configStore.getInteger(ConfigKeys.JMS_PORT),
             "org.apache.streampipes.notifications." + this.correspondingUser);
   }
 
@@ -65,7 +68,7 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
     notification.setId(UUID.randomUUID().toString());
     notification.setRead(false);
     notification.setTitle(title);
-    notification.setMessage(replacePlaceholders(inputEvent, content));
+    notification.setMessage(PlaceholderExtractor.replacePlaceholders(inputEvent, content));
     notification.setCreatedAt(currentDate);
     notification.setCreatedAtTimestamp(currentDate.getTime());
     notification.setCorrespondingPipelineId(correspondingPipelineId);
@@ -81,10 +84,4 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
     this.publisher.disconnect();
   }
 
-  private String replacePlaceholders(Event event, String content) {
-    for(String key: event.getRaw().keySet()) {
-      content = content.replaceAll(HASHTAG + key + HASHTAG, event.getRaw().get(key).toString());
-    }
-    return content;
-  }
 }

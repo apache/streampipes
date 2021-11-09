@@ -19,23 +19,13 @@
 package org.apache.streampipes.sinks.internal.jvm.config;
 
 public class ConfigKeys {
-    final static String HOST = "SP_HOST";
-    final static String PORT = "SP_PORT";
-    final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    final static String COUCHDB_PORT = "SP_COCHDB_PORT";
-    final static String JMS_HOST = "SP_JMS_HOST";
-    final static String JMS_PORT = "SP_JMS_PORT";
-    final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
-    final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
-    final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
-    final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
-    final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
-    final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
-    final static String BACKEND_HOST = "SP_BACKEND_HOST";
-    final static String BACKEND_PORT = "SP_BACKEND_PORT";
-    final static String BACKEND_PROTOCOL = "SP_BACKEND_PROTOCOL";
-    final static String IMAGE_STORAGE_LOCATION = "SP_IMAGE_STORAGE_LOCATION";
-
-
-    final static String SERVICE_NAME = "SP_SERVICE_NAME";
+    public final static String JMS_HOST = "SP_JMS_HOST";
+    public final static String JMS_PORT = "SP_JMS_PORT";
+    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
+    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
+    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
+    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
+    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
+    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
+    public final static String IMAGE_STORAGE_LOCATION = "SP_IMAGE_STORAGE_LOCATION";
 }

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.adapters.ti;
 
-import org.apache.streampipes.pe.shared.config.Mqqt.*;
+import org.apache.streampipes.pe.shared.config.mqtt.*;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;

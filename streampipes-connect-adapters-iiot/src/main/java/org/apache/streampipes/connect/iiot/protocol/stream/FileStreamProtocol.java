@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
@@ -30,6 +29,7 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -55,7 +55,7 @@ public class FileStreamProtocol extends Protocol {
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.file";
 
   //private String filePath;
-  private String fileFetchUrl;
+  private String selectedFileName;
  // private String timestampKey;
   private boolean replaceTimestamp;
   private float speedUp;
@@ -68,10 +68,10 @@ public class FileStreamProtocol extends Protocol {
   public FileStreamProtocol() {
   }
 
-  public FileStreamProtocol(IParser parser, IFormat format, String fileFetchUrl,
+  public FileStreamProtocol(IParser parser, IFormat format, String selectedFileName,
                             boolean replaceTimestamp, float speedUp, int timeBetweenReplay) {
     super(parser, format);
-    this.fileFetchUrl = fileFetchUrl;
+    this.selectedFileName = selectedFileName;
     this.replaceTimestamp = replaceTimestamp;
     this.speedUp = speedUp;
     this.timeBetweenReplay = timeBetweenReplay;
@@ -141,10 +141,12 @@ public class FileStreamProtocol extends Protocol {
   }
 
   private InputStream getDataFromEndpoint() throws ParseException {
-    try {
-      return Request.Get(fileFetchUrl).execute().returnContent().asStream();
+
+
+      try {
+          return FileProtocolUtils.getFileInputStream(this.selectedFileName);
     } catch (IOException e) {
-      throw new ParseException("Could not find file: " + fileFetchUrl);
+      throw new ParseException("Could not find file: " + selectedFileName);
     }
   }
 
@@ -160,8 +162,8 @@ public class FileStreamProtocol extends Protocol {
 
     int timeBetweenReplay = 1;
 
-    String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
-    return new FileStreamProtocol(parser, format, fileFetchUrl, replaceTimestamp, speedUp, timeBetweenReplay);
+    String fileName = extractor.selectedFilename("filePath");
+    return new FileStreamProtocol(parser, format, fileName, replaceTimestamp, speedUp, timeBetweenReplay);
   }
 
   private String getTimestampKey(List<EventProperty> eventProperties, String prefixKey) {

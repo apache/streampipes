@@ -26,7 +26,7 @@ import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioAllPowerOutputs;
 import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioPowerOutput;
-import org.apache.streampipes.pe.shared.config.Mqqt.*;
+import org.apache.streampipes.pe.shared.config.mqtt.*;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;

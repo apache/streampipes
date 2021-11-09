@@ -18,16 +18,14 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
-
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
 
@@ -55,9 +53,8 @@ public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
   @Override
   public void onEvent(Event inputEvent) {
     try {
-      Map<String, Object> event = inputEvent.getRaw();
-      publisher.fire(dataFormatDefinition.fromMap(event),
-              PlaceholderExtractor.replacePlaceholders(topic, event));
+      publisher.fire(dataFormatDefinition.fromMap(inputEvent.getRaw()),
+              PlaceholderExtractor.replacePlaceholders(inputEvent, topic));
     } catch (SpRuntimeException e) {
       LOG.error("Could not serialiaze event");
     }

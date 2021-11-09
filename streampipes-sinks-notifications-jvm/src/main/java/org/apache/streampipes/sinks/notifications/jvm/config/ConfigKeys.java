@@ -19,13 +19,5 @@
 package org.apache.streampipes.sinks.notifications.jvm.config;
 
 public class ConfigKeys {
-    public final static String EMAIL_FROM = "SP_EMAIL_FROM";
-    public final static String EMAIL_USERNAME = "SP_EMAIL_USERNAME";
-    public final static String EMAIL_PASSWORD = "SP_EMAIL_PASSWORD";
-    public final static String EMAIL_SMTP_HOST = "SP_EMAIL_SMTP_HOST";
-    public final static String EMAIL_SMTP_PORT = "SP_EMAIL_SMTP_PORT";
-    public final static String EMAIL_STARTTLS = "SP_EMAIL_STARTTLS";
-    public final static String EMAIL_SLL = "SP_EMAIL_SLL";
     public final static String WEBSOCKET_PROTOCOL = "SP_WEBSOCKET_PROTOCOL";
-
 }

@@ -26,61 +26,25 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
  */
 public class DataLakeParameters extends EventSinkBindingParams {
 
-  private String influxDbHost;
-  private Integer influxDbPort;
-  private String databaseName;
   private String measureName;
-  private String user;
-  private String password;
   private String timestampField;
   private Integer batchSize;
   private Integer flushDuration;
 
   public DataLakeParameters(DataSinkInvocation graph,
-                            String influxDbHost,
-                            Integer influxDbPort,
-                            String databaseName,
                             String measureName,
-                            String user,
-                            String password,
                             String timestampField,
                             Integer batchSize,
                             Integer flushDuration) {
     super(graph);
-
-    this.influxDbHost = influxDbHost;
-    this.influxDbPort = influxDbPort;
-    this.databaseName = databaseName;
     this.measureName = measureName;
-    this.user = user;
-    this.password = password;
     this.timestampField = timestampField;
     this.batchSize = batchSize;
     this.flushDuration = flushDuration;
   }
 
-  public String getInfluxDbHost() {
-    return influxDbHost;
-  }
-
-  public Integer getInfluxDbPort() {
-    return influxDbPort;
-  }
-
-  public String getDatabaseName() {
-    return databaseName;
-  }
-
   public String getMeasurementName() {
     return measureName;
-  }
-
-  public String getUsername() {
-    return user;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public String getTimestampField() {

@@ -16,9 +16,8 @@
  *
  */
 
-package org.apache.streampipes.pe.shared.config.Kafka;
+package org.apache.streampipes.pe.shared.config.kafka;
 
-import org.apache.streampipes.pe.shared.config.Kafka.KafkaConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;

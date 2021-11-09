@@ -23,7 +23,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sinks.internal.jvm.config.SinksInternalJvmConfig;
+import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
@@ -38,10 +38,10 @@ public class Dashboard implements EventSink<DashboardParameters> {
 
     @Override
     public void onInvocation(DashboardParameters parameters,
-                             EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+                             EventSinkRuntimeContext context) throws SpRuntimeException {
         this.publisher = new ActiveMQPublisher(
-                SinksInternalJvmConfig.INSTANCE.getJmsHost(),
-                SinksInternalJvmConfig.INSTANCE.getJmsPort(),
+                context.getConfigStore().getConfig().getString(ConfigKeys.JMS_HOST),
+                context.getConfigStore().getConfig().getInteger(ConfigKeys.JMS_PORT),
                 makeTopic(parameters.getGraph().getInputStreams().get(0), parameters.getVisualizationName()));
     }
 

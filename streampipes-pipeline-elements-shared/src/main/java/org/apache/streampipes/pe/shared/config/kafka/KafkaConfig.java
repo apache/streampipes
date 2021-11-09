@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.pe.shared.config.Kafka;
+package org.apache.streampipes.pe.shared.config.kafka;
 
 public class KafkaConfig {
 

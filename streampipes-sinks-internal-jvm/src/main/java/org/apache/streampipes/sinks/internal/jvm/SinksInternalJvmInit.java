@@ -28,6 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
 import org.apache.streampipes.sinks.internal.jvm.dashboard.DashboardController;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeController;
 import org.apache.streampipes.sinks.internal.jvm.notification.NotificationController;
@@ -57,6 +58,17 @@ public class SinksInternalJvmInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.JMS_HOST, "activemq", "")
+            .addConfig(ConfigKeys.JMS_PORT, 61616, "")
+            .addConfig(ConfigKeys.DATA_LAKE_HOST, "influxdb", "Hostname for the StreamPipes data lake database")
+            .addConfig(ConfigKeys.DATA_LAKE_PROTOCOL, "http", "Protocol for the StreamPipes data lake database")
+            .addConfig(ConfigKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database")
+            .addConfig(ConfigKeys.DATA_LAKE_USERNAME, "default", "Username for the StreamPipes data lake database")
+            .addConfig(ConfigKeys.DATA_LAKE_PASSWORD, "default", "Password for the StreamPipes data lake database")
+            .addConfig(ConfigKeys.DATA_LAKE_DATABASE_NAME, "sp", "Database name for the StreamPipes data lake database")
+            .addConfig(ConfigKeys.IMAGE_STORAGE_LOCATION, "/spImages/", "Storage location of the data lake images")
             .build();
+
+
   }
 }

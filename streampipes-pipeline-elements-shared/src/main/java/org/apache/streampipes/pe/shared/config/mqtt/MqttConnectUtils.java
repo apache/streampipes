@@ -16,9 +16,8 @@
  *
  */
 
-package org.apache.streampipes.pe.shared.config.Mqqt;
+package org.apache.streampipes.pe.shared.config.mqtt;
 
-import org.apache.streampipes.pe.shared.config.Mqqt.MqttConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;

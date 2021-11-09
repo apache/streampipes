@@ -59,13 +59,6 @@ public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
             .addConfig(ConfigKeys.WEBSOCKET_PROTOCOL, "ws", "")
-            .addConfig(ConfigKeys.EMAIL_FROM, "", "The sender address of the email")
-            .addConfig(ConfigKeys.EMAIL_USERNAME, "", "The username of the email account")
-            .addConfig(ConfigKeys.EMAIL_PASSWORD, "", "The password of the email account")
-            .addConfig(ConfigKeys.EMAIL_SMTP_HOST, "", "The SMTP Host")
-            .addConfig(ConfigKeys.EMAIL_SMTP_PORT, "", "The SMTP Port")
-            .addConfig(ConfigKeys.EMAIL_STARTTLS, false, "Use startls?")
-            .addConfig(ConfigKeys.EMAIL_SLL, false, "Use SLL?")
             .build();
   }
 }
