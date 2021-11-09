@@ -82,7 +82,7 @@ jobs:
         run: |
           NODE_PATH=/cache/node_modules
           NODE_OPTIONS=--max_old_space_size=6096
-          npm install --unsafe-perm
+          npm install --unsafe-perm --legacy-peer-deps
           npm run build
       - name: Build and Push Docker UI Image
         working-directory: ./ui
