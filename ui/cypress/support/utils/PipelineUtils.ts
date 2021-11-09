@@ -33,7 +33,9 @@ export class PipelineUtils {
 
     // if data source type is data set, switch to this tab
     if (pipelineInput.dataSourceType === 'set') {
+      cy.wait(5000);
       cy.contains('Data Sets', { timeout: 10000 }).parent().click();
+      cy.dataCy('sp-pipeline-element-' + pipelineInput.dataSource, { timeout: 10000 }).should('be.visible');
     }
 
     PipelineUtils.selectDataStream(pipelineInput);

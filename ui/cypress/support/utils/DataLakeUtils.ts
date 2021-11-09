@@ -165,8 +165,16 @@ export class DataLakeUtils {
   public static checkResults(dataLakeIndex: string, fileRoute: string) {
 
     // Validate result in datalake
-    cy.request('GET', '/streampipes-backend/api/v4/datalake/measurements/' + dataLakeIndex + '/download?format=csv',
-      { 'content-type': 'application/octet-stream' }).should((response) => {
+    cy.request({
+      method: 'GET',
+      url: `/streampipes-backend/api/v4/datalake/measurements/${dataLakeIndex}/download?format=csv`,
+      headers: {
+        'content-type': 'application/octet-stream'
+      },
+      auth: {
+        bearer: window.localStorage.getItem('auth-token')
+      }
+    }).should((response) => {
       const actualResultString = response.body;
       cy.readFile(fileRoute).then((expectedResultString) => {
         DataLakeUtils.resultEqual(actualResultString, expectedResultString);
