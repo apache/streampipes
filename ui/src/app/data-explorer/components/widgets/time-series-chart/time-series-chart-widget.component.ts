@@ -31,6 +31,8 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
 
   presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
 
+  groupKeeper: {} = {};
+
   data: any[] = undefined;
   advancedSettingsActive = false;
   showBackgroundColorProperty = true;
@@ -128,36 +130,67 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     const indexXkey = 0;
 
     const tmpLineChartTraces: any[] = [];
-    columnsContainingNumbersPlusBooleans.forEach(field => {
-      const headerName = data.headers[this.getColumnIndex(field, data)];
-      tmpLineChartTraces[field.fullDbName + sourceIndex.toString()] = {
-        type: 'scatter',
-        mode: 'Line',
-        name: headerName,
-        connectgaps: false,
-        x: [],
-        y: []
-      };
-    });
 
-    data.allDataSeries[0].rows.forEach(row => {
-      this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(field => {
-        if (field.sourceIndex === data.sourceIndex) {
-          const columnIndex = this.getColumnIndex(field, data);
+    data.allDataSeries.map((group, index) => {
+      group.rows.forEach(row => {
 
-          let value = row[columnIndex];
-          if (this.fieldProvider.booleanFields.find(f => field.fullDbName === f.fullDbName
-            && f.sourceIndex === data.sourceIndex) !== undefined) {
-            value = value === true ? 1 : 0;
+        this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(field => {
+          if (field.sourceIndex === data.sourceIndex) {
+
+            const name = field.runtimeName + sourceIndex.toString();
+
+            if (group['tags'] != null) {
+              Object.entries(group['tags']).forEach(
+                ([key, val]) => {
+                  if (name in this.groupKeeper) {
+                    if (this.groupKeeper[name].indexOf(val) === - 1) {
+                      this.groupKeeper[name].push(val);
+                    }
+                  } else {
+                    this.groupKeeper[name] = [val];
+                  }
+                });
+            }
+
+            const columnIndex = this.getColumnIndex(field, data);
+
+            let value = row[columnIndex];
+            if (this.fieldProvider.booleanFields.find(f => field.fullDbName === f.fullDbName
+              && f.sourceIndex === data.sourceIndex) !== undefined) {
+              value = value === true ? 1 : 0;
+            }
+
+            if (!(field.fullDbName + sourceIndex.toString() + index.toString() in tmpLineChartTraces)) {
+              const headerName = data.headers[this.getColumnIndex(field, data)];
+              tmpLineChartTraces[field.fullDbName + sourceIndex.toString() + index.toString()] = {
+                type: 'scatter',
+                mode: 'Line',
+                name: headerName,
+                connectgaps: false,
+                x: [],
+                y: []
+              };
+            }
+
+            tmpLineChartTraces[field.fullDbName + sourceIndex.toString() + index.toString()].x.push(new Date(row[indexXkey]));
+            tmpLineChartTraces[field.fullDbName + sourceIndex.toString() + index.toString()].y.push(value);
           }
-
-          tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].x.push(new Date(row[indexXkey]));
-          tmpLineChartTraces[field.fullDbName + sourceIndex.toString()].y.push(value);
-        }
+        });
       });
     });
 
     return Object.values(tmpLineChartTraces);
+  }
+
+  lightenColor(color: string, percent: number) {
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = (num >> 16) + amt;
+    const B = (num >> 8 & 0x00FF) + amt;
+    const G = (num & 0x0000FF) + amt;
+    const result = '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                  (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
+    return result;
   }
 
   setStartX(startX: string) {
@@ -172,46 +205,82 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     this.graph.layout.paper_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
+
+    const keeper = {};
+    let pastGroups = 0;
+    let index = 0;
+
     if (this.data) {
-      this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.map((field, index) => {
-        if (this.data[index] !== undefined) {
-          this.data[index]['marker'] = { 'color': '' };
+      this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.map((field, findex) => {
 
-          const name = field.runtimeName + field.sourceIndex.toString();
+        const name = field.runtimeName + field.sourceIndex.toString();
 
-          if (!(name in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
-            this.dataExplorerWidget.visualizationConfig.chosenColor[name] = this.presetColors[index];
+        let localGroups = [];
+        if (name in this.groupKeeper) {
+          localGroups = this.groupKeeper[name];
+        }
+
+        let repeat = 1;
+        if (localGroups.length > 0) {
+          repeat = localGroups.length;
+        }
+
+        for (let it = 0; it < repeat; it++) {
+
+          index = pastGroups;
+
+          if (this.data[index] !== undefined) {
+            this.data[index]['marker'] = { 'color': '' };
+
+            if (!(name in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
+              this.dataExplorerWidget.visualizationConfig.chosenColor[name] = this.presetColors[index];
+            }
+
+            if (!(name in this.dataExplorerWidget.visualizationConfig.displayName)) {
+              this.dataExplorerWidget.visualizationConfig.displayName[name] = field.fullDbName;
+            }
+
+            if (!(name in this.dataExplorerWidget.visualizationConfig.displayType)) {
+              this.dataExplorerWidget.visualizationConfig.displayType[name] = 'lines';
+            }
+
+            let color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
+
+            if (name in keeper) {
+              color = this.lightenColor(keeper[name], 11.0);
+              keeper[name] = color;
+            } else {
+              keeper[name] = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
+            }
+
+            let displayName = this.dataExplorerWidget.visualizationConfig.displayName[name];
+            if (localGroups.length > 0) {
+              const tag = localGroups[it];
+              displayName = displayName + ' ' + tag;
+            }
+
+            this.data[index].marker.color = color;
+            this.data[index].name = displayName;
+
+            let displayType = 'scatter';
+            let displayMode = 'lines';
+
+            const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
+
+            if (setType !== 'bar') {
+              displayMode = setType;
+            } else {
+              displayType = 'bar';
+            }
+
+            this.data[index].type = displayType;
+            this.data[index].mode = displayMode;
+
+            pastGroups += 1;
           }
-
-          if (!(name in this.dataExplorerWidget.visualizationConfig.displayName)) {
-            this.dataExplorerWidget.visualizationConfig.displayName[name] = field.fullDbName;
-          }
-
-          if (!(name in this.dataExplorerWidget.visualizationConfig.displayType)) {
-            this.dataExplorerWidget.visualizationConfig.displayType[name] = 'lines';
-          }
-
-          this.data[index].marker.color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
-          this.data[index].name = this.dataExplorerWidget.visualizationConfig.displayName[name];
-
-          let displayType = 'scatter';
-          let displayMode = 'lines';
-
-          const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
-
-          if (setType !== 'bar') {
-            displayMode = setType;
-          } else {
-            displayType = 'bar';
-          }
-
-          this.data[index].type = displayType;
-          this.data[index].mode = displayMode;
-
         }
       });
     }
-
   }
 
   refreshView() {
@@ -233,10 +302,15 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     this.data = [];
 
     this.setShownComponents(true, false, false);
+    this.groupKeeper = {};
     spQueryResults.map((spQueryResult, index) => {
-      this.data = this.data.concat(this.transformData(spQueryResult, spQueryResult.sourceIndex));
+      const res = this.transformData(spQueryResult, spQueryResult.sourceIndex);
+      res.forEach(item => {
+        this.data = this.data.concat(item);
+      });
     });
     this.setShownComponents(false, true, false);
+
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
