@@ -47,7 +47,8 @@
                 </div>
                 <div fxLayout="column" class="general-options-panel" *ngIf="!editMode && isUserAccount">
                     <span class="general-options-header">Password</span>
-                    <mat-form-field color="accent">
+                    <mat-checkbox formControlName="sendPasswordToUser">Auto-create password and send to user</mat-checkbox>
+                    <mat-form-field color="accent" *ngIf="!sendPasswordToUser">
                         <mat-label>Initial password</mat-label>
                         <input formControlName="password" fxFlex
                                type="password"
@@ -55,7 +56,7 @@
                                required
                                data-cy="new-user-password">
                     </mat-form-field>
-                    <mat-form-field color="accent">
+                    <mat-form-field color="accent" *ngIf="!sendPasswordToUser">
                         <mat-label>Repeat password</mat-label>
                         <input formControlName="repeatPassword" fxFlex
                                type="password"

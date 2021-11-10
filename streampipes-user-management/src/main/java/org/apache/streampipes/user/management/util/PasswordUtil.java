@@ -18,15 +18,18 @@
 
 package org.apache.streampipes.user.management.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
 public class PasswordUtil {
+
+  private static final int DEFAULT_PASSWORD_LENGTH = 10;
 
   public static byte[] createSalt() {
     SecureRandom random = new SecureRandom();
@@ -84,5 +87,10 @@ public class PasswordUtil {
       bytes[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
     }
     return bytes;
+  }
+
+  
+  public static String generateRandomPassword() {
+    return RandomStringUtils.randomAscii(DEFAULT_PASSWORD_LENGTH);
   }
 }

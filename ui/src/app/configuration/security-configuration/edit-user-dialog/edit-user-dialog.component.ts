@@ -63,6 +63,8 @@ export class EditUserDialogComponent implements OnInit {
 
   registrationError: string;
 
+  sendPasswordToUser = false;
+
   constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
               private availableRolesService: AvailableRolesService,
               private fb: FormBuilder,
@@ -94,6 +96,7 @@ export class EditUserDialogComponent implements OnInit {
     if (!this.editMode && this.clonedUser instanceof UserAccount) {
       this.parentForm.addControl('password', new FormControl(this.clonedUser.password, Validators.required));
       this.parentForm.addControl('repeatPassword', new FormControl());
+      this.parentForm.addControl('sendPasswordToUser', new FormControl(this.sendPasswordToUser));
       this.parentForm.setValidators(this.checkPasswords);
     }
 
@@ -104,7 +107,23 @@ export class EditUserDialogComponent implements OnInit {
       if (this.clonedUser instanceof UserAccount) {
         this.clonedUser.fullName = v.fullName;
         if (!this.editMode) {
-          this.clonedUser.password = v.password;
+          this.sendPasswordToUser = v.sendPasswordToUser;
+          if (this.sendPasswordToUser) {
+            if (this.parentForm.controls['password']) {
+              this.parentForm.removeControl('password');
+              this.parentForm.removeControl('repeatPassword');
+              this.parentForm.removeValidators(this.checkPasswords);
+              this.clonedUser.password = undefined;
+            }
+          } else {
+            if (!this.parentForm.controls['password']) {
+              this.parentForm.addControl('password', new FormControl(this.clonedUser.password, Validators.required));
+              this.parentForm.addControl('repeatPassword', new FormControl());
+              this.parentForm.setValidators(this.checkPasswords);
+            }
+            this.clonedUser.password = v.password;
+            this.parentForm.controls.password.setValidators(Validators.required);
+          }
         }
       } else {
         if (this.user.clientSecret !== v.clientSecret) {
@@ -142,13 +161,13 @@ export class EditUserDialogComponent implements OnInit {
         this.userService.createUser(this.clonedUser as UserAccount).subscribe(() => {
           this.close(true);
         }, error => {
-          this.registrationError = error.error.notifications[0].title;
+          this.registrationError = error.error.notifications ? error.error.notifications[0].title : 'Unknown error';
         });
       } else {
         this.userService.createServiceAccount(this.clonedUser as ServiceAccount).subscribe(() => {
           this.close(true);
         }, error => {
-          this.registrationError = error.error.notifications[0].title;
+          this.registrationError = error.error.notifications ? error.error.notifications[0].title: 'Unknown error';
         });
       }
     }

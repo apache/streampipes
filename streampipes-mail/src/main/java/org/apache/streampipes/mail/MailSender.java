@@ -18,6 +18,7 @@
 package org.apache.streampipes.mail;
 
 import org.apache.streampipes.mail.template.AccountActiviationMailTemplate;
+import org.apache.streampipes.mail.template.InitialPasswordMailTemplate;
 import org.apache.streampipes.mail.template.PasswordRecoveryMailTemplate;
 import org.apache.streampipes.mail.utils.MailUtils;
 import org.apache.streampipes.model.mail.SpEmail;
@@ -59,4 +60,14 @@ public class MailSender extends AbstractMailer {
     deliverMail(email);
   }
 
+  public void sendInitialPasswordMail(String recipientAddress,
+                                      String generatedProperty) throws IOException {
+    Email email = baseEmail()
+            .withSubject(MailUtils.extractAppName() + " - New Account")
+            .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty).generateTemplate())
+            .to(recipientAddress)
+            .buildEmail();
+
+    deliverMail(email);
+  }
 }

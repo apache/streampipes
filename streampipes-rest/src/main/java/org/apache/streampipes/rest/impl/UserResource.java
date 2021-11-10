@@ -17,18 +17,23 @@
  */
 package org.apache.streampipes.rest.impl;
 
+import org.apache.streampipes.mail.MailSender;
 import org.apache.streampipes.model.client.user.*;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
@@ -36,11 +41,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/v2/users")
+@Component
 public class UserResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response getAllUsers(@QueryParam("type") String principalType) {
     List<Principal> allPrincipals = new ArrayList<>();
     if (principalType != null && principalType.equals(PrincipalType.USER_ACCOUNT.name())) {
@@ -88,6 +95,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @DELETE
   @JacksonSerialized
   @Path("{principalId}")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response deleteUser(@PathParam("principalId") String principalId) {
     Principal principal = getPrincipalById(principalId);
 
@@ -126,14 +134,18 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     try {
       if (getUserStorage().getUser(userAccount.getUsername()) == null) {
         String property = userAccount.getPassword();
-        String encryptedProperty = PasswordUtil.encryptPassword(property);
-        userAccount.setPassword(encryptedProperty);
-        getUserStorage().storeUser(userAccount);
+        if (property != null) {
+          encryptAndStore(userAccount, property);
+        } else {
+          String generatedProperty = PasswordUtil.generateRandomPassword();
+          encryptAndStore(userAccount, generatedProperty);
+          new MailSender().sendInitialPasswordMail(userAccount.getUsername(), generatedProperty);
+        }
         return ok();
       } else {
         return badRequest(Notifications.error("This user ID already exists. Please choose another address."));
       }
-    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
       return badRequest();
     }
   }
@@ -220,6 +232,13 @@ public class UserResource extends AbstractAuthGuardedRestResource {
                             .getTokenId()
                             .equals(updatedToken.getTokenId())))
             .collect(Collectors.toList()));
+  }
+
+  private void encryptAndStore(UserAccount userAccount,
+                               String property) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    String encryptedProperty = PasswordUtil.encryptPassword(property);
+    userAccount.setPassword(encryptedProperty);
+    getUserStorage().storeUser(userAccount);
   }
 
   private UserAccount getUser(String username) {
