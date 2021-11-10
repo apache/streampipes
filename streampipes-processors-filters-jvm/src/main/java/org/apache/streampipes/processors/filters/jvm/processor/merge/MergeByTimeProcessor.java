@@ -17,42 +17,77 @@
  */
 package org.apache.streampipes.processors.filters.jvm.processor.merge;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
+import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.runtime.EventProcessor;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import java.util.List;
 
-public class MergeByTime implements EventProcessor<MergeByTimeParameters> {
+public class MergeByTimeProcessor extends StreamPipesDataProcessor {
 
-  private EventSchema outputSchema;
+  private static final String TIMESTAMP_MAPPING_STREAM_1_KEY = "timestamp_mapping_stream_1";
+  private static final String TIMESTAMP_MAPPING_STREAM_2_KEY = "timestamp_mapping_stream_2";
+  private static final String NUMBER_MAPPING = "number_mapping";
+  private static final String TIME_INTERVAL = "time-interval";
+
   private List<String> outputKeySelectors;
-
   private String timestampFieldStream0;
   private String timestampFieldStream1;
   private Integer timeInterval;
+  private EventSchema outputSchema;
 
   private StreamBuffer streamBufferS0;
   private StreamBuffer streamBufferS1;
 
   @Override
-  public void onInvocation(MergeByTimeParameters composeParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-    this.outputSchema = composeParameters.getGraph().getOutputStream().getEventSchema();
-    this.outputKeySelectors = composeParameters.getOutputKeySelectors();
-    this.timestampFieldStream0 = composeParameters.getTimestampFieldStream1();
-    this.timestampFieldStream1 = composeParameters.getTimestampFieldStream2();
-    this.timeInterval = composeParameters.getTimeInterval();
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.merge")
+            .category(DataProcessorType.TRANSFORM)
+            .withAssets(Assets.DOCUMENTATION, Assets.ICON, "merge_description.png")
+            .withLocales(Locales.EN)
+            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                    EpRequirements.timestampReq(),
+                    Labels.withId(TIMESTAMP_MAPPING_STREAM_1_KEY),
+                    PropertyScope.NONE).build())
+            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                    EpRequirements.timestampReq(),
+                    Labels.withId(TIMESTAMP_MAPPING_STREAM_2_KEY),
+                    PropertyScope.NONE).build())
+            .requiredIntegerParameter(Labels.withId(TIME_INTERVAL), NUMBER_MAPPING)
+            .outputStrategy(OutputStrategies.custom(true))
+            .build();
+  }
+
+  @Override
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
+    this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
+    this.timestampFieldStream0 = processorParams.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_1_KEY);
+    this.timestampFieldStream1 = processorParams.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_2_KEY);
+
+    this.timeInterval = processorParams.extractor().singleValueParameter(TIME_INTERVAL,Integer.class);
 
     this.streamBufferS0 = new StreamBuffer(this.timestampFieldStream0);
     this.streamBufferS1 = new StreamBuffer(this.timestampFieldStream1);
   }
 
-
   @Override
-  public void onEvent(Event event, SpOutputCollector spOutputCollector) {
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
     String streamId = event.getSourceInfo().getSelectorPrefix();
 
     // Decide to which buffer the event should be added
@@ -97,13 +132,12 @@ public class MergeByTime implements EventProcessor<MergeByTimeParameters> {
   }
 
   @Override
-  public void onDetach() {
-    this.streamBufferS0.reset();
-    this.streamBufferS1.reset();
+  public void onDetach() throws SpRuntimeException {
+
   }
+
 
   private Event mergeEvents(Event e1, Event e2) {
     return EventFactory.fromEvents(e1, e2, outputSchema).getSubset(outputKeySelectors);
   }
-
 }

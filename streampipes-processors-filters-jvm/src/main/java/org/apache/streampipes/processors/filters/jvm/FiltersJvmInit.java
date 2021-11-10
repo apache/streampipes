@@ -29,12 +29,12 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.BooleanFilterProcessor;
-import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeController;
-import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichController;
+import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeProcessor;
+import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitController;
-import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeController;
+import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterProcessor;
-import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterController;
+import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.schema.MergeBySchemaProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterProcessor;
@@ -58,11 +58,11 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
                     new NumericalFilterProcessor(),
                     new ThresholdDetectionProcessor(),
                     new ProjectionProcessor(),
-                    new MergeByEnrichController(),
-                    new MergeByTimeController(),
+                    new MergeByEnrichProcessor(),
+                    new MergeByTimeProcessor(),
                     new MergeBySchemaProcessor(),
-                    new ComposeController(),
-                    new NumericalTextFilterController(),
+                    new ComposeProcessor(),
+                    new NumericalTextFilterProcessor(),
                     new RateLimitController())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),

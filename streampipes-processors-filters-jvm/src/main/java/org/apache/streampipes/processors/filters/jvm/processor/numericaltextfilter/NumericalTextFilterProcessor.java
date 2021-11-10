@@ -18,24 +18,22 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter;
 
-import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-import java.util.List;
 
-public class NumericalTextFilterController extends StandaloneEventProcessingDeclarer<NumericalTextFilterParameters> {
+public class NumericalTextFilterProcessor extends StreamPipesDataProcessor {
 
   // number
   private static final String NUMBER_MAPPING = "number-mapping";
@@ -45,6 +43,14 @@ public class NumericalTextFilterController extends StandaloneEventProcessingDecl
   private static final String TEXT_MAPPING = "text-mapping";
   private static final String TEXT_OPERATION = "text-operation";
   private static final String TEXT_KEYWORD = "text-keyword";
+
+  private double numberThreshold;
+  private NumericalOperator numericalOperator;
+  private String numberProperty;
+  private String textKeyword;
+  private StringOperator textOperator;
+  private String textProperty;
+
 
   @Override
   public DataProcessorDescription declareModel() {
@@ -72,18 +78,17 @@ public class NumericalTextFilterController extends StandaloneEventProcessingDecl
   }
 
   @Override
-  public ConfiguredEventProcessor<NumericalTextFilterParameters> onInvocation
-          (DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
 
     // number
-    String numberProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
-    Double numberThreshold = extractor.singleValueParameter(NUMBER_VALUE, Double.class);
-    String numberOperation = extractor.selectedSingleValue(NUMBER_OPERATION, String.class);
+    this.numberProperty = processorParams.extractor().mappingPropertyValue(NUMBER_MAPPING);
+    this.numberThreshold = processorParams.extractor().singleValueParameter(NUMBER_VALUE, Double.class);
+    String numberOperation = processorParams.extractor().selectedSingleValue(NUMBER_OPERATION, String.class);
 
     // text
-    String textProperty = extractor.mappingPropertyValue(TEXT_MAPPING);
-    String textKeyword = extractor.singleValueParameter(TEXT_KEYWORD, String.class);
-    String textOperation = extractor.selectedSingleValue(TEXT_OPERATION, String.class);
+    this.textProperty = processorParams.extractor().mappingPropertyValue(TEXT_MAPPING);
+    this.textKeyword = processorParams.extractor().singleValueParameter(TEXT_KEYWORD, String.class);
+    this.textOperator = StringOperator.valueOf(processorParams.extractor().selectedSingleValue(TEXT_OPERATION, String.class));
 
     String numOperation = "GT";
 
@@ -99,17 +104,52 @@ public class NumericalTextFilterController extends StandaloneEventProcessingDecl
       numOperation = "IE";
     }
 
+    this.numericalOperator = NumericalOperator.valueOf(numOperation);
 
-    NumericalTextFilterParameters staticParam = new NumericalTextFilterParameters(
-            graph,
-            numberThreshold,
-            NumericalOperator.valueOf(numOperation),
-            numberProperty,
-            textKeyword,
-            StringOperator.valueOf(textOperation),
-            textProperty);
-
-    return new ConfiguredEventProcessor<>(staticParam, NumericalTextFilter::new);
   }
 
+  @Override
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    boolean satisfiesNumberFilter = false;
+    boolean satisfiesTextFilter = false;
+
+    Double numbervalue = event.getFieldBySelector(this.numberProperty)
+            .getAsPrimitive()
+            .getAsDouble();
+
+    String value = event.getFieldBySelector(this.textProperty)
+            .getAsPrimitive()
+            .getAsString();
+
+    Double threshold = this.numberThreshold;
+
+    if (this.numericalOperator == NumericalOperator.EQ) {
+      satisfiesNumberFilter = (Math.abs(numbervalue - threshold) < 0.000001);
+    } else if (this.numericalOperator  == NumericalOperator.GE) {
+      satisfiesNumberFilter = (numbervalue >= threshold);
+    } else if (this.numericalOperator  == NumericalOperator.GT) {
+      satisfiesNumberFilter = numbervalue > threshold;
+    } else if (this.numericalOperator  == NumericalOperator.LE) {
+      satisfiesNumberFilter = (numbervalue <= threshold);
+    } else if (this.numericalOperator  == NumericalOperator.LT) {
+      satisfiesNumberFilter = (numbervalue < threshold);
+    } else if (this.numericalOperator  == NumericalOperator.IE) {
+      satisfiesNumberFilter = (Math.abs(numbervalue - threshold) > 0.000001);
+    }
+
+    if (this.textOperator == StringOperator.MATCHES) {
+      satisfiesTextFilter = (value.equals(this.textKeyword));
+    } else if (this.textOperator == StringOperator.CONTAINS) {
+      satisfiesTextFilter = (value.contains(this.textKeyword));
+    }
+
+    if (satisfiesNumberFilter && satisfiesTextFilter) {
+      spOutputCollector.collect(event);
+    }
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
 }
