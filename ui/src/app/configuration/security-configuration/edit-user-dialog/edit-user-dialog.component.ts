@@ -71,7 +71,8 @@ export class EditUserDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.availableRoles = this.availableRolesService.availableRoles;
+    const filterObject = this.user instanceof UserAccount ? UserRole.ROLE_SERVICE_ADMIN : UserRole.ROLE_ADMIN;
+    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== filterObject);
     this.userGroupService.getAllUserGroups().subscribe(response => {
       this.availableGroups = response;
     });
@@ -87,7 +88,7 @@ export class EditUserDialogComponent implements OnInit {
     if (this.clonedUser instanceof UserAccount) {
       this.parentForm.addControl('fullName', new FormControl(this.clonedUser.fullName));
     } else {
-      this.parentForm.addControl('clientSecret', new FormControl(this.clonedUser.clientSecret));
+      this.parentForm.addControl('clientSecret', new FormControl(this.clonedUser.clientSecret, [Validators.required, Validators.minLength(35)]));
     }
 
     if (!this.editMode && this.clonedUser instanceof UserAccount) {
@@ -106,7 +107,10 @@ export class EditUserDialogComponent implements OnInit {
           this.clonedUser.password = v.password;
         }
       } else {
-        this.clonedUser.clientSecret = v.clientSecret;
+        if (this.user.clientSecret !== v.clientSecret) {
+          this.clonedUser.clientSecret = v.clientSecret;
+          this.clonedUser.secretEncrypted = false;
+        }
       }
     });
   }

@@ -25,6 +25,7 @@ import java.util.Set;
 public class ServiceAccount extends Principal {
 
   private String clientSecret;
+  private boolean secretEncrypted;
 
   public static ServiceAccount from(String serviceAccountName,
                                  String clientSecret,
@@ -51,4 +52,11 @@ public class ServiceAccount extends Principal {
     this.clientSecret = clientSecret;
   }
 
+  public boolean isSecretEncrypted() {
+    return secretEncrypted;
+  }
+
+  public void setSecretEncrypted(boolean secretEncrypted) {
+    this.secretEncrypted = secretEncrypted;
+  }
 }

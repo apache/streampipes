@@ -18,7 +18,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2021-11-08 19:00:56.
+// Generated using typescript-generator version 2.27.744 on 2021-11-10 09:40:43.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;
@@ -189,6 +189,7 @@ export class RawUserApiToken {
 
 export class ServiceAccount extends Principal {
     clientSecret: string;
+    secretEncrypted: boolean;
 
     static fromData(data: ServiceAccount, target?: ServiceAccount): ServiceAccount {
         if (!data) {
@@ -197,6 +198,7 @@ export class ServiceAccount extends Principal {
         const instance = target || new ServiceAccount();
         super.fromData(data, instance);
         instance.clientSecret = data.clientSecret;
+        instance.secretEncrypted = data.secretEncrypted;
         return instance;
     }
 }

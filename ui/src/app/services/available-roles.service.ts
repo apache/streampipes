@@ -25,6 +25,7 @@ export class AvailableRolesService {
 
   availableRoles: RoleDescription[] = [
     {role: UserRole.ROLE_ADMIN, roleTitle: 'Admin', roleDescription: ''},
+    {role: UserRole.ROLE_SERVICE_ADMIN, roleTitle: 'Service Admin', roleDescription: ''},
     {role: UserRole.ROLE_APP_USER, roleTitle: 'App User', roleDescription: ''},
     {role: UserRole.ROLE_DASHBOARD_USER, roleTitle: 'Dashboard User', roleDescription: ''},
     {role: UserRole.ROLE_DASHBOARD_ADMIN, roleTitle: 'Dashboard Admin', roleDescription: ''},

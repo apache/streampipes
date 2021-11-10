@@ -74,6 +74,7 @@
                                matInput
                                required>
                     </mat-form-field>
+                    <mat-error *ngIf="parentForm.controls.clientSecret.errors">Minimum length 35 characters.</mat-error>
                 </div>
                 <div fxLayout="column" class="general-options-panel">
                     <span class="general-options-header">Groups</span>

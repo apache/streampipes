@@ -21,6 +21,7 @@ import org.apache.streampipes.model.client.user.*;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -142,10 +143,12 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  public Response registerService(ServiceAccount userAccount) {
+  public Response registerService(ServiceAccount serviceAccount) {
     // TODO check if userId is already taken
-    if (getUserStorage().getUser(userAccount.getUsername()) == null) {
-      getUserStorage().storeUser(userAccount);
+    if (getUserStorage().getUser(serviceAccount.getUsername()) == null) {
+      serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(serviceAccount.getClientSecret()));
+      serviceAccount.setSecretEncrypted(true);
+      getUserStorage().storeUser(serviceAccount);
       return ok();
     } else {
       return badRequest(Notifications.error("This user ID already exists. Please choose another address."));
@@ -191,6 +194,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);
       user.setRev(existingUser.getRev());
+      if (!user.isSecretEncrypted()) {
+        user.setClientSecret(SecretEncryptionManager.encrypt(user.getClientSecret()));
+        user.setSecretEncrypted(true);
+      }
       getUserStorage().updateUser(user);
       return ok(Notifications.success("User updated"));
     } else {

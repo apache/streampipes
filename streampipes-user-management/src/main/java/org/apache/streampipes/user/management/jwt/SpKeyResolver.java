@@ -26,6 +26,7 @@ import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -49,7 +50,8 @@ public class SpKeyResolver implements SigningKeyResolver {
     } else if (isRealUser(principal)) {
       return makeKeyForSecret(this.tokenSecret);
     } else {
-      return makeKeyForSecret(((ServiceAccount) principal).getClientSecret());
+      String decryptedSecret = SecretEncryptionManager.decrypt(((ServiceAccount) principal).getClientSecret());
+      return makeKeyForSecret(decryptedSecret);
     }
   }
 
