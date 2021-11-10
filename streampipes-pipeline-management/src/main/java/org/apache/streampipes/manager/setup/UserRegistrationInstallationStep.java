@@ -23,6 +23,7 @@ import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 import org.apache.streampipes.user.management.util.PasswordUtil;
 
 import java.security.NoSuchAlgorithmException;
@@ -75,6 +76,8 @@ public class UserRegistrationInstallationStep extends InstallationStep {
 
 	private void addServiceUser() {
 		ServiceAccount serviceAccount = ServiceAccount.from(initialServiceAccountName, initialServiceAccountSecret, roles);
+		serviceAccount.setClientSecret(SecretEncryptionManager.encrypt(initialServiceAccountSecret));
+		serviceAccount.setSecretEncrypted(true);
 		storePrincipal(serviceAccount);
 	}
 

@@ -89,7 +89,7 @@ public class PasswordUtil {
     return bytes;
   }
 
-  
+
   public static String generateRandomPassword() {
     return RandomStringUtils.randomAscii(DEFAULT_PASSWORD_LENGTH);
   }
