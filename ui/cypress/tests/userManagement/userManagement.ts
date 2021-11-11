@@ -17,51 +17,42 @@
  */
 
 
+import { UserBuilder } from '../../support/builder/UserBuilder';
+import { UserRole } from '../../../src/app/_enums/user-role.enum';
+import { UserUtils } from '../../support/utils/UserUtils';
+
 describe('Test User Management', () => {
   before('Setup Test', () => {
-    // cy.initStreamPipesTest();
-    cy.login();
+    cy.initStreamPipesTest();
   });
 
   it('Perform Test', () => {
     // Add new user
-    cy.visit('#/configuration');
-    cy.get('div').contains('Security').parent().click();
-
+    UserUtils.goToUserConfiguration();
 
     cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should('have.length', 1);
 
     const email = 'user@streampipes.apache.org';
     const name = 'user';
-    // user configuration
-    cy.dataCy('add-new-user').click();
-    cy.dataCy('new-user-email').type(email);
-    cy.dataCy('new-user-full-name').type(name);
-    cy.dataCy('new-user-password').type(name);
-    cy.dataCy('new-user-password-repeat').type(name);
+    const user = UserBuilder.create(email)
+        .setName(name)
+        .setPassword(name)
+        .addRole(UserRole.ROLE_ADMIN)
+        .build();
 
-    // Set role
-    cy.dataCy('role-ROLE_ADMIN').children().click();
-    cy.dataCy('new-user-enabled').children().click();
-
-    // Store
-    cy.dataCy('sp-element-edit-user-save').click();
+    UserUtils.addUser(user);
 
     cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should('have.length', 2);
 
-    cy.dataCy('user-delete-btn-' + name).click();
+    // Login as user
+    cy.switchUser(user);
 
+    UserUtils.goToUserConfiguration();
+
+    cy.switchUser(UserUtils.adminUser);
+    UserUtils.goToUserConfiguration();
+    UserUtils.deleteUser(user);
+    // Validate that user is removed
     cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should('have.length', 1);
-    // Validate that new user is in list
-
-    // Logout
-
-    // Login with new user
-
-    // Logout
-
-    // Login to Admin
-
-    // Delete User
   });
 });

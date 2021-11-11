@@ -16,33 +16,37 @@
  *
  */
 
-import { UserUtils } from '../utils/UserUtils';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { User } from '../model/User';
+import { UserRole } from '../../../src/app/_enums/user-role.enum';
 
-declare global {
-  namespace Cypress {
-    interface Chainable {
-      /**
-       * Login into streampipes with standard test user
-       * @example cy.login();
-       */
-      login: typeof login;
+export class UserBuilder {
+    user: User;
+
+    constructor(email: string) {
+        this.user = new User();
+        this.user.email = email;
     }
-  }
+
+    public static create(email: string) {
+        return new UserBuilder(email);
+    }
+
+    public setName(name: string) {
+        this.user.name = name;
+        return this;
+    }
+
+    public setPassword(password: string) {
+        this.user.password = password;
+        return this;
+    }
+
+    public addRole(role: UserRole) {
+        this.user.role.push(role);
+        return this;
+    }
+
+    build() {
+        return this.user;
+    }
 }
-
-export const login = (user?: User) => {
-  let _user;
-  _user = !user ? UserUtils.adminUser : user;
-
-  cy.request('POST', '/streampipes-backend/api/v2/auth/login', {
-    username: _user.email,
-    password: _user.password
-  }).then(res => {
-    const decodedToken = new JwtHelperService({}).decodeToken(res.body.accessToken);
-    window.localStorage.setItem('auth-user', JSON.stringify(decodedToken.user));
-    window.localStorage.setItem('auth-token', res.body.accessToken);
-    console.log(user);
-  });
-};

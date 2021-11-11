@@ -15,20 +15,11 @@
  * limitations under the License.
  *
  */
+import { UserRole } from '../../../src/app/_enums/user-role.enum';
 
-import { UserUtils } from '../../support/utils/UserUtils';
-
-
-describe('Login and logout of StreamPipes', () => {
-
-  it('Perform Test', () => {
-    cy.visit('#/login');
-    cy.dataCy('login-email').type(UserUtils.adminUser.email);
-    cy.dataCy('login-password').type(UserUtils.adminUser.password);
-    cy.dataCy('login-button').click();
-
-    cy.dataCy('sp-user-preferences').click();
-    cy.dataCy('sp-logout').click();
-  });
-
-});
+export class User {
+    email: string;
+    name: string;
+    password: string;
+    role: UserRole[] = [];
+}
