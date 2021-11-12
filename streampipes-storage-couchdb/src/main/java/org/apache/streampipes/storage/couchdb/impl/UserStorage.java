@@ -18,84 +18,102 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.client.user.User;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.ServiceAccount;
+import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
-import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
+import org.apache.streampipes.storage.couchdb.dao.CrudViewDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
-import org.lightcouch.CouchDbClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User Storage.
  * Handles operations on user including user-specified pipelines.
- *
- *
  */
-public class UserStorage extends AbstractDao<User> implements IUserStorage {
+public class UserStorage extends CrudViewDao implements IUserStorage {
 
-    Logger LOG = LoggerFactory.getLogger(UserStorage.class);
+  private static final Logger LOG = LoggerFactory.getLogger(UserStorage.class);
+  private static final String viewName = "users/username";
 
-    public UserStorage() {
-        super(Utils::getCouchDbUserClient, User.class);
+  public UserStorage() {
+    super(Utils::getCouchDbUserClient);
+  }
+
+  @Override
+  public List<Principal> getAllUsers() {
+    return findAll(viewName, Principal.class);
+  }
+
+  @Override
+  public List<UserAccount> getAllUserAccounts() {
+    return getAllUsers()
+            .stream()
+            .filter(u -> u instanceof UserAccount)
+            .map(u -> (UserAccount) u)
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<ServiceAccount> getAllServiceAccounts() {
+    return getAllUsers()
+            .stream()
+            .filter(u -> u instanceof ServiceAccount)
+            .map(u -> (ServiceAccount) u)
+            .collect(Collectors.toList());
+  }
+
+  @Override
+  public Principal getUser(String username) {
+    List<Principal> users = findByKey(viewName, username, Principal.class);
+    if (users.size() != 1) {
+      LOG.error("None or to many users with matching username");
     }
+    return users.size() > 0 ? users.get(0) : null;
+  }
 
-    @Override
-    public List<User> getAllUsers()
-    {
-      List<User> users = findAll();
-    	return new ArrayList<>(users);
-    }
+  @Override
+  public UserAccount getUserAccount(String username) {
+    return (UserAccount) getUser(username);
+  }
 
-    @Override
-    public User getUser(String email) {
-        // TODO improve
-        CouchDbClient couchDbClient = couchDbClientSupplier.get();
-        List<User> users = couchDbClient.view("users/username").key(email).includeDocs(true).query(User.class);
-        if (users.size() != 1) {
-            LOG.error("None or to many users with matching username");
-        }
-        return users.get(0);
-    }
+  @Override
+  public ServiceAccount getServiceAccount(String username) {
+    return (ServiceAccount) getUser(username);
+  }
 
-    @Override
-    public void storeUser(User user) {
-        persist(user);
-    }
+  @Override
+  public void storeUser(Principal user) {
+    persist(user, Principal.class);
+  }
 
-    @Override
-    public void updateUser(User user) {
-        update(user);
-    }
+  @Override
+  public void updateUser(Principal user) {
+    update(user, Principal.class);
+  }
 
-    @Override
-    public boolean emailExists(String email)
-    {
-    	List<User> users = findAll();
-    	return users
-                .stream()
-                .filter(u -> u.getEmail() != null)
-                .anyMatch(u -> u.getEmail().equals(email));
-    }
+  /**
+   * @param username
+   * @return True if user exists exactly once, false otherwise
+   */
+  @Override
+  public boolean checkUser(String username) {
+    List<Principal> users = findByKey(viewName, username, Principal.class);
 
-    /**
-    *
-    * @param username
-    * @return True if user exists exactly once, false otherwise
-    */
-   @Override
-   public boolean checkUser(String username) {
-       List<User> users = couchDbClientSupplier
-               .get()
-               .view("users/username")
-               .key(username)
-               .includeDocs(true)
-               .query(User.class);
+    return users.size() == 1;
+  }
 
-       return users.size() == 1;
-   }
+  @Override
+  public void deleteUser(String principalId) {
+    delete(principalId, Principal.class);
+  }
+
+  @Override
+  public Principal getUserById(String principalId) {
+    return findWithNullIfEmpty(principalId, Principal.class);
+  }
 
 }

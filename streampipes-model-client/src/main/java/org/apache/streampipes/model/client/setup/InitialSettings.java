@@ -18,28 +18,35 @@
 
 package org.apache.streampipes.model.client.setup;
 
-public class InitialSettings {
+import org.apache.streampipes.commons.random.UUIDGenerator;
 
+public class InitialSettings {
 
 	private String adminEmail;
 	private String adminPassword;
+	private String initialServiceAccountName;
+	private String initialServiceAccountSecret;
 	private Boolean installPipelineElements;
-
-	public InitialSettings(String adminEmail, String adminPassword, Boolean installPipelineElements) {
-		this.adminEmail = adminEmail;
-		this.adminPassword = adminPassword;
-		this.installPipelineElements = installPipelineElements;
-	}
+	private String initialAdminUserSid;
 
 	public InitialSettings() {
-		// TODO Auto-generated constructor stub
+		this.initialAdminUserSid = UUIDGenerator.generateUuid();
 	}
 
 	public String getAdminPassword() {
 		return adminPassword;
 	}
+
 	public void setAdminPassword(String adminPassword) {
 		this.adminPassword = adminPassword;
+	}
+
+	public Boolean getInstallPipelineElements() {
+		return installPipelineElements;
+	}
+
+	public void setInstallPipelineElements(Boolean installPipelineElements) {
+		this.installPipelineElements = installPipelineElements;
 	}
 
 	public String getAdminEmail() {
@@ -50,11 +57,27 @@ public class InitialSettings {
 		this.adminEmail = adminEmail;
 	}
 
-	public Boolean getInstallPipelineElements() {
-		return installPipelineElements;
+	public String getInitialServiceAccountName() {
+		return initialServiceAccountName;
 	}
 
-	public void setInstallPipelineElements(Boolean installPipelineElements) {
-		this.installPipelineElements = installPipelineElements;
+	public void setInitialServiceAccountName(String initialServiceAccountName) {
+		this.initialServiceAccountName = initialServiceAccountName;
+	}
+
+	public String getInitialServiceAccountSecret() {
+		return initialServiceAccountSecret;
+	}
+
+	public void setInitialServiceAccountSecret(String initialServiceAccountSecret) {
+		this.initialServiceAccountSecret = initialServiceAccountSecret;
+	}
+
+	public String getInitialAdminUserSid() {
+		return initialAdminUserSid;
+	}
+
+	public void setInitialAdminUserSid(String initialAdminUserSid) {
+		this.initialAdminUserSid = initialAdminUserSid;
 	}
 }

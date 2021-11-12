@@ -16,16 +16,16 @@
  *
  */
 
-import {Component, HostBinding, OnInit, ViewChild} from "@angular/core";
-import {BaseNavigationComponent} from "../base-navigation.component";
-import {Router} from "@angular/router";
-import {RestApi} from "../../../services/rest-api.service";
-import {AuthStatusService} from "../../../services/auth-status.service";
-import {MatMenuTrigger} from "@angular/material/menu";
-import {FormControl} from "@angular/forms";
-import {OverlayContainer} from "@angular/cdk/overlay";
-import {ProfileService} from "../../../profile/profile.service";
-import {VersionInfo} from "../../../info/versions/service/version-info.model";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { BaseNavigationComponent } from '../base-navigation.component';
+import { Router } from '@angular/router';
+import { RestApi } from '../../../services/rest-api.service';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { FormControl } from '@angular/forms';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ProfileService } from '../../../profile/profile.service';
+import { VersionInfo } from '../../../info/versions/service/version-info.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'toolbar',
@@ -39,76 +39,74 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
 
   userEmail;
   versionInfo: VersionInfo;
+  darkMode: boolean;
 
   appearanceControl: FormControl;
 
-  constructor(Router: Router,
+  constructor(router: Router,
               private profileService: ProfileService,
-              private RestApi: RestApi,
-              public AuthStatusService: AuthStatusService,
-              private overlay: OverlayContainer) {
-    super(Router);
+              private restApi: RestApi,
+              private overlay: OverlayContainer,
+              authService: AuthService) {
+    super(authService, router);
   }
 
   ngOnInit(): void {
     this.getVersion();
-    this.userEmail = this.AuthStatusService.email;
-    this.profileService.getUserProfile().subscribe(user => {
-      this.AuthStatusService.darkMode = user.darkMode;
-      this.modifyAppearance(user.darkMode);
-    })
-    this.appearanceControl = new FormControl(this.AuthStatusService.darkMode);
-    //this.modifyAppearance(this.AuthStatusService.darkMode);
-    this.appearanceControl.valueChanges.subscribe(darkMode => {
-      this.AuthStatusService.darkMode = darkMode;
-      this.modifyAppearance(darkMode);
-
+    this.authService.user$.subscribe(user => {
+      this.userEmail = user.displayName;
+      this.profileService.getUserProfile(user.username).subscribe(userInfo => {
+        this.darkMode = this.authService.darkMode$.getValue();
+        this.modifyAppearance(userInfo.darkMode);
+      });
     });
-    //this.darkMode = this.AuthStatusService.darkMode;
+
+    this.appearanceControl = new FormControl(this.authService.darkMode$.getValue());
+    this.appearanceControl.valueChanges.subscribe(darkMode => {
+      this.authService.darkMode$.next(darkMode);
+      this.modifyAppearance(darkMode);
+    });
     super.onInit();
   }
 
   modifyAppearance(darkMode: boolean) {
     if (darkMode) {
-      this.overlay.getContainerElement().classList.remove("light-mode");
-      this.overlay.getContainerElement().classList.add("dark-mode");
+      this.overlay.getContainerElement().classList.remove('light-mode');
+      this.overlay.getContainerElement().classList.add('dark-mode');
     } else {
-      this.overlay.getContainerElement().classList.remove("dark-mode");
-      this.overlay.getContainerElement().classList.add("light-mode");
+      this.overlay.getContainerElement().classList.remove('dark-mode');
+      this.overlay.getContainerElement().classList.add('light-mode');
     }
   }
 
   closeFeedbackWindow() {
-    //this.feedbackOpen = false;
+    // this.feedbackOpen = false;
     this.feedbackOpen.closeMenu();
   }
 
   openDocumentation() {
     window.open('https://streampipes.apache.org/docs', '_blank');
-  };
+  }
 
   openInfo() {
-    this.Router.navigate(["info"]);
-    this.activePage = "Info";
+    this.router.navigate(['info']);
+    this.activePage = 'Info';
   }
 
   openProfile() {
-    this.Router.navigate(["profile"]);
-    this.activePage = "Profile";
+    this.router.navigate(['profile']);
+    this.activePage = 'Profile';
   }
 
   logout() {
-    this.RestApi.logout().subscribe(() => {
-      this.AuthStatusService.user = undefined;
-      this.AuthStatusService.authenticated = false;
-      this.Router.navigateByUrl('login');
-    });
-  };
+    this.authService.logout();
+    this.router.navigate(['login']);
+  }
 
-  getVersion(){
-    this.RestApi.getVersionInfo().subscribe((response) => {
+  getVersion() {
+    this.restApi.getVersionInfo().subscribe((response) => {
       this.versionInfo = response as VersionInfo;
-    })
+    });
   }
 
 }

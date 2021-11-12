@@ -40,29 +40,20 @@ public class DataProcessorVerifier extends ElementVerifier<DataProcessorDescript
   }
 
   @Override
-  protected StorageState store(String username, boolean publicElement, boolean refreshCache) {
+  protected StorageState store() {
     StorageState storageState = StorageState.STORED;
 
     if (!storageApi.exists(elementDescription)) {
       storageApi.storeDataProcessor(elementDescription);
-      if (refreshCache) {
-        storageApi.refreshDataProcessorCache();
-      }
     } else {
       storageState = StorageState.ALREADY_IN_SESAME;
-    }
-    if (!(userService.getOwnSepaUris(username).contains(elementDescription.getUri()))) {
-      userService.addOwnSepa(username, elementDescription.getUri(), publicElement);
-    } else {
-      storageState = StorageState.ALREADY_IN_SESAME_AND_USER_DB;
     }
     return storageState;
   }
 
   @Override
-  protected void update(String username) {
+  protected void update() {
     storageApi.update(elementDescription);
-    storageApi.refreshDataProcessorCache();
   }
 
   @Override

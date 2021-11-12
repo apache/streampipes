@@ -44,10 +44,6 @@ public class PipelineGenerator {
 //  private static final String sourcesUrl = "http://pe-examples-sources:8090";
 //  private static final String flinkUrl = "http://pe-flink:8094";
 
-  private static final String backendUrl = "http://ipe-koi06.fzi.de:8030";
-  private static final String sourcesUrl = "http://pe-examples-sources:8090";
-  private static final String flinkUrl = "http://pe-flink:8094";
-
   private DataSourceDescription dataSourceDescription;
   private DataProcessorDescription timestampEnrichmentDescription;
   private DataSinkDescription elasticSearchDescription;

@@ -32,11 +32,16 @@ public class InstallationConfiguration {
 		List<InstallationStep> steps = new ArrayList<>();
 
 		steps.add(new CouchDbInstallationStep());
-		steps.add(new UserRegistrationInstallationStep(settings.getAdminEmail(), settings.getAdminPassword()));
+		steps.add(new UserRegistrationInstallationStep(
+						settings.getAdminEmail(),
+						settings.getAdminPassword(),
+						settings.getInitialServiceAccountName(),
+						settings.getInitialServiceAccountSecret(),
+						settings.getInitialAdminUserSid()));
 
 		if (settings.getInstallPipelineElements()) {
 			for(ExtensionsServiceEndpoint endpoint : new EndpointFetcher().getEndpoints()) {
-				steps.add(new PipelineElementInstallationStep(endpoint, settings.getAdminEmail()));
+				steps.add(new PipelineElementInstallationStep(endpoint, settings.getInitialAdminUserSid()));
 			}
 		}
 		

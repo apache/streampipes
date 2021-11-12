@@ -19,13 +19,8 @@ package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
 import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.List;
 
 public class ConnectWorkerRegistrationService {
 
@@ -35,19 +30,12 @@ public class ConnectWorkerRegistrationService {
     boolean connected = false;
 
     while (!connected) {
-      List<String> coreServices = getConnectMasterUrl();
-      if (coreServices.size() > 0) {
-        String masterUrl = coreServices.get(0) + "/streampipes-backend";
-        LOG.info("Trying to connect to master: " + masterUrl);
-        connected = MasterRestClient.register(masterUrl,
-                new ConnectWorkerDescriptionProvider().getContainerDescription(serviceDef.getServiceGroup()));
 
-        if (connected) {
-          LOG.info("Successfully connected to master: " + masterUrl + " Worker is now running.");
-        }
-      }
+      connected = MasterRestClient.register(new ConnectWorkerDescriptionProvider().getContainerDescription(serviceDef.getServiceGroup()));
 
-      if (!connected) {
+      if (connected) {
+        LOG.info("Successfully connected to master. Worker is now running.");
+      } else {
         LOG.info("Retrying in 5 seconds");
         try {
           Thread.sleep(5000);
@@ -56,11 +44,5 @@ public class ConnectWorkerRegistrationService {
         }
       }
     }
-  }
-
-  private List<String> getConnectMasterUrl() {
-    return SpServiceDiscovery
-            .getServiceDiscovery()
-            .getServiceEndpoints(DefaultSpServiceGroups.CORE, true, Collections.emptyList());
   }
 }

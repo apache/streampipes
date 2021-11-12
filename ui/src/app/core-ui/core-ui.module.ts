@@ -66,7 +66,6 @@ import { StaticOneOfInputComponent } from './static-properties/static-one-of-inp
 import { StaticRuntimeResolvableAnyInputComponent } from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
 import { StaticRuntimeResolvableOneOfInputComponent } from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
 import { RuntimeResolvableService } from './static-properties/static-runtime-resolvable-input/runtime-resolvable.service';
-import { StaticFileRestService } from './static-properties/static-file-input/static-file-rest.service';
 import { DisplayRecommendedPipe } from './static-properties/filter/display-recommended.pipe';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { QuillModule } from 'ngx-quill';
@@ -80,6 +79,8 @@ import { BarchartWidgetComponent } from './widget/barchart/barchart-widget.compo
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
+import { SplitSectionComponent } from './split-section/split-section.component';
+import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 
 @NgModule({
   imports: [
@@ -116,8 +117,10 @@ import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-stat
     ImageBarComponent,
     ImageAnnotationsComponent,
     ImageViewerComponent,
+    ObjectPermissionDialogComponent,
     StandardDialogComponent,
     PanelDialogComponent,
+    SplitSectionComponent,
     StaticAnyInput,
     StaticPropertyComponent,
     StaticFreeInputComponent,
@@ -150,7 +153,6 @@ import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-stat
     LabelingModeService,
     DialogService,
     RuntimeResolvableService,
-    StaticFileRestService
   ],
   entryComponents: [],
   exports: [
@@ -180,7 +182,8 @@ import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-stat
     StatusWidgetComponent,
     BarchartWidgetComponent,
     ErrorHintComponent,
-    PipelineStartedStatusComponent
+    PipelineStartedStatusComponent,
+    SplitSectionComponent
   ]
 })
 export class CoreUiModule {

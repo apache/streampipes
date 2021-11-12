@@ -19,15 +19,13 @@
 package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
-import org.apache.streampipes.manager.storage.UserManagementService;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.SuccessMessage;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
 import org.apache.streampipes.storage.api.*;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -61,7 +59,7 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
   }
 
   protected UserService getUserService() {
-    return UserManagementService.getUserService();
+    return new UserService(getUserStorage());
   }
 
   protected IVisualizationStorage getVisualizationStorage() {
@@ -107,19 +105,17 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
     return statusMessage(new ErrorMessage(notifications));
   }
 
-  protected String getCurrentUsername() throws AuthenticationException {
-    if (SecurityUtils.getSubject().isAuthenticated()) {
-      return SecurityUtils.getSubject().getPrincipal().toString();
-    }
-    throw new AuthenticationException("Not authenticated");
-  }
+//  protected String getCurrentUsername() throws AuthenticationException {
+//    if (SecurityContext.getSubject().isAuthenticated()) {
+//      return SecurityUtils.getSubject().getPrincipal().toString();
+//    }
+//    throw new AuthenticationException("Not authenticated");
+//  }
 
   protected boolean authorized(String username) {
-    return username.equals(SecurityUtils.getSubject().getPrincipal().toString());
-  }
-
-  protected boolean isAuthenticated() {
-    return SecurityUtils.getSubject().isAuthenticated();
+    // TODO SEC
+    //return username.equals(SecurityUtils.getSubject().getPrincipal().toString());
+    return true;
   }
 
   @SuppressWarnings("deprecation")
@@ -140,12 +136,20 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
             .build();
   }
 
+  protected Response unauthorized() {
+    return Response.status(Response.Status.UNAUTHORIZED).build();
+  }
+
   protected ISpKvManagement getKeyValueStore() {
     return SpServiceDiscovery.getKeyValueStore();
   }
 
   protected ISpServiceDiscovery getServiceDiscovery() {
     return SpServiceDiscovery.getServiceDiscovery();
+  }
+
+  protected SpResourceManager getSpResourceManager() {
+    return new SpResourceManager();
   }
 
 }

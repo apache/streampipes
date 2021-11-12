@@ -22,6 +22,7 @@ import org.apache.http.*;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.util.EntityUtils;
 import org.apache.streampipes.client.http.header.Headers;
+import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
@@ -31,33 +32,38 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 
 public abstract class HttpRequest<SO, DSO, DT> {
 
-  private StreamPipesClientConfig clientConfig;
-  private StreamPipesApiPath apiPath;
-  private ObjectMapper objectMapper;
-  private Serializer<SO, DSO, DT> serializer;
+  private final StreamPipesClientConfig clientConfig;
+  private final ClientConnectionUrlResolver connectionConfig;
+  private final StreamPipesApiPath apiPath;
+  private final ObjectMapper objectMapper;
+  private final Serializer<SO, DSO, DT> serializer;
 
   public HttpRequest(StreamPipesClientConfig clientConfig,
                      StreamPipesApiPath apiPath,
                      Serializer<SO, DSO, DT> serializer) {
     this.clientConfig = clientConfig;
+    this.connectionConfig = clientConfig.getConnectionConfig();
     this.objectMapper = clientConfig.getSerializer();
     this.apiPath = apiPath;
     this.serializer = serializer;
   }
 
-  protected Header[] standardHeaders() {
-    List<Header> headers = new ArrayList<>();
-    headers.add(Headers.auth(clientConfig.getCredentials()));
+  protected Header[] standardJsonHeaders() {
+    List<Header> headers = new ArrayList<>(connectionConfig.getCredentials().makeHeaders());
     headers.add(Headers.acceptJson());
     return headers.toArray(new Header[0]);
   }
 
+  protected Header[] standardHeaders() {
+    List<Header> headers = new ArrayList<>(connectionConfig.getCredentials().makeHeaders());
+    return headers.toArray(new Header[0]);
+  }
+
   protected Header[] standardPostHeaders() {
-    List<Header> headers = new ArrayList<>(Arrays.asList(standardHeaders()));
+    List<Header> headers = new ArrayList<>(Arrays.asList(standardJsonHeaders()));
     headers.add(Headers.contentTypeJson());
     return headers.toArray(new Header[0]);
   }
@@ -67,15 +73,12 @@ public abstract class HttpRequest<SO, DSO, DT> {
   }
 
   protected String makeUrl(boolean includePath) {
-    StringJoiner joiner = new StringJoiner("");
-    joiner.add(makeProtocol() + clientConfig.getStreamPipesHost()
-            + ":"
-            + clientConfig.getStreamPipesPort());
+    String baseUrl = clientConfig.getConnectionConfig().getBaseUrl();
     if (includePath) {
-      joiner.add("/" + apiPath.toString());
+      baseUrl = baseUrl + "/" + apiPath.toString();
     }
 
-    return joiner.toString();
+    return baseUrl;
   }
 
   public DT executeRequest() throws SpRuntimeException {
@@ -87,7 +90,7 @@ public abstract class HttpRequest<SO, DSO, DT> {
         return afterRequest(serializer, response.getEntity());
       } else {
         if (status.getStatusCode() == 401) {
-          throw new SpRuntimeException(" 401 - Access to this resource is forbidden - did you provide a poper API key?");
+          throw new SpRuntimeException(" 401 - Access to this resource is forbidden - did you provide a poper API key or client secret?");
         } else {
           throw new SpRuntimeException(status.getStatusCode() + " - " + status.getReasonPhrase());
         }
@@ -103,13 +106,12 @@ public abstract class HttpRequest<SO, DSO, DT> {
     return EntityUtils.toString(entity);
   }
 
+  protected byte[] entityAsByteArray(HttpEntity entity) throws IOException {
+    return EntityUtils.toByteArray(entity);
+  }
+
   protected abstract Request makeRequest(Serializer<SO, DSO, DT> serializer);
 
   protected abstract DT afterRequest(Serializer<SO, DSO, DT> serializer, HttpEntity entity) throws IOException;
-
-  private String makeProtocol() {
-    return clientConfig.isHttpsDisabled() ? "http://" : "https://";
-  }
-
 
 }

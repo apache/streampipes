@@ -20,16 +20,11 @@ package org.apache.streampipes.rest.impl;
 
 import com.google.gson.JsonObject;
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.manager.setup.Installer;
-import org.apache.streampipes.model.client.setup.InitialSettings;
-import org.apache.streampipes.model.message.Notifications;
-import org.apache.streampipes.model.message.SetupStatusMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.notifications.NotificationListener;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
-import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -46,40 +41,8 @@ public class Setup extends AbstractRestResource {
       return ok(obj.toString());
     } else {
       obj.addProperty("configured", false);
+      obj.addProperty("setupRunning", BackendConfig.INSTANCE.isConfigured());
       return ok(obj.toString());
     }
   }
-
-  @POST
-  @Path("/install/{currentInstallationStep}")
-  @JacksonSerialized
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response configure(InitialSettings settings, @PathParam("currentInstallationStep") Integer currentInstallationStep) {
-    SetupStatusMessage message = new Installer(settings).install(currentInstallationStep);
-    if (currentInstallationStep == (message.getInstallationStepCount() - 1)) {
-      new NotificationListener().contextInitialized(null);
-    }
-    return ok(message);
-  }
-
-  @PUT
-  @Path("/configuration")
-  @GsonWithIds
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response updateConfiguration(InitialSettings settings) {
-    try {
-      // TODO implement update consul configs
-//			ConfigurationManager
-//                    .storeWebappConfigurationToProperties(
-//                            new File(ConfigurationManager.getStreamPipesConfigFullPath()),
-//                           new File(ConfigurationManager.getStreamPipesConfigFileLocation()),
-//                            settings);
-      return ok(Notifications.success("Configuration updated"));
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ok(Notifications.error("Error"));
-    }
-  }
-
 }

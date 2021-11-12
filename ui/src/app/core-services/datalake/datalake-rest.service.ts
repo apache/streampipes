@@ -19,7 +19,6 @@
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthStatusService } from '../../services/auth-status.service';
 import { DataLakeMeasure, SpQueryResult } from '../../core-model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from './DatalakeQueryParameters';
@@ -27,8 +26,7 @@ import { DatalakeQueryParameters } from './DatalakeQueryParameters';
 @Injectable()
 export class DatalakeRestService {
 
-  constructor(private http: HttpClient,
-              private authStatusService: AuthStatusService) {
+  constructor(private http: HttpClient) {
   }
 
   private get baseUrl() {

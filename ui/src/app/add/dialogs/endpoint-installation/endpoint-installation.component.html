@@ -41,6 +41,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
+        <mat-checkbox class="mr-15" [(ngModel)]="installAsPublicElement" *ngIf="install">Make available to all users with appropriate role</mat-checkbox>
         <button mat-button mat-raised-button class="mat-basic" (click)="close()" style="margin-right: 10px;" *ngIf="nextButton !== 'Close'">
             Close
         </button>

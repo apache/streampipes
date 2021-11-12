@@ -18,25 +18,31 @@
 
 package org.apache.streampipes.user.management.authentication;
 
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.streampipes.user.management.util.PasswordUtil;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-public class StreamPipesCredentialsMatcher implements CredentialsMatcher {
+public class StreamPipesCredentialsMatcher implements PasswordEncoder {
 
   @Override
-  public boolean doCredentialsMatch(AuthenticationToken authenticationToken, AuthenticationInfo authenticationInfo) {
+  public String encode(CharSequence charSequence) {
     try {
-      return PasswordUtil.validatePassword(new String((char[]) authenticationToken
-                      .getCredentials()),
-              authenticationInfo
-              .getCredentials().toString());
+      return PasswordUtil.encryptPassword(charSequence.toString());
     } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-      return false;
+      e.printStackTrace();
     }
+    return null;
+  }
+
+  @Override
+  public boolean matches(CharSequence charSequence, String s) {
+    try {
+      return PasswordUtil.validatePassword(charSequence.toString(), s);
+    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 }

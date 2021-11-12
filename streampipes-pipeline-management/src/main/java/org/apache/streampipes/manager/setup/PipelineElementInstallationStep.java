@@ -22,39 +22,37 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.model.message.Message;
-import org.apache.streampipes.model.message.Notifications;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PipelineElementInstallationStep implements InstallationStep {
+public class PipelineElementInstallationStep extends InstallationStep {
 
-  private ExtensionsServiceEndpoint endpoint;
-  private String userEmail;
+  private final ExtensionsServiceEndpoint endpoint;
+  private final String principalSid;
 
-  public PipelineElementInstallationStep(ExtensionsServiceEndpoint endpoint, String userEmail) {
+  public PipelineElementInstallationStep(ExtensionsServiceEndpoint endpoint,
+                                         String principalSid) {
     this.endpoint = endpoint;
-    this.userEmail = userEmail;
+    this.principalSid = principalSid;
   }
 
   @Override
-  public List<Message> install() {
+  public void install() {
     List<Message> statusMessages = new ArrayList<>();
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
     for(ExtensionsServiceEndpointItem item : items) {
       statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
-              userEmail, true, false));
+              principalSid, true));
     }
 
-    Message installMessage;
     if (statusMessages.stream().allMatch(Message::isSuccess)) {
-      installMessage = Notifications.success(getTitle());
+      logSuccess(getTitle());
     } else {
-      installMessage = Notifications.error(getTitle());
+      logFailure(getTitle());
     }
 
-    return Collections.singletonList(installMessage);
   }
 
   @Override

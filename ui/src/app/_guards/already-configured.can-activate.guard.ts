@@ -16,28 +16,24 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {Router, UrlTree} from "@angular/router";
-import {AuthService} from "../services/auth.service";
-import {BaseConfiguredCanActivateGuard} from "./base-configured.can-activate.guard";
+import { Injectable } from '@angular/core';
+import { Router, UrlTree } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.guard';
 
 @Injectable()
 export class AlreadyConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
 
-  constructor(Router: Router,
-              AuthService: AuthService) {
-    super(Router, AuthService);
+  constructor(router: Router,
+              authService: AuthService) {
+    super(router, authService);
   }
 
   onIsConfigured(): boolean | UrlTree {
-    return this.Router.parseUrl('login');
+    return this.router.parseUrl('login');
   }
 
   onIsUnconfigured(): boolean | UrlTree {
     return true;
   }
-
-
-
-
 }

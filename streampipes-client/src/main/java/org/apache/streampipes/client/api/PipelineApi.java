@@ -25,7 +25,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
 
-public class PipelineApi extends AbstractClientApi<Pipeline> implements CRUDApi<String, Pipeline> {
+public class PipelineApi extends AbstractTypedClientApi<Pipeline> implements CRUDApi<String, Pipeline> {
 
   public PipelineApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, Pipeline.class);

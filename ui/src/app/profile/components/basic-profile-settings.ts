@@ -16,27 +16,31 @@
  *
  */
 
-import {ProfileService} from "../profile.service";
-import {User} from "../../core-model/gen/streampipes-model-client";
-import {Directive} from "@angular/core";
-import {AppConstants} from "../../services/app.constants";
+import { ProfileService } from '../profile.service';
+import { UserAccount } from '../../core-model/gen/streampipes-model-client';
+import { Directive } from '@angular/core';
+import { AppConstants } from '../../services/app.constants';
+import { JwtTokenStorageService } from '../../services/jwt-token-storage.service';
+import { AuthService } from '../../services/auth.service';
 
 @Directive()
 export abstract class BasicProfileSettings {
 
-  userData: User;
-  profileLoaded: boolean = false;
-  profileUpdating: boolean = false;
+  userData: UserAccount;
+  profileLoaded = false;
+  profileUpdating = false;
   errorMessage: string;
 
   constructor(protected profileService: ProfileService,
-              public appConstants: AppConstants) {
+              public appConstants: AppConstants,
+              private tokenService: JwtTokenStorageService,
+              protected authService: AuthService) {
 
   }
 
   receiveUserData() {
     this.profileService
-        .getUserProfile()
+        .getUserProfile(this.authService.user$.getValue().username)
         .subscribe(userData => {
           this.userData = userData;
           this.onUserDataReceived();

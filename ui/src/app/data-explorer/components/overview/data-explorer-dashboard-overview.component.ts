@@ -24,6 +24,10 @@ import { Dashboard } from '../../../dashboard/models/dashboard.model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
+import { UserRole } from '../../../_enums/user-role.enum';
+import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-overview',
@@ -37,16 +41,28 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
   @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
 
   dataSource = new MatTableDataSource<Dashboard>();
-  displayedColumns: string[] = ['name', 'open', 'edit', 'delete'];
+  displayedColumns: string[] = [];
 
   editLabels: boolean;
+  isAdmin = false;
+
+  hasDataExplorerWritePrivileges = false;
+  hasDataExplorerDeletePrivileges = false;
 
   constructor(private dashboardService: DataViewDataExplorerService,
-              public dialogService: DialogService) {
+              public dialogService: DialogService,
+              private authService: AuthService) {
 
   }
 
   ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
+      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
+      this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+      this.displayedColumns = ['name', 'actions'];
+
+    });
     this.dataSource.data = this.dataViewDashboards;
     this.editLabels = false;
   }
@@ -75,6 +91,25 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.reloadDashboardsEmitter.emit();
+    });
+  }
+
+  showPermissionsDialog(dashboard: Dashboard) {
+
+    const dialogRef = this.dialogService.open(ObjectPermissionDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Manage permissions',
+      width: '50vw',
+      data: {
+        'objectInstanceId': dashboard._id,
+        'headerTitle': 'Manage permissions for dashboard ' + dashboard.name
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(refresh => {
+      if (refresh) {
+        this.reloadDashboardsEmitter.emit();
+      }
     });
   }
 

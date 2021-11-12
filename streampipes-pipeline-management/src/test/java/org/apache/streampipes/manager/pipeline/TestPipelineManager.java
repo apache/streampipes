@@ -18,7 +18,7 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.test.generator.pipeline.DummyPipelineGenerator;
@@ -36,67 +36,48 @@ import static junit.framework.TestCase.assertNotNull;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
-        UserManagementService.class,
+        UserResourceManager.class,
         PipelineManager.class,
         Operations.class})
 public class TestPipelineManager {
 
-    @Before
-    public  void before() {
-        PowerMockito.mockStatic(
-                UserManagementService.class);
-    }
+  @Before
+  public void before() {
+    PowerMockito.mockStatic(
+            UserResourceManager.class);
+  }
 
-    @Test
-    public void testStartPipeline() {
-        // Prepare
-        PipelineOperationStatus expectedPipelineOperationStatus = getPipelineOperationStatus();
-        PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(DummyPipelineGenerator.makePipelineWithPipelineName());
-        PowerMockito.stub(PowerMockito.method(Operations.class, "startPipeline", Pipeline.class)).toReturn(expectedPipelineOperationStatus);
+  @Test
+  public void testStartPipeline() {
+    // Prepare
+    PipelineOperationStatus expectedPipelineOperationStatus = getPipelineOperationStatus();
+    PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(DummyPipelineGenerator.makePipelineWithPipelineName());
+    PowerMockito.stub(PowerMockito.method(Operations.class, "startPipeline", Pipeline.class)).toReturn(expectedPipelineOperationStatus);
 
-        // Test
-        PipelineOperationStatus result = PipelineManager.startPipeline("pipelineId");
+    // Test
+    PipelineOperationStatus result = PipelineManager.startPipeline("pipelineId");
 
-        // Assertions
-        assertNotNull(result);
-        assertEquals(expectedPipelineOperationStatus.getPipelineName(), result.getPipelineName());
-    }
+    // Assertions
+    assertNotNull(result);
+    assertEquals(expectedPipelineOperationStatus.getPipelineName(), result.getPipelineName());
+  }
 
-    @Test
-    public void testStopPipeline() {
-        // Prepare
-        PipelineOperationStatus expectedPipelineOperationStatus = getPipelineOperationStatus();
-        PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(DummyPipelineGenerator.makePipelineWithPipelineName());
-        PowerMockito.stub(PowerMockito.method(Operations.class, "stopPipeline", Pipeline.class, boolean.class)).toReturn(expectedPipelineOperationStatus);
+  @Test
+  public void testStopPipeline() {
+    // Prepare
+    PipelineOperationStatus expectedPipelineOperationStatus = getPipelineOperationStatus();
+    PowerMockito.stub(PowerMockito.method(PipelineManager.class, "getPipeline", String.class)).toReturn(DummyPipelineGenerator.makePipelineWithPipelineName());
+    PowerMockito.stub(PowerMockito.method(Operations.class, "stopPipeline", Pipeline.class, boolean.class)).toReturn(expectedPipelineOperationStatus);
 
-        // Test
-        PipelineOperationStatus result = PipelineManager.stopPipeline("pipelineId", true);
+    // Test
+    PipelineOperationStatus result = PipelineManager.stopPipeline("pipelineId", true);
 
-        // Assertions
-        assertNotNull(result);
-        assertEquals(expectedPipelineOperationStatus.getPipelineName(), result.getPipelineName());
-    }
+    // Assertions
+    assertNotNull(result);
+    assertEquals(expectedPipelineOperationStatus.getPipelineName(), result.getPipelineName());
+  }
 
-    @Test
-    public void testAddPipeline() {
-        // Prepare
-        PowerMockito.mockStatic(Operations.class);
-        Pipeline pipeline = DummyPipelineGenerator.makePipelineWithProcessorAndSink();
-
-        String username = "test@user.com";
-
-        // Test
-        String result = PipelineManager.addPipeline(username, pipeline);
-
-        // Assertions
-        assertNotNull(result);
-        assertNotNull(pipeline.getPipelineId());
-        assertEquals(username, pipeline.getCreatedByUser());
-        pipeline.getSepas().forEach(processor -> assertEquals(username, processor.getCorrespondingUser()));
-        pipeline.getActions().forEach(sink -> assertEquals(username, sink.getCorrespondingUser()));
-    }
-
-    private PipelineOperationStatus getPipelineOperationStatus() {
-        return new PipelineOperationStatus("", DummyPipelineGenerator.PIPELINE_NAME,"", new ArrayList<>());
-    }
+  private PipelineOperationStatus getPipelineOperationStatus() {
+    return new PipelineOperationStatus("", DummyPipelineGenerator.PIPELINE_NAME, "", new ArrayList<>());
+  }
 }

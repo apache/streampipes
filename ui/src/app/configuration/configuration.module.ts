@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './shared/configuration.service';
@@ -43,6 +43,17 @@ import { DatalakeConfigurationComponent } from './datalake-configuration/datalak
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { MatDividerModule } from '@angular/material/divider';
+import { SecurityUserConfigComponent } from './security-configuration/security-user-configuration/security-user-config.component';
+import { SecurityServiceConfigComponent } from './security-configuration/security-service-configuration/security-service-config.component';
+import { EditUserDialogComponent } from './security-configuration/edit-user-dialog/edit-user-dialog.component';
+import { PlatformServicesModule } from '../platform-services/platform.module';
+import { SecurityUserGroupConfigComponent } from './security-configuration/user-group-configuration/user-group-configuration.component';
+import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
+import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';
+import { GeneralConfigurationComponent } from './general-configuration/general-configuration.component';
 
 @NgModule({
   imports: [
@@ -55,9 +66,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatIconModule,
     MatInputModule,
     MatCheckboxModule,
+    MatDividerModule,
     MatTooltipModule,
     FormsModule,
-    DragDropModule
+    DragDropModule,
+    CoreUiModule,
+    ReactiveFormsModule,
+    PlatformServicesModule,
   ],
   declarations: [
     ConfigurationComponent,
@@ -68,9 +83,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ConsulConfigsBooleanComponent,
     ConsulConfigsNumberComponent,
     DeleteDatalakeIndexComponent,
+    EditUserDialogComponent,
+    EditGroupDialogComponent,
+    EmailConfigurationComponent,
+    GeneralConfigurationComponent,
     PipelineElementConfigurationComponent,
+    SecurityConfigurationComponent,
+    SecurityUserConfigComponent,
+    SecurityUserGroupConfigComponent,
+    SecurityServiceConfigComponent,
     MessagingConfigurationComponent,
-    DatalakeConfigurationComponent
+    DatalakeConfigurationComponent,
   ],
   providers: [
     ConfigurationService,

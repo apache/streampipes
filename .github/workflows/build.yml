@@ -33,7 +33,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
-          node-version: '13.x'
+          node-version: '16.x'
       - name: Build with Maven
         run: mvn clean install javadoc:aggregate
       - name: Set env variables for Docker builds
@@ -82,7 +82,7 @@ jobs:
         run: |
           NODE_PATH=/cache/node_modules
           NODE_OPTIONS=--max_old_space_size=6096
-          npm install --unsafe-perm
+          npm install --unsafe-perm --legacy-peer-deps
           npm run build
       - name: Build and Push Docker UI Image
         working-directory: ./ui

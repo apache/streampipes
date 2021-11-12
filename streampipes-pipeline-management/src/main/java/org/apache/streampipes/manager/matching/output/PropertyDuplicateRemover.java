@@ -58,7 +58,6 @@ public class PropertyDuplicateRemover {
             if (np instanceof EventPropertyPrimitive) {
               EventPropertyPrimitive thisPrimitive = (EventPropertyPrimitive) np;
               EventProperty newNested = new EventPropertyPrimitive(thisPrimitive.getRuntimeType(), thisPrimitive.getRuntimeName(), "", thisPrimitive.getDomainProperties());
-              //newNested.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
               newNested.setElementId(thisPrimitive.getElementId());
               nestedProperties.add(newNested);
             }
@@ -66,7 +65,6 @@ public class PropertyDuplicateRemover {
           }
           newProperty = new EventPropertyNested(nested.getRuntimeName() + i, nestedProperties);
           //newProperty = new EventPropertyNested(nested.getPropertyName() +i, nested.getEventProperties());
-          //newProperty.setRdfId(new URIKey(URI.create("urn:fzi.de:sepa:" +UUID.randomUUID().toString())));
           newProperty.setElementId(nested.getElementId() + i);
         }
         i++;

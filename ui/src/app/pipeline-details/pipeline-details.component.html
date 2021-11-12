@@ -24,7 +24,7 @@
                     <mat-tab label="Overview"></mat-tab>
                     <mat-tab label="Monitoring"></mat-tab>
                     <mat-tab label="Errors"></mat-tab>
-                    <mat-tab label="Quick Edit" [disabled]="pipelineAvailable && pipeline.running"></mat-tab>
+                    <mat-tab label="Quick Edit" [disabled]="pipelineAvailable && pipeline.running" *ngIf="hasPipelineWritePrivileges"></mat-tab>
                 </mat-tab-group>
             </div>
         </div>
@@ -43,7 +43,7 @@
         <div fxFlex="40" class="md-padding">
             <div fxFlex fxLayout="column">
                 <pipeline-actions (reloadPipelineEmitter)="loadPipeline()" [pipeline]="pipeline"
-                                  style="margin-bottom:15px;"></pipeline-actions>
+                                  style="margin-bottom:15px;" *ngIf="hasPipelineWritePrivileges"></pipeline-actions>
                 <pipeline-status [pipeline]="pipeline"></pipeline-status>
             </div>
         </div>

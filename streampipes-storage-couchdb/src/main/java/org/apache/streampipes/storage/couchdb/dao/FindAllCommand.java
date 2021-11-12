@@ -25,13 +25,19 @@ import java.util.function.Supplier;
 
 public class FindAllCommand<T> extends DbCommand<List<T>, T> {
 
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient, Class<T> clazz) {
+  private String viewName;
+
+  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
+                        Class<T> clazz,
+                        String viewName) {
     super(couchDbClient, clazz);
+    this.viewName = viewName;
   }
 
   @Override
   protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    List<T> allResults = couchDbClient.view("_all_docs")
+    List<T> allResults = couchDbClient
+            .view(viewName)
             .includeDocs(true)
             .query(clazz);
 

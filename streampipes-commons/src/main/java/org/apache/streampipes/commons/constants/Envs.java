@@ -22,7 +22,16 @@ public enum Envs {
   SP_HOST("SP_HOST"),
   SP_PORT("SP_PORT"),
   SP_CONSUL_LOCATION("CONSUL_LOCATION"),
-  SP_KAFKA_RETENTION_MS("SP_KAFKA_RETENTION_MS");
+  SP_KAFKA_RETENTION_MS("SP_KAFKA_RETENTION_MS"),
+  SP_JWT_SECRET("JWT_SECRET"),
+  SP_INITIAL_ADMIN_EMAIL("SP_INITIAL_ADMIN_EMAIL"),
+  SP_INITIAL_ADMIN_PASSWORD("SP_INITIAL_ADMIN_PASSWORD"),
+  SP_INITIAL_SERVICE_USER("SP_INITIAL_SERVICE_USER"),
+  SP_INITIAL_SERVICE_USER_SECRET("SP_INITIAL_SERVICE_USER_SECRET"),
+  SP_SETUP_INSTALL_PIPELINE_ELEMENTS("SP_SETUP_INSTALL_PIPELINE_ELEMENTS"),
+  SP_CLIENT_USER("SP_CLIENT_USER"),
+  SP_CLIENT_SECRET("SP_CLIENT_SECRET"),
+  SP_ENCRYPTION_PASSCODE("SP_ENCRYPTION_PASSCODE");
 
   private final String envVariableName;
 
@@ -44,6 +53,14 @@ public enum Envs {
 
   public Boolean getValueAsBoolean() {
     return CustomEnvs.getEnvAsBoolean(this.envVariableName);
+  }
+
+  public String getEnvVariableName() {
+    return envVariableName;
+  }
+
+  public String getValueOrDefault(String defaultValue) {
+    return this.exists() ? this.getValue() : defaultValue;
   }
 
 }

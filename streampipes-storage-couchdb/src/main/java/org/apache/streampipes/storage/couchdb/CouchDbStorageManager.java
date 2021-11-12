@@ -39,6 +39,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public ICategoryStorage getCategoryStorageAPI() { return new CategoryStorageImpl(); }
 
   @Override
+  public IUserGroupStorage getUserGroupStorage() {
+    return new UserGroupStorageImpl();
+  }
+
+  @Override
   public ILabelStorage getLabelStorageAPI() { return new LabelStorageImpl(); }
 
   @Override
@@ -130,4 +135,36 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public IPipelineElementDescriptionStorageCache getPipelineElementDescriptionStorage() {
     return new PipelineElementDescriptionStorageImpl();
   }
+
+  @Override
+  public IPermissionStorage getPermissionStorage() {
+    return new PermissionStorageImpl();
+  }
+
+  @Override
+  public IDataProcessorStorage getDataProcessorStorage() {
+    return new DataProcessorStorageImpl();
+  }
+
+  @Override
+  public IDataSinkStorage getDataSinkStorage() {
+    return new DataSinkStorageImpl();
+  }
+
+  @Override
+  public IDataStreamStorage getDataStreamStorage() {
+    return new DataStreamStorageImpl();
+  }
+
+  @Override
+  public IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage() {
+    return new PasswordRecoveryTokenImpl();
+  }
+
+  @Override
+  public IUserActivationTokenStorage getUserActivationTokenStorage() {
+    return new UserActivationTokenImpl();
+  }
+
+
 }

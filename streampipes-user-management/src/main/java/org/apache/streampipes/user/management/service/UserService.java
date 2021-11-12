@@ -18,9 +18,8 @@
 package org.apache.streampipes.user.management.service;
 
 import com.google.gson.JsonObject;
-import org.apache.shiro.authc.AuthenticationException;
-import org.lightcouch.CouchDbClient;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.lightcouch.CouchDbClient;
 
 import java.util.List;
 
@@ -28,11 +27,11 @@ public class UserService {
 
   private JsonObject user;
 
-  public UserService(String email) throws AuthenticationException {
+  public UserService(String email) throws IllegalArgumentException {
     CouchDbClient dbClient = Utils.getCouchDbUserClient();
     List<JsonObject> users = dbClient.view("users/password").key(email).includeDocs(true).query(JsonObject.class);
     if (users.size() != 1) {
-      throw new AuthenticationException("None or too many users with matching username");
+      throw new IllegalArgumentException("None or too many users with matching username");
     }
     this.user = users.get(0);
 

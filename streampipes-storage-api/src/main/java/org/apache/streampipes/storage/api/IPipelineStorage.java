@@ -29,8 +29,6 @@ public interface IPipelineStorage {
 
 	List<Pipeline> getSystemPipelines();
 
-	List<Pipeline> getAllUserPipelines();
-
 	void storePipeline(Pipeline pipeline);
 
 	void updatePipeline(Pipeline pipeline);

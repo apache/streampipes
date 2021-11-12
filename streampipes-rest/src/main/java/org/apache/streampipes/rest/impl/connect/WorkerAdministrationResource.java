@@ -23,8 +23,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,10 +31,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("v2/connect/{username}/master/administration")
+@Path("v2/connect/master/administration")
 public class WorkerAdministrationResource extends AbstractSharedRestInterface {
-
-    private static final Logger LOG = LoggerFactory.getLogger(WorkerAdministrationResource.class);
 
     private WorkerAdministrationManagement workerAdministrationManagement;
 

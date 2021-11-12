@@ -37,7 +37,7 @@ export class PipelineElementTemplateService {
 
   getPipelineElementTemplates(appId: string): Observable<PipelineElementTemplate[]> {
     return this.http
-        .get(this.platformServicesCommons.apiBasePath()
+        .get(this.platformServicesCommons.apiBasePath
             + '/pipeline-element-templates?appId=' + appId)
         .pipe(map(data => {
           return (data as []).map(dpi => PipelineElementTemplate.fromData(dpi));
@@ -45,7 +45,7 @@ export class PipelineElementTemplateService {
   }
 
   getConfiguredDataProcessorForTemplate(templateId: string, invocation: DataProcessorInvocation): Observable<DataProcessorInvocation> {
-    return this.http.post(this.platformServicesCommons.apiBasePath()
+    return this.http.post(this.platformServicesCommons.apiBasePath
         + '/pipeline-element-templates/' + templateId + '/processor', invocation)
         .pipe(map(response => {
           return DataProcessorInvocation.fromData(response as DataProcessorInvocation);
@@ -53,7 +53,7 @@ export class PipelineElementTemplateService {
   }
 
   getConfiguredDataSinkForTemplate(templateId: string, invocation: DataSinkInvocation): Observable<DataSinkInvocation> {
-    return this.http.post(this.platformServicesCommons.apiBasePath()
+    return this.http.post(this.platformServicesCommons.apiBasePath
         + '/pipeline-element-templates/' + templateId + '/sink', invocation)
         .pipe(map(response => {
           return DataSinkInvocation.fromData(response as DataSinkInvocation);
@@ -61,7 +61,7 @@ export class PipelineElementTemplateService {
   }
 
   storePipelineElementTemplate(template: PipelineElementTemplate) {
-    return this.http.post(this.platformServicesCommons.apiBasePath() + '/pipeline-element-templates', template);
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/pipeline-element-templates', template);
   }
 
 

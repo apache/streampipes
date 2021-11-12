@@ -17,45 +17,20 @@
  */
 package org.apache.streampipes.client.api;
 
-import org.apache.streampipes.client.http.*;
+import org.apache.streampipes.client.http.DeleteRequest;
+import org.apache.streampipes.client.http.PostRequestWithPayloadResponse;
+import org.apache.streampipes.client.http.PostRequestWithoutPayloadResponse;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
-import org.apache.streampipes.client.serializer.ListSerializer;
 import org.apache.streampipes.client.serializer.ObjectSerializer;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-import java.util.List;
-
-public abstract class AbstractClientApi<T> {
+public class AbstractClientApi {
 
   protected StreamPipesClientConfig clientConfig;
-  private Class<T> targetClass;
 
-  public AbstractClientApi(StreamPipesClientConfig clientConfig, Class<T> targetClass) {
+  public AbstractClientApi(StreamPipesClientConfig clientConfig) {
     this.clientConfig = clientConfig;
-    this.targetClass = targetClass;
-  }
-
-  protected List<T> getAll(StreamPipesApiPath apiPath) throws SpRuntimeException {
-    ListSerializer<Void, T> serializer = new ListSerializer<>();
-    return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
-  }
-
-  protected T getSingle(StreamPipesApiPath apiPath) throws SpRuntimeException {
-    ObjectSerializer<Void, T> serializer = new ObjectSerializer<>();
-    return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
-  }
-
-  protected <O> O getSingle(StreamPipesApiPath apiPath, Class<O> targetClass) throws SpRuntimeException {
-    ObjectSerializer<Void, O> serializer = new ObjectSerializer<>();
-    return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
-  }
-
-  protected <O> O post(StreamPipesApiPath apiPath, T object, Class<O> responseClass) {
-    ObjectSerializer<T, O> serializer = new ObjectSerializer<>();
-    return new PostRequestWithPayloadResponse<>(clientConfig, apiPath, serializer, object, responseClass)
-            .executeRequest();
   }
 
   protected <O> O post(StreamPipesApiPath apiPath, Class<O> responseClass) {
@@ -63,7 +38,7 @@ public abstract class AbstractClientApi<T> {
     return new PostRequestWithPayloadResponse<>(clientConfig, apiPath, serializer, responseClass).executeRequest();
   }
 
-  protected void post(StreamPipesApiPath apiPath, T object) {
+  protected <T> void post(StreamPipesApiPath apiPath, T object) {
     ObjectSerializer<T, Void> serializer = new ObjectSerializer<>();
     new PostRequestWithoutPayloadResponse<>(clientConfig, apiPath, serializer, object).executeRequest();
   }
@@ -73,5 +48,9 @@ public abstract class AbstractClientApi<T> {
     return new DeleteRequest<>(clientConfig, apiPath, responseClass, serializer).executeRequest();
   }
 
-  protected abstract StreamPipesApiPath getBaseResourcePath();
+  protected <T, O> O post(StreamPipesApiPath apiPath, T object, Class<O> responseClass) {
+    ObjectSerializer<T, O> serializer = new ObjectSerializer<>();
+    return new PostRequestWithPayloadResponse<>(clientConfig, apiPath, serializer, object, responseClass)
+            .executeRequest();
+  }
 }

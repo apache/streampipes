@@ -19,18 +19,21 @@ package org.apache.streampipes.client.http.header;
 
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
-import org.apache.streampipes.client.StreamPipesCredentials;
+
+import static org.apache.streampipes.commons.constants.HttpConstants.*;
 
 public class Headers {
 
-  private static final String AUTHORIZATION = "Authorization";
-  private static final String ACCEPT = "Accept";
-  private static final String CONTENT_TYPE = "Content-type";
-  private static final String BEARER = "Bearer ";
-  private static final String APPLICATION_JSON_TYPE = "application/json";
+  public static Header authorizationBearer(String bearerToken) {
+    return makeHeader(AUTHORIZATION, BEARER + bearerToken);
+  }
 
-  public static Header auth(StreamPipesCredentials credentials) {
-    return makeHeader(AUTHORIZATION, BEARER + credentials.getApiKey());
+  public static Header xApiKey(String apiKey) {
+    return makeHeader(X_API_KEY, apiKey);
+  }
+
+  public static Header xApiUser(String apiUser) {
+    return makeHeader(X_API_USER, apiUser);
   }
 
   public static Header acceptJson() {

@@ -27,6 +27,9 @@ module.exports = {
         alias: {
             npm: path.join(__dirname, 'node_modules'),
             legacy: path.join(__dirname, 'src', 'assets', 'lib'),
+        },
+        fallback: {
+            "assert": false
         }
     }
 };

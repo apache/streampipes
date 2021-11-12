@@ -18,10 +18,13 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.file.FileManager;
-import org.apache.streampipes.model.client.file.FileMetadata;
+import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -29,10 +32,12 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 
 @Path("/v2/files")
+@Component
 public class PipelineElementFile extends AbstractAuthGuardedRestResource {
 
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response storeFile(@FormDataParam("file_upload") InputStream uploadedInputStream,
                             @FormDataParam("file_upload") FormDataContentDisposition fileDetail) {
     try {
@@ -45,6 +50,7 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
 
   @DELETE
   @Path("{fileId}")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
   public Response deleteFile(@PathParam("fileId") String fileId) {
     FileManager.deleteFile(fileId);
     return ok();
@@ -52,9 +58,16 @@ public class PipelineElementFile extends AbstractAuthGuardedRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.HAS_READ_FILE_PRIVILEGE)
   public Response getFileInfo(@QueryParam("filetypes") String filetypes) {
     return ok(FileManager.getAllFiles(filetypes));
   }
 
+  @GET
+  @Path("/{filename}")
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
+  public Response getFile(@PathParam("filename") String filename) {
+    return ok(FileManager.getFile(filename));
+  }
 
 }

@@ -20,7 +20,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { AuthStatusService } from '../../services/auth-status.service';
 import { DashboardConfiguration } from '../model/dashboard-configuration.model';
 import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
 
@@ -28,7 +27,6 @@ import { PlatformServicesCommons } from '../../platform-services/apis/commons.se
 export class RestService {
 
   constructor(private http: HttpClient,
-              private authStatusService: AuthStatusService,
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
@@ -72,7 +70,7 @@ export class RestService {
   }
 
   private get url() {
-    return `${this.platformServicesCommons.apiBasePath()}/asset-dashboards`;
+    return `${this.platformServicesCommons.apiBasePath}/asset-dashboards`;
   }
 
   private get imagePath() {

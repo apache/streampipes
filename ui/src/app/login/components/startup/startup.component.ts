@@ -16,11 +16,10 @@
  *
  */
 
-import {AuthService} from "../../../services/auth.service";
-import {AuthStatusService} from "../../../services/auth-status.service";
-import {Component, Inject, OnInit} from "@angular/core";
-import {Router} from "@angular/router";
-import {AppConstants} from "../../../services/app.constants";
+import { AuthService } from '../../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppConstants } from '../../../services/app.constants';
 
 @Component({
     selector: 'startup',
@@ -28,14 +27,13 @@ import {AppConstants} from "../../../services/app.constants";
 })
 export class StartupComponent implements OnInit {
 
-    progress: number = 0;
+    progress = 0;
     currentStep = 0;
     maxLoadingTimeInSeconds = 300;
     loadingIntervalInSeconds = 1;
 
-    constructor(private AuthService: AuthService,
-                private AuthStatusService: AuthStatusService,
-                private Router: Router,
+    constructor(private authService: AuthService,
+                private router: Router,
                 public appConstants: AppConstants) {
     }
 
@@ -44,16 +42,16 @@ export class StartupComponent implements OnInit {
     }
 
     checkStatus() {
-        this.AuthService.checkConfiguration().subscribe((configured) => {
+        this.authService.checkConfiguration().subscribe((configured) => {
             this.progress = 100;
-            let target: string = configured ? 'login' : 'setup';
-            this.Router.navigate([target]);
+            const target: string = configured ? 'login' : 'setup';
+            this.router.navigate([target]);
         }, () => {
             this.currentStep += this.loadingIntervalInSeconds;
             this.progress = (this.currentStep / this.maxLoadingTimeInSeconds) * 100;
             setTimeout(() => {
                 this.checkStatus();
-            }, this.loadingIntervalInSeconds*1000);
+            }, this.loadingIntervalInSeconds * 1000);
         });
     }
 }

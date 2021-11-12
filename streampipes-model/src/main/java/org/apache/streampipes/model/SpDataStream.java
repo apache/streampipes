@@ -41,7 +41,7 @@ public class SpDataStream extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = -5732549347563182863L;
 
-  private static final String prefix = "urn:fzi.de:eventstream:";
+  private static final String prefix = "urn:streampipes.apache.org:eventstream:";
 
   protected transient List<EventStreamQualityDefinition> hasEventStreamQualities;
 

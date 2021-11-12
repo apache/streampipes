@@ -20,6 +20,11 @@ package org.apache.streampipes.config.backend;
 
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.random.TokenGenerator;
+import org.apache.streampipes.config.backend.model.EmailConfig;
+import org.apache.streampipes.config.backend.model.GeneralConfig;
+import org.apache.streampipes.config.backend.model.LocalAuthConfig;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
@@ -53,6 +58,8 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
     config.register(BackendConfigKeys.IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
             "already configured or not");
+    config.register(BackendConfigKeys.IS_SETUP_RUNNING, false, "Boolean that indicates whether the initial setup " +
+            "is currently running");
     config.register(BackendConfigKeys.ASSETS_DIR, makeAssetLocation(), "The directory where " +
             "pipeline element assets are stored.");
     config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(), "The directory where " +
@@ -66,7 +73,9 @@ public enum BackendConfig {
     config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
             "Default Messaging Settings");
 
-    config.register(BackendConfigKeys.ENCRYPTION_KEY, randomKey(), "A random secret key");
+    config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()), "Local authentication settings");
+    config.registerObject(BackendConfigKeys.EMAIL_CONFIG, EmailConfig.fromDefaults(), "Email settings");
+    config.registerObject(BackendConfigKeys.GENERAL_CONFIG, new GeneralConfig(), "General settings");
   }
 
   private String makeAssetLocation() {
@@ -156,14 +165,6 @@ public enum BackendConfig {
     config.setString(BackendConfigKeys.KAFKA_HOST, s);
   }
 
-  public void setZookeeperHost(String s) {
-    config.setString(BackendConfigKeys.ZOOKEEPER_HOST, s);
-  }
-
-  public void setJmsHost(String s) {
-    config.setString(BackendConfigKeys.JMS_HOST, s);
-  }
-
   public void setMessagingSettings(MessagingSettings settings) {
     config.setObject(BackendConfigKeys.MESSAGING_SETTINGS, settings);
   }
@@ -182,10 +183,6 @@ public enum BackendConfig {
 
   public String getElasticsearchProtocol() {
     return config.getString(BackendConfigKeys.ELASTICSEARCH_PROTOCOL);
-  }
-
-  public String getElasticsearchURL() {
-    return getElasticsearchProtocol()+ "://" + getElasticsearchHost() + ":" + getElasticsearchPort();
   }
 
   public String getKafkaRestHost() {
@@ -236,11 +233,44 @@ public enum BackendConfig {
     return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
   }
 
-  public String getEncryptionKey() {
-    return config.getString(BackendConfigKeys.ENCRYPTION_KEY);
+  public LocalAuthConfig getLocalAuthConfig() {
+    return config.getObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.class, LocalAuthConfig.fromDefaults(getJwtSecret()));
   }
 
+  public EmailConfig getEmailConfig() {
+    return config.getObject(BackendConfigKeys.EMAIL_CONFIG, EmailConfig.class, EmailConfig.fromDefaults());
+  }
 
+  public void updateEmailConfig(EmailConfig emailConfig) {
+    config.setObject(BackendConfigKeys.EMAIL_CONFIG, emailConfig);
+  }
 
+  public GeneralConfig getGeneralConfig() {
+    return config.getObject(BackendConfigKeys.GENERAL_CONFIG, GeneralConfig.class, new GeneralConfig());
+  }
+
+  public void updateGeneralConfig(GeneralConfig generalConfig) {
+    config.setObject(BackendConfigKeys.GENERAL_CONFIG, generalConfig);
+  }
+
+  public boolean isSetupRunning() {
+    return config.getBoolean(BackendConfigKeys.IS_SETUP_RUNNING);
+  }
+
+  public void updateSetupStatus(boolean status) {
+    config.setBoolean(BackendConfigKeys.IS_SETUP_RUNNING, status);
+  }
+
+  private String getJwtSecret() {
+    if (Envs.SP_JWT_SECRET.exists()) {
+      return Envs.SP_JWT_SECRET.getValue();
+    } else {
+      return makeDefaultJwtSecret();
+    }
+  }
+
+  private String makeDefaultJwtSecret() {
+    return TokenGenerator.generateNewToken();
+  }
 
 }

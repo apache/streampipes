@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {PipelineElementEndpointService} from "../../../platform-services/apis/pipeline-element-endpoint.service";
+import { Component, Input } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { PipelineElementEndpointService } from '../../../platform-services/apis/pipeline-element-endpoint.service';
 
 @Component({
   selector: 'endpoint-installation-dialog',
@@ -35,7 +35,7 @@ export class EndpointInstallationComponent {
   @Input()
   endpointItemsToInstall: any;
 
-  installedItemsChanged: boolean = false;
+  installedItemsChanged = false;
 
   installationStatus: any;
   installationFinished: boolean;
@@ -43,31 +43,33 @@ export class EndpointInstallationComponent {
   nextButton: string;
   installationRunning: boolean;
 
-  constructor(private DialogRef: DialogRef<EndpointInstallationComponent>,
-              private PipelineElementEndpointService: PipelineElementEndpointService) {
+  installAsPublicElement = true;
+
+  constructor(private dialogRef: DialogRef<EndpointInstallationComponent>,
+              private pipelineElementEndpointService: PipelineElementEndpointService) {
     this.installationStatus = [];
     this.installationFinished = false;
-    this.page = "preview";
-    this.nextButton = "Next";
+    this.page = 'preview';
+    this.nextButton = 'Next';
     this.installationRunning = false;
   }
 
   close() {
-    this.DialogRef.close(this.installedItemsChanged);
+    this.dialogRef.close(this.installedItemsChanged);
   }
 
   next() {
-    if (this.page === "installation") {
+    if (this.page === 'installation') {
       this.close();
     } else {
-      this.page = "installation";
+      this.page = 'installation';
       this.initiateInstallation(this.endpointItemsToInstall[0], 0);
     }
   }
 
   initiateInstallation(endpointUri, index) {
     this.installationRunning = true;
-    this.installationStatus.push({"name": endpointUri.name, "id": index, "status": "waiting"});
+    this.installationStatus.push({'name': endpointUri.name, 'id': index, 'status': 'waiting'});
     if (this.install) {
       this.installElement(endpointUri, index);
     } else {
@@ -78,16 +80,16 @@ export class EndpointInstallationComponent {
   installElement(endpointUri, index) {
     endpointUri = encodeURIComponent(endpointUri.uri);
 
-    this.PipelineElementEndpointService.add(endpointUri, true)
+    this.pipelineElementEndpointService.add(endpointUri, this.installAsPublicElement)
         .subscribe(data => {
           if (data.success) {
-            this.installationStatus[index].status = "success";
+            this.installationStatus[index].status = 'success';
           } else {
-            this.installationStatus[index].status = "error";
+            this.installationStatus[index].status = 'error';
             this.installationStatus[index].details = data.notifications[0].additionalInformation;
           }
         }, data => {
-          this.installationStatus[index].status = "error";
+          this.installationStatus[index].status = 'error';
         })
         .add(() => {
           if (index < this.endpointItemsToInstall.length - 1) {
@@ -95,29 +97,25 @@ export class EndpointInstallationComponent {
             this.initiateInstallation(this.endpointItemsToInstall[index], index);
           } else {
             this.installedItemsChanged = true;
-            this.nextButton = "Close";
+            this.nextButton = 'Close';
             this.installationRunning = false;
           }
         });
   }
 
   uninstallElement(endpointUri, index) {
-    this.PipelineElementEndpointService.del(endpointUri.elementId)
+    this.pipelineElementEndpointService.del(endpointUri.elementId)
         .subscribe(data => {
-          if (data.success) {
-            this.installationStatus[index].status = "success";
-          } else {
-            this.installationStatus[index].status = "error";
-          }
+          this.installationStatus[index].status = data.success ? 'success' : 'error';
         }, data => {
-          this.installationStatus[index].status = "error";
+          this.installationStatus[index].status = 'error';
         })
         .add(() => {
           if (index < this.endpointItemsToInstall.length - 1) {
             index++;
             this.initiateInstallation(this.endpointItemsToInstall[index], index);
           } else {
-            this.nextButton = "Close";
+            this.nextButton = 'Close';
             this.installationRunning = false;
             this.installedItemsChanged = true;
           }

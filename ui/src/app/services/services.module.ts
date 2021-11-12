@@ -16,15 +16,16 @@
  *
  */
 
-import {NgModule} from "@angular/core";
-import {RestApi} from "./rest-api.service";
-import {AuthService} from "./auth.service";
-import {ShepherdService} from "./tour/shepherd.service";
-import {TourProviderService} from "./tour/tour-provider.service";
-import {NotificationCountService} from "./notification-count-service";
-import {PropertySelectorService} from "./property-selector.service";
-import {ElementIconText} from "./get-element-icon-text.service";
-import {AppConstants} from "./app.constants";
+import { NgModule } from '@angular/core';
+import { RestApi } from './rest-api.service';
+import { AuthService } from './auth.service';
+import { ShepherdService } from './tour/shepherd.service';
+import { TourProviderService } from './tour/tour-provider.service';
+import { NotificationCountService } from './notification-count-service';
+import { PropertySelectorService } from './property-selector.service';
+import { ElementIconText } from './get-element-icon-text.service';
+import { AppConstants } from './app.constants';
+import { JwtTokenStorageService } from './jwt-token-storage.service';
 
 @NgModule({
   imports: [],
@@ -34,6 +35,7 @@ import {AppConstants} from "./app.constants";
     RestApi,
     AuthService,
     ElementIconText,
+    JwtTokenStorageService,
     ShepherdService,
     TourProviderService,
     NotificationCountService,

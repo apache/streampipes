@@ -21,7 +21,11 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.impl.dashboard.AbstractPipelineExtractionResource;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,8 +34,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.List;
 
 @Path("/v3/datalake/pipelines")
+@Component
 public class PersistedDataStreamResource extends AbstractPipelineExtractionResource<DataLakeMeasure> {
 
   private static final String DataLakeAppId = "org.apache.streampipes.sinks.internal.jvm.datalake";
@@ -40,8 +46,10 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   @GET
   @JacksonSerialized
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getPersistedDataStreams() {
-    return ok(extract(new ArrayList<>(), DataLakeAppId));
+  @PreAuthorize(AuthConstants.HAS_READ_DATA_EXPLORER_PRIVILEGE)
+  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  public List<DataLakeMeasure> getPersistedDataStreams() {
+    return extract(new ArrayList<>(), DataLakeAppId);
   }
 
   @GET

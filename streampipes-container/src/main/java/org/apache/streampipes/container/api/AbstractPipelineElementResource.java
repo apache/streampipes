@@ -32,6 +32,8 @@ import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -49,6 +51,8 @@ import java.util.Map;
 public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
 
   private static final String SLASH = "/";
+
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractPipelineElementResource.class);
 
   @GET
   @Path("{appId}")
@@ -75,16 +79,26 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
   @Path("{appId}/assets/icon")
   @Produces("image/png")
   public Response getIconAsset(@PathParam("appId") String appId) throws IOException {
-    URL iconUrl = Resources.getResource(makeIconPath(appId));
-    return ok(Resources.toByteArray(iconUrl));
+    try {
+      URL iconUrl = Resources.getResource(makeIconPath(appId));
+      return ok(Resources.toByteArray(iconUrl));
+    } catch (IllegalArgumentException e) {
+      LOG.warn("No icon resource found for pipeline element {}", appId);
+      return Response.status(400).build();
+    }
   }
 
   @GET
   @Path("{id}/assets/documentation")
   @Produces(MediaType.TEXT_PLAIN)
-  public String getDocumentationAsset(@PathParam("id") String elementId) throws IOException {
-    URL documentationUrl = Resources.getResource(makeDocumentationPath(elementId));
-    return Resources.toString(documentationUrl, Charsets.UTF_8);
+  public Response getDocumentationAsset(@PathParam("id") String elementId) throws IOException {
+    try {
+      URL documentationUrl = Resources.getResource(makeDocumentationPath(elementId));
+      return ok(Resources.toString(documentationUrl, Charsets.UTF_8));
+    } catch (IllegalArgumentException e) {
+      LOG.warn("No documentation resource found for pipeline element {}", elementId);
+      return Response.status(400).build();
+    }
   }
 
   protected NamedStreamPipesEntity prepareElement(String appId) {

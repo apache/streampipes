@@ -40,11 +40,11 @@
                         <mat-icon>get_app</mat-icon>
                         <span>Download data</span>
                     </button>
-                    <button mat-menu-item (click)="startEditMode()" *ngIf="!editMode">
+                    <button mat-menu-item (click)="startEditMode()" *ngIf="!editMode && hasDataExplorerWritePrivileges">
                         <mat-icon>edit</mat-icon>
                         <span>Edit Widget</span>
                     </button>
-                    <button mat-menu-item (click)="removeWidget()" *ngIf="editMode">
+                    <button mat-menu-item (click)="removeWidget()" *ngIf="editMode && hasDataExplorerDeletePrivileges">
                         <mat-icon>clear</mat-icon>
                         <span>Delete widget</span>
                     </button>

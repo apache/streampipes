@@ -28,7 +28,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 
 import java.util.List;
 
-public class DataSinkApi extends AbstractClientApi<DataSinkInvocation> implements CRUDApi<String, DataSinkInvocation> {
+public class DataSinkApi extends AbstractTypedClientApi<DataSinkInvocation> implements CRUDApi<String, DataSinkInvocation> {
 
   public DataSinkApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataSinkInvocation.class);
@@ -86,7 +86,7 @@ public class DataSinkApi extends AbstractClientApi<DataSinkInvocation> implement
   }
 
   public DataSinkInvocation getDataSinkForPipelineElement(String templateId, DataSinkInvocation pipelineElement) {
-    StreamPipesApiPath path = StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())
+    StreamPipesApiPath path = StreamPipesApiPath.fromBaseApiPath()
             .addToPath("pipeline-element-templates")
             .addToPath(templateId)
             .addToPath("sink");
@@ -96,7 +96,7 @@ public class DataSinkApi extends AbstractClientApi<DataSinkInvocation> implement
 
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
-    return StreamPipesApiPath.fromUserApiPath(clientConfig.getCredentials())
+    return StreamPipesApiPath.fromBaseApiPath()
             .addToPath("actions")
             .addToPath("own");
   }

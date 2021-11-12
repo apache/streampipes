@@ -33,6 +33,7 @@ public class BackendConfigKeys {
   public static final String ELASTICSEARCH_PORT = "SP_ELASTICSEARCH_PORT";
   public static final String ELASTICSEARCH_PROTOCOL = "SP_ELASTICSEARCH_PROTOCOL";
   public static final String IS_CONFIGURED = "SP_IS_CONFIGURED";
+  public static final String IS_SETUP_RUNNING = "SP_IS_SETUP_RUNNING";
   public static final String KAFKA_REST_HOST = "SP_KAFKA_REST_HOST";
   public static final String KAFKA_REST_PORT = "SP_KAFKA_REST_PORT";
   public static final String ASSETS_DIR = "SP_ASSETS_DIR";
@@ -45,7 +46,9 @@ public class BackendConfigKeys {
   public static final String INFLUX_DATA_BASE = "SP_INFLUX_DATA_BASE";
   public static final String MESSAGING_SETTINGS = "SP_MESSAGING_SETTINGS";
 
-  public static final String ENCRYPTION_KEY = "SP_ENCRYPTION_KEY";
+  public static final String LOCAL_AUTH_CONFIG = "SP_LOCAL_AUTH_CONFIG";
+  public static final String EMAIL_CONFIG = "SP_EMAIL_CONFIG";
+  public static final String GENERAL_CONFIG = "SP_GENERAL_CONFIG";
 
 
   public static final String SERVICE_NAME = "SP_SERVICE_NAME";

@@ -17,6 +17,9 @@
  */
 package org.apache.streampipes.rest.core.base.impl;
 
+import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
@@ -31,6 +34,14 @@ public class AbstractAuthGuardedRestResource extends AbstractRestResource {
 
   protected String getAuthenticatedUsername() {
     return this.securityContext.getUserPrincipal().getName();
+  }
+
+  protected PrincipalUserDetails<?> getPrincipal() {
+    return (PrincipalUserDetails<?>) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  }
+
+  protected String getAuthenticatedUserSid() {
+    return getPrincipal().getDetails().getPrincipalId();
   }
 
 }

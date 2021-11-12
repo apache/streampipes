@@ -20,9 +20,9 @@
     <div fxFlex="100" fxLayout="column">
         <div fxLayout="row" class="fixed-height options-bar sp-tab-bg">
             <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
-                <button mat-button mat-raised-button color="accent" (click)="openNewDashboardDialog()">
+                <button mat-button mat-raised-button color="accent" (click)="openNewDashboardDialog()" *ngIf="hasDashboardWritePrivileges">
                     <i class="material-icons">add</i>
-                   <span> New dashboard</span>
+                    <span> New dashboard</span>
                 </button>
             </div>
         </div>
@@ -46,62 +46,46 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="open">
-                    <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Show</th>
-                    <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
+                <ng-container matColumnDef="actions">
+                    <th fxFlex="40" fxLayoutAlign="center center" mat-header-cell *matHeaderCellDef> Actions</th>
+                    <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                        <div fxLayout="row" fxFlex="100">
+                            <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="showDashboard(element, false)">
                                 <i class="material-icons">visibility</i>
                             </button>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="openWindow">
-                    <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Window</th>
-                    <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
+                            </span>
+                            <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="openExternalDashboard(element)">
                                 <i class="material-icons">open_in_new</i>
                             </button>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="settings">
-                    <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Settings</th>
-                    <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
+                            </span>
+                            <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDashboardWritePrivileges">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="openEditDashboardDialog(element)">
                                 <i class="material-icons">settings</i>
                             </button>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="edit">
-                    <th fxFlex="8" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Edit</th>
-                    <td fxFlex="8" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
+                            </span>
+                            <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDashboardWritePrivileges">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="showDashboard(element, true)">
                                 <i class="material-icons">edit</i>
                             </button>
-                        </div>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="delete">
-                    <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delete</th>
-                    <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row">
+                            </span>
+                            <span fxFlex fxFlexOrder="5" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
+                            <button mat-button mat-icon-button color="accent"
+                                    (click)="showPermissionsDialog(element)">
+                                <i class="material-icons">share</i>
+                            </button>
+                            </span>
+                            <span fxFlex fxFlexOrder="6" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDashboardDeletePrivileges">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="openDeleteDashboardDialog(element)">
                                 <i class="material-icons">delete</i>
                             </button>
+                            </span>
                         </div>
                     </td>
                 </ng-container>

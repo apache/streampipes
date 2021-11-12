@@ -29,12 +29,13 @@ import java.net.URLDecoder;
 
 public class EndpointItemParser {
 
-  public Message parseAndAddEndpointItem(String url, String username, boolean publicElement,
-                                         boolean refreshCache) {
+  public Message parseAndAddEndpointItem(String url,
+                                         String principalSid,
+                                         boolean publicElement) {
     try {
       url = URLDecoder.decode(url, "UTF-8");
       String payload = parseURIContent(url);
-      return Operations.verifyAndAddElement(payload, username, publicElement, refreshCache);
+      return Operations.verifyAndAddElement(payload, principalSid, publicElement);
     } catch (Exception e) {
       e.printStackTrace();
       return Notifications.error(NotificationType.PARSE_ERROR, e.getMessage());

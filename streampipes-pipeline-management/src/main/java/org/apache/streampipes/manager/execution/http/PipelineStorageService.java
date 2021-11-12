@@ -21,7 +21,7 @@ package org.apache.streampipes.manager.execution.http;
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
 import org.apache.streampipes.manager.matching.InvocationGraphBuilder;
-import org.apache.streampipes.manager.secret.SecretProvider;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -63,11 +63,11 @@ public class PipelineStorageService {
   }
 
   private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {
-    SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(graphs);
+    SecretProvider.getEncryptionService().apply(graphs);
   }
 
   private void encryptSecrets(Pipeline pipeline) {
-    SecretProvider.getEncryptionService(pipeline.getCreatedByUser()).apply(pipeline);
+    SecretProvider.getEncryptionService().apply(pipeline);
   }
 
   private <T> List<T> filter(List<InvocableStreamPipesEntity> graphs, Class<T> clazz) {

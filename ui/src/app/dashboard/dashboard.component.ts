@@ -23,6 +23,8 @@ import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { Tuple2 } from '../core-model/base/Tuple2';
 import { EditModeService } from './services/edit-mode.service';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { UserPrivilege } from '../_enums/user-privilege.enum';
 
 @Component({
     selector: 'dashboard',
@@ -39,15 +41,18 @@ export class DashboardComponent implements OnInit {
     editMode = false;
 
     dashboards: Dashboard[];
+    hasDashboardWritePrivileges = false;
 
     routeParams: any;
 
     constructor(private dashboardService: DashboardService,
                 private refreshDashboardService: RefreshDashboardService,
                 private editModeService: EditModeService,
-                private route: ActivatedRoute) {}
+                private route: ActivatedRoute,
+                private authService: AuthService) {}
 
     ngOnInit() {
+        this.hasDashboardWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DASHBOARD);
         this.route.queryParams.subscribe(params => {
             this.getDashboards(params['dashboardId']);
         });

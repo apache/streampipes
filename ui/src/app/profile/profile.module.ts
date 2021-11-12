@@ -28,6 +28,8 @@ import {TokenManagementSettingsComponent} from "./components/token/token-managem
 import {GeneralProfileSettingsComponent} from "./components/general/general-profile-settings.component";
 import {ProfileService} from "./profile.service";
 import {MatDividerModule} from "@angular/material/divider";
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { CoreUiModule } from '../core-ui/core-ui.module';
 
 @NgModule({
   imports: [
@@ -38,6 +40,8 @@ import {MatDividerModule} from "@angular/material/divider";
     MatButtonModule,
     CustomMaterialModule,
     CommonModule,
+    ClipboardModule,
+    CoreUiModule,
   ],
   declarations: [
     GeneralProfileSettingsComponent,

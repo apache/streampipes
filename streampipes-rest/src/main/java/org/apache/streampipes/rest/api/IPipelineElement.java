@@ -19,17 +19,15 @@
 package org.apache.streampipes.rest.api;
 
 
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+
 import javax.ws.rs.core.Response;
 
-public interface IPipelineElement {
+public interface IPipelineElement<T extends NamedStreamPipesEntity> {
 
 	Response getAvailable();
-	Response getFavorites();
 	Response getOwn();
 
-	Response addFavorite(String elementUri);
-
-	Response removeFavorite(String elementUri);
 	Response removeOwn(String elementUri);
 
 	Response getElement(String elementUri);

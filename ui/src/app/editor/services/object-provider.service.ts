@@ -16,12 +16,12 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {RestApi} from "../../services/rest-api.service";
-import {InvocablePipelineElementUnion, PipelineElementConfig} from "../model/editor.model";
-import {DataSinkInvocation, Pipeline} from "../../core-model/gen/streampipes-model";
-import {EditorService} from "./editor.service";
-import {JsplumbFactoryService} from "./jsplumb-factory.service";
+import { Injectable } from "@angular/core";
+import { RestApi } from "../../services/rest-api.service";
+import { InvocablePipelineElementUnion, PipelineElementConfig } from "../model/editor.model";
+import { DataSinkInvocation, Pipeline } from "../../core-model/gen/streampipes-model";
+import { EditorService } from "./editor.service";
+import { JsplumbFactoryService } from "./jsplumb-factory.service";
 
 @Injectable()
 export class ObjectProvider {
@@ -107,10 +107,5 @@ export class ObjectProvider {
 
     updatePipeline(pipeline: Pipeline) {
         return this.EditorService.updatePartialPipeline(pipeline);
-    };
-
-    storePipeline(pipeline) {
-        return this.RestApi.storePipeline(pipeline);
-
     }
 }

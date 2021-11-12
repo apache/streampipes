@@ -23,7 +23,7 @@
             <div fxLayoutAlign="start center" fxLayout="row" class="pl-10">
                 <button mat-button mat-raised-button color="accent"
                         data-cy="open-new-data-view-dialog"
-                        (click)="openNewDataViewDialog()" class="mr-10">
+                        (click)="openNewDataViewDialog()" class="mr-10" *ngIf="hasDataExplorerWritePrivileges">
                     <i class="material-icons">add</i>
                     <span>New Data View</span>
                 </button>
@@ -45,46 +45,42 @@
                 <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
 
                     <ng-container matColumnDef="name">
-                        <th fxFlex="80" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Data View</th>
-                        <td fxFlex="80" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                        <th fxFlex="60" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Data View</th>
+                        <td fxFlex="60" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                             {{element.name}}<br/>
                             {{element.description}}
                         </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="open">
-                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Show</th>
-                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                            <div fxLayout="row">
+                    <ng-container matColumnDef="actions">
+                        <th fxFlex="40" fxLayoutAlign="center center" mat-header-cell *matHeaderCellDef> Actions</th>
+                        <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                            <div fxLayout="row" fxFlex="100">
+                                <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                                 <button mat-button mat-icon-button color="accent"
                                         (click)="showDashboard(element, false)">
                                     <i class="material-icons">visibility</i>
                                 </button>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="edit">
-                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Edit</th>
-                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                            <div fxLayout="row">
+                                </span>
+                                <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerWritePrivileges">
                                 <button mat-button mat-icon-button color="accent"
                                         data-cy="edit-data-view"
                                         (click)="showDashboard(element, true)">
                                     <i class="material-icons">edit</i>
                                 </button>
-                            </div>
-                        </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="delete">
-                        <th fxFlex="10" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Delete</th>
-                        <td fxFlex="10" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                            <div fxLayout="row">
+                                </span>
+                                <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
+                                <button mat-button mat-icon-button color="accent"
+                                        (click)="showPermissionsDialog(element)">
+                                    <i class="material-icons">share</i>
+                                </button>
+                                </span>
+                                <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerDeletePrivileges">
                                 <button mat-button mat-icon-button color="accent"
                                         (click)="openDeleteDashboardDialog(element)">
                                     <i class="material-icons">delete</i>
                                 </button>
+                                </span>
                             </div>
                         </td>
                     </ng-container>

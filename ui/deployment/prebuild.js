@@ -69,6 +69,7 @@ for (let module of config.modules) {
         ng5_componentPath: modules[module]['ng5_componentPath'],
         path: modules[module]['path'],
         link: modules[module]['link'],
+        pageNames: modules[module]['pageNames'],
         url: modules[module]['url'],
         title: modules[module]['title'],
         icon: modules[module]['icon'],
@@ -109,6 +110,11 @@ if (process.env.LOGO_NAV_LOC !== undefined) {
 if (process.env.FAVICON_LOC !== undefined) {
     console.log('Using custom-provided favicon ' + process.env.FAVICON_LOC);
     fs.writeFileSync('src/assets/img/favicon/favicon-96x96.png', fs.readFileSync(process.env.FAVICON_LOC));
+}
+
+if (process.env.CONSTANTS_FILE !== undefined) {
+    console.log('Using custom-provided constants file ' + process.env.CONSTANTS_FILE);
+    fs.writeFileSync('src/app/services/app.constants.ts', fs.readFileSync(process.env.CONSTANTS_FILE, 'utf8'));
 }
 
 console.log('Pre-Build finished.');

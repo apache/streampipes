@@ -21,14 +21,15 @@ package org.apache.streampipes.manager.verification;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.manager.storage.UserManagementService;
-import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.manager.verification.messages.VerificationError;
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
 import org.apache.streampipes.manager.verification.structure.GeneralVerifier;
 import org.apache.streampipes.manager.verification.structure.Verifier;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.client.user.PermissionBuilder;
 import org.apache.streampipes.model.message.*;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
 import org.apache.streampipes.storage.management.StorageManager;
@@ -53,7 +54,6 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   protected IPipelineElementDescriptionStorageCache storageApi =
           StorageManager.INSTANCE.getPipelineElementStorage();
-  protected UserService userService = UserManagementService.getUserService();
 
   public ElementVerifier(String graphData, Class<T> elementClass) {
     this.elementClass = elementClass;
@@ -74,17 +74,16 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     validators.add(new GeneralVerifier<>(elementDescription));
   }
 
-  protected abstract StorageState store(String username, boolean publicElement,
-                                        boolean refreshCache);
+  protected abstract StorageState store();
 
-  protected abstract void update(String username);
+  protected abstract void update();
 
   protected void verify() {
     collectValidators();
     validators.forEach(validator -> validationResults.addAll(validator.validate()));
   }
 
-  public Message verifyAndAdd(String username, boolean publicElement, boolean refreshCache) throws SepaParseException {
+  public Message verifyAndAdd(String principalSid, boolean publicElement) throws SepaParseException {
     if (shouldTransform) {
       try {
         this.elementDescription = transform();
@@ -94,8 +93,9 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     }
     verify();
     if (isVerifiedSuccessfully()) {
-      StorageState state = store(username, publicElement, refreshCache);
+      StorageState state = store();
       if (state == StorageState.STORED) {
+        createAndStorePermission(principalSid, publicElement);
         try {
           storeAssets();
         } catch (IOException | NoServiceEndpointsAvailableException e) {
@@ -113,7 +113,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   }
 
-  public Message verifyAndUpdate(String username) throws SepaParseException {
+  public Message verifyAndUpdate() throws SepaParseException {
     try {
       this.elementDescription = transform();
     } catch (JsonProcessingException e) {
@@ -121,7 +121,7 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
     }
     verify();
     if (isVerifiedSuccessfully()) {
-      update(username);
+      update();
       try {
         updateAssets();
       } catch (IOException | NoServiceEndpointsAvailableException e) {
@@ -172,5 +172,30 @@ public abstract class ElementVerifier<T extends NamedStreamPipesEntity> {
 
   protected T transform() throws JsonProcessingException {
     return JacksonSerializer.getObjectMapper().readValue(graphData, elementClass);
+  }
+
+  private void createAndStorePermission(String principalSid,
+                                        boolean publicElement) {
+    Permission permission = makePermission(
+            this.elementDescription.getElementId(),
+            this.elementDescription.getClass(),
+            principalSid, publicElement
+    );
+
+    storeNewObjectPermission(permission);
+  }
+
+  protected Permission makePermission(String objectInstanceId,
+                                      Class<?> objectInstanceClass,
+                                      String principalSid,
+                                      boolean publicElement) {
+    return PermissionBuilder
+            .create(objectInstanceId, objectInstanceClass, principalSid)
+            .publicElement(publicElement)
+            .build();
+  }
+
+  protected void storeNewObjectPermission(Permission permission) {
+    new SpResourceManager().managePermissions().create(permission);
   }
 }

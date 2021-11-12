@@ -16,16 +16,12 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" style="margin-top:40px;">
-    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch">
-        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
-            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h4>Kafka Settings</h4>
-                <span flex></span>
-            </div>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
-            <form (ngSubmit)="updateMessagingSettings()" class="form-width" fxFlex="100" fxLayout="column" *ngIf="loadingCompleted">
+<div fxLayout="column" class="page-container-padding">
+    <sp-split-section title="Kafka Settings"
+                      subtitle="Manage Kafka settings for pipeline communication">
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner">
+            <form (ngSubmit)="updateMessagingSettings()" class="form-width" fxFlex="100" fxLayout="column"
+                  *ngIf="loadingCompleted">
                 <mat-form-field class="form-field" fxFlex="100">
                     <input matInput [(ngModel)]="messagingSettings.batchSize"
                            [placeholder]="'Batch Size'" type="text"
@@ -46,53 +42,52 @@
                            [placeholder]="'Linger MS'" type="text"
                            [ngModelOptions]="{standalone: true}">
                 </mat-form-field>
-                <div fxLayoutAlign="end center">
-                    <button mat-raised-button color="accent" type="submit" class="md-raised md-primary submit-button">Update
+                <div fxLayoutAlign="start center" class="mt-10">
+                    <button mat-raised-button color="accent" type="submit"
+                            class="md-raised md-primary submit-button">Update
                     </button>
                 </div>
 
             </form>
         </div>
+    </sp-split-section>
+    <mat-divider></mat-divider>
 
-    </div>
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start stretch" style="margin-top:40px;">
-        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
-            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h4>Message Formats</h4>
-                <span flex></span>
-            </div>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
-            <div cdkDropList class="data-format-list" (cdkDropListDropped)="drop($event)" *ngIf="loadingCompleted">
-                <div class="data-format-box" *ngFor="let format of messagingSettings.prioritizedFormats" cdkDrag>
+    <sp-split-section title="Message Formats"
+                      subtitle="Manage the priority of message formats used">
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner">
+            <div cdkDropList class="data-format-list" (cdkDropListDropped)="drop($event)"
+                 *ngIf="loadingCompleted">
+                <div class="data-format-box" *ngFor="let format of messagingSettings.prioritizedFormats"
+                     cdkDrag>
                     {{format}}
                 </div>
             </div>
-            <div fxLayoutAlign="end center">
-                <button mat-raised-button color="accent" type="submit" class="md-raised md-primary submit-button" (click)="updateMessagingSettings()">Update
+            <div fxLayoutAlign="start center" class="mt-10">
+                <button mat-raised-button color="accent" type="submit"
+                        class="md-raised md-primary submit-button" (click)="updateMessagingSettings()">Update
                 </button>
             </div>
         </div>
-    </div>
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start stretch" style="margin-top:40px;">
-        <div fxFlex="100" class="assemblyOptions sp-blue-bg" style="padding:5px;">
-            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h4>Protocols</h4>
-                <span fxFlex></span>
-            </div>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border page-container-padding-inner">
+    </sp-split-section>
+
+    <mat-divider></mat-divider>
+
+    <sp-split-section title="Protocols"
+                      subtitle="Manage the priority of protocols used">
+        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="page-container-padding-inner">
             <div cdkDropList class="data-format-list" (cdkDropListDropped)="dropProtocol($event)"
                  *ngIf="loadingCompleted">
-                <div class="data-format-box" *ngFor="let protocol of messagingSettings.prioritizedProtocols" cdkDrag>
+                <div class="data-format-box" *ngFor="let protocol of messagingSettings.prioritizedProtocols"
+                     cdkDrag>
                     {{protocol}}
                 </div>
             </div>
-            <div fxLayoutAlign="end center">
-                <button mat-raised-button color="accent" type="submit" class="md-raised md-primary submit-button" (click)="updateMessagingSettings()">Update
+            <div fxLayoutAlign="start center" class="mt-10">
+                <button mat-raised-button color="accent" type="submit"
+                        class="md-raised md-primary submit-button" (click)="updateMessagingSettings()">Update
                 </button>
             </div>
         </div>
-
-    </div>
+    </sp-split-section>
 </div>

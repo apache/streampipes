@@ -41,4 +41,8 @@ public class ElementIdGenerator {
   public static String makeElementIdFromAppId(String appId) {
     return prefix + appId;
   }
+
+  public static String makeRecoveryToken() {
+    return RandomStringUtils.randomAlphanumeric(40);
+  }
 }

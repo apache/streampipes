@@ -57,10 +57,6 @@
 
         <!-- External dependencies -->
         <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.lightcouch</groupId>
             <artifactId>lightcouch</artifactId>
         </dependency>

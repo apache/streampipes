@@ -16,27 +16,32 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
-import {LoginComponent} from "./components/login/login.component";
-import {SetupComponent} from "./components/setup/setup.component";
-import {MatCardModule} from "@angular/material/card";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {MatButtonModule} from "@angular/material/button";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatInputModule} from "@angular/material/input";
-import {StartupComponent} from './components/startup/startup.component';
-import {MatDividerModule} from "@angular/material/divider";
-import {MatProgressBarModule} from "@angular/material/progress-bar";
-import {LoginService} from "./services/login.service";
-import {AuthStatusService} from "../services/auth-status.service";
-import {RestApi} from "../services/rest-api.service";
-import {AppRoutingModule} from "../app-routing.module";
+import { NgModule } from '@angular/core';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommonModule } from '@angular/common';
+import { LoginComponent } from './components/login/login.component';
+import { SetupComponent } from './components/setup/setup.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { StartupComponent } from './components/startup/startup.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { LoginService } from './services/login.service';
+import { AppRoutingModule } from '../app-routing.module';
+import { AuthBoxComponent } from './components/auth-box/auth-box.component';
+import { RestorePasswordComponent } from './components/restore-password/restore-password.component';
+import { RegisterComponent } from './components/register/register.component';
+import { RestorePasswordService } from './services/restore-password.service';
+import { SetNewPasswordComponent } from './components/set-new-password/set-new-password.component';
+import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
+import { AccountActivationService } from './services/account-activation.service';
 
 @NgModule({
   imports: [
@@ -57,13 +62,19 @@ import {AppRoutingModule} from "../app-routing.module";
     MatProgressBarModule,
   ],
   declarations: [
+    ActivateAccountComponent,
+    AuthBoxComponent,
     LoginComponent,
+    RegisterComponent,
+    RestorePasswordComponent,
+    SetNewPasswordComponent,
     SetupComponent,
     StartupComponent,
   ],
   providers: [
+    AccountActivationService,
     LoginService,
-    AuthStatusService,
+    RestorePasswordService
   ],
   entryComponents: [
     LoginComponent,

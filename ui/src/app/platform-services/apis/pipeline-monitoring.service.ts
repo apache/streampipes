@@ -16,14 +16,12 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {
-  PipelineMonitoringInfo
-} from "../../core-model/gen/streampipes-model";
-import {PlatformServicesCommons} from "./commons.service";
-import {map} from "rxjs/operators";
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { PipelineMonitoringInfo } from "../../core-model/gen/streampipes-model";
+import { PlatformServicesCommons } from "./commons.service";
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class PipelineMonitoringService {
@@ -33,7 +31,7 @@ export class PipelineMonitoringService {
   }
 
   getPipelineMonitoringInfo(pipelineId: string): Observable<PipelineMonitoringInfo> {
-    return this.http.get(this.platformServicesCommons.apiBasePath()
+    return this.http.get(this.platformServicesCommons.apiBasePath
         + '/pipeline-monitoring/'
         + pipelineId)
         .pipe(map(response => PipelineMonitoringInfo.fromData(response as any)));

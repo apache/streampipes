@@ -28,6 +28,9 @@ import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/s
 import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
 import { zip } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { UserRole } from '../_enums/user-role.enum';
+import { UserPrivilege } from '../_enums/user-privilege.enum';
 
 @Component({
   selector: 'pipelines',
@@ -52,16 +55,21 @@ export class PipelinesComponent implements OnInit {
   pipelinesReady = false;
 
   selectedCategoryIndex = 0;
+  hasPipelineWritePrivileges = false;
 
   constructor(private pipelineService: PipelineService,
               private dialogService: DialogService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private authService: AuthService) {
     this.pipelineCategories = [];
     this.starting = false;
     this.stopping = false;
   }
 
   ngOnInit() {
+    this.authService.user$.subscribe(user => {
+      this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
+    });
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['pipeline']) {
         this.pipelineIdToStart = params['pipeline'];

@@ -25,8 +25,6 @@ import java.util.List;
 
 public class SpDataSet extends SpDataStream {
 
-  private static final String prefix = "urn:fzi.de:dataset:";
-
   private EventGrounding supportedGrounding;
 
   private String datasetInvocationId;

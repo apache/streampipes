@@ -19,14 +19,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { AuthStatusService } from '../../services/auth-status.service';
 import { ConnectService } from './connect.service';
 import {
   AdapterDescription,
   AdapterDescriptionUnion,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
-  Message,
+  Message, SpDataStream, SpDataStreamUnion,
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription
 } from '../../core-model/gen/streampipes-model';
@@ -37,14 +36,13 @@ import { PlatformServicesCommons } from '../../platform-services/apis/commons.se
 export class DataMarketplaceService {
 
   constructor(
-    private http: HttpClient,
-    private authStatusService: AuthStatusService,
-    private connectService: ConnectService,
-    private platformServicesCommons: PlatformServicesCommons) {
+      private http: HttpClient,
+      private connectService: ConnectService,
+      private platformServicesCommons: PlatformServicesCommons) {
   }
 
   get connectPath() {
-    return `${this.platformServicesCommons.apiBasePath()}/connect`;
+    return `${this.platformServicesCommons.apiBasePath}/connect`;
   }
 
   getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {

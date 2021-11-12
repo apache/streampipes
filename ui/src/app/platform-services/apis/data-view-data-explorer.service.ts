@@ -20,7 +20,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
-import { AuthStatusService } from '../../services/auth-status.service';
 import { DataExplorerWidgetModel, DataLakeMeasure } from '../../core-model/gen/streampipes-model';
 import { Dashboard } from '../../dashboard/models/dashboard.model';
 import { Injectable } from '@angular/core';
@@ -33,7 +32,6 @@ export class DataViewDataExplorerService {
   localDashboards: Dashboard[] = [];
 
   constructor(private http: HttpClient,
-              private authStatusService: AuthStatusService,
               private dataLakeRestService: DatalakeRestService,
               private sharedDatalakeRestService: SharedDatalakeRestService) {
   }

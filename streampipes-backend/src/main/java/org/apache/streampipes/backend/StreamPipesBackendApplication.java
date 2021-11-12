@@ -17,15 +17,15 @@
  */
 package org.apache.streampipes.backend;
 
-import org.apache.shiro.web.env.EnvironmentLoaderListener;
-import org.apache.shiro.web.servlet.OncePerRequestFilter;
-import org.apache.shiro.web.servlet.ShiroFilter;
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.container.base.BaseNetworkingConfig;
 import org.apache.streampipes.container.base.StreamPipesServiceBase;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -35,9 +35,9 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -56,7 +56,12 @@ import java.util.stream.Collectors;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({StreamPipesResourceConfig.class, WelcomePageController.class})
+@Import({StreamPipesResourceConfig.class,
+        WelcomePageController.class,
+        WebSecurityConfig.class,
+        SpPermissionEvaluator.class
+})
+@ComponentScan({"org.apache.streampipes.rest.*"})
 public class StreamPipesBackendApplication extends StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesBackendApplication.class.getCanonicalName());
@@ -94,12 +99,31 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+    if (!isConfigured()) {
+      doInitialSetup();
+    }
+
+    new NotificationListener().contextInitialized(null);
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
     healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
             HEALTH_CHECK_INTERVAL,
             HEALTH_CHECK_INTERVAL,
             HEALTH_CHECK_UNIT);
+
+  }
+
+  private boolean isConfigured() {
+    return BackendConfig.INSTANCE.isConfigured();
+  }
+
+  private void doInitialSetup() {
+    LOG.info("\n\n**********\n\nWelcome to Apache StreamPipes!\n\n**********\n\n");
+    LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
+
+    BackendConfig.INSTANCE.updateSetupStatus(true);
+    new AutoInstallation().startAutoInstallation();
+    BackendConfig.INSTANCE.updateSetupStatus(false);
   }
 
   private void schedulePipelineStart(Pipeline pipeline, boolean restartOnReboot) {
@@ -218,19 +242,6 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
   }
 
   @Bean
-  public FilterRegistrationBean shiroFilterBean() {
-    FilterRegistrationBean<OncePerRequestFilter> bean = new FilterRegistrationBean<>();
-    bean.setFilter(new ShiroFilter());
-    bean.addUrlPatterns("/api/*");
-    return bean;
-  }
-
-  @Bean
-  public ServletListenerRegistrationBean shiroListenerBean() {
-    return listener(new EnvironmentLoaderListener());
-  }
-
-  @Bean
   public ServletListenerRegistrationBean streamPipesNotificationListenerBean() {
     return listener(new NotificationListener());
   }
@@ -253,6 +264,6 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
 
   @Override
   protected String getHealthCheckPath() {
-    return "/streampipes-backend";
+    return "/streampipes-backend/";
   }
 }

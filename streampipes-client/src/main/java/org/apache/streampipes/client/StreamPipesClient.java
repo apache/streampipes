@@ -18,11 +18,16 @@
 package org.apache.streampipes.client;
 
 import org.apache.streampipes.client.api.*;
+import org.apache.streampipes.client.credentials.CredentialsProvider;
+import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
+import org.apache.streampipes.client.model.StreamPipesClientConnectionConfig;
+import org.apache.streampipes.client.paths.ApiPath;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
+import org.apache.streampipes.model.mail.SpEmail;
 
 public class StreamPipesClient implements SupportsPipelineApi,
         SupportsPipelineElementTemplateApi,
@@ -35,13 +40,21 @@ public class StreamPipesClient implements SupportsPipelineApi,
   private StreamPipesClientConfig config;
 
   /**
+   * Create a new StreamPipes API client with a runtime connection resolver
+   * @param connectionConfig A ClientConnectionConfigResolver providing connection details
+   */
+  public static StreamPipesClient create(ClientConnectionUrlResolver connectionConfig) {
+    return new StreamPipesClient(connectionConfig);
+  }
+
+  /**
    * Create a new StreamPipes API client with default port and custom HTTPS settings
    * @param streamPipesHost The hostname of the StreamPipes instance without scheme
    * @param credentials The credentials object
    * @param httpsDisabled Set true if the instance is not served over HTTPS
    */
   public static StreamPipesClient create(String streamPipesHost,
-                                         StreamPipesCredentials credentials,
+                                         CredentialsProvider credentials,
                                          boolean httpsDisabled) {
     return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, httpsDisabled);
   }
@@ -52,7 +65,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
    * @param credentials The credentials object
    */
   public static StreamPipesClient create(String streamPipesHost,
-                                         StreamPipesCredentials credentials) {
+                                         CredentialsProvider credentials) {
     return new StreamPipesClient(streamPipesHost, SP_DEFAULT_PORT, credentials, false);
   }
 
@@ -64,7 +77,7 @@ public class StreamPipesClient implements SupportsPipelineApi,
    */
   public static StreamPipesClient create(String streamPipesHost,
                                          Integer streamPipesPort,
-                                         StreamPipesCredentials credentials) {
+                                         CredentialsProvider credentials) {
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, false);
   }
 
@@ -77,19 +90,23 @@ public class StreamPipesClient implements SupportsPipelineApi,
    */
   public static StreamPipesClient create(String streamPipesHost,
                                          Integer streamPipesPort,
-                                         StreamPipesCredentials credentials,
+                                         CredentialsProvider credentials,
                                          boolean httpsDisabled) {
     return new StreamPipesClient(streamPipesHost, streamPipesPort, credentials, httpsDisabled);
   }
 
-  private StreamPipesClient(String streamPipesHost,
-                            Integer streamPipesPort,
-                            StreamPipesCredentials credentials,
-                            boolean httpsDisabled) {
-    this.config = new StreamPipesClientConfig(credentials, streamPipesHost, streamPipesPort, httpsDisabled);
+  private StreamPipesClient(ClientConnectionUrlResolver connectionConfig) {
+    this.config = new StreamPipesClientConfig(connectionConfig);
     this.registerDataFormat(new JsonDataFormatFactory());
     this.registerDataFormat(new FstDataFormatFactory());
     this.registerDataFormat(new CborDataFormatFactory());
+  }
+
+  private StreamPipesClient(String streamPipesHost,
+                            Integer streamPipesPort,
+                            CredentialsProvider credentials,
+                            boolean httpsDisabled) {
+    this(new StreamPipesClientConnectionConfig(credentials, streamPipesHost, streamPipesPort, httpsDisabled));
   }
 
   /**
@@ -100,12 +117,16 @@ public class StreamPipesClient implements SupportsPipelineApi,
     this.config.addDataFormat(spDataFormatFactory);
   }
 
-  public StreamPipesCredentials getCredentials() {
-    return config.getCredentials();
+  public CredentialsProvider getCredentials() {
+    return config.getConnectionConfig().getCredentials();
   }
 
   public StreamPipesClientConfig getConfig() {
     return config;
+  }
+
+  public ClientConnectionUrlResolver getConnectionConfig() {
+    return config.getConnectionConfig();
   }
 
   /**
@@ -151,5 +172,22 @@ public class StreamPipesClient implements SupportsPipelineApi,
   @Override
   public DataProcessorApi processors() {
     return new DataProcessorApi(config);
+  }
+
+  public CustomRequestApi customRequest() {
+    return new CustomRequestApi(config);
+  }
+
+  public AdminApi adminApi() {
+    return new AdminApi(config);
+  }
+
+  public void deliverEmail(SpEmail email) {
+    CustomRequestApi api = customRequest();
+    api.sendPost(ApiPath.EMAIL_RESOURCE, email);
+  }
+
+  public FileApi fileApi() {
+    return new FileApi(config);
   }
 }

@@ -29,7 +29,7 @@ export class LabelService {
   private bufferedLabels = [];
 
   urlBase() {
-    return this.platformServicesCommons.apiBasePath();
+    return this.platformServicesCommons.apiBasePath;
   }
 
   constructor(

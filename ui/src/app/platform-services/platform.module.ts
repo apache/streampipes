@@ -28,13 +28,21 @@ import { PipelineMonitoringService } from './apis/pipeline-monitoring.service';
 import { SemanticTypesService } from './apis/semantic-types.service';
 import { PipelineCanvasMetadataService } from './apis/pipeline-canvas-metadata.service';
 import { PipelineTemplateService } from './apis/pipeline-template.service';
+import { UserService } from './apis/user.service';
+import { UserGroupService } from './apis/user-group.service';
+import { MailConfigService } from './apis/mail-config.service';
+import { PermissionsService } from './apis/permissions.service';
+import { GeneralConfigService } from './apis/general-config.service';
 
 @NgModule({
   imports: [],
   declarations: [],
   providers: [
     FilesService,
+    GeneralConfigService,
+    MailConfigService,
     MeasurementUnitsService,
+    PermissionsService,
     PlatformServicesCommons,
     PipelineCanvasMetadataService,
     PipelineElementEndpointService,
@@ -43,7 +51,9 @@ import { PipelineTemplateService } from './apis/pipeline-template.service';
     PipelineMonitoringService,
     PipelineService,
     SemanticTypesService,
-    PipelineTemplateService
+    PipelineTemplateService,
+    UserService,
+    UserGroupService
   ],
   entryComponents: []
 })

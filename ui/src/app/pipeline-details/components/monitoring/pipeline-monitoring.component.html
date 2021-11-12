@@ -34,6 +34,7 @@
             <div class="error-message">(monitoring info is only available for running pipelines)</div>
             <button mat-button mat-raised-button color="accent"
                     matTooltip="Start Pipeline" matTooltipPosition="above"
+                    *ngIf="hasPipelineWritePrivileges"
                     (click)="startPipeline()">
                 <mat-icon>play_arrow</mat-icon>
                 <span>&nbsp;Start pipeline</span>

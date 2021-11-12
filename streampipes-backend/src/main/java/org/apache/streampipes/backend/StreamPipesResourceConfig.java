@@ -23,17 +23,19 @@ import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.ps.DataLakeResourceV4;
 import org.apache.streampipes.ps.PipelineElementTemplateResource;
 import org.apache.streampipes.rest.impl.*;
+import org.apache.streampipes.rest.impl.admin.*;
 import org.apache.streampipes.rest.impl.connect.*;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipelineResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
-import org.apache.streampipes.rest.impl.datalake.DataLakeNoUserResourceV3;
+import org.apache.streampipes.rest.impl.datalake.DataLakeMeasureResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.datalake.PersistedDataStreamResource;
-import org.apache.streampipes.rest.impl.nouser.FileServingResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
-import org.apache.streampipes.rest.impl.nouser.PipelineNoUserResource;
+import org.apache.streampipes.rest.impl.pe.DataProcessorResource;
+import org.apache.streampipes.rest.impl.pe.DataSinkResource;
+import org.apache.streampipes.rest.impl.pe.DataStreamResource;
 import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
@@ -43,14 +45,17 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 
 import javax.ws.rs.ApplicationPath;
+import java.util.Collections;
 
 @Configuration
 @ApplicationPath("/api")
 public class StreamPipesResourceConfig extends ResourceConfig {
 
     public StreamPipesResourceConfig() {
+        setProperties(Collections.singletonMap("jersey.config.server.response.setStatusOverSendError", true));
+        register(AccountActivationResource.class);
         register(Authentication.class);
-        register(AssetDashboard.class);
+        register(AssetDashboardResource.class);
         register(AutoComplete.class);
         register(CategoryResource.class);
         register(ConsulConfig.class);
@@ -58,17 +63,18 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DashboardWidget.class);
         register(Dashboard.class);
         register(DataLakeResourceV3.class);
-        register(DataLakeNoUserResourceV3.class);
+        register(DataLakeMeasureResourceV3.class);
         register(DataStream.class);
         register(Deployment.class);
+        register(EmailConfigurationResource.class);
+        register(EmailResource.class);
         register(ExtensionsServiceEndpointResource.class);
-        register(FileServingResource.class);
-        register(InternalPipelineTemplates.class);
+        register(GeneralConfigurationResource.class);
         register(LabelResource.class);
         register(MeasurementUnitResource.class);
         register(Notification.class);
         register(OntologyMeasurementUnit.class);
-        register(OntologyPipelineElement.class);
+        register(PermissionResource.class);
         register(PersistedDataStreamResource.class);
         register(PipelineCanvasMetadataCache.class);
         register(PipelineCanvasMetadataResource.class);
@@ -82,26 +88,27 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(PipelineElementPreview.class);
         register(PipelineElementRuntimeInfo.class);
         register(PipelineMonitoring.class);
-        register(PipelineNoUserResource.class);
         register(PipelineTemplate.class);
         register(PipelineResource.class);
-        register(SemanticEventConsumer.class);
-        register(SemanticEventProcessingAgent.class);
-        register(SemanticEventProducer.class);
+        register(DataSinkResource.class);
+        register(DataProcessorResource.class);
+        register(DataStreamResource.class);
         register(Setup.class);
         register(ResetResource.class);
-        register(User.class);
+        register(RestorePasswordResource.class);
+        register(UserProfile.class);
+        register(UserResource.class);
         register(Version.class);
         register(PipelineElementAsset.class);
         register(DataLakeDashboardResource.class);
         register(DataLakeWidgetResource.class);
         register(DataLakeResourceV3.class);
-        register(DataLakeNoUserResourceV3.class);
+        register(DataLakeMeasureResourceV3.class);
         register(PipelineElementFile.class);
-        register(FileServingResource.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
         register(VisualizablePipelineResource.class);
+        register(UserGroupResource.class);
 
         // Serializers
         register(GsonWithIdProvider.class);

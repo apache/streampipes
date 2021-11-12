@@ -18,7 +18,6 @@
 package org.apache.streampipes.client.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.streampipes.client.StreamPipesCredentials;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
@@ -27,43 +26,18 @@ import java.util.List;
 
 public class StreamPipesClientConfig {
 
-  private StreamPipesCredentials credentials;
-  private String streamPipesHost;
-  private Integer streamPipesPort;
+  private ClientConnectionUrlResolver connectionConfig;
   private ObjectMapper serializer;
-  private boolean httpsDisabled;
   private List<SpDataFormatFactory> registeredDataFormats;
 
-  public StreamPipesClientConfig(StreamPipesCredentials credentials,
-                                 String streamPipesHost,
-                                 Integer streamPipesPort,
-                                 boolean httpsDisabled) {
-    this.credentials = credentials;
-    this.streamPipesHost = streamPipesHost;
-    this.streamPipesPort = streamPipesPort;
-    this.httpsDisabled = httpsDisabled;
+  public StreamPipesClientConfig(ClientConnectionUrlResolver connectionConfig) {
+    this.connectionConfig = connectionConfig;
     this.serializer = JacksonSerializer.getObjectMapper();
     this.registeredDataFormats = new ArrayList<>();
   }
 
-  public StreamPipesCredentials getCredentials() {
-    return credentials;
-  }
-
-  public String getStreamPipesHost() {
-    return streamPipesHost;
-  }
-
-  public Integer getStreamPipesPort() {
-    return streamPipesPort;
-  }
-
   public ObjectMapper getSerializer() {
     return serializer;
-  }
-
-  public boolean isHttpsDisabled() {
-    return httpsDisabled;
   }
 
   public void addDataFormat(SpDataFormatFactory spDataFormatFactory) {
@@ -72,5 +46,9 @@ public class StreamPipesClientConfig {
 
   public List<SpDataFormatFactory> getRegisteredDataFormats() {
     return registeredDataFormats;
+  }
+
+  public ClientConnectionUrlResolver getConnectionConfig() {
+    return connectionConfig;
   }
 }

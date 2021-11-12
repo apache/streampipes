@@ -25,6 +25,8 @@ public interface INoSqlStorage {
 
   ICategoryStorage getCategoryStorageAPI();
 
+  IUserGroupStorage getUserGroupStorage();
+
   ILabelStorage getLabelStorageAPI();
 
   IPipelineStorage getPipelineStorageAPI();
@@ -63,4 +65,15 @@ public interface INoSqlStorage {
 
   IPipelineElementDescriptionStorageCache getPipelineElementDescriptionStorage();
 
+  IPermissionStorage getPermissionStorage();
+
+  IDataProcessorStorage getDataProcessorStorage();
+
+  IDataSinkStorage getDataSinkStorage();
+
+  IDataStreamStorage getDataStreamStorage();
+
+  IPasswordRecoveryTokenStorage getPasswordRecoveryTokenStorage();
+
+  IUserActivationTokenStorage getUserActivationTokenStorage();
 }

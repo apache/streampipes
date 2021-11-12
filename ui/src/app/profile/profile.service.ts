@@ -16,13 +16,13 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {PlatformServicesCommons} from "../platform-services/apis/commons.service";
-import {HttpClient} from "@angular/common/http";
-import {RawUserApiToken, User} from "../core-model/gen/streampipes-model-client";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {Message} from "../core-model/gen/streampipes-model";
+import { Injectable } from '@angular/core';
+import { PlatformServicesCommons } from '../platform-services/apis/commons.service';
+import { HttpClient } from '@angular/common/http';
+import { RawUserApiToken, UserAccount } from '../core-model/gen/streampipes-model-client';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Message } from '../core-model/gen/streampipes-model';
 
 @Injectable()
 export class ProfileService {
@@ -32,28 +32,33 @@ export class ProfileService {
 
   }
 
-  getUserProfile(): Observable<User> {
-    return this.http.get(this.platformServicesCommons.authUserBasePath()).pipe(map(response => {
-      return User.fromData(response as any);
+  getUserProfile(username: string): Observable<UserAccount> {
+    return this.http.get(this.profilePath + '/username/' + username).pipe(map(response => {
+      return UserAccount.fromData(response as any);
     }));
   }
 
-  updateUserProfile(userData: User): Observable<Message> {
-    return this.http.put(this.platformServicesCommons.authUserBasePath(), userData).pipe(map(response => {
+  updateUserProfile(userData: UserAccount): Observable<Message> {
+    return this.http.put(this.profilePath + '/' + userData.username, userData).pipe(map(response => {
       return Message.fromData(response as any);
-    }))
+    }));
   }
 
-  updateAppearanceMode(darkMode: boolean): Observable<Message> {
-    return this.http.put(`${this.platformServicesCommons.authUserBasePath()}/appearance/mode/${darkMode}`, {}).pipe(map(response => {
+  updateAppearanceMode(username, darkMode: boolean): Observable<Message> {
+    return this.http.put(`${this.profilePath}/${username}/appearance/mode/${darkMode}`, {}).pipe(map(response => {
       return Message.fromData(response as any);
-    }))
+    }));
   }
 
-  requestNewApiToken(baseToken: RawUserApiToken): Observable<RawUserApiToken> {
-    return this.http.post(this.platformServicesCommons.authUserBasePath() + "/tokens", baseToken)
+  requestNewApiToken(username: string,
+                     baseToken: RawUserApiToken): Observable<RawUserApiToken> {
+    return this.http.post(this.profilePath + '/' + username + '/tokens', baseToken)
         .pipe(map(response => {
           return RawUserApiToken.fromData(response as any);
-        }))
+        }));
+  }
+
+  private get profilePath(): string {
+    return this.platformServicesCommons.apiBasePath + '/users';
   }
 }

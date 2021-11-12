@@ -16,43 +16,31 @@
  *
  */
 
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivateChild,
   Router,
-  RouterStateSnapshot,
-  UrlTree
-} from "@angular/router";
-import {Observable} from "rxjs";
-import {RestApi} from "../services/rest-api.service";
-import {AuthStatusService} from "../services/auth-status.service";
+  RouterStateSnapshot
+} from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthCanActivateChildrenGuard implements CanActivateChild {
 
-  constructor(private RestApi: RestApi,
-              private AuthStatusService: AuthStatusService,
-              private Router: Router) {
+  constructor(private authService: AuthService,
+              private router: Router) {
   }
 
-
-  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return new Promise((resolve) => this.RestApi.getAuthc().subscribe(response => {
-      if (response.success) {
-        this.AuthStatusService.username = response.info.authc.principal.username;
-        this.AuthStatusService.email = response.info.authc.principal.email;
-        this.AuthStatusService.authenticated = true;
-        this.AuthStatusService.token = response.token;
-        resolve(true);
-      } else {
-        this.AuthStatusService.authenticated = false;
-        let url = this.Router.parseUrl('login');
-        resolve(url);
+  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    //this.authService.logout();
+      if (this.authService.authenticated()) {
+        return true;
       }
-    }, error => {
-      let url = this.Router.parseUrl('startup');
-      resolve(url);
-    }));
+      this.authService.logout();
+      this.router.navigate(['/login']);
+
+      return false;
+
   }
 }

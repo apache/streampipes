@@ -18,12 +18,10 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
+import org.apache.streampipes.commons.exceptions.UserNotFoundException;
+import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.manager.storage.UserManagementService;
+import org.apache.streampipes.config.backend.model.GeneralConfig;
 import org.apache.streampipes.model.client.user.*;
 import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.model.message.NotificationType;
@@ -31,42 +29,55 @@ import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
+import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
-@Path("/v2/admin")
+@Path("/v2/auth")
 public class Authentication extends AbstractRestResource {
+
+  @Autowired
+  AuthenticationManager authenticationManager;
 
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   @POST
   @Path("/login")
-  public Response doLogin(ShiroAuthenticationRequest token) {
+  public Response doLogin(LoginRequest token) {
     try {
-      ShiroAuthenticationResponse authResponse = login(token);
-      return ok(authResponse);
-    } catch (AuthenticationException e) {
-      return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
+      org.springframework.security.core.Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(token.getUsername(), token.getPassword()));
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      return processAuth(authentication);
+    } catch (BadCredentialsException e) {
+      return unauthorized();
     }
   }
 
-
-  @Path("/logout")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
   @GET
-  @GsonWithIds
-  public Response doLogout() {
-    Subject subject = SecurityUtils.getSubject();
-    subject.logout();
-    return ok(new SuccessMessage(NotificationType.LOGOUT_SUCCESS.uiNotification()));
+  @Path("/token/renew")
+  public Response doLogin() {
+    try {
+      org.springframework.security.core.Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      return processAuth(auth);
+    } catch (BadCredentialsException e) {
+      return ok(new ErrorMessage(NotificationType.LOGIN_FAILED.uiNotification()));
+    }
   }
-
 
   @Path("/register")
   @POST
@@ -74,47 +85,60 @@ public class Authentication extends AbstractRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public Response doRegister(RegistrationData data) {
-
-    Set<Role> roles = new HashSet<>();
-    roles.add(data.getRole());
-    if (getUserStorage().emailExists(data.getEmail())) {
-      return ok(Notifications.error("This email address already exists. Please choose another address."));
-    } else {
-      new UserManagementService().registerUser(data, roles);
+    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
+    if (!config.isAllowSelfRegistration()) {
+      throw new WebApplicationException(Response.Status.FORBIDDEN);
+    }
+    data.setRoles(config.getDefaultUserRoles());
+    try {
+      getSpResourceManager().manageUsers().registerUser(data);
       return ok(new SuccessMessage(NotificationType.REGISTRATION_SUCCESS.uiNotification()));
+    } catch (UsernameAlreadyTakenException e) {
+      return badRequest(Notifications.error("This email address already exists. Please choose another address."));
     }
   }
 
+  @Path("restore/{username}")
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response sendPasswordRecoveryLink(@PathParam("username") String username) {
+    try {
+      getSpResourceManager().manageUsers().sendPasswordRecoveryLink(username);
+      return ok(new SuccessMessage(NotificationType.PASSWORD_RECOVERY_LINK_SENT.uiNotification()));
+    } catch (UserNotFoundException e) {
+      return ok();
+    } catch (Exception e) {
+      return badRequest();
+    }
+  }
+
+  @Path("settings")
   @GET
-  @GsonWithIds
-  @Path("/authc")
-  public Response userAuthenticated(@Context HttpServletRequest req) {
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getAuthSettings() {
+    GeneralConfig config = BackendConfig.INSTANCE.getGeneralConfig();
+    Map<String, Object> response = new HashMap<>();
+    response.put("allowSelfRegistration", config.isAllowSelfRegistration());
+    response.put("allowPasswordRecovery", config.isAllowPasswordRecovery());
 
-    if (BackendConfig.INSTANCE.isConfigured()) {
-      if (SecurityUtils.getSubject().isAuthenticated()) {
-        ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory
-                .create(getUserStorage()
-                        .getUser((String) SecurityUtils.getSubject().getPrincipal()));
-        return ok(response);
-      }
+    return ok(response);
+  }
+
+  private Response processAuth(org.springframework.security.core.Authentication auth) {
+    Principal principal = ((PrincipalUserDetails<?>) auth.getPrincipal()).getDetails();
+    if (principal instanceof UserAccount) {
+      JwtAuthenticationResponse tokenResp = makeJwtResponse(auth);
+      return ok(tokenResp);
+    } else {
+      throw new BadCredentialsException("Could not create auth token");
     }
-    return ok(new ErrorMessage(NotificationType.NOT_LOGGED_IN.uiNotification()));
   }
 
-
-  private ShiroAuthenticationResponse login(ShiroAuthenticationRequest token) {
-    Subject subject = SecurityUtils.getSubject();
-    UsernamePasswordToken shiroToken = new UsernamePasswordToken(token.getUsername(),
-            token.getPassword());
-    shiroToken.setRememberMe(true);
-
-    subject.login(shiroToken);
-    ShiroAuthenticationResponse response = ShiroAuthenticationResponseFactory
-            .create(getUserStorage().getUser((String) subject.getPrincipal()));
-    response.setToken(subject.getSession().getId().toString());
-
-    return response;
-
+  private JwtAuthenticationResponse makeJwtResponse(org.springframework.security.core.Authentication auth) {
+    String jwt = new JwtTokenProvider().createToken(auth);
+    return JwtAuthenticationResponse.from(jwt);
   }
+
 
 }

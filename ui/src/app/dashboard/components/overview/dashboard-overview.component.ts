@@ -16,81 +16,122 @@
  *
  */
 
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
-import {Dashboard} from "../../models/dashboard.model";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatDialog} from "@angular/material/dialog";
-import {DashboardService} from "../../services/dashboard.service";
-import {EditDashboardDialogComponent} from "../../dialogs/edit-dashboard/edit-dashboard-dialog.component";
-import {Tuple2} from "../../../core-model/base/Tuple2";
-import {Router} from "@angular/router";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Dashboard } from '../../models/dashboard.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { DashboardService } from '../../services/dashboard.service';
+import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { Router } from '@angular/router';
+import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { UserRole } from '../../../_enums/user-role.enum';
+import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
-    selector: 'dashboard-overview',
-    templateUrl: './dashboard-overview.component.html',
-    styleUrls: ['./dashboard-overview.component.css']
+  selector: 'dashboard-overview',
+  templateUrl: './dashboard-overview.component.html',
+  styleUrls: ['./dashboard-overview.component.css']
 })
 export class DashboardOverviewComponent implements OnInit {
 
-    @Input() dashboards: Array<Dashboard>;
-    @Output() reloadDashboardsEmitter = new EventEmitter<void>();
-    @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
+  @Input() dashboards: Dashboard[];
+  @Output() reloadDashboardsEmitter = new EventEmitter<void>();
+  @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
 
-    dataSource = new MatTableDataSource<Dashboard>();
-    displayedColumns: string[] = ['name', 'open', 'openWindow', 'settings', 'edit', 'delete'];
+  dataSource = new MatTableDataSource<Dashboard>();
+  displayedColumns: string[] = [];
 
-    constructor(private dashboardService: DashboardService,
-                public dialog: MatDialog,
-                private Router: Router) {
+  isAdmin = false;
+  hasDashboardWritePrivileges = false;
+  hasDashboardDeletePrivileges = false;
 
-    }
+  constructor(private dashboardService: DashboardService,
+              public dialog: MatDialog,
+              private router: Router,
+              private dialogService: DialogService,
+              private authService: AuthService) {
 
-    ngOnInit(): void {
-        this.dataSource.data = this.dashboards;
-    }
+  }
 
-    openNewDashboardDialog() {
-        let dashboard = {} as Dashboard;
-        dashboard.widgets = [];
+  ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+      this.hasDashboardWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DASHBOARD);
+      this.hasDashboardDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DASHBOARD);
+      this.displayedColumns = ['name', 'actions'];
 
-        this.openDashboardModificationDialog(true, dashboard);
-    }
+    });
+    this.dataSource.data = this.dashboards;
+  }
 
-    openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
-        const dialogRef = this.dialog.open(EditDashboardDialogComponent, {
-            width: '70%',
-            panelClass: 'custom-dialog-container'
-        });
-        dialogRef.componentInstance.createMode = createMode;
-        dialogRef.componentInstance.dashboard = dashboard;
+  openNewDashboardDialog() {
+    const dashboard = {} as Dashboard;
+    dashboard.widgets = [];
 
-        dialogRef.afterClosed().subscribe(result => {
-            this.reloadDashboardsEmitter.emit();
-        });
-    }
+    this.openDashboardModificationDialog(true, dashboard);
+  }
 
-    openEditDashboardDialog(dashboard: Dashboard) {
-        this.openDashboardModificationDialog(false, dashboard);
-    }
+  openDashboardModificationDialog(createMode: boolean, dashboard: Dashboard) {
+    const dialogRef = this.dialogService.open(EditDashboardDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: createMode ? 'New Dashboard' : 'Edit Dashboard',
+      width: '50vw',
+      data: {
+        'createMode': createMode,
+        'dashboard': dashboard
+      }
+    });
 
-    openDeleteDashboardDialog(dashboard: Dashboard) {
-        // TODO add confirm dialog
-        this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-            this.reloadDashboardsEmitter.emit();
-        });
-    }
+    dialogRef.afterClosed().subscribe(result => {
+      this.reloadDashboardsEmitter.emit();
+    });
+  }
 
-    showDashboard(dashboard: Dashboard, openInEditMode: boolean) {
-        let data: Tuple2<Dashboard, boolean> = {} as Tuple2<Dashboard, boolean>;
-        data.a = dashboard;
-        data.b = openInEditMode;
-        this.selectDashboardEmitter.emit(data);
-    }
+  openEditDashboardDialog(dashboard: Dashboard) {
+    this.openDashboardModificationDialog(false, dashboard);
+  }
 
-    openExternalDashboard(dashboard: Dashboard) {
-        let href = this.Router.createUrlTree(['standalone', dashboard._id]);
-        // TODO fixes bug that hashing strategy is ignored by createUrlTree
-        window.open("#" + href.toString(), "_blank");
-    }
+  openDeleteDashboardDialog(dashboard: Dashboard) {
+    // TODO add confirm dialog
+    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
+      this.reloadDashboardsEmitter.emit();
+    });
+  }
+
+  showDashboard(dashboard: Dashboard, openInEditMode: boolean) {
+    const data: Tuple2<Dashboard, boolean> = {} as Tuple2<Dashboard, boolean>;
+    data.a = dashboard;
+    data.b = openInEditMode;
+    this.selectDashboardEmitter.emit(data);
+  }
+
+  openExternalDashboard(dashboard: Dashboard) {
+    const href = this.router.createUrlTree(['standalone', dashboard._id]);
+    // TODO fixes bug that hashing strategy is ignored by createUrlTree
+    window.open('#' + href.toString(), '_blank');
+  }
+
+  showPermissionsDialog(dashboard: Dashboard) {
+
+    const dialogRef = this.dialogService.open(ObjectPermissionDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Manage permissions',
+      width: '50vw',
+      data: {
+        'objectInstanceId': dashboard._id,
+        'headerTitle': 'Manage permissions for dashboard ' + dashboard.name
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(refresh => {
+      if (refresh) {
+        this.reloadDashboardsEmitter.emit();
+      }
+    });
+  }
 
 }

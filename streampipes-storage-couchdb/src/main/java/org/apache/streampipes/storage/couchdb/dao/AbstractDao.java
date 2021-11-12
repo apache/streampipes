@@ -24,47 +24,39 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class AbstractDao<T> {
+public class AbstractDao<T> extends CrudDao {
 
-  protected Supplier<CouchDbClient> couchDbClientSupplier;
+  private static final String ALL_DOCS = "_all_docs";
+
   protected Class<T> clazz;
 
   public AbstractDao(Supplier<CouchDbClient> couchDbClientSupplier, Class<T> clazz) {
-    this.couchDbClientSupplier = couchDbClientSupplier;
+    super(couchDbClientSupplier);
     this.clazz = clazz;
   }
 
   public Tuple2<Boolean, String> persist(T objToPersist) {
-    DbCommand<Tuple2<Boolean, String>, T> cmd = new PersistCommand<>(couchDbClientSupplier,
-            objToPersist,
-            clazz);
-    return cmd.execute();
+    return persist(objToPersist, clazz);
   }
 
   public Boolean delete(String key) {
-    DbCommand<Boolean, T> cmd = new DeleteCommand<>(couchDbClientSupplier, key, clazz);
-    return cmd.execute();
+    return delete(key, clazz);
   }
 
   public Boolean update(T objToUpdate) {
-    DbCommand<Boolean, T> cmd = new UpdateCommand<>(couchDbClientSupplier, objToUpdate, clazz);
-    return cmd.execute();
+    return update(objToUpdate, clazz);
   }
 
   public Optional<T> find(String id) {
-    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);
-    return cmd.execute();
+    return find(id, clazz);
   }
 
   public List<T> findAll() {
-    DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClientSupplier, clazz);
-    return cmd.execute();
+    return findAll(ALL_DOCS, clazz);
   }
 
   public T findWithNullIfEmpty(String id) {
-    DbCommand<Optional<T>, T> cmd = new FindCommand<>(couchDbClientSupplier, id, clazz);
-    return cmd.execute().orElse(null);
+   return findWithNullIfEmpty(id, clazz);
   }
-
 
 }

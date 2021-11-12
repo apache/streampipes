@@ -28,11 +28,18 @@ import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children
 import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
 import {StartupComponent} from "./login/components/startup/startup.component";
 import {AlreadyConfiguredCanActivateGuard} from "./_guards/already-configured.can-activate.guard";
-import {LoggedInCanActivateGuard} from "./_guards/logged-in.can-activate.guard";
 import {InfoComponent} from "./info/info.component";
 import {NotificationsComponent} from "./notifications/notifications.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {ApidocsComponent} from "./apidocs/apidocs.component";
+import { PageName } from './_enums/page-name.enum';
+import { PageAuthGuard } from './_guards/page-auth.can-active.guard';
+import { RegisterComponent } from './login/components/register/register.component';
+import { RestorePasswordComponent } from './login/components/restore-password/restore-password.component';
+import { RegistrationAllowedCanActivateGuard } from './_guards/registration-allowed.can-activate.guard';
+import { RestorePasswordAllowedCanActivateGuard } from './_guards/restore-password-allowed.can-activate.guard';
+import { SetNewPasswordComponent } from './login/components/set-new-password/set-new-password.component';
+import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 
 import { EditorComponent } from './editor/editor.component';
 import { PipelinesComponent } from './pipelines/pipelines.component';
@@ -46,27 +53,30 @@ import { ConfigurationComponent } from './configuration/configuration.component'
 
 const routes: Routes = [
   { path: 'apidocs', component: ApidocsComponent, canActivate: [ConfiguredCanActivateGuard]},
-  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard, LoggedInCanActivateGuard],
+  { path: 'login', component: LoginComponent, canActivate: [ConfiguredCanActivateGuard],
   data: {animation: 'LoginPage'}},
-  { path: 'setup', component: SetupComponent, canActivate: [AlreadyConfiguredCanActivateGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
+  { path: 'activate-account', component: ActivateAccountComponent, canActivate: [RegistrationAllowedCanActivateGuard] },
+  { path: 'restore-password', component: RestorePasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
+  { path: 'set-new-password', component: SetNewPasswordComponent, canActivate: [RestorePasswordAllowedCanActivateGuard] },
   { path: 'startup', component: StartupComponent },
   { path: 'standalone/:dashboardId', component: StandaloneDashboardComponent },
   { path: '', component: StreampipesComponent, children: [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
-      { path: 'editor', component: EditorComponent },
-      { path: 'pipelines', component: PipelinesComponent },
-      { path: 'connect', component: ConnectComponent },
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'dataexplorer', component: DataExplorerComponent },
-      { path: 'app-overview', component: AppOverviewComponent },
-      { path: 'add', component: AddComponent },
-      { path: 'files', component: FilesComponent },
-      { path: 'configuration', component: ConfigurationComponent },
+      { path: 'editor', component: EditorComponent, data: { authPageNames: [PageName.PIPELINE_EDITOR]}},
+      { path: 'pipelines', component: PipelinesComponent, data: { authPageNames: [PageName.PIPELINE_OVERVIEW]}},
+      { path: 'connect', component: ConnectComponent, data: { authPageNames: [PageName.CONNECT]}},
+      { path: 'dashboard', component: DashboardComponent, data: { authPageNames: [PageName.DASHBOARD]}},
+      { path: 'dataexplorer', component: DataExplorerComponent, data: { authPageNames: [PageName.DATA_EXPLORER]}},
+      { path: 'app-overview', component: AppOverviewComponent, data: { authPageNames: [PageName.APPS]}},
+      { path: 'add', component: AddComponent, data: { authPageNames: [PageName.INSTALL_PIPELINE_ELEMENTS]}},
+      { path: 'files', component: FilesComponent, data: { authPageNames: [PageName.FILE_UPLOAD]}},
+      { path: 'configuration', component: ConfigurationComponent, data: { authPageNames: [PageName.SETTINGS]}},
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
       { path: 'pipeline-details', component: PipelineDetailsComponent },
       { path: 'profile', component: ProfileComponent},
-    ], canActivateChild: [AuthCanActivateChildrenGuard] }
+    ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard] }
 ];
 
 @NgModule({
@@ -76,7 +86,9 @@ const routes: Routes = [
       AuthCanActivateChildrenGuard,
       AlreadyConfiguredCanActivateGuard,
       ConfiguredCanActivateGuard,
-      LoggedInCanActivateGuard
+      PageAuthGuard,
+      RegistrationAllowedCanActivateGuard,
+      RestorePasswordAllowedCanActivateGuard,
   ]
 })
 export class AppRoutingModule { }

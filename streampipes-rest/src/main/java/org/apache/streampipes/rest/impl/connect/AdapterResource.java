@@ -22,9 +22,11 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
+import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,13 +45,15 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @POST
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
     public Response addAdapter(AdapterDescription adapterDescription) {
+        String principalSid = getAuthenticatedUserSid();
         String username = getAuthenticatedUsername();
         String adapterId;
         LOG.info("User: " + username + " starts adapter " + adapterDescription.getElementId());
 
         try {
-            adapterId = managementService.addAdapter(adapterDescription, username);
+            adapterId = managementService.addAdapter(adapterDescription, principalSid);
         } catch (AdapterException e) {
             LOG.error("Error while starting adapter with id " + adapterDescription.getAppId(), e);
             return ok(Notifications.error(e.getMessage()));
@@ -63,6 +67,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
     public Response getAdapter(@PathParam("id") String adapterId) {
 
         try {
@@ -79,6 +84,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}/stop")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
     public Response stopAdapter(@PathParam("id") String adapterId) {
         try {
             managementService.stopStreamAdapter(adapterId);
@@ -93,6 +99,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}/start")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_WRITE_ADAPTER_PRIVILEGE)
     public Response startAdapter(@PathParam("id") String adapterId) {
         try {
             managementService.startStreamAdapter(adapterId);
@@ -107,6 +114,7 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @JacksonSerialized
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_DELETE_ADAPTER_PRIVILEGE)
     public Response deleteAdapter(@PathParam("id") String elementId) {
 
         try {
@@ -121,14 +129,13 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @GET
     @JacksonSerialized
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAdapters() {
+    @PreAuthorize(AuthConstants.HAS_READ_ADAPTER_PRIVILEGE)
+    public List<AdapterDescription> getAllAdapters() {
         try {
-            List<AdapterDescription> result = managementService.getAllAdapterInstances();
-
-            return ok(result);
+            return managementService.getAllAdapterInstances();
         } catch (AdapterException e) {
             LOG.error("Error while getting all adapters", e);
-            return fail();
+            throw new WebApplicationException(500);
         }
     }
 

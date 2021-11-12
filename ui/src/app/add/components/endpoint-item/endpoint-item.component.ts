@@ -16,13 +16,17 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output, Sanitizer} from "@angular/core";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {PipelineElementEndpointService} from "../../../platform-services/apis/pipeline-element-endpoint.service";
-import {AddService} from "../../services/add.service";
-import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {ExtensionsServiceEndpointItem} from "../../../core-model/gen/streampipes-model-client";
-import {AppConstants} from "../../../services/app.constants";
+import { Component, EventEmitter, Input, OnInit, Output, Sanitizer } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PipelineElementEndpointService } from '../../../platform-services/apis/pipeline-element-endpoint.service';
+import { AddService } from '../../services/add.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ExtensionsServiceEndpointItem } from '../../../core-model/gen/streampipes-model-client';
+import { AppConstants } from '../../../services/app.constants';
+import { Pipeline } from '../../../core-model/gen/streampipes-model';
+import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 
 @Component({
   selector: 'endpoint-item',
@@ -41,17 +45,18 @@ export class EndpointItemComponent implements OnInit {
   itemSelected: boolean;
 
   image: SafeUrl;
-  iconReady: boolean = false;
-  iconError: boolean = false;
+  iconReady = false;
+  iconError = false;
 
   @Output()
   triggerInstallation: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(private snackBar: MatSnackBar,
-              private PipelineElementEndpointService: PipelineElementEndpointService,
+              private pipelineElementEndpointService: PipelineElementEndpointService,
               private addService: AddService,
               private sanitizer: DomSanitizer,
-              public appConstants: AppConstants) {
+              public appConstants: AppConstants,
+              private dialogService: DialogService) {
 
   }
 
@@ -60,7 +65,7 @@ export class EndpointItemComponent implements OnInit {
    this.findItemStyle();
    if (this.item.includesIcon) {
      this.addService.getRdfEndpointIcon(this.item).subscribe(blob => {
-       let objectURL = URL.createObjectURL(blob);
+       const objectURL = URL.createObjectURL(blob);
        this.image = this.sanitizer.bypassSecurityTrustUrl(objectURL);
        this.iconReady = true;
      }, error => this.iconError = true);
@@ -68,11 +73,11 @@ export class EndpointItemComponent implements OnInit {
   }
 
   iconText(s) {
-    var result = "";
+    let result = '';
     if (s.length <= 4) {
       result = s;
     } else {
-      var words = s.split(" ");
+      const words = s.split(' ');
       words.forEach(function (word, i) {
         if (i < 4) {
           result += word.charAt(0);
@@ -84,61 +89,77 @@ export class EndpointItemComponent implements OnInit {
 
   getSelectedBackground() {
     if (this.itemSelected) {
-      return "var(--color-bg-2)";
-    }
-    else {
-      return "var(--color-bg-1)";
+      return 'var(--color-bg-2)';
+    } else {
+      return 'var(--color-bg-1)';
     }
   }
 
   findItemTypeTitle() {
     if (this.item.type === 'stream') {
-      this.itemTypeTitle = "Data Stream";
+      this.itemTypeTitle = 'Data Stream';
     } else if (this.item.type === 'set') {
-      this.itemTypeTitle = "Data Set";
+      this.itemTypeTitle = 'Data Set';
     } else if (this.item.type === 'sepa') {
-      this.itemTypeTitle = "Data Processor";
+      this.itemTypeTitle = 'Data Processor';
     } else {
-      this.itemTypeTitle = "Data Sink";
+      this.itemTypeTitle = 'Data Sink';
     }
   }
 
   findItemStyle() {
-    let baseType = "pe-label ";
+    const baseType = 'pe-label ';
     if (this.item.type == 'stream') {
-      this.itemTypeStyle = baseType + "stream-label";
+      this.itemTypeStyle = baseType + 'stream-label';
     } else if (this.item.type === 'set') {
-      this.itemTypeStyle = baseType + "set-label";
+      this.itemTypeStyle = baseType + 'set-label';
     } else if (this.item.type == 'sepa') {
-      this.itemTypeStyle = baseType + "processor-label";
+      this.itemTypeStyle = baseType + 'processor-label';
     } else {
-      this.itemTypeStyle = baseType + "sink-label";
+      this.itemTypeStyle = baseType + 'sink-label';
     }
   }
 
   installSingleElement(event: Event, endpointItem) {
-    let endpointItems = [];
+    const endpointItems = [];
     endpointItems.push(endpointItem);
-    this.triggerInstallation.emit({endpointItems: endpointItems, install: true});
+    this.triggerInstallation.emit({endpointItems, install: true});
     event.stopPropagation();
   }
 
   uninstallSingleElement(event: Event, endpointItem) {
-    let endpointItems = [];
+    const endpointItems = [];
     endpointItems.push(endpointItem);
-    this.triggerInstallation.emit({endpointItems: endpointItems, install: false});
+    this.triggerInstallation.emit({endpointItems, install: false});
     event.stopPropagation();
   }
 
   refresh(elementId: string) {
-    this.PipelineElementEndpointService.update(elementId)
+    this.pipelineElementEndpointService.update(elementId)
         .subscribe(msg => {
-          this.snackBar.open(msg.notifications[0].title, "Ok", {
+          this.snackBar.open(msg.notifications[0].title, 'Ok', {
             duration: 2000
           });
         })
         .add(() => {
-          //this.loadCurrentElements(type);
+          // this.loadCurrentElements(type);
         });
+  }
+
+  showPermissionsDialog(elementId: string,
+                        elementName: string) {
+    const dialogRef = this.dialogService.open(ObjectPermissionDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Manage permissions',
+      width: '50vw',
+      data: {
+        'objectInstanceId': elementId,
+        'headerTitle': 'Manage permissions for pipeline element ' + elementName
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(refresh => {
+      console.log(refresh);
+    });
   }
 }

@@ -19,15 +19,35 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 
+import org.apache.streampipes.model.client.user.Privilege;
+import org.apache.streampipes.model.client.user.Role;
+import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
 import org.apache.streampipes.rest.impl.dashboard.AbstractDashboardResource;
-import org.apache.streampipes.storage.api.IDashboardStorage;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/v3/datalake/dashboard")
+@Component
 public class DataLakeDashboardResource extends AbstractDashboardResource {
 
-    protected IDashboardStorage getDashboardStorage() {
-        return getNoSqlStorage().getDataExplorerDashboardStorage();
+    @Override
+    protected AbstractDashboardResourceManager getResourceManager() {
+        return getSpResourceManager().manageDataExplorer();
+    }
+
+    @Override
+    public String getWriteRoles() {
+        return Role.Constants.ROLE_ADMIN_VALUE + ", " + Privilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE;
+    }
+
+    @Override
+    public String getReadRoles() {
+        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE;
+    }
+
+    @Override
+    public String getDeleteRoles() {
+        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE;
     }
 }

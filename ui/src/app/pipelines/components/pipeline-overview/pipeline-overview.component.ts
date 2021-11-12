@@ -22,6 +22,9 @@ import { PipelineOperationsService } from '../../services/pipeline-operations.se
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../_enums/user-role.enum';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 
 @Component({
@@ -54,12 +57,22 @@ export class PipelineOverviewComponent implements OnInit {
   starting: any;
   stopping: any;
 
-  constructor(public pipelineOperationsService: PipelineOperationsService) {
+  isAdmin = false;
+  hasPipelineWritePrivileges = false;
+  hasPipelineDeletePrivileges = false;
+
+  constructor(public pipelineOperationsService: PipelineOperationsService,
+              private authService: AuthService) {
     this.starting = false;
     this.stopping = false;
   }
 
   ngOnInit() {
+    this.authService.user$.subscribe(user => {
+      this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+      this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
+      this.hasPipelineDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_PIPELINE);
+    });
     this.toggleRunningOperation = this.toggleRunningOperation.bind(this);
 
     if (this.pipelineToStart) {

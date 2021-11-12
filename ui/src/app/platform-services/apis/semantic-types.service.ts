@@ -31,8 +31,8 @@ export class SemanticTypesService {
   }
 
   getSemanticTypes(text: string): Observable<string[]> {
-    return this.http.get(this.platformServicesCommons.unauthenticatedBasePath +
-      '/autocomplete/semantic-type?text=' + text).pipe(map(response => {
+    return this.http.get(this.platformServicesCommons.apiBasePath +
+        '/autocomplete/semantic-type?text=' + text).pipe(map(response => {
       return response as string[];
     }));
   }

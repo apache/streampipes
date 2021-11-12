@@ -20,7 +20,6 @@ import { Observable } from 'rxjs';
 import { RuntimeOptionsRequest, RuntimeOptionsResponse } from '../../../core-model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { AuthStatusService } from '../../../services/auth-status.service';
 import { PlatformServicesCommons } from '../../../platform-services/apis/commons.service';
 import { Injectable } from '@angular/core';
 
@@ -28,7 +27,6 @@ import { Injectable } from '@angular/core';
 export class RuntimeResolvableService {
 
   constructor(private http: HttpClient,
-              private authStatusService: AuthStatusService,
               private platformServicesCommons: PlatformServicesCommons) {
 
   }
@@ -42,7 +40,7 @@ export class RuntimeResolvableService {
   }
 
   fetchRemoteOptionsForPipelineElement(resolvableOptionsParameterRequest: RuntimeOptionsRequest): Observable<RuntimeOptionsResponse> {
-    const url: string = this.platformServicesCommons.apiBasePath() + '/pe/options';
+    const url: string = this.platformServicesCommons.apiBasePath + '/pe/options';
     return this.fetchRemoteOptions(url, resolvableOptionsParameterRequest);
   }
 

@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {BaseNavigationComponent} from "../base-navigation.component";
-import {Client} from "@stomp/stompjs";
-import {NotificationItem} from "../../../notifications/model/notifications.model";
-import {Router} from "@angular/router";
-import {AuthStatusService} from "../../../services/auth-status.service";
-import {NotificationCountService} from "../../../services/notification-count-service";
+import { Component, OnInit } from '@angular/core';
+import { BaseNavigationComponent } from '../base-navigation.component';
+import { Client } from '@stomp/stompjs';
+import { NotificationItem } from '../../../notifications/model/notifications.model';
+import { Router } from '@angular/router';
+import { NotificationCountService } from '../../../services/notification-count-service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'iconbar',
@@ -31,32 +31,32 @@ import {NotificationCountService} from "../../../services/notification-count-ser
 })
 export class IconbarComponent extends BaseNavigationComponent implements OnInit {
 
-  unreadNotifications: number = 0;
+  unreadNotifications = 0;
 
-  constructor(Router: Router,
-              private AuthStatusService: AuthStatusService,
-              public NotificationCountService: NotificationCountService) {
-    super(Router);
+  constructor(router: Router,
+              authService: AuthService,
+              public notificationCountService: NotificationCountService) {
+    super(authService, router);
   }
 
   ngOnInit(): void {
     super.onInit();
     this.connectToBroker();
-    this.NotificationCountService.loadUnreadNotifications();
+    this.notificationCountService.loadUnreadNotifications();
   }
 
   connectToBroker() {
-    var login = 'admin';
-    var passcode = 'admin';
-    var websocketProtocol = window.location.protocol === "http:" ? "ws" : "wss";
-    var brokerUrl = websocketProtocol + '://' + window.location.hostname + ':' + window.location.port + '/streampipes/ws';
-    var inputTopic = '/topic/org.apache.streampipes.notifications.' + this.AuthStatusService.email;
+    const login = 'admin';
+    const passcode = 'admin';
+    const websocketProtocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+    const brokerUrl = websocketProtocol + '://' + window.location.hostname + ':' + window.location.port + '/streampipes/ws';
+    const inputTopic = '/topic/org.apache.streampipes.notifications.' + this.authService.getCurrentUser().username;
 
-    let stompClient = new Client({
+    const stompClient = new Client({
       brokerURL: brokerUrl,
       connectHeaders: {
-        login: login,
-        passcode: passcode
+        login,
+        passcode
       },
       reconnectDelay: 5000
     });
@@ -64,7 +64,7 @@ export class IconbarComponent extends BaseNavigationComponent implements OnInit 
     stompClient.onConnect = (frame) => {
 
       stompClient.subscribe(inputTopic, message => {
-        this.NotificationCountService.increaseNotificationCount(JSON.parse(message.body) as NotificationItem);
+        this.notificationCountService.increaseNotificationCount(JSON.parse(message.body) as NotificationItem);
       });
     };
 
