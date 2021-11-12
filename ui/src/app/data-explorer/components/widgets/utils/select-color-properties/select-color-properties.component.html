@@ -56,9 +56,10 @@
                         [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType[field.runtimeName + field.sourceIndex.toString()]"
                         (selectionChange)="triggerDataRefresh()">
                     <mat-option [value]="'lines'">Line</mat-option>
-                    <mat-option [value]="'markers'">Scatter</mat-option>
+                    <mat-option [value]="'normal_markers'">Scatter</mat-option>
                     <mat-option [value]="'lines+markers'">Scattered Line</mat-option>
                     <mat-option [value]="'bar'">Bar</mat-option>
+                    <mat-option [value]="'symbol_markers'">Symbol</mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field
