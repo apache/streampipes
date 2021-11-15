@@ -36,5 +36,5 @@ export const switchUser = (user: User) => {
   cy.dataCy('login-email').type(user.email);
   cy.dataCy('login-password').type(user.password);
   cy.dataCy('login-button').click();
-  cy.wait(5000);
+  cy.wait(1000);
 };
