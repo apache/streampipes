@@ -44,6 +44,8 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
   // this can be set to scale the line chart according to the layout
   offsetRightLineChart = 10;
 
+  maxValue = -10000000;
+
   updatemenus = [];
   graph = {
 
@@ -137,6 +139,22 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
         this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(field => {
           if (field.sourceIndex === data.sourceIndex) {
 
+            if (field.fieldCharacteristics.numeric) {
+              const columnIndex = this.getColumnIndex(field, data);
+              const value = row[columnIndex];
+              this.maxValue = value > this.maxValue ? value : this.maxValue;
+            }
+          }
+        });
+      });
+    });
+
+    data.allDataSeries.map((group, index) => {
+      group.rows.forEach(row => {
+
+        this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(field => {
+          if (field.sourceIndex === data.sourceIndex) {
+
             const name = field.runtimeName + sourceIndex.toString();
 
             if (group['tags'] != null) {
@@ -157,7 +175,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             let value = row[columnIndex];
             if (this.fieldProvider.booleanFields.find(f => field.fullDbName === f.fullDbName
               && f.sourceIndex === data.sourceIndex) !== undefined) {
-              value = value === true ? 1 : 0;
+              value = value === true ? this.maxValue + 2 : 0;
             }
 
             if (!(field.fullDbName + sourceIndex.toString() + index.toString() in tmpLineChartTraces)) {
@@ -267,10 +285,19 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
 
             const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
 
-            if (setType !== 'bar') {
-              displayMode = setType;
-            } else {
-              displayType = 'bar';
+            if (setType === 'bar') {
+              displayMode = 'bar';
+            }
+            if (setType === 'lines') {
+              displayMode = 'lines';
+            }
+            if (setType === 'normal_markers') {
+              displayMode = 'markers';
+            }
+            if (setType === 'symbol_markers') {
+              displayMode = 'markers';
+              this.data[index].marker['symbol'] = ['202'];
+              this.data[index].marker['size'] = 12;
             }
 
             this.data[index].type = displayType;
