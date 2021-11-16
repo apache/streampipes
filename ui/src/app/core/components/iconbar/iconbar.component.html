@@ -21,7 +21,8 @@
         <div *ngIf="item.visible" style="min-width:0px;padding:0px;padding-top:5px;padding-bottom:5px;" [ngClass]="item.link === activePage ? 'sp-navbar-item-selected': 'sp-navbar-item'">
         <button mat-button mat-icon-button class="button-margin-iconbar iconbar-size" (click)="go(item.link)"
                 matTooltip="{{item.title}}" matTooltipPosition="right" >
-            <mat-icon [ngClass]="item.link === activePage ? 'sp-navbar-icon-selected' : 'sp-navbar-icon'">
+            <mat-icon [ngClass]="item.link === activePage ? 'sp-navbar-icon-selected' : 'sp-navbar-icon'"
+                      data-cy="navigation-icon">
                 {{item.icon}}
             </mat-icon>
         </button>
@@ -34,7 +35,9 @@
                 matTooltip="Notifications" matTooltipPosition="right">
             <mat-icon [matBadge]="notificationCountService.unreadNotificationCount"
                       [matBadgeHidden]="notificationCountService.unreadNotificationCount == 0"
-                      [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'">chat
+                      [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
+                      data-cy="navigation-icon">chat
+
             </mat-icon>
         </button>
     </div>
@@ -47,7 +50,8 @@
                     (click)="go(item.link)"
                     matTooltip="{{item.title}}" >
                 <mat-icon
-                        [ngClass]="item.link === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'">{{item.icon}}</mat-icon>
+                        [ngClass]="item.link === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
+                        data-cy="navigation-icon">{{item.icon}}</mat-icon>
             </button>
         </div>
     </div>
