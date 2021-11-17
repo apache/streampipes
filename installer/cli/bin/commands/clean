@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+cli_help_clean() {
+  cat <<EOF
+Remove all dangling StreamPipes images and created configurations/data volumes
+
+Usage: streampipes clean [OPTIONS]
+
+Options:
+  -v, --volumes   Remove all unused StreamPipes data volumes
+EOF
+
+  exit 1
+}
+
+[ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_clean
+
+if [ "$#" -gt 2 ]; then
+    fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -v|--volumes) clean_volumes=true; shift ;;
+        *) fatal "Unsupported command $1, see 'streampipes ${0##*/} --help'" >&2 ;;
+    esac
+done
+
+remove_dangling_images(){
+  if [ "$(docker images -f dangling=true | grep "apachestreampipes")" ]; then
+    info "Removing dangling StreamPipes images"
+    dangling_imgs=$(docker images -f dangling=true | grep "apachestreampipes" | awk '{print $3}')
+    for img in "${dangling_imgs[@]}"
+    do
+    	run "docker rmi $img"
+    done
+  else
+    info "No dangling StreamPipes images found"
+  fi
+}
+
+remove_unused_volumes(){
+  # > /dev/null 2>&1
+  if [ "$(docker volume ls --filter name=streampipes -q)" ]; then
+    info "Removing StreamPipes docker volumes"
+    run "docker volume rm $(docker volume ls --filter name=streampipes -q)"
+  else
+    info "No unused StreamPipes docker volumes found"
+  fi
+}
+
+remove_docker_network(){
+  if [ "$(docker network ls --filter name=spnet -q)" ]; then
+    info "Removing StreamPipes docker network"
+    run "docker network rm spnet" > /dev/null 2>&1
+  else
+    info "No StreamPipes docker network found"
+  fi
+}
+
+continue_check(){
+
+  if [ "$clean_volumes" = true ]; then
+    cat << EOF
+$(warning "This will remove:")
+    - StreamPipes docker network
+    - all unused StreamPipes data volumes
+    - all dangling StreamPipes images
+
+EOF
+  else
+    cat << EOF
+$(warning "This will remove:")
+    - StreamPipes docker network
+    - all dangling StreamPipes images
+
+EOF
+  fi
+  read -p "Are you sure you want to continue? [y/N]: " input
+
+  if [[ "$input" != "y"  && "$input" != "Y" && "$input" != "yes" && "$input" != "Yes" && "$input" != "YES" ]]; then
+    exit 1
+  fi
+}
+
+clean_system() {
+  if is_streampipes_running; then
+    warning "Cannot run 'streampipes ${0##*/}' on running environment"
+  else
+    continue_check
+    remove_dangling_images
+    remove_docker_network
+    if [ "$clean_volumes" = true ]; then
+      remove_unused_volumes
+    fi
+  fi
+}
+
+clean_system

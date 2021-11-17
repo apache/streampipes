@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+list_stopped_containers=false
+
+cli_help_ps() {
+  cat << EOF
+List all StreamPipes containers
+
+Usage: streampipes ps [OPTIONS]
+
+Options:
+  -a, --all    Show all stopped containers
+EOF
+
+  exit 1
+}
+
+[ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_ps
+
+if [ "$#" -gt 2 ]; then
+    fatal "Illegal number of arguments, see 'streampipes ${0##*/} --help'"
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -a|--all) list_stopped_containers=true; shift ;;
+        -|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ; shift ;;
+        *) fatal "Wrong usage, see 'streampipes ${0##*/} --help'" ;;
+    esac
+done
+
+project_name=$(sed -n 's/^COMPOSE_PROJECT_NAME=//p' $STREAMPIPES_WORKDIR/.env)
+
+if [ "$list_stopped_containers" = true ]; then
+  docker ps \
+      --filter "name=${project_name}_*" \
+      --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}' \
+      --all
+else
+  docker ps \
+    --filter "name=${project_name}_*" \
+    --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}'
+fi

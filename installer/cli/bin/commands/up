@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+no_ports=false
+
+cli_help_start() {
+  cat <<EOF
+  Starts selected StreamPipes environment and attaches to containers for a service.
+
+  Usage: streampipes up [OPTIONS] [SERVICE...]
+
+  Examples:
+  streampipes up -d
+  streampipes up -d --no-ports
+
+  Options:
+    -d, --detach      Detach mode: Run containers in the background
+    -np, --no-ports   Per default, all docker service ports are mapped to the
+                      host. Using this option prevents service ports to be mapped
+                      to the host, except the UI port (generally port 80).
+EOF
+
+  exit 1
+}
+
+[ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_start
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -d|--detach) detach=true; shift ;;
+        -np|--no-ports) no_ports=true; shift ;;
+        -*|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ;;
+        *) svc+=("$1"); shift ;;
+    esac
+done
+
+configure(){
+
+  if [ ! -f "$STREAMPIPES_WORKDIR/.spenv" ]; then
+    fatal "Environment missing. See 'streampipes env --help'"
+  fi
+
+  startup_notice
+  get_curr_environment
+
+  info "Version: $(show_version_no_build)"
+  info "Environment: '$curr_environment'"
+  if [ "$no_ports" = true ]; then
+    info "Mode: Production mode, all ports closed"
+  else
+    info "Mode: Development mode, all ports mapped"
+  fi
+}
+
+create_external_docker_network() {
+	if [ ! "$(docker network ls | grep spnet)" ]; then
+	  info "Creating docker network 'spnet'"
+    subnet=$(sed -n 's/^SP_SUBNET=//p' $STREAMPIPES_WORKDIR/.env)
+	  run "docker network create --driver=bridge --subnet=$subnet spnet" > /dev/null 2>&1
+	else
+	  info "Docker network 'spnet' already exists. Continuing"
+	fi
+}
+
+start_environment(){
+  configure
+  concatenate_compose_files $no_ports
+  create_external_docker_network
+  info "Creating docker volumes and starting docker containers"
+
+  # check if starting whole environment or individual services
+  if [ -z "$svc" ]; then
+      # environment
+      if [ "$detach" = true ]; then
+        run "$docker_compose_files up -d"
+        deployment_notice
+      else
+        run "$docker_compose_files up"
+      fi
+  else
+      # individual services
+      if [ "$detach" = true ]; then
+        run "$docker_compose_files up -d ${svc[*]}"
+        deployment_notice
+      else
+        run "$docker_compose_files up ${svc[*]}"
+      fi
+  fi
+}
+
+start_environment

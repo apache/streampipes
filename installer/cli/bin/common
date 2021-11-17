@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+CYAN=$'\e[0;36m'
+RED=$'\e[0;31m'
+NC=$'\e[0m'
+
+OS=`uname`
+
+info(){
+  echo "${CYAN}[INFO]${NC} $1"
+}
+
+warning(){
+  echo "${RED}[WARN]${NC} $1"
+}
+
+fatal(){
+  echo "${RED}[ERROR]${NC} $1"
+  exit 1
+}
+
+show_version(){
+  echo $(sed -n 's/^SP_VERSION=//p' $STREAMPIPES_WORKDIR/.env), build $(git --git-dir "$(dirname "$STREAMPIPES_WORKDIR")/.git" rev-parse --short HEAD)
+}
+
+show_version_no_build(){
+  echo $(sed -n 's/^SP_VERSION=//p' $STREAMPIPES_WORKDIR/.env)
+}
+
+show_banner(){
+  cat <<EOF
+  _______ __                              ______ __
+ |     __|  |_.----.-----.---.-.--------.|   __ \__|.-----.-----.-----.
+ |__     |   _|   _|  -__|  _  |        ||    __/  ||  _  |  -__|__ --|
+ |_______|____|__| |_____|___._|__|__|__||___|  |__||   __|_____|_____|
+                                                     |__|
+EOF
+}
+
+startup_notice(){
+  show_banner
+  cat <<EOF
+
+Welcome to Apache StreamPipes - wait for installation to be finished...
+
+EOF
+}
+
+deployment_notice() {
+  cat <<EOF
+
+    Apache StreamPipes environment is now up and running. Have fun developing!
+
+            Check docs for help:  https://streampipes.apache.org/docs
+
+    If your environment contains the StreamPipes UI, open your browser and follow
+    the instructions to get started:
+    
+    Local Docker for Mac/Windows, Linux:     http://localhost/   
+    Remote Docker host:                      http://HOST_IP/
+
+EOF
+}
+
+set_lf_line_encoding(){
+  case "$(uname -s)" in
+      Darwin)
+        # for MacOS
+        sed -i '' $'s/\r$//' $1
+        ;;
+      *)
+        # for Linux and Windows
+        sed -i 's/\r$//' $1
+        ;;
+  esac
+}
+
+is_streampipes_running(){
+  if [ "$(docker ps --format '{{.Names}}' | grep streampipes)" ]; then
+    true
+  else
+    false
+  fi
+}
+
+get_curr_environment() {
+  search_str="[environment:"
+
+  while IFS='' read -r line; do
+    [[ "$line" == *"$search_str"* ]] &&
+    helper=${line#*$search_str}
+    curr_environment=${helper%]*}
+  done < "$STREAMPIPES_WORKDIR/.spenv"
+}
+
+concatenate_compose_files() {
+  no_ports=$1
+  search_str="[environment:"
+  docker_compose_files="docker-compose --env-file $STREAMPIPES_WORKDIR/.env"
+
+  while IFS='' read -r line; do
+    [[ -n "$line" && "$line" != *"$search_str"* && "$line" != [[:blank:]#]* ]] &&
+      if [ "$no_ports" = true ]; then
+        docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml"
+      else
+        docker_compose_files="$docker_compose_files -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.yml -f $STREAMPIPES_WORKDIR/deploy/standalone/$line/docker-compose.dev.yml"
+      fi
+  done < "$STREAMPIPES_WORKDIR/.spenv"
+}
+
+run() {
+  $1
+  if [ $? -ne 0 ]; then
+      fatal "Error occured while executing the StreamPipes command."
+  fi
+}

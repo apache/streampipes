@@ -1,0 +1,51 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+spec:
+  selector:
+    matchLabels:
+      app: influxdb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      volumes:
+        - name: influxdb-pv
+          persistentVolumeClaim:
+            claimName: influxdb-pvc
+      containers:
+        - name: influxdb
+          image: fogsyio/influxdb:{{ .Values.external.influxdbVersion }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - containerPort: 8083
+            - containerPort: 8086
+            - containerPort: 8090
+          env:
+            - name: INFLUXDB_DATA_ENGINE
+              value: "tsm1"
+            - name: INFLUXDB_REPORTING_DISABLED
+              value: "false"
+            - name: INFLUXDB_ADMIN_ENABLED
+              value: "true"
+          volumeMounts:
+            - mountPath: "/var/lib/influxdb"
+              name: influxdb-pv
