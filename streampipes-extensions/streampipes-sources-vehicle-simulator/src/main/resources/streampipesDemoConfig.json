@@ -1,0 +1,21 @@
+{
+  "workflows": [
+    {
+      "workflowName": "vehicle",
+      "workflowFilename": "streampipesVehicleWorkflow.json"
+    }
+  ],
+  "producers": [
+    {
+      "type": "logger"
+    },
+    {
+      "type": "kafka",
+      "broker.server": "kafka",
+      "broker.port": 9092,
+      "topic": "xyz.use.step.specific.topic",
+      "flatten": true,
+      "sync": false
+    }
+  ]
+}

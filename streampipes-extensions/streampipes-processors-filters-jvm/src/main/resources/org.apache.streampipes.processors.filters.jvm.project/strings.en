@@ -1,0 +1,2 @@
+org.apache.streampipes.processors.filters.jvm.project.title=Projection
+org.apache.streampipes.processors.filters.jvm.project.description=Outputs a selectable subset of an input event type

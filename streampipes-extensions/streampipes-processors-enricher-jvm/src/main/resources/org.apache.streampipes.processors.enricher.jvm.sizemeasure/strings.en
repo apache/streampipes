@@ -1,0 +1,5 @@
+org.apache.streampipes.processors.enricher.jvm.sizemeasure.title=Size Measure
+org.apache.streampipes.processors.enricher.jvm.sizemeasure.description=Measures the size of an event in Bytes, KB or MB
+
+sizeUnit.title=Size unit
+sizeUnit.description=The unit in which the size of the event should be added

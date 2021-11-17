@@ -1,0 +1,16 @@
+org.apache.streampipes.processors.transformation.jvm.stringoperator.counter.title=String Counter
+org.apache.streampipes.processors.transformation.jvm.stringoperator.counter.description= Increases a counter on each change of a string value.
+
+field.title=String Field
+field.description=The field of the string to monitor
+
+countField.title=Counter
+countField.description= Number of changes of the given pair
+
+changeFromField.title = Change From Value
+changeFromField.description= Field value before the change
+
+changeFromField.title = Change To Value
+changeFromField.description= Field value after the change
+
+

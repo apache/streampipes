@@ -1,0 +1,3 @@
+org.apache.streampipes.connect.adapters.wikipedia.new.title=Wikipedia New Articles
+org.apache.streampipes.connect.adapters.wikipedia.new.description=Continuously publishes articles created on Wikipedia
+

@@ -1,0 +1,68 @@
+{
+  "eventFrequency": 1000,
+  "varyEventFrequency": true,
+  "repeatWorkflow": true,
+  "timeBetweenRepeat": 1000,
+  "varyRepeatFrequency": true,
+  "targetTopic": "org.apache.streampipes.examples.sources.vehicle",
+  "steps": [
+    {
+      "config": [
+        {
+          "timestamp": "nowTimestamp()",
+          "plateNumber": "level02",
+          "latitude": "double(40.730610, 40.741610)",
+          "longitude": "double(-73.935242, -73.946242)"
+        }
+      ],
+      "duration": 5000
+    },
+    {
+      "config": [
+        {
+          "timestamp": "nowTimestamp()",
+          "plateNumber": "level02",
+          "latitude": "double(40.740610, 40.751610)",
+          "longitude": "double(-73.945242, -73.956242)"
+        }
+      ],
+      "duration": 5000
+    },
+    {
+      "config": [{
+        "timestamp": "nowTimestamp()",
+        "plateNumber" : "level02",
+        "latitude": "double(40.750610, 40.761610)",
+        "longitude": "double(-73.945242, -73.956242)"
+      }],
+      "duration": 5000
+    },
+    {
+      "config": [{
+        "timestamp": "nowTimestamp()",
+        "plateNumber" : "level02",
+        "latitude": "double(40.760610, 40.771610)",
+        "longitude": "double(-73.955242, -73.966242)"
+      }],
+      "duration": 5000
+    },
+    {
+      "config": [{
+        "timestamp": "nowTimestamp()",
+        "plateNumber" : "level02",
+        "latitude": "double(40.770610, 40.781610)",
+        "longitude": "double(-73.945242, -73.956242)"
+      }],
+      "duration": 5000
+    },
+    {
+      "config": [{
+        "timestamp": "nowTimestamp()",
+        "plateNumber" : "level02",
+        "latitude": "double(40.790610, 40.801610)",
+        "longitude": "double(-73.945242, -73.956242)"
+      }],
+      "duration": 5000
+    }
+  ]
+}

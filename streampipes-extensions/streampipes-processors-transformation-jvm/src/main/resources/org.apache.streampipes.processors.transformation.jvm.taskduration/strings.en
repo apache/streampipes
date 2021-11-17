@@ -1,0 +1,17 @@
+org.apache.streampipes.processors.transformation.jvm.taskduration.title=Task Duration
+org.apache.streampipes.processors.transformation.jvm.taskduration.description=Computes the time difference between two events
+that contain fields indicating a current process step, i.e., id computes the time required for a state change.
+
+task-field.title=Task Field
+task-field.description=The field containing a description of the current process step.
+
+timestamp-field.title=Timestamp Field
+timestamp-field.description=The field containing a timestamp of the event.
+
+process-id.title=Process Id
+process-id.description=The ID of the state change detected.
+
+duration-id.title=Duration
+duration-id.description=The duration of the state change.
+
+

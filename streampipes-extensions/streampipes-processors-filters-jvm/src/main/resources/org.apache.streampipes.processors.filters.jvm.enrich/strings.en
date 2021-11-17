@@ -1,0 +1,5 @@
+org.apache.streampipes.processors.filters.jvm.enrich.title=Merge Two Streams
+org.apache.streampipes.processors.filters.jvm.enrich.description=One data stream is enriched by the values of the other
+
+select-stream.title=Select Output Frequency
+select-stream.description=The output frequency of the selected stream is maintained

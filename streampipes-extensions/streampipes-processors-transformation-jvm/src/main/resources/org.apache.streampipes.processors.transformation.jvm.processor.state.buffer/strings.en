@@ -1,0 +1,18 @@
+org.apache.streampipes.processors.transformation.jvm.processor.state.buffer.title=State Buffer
+org.apache.streampipes.processors.transformation.jvm.processor.state.buffer.description=Buffers a sensor values during a state
+
+timestampId.title=Timestamp
+timestampId.description=Field with the timestamp of event
+
+stateId.title=State
+stateId.description=Field containing the state
+
+sensorValueFieldId.title=Sensor Value to Cache
+sensorValueFieldId.description=Select the sensor value that should be cached, while the state is active
+
+values.title=values
+values.description=
+
+state.title=state
+state.description=
+

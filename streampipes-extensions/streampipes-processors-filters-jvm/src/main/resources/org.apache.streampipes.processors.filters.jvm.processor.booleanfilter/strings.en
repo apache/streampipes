@@ -1,0 +1,9 @@
+org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.title=Boolean Filter
+org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.description=Keeps events with the selected value
+
+boolean-mapping.title=Boolean Field
+boolean-mapping.description=Specifies the field name where the filter operation should be applied on.
+
+value.title=Value
+value.description=Events with the selected value are forwarded (E.g. when false, all events with value true are filtered out)
+

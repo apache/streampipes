@@ -1,0 +1,27 @@
+org.apache.streampipes.connect.adapters.flic.mqtt.title= Flic MQTT
+org.apache.streampipes.connect.adapters.flic.mqtt.description= Connect a Flic Smart Button over MQTT
+
+access-mode.title=Access Mode
+access-mode.description=
+
+anonymous-alternative.title=Unauthenticated
+anonymous-alternative.description=
+
+username-alternative.title=Username/Password
+username-alternative.description=
+
+username-group.title=User Group
+username-group.description=
+
+username.title=Username
+username.description=
+
+password.title=Password
+password.description=
+
+broker_url.title=Broker URL
+broker_url.description=Example: tcp://test-server.com:1883 (Protocol required. Port required)"
+
+topic.title=Topic
+topic.description=Example: test/topic
+

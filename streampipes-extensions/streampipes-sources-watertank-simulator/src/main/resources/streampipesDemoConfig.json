@@ -1,0 +1,37 @@
+{
+  "workflows": [
+    {
+      "workflowName": "festoFlowRate",
+      "workflowFilename": "streampipesFestoFlowRateWorkflow.json"
+    },
+    {
+      "workflowName": "siemensFlowRate",
+      "workflowFilename": "streampipesSiemensFlowRateWorkflow.json"
+    },
+    {
+      "workflowName": "festoLevel101",
+      "workflowFilename": "streampipesFestoLevel101Workflow.json"
+    },
+    {
+      "workflowName": "festoLevel102",
+      "workflowFilename": "streampipesFestoLevel102Workflow.json"
+    },
+    {
+      "workflowName": "festoPressure",
+      "workflowFilename": "streampipesFestoPressureWorkflow.json"
+    }
+  ],
+  "producers": [
+    {
+      "type": "logger"
+    },
+    {
+      "type": "kafka",
+      "broker.server": "kafka",
+      "broker.port": 9092,
+      "topic": "xyz.use.step.specific.topic",
+      "flatten": true,
+      "sync": false
+    }
+  ]
+}

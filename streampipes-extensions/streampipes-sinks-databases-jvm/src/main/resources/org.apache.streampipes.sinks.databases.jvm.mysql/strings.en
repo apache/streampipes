@@ -1,0 +1,21 @@
+org.apache.streampipes.sinks.databases.jvm.mysql.title = MySQL Database
+org.apache.streampipes.sinks.databases.jvm.mysql.description = Stores events in a MySQL database.
+
+host.title= Hostname
+host.description= Hostname of the MySQL server
+
+user.title = Username
+user.description = Username of the user
+
+password.title = Password
+password.description = Password of the user
+
+db.title = Database
+db.description = Database where the table is located
+
+table.title = Table
+table.description = Table that the data is written to
+
+port.title= Port
+port.description= Port of the MySQL server. Default port: 3306
+
