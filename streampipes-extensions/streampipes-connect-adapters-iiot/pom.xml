@@ -35,17 +35,22 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-container-worker</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-shared</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-client</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-container-extensions</artifactId>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -212,10 +217,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container-extensions</artifactId>
         </dependency>
     </dependencies>
 

@@ -30,12 +30,13 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-extensions</artifactId>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <!-- StreamPipes pipeline elements all (JVM) -->
             <dependency>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-pipeline-elements-all-jvm</artifactId>
-                <version>${streampipes.version}</version>
+                <version>0.69.0-SNAPSHOT</version>
                 <classifier>embed</classifier>
             </dependency>
 
@@ -43,7 +44,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
     </dependencies>

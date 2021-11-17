@@ -31,73 +31,73 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-image-processing-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-filters-siddhi</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-text-mining-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-brokers-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-databases-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-internal-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-notifications-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-enricher-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-geo-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-change-detection-jvm</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
 

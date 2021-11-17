@@ -868,6 +868,7 @@
         <module>streampipes-dataformat-fst</module>
         <module>streampipes-dataformat-json</module>
         <module>streampipes-dataformat-smile</module>
+        <module>streampipes-extensions</module>
         <module>streampipes-logging</module>
         <module>streampipes-maven-plugin</module>
         <module>streampipes-measurement-units</module>

@@ -31,42 +31,42 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-aggregation-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-enricher-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-geo-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-pattern-detection-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-statistics-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-text-mining-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-databases-flink</artifactId>
-            <version>${streampipes.version}</version>
+            <version>0.69.0-SNAPSHOT</version>
         </dependency>
 
         <!-- 3rd party dependencies to avoid convergence errors -->
