@@ -565,72 +565,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
-        <profile>
-            <id>apache-release</id>
-            <build>
-                <plugins>
-                    <!--
-                      Create MD5 and SHA512 checksum files for the release artifacts.
-                    -->
-                    <plugin>
-                        <groupId>net.nicoulaj.maven.plugins</groupId>
-                        <artifactId>checksum-maven-plugin</artifactId>
-                        <version>1.8</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>files</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <algorithms>
-                                <algorithm>SHA-512</algorithm>
-                            </algorithms>
-                            <fileSets>
-                                <fileSet>
-                                    <directory>${project.build.directory}</directory>
-                                    <includes>
-                                        <include>
-                                            apache-streampipes-extensions-${project.version}-incubating-source-release.zip
-                                        </include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <additionalJOption>-Xdoclint:none</additionalJOption>
-                                    <doclint>none</doclint>
-                                    <source>8</source>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>java8-doclint-disabled</id>
-            <activation>
-                <jdk>[1.8,)</jdk>
-            </activation>
-            <properties>
-                <javadoc.opts>-Xdoclint:none</javadoc.opts>
-            </properties>
-        </profile>
-    </profiles>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -638,22 +572,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.2.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <encoding>UTF-8</encoding>
-                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -665,22 +583,6 @@
                             <goals>
                                 <goal>jar</goal>
                             </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                            <configuration>
-                                <doclint>none</doclint>
-                                <additionalJOption>-Xdoclint:none</additionalJOption>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -711,14 +613,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.2.0</version>
-                    <configuration>
-                        <finalName>apache-streampipes-extensions-${project.version}-incubating</finalName>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.8.2</version>
                     <configuration>
@@ -729,123 +623,10 @@
         </pluginManagement>
         <plugins>
             <plugin>
-                <groupId>org.apache.rat</groupId>
-                <artifactId>apache-rat-plugin</artifactId>
-                <version>0.13</version>
-                <executions>
-                    <execution>
-                        <id>license-check</id>
-                        <inherited>false</inherited>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <excludeSubProjects>false</excludeSubProjects>
-                    <useMavenDefaultExcludes>true</useMavenDefaultExcludes>
-                    <consoleOutput>true</consoleOutput>
-                    <excludes>
-                        <!-- Git related files -->
-                        <exclude>**/.git/**</exclude>
-                        <exclude>**/.gitignore</exclude>
-                        <exclude>**/.spignore</exclude>
-
-                        <!-- License Files for other licenses -->
-                        <exclude>**/UNLICENSE</exclude>
-
-                        <!-- Maven related files -->
-                        <exclude>**/target/**</exclude>
-                        <exclude>target/**</exclude>
-
-                        <!-- Eclipse related files -->
-                        <exclude>**/.project</exclude>
-                        <exclude>**/.settings/**</exclude>
-                        <exclude>**/.classpath</exclude>
-                        <exclude>**/.factorypath</exclude>
-
-                        <!-- IntelliJ related files -->
-                        <exclude>**/.idea/**</exclude>
-                        <exclude>**/*.iml</exclude>
-
-                        <!-- JSON doesn't like comments -->
-                        <exclude>**/*.json</exclude>
-                        <exclude>**/*.jsonld</exclude>
-                        <exclude>**/*.txt</exclude>
-
-                        <exclude>**/system</exclude>
-
-                        <exclude>DISCLAIMER-WIP</exclude>
-
-                        <!-- Language Files -->
-                        <exclude>**/*.en</exclude>
-
-                        <!-- External files -->
-                        <exclude>
-                            streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**
-                        </exclude>
-                        <exclude>
-                            streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
-                        </exclude>
-
-                    </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-maven-plugin</artifactId>
                 <version>0.69.0-SNAPSHOT</version>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
-                <configuration>
-                    <rules>
-                        <dependencyConvergence/>
-                    </rules>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven.javadoc.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <failOnError>false</failOnError>
-                    <doclint>none</doclint>
-                    <additionalJOption>-Xdoclint:none</additionalJOption>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>apache.snapshots</id>
-            <name>Apache Snapshot Repository</name>
-            <url>https://repository.apache.org/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-
-    <scm>
-        <developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes-extensions.git
-        </developerConnection>
-        <connection>scm:git:ssh://git@github.com/apache/incubator-streampipes-extensions.git</connection>
-        <url>https://github.com/apache/incubator-streampipes-extensions</url>
-        <tag>HEAD</tag>
-    </scm>
-
 </project>

@@ -1153,6 +1153,14 @@
                         <exclude>archetypes/streampipes-archetype-pe-sinks-jvm/src/main/resources/**</exclude>
                         <exclude>archetypes/streampipes-archetype-pe-sources/src/main/resources/**</exclude>
 
+                        <!-- External files -->
+                        <exclude>
+                            streampipes-extensions/streampipes-processors-transformation-flink/src/main/java/com/kohlschutter/boilerpipe/**
+                        </exclude>
+                        <exclude>
+                            streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor/revgeocoder/geocode/**
+                        </exclude>
+
                         <!-- External vocabularies -->
                         <exclude>streampipes-measurement-units/src/main/java/com/github/jqudt/**</exclude>
 
@@ -1160,7 +1168,7 @@
                         <exclude>ui/src/assets/img/svg/**</exclude>
 
                         <!-- Exclude disclaimer and notice files -->
-                        <exclude>DISCLAIMER-WIP</exclude>
+                        <exclude>DISCLAIMER</exclude>
                         <exclude>NOTICE-binary</exclude>
 
                         <!-- Exclude license files in license folder -->
