@@ -19,7 +19,6 @@ on:
   push:
     branches:
       - dev
-      - STREAMPIPES-463
       - 'rel/**'
 jobs:
   build-and-push-to-docker:
