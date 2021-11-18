@@ -21,8 +21,9 @@
 #set( $symbol_escape = '\' )
 package ${package};
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -31,26 +32,31 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 
-import ${package}.config.Config;
-import ${package}.pe.processor.${packageName}.${classNamePrefix}Controller;
+import ${package}.pe.${packageName}.ExampleDataProcessor;
+import ${package}.pe.${packageName}.ExampleDataSink;
 
-public class Init extends StandaloneModelSubmitter {
+public class Init extends ExtensionsModelSubmitter {
 
-  public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new ${classNamePrefix}Controller());
+  public static void main (String[] args) {
+    new Init().init();
+  }
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new Init().init(Config.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("${package}",
+                    "human-readable service name",
+                    "human-readable service description", 8090)
+            .registerPipelineElement(new ExampleDataProcessor())
+            .registerPipelineElement(new ExampleDataSink())
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .build();
   }
 }

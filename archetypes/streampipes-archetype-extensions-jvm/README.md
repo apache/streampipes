@@ -16,14 +16,14 @@
   ~
   -->
 
-## StreamPipes Maven Archetype for Standalone Processors
+## StreamPipes Maven Archetype for Standalone Extensions
 
 ### Usage
 
 ```bash
 mvn archetype:generate \
  -DarchetypeGroupId=org.apache.streampipes \
- -DarchetypeArtifactId=streampipes-archetype-pe-processors-jvm \
+ -DarchetypeArtifactId=streampipes-archetype-extensions-jvm \
  -DarchetypeVersion=<VERSION> \
  -DgroupId=org.myorga \
  -DclassNamePrefix=MyProcessor \
@@ -33,6 +33,6 @@ mvn archetype:generate \
 			
 ### Variables
 
-* classNamePrefix: Will be used as a prefix to name your controller & parameter classes
+* classNamePrefix: Will be used as a prefix to prefix the examples processor and sink
 * packageName: Will be used as the package name
 

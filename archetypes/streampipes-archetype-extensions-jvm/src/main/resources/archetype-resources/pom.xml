@@ -31,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-commons</artifactId>
+            <artifactId>streampipes-sdk-bundle</artifactId>
             <version>${sp.version}</version>
         </dependency>
         <dependency>
@@ -41,58 +41,18 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-cbor</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-smile</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-fst</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-jms</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>${sp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-messaging-mqtt</artifactId>
+            <artifactId>streampipes-sources</artifactId>
             <version>${sp.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.streampipes</groupId>
+                <artifactId>streampipes-maven-plugin</artifactId>
+                <version>${sp.version}</version>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

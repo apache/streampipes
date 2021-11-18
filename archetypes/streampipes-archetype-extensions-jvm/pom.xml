@@ -25,10 +25,10 @@
         <version>0.69.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>streampipes-archetype-pe-processors-jvm</artifactId>
+    <artifactId>streampipes-archetype-extensions-jvm</artifactId>
     <packaging>maven-archetype</packaging>
 
-    <name>streampipes-archetype-pe-processors-jvm</name>
+    <name>streampipes-archetype-extensions-jvm</name>
 
     <build>
         <extensions>
