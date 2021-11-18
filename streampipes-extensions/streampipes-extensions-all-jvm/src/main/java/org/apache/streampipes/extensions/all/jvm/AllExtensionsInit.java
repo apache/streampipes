@@ -43,6 +43,7 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
                 "StreamPipes Extensions (JVM)",
                 "", 8090)
                 .merge(new ConnectAdapterInit().provideServiceDefinition())
+                .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
                 .merge(new AllPipelineElementsInit().provideServiceDefinition())
                 .registerMessagingFormats(
                         new JsonDataFormatFactory(),
