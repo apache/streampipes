@@ -1,0 +1,31 @@
+org.apache.streampipes.sinks.brokers.jvm.kafka.title=Kafka Publisher
+org.apache.streampipes.sinks.brokers.jvm.kafka.description=Publish events to Apache Kafka
+
+topic.title=Kafka Topic
+topic.description=Select a Kafka topic
+
+broker-settings.title=Kafka broker settings
+broker-settings.description=Provide settings of the Kafka broker to connect with.
+
+host.title=Kafka Broker
+host.description=IP address or hostname of Kafka broker
+
+port.title=Port
+port.description=Port of the Kafka broker. Default port 9092
+
+username.title=Username
+username.description=The username to authenticate with the broker
+
+password.title=Password
+password.description=The password to authenticate with the broker
+
+access-mode.title=Access Mode
+access-mode.description=Unauthenticated or SASL/PLAIN
+
+anonymous-alternative.title=Unauthenticated
+anonymous-alternative.description=No authentication and plaintext
+
+username-alternative.title=SASL/PLAIN
+username-alternative.description=Username and password, no encryption
+
+username-group.title=Username and password

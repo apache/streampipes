@@ -1,0 +1,11 @@
+org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.title=String To State
+org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.description=Transforms string properties into a string state property
+
+state-field.title=State field
+state-field.description=Test
+
+collection-id.title=Collection Field
+collection-id.description=Test
+
+string_state.title=Current State
+string_state_field.description=

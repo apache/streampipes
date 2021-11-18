@@ -1,0 +1,8 @@
+org.apache.streampipes.connect.adapters.iex.news.title=IEX Cloud News
+org.apache.streampipes.connect.adapters.iex.news.description=Fetches news for a given company (10 news / minutes maximum)
+
+token.title=API Token
+token.description=The IEXCloud API token
+
+stock-symbol.title=Stock Symbol
+stock-symbol.description=The stock symbol (e.g., AAPL)

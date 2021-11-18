@@ -1,0 +1,2 @@
+org.apache.streampipes.processors.enricher.jvm.jseval
+org.apache.streampipes.sinks.databases.jvm.redis

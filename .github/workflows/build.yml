@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: '16.x'
       - name: Build with Maven
-        run: mvn clean install javadoc:aggregate
+        run: mvn clean package -Dmaven.test.skip=true
       - name: Set env variables for Docker builds
         run: |
           echo "DOCKER_CLI_EXPERIMENTAL=enabled" >> $GITHUB_ENV
@@ -95,6 +95,106 @@ jobs:
           docker build --no-cache --pull --build-arg BASE_IMAGE=$BASE_IMG_NGINX_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
           docker build --no-cache --pull --build-arg BASE_IMAGE=$BASE_IMG_NGINX_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
           docker build --no-cache --pull --build-arg BASE_IMAGE=$BASE_IMG_NGINX_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT
+      - name: Build and Push Docker Image connect-adapters-iiot
+        working-directory: ./streampipes-extensions/streampipes-connect-adapters-iiot
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-adapters-iiot:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-adapters-iiot:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-adapters-iiot:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/connect-adapters-iiot:arm64v8-${{ env.MVN_VERSION }}
+        run: |
+          cp /usr/bin/{qemu-arm-static,qemu-aarch64-static} .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT
+      - name: Build and Push Docker Image extensions-all-jvm
+        working-directory: ./streampipes-extensions/streampipes-extensions-all-jvm
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-jvm:arm64v8-${{ env.MVN_VERSION }}
+        run: |
+          cp /usr/bin/{qemu-arm-static,qemu-aarch64-static} .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT
+      - name: Build and Push Docker Image pipeline-elements-all-flink
+        working-directory: ./streampipes-extensions/streampipes-pipeline-elements-all-flink
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-flink:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-flink:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-flink:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-flink:arm64v8-${{ env.MVN_VERSION }}
+        run: |
+          cp /usr/bin/{qemu-arm-static,qemu-aarch64-static} .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT
+      - name: Build and Push Docker Image pipeline-elements-all-jvm
+        working-directory: ./streampipes-extensions/streampipes-pipeline-elements-all-jvm
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-jvm:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-jvm:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-jvm:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-jvm:arm64v8-${{ env.MVN_VERSION }}
+        run: |
+          cp /usr/bin/{qemu-arm-static,qemu-aarch64-static} .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
+          docker push $IMG_NAME_DEFAULT
+          docker push $IMG_NAME_AMD64
+          docker push $IMG_NAME_ARM32V7
+          docker push $IMG_NAME_ARM64V8
+          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
+          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
+          docker manifest push $IMG_NAME_DEFAULT
+      - name: Build and Push Docker Image sinks-internal-jvm
+        working-directory: ./streampipes-extensions/streampipes-sinks-internal-jvm
+        env:
+          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/sinks-internal-jvm:${{ env.MVN_VERSION }}
+          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/sinks-internal-jvm:amd64-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/sinks-internal-jvm:arm32v7-${{ env.MVN_VERSION }}
+          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/sinks-internal-jvm:arm64v8-${{ env.MVN_VERSION }}
+        run: |
+          cp /usr/bin/{qemu-arm-static,qemu-aarch64-static} .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
+          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
           docker push $IMG_NAME_DEFAULT
           docker push $IMG_NAME_AMD64
           docker push $IMG_NAME_ARM32V7

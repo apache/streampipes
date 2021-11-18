@@ -1,0 +1,14 @@
+org.apache.streampipes.processors.textmining.jvm.languagedetection.title=Language Detection
+org.apache.streampipes.processors.textmining.jvm.languagedetection.description=Detects the language of a given text
+
+detectionField.title=Text detection
+detectionField.description=Specifies the event property from your stream that contains the text in an unknown language.
+
+language.title=Language
+language.description=The acronym of the detected language
+
+confidence.title=Confidence
+confidence.description=The probability that the detected language is correct. Between 0 (no confidence) and 1 (highly confident).
+
+binary-file.title=Model File
+binary-file.description=Provide a model from the OpenNLP project. You can find the link in the documentation of this processor.

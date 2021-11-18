@@ -1,0 +1,6 @@
+org.apache.streampipes.connect.adapters.simulator.randomdatastream.title=Random Data Simulator (Stream)
+org.apache.streampipes.connect.adapters.simulator.randomdatastream.description=Publishes a continuous stream of random events
+
+
+wait-time-ms.title=Wait Time (MS)
+wait-time-ms.description=The time to wait between two events in milliseconds"

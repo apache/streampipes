@@ -1,0 +1,38 @@
+org.apache.streampipes.sinks.databases.jvm.redis.title=Redis
+org.apache.streampipes.sinks.databases.jvm.redis.description=Stores events in a Redis key-value store.
+
+redis_host.title=Hostname
+redis_host.description=The hostname of the Redis instance
+
+redis_port.title=Port
+redis_port.description=The port of the Redis instance (default 6379)
+
+event_pk.title=Key Field
+event_pk.description=Runtime field to be used as the key when storing the event. If auto-increment is enabled, this setting will be ignored.
+
+event_key_ai.title=Auto Increment
+event_key_ai.description=Enabling this will generate a sequential numeric key for every record inserted. (note: enabling this will ignore Key Field)
+
+event_ttl.title=Expiration Time
+event_ttl.description=The expiration time for a persisted event.
+
+redis_pw.title=Password
+redis_pw.description=The password for the Redis instance.
+
+redis_client.title=Connection Name
+redis_client.description=A connection name to assign for the current connection.
+
+redis_index.title=DB Index
+redis_index.description=Zero-based numeric index for Redis database.
+
+redis_pool_max_active.title=Max Active (Redis Pool)
+redis_pool_max_active.description=The maximum number of connections that can be allocated from the pool.
+
+redis_pool_max_idle.title=Max Idle (Redis Pool)
+redis_pool_max_idle.description=The maximum number of connections that can remain idle in the pool.
+
+redis_pool_max_wait.title=Max Wait (Redis Pool)
+redis_pool_max_wait.description=The maximum number of milliseconds that the caller needs to wait when no connection is available.
+
+redis_pool_timeout.title=Max Timeout (Redis Pool)
+redis_pool_timeout.description=The maximum time for connection timeout and read/write timeout.

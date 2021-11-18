@@ -1,0 +1,5 @@
+org.apache.streampipes.sinks.brokers.jvm.websocket.title=Websocket Server
+org.apache.streampipes.sinks.brokers.jvm.websocket.description=Sends events to a connected client
+
+port.title=Port
+port.description=Port of the websocket server.

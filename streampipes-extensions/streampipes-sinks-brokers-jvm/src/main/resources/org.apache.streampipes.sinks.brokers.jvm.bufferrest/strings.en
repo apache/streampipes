@@ -1,0 +1,8 @@
+org.apache.streampipes.sinks.brokers.jvm.bufferrest.title=Buffered REST Publisher
+org.apache.streampipes.sinks.brokers.jvm.bufferrest.description=Once a given amount of events is reached, events are posted to the given REST interface.
+
+bufferrest.uri.title=REST URL
+bufferrest.uri.description=URL of the REST endpoint
+
+bufferrest.count.title=Buffer Size
+bufferrest.count=The amount of events to buffer before sending them on

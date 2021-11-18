@@ -1,0 +1,42 @@
+{
+  "eventFrequency": 1000,
+  "varyEventFrequency": true,
+  "repeatWorkflow": true,
+  "timeBetweenRepeat": 1000,
+  "varyRepeatFrequency": true,
+  "targetTopic" : "org.apache.streampipes.examples.flowrate2",
+  "steps": [{
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "flowrate02",
+      "mass_flow": "double(0,10)",
+      "volume_flow": "double(6,8)",
+      "density": "double(40,50)",
+      "fluid_temperature": "double(10,15)",
+      "sensor_fault_flags": "double(0,1)"
+    }],
+    "duration": 15000
+  },{
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "flowrate02",
+      "mass_flow": "double(0,10)",
+      "volume_flow": "double(4,6)",
+      "density": "double(40,50)",
+      "fluid_temperature": "double(10,15)",
+      "sensor_fault_flags": "double(0,1)"
+    }],
+    "duration": 5000
+  }, {
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "flowrate02",
+      "mass_flow": "double(0,10)",
+      "volume_flow": "double(0,1)",
+      "density": "double(40,50)",
+      "fluid_temperature": "double(10,15)",
+      "sensor_fault_flags": "double(0,1)"
+    }],
+    "duration": 5000
+  }]
+}

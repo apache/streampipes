@@ -1,0 +1,8 @@
+org.apache.streampipes.processors.siddhi.listcollector.title=List Collector
+org.apache.streampipes.processors.siddhi.listcollector.description=Collects all values from a field within a specified batch window into a list.
+
+list-key.title=Field
+list-key.description=The field where values should be collected into a list.
+
+window-size.title=Batch Window Size
+window-size.description=The batch window size.

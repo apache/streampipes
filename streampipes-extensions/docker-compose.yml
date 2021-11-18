@@ -1,0 +1,102 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ============================================================
+# NOTICE
+# ============================================================
+# This docker-compose file is for validating releases only. To use StreamPipes, use the installation instructions
+# provided on https://streampipes.apache.org/download
+#
+
+
+version: "3.8"
+
+# global logging
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
+services:
+
+  #### apache/incubator-streampipes-extensions
+  connect-worker-main:
+    build:
+      context: ./streampipes-connect-adapters
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
+    image: incubator-streampipes_connect-worker-main:release-validation
+    environment:
+      - SP_CONNECT_CONTAINER_HOST=connect-master
+      - SP_CONNECT_CONTAINER_WORKER=connect-worker-main
+    logging: *default-logging
+    networks:
+      spnet:
+
+  pipeline-elements-all-jvm:
+    build:
+      context: ./streampipes-pipeline-elements-all-jvm
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
+    image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
+    volumes:
+    - files:/spImages
+    logging: *default-logging
+    networks:
+      spnet:
+
+  pipeline-elements-all-flink:
+    build:
+      context: ./streampipes-pipeline-elements-all-flink
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
+    image: incubator-streampipes_pipeline-elements-all-flink:release-validation
+    logging: *default-logging
+    networks:
+      spnet:
+
+  sources-watertank-simulator:
+    build:
+      context: ./streampipes-sources-watertank-simulator
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
+    image: incubator-streampipes_sources-watertank-simulator:release-validation
+    logging: *default-logging
+    networks:
+      spnet:
+
+  sources-vehicle-simulator:
+    build:
+      context: ./streampipes-sources-vehicle-simulator
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
+    image: incubator-streampipes_sources-vehicle-simulator:release-validation
+    logging: *default-logging
+    networks:
+      spnet:
+
+volumes:
+  files:
+
+networks:
+  spnet:
+    external: true

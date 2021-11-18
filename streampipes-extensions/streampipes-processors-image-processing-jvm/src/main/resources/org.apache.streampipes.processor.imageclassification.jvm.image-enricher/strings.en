@@ -1,0 +1,8 @@
+org.apache.streampipes.processor.imageclassification.jvm.image-enricher.title=Image Enricher
+org.apache.streampipes.processor.imageclassification.jvm.image-enricher.description=Enriches an image with a bounding box of given coordinates
+
+image-property.title=Image Field
+image-property.description=The field containing the image.
+
+box-array-property.title=Bounding box field
+box-array-property.description=The field containing a list of bounding boxes.

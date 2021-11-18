@@ -1,0 +1,245 @@
+#!/usr/bin/env bash
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+set -e
+. "$STREAMPIPES_WORKDIR/bin/common"
+
+STREAMPIPES_ENVIRONMENTS_PATH=$STREAMPIPES_WORKDIR/environments
+docker_compose_api_version=3.4
+svc_has_ports=false
+activate_svc=false
+
+cli_help_start() {
+  cat <<EOF
+Add new StreamPipes service to catalog.
+
+Usage: streampipes add SERVICE [OPTIONS]
+
+Examples:
+# Create Docker Compose files using default image scheme
+streampipes add my-service
+
+# Create Docker Compose files with custom image tag and port mappings
+streampipes add my-service --image myrepo/my-service:0.69.0 --ports 8090:8090 --ports 8091:8091
+
+# Create Docker Compose files, persistently store in environment (lite), and add to .spenv 
+streampipes add my-service --store lite --activate
+
+
+Options:
+  -a, --activate  Add service to current working environment .spenv
+  -i, --image     Name of image (default: ${SP_DOCKER_REGISTRY}/my-service:${SP_VERSION})
+  -p, --ports     Port mapping for this service (external:internal)
+  -s, --store     Store service in specific environment (see 'streampipes env --list')
+EOF
+
+  exit 1
+}
+
+[ "$1" == '--help' ] || [ "$1" == '-h' ] && cli_help_start
+
+if [ -z "$1" ]; then
+    fatal "Argument missing, see 'streampipes ${0##*/} --help'"
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -a|--activate) activate_svc=true; shift ;;
+        -i|--image)
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            svc_img_tag="$2"
+            shift 2
+          else
+            fatal "Image tag for $1 is missing" >&2
+          fi
+          ;;
+        -p|--ports)
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            ports+=("$2")
+            svc_has_ports=true
+            shift 2
+          else
+            fatal "Ports for $1 is missing" >&2
+          fi
+          ;;
+        -s|--store)
+          if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+            set_environment="$2"
+            shift 2
+          else
+            fatal "Environment name for $1 is missing" >&2
+          fi
+          ;;
+        -*|--*=) fatal "Unsupported flag $1, see 'streampipes ${0##*/} --help'" >&2 ; shift ;;
+        # *) fatal "Wrong usage, see 'streampipes ${0##*/} --help'" ;;
+        *)
+          if [ ! -z "$1" ]; then
+            svc_name=$1
+            shift
+          else
+            fatal "Wrong usage, see 'streampipes ${0##*/} --help'"
+          fi
+        ;;
+    esac
+done
+
+apache_license_header(){
+  cat << EOF
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+EOF
+}
+
+
+add_docker_compose_file() {
+  cat << EOF
+$(apache_license_header)
+
+version: "${docker_compose_api_version}"
+services:
+ ${svc_name}:
+    image: ${svc_img_tag}
+    depends_on:
+      - "consul"
+      - "backend"
+    environment:
+      - SP_HOST=${svc_name}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"
+    networks:
+      spnet:
+
+networks:
+  spnet:
+    external: true
+EOF
+}
+
+add_docker_compose_dev_file_with_ports() {
+  cat << EOF
+$(apache_license_header)
+
+version: "${docker_compose_api_version}"
+services:
+  ${svc_name}:
+EOF
+  cat << EOF 
+      ports:
+$(get_port_mappings)
+EOF
+}
+
+add_docker_compose_dev_file_without_ports() {
+  cat << EOF
+$(apache_license_header)
+
+version: "${docker_compose_api_version}"
+services:
+  ${svc_name}:
+EOF
+}
+
+get_port_mappings(){
+  for port_mapping in "${ports[@]}"
+  do
+    cat << EOF
+        - "$port_mapping"
+EOF
+  done
+}
+
+create_dir(){
+  if [ ! -d "$1" ]; then
+    mkdir $1
+    info "Create new directory for: $1"
+  else
+    warning "Service already exists $svc_name"
+    read -p 'Would you like to overwrite existing files? [y/n]: ' continue
+    if [ "$continue" == "n" ] || [ "$continue" == "n" ]; then
+        exit 1
+    fi
+  fi 
+}
+
+check_img_or_default(){
+  if [ -z "$svc_img_tag" ]; then
+      svc_img_tag="\${SP_DOCKER_REGISTRY}/$svc_name:\${SP_VERSION}"
+  fi
+}
+
+check_environment(){
+  template=$STREAMPIPES_ENVIRONMENTS_PATH/$1
+  if [ ! -f "$template" ]; then
+    fatal "Environment not found '$1'. see 'streampipes env --list'"
+  fi
+}
+
+create_docker_compose_files(){
+  info "Generate Docker Compose files for $svc_name"
+  check_img_or_default
+  add_docker_compose_file > $1/docker-compose.yml
+
+  if $svc_has_ports; then
+    add_docker_compose_dev_file_with_ports > $1/docker-compose.dev.yml
+  else
+    add_docker_compose_dev_file_without_ports > $1/docker-compose.dev.yml
+  fi
+}
+
+append_to_curr_environment(){
+  info "Add $svc_name to current environment in .spenv"
+  curr_env_file=$STREAMPIPES_WORKDIR/.spenv
+  grep -qxF $svc_name $curr_env_file || echo $svc_name >> $curr_env_file
+}
+
+store_in_environment() {
+  check_environment $set_environment
+  info "Store $svc_name in environment $set_environment"
+  template=$STREAMPIPES_ENVIRONMENTS_PATH/$set_environment
+  grep -qxF $svc_name $template || echo $svc_name >> $template
+}
+
+
+add_service() {
+  svc_dir=$STREAMPIPES_WORKDIR/deploy/standalone/${svc_name}
+  create_dir $svc_dir
+  create_docker_compose_files $svc_dir
+
+  if $activate_svc; then 
+    append_to_curr_environment
+  fi
+  
+  if [ ! -z "$set_environment" ]; then
+    store_in_environment
+  fi
+}
+
+add_service

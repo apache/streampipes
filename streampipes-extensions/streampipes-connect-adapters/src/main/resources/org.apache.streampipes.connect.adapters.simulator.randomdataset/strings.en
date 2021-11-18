@@ -1,0 +1,9 @@
+org.apache.streampipes.connect.adapters.simulator.randomdataset.title=Random Data Simulator (Set)
+org.apache.streampipes.connect.adapters.simulator.randomdataset.description=Publishes a bounded stream of random events
+
+
+wait-time-ms.title=Wait Time (MS)
+wait-time-ms.description=The time to wait between two events in milliseconds
+
+number-of-events.title=Number of Events
+number-of-events.description=The number of events to send

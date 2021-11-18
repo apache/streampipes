@@ -1,0 +1,6 @@
+org.apache.streampipes.connect.adapters.coindesk.title=Coindesk Bitcoin Price
+org.apache.streampipes.connect.adapters.coindesk.description=The current bitcoin price from the Coindesk API.
+
+currency.title=Currency
+currency.description=The currency of the bitcoin rate
+

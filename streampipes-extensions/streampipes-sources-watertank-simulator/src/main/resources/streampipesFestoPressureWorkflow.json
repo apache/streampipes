@@ -1,0 +1,44 @@
+{
+  "eventFrequency": 1000,
+  "varyEventFrequency": true,
+  "repeatWorkflow": true,
+  "timeBetweenRepeat": 1000,
+  "varyRepeatFrequency": true,
+  "targetTopic" : "org.apache.streampipes.examples.pressuretank",
+  "steps": [{
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "pressure01",
+      "pressure": "double(10,30)"
+    }],
+    "duration": 20000
+  },{
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "pressure01",
+      "pressure": "double(30,40)"
+    }],
+    "duration": 5000
+  }, {
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "pressure01",
+      "pressure": "double(50,60)"
+    }],
+    "duration": 5000
+  }, {
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "pressure01",
+      "pressure": "double(60,70)"
+    }],
+    "duration": 5000
+  }, {
+    "config": [{
+      "timestamp": "nowTimestamp()",
+      "sensorId" : "pressure01",
+      "pressure": "double(70,80)"
+    }],
+    "duration": 5000
+  }]
+}

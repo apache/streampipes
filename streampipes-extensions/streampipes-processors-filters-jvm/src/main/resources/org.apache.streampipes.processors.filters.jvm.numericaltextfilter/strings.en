@@ -1,0 +1,20 @@
+org.apache.streampipes.processors.filters.jvm.numericaltextfilter.title=Numerical Text Filter
+org.apache.streampipes.processors.filters.jvm.numericaltextfilter.description=Filters numerical and text values.
+
+number-mapping.title=Number Field
+number-mapping.description=Specifies the field name where the filter operation should be applied on.
+
+number-operation.title=Number Filter Operation
+number-operation.description=Specifies the filter operation that should be applied on the field
+
+number-value.title=Number Threshold
+number-value.description=Specifies a threshold value
+
+text-mapping.title=Text Field
+text.description=
+
+text-operation.title=Text Operation
+text-operation.description=
+
+text-keyword.title=Text keyword
+text-keyword.description=
