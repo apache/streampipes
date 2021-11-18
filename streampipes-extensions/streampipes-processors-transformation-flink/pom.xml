@@ -31,47 +31,12 @@
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-commons</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-config</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container-standalone</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-json</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-cbor</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-smile</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-dataformat-fst</artifactId>
+            <artifactId>streampipes-sdk-bundle</artifactId>
             <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-measurement-units</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-sdk</artifactId>
             <version>0.69.0-SNAPSHOT</version>
         </dependency>
         <dependency>
