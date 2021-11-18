@@ -32,6 +32,7 @@ external:
   zookeeperVersion: 3.4.13
   influxdbVersion: 1.7
 
+
 # NOTE: Local testing only!
 # minikube start --mount-string ${HOME}/streampipes-k8s:/streampipes-k8s --mount --memory=4g --cpus=4
 # Specify minikube directory:

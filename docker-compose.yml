@@ -101,7 +101,7 @@ services:
         ipv4_address: 172.31.0.9
 
   couchdb:
-    image: fogsyio/couchdb:2.3.1
+    image: couchdb:2.3.1
     logging: *default-logging
     volumes:
       - couchdb:/opt/couchdb/data
