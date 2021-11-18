@@ -18,6 +18,7 @@
 package org.apache.streampipes.extensions.all.jvm;
 
 import org.apache.streampipes.connect.ConnectAdapterInit;
+import org.apache.streampipes.connect.iiot.ConnectAdapterIiotInit;
 import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
