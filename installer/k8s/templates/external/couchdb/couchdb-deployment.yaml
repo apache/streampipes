@@ -33,7 +33,7 @@ spec:
             claimName: couchdb-pvc
       containers:
         - name: couchdb
-          image: fogsyio/couchdb:{{ .Values.external.couchdbVersion }}
+          image: couchdb:{{ .Values.external.couchdbVersion }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 5984
