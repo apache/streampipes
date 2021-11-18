@@ -909,6 +909,7 @@
         <module>streampipes-wrapper-standalone</module>
         <module>streampipes-mail</module>
         <module>streampipes-resource-management</module>
+        <module>streampipes-sdk-bundle</module>
     </modules>
 
     <profiles>

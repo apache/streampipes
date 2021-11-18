@@ -59,7 +59,8 @@ public class GoogleMapsGeocodingController extends StandaloneEventProcessingDecl
   }
 
   @Override
-  public ConfiguredEventProcessor<GoogleMapsGeocodingParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<GoogleMapsGeocodingParameters> onInvocation(DataProcessorInvocation graph,
+                                                                              ProcessingElementParameterExtractor extractor) {
     String placeField = extractor.mappingPropertyValue(PLACE_MAPPING);
     String googleMapsApiKey = GeoJvmConfig.INSTANCE.getGoogleApiKey();
 
