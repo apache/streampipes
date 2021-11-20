@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: '16.x'
       - name: Validate code with rat plugin
-      - run: mvn rat:rat
+        run: mvn rat:rat
       - name: Build with Maven
         run: mvn clean package -Dmaven.test.skip=true
       - name: Set env variables for Docker builds
