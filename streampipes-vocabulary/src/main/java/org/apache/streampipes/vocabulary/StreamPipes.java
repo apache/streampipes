@@ -508,4 +508,5 @@ public class StreamPipes {
   public static final String HAS_CONTAINER_ENV_KEY = NS + "hasContainerEnvKey";
   public static final String HAS_CONTAINER_ENV_VALUE = NS + "hasContainerEnvValue";
     public static final String HAS_DEPLOYMENT_CONTAINER = NS + "hasDeploymentContainer";
+    public static final String IS_STATEFUL = NS + "isStateful";
 }

@@ -91,6 +91,31 @@ public class InvocableEntityResource extends AbstractResource {
         return ok(resp);
     }
 
+    @GET
+    @Path("{identifier}/{elementId}/{runningInstanceId}/state")
+    @Produces(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response getState(@PathParam("identifier") String identifier,
+                                            @PathParam("elementId") String elementId,
+                                            @PathParam("runningInstanceId") String runningInstanceId) {
+        InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
+        Response resp = PipelineElementManager.getInstance().getState(graph, runningInstanceId);
+
+        return ok(resp);
+    }
+
+    @PUT
+    @Path("{identifier}/{elementId}/{runningInstanceId}/state")
+    @Produces(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response setState(@PathParam("identifier") String identifier,
+                                              @PathParam("elementId") String elementId,
+                                              @PathParam("runningInstanceId") String runningInstanceId,
+                                              String state) {
+        InvocableStreamPipesEntity graph = RunningInvocableInstances.INSTANCE.get(runningInstanceId);
+        Response resp = PipelineElementManager.getInstance().setState(graph, runningInstanceId, state);
+
+        return ok(resp);
+    }
+
     // Live-Reconfiguration
     @POST
     @JacksonSerialized

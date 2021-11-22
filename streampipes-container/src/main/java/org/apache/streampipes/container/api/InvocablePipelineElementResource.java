@@ -21,6 +21,7 @@ package org.apache.streampipes.container.api;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.init.RunningInstances;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -149,6 +150,41 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
 
         return ok(new Response(elementId, false, "Could not find the running instance with id: " + runningInstanceId));
     }
+
+
+    @GET
+    @Path("{elementId}/{runningInstanceId}/state")
+    @Produces(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response getState(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+
+        InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
+
+
+        if (runningInstance != null && runningInstance instanceof SemanticEventProcessingAgentDeclarer) {
+            String serializedState = ((SemanticEventProcessingAgentDeclarer) runningInstance).getState();
+            
+            return ok(new Response(elementId, true, serializedState));
+        }
+
+        return ok(new Response(elementId, false, "Could not find the running instance with id: " + runningInstanceId));
+    }
+
+    @PUT
+    @Path("{elementId}/{runningInstanceId}/state")
+    @Produces(MediaType.APPLICATION_JSON)
+    public javax.ws.rs.core.Response setState(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId, String payload) {
+
+        InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
+
+
+        if (runningInstance != null && runningInstance instanceof SemanticEventProcessingAgentDeclarer) {
+            ((SemanticEventProcessingAgentDeclarer) runningInstance).setState(payload);
+            return ok(new Response(elementId, true, "State update successful."));
+        }
+
+        return ok(new Response(elementId, false, "Could not find the running instance with id: " + runningInstanceId));
+    }
+
 
     protected abstract P getExtractor(I graph);
 

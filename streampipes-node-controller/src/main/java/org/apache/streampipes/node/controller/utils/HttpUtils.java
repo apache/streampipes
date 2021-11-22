@@ -126,6 +126,23 @@ public class HttpUtils {
         }
     }
 
+    //TODO: Naming is provisional; rename
+    public static org.apache.streampipes.model.Response putAndRespond(String url, String body) {
+        org.apache.streampipes.model.Response response = new org.apache.streampipes.model.Response();
+        javax.ws.rs.core.Response.ok().build();
+        response.setSuccess(false);
+        try {
+            response = deserialize(Request.Put(url)
+                    .bodyString(body, ContentType.APPLICATION_JSON)
+                    .connectTimeout(CONNECT_TIMEOUT)
+                    .execute(), org.apache.streampipes.model.Response.class);
+            return response;
+        } catch (IOException e) {
+            LOG.error("Something went wrong during PUT request", e);
+            return response;
+        }
+    }
+
     public static String post(String url, String body) {
         try {
             return Request.Post(url)

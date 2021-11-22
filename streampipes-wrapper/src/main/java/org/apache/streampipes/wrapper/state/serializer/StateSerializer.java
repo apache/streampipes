@@ -15,15 +15,12 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.pe;
+package org.apache.streampipes.wrapper.state.serializer;
 
-public enum PipelineElementLifeCycleState {
-    REGISTER,
-    INVOKE,
-    DETACH,
-    RECONFIGURE,
-    OFFLOAD,
-    GETSTATE,
-    SETSTATE,
-    DEREGISTER
+import java.lang.reflect.Type;
+
+public interface StateSerializer {
+    String serialize(Object o);
+    <T> T deserialize(String serializedObject, String typeSignature);
+    String getTypeSignature(Type type);
 }

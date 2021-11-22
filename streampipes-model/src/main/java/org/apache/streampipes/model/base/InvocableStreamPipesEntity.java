@@ -108,12 +108,27 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   private boolean uncompleted;
 
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.IS_STATEFUL)
+  private boolean isStateful;
+
+
+  public boolean isStateful() {
+    return isStateful;
+  }
+
+  public void setStateful(boolean stateful) {
+    isStateful = stateful;
+  }
+
   public InvocableStreamPipesEntity() {
     super();
   }
 
   public InvocableStreamPipesEntity(InvocableStreamPipesEntity other) {
     super(other);
+    this.setStateful(other.isStateful());
     this.belongsTo = other.getBelongsTo();
     this.correspondingPipeline = other.getCorrespondingPipeline();
     this.inputStreams = new Cloner().streams(other.getInputStreams());

@@ -21,10 +21,13 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.standalone.state.DefaultStateCollector;
 
 import java.util.function.Supplier;
 
 public abstract class StreamPipesDataProcessor extends StandaloneEventProcessingDeclarer<ProcessorParams> implements EventProcessor<ProcessorParams> {
+
+  protected DefaultStateCollector stateCollector = null;
 
   @Override
   public ConfiguredEventProcessor<ProcessorParams> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
@@ -32,4 +35,15 @@ public abstract class StreamPipesDataProcessor extends StandaloneEventProcessing
     return new ConfiguredEventProcessor<>(new ProcessorParams(graph), supplier);
   }
 
+  @Override
+  public String getState() {
+    if(this.stateCollector != null)
+      return this.stateCollector.getState();
+    return null;
+  }
+
+  @Override
+  public void setState(String state) {
+    this.stateCollector.setState(state);
+  }
 }

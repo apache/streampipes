@@ -80,6 +80,16 @@ public class PipelineElementManager implements IPipelineElementLifeCycle {
     }
 
     @Override
+    public Response getState(InvocableStreamPipesEntity graph, String runningInstanceId) {
+        return new PipelineElementStateHandler(graph, PipelineElementLifeCycleState.GETSTATE, runningInstanceId).handle();
+    }
+
+    @Override
+    public Response setState(InvocableStreamPipesEntity graph, String runningInstanceId, String state) {
+        return new PipelineElementStateHandler(graph, PipelineElementLifeCycleState.SETSTATE, runningInstanceId, state).handle();
+    }
+
+    @Override
     public void deregister(){
         // TODO: unregister element from Consul
 

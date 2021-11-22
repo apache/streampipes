@@ -44,4 +44,13 @@ public abstract class EventProcessorDeclarer<B extends EventProcessorBindingPara
 		return invokeEPRuntime(graph);
 	}
 
+	//If not overwritten elements are regarded as stateless
+	@Override
+	public void setState(String state) {
+	}
+
+	@Override
+	public String getState() {
+		return null;
+	}
 }

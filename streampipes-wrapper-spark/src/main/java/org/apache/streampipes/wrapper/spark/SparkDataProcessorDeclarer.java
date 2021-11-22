@@ -25,4 +25,14 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public abstract class SparkDataProcessorDeclarer<B extends EventProcessorBindingParams>
     extends AbstractSparkDeclarer<DataProcessorDescription, DataProcessorInvocation, SparkDataProcessorRuntime> implements SemanticEventProcessingAgentDeclarer {
+    //If not overwritten elements are regarded as stateless
+    //TODO: Assess if this class is needed in its current form as it is not used in extensions atm
+    @Override
+    public void setState(String state) {
+    }
+
+    @Override
+    public String getState() {
+        return null;
+    }
 }

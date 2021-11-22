@@ -1083,6 +1083,7 @@ export class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
     preemption: boolean;
     priorityScore: number;
     resourceRequirements: NodeResourceRequirementUnion[];
+    stateful: boolean;
     staticProperties: StaticPropertyUnion[];
     statusInfoSettings: ElementStatusInfoSettings;
     streamRequirements: SpDataStreamUnion[];
@@ -1115,6 +1116,7 @@ export class InvocableStreamPipesEntity extends NamedStreamPipesEntity {
         instance.preemption = data.preemption;
         instance.configured = data.configured;
         instance.uncompleted = data.uncompleted;
+        instance.stateful = data.stateful;
         return instance;
     }
 }

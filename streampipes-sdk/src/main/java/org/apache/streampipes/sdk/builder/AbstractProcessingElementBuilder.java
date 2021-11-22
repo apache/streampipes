@@ -272,6 +272,11 @@ public abstract class AbstractProcessingElementBuilder<BU extends
     return me();
   }
 
+  public BU containsState(){
+    this.elementDescription.setStateful(true);
+    return me();
+  }
+
 
   @Override
   public void prepareBuild() {

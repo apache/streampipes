@@ -66,11 +66,26 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
   @RdfProperty(StreamPipes.ELEMENT_ENDPOINT_SERVICE_NAME)
   private String elementEndpointServiceName;
 
+  @OneToOne(fetch = FetchType.EAGER,
+          cascade = {CascadeType.ALL})
+  @RdfProperty(StreamPipes.IS_STATEFUL)
+  private boolean isStateful;
+
+
+  public boolean isStateful() {
+    return isStateful;
+  }
+
+  public void setStateful(boolean stateful) {
+    isStateful = stateful;
+  }
+
   public ConsumableStreamPipesEntity() {
     super();
     this.spDataStreams = new ArrayList<>();
     this.staticProperties = new ArrayList<>();
     this.resourceRequirements = new ArrayList<>();
+    this.setStateful(false);
   }
 
   public ConsumableStreamPipesEntity(String uri, String name, String description, String iconUrl) {
@@ -78,6 +93,7 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     this.spDataStreams = new ArrayList<>();
     this.staticProperties = new ArrayList<>();
     this.resourceRequirements = new ArrayList<>();
+    this.setStateful(false);
   }
 
   public ConsumableStreamPipesEntity(ConsumableStreamPipesEntity other) {
@@ -95,6 +111,7 @@ public abstract class ConsumableStreamPipesEntity extends NamedStreamPipesEntity
     if (other.getResourceRequirements() != null) {
       this.resourceRequirements = new Cloner().resourceRequirements(other.getResourceRequirements());
     }
+    this.isStateful = other.isStateful;
   }
 
   public List<SpDataStream> getSpDataStreams() {

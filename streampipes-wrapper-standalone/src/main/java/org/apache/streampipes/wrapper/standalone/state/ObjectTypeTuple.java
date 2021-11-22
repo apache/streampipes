@@ -15,15 +15,32 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.node.controller.management.pe;
+package org.apache.streampipes.wrapper.standalone.state;
 
-public enum PipelineElementLifeCycleState {
-    REGISTER,
-    INVOKE,
-    DETACH,
-    RECONFIGURE,
-    OFFLOAD,
-    GETSTATE,
-    SETSTATE,
-    DEREGISTER
+import org.apache.streampipes.wrapper.state.serializer.StateSerializer;
+import java.lang.reflect.Type;
+
+public class ObjectTypeTuple {
+
+    private String genericTypeSignature;
+    private String objectSerialization;
+
+    //Default constructor needed for Jackson deserialization
+    public ObjectTypeTuple(){}
+
+    public ObjectTypeTuple(Object obj, StateSerializer serializer, Type type){
+        this.genericTypeSignature = serializer.getTypeSignature(type);
+        this.objectSerialization = serializer.serialize(obj);
+    }
+
+    public String getGenericTypeSignature(){
+        return this.genericTypeSignature;
+    }
+
+    public String getObjectSerialization(){
+        return this.objectSerialization;
+    }
+
+
+
 }

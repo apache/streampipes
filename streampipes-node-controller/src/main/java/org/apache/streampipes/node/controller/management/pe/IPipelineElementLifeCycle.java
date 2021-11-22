@@ -30,6 +30,10 @@ public interface IPipelineElementLifeCycle {
 
     Response detach(InvocableStreamPipesEntity graph, String runningInstanceId);
 
+    Response getState(InvocableStreamPipesEntity graph, String runningInstanceId);
+
+    Response setState(InvocableStreamPipesEntity graph, String runningInstanceId, String state);
+
     Response reconfigure(InvocableStreamPipesEntity graph, PipelineElementReconfigurationEntity reconfigurationEvent);
 
     Response offload(InvocableStreamPipesEntity graph);
