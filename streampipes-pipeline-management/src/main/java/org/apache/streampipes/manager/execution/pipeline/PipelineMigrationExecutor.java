@@ -82,6 +82,12 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
     }
 
     public PipelineOperationStatus migratePipelineElement() {
+        if(this.migrationEntity.getTargetElement().isStateful())
+            return migrateStatefulPipelineElement();
+        return migrateStatelessPipelineElement();
+    }
+
+    public PipelineOperationStatus migrateStatelessPipelineElement() {
 
         PipelineOperationStatus status = initPipelineOperationStatus();
 
@@ -137,6 +143,82 @@ public class PipelineMigrationExecutor extends AbstractPipelineExecutor {
         }
         long stop_origin_duration = System.nanoTime() - before_stop_origin;
         logger.logMQTT("Migration", "stop origin element","",stop_origin_duration,stop_origin_duration/1000000000.0);
+
+        List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
+        graphs.addAll(pipeline.getActions());
+        graphs.addAll(pipeline.getSepas());
+
+        List<SpDataSet> dataSets = findDataSets();
+
+        // store new pipeline and relays
+        storeInvocationGraphs(pipeline.getPipelineId(), graphs, dataSets);
+        deleteDataStreamRelayContainer(relaysToBeDeleted);
+        storeDataStreamRelayContainer(relaysToBePersisted);
+
+        // set global status
+        status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
+
+        return status;
+    }
+
+    public PipelineOperationStatus migrateStatefulPipelineElement() {
+        //TODO: Assess how this 'dirty' implementation/procedure can be improved
+
+        PipelineOperationStatus status = initPipelineOperationStatus();
+
+        // 1. start new element
+        // 2. stop relay to origin element
+        // 3. start relay to new element
+        // 4. stop origin element
+        // 5. stop origin relay
+
+        prepareMigration();
+
+        //Try to get state of origin element (success not checked)
+        PipelineElementStatus statusGettingState = getState(this.migrationEntity.getSourceElement());
+        if(!statusGettingState.isSuccess()){
+            //status.addPipelineElementStatus(statusGettingState);
+            status.setSuccess(false);
+            return status;
+        }
+        String currentState = statusGettingState.getOptionalMessage();
+        // Start target pipeline elements and relays on new target node
+        PipelineOperationStatus statusStartTarget = startTargetPipelineElementsAndRelays(status);
+        if(!statusStartTarget.isSuccess()){
+            //Target PE could not be started; nothing to roll back
+            return status;
+        }
+
+        //Set state of the newly invoked Pipeline Element (success not checked)
+         PipelineElementStatus statusSettingState = setState(this.migrationEntity.getTargetElement(), currentState);
+
+        if(!statusSettingState.isSuccess()){
+            //status.addPipelineElementStatus(statusSettingState);
+            status.setSuccess(false);
+            rollbackToPreMigrationStepOne(new PipelineOperationStatus(), status);
+            return status;
+        }
+
+        // Stop relays from origin predecessor
+        PipelineOperationStatus statusStopRelays = stopRelaysFromPredecessorsBeforeMigration(status);
+        if(!statusStopRelays.isSuccess()){
+            rollbackToPreMigrationStepOne(statusStopRelays, status);
+            return status;
+        }
+
+        // Start relays to target after migration
+        PipelineOperationStatus statusStartRelays = startRelaysFromPredecessorsAfterMigration(status);
+        if(!statusStartRelays.isSuccess()){
+            rollbackToPreMigrationStepTwo(statusStartRelays, status);
+            return status;
+        }
+
+        //Stop origin and associated relay
+        PipelineOperationStatus statusStopOrigin = stopOriginPipelineElementsAndRelays(status);
+        if(!statusStopOrigin.isSuccess()){
+            rollbackToPreMigrationStepThree(status);
+            return status;
+        }
 
         List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
         graphs.addAll(pipeline.getActions());

@@ -22,6 +22,7 @@ import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.execution.http.GraphSubmitter;
 
+import org.apache.streampipes.manager.execution.http.StateSubmitter;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -35,6 +36,7 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.storage.api.INodeDataStreamRelay;
@@ -128,6 +130,14 @@ public abstract class AbstractPipelineExecutor {
     protected PipelineOperationStatus stopRelays(List<SpDataStreamRelayContainer> relays){
         return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),new ArrayList<>(), new ArrayList<>(),
                 relays).detachRelaysOnMigration();
+    }
+
+    protected PipelineElementStatus getState(InvocableStreamPipesEntity graph){
+        return new StateSubmitter(pipeline.getPipelineId(), pipeline.getName(), graph, null).getElementState();
+    }
+
+    protected PipelineElementStatus setState(InvocableStreamPipesEntity graph, String state){
+        return new StateSubmitter(pipeline.getPipelineId(), pipeline.getName(), graph, state).setElementState();
     }
 
     protected List<SpDataStreamRelayContainer> findRelaysWhenStopping(List<NamedStreamPipesEntity> predecessors,
