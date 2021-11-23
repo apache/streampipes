@@ -4,7 +4,7 @@
   "env": {
     "TAKE_SCREENSHOT": "false"
   },
-  "baseUrl": "http://localhost:8082",
+  "baseUrl": "http://localhost:80",
   "trashAssetsBeforeRuns": false,
   "videoCompression": false,
   "viewportWidth": 1920,
