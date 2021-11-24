@@ -259,7 +259,7 @@
             <dependency>
                 <groupId>org.graalvm.js</groupId>
                 <artifactId>js-scriptengine</artifactId>
-                <version>${graalvm.js}</version>
+                <version>${graalvm.js.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.shyiko</groupId>
