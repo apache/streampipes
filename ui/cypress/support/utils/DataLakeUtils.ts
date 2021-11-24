@@ -197,7 +197,7 @@ export class DataLakeUtils {
       .type(`${value.toLocaleString()}{enter}`);
   }
 
-  private static resultEqual(actual: string, expected: string) {
+  private static resultEqual(expected: string, actual: string) {
     const expectedResult = DataLakeUtils.parseCsv(expected);
     const actualResult = DataLakeUtils.parseCsv(actual);
     expect(expectedResult).to.deep.equal(actualResult);

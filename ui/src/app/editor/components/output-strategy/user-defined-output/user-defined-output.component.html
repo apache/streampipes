@@ -20,7 +20,9 @@
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="margin-bottom:20px;">
         <button mat-button mat-raised-button color="accent" class="small-button"
                 (click)="applyDefaultSchema()"
-                style="margin-right:10px;margin-left:10px;" [disabled]="restrictedEditMode">Use input schema
+                style="margin-right:10px;margin-left:10px;"
+                [disabled]="restrictedEditMode"
+                data-cy="use-input-schema">Use input schema
         </button>
     </div>
 
@@ -28,14 +30,18 @@
         <div fxLayout="column" fxFlex="30">
             <mat-form-field fxFlex>
                 <mat-label>Runtime name</mat-label>
-                <input [(ngModel)]="ep.runtimeName" fxFlex
+                <input [(ngModel)]="ep.runtimeName"
+                       data-cy="runtime-name"
+                       fxFlex
                        matInput>
             </mat-form-field>
         </div>
         <div fxLayout="column" fxFlex="30">
             <mat-form-field class="example-full-width">
                 <mat-label>Runtime type</mat-label>
-                <mat-select [(ngModel)]="ep.runtimeType" [disabled]="restrictedEditMode">
+                <mat-select [(ngModel)]="ep.runtimeType"
+                            [disabled]="restrictedEditMode"
+                            data-cy="runtime-type">
                     <mat-option *ngFor="let primitive of primitiveClasses" [value]="primitive.id">
                         {{primitive.label}}
                     </mat-option>
@@ -45,7 +51,10 @@
         <div fxLayout="column" fxFlex="30">
             <mat-form-field fxFlex>
                 <mat-label>Semantic type</mat-label>
-                <input [(ngModel)]="ep.domainProperties[0]" [disabled]="restrictedEditMode" fxFlex
+                <input [(ngModel)]="ep.domainProperties[0]"
+                       [disabled]="restrictedEditMode"
+                       data-cy="semantic-type"
+                       fxFlex
                        matInput>
             </mat-form-field>
         </div>
@@ -56,7 +65,11 @@
         </div>
     </div>
     <div>
-        <button mat-button mat-flat-button (click)="addProperty()" [disabled]="restrictedEditMode">
+        <button mat-button
+                mat-flat-button
+                (click)="addProperty()"
+                [disabled]="restrictedEditMode"
+                data-cy="add-field">
             <mat-icon class="icon">add</mat-icon>
             <span>Add field</span>
         </button>

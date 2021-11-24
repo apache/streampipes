@@ -17,8 +17,10 @@
  */
 
 import { UserInput } from './UserInput';
+import { OutputStrategyConfig } from './OutputStrategyConfig';
 
 export class PipelineElementInput {
     name: string;
     config: UserInput[];
+    output: OutputStrategyConfig;
 }

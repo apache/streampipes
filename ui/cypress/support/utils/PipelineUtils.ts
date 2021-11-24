@@ -18,6 +18,7 @@
 
 import { PipelineInput } from '../model/PipelineInput';
 import { StaticPropertyUtils } from './StaticPropertyUtils';
+import { OutputStrategyUtils } from './OutputStrategyUtils';
 
 export class PipelineUtils {
 
@@ -69,6 +70,7 @@ export class PipelineUtils {
     if (pipelineInput.processingElement) {
       cy.dataCy('sp-compatible-elements-' + pipelineInput.processingElement.name).click();
       StaticPropertyUtils.input(pipelineInput.processingElement.config);
+      OutputStrategyUtils.input(pipelineInput.processingElement.output);
       // Save configuration
       cy.dataCy('sp-element-configuration-save').click();
       // Select sink

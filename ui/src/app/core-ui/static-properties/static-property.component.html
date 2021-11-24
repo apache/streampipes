@@ -24,13 +24,13 @@
             <mat-hint class="description">{{staticProperty.description}}</mat-hint>
         </div>
         <div fxFlex="100">
-            <app-static-code-input *ngIf="isCodeInputStaticProperty(staticProperty)"
+            <sp-static-code-input *ngIf="isCodeInputStaticProperty(staticProperty)"
                                    [staticProperty]="staticProperty"
                                    [parentForm]="parentForm"
                                    [eventSchemas]="eventSchemas"
                                    [fieldName]="fieldName"
                                    (updateEmitter)="emitUpdate($event)">
-            </app-static-code-input>
+            </sp-static-code-input>
 
             <app-static-secret-input *ngIf="isSecretStaticProperty(staticProperty)"
                                      [staticProperty]="staticProperty"

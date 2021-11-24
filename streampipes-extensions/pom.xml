@@ -81,6 +81,7 @@
         <ddogleg.version>0.16</ddogleg.version>
         <errorprone-annotations.version>2.2.0</errorprone-annotations.version>
         <google-maps-services.version>0.10.0</google-maps-services.version>
+        <graalvm.js.version>21.3.0</graalvm.js.version>
         <iotdb.version>0.12.0</iotdb.version>
         <jackson.version>2.10.0</jackson.version>
         <java-websocket.version>1.4.0</java-websocket.version>
@@ -249,6 +250,16 @@
                 <groupId>org.eclipse.milo</groupId>
                 <artifactId>sdk-client</artifactId>
                 <version>${eclipse.milo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.js</groupId>
+                <artifactId>js</artifactId>
+                <version>${graalvm.js.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graalvm.js</groupId>
+                <artifactId>js-scriptengine</artifactId>
+                <version>${graalvm.js}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.shyiko</groupId>

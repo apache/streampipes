@@ -17,7 +17,7 @@
  */
 
 export class UserInput {
-    type: string | 'checkbox' | 'input' | 'file' | 'drop-down' | 'radio';
+    type: 'checkbox' | 'input' | 'file' | 'drop-down' | 'radio' | 'code-input' | 'click';
     selector: string;
     value: string;
 }
