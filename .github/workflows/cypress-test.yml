@@ -16,7 +16,9 @@
 name: build-and-deploy-docker-dev
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - STREAMPIPES-478
 
 jobs:
   build-and-push-to-docker:
