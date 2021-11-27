@@ -30,6 +30,12 @@ jobs:
 #        uses: actions/setup-java@v1
 #        with:
 #          java-version: 1.8
+      - name: Pull Docker
+        working-directory: ./installer/compose
+        run: docker-compose pull
+      - name: Pull Docker
+        working-directory: ./installer/compose
+        run: docker-compose up -d
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
@@ -40,19 +46,15 @@ jobs:
           NODE_PATH=/cache/node_modules
           NODE_OPTIONS=--max_old_space_size=6096
           npm install --unsafe-perm --legacy-peer-deps
-          npm run build
+          npm run test-cypress
+#          npm run build
 #      - name: Build with Maven
 #        run: mvn clean package -Dmaven.test.skip=true
 #      - name: Build and run streampipes
 #        run: docker-compose up --build -d
-      - name: Pull Docker
-        working-directory: ./installer/compose
-        run: docker-compose pull
-      - name: Pull Docker
-        working-directory: ./installer/compose
-        run: docker-compose up -d
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          working-directory: ./ui
-          spec: cypress/tests/integration/adapter/*
+
+#      - name: Cypress run
+#        uses: cypress-io/github-action@v2
+#        with:
+#          working-directory: ./ui
+#          spec: cypress/tests/integration/adapter/*
