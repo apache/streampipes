@@ -45,3 +45,8 @@ jobs:
         run: mvn clean package -Dmaven.test.skip=true
       - name: Build and run streampipes
         run: docker-compose up --build -d
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          spec: cypress/tests/integration/adapter/*
