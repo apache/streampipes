@@ -46,8 +46,10 @@ jobs:
 #      - name: Build and run streampipes
 #        run: docker-compose up --build -d
       - name: Pull Docker
+        working-directory: ./installer/compose
         run: docker-compose pull
       - name: Pull Docker
+        working-directory: ./installer/compose
         run: docker-compose up -d
       - name: Cypress run
         uses: cypress-io/github-action@v2
