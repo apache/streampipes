@@ -50,7 +50,7 @@ jobs:
       - name: Pull Docker
         run: docker-compose up -d
       - name: Cypress run
-        working-directory: ./ui
         uses: cypress-io/github-action@v2
         with:
+          working-directory: ./ui
           spec: cypress/tests/integration/adapter/*
