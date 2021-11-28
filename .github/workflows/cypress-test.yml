@@ -48,15 +48,16 @@ jobs:
       - name: Build and run streampipes
         run: docker-compose up --build -d
 
-      - name: Wait till streampipes is started
-        uses: nev7n/wait_for_response@v1
-        with:
-          url: 'http://localhost/#/login'
-          responseCode: 200
-          timeout: 20000
-          interval: 500
+      - name: 'UI Tests'
+          uses: cypress-io/github-action@v2
+          with:
+            install: false
+            wait-on: 'http://localhost:80'
+            wait-on-timeout: 120
+            spec: cypress/tests/**/*.smoke.ts
 
-      - name: Run Cypress Tests
-        working-directory: ./ui
-        run: |
-          npm run test-cypress-github
+#      - name: Run Cypress Tests
+#        working-directory: ./ui
+#        run: |
+#          npm run test-cypress-github
+#
