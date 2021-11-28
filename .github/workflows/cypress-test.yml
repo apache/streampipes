@@ -49,12 +49,12 @@ jobs:
         run: docker-compose up --build -d
 
       - name: 'UI Tests'
-          uses: cypress-io/github-action@v2
-          with:
-            install: false
-            wait-on: 'http://localhost:80'
-            wait-on-timeout: 120
-            spec: cypress/tests/**/*.smoke.ts
+        uses: cypress-io/github-action@v2
+        with:
+          install: false
+          wait-on: 'http://localhost:80'
+          wait-on-timeout: 120
+          spec: cypress/tests/**/*.smoke.ts
 
 #      - name: Run Cypress Tests
 #        working-directory: ./ui
