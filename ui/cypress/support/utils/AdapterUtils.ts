@@ -182,7 +182,7 @@ export class AdapterUtils {
 
     // Start adapter
     cy.get('#button-startAdapter').click();
-    cy.dataCy(successElement, { timeout: 10000 }).should('be.visible');
+    cy.dataCy(successElement, { timeout: 20000 }).should('be.visible');
 
     // Close adapter preview
     cy.get('button').contains('Close').parent().click();
