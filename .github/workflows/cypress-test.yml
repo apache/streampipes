@@ -31,16 +31,16 @@ jobs:
 #        uses: actions/setup-java@v1
 #        with:
 #          java-version: 1.8
-#      - name: Set up Node
-#        uses: actions/setup-node@v1
-#        with:
-#          node-version: '16.x'
-#      - name: Build UI
-#        working-directory: ./ui
-#        run: |
-#          NODE_PATH=/cache/node_modules
-#          NODE_OPTIONS=--max_old_space_size=6096
-#          npm install --unsafe-perm --legacy-peer-deps
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+      - name: Build UI
+        working-directory: ./ui
+        run: |
+          NODE_PATH=/cache/node_modules
+          NODE_OPTIONS=--max_old_space_size=6096
+          npm install --unsafe-perm --legacy-peer-deps
 #          npm run build
 #
 #      - name: Build with Maven
@@ -63,6 +63,7 @@ jobs:
           wait-on: 'http://localhost:80'
           wait-on-timeout: 120
           spec: cypress/tests/**/*.smoke.ts
+          working-directory: ui
 
 #      - name: Run Cypress Tests
 #        working-directory: ./ui
