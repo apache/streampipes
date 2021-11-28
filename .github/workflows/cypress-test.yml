@@ -27,10 +27,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-#      - name: Set up JDK 1.8
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: 1.8
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
@@ -41,20 +41,20 @@ jobs:
           NODE_PATH=/cache/node_modules
           NODE_OPTIONS=--max_old_space_size=6096
           npm install --unsafe-perm --legacy-peer-deps
-#          npm run build
-#
-#      - name: Build with Maven
-#        run: mvn clean package -Dmaven.test.skip=true
-#
-#      - name: Build and run streampipes
-#        run: docker-compose up --build -d
+          npm run build
 
-      - name: Pull Docker
-        working-directory: ./installer/compose
-        run: docker-compose pull
-      - name: Start Docker
-        working-directory: ./installer/compose
-        run: docker-compose up -d
+      - name: Build with Maven
+        run: mvn clean package -Dmaven.test.skip=true
+
+      - name: Build and run streampipes
+        run: docker-compose up --build -d
+
+#      - name: Pull Docker
+#        working-directory: ./installer/compose
+#        run: docker-compose pull
+#      - name: Start Docker
+#        working-directory: ./installer/compose
+#        run: docker-compose up -d
 
       - name: Docker PS
         working-directory: ./installer/compose
@@ -62,7 +62,7 @@ jobs:
 
       - name: Wait 30 seconds
         working-directory: ./installer/compose
-        run: sleep 30
+        run: sleep 70
 
       - name: Docker PS
         working-directory: ./installer/compose
