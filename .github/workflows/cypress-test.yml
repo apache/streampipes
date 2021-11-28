@@ -34,7 +34,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
-          node-version: '16.x'
+          node-version: '14'
       - name: Build UI
         working-directory: ./ui
         run: |
@@ -56,16 +56,24 @@ jobs:
         working-directory: ./installer/compose
         run: docker-compose up -d
 
-#      - name: 'UI Tests'
-#        uses: cypress-io/github-action@v2
-#        with:
-#          install: false
-#          wait-on: 'http://localhost/#/login'
-#          wait-on-timeout: 120
-#          spec: cypress/tests/**/*.smoke.ts
-#          working-directory: ui
+      - name: Docker PS
+        working-directory: ./installer/compose
+        run: docker ps
+
+      - name: 'UI Tests'
+        uses: cypress-io/github-action@v2
+        with:
+          install: false
+          node-version: '14'
+          wait-on: 'http://localhost/#/login'
+          wait-on-timeout: 120
+          spec: cypress/tests/**/*.smoke.ts
+          working-directory: ui
 
       - name: Run Cypress Tests
         working-directory: ./ui
         run: |
+          NODE_PATH=/cache/node_modules
+          NODE_OPTIONS=--max_old_space_size=6096
+          npm install --unsafe-perm --legacy-peer-deps
           npm run test-cypress-github
