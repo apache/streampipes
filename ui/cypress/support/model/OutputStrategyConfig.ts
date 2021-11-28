@@ -16,8 +16,9 @@
  *
  */
 
-export class UserInput {
-    type: 'checkbox' | 'input' | 'file' | 'drop-down' | 'radio' | 'code-input' | 'click';
-    selector: string;
-    value: string;
+import { EventPropertyInput } from './EventPropertyInput';
+
+export class OutputStrategyConfig {
+    type: 'append';
+    config: EventPropertyInput[];
 }

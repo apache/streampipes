@@ -22,30 +22,23 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.ProxyObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 
 public class JSEval implements EventProcessor<JSEvalParameters> {
-    private static final String ENGINE_NAME = "JavaScript";
-    private ScriptEngine engine;
-    private String code;
+    private Context polyglot;
+    private Value function;
 
     @Override
     public void onInvocation(JSEvalParameters parameters, SpOutputCollector spOutputCollector,
                              EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-        ScriptEngineManager factory = new ScriptEngineManager();
-        engine = factory.getEngineByName(ENGINE_NAME);
-        code = parameters.getCode();
-        try {
-            engine.eval(code);
-        } catch (ScriptException e) {
-            throw new SpRuntimeException("Error in script: " + e.getMessage());
-        }
+        polyglot = Context.create();
+        String code = parameters.getCode();
+        function = polyglot.eval("js", "(" + code + ")");
     }
 
     @Override
@@ -53,19 +46,18 @@ public class JSEval implements EventProcessor<JSEvalParameters> {
         // create new event with input event's source info and schema info.
         Event outEvent = new Event(new HashMap<>(), event.getSourceInfo(), event.getSchemaInfo());
         try {
+
             final Map<String, Object> eventData = event.getRaw();
-            Object result = ((Invocable) engine).invokeFunction("process", eventData);
-            if (result != null) {
-                Map<String, Object> output = (Map<String, Object>) result;
-                output.forEach(outEvent::addField);
+
+            Object result = function.execute(ProxyObject.fromMap(eventData));
+            Map<String, Object> resultEvent =  ((Value) result).as(java.util.Map.class);
+            if (resultEvent != null) {
+                resultEvent.forEach(outEvent::addField);
                 outputCollector.collect(outEvent);
             }
-        } catch (ScriptException e) {
-            throw new SpRuntimeException("Error in script: " + e.getMessage());
+
         } catch (ClassCastException e) {
             throw new SpRuntimeException("`process` method must return a map with new event data.");
-        } catch (NoSuchMethodException e) {
-            throw new SpRuntimeException("`process(event){ return {}; };` method not found in script: " + code);
         }
     }
 
@@ -73,4 +65,5 @@ public class JSEval implements EventProcessor<JSEvalParameters> {
     public void onDetach() {
         // do nothing.
     }
+
 }

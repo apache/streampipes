@@ -1,0 +1,19 @@
+{
+  "name": "javascript_eval",
+  "config": [
+    {
+      "type": "code-input",
+      "selector": "jsFunction",
+      "value": "function process(event) {\n  event.plusone = event.numberlist + 1;\n return event;"
+    }],
+  "output":
+    {
+      "type": "append",
+      "config": [
+          {
+            "runtimeName":  "plusone",
+            "runtimeType":  "Float"
+          }
+]
+    }
+}

@@ -16,8 +16,8 @@
  *
  */
 
-export class UserInput {
-    type: 'checkbox' | 'input' | 'file' | 'drop-down' | 'radio' | 'code-input' | 'click';
-    selector: string;
-    value: string;
+export class EventPropertyInput {
+    runtimeName: string;
+    runtimeType: 'String' | 'Boolean' | 'Integer' | 'Long' | 'Double' | 'Float';
+    semanticType = '';
 }

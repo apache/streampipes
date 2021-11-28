@@ -96,17 +96,6 @@ services:
     networks:
       spnet:
 
-  pipeline-elements-all-flink:
-    build:
-      context: ./streampipes-extensions/streampipes-pipeline-elements-all-flink
-      dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_pipeline-elements-all-flink:release-validation
-    logging: *default-logging
-    networks:
-      spnet:
-
   #### Mandatory external services
   activemq:
     image: fogsyio/activemq:5.15.9

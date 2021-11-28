@@ -16,9 +16,9 @@
  *
  */
 
-import { CodeInputStaticProperty } from "../../../core-model/gen/streampipes-model";
-import { AbstractValidatedStaticPropertyRenderer } from "../base/abstract-validated-static-property";
-import { AfterViewInit, Component, OnInit } from "@angular/core";
+import { CodeInputStaticProperty } from '../../../core-model/gen/streampipes-model';
+import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/python/python';
@@ -28,12 +28,12 @@ import 'codemirror/addon/hint/javascript-hint';
 import 'codemirror/addon/lint/javascript-lint';
 import 'codemirror/addon/lint/lint';
 import { JSHINT } from 'jshint';
-import * as CodeMirror from "codemirror";
+import * as CodeMirror from 'codemirror';
 
-(<any>window).JSHINT = JSHINT;
+(window as any).JSHINT = JSHINT;
 
 @Component({
-  selector: 'app-static-code-input',
+  selector: 'sp-static-code-input',
   templateUrl: './static-code-input.component.html',
   styleUrls: ['./static-code-input.component.scss']
 })
@@ -41,16 +41,16 @@ export class StaticCodeInputComponent
     extends AbstractValidatedStaticPropertyRenderer<CodeInputStaticProperty> implements OnInit, AfterViewInit {
 
   editorOptions = {
-    mode: "javascript",
+    mode: 'javascript',
     autoRefresh: true,
     theme: 'dracula',
     autoCloseBrackets: true,
     lineNumbers: true,
     lineWrapping: true,
-    gutters: ["CodeMirror-lint-markers"],
+    gutters: ['CodeMirror-lint-markers'],
     lint: true,
     extraKeys: {
-      "Ctrl-Space": "autocomplete"
+      'Ctrl-Space': 'autocomplete'
     }
   };
 
@@ -60,7 +60,7 @@ export class StaticCodeInputComponent
 
   ngOnInit() {
     this.applyLanguage();
-    if (!this.staticProperty.value || this.staticProperty.value === "") {
+    if (!this.staticProperty.value || this.staticProperty.value === '') {
       this.staticProperty.value = this.staticProperty.codeTemplate;
     }
   }
@@ -85,19 +85,24 @@ export class StaticCodeInputComponent
     this.staticProperty.value = this.staticProperty.codeTemplate;
   }
 
+  cleanCode() {
+    this.staticProperty.value = '';
+  }
+
+
   enableCodeHints() {
     if (this.editorOptions.mode === 'javascript') {
-      var jsHint = (CodeMirror as any).hint.javascript;
+      const jsHint = (CodeMirror as any).hint.javascript;
       (CodeMirror as any).hint.javascript = (cm) => {
-        let cursor = cm.getCursor();
-        let token = cm.getTokenAt(cursor);
+        const cursor = cm.getCursor();
+        const token = cm.getTokenAt(cursor);
         let inner = {from: cm.getCursor(), to: cm.getCursor(), list: []};
-        let previousCursor = {line: cursor.line, ch: (cursor.ch - 1), sticky: null}
-        let previousToken = cm.getTokenAt(previousCursor);
-        if (token.string === "." && previousToken.string === "event") {
+        const previousCursor = {line: cursor.line, ch: (cursor.ch - 1), sticky: null};
+        const previousToken = cm.getTokenAt(previousCursor);
+        if (token.string === '.' && previousToken.string === 'event') {
           this.eventSchemas[0].eventProperties.forEach(ep => {
             inner.list.unshift(ep.runtimeName);
-          })
+          });
         } else {
           inner = jsHint(cm);
         }

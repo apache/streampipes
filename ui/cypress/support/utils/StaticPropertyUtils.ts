@@ -32,9 +32,12 @@ export class StaticPropertyUtils {
         cy.dataCy(config.selector + config.value).click();
       } else if (config.type === 'click') {
         cy.dataCy(config.selector).click({ force: true });
+      } else if (config.type === 'code-input') {
+        cy.dataCy('reset-code-' + config.selector).click();
+        cy.dataCy('code-editor-' + config.selector).type(config.value);
       } else {
-        cy.dataCy(config.selector).type(config.value);
-      }
+          cy.dataCy(config.selector).type(config.value);
+        }
     });
   }
 }
