@@ -33,5 +33,3 @@ Cypress.Commands.add('dataCy', dataCy);
 Cypress.Commands.add('resetStreamPipes', resetStreamPipes);
 Cypress.Commands.add('initStreamPipesTest', initStreamPipesTest);
 // Cypress.Commands.add('readDir', readDir);
-
-

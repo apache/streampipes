@@ -15,7 +15,7 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts*",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "test-e2e": "cypress open",
-    "test-cypress": "npx cypress run --spec 'cypress/tests/integration/adapter/*'"
+    "test-cypress-github": "npx cypress run --spec 'cypress/tests/**/*.smoke.ts'"
   },
   "dependencies": {
     "@angular/animations": "12.2.9",
