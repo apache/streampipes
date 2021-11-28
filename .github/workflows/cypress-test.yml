@@ -68,7 +68,7 @@ jobs:
         working-directory: ./installer/compose
         run: docker ps
 
-        - name: 'UI Tests'
+      - name: 'UI Tests'
         uses: cypress-io/github-action@v2
         with:
           install: false
