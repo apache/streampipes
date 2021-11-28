@@ -56,17 +56,16 @@ jobs:
         working-directory: ./installer/compose
         run: docker-compose up -d
 
-      - name: 'UI Tests'
-        uses: cypress-io/github-action@v2
-        with:
-          install: false
-          wait-on: 'http://localhost/#/login'
-          wait-on-timeout: 120
-          spec: cypress/tests/**/*.smoke.ts
-          working-directory: ui
+#      - name: 'UI Tests'
+#        uses: cypress-io/github-action@v2
+#        with:
+#          install: false
+#          wait-on: 'http://localhost/#/login'
+#          wait-on-timeout: 120
+#          spec: cypress/tests/**/*.smoke.ts
+#          working-directory: ui
 
-#      - name: Run Cypress Tests
-#        working-directory: ./ui
-#        run: |
-#          npm run test-cypress-github
-#
+      - name: Run Cypress Tests
+        working-directory: ./ui
+        run: |
+          npm run test-cypress-github
