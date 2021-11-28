@@ -46,7 +46,7 @@ jobs:
           NODE_PATH=/cache/node_modules
           NODE_OPTIONS=--max_old_space_size=6096
           npm install --unsafe-perm --legacy-peer-deps
-          npm run test-cypress
+          npm run test-cypress-github
 #          npm run build
 #      - name: Build with Maven
 #        run: mvn clean package -Dmaven.test.skip=true
