@@ -49,24 +49,9 @@ jobs:
       - name: Build and run streampipes
         run: docker-compose up --build -d
 
-#      - name: Pull Docker
-#        working-directory: ./installer/compose
-#        run: docker-compose pull
-#      - name: Start Docker
-#        working-directory: ./installer/compose
-#        run: docker-compose up -d
-
-      - name: Docker PS
-        working-directory: ./installer/compose
-        run: docker ps
-
       - name: Wait 30 seconds
         working-directory: ./installer/compose
         run: sleep 70
-
-      - name: Docker PS
-        working-directory: ./installer/compose
-        run: docker ps
 
       - name: 'UI Tests'
         uses: cypress-io/github-action@v2
@@ -76,11 +61,3 @@ jobs:
           wait-on-timeout: 120
           spec: cypress/tests/**/*.smoke.ts
           working-directory: ui
-
-#      - name: Run Cypress Tests
-#        working-directory: ./ui
-#        run: |
-#          NODE_PATH=/cache/node_modules
-#          NODE_OPTIONS=--max_old_space_size=6096
-#          npm install --unsafe-perm --legacy-peer-deps
-#          npm run test-cypress-github
