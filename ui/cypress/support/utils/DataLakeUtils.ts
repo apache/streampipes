@@ -183,8 +183,10 @@ export class DataLakeUtils {
   }
 
   public static selectTimeRange(from: Date, to: Date) {
-    DataLakeUtils.setTimeInput('time-range-from', from);
-    DataLakeUtils.setTimeInput('time-range-to', to);
+    cy.dataCy('1_year').click();
+    // TODO fix time range selection
+    // DataLakeUtils.setTimeInput('time-range-from', from);
+    // DataLakeUtils.setTimeInput('time-range-to', to);
   }
 
   private static setTimeInput(selector: string, value: Date) {
