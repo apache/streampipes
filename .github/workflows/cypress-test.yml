@@ -16,9 +16,8 @@
 name: build-and-deploy-docker-dev
 
 on:
-  push:
-    branches:
-      - STREAMPIPES-478
+  schedule:
+    - cron:  '45 * * * *'
 
 jobs:
   build-and-push-to-docker:
