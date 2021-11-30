@@ -116,7 +116,7 @@ export class DataExplorerComponent implements OnInit {
   protected getDashboards(currentDashboardId?: string) {
     this.dashboardsLoaded = false;
     this.dataViewService.getDataViews().subscribe(data => {
-      this.dataViewDashboards = data;
+      this.dataViewDashboards = data.sort((a, b) => a.name.localeCompare(b.name));
       if (currentDashboardId) {
         this.findAndSelectDashboard(currentDashboardId);
       } else if (this.routeParams.dashboardId) {

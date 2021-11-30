@@ -84,7 +84,7 @@ export class DashboardComponent implements OnInit {
     protected getDashboards(currentDashboardId?: string) {
         this.dashboardsLoaded = false;
         this.dashboardService.getDashboards().subscribe(data => {
-            this.dashboards = data;
+            this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
             if (currentDashboardId) {
                 const currentDashboard = this.dashboards.find(d => d._id === currentDashboardId);
                 this.selectDashboard(this.dashboards.indexOf(currentDashboard) + 1);
