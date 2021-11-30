@@ -22,7 +22,7 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testNames = ['textFilter1','textFilter2'];
+  const testNames = ['textFilter2'];
 
   const processorTest = test as ProcessorTest;
 
