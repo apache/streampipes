@@ -20,6 +20,7 @@ import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuild
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
 import { PipelineElementInput } from '../../support/model/PipelineElementInput';
+import { ParameterUtils } from '../../support/utils/ParameterUtils';
 
 describe('Test Kafka Integration', () => {
   before('Setup Test', () => {
@@ -28,11 +29,13 @@ describe('Test Kafka Integration', () => {
 
   it('Perform Test', () => {
     const topicName = 'cypresstopic';
+    const host: string = ParameterUtils.get('localhost', 'kafka');
+    const port: string = ParameterUtils.get('9094', '9092');
 
     const sink: PipelineElementInput = PipelineElementBuilder.create('kafka_publisher')
       .addInput('select', 'Unauthenticated', 'check')
-      .addInput('input', 'host', 'localhost')
-      .addInput('input', 'port', '{backspace}{backspace}{backspace}{backspace}9094')
+        .addInput('input', 'host', host)
+      .addInput('input', 'port', '{backspace}{backspace}{backspace}{backspace}' + port)
       .addInput('input', 'topic', topicName)
       .build();
 
@@ -41,8 +44,8 @@ describe('Test Kafka Integration', () => {
       .setName('Kafka4')
       .setTimestampProperty('timestamp')
       .addProtocolInput('select', 'Unauthenticated', 'check')
-      .addProtocolInput('input', 'host', 'localhost')
-      .addProtocolInput('input', 'port', '9094')
+        .addProtocolInput('input', 'host', host)
+        .addProtocolInput('input', 'port', port)
       .addProtocolInput('click', 'sp-reload', '')
       .addProtocolInput('select', topicName, 'check')
       .setFormat('json_object')

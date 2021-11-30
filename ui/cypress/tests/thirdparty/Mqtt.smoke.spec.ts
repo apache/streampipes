@@ -16,44 +16,38 @@
  *
  */
 
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegrationUtils';
 import { PipelineElementInput } from '../../support/model/PipelineElementInput';
+import { ParameterUtils } from '../../support/utils/ParameterUtils';
 
-describe('Test InfluxDB Integration', () => {
+describe('Test MQTT Integration', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
   });
 
   it('Perform Test', () => {
-    const dbName = 'cypresstestdb';
+    const topicName = 'cypresstopic';
+    const host: string = ParameterUtils.get('localhost', 'activemq');
 
-    const sink: PipelineElementInput = PipelineElementBuilder.create('influxdb')
-      .addInput('input', 'db_host', 'http://localhost')
-      .addInput('input', 'db_name', 'sp')
-      .addInput('input', 'db_measurement', dbName)
-      .addInput('input', 'db_user', 'sp')
-      .addInput('input', 'db_password', 'default')
-      .addInput('input', 'batch_interval_actions', '2')
-      .addInput('input', 'max_flush_duration', '{backspace}{backspace}{backspace}{backspace}500')
-      .addInput('drop-down', 'timestamp_mapping', 'timestamp')
-      .build();
+    const sink: PipelineElementInput =
+      PipelineElementBuilder.create('mqtt_publisher')
+        .addInput('input', 'host', host)
+        .addInput('input', 'topic', topicName)
+        .build();
 
-    const adapter = SpecificAdapterBuilder
-      .create('InfluxDB_Stream_Adapter')
-      .setName('InfluxDB Adapter')
-      .addInput('input', 'influxDbHost', 'http://localhost')
-      .addInput('input', 'influxDbPort', '8086')
-      .addInput('input', 'influxDbDatabase', 'sp')
-      .addInput('input', 'influxDbMeasurement', dbName)
-      .addInput('input', 'influxDbUsername', 'sp')
-      .addInput('input', 'influxDbPassword', 'default')
-      .addInput('input', 'pollingInterval', '200')
+    const adapter = GenericAdapterBuilder
+      .create('MQTT')
+      .setName('Adapter Mqtt')
+      .setTimestampProperty('timestamp')
+      .addProtocolInput('select', 'Unauthenticated', 'check')
+      .addProtocolInput('input', 'broker_url', 'tcp://' + host + ':1883')
+      .addProtocolInput('input', 'topic', topicName)
+      .setFormat('json_object')
       .build();
 
     ThirdPartyIntegrationUtils.runTest(sink, adapter);
-
   });
 
 });
