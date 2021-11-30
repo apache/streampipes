@@ -21,25 +21,27 @@ import { OutputStrategyConfig } from '../model/OutputStrategyConfig';
 export class OutputStrategyUtils {
 
     public static input(outputStrategyConfig: OutputStrategyConfig) {
-        if (outputStrategyConfig.type === 'append') {
-            cy.dataCy('use-input-schema').click();
-        }
+        if (outputStrategyConfig !== undefined) {
+            if (outputStrategyConfig.type === 'append') {
+                cy.dataCy('use-input-schema').click();
+            }
 
-        if (outputStrategyConfig.config && outputStrategyConfig.config.length > 0) {
-            outputStrategyConfig.config.forEach(config => {
-                cy.dataCy('add-field').click();
+            if (outputStrategyConfig.config && outputStrategyConfig.config.length > 0) {
+                outputStrategyConfig.config.forEach(config => {
+                    cy.dataCy('add-field').click();
 
-                // Set runtime name
-                cy.dataCy('runtime-name').last().type(config.runtimeName);
+                    // Set runtime name
+                    cy.dataCy('runtime-name').last().type(config.runtimeName);
 
-                // select property type
-                cy.dataCy('runtime-type').last().click().get('mat-option').contains(config.runtimeType).click();
+                    // select property type
+                    cy.dataCy('runtime-type').last().click().get('mat-option').contains(config.runtimeType).click();
 
-                // Set semantic type
-                if (config.semanticType) {
-                    cy.dataCy('semantic-type').last().type(config.semanticType);
-                }
-            });
+                    // Set semantic type
+                    if (config.semanticType) {
+                        cy.dataCy('semantic-type').last().type(config.semanticType);
+                    }
+                });
+            }
         }
     }
 }

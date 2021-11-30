@@ -16,26 +16,14 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
 
-const allTests = Cypress.env('processingElements');
+export class ParameterUtils {
 
-allTests.forEach(test => {
-  const testNames = ['textFilter2'];
-
-  const processorTest = test as ProcessorTest;
-
-  if (testNames.includes(processorTest.name)) {
-
-    describe('Test Processor ' + test.dir, () => {
-      before('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
-});
+    public static get(localVariable: string, containerVariable: string): string {
+        if (Cypress.env('DEVELOPMENT')) {
+            return localVariable;
+        } else {
+            return containerVariable;
+        }
+    }
+}
