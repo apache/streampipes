@@ -45,10 +45,9 @@ export class EditDashboardDialogComponent {
 
     onSave(): void {
         if (this.createMode) {
-            this.dashboardService.saveDashboard(this.dashboard).subscribe();
+            this.dashboardService.saveDashboard(this.dashboard).subscribe(result => this.onCancel());
         } else {
-            this.dashboardService.updateDashboard(this.dashboard).subscribe();
+            this.dashboardService.updateDashboard(this.dashboard).subscribe(result => this.onCancel());
         }
-        this.dialogRef.close();
     }
 }
