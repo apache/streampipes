@@ -59,6 +59,16 @@ export class PipelineElementService {
     }));
   }
 
+  getDataStreamByElementId(elementId: string): Observable<SpDataStream> {
+    return this.http.get(`${this.dataStreamsUrl}/${elementId}`).pipe(map(data => {
+      if (data['@class'] === 'org.apache.streampipes.model.SpDataSet') {
+        return SpDataSet.fromData(data as any);
+      } else {
+        return SpDataStream.fromData(data as any);
+      }
+    }));
+  }
+
   getDocumentation(appId) {
     return this.http.get(this.platformServicesCommons.apiBasePath
         + '/pe/'

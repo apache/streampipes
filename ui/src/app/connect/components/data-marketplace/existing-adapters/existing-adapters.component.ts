@@ -30,6 +30,8 @@ import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../../_enums/user-role.enum';
 import { AuthService } from '../../../../services/auth.service';
+import {PipelineElementService} from "../../../../platform-services/apis/pipeline-element.service";
+import {HelpComponent} from "../../../../editor/dialog/help/help.component";
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -61,7 +63,8 @@ export class ExistingAdaptersComponent implements OnInit {
   constructor(public connectService: ConnectService,
               private dataMarketplaceService: DataMarketplaceService,
               private dialogService: DialogService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private pipelineElementService: PipelineElementService) {
 
   }
 
@@ -131,6 +134,24 @@ export class ExistingAdaptersComponent implements OnInit {
       }
     });
   }
+
+  openHelpDialog(adapter: AdapterDescriptionUnion) {
+    const streamId = adapter.correspondingDataStreamElementId;
+
+    this.pipelineElementService.getDataStreamByElementId(streamId).subscribe(stream => {
+      if (stream) {
+        this.dialogService.open(HelpComponent, {
+          panelType: PanelType.STANDARD_PANEL,
+          title: stream.name,
+          width: '70vw',
+          data: {
+            'pipelineElement': stream
+          }
+        });
+      }
+    });
+  }
+
 
   createTemplate(adapter: AdapterDescriptionUnion): void {
     this.createTemplateEmitter.emit(adapter);

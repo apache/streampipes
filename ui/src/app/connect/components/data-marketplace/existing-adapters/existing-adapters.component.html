@@ -97,19 +97,25 @@
                         <!--                        <i class="material-icons">mode_edit</i>-->
                         <!--                    </button>-->
                         <!--                </span>-->
-                        <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
+                <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
+                    <button color="accent" mat-button mat-icon-button matTooltip="Show info"
+                            matTooltipPosition="above" (click)="openHelpDialog(adapter)"><i
+                            class="material-icons">help_outline</i>
+                    </button>
+                </span>
+                <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">
                     <button color="accent" mat-button mat-icon-button matTooltip="Create adapter template"
                             matTooltipPosition="above" (click)="createTemplate(adapter)"><i
                             class="material-icons">content_copy</i>
                     </button>
                 </span>
-                        <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
+                        <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
                     <button color="accent" mat-button mat-icon-button matTooltip="Manage permissions"
                             matTooltipPosition="above" (click)="showPermissionsDialog(adapter)"><i
                             class="material-icons">share</i>
                     </button>
                 </span>
-                        <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
+                        <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center">
                     <button color="accent" mat-button mat-icon-button matTooltip="Delete adapter"
                             data-cy="delete" matTooltipPosition="above" (click)="deleteAdapter(adapter)">
                         <i class="material-icons">delete</i>
