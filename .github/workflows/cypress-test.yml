@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: build-and-deploy-docker-dev
+name: run-cypress-tests
 
 on:
   schedule:
-    - cron:  '45 * * * *'
+    - cron:  '51 23 * * *'
 
 jobs:
   build-and-push-to-docker:
