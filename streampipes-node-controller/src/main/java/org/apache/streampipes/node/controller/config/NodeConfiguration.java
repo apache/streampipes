@@ -21,6 +21,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.streampipes.model.node.resources.fielddevice.FieldDeviceAccessResource;
 import org.apache.streampipes.node.controller.config.utils.ConfigUtils;
 import org.apache.streampipes.node.controller.management.offloading.strategies.OffloadingStrategyType;
+import org.apache.streampipes.node.controller.management.offloading.strategies.SelectionStrategyType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,7 @@ public final class NodeConfiguration {
     private static String consulHost;
     private static boolean autoOffloadingActivated;
     private static OffloadingStrategyType autoOffloadingStrategy;
+    private static SelectionStrategyType autoOffloadingSelectionStrategy;
     private static float autoOffloadingThresholdInPercent;
     private static int autoOffloadingMaxNumViolations;
     private static String nodeStoragePath;
@@ -311,6 +313,14 @@ public final class NodeConfiguration {
 
     public static void setAutoOffloadingStrategy(OffloadingStrategyType autoOffloadingStrategy) {
         NodeConfiguration.autoOffloadingStrategy = autoOffloadingStrategy;
+    }
+
+    public static SelectionStrategyType getAutoOffloadingSelectionStrategy() {
+        return autoOffloadingSelectionStrategy;
+    }
+
+    public static void setAutoOffloadingSelectionStrategy(SelectionStrategyType autoOffloadingSelectionStrategy) {
+        NodeConfiguration.autoOffloadingSelectionStrategy = autoOffloadingSelectionStrategy;
     }
 
     public static float getAutoOffloadingThresholdInPercent() {
@@ -563,6 +573,10 @@ public final class NodeConfiguration {
                 case AUTO_OFFLOADING_STRATEGY:
                     configMap.put(envKey, value);
                     setAutoOffloadingStrategy(OffloadingStrategyType.fromString(value));
+                    break;
+                case AUTO_OFFLOADING_SELECTION_STRATEGY:
+                    configMap.put(envKey, value);
+                    setAutoOffloadingSelectionStrategy(SelectionStrategyType.fromString(value));
                     break;
                 case AUTO_OFFLOADING_THRESHOLD_IN_PERCENT:
                     configMap.put(envKey, value);

@@ -25,7 +25,9 @@ import org.apache.streampipes.node.controller.management.offloading.strategies.p
 import org.apache.streampipes.node.controller.management.offloading.strategies.property.CPULoadResourceProperty;
 import org.apache.streampipes.node.controller.management.offloading.strategies.property.FreeDiskSpaceResourceProperty;
 import org.apache.streampipes.node.controller.management.offloading.strategies.property.FreeMemoryResourceProperty;
+import org.apache.streampipes.node.controller.management.offloading.strategies.selection.PrioritySelectionStrategy;
 import org.apache.streampipes.node.controller.management.offloading.strategies.selection.RandomSelectionStrategy;
+import org.apache.streampipes.node.controller.management.offloading.strategies.selection.SelectionStrategy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +35,7 @@ import java.util.List;
 
 public class OffloadingStrategyFactory {
 
-    private static final int HISTORY_QUEUE_SIZE_FACTOR = 5;
+    private static final int HISTORY_QUEUE_SIZE_FACTOR = 1;
 
     public List<OffloadingStrategy<?>> select(){
 
@@ -51,6 +53,17 @@ public class OffloadingStrategyFactory {
         }
     }
 
+    private SelectionStrategy getAutoOffloadingSelectionStrategy() {
+        switch (NodeConfiguration.getAutoOffloadingSelectionStrategy()) {
+            case RANDOM:
+                return new RandomSelectionStrategy();
+            case PRIO:
+                return new PrioritySelectionStrategy();
+            default:
+                return new RandomSelectionStrategy();
+        }
+    }
+
     private OffloadingStrategy<Float> getDebugOffloadingPolicy() {
         return new OffloadingStrategy<Float>(
                 new ThresholdViolationOffloadingPolicy<>(
@@ -59,7 +72,7 @@ public class OffloadingStrategyFactory {
                         0.5f,
                         1),
                 new CPULoadResourceProperty(),
-                new RandomSelectionStrategy());
+                getAutoOffloadingSelectionStrategy());
     }
 
     private List<OffloadingStrategy<?>> getDefaultStrategy(){
@@ -78,7 +91,7 @@ public class OffloadingStrategyFactory {
                         NodeConfiguration.getAutoOffloadingThresholdInPercent(),
                         NodeConfiguration.getAutoOffloadingMaxNumViolations()),
                 new CPULoadResourceProperty(),
-                new RandomSelectionStrategy());
+                getAutoOffloadingSelectionStrategy());
     }
 
     private OffloadingStrategy<Long> getDefaultMemoryOffloadingPolicy(){
@@ -92,7 +105,7 @@ public class OffloadingStrategyFactory {
                         threshold,
                         NodeConfiguration.getAutoOffloadingMaxNumViolations()),
                 new FreeMemoryResourceProperty(),
-                new RandomSelectionStrategy());
+                getAutoOffloadingSelectionStrategy());
     }
 
     private OffloadingStrategy<Long> getDefaultDiskSpaceOffloadingPolicy(){
@@ -106,6 +119,6 @@ public class OffloadingStrategyFactory {
                         threshold,
                         NodeConfiguration.getAutoOffloadingMaxNumViolations()),
                 new FreeDiskSpaceResourceProperty(),
-                new RandomSelectionStrategy());
+                getAutoOffloadingSelectionStrategy());
     }
 }

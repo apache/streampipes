@@ -15,29 +15,24 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.performance;
+package org.apache.streampipes.node.controller.management.offloading.strategies;
 
-import org.apache.streampipes.performance.performancetest.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public enum SelectionStrategyType {
+    RANDOM("random"),
+    PRIO("prio");
 
+    String name;
 
-public class EdgeExtensionsGenericPerformanceTest {
-
-    private static final Logger LOG = LoggerFactory.getLogger(EdgeExtensionsGenericPerformanceTest.class.getCanonicalName());
-
-    public static void main(String ... args){
-
-        int numberOfRuns = Integer.parseInt(System.getenv("TEST_RUNS"));
-        Test test = TestFactory.getFromEnv();
-
-        for(int i = 1; i <= numberOfRuns; i++){
-            if (i==numberOfRuns)
-                test.setStopPipeline(true);
-
-            LOG.info("Executing run: {}/{}", i, numberOfRuns);
-            test.execute(i);
-        }
+    SelectionStrategyType(String name) {
+        this.name = name;
     }
 
+    public static SelectionStrategyType fromString(String name) {
+        for (SelectionStrategyType o : SelectionStrategyType.values()) {
+            if (o.name.equalsIgnoreCase(name.toLowerCase())) {
+                return o;
+            }
+        }
+        return null;
+    }
 }

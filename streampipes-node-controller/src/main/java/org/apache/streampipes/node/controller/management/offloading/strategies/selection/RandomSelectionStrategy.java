@@ -26,13 +26,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class RandomSelectionStrategy implements SelectionStrategy{
+public class RandomSelectionStrategy implements SelectionStrategy {
 
     @Override
-    public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities) {
+    public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistInvocables) {
         //Sinks cannot be migrated atm
-        List<InvocableStreamPipesEntity> instances = RunningInvocableInstances.INSTANCE.getAll().stream().
-                filter(e -> e instanceof DataProcessorInvocation).collect(Collectors.toList());
+        List<InvocableStreamPipesEntity> instances = RunningInvocableInstances.INSTANCE.getAll().stream()
+                .filter(e -> e instanceof DataProcessorInvocation)
+                .collect(Collectors.toList());
         if(instances.size() == 0)
             return null;
         return instances.get(new Random().nextInt(instances.size()));

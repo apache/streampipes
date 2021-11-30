@@ -25,7 +25,6 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +40,16 @@ public class GenericTest implements Test{
     private final EvaluationLogger evalLogger = EvaluationLogger.getInstance();
     private float reconfigurableValue = 1;
 
-    public GenericTest(String pipelineName, boolean stopPipeline, boolean shouldBeMigrated, boolean shouldBeReconfigured,
-                       long timeToSleepBeforeManipulation, long timeToSleepAfterManipulation){
+    private final String pipelineName;
+
+    public GenericTest(String pipelineName,
+                       boolean stopPipeline,
+                       boolean shouldBeMigrated,
+                       boolean shouldBeReconfigured,
+                       long timeToSleepBeforeManipulation,
+                       long timeToSleepAfterManipulation){
+
+        this.pipelineName = pipelineName;
         this.stopPipeline = stopPipeline;
         this.shouldBeMigrated = shouldBeMigrated;
         this.shouldBeReconfigured = shouldBeReconfigured;
@@ -69,7 +76,13 @@ public class GenericTest implements Test{
     public void execute(int nrRuns) {
 
         String testType = System.getenv("TEST_TYPE");
-        String offloadingThreshold = System.getenv("OFFLOADING_THRESHOLD");
+
+        String[] cpuLoadTargets = System.getenv("OFFLOADING_CPU_LOAD_STEPS") != null ? System.getenv(
+                "OFFLOADING_CPU_LOAD_STEPS").split(";") : null;
+        String cpuEndLoad = System.getenv("OFFLOADING_CPU_LOAD_END") != null ?
+                System.getenv("OFFLOADING_CPU_LOAD_END") : "0.2";
+
+        // 0.5;0.9
 
         Object[] line = null;
 
@@ -115,32 +128,56 @@ public class GenericTest implements Test{
         }
         //Reconfiguration
         if (shouldBeReconfigured) {
-            if (testType.equals("Reconfiguration"))
-                pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
-                    .filter(FreeTextStaticProperty.class::isInstance)
-                    .map(FreeTextStaticProperty.class::cast)
-                    .filter(FreeTextStaticProperty::isReconfigurable)
-                    .forEach(sp -> {
-                        if (sp.getInternalName().equals("i-am-reconfigurable")) {
-                            sp.setValue(Float.toString(this.reconfigurableValue++));
-                        }
-                    }));
-            else if (testType.equals("Offloading"))
+            if (testType.equals("Reconfiguration")) {
                 pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
                         .filter(FreeTextStaticProperty.class::isInstance)
                         .map(FreeTextStaticProperty.class::cast)
                         .filter(FreeTextStaticProperty::isReconfigurable)
                         .forEach(sp -> {
-                            if (sp.getInternalName().equals("load")) {
-                                sp.setValue(offloadingThreshold != null ? offloadingThreshold : "0.9");
+                            if (sp.getInternalName().equals("i-am-reconfigurable")) {
+                                sp.setValue(Float.toString(this.reconfigurableValue++));
                             }
                         }));
-            line = new Object[]{"Reconfiguration triggered", nrRuns, (this.reconfigurableValue - 1), true};
-            System.out.println("Reconfiguration triggered with value " + (this.reconfigurableValue-1));
-            PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
-            System.out.println(message.getTitle());
-            if (!message.isSuccess()) {
-                line[line.length -1] = false;
+
+                line = reconfigurePipeline(pipeline, nrRuns);
+            }
+            else if (testType.equals("Offloading")) {
+
+                // when having load profiles
+                if (cpuLoadTargets != null && cpuLoadTargets.length > 1) {
+                    for (String load : cpuLoadTargets) {
+                        System.out.printf("Set CPU load to: %f percent", Float.parseFloat(load) * 100);
+                        pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
+                                .filter(FreeTextStaticProperty.class::isInstance)
+                                .map(FreeTextStaticProperty.class::cast)
+                                .filter(FreeTextStaticProperty::isReconfigurable)
+                                .forEach(sp -> {
+                                    if (sp.getInternalName().equals("load")) {
+                                        sp.setValue(load);
+                                    }
+                                }));
+
+                        line = reconfigurePipeline(pipeline, nrRuns);
+
+                        try {
+                            Thread.sleep(timeToSleepBeforeManipulation);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else {
+                    pipeline.getSepas().forEach(p -> p.getStaticProperties().stream()
+                            .filter(FreeTextStaticProperty.class::isInstance)
+                            .map(FreeTextStaticProperty.class::cast)
+                            .filter(FreeTextStaticProperty::isReconfigurable)
+                            .forEach(sp -> {
+                                if (sp.getInternalName().equals("load")) {
+                                    sp.setValue("0.9");
+                                }
+                            }));
+
+                    line = reconfigurePipeline(pipeline, nrRuns);
+                }
             }
         }
 
@@ -149,7 +186,33 @@ public class GenericTest implements Test{
                 long sleepTime = timeToSleepAfterManipulation + (long)(Math.random()*10000);
                 Thread.sleep(sleepTime);
             }else {
+
                 Thread.sleep(timeToSleepAfterManipulation);
+
+                if (shouldBeReconfigured) {
+                    // Reset to baseload
+                    if (testType.equals("Offloading")) {
+                        System.out.printf("Set CPU load to: %f percent", Float.parseFloat(cpuEndLoad) * 100);
+
+                        List<Pipeline> pipelines = client.pipelines().all();
+                        Pipeline pipelineLatest = pipelines.stream()
+                                .filter(p -> p.getName().equals(pipelineName))
+                                .findFirst()
+                                .orElseThrow(() -> new RuntimeException("Pipeline not found"));
+
+                        pipelineLatest.getSepas().forEach(p -> p.getStaticProperties().stream()
+                                .filter(FreeTextStaticProperty.class::isInstance)
+                                .map(FreeTextStaticProperty.class::cast)
+                                .filter(FreeTextStaticProperty::isReconfigurable)
+                                .forEach(sp -> {
+                                    if (sp.getInternalName().equals("load")) {
+                                        sp.setValue(cpuEndLoad);
+                                    }
+                                }));
+                        line = reconfigurePipeline(pipelineLatest, nrRuns);
+                        Thread.sleep(timeToSleepBeforeManipulation);
+                    }
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -174,6 +237,17 @@ public class GenericTest implements Test{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private Object[] reconfigurePipeline(Pipeline pipeline, int nrRuns) {
+        Object[] line = new Object[]{"Reconfiguration triggered", nrRuns, (this.reconfigurableValue - 1), true};
+        System.out.println("Reconfiguration triggered with value " + (this.reconfigurableValue-1));
+        PipelineOperationStatus message = client.pipelines().reconfigure(pipeline);
+        System.out.println(message.getTitle());
+        if (!message.isSuccess()) {
+            line[line.length -1] = false;
+        }
+        return line;
     }
 
     private void executeReconfiguration(){

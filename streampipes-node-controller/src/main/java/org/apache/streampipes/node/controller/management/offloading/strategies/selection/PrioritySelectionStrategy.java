@@ -19,12 +19,9 @@
 package org.apache.streampipes.node.controller.management.offloading.strategies.selection;
 
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.node.NodeInfoDescription;
-import org.apache.streampipes.node.controller.config.NodeConfiguration;
-import org.apache.streampipes.node.controller.management.offloading.OffloadingPolicyManager;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,53 +29,29 @@ import java.util.stream.Collectors;
 public class PrioritySelectionStrategy implements SelectionStrategy{
 
     @Override
-    public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities) {
-        List<InvocableStreamPipesEntity> runningPipelineElements = RunningInvocableInstances.INSTANCE.getAll();
-
-        //List all other nodes that are online
-        // TODO: this involves request to central backend (deactivated; assess if provides meaningful benefit)
-        /*List<NodeInfoDescription> onlineNodes = getNodeInfos().stream().filter(desc ->
-                !desc.getNodeControllerId().equals(NodeConfiguration.getNodeControllerId()))
-                .collect(Collectors.toList());*/
-
-        List<InvocableStreamPipesEntity> candidatesForOffloading = runningPipelineElements.stream()
-                        .filter(entity -> isNotBlacklisted(entity, blacklistedEntities))
-                        .filter(InvocableStreamPipesEntity::isPreemption)
-                        //.filter(entity -> verifyIfSupportedOnOtherNodes(entity, onlineNodes))
-                        .collect(Collectors.toList());
-
-        if (candidatesForOffloading.isEmpty()) {
-            return null;
-        } else {
-            return selectPipelineElementWithLowestPriorityScore(candidatesForOffloading);
-        }
-    }
-
-    private List<NodeInfoDescription> getNodeInfos(){
-        return OffloadingPolicyManager.getInstance().getOnlineNodes();
-    }
-
-    private InvocableStreamPipesEntity selectPipelineElementWithLowestPriorityScore(List<InvocableStreamPipesEntity> entities){
-        // sort pipeline element priorityScores ascending
-        List<InvocableStreamPipesEntity> sortedPipelineElements = entities.stream()
-                .sorted(Comparator.comparingInt(InvocableStreamPipesEntity::getPriorityScore))
+    public InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistInvocables) {
+        // Sinks cannot be migrated
+        List<InvocableStreamPipesEntity> candidateInvocables = RunningInvocableInstances.INSTANCE.getAll().stream()
+                .filter(e -> e instanceof DataProcessorInvocation)
+                .filter(entity -> isNotBlacklisted(entity, blacklistInvocables))
+                .filter(InvocableStreamPipesEntity::isPreemption)
                 .collect(Collectors.toList());
-
-        // return first element with lowest score
-        return sortedPipelineElements.get(0);
+        if(candidateInvocables.size() == 0)
+            return null;
+        return selectWithLowestPrioScore(candidateInvocables);
     }
 
-    private boolean verifyIfSupportedOnOtherNodes(InvocableStreamPipesEntity entity, List<NodeInfoDescription> nodeInfos){
-        List<NodeInfoDescription> candidateNodes = new ArrayList<>();
-        for(NodeInfoDescription nodeInfo : nodeInfos){
-            if (nodeInfo.getSupportedElements().contains(entity.getAppId()))
-                candidateNodes.add(nodeInfo);
-        }
-        return !candidateNodes.isEmpty();
+    private InvocableStreamPipesEntity selectWithLowestPrioScore(List<InvocableStreamPipesEntity> candidateInvocables){
+        // sort pipeline element priorityScores ascending and return element with lowest score
+        return candidateInvocables.stream()
+                .sorted(Comparator.comparingInt(InvocableStreamPipesEntity::getPriorityScore))
+                .collect(Collectors.toList()).get(0);
     }
 
-    private boolean isNotBlacklisted(InvocableStreamPipesEntity entity, List<InvocableStreamPipesEntity> blacklist){
-        return blacklist.stream().noneMatch(blacklistedEntity ->
-                blacklistedEntity.getDeploymentRunningInstanceId().equals(entity.getDeploymentRunningInstanceId()));
+    private boolean isNotBlacklisted(InvocableStreamPipesEntity entity,
+                                     List<InvocableStreamPipesEntity> blacklistInvocables){
+        return blacklistInvocables.stream()
+                .noneMatch(blacklistEntity -> blacklistEntity
+                        .getDeploymentRunningInstanceId().equals(entity.getDeploymentRunningInstanceId()));
     }
 }

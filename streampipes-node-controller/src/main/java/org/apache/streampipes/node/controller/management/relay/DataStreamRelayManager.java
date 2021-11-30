@@ -18,6 +18,7 @@
 package org.apache.streampipes.node.controller.management.relay;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelay;
@@ -35,6 +36,9 @@ import java.util.stream.Collectors;
 public class DataStreamRelayManager {
 
     private static DataStreamRelayManager instance = null;
+
+    // TODO: remove after tests
+    private static final EvaluationLogger logger = EvaluationLogger.getInstance();
 
     private DataStreamRelayManager() {}
 
@@ -59,6 +63,7 @@ public class DataStreamRelayManager {
 
         Map<String, EventRelay> eventRelayMap = new HashMap<>();
 
+        logger.logMQTT("Migration", "node controller start relay", "");
         // start data stream relay
         // 1:1 mapping -> remote forward
         // 1:n mapping -> remote fan-out
@@ -76,6 +81,7 @@ public class DataStreamRelayManager {
     }
 
     public Response stop(String id) {
+        logger.logMQTT("Migration", "node controller stop relay", "");
         Map<String, EventRelay> relays = RunningRelayInstances.INSTANCE.get(id);
         if (relays != null) {
             relays.values().forEach(EventRelay::stop);

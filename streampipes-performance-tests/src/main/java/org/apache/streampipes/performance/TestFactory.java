@@ -18,7 +18,9 @@
 package org.apache.streampipes.performance;
 
 import org.apache.streampipes.logging.evaluation.EvaluationLogger;
+import org.apache.streampipes.performance.performancetest.CountBasedOffloadingTest;
 import org.apache.streampipes.performance.performancetest.GenericTest;
+import org.apache.streampipes.performance.performancetest.PrioOffloadingTest;
 import org.apache.streampipes.performance.performancetest.Test;
 
 public class TestFactory {
@@ -45,6 +47,16 @@ public class TestFactory {
                 Object[] header_offloading = {"timestampInMillis", "deviceId", "event", "policy", "selectedProcessor"};
                 logger.logHeader("Offloading", header_offloading);
                 return getOffloadingTest();
+            case "OffloadingPrio":
+                Object[] header_offloading_multi = {"timestampInMillis", "deviceId", "event", "policy",
+                        "selectedProcessor"};
+                logger.logHeader("Offloading", header_offloading_multi);
+                return getOffloadingPrioSelectionTest();
+            case "OffloadingCountBased":
+                Object[] header_offloading_count_based = {"timestampInMillis", "deviceId", "event", "policy",
+                        "selectedProcessor"};
+                logger.logHeader("Offloading", header_offloading_count_based);
+                return getOffloadingCountBasedTest();
             default:
                 throw new RuntimeException("No test configuration found.");
         }
@@ -73,12 +85,33 @@ public class TestFactory {
 
     public static Test getOffloadingTest(){
         return new GenericTest(getPipelineName(), false, false,
-                true, 20000, 1500000);
+                true, 300000, 5400000);
+    }
+
+    public static Test getOffloadingPrioSelectionTest() {
+        return new PrioOffloadingTest(getLowPrioPipelineName(), getHighPrioPipelineName(),
+                false,  300000);
+    }
+
+    private static Test getOffloadingCountBasedTest() {
+        return new CountBasedOffloadingTest(getPipelineName(), false, 300000);
     }
 
     //Helpers
     private static String getPipelineName(){
         String pipelineName = System.getenv("TEST_PIPELINE_NAME");
+        if (pipelineName==null) throw new RuntimeException("No Pipeline Name provided.");
+        return pipelineName;
+    }
+
+    private static String getLowPrioPipelineName() {
+        String pipelineName = System.getenv("TEST_LOW_PRIO_PIPELINE_NAME");
+        if (pipelineName==null) throw new RuntimeException("No Pipeline Name provided.");
+        return pipelineName;
+    }
+
+    private static String getHighPrioPipelineName() {
+        String pipelineName = System.getenv("TEST_HIGH_PRIO_PIPELINE_NAME");
         if (pipelineName==null) throw new RuntimeException("No Pipeline Name provided.");
         return pipelineName;
     }

@@ -24,7 +24,6 @@ import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.node.NodeInfoDescription;
 import org.apache.streampipes.model.node.monitor.ResourceMetrics;
-import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.node.controller.config.NodeConfiguration;
 import org.apache.streampipes.node.controller.management.offloading.strategies.OffloadingStrategy;
 import org.apache.streampipes.node.controller.management.pe.PipelineElementManager;
@@ -44,7 +43,7 @@ public class OffloadingPolicyManager {
     private static final String NODE_MANAGEMENT_ONLINE_ENDPOINT = BACKEND_BASE_ROUTE + "/nodes/online";
 
     private final List<OffloadingStrategy<?>> offloadingStrategies = new ArrayList<>();
-    private final List<InvocableStreamPipesEntity> unsuccessfullyTriedEntities = new ArrayList<>();
+    private final List<InvocableStreamPipesEntity> blacklistInvocables = new ArrayList<>();
     private static OffloadingPolicyManager instance;
     private static final Logger LOG = LoggerFactory.getLogger(OffloadingPolicyManager.class.getCanonicalName());
     //private static EvaluationLogger logger = EvaluationLogger.getInstance();
@@ -74,26 +73,32 @@ public class OffloadingPolicyManager {
             triggerOffloading(violatedPolicies.get(0));
         }
         //Blacklist of entities is cleared when no policies were violated.
-        else unsuccessfullyTriedEntities.clear();
+        else blacklistInvocables.clear();
     }
 
     private void triggerOffloading(OffloadingStrategy strategy){
-        InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select(this.unsuccessfullyTriedEntities);
+        InvocableStreamPipesEntity offloadEntity = strategy.getSelectionStrategy().select(this.blacklistInvocables);
         EvaluationLogger.getInstance().logMQTT("Offloading", "entity to offload selected");
         if(offloadEntity != null){
             Response resp = PipelineElementManager.getInstance().offload(offloadEntity);
 
             String appId = offloadEntity.getAppId();
+            String runningInstanceId = offloadEntity.getDeploymentRunningInstanceId();
             String pipelineName = offloadEntity.getCorrespondingPipeline();
+            int prioScore = offloadEntity.getPriorityScore();
 
-            EvaluationLogger.getInstance().logMQTT("Offloading", "offloading done", strategy.getOffloadingPolicy().getClass().getSimpleName(), appId);
+            EvaluationLogger.getInstance().logMQTT(
+                    "Offloading",
+                    "offloading done",
+                    strategy.getOffloadingPolicy().getClass().getSimpleName(),
+                    appId + "_prio" + prioScore + "_" + pipelineName);
 
             if(resp.isSuccess()){
                 LOG.info("Successfully offloaded: {} of pipeline: {}", appId, pipelineName);
                 strategy.getOffloadingPolicy().reset();
             } else{
                 LOG.warn("Failed to offload: {} of pipeline: {}", appId, pipelineName);
-                unsuccessfullyTriedEntities.add(offloadEntity);
+                blacklistInvocables.add(offloadEntity);
             }
         } else LOG.info("No pipeline element found to offload");
     }

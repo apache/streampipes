@@ -22,7 +22,7 @@ RUN apt -y update; \
 FROM $BASE_IMAGE
 MAINTAINER dev@streampipes.apache.org
 
-EXPOSE 7077
+EXPOSE 7077 9010
 ENV CONSUL_LOCATION consul
 
 COPY --from=build-dev /usr/bin/qemu-aarch64-static /usr/bin
@@ -34,4 +34,13 @@ RUN set -ex; \
 
 COPY target/streampipes-node-controller.jar  /streampipes-node-controller.jar
 
-ENTRYPOINT ["java", "-jar", "/streampipes-node-controller.jar"]
+ENTRYPOINT ["java", \
+            "-Djava.rmi.server.hostname=0.0.0.0", \
+            "-Dcom.sun.management.jmxremote", \
+            "-Dcom.sun.management.jmxremote.port=9010", \
+            "-Dcom.sun.management.jmxremote.rmi.port=9010", \
+            "-Dcom.sun.management.jmxremote.local.only=false", \
+            "-Dcom.sun.management.jmxremote.ssl=false", \
+            "-Dcom.sun.management.jmxremote.authenticate=false", \
+            "-jar", \
+            "/streampipes-node-controller.jar"]

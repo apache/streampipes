@@ -28,7 +28,7 @@ docker_build_amd(){
 
 docker_build_arm(){
   echo "Docker build for arm ..."
-  docker buildx build \
+  docker buildx build --no-cache --pull \
   --platform linux/arm/v7 \
   -t $repo/$1:$version-armv7 \
   -f $2/arm.Dockerfile $2 --load
@@ -36,7 +36,7 @@ docker_build_arm(){
 
 docker_build_aarch64(){
   echo "Docker build for aarch64 ..."
-  docker buildx build \
+  docker buildx build --no-cache --pull \
   --platform linux/arm64 \
   -t $repo/$1:$version-aarch64 \
   -f $2/aarch64.Dockerfile $2 --load

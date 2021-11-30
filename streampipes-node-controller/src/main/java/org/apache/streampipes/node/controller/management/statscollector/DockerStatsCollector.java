@@ -54,7 +54,7 @@ public class DockerStatsCollector {
     public void run() {
         LOG.debug("Create Docker stats scheduler");
         ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(collect, 0, 1, TimeUnit.SECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(collect, 0, DOCKER_STATS_COLLECT_FREQ_SECS, TimeUnit.SECONDS);
 
         Object[] header = new Object[]{
                 "timestamp",

@@ -29,12 +29,16 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
             LoggerFactory.getLogger(ThresholdViolationOffloadingPolicy.class.getCanonicalName());
 
     private Queue<T> history;
+    private final int length;
     private final T threshold;
     private final Comparator comparator;
     private final int numberOfThresholdViolations;
 
+    private int numPreviousViolations = 0;
+
     public ThresholdViolationOffloadingPolicy(int length, Comparator comparator, T threshold,
                                               int numberOfThresholdViolations){
+        this.length = length;
         this.history = new ArrayBlockingQueue<>(length);
         this.comparator = comparator;
         this.threshold = threshold;
@@ -54,16 +58,16 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
         if(!this.history.offer(value)) {
             this.history.poll();
             this.history.offer(value);
-            //Only for logging; can be removed later
-            if(value.compareTo(this.threshold) > 0){
-                int numViolations = 0;
-                for(T val : this.history){
-                    if(val.compareTo(this.threshold) > 0){
-                        numViolations++;
-                    }
-                }
-                EvaluationLogger.getInstance().logMQTT("Offloading", "policy violation #" + numViolations);
-            }
+            //TODO: Only for logging; can be removed later
+//            if(value.compareTo(this.threshold) > 0){
+//                int numViolations = 0;
+//                for(T val : this.history){
+//                    if(val.compareTo(this.threshold) > 0){
+//                        numViolations++;
+//                    }
+//                }
+//                EvaluationLogger.getInstance().logMQTT("Offloading", "policy violation #" + numViolations);
+//            }
         }
     }
 
@@ -86,6 +90,12 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
                 }
                 break;
         }
+
+        if (numViolations > numPreviousViolations) {
+            EvaluationLogger.getInstance().logMQTT("Offloading", "policy violation #" + numViolations);
+            numPreviousViolations = numViolations;
+        }
+
         if(numViolations >= this.numberOfThresholdViolations){
             LOG.info("Threshold violation detected");
             return true;
@@ -95,7 +105,10 @@ public class ThresholdViolationOffloadingPolicy<T extends Comparable<T>> impleme
 
     @Override
     public void reset() {
+        LOG.info("Reset history queue to length: " + this.history.size());
         this.history = new ArrayBlockingQueue<>(this.history.size());
+        LOG.info("Reset number previous violation counter from: " + numPreviousViolations + "-> to: " + 0);
+        this.numPreviousViolations = 0;
     }
 
     //TODO: Remove -- Only for debugging purposes

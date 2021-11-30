@@ -32,6 +32,8 @@ import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.node.controller.management.IHandler;
 import org.apache.streampipes.node.controller.management.pe.storage.RunningInvocableInstances;
 import org.apache.streampipes.node.controller.utils.HttpUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 public class PipelineElementReconfigurationHandler implements IHandler<Response> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PipelineElementReconfigurationHandler.class.getCanonicalName());
 
     private static final String DOT = ".";
     private static final String RECONFIGURATION_TOPIC = "org.apache.streampipes.control.event.reconfigure";
@@ -63,6 +67,8 @@ public class PipelineElementReconfigurationHandler implements IHandler<Response>
         EventProducer pub = getReconfigurationEventProducer();
 
         byte [] reconfigurationEvent = reconfigurationToByteArray();
+
+        LOG.info("Publish reconfiguration event to pipeline element {}", graph.getDeploymentRunningInstanceId());
         pub.publish(reconfigurationEvent);
         pub.disconnect();
 

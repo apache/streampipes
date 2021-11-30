@@ -23,5 +23,5 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import java.util.List;
 
 public interface SelectionStrategy {
-    InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistedEntities);
+    InvocableStreamPipesEntity select(List<InvocableStreamPipesEntity> blacklistInvocables);
 }
