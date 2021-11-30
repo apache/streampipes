@@ -22,35 +22,40 @@ import { ThirdPartyIntegrationUtils } from '../../support/utils/ThirdPartyIntegr
 import { PipelineElementInput } from '../../support/model/PipelineElementInput';
 import { ParameterUtils } from '../../support/utils/ParameterUtils';
 
-describe('Test MySQL Integration', () => {
+describe('Test InfluxDB Integration', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
   });
 
   it('Perform Test', () => {
-    const dbName = 'cypressDatabase';
-    const host: string = ParameterUtils.get('localhost', 'mysql');
+    const dbName = 'cypresstestdb';
+    const host: string = ParameterUtils.get('localhost', 'influxdb');
 
-    const sink: PipelineElementInput = PipelineElementBuilder.create('mysql_database')
-      .addInput('input', 'host', host)
-      .addInput('input', 'user', 'root')
-      .addInput('input', 'password', '7uc4rAymrPhxv6a5')
-      .addInput('input', 'db', 'sp')
-      .addInput('input', 'table', dbName)
+    const sink: PipelineElementInput = PipelineElementBuilder.create('influxdb')
+      .addInput('input', 'db_host', 'http://' + host)
+      .addInput('input', 'db_name', 'sp')
+      .addInput('input', 'db_measurement', dbName)
+      .addInput('input', 'db_user', 'sp')
+      .addInput('input', 'db_password', 'default')
+      .addInput('input', 'batch_interval_actions', '2')
+      .addInput('input', 'max_flush_duration', '{backspace}{backspace}{backspace}{backspace}500')
+      .addInput('drop-down', 'timestamp_mapping', 'timestamp')
       .build();
 
     const adapter = SpecificAdapterBuilder
-      .create('MySql_Stream_Adapter')
-      .setName('MySQL Adapter')
-      .setTimestampProperty('timestamp')
-      .addInput('input', 'mysqlHost', host)
-      .addInput('input', 'mysqlUser', 'root')
-      .addInput('input', 'mysqlPassword', '7uc4rAymrPhxv6a5')
-      .addInput('input', 'mysqlDatabase', 'sp')
-      .addInput('input', 'mysqlTable', dbName)
+      .create('InfluxDB_Stream_Adapter')
+      .setName('InfluxDB Adapter')
+      .addInput('input', 'influxDbHost', 'http://' + host)
+      .addInput('input', 'influxDbPort', '8086')
+      .addInput('input', 'influxDbDatabase', 'sp')
+      .addInput('input', 'influxDbMeasurement', dbName)
+      .addInput('input', 'influxDbUsername', 'sp')
+      .addInput('input', 'influxDbPassword', 'default')
+      .addInput('input', 'pollingInterval', '200')
       .build();
 
     ThirdPartyIntegrationUtils.runTest(sink, adapter);
+
   });
 
 });
