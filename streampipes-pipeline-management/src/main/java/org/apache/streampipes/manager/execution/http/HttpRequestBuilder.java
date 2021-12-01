@@ -22,8 +22,12 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.client.user.Permission;
+import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
 import org.slf4j.Logger;
@@ -37,12 +41,16 @@ public class HttpRequestBuilder {
 
   private final NamedStreamPipesEntity payload;
   private final String endpointUrl;
+  private String pipelineId;
 
   private final static Logger LOG = LoggerFactory.getLogger(HttpRequestBuilder.class);
 
-  public HttpRequestBuilder(NamedStreamPipesEntity payload, String endpointUrl) {
+  public HttpRequestBuilder(NamedStreamPipesEntity payload,
+                            String endpointUrl,
+                            String pipelineId) {
     this.payload = payload;
     this.endpointUrl = endpointUrl;
+    this.pipelineId = pipelineId;
   }
 
   public PipelineElementStatus invoke() {
@@ -57,6 +65,7 @@ public class HttpRequestBuilder {
                       .execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
+      e.printStackTrace();
       LOG.error(e.getMessage());
       return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
@@ -89,7 +98,23 @@ public class HttpRequestBuilder {
   }
 
   private String getAuthToken() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    return "Bearer " + new JwtTokenProvider().createToken(auth);
+    if (SecurityContextHolder.getContext().getAuthentication() != null) {
+      Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+      return "Bearer " + new JwtTokenProvider().createToken(auth);
+    } else {
+      if (this.pipelineId != null) {
+        String ownerSid = new SpResourceManager()
+                .managePermissions()
+                .findForObjectId(this.pipelineId)
+                .stream()
+                .findFirst()
+                .map(Permission::getOwnerSid).orElseThrow(() -> new IllegalArgumentException("Could not find owner for pipeline"));
+
+        Principal correspondingUser = new SpResourceManager().manageUsers().getPrincipalById(ownerSid);
+        return "Bearer " + new JwtTokenProvider().createToken(correspondingUser);
+      } else {
+        throw new IllegalArgumentException("No authenticated user found to associate with invocation request");
+      }
+    }
   }
 }

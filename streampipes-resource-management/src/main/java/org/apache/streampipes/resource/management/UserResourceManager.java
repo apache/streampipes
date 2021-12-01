@@ -53,6 +53,10 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
     return StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
   }
 
+  public Principal getPrincipalById(String principalId) {
+    return db.getUserById(principalId);
+  }
+
   public boolean registerUser(RegistrationData data) throws UsernameAlreadyTakenException {
 
     try {
