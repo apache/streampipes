@@ -63,7 +63,7 @@ export class PipelineElementStatisticsComponent implements OnInit {
   consumedMessagesFirstStreamBandColor: string;
   consumedMessagesSecondStreamBandColor: string;
 
-  notAvailable: string = "n/a";
+  notAvailable: string = "-";
 
   historicFirstConsumedInputValues: HistoricalMonitoringData[] = [];
   historicSecondConsumedInputValues: HistoricalMonitoringData[] = [];
@@ -73,8 +73,14 @@ export class PipelineElementStatisticsComponent implements OnInit {
   consumedMessagesSecondStreamLastValue: number = -1;
   producedMessageOutputLastValue: number = -1;
 
-  ngOnInit(): void {
+  consumedMessagesFirstStreamAvailable = false;
+  consumedMessagesSecondStreamAvailable = false;
+  producedMessagesAvailable = false;
 
+  ngOnInit(): void {
+    this.producedMessagesAvailable = this.pipelineElementMonitoringInfo.producedMessageInfoExists;
+    this.consumedMessagesFirstStreamAvailable = this.pipelineElementMonitoringInfo.consumedMessageInfoExists;
+    this.consumedMessagesSecondStreamAvailable = this.pipelineElementMonitoringInfo.consumedMessageInfoExists && this.pipelineElementMonitoringInfo.consumedMessagesInfos.length > 1;
   }
 
   updateMonitoringInfo() {

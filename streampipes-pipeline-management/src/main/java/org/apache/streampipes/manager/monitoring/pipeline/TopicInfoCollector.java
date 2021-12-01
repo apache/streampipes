@@ -26,6 +26,7 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.monitoring.ConsumedMessagesInfo;
 import org.apache.streampipes.model.monitoring.PipelineElementMonitoringInfo;
@@ -113,18 +114,7 @@ public class TopicInfoCollector {
 
     info.setProducedMessagesInfo(outputTopicInfo);
     info.setConsumedMessagesInfos(inputTopicInfo);
-    printStatistics(info);
     return info;
-  }
-
-  private void printStatistics(PipelineElementMonitoringInfo info) {
-    System.out.println("Pipeline Element: " + info.getPipelineElementName());
-    info.getConsumedMessagesInfos().forEach(input -> {
-      System.out.println("Consumed messages since pipeline start: " + input.getConsumedMessagesSincePipelineStart());
-      System.out.println("Total messages since pipeline start: " + (input.getTotalMessagesSincePipelineStart()));
-      System.out.println("Lag: " + input.getLag());
-    });
-    //System.out.println("Produced messages: " + (info.getOutputTopicInfo().getCurrentOffset() - info.getOutputTopicInfo().getOffsetAtPipelineStart()));
   }
 
   private PipelineElementMonitoringInfo makeSinkMonitoringInfo(DataSinkInvocation sink) {
@@ -141,7 +131,7 @@ public class TopicInfoCollector {
       ConsumedMessagesInfo info = new ConsumedMessagesInfo(topic, groupId);
       long consumedMessagesSincePipelineStart = (getCurrentConsumerGroupOffset(groupId) - topicOffsetAtPipelineStart.get(topic));
       long totalMessagesSincePipelineStart = (latestTopicOffsets.get(topic) - topicOffsetAtPipelineStart.get(topic));
-      long lag = totalMessagesSincePipelineStart - consumedMessagesSincePipelineStart;
+      long lag = Math.max(0, totalMessagesSincePipelineStart - consumedMessagesSincePipelineStart);
 
       info.setTotalMessagesSincePipelineStart(totalMessagesSincePipelineStart);
       info.setConsumedMessagesSincePipelineStart(consumedMessagesSincePipelineStart);
@@ -240,18 +230,4 @@ public class TopicInfoCollector {
             .collect(Collectors.toList());
   }
 
-  public static void main(String[] args) {
-    List<Pipeline> pipelines = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
-    Pipeline testPipeline = pipelines.get(0);
-
-    for(int i = 0; i < 50; i++) {
-      List<PipelineElementMonitoringInfo> monitoringInfo = new TopicInfoCollector(testPipeline).makeMonitoringInfo();
-      System.out.println(monitoringInfo.size());
-      try {
-        Thread.sleep(5000);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-  }
 }

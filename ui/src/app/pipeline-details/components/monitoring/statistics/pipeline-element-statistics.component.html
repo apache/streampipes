@@ -20,7 +20,7 @@
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
         <div fxFlex="33">
             <div fxLayout="column" class="mb-10">
-                <sp-status-widget fxFlex="100" [label]="'Consumed Messages / Lag'"
+                <sp-status-widget fxFlex="100" [label]="'Consumed / Queued'"
                                   [color]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedCardColor : cardColor"
                                   [textColor]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedTextColor : textColor"
                                   [bandColor]="consumedMessagesFirstStreamBandColor"
@@ -35,7 +35,7 @@
         </div>
         <div fxFlex="33">
             <div fxLayout="column" class="mb-10">
-                <sp-status-widget fxFlex="100" [label]="'Consumed Messages / Lag'"
+                <sp-status-widget fxFlex="100" [label]="'Consumed / Queued'"
                                   [color]="consumedMessagesSecondInputStream === notAvailable ? deactivatedCardColor : cardColor"
                                   [textColor]="consumedMessagesSecondInputStream === notAvailable ? deactivatedTextColor : textColor"
                                   [bandColor]="consumedMessagesSecondStreamBandColor"
