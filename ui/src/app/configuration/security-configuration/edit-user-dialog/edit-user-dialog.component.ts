@@ -41,6 +41,7 @@ import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
+import {MailConfigService} from "../../../platform-services/apis/mail-config.service";
 
 @Component({
   selector: 'sp-edit-user-dialog',
@@ -67,19 +68,22 @@ export class EditUserDialogComponent implements OnInit {
 
   sendPasswordToUser = false;
   emailChanged = false;
+  emailConfigured = false;
 
-  constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
+      constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
               private availableRolesService: AvailableRolesService,
               private fb: FormBuilder,
               private userService: UserService,
               private userGroupService: UserGroupService,
               private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private mailConfigService: MailConfigService) {
   }
 
   ngOnInit(): void {
     const filterObject = this.user instanceof UserAccount ? UserRole.ROLE_SERVICE_ADMIN : UserRole.ROLE_ADMIN;
-    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== filterObject);
+    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== filterObject)
+    this.mailConfigService.getMailConfig().subscribe(config => this.emailConfigured = config.emailConfigured);
     this.userGroupService.getAllUserGroups().subscribe(response => {
       this.availableGroups = response;
     });

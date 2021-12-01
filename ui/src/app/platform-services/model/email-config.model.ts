@@ -17,7 +17,7 @@
  */
 export interface EmailConfig {
 
-  emailConfigured: string;
+  emailConfigured: boolean;
   transportStrategy: 'SMTP' | 'SMTPS' | 'SMTP_TLS';
   smtpServerHost: string;
   smtpServerPort: number;
