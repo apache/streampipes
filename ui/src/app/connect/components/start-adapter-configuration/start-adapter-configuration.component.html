@@ -47,7 +47,7 @@
             <mat-checkbox [(ngModel)]="removeDuplicates"
                           [ngModelOptions]="{standalone: true}">Remove Duplicates
             </mat-checkbox>
-            <mat-form-field *ngIf="removeDuplicates">
+            <mat-form-field *ngIf="removeDuplicates" color="accent">
                 <input matInput id="input-removeDuplicatesTime"
                        [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window"
                        [(ngModel)]="removeDuplicatesTime">
@@ -57,12 +57,12 @@
                           [ngModelOptions]="{standalone: true}"
                           matTooltip="Send maximum one event in the specified time window">Reduce the event rate
             </mat-checkbox>
-            <mat-form-field *ngIf="eventRateReduction">
+            <mat-form-field *ngIf="eventRateReduction" color="accent">
                 <input type="number" matInput id="input-evenRateTime"
                        [ngModelOptions]="{standalone: true}" [(ngModel)]="eventRateTime"
                        placeholder="Time Window (Milliseconds)" matTooltipPosition="above">
             </mat-form-field>
-            <mat-form-field *ngIf="eventRateReduction">
+            <mat-form-field *ngIf="eventRateReduction" color="accent">
                 <mat-label>Event Aggregation</mat-label>
                 <mat-select [(ngModel)]="eventRateMode" [ngModelOptions]="{standalone: true}">
                     <mat-option class="md-elevation-z1" style="background: white;"
@@ -78,7 +78,7 @@
                           data-cy="sp-store-in-datalake">
                 Store in Datalake
             </mat-checkbox>
-            <mat-form-field *ngIf="saveInDataLake">
+            <mat-form-field *ngIf="saveInDataLake" color="accent">
                 <mat-label>Select Time Field</mat-label>
                 <mat-select [(ngModel)]="dataLakeTimestampField"
                             [ngModelOptions]="{standalone: true}"
