@@ -19,12 +19,12 @@
 <div fxLayout="row" class="page-container-padding">
     <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="profileLoaded">
         <sp-split-section title="Main Settings" subtitle="Manage your basic profile settings here.">
-            <mat-form-field fxFlex>
+            <mat-form-field fxFlex color="accent">
                 <mat-label>Email</mat-label>
                 <input [(ngModel)]="userData.username" matInput type="email" name="email" disabled/>
                 <mat-hint>Your mail address can't be changed currently.</mat-hint>
             </mat-form-field>
-            <mat-form-field fxFlex>
+            <mat-form-field fxFlex color="accent">
                 <mat-label>Full Name</mat-label>
                 <input [(ngModel)]="userData.fullName" matInput/>
             </mat-form-field>
