@@ -37,7 +37,7 @@ public class MasterRestClient {
             client.adminApi().registerAdapters(allAvailableAdapters);
             return true;
         } catch (Exception e) {
-            LOG.info("Could not register adapter at url " , e);
+            LOG.error("Could not register adapter at url - is a 'StreamPipes Core' service running?" , e);
             return false;
         }
     }
