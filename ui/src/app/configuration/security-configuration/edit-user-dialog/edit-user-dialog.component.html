@@ -37,6 +37,7 @@
                                data-cy="new-user-email">
                         <mat-error>Must be a valid email address.</mat-error>
                     </mat-form-field>
+                    <div class="email-changed" *ngIf="emailChanged">Changing the current user's email will require a re-login.</div>
                     <mat-form-field color="accent" *ngIf="isUserAccount">
                         <mat-label>Full Name</mat-label>
                         <input formControlName="fullName" fxFlex
@@ -110,15 +111,17 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <div fxLayout="row">
-            <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
-                    [disabled]="!parentForm.valid"
-                    data-cy="sp-element-edit-user-save">
-                <i class="material-icons">save</i><span>&nbsp;Save</span>
-            </button>
-            <button mat-button mat-raised-button class="mat-basic" (click)="close(false)">
-                Cancel
-            </button>
+        <div fxLayout="column">
+            <div fxLayout="row">
+                <button mat-button mat-raised-button color="accent" (click)="save()" style="margin-right:10px;"
+                        [disabled]="!parentForm.valid"
+                        data-cy="sp-element-edit-user-save">
+                    <i class="material-icons">save</i><span>&nbsp;Save</span>
+                </button>
+                <button mat-button mat-raised-button class="mat-basic" (click)="close(false)">
+                    Cancel
+                </button>
+            </div>
         </div>
     </div>
 </div>
