@@ -16,6 +16,7 @@
 name: run-cypress-tests
 
 on:
+  workflow_dispatch:
   schedule:
     - cron:  '51 23 * * *'
 
