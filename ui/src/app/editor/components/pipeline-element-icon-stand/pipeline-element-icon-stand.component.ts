@@ -145,6 +145,7 @@ export class PipelineElementIconStandComponent implements OnInit {
     @Input()
     set currentElements(value: PipelineElementUnion[]) {
         this._currentElements = value;
+        this.elementFilter = "";
         this.currentlyFilteredElements = this._currentElements;
     }
 

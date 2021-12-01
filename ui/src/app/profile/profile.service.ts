@@ -39,7 +39,7 @@ export class ProfileService {
   }
 
   updateUserProfile(userData: UserAccount): Observable<Message> {
-    return this.http.put(this.profilePath + '/' + userData.username, userData).pipe(map(response => {
+    return this.http.put(this.profilePath + '/user/' + userData.principalId, userData).pipe(map(response => {
       return Message.fromData(response as any);
     }));
   }

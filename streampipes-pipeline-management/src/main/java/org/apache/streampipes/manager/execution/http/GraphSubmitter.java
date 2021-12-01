@@ -110,21 +110,21 @@ public class GraphSubmitter {
 
   private PipelineElementStatus performInvocation(InvocableStreamPipesEntity entity) {
     String endpointUrl = entity.getSelectedEndpointUrl();
-    return new HttpRequestBuilder(entity, endpointUrl).invoke();
+    return new HttpRequestBuilder(entity, endpointUrl, this.pipelineId).invoke();
   }
 
   private PipelineElementStatus performInvocation(SpDataSet dataset) {
     String endpointUrl = dataset.getSelectedEndpointUrl();
-    return new HttpRequestBuilder(dataset, endpointUrl).invoke();
+    return new HttpRequestBuilder(dataset, endpointUrl, this.pipelineId).invoke();
   }
 
   private PipelineElementStatus performDetach(InvocableStreamPipesEntity entity) {
     String endpointUrl = entity.getSelectedEndpointUrl() + "/" + InstanceIdExtractor.extractId(entity.getElementId());
-    return new HttpRequestBuilder(entity, endpointUrl).detach();
+    return new HttpRequestBuilder(entity, endpointUrl, this.pipelineId).detach();
   }
 
   private PipelineElementStatus performDetach(SpDataSet dataset) {
     String endpointUrl = dataset.getSelectedEndpointUrl() + "/" + dataset.getCorrespondingAdapterId() + "/" + dataset.getDatasetInvocationId();
-    return new HttpRequestBuilder(dataset, endpointUrl).detach();
+    return new HttpRequestBuilder(dataset, endpointUrl, this.pipelineId).detach();
   }
 }

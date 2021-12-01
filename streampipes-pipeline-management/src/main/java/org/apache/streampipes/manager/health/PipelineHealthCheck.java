@@ -71,7 +71,7 @@ public class PipelineHealthCheck implements Runnable {
               boolean success;
               try {
                 endpointUrl = findEndpointUrl(graph);
-                success = new HttpRequestBuilder(graph, endpointUrl).invoke().isSuccess();
+                success = new HttpRequestBuilder(graph, endpointUrl, pipeline.getPipelineId()).invoke().isSuccess();
               } catch (NoServiceEndpointsAvailableException e) {
                 success = false;
               }

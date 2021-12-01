@@ -78,11 +78,11 @@ public class PipelinePreview {
   }
 
   private void invokeGraphs(List<InvocableStreamPipesEntity> graphs) {
-    graphs.forEach(g -> new HttpRequestBuilder(g, g.getBelongsTo()).invoke());
+    graphs.forEach(g -> new HttpRequestBuilder(g, g.getBelongsTo(), null).invoke());
   }
 
   private void detachGraphs(List<InvocableStreamPipesEntity> graphs) {
-    graphs.forEach(g -> new HttpRequestBuilder(g, g.getUri()).detach());
+    graphs.forEach(g -> new HttpRequestBuilder(g, g.getUri(), null).detach());
   }
 
   private void deleteGraphs(String previewId) {

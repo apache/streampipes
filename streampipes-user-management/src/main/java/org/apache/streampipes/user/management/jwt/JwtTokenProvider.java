@@ -25,6 +25,7 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.client.user.UserInfo;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -52,6 +53,17 @@ public class JwtTokenProvider {
 						.map(GrantedAuthority::getAuthority)
 						.collect(Collectors.toSet());
 
+		return createToken(userPrincipal, roles);
+
+	}
+
+	public String createToken(Principal userPrincipal) {
+		Set<String> roles = new GrantedAuthoritiesBuilder(userPrincipal).buildAllAuthorities();
+		return createToken(userPrincipal, roles);
+	}
+
+	public String createToken(Principal userPrincipal,
+							  Set<String> roles) {
 		Date tokenExpirationDate = makeExpirationDate();
 		Map<String, Object> claims = makeClaims(userPrincipal, roles);
 

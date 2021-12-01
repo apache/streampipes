@@ -39,6 +39,9 @@ import { UserService } from '../../../platform-services/apis/user.service';
 import { UserGroupService } from '../../../platform-services/apis/user-group.service';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
+import {AuthService} from "../../../services/auth.service";
+import {Router} from "@angular/router";
+import {MailConfigService} from "../../../platform-services/apis/mail-config.service";
 
 @Component({
   selector: 'sp-edit-user-dialog',
@@ -64,17 +67,23 @@ export class EditUserDialogComponent implements OnInit {
   registrationError: string;
 
   sendPasswordToUser = false;
+  emailChanged = false;
+  emailConfigured = false;
 
-  constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
+      constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
               private availableRolesService: AvailableRolesService,
               private fb: FormBuilder,
               private userService: UserService,
-              private userGroupService: UserGroupService) {
+              private userGroupService: UserGroupService,
+              private authService: AuthService,
+              private router: Router,
+              private mailConfigService: MailConfigService) {
   }
 
   ngOnInit(): void {
     const filterObject = this.user instanceof UserAccount ? UserRole.ROLE_SERVICE_ADMIN : UserRole.ROLE_ADMIN;
-    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== filterObject);
+    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== filterObject)
+    this.mailConfigService.getMailConfig().subscribe(config => this.emailConfigured = config.emailConfigured);
     this.userGroupService.getAllUserGroups().subscribe(response => {
       this.availableGroups = response;
     });
@@ -105,6 +114,7 @@ export class EditUserDialogComponent implements OnInit {
       this.clonedUser.accountLocked = v.accountLocked;
       this.clonedUser.accountEnabled = v.accountEnabled;
       if (this.clonedUser instanceof UserAccount) {
+        this.emailChanged = (this.clonedUser.username !== this.user.username) && this.user.username === this.authService.getCurrentUser().username && this.editMode;
         this.clonedUser.fullName = v.fullName;
         if (!this.editMode) {
           this.sendPasswordToUser = v.sendPasswordToUser;
@@ -149,7 +159,13 @@ export class EditUserDialogComponent implements OnInit {
     if (this.editMode) {
       if (this.isUserAccount) {
         this.userService.updateUser(this.clonedUser as UserAccount).subscribe(() => {
-          this.close(true);
+          if (this.emailChanged) {
+            this.authService.logout();
+            this.close(false);
+            this.router.navigate(['login']);
+          } else {
+            this.close(true);
+          }
         });
       } else {
         this.userService.updateService(this.clonedUser as ServiceAccount).subscribe(() => {
