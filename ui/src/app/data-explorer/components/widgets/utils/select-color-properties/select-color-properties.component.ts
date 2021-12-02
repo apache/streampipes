@@ -87,7 +87,7 @@ export class SelectColorPropertiesComponent implements OnInit {
   }
 
   onFilterChange(searchValue: string, field: DataExplorerField): void {
-    this.currentlyConfiguredWidget.visualizationConfig.displayName[field.runtimeName + field.sourceIndex.toString()] = searchValue;
+    this.currentlyConfiguredWidget.visualizationConfig.displayName[field.fullDbName + field.sourceIndex.toString()] = searchValue;
     this.triggerDataRefresh();
   }
 

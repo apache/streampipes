@@ -21,6 +21,7 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { CorrelationChartWidgetModel } from './model/correlation-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 
 @Component({
   selector: 'sp-data-explorer-correlation-chart-widget',
@@ -29,33 +30,15 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 })
 export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<CorrelationChartWidgetModel> implements OnInit {
 
-  data = [
-    {
-      x: [],
-      y: [],
-      mode: 'markers',
-      name: 'points',
-      marker: {
-        color: 'rgb(102,0,0)',
-        size: 2,
-        opacity: 0.4
-      },
-      type: 'scatter'
-    },
-    {
-      x: [],
-      y: [],
-      name: 'density',
-      ncontours: 20,
-      colorscale: 'Hot',
-      reversescale: true,
-      showscale: false,
-      type: 'histogram2dcontour'
-    }
-  ];
+  colNo = 2;
+  fixedColNo = 2;
+  rowNo = 2;
+
+  data = [];
 
   graph = {
     layout: {
+      grid: {rows: this.rowNo, columns: this.fixedColNo, pattern: 'independent'},
       xaxis: {
         title: {
           text: ''
@@ -85,22 +68,117 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<Corr
     this.updateAppearance();
   }
 
+  lightenColor(color: string, percent: number) {
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = (num >> 16) + amt;
+    const B = (num >> 8 & 0x00FF) + amt;
+    const G = (num & 0x0000FF) + amt;
+    const result = '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                  (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
+    return result;
+  }
+
   prepareData(result: SpQueryResult[]) {
+    
     const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result[0]);
     const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result[0]);
-    this.data[0].x = this.transform(result[0].allDataSeries[0].rows, xIndex);
-    this.data[0].y = this.transform(result[0].allDataSeries[0].rows, yIndex);
-    if (this.dataExplorerWidget.visualizationConfig.displayType === 'Density') {
-      this.data[1].x = this.transform(result[0].allDataSeries[0].rows, xIndex);
-      this.data[1].y = this.transform(result[0].allDataSeries[0].rows, yIndex);
-      this.data[0].marker.size = 2;
-      this.data[0].marker.opacity = 0.4;
-    } else {
-      this.data[1].x = [];
-      this.data[1].y = [];
-      this.data[0].marker.size = 5;
-      this.data[0].marker.opacity = 1.;
-    }
+
+    this.data = [];
+
+    const len = result[0].allDataSeries.length;
+
+    const even = len % this.colNo === 0;
+
+    this.rowNo = even ? len / this.fixedColNo : (len + 1) / this.fixedColNo;
+
+    this.colNo = len === 1 ? 1 : this.fixedColNo;
+
+    let rowCount = 0;
+    let colCount = 0;
+
+    let colorVal = '#015c0d';
+
+    result[0].allDataSeries.map((group, findex) => {
+
+      let groupName;
+
+      if (group['tags'] != null) {
+        Object.entries(group['tags']).forEach(
+          ([key, val]) => {
+            groupName = val;
+          });
+      }
+
+      groupName = groupName === undefined ? 'density' : groupName;
+
+      let sizeVal;
+      let opacityVal;
+
+      if (this.dataExplorerWidget.visualizationConfig.displayType === 'Density') {
+        sizeVal = 2;
+        opacityVal = 0.4;
+      } else {
+        sizeVal = 5;
+        opacityVal = 0.9;
+      }
+
+      const xaxisVal = findex !== 0 ? 'x' + (findex + 1).toString() : 'x';
+      const yaxisVal = findex !== 0 ? 'y' + (findex + 1).toString() : 'y';
+
+      const component = {
+        x: this.transform(group.rows, xIndex),
+        y: this.transform(group.rows, yIndex),
+        mode: 'markers',
+        name: groupName,
+        marker: {
+          color: colorVal,
+          size: sizeVal,
+          opacity: opacityVal,
+        },
+        type: 'scatter',
+        xaxis: xaxisVal,
+        yaxis: yaxisVal,
+        // domain: {
+        //   row: rowCount,
+        //   column: colCount,
+        // },
+      };
+
+      this.data.push(component);
+
+      if (this.dataExplorerWidget.visualizationConfig.displayType === 'Density') {
+
+        const component2 = {
+          x: this.transform(group.rows, xIndex),
+          y: this.transform(group.rows, yIndex),
+          name: groupName,
+          ncontours: 20,
+          colorscale: 'Hot',
+          reversescale: true,
+          showscale: false,
+          type: 'histogram2dcontour',
+          xaxis: xaxisVal,
+          yaxis: yaxisVal,
+          // domain: {
+          //   row: rowCount,
+          //   column: colCount,
+          // },
+        };
+
+        this.data.push(component2);
+
+      }
+      if (colCount === (this.colNo - 1)) {
+        colCount = 0;
+        rowCount += 1;
+       } else {
+         colCount += 1;
+       }
+
+       colorVal = this.lightenColor(colorVal, 11.);
+
+    });
   }
 
   transform(rows, index: number): any[] {
@@ -113,6 +191,11 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<Corr
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
     this.graph.layout.xaxis.title.text = this.dataExplorerWidget.visualizationConfig.firstField.fullDbName;
     this.graph.layout.yaxis.title.text = this.dataExplorerWidget.visualizationConfig.secondField.fullDbName;
+    this.graph.layout.grid = {
+      rows: this.rowNo,
+      columns: this.colNo,
+      pattern: 'independent'
+    };
   }
 
   onResize(width: number, height: number) {

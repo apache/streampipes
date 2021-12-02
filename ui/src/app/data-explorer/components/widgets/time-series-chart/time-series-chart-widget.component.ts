@@ -44,6 +44,8 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
   // this can be set to scale the line chart according to the layout
   offsetRightLineChart = 10;
 
+  orderedSelectedProperties = [];
+
   maxValue = -10000000;
 
   updatemenus = [];
@@ -143,6 +145,11 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
               const columnIndex = this.getColumnIndex(field, data);
               const value = row[columnIndex];
               this.maxValue = value > this.maxValue ? value : this.maxValue;
+
+              if (!this.orderedSelectedProperties.includes(field.fullDbName + field.sourceIndex.toString())) {
+                this.orderedSelectedProperties.push(field.fullDbName + field.sourceIndex.toString());
+              }
+
             }
           }
         });
@@ -155,7 +162,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
         this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(field => {
           if (field.sourceIndex === data.sourceIndex) {
 
-            const name = field.runtimeName + sourceIndex.toString();
+            const name = field.fullDbName + sourceIndex.toString();
 
             if (group['tags'] != null) {
               Object.entries(group['tags']).forEach(
@@ -228,10 +235,12 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     let pastGroups = 0;
     let index = 0;
 
-    if (this.data) {
-      this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.map((field, findex) => {
+    const collectNames = [];
 
-        const name = field.runtimeName + field.sourceIndex.toString();
+    if (this.data) {
+      this.orderedSelectedProperties.map((name, findex) => {
+
+        collectNames.push(name);
 
         let localGroups = [];
         if (name in this.groupKeeper) {
@@ -255,7 +264,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             }
 
             if (!(name in this.dataExplorerWidget.visualizationConfig.displayName)) {
-              this.dataExplorerWidget.visualizationConfig.displayName[name] = field.fullDbName;
+              this.dataExplorerWidget.visualizationConfig.displayName[name] = name; //field.fullDbName;
             }
 
             if (!(name in this.dataExplorerWidget.visualizationConfig.displayType)) {
@@ -277,6 +286,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
               displayName = displayName + ' ' + tag;
             }
 
+
             this.data[index].marker.color = color;
             this.data[index].name = displayName;
 
@@ -286,10 +296,13 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
 
             if (setType === 'bar') {
-              displayMode = 'bar';
+              displayType = 'bar';
             }
             if (setType === 'lines') {
               displayMode = 'lines';
+            }
+            if (setType === 'lines+markers') {
+              displayMode = 'lines+markers';
             }
             if (setType === 'normal_markers') {
               displayMode = 'markers';
@@ -307,6 +320,17 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
           }
         }
       });
+
+      for (const key in this.dataExplorerWidget.visualizationConfig.chosenColor) {
+        if (this.dataExplorerWidget.visualizationConfig.chosenColor.hasOwnProperty(key)) {
+          if (!collectNames.includes(key)) {
+            delete this.dataExplorerWidget.visualizationConfig.chosenColor[key];
+            delete this.dataExplorerWidget.visualizationConfig.displayName[key];
+            delete this.dataExplorerWidget.visualizationConfig.displayType[key];
+          }
+        }
+      }
+
     }
   }
 
@@ -330,6 +354,9 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
 
     this.setShownComponents(true, false, false);
     this.groupKeeper = {};
+
+    this.orderedSelectedProperties = [];
+
     spQueryResults.map((spQueryResult, index) => {
       const res = this.transformData(spQueryResult, spQueryResult.sourceIndex);
       res.forEach(item => {
