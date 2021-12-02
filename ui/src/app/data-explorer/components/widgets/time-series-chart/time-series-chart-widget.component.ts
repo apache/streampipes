@@ -264,7 +264,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             }
 
             if (!(name in this.dataExplorerWidget.visualizationConfig.displayName)) {
-              this.dataExplorerWidget.visualizationConfig.displayName[name] = name; //field.fullDbName;
+              this.dataExplorerWidget.visualizationConfig.displayName[name] = name;
             }
 
             if (!(name in this.dataExplorerWidget.visualizationConfig.displayType)) {
