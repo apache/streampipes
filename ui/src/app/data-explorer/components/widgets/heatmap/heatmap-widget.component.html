@@ -18,8 +18,8 @@
 
   <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel">
     <div class="value-panel">
-      <div echarts [options]="option" [ngStyle]="{'width': currentWidth, 'height': currentHeight}"
-           (chartInit)="onChartInit($event)" [merge]= "dynamic" >
+      <div echarts [options]="option" [ngStyle]="{'width': '100%', 'height': currentHeight}"
+           (chartInit)="onChartInit($event)" [merge]= "dynamic" *ngIf="configReady">
       </div>
   </div>
 </div>

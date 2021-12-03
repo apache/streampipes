@@ -35,14 +35,17 @@ import { ECharts } from 'echarts/core';
 export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidgetModel> implements OnInit, OnDestroy {
 
   eChartsInstance: ECharts;
-  currentWidth = 1200;
-  currentHeight = 600;
+  currentWidth: number;
+  currentHeight: number;
 
   option = {};
   dynamic: EChartsOption;
 
+  configReady = false;
+
   ngOnInit(): void {
     super.ngOnInit();
+    this.onSizeChanged(this.gridsterItemComponent.width, this.gridsterItemComponent.height);
   }
 
   ngOnDestroy(): void {
@@ -53,6 +56,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
   }
 
   onResize(width: number, height: number) {
+    this.onSizeChanged(width, height);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
@@ -69,15 +73,22 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
     }
   }
 
-  onChartInit(ec) {
+  onChartInit(ec: ECharts) {
     this.eChartsInstance = ec;
     this.applySize(this.currentWidth, this.currentHeight);
     this.initOptions();
   }
 
+  protected onSizeChanged(width: number, height: number) {
+    this.currentWidth = width;
+    this.currentHeight = height;
+    this.configReady = true;
+    this.applySize(width, height);
+  }
+
   applySize(width: number, height: number) {
     if (this.eChartsInstance) {
-      this.eChartsInstance.resize({ width: width, height: height });
+      this.eChartsInstance.resize({ width, height });
     }
   }
 
@@ -87,7 +98,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
     let max = -100000;
 
     const result = spQueryResult[0].allDataSeries;
-    const xAxisData = this.transform(result[0].rows, 0); // always time.
+    const xAxisData = this.transform(result[0].rows, 0);
     const heatIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedHeatProperty, spQueryResult[0]);
 
     const yAxisData = [];
@@ -95,7 +106,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
     result.map((groupedList, index) => {
 
-      let groupedVal = index.toString();
+      let groupedVal = '';
 
       if (groupedList['tags'] != null) {
         Object.entries(groupedList['tags']).forEach(
