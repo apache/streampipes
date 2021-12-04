@@ -62,8 +62,11 @@ public class ${classNamePrefix}Controller extends FlinkDataProcessorDeclarer<${c
 	}
 
 	@Override
-	public FlinkDataProcessorRuntime<${classNamePrefix}Parameters> getRuntime(DataProcessorInvocation
-				graph, ProcessingElementParameterExtractor extractor) {
+	public FlinkDataProcessorRuntime<${classNamePrefix}Parameters> getRuntime(
+			DataProcessorInvocation graph,
+			ProcessingElementParameterExtractor extractor,
+			ConfigExtractor configExtractor,
+			StreamPipesClient streamPipesClient) {
 
 		String exampleText = extractor.singleValueParameter(EXAMPLE_KEY, String.class);
 		${classNamePrefix}Parameters params = new ${classNamePrefix}Parameters(graph, exampleText);
