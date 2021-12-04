@@ -32,6 +32,7 @@ export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
   chosenColor: { [id: string]: string; };
   displayName: { [id: string]: string; };
   displayType: { [id: string]: string; };
+  chosenAxis: { [id: string]: string; };
 }
 
 export interface TimeSeriesChartWidgetModel extends DataExplorerWidgetModel {

@@ -271,6 +271,12 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
               this.dataExplorerWidget.visualizationConfig.displayType[name] = 'lines';
             }
 
+            if (!(name in this.dataExplorerWidget.visualizationConfig.chosenAxis)) {
+              this.dataExplorerWidget.visualizationConfig.chosenAxis[name] = 'links';
+            } else {
+              console.log("have " + name + ": " + this.dataExplorerWidget.visualizationConfig.chosenAxis[name]);
+            }
+
             let color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
 
             if (name in keeper) {
@@ -285,7 +291,6 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
               const tag = localGroups[it];
               displayName = displayName + ' ' + tag;
             }
-
 
             this.data[index].marker.color = color;
             this.data[index].name = displayName;
@@ -315,6 +320,17 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
 
             this.data[index].type = displayType;
             this.data[index].mode = displayMode;
+
+            const setAxis = this.dataExplorerWidget.visualizationConfig.chosenAxis[name] === 'links' ? 'y1' : 'y2';
+            this.data[index]['yaxis'] = setAxis;
+
+            if (setAxis === 'y2') {
+              this.graph.layout['yaxis2'] = {
+                                              title: '',
+                                              overlaying: 'y',
+                                              side: 'right'
+                                            };
+            }
 
             pastGroups += 1;
           }

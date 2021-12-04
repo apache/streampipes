@@ -46,14 +46,14 @@
             <mat-form-field class="marginColorField"
                             color="accent"
                             fxFlex="60">
-                <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.displayName[field.runtimeName + field.sourceIndex.toString()]"
+                <input [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.displayName[field.fullDbName + field.sourceIndex.toString()]"
                        matInput (input)="onFilterChange($event.target.value, field)"/>
             </mat-form-field>
             <mat-form-field class="marginColorField"
                             color="accent"
                             fxFlex="35">
                 <mat-select
-                        [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType[field.runtimeName + field.sourceIndex.toString()]"
+                        [(value)]="currentlyConfiguredWidget.visualizationConfig.displayType[field.fullDbName + field.sourceIndex.toString()]"
                         (selectionChange)="triggerDataRefresh()">
                     <mat-option [value]="'lines'">Line</mat-option>
                     <mat-option [value]="'normal_markers'">Scatter</mat-option>
@@ -67,13 +67,34 @@
                     color="accent"
                     fxFlex="5">
                 <input matInput
-                       [(colorPicker)]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]"
-                       [style.background]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.runtimeName + field.sourceIndex.toString()]"
+                       [(colorPicker)]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.fullDbName + field.sourceIndex.toString()]"
+                       [style.background]="currentlyConfiguredWidget.visualizationConfig.chosenColor[field.fullDbName + field.sourceIndex.toString()]"
                        required
                        [cpPosition]="'bottom'"
                        [cpPresetColors]="presetColors"
                        (colorPickerSelect)="triggerDataRefresh()"
                        autocomplete="off"/>
+            </mat-form-field>
+        </div>
+    </div>
+    <span class="data-explorer-header">Axis Selection </span>
+    <div style="margin-left: 1px; margin-right: 1px;" 
+         *ngFor="let field of availableProperties" 
+         fxLayout="column"
+         class="field-scroll-panel">
+         <div fxFlex 
+              fxLayoutAlign="start center" 
+              *ngIf="isSelected(field)" >
+            <b>{{field.runtimeName + ' (' + (field.aggregation ? field.aggregation + ', ' : '') + field.measure + ')'}}</b>
+            <mat-form-field color="accent"
+                            fxFlex="60"
+                            class="marginColorFieldMore">
+                <mat-select
+                    [(value)]="currentlyConfiguredWidget.visualizationConfig.chosenAxis[field.fullDbName + field.sourceIndex.toString()]"
+                    (selectionChange)="triggerDataRefresh()">
+                    <mat-option [value]="'links'">Links</mat-option>
+                    <mat-option [value]="'rechts'">Rechts</mat-option>
+                </mat-select>
             </mat-form-field>
         </div>
     </div>
