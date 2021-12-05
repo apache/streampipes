@@ -41,8 +41,10 @@ export class DashboardWidgetComponent implements OnInit {
   @Input() widget: DashboardItem;
   @Input() editMode: boolean;
   @Input() headerVisible: boolean = false;
-  @Input() item: GridsterItem;
-  @Input() gridsterItemComponent: GridsterItemComponent;
+  @Input() itemWidth: number;
+  @Input() itemHeight: number;
+  //@Input() item: GridsterItem;
+  //@Input() gridsterItemComponent: GridsterItemComponent;
 
   @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
   @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();

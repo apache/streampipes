@@ -22,3 +22,9 @@ export interface GridsterInfo {
     gridsterItem: GridsterItem;
     gridsterItemComponent: GridsterItemComponent
 }
+
+export interface WidgetInfo {
+    width: number;
+    height: number;
+    id: string;
+}

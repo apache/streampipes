@@ -74,10 +74,10 @@ export class DashboardGridComponent implements OnInit, OnChanges {
             resizable: { enabled: this.editMode },
             displayGrid: this.editMode ? 'always' : 'none',
             itemResizeCallback: ((item, itemComponent) => {
-                this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);
+                this.resizeService.notify({id: item.id, width: itemComponent.width, height: itemComponent.height});
             }),
             itemInitCallback: ((item, itemComponent) => {
-                this.resizeService.notify({gridsterItem: item, gridsterItemComponent: itemComponent} as GridsterInfo);
+                this.resizeService.notify({id: item.id, width: itemComponent.width, height: itemComponent.height});
             })
         };
     }

@@ -25,7 +25,7 @@ import {Subscription} from "rxjs";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 import {ResizeService} from "../../../services/resize.service";
-import {GridsterInfo} from "../../../models/gridster-info.model";
+import {GridsterInfo, WidgetInfo} from "../../../models/gridster-info.model";
 import {DashboardService} from "../../../services/dashboard.service";
 import {
     DashboardWidgetModel,
@@ -35,11 +35,13 @@ import {
 @Directive()
 export abstract class BaseStreamPipesWidget implements OnChanges {
 
-    @Input() widget: DashboardItem;
+    //@Input() widget: DashboardItem;
     @Input() widgetConfig: DashboardWidgetModel;
     @Input() widgetDataConfig: VisualizablePipeline;
-    @Input() gridsterItem: GridsterItem;
-    @Input() gridsterItemComponent: GridsterItemComponent;
+    @Input() itemWidth: number;
+    @Input() itemHeight: number;
+    //@Input() gridsterItem: GridsterItem;
+    //@Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
 
     static readonly PADDING: number = 20;
@@ -99,16 +101,16 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
         this.subscription.unsubscribe();
     }
 
-    computeCurrentWidth(gridsterItemComponent: GridsterItemComponent): number {
+    computeCurrentWidth(width: number): number {
         return this.adjustPadding ?
-            (gridsterItemComponent.width - (BaseStreamPipesWidget.PADDING * 2)) :
-            gridsterItemComponent.width;
+            (width - (BaseStreamPipesWidget.PADDING * 2)) :
+            width;
     }
 
-    computeCurrentHeight(gridsterItemComponent: GridsterItemComponent): number {
+    computeCurrentHeight(height: number): number {
         return this.adjustPadding ?
-            (gridsterItemComponent.height - (BaseStreamPipesWidget.PADDING * 2) - this.editModeOffset() - this.titlePanelOffset()) :
-            gridsterItemComponent.height - this.editModeOffset() - this.titlePanelOffset();
+            (height - (BaseStreamPipesWidget.PADDING * 2) - this.editModeOffset() - this.titlePanelOffset()) :
+            height - this.editModeOffset() - this.titlePanelOffset();
     }
 
     editModeOffset(): number {
@@ -131,11 +133,11 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
         }
     }
 
-    onResize(info: GridsterInfo) {
-        if (info.gridsterItem.id === this.gridsterItem.id) {
+    onResize(info: WidgetInfo) {
+        if (info.id === this.widgetConfig._id) {
             setTimeout(() => {
-                this.onSizeChanged(this.computeCurrentWidth(info.gridsterItemComponent),
-                    this.computeCurrentHeight(info.gridsterItemComponent))
+                this.onSizeChanged(this.computeCurrentWidth(info.width),
+                    this.computeCurrentHeight(info.height))
             }, 100);
         }
     }

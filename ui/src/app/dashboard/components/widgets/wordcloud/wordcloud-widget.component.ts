@@ -99,7 +99,7 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.onSizeChanged(this.gridsterItemComponent.width, this.gridsterItemComponent.height);
+    this.onSizeChanged(this.itemWidth, this.itemHeight);
   }
 
   protected extractConfig(extractor: StaticPropertyExtractor) {

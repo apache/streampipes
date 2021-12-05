@@ -16,12 +16,19 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 import Konva from 'konva';
 import { WebsocketService } from '../../services/websocket.service';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { RestService } from '../../services/rest.service';
+import {DashboardService} from "../../../dashboard/services/dashboard.service";
+import {
+    DashboardWidgetModel,
+    Pipeline,
+    VisualizablePipeline
+} from "../../../core-model/gen/streampipes-model";
+import {DashboardItem} from "../../../dashboard/models/dashboard.model";
 
 interface Window {
     Image: any;
@@ -34,7 +41,7 @@ declare const window: Window;
     templateUrl: './view-asset.component.html',
     styleUrls: ['./view-asset.component.css']
 })
-export class ViewAssetComponent {
+export class ViewAssetComponent implements OnInit {
 
     @Input() dashboardConfig: DashboardConfiguration;
     @Output() dashboardClosed = new EventEmitter<boolean>();
@@ -44,9 +51,16 @@ export class ViewAssetComponent {
     mainLayer: any;
     backgroundImageLayer: any;
 
-    constructor(private websocketService: WebsocketService,
-                private restService: RestService) {
+    dashboardItem: DashboardItem;
+    widgetLoaded = false;
 
+    constructor(private websocketService: WebsocketService,
+                private restService: RestService,
+                private dashboardService: DashboardService) {
+
+    }
+
+    ngOnInit() {
     }
 
     ngAfterViewInit() {

@@ -126,7 +126,8 @@ import {ReloadPipelineService} from "./services/reload-pipeline.service";
         },
     ],
     exports: [
-        DashboardComponent
+        DashboardComponent,
+        DashboardWidgetComponent
     ],
     entryComponents: [
         DashboardComponent,

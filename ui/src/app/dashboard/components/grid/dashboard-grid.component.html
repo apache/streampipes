@@ -25,10 +25,12 @@
         <gridster-item [item]="item" #gridsterItemComponent>
             <dashboard-widget (updateCallback)="propagateItemUpdate($event)"
                               (deleteCallback)="propagateItemRemoval($event)"
-                              [item]="item" [widget]="item"
+                              [widget]="item"
                               [editMode]="editMode"
                               [headerVisible]="headerVisible"
-                              [gridsterItemComponent]="gridsterItemComponent"></dashboard-widget>
+                              [itemWidth]="gridsterItemComponent.width"
+                              [itemHeight]="gridsterItemComponent.height"
+            ></dashboard-widget>
         </gridster-item>
     </ng-container>
 </gridster>
