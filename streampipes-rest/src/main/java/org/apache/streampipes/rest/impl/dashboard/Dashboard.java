@@ -24,6 +24,7 @@ import org.apache.streampipes.resource.management.AbstractDashboardResourceManag
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
+import java.util.Arrays;
 
 @Path("/v2/dashboard/dashboards")
 @Component
@@ -35,17 +36,17 @@ public class Dashboard extends AbstractDashboardResource {
     }
 
     @Override
-    public String getWriteRoles() {
-        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE;
+    public boolean hasReadAuthority() {
+        return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
     }
 
     @Override
-    public String getReadRoles() {
-        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE;
+    public boolean hasWriteAuthority() {
+        return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
     }
 
     @Override
-    public String getDeleteRoles() {
-        return Role.Constants.ROLE_ADMIN_VALUE + ", " +Privilege.Constants.PRIVILEGE_DELETE_DASHBOARD_VALUE;
+    public boolean hasDeleteAuthority() {
+        return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_DELETE_DASHBOARD_VALUE);
     }
 }

@@ -58,6 +58,7 @@ import java.util.stream.Collectors;
 @EnableAutoConfiguration
 @Import({StreamPipesResourceConfig.class,
         WelcomePageController.class,
+        StreamPipesPasswordEncoder.class,
         WebSecurityConfig.class,
         SpPermissionEvaluator.class
 })

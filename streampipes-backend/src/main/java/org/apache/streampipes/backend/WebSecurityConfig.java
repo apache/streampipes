@@ -42,14 +42,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   private final UserDetailsService userDetailsService;
+  private StreamPipesPasswordEncoder passwordEncoder;
 
-  public WebSecurityConfig() {
+  public WebSecurityConfig(StreamPipesPasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
     this.userDetailsService = new SpUserDetailsService();
   }
 
   @Autowired
   public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    auth.userDetailsService(userDetailsService).passwordEncoder(this.passwordEncoder.passwordEncoder());
   }
 
   @Override
@@ -80,11 +82,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   public UserDetailsService userDetailsService() {
     return userDetailsService;
-  }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new StreamPipesCredentialsMatcher();
   }
 
   @Bean(BeanIds.AUTHENTICATION_MANAGER)
