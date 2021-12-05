@@ -960,8 +960,10 @@
                                     <goal>jar</goal>
                                 </goals>
                                 <configuration>
+                                    <failOnError>false</failOnError>
                                     <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <doclint>none</doclint>
+                                    <additionalJOption>-Xdoclint:none</additionalJOption>
                                     <source>8</source>
                                 </configuration>
                             </execution>
