@@ -1089,7 +1089,25 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <failOnWarnings>false</failOnWarnings>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <doclint>none</doclint>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <source>8</source>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
+                    <failOnWarnings>false</failOnWarnings>
+                    <failOnError>false</failOnError>
                     <source>8</source>
                 </configuration>
             </plugin>
