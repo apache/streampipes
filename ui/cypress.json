@@ -4,6 +4,10 @@
   "env": {
     "TAKE_SCREENSHOT": "false"
   },
+  "retries": {
+    "runMode": 1,
+    "openMode": 0
+  },
   "baseUrl": "http://localhost",
   "trashAssetsBeforeRuns": false,
   "videoCompression": false,
