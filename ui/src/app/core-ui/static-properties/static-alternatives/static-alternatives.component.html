@@ -26,7 +26,7 @@
                                   [value]="alternative"
                                   [checked]="alternative.selected"
                                   [matTooltip]="alternative.description"
-                                  [attr.data-cy]="staticProperty.internalName.replace(' ',  '_').toLowerCase() + '-' + alternative.label.replace(' ',  '_').toLowerCase()">
+                                  [attr.data-cy]="staticProperty.internalName.split(' ').join('_').toLowerCase() + '-' + alternative.label.split(' ').join('_').toLowerCase()">
                     <label style="font-weight: normal;">
                         {{alternative.label}}
                     </label>
