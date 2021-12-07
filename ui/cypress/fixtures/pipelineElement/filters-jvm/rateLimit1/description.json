@@ -1,0 +1,25 @@
+{
+  "name": "rate_limit",
+  "config": [
+    {
+      "type": "radio",
+      "selector": "grouping-enabled",
+      "value": "False"
+    },
+    {
+      "type": "radio",
+      "selector": "window-type",
+      "value": "Length Window"
+    },
+    {
+      "type": "input",
+      "selector": "undefined-length-window-size-2",
+      "value": "5"
+    },
+    {
+      "type": "radio",
+      "selector": "event-selection",
+      "value": "Last"
+    }
+  ]
+}
