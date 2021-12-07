@@ -76,14 +76,14 @@ export class TimeSeriesChartWidgetConfigComponent
     const colors = {};
     const names = {};
     const dTypes = {};
+    const axes = {};
 
     numericPlusBooleanFields.map((field, index) => {
-      colors[field.runtimeName + field.sourceIndex] = this.presetColors[index];
-      names[field.runtimeName + field.sourceIndex] = field.fullDbName;
-      dTypes[field.runtimeName  + field.sourceIndex] = 'lines';
+      colors[field.fullDbName + field.sourceIndex] = this.presetColors[index];
+      names[field.fullDbName + field.sourceIndex] = field.fullDbName;
+      dTypes[field.fullDbName  + field.sourceIndex] = 'lines';
+      axes[field.fullDbName  + field.sourceIndex] = 'links';
     });
-
-
 
     return {
       forType: this.getWidgetType(),
@@ -94,6 +94,7 @@ export class TimeSeriesChartWidgetConfigComponent
       chosenColor: colors,
       displayName: names,
       displayType: dTypes,
+      chosenAxis: axes,
     };
   }
 

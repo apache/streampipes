@@ -21,6 +21,7 @@ import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
 import { DistributionChartWidgetModel } from './model/distribution-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'sp-data-explorer-distribution-chart-widget',
@@ -29,17 +30,17 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 })
 export class DistributionChartWidgetComponent extends BaseDataExplorerWidget<DistributionChartWidgetModel> implements OnInit {
 
-  data = [
-    {
-      x: [],
-      values: [],
-      labels: [],
-      type: 'pie'
-    }
-  ];
+  data = [];
+
+  rowNo = 2;
+  colNo = 2;
+  fixedColNo = 2;
 
   graph = {
     layout: {
+      grid: {
+        rows: this.rowNo, columns: this.colNo
+      },
       font: {
         color: '#FFF'
       },
@@ -65,46 +66,97 @@ export class DistributionChartWidgetComponent extends BaseDataExplorerWidget<Dis
   }
 
   prepareData(spQueryResult: SpQueryResult[]) {
-    const series = spQueryResult[0];
-    const finalLabels: string[] = [];
-    const finalValues: number[] = [];
-    const values: Map<string, number> = new Map();
-    const field = this.dataExplorerWidget.visualizationConfig.selectedProperty;
-    const index = this.getColumnIndex(field, series);
-    const histoValues: number[] = [];
 
-    if (series.total > 0) {
-      const colValues = this.transform(series.allDataSeries[0].rows, index);
-      colValues.forEach(value => {
+    //todo tags als namen und labels unter pie und legende für histo
 
-      histoValues.push(value);
+    this.data = [];
 
-      if (field.fieldCharacteristics.numeric) {
-        const roundingValue = this.dataExplorerWidget.visualizationConfig.roundingValue;
-        value = Math.round(value / roundingValue) * roundingValue;
+    const len = spQueryResult[0].allDataSeries.length;
+
+    const even = len % this.colNo === 0;
+
+    this.rowNo = even ? len / this.fixedColNo : (len + 1) / this.fixedColNo;
+
+    this.colNo = len === 1 ? 1 : this.fixedColNo;
+
+    let rowCount = 0;
+    let colCount = 0;
+
+    spQueryResult[0].allDataSeries.map((group, gindex) => {
+
+      const series = group;
+      const finalLabels: string[] = [];
+      const finalValues: number[] = [];
+      const values: Map<string, number> = new Map();
+      const field = this.dataExplorerWidget.visualizationConfig.selectedProperty;
+      const index = this.getColumnIndex(field, spQueryResult[0]);
+      const histoValues: number[] = [];
+
+      let groupName;
+
+      if (group['tags'] != null) {
+        Object.entries(group['tags']).forEach(
+          ([key, val]) => {
+            groupName = val;
+          });
       }
 
-      if (!values.has(value)) {
-        values.set(value, 0);
-      }
-      const currentVal = values.get(value);
-      values.set(value, currentVal + 1);
+      groupName = groupName === undefined ? field.fullDbName : groupName;
 
+      if (series.total > 0) {
+        const colValues = this.transform(series.rows, index);
+        colValues.forEach(value => {
+
+          histoValues.push(value);
+
+          if (field.fieldCharacteristics.numeric) {
+            const roundingValue = this.dataExplorerWidget.visualizationConfig.roundingValue;
+            value = Math.round(value / roundingValue) * roundingValue;
+          }
+
+          if (!values.has(value)) {
+            values.set(value, 0);
+          }
+          const currentVal = values.get(value);
+          values.set(value, currentVal + 1);
+
+        });
+      }
+      values.forEach((value, key) => {
+        finalLabels.push(key);
+        finalValues.push(value);
       });
-    }
-    values.forEach((value, key) => {
-      finalLabels.push(key);
-      finalValues.push(value);
-    });
 
-    if (this.dataExplorerWidget.visualizationConfig.displayType === 'pie') {
-      this.data[0].values = finalValues;
-      this.data[0].labels = finalLabels;
-      this.data[0].type = 'pie';
+      let component;
+
+      if (this.dataExplorerWidget.visualizationConfig.displayType === 'pie') {
+
+        component = {
+            name: groupName,
+            values: finalValues,
+            labels: finalLabels,
+            type: 'pie',
+            domain: {
+                row: rowCount,
+                column: colCount,
+            },
+          };
+
+       if (colCount === (this.colNo - 1)) {
+        colCount = 0;
+        rowCount += 1;
+       } else {
+         colCount += 1;
+       }
+
     } else {
-      this.data[0].x = histoValues;
-      this.data[0].type = 'histogram';
+      component = {
+        x: histoValues,
+        type: 'histogram'
+      };
     }
+    this.data.push(component);
+  });
   }
 
   existsLabel(labels: string[],
@@ -116,6 +168,10 @@ export class DistributionChartWidgetComponent extends BaseDataExplorerWidget<Dis
     this.graph.layout.paper_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
+    this.graph.layout.grid = {
+      rows: this.rowNo,
+      columns: this.colNo
+    };
   }
 
   onResize(width: number, height: number) {

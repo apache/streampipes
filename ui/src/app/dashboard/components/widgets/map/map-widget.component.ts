@@ -15,14 +15,14 @@
  *   limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {MapConfig} from "./map-config";
-import {latLng, marker, Marker, tileLayer, Map, LatLngExpression, LatLng, icon, Content} from "leaflet";
-import {ResizeService} from "../../../services/resize.service";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { MapConfig } from './map-config';
+import { latLng, marker, Marker, tileLayer, Map, LatLngExpression, LatLng, icon, Content } from 'leaflet';
+import { ResizeService } from '../../../services/resize.service';
+import { DashboardService } from '../../../services/dashboard.service';
 
 @Component({
     selector: 'map-widget',
@@ -50,7 +50,7 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
 
     options = {
         layers: [
-            tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: "© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors" })
+            tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '© <a href=\'https://www.openstreetmap.org/copyright\'>OpenStreetMap</a> Contributors' })
         ],
         zoom: 5,
         center: latLng(46.879966, -121.726909)

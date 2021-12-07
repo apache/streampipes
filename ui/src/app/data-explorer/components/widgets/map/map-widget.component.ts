@@ -83,16 +83,13 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
 
   onMapReady(map: Map) {
     this.map = map;
+    this.map.invalidateSize();
   }
 
   makeMarker(point: LatLngExpression, markerType: string): Marker {
     let newIconUrl = '';
 
-    if (markerType === 'pin') {
-      newIconUrl = this.markerImage('Default');
-    } else {
-      newIconUrl = this.markerImage('Car');
-    }
+    newIconUrl = markerType === 'pin' ? this.markerImage('Default') : this.markerImage('Car');
 
     return marker(point, {
       icon: icon({
@@ -111,13 +108,15 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     const currentCenter = this.defaultCenter;
     const usedCenter = this.dataExplorerWidget.visualizationConfig.useLastEventCoordinates ? lastCoordinate : currentCenter;
 
-    this.map.setView(usedCenter, zoom);
     this.makeLayers(this.lastDataResults);
+    this.map.setView(usedCenter, zoom);
+    this.map.invalidateSize();
   }
 
   onResize(width: number, height: number) {
     this.mapWidth = width;
     this.mapHeight = height;
+    this.map.invalidateSize();
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
@@ -157,9 +156,8 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     this.layers = [];
 
     if (spQueryResult.total > 0) {
-      const result = spQueryResult.allDataSeries[0];
 
-      for (var i = 0; i <= spQueryResult.allDataSeries.length - 1; i++) {
+      for (let i = 0; i <= spQueryResult.allDataSeries.length - 1; i++) {
 
         const result = spQueryResult.allDataSeries[i];
 
