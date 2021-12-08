@@ -113,6 +113,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   @RdfProperty(StreamPipes.IS_STATEFUL)
   private boolean isStateful;
 
+  private String state;
 
   public boolean isStateful() {
     return isStateful;
@@ -122,6 +123,14 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     isStateful = stateful;
   }
 
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state;
+  }
+
   public InvocableStreamPipesEntity() {
     super();
   }
@@ -129,6 +138,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
   public InvocableStreamPipesEntity(InvocableStreamPipesEntity other) {
     super(other);
     this.setStateful(other.isStateful());
+    this.state = other.getState();
     this.belongsTo = other.getBelongsTo();
     this.correspondingPipeline = other.getCorrespondingPipeline();
     this.inputStreams = new Cloner().streams(other.getInputStreams());

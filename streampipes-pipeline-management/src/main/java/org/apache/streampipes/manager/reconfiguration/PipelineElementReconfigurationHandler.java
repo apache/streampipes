@@ -17,10 +17,7 @@
  */
 package org.apache.streampipes.manager.reconfiguration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.manager.execution.pipeline.PipelineElementReconfigurationExecutor;
+import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutorFactory;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.*;
@@ -38,7 +35,7 @@ public class PipelineElementReconfigurationHandler {
 
     private final PipelineOperationStatus pipelineReconfigurationStatus;
     private final Pipeline reconfiguredPipeline;
-    private Pipeline storedPipeline;
+    private final Pipeline storedPipeline;
 
     public PipelineElementReconfigurationHandler(Pipeline reconfiguredPipeline) {
         this.reconfiguredPipeline = reconfiguredPipeline;
@@ -70,7 +67,10 @@ public class PipelineElementReconfigurationHandler {
     }
 
     private PipelineOperationStatus reconfigurePipelineElement(PipelineElementReconfigurationEntity entity) {
-        return new PipelineElementReconfigurationExecutor(reconfiguredPipeline, entity).reconfigurePipelineElement();
+        return PipelineExecutorFactory
+                .createReconfigurationExecutor(this.storedPipeline, false, false, false, this.reconfiguredPipeline, entity)
+                .execute();
+        //return new PipelineElementReconfigurationExecutor(reconfiguredPipeline, entity).reconfigurePipelineElement();
     }
 
     private List<PipelineElementReconfigurationEntity> comparePipelinesAndGetReconfiguration() {

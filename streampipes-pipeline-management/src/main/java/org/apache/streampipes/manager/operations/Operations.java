@@ -22,11 +22,10 @@ import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableExcepti
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.manager.endpoint.EndpointItemFetcher;
-import org.apache.streampipes.manager.execution.pipeline.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.PipelineStorageService;
+import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutorFactory;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
 import org.apache.streampipes.manager.matching.PipelineVerificationHandler;
-import org.apache.streampipes.manager.migration.MigrationPipelineGenerator;
 import org.apache.streampipes.manager.migration.PipelineElementMigrationHandler;
 import org.apache.streampipes.manager.migration.PipelineElementOffloadHandler;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
@@ -126,7 +125,8 @@ public class Operations {
   public static PipelineOperationStatus startPipeline(
           Pipeline pipeline, boolean visualize, boolean storeStatus,
           boolean monitor) {
-    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).startPipeline();
+    return PipelineExecutorFactory.createInvocationExecutor(pipeline, visualize, storeStatus, monitor).execute();
+    //return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).startPipeline();
   }
 
   public static PipelineOperationStatus stopPipeline(
@@ -150,7 +150,7 @@ public class Operations {
   public static PipelineOperationStatus stopPipeline(
           Pipeline pipeline, boolean visualize, boolean storeStatus,
           boolean monitor) {
-    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor).stopPipeline();
+    return PipelineExecutorFactory.createDetachExecutor(pipeline, visualize, storeStatus, monitor).execute();
   }
 
   public static List<RdfEndpointItem> getEndpointUriContents(List<RdfEndpoint> endpoints) {

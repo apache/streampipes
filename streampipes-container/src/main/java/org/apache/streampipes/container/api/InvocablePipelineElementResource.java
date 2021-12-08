@@ -36,6 +36,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -72,6 +75,10 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
                 if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
                     RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
                     Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph);
+                    if(resp.isSuccess() && graph.getState() != null && graph.isStateful()){
+                        //TODO: Handle fail while setting state
+                        setState(elementId, runningInstanceId, graph.getState());
+                    }
                     return ok(resp);
                 } else {
                     LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);

@@ -20,7 +20,8 @@ package org.apache.streampipes.manager.migration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.manager.execution.pipeline.PipelineMigrationExecutor;
+import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
+import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutorFactory;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -86,13 +87,16 @@ public class PipelineElementMigrationHandler {
                 swapPipelineElement(migrationPipeline, failedEntity);
             }
         });
-
+        //Why overwrite when changes are rolled back? TODO: Check if needed when pipeline is rolled back (else return)
         Operations.overwritePipeline(migrationPipeline);
     }
 
     private PipelineOperationStatus migratePipelineElement(PipelineElementMigrationEntity migrationEntity) {
-        return new PipelineMigrationExecutor(migrationPipeline, currentPipeline, migrationEntity, visualize,
-                storeStatus, monitor).migratePipelineElement();
+        PipelineExecutor migrationExecutor = PipelineExecutorFactory.
+                createMigrationExecutor(migrationPipeline, visualize, storeStatus, monitor, currentPipeline, migrationEntity);
+        return migrationExecutor.execute();
+        //return new PipelineMigrationExecutor(migrationPipeline, currentPipeline, migrationEntity, visualize,
+        //        storeStatus, monitor).migratePipelineElement();
     }
 
 
