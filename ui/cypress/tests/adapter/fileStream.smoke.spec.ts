@@ -26,7 +26,7 @@ describe('Test File Stream Adapter', {
     openMode: 1,
   }
 }, () => {
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
     FileManagementUtils.addFile('fileTest/random.csv');
   });
