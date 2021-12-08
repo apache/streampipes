@@ -21,7 +21,7 @@ on:
     - cron:  '51 23 * * *'
 
 jobs:
-  build-and-push-to-docker:
+  build-streampipes-and-run-e2e-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
