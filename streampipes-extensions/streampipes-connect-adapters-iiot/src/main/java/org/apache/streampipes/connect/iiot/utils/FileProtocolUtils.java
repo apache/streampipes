@@ -52,10 +52,10 @@ public class FileProtocolUtils {
 
         StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
 
-        byte[] res = client.fileApi().getFileContent(selectedFilename);
+        InputStream res = client.fileApi().getFileContentAsStream(selectedFilename);
 
         File file = new File(makeFileLoc(selectedFilename));
-        FileUtils.writeByteArrayToFile(file, res);
+        FileUtils.copyInputStreamToFile(res, file);
     }
 
     private static  String makeServiceStorageDir() {

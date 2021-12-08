@@ -29,6 +29,7 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,6 +96,17 @@ public abstract class HttpRequest<SO, DSO, DT> {
           throw new SpRuntimeException(status.getStatusCode() + " - " + status.getReasonPhrase());
         }
       }
+    } catch (NoHttpResponseException e) {
+      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available at " + makeUrl(false));
+    } catch (IOException e) {
+      throw new SpRuntimeException(e.getMessage());
+    }
+  }
+
+  public InputStream executeStreamRequest() throws SpRuntimeException {
+    Request request = makeRequest(serializer);
+    try {
+      return request.execute().returnContent().asStream();
     } catch (NoHttpResponseException e) {
       throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available at " + makeUrl(false));
     } catch (IOException e) {
