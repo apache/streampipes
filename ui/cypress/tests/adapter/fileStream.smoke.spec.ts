@@ -20,7 +20,12 @@ import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 
-describe('Test File Stream Adapter', () => {
+describe('Test File Stream Adapter', {
+  retries: {
+    runMode: 4,
+    openMode: 1,
+  }
+}, () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
     FileManagementUtils.addFile('fileTest/random.csv');
