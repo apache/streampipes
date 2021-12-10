@@ -28,8 +28,13 @@ import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,14 +108,32 @@ public abstract class HttpRequest<SO, DSO, DT> {
     }
   }
 
-  public InputStream executeStreamRequest() throws SpRuntimeException {
-    Request request = makeRequest(serializer);
+  public void writeToFile(String fileLocation) throws SpRuntimeException {
+
+    String urlString = makeUrl();
+    URL url = null;
     try {
-      return request.execute().returnContent().asStream();
-    } catch (NoHttpResponseException e) {
-      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available at " + makeUrl(false));
+      url = new URL(urlString);
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+
+    try {
+      URLConnection connection = url.openConnection();
+
+      connection.setRequestProperty("Authorization", connectionConfig.getCredentials().makeHeaders().get(0).getElements()[0].getName());
+
+      try {
+        ReadableByteChannel readableByteChannel = Channels.newChannel(connection.getInputStream());
+        FileOutputStream fileOutputStream = new FileOutputStream(fileLocation);
+        fileOutputStream.getChannel()
+                .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
     } catch (IOException e) {
-      throw new SpRuntimeException(e.getMessage());
+      e.printStackTrace();
     }
   }
 
