@@ -21,7 +21,7 @@ import { DataLakeUtils } from '../../../support/utils/DataLakeUtils';
 
 describe('Test Table View in Data Explorer', () => {
 
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.login();
     // cy.initStreamPipesTest();
     // DataLakeUtils.loadRandomDataSetIntoDataLake();

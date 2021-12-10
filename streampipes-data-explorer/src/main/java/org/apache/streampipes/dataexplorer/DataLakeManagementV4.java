@@ -42,6 +42,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
@@ -53,9 +54,11 @@ import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParam
 
 public class DataLakeManagementV4 {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd'T'HH:mm:ss[.SSS]'Z'")
-            .withZone(ZoneId.of("UTC"));
+    private static final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("uuuu[-MM[-dd]]['T'HH[:mm[:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]]]][XXX]")
+            .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
+            .parseDefaulting(ChronoField.OFFSET_SECONDS, 0)
+            .toFormatter();
 
     public List<DataLakeMeasure> getAllMeasurements() {
         return DataExplorerUtils.getInfos();
@@ -284,4 +287,5 @@ public class DataLakeManagementV4 {
         Instant instant = Instant.from(temporalAccessor);
         return Instant.EPOCH.until(instant, ChronoUnit.MILLIS);
     }
+
 }
