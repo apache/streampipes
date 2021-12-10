@@ -33,7 +33,7 @@ describe('Test Kafka Integration', () => {
     const port: string = ParameterUtils.get('9094', '9092');
 
     const sink: PipelineElementInput = PipelineElementBuilder.create('kafka_publisher')
-      .addInput('select', 'Unauthenticated', 'check')
+      .addInput('select', 'access-mode-unauthenticated', 'check')
         .addInput('input', 'host', host)
       .addInput('input', 'port', '{backspace}{backspace}{backspace}{backspace}' + port)
       .addInput('input', 'topic', topicName)
@@ -43,7 +43,7 @@ describe('Test Kafka Integration', () => {
       .create('Apache_Kafka')
       .setName('Kafka4')
       .setTimestampProperty('timestamp')
-      .addProtocolInput('select', 'Unauthenticated', 'check')
+      .addProtocolInput('select', 'access-mode-unauthenticated', 'check')
         .addProtocolInput('input', 'host', host)
         .addProtocolInput('input', 'port', port)
       .addProtocolInput('click', 'sp-reload', '')
