@@ -41,7 +41,7 @@ describe('Test MQTT Integration', () => {
       .create('MQTT')
       .setName('Adapter Mqtt')
       .setTimestampProperty('timestamp')
-      .addProtocolInput('select', 'Unauthenticated', 'check')
+      .addProtocolInput('select', 'access-mode-unauthenticated', 'check')
       .addProtocolInput('input', 'broker_url', 'tcp://' + host + ':1883')
       .addProtocolInput('input', 'topic', topicName)
       .setFormat('json_object')
