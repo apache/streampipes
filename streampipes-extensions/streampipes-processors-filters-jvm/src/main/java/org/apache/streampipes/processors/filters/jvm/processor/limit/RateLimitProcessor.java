@@ -15,29 +15,33 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.processors.filters.jvm.processor.limit;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.util.WindowFactory;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.WindowType;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Window;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.Alternatives;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
-import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.standalone.ProcessorParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
-public class RateLimitController extends StandaloneEventProcessingDeclarer<RateLimitParameters> {
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+public class RateLimitProcessor extends StreamPipesDataProcessor {
+
     private static final String EVENT_SELECTION = "event-selection";
     private static final String WINDOW_TYPE = "window-type";
     private static final String LENGTH_WINDOW = "length-window";
@@ -53,6 +57,13 @@ public class RateLimitController extends StandaloneEventProcessingDeclarer<RateL
     private static final String OPTION_FIRST = "First";
     private static final String OPTION_LAST = "Last";
     private static final String OPTION_ALL = "All";
+
+    private final static String DEFAULT_GROUP = "default";
+    private Boolean groupingEnabled;
+    private String groupingField;
+    private ConcurrentMap<Object, Window> windows;
+    private WindowFactory factory;
+
 
     @Override
     public DataProcessorDescription declareModel() {
@@ -80,29 +91,63 @@ public class RateLimitController extends StandaloneEventProcessingDeclarer<RateL
     }
 
     @Override
-    public ConfiguredEventProcessor<RateLimitParameters> onInvocation(DataProcessorInvocation graph,
-                                                                      ProcessingElementParameterExtractor extractor) {
-        Boolean groupingEnabled = Boolean.valueOf(extractor.selectedSingleValue(GROUPING_ENABLED, String.class));
-        String groupingField = extractor.mappingPropertyValue(GROUPING_FIELD);
-        EventSelection eventSelection = EventSelection.valueOf(extractor
+      public void onInvocation(ProcessorParams
+        processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+
+        this.groupingEnabled = Boolean.valueOf(processorParams.extractor().selectedSingleValue(GROUPING_ENABLED, String.class));
+        this.groupingField = processorParams.extractor().mappingPropertyValue(GROUPING_FIELD);
+        this.windows = new ConcurrentHashMap<>();
+
+        EventSelection eventSelection = EventSelection.valueOf(processorParams.extractor()
                 .selectedSingleValue(EVENT_SELECTION, String.class).toUpperCase());
-        String windowType = extractor.selectedAlternativeInternalId(WINDOW_TYPE);
+        String windowType = processorParams.extractor().selectedAlternativeInternalId(WINDOW_TYPE);
+
         if (TIME_WINDOW.equals(windowType)) {
-            Integer windowSize = extractor.singleValueParameter(TIME_WINDOW_SIZE, Integer.class);
-            RateLimitParameters params = new RateLimitParameters(graph, WindowType.TIME,
-                    windowSize, groupingEnabled, groupingField, eventSelection);
-            return new ConfiguredEventProcessor<>(params, RateLimit::new);
+            Integer windowSize = processorParams.extractor().singleValueParameter(TIME_WINDOW_SIZE, Integer.class);
+            this.factory = new WindowFactory(
+                    WindowType.TIME,
+                    windowSize,
+                    eventSelection,
+                    spOutputCollector);
+
         } else if (CRON_WINDOW.equals(windowType)) {
-            String cronExpression = extractor.singleValueParameter(CRON_WINDOW_EXPR, String.class);
-            RateLimitParameters params = new RateLimitParameters(graph, WindowType.CRON,
-                    cronExpression, groupingEnabled, groupingField, eventSelection);
-            return new ConfiguredEventProcessor<>(params, RateLimit::new);
+            String cronExpression = processorParams.extractor().singleValueParameter(CRON_WINDOW_EXPR, String.class);
+            this.factory = new WindowFactory(
+                    WindowType.CRON,
+                    cronExpression,
+                    eventSelection,
+                    spOutputCollector);
+
         } else {
-            Integer windowSize = extractor.singleValueParameter(LENGTH_WINDOW_SIZE, Integer.class);
-            RateLimitParameters params = new RateLimitParameters(graph, WindowType.LENGTH,
-                    windowSize, groupingEnabled, groupingField, eventSelection);
-            return new ConfiguredEventProcessor<>(params, RateLimit::new);
+            Integer windowSize = processorParams.extractor().singleValueParameter(LENGTH_WINDOW_SIZE, Integer.class);
+            this.factory = new WindowFactory(
+                    WindowType.LENGTH,
+                    windowSize,
+                    eventSelection,
+                    spOutputCollector);
         }
     }
 
+    @Override
+    public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+        Object group = groupingEnabled ? getGroupKey(event) : DEFAULT_GROUP;
+        Window window = windows.get(group);
+        if (window == null) {
+            window = factory.create();
+            window.init();
+            windows.put(group, window);
+        }
+        window.onEvent(event);
+    }
+
+    @Override
+    public void onDetach() throws SpRuntimeException {
+        for (Window window : this.windows.values()) {
+            window.destroy();
+        }
+    }
+
+    private Object getGroupKey(Event event) {
+        return event.getFieldBySelector(groupingField).getAsPrimitive().getAsString();
+    }
 }
