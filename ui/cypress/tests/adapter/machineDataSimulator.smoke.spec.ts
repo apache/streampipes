@@ -26,16 +26,15 @@ describe('Test Random Data Simulator Stream Adapter', () => {
 
   it('Perform Test', () => {
     const adapterInput = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName('Machine Data Simulator Test')
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
+        .create('Machine_Data_Simulator')
+        .setName('Machine Data Simulator Test')
+        .addInput('input', 'wait-time-ms', '1000')
+        .build();
 
 
     cy.visit('#/connect');
     AdapterUtils.testSpecificStreamAdapter(adapterInput);
     AdapterUtils.deleteAdapter();
-
   });
 
 });

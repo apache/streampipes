@@ -107,12 +107,12 @@ export class AdapterUtils {
     cy.visit('#/connect');
   }
 
-  private static selectAdapter(name) {
+  public static selectAdapter(name) {
     // Select adapter
     cy.get('#' + name).click();
   }
 
-  private static configureAdapter(configs: UserInput[]) {
+  public static configureAdapter(configs: UserInput[]) {
 
     StaticPropertyUtils.input(configs);
 
@@ -157,13 +157,13 @@ export class AdapterUtils {
     cy.get('#event-schema-next-button').parent().should('not.be.disabled');
   }
 
-  private static finishEventSchemaConfiguration() {
+  public static finishEventSchemaConfiguration() {
     // Click next
     cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should('be.visible');
     cy.get('#event-schema-next-button').click();
   }
 
-  private static startStreamAdapter(adapterInput: AdapterInput) {
+  public static startStreamAdapter(adapterInput: AdapterInput) {
     AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-live-preview');
   }
 
@@ -171,7 +171,7 @@ export class AdapterUtils {
     AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-set-success');
   }
 
-  private static startAdapter(adapterInput: AdapterInput, successElement) {
+  public static startAdapter(adapterInput: AdapterInput, successElement) {
     // Set adapter name
     cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
