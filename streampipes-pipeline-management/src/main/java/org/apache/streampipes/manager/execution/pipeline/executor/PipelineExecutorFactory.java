@@ -32,10 +32,10 @@ public class PipelineExecutorFactory {
                 .addPrepareMigrationOperation();
         if(migrationEntity.getTargetElement().isStateful())
             builder.addGetStateOperation();
-        builder.addStartTargetPipelineElementsOperation()
-                .addStopRelaysFromPredecessorOperation()
-                .addStartRelaysFromPredecessorsOperation()
-                .addStopOriginPipelineElementAndRelaysOperation()
+        builder.addStartGraphsAndAssociatedRelaysOperation()
+                .addStopRelaysOperation()
+                .addStartRelaysOperation()
+                .addStopGraphsAndAssociatedRelaysOperation()
                 .addStoreMigratedPipelineOperation();
         return builder.buildPipelineExecutor();
     }
@@ -51,7 +51,10 @@ public class PipelineExecutorFactory {
     public static PipelineExecutor createInvocationExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus,
                                                             boolean monitor){
         return PipelineExecutorBuilder.getBuilder().initializePipelineExecutor(pipeline, visualize, storeStatus, monitor)
-                .addStartPipelineOperation().addStorePipelineOperation().buildPipelineExecutor();
+                .addPreparePipelineStartOperation()
+                .addStartPipelineOperation()
+                .addStorePipelineOperation()
+                .buildPipelineExecutor();
     }
 
     public static PipelineExecutor createDetachExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus,

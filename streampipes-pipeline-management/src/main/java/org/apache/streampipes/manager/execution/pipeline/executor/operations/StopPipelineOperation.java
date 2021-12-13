@@ -19,9 +19,7 @@ package org.apache.streampipes.manager.execution.pipeline.executor.operations;
 
 import org.apache.streampipes.manager.execution.http.GraphSubmitter;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
-import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
-import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
-import org.apache.streampipes.manager.execution.pipeline.executor.utils.StorageUtils;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.*;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
 import org.apache.streampipes.model.SpDataSet;
@@ -33,6 +31,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
+import java.util.Set;
 
 public class StopPipelineOperation extends PipelineExecutionOperation {
 
@@ -42,7 +41,7 @@ public class StopPipelineOperation extends PipelineExecutionOperation {
 
     @Override
     public PipelineOperationStatus executeOperation() {
-        Pipeline pipeline = associatedPipelineExecutor.getPipeline();
+        Pipeline pipeline = pipelineExecutor.getPipeline();
         List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
         List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
         List<SpDataStreamRelayContainer> relays = PipelineElementUtils.generateRelays(graphs, pipeline);
@@ -51,8 +50,8 @@ public class StopPipelineOperation extends PipelineExecutionOperation {
                 dataSets, relays).detachPipelineElementsAndRelays();
 
         if (status.isSuccess()) {
-            if (associatedPipelineExecutor.isMonitor()) StorageUtils.deleteVisualization(pipeline.getPipelineId());
-            if (associatedPipelineExecutor.isStoreStatus()) StorageUtils.setPipelineStopped(pipeline);
+            if (pipelineExecutor.isMonitor()) StorageUtils.deleteVisualization(pipeline.getPipelineId());
+            if (pipelineExecutor.isStoreStatus()) StorageUtils.setPipelineStopped(pipeline);
 
             StorageUtils.deleteDataStreamRelayContainer(relays);
 
@@ -67,13 +66,32 @@ public class StopPipelineOperation extends PipelineExecutionOperation {
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        //TODO: Implement sth?
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        Pipeline pipeline = pipelineExecutor.getPipeline();
+
+        Set<String> idsToRollback = StatusUtils.extractUniqueSuccessfulIds(this.getStatus());
+
+        List<InvocableStreamPipesEntity> graphsToRollBack =
+                PipelineElementUtils.filterPipelineElementsById(
+                        pipelineExecutor.getGraphs().getEntitiesToStop(),
+                        idsToRollback);
+        List<SpDataSet> dataSetsToRollBack =
+                DataSetUtils.filterDataSetsById(
+                        pipelineExecutor.getDataSets().getEntitiesToStart(),
+                        idsToRollback);
+        List<SpDataStreamRelayContainer> relaysToRollBack =
+                RelayUtils.filterRelaysById(
+                        pipelineExecutor.getRelays().getEntitiesToStart(),
+                        idsToRollback);
+
+        return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),
+                graphsToRollBack,
+                dataSetsToRollBack,
+                relaysToRollBack).invokePipelineElementsAndRelays();
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
         //TODO: Implement sth?
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 }

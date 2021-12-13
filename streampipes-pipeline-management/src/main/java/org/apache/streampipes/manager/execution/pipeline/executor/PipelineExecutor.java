@@ -24,16 +24,13 @@ import org.apache.streampipes.manager.execution.pipeline.executor.operations.typ
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementMigrationEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class PipelineExecutor {
 
@@ -42,9 +39,6 @@ public class PipelineExecutor {
     private boolean storeStatus;
     private boolean monitor;
 
-    /**
-     * Old pipeline before migration
-     */
     private Pipeline secondaryPipeline;
 
     /**
@@ -52,58 +46,29 @@ public class PipelineExecutor {
      */
     private PipelineElementMigrationEntity migrationEntity;
 
-    /**
-     * Predecessors of the pipeline element to be migrated in the migration pipeline
-     */
-    private List<NamedStreamPipesEntity> predecessorsAfterMigration;
+    private PipelineElementReconfigurationEntity reconfigurationEntity;
 
-    /**
-     * Predecessors of the pipeline element to be migrated in the old pipeline before migration
-     */
-    private List<NamedStreamPipesEntity> predecessorsBeforeMigration;
+    private final LifecycleEntity<InvocableStreamPipesEntity> graphs;
 
-    /**
-     * Collection of relays that were created in the migration process needing to be stored
-     */
-    private List<SpDataStreamRelayContainer> relaysToBePersisted;
+    private final LifecycleEntity<SpDataStreamRelayContainer> relays;
 
-    /**
-     * Collection of relays that were removed in the migration process needing to be deleted from persistent storage.
-     */
-    private List<SpDataStreamRelayContainer> relaysToBeDeleted;
+    private final LifecycleEntity<SpDataSet> dataSets;
+
 
     private PipelineOperationStatus status;
 
-    private PipelineElementReconfigurationEntity reconfigurationEntity;
-
     private final LinkedList<PipelineExecutionOperation> operations = new LinkedList<>();
-
-    private List<SpDataSet> dataSets;
-
-    private List<SpDataStreamRelayContainer> relays;
-
-    private List<InvocableStreamPipesEntity> graphs;
-
-    private final LifecycleEntity<InvocableStreamPipesEntity> grafs;
-
-    private final LifecycleEntity<SpDataStreamRelayContainer> relais;
-
-    private final LifecycleEntity<SpDataSet> dataZeds;
 
     public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor){
         this.pipeline = pipeline;
         this.visualize = visualize;
         this.storeStatus = storeStatus;
         this.monitor = monitor;
-        this.predecessorsAfterMigration = new ArrayList<>();
-        this.predecessorsBeforeMigration = new ArrayList<>();
-        this.relaysToBePersisted = new ArrayList<>();
-        this.relaysToBeDeleted = new ArrayList<>();
         this.status = StatusUtils.initPipelineOperationStatus(pipeline);
 
-        this.grafs = new LifecycleEntity<>();
-        this.relais = new LifecycleEntity<>();
-        this.dataZeds = new LifecycleEntity<>();
+        this.graphs = new LifecycleEntity<>();
+        this.relays = new LifecycleEntity<>();
+        this.dataSets = new LifecycleEntity<>();
     }
 
     public PipelineOperationStatus execute(){
@@ -134,11 +99,20 @@ public class PipelineExecutor {
         StatusUtils.updateStatus(rollbackStatus, this.status);
     }
 
-    //Getter and Setter
-
     public void addOperation(PipelineExecutionOperation operation){
         this.operations.add(operation);
     }
+
+    public boolean containsReconfigurationOperation(){
+        return this.operations.stream().anyMatch(operation -> operation instanceof ReconfigurationOperation);
+    }
+
+    public boolean containsMigrationOperation(){
+        return this.operations.stream().anyMatch(operation -> operation instanceof MigrationOperation);
+    }
+
+
+    //Getter and Setter
 
     public Pipeline getPipeline() {
         return pipeline;
@@ -188,38 +162,6 @@ public class PipelineExecutor {
         this.migrationEntity = migrationEntity;
     }
 
-    public List<NamedStreamPipesEntity> getPredecessorsAfterMigration() {
-        return predecessorsAfterMigration;
-    }
-
-    public void setPredecessorsAfterMigration(List<NamedStreamPipesEntity> predecessorsAfterMigration) {
-        this.predecessorsAfterMigration = predecessorsAfterMigration;
-    }
-
-    public List<NamedStreamPipesEntity> getPredecessorsBeforeMigration() {
-        return predecessorsBeforeMigration;
-    }
-
-    public void setPredecessorsBeforeMigration(List<NamedStreamPipesEntity> predecessorsBeforeMigration) {
-        this.predecessorsBeforeMigration = predecessorsBeforeMigration;
-    }
-
-    public List<SpDataStreamRelayContainer> getRelaysToBePersisted() {
-        return relaysToBePersisted;
-    }
-
-    public void setRelaysToBePersisted(List<SpDataStreamRelayContainer> relaysToBePersisted) {
-        this.relaysToBePersisted = relaysToBePersisted;
-    }
-
-    public List<SpDataStreamRelayContainer> getRelaysToBeDeleted() {
-        return relaysToBeDeleted;
-    }
-
-    public void setRelaysToBeDeleted(List<SpDataStreamRelayContainer> relaysToBeDeleted) {
-        this.relaysToBeDeleted = relaysToBeDeleted;
-    }
-
     public PipelineOperationStatus getStatus() {
         return status;
     }
@@ -236,48 +178,15 @@ public class PipelineExecutor {
         this.reconfigurationEntity = reconfigurationEntity;
     }
 
-    public List<SpDataSet> getDataSets() {
-        return dataSets;
-    }
-
-    public void setDataSets(List<SpDataSet> dataSets) {
-        this.dataSets = dataSets;
-    }
-
-    public List<SpDataStreamRelayContainer> getRelays() {
-        return relays;
-    }
-
-    public void setRelays(List<SpDataStreamRelayContainer> relays) {
-        this.relays = relays;
-    }
-
-    public List<InvocableStreamPipesEntity> getGraphs() {
+    public LifecycleEntity<InvocableStreamPipesEntity> getGraphs() {
         return graphs;
     }
 
-    public void setGraphs(List<InvocableStreamPipesEntity> graphs) {
-        this.graphs = graphs;
+    public LifecycleEntity<SpDataStreamRelayContainer> getRelays() {
+        return relays;
     }
 
-
-    public LifecycleEntity<InvocableStreamPipesEntity> getGrafs() {
-        return grafs;
-    }
-
-    public LifecycleEntity<SpDataStreamRelayContainer> getRelais() {
-        return relais;
-    }
-
-    public LifecycleEntity<SpDataSet> getDataZeds() {
-        return dataZeds;
-    }
-
-    public boolean containsReconfigurationOperation(){
-        return this.operations.stream().anyMatch(operation -> operation instanceof ReconfigurationOperation);
-    }
-
-    public boolean containsMigrationOperation(){
-        return this.operations.stream().anyMatch(operation -> operation instanceof MigrationOperation);
+    public LifecycleEntity<SpDataSet> getDataSets() {
+        return dataSets;
     }
 }

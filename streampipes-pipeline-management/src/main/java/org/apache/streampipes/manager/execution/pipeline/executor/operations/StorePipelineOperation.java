@@ -34,12 +34,12 @@ public class StorePipelineOperation extends PipelineExecutionOperation{
 
     @Override
     public PipelineOperationStatus executeOperation() {
-        PipelineOperationStatus status = StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
-        Pipeline pipeline = associatedPipelineExecutor.getPipeline();
+        PipelineOperationStatus status = StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
+        Pipeline pipeline = pipelineExecutor.getPipeline();
         try{
-            StorageUtils.storeInvocationGraphs(pipeline.getPipelineId(), associatedPipelineExecutor.getGraphs(),
-                    associatedPipelineExecutor.getDataSets());
-            StorageUtils.storeDataStreamRelayContainer(associatedPipelineExecutor.getRelays());
+            StorageUtils.storeInvocationGraphs(pipeline.getPipelineId(), pipelineExecutor.getGraphs().getEntitiesToStore(),
+                    pipelineExecutor.getDataSets().getEntitiesToStore());
+            StorageUtils.storeDataStreamRelayContainer(pipelineExecutor.getRelays().getEntitiesToStore());
 
             PipelineStatusManager.addPipelineStatus(
                     pipeline.getPipelineId(),
@@ -48,7 +48,7 @@ public class StorePipelineOperation extends PipelineExecutionOperation{
                             PipelineStatusMessageType.PIPELINE_STARTED.title(),
                             PipelineStatusMessageType.PIPELINE_STARTED.description()));
 
-            if (associatedPipelineExecutor.isStoreStatus()) StorageUtils.setPipelineStarted(pipeline);
+            if (pipelineExecutor.isStoreStatus()) StorageUtils.setPipelineStarted(pipeline);
         }catch (Exception e){
             status.setSuccess(false);
             status.setTitle(e.getMessage());
@@ -59,11 +59,11 @@ public class StorePipelineOperation extends PipelineExecutionOperation{
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        return null;
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        return null;
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 }

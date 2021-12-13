@@ -20,52 +20,48 @@ package org.apache.streampipes.manager.execution.pipeline.executor.operations;
 import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.MigrationOperation;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.CommunicationUtils;
-import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.RelayUtils;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-public class StopOriginPipelineElementAndRelaysOperation extends PipelineExecutionOperation implements MigrationOperation {
+public class StartRelaysOperation extends PipelineExecutionOperation implements MigrationOperation {
 
-    public StopOriginPipelineElementAndRelaysOperation(PipelineExecutor pipelineExecutor) {
+
+    public StartRelaysOperation(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 
     @Override
     public PipelineOperationStatus executeOperation() {
         long nanoTimeBeforeOperation = System.nanoTime();
-        List<InvocableStreamPipesEntity> graphs = Collections.singletonList(
-                associatedPipelineExecutor.getMigrationEntity().getSourceElement());
-        List<SpDataStreamRelayContainer> relays = PipelineElementUtils.extractRelaysFromDataProcessor(graphs);
+        List<SpDataStreamRelayContainer> relays = pipelineExecutor.getRelays().getEntitiesToStart();
 
-        RelayUtils.updateRelays(relays, associatedPipelineExecutor.getRelaysToBeDeleted());
-
-        PipelineOperationStatus status = CommunicationUtils.stopPipelineElementsAndRelays(graphs, relays, associatedPipelineExecutor.getPipeline());
+        PipelineOperationStatus status= CommunicationUtils.startRelays(relays, pipelineExecutor.getPipeline());
 
         long duration = System.nanoTime() - nanoTimeBeforeOperation;
-        EvaluationLogger.getInstance().logMQTT("Migration", "stop origin element", "", duration, duration/1000000000.0);
+        EvaluationLogger.getInstance().logMQTT("Migration", "start relay to target", "", duration, duration/1000000000.0);
 
         return status;
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        //TODO: Implement
-        return null;
+        Set<String> relayIdsToRollback = StatusUtils.extractUniqueSuccessfulIds(this.getStatus());
+        List<SpDataStreamRelayContainer> relaysToRollBack =
+                RelayUtils.filterRelaysById(pipelineExecutor.getRelays().getEntitiesToStart(),
+                        relayIdsToRollback);
+
+        return CommunicationUtils.stopRelays(relaysToRollBack, pipelineExecutor.getPipeline());
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        List<InvocableStreamPipesEntity> graphs = Collections.singletonList(
-                associatedPipelineExecutor.getMigrationEntity().getSourceElement());
-        List<SpDataStreamRelayContainer> relays = PipelineElementUtils.extractRelaysFromDataProcessor(graphs);
-
-        RelayUtils.updateRelays(relays, associatedPipelineExecutor.getRelaysToBeDeleted());
-        return CommunicationUtils.startPipelineElementsAndRelays(graphs, relays, associatedPipelineExecutor.getPipeline());
+        List<SpDataStreamRelayContainer> relaysToRollBack = pipelineExecutor.getRelays().getEntitiesToStart();
+        return CommunicationUtils.stopRelays(relaysToRollBack, pipelineExecutor.getPipeline());
     }
 }

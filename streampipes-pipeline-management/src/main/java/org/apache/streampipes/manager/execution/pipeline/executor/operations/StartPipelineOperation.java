@@ -19,22 +19,19 @@ package org.apache.streampipes.manager.execution.pipeline.executor.operations;
 
 import org.apache.streampipes.manager.execution.http.GraphSubmitter;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.DataSetUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.RelayUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.Set;
+
 
 public class StartPipelineOperation extends PipelineExecutionOperation{
 
@@ -44,61 +41,44 @@ public class StartPipelineOperation extends PipelineExecutionOperation{
 
     @Override
     public PipelineOperationStatus executeOperation() {
-        Pipeline pipeline = associatedPipelineExecutor.getPipeline();
-        pipeline.getSepas().forEach(this::updateKafkaGroupIds);
-        pipeline.getActions().forEach(this::updateKafkaGroupIds);
-
-        List<DataProcessorInvocation> sepas = pipeline.getSepas();
-        List<DataSinkInvocation> secs = pipeline.getActions();
-
-        List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
-                SpDataSet((SpDataSet) s)).collect(Collectors.toList());
-
-        for (SpDataSet ds : dataSets) {
-            ds.setCorrespondingPipeline(pipeline.getPipelineId());
-        }
-
-        List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
-        graphs.addAll(sepas);
-        graphs.addAll(secs);
-
-        List<InvocableStreamPipesEntity> decryptedGraphs = PipelineElementUtils.decryptSecrets(graphs, pipeline);
-
-        graphs.forEach(g -> g.setStreamRequirements(Collections.emptyList()));
-
-        List<SpDataStreamRelayContainer> relays = PipelineElementUtils.generateRelays(decryptedGraphs, pipeline);
-
-        associatedPipelineExecutor.setGraphs(graphs);
-        associatedPipelineExecutor.setDataSets(dataSets);
-        associatedPipelineExecutor.setRelays(relays);
-
+        Pipeline pipeline = pipelineExecutor.getPipeline();
         return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),
-                decryptedGraphs, dataSets, relays).invokePipelineElementsAndRelays();
+                pipelineExecutor.getGraphs().getEntitiesToStart(),
+                pipelineExecutor.getDataSets().getEntitiesToStart(),
+                pipelineExecutor.getRelays().getEntitiesToStart()).invokePipelineElementsAndRelays();
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        //TODO: Check if there is a possible realization of partial rollback
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        Pipeline pipeline = pipelineExecutor.getPipeline();
+
+        Set<String> idsToRollback = StatusUtils.extractUniqueSuccessfulIds(this.getStatus());
+
+        List<InvocableStreamPipesEntity> graphsToRollBack =
+                PipelineElementUtils.filterPipelineElementsById(
+                        pipelineExecutor.getGraphs().getEntitiesToStart(),
+                        idsToRollback);
+        List<SpDataSet> dataSetsToRollBack =
+                DataSetUtils.filterDataSetsById(
+                        pipelineExecutor.getDataSets().getEntitiesToStart(),
+                        idsToRollback);
+        List<SpDataStreamRelayContainer> relaysToRollBack =
+                RelayUtils.filterRelaysById(
+                        pipelineExecutor.getRelays().getEntitiesToStart(),
+                        idsToRollback);
+
+        return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),
+                graphsToRollBack,
+                dataSetsToRollBack,
+                relaysToRollBack).detachPipelineElementsAndRelays();
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        //TODO: Implement full rollback
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
-    }
-
-    /**
-     * Updates group.id for data processor/sink. Note: KafkaTransportProtocol only!!
-     *
-     * @param entity    data processor/sink
-     */
-    private void updateKafkaGroupIds(InvocableStreamPipesEntity entity) {
-        entity.getInputStreams()
-                .stream()
-                .filter(is -> is.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol)
-                .map(is -> is.getEventGrounding().getTransportProtocol())
-                .map(KafkaTransportProtocol.class::cast)
-                .forEach(tp -> tp.setGroupId(UUID.randomUUID().toString()));
+        Pipeline pipeline = pipelineExecutor.getPipeline();
+        return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),
+                pipelineExecutor.getGraphs().getEntitiesToStart(),
+                pipelineExecutor.getDataSets().getEntitiesToStart(),
+                pipelineExecutor.getRelays().getEntitiesToStart()).detachPipelineElementsAndRelays();
     }
 }

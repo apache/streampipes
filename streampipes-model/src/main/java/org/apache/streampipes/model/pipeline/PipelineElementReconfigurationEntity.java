@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.model.pipeline;
 
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 import java.util.ArrayList;
@@ -45,6 +46,15 @@ public class PipelineElementReconfigurationEntity {
         this.deploymentTargetNodeHostname = deploymentTargetNodeHostname;
         this.deploymentTargetNodePort = deploymentTargetNodePort;
         this.reconfiguredStaticProperties = reconfiguredStaticProperties;
+    }
+
+    public PipelineElementReconfigurationEntity(InvocableStreamPipesEntity entity){
+        this.deploymentRunningInstanceId = entity.getDeploymentRunningInstanceId();
+        this.pipelineElementName = entity.getName();
+        this.deploymentTargetNodeId = entity.getDeploymentTargetNodeId();
+        this.deploymentTargetNodeHostname = entity.getDeploymentTargetNodeHostname();
+        this.deploymentTargetNodePort = entity.getDeploymentTargetNodePort();
+        this.reconfiguredStaticProperties = new ArrayList<>();
     }
 
     public String getDeploymentRunningInstanceId() {

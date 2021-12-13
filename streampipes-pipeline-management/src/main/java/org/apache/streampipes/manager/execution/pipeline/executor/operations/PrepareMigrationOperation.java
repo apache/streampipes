@@ -22,17 +22,26 @@ import org.apache.streampipes.manager.data.PipelineGraphBuilder;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.MigrationOperation;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineUtils;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.RelayUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
+import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class PrepareMigrationOperation extends PipelineExecutionOperation implements MigrationOperation {
+
+    private List<NamedStreamPipesEntity> predecessorsAfterMigration;
+    private final List<NamedStreamPipesEntity> predecessorsBeforeMigration = new ArrayList<>();
+    private Pipeline pipeline;
 
     public PrepareMigrationOperation(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
@@ -40,7 +49,7 @@ public class PrepareMigrationOperation extends PipelineExecutionOperation implem
 
     @Override
     public PipelineOperationStatus executeOperation() {
-        Pipeline pipeline = associatedPipelineExecutor.getPipeline();
+        this.pipeline = pipelineExecutor.getPipeline();
         //Purge existing relays
         PipelineUtils.purgeExistingRelays(pipeline);
 
@@ -51,42 +60,78 @@ public class PrepareMigrationOperation extends PipelineExecutionOperation implem
 
         //Get predecessors
         PipelineGraph pipelineGraphBeforeMigration =
-                new PipelineGraphBuilder(associatedPipelineExecutor.getSecondaryPipeline()).buildGraph();
-        findPredecessorsInMigrationPipeline(pipelineGraphAfterMigration);
+                new PipelineGraphBuilder(pipelineExecutor.getSecondaryPipeline()).buildGraph();
+        findPredecessorsAfterMigration(pipelineGraphAfterMigration);
 
         //Find counterpart for predecessors in currentPipeline
-        findAndComparePredecessorsInCurrentPipeline(pipelineGraphBeforeMigration);
+        findPredecessorsBeforeMigration(pipelineGraphBeforeMigration);
+
+        initializeGraphs();
+        initializeRelays();
+
         return StatusUtils.initPipelineOperationStatus(pipeline);
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        return null;
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        return null;
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 
-    private void findPredecessorsInMigrationPipeline(PipelineGraph pipelineGraphAfterMigration) {
+    private void findPredecessorsAfterMigration(PipelineGraph pipelineGraphAfterMigration) {
         // get unique list of predecessors
-        List<NamedStreamPipesEntity> predecessors = PipelineGraphHelpers.findStreams(pipelineGraphAfterMigration).stream()
+        this.predecessorsAfterMigration = PipelineGraphHelpers.findStreams(pipelineGraphAfterMigration).stream()
                 .map(stream -> PipelineUtils.getPredecessors(stream,
-                        associatedPipelineExecutor.getMigrationEntity().getTargetElement(),
+                        pipelineExecutor.getMigrationEntity().getTargetElement(),
                         pipelineGraphAfterMigration, new ArrayList<>()))
                 .flatMap(List::stream)
                 .collect(Collectors.toList())
                 .stream()
                 .distinct()
                 .collect(Collectors.toList());
-
-        associatedPipelineExecutor.getPredecessorsAfterMigration().addAll(predecessors);
     }
 
-    private void findAndComparePredecessorsInCurrentPipeline(PipelineGraph pipelineGraphBeforeMigration) {
-        associatedPipelineExecutor.getPredecessorsAfterMigration().forEach(migrationPredecessor ->
-                associatedPipelineExecutor.getPredecessorsBeforeMigration()
-                        .add(PipelineUtils.findMatching(migrationPredecessor, pipelineGraphBeforeMigration)));
+    private void findPredecessorsBeforeMigration(PipelineGraph pipelineGraphBeforeMigration) {
+        this.predecessorsAfterMigration.forEach(migrationPredecessor ->
+        {
+            NamedStreamPipesEntity predecessor = PipelineUtils.findMatching(migrationPredecessor, pipelineGraphBeforeMigration);
+            this.predecessorsBeforeMigration
+                    .add(predecessor);
+        });
+    }
+
+    private void initializeGraphs(){
+        List<InvocableStreamPipesEntity> decryptedTargetGraphs = PipelineElementUtils.decryptSecrets(
+                Collections.singletonList(pipelineExecutor.getMigrationEntity().getTargetElement()),
+                pipelineExecutor.getPipeline());
+        pipelineExecutor.getGraphs().getEntitiesToStart().addAll(decryptedTargetGraphs);
+
+        List<InvocableStreamPipesEntity> originGraphs = Collections.singletonList(
+                pipelineExecutor.getMigrationEntity().getSourceElement());
+        pipelineExecutor.getGraphs().getEntitiesToStop().addAll(originGraphs);
+
+        pipelineExecutor.getGraphs().getEntitiesToStore().addAll(pipeline.getActions());
+        pipelineExecutor.getGraphs().getEntitiesToStore().addAll(pipeline.getSepas());
+    }
+
+    private void initializeRelays(){
+        List<SpDataStreamRelayContainer> relaysToTarget = RelayUtils.findRelays(
+                predecessorsAfterMigration,
+                pipelineExecutor.getMigrationEntity().getTargetElement(),
+                pipelineExecutor.getPipeline());
+        pipelineExecutor.getRelays().getEntitiesToStart().addAll(relaysToTarget);
+        pipelineExecutor.getRelays().getEntitiesToStore().addAll(relaysToTarget);
+
+        List<SpDataStreamRelayContainer> relaysToOrigin = RelayUtils
+                .findRelaysWhenStopping(
+                        predecessorsBeforeMigration,
+                        pipelineExecutor.getMigrationEntity().getSourceElement(),
+                        pipelineExecutor.getPipeline());
+        pipelineExecutor.getRelays().getEntitiesToStop().addAll(relaysToOrigin);
+        pipelineExecutor.getRelays().getEntitiesToDelete().addAll(relaysToOrigin);
     }
 }

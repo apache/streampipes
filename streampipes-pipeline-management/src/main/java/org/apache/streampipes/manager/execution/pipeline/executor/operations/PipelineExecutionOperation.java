@@ -23,13 +23,13 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 public abstract class PipelineExecutionOperation {
 
-    protected final PipelineExecutor associatedPipelineExecutor;
+    protected final PipelineExecutor pipelineExecutor;
 
     private PipelineOperationStatus status;
 
     public PipelineExecutionOperation(PipelineExecutor pipelineExecutor){
-        this.associatedPipelineExecutor = pipelineExecutor;
-        this.status = StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        this.pipelineExecutor = pipelineExecutor;
+        this.status = StatusUtils.initPipelineOperationStatus(this.pipelineExecutor.getPipeline());
     }
 
     public abstract PipelineOperationStatus executeOperation();

@@ -21,8 +21,15 @@ import org.apache.streampipes.manager.execution.http.ReconfigurationSubmitter;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.ReconfigurationOperation;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ReconfigureElementOperation extends PipelineExecutionOperation implements ReconfigurationOperation {
 
@@ -32,18 +39,49 @@ public class ReconfigureElementOperation extends PipelineExecutionOperation impl
 
     @Override
     public PipelineOperationStatus executeOperation() {
-        Pipeline reconfiguredPipeline = associatedPipelineExecutor.getSecondaryPipeline();
+        Pipeline reconfiguredPipeline = pipelineExecutor.getSecondaryPipeline();
         return new ReconfigurationSubmitter(reconfiguredPipeline.getPipelineId(), reconfiguredPipeline.getName(),
-                associatedPipelineExecutor.getReconfigurationEntity()).reconfigure();
+                pipelineExecutor.getReconfigurationEntity()).reconfigure();
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        return rollbackOperationFully();
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        Pipeline originalPipeline = pipelineExecutor.getPipeline();
+        PipelineElementReconfigurationEntity originalReconfigurationEntity = pipelineExecutor.getReconfigurationEntity();
+
+        Optional<DataProcessorInvocation> reconfiguredEntity =
+                findReconfiguredEntity(originalPipeline, originalReconfigurationEntity);
+
+        if(!reconfiguredEntity.isPresent())
+            return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
+
+        PipelineElementReconfigurationEntity rollbackReconfigurationEntity =
+                new PipelineElementReconfigurationEntity(reconfiguredEntity.get());
+
+        rollbackReconfigurationEntity.setReconfiguredStaticProperties(
+                findMatchingStaticProperty(reconfiguredEntity.get().getStaticProperties(),
+                        originalReconfigurationEntity.getReconfiguredStaticProperties()));
+
+        return new ReconfigurationSubmitter(originalPipeline.getPipelineId(), originalPipeline.getName(),
+                rollbackReconfigurationEntity).reconfigure();
+    }
+
+    private Optional<DataProcessorInvocation> findReconfiguredEntity(Pipeline originalPipeline,
+                                                                     PipelineElementReconfigurationEntity reconfigurationEntity){
+        return originalPipeline.getSepas().stream()
+                .filter(invocation -> invocation.getDeploymentRunningInstanceId()
+                        .equals(reconfigurationEntity.getDeploymentRunningInstanceId())).findFirst();
+    }
+
+    private List<StaticProperty> findMatchingStaticProperty(List<StaticProperty> listToSearchIn,
+                                                            List<StaticProperty> listToCompareTo){
+        return listToSearchIn.stream().filter(searchProperty ->
+            listToCompareTo.stream().anyMatch(compareProperty ->
+                    compareProperty.getInternalName().equals(searchProperty.getInternalName()))).collect(Collectors.toList());
     }
 }

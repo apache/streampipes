@@ -193,4 +193,11 @@ public class PipelineElementUtils {
                 .filter(r -> r.getOutputStreamRelays().size() > 0)
                 .collect(Collectors.toList());
     }
+
+    public static List<InvocableStreamPipesEntity> filterPipelineElementsById(List<InvocableStreamPipesEntity> pipelineElements,
+                                                                    Set<String> pipelineElementIds) {
+        return pipelineElements.stream().
+                filter(pipelineElement -> pipelineElementIds.contains(pipelineElement.getDeploymentRunningInstanceId()))
+                .collect(Collectors.toList());
+    }
 }

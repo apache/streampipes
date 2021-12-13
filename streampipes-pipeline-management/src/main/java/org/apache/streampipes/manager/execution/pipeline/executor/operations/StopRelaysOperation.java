@@ -21,7 +21,6 @@ import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.manager.execution.pipeline.executor.*;
 import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.MigrationOperation;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.CommunicationUtils;
-import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.RelayUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
@@ -30,24 +29,19 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import java.util.List;
 import java.util.Set;
 
-public class StopRelaysFromPredecessorOperation extends PipelineExecutionOperation implements MigrationOperation {
+public class StopRelaysOperation extends PipelineExecutionOperation implements MigrationOperation {
 
-    public StopRelaysFromPredecessorOperation(PipelineExecutor pipelineExecutor){
+    public StopRelaysOperation(PipelineExecutor pipelineExecutor){
         super(pipelineExecutor);
     }
 
     @Override
     public PipelineOperationStatus executeOperation() {
         long nanoTimeBeforeOperation = System.nanoTime();
-        List<SpDataStreamRelayContainer> relays = RelayUtils
-                .findRelaysWhenStopping(associatedPipelineExecutor.getPredecessorsBeforeMigration(),
-                associatedPipelineExecutor.getMigrationEntity().getSourceElement(),
-                        associatedPipelineExecutor.getPipeline());
-
-        RelayUtils.updateRelays(relays, associatedPipelineExecutor.getRelaysToBeDeleted());
+        List<SpDataStreamRelayContainer> relays = pipelineExecutor.getRelays().getEntitiesToStop();
 
         PipelineOperationStatus statusStopRelays =
-                CommunicationUtils.stopRelays(relays, associatedPipelineExecutor.getPipeline());
+                CommunicationUtils.stopRelays(relays, pipelineExecutor.getPipeline());
 
         long duration = System.nanoTime() - nanoTimeBeforeOperation;
         EvaluationLogger.getInstance().logMQTT("Migration", "stop relay from origin", "", duration, duration/1000000000.0);
@@ -57,21 +51,17 @@ public class StopRelaysFromPredecessorOperation extends PipelineExecutionOperati
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        Set<String> relayIdsToRollback = StatusUtils.extractUniqueRelayIds(this.getStatus());
-        List<SpDataStreamRelayContainer> rollbackRelays = PipelineElementUtils.findRelaysAndFilterById(relayIdsToRollback,
-                associatedPipelineExecutor.getPredecessorsBeforeMigration(),
-                associatedPipelineExecutor.getMigrationEntity().getSourceElement(),
-                associatedPipelineExecutor.getPipeline());
+        Set<String> relayIdsToRollback = StatusUtils.extractUniqueSuccessfulIds(this.getStatus());
+        List<SpDataStreamRelayContainer> rollbackRelays =
+                RelayUtils.filterRelaysById(pipelineExecutor.getRelays().getEntitiesToStop(),
+                        relayIdsToRollback);
 
-        return CommunicationUtils.startRelays(rollbackRelays, associatedPipelineExecutor.getPipeline());
+        return CommunicationUtils.startRelays(rollbackRelays, pipelineExecutor.getPipeline());
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        List<SpDataStreamRelayContainer> rollbackRelays = RelayUtils.findRelays(
-                associatedPipelineExecutor.getPredecessorsBeforeMigration(),
-                associatedPipelineExecutor.getMigrationEntity().getSourceElement(),
-                associatedPipelineExecutor.getPipeline());
-        return CommunicationUtils.startRelays(rollbackRelays, associatedPipelineExecutor.getPipeline());
+        List<SpDataStreamRelayContainer> rollbackRelays = pipelineExecutor.getRelays().getEntitiesToStop();
+        return CommunicationUtils.startRelays(rollbackRelays, pipelineExecutor.getPipeline());
     }
 }

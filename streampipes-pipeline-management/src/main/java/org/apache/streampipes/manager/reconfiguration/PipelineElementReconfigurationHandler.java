@@ -60,8 +60,6 @@ public class PipelineElementReconfigurationHandler {
 
             if (entityStatus.isSuccess()) {
                 Operations.overwritePipeline(reconfiguredPipeline);
-            } else {
-                //TODO: Send old/existing configuration
             }
         });
     }
@@ -70,7 +68,6 @@ public class PipelineElementReconfigurationHandler {
         return PipelineExecutorFactory
                 .createReconfigurationExecutor(this.storedPipeline, false, false, false, this.reconfiguredPipeline, entity)
                 .execute();
-        //return new PipelineElementReconfigurationExecutor(reconfiguredPipeline, entity).reconfigurePipelineElement();
     }
 
     private List<PipelineElementReconfigurationEntity> comparePipelinesAndGetReconfiguration() {
@@ -103,12 +100,7 @@ public class PipelineElementReconfigurationHandler {
 
     private PipelineElementReconfigurationEntity reconfigurationEntity(DataProcessorInvocation graph,
                                                                        List<StaticProperty> adaptedStaticProperty) {
-        PipelineElementReconfigurationEntity entity = new PipelineElementReconfigurationEntity();
-        entity.setDeploymentRunningInstanceId(graph.getDeploymentRunningInstanceId());
-        entity.setPipelineElementName(graph.getName());
-        entity.setDeploymentTargetNodeId(graph.getDeploymentTargetNodeId());
-        entity.setDeploymentTargetNodeHostname(graph.getDeploymentTargetNodeHostname());
-        entity.setDeploymentTargetNodePort(graph.getDeploymentTargetNodePort());
+        PipelineElementReconfigurationEntity entity = new PipelineElementReconfigurationEntity(graph);
         entity.setReconfiguredStaticProperties(adaptedStaticProperty);
         return entity;
     }

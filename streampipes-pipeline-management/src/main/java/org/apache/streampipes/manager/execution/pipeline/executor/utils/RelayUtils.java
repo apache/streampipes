@@ -233,4 +233,11 @@ public class RelayUtils {
                                 String deploymentRunningInstanceId) {
         return relays.stream().anyMatch(r -> r.getRunningStreamRelayInstanceId().equals(deploymentRunningInstanceId));
     }
+
+    public static List<SpDataStreamRelayContainer> filterRelaysById(List<SpDataStreamRelayContainer> relays,
+                                                                    Set<String> relayIds) {
+        return relays.stream().
+                filter(relay -> relayIds.contains(relay.getRunningStreamRelayInstanceId()))
+                .collect(Collectors.toList());
+    }
 }

@@ -87,7 +87,6 @@ public class PipelineElementMigrationHandler {
                 swapPipelineElement(migrationPipeline, failedEntity);
             }
         });
-        //Why overwrite when changes are rolled back? TODO: Check if needed when pipeline is rolled back (else return)
         Operations.overwritePipeline(migrationPipeline);
     }
 
@@ -95,8 +94,6 @@ public class PipelineElementMigrationHandler {
         PipelineExecutor migrationExecutor = PipelineExecutorFactory.
                 createMigrationExecutor(migrationPipeline, visualize, storeStatus, monitor, currentPipeline, migrationEntity);
         return migrationExecutor.execute();
-        //return new PipelineMigrationExecutor(migrationPipeline, currentPipeline, migrationEntity, visualize,
-        //        storeStatus, monitor).migratePipelineElement();
     }
 
 

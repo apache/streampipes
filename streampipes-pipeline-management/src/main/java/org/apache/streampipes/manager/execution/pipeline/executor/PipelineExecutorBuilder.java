@@ -68,23 +68,23 @@ public class PipelineExecutorBuilder {
         return this;
     }
 
-    public PipelineExecutorBuilder addStartRelaysFromPredecessorsOperation(){
-        pipelineExecutor.addOperation(new StartRelaysFromPredecessorsOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStartRelaysOperation(){
+        pipelineExecutor.addOperation(new StartRelaysOperation(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStartTargetPipelineElementsOperation(){
-        pipelineExecutor.addOperation(new StartTargetPipelineElementsOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStartGraphsAndAssociatedRelaysOperation(){
+        pipelineExecutor.addOperation(new StartGraphsAndAssociatedRelaysOperation(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStopOriginPipelineElementAndRelaysOperation(){
-        pipelineExecutor.addOperation(new StopOriginPipelineElementAndRelaysOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStopGraphsAndAssociatedRelaysOperation(){
+        pipelineExecutor.addOperation(new StopGraphsAndAssociatedRelaysOperation(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStopRelaysFromPredecessorOperation(){
-        pipelineExecutor.addOperation(new StopRelaysFromPredecessorOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStopRelaysOperation(){
+        pipelineExecutor.addOperation(new StopRelaysOperation(pipelineExecutor));
         return this;
     }
 
@@ -95,6 +95,11 @@ public class PipelineExecutorBuilder {
 
     public PipelineExecutorBuilder addReconfigureElementOperation(){
         pipelineExecutor.addOperation(new ReconfigureElementOperation(pipelineExecutor));
+        return this;
+    }
+
+    public PipelineExecutorBuilder addPreparePipelineStartOperation(){
+        pipelineExecutor.addOperation(new PrepareStartPipelineOperation(pipelineExecutor));
         return this;
     }
 

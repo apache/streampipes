@@ -22,10 +22,8 @@ import org.apache.streampipes.manager.execution.pipeline.executor.utils.Pipeline
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StorageUtils;
 import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StoreMigratedPipelineOperation extends PipelineExecutionOperation{
@@ -36,26 +34,23 @@ public class StoreMigratedPipelineOperation extends PipelineExecutionOperation{
 
     @Override
     public PipelineOperationStatus executeOperation() {
-        List<InvocableStreamPipesEntity> graphs = new ArrayList<>();
-        graphs.addAll(associatedPipelineExecutor.getPipeline().getActions());
-        graphs.addAll(associatedPipelineExecutor.getPipeline().getSepas());
 
-        List<SpDataSet> dataSets = PipelineUtils.findDataSets(associatedPipelineExecutor.getPipeline());
+        List<SpDataSet> dataSets = PipelineUtils.findDataSets(pipelineExecutor.getPipeline());
 
-        // store new pipeline and relays
-        StorageUtils.storeInvocationGraphs(associatedPipelineExecutor.getPipeline().getPipelineId(), graphs, dataSets);
-        StorageUtils.deleteDataStreamRelayContainer(associatedPipelineExecutor.getRelaysToBeDeleted());
-        StorageUtils.storeDataStreamRelayContainer(associatedPipelineExecutor.getRelaysToBePersisted());
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        StorageUtils.storeInvocationGraphs(pipelineExecutor.getPipeline().getPipelineId(),
+                pipelineExecutor.getGraphs().getEntitiesToStore(), dataSets);
+        StorageUtils.deleteDataStreamRelayContainer(pipelineExecutor.getRelays().getEntitiesToDelete());
+        StorageUtils.storeDataStreamRelayContainer(pipelineExecutor.getRelays().getEntitiesToStore());
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        return null;
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        return null;
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 }

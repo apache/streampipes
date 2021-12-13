@@ -39,20 +39,20 @@ public class GetStateOperation extends PipelineExecutionOperation implements Mig
     public PipelineOperationStatus executeOperation() {
         long nanoTimeBeforeOperation = System.nanoTime();
         PipelineElementStatus statusGettingState = CommunicationUtils.getState(
-                associatedPipelineExecutor.getMigrationEntity().getSourceElement(),
-                associatedPipelineExecutor.getPipeline());
+                pipelineExecutor.getMigrationEntity().getSourceElement(),
+                pipelineExecutor.getPipeline());
         if(statusGettingState.isSuccess()) {
-            associatedPipelineExecutor.getMigrationEntity().getTargetElement()
+            pipelineExecutor.getMigrationEntity().getTargetElement()
                     .setState(statusGettingState.getOptionalMessage());
             statusGettingState.setOptionalMessage("Successfully retrieved state");
         }
-        PipelineOperationStatus getStateStatus = StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        PipelineOperationStatus getStateStatus = StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
         getStateStatus.addPipelineElementStatus(statusGettingState);
         StatusUtils.checkSuccess(getStateStatus);
         long duration = System.nanoTime() - nanoTimeBeforeOperation;
         EvaluationLogger.getInstance().logMQTT("Migration", "get state", "", duration, duration/1000000000.0);
         try {
-            int stateSize = getSizeInBytes(associatedPipelineExecutor.getMigrationEntity().getTargetElement().getState());
+            int stateSize = getSizeInBytes(pipelineExecutor.getMigrationEntity().getTargetElement().getState());
             EvaluationLogger.getInstance().logMQTT("Migration", "state size", stateSize/1024.0, stateSize/1048576.0);
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,13 +73,13 @@ public class GetStateOperation extends PipelineExecutionOperation implements Mig
 
     @Override
     public PipelineOperationStatus rollbackOperationPartially() {
-        associatedPipelineExecutor.getMigrationEntity().getTargetElement().setState(null);
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        pipelineExecutor.getMigrationEntity().getTargetElement().setState(null);
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        associatedPipelineExecutor.getMigrationEntity().getTargetElement().setState(null);
-        return StatusUtils.initPipelineOperationStatus(associatedPipelineExecutor.getPipeline());
+        pipelineExecutor.getMigrationEntity().getTargetElement().setState(null);
+        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
     }
 }

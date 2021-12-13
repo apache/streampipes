@@ -47,7 +47,7 @@ public class StatusUtils {
             status.setTitle(partialStatus.getTitle());
     }
 
-    public static Set<String> extractUniqueRelayIds(PipelineOperationStatus status) {
+    public static Set<String> extractUniqueSuccessfulIds(PipelineOperationStatus status) {
         return status.getElementStatus().stream()
                 .filter(PipelineElementStatus::isSuccess)
                 .map(PipelineElementStatus::getElementId)
