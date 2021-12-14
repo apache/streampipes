@@ -22,6 +22,7 @@ import org.apache.streampipes.client.http.BinaryGetRequest;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+
 public class FileApi extends AbstractClientApi {
 
     public FileApi(StreamPipesClientConfig clientConfig) {
@@ -30,6 +31,11 @@ public class FileApi extends AbstractClientApi {
 
     public byte[] getFileContent(String fileName) {
        return new BinaryGetRequest(clientConfig, getBaseResourcePath(fileName), null).executeRequest();
+    }
+
+    public void writeToFile(String file, String fileLocation) {
+        new BinaryGetRequest(clientConfig, getBaseResourcePath(file), null)
+                .writeToFile(fileLocation);
     }
 
     protected StreamPipesApiPath getBaseResourcePath(String fileName) {

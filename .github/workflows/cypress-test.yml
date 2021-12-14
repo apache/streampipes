@@ -49,7 +49,7 @@ jobs:
       - name: Build and run streampipes
         run: docker-compose up --build -d
 
-      - name: Wait 30 seconds
+      - name: Wait 70 seconds
         working-directory: ./installer/compose
         run: sleep 70
 
