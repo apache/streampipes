@@ -108,19 +108,32 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return getStaticPropertyByName(internalName, ColorPickerStaticProperty.class).getSelectedColor();
   }
 
+  /**
+   * @deprecated
+   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * Use the StreamPipes Client File API instead.
+   **/
+  @Deprecated
   public String fileContentsAsString(String internalName) throws IOException {
-    String filename = selectedFilename(internalName);
-    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asString(Charsets.UTF_8);
+    throw new IllegalArgumentException("Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
   }
 
+  /**
+   * @deprecated
+   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * Use the StreamPipes Client File API instead.
+   **/
   public byte[] fileContentsAsByteArray(String internalName) throws IOException {
-    String filename = selectedFilename(internalName);
-    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asBytes();
+    throw new IllegalArgumentException("Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
   }
 
+  /**
+   * @deprecated
+   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * Use the StreamPipes Client File API instead.
+   **/
   public InputStream fileContentsAsStream(String internalName) throws IOException {
-    String filename = selectedFilename(internalName);
-    return Request.Get(makeFileRequestPath(filename)).execute().returnContent().asStream();
+    throw new IllegalArgumentException("Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
   }
 
   public String selectedFilename(String internalName) {

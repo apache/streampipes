@@ -19,6 +19,7 @@ package org.apache.streampipes.processors.transformation.jvm.processor.csvmetada
 
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
@@ -30,10 +31,12 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -78,16 +81,12 @@ public class CsvMetadataEnrichmentController
   }
 
   @Override
-  public ConfiguredEventProcessor<CsvMetadataEnrichmentParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<CsvMetadataEnrichmentParameters> onInvocation(DataProcessorInvocation graph,
+                                                                                ProcessingElementParameterExtractor extractor) {
     String mappingFieldSelector = extractor.mappingPropertyValue(MAPPING_FIELD_KEY);
     List<String> fieldsToAppend = extractor.selectedMultiValues(FIELDS_TO_APPEND_KEY, String.class);
     String lookupField = extractor.selectedSingleValue(FIELD_TO_MATCH, String.class);
-    String fileContents = null;
-    try {
-      fileContents = extractor.fileContentsAsString(CSV_FILE_KEY);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    String fileContents = getFileContents(extractor);
 
     CsvMetadataEnrichmentParameters params = new CsvMetadataEnrichmentParameters(graph,
             mappingFieldSelector,
@@ -99,9 +98,10 @@ public class CsvMetadataEnrichmentController
   }
 
   @Override
-  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
+  public List<Option> resolveOptions(String requestId,
+                                     StaticPropertyExtractor parameterExtractor) {
     try {
-      String fileContents = parameterExtractor.fileContentsAsString(CSV_FILE_KEY);
+      String fileContents = getFileContents(parameterExtractor);
       if (requestId.equals(FIELDS_TO_APPEND_KEY)) {
         String matchColumn = parameterExtractor.selectedSingleValue(FIELD_TO_MATCH, String.class);
         return getOptionsFromColumnNames(fileContents, Collections.singletonList(matchColumn));
@@ -115,7 +115,8 @@ public class CsvMetadataEnrichmentController
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+                                           ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
     List<EventProperty> properties = processingElement
             .getInputStreams()
             .get(0)
@@ -125,7 +126,7 @@ public class CsvMetadataEnrichmentController
     List<String> columnsToInclude = parameterExtractor.selectedMultiValues(FIELDS_TO_APPEND_KEY,
             String.class);
     try {
-      String fileContents = parameterExtractor.fileContentsAsString(CSV_FILE_KEY);
+      String fileContents = getFileContents(parameterExtractor);
       properties.addAll(getAppendProperties(fileContents, columnsToInclude));
     } catch (IOException e) {
       e.printStackTrace();
@@ -168,5 +169,14 @@ public class CsvMetadataEnrichmentController
             .stream()
             .filter(key -> columnsToIgnore.stream().noneMatch(c -> c.equals(key)))
             .collect(Collectors.toList());
+  }
+
+  private String getFileContents(AbstractParameterExtractor<?> extractor) {
+    String filename = extractor.selectedFilename(CSV_FILE_KEY);
+    return getStreamPipesClientInstance().fileApi().getFileContentAsString(filename);
+  }
+
+  private StreamPipesClient getStreamPipesClientInstance() {
+    return new StreamPipesClientResolver().makeStreamPipesClientInstance();
   }
 }
