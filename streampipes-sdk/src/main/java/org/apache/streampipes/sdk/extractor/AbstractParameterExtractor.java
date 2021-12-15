@@ -111,7 +111,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   /**
    * @deprecated
    * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
-   * Use the StreamPipes Client File API instead.
+   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
   @Deprecated
   public String fileContentsAsString(String internalName) throws IOException {
@@ -121,7 +121,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   /**
    * @deprecated
    * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
-   * Use the StreamPipes Client File API instead.
+   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
   public byte[] fileContentsAsByteArray(String internalName) throws IOException {
     throw new IllegalArgumentException("Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
@@ -130,7 +130,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   /**
    * @deprecated
    * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
-   * Use the StreamPipes Client File API instead.
+   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
   public InputStream fileContentsAsStream(String internalName) throws IOException {
     throw new IllegalArgumentException("Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.namefinder;
 
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -28,6 +29,7 @@ import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -64,14 +66,10 @@ public class NameFinderController extends StandaloneEventProcessingDeclarer<Name
   @Override
   public ConfiguredEventProcessor<NameFinderParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    String filename = extractor.selectedFilename(MODEL);
+    byte[] fileContent = client.fileApi().getFileContent(filename);
     String tokens = extractor.mappingPropertyValue(TOKENS_FIELD_KEY);
-
-    byte[] fileContent = null;
-    try {
-      fileContent = extractor.fileContentsAsByteArray(MODEL);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     NameFinderParameters params = new NameFinderParameters(graph, tokens, fileContent);
     return new ConfiguredEventProcessor<>(params, NameFinder::new);
