@@ -54,7 +54,6 @@ public class FileProtocol extends Protocol {
 
     public static final String ID = "org.apache.streampipes.connect.iiot.protocol.set.file";
 
-    private String fileFetchUrl;
     private String selectedFilename;
 
     public FileProtocol() {
@@ -62,10 +61,8 @@ public class FileProtocol extends Protocol {
 
     public FileProtocol(IParser parser,
                         IFormat format,
-                        String fileFetchUrl,
                         String selectedFilename) {
         super(parser, format);
-        this.fileFetchUrl = fileFetchUrl;
         this.selectedFilename = selectedFilename;
     }
 
@@ -83,9 +80,8 @@ public class FileProtocol extends Protocol {
     @Override
     public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
-        String fileFetchUrl = extractor.selectedFileFetchUrl("filePath");
         String selectedFilename = extractor.selectedFilename("filePath");
-        return new FileProtocol(parser, format, fileFetchUrl, selectedFilename);
+        return new FileProtocol(parser, format, selectedFilename);
     }
 
     @Override

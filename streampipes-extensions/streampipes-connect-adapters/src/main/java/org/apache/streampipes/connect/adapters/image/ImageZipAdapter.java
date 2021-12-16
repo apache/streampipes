@@ -56,7 +56,7 @@ public class ImageZipAdapter {
                 StaticPropertyExtractor.from(adapterDescription.getConfig());
 
         Integer timeBetweenReplay = extractor.singleValueParameter(ImageZipUtils.INTERVAL_KEY, Integer.class);
-        String zipFileUrl = extractor.selectedFileFetchUrl(ImageZipUtils.ZIP_FILE_KEY);
+        String zipFileUrl = extractor.selectedFilename(ImageZipUtils.ZIP_FILE_KEY);
         ZipFileImageIterator zipFileImageIterator;
         try {
             zipFileImageIterator = new ZipFileImageIterator(zipFileUrl, infinite);

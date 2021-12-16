@@ -140,15 +140,13 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
     return getStaticPropertyByName(internalName, FileStaticProperty.class).getLocationPath();
   }
 
+  /**
+   * @deprecated
+   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
+   **/
   public String selectedFileFetchUrl(String internalName) {
-    return makeFileRequestPath(selectedFilename(internalName));
-  }
-
-  private String makeFileRequestPath(String filename) {
-    return BackendConfig.INSTANCE.getBackendUrl()
-            + "/streampipes-backend/api/v2/noauth"
-            + "/files/"
-            + filename;
+    throw new IllegalArgumentException("Deprecated as API requests need to be authenticated - use the StreamPipes Client file API instead.");
   }
 
   private <V, T extends SelectionStaticProperty> V selectedSingleValue(String internalName, Class<V> targetClass, Class<T> oneOfStaticProperty) {
