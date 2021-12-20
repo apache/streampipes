@@ -88,7 +88,9 @@ export class TimeSeriesChartWidgetConfigComponent
     return {
       forType: this.getWidgetType(),
       yKeys: [],
-      selectedTimeSeriesChartProperties: numericPlusBooleanFields,
+      selectedTimeSeriesChartProperties: numericPlusBooleanFields.length > 6 ?
+      numericPlusBooleanFields.slice(0, 5) :
+      numericPlusBooleanFields,
       chosenColor: colors,
       displayName: names,
       displayType: dTypes,
