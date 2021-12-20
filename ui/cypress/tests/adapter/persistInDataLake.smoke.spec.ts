@@ -22,7 +22,7 @@ import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuild
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 
 describe('Test File Stream Adapter', () => {
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
     FileManagementUtils.addFile('fileTest/random.csv');
   });

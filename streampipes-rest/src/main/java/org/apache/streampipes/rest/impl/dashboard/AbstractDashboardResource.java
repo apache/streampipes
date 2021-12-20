@@ -35,7 +35,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  @PreAuthorize("hasAnyAuthority(#root.this.getReadRoles())")
+  @PreAuthorize("this.hasReadAuthority()")
   @PostFilter("hasPermission(filterObject.couchDbId, 'READ')")
   public List<DashboardModel> getAllDashboards() {
     return getResourceManager().findAll();
@@ -44,7 +44,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @PreAuthorize("hasAnyAuthority(#root.this.getReadRoles()) and hasPermission(#dashboardId, 'READ')")
+  @PreAuthorize("this.hasReadAuthority() and hasPermission(#dashboardId, 'READ')")
   public DashboardModel getDashboard(@PathParam("dashboardId") String dashboardId) {
     return getResourceManager().find(dashboardId);
   }
@@ -52,7 +52,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   @PUT
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @PreAuthorize("hasAnyAuthority(#root.this.getWriteRoles()) and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
+  @PreAuthorize("this.hasWriteAuthority() and hasPermission(#dashboardModel.couchDbId, 'WRITE')")
   public DashboardModel modifyDashboard(DashboardModel dashboardModel) {
     getResourceManager().update(dashboardModel);
     return getResourceManager().find(dashboardModel.getCouchDbId());
@@ -61,7 +61,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
   @DELETE
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/{dashboardId}")
-  @PreAuthorize("hasAnyAuthority(#root.this.getDeleteRoles()) and hasPermission(#dashboardId, 'DELETE')")
+  @PreAuthorize("this.hasDeleteAuthority() and hasPermission(#dashboardId, 'DELETE')")
   public Response deleteDashboard(@PathParam("dashboardId") String dashboardId) {
     getResourceManager().delete(dashboardId);
     return ok();
@@ -69,7 +69,7 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @PreAuthorize("hasAnyAuthority(#root.this.getWriteRoles())")
+  @PreAuthorize("this.hasWriteAuthority()")
   public Response createDashboard(DashboardModel dashboardModel) {
     getResourceManager().create(dashboardModel, getAuthenticatedUserSid());
     return ok();
@@ -81,10 +81,10 @@ public abstract class AbstractDashboardResource extends AbstractAuthGuardedRestR
    * Do not delete these abstract methods below - required by Spring SPEL (see above)
    */
 
-  public abstract String getWriteRoles();
+  public abstract boolean hasReadAuthority();
 
-  public abstract String getReadRoles();
+  public abstract boolean hasWriteAuthority();
 
-  public abstract String getDeleteRoles();
+  public abstract boolean hasDeleteAuthority();
 
 }

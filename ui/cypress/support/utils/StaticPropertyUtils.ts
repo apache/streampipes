@@ -29,7 +29,7 @@ export class StaticPropertyUtils {
       } else if (config.type === 'drop-down') {
         cy.dataCy(config.selector).click().get('mat-option').contains(config.value).click();
       } else if (config.type === 'radio') {
-        cy.dataCy(config.selector + config.value).click();
+        cy.dataCy(config.selector.replace(' ', '_').toLowerCase() + '-' + config.value.replace(' ', '_').toLowerCase()).click();
       } else if (config.type === 'click') {
         cy.dataCy(config.selector).click({ force: true });
       } else if (config.type === 'code-input') {

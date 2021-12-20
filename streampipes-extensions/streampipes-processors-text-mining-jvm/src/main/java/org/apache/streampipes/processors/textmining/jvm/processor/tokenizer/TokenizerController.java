@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.tokenizer;
 
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -27,6 +28,7 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
@@ -62,14 +64,10 @@ public class TokenizerController extends StandaloneEventProcessingDeclarer<Token
   @Override
   public ConfiguredEventProcessor<TokenizerParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
+    StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+    String filename = extractor.selectedFilename(BINARY_FILE_KEY);
+    byte[] fileContent = client.fileApi().getFileContent(filename);
     String detection = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
-
-    byte[] fileContent = null;
-    try {
-      fileContent = extractor.fileContentsAsByteArray(BINARY_FILE_KEY);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
 
     TokenizerParameters params = new TokenizerParameters(graph, detection, fileContent);
     return new ConfiguredEventProcessor<>(params, Tokenizer::new);

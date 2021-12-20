@@ -41,6 +41,7 @@ import {AssetDashboardOverviewComponent} from "./components/dashboard-overview/d
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
 import {streamPipesStompConfig} from "../dashboard/services/websocket.config";
 import { AddLinkDialogComponent } from './dialog/add-link/add-link-dialog.component';
+import {DashboardModule} from "../dashboard/dashboard.module";
 
 @NgModule({
     imports: [
@@ -51,7 +52,8 @@ import { AddLinkDialogComponent } from './dialog/add-link/add-link-dialog.compon
         MatInputModule,
         MatFormFieldModule,
         FormsModule,
-        ColorPickerModule
+        ColorPickerModule,
+        DashboardModule
     ],
     declarations: [
         AppAssetMonitoringComponent,

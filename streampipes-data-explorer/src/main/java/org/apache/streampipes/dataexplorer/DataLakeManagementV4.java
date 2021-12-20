@@ -40,6 +40,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -47,6 +53,12 @@ import java.util.TimeZone;
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
 public class DataLakeManagementV4 {
+
+    private static final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("uuuu[-MM[-dd]]['T'HH[:mm[:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]]]][XXX]")
+            .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
+            .parseDefaulting(ChronoField.OFFSET_SECONDS, 0)
+            .toFormatter();
 
     public List<DataLakeMeasure> getAllMeasurements() {
         return DataExplorerUtils.getInfos();
@@ -64,8 +76,6 @@ public class DataLakeManagementV4 {
         if (!params.has(QP_LIMIT)) {
             params.update(QP_LIMIT, 500000);
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         SpQueryResult dataResult;
         //JSON
@@ -100,11 +110,7 @@ public class DataLakeManagementV4 {
                             }
                             isFirstElementInRow = false;
                             if (i1 == 0) {
-                                try {
-                                    element = formatter.parse(element.toString()).getTime();
-                                } catch (ParseException e) {
-                                    element = element.toString();
-                                }
+                                element = parseTime(element.toString());
                             }
                             //produce json e.g. "name": "Pipes" or "load": 42
                             outputStream.write(toBytes("\"" + dataResult.getHeaders().get(i1) + "\": "
@@ -157,11 +163,7 @@ public class DataLakeManagementV4 {
                             }
                             isFirstInRow = false;
                             if (i1 == 0) {
-                                try {
-                                    element = formatter.parse(element.toString()).getTime();
-                                } catch (ParseException e) {
-                                    element = element.toString();
-                                }
+                                element = parseTime(element.toString());
                             }
                             if (element == null) {
                                 outputStream.write(toBytes(""));
@@ -195,10 +197,7 @@ public class DataLakeManagementV4 {
             if (measure.getMeasureName().equals(measurementID)) {
                 QueryResult queryResult = new DeleteDataQuery(new DataLakeMeasure(measurementID, null)).executeQuery();
 
-                if (queryResult.hasError() || queryResult.getResults().get(0).getError() != null) {
-                    return false;
-                }
-                return true;
+                return !queryResult.hasError() && queryResult.getResults().get(0).getError() == null;
             }
         }
         return false;
@@ -232,11 +231,11 @@ public class DataLakeManagementV4 {
             Integer batchSize = config.getBatchSize();
             Integer flushDuration = config.getFlushDuration();
 
-            /**
-             * TODO:
-             * - Implementation of parameter update for batchSize and flushDuration
-             * - Updating multiple retention policies
-             */
+            //
+            // TODO:
+            // - Implementation of parameter update for batchSize and flushDuration
+            // - Updating multiple retention policies
+            //
 
             String operation = "CREATE";
             if (existingRetentionPolicies.size() > 1) {
@@ -247,10 +246,10 @@ public class DataLakeManagementV4 {
     }
 
     public List<DataLakeRetentionPolicy> getAllExistingRetentionPolicies() {
-        /**
-         * TODO:
-         * - Implementation of parameter return for batchSize and flushDuration
-         */
+        //
+        // TODO:
+        // - Implementation of parameter return for batchSize and flushDuration
+        //
         return new ShowRetentionPolicyQuery(RetentionPolicyQueryParams.from("", "0s")).executeQuery();
     }
 
@@ -278,4 +277,15 @@ public class DataLakeManagementV4 {
     private byte[] toBytes(String value) {
         return value.getBytes();
     }
+
+    private static Long parseTime(String v) {
+        TemporalAccessor temporalAccessor = formatter.parseBest(v,
+                ZonedDateTime::from,
+                LocalDateTime::from,
+                LocalDate::from);
+
+        Instant instant = Instant.from(temporalAccessor);
+        return Instant.EPOCH.until(instant, ChronoUnit.MILLIS);
+    }
+
 }

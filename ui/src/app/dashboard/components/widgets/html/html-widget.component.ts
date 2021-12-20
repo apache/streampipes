@@ -42,8 +42,8 @@ export class HtmlWidgetComponent extends BaseStreamPipesWidget implements OnInit
 
     ngOnInit(): void {
         super.ngOnInit();
-        this.width = this.computeCurrentWidth(this.gridsterItemComponent);
-        this.height = this.computeCurrentHeight(this.gridsterItemComponent);
+        this.width = this.computeCurrentWidth(this.itemWidth);
+        this.height = this.computeCurrentHeight(this.itemHeight);
     }
 
     ngOnDestroy(): void {

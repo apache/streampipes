@@ -22,7 +22,7 @@ import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 describe('Test Truncate data in datalake', () => {
 
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
     DataLakeUtils.loadRandomDataSetIntoDataLake();
   });

@@ -108,7 +108,7 @@ public class HttpRequestBuilder {
                 .findForObjectId(this.pipelineId)
                 .stream()
                 .findFirst()
-                .map(Permission::getOwnerSid).orElseThrow(() -> new IllegalArgumentException("Could not find owner for pipeline"));
+                .map(Permission::getOwnerSid).orElseThrow(() -> new IllegalArgumentException("Could not find owner for pipeline " + pipelineId));
 
         Principal correspondingUser = new SpResourceManager().manageUsers().getPrincipalById(ownerSid);
         return "Bearer " + new JwtTokenProvider().createToken(correspondingUser);

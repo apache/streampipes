@@ -49,13 +49,9 @@ public class FileProtocolUtils {
         if (!storageDir.exists()) {
             storageDir.mkdirs();
         }
-
         StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
 
-        byte[] res = client.fileApi().getFileContent(selectedFilename);
-
-        File file = new File(makeFileLoc(selectedFilename));
-        FileUtils.writeByteArrayToFile(file, res);
+        client.fileApi().writeToFile(selectedFilename, makeFileLoc(selectedFilename));
     }
 
     private static  String makeServiceStorageDir() {

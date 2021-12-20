@@ -16,9 +16,9 @@
  *
  */
 
-import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {StaticPropertyAlternatives} from "../../../core-model/gen/streampipes-model";
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
+import { StaticPropertyAlternatives } from '../../../core-model/gen/streampipes-model';
 
 @Component({
     selector: 'app-static-alternatives',
@@ -29,9 +29,9 @@ export class StaticAlternativesComponent
     extends AbstractStaticPropertyRenderer<StaticPropertyAlternatives> implements OnInit {
 
 
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    private errorMessage = "Please select a option";
+    private errorMessage = 'Please select a option';
 
     constructor(private changeDetectorRef: ChangeDetectorRef) {
         super();
@@ -42,11 +42,7 @@ export class StaticAlternativesComponent
 
     radioSelectionChange(event) {
         this.staticProperty.alternatives.forEach(alternative => {
-            if (alternative.elementId == event.value.elementId) {
-                alternative.selected = true;
-            } else {
-                alternative.selected = false;
-            }
+            alternative.selected = alternative.elementId === event.value.elementId;
         });
         this.changeDetectorRef.detectChanges();
     }

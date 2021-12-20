@@ -22,7 +22,7 @@ import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 
 describe('Test User Management', () => {
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
   });
 

@@ -31,7 +31,7 @@
 <div fxLayout="row" fxLayoutAlign="start">
     <div class="form-group" fxFlexAlign="center">
         <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'formatString'" color="accent">
-            <input matInput placeholder="E.g. yyyy-MM-dd HH:mm:ss.SSSZ"
+            <input matInput placeholder="E.g. yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                    [(ngModel)]="cachedProperty.timestampTransformationFormatString">
         </mat-form-field>
         <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'" color="accent">

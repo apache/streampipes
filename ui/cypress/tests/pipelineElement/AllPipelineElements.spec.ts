@@ -24,7 +24,7 @@ const allTests = Cypress.env('processingElements');
 allTests.forEach(test => {
 
   describe('Test Processor ' + test['name'], () => {
-    before('Setup Test', () => {
+    beforeEach('Setup Test', () => {
       cy.initStreamPipesTest();
     });
 

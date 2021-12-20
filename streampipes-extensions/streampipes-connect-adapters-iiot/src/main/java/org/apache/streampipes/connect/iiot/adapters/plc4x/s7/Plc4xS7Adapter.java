@@ -116,7 +116,7 @@ public class Plc4xS7Adapter extends PullAdapter {
                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_RUNTIME_NAME)),
                         StaticProperties.stringFreeTextProperty(Labels.withId(PLC_NODE_NAME)),
                         StaticProperties.singleValueSelection(Labels.withId(PLC_NODE_TYPE),
-                                Options.from("Bool",  "Byte", "Int", "Word", "Real", "Char", "String")))
+                                Options.from("Bool",  "Byte", "Int", "Word", "Real", "Char", "String", "Date", "Time of day", "Date and Time")))
                 .build();
         description.setAppId(ID);
 
@@ -145,7 +145,7 @@ public class Plc4xS7Adapter extends PullAdapter {
         List<EventProperty> allProperties = new ArrayList<>();
 
         for (Map<String, String> node : this.nodes) {
-            Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase());
+            Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
 
             allProperties.add(
                     PrimitivePropertyBuilder
@@ -193,7 +193,7 @@ public class Plc4xS7Adapter extends PullAdapter {
         try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
             PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
             for (Map<String, String> node : this.nodes) {
-                builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase());
+                builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
             }
             PlcReadRequest readRequest = builder.build();
 
@@ -299,16 +299,16 @@ public class Plc4xS7Adapter extends PullAdapter {
             case "BOOL":
                 return Datatypes.Boolean;
             case "BYTE":
+            case "REAL":
                 return Datatypes.Float;
             case "INT":
                 return Datatypes.Integer;
             case "WORD":
-                return Datatypes.String;
-            case "REAL":
-                return Datatypes.Float;
-            case "CHAR":
-                return Datatypes.String;
+            case "TIME_OF_DAY":
+            case "DATE":
+            case "DATE_AND_TIME":
             case "STRING":
+            case "CHAR":
                 return Datatypes.String;
             default:
                 throw new AdapterException("Datatype " + plcType + " is not supported");

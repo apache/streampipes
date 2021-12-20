@@ -25,7 +25,7 @@ const adapterName = 'simulator';
 
 
 describe('Test Random Data Simulator Stream Adapter', () => {
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
     AdapterUtils.addMachineDataSimulator(adapterName);
   });

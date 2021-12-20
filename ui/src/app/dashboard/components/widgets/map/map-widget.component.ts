@@ -66,8 +66,8 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         this.markerLayers = [];
         this.markerIds = [];
         this.showMarkers = true;
-        this.mapWidth = this.computeCurrentWidth(this.gridsterItemComponent);
-        this.mapHeight = this.computeCurrentHeight(this.gridsterItemComponent);
+        this.mapWidth = this.computeCurrentWidth(this.itemWidth);
+        this.mapHeight = this.computeCurrentHeight(this.itemHeight);
     }
 
     ngOnDestroy(): void {

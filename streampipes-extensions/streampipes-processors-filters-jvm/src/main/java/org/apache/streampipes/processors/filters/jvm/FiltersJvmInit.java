@@ -31,7 +31,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.filters.jvm.processor.booleanfilter.BooleanFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposeProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichProcessor;
-import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitController;
+import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterProcessor;
@@ -63,7 +63,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
                     new MergeBySchemaProcessor(),
                     new ComposeProcessor(),
                     new NumericalTextFilterProcessor(),
-                    new RateLimitController())
+                    new RateLimitProcessor())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),

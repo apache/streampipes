@@ -20,7 +20,7 @@ import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 
 describe('Test Random Data Simulator Stream Adapter', () => {
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
   });
 

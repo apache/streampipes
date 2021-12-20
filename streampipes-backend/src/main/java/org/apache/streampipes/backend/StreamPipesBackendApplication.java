@@ -58,6 +58,7 @@ import java.util.stream.Collectors;
 @EnableAutoConfiguration
 @Import({StreamPipesResourceConfig.class,
         WelcomePageController.class,
+        StreamPipesPasswordEncoder.class,
         WebSecurityConfig.class,
         SpPermissionEvaluator.class
 })
@@ -158,7 +159,7 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
       }
     });
 
-    deregisterService(AUTO_GENERATED_SERVICE_ID);
+    deregisterService(serviceId());
 
     LOG.info("Thanks for using Apache StreamPipes - see you next time!");
   }

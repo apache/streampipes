@@ -32,8 +32,8 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 
-import ${package}.pe.${packageName}.ExampleDataProcessor;
-import ${package}.pe.${packageName}.ExampleDataSink;
+import ${package}.pe.${packageName}.${classNamePrefix}DataProcessor;
+import ${package}.pe.${packageName}.${classNamePrefix}DataSink;
 
 public class Init extends ExtensionsModelSubmitter {
 
@@ -46,8 +46,8 @@ public class Init extends ExtensionsModelSubmitter {
     return SpServiceDefinitionBuilder.create("${package}",
                     "human-readable service name",
                     "human-readable service description", 8090)
-            .registerPipelineElement(new ExampleDataProcessor())
-            .registerPipelineElement(new ExampleDataSink())
+            .registerPipelineElement(new ${classNamePrefix}DataProcessor())
+            .registerPipelineElement(new ${classNamePrefix}DataSink())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),

@@ -21,7 +21,7 @@ on:
     - cron:  '51 23 * * *'
 
 jobs:
-  build-and-push-to-docker:
+  build-streampipes-and-run-e2e-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,7 +49,7 @@ jobs:
       - name: Build and run streampipes
         run: docker-compose up --build -d
 
-      - name: Wait 30 seconds
+      - name: Wait 70 seconds
         working-directory: ./installer/compose
         run: sleep 70
 

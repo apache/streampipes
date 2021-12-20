@@ -45,7 +45,7 @@ export class StatusWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.onSizeChanged(this.computeCurrentWidth(this.gridsterItemComponent), this.computeCurrentHeight(this.gridsterItemComponent));
+    this.onSizeChanged(this.computeCurrentWidth(this.itemWidth), this.computeCurrentHeight(this.itemHeight));
   }
 
   protected extractConfig(extractor: StaticPropertyExtractor) {

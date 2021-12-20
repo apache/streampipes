@@ -22,7 +22,7 @@ import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 describe('Test Table View in Data Explorer', () => {
 
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
     DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
   });

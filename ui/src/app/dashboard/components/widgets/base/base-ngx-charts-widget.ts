@@ -37,8 +37,8 @@ export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidg
     ngOnInit() {
         super.ngOnInit();
         this.colorScheme = {domain: [this.selectedSecondaryTextColor, this.selectedPrimaryTextColor]};
-        this.view = [this.computeCurrentWidth(this.gridsterItemComponent),
-            this.computeCurrentHeight(this.gridsterItemComponent)];
+        this.view = [this.computeCurrentWidth(this.itemWidth),
+            this.computeCurrentHeight(this.itemHeight)];
         this.displayChart = true;
     }
 

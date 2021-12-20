@@ -22,14 +22,14 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testNames = ['textFilter2'];
+  const testNames = ['jsEvaluator1'];
 
   const processorTest = test as ProcessorTest;
 
   if (testNames.includes(processorTest.name)) {
 
     describe('Test Processor ' + test.dir, () => {
-      before('Setup Test', () => {
+      beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
       });
 

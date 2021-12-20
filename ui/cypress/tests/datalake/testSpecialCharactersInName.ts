@@ -26,7 +26,7 @@ import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 
 describe('Test Table View in Data Explorer', () => {
 
-  before('Setup Test', () => {
+  beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
   });
 
