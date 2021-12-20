@@ -141,15 +141,12 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
         this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties.forEach(field => {
           if (field.sourceIndex === data.sourceIndex) {
 
-            if (field.fieldCharacteristics.numeric) {
-              const columnIndex = this.getColumnIndex(field, data);
-              const value = row[columnIndex];
-              this.maxValue = value > this.maxValue ? value : this.maxValue;
+            const columnIndex = this.getColumnIndex(field, data);
+            const value = row[columnIndex];
+            this.maxValue = value > this.maxValue ? value : this.maxValue;
 
-              if (!this.orderedSelectedProperties.includes(field.fullDbName + field.sourceIndex.toString())) {
-                this.orderedSelectedProperties.push(field.fullDbName + field.sourceIndex.toString());
-              }
-
+            if (!this.orderedSelectedProperties.includes(field.fullDbName + field.sourceIndex.toString())) {
+              this.orderedSelectedProperties.push(field.fullDbName + field.sourceIndex.toString());
             }
           }
         });
@@ -274,11 +271,10 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             if (!(name in this.dataExplorerWidget.visualizationConfig.chosenAxis)) {
               this.dataExplorerWidget.visualizationConfig.chosenAxis[name] = 'links';
             } else {
-              console.log("have " + name + ": " + this.dataExplorerWidget.visualizationConfig.chosenAxis[name]);
             }
 
             let color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
-
+             
             if (name in keeper) {
               color = this.lightenColor(keeper[name], 11.0);
               keeper[name] = color;
