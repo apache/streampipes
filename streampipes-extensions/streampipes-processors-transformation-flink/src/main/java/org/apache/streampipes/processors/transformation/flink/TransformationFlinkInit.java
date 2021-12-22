@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.processors.transformation.flink;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,6 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.apache.streampipes.processors.transformation.flink.processor.boilerplate.BoilerplateController;
 import org.apache.streampipes.processors.transformation.flink.processor.converter.FieldConverterController;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.FieldHasherController;
@@ -38,25 +38,30 @@ import org.apache.streampipes.processors.transformation.flink.processor.rename.F
 public class TransformationFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new FieldConverterController())
-            .add(new FieldHasherController())
-            .add(new FieldMapperController())
-            .add(new MeasurementUnitConverterController())
-            .add(new FieldRenamerController())
-            .add(new BoilerplateController());
+    new TransformationFlinkInit().init();
+  }
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new TransformationFlinkInit().init(TransformationFlinkConfig.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.transformation.flink",
+                    "Processors Transformation Flink",
+                    "",
+                    8090)
+            .registerPipelineElements(new FieldConverterController(),
+                    new FieldHasherController(),
+                    new FieldMapperController(),
+                    new MeasurementUnitConverterController(),
+                    new FieldRenamerController(),
+                    new BoilerplateController())
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .build();
   }
 }
