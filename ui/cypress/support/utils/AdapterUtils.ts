@@ -123,7 +123,7 @@ export class AdapterUtils {
     cy.get('button').contains('Next').parent().click();
   }
 
-  private static configureFormat(adapterConfiguration: GenericAdapterInput) {
+  public static configureFormat(adapterConfiguration: GenericAdapterInput) {
     // Select format
     cy.dataCy(adapterConfiguration.format).click();
 
@@ -142,9 +142,9 @@ export class AdapterUtils {
   }
 
 
-  private static markPropertyAsTimestamp(propertyName: string) {
+  public static markPropertyAsTimestamp(propertyName: string) {
     // Mark property as timestamp
-    cy.get('#event-schema-next-button').should('be.disabled');
+    this.eventSchemaNextBtnDisabled();
     // Edit timestamp
     cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
 
@@ -154,6 +154,14 @@ export class AdapterUtils {
     // Close
     cy.dataCy('sp-save-edit-property').click();
 
+    this.eventSchemaNextBtnEnabled();
+  }
+
+  public static eventSchemaNextBtnDisabled() {
+    cy.get('#event-schema-next-button').should('be.disabled');
+  }
+
+  public static eventSchemaNextBtnEnabled() {
     cy.get('#event-schema-next-button').parent().should('not.be.disabled');
   }
 
@@ -167,7 +175,7 @@ export class AdapterUtils {
     AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-live-preview');
   }
 
-  private static startSetAdapter(adapterInput: AdapterInput) {
+  public static startSetAdapter(adapterInput: AdapterInput) {
     AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-set-success');
   }
 

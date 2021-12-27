@@ -17,8 +17,12 @@
   -->
 
 <mat-form-field class="doubleWidth" color="accent">
-    <mat-select placeholder="Runtime Type" [(ngModel)]="cachedProperty.runtimeType" (selectionChange)="valueChanged()">
-        <mat-option *ngFor="let dataType of runtimeDataTypes" [value]="dataType.url">
+    <mat-select placeholder="Runtime Type"
+                [(ngModel)]="cachedProperty.runtimeType"
+                (selectionChange)="valueChanged()"
+                data-cy="connect-change-runtime-type">
+        <mat-option *ngFor="let dataType of runtimeDataTypes"
+                    [value]="dataType.url">
             {{ dataType.label }}
         </mat-option>
     </mat-select>

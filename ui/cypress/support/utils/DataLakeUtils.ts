@@ -162,7 +162,7 @@ export class DataLakeUtils {
     cy.get('div').contains('DataLake').parent().click();
   }
 
-  public static checkResults(dataLakeIndex: string, fileRoute: string) {
+  public static checkResults(dataLakeIndex: string, fileRoute: string, ignoreTime: boolean = false) {
 
     // Validate result in datalake
     cy.request({
@@ -177,7 +177,7 @@ export class DataLakeUtils {
     }).should((response) => {
       const actualResultString = response.body;
       cy.readFile(fileRoute).then((expectedResultString) => {
-        DataLakeUtils.resultEqual(actualResultString, expectedResultString);
+        DataLakeUtils.resultEqual(actualResultString, expectedResultString, ignoreTime);
       });
     });
   }
@@ -199,10 +199,17 @@ export class DataLakeUtils {
       .type(`${value.toLocaleString()}{enter}`);
   }
 
-  private static resultEqual(expected: string, actual: string) {
+  private static resultEqual(actual: string, expected: string, ignoreTime: boolean) {
+    let actualResult;
+    if (ignoreTime) {
+      actualResult = DataLakeUtils.parseCsv(actual).map(row => {
+        return row.splice(1);
+      });
+    } else {
+      actualResult = DataLakeUtils.parseCsv(actual);
+    }
     const expectedResult = DataLakeUtils.parseCsv(expected);
-    const actualResult = DataLakeUtils.parseCsv(actual);
-    expect(expectedResult).to.deep.equal(actualResult);
+    expect(actualResult).to.deep.equal(expectedResult);
   }
 
   private static parseCsv(csv: string) {
