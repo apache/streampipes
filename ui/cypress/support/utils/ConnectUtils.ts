@@ -23,6 +23,8 @@ import { GenericAdapterInput } from '../model/GenericAdapterInput';
 import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
 import { AdapterInput } from '../model/AdapterInput';
 import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
+import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
+import { DataLakeUtils } from './DataLakeUtils';
 
 export class ConnectUtils {
 
@@ -177,4 +179,44 @@ export class ConnectUtils {
     cy.dataCy('delete', { timeout: 20000 }).should('have.length', 0);
     // });
   }
+
+  public static setUpPreprocessingRuleTest(): AdapterInput {
+    const adapterConfiguration = GenericAdapterBuilder
+        .create('File_Set')
+        .setStoreInDataLake()
+        .setTimestampProperty('timestamp')
+        .setName('Adapter to test rules')
+        .setFormat('csv')
+        .addFormatInput('input', 'delimiter', ';')
+        .addFormatInput('checkbox', 'header', 'check')
+        .build();
+
+
+    ConnectUtils.goToConnect();
+    ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
+    ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
+    ConnectUtils.configureFormat(adapterConfiguration);
+
+    // wait till schema is shown
+    cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should('be.visible');
+
+    return adapterConfiguration;
+  }
+
+  public static tearDownPreprocessingRuleTest(adapterConfiguration: AdapterInput,
+                                              expectedFile: string,
+                                              ignoreTime: boolean) {
+    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
+    ConnectUtils.startSetAdapter(adapterConfiguration);
+
+    // Wait till data is stored
+    cy.wait(10000);
+
+    DataLakeUtils.checkResults(
+        'adaptertotestrules',
+        expectedFile,
+        ignoreTime);
+  }
+
 }

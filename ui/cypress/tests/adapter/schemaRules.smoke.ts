@@ -18,9 +18,7 @@
 
 import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
-import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/ConnectEventSchemaUtils';
-import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
@@ -30,24 +28,7 @@ describe('Connect schema rule transformations', () => {
 
     it('Perform Test', () => {
 
-        const adapterConfiguration = GenericAdapterBuilder
-            .create('File_Set')
-            .setStoreInDataLake()
-            .setTimestampProperty('timestamp')
-            .setName('Adapter to test schema rules')
-            .setFormat('csv')
-            .addFormatInput('input', 'delimiter', ';')
-            .addFormatInput('checkbox', 'header', 'check')
-            .build();
-
-
-        ConnectUtils.goToConnect();
-        ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
-        ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
-        ConnectUtils.configureFormat(adapterConfiguration);
-
-        // wait till schema is shown
-        cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should('be.visible');
+        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
 
         // Add static value to event
         ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');
@@ -61,17 +42,10 @@ describe('Connect schema rule transformations', () => {
         // Add a timestamp property
         ConnectEventSchemaUtils.addTimestampProperty();
 
-        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-
-        ConnectUtils.startSetAdapter(adapterConfiguration);
-
-        // Wait till data is stored
-        cy.wait(10000);
-
-        DataLakeUtils.checkResults(
-            'adaptertotestschemarules',
+        ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
             'cypress/fixtures/connect/schemaRules/expected.csv',
             true);
+
     });
 
 });

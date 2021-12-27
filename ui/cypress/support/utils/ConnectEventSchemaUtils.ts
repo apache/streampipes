@@ -47,6 +47,43 @@ export class ConnectEventSchemaUtils {
     this.eventSchemaNextBtnEnabled();
   }
 
+  public static editTimestampProperty(propertyName: string,  timestampRegex: string) {
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    cy.dataCy('sp-mark-as-timestamp').children().click();
+    cy.dataCy('connect-timestamp-converter').click().get('mat-option').contains('String').click();
+    cy.dataCy('connect-timestamp-string-regex').type(timestampRegex);
+
+    cy.dataCy('sp-save-edit-property').click();
+
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click({ force: true });
+    cy.dataCy('connect-timestamp-string-regex', { timeout: 10000 }).should('have.value', timestampRegex);
+    cy.dataCy('sp-save-edit-property').click();
+  }
+
+  public static numberTransformation(propertyName: string,  value: string) {
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    cy.dataCy('connect-schema-correction-value').type(value);
+    cy.dataCy('connect-schema-correction-operator').click().get('mat-option').contains('Multiply').click();
+
+    cy.dataCy('sp-save-edit-property').click();
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click({ force: true });
+    cy.dataCy('connect-schema-correction-value', { timeout: 10000 }).should('have.value', value);
+    cy.dataCy('sp-save-edit-property').click();
+  }
+
+  public static unitTransformation(propertyName: string, fromUnit: string, toUnit: string) {
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    cy.dataCy('connect-schema-unit-from-dropdown').type(fromUnit);
+    cy.dataCy('connect-schema-unit-transform-btn').click();
+    cy.dataCy('connect-schema-unit-to-dropdown').click().get('mat-option').contains(toUnit).click();
+    cy.dataCy('sp-save-edit-property').click();
+
+    // TODO fix check when editing
+    // cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click({ force: true });
+    // cy.dataCy('connect-schema-unit-from-input', { timeout: 10000 }).should('have.value', fromUnit);
+    // cy.dataCy('connect-schema-unit-to-dropdown', { timeout: 10000 }).should('have.value', toUnit);
+    // cy.dataCy('sp-save-edit-property').click();
+  }
 
   public static addStaticProperty(propertyName: string, propertyValue: string) {
     // Click add a static value to event
