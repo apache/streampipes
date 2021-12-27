@@ -20,7 +20,7 @@
 import * as CSV from 'csv-string';
 import { FileManagementUtils } from './FileManagementUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
-import { AdapterUtils } from './AdapterUtils';
+import { ConnectUtils } from './ConnectUtils';
 import { DataLakeFilterConfig } from '../model/DataLakeFilterConfig';
 
 export class DataLakeUtils {
@@ -47,7 +47,7 @@ export class DataLakeUtils {
     FileManagementUtils.addFile(dataSet);
 
     const adapter = this.getDataLakeTestSetAdapter('datalake_configuration');
-    AdapterUtils.addGenericSetAdapter(adapter);
+    ConnectUtils.addGenericSetAdapter(adapter);
 
     // Wait till data is stored
     cy.wait(10000);

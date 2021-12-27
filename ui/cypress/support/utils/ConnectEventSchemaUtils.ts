@@ -1,0 +1,99 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+export class ConnectEventSchemaUtils {
+
+  public static markPropertyAsDimension(propertyName: string) {
+    cy.dataCy('property-scope-' + propertyName)
+      .click()
+      .get('.mat-option-text')
+      .contains('Dimension')
+      .click();
+  }
+
+  public static markPropertyAsTimestamp(propertyName: string) {
+    // Mark property as timestamp
+    this.eventSchemaNextBtnDisabled();
+    // Edit timestamp
+    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
+
+    // Mark as timestamp
+    cy.dataCy('sp-mark-as-timestamp').children().click();
+
+    // Close
+    cy.dataCy('sp-save-edit-property').click();
+
+    this.eventSchemaNextBtnEnabled();
+  }
+
+  public static addTimestampProperty() {
+    this.eventSchemaNextBtnDisabled();
+    cy.dataCy('connect-schema-add-timestamp-btn', { timeout: 10000 }).click();
+    this.eventSchemaNextBtnEnabled();
+  }
+
+
+  public static addStaticProperty(propertyName: string, propertyValue: string) {
+    // Click add a static value to event
+    cy.dataCy('connect-add-static-property', { timeout: 10000 }).click();
+
+    // Edit new property
+    cy.dataCy('edit-key_0', { timeout: 10000 }).click();
+
+    cy.dataCy('connect-edit-field-runtime-name', { timeout: 10000 })
+        .type('{backspace}{backspace}{backspace}{backspace}{backspace}' + propertyName);
+    cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).type(propertyValue);
+
+    cy.dataCy('sp-save-edit-property').click();
+
+    // validate that static value is persisted
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).should('have.value', propertyValue);
+    cy.dataCy('sp-save-edit-property').click();
+  }
+
+  public static deleteProperty(propertyName: string) {
+    cy.dataCy('delete-property-' + propertyName, { timeout: 10000 }).children().click({ force: true });
+    cy.dataCy('connect-schema-delete-properties-btn', { timeout: 10000 }).click();
+  }
+
+
+  public static changePropertyDataType(propertyName: string, dataType: string) {
+    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
+    cy.dataCy('connect-change-runtime-type').click().get('mat-option').contains(dataType).click();
+    cy.dataCy('sp-save-edit-property').click();
+    // validate that static value is persisted
+    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click({ force: true });
+    cy.dataCy('connect-change-runtime-type', { timeout: 10000 }).contains(dataType);
+    cy.dataCy('sp-save-edit-property').click();
+  }
+  public static eventSchemaNextBtnDisabled() {
+    cy.get('#event-schema-next-button').should('be.disabled');
+  }
+
+  public static eventSchemaNextBtnEnabled() {
+    cy.get('#event-schema-next-button').parent().should('not.be.disabled');
+  }
+
+  public static finishEventSchemaConfiguration() {
+    // Click next
+    cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should('be.visible');
+    cy.get('#event-schema-next-button').click();
+  }
+
+}

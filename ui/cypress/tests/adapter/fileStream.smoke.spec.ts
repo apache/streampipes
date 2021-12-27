@@ -16,7 +16,7 @@
  *
  */
 
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 
@@ -43,8 +43,8 @@ describe('Test File Stream Adapter', {
       .addFormatInput('checkbox', 'header', 'check')
       .build();
 
-    AdapterUtils.testGenericStreamAdapter(adapterInput);
-    AdapterUtils.deleteAdapter();
+    ConnectUtils.testGenericStreamAdapter(adapterInput);
+    ConnectUtils.deleteAdapter();
   });
 
 });

@@ -18,7 +18,7 @@
 
 
 import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
-import { AdapterUtils } from './AdapterUtils';
+import { ConnectUtils } from './ConnectUtils';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineUtils } from './PipelineUtils';
 import { PipelineElementInput } from '../model/PipelineElementInput';
@@ -37,7 +37,7 @@ export class ThirdPartyIntegrationUtils {
       .addInput('input', 'wait-time-ms', '1000')
       .build();
 
-    AdapterUtils.testSpecificStreamAdapter(machineAdapter);
+    ConnectUtils.testSpecificStreamAdapter(machineAdapter);
 
     const pipelineInput = PipelineBuilder.create('Pipeline Test')
       .addSource(simulatorAdapterName)
@@ -47,9 +47,9 @@ export class ThirdPartyIntegrationUtils {
     PipelineUtils.testPipeline(pipelineInput);
 
     if (adapter instanceof SpecificAdapterInput) {
-      AdapterUtils.testSpecificStreamAdapter(adapter);
+      ConnectUtils.testSpecificStreamAdapter(adapter);
     } else if (adapter instanceof GenericAdapterInput) {
-      AdapterUtils.testGenericStreamAdapter(adapter);
+      ConnectUtils.testGenericStreamAdapter(adapter);
     }
   }
 }

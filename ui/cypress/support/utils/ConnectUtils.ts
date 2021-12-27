@@ -22,65 +22,66 @@ import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
 import { GenericAdapterInput } from '../model/GenericAdapterInput';
 import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
 import { AdapterInput } from '../model/AdapterInput';
+import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
 
-export class AdapterUtils {
+export class ConnectUtils {
 
   public static testSpecificStreamAdapter(adapterConfiguration: SpecificAdapterInput) {
 
-    AdapterUtils.goToConnect();
+    ConnectUtils.goToConnect();
 
-    AdapterUtils.selectAdapter(adapterConfiguration.adapterType);
+    ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
-    AdapterUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
+    ConnectUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
 
     if (adapterConfiguration.timestampProperty) {
-      AdapterUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
+      ConnectEventSchemaUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
     }
 
-    AdapterUtils.finishEventSchemaConfiguration();
+    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-    AdapterUtils.startStreamAdapter(adapterConfiguration);
+    ConnectUtils.startStreamAdapter(adapterConfiguration);
 
   }
 
   public static testGenericStreamAdapter(adapterConfiguration: GenericAdapterInput) {
 
-    AdapterUtils.addGenericStreamAdapter(adapterConfiguration);
+    ConnectUtils.addGenericStreamAdapter(adapterConfiguration);
 
   }
 
 
   public static addGenericStreamAdapter(adapterConfiguration: GenericAdapterInput) {
-    AdapterUtils.addGenericAdapter(adapterConfiguration);
+    ConnectUtils.addGenericAdapter(adapterConfiguration);
 
-    AdapterUtils.startStreamAdapter(adapterConfiguration);
+    ConnectUtils.startStreamAdapter(adapterConfiguration);
   }
 
   public static addGenericSetAdapter(adapterConfiguration: GenericAdapterInput) {
-    AdapterUtils.addGenericAdapter(adapterConfiguration);
+    ConnectUtils.addGenericAdapter(adapterConfiguration);
 
-    AdapterUtils.startSetAdapter(adapterConfiguration);
+    ConnectUtils.startSetAdapter(adapterConfiguration);
   }
 
   private static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
-    AdapterUtils.goToConnect();
+    ConnectUtils.goToConnect();
 
-    AdapterUtils.selectAdapter(adapterConfiguration.adapterType);
+    ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
-    AdapterUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
+    ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
 
-    AdapterUtils.configureFormat(adapterConfiguration);
+    ConnectUtils.configureFormat(adapterConfiguration);
 
 
     if (adapterConfiguration.dimensionProperties.length > 0) {
       adapterConfiguration.dimensionProperties.forEach(dimensionPropertyName => {
-        AdapterUtils.markPropertyAsDimension(dimensionPropertyName);
+        ConnectEventSchemaUtils.markPropertyAsDimension(dimensionPropertyName);
       });
     }
 
-    AdapterUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
+    ConnectEventSchemaUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
 
-    AdapterUtils.finishEventSchemaConfiguration();
+    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
   }
 
   public static addMachineDataSimulator(name: string) {
@@ -91,15 +92,15 @@ export class AdapterUtils {
       .addInput('input', 'wait-time-ms', '1000')
       .build();
 
-    AdapterUtils.goToConnect();
+    ConnectUtils.goToConnect();
 
-    AdapterUtils.selectAdapter(configuration.adapterType);
+    ConnectUtils.selectAdapter(configuration.adapterType);
 
-    AdapterUtils.configureAdapter(configuration.adapterConfiguration);
+    ConnectUtils.configureAdapter(configuration.adapterConfiguration);
 
-    AdapterUtils.finishEventSchemaConfiguration();
+    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-    AdapterUtils.startStreamAdapter(configuration);
+    ConnectUtils.startStreamAdapter(configuration);
 
   }
 
@@ -133,38 +134,6 @@ export class AdapterUtils {
     cy.dataCy('sp-format-selection-next-button').contains('Next').parent().click();
   }
 
-  private static markPropertyAsDimension(propertyName: string) {
-    cy.dataCy('property-scope-' + propertyName)
-      .click()
-      .get('.mat-option-text')
-      .contains('Dimension')
-      .click();
-  }
-
-
-  public static markPropertyAsTimestamp(propertyName: string) {
-    // Mark property as timestamp
-    this.eventSchemaNextBtnDisabled();
-    // Edit timestamp
-    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
-
-    // Mark as timestamp
-    cy.dataCy('sp-mark-as-timestamp').children().click();
-
-    // Close
-    cy.dataCy('sp-save-edit-property').click();
-
-    this.eventSchemaNextBtnEnabled();
-  }
-
-  public static eventSchemaNextBtnDisabled() {
-    cy.get('#event-schema-next-button').should('be.disabled');
-  }
-
-  public static eventSchemaNextBtnEnabled() {
-    cy.get('#event-schema-next-button').parent().should('not.be.disabled');
-  }
-
   public static finishEventSchemaConfiguration() {
     // Click next
     cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should('be.visible');
@@ -172,11 +141,11 @@ export class AdapterUtils {
   }
 
   public static startStreamAdapter(adapterInput: AdapterInput) {
-    AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-live-preview');
+    ConnectUtils.startAdapter(adapterInput, 'sp-connect-adapter-live-preview');
   }
 
   public static startSetAdapter(adapterInput: AdapterInput) {
-    AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-set-success');
+    ConnectUtils.startAdapter(adapterInput, 'sp-connect-adapter-set-success');
   }
 
   public static startAdapter(adapterInput: AdapterInput, successElement) {

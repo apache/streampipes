@@ -16,7 +16,7 @@
  *
  */
 
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 
 describe('Test Random Data Simulator Stream Adapter', () => {
@@ -33,8 +33,8 @@ describe('Test Random Data Simulator Stream Adapter', () => {
 
 
     cy.visit('#/connect');
-    AdapterUtils.testSpecificStreamAdapter(adapterInput);
-    AdapterUtils.deleteAdapter();
+    ConnectUtils.testSpecificStreamAdapter(adapterInput);
+    ConnectUtils.deleteAdapter();
   });
 
 });
