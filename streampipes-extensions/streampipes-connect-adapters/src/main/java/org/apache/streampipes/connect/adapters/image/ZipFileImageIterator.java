@@ -19,8 +19,11 @@
 package org.apache.streampipes.connect.adapters.image;
 
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,8 +86,10 @@ public class ZipFileImageIterator {
 
     }
 
-    private ZipInputStream fetchZipInputStream(String fileFetchUrl) throws IOException {
-        return new ZipInputStream(Request.Get(fileFetchUrl).execute().returnContent().asStream());
+    private ZipInputStream fetchZipInputStream(String filename) {
+        StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+        byte[] result = client.fileApi().getFileContent(filename);
+        return new ZipInputStream(new ByteArrayInputStream(result));
     }
 
     private byte[] extractFile(ZipInputStream zipIn) throws IOException {
