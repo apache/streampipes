@@ -22,7 +22,7 @@ import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuild
 import { ConnectEventSchemaUtils } from '../../support/utils/ConnectEventSchemaUtils';
 import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
-describe('Test Random Data Simulator Stream Adapter', () => {
+describe('Connect schema rule transformations', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
         FileManagementUtils.addFile('connect/schemaRules/input.csv');
@@ -55,8 +55,8 @@ describe('Test Random Data Simulator Stream Adapter', () => {
         // Delete one property
         ConnectEventSchemaUtils.deleteProperty('density');
 
-        // TODO use data type class
-        ConnectEventSchemaUtils.changePropertyDataType('temperature', 'Float');
+        // Set data type to float
+        ConnectEventSchemaUtils.changePropertyDataType('temperature', 'Integer');
 
         // Add a timestamp property
         ConnectEventSchemaUtils.addTimestampProperty();

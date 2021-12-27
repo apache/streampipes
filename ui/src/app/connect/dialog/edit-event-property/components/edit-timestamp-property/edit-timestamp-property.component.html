@@ -19,7 +19,8 @@
 <div fxLayout="row" fxLayoutAlign="start">
      <mat-form-field class="doubleWidth" color="accent">
         <mat-select placeholder="Timestamp converter (unix timestamp)"
-                    [(value)]="cachedProperty.timestampTransformationMode">
+                    [(value)]="cachedProperty.timestampTransformationMode"
+                    data-cy="connect-timestamp-converter">
             <mat-option value="none">None</mat-option>
             <mat-option value="formatString">Date String</mat-option>
             <mat-option value="timeUnit">Date Number</mat-option>
@@ -31,7 +32,9 @@
 <div fxLayout="row" fxLayoutAlign="start">
     <div class="form-group" fxFlexAlign="center">
         <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'formatString'" color="accent">
-            <input matInput placeholder="E.g. yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+            <input matInput
+                   placeholder="E.g. yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+                   data-cy="connect-timestamp-string-regex"
                    [(ngModel)]="cachedProperty.timestampTransformationFormatString">
         </mat-form-field>
         <mat-form-field class="doubleWidth" *ngIf="cachedProperty.timestampTransformationMode === 'timeUnit'" color="accent">
