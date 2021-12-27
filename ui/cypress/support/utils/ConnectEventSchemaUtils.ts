@@ -78,11 +78,10 @@ export class ConnectEventSchemaUtils {
     cy.dataCy('connect-schema-unit-to-dropdown').click().get('mat-option').contains(toUnit).click();
     cy.dataCy('sp-save-edit-property').click();
 
-    // TODO fix check when editing
-    // cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click({ force: true });
-    // cy.dataCy('connect-schema-unit-from-input', { timeout: 10000 }).should('have.value', fromUnit);
-    // cy.dataCy('connect-schema-unit-to-dropdown', { timeout: 10000 }).should('have.value', toUnit);
-    // cy.dataCy('sp-save-edit-property').click();
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click({ force: true });
+    cy.dataCy('connect-schema-unit-from-input', { timeout: 10000 }).should('have.value', fromUnit);
+    cy.dataCy('connect-schema-unit-to-dropdown', { timeout: 10000 }).contains(toUnit);
+    cy.dataCy('sp-save-edit-property').click();
   }
 
   public static addStaticProperty(propertyName: string, propertyValue: string) {
