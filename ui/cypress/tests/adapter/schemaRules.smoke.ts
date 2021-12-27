@@ -20,6 +20,7 @@ import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 import { ConnectEventSchemaUtils } from '../../support/utils/ConnectEventSchemaUtils';
+import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 describe('Test Random Data Simulator Stream Adapter', () => {
     beforeEach('Setup Test', () => {
@@ -48,31 +49,29 @@ describe('Test Random Data Simulator Stream Adapter', () => {
         // wait till schema is shown
         cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should('be.visible');
 
-        // TODO FIX breaks adapter
         // Add static value to event
-        // ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');
+        ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');
 
         // Delete one property
         ConnectEventSchemaUtils.deleteProperty('density');
 
-        // TODO FIX breaks adapter
         // TODO use data type class
-        // ConnectEventSchemaUtils.changePropertyDataType('temperature', 'Float');
+        ConnectEventSchemaUtils.changePropertyDataType('temperature', 'Float');
 
         // Add a timestamp property
         ConnectEventSchemaUtils.addTimestampProperty();
 
-        // ConnectEventSchemaUtils.finishEventSchemaConfiguration();
-        //
-        // ConnectUtils.startSetAdapter(adapterConfiguration);
-        //
-        // // Wait till data is stored
-        // cy.wait(10000);
-        //
-        // DataLakeUtils.checkResults(
-        //     'adaptertotestschemarules',
-        //     'cypress/fixtures/connect/schemaRules/expected.csv',
-        //     true);
+        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
+        ConnectUtils.startSetAdapter(adapterConfiguration);
+
+        // Wait till data is stored
+        cy.wait(10000);
+
+        DataLakeUtils.checkResults(
+            'adaptertotestschemarules',
+            'cypress/fixtures/connect/schemaRules/expected.csv',
+            true);
     });
 
 });

@@ -1,2 +1,2 @@
-count;temperature
-122.0;11.0
+count;staticpropertyname;temperature
+122.0;id1;11.0

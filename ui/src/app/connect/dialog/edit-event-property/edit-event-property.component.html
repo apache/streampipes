@@ -53,7 +53,9 @@
     <div class="form-group">
       <mat-form-field class="doubleWidth" color="accent">
         <input matInput placeholder="Semantic Type" class="dmainProperty" name="domainproperty" id="domainproperty"
-               [(ngModel)]="cachedProperty.domainProperties[0]" [matAutocomplete]="st" [formControl]="domainPropertyControl">
+               [(ngModel)]="cachedProperty.domainProperties[0]"
+               [matAutocomplete]="st"
+               [formControl]="domainPropertyControl">
       <mat-autocomplete #st="matAutocomplete" [panelWidth]="'300px'">
         <mat-option *ngFor="let semanticType of semanticTypes | async" [value]="semanticType" style="font-size: 10pt;">
           {{semanticType}}
