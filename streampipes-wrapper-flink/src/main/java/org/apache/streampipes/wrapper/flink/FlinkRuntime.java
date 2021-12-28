@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.wrapper.flink;
 
+import org.apache.flink.client.program.ClusterClient;
+import org.apache.flink.client.program.MiniClusterClient;
 import org.apache.flink.client.program.rest.RestClusterClient;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.JobManagerOptions;
@@ -73,8 +75,15 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   public void run() {
     try {
-      env.execute(bindingParams.getGraph().getElementId());
-
+      if (!this.config.isMiniClusterMode()) {
+        env.execute(bindingParams.getGraph().getElementId());
+      } else {
+        FlinkSpMiniCluster.INSTANCE.start();
+        FlinkSpMiniCluster
+                .INSTANCE
+                .getClusterClient()
+                .submitJob(env.getStreamGraph(bindingParams.getGraph().getElementId()).getJobGraph());
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -235,14 +244,14 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
   @Override
   public void discardRuntime() throws SpRuntimeException {
     try {
-      RestClusterClient<String> restClient = getRestClient();
+      ClusterClient<? extends Comparable<? extends Comparable<?>>> clusterClient = getClusterClient();
       Optional<JobStatusMessage> jobStatusMessage =
               getJobStatus(bindingParams.getGraph().getElementId());
       if (jobStatusMessage.isPresent()) {
         String jobStatusStr = jobStatusMessage.get().getJobState().name();
         // Cancel the job if running
         if (jobStatusStr.equals("RUNNING")) {
-          restClient.cancel(jobStatusMessage.get().getJobId());
+          clusterClient.cancel(jobStatusMessage.get().getJobId());
         }
         // else ignore, because job is already discarded
       } else {
@@ -267,7 +276,19 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     }
   }
 
-  private RestClusterClient<String> getRestClient() throws Exception {
+  private ClusterClient<? extends Comparable<? extends Comparable<?>>> getClusterClient() throws Exception {
+    if (config.isMiniClusterMode()) {
+      return getMiniClusterClient();
+    } else {
+      return getRestClusterClient();
+    }
+  }
+
+  private MiniClusterClient getMiniClusterClient() throws Exception {
+    return FlinkSpMiniCluster.INSTANCE.getClusterClient();
+  }
+
+  private RestClusterClient<String> getRestClusterClient() throws Exception {
     Configuration restConfig = new Configuration();
     restConfig.setString(JobManagerOptions.ADDRESS, config.getHost());
     restConfig.setInteger(JobManagerOptions.PORT, config.getPort());
@@ -277,8 +298,8 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   private Optional<JobStatusMessage> getJobStatus(String jobName) {
     try {
-      RestClusterClient<String> restClient = getRestClient();
-      CompletableFuture<Collection<JobStatusMessage>> jobs = restClient.listJobs();
+      ClusterClient<? extends Comparable<? extends Comparable<?>>> clusterClient = getClusterClient();
+      CompletableFuture<Collection<JobStatusMessage>> jobs = clusterClient.listJobs();
       Collection<JobStatusMessage> jobsFound = jobs.get();
 
       // First, find a job with Running status
