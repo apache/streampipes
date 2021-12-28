@@ -17,26 +17,31 @@
  */
 package org.apache.streampipes.processor.geo.flink;
 
-import org.apache.streampipes.processor.geo.flink.config.GeoFlinkConfig;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.processor.geo.flink.config.ConfigKeys;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public abstract class AbstractGeoProgram<B extends EventProcessorBindingParams> extends FlinkDataProcessorRuntime<B> {
 
-  public AbstractGeoProgram(B params, boolean debug) {
-    super(params, debug);
-  }
-
-  public AbstractGeoProgram(B params) {
-    super(params, false);
+  public AbstractGeoProgram(B params,
+                            ConfigExtractor configExtractor,
+                            StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override
-  protected FlinkDeploymentConfig getDeploymentConfig() {
-    return new FlinkDeploymentConfig(GeoFlinkConfig.JAR_FILE,
-            GeoFlinkConfig.INSTANCE.getFlinkHost(), GeoFlinkConfig.INSTANCE.getFlinkPort());
+  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
+    SpConfig config = configExtractor.getConfig();
+    return new FlinkDeploymentConfig(config.getString(
+            ConfigKeys.FLINK_JAR_FILE_LOC),
+            config.getString(ConfigKeys.FLINK_HOST),
+            config.getInteger(ConfigKeys.FLINK_PORT),
+            config.getBoolean(ConfigKeys.DEBUG)
+    );
   }
-
 }
 

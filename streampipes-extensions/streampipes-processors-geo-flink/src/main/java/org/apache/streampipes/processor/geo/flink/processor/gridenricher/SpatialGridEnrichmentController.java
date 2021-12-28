@@ -23,7 +23,6 @@ import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processor.geo.flink.config.GeoFlinkConfig;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -96,7 +95,7 @@ public class SpatialGridEnrichmentController extends FlinkDataProcessorDeclarer<
     SpatialGridEnrichmentParameters params = new SpatialGridEnrichmentParameters(graph,
             enrichmentSettings);
 
-    return new SpatialGridEnrichmentProgram(params, GeoFlinkConfig.INSTANCE.getDebug());
+    return new SpatialGridEnrichmentProgram(params, configExtractor, streamPipesClient);
 
   }
 }

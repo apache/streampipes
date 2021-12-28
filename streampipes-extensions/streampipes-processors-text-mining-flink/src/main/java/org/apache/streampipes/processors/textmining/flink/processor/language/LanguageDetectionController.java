@@ -23,7 +23,6 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.textmining.flink.config.TextMiningFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -64,6 +63,6 @@ public class LanguageDetectionController extends FlinkDataProcessorDeclarer<Lang
                                                                            StreamPipesClient streamPipesClient) {
     String fieldName = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    return new LanguageDetectionProgram(new LanguageDetectionParameters(graph, fieldName), TextMiningFlinkConfig.INSTANCE.getDebug());
+    return new LanguageDetectionProgram(new LanguageDetectionParameters(graph, fieldName), configExtractor, streamPipesClient);
   }
 }

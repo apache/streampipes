@@ -29,11 +29,14 @@ import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
 import org.apache.streampipes.model.mail.SpEmail;
 
+import java.io.Serializable;
+
 public class StreamPipesClient implements SupportsPipelineApi,
         SupportsPipelineElementTemplateApi,
         SupportsDataSinkApi,
         SupportsDataStreamApi,
-        SupportsDataProcessorApi {
+        SupportsDataProcessorApi,
+        Serializable {
 
   private static final Integer SP_DEFAULT_PORT = 80;
 

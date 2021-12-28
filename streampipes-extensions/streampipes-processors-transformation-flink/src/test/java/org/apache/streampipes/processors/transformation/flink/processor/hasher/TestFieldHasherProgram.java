@@ -17,24 +17,22 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
-import static org.apache.streampipes.processors.transformation.flink.processor.hasher.TestFieldHasherUtils.makeTestData;
-
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
+import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.*;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Md5HashAlgorithm;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha1HashAlgorithm;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha2HashAlgorithm;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 
 import java.util.Arrays;
+
+import static org.apache.streampipes.processors.transformation.flink.processor.hasher.TestFieldHasherUtils.makeTestData;
 
 @RunWith(Parameterized.class)
 @Ignore
@@ -59,7 +57,8 @@ public class TestFieldHasherProgram extends DataStreamTestBase {
   public void testFieldHasherProgram() {
 
     FieldHasherParameters params = makeParams();
-    FieldHasherProgram program = new FieldHasherProgram(params);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    FieldHasherProgram program = new FieldHasherProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeTestData(true, hashAlgorithm)));
 

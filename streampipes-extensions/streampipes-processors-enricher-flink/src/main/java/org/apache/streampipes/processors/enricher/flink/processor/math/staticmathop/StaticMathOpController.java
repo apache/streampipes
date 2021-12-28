@@ -24,21 +24,11 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
-import org.apache.streampipes.processors.enricher.flink.processor.math.operation.Operation;
-import org.apache.streampipes.processors.enricher.flink.processor.math.operation.OperationAddition;
-import org.apache.streampipes.processors.enricher.flink.processor.math.operation.OperationDivide;
-import org.apache.streampipes.processors.enricher.flink.processor.math.operation.OperationModulo;
-import org.apache.streampipes.processors.enricher.flink.processor.math.operation.OperationMultiply;
-import org.apache.streampipes.processors.enricher.flink.processor.math.operation.OperationSubtracting;
+import org.apache.streampipes.processors.enricher.flink.processor.math.operation.*;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -99,7 +89,7 @@ public class StaticMathOpController extends FlinkDataProcessorDeclarer<StaticMat
 
     StaticMathOpParameters parameters = new StaticMathOpParameters(graph, arithmeticOperation, leftOperand, rightOperand, RESULT_FIELD);
 
-    return new StaticMathOpProgram(parameters, EnricherFlinkConfig.INSTANCE.getDebug());
+    return new StaticMathOpProgram(parameters, configExtractor, streamPipesClient);
 
   }
 }

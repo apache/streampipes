@@ -30,6 +30,8 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnitConverter;
@@ -39,8 +41,10 @@ import java.util.Map;
 
 public class AbsenceProgram extends AbstractPatternDetectionProgram<AbsenceParameters> {
 
-  public AbsenceProgram(AbsenceParameters params, boolean debug) {
-    super(params, debug);
+  public AbsenceProgram(AbsenceParameters params,
+                        ConfigExtractor configExtractor,
+                        StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

@@ -28,6 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.processors.statistics.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.apache.streampipes.processors.statistics.flink.processor.stat.window.StatisticsSummaryControllerWindow;
 
@@ -54,6 +55,10 @@ public class StatisticsFlinkInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
             .build();
   }
 

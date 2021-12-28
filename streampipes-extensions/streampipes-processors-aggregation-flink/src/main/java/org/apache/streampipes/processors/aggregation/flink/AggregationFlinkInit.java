@@ -28,6 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.processors.aggregation.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.aggregation.flink.processor.aggregation.AggregationController;
 import org.apache.streampipes.processors.aggregation.flink.processor.count.CountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.eventcount.EventCountController;
@@ -35,13 +36,15 @@ import org.apache.streampipes.processors.aggregation.flink.processor.rate.EventR
 
 public class AggregationFlinkInit extends StandaloneModelSubmitter {
 
+  public static final String ServiceGroup = "org.apache.streampipes.processors.aggregation.flink";
+
   public static void main(String[] args) {
     new AggregationFlinkInit().init();
   }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.aggregation.flink",
+    return SpServiceDefinitionBuilder.create(ServiceGroup,
                     "Processors Aggregation Flink",
                     "",
                     8090)
@@ -58,6 +61,10 @@ public class AggregationFlinkInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
             .build();
   }
 }

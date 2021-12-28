@@ -22,13 +22,17 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
 public class EventRateProgram extends AbstractAggregationProgram<EventRateParameter> {
 
-  public EventRateProgram(EventRateParameter params, boolean debug) {
-    super(params, debug);
+  public EventRateProgram(EventRateParameter params,
+                          ConfigExtractor configExtractor,
+                          StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
     setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
   }
 

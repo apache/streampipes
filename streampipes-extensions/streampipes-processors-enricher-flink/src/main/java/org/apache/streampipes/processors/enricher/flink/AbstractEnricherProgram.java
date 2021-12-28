@@ -17,25 +17,31 @@
  */
 package org.apache.streampipes.processors.enricher.flink;
 
-import org.apache.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.processors.enricher.flink.config.ConfigKeys;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public abstract class AbstractEnricherProgram<B extends EventProcessorBindingParams> extends FlinkDataProcessorRuntime<B> {
 
-  public AbstractEnricherProgram(B params, boolean debug) {
-    super(params, debug);
-  }
-
-  public AbstractEnricherProgram(B params) {
-    super(params, false);
+  public AbstractEnricherProgram(B params,
+                                 ConfigExtractor configExtractor,
+                                 StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override
-  protected FlinkDeploymentConfig getDeploymentConfig() {
-    return new FlinkDeploymentConfig(EnricherFlinkConfig.JAR_FILE,
-            EnricherFlinkConfig.INSTANCE.getFlinkHost(), EnricherFlinkConfig.INSTANCE.getFlinkPort());
+  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
+    SpConfig config = configExtractor.getConfig();
+    return new FlinkDeploymentConfig(config.getString(
+            ConfigKeys.FLINK_JAR_FILE_LOC),
+            config.getString(ConfigKeys.FLINK_HOST),
+            config.getInteger(ConfigKeys.FLINK_PORT),
+            config.getBoolean(ConfigKeys.DEBUG)
+    );
   }
 
 }

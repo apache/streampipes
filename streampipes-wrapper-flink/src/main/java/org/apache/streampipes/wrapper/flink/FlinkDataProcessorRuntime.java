@@ -20,6 +20,8 @@ package org.apache.streampipes.wrapper.flink;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -33,6 +35,8 @@ import org.apache.streampipes.wrapper.flink.sink.JmsFlinkProducer;
 import org.apache.streampipes.wrapper.flink.sink.MqttFlinkProducer;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Properties;
@@ -43,24 +47,13 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
         DataProcessorInvocation, EventProcessorRuntimeContext> {
 
   private static final long serialVersionUID = 1L;
+  private static final Logger LOG = LoggerFactory.getLogger(FlinkDataProcessorRuntime.class);
 
-  /**
-   * @deprecated Use {@link #FlinkDataProcessorRuntime(EventProcessorBindingParams, boolean)} instead
-   */
-  @Deprecated
-  public FlinkDataProcessorRuntime(B params) {
-    super(params);
-  }
 
-  public FlinkDataProcessorRuntime(B params, boolean debug) {
-    super(params, debug);
-  }
-
-  /**
-   * @deprecated Use {@link #FlinkDataProcessorRuntime(EventProcessorBindingParams, boolean)} instead
-   */
-  public FlinkDataProcessorRuntime(B params, FlinkDeploymentConfig config) {
-    super(params, config);
+  public FlinkDataProcessorRuntime(B params,
+                                   ConfigExtractor configExtractor,
+                                   StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @SuppressWarnings("deprecation")
@@ -106,8 +99,10 @@ public abstract class FlinkDataProcessorRuntime<B extends EventProcessorBindingP
     return props;
   }
 
-  protected EventProcessorRuntimeParams<B> makeRuntimeParams() {
-    // TODO add support for config extractor & client
+  @Override
+  protected EventProcessorRuntimeParams<B> makeRuntimeParams(ConfigExtractor configExtractor,
+                                                             StreamPipesClient streamPipesClient) {
+    LOG.warn("The config extractor and StreamPipes Client can currently not be accessed by a deployed Flink program due to non-serializable classes.");
     return new EventProcessorRuntimeParams<>(bindingParams, false, null, null);
   }
 }

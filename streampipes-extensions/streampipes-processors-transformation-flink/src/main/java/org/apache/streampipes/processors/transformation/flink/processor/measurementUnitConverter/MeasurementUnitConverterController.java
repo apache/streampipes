@@ -100,7 +100,7 @@ public class MeasurementUnitConverterController extends
             outputUnit
     );
 
-    return new MeasurementUnitConverterProgram(staticParams);
+    return new MeasurementUnitConverterProgram(staticParams, configExtractor, streamPipesClient);
   }
 
   @Override

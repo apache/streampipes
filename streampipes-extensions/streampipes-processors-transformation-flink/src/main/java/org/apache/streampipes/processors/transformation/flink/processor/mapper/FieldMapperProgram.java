@@ -18,17 +18,17 @@
 package org.apache.streampipes.processors.transformation.flink.processor.mapper;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
 public class FieldMapperProgram extends AbstractFlinkTransformationProgram<FieldMapperParameters> {
 
-  public FieldMapperProgram(FieldMapperParameters params, boolean debug) {
-    super(params, debug);
-  }
-
-  public FieldMapperProgram(FieldMapperParameters params) {
-    super(params);
+  public FieldMapperProgram(FieldMapperParameters params,
+                            ConfigExtractor configExtractor,
+                            StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

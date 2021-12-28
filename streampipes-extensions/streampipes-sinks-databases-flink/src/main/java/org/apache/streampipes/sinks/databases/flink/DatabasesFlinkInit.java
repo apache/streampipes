@@ -28,6 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.sinks.databases.flink.config.ConfigKeys;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.ElasticSearchController;
 
 public class DatabasesFlinkInit extends StandaloneModelSubmitter {
@@ -52,6 +53,12 @@ public class DatabasesFlinkInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+            .addConfig(ConfigKeys.ELASTIC_HOST, "elasticsearch", "Elastic search host address")
+            .addConfig(ConfigKeys.ELASTIC_PORT_REST, 9200, "Elasitc search rest port")
             .build();
   }
 }

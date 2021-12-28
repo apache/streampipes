@@ -33,12 +33,7 @@ import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.helpers.Tuple2;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -86,7 +81,7 @@ public class FieldConverterController extends
             targetDatatype
     );
 
-    return new FieldConverterProgram(staticParams);
+    return new FieldConverterProgram(staticParams, configExtractor, streamPipesClient);
   }
 
   @Override

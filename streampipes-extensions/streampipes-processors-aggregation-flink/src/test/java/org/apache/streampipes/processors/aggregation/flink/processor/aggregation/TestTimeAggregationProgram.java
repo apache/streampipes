@@ -22,10 +22,12 @@ import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 
 import java.util.Arrays;
 
@@ -46,7 +48,8 @@ public class TestTimeAggregationProgram extends DataStreamTestBase {
   @Test
   public void testAggregationProgram() {
     AggregationParameters params = makeParams();
-    AggregationProgram program = new AggregationProgram(params, true);
+    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.ServiceGroup);
+    AggregationProgram program = new AggregationProgram(params, configExtractor, null);
     AggregationTestData testData = new AggregationTestData();
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData

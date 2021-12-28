@@ -28,7 +28,9 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -60,40 +62,13 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   protected TimeCharacteristic streamTimeCharacteristic;
   protected FlinkDeploymentConfig config;
-
-  private boolean debug;
   private StreamExecutionEnvironment env;
 
-  /**
-   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
-   */
-  @Deprecated
-  public FlinkRuntime(B bindingParams) {
-    this(bindingParams,true);
-  }
-
-  /**
-   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
-   */
-  @Deprecated
-  public FlinkRuntime(B bindingParams, FlinkDeploymentConfig config) {
-    this(bindingParams, config, false);
-  }
-
-  public FlinkRuntime(B bindingParams, boolean debug) {
-    super(bindingParams);
-    if (!debug) {
-      this.config = getDeploymentConfig();
-    } else {
-      this.config = new FlinkDeploymentConfig("", "localhost", 6123);
-    }
-    this.debug = debug;
-  }
-
-  private FlinkRuntime(B bindingParams, FlinkDeploymentConfig config, boolean debug) {
-    super(bindingParams);
-    this.config = config;
-    this.debug = debug;
+  public FlinkRuntime(B bindingParams,
+                      ConfigExtractor configExtractor,
+                      StreamPipesClient streamPipesClient) {
+    super(bindingParams, configExtractor, streamPipesClient);
+    this.config = getDeploymentConfig(configExtractor);
   }
 
   public void run() {
@@ -175,7 +150,7 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   @Override
   public void prepareRuntime() throws SpRuntimeException {
-    if (debug) {
+    if (config.isMiniClusterMode()) {
       this.env = StreamExecutionEnvironment.createLocalEnvironment();
     } else {
       this.env = StreamExecutionEnvironment
@@ -227,7 +202,7 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
       // The loop waits until the job is deployed
       // When the deployment takes longer then 60 seconds it returns false
       // This check is not needed when the execution environment is st to local
-      if (!debug) {
+      if (!config.isMiniClusterMode()) {
         boolean isDeployed = false;
         int count = 0;
         do {
@@ -324,7 +299,7 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     }
   }
 
-  protected abstract FlinkDeploymentConfig getDeploymentConfig();
+  protected abstract FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor);
 
   protected abstract void appendExecutionConfig(DataStream<Event>... convertedStream);
 

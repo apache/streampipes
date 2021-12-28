@@ -17,25 +17,31 @@
  */
 package org.apache.streampipes.processors.statistics.flink;
 
-import org.apache.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.processors.statistics.flink.config.ConfigKeys;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public abstract class AbstractStatisticsProgram<B extends EventProcessorBindingParams> extends FlinkDataProcessorRuntime<B> {
 
-  public AbstractStatisticsProgram(B params, boolean debug) {
-    super(params, debug);
-  }
-
-  public AbstractStatisticsProgram(B params) {
-    super(params, false);
+  public AbstractStatisticsProgram(B params,
+                                   ConfigExtractor configExtractor,
+                                   StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override
-  protected FlinkDeploymentConfig getDeploymentConfig() {
-    return new FlinkDeploymentConfig(StatisticsFlinkConfig.JAR_FILE,
-            StatisticsFlinkConfig.INSTANCE.getFlinkHost(), StatisticsFlinkConfig.INSTANCE.getFlinkPort());
+  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
+    SpConfig config = configExtractor.getConfig();
+    return new FlinkDeploymentConfig(config.getString(
+            ConfigKeys.FLINK_JAR_FILE_LOC),
+            config.getString(ConfigKeys.FLINK_HOST),
+            config.getInteger(ConfigKeys.FLINK_PORT),
+            config.getBoolean(ConfigKeys.DEBUG)
+    );
   }
 
 }

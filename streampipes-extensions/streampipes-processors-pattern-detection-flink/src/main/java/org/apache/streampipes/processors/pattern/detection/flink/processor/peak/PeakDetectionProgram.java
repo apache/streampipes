@@ -22,6 +22,8 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.utils.SlidingBatchWindow;
@@ -33,8 +35,10 @@ import java.util.List;
  */
 public class PeakDetectionProgram extends AbstractPatternDetectionProgram<PeakDetectionParameters> {
 
-  public PeakDetectionProgram(PeakDetectionParameters params, boolean debug) {
-    super(params, debug);
+  public PeakDetectionProgram(PeakDetectionParameters params,
+                              ConfigExtractor configExtractor,
+                              StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

@@ -19,17 +19,17 @@
 package org.apache.streampipes.processors.transformation.flink.processor.rename;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
 public class FieldRenamerProgram extends AbstractFlinkTransformationProgram<FieldRenamerParameters> {
 
-	public FieldRenamerProgram(FieldRenamerParameters params, boolean debug) {
-		super(params, debug);
-	}
-
-	public FieldRenamerProgram(FieldRenamerParameters params) {
-		super(params);
+	public FieldRenamerProgram(FieldRenamerParameters params,
+							   ConfigExtractor configExtractor,
+							   StreamPipesClient streamPipesClient) {
+		super(params, configExtractor, streamPipesClient);
 	}
 
 	@Override

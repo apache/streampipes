@@ -22,12 +22,14 @@ import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,8 +72,9 @@ public class TestRateProgram extends DataStreamTestBase {
   @Test
   public void testRateProgram() {
     EventRateParameter params = new EventRateParameter(InvocationGraphGenerator.makeEmptyInvocation(new EventRateController().declareModel()), timeWindowSize);
+    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.ServiceGroup);
 
-    EventRateProgram program = new EventRateProgram(params, true);
+    EventRateProgram program = new EventRateProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData
             (numEvents, waitTime, timeUnit)));

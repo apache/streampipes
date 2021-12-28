@@ -24,7 +24,6 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -82,6 +81,6 @@ public class TrigonometryController extends FlinkDataProcessorDeclarer<Trigonome
 
         TrigonometryParameters parameters = new TrigonometryParameters(graph, operand, trigonometryFunction, RESULT_FIELD);
 
-        return new TrigonometryProgram(parameters, EnricherFlinkConfig.INSTANCE.getDebug());
+        return new TrigonometryProgram(parameters, configExtractor, streamPipesClient);
     }
 }

@@ -31,7 +31,7 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.sinks.databases.flink.config.DatabasesFlinkConfig;
+import org.apache.streampipes.sinks.databases.flink.config.ConfigKeys;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 
@@ -63,10 +63,12 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
 
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
     String indexName = extractor.singleValueParameter(INDEX_NAME, String.class);
+    String elasticsearchHost = configExtractor.getConfig().getString(ConfigKeys.ELASTIC_HOST);
+    Integer elasticsearchPort = configExtractor.getConfig().getInteger(ConfigKeys.ELASTIC_PORT_REST);
 
-    ElasticSearchParameters params = new ElasticSearchParameters(graph, timestampField, indexName);
+    ElasticSearchParameters params = new ElasticSearchParameters(graph, timestampField, indexName, elasticsearchHost, elasticsearchPort);
 
-    return new ElasticSearchProgram(params, DatabasesFlinkConfig.INSTANCE.getDebug());
+    return new ElasticSearchProgram(params, configExtractor, streamPipesClient);
 
   }
 

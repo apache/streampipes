@@ -17,29 +17,31 @@
  */
 package org.apache.streampipes.processors.pattern.detection.processor.and;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.pattern.detection.flink.PatternDetectionFlinkInit;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.AndParameters;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.AndProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import static org.hamcrest.core.IsEqual.equalTo;
 
 @Ignore
 @RunWith(Parameterized.class)
@@ -88,7 +90,8 @@ public class TestAnd extends DataStreamTestBase {
             new AndParameters(InvocationGraphGenerator.makeEmptyInvocation(description), timeUnit,
                     timeWindow, leftMapping, rightMapping);
 
-    AndProgram program = new AndProgram(params, true);
+    ConfigExtractor configExtractor = ConfigExtractor.from(PatternDetectionFlinkInit.ServiceGroup);
+    AndProgram program = new AndProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(delayFirstEvent, makeMap("field1"))), createTestStream(makeInputData(delaySecondEvent, makeMap("field2"))));
 

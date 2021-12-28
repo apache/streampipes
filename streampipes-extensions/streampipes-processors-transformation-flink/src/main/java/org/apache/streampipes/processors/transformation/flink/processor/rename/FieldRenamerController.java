@@ -26,11 +26,7 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
-import org.apache.streampipes.sdk.helpers.TransformOperations;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -65,7 +61,7 @@ public class FieldRenamerController extends FlinkDataProcessorDeclarer<FieldRena
     String newPropertyName = extractor.singleValueParameter(FIELD_NAME, String.class);
 
     return new FieldRenamerProgram(
-            new FieldRenamerParameters(graph, oldPropertyName, newPropertyName));
+            new FieldRenamerParameters(graph, oldPropertyName, newPropertyName), configExtractor, streamPipesClient);
   }
 
 }

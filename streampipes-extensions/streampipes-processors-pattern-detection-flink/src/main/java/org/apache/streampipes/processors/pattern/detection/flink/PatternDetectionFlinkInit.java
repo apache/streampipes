@@ -28,6 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.processors.pattern.detection.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
@@ -35,13 +36,15 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.seque
 
 public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
 
+  public static final String ServiceGroup = "org.apache.streampipes.processors.patterndetection.flink";
+
   public static void main(String[] args) {
     new PatternDetectionFlinkInit().init();
   }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.patterndetection.flink",
+    return SpServiceDefinitionBuilder.create(ServiceGroup,
                     "Processors Pattern Detection Flink",
                     "",
                     8090)
@@ -58,6 +61,10 @@ public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
             .build();
   }
 
