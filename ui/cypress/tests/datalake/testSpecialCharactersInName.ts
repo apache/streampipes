@@ -17,7 +17,7 @@
  */
 
 import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
@@ -40,7 +40,7 @@ describe('Test Table View in Data Explorer', () => {
     // Add Adpater
 
     const adapter = DataLakeUtils.getDataLakeTestSetAdapter(adapterName, false);
-    AdapterUtils.addGenericSetAdapter(adapter);
+    ConnectUtils.addGenericSetAdapter(adapter);
 
     const pipelineInput = PipelineBuilder.create(dataLakeName)
       .addSource(adapterName)

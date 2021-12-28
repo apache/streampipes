@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.adapters.generic.elements;
 
 import org.junit.Test;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.DuplicateFilterPipelineElement;
+import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;

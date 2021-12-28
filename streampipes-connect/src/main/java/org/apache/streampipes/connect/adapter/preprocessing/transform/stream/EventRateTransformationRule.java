@@ -28,7 +28,6 @@ public class EventRateTransformationRule implements StreamTransformationRule {
     //none (Values from last event), max, min, mean, sum (of the values in the time window)
     private String aggregationType;
 
-    private LinkedList<Map<String, Object>> eventStorage = new LinkedList<>();
     private long lastSentToPipelineTimestamp = System.currentTimeMillis();
 
     public EventRateTransformationRule(long aggregationTimeWindow, String aggregationType) {
@@ -38,10 +37,6 @@ public class EventRateTransformationRule implements StreamTransformationRule {
 
     @Override
     public Map<String, Object> transform(Map<String, Object> event) {
-        if (!aggregationType.equals("none")) {
-            eventStorage.add(event);
-        }
-
         if (System.currentTimeMillis() > lastSentToPipelineTimestamp + aggregationTimeWindow) {
             switch (aggregationType) {
                 case "none":

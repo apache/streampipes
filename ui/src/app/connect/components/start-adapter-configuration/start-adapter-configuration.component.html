@@ -45,22 +45,26 @@
 
 
             <mat-checkbox [(ngModel)]="removeDuplicates"
-                          [ngModelOptions]="{standalone: true}">Remove Duplicates
+                          [ngModelOptions]="{standalone: true}"
+                          data-cy="connect-remove-duplicates-box">Remove Duplicates
             </mat-checkbox>
             <mat-form-field *ngIf="removeDuplicates" color="accent">
                 <input matInput id="input-removeDuplicatesTime"
                        [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window"
-                       [(ngModel)]="removeDuplicatesTime">
+                       [(ngModel)]="removeDuplicatesTime"
+                       data-cy="connect-remove-duplicates-input">
             </mat-form-field>
 
             <mat-checkbox [(ngModel)]="eventRateReduction"
                           [ngModelOptions]="{standalone: true}"
-                          matTooltip="Send maximum one event in the specified time window">Reduce the event rate
+                          matTooltip="Send maximum one event in the specified time window"
+                          data-cy="connect-reduce-event-rate-box">Reduce the event rate
             </mat-checkbox>
             <mat-form-field *ngIf="eventRateReduction" color="accent">
                 <input type="number" matInput id="input-evenRateTime"
                        [ngModelOptions]="{standalone: true}" [(ngModel)]="eventRateTime"
-                       placeholder="Time Window (Milliseconds)" matTooltipPosition="above">
+                       placeholder="Time Window (Milliseconds)" matTooltipPosition="above"
+                       data-cy="connect-reduce-event-input">
             </mat-form-field>
             <mat-form-field *ngIf="eventRateReduction" color="accent">
                 <mat-label>Event Aggregation</mat-label>

@@ -21,24 +21,24 @@ export class FileManagementUtils {
 
     public static addFile(filePath: string) {
         // Go to StreamPipes file management
-            cy.visit('#/files');
+        cy.visit('#/files');
 
         // Open file upload dialog
-            cy.dataCy('sp-open-file-upload-dialog').click();
+        cy.dataCy('sp-open-file-upload-dialog').click();
 
         // Upload file
-            // const filepath = 'fileTest/test.csv'
-            cy.dataCy('sp-file-management-file-input').attachFile(filePath);
-            cy.dataCy('sp-file-management-store-file').click();
+        // const filepath = 'fileTest/test.csv'
+        cy.dataCy('sp-file-management-file-input').attachFile(filePath);
+        cy.dataCy('sp-file-management-store-file').click();
     }
 
     public static deleteFile() {
         // Go to StreamPipes file management
-            cy.visit('#/files');
+        cy.visit('#/files');
         // Check if file was uploaded and delete it
-            cy.dataCy('delete').should('have.length', 1);
-            cy.dataCy('delete').click();
-            cy.dataCy('confirm-delete').click();
-            cy.dataCy('delete').should('have.length', 0);
+        cy.dataCy('delete').should('have.length', 1);
+        cy.dataCy('delete').click();
+        cy.dataCy('confirm-delete').click();
+        cy.dataCy('delete').should('have.length', 0);
     }
 }

@@ -27,7 +27,11 @@
       </div>
       <div attr.id="input-runtime-name-{{cachedProperty.label}}" class="form-group" fxFlexAlign="center">
         <mat-form-field class="example-full-width" color="accent">
-          <input matInput placeholder="RuntimeName" name="runtimename" id="runtimename"
+          <input matInput
+                 placeholder="RuntimeName"
+                 name="runtimename"
+                 id="runtimename"
+                 data-cy="connect-edit-field-runtime-name"
             [(ngModel)]="cachedProperty.runtimeName">
         </mat-form-field>
       </div>
@@ -49,7 +53,9 @@
     <div class="form-group">
       <mat-form-field class="doubleWidth" color="accent">
         <input matInput placeholder="Semantic Type" class="dmainProperty" name="domainproperty" id="domainproperty"
-               [(ngModel)]="cachedProperty.domainProperties[0]" [matAutocomplete]="st" [formControl]="domainPropertyControl">
+               [(ngModel)]="cachedProperty.domainProperties[0]"
+               [matAutocomplete]="st"
+               [formControl]="domainPropertyControl">
       <mat-autocomplete #st="matAutocomplete" [panelWidth]="'300px'">
         <mat-option *ngFor="let semanticType of semanticTypes | async" [value]="semanticType" style="font-size: 10pt;">
           {{semanticType}}
