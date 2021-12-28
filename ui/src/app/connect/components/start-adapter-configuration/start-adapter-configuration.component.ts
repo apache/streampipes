@@ -123,7 +123,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     if (this.eventRateReduction) {
       const eventRate: EventRateTransformationRuleDescription = new EventRateTransformationRuleDescription();
       eventRate['@class'] = 'org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription';
-      eventRate.aggregationTimeWindow = this.eventRateMode as any;
+      eventRate.aggregationTimeWindow = this.eventRateTime;
       eventRate.aggregationType = this.eventRateMode;
       this.adapterDescription.rules.push(eventRate);
     }

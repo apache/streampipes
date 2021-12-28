@@ -42,6 +42,8 @@ describe('Connect value rule transformations', () => {
             'Degree Celsius',
             'Degree Fahrenheit');
 
+        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
         ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
             'cypress/fixtures/connect/valueRules/expected.csv',
             false);

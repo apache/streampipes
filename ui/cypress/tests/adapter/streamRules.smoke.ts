@@ -20,34 +20,46 @@ import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { ConnectEventSchemaUtils } from '../../support/utils/ConnectEventSchemaUtils';
 
-describe('Connect schema rule transformations', () => {
+describe('Connect aggregation rule transformations', () => {
     beforeEach('Setup Test', () => {
         cy.initStreamPipesTest();
-        FileManagementUtils.addFile('connect/schemaRules/input.csv');
+        FileManagementUtils.addFile('connect/aggregationRules/input.csv');
     });
 
     it('Perform Test', () => {
 
         const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
 
-        // Add static value to event
-        ConnectEventSchemaUtils.addStaticProperty('staticPropertyName', 'id1');
 
-        // Delete one property
-        ConnectEventSchemaUtils.deleteProperty('density');
-
-        // Set data type to float
-        ConnectEventSchemaUtils.changePropertyDataType('temperature', 'Integer');
-
-        // Add a timestamp property
-        ConnectEventSchemaUtils.addTimestampProperty();
-
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+        cy.dataCy('connect-reduce-event-rate-box').children().click();
+        cy.dataCy('connect-reduce-event-input').type('3000');
 
         ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
-            'cypress/fixtures/connect/schemaRules/expected.csv',
-            true);
+            'cypress/fixtures/connect/aggregationRules/expected.csv',
+            false);
+    });
+});
 
+describe('Remove duplicates rule transformations', () => {
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+        FileManagementUtils.addFile('connect/removeDuplicateRules/input.csv');
     });
 
+    it('Perform Test', () => {
+
+        const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
+
+        ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
+        ConnectEventSchemaUtils.finishEventSchemaConfiguration();
+
+        cy.dataCy('connect-remove-duplicates-box').children().click();
+        cy.dataCy('connect-remove-duplicates-input').type('10000');
+
+        ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
+            'cypress/fixtures/connect/removeDuplicateRules/expected.csv',
+            false);
+    });
 });

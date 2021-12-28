@@ -206,7 +206,6 @@ export class ConnectUtils {
   public static tearDownPreprocessingRuleTest(adapterConfiguration: AdapterInput,
                                               expectedFile: string,
                                               ignoreTime: boolean) {
-    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
     ConnectUtils.startSetAdapter(adapterConfiguration);
 
