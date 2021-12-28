@@ -17,8 +17,7 @@
  */
 
 import { FileManagementUtils } from './FileManagementUtils';
-import { AdapterUtils } from './AdapterUtils';
-import { PipelineElementInput } from '../model/PipelineElementInput';
+import { ConnectUtils } from './ConnectUtils';
 import { PipelineUtils } from './PipelineUtils';
 import { DataLakeUtils } from './DataLakeUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
@@ -56,7 +55,7 @@ export class ProcessingElementTestUtils {
 
         const adapterInput = adapterInputBuilder.build();
 
-        AdapterUtils.addGenericSetAdapter(adapterInput);
+        ConnectUtils.addGenericSetAdapter(adapterInput);
 
         // Build Pipeline
         const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)

@@ -22,65 +22,68 @@ import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
 import { GenericAdapterInput } from '../model/GenericAdapterInput';
 import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
 import { AdapterInput } from '../model/AdapterInput';
+import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
+import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
+import { DataLakeUtils } from './DataLakeUtils';
 
-export class AdapterUtils {
+export class ConnectUtils {
 
   public static testSpecificStreamAdapter(adapterConfiguration: SpecificAdapterInput) {
 
-    AdapterUtils.goToConnect();
+    ConnectUtils.goToConnect();
 
-    AdapterUtils.selectAdapter(adapterConfiguration.adapterType);
+    ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
-    AdapterUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
+    ConnectUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
 
     if (adapterConfiguration.timestampProperty) {
-      AdapterUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
+      ConnectEventSchemaUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
     }
 
-    AdapterUtils.finishEventSchemaConfiguration();
+    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-    AdapterUtils.startStreamAdapter(adapterConfiguration);
+    ConnectUtils.startStreamAdapter(adapterConfiguration);
 
   }
 
   public static testGenericStreamAdapter(adapterConfiguration: GenericAdapterInput) {
 
-    AdapterUtils.addGenericStreamAdapter(adapterConfiguration);
+    ConnectUtils.addGenericStreamAdapter(adapterConfiguration);
 
   }
 
 
   public static addGenericStreamAdapter(adapterConfiguration: GenericAdapterInput) {
-    AdapterUtils.addGenericAdapter(adapterConfiguration);
+    ConnectUtils.addGenericAdapter(adapterConfiguration);
 
-    AdapterUtils.startStreamAdapter(adapterConfiguration);
+    ConnectUtils.startStreamAdapter(adapterConfiguration);
   }
 
   public static addGenericSetAdapter(adapterConfiguration: GenericAdapterInput) {
-    AdapterUtils.addGenericAdapter(adapterConfiguration);
+    ConnectUtils.addGenericAdapter(adapterConfiguration);
 
-    AdapterUtils.startSetAdapter(adapterConfiguration);
+    ConnectUtils.startSetAdapter(adapterConfiguration);
   }
 
   private static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
-    AdapterUtils.goToConnect();
+    ConnectUtils.goToConnect();
 
-    AdapterUtils.selectAdapter(adapterConfiguration.adapterType);
+    ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
-    AdapterUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
+    ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
 
-    AdapterUtils.configureFormat(adapterConfiguration);
+    ConnectUtils.configureFormat(adapterConfiguration);
 
 
     if (adapterConfiguration.dimensionProperties.length > 0) {
       adapterConfiguration.dimensionProperties.forEach(dimensionPropertyName => {
-        AdapterUtils.markPropertyAsDimension(dimensionPropertyName);
+        ConnectEventSchemaUtils.markPropertyAsDimension(dimensionPropertyName);
       });
     }
 
-    AdapterUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
+    ConnectEventSchemaUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
 
-    AdapterUtils.finishEventSchemaConfiguration();
+    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
   }
 
   public static addMachineDataSimulator(name: string) {
@@ -91,15 +94,15 @@ export class AdapterUtils {
       .addInput('input', 'wait-time-ms', '1000')
       .build();
 
-    AdapterUtils.goToConnect();
+    ConnectUtils.goToConnect();
 
-    AdapterUtils.selectAdapter(configuration.adapterType);
+    ConnectUtils.selectAdapter(configuration.adapterType);
 
-    AdapterUtils.configureAdapter(configuration.adapterConfiguration);
+    ConnectUtils.configureAdapter(configuration.adapterConfiguration);
 
-    AdapterUtils.finishEventSchemaConfiguration();
+    ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-    AdapterUtils.startStreamAdapter(configuration);
+    ConnectUtils.startStreamAdapter(configuration);
 
   }
 
@@ -107,12 +110,12 @@ export class AdapterUtils {
     cy.visit('#/connect');
   }
 
-  private static selectAdapter(name) {
+  public static selectAdapter(name) {
     // Select adapter
     cy.get('#' + name).click();
   }
 
-  private static configureAdapter(configs: UserInput[]) {
+  public static configureAdapter(configs: UserInput[]) {
 
     StaticPropertyUtils.input(configs);
 
@@ -123,7 +126,7 @@ export class AdapterUtils {
     cy.get('button').contains('Next').parent().click();
   }
 
-  private static configureFormat(adapterConfiguration: GenericAdapterInput) {
+  public static configureFormat(adapterConfiguration: GenericAdapterInput) {
     // Select format
     cy.dataCy(adapterConfiguration.format).click();
 
@@ -133,45 +136,21 @@ export class AdapterUtils {
     cy.dataCy('sp-format-selection-next-button').contains('Next').parent().click();
   }
 
-  private static markPropertyAsDimension(propertyName: string) {
-    cy.dataCy('property-scope-' + propertyName)
-      .click()
-      .get('.mat-option-text')
-      .contains('Dimension')
-      .click();
-  }
-
-
-  private static markPropertyAsTimestamp(propertyName: string) {
-    // Mark property as timestamp
-    cy.get('#event-schema-next-button').should('be.disabled');
-    // Edit timestamp
-    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
-
-    // Mark as timestamp
-    cy.dataCy('sp-mark-as-timestamp').children().click();
-
-    // Close
-    cy.dataCy('sp-save-edit-property').click();
-
-    cy.get('#event-schema-next-button').parent().should('not.be.disabled');
-  }
-
-  private static finishEventSchemaConfiguration() {
+  public static finishEventSchemaConfiguration() {
     // Click next
     cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should('be.visible');
     cy.get('#event-schema-next-button').click();
   }
 
-  private static startStreamAdapter(adapterInput: AdapterInput) {
-    AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-live-preview');
+  public static startStreamAdapter(adapterInput: AdapterInput) {
+    ConnectUtils.startAdapter(adapterInput, 'sp-connect-adapter-live-preview');
   }
 
-  private static startSetAdapter(adapterInput: AdapterInput) {
-    AdapterUtils.startAdapter(adapterInput, 'sp-connect-adapter-set-success');
+  public static startSetAdapter(adapterInput: AdapterInput) {
+    ConnectUtils.startAdapter(adapterInput, 'sp-connect-adapter-set-success');
   }
 
-  private static startAdapter(adapterInput: AdapterInput, successElement) {
+  public static startAdapter(adapterInput: AdapterInput, successElement) {
     // Set adapter name
     cy.dataCy('sp-adapter-name').type(adapterInput.adapterName);
 
@@ -200,4 +179,43 @@ export class AdapterUtils {
     cy.dataCy('delete', { timeout: 20000 }).should('have.length', 0);
     // });
   }
+
+  public static setUpPreprocessingRuleTest(): AdapterInput {
+    const adapterConfiguration = GenericAdapterBuilder
+        .create('File_Set')
+        .setStoreInDataLake()
+        .setTimestampProperty('timestamp')
+        .setName('Adapter to test rules')
+        .setFormat('csv')
+        .addFormatInput('input', 'delimiter', ';')
+        .addFormatInput('checkbox', 'header', 'check')
+        .build();
+
+
+    ConnectUtils.goToConnect();
+    ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
+    ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
+    ConnectUtils.configureFormat(adapterConfiguration);
+
+    // wait till schema is shown
+    cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should('be.visible');
+
+    return adapterConfiguration;
+  }
+
+  public static tearDownPreprocessingRuleTest(adapterConfiguration: AdapterInput,
+                                              expectedFile: string,
+                                              ignoreTime: boolean) {
+
+    ConnectUtils.startSetAdapter(adapterConfiguration);
+
+    // Wait till data is stored
+    cy.wait(10000);
+
+    DataLakeUtils.checkResults(
+        'adaptertotestrules',
+        expectedFile,
+        ignoreTime);
+  }
+
 }

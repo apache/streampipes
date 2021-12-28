@@ -53,7 +53,7 @@ export class EditEventPropertyComponent implements OnInit {
   isNumericProperty: boolean;
   isSaveBtnEnabled: boolean;
 
-  semanticTypes: Observable<Array<string>>;
+  semanticTypes: Observable<string[]>;
 
   private propertyForm: FormGroup;
   domainPropertyControl = new FormControl();
@@ -147,7 +147,9 @@ export class EditEventPropertyComponent implements OnInit {
   save(): void {
     this.property.label = this.cachedProperty.label;
     this.property.description = this.cachedProperty.description;
-    this.property.domainProperties = this.cachedProperty.domainProperties;
+
+    // remove undefined from domain properies array
+    this.property.domainProperties = this.cachedProperty.domainProperties.filter(n => n);
     this.property.runtimeName = this.cachedProperty.runtimeName;
     this.property.propertyScope = this.cachedProperty.propertyScope;
 

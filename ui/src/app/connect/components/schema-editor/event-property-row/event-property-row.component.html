@@ -47,15 +47,18 @@
          *ngIf="isNested || isPrimitive || isList">
         <button [disabled]="!isEditable" color="accent" mat-button
                 (click)="openEditDialog(node.data)"
-                [attr.data-cy]="'edit-' + label">
+                [attr.data-cy]="'edit-' + label.toLowerCase()">
             <mat-icon>edit</mat-icon>
         </button>
     </div>
     <div fxFlex="0 1 auto" fxLayoutAlign="center center">
         <mat-checkbox
                 *ngIf="isNested || isPrimitive || isList"
-                (click)="selectProperty(node.data.id, undefined)" [disabled]="!isEditable"
-                [class.checkbox-selected]="node.data.selected" [checked]="node.data.selected">
+                (click)="selectProperty(node.data.id, undefined)"
+                [disabled]="!isEditable"
+                [class.checkbox-selected]="node.data.selected"
+                [checked]="node.data.selected"
+                [attr.data-cy]="'delete-property-' + label.toLowerCase()">
         </mat-checkbox>
     </div>
 </div>

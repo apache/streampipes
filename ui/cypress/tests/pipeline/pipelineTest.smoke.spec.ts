@@ -16,7 +16,7 @@
  *
  */
 
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
 import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
@@ -27,7 +27,7 @@ const adapterName = 'simulator';
 describe('Test Random Data Simulator Stream Adapter', () => {
   beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
-    AdapterUtils.addMachineDataSimulator(adapterName);
+    ConnectUtils.addMachineDataSimulator(adapterName);
   });
 
   it('Perform Test', () => {
