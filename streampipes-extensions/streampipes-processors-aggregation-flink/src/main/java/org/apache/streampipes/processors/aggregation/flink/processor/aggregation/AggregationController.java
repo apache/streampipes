@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
