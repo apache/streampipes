@@ -83,9 +83,7 @@
         <google-maps-services.version>0.10.0</google-maps-services.version>
         <graalvm.js.version>21.3.0</graalvm.js.version>
         <iotdb.version>0.12.0</iotdb.version>
-        <jackson.version>2.10.0</jackson.version>
         <java-websocket.version>1.4.0</java-websocket.version>
-        <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jedis.version>3.3.0</jedis.version>
@@ -106,8 +104,6 @@
         <snakeyaml.version>1.25</snakeyaml.version>
         <xerces.version>2.9.1</xerces.version>
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
-        <mqtt-client.version>1.12</mqtt-client.version>
-        <hawtbuf.version>1.11</hawtbuf.version>
 
         <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
         <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -121,18 +117,16 @@
         <commons-text.version>1.8</commons-text.version>
         <errorprone-annotations.version>2.2.0</errorprone-annotations.version>
         <java-websocket.version>1.4.0</java-websocket.version>
-        <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <influxdb.java.version>2.14</influxdb.java.version>
-        <hadoop.version>3.2.1</hadoop.version>
         <eclipse.milo.version>0.5.3</eclipse.milo.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
         <netty.version>4.1.39.Final</netty.version>
         <nimbus-jose-jwt.version>4.41.1</nimbus-jose-jwt.version>
-        <opencsv.version>4.6</opencsv.version>
+        <opencsv.version>5.5.2</opencsv.version>
         <plc4x.version>0.8.0</plc4x.version>
         <protobuf.version>3.6.1</protobuf.version>
         <nats.version>2.11.0</nats.version>
@@ -206,45 +200,6 @@
                 <groupId>org.influxdb</groupId>
                 <artifactId>influxdb-java</artifactId>
                 <version>${influxdb.java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.hadoop</groupId>
-                <artifactId>hadoop-client</artifactId>
-                <version>${hadoop.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>jetty-server</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-servlet</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-servlets</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-webapp</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-util</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-servlet</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.milo</groupId>
@@ -337,11 +292,6 @@
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
                 <version>${errorprone-annotations.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-jaxb-annotations</artifactId>
-                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
@@ -510,16 +460,6 @@
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
                 <version>${xerces.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.fusesource.mqtt-client</groupId>
-                <artifactId>mqtt-client</artifactId>
-                <version>${mqtt-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.fusesource.hawtbuf</groupId>
-                <artifactId>hawtbuf</artifactId>
-                <version>${hawtbuf.version}</version>
             </dependency>
             <dependency>
                 <groupId>redis.clients</groupId>

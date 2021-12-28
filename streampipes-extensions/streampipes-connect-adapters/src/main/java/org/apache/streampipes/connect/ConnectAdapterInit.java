@@ -61,7 +61,6 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
             .registerAdapter(new IssAdapter())
             .registerAdapter(new FlicMQTTAdapter())
             .registerAdapter(new TISensorTag())
-//            .registerAdapter(new HDFSProtocol())
             .build();
   }
 

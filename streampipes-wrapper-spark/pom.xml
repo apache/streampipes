@@ -29,7 +29,7 @@
     <artifactId>streampipes-wrapper-spark</artifactId>
 
     <properties>
-        <spark.version>2.4.4</spark.version>
+        <spark.version>2.4.8</spark.version>
     </properties>
 
     <dependencyManagement>
@@ -140,10 +140,6 @@
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.lz4</groupId>

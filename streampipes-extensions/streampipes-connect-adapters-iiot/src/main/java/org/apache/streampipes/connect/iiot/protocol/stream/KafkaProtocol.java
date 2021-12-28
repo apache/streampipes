@@ -33,7 +33,6 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.pe.shared.config.kafka.*;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
@@ -42,6 +41,8 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.pe.shared.config.kafka.KafkaConfig;
+import org.apache.streampipes.pe.shared.config.kafka.KafkaConnectUtils;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
@@ -50,7 +51,6 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -130,13 +130,9 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
                     consumer.poll(1000);
 
             consumerRecords.forEach(record -> {
-                try {
-                    InputStream inputStream = IOUtils.toInputStream(record.value(), "UTF-8");
+                InputStream inputStream = IOUtils.toInputStream(record.value(), "UTF-8");
 
-                    nEventsByte.addAll(parser.parseNEvents(inputStream, n));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                nEventsByte.addAll(parser.parseNEvents(inputStream, n));
             });
 
             if (nEventsByte.size() > n) {
@@ -279,8 +275,6 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         public void onEvent(byte[] payload) {
             try {
                 parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
-            } catch (IOException e) {
-                logger.error("Adapter " + ID + " could not read value!",e);
             } catch (ParseException e) {
                 logger.error("Error while parsing: " + e.getMessage());
         }

@@ -19,7 +19,7 @@
 package org.apache.streampipes.connect.adapter.format.csv;
 
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.api.exception.ParseException;

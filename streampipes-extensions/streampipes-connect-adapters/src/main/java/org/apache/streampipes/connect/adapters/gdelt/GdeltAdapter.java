@@ -89,7 +89,7 @@ public class GdeltAdapter extends PullAdapter {
             ZipInputStream zipInputStream = new ZipInputStream(zipFileUrl.openStream());
             BufferedReader zipBufferedReader = new BufferedReader(new InputStreamReader(zipInputStream));
             zipInputStream.getNextEntry();
-            CSVReader csvReader = new CSVReader(zipBufferedReader, '\t', '"');
+            CSVReader csvReader = new CSVReader(zipBufferedReader);
             String[] nextRecord;
             while ((nextRecord = csvReader.readNext()) != null) {
 

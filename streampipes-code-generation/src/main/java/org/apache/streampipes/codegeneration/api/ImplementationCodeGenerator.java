@@ -19,7 +19,7 @@
 package org.apache.streampipes.codegeneration.api;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.commons.zip.ZipFileGenerator;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.client.deployment.DeploymentConfiguration;
