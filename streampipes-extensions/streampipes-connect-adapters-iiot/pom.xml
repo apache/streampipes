@@ -30,6 +30,10 @@
     </parent>
     <artifactId>streampipes-connect-adapters-iiot</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>

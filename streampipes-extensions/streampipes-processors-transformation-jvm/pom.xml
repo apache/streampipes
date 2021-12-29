@@ -27,6 +27,10 @@
 
     <artifactId>streampipes-processors-transformation-jvm</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <!-- External dependencies -->
         <dependency>

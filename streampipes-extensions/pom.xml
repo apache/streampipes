@@ -64,7 +64,7 @@
 
     <properties>
         <owasp.check.skip>true</owasp.check.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
+        <maven.deploy.skip>false</maven.deploy.skip>
 
         <amqp-client.version>4.1.0</amqp-client.version>
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
