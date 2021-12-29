@@ -31,6 +31,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.IDashboardStorage;
+import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
@@ -110,6 +111,18 @@ public class ResetManagement {
         IDashboardStorage dataLakeDashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDataExplorerDashboardStorage();
         dataLakeDashboardStorage.getAllDashboards().forEach(dashboard  -> {
             dataLakeDashboardStorage.deleteDashboard(dashboard.getCouchDbId());
+        });
+
+        // Remove all dashboard widgets
+        IDashboardWidgetStorage dashobardWidgetStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDashboardWidgetStorage();
+        dashobardWidgetStorage.getAllDashboardWidgets().forEach(widget -> {
+            dashobardWidgetStorage.deleteDashboardWidget(widget.getId());
+        });
+
+        // Remove all dashboards
+        IDashboardStorage dashboardStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getDashboardStorage();
+        dashboardStorage.getAllDashboards().forEach(dashboard  -> {
+            dashboardStorage.deleteDashboard(dashboard.getCouchDbId());
         });
 
         logger.info("Resetting the system was completed");
