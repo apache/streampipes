@@ -27,9 +27,9 @@
 
     <artifactId>streampipes-processors-enricher-flink</artifactId>
 
-
     <properties>
         <elasticsearch.version>5.2.2</elasticsearch.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencies>

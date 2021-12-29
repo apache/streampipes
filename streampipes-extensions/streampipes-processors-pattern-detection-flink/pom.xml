@@ -28,9 +28,9 @@
     <artifactId>streampipes-processors-pattern-detection-flink</artifactId>
 
     <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
         <elasticsearch.version>5.2.2</elasticsearch.version>
     </properties>
-
 
     <dependencies>
         <!-- StreamPipes dependencies -->
