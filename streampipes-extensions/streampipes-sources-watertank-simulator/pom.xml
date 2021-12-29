@@ -32,6 +32,12 @@
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-data-simulator</artifactId>
             <version>0.69.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- StreamPipes dependencies -->
@@ -52,6 +58,12 @@
         </dependency>
 
         <!-- External dependencies -->
+
+        <dependency>
+            <groupId>org.apache.qpid</groupId>
+            <artifactId>proton-j</artifactId>
+            <version>0.18.0</version>
+        </dependency>
     </dependencies>
 
     <build>

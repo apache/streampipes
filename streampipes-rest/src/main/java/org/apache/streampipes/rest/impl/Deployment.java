@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl;
 
-import org.apache.streampipes.codegeneration.api.CodeGenerator;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.deployment.DeploymentConfiguration;
 import org.apache.streampipes.model.client.deployment.ElementType;
@@ -34,7 +33,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 
 
 @Path("/v2/deploy")
@@ -53,15 +51,16 @@ public class Deployment extends AbstractRestResource {
             throw new WebApplicationException(500);
         }
 
-        File f = CodeGenerator.getCodeGenerator(deploymentConfig, element).getGeneratedFile();
-
-        if (!f.exists()) {
-            throw new WebApplicationException(404);
-        }
-
-        return Response.ok(f)
-                .header("Content-Disposition",
-                        "attachment; filename=" + f.getName()).build();
+//        File f = CodeGenerator.getCodeGenerator(deploymentConfig, element).getGeneratedFile();
+//
+//        if (!f.exists()) {
+//            throw new WebApplicationException(404);
+//        }
+//
+//        return Response.ok(f)
+//                .header("Content-Disposition",
+//                        "attachment; filename=" + f.getName()).build();
+        return Response.serverError().build();
     }
 
     public static NamedStreamPipesEntity getElement(DeploymentConfiguration config, String model) {
@@ -133,11 +132,11 @@ public class Deployment extends AbstractRestResource {
 
         NamedStreamPipesEntity element = getElement(deploymentConfig, model);
 
-        String java = CodeGenerator.getCodeGenerator(deploymentConfig, element).getDeclareModel();
+        //String java = CodeGenerator.getCodeGenerator(deploymentConfig, element).getDeclareModel();
 
         try {
 
-            return Response.ok(java).build();
+            return Response.ok().build();
         } catch (IllegalArgumentException | SecurityException e) {
             e.printStackTrace();
             return Response.serverError().build();

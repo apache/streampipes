@@ -77,6 +77,17 @@
             <artifactId>scala-parser-combinators_2.11</artifactId>
         </dependency>
 
+        <!-- Dependency convergence -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-xml_2.11</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
@@ -91,6 +102,10 @@
                 <exclusion>
                     <groupId>org.apache.flink</groupId>
                     <artifactId>flink-runtime_2.11</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-streaming-java_2.11</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
