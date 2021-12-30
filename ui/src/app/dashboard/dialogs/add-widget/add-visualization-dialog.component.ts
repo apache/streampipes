@@ -16,13 +16,13 @@
  *
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {ElementIconText} from '../../../services/get-element-icon-text.service';
-import {Dashboard} from '../../models/dashboard.model';
-import {WidgetConfigBuilder} from '../../registry/widget-config-builder';
-import {WidgetRegistry} from '../../registry/widget-registry';
-import {MappingPropertyGenerator} from '../../sdk/matching/mapping-property-generator';
-import {DashboardService} from '../../services/dashboard.service';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ElementIconText } from '../../../services/get-element-icon-text.service';
+import { Dashboard } from '../../models/dashboard.model';
+import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
+import { WidgetRegistry } from '../../registry/widget-registry';
+import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';
+import { DashboardService } from '../../services/dashboard.service';
 import {
     DashboardWidgetModel,
     DashboardWidgetSettings,
@@ -32,10 +32,10 @@ import {
     MappingPropertyNary,
     MappingPropertyUnary,
     VisualizablePipeline
-} from "../../../core-model/gen/streampipes-model";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+} from '../../../core-model/gen/streampipes-model';
+import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
     selector: 'add-visualization-dialog-component',
@@ -72,8 +72,8 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
 
     parentForm: FormGroup;
 
-    formValid: boolean = false;
-    viewInitialized: boolean = false;
+    formValid = false;
+    viewInitialized = false;
 
     @Input()
     pipeline: VisualizablePipeline;
@@ -126,7 +126,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
         });
     }
 
-    sortPipeline(visualizations: Array<VisualizablePipeline>): Array<VisualizablePipeline> {
+    sortPipeline(visualizations: VisualizablePipeline[]): VisualizablePipeline[] {
         return visualizations.sort((a, b) => {
             if (a.pipelineName === b.pipelineName) {
                 return a.visualizationName.toLowerCase() < b.visualizationName.toLowerCase() ? -1 : 1;
@@ -149,7 +149,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     }
 
     getSelectedCss(selected, current) {
-        if (selected == current) {
+        if (selected === current) {
             return 'wizard-preview wizard-preview-selected';
         } else {
             return 'wizard-preview';
@@ -157,7 +157,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     }
 
     getTabCss(page) {
-        if (page == this.page) { return 'md-fab md-accent'; } else { return 'md-fab md-accent wizard-inactive'; }
+        if (page === this.page) { return 'md-fab md-accent'; } else { return 'md-fab md-accent wizard-inactive'; }
     }
 
     selectPipeline(vis) {
@@ -170,7 +170,8 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
         this.selectedWidget.config.forEach(sp => {
             if (sp instanceof MappingPropertyUnary || sp instanceof MappingPropertyNary) {
                 const requirement: EventPropertyUnion = this.findRequirement(this.selectedWidget.requiredSchema, sp.internalName);
-                sp.mapsFromOptions = new MappingPropertyGenerator(requirement, this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
+                sp.mapsFromOptions = new MappingPropertyGenerator(requirement,
+                    this.selectedPipeline.schema.eventProperties).computeMatchingProperties();
             }
             if (sp instanceof FreeTextStaticProperty && sp.internalName === WidgetConfigBuilder.TITLE_KEY) {
                 sp.value = this.selectedPipeline.visualizationName;
@@ -191,16 +192,16 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     }
 
     next() {
-        if (this.page == 'select-pipeline') {
+        if (this.page === 'select-pipeline') {
             this.loadAvailableWidgets();
             this.page = 'select-widget';
-        } else if (this.page == 'select-widget') {
+        } else if (this.page === 'select-widget') {
             this.page = 'configure-widget';
         } else {
             const configuredWidget: DashboardWidgetModel = new DashboardWidgetModel();
-            configuredWidget["@class"] = "org.apache.streampipes.model.dashboard.DashboardWidgetModel";
+            configuredWidget['@class'] = 'org.apache.streampipes.model.dashboard.DashboardWidgetModel';
             configuredWidget.dashboardWidgetSettings = this.selectedWidget;
-            configuredWidget.dashboardWidgetSettings["@class"] = "org.apache.streampipes.model.dashboard.DashboardWidgetSettings";
+            configuredWidget.dashboardWidgetSettings['@class'] = 'org.apache.streampipes.model.dashboard.DashboardWidgetSettings';
             configuredWidget.visualizationName = this.selectedPipeline.visualizationName;
             configuredWidget.pipelineId = this.selectedPipeline.pipelineId;
             configuredWidget.widgetType = configuredWidget.dashboardWidgetSettings.widgetName;
@@ -218,9 +219,9 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     }
 
     back() {
-        if (this.page == 'select-widget') {
+        if (this.page === 'select-widget') {
             this.page = 'select-pipeline';
-        } else if (this.page == 'configure-widget') {
+        } else if (this.page === 'configure-widget') {
             this.loadAvailableWidgets();
             this.page = 'select-widget';
         }
