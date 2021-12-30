@@ -20,7 +20,12 @@
     <div fxFlex="100" fxLayout="column">
         <div fxLayout="row" class="fixed-height options-bar sp-tab-bg">
             <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
-                <button mat-button mat-raised-button color="accent" (click)="openNewDashboardDialog()" *ngIf="hasDashboardWritePrivileges">
+                <button mat-button
+                        mat-raised-button
+                        color="accent"
+                        (click)="openNewDashboardDialog()"
+                        *ngIf="hasDashboardWritePrivileges"
+                        data-cy="new-dashboard-btn">
                     <i class="material-icons">add</i>
                     <span> New dashboard</span>
                 </button>
@@ -52,7 +57,8 @@
                         <div fxLayout="row" fxFlex="100">
                             <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                             <button mat-button mat-icon-button color="accent"
-                                    (click)="showDashboard(element, false)">
+                                    (click)="showDashboard(element, false)"
+                                    [attr.data-cy]="'show-dashboard-' + element.name">
                                 <i class="material-icons">visibility</i>
                             </button>
                             </span>
@@ -70,7 +76,8 @@
                             </span>
                             <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDashboardWritePrivileges">
                             <button mat-button mat-icon-button color="accent"
-                                    (click)="showDashboard(element, true)">
+                                    (click)="showDashboard(element, true)"
+                                    [attr.data-cy]="'edit-dashboard-' + element.name">
                                 <i class="material-icons">edit</i>
                             </button>
                             </span>
