@@ -228,7 +228,14 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
 
-    const keeper = {};
+    
+    const colorKeeper = {};
+    const dashTypeKeeper = {};
+    const lineVisualizationOptions = ['solid', 'dash', 'dot', 'dashdot'];
+    const barVisualizationOptions = ['', '+', '/', '.'];
+    const symbolVisualizationOptions = ['diamond', 'star-triangle-up', 'pentagon', 'star-diamond', 'x']
+    const scatterVisualizationOptions = ['', 'diamond', 'star-triangle-up', 'pentagon', 'star-diamond', 'x']
+   
     let pastGroups = 0;
     let index = 0;
 
@@ -269,17 +276,47 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             }
 
             if (!(name in this.dataExplorerWidget.visualizationConfig.chosenAxis)) {
-              this.dataExplorerWidget.visualizationConfig.chosenAxis[name] = 'links';
+              this.dataExplorerWidget.visualizationConfig.chosenAxis[name] = 'left';
             } else {
             }
 
             let color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
-             
-            if (name in keeper) {
-              color = this.lightenColor(keeper[name], 11.0);
-              keeper[name] = color;
+            const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
+
+            let visualizationOptions = undefined;
+            if (setType === 'bar') {
+              visualizationOptions = barVisualizationOptions;
+            } 
+            if (setType === 'lines' || setType === 'lines+markers')  {
+              visualizationOptions = lineVisualizationOptions;
+            }
+            if (setType === 'symbol_markers') {
+              visualizationOptions = symbolVisualizationOptions;
+            }
+            if (setType === 'normal_markers') {
+              visualizationOptions = scatterVisualizationOptions;
+            }
+
+            let dashType = undefined;
+
+            if (name in colorKeeper) {
+              dashType = dashTypeKeeper[name];
+              const visualizationTypePosition = visualizationOptions.indexOf(dashType)
+              if (visualizationTypePosition === (visualizationOptions.length - 1)) {
+                dashType = visualizationOptions[0];
+                dashTypeKeeper[name] = dashType;
+                color = this.lightenColor(colorKeeper[name], 11.0);
+                colorKeeper[name] = color;
+              } else {
+                dashType = visualizationOptions[visualizationTypePosition + 1]
+                dashTypeKeeper[name] = dashType;
+                color = colorKeeper[name];
+              }
+
             } else {
-              keeper[name] = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
+              dashType = visualizationOptions[0];
+              dashTypeKeeper[name] = dashType;
+              colorKeeper[name] = color;
             }
 
             let displayName = this.dataExplorerWidget.visualizationConfig.displayName[name];
@@ -289,12 +326,27 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             }
 
             this.data[index].marker.color = color;
+
+            if (setType === 'bar') {
+              this.data[index].marker['pattern'] = {
+                  'shape' : dashType,
+                  'fillmode' : 'overlay',
+                  'fgcolor' : '#ffffff',
+                  // 'size' : 3,
+              };
+            } else {
+              if (setType === 'lines' || setType === 'lines+markers') {
+                this.data[index]['line'] = {
+                              'dash' : dashType,
+                              'width' : 3,
+                };
+              };
+            };
+
             this.data[index].name = displayName;
 
             let displayType = 'scatter';
             let displayMode = 'lines';
-
-            const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
 
             if (setType === 'bar') {
               displayType = 'bar';
@@ -307,17 +359,19 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
             }
             if (setType === 'normal_markers') {
               displayMode = 'markers';
+              this.data[index].marker['symbol'] = dashType;
+              this.data[index].marker['size'] = 5;
             }
             if (setType === 'symbol_markers') {
               displayMode = 'markers';
-              this.data[index].marker['symbol'] = ['202'];
-              this.data[index].marker['size'] = 12;
+              this.data[index].marker['symbol'] = dashType;
+              this.data[index].marker['size'] = 10;
             }
 
             this.data[index].type = displayType;
             this.data[index].mode = displayMode;
 
-            const setAxis = this.dataExplorerWidget.visualizationConfig.chosenAxis[name] === 'links' ? 'y1' : 'y2';
+            const setAxis = this.dataExplorerWidget.visualizationConfig.chosenAxis[name] === 'left' ? 'y1' : 'y2';
             this.data[index]['yaxis'] = setAxis;
 
             if (setAxis === 'y2') {

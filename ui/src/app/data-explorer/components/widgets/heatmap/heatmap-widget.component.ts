@@ -25,7 +25,7 @@ import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 import { EChartsOption } from 'echarts';
 import { ECharts } from 'echarts/core';
-
+import { format } from 'echarts/core';
 
 @Component({
   selector: 'sp-data-explorer-heatmap-widget',
@@ -129,17 +129,48 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
       });
     });
 
+    const timeNames = xAxisData
+    const groupNames = yAxisData
+
+    this.option['tooltip'] = {
+      formatter: function(params) {
+        const timeIndex = params.value[0]
+        const groupNameIndex = params.value[1]
+
+        const value = params.value[2]
+        const time = timeNames[timeIndex];
+        const groupName = groupNames[groupNameIndex];
+
+        return '<style>' +
+               'ul {margin: 0px; padding: 0px; list-style-type: none; text-align: left}' +
+               '</style>' +
+               '<ul>' +
+               '<li><b>' + 'Time: ' + '</b>'+ time + '</li>' + 
+               '<li><b>' + 'Name: ' + '</b>' + groupName + '</li>' + 
+               '<li><b>' + 'Value: ' + '</b>' + value + '</li>' +
+               '</ul>';
+       },
+       position: 'top',
+    }
+
+    if (groupNames.length === 1) {
+      this.option['tooltip']['position'] = function (point, params, dom, rect, size) {
+                                              return [point[0], '10%'];
+                                           }
+    }
+
+    
+
     return [contentData, xAxisData, yAxisData, min, max];
   }
 
   initOptions() {
     this.option = {
       tooltip: {
-        position: 'top'
       },
       grid: {
-        height: '50%',
-        top: '10%'
+        height: '80%',
+        top: '7%'
       },
       xAxis: {
         type: 'category',
@@ -159,9 +190,9 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
         min: 0,
         max: 10,
         calculable: true,
-        orient: 'horizontal',
-        left: 'center',
-        bottom: '15%'
+        orient: 'vertical',
+        right: '5%',
+        top: '7%'
       },
       series: [
         {
