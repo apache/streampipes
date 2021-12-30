@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
@@ -30,7 +30,6 @@ import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
@@ -132,11 +131,12 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
             selectProperties,
             timeCountWindow.equals(TIME_WINDOW_OPTION));
 
-    return new AggregationProgram(staticParam, AggregationFlinkConfig.INSTANCE.getDebug());
+    return new AggregationProgram(staticParam, configExtractor, streamPipesClient);
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+                                           ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
 
     EventSchema eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
 

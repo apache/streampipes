@@ -22,6 +22,8 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
@@ -30,8 +32,10 @@ import java.util.List;
 
 public class AndProgram extends AbstractPatternDetectionProgram<AndParameters> {
 
-  public AndProgram(AndParameters params, boolean debug) {
-    super(params, debug);
+  public AndProgram(AndParameters params,
+                    ConfigExtractor configExtractor,
+                    StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

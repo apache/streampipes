@@ -24,7 +24,6 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -79,7 +78,7 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
     Integer timeWindow = extractor.singleValueParameter(TIME_WINDOW, Integer.class);
 
     AndParameters params = new AndParameters(graph, timeUnit, timeWindow, leftMappings, rightMappings);
-    return new AndProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
+    return new AndProgram(params, configExtractor, streamPipesClient);
 
   }
 }

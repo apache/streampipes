@@ -21,6 +21,7 @@ package org.apache.streampipes.sources.vehicle.simulator.simulator;
 import net.acesinc.data.json.generator.config.JSONConfigReader;
 import net.acesinc.data.json.generator.config.SimulationConfig;
 import net.acesinc.data.json.generator.config.WorkflowConfig;
+import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.pe.simulator.StreamPipesSimulationRunner;
@@ -40,8 +41,8 @@ public class VehicleDataSimulator implements Runnable {
       ConfigExtractor configExtractor = ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
       SimulationConfig config = buildSimulationConfig();
       Map<String, TopicAwareWorkflow> workflows = buildSimWorkflows(config);
-      String kafkaHost = configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
-      Integer kafkaPort = configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
+      String kafkaHost = getKafkaHost(configExtractor);
+      Integer kafkaPort = getKafkaPort(configExtractor);
       new StreamPipesSimulationRunner(config, workflows, kafkaHost, kafkaPort).startSimulation();
 
     } catch (IOException e) {
@@ -63,6 +64,16 @@ public class VehicleDataSimulator implements Runnable {
     }
 
     return workflows;
+  }
+
+  private String getKafkaHost(ConfigExtractor configExtractor) {
+    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean() ?
+            "localhost" : configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
+  }
+
+  private Integer getKafkaPort(ConfigExtractor configExtractor) {
+    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean() ?
+            9094 : configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
   }
 
   @Override

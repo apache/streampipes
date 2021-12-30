@@ -19,13 +19,17 @@
 package org.apache.streampipes.processors.enricher.flink.processor.trigonometry;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.enricher.flink.AbstractEnricherProgram;
 
 public class TrigonometryProgram extends AbstractEnricherProgram<TrigonometryParameters> {
 
-    public TrigonometryProgram(TrigonometryParameters params, boolean debug) {
-        super(params, debug);
+    public TrigonometryProgram(TrigonometryParameters params,
+                               ConfigExtractor configExtractor,
+                               StreamPipesClient streamPipesClient) {
+        super(params, configExtractor, streamPipesClient);
     }
 
     @Override

@@ -23,7 +23,6 @@ import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.transformation.flink.config.TransformationFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -91,6 +90,6 @@ public class BoilerplateController extends FlinkDataProcessorDeclarer<Boilerplat
 
         BoilerplateParameters staticParams = new BoilerplateParameters(graph, htmlProperty, extractorMode, outputMode);
 
-        return new BoilerplateProgram(staticParams, TransformationFlinkConfig.INSTANCE.getDebug());
+        return new BoilerplateProgram(staticParams, configExtractor, streamPipesClient);
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.preprocessing.elements;
+package org.apache.streampipes.connect.adapter.preprocessing.transform.stream;
 
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 

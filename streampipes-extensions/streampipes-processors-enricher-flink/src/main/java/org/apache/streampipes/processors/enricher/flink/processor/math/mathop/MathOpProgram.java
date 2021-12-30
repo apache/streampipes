@@ -19,13 +19,17 @@
 package org.apache.streampipes.processors.enricher.flink.processor.math.mathop;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.enricher.flink.AbstractEnricherProgram;
 
 public class MathOpProgram extends AbstractEnricherProgram<MathOpParameters> {
 
-    public MathOpProgram(MathOpParameters params, boolean debug) {
-        super(params, debug);
+    public MathOpProgram(MathOpParameters params,
+                         ConfigExtractor configExtractor,
+                         StreamPipesClient streamPipesClient) {
+        super(params, configExtractor, streamPipesClient);
     }
 
     @Override

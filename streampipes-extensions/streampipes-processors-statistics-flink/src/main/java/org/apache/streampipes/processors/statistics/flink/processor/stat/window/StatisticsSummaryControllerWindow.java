@@ -23,7 +23,6 @@ import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
 import org.apache.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -108,7 +107,7 @@ public class StatisticsSummaryControllerWindow extends
     StatisticsSummaryParamsSerializable serializableParams = new StatisticsSummaryParamsSerializable
             (valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
 
-    return new StatisticsSummaryProgramWindow(params, serializableParams, StatisticsFlinkConfig.INSTANCE.getDebug());
+    return new StatisticsSummaryProgramWindow(params, serializableParams, configExtractor, streamPipesClient);
 
   }
 }

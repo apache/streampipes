@@ -16,7 +16,7 @@
  *
  */
 
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 
 describe('Test Random Data Simulator Stream Adapter', () => {
@@ -26,16 +26,15 @@ describe('Test Random Data Simulator Stream Adapter', () => {
 
   it('Perform Test', () => {
     const adapterInput = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName('Machine Data Simulator Test')
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
+        .create('Machine_Data_Simulator')
+        .setName('Machine Data Simulator Test')
+        .addInput('input', 'wait-time-ms', '1000')
+        .build();
 
 
     cy.visit('#/connect');
-    AdapterUtils.testSpecificStreamAdapter(adapterInput);
-    AdapterUtils.deleteAdapter();
-
+    ConnectUtils.testSpecificStreamAdapter(adapterInput);
+    ConnectUtils.deleteAdapter();
   });
 
 });

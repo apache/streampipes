@@ -24,7 +24,6 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -78,6 +77,6 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
 
     AbsenceParameters params = new AbsenceParameters(graph, selectProperties, timeWindow, timeUnit);
 
-    return new AbsenceProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
+    return new AbsenceProgram(params, configExtractor, streamPipesClient);
   }
 }

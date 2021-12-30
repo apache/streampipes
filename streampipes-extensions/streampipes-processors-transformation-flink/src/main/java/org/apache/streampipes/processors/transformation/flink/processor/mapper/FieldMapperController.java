@@ -74,7 +74,7 @@ public class FieldMapperController extends
     FieldMapperParameters params = new FieldMapperParameters(graph, replacePropertyNames, newFieldName);
 
 
-    return new FieldMapperProgram(params);
+    return new FieldMapperProgram(params, configExtractor, streamPipesClient);
   }
 
   @Override

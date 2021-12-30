@@ -18,15 +18,28 @@
 <div fxFlex="100" fxLayout="column">
     <div fxLayout="row" class="fixed-height options-bar sp-tab-bg" *ngIf="editMode">
         <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
-            <button mat-button mat-raised-button color="accent" (click)="updateDashboardAndCloseEditMode()" class="mr-10">
+            <button mat-button
+                    mat-raised-button
+                    color="accent"
+                    (click)="updateDashboardAndCloseEditMode()"
+                    class="mr-10"
+                    data-cy="dashboard-save-edit-mode">
                 <i class="material-icons">save</i>
                 <span> Save</span>
             </button>
-            <button mat-button mat-raised-button class="mat-basic mr-10" (click)="discardChanges()">
+            <button mat-button
+                    mat-raised-button
+                    class="mat-basic mr-10"
+                    (click)="discardChanges()">
                 <i class="material-icons">clear</i>
                 <span> Discard</span>
             </button>
-            <button mat-button mat-raised-button color="accent" (click)="addWidget()" [disabled]="!editMode">
+            <button mat-button
+                    mat-raised-button
+                    color="accent"
+                    (click)="addWidget()"
+                    [disabled]="!editMode"
+                    data-cy="dashboard-add-widget">
                 <i class="material-icons">add</i>
                 <span> Add visualization</span>
             </button>

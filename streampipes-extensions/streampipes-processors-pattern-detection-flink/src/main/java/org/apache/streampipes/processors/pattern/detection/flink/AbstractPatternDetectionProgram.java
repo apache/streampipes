@@ -19,25 +19,31 @@ package org.apache.streampipes.processors.pattern.detection.flink;
 
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.processors.pattern.detection.flink.config.ConfigKeys;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public abstract class AbstractPatternDetectionProgram<B extends EventProcessorBindingParams> extends FlinkDataProcessorRuntime<B> {
 
-  public AbstractPatternDetectionProgram(B params, boolean debug) {
-    super(params, debug);
-  }
-
-  public AbstractPatternDetectionProgram(B params) {
-    super(params, false);
+  public AbstractPatternDetectionProgram(B params,
+                                         ConfigExtractor configExtractor,
+                                         StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override
-  protected FlinkDeploymentConfig getDeploymentConfig() {
-    return new FlinkDeploymentConfig(PatternDetectionFlinkConfig.JAR_FILE,
-            PatternDetectionFlinkConfig.INSTANCE.getFlinkHost(), PatternDetectionFlinkConfig.INSTANCE.getFlinkPort());
+  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
+    SpConfig config = configExtractor.getConfig();
+    return new FlinkDeploymentConfig(config.getString(
+            ConfigKeys.FLINK_JAR_FILE_LOC),
+            config.getString(ConfigKeys.FLINK_HOST),
+            config.getInteger(ConfigKeys.FLINK_PORT),
+            config.getBoolean(ConfigKeys.DEBUG)
+    );
   }
 
   @Override

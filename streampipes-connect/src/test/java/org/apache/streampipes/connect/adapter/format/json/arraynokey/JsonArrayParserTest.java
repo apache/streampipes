@@ -18,19 +18,18 @@
 
 package org.apache.streampipes.connect.adapter.format.json.arraynokey;
 
-import static org.junit.Assert.assertEquals;
-import static org.apache.streampipes.connect.adapter.TestUtils.getJsonArrayWithThreeElements;
-import static org.apache.streampipes.connect.adapter.TestUtils.makeJsonObject;
-
 import com.google.gson.JsonArray;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.junit.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import static org.apache.streampipes.connect.adapter.TestUtils.getJsonArrayWithThreeElements;
+import static org.apache.streampipes.connect.adapter.TestUtils.makeJsonObject;
+import static org.junit.Assert.assertEquals;
 
 public class JsonArrayParserTest {
 
@@ -87,14 +86,7 @@ public class JsonArrayParserTest {
   }
 
   private InputStream getInputStream(String s) {
-
-    try {
-      return IOUtils.toInputStream(s, "UTF-8");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    return null;
+    return IOUtils.toInputStream(s, "UTF-8");
   }
 
 }

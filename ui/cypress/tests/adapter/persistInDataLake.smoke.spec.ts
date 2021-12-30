@@ -16,7 +16,7 @@
  *
  */
 
-import { AdapterUtils } from '../../support/utils/AdapterUtils';
+import { ConnectUtils } from '../../support/utils/ConnectUtils';
 import { PipelineUtils } from '../../support/utils/PipelineUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
@@ -41,7 +41,7 @@ describe('Test File Stream Adapter', () => {
       .addFormatInput('checkbox', 'header', 'check')
       .build();
 
-    AdapterUtils.testGenericStreamAdapter(adapterInput);
+    ConnectUtils.testGenericStreamAdapter(adapterInput);
     PipelineUtils.checkAmountOfPipelinesPipeline(1);
   });
 

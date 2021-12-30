@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.processors.enricher.flink;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
+import org.apache.streampipes.processors.enricher.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.enricher.flink.processor.math.mathop.MathOpController;
 import org.apache.streampipes.processors.enricher.flink.processor.math.staticmathop.StaticMathOpController;
 import org.apache.streampipes.processors.enricher.flink.processor.timestamp.TimestampController;
@@ -37,25 +38,33 @@ import org.apache.streampipes.processors.enricher.flink.processor.urldereferenci
 public class EnricherFlinkInit extends StandaloneModelSubmitter {
 
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new TimestampController())
-            .add(new MathOpController())
-            .add(new StaticMathOpController())
-            .add(new UrlDereferencingController())
-            .add(new TrigonometryController());
-
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new EnricherFlinkInit().init(EnricherFlinkConfig.INSTANCE);
+    new EnricherFlinkInit().init();
   }
 
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.enricher.flink",
+                    "Processors Enricher Flink",
+                    "",
+                    8090)
+            .registerPipelineElements(new TimestampController(),
+                    new MathOpController(),
+                    new StaticMathOpController(),
+                    new UrlDereferencingController(),
+                    new TrigonometryController())
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+            .build();
+  }
 }

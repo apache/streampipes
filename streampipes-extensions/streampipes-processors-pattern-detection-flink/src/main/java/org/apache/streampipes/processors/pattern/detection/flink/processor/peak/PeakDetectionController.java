@@ -24,7 +24,6 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -33,9 +32,6 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
-/**
- * Created by riemer on 20.04.2017.
- */
 public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDetectionParameters> {
 
   private static final String VALUE_TO_OBSERVE = "value-to-observe";
@@ -90,6 +86,6 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
     PeakDetectionParameters params = new PeakDetectionParameters(sepa,
             valueToObserve, timestampMapping, groupBy, countWindowSize, lag, threshold, influence);
 
-    return new PeakDetectionProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
+    return new PeakDetectionProgram(params, configExtractor, streamPipesClient);
   }
 }

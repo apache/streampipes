@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.summary;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
@@ -27,15 +27,10 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.statistics.flink.config.StatisticsFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpProperties;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Statistics;
@@ -81,7 +76,7 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMappings);
 
-    return new StatisticsSummaryProgram(params, StatisticsFlinkConfig.INSTANCE.getDebug());
+    return new StatisticsSummaryProgram(params, configExtractor, streamPipesClient);
 
   }
 

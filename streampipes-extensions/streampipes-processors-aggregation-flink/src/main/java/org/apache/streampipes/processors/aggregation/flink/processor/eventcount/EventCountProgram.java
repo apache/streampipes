@@ -18,14 +18,18 @@
 package org.apache.streampipes.processors.aggregation.flink.processor.eventcount;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 import org.apache.streampipes.processors.aggregation.flink.processor.count.TimeWindowConverter;
 
 public class EventCountProgram extends AbstractAggregationProgram<EventCountParameters> {
 
-  public EventCountProgram(EventCountParameters params, boolean debug) {
-    super(params, debug);
+  public EventCountProgram(EventCountParameters params,
+                           ConfigExtractor configExtractor,
+                           StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

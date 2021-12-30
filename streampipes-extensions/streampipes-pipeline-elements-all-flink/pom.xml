@@ -27,11 +27,16 @@
 
     <artifactId>streampipes-pipeline-elements-all-flink</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-aggregation-flink</artifactId>
             <version>0.69.0-SNAPSHOT</version>
+            <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>

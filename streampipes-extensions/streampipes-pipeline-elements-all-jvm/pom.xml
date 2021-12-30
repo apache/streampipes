@@ -27,6 +27,10 @@
 
     <artifactId>streampipes-pipeline-elements-all-jvm</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
@@ -45,6 +49,12 @@
             <artifactId>streampipes-processors-filters-siddhi</artifactId>
             <version>0.69.0-SNAPSHOT</version>
             <classifier>embed</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
@@ -105,6 +115,10 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
         </dependency>
         <dependency>
             <groupId>org.atteo.classindex</groupId>

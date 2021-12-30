@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.wrapper.runtime;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 public abstract class PipelineElementRuntime {

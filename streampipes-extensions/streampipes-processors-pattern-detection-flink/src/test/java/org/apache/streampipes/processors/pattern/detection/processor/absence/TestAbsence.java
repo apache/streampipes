@@ -17,27 +17,29 @@
  */
 package org.apache.streampipes.processors.pattern.detection.processor.absence;
 
-import static org.hamcrest.core.IsEqual.equalTo;
-
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.pattern.detection.flink.PatternDetectionFlinkInit;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceParameters;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import static org.hamcrest.core.IsEqual.equalTo;
 
 @Ignore
 @RunWith(Parameterized.class)
@@ -75,7 +77,8 @@ public class TestAbsence extends DataStreamTestBase {
   public void testAbsenceProgram() {
     AbsenceParameters params = new AbsenceParameters(InvocationGraphGenerator.makeEmptyInvocation(new AbsenceController().declareModel()),  Arrays.asList("id", "timestamp", "value"), timeWindow, timeUnit);
 
-    AbsenceProgram program = new AbsenceProgram(params, true);
+    ConfigExtractor configExtractor = ConfigExtractor.from(PatternDetectionFlinkInit.ServiceGroup);
+    AbsenceProgram program = new AbsenceProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(1, makeMap(), 0)), createTestStream(makeInputData(waitForMs, makeMap(), 1)));
 

@@ -22,10 +22,12 @@ import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,8 +62,8 @@ public class TestCountProgram extends DataStreamTestBase {
           expected) {
     CountParameters params =
             new CountParameters(InvocationGraphGenerator.makeEmptyInvocation(new CountController().declareModel()), 10,"SECONDS", "field");
-
-    CountProgram program = new CountProgram(params, true);
+    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.ServiceGroup);
+    CountProgram program = new CountProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(input));
 

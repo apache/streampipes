@@ -25,11 +25,19 @@ public class ElasticSearchParameters extends EventSinkBindingParams {
 
   private String timestampField;
   private String indexName;
+  private String elasticsearchHost;
+  private Integer elasticsearchPort;
 
-  public ElasticSearchParameters(DataSinkInvocation graph, String timestampField, String indexName) {
+  public ElasticSearchParameters(DataSinkInvocation graph,
+                                 String timestampField,
+                                 String indexName,
+                                 String elasticsearchHost,
+                                 Integer elasticsearchPort) {
     super(graph);
     this.timestampField = timestampField;
     this.indexName = indexName;
+    this.elasticsearchHost = elasticsearchHost;
+    this.elasticsearchPort = elasticsearchPort;
   }
 
   public String getTimestampField() {
@@ -38,5 +46,13 @@ public class ElasticSearchParameters extends EventSinkBindingParams {
 
   public String getIndexName() {
     return indexName;
+  }
+
+  public String getElasticsearchHost() {
+    return elasticsearchHost;
+  }
+
+  public Integer getElasticsearchPort() {
+    return elasticsearchPort;
   }
 }

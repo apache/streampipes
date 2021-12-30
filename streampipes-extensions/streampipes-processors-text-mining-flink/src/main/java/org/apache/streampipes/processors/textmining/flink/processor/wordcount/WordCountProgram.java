@@ -19,6 +19,8 @@
 package org.apache.streampipes.processors.textmining.flink.processor.wordcount;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.textmining.flink.AbstractTextMiningProgram;
 
@@ -26,12 +28,10 @@ import java.io.Serializable;
 
 public class WordCountProgram extends AbstractTextMiningProgram<WordCountParameters> implements Serializable {
 
-  public WordCountProgram(WordCountParameters params, boolean debug) {
-    super(params, debug);
-  }
-
-  public WordCountProgram(WordCountParameters params) {
-    super(params);
+  public WordCountProgram(WordCountParameters params,
+                          ConfigExtractor configExtractor,
+                          StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

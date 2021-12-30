@@ -23,7 +23,6 @@ import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.processors.pattern.detection.flink.config.PatternDetectionFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -63,7 +62,7 @@ public class SequenceController extends FlinkDataProcessorDeclarer<SequenceParam
 
     SequenceParameters params = new SequenceParameters(graph, timeWindowSize, timeUnit);
 
-    return new SequenceProgram(params, PatternDetectionFlinkConfig.INSTANCE.getDebug());
+    return new SequenceProgram(params, configExtractor, streamPipesClient);
 
   }
 }

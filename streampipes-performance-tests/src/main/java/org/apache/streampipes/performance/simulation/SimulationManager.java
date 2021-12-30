@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.performance.simulation;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.performance.model.PerformanceTestSettings;
 import org.apache.streampipes.performance.producer.DataSimulator;
 

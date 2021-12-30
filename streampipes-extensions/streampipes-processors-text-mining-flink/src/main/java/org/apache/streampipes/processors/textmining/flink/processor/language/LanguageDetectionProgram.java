@@ -18,17 +18,17 @@
 package org.apache.streampipes.processors.textmining.flink.processor.language;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.textmining.flink.AbstractTextMiningProgram;
 
 public class LanguageDetectionProgram extends AbstractTextMiningProgram<LanguageDetectionParameters> {
 
-  public LanguageDetectionProgram(LanguageDetectionParameters params, boolean debug) {
-    super(params, debug);
-  }
-
-  public LanguageDetectionProgram(LanguageDetectionParameters params) {
-    super(params);
+  public LanguageDetectionProgram(LanguageDetectionParameters params,
+                                  ConfigExtractor configExtractor,
+                                  StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

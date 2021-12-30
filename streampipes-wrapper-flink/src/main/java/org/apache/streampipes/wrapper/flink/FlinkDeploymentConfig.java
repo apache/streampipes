@@ -27,12 +27,23 @@ public class FlinkDeploymentConfig implements Serializable {
   private String jarFile;
   private String host;
   private int port;
+  private boolean miniClusterMode;
 
-  public FlinkDeploymentConfig(String jarFile, String host, int port) {
+  public FlinkDeploymentConfig(String jarFile,
+                               String host,
+                               int port) {
     super();
     this.jarFile = jarFile;
     this.host = host;
     this.port = port;
+  }
+
+  public FlinkDeploymentConfig(String jarFile,
+                               String host,
+                               int port,
+                               boolean miniClusterMode) {
+    this(jarFile, host, port);
+    this.miniClusterMode = miniClusterMode;
   }
 
   public String getJarFile() {
@@ -45,6 +56,10 @@ public class FlinkDeploymentConfig implements Serializable {
 
   public int getPort() {
     return port;
+  }
+
+  public boolean isMiniClusterMode() {
+    return miniClusterMode;
   }
 
 }

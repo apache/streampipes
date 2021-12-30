@@ -37,7 +37,11 @@
 
     <div fxLayout="row" fxLayoutAlign="start" *ngIf="addedByUser">
         <mat-form-field  class="doubleWidth">
-            <input matInput placeholder="Static Value" name="static_value" id="static_value"
+            <input matInput
+                   placeholder="Static Value"
+                   name="static_value"
+                   id="static_value"
+                   data-cy="connect-edit-field-static-value"
                 [(ngModel)]="cachedProperty.staticValue">
         </mat-form-field>
     </div>

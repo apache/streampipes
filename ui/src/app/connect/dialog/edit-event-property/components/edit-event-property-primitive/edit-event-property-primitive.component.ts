@@ -41,7 +41,9 @@ export class EditEventPropertyPrimitiveComponent implements OnInit {
   ngOnInit(): void {
     this.setShowUnitTransformation();
     this.addedByUser = this.staticValueAddedByUser();
-    this.cachedProperty.staticValue = '';
+    if (!this.cachedProperty.staticValue) {
+      this.cachedProperty.staticValue = '';
+    }
   }
 
   setShowUnitTransformation() {
@@ -56,11 +58,7 @@ export class EditEventPropertyPrimitiveComponent implements OnInit {
   }
 
   staticValueAddedByUser() {
-    if (this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/')) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.cachedProperty.elementId.startsWith('http://eventProperty.de/staticValue/');
   }
 
 }

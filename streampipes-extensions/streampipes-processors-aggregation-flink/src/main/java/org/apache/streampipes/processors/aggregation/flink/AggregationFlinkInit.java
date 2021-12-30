@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.processors.aggregation.flink;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
@@ -27,7 +28,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.processors.aggregation.flink.config.AggregationFlinkConfig;
+import org.apache.streampipes.processors.aggregation.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.aggregation.flink.processor.aggregation.AggregationController;
 import org.apache.streampipes.processors.aggregation.flink.processor.count.CountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.eventcount.EventCountController;
@@ -35,25 +36,35 @@ import org.apache.streampipes.processors.aggregation.flink.processor.rate.EventR
 
 public class AggregationFlinkInit extends StandaloneModelSubmitter {
 
+  public static final String ServiceGroup = "org.apache.streampipes.processors.aggregation.flink";
+
   public static void main(String[] args) {
-    DeclarersSingleton.getInstance()
-            .add(new AggregationController())
-            .add(new CountController())
-            .add(new EventRateController())
-            .add(new EventCountController());
-
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new AggregationFlinkInit().init(AggregationFlinkConfig.INSTANCE);
+    new AggregationFlinkInit().init();
   }
 
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create(ServiceGroup,
+                    "Processors Aggregation Flink",
+                    "",
+                    8090)
+            .registerPipelineElements(new AggregationController(),
+                    new CountController(),
+                    new EventRateController(),
+                    new EventCountController())
+            .registerMessagingFormats(
+                    new JsonDataFormatFactory(),
+                    new CborDataFormatFactory(),
+                    new SmileDataFormatFactory(),
+                    new FstDataFormatFactory())
+            .registerMessagingProtocols(
+                    new SpKafkaProtocolFactory(),
+                    new SpJmsProtocolFactory(),
+                    new SpMqttProtocolFactory())
+            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+            .build();
+  }
 }

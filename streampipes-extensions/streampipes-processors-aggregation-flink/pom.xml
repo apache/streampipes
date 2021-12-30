@@ -27,6 +27,10 @@
 
     <artifactId>streampipes-processors-aggregation-flink</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
@@ -67,6 +71,16 @@
             <groupId>org.lz4</groupId>
             <artifactId>lz4-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-xml_2.11</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 
         <!-- Test dependencies -->
@@ -79,11 +93,16 @@
                     <groupId>org.apache.flink</groupId>
                     <artifactId>flink-runtime_2.11</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-streaming-java_2.11</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-test-utils_2.11</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -105,6 +124,21 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <classifier>embed</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

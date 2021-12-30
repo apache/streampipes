@@ -25,8 +25,10 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.context.SpEventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+import java.io.Serializable;
+
 public class EventProcessorRuntimeParams<B extends EventProcessorBindingParams> extends
-        RuntimeParams<B, DataProcessorInvocation, EventProcessorRuntimeContext> { // B - Bind Type
+        RuntimeParams<B, DataProcessorInvocation, EventProcessorRuntimeContext> implements Serializable {
 
   public EventProcessorRuntimeParams(B bindingParams,
                                      Boolean singletonEngine,

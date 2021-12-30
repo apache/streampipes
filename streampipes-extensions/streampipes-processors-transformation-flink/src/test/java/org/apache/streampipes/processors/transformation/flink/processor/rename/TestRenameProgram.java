@@ -22,11 +22,13 @@ import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +56,8 @@ public class TestRenameProgram extends DataStreamTestBase {
   public void testConverterProgram() {
     FieldRenamerParameters params = new FieldRenamerParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldRenamerController().declareModel()), oldPropertyName, newPropertyName);
 
-    FieldRenamerProgram program = new FieldRenamerProgram(params, true);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    FieldRenamerProgram program = new FieldRenamerProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData()));
 

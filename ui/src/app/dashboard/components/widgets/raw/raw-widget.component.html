@@ -20,7 +20,8 @@
         {{selectedTitle}}
     </div>
     <div [ngStyle]="{'width': width + 'px', 'height': height + 'px'}" class="p-10">
-        <div *ngFor="let item of items">
+        <div *ngFor="let item of items"
+             data-cy="dashboard-raw-item">
             {{item}}
         </div>
     </div>

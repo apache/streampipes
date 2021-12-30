@@ -19,18 +19,28 @@
 <div fxLayout="row">
     <div fxLayoutAlign="space-between center" class="add-schema" fxFlex="0 1 100%">
         <div>
-            <button color="primary" mat-button (click)=addNestedProperty()>
+            <button color="primary"
+                    mat-button
+                    data-cy="connect-add-nested-property"
+                    (click)=addNestedProperty()>
                 <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
             </button>
-            <button color="primary" mat-button
+            <button color="primary"
+                    mat-button
+                    data-cy="connect-add-static-property"
                     (click)="addStaticValueProperty()">
                 <mat-icon matTooltip="Add a static value to event">add</mat-icon>
             </button>
-            <button color="primary" mat-button
-                    (click)=addTimestampProperty()>
+            <button color="primary"
+                    mat-button
+                    data-cy="connect-add-timestamp-property"
+                    (click)=addTimestampProperty()
+                    data-cy="connect-schema-add-timestamp-btn">
                 <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
             </button>
-            <button color="primary" mat-button (click)=guessSchema()>
+            <button color="primary"
+                    mat-button
+                    (click)=guessSchema()>
                 <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
             </button>
             <!--            <button color="primary" mat-button (click)=togglePreview()>-->
@@ -44,8 +54,12 @@
                 </sp-error-hint>
 
 
-            <button style="padding-right:0" color="primary" mat-button [disabled]="countSelected == 0"
-                    (click)="removeSelectedProperties()">
+            <button style="padding-right:0"
+                    color="primary"
+                    mat-button
+                    [disabled]="countSelected == 0"
+                    (click)="removeSelectedProperties()"
+                    data-cy="connect-schema-delete-properties-btn">
                 <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>
             </button>
         </div>

@@ -24,6 +24,8 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
@@ -33,8 +35,10 @@ import java.util.Map;
 
 public class AggregationProgram extends AbstractAggregationProgram<AggregationParameters> {
 
-  public AggregationProgram(AggregationParameters params, boolean debug) {
-    super(params, debug);
+  public AggregationProgram(AggregationParameters params,
+                            ConfigExtractor configExtractor,
+                            StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
     setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
   }
 

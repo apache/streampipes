@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.container.api;
 
+import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
@@ -42,138 +43,140 @@ import java.util.Map;
 public abstract class InvocablePipelineElementResource<I extends InvocableStreamPipesEntity, D extends Declarer<?>,
         P extends AbstractParameterExtractor<I>> extends AbstractPipelineElementResource<D> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
 
-    protected abstract Map<String, D> getElementDeclarers();
-    protected abstract String getInstanceId(String uri, String elementId);
+  protected abstract Map<String, D> getElementDeclarers();
 
-    protected Class<I> clazz;
+  protected abstract String getInstanceId(String uri, String elementId);
 
-    public InvocablePipelineElementResource(Class<I> clazz) {
-        this.clazz = clazz;
-    }
+  protected Class<I> clazz;
 
-    @POST
-    @Path("{elementId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @JacksonSerialized
-    public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId, I graph) {
+  public InvocablePipelineElementResource(Class<I> clazz) {
+    this.clazz = clazz;
+  }
 
-        try {
-            if (isDebug()) {
-              graph = createGroundingDebugInformation(graph);
-            }
+  @POST
+  @Path("{elementId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId, I graph) {
 
-            InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
+    try {
+      if (isDebug()) {
+        LOG.info("SP_DEBUG env variable is set - overriding broker hostname and port for local development");
+        graph = createGroundingDebugInformation(graph);
+      }
 
-            if (declarer != null) {
-                String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
-                if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
-                    RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
-                    Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceGroup());
-                    if (!resp.isSuccess()) {
-                        LOG.error("Could not invoke pipeline element {} due to the following error: {}",
-                                graph.getName(),
-                                resp.getOptionalMessage());
-                        RunningInstances.INSTANCE.remove(runningInstanceId);
-                    }
-                    return ok(resp);
-                } else {
-                    LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);
-                    Response resp = new Response(graph.getElementId(), true);
-                    return ok(resp);
-                }
+      InvocableDeclarer declarer = (InvocableDeclarer) getDeclarerById(elementId);
 
-            }
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return ok(new Response(elementId, false, e.getMessage()));
+      if (declarer != null) {
+        String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
+        if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
+          RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
+          Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceGroup());
+          if (!resp.isSuccess()) {
+            LOG.error("Could not invoke pipeline element {} due to the following error: {}",
+                    graph.getName(),
+                    resp.getOptionalMessage());
+            RunningInstances.INSTANCE.remove(runningInstanceId);
+          }
+          return ok(resp);
+        } else {
+          LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);
+          Response resp = new Response(graph.getElementId(), true);
+          return ok(resp);
         }
 
-        return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
+      }
+    } catch (InstantiationException | IllegalAccessException e) {
+      e.printStackTrace();
+      return ok(new Response(elementId, false, e.getMessage()));
     }
 
-    @POST
-    @Path("{elementId}/configurations")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @JacksonSerialized
-    public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
-                                                         RuntimeOptionsRequest runtimeOptionsRequest) {
+    return ok(new Response(elementId, false, "Could not find the element with id: " + elementId));
+  }
 
-        ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
+  @POST
+  @Path("{elementId}/configurations")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
+                                                       RuntimeOptionsRequest runtimeOptionsRequest) {
 
-        List<Option> availableOptions =
-                resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                StaticPropertyExtractor.from(
-                        runtimeOptionsRequest.getStaticProperties(),
-                        runtimeOptionsRequest.getInputStreams(),
-                        runtimeOptionsRequest.getAppId()
-                ));
+    ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
 
-        return ok(new RuntimeOptionsResponse(runtimeOptionsRequest, availableOptions));
+    List<Option> availableOptions =
+            resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
+                    StaticPropertyExtractor.from(
+                            runtimeOptionsRequest.getStaticProperties(),
+                            runtimeOptionsRequest.getInputStreams(),
+                            runtimeOptionsRequest.getAppId()
+                    ));
+
+    return ok(new RuntimeOptionsResponse(runtimeOptionsRequest, availableOptions));
+  }
+
+  @POST
+  @Path("{elementId}/output")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId, I runtimeOptionsRequest) {
+    try {
+      //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
+      ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
+              (ResolvesContainerProvidedOutputStrategy<I, P>)
+                      getDeclarerById
+                              (elementId);
+      return ok(resolvesOutput.resolveOutputStrategy
+              (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
+      return ok(new Response(elementId, false));
+    }
+  }
+
+
+  // TODO move endpoint to /elementId/instances/runningInstanceId
+  @DELETE
+  @Path("{elementId}/{runningInstanceId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public javax.ws.rs.core.Response detach(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+
+    InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
+
+    if (runningInstance != null) {
+      Response resp = runningInstance.detachRuntime(runningInstanceId, getServiceGroup());
+
+      if (resp.isSuccess()) {
+        RunningInstances.INSTANCE.remove(runningInstanceId);
+      }
+
+      return ok(resp);
     }
 
-    @POST
-    @Path("{elementId}/output")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @JacksonSerialized
-    public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId, I runtimeOptionsRequest) {
-        try {
-            //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
-            ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
-                    (ResolvesContainerProvidedOutputStrategy<I, P>)
-                            getDeclarerById
-                                    (elementId);
-            return ok(resolvesOutput.resolveOutputStrategy
-                    (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
-        } catch (SpRuntimeException e) {
-            e.printStackTrace();
-            return ok(new Response(elementId, false));
-        }
-    }
+    return ok(new Response(elementId, false, "Could not find the running instance with id: " + runningInstanceId));
+  }
 
+  @GET
+  @Path("{elementId}/instances")
+  @Produces(MediaType.APPLICATION_JSON)
+  public javax.ws.rs.core.Response listRunningInstances(@PathParam("elementId") String elementId) {
+    return ok(RunningInstances.INSTANCE.getRunningInstanceIdsForElement(elementId));
+  }
 
-    // TODO move endpoint to /elementId/instances/runningInstanceId
-    @DELETE
-    @Path("{elementId}/{runningInstanceId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public javax.ws.rs.core.Response detach(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+  protected abstract P getExtractor(I graph);
 
-        InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
+  protected abstract I createGroundingDebugInformation(I graph);
 
-        if (runningInstance != null) {
-            Response resp = runningInstance.detachRuntime(runningInstanceId, getServiceGroup());
+  private Boolean isDebug() {
+    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean();
+  }
 
-            if (resp.isSuccess()) {
-                RunningInstances.INSTANCE.remove(runningInstanceId);
-            }
-
-            return ok(resp);
-        }
-
-        return ok(new Response(elementId, false, "Could not find the running instance with id: " + runningInstanceId));
-    }
-
-    @GET
-    @Path("{elementId}/instances")
-    @Produces(MediaType.APPLICATION_JSON)
-    public javax.ws.rs.core.Response listRunningInstances(@PathParam("elementId") String elementId) {
-        return ok(RunningInstances.INSTANCE.getRunningInstanceIdsForElement(elementId));
-    }
-
-    protected abstract P getExtractor(I graph);
-
-    protected abstract I createGroundingDebugInformation(I graph);
-
-    private Boolean isDebug() {
-        return "true".equals(System.getenv("SP_DEBUG"));
-    }
-
-    private String getServiceGroup() {
-        return DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup();
-    }
+  private String getServiceGroup() {
+    return DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup();
+  }
 }
 

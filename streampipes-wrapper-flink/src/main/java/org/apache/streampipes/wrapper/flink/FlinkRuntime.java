@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.wrapper.flink;
 
+import org.apache.flink.client.program.ClusterClient;
+import org.apache.flink.client.program.MiniClusterClient;
 import org.apache.flink.client.program.rest.RestClusterClient;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.JobManagerOptions;
@@ -28,7 +30,9 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -60,46 +64,26 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   protected TimeCharacteristic streamTimeCharacteristic;
   protected FlinkDeploymentConfig config;
-
-  private boolean debug;
   private StreamExecutionEnvironment env;
 
-  /**
-   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
-   */
-  @Deprecated
-  public FlinkRuntime(B bindingParams) {
-    this(bindingParams,true);
-  }
-
-  /**
-   * @deprecated Use {@link #FlinkRuntime(BindingParams, boolean)} instead
-   */
-  @Deprecated
-  public FlinkRuntime(B bindingParams, FlinkDeploymentConfig config) {
-    this(bindingParams, config, false);
-  }
-
-  public FlinkRuntime(B bindingParams, boolean debug) {
-    super(bindingParams);
-    if (!debug) {
-      this.config = getDeploymentConfig();
-    } else {
-      this.config = new FlinkDeploymentConfig("", "localhost", 6123);
-    }
-    this.debug = debug;
-  }
-
-  private FlinkRuntime(B bindingParams, FlinkDeploymentConfig config, boolean debug) {
-    super(bindingParams);
-    this.config = config;
-    this.debug = debug;
+  public FlinkRuntime(B bindingParams,
+                      ConfigExtractor configExtractor,
+                      StreamPipesClient streamPipesClient) {
+    super(bindingParams, configExtractor, streamPipesClient);
+    this.config = getDeploymentConfig(configExtractor);
   }
 
   public void run() {
     try {
-      env.execute(bindingParams.getGraph().getElementId());
-
+      if (!this.config.isMiniClusterMode()) {
+        env.execute(bindingParams.getGraph().getElementId());
+      } else {
+        FlinkSpMiniCluster.INSTANCE.start();
+        FlinkSpMiniCluster
+                .INSTANCE
+                .getClusterClient()
+                .submitJob(env.getStreamGraph(bindingParams.getGraph().getElementId()).getJobGraph());
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -175,7 +159,7 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   @Override
   public void prepareRuntime() throws SpRuntimeException {
-    if (debug) {
+    if (config.isMiniClusterMode()) {
       this.env = StreamExecutionEnvironment.createLocalEnvironment();
     } else {
       this.env = StreamExecutionEnvironment
@@ -227,7 +211,7 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
       // The loop waits until the job is deployed
       // When the deployment takes longer then 60 seconds it returns false
       // This check is not needed when the execution environment is st to local
-      if (!debug) {
+      if (!config.isMiniClusterMode()) {
         boolean isDeployed = false;
         int count = 0;
         do {
@@ -260,14 +244,14 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
   @Override
   public void discardRuntime() throws SpRuntimeException {
     try {
-      RestClusterClient<String> restClient = getRestClient();
+      ClusterClient<? extends Comparable<? extends Comparable<?>>> clusterClient = getClusterClient();
       Optional<JobStatusMessage> jobStatusMessage =
               getJobStatus(bindingParams.getGraph().getElementId());
       if (jobStatusMessage.isPresent()) {
         String jobStatusStr = jobStatusMessage.get().getJobState().name();
         // Cancel the job if running
         if (jobStatusStr.equals("RUNNING")) {
-          restClient.cancel(jobStatusMessage.get().getJobId());
+          clusterClient.cancel(jobStatusMessage.get().getJobId());
         }
         // else ignore, because job is already discarded
       } else {
@@ -292,7 +276,19 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     }
   }
 
-  private RestClusterClient<String> getRestClient() throws Exception {
+  private ClusterClient<? extends Comparable<? extends Comparable<?>>> getClusterClient() throws Exception {
+    if (config.isMiniClusterMode()) {
+      return getMiniClusterClient();
+    } else {
+      return getRestClusterClient();
+    }
+  }
+
+  private MiniClusterClient getMiniClusterClient() throws Exception {
+    return FlinkSpMiniCluster.INSTANCE.getClusterClient();
+  }
+
+  private RestClusterClient<String> getRestClusterClient() throws Exception {
     Configuration restConfig = new Configuration();
     restConfig.setString(JobManagerOptions.ADDRESS, config.getHost());
     restConfig.setInteger(JobManagerOptions.PORT, config.getPort());
@@ -302,8 +298,8 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
 
   private Optional<JobStatusMessage> getJobStatus(String jobName) {
     try {
-      RestClusterClient<String> restClient = getRestClient();
-      CompletableFuture<Collection<JobStatusMessage>> jobs = restClient.listJobs();
+      ClusterClient<? extends Comparable<? extends Comparable<?>>> clusterClient = getClusterClient();
+      CompletableFuture<Collection<JobStatusMessage>> jobs = clusterClient.listJobs();
       Collection<JobStatusMessage> jobsFound = jobs.get();
 
       // First, find a job with Running status
@@ -324,7 +320,7 @@ public abstract class FlinkRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     }
   }
 
-  protected abstract FlinkDeploymentConfig getDeploymentConfig();
+  protected abstract FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor);
 
   protected abstract void appendExecutionConfig(DataStream<Event>... convertedStream);
 

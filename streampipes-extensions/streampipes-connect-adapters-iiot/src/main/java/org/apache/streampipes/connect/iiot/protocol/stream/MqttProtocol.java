@@ -24,17 +24,18 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.pe.shared.config.mqtt.*;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.pe.shared.config.mqtt.MqttConfig;
+import org.apache.streampipes.pe.shared.config.mqtt.MqttConnectUtils;
+import org.apache.streampipes.pe.shared.config.mqtt.MqttConsumer;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,7 +129,7 @@ public class MqttProtocol extends BrokerProtocol {
     public void onEvent(byte[] payload) {
       try {
         parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
-      } catch (IOException | ParseException e) {
+      } catch (ParseException e) {
         e.printStackTrace();
         //logger.error("Adapter " + ID + " could not read value!",e);
       }

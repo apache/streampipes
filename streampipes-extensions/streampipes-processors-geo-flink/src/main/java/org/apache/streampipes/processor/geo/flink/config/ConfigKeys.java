@@ -19,10 +19,8 @@
 package org.apache.streampipes.processor.geo.flink.config;
 
 public class ConfigKeys {
-    final static String HOST = "SP_HOST";
-    final static String PORT = "SP_PORT";
-    final static String FLINK_HOST = "SP_FLINK_HOST";
-    final static String FLINK_PORT = "SP_FLINK_PORT";
-    final static String SERVICE_NAME = "SP_SERVICE_NAME";
-    final static String DEBUG = "SP_FLINK_DEBUG";
+    public final static String FLINK_HOST = "SP_FLINK_HOST";
+    public final static String FLINK_PORT = "SP_FLINK_PORT";
+    public final static String DEBUG = "SP_FLINK_DEBUG";
+    public final static String FLINK_JAR_FILE_LOC = "SP_FLINK_JAR_FILE_LOC";
 }

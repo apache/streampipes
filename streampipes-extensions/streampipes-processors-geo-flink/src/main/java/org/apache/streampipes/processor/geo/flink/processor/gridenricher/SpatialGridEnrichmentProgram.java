@@ -19,13 +19,17 @@
 package org.apache.streampipes.processor.geo.flink.processor.gridenricher;
 
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processor.geo.flink.AbstractGeoProgram;
 
 public class SpatialGridEnrichmentProgram extends AbstractGeoProgram<SpatialGridEnrichmentParameters> {
 
-  public SpatialGridEnrichmentProgram(SpatialGridEnrichmentParameters params, boolean debug) {
-    super(params, debug);
+  public SpatialGridEnrichmentProgram(SpatialGridEnrichmentParameters params,
+                                      ConfigExtractor configExtractor,
+                                      StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

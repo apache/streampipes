@@ -64,6 +64,7 @@
 
     <properties>
         <owasp.check.skip>true</owasp.check.skip>
+        <maven.deploy.skip>false</maven.deploy.skip>
 
         <amqp-client.version>4.1.0</amqp-client.version>
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
@@ -83,31 +84,29 @@
         <google-maps-services.version>0.10.0</google-maps-services.version>
         <graalvm.js.version>21.3.0</graalvm.js.version>
         <iotdb.version>0.12.0</iotdb.version>
-        <jackson.version>2.10.0</jackson.version>
         <java-websocket.version>1.4.0</java-websocket.version>
-        <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jedis.version>3.3.0</jedis.version>
         <j2objc-annotations.version>1.3</j2objc-annotations.version>
-        <quartz.version>2.3.2</quartz.version>
         <language-detector.version>0.6</language-detector.version>
         <log4j-to-slf4j.version>2.8.2</log4j-to-slf4j.version>
+        <lombok.version>1.18.22</lombok.version>
         <mailapi.version>1.4.3</mailapi.version>
         <metrics-core.version>3.1.2</metrics-core.version>
         <nekohtml.version>1.9.13</nekohtml.version>
+        <netty-resolver.version>4.1.72.Final</netty-resolver.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opennlp.version>1.9.0</opennlp.version>
         <postgresql.version>42.2.2</postgresql.version>
-        <pulsar.version>2.7.0</pulsar.version>
+        <pulsar.version>2.9.1</pulsar.version>
+        <quartz.version>2.3.2</quartz.version>
         <scala-lang.version>2.11.12</scala-lang.version>
         <scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
         <slack-api.version>1.2.0</slack-api.version>
         <snakeyaml.version>1.25</snakeyaml.version>
         <xerces.version>2.9.1</xerces.version>
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
-        <mqtt-client.version>1.12</mqtt-client.version>
-        <hawtbuf.version>1.11</hawtbuf.version>
 
         <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
         <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
@@ -121,18 +120,16 @@
         <commons-text.version>1.8</commons-text.version>
         <errorprone-annotations.version>2.2.0</errorprone-annotations.version>
         <java-websocket.version>1.4.0</java-websocket.version>
-        <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <influxdb.java.version>2.14</influxdb.java.version>
-        <hadoop.version>3.2.1</hadoop.version>
         <eclipse.milo.version>0.5.3</eclipse.milo.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
         <netty.version>4.1.39.Final</netty.version>
         <nimbus-jose-jwt.version>4.41.1</nimbus-jose-jwt.version>
-        <opencsv.version>4.6</opencsv.version>
+        <opencsv.version>5.5.2</opencsv.version>
         <plc4x.version>0.8.0</plc4x.version>
         <protobuf.version>3.6.1</protobuf.version>
         <nats.version>2.11.0</nats.version>
@@ -141,16 +138,73 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- External Connect dependencies -->
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>${jcl-over-slf4j.version}</version>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>4.9</version>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-annotations</artifactId>
-                <version>${animal-sniffer-annotations.version}</version>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler</artifactId>
+                <version>4.1.72.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.qpid</groupId>
+                <artifactId>proton-j</artifactId>
+                <version>0.18.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>4.1.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.scala-lang.modules</groupId>
+                <artifactId>scala-xml_2.11</artifactId>
+                <version>1.0.5</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- External Connect dependencies -->
+            <dependency>
+                <groupId>com.github.shyiko</groupId>
+                <artifactId>mysql-binlog-connector-java</artifactId>
+                <version>${mysql-binlog-connector.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.j2objc</groupId>
+                <artifactId>j2objc-annotations</artifactId>
+                <version>${j2objc-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>edu.wpi.rail</groupId>
+                <artifactId>jrosbridge</artifactId>
+                <version>${jsrosbridge.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-resolver</artifactId>
+                <version>${netty-resolver.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.websocket</groupId>
+                <artifactId>javax.websocket-api</artifactId>
+                <version>${javax-websocket-client-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons-compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
@@ -173,78 +227,9 @@
                 <version>${checker-qual.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-collections4</artifactId>
-                <version>${commons-collections4.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>${commons-compress.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-text</artifactId>
-                <version>${commons-text.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.java-websocket</groupId>
-                <artifactId>Java-WebSocket</artifactId>
-                <version>${java-websocket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.websocket</groupId>
-                <artifactId>javax.websocket-api</artifactId>
-                <version>${javax-websocket-client-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>edu.wpi.rail</groupId>
-                <artifactId>jrosbridge</artifactId>
-                <version>${jsrosbridge.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.influxdb</groupId>
-                <artifactId>influxdb-java</artifactId>
-                <version>${influxdb.java.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.hadoop</groupId>
-                <artifactId>hadoop-client</artifactId>
-                <version>${hadoop.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>jetty-server</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-servlet</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-servlets</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-webapp</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>jetty-util</artifactId>
-                        <groupId>org.eclipse.jetty</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.jersey</groupId>
-                        <artifactId>jersey-servlet</artifactId>
-                    </exclusion>
-                </exclusions>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>animal-sniffer-annotations</artifactId>
+                <version>${animal-sniffer-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.milo</groupId>
@@ -262,14 +247,25 @@
                 <version>${graalvm.js.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.github.shyiko</groupId>
-                <artifactId>mysql-binlog-connector-java</artifactId>
-                <version>${mysql-binlog-connector.version}</version>
+                <groupId>org.influxdb</groupId>
+                <artifactId>influxdb-java</artifactId>
+                <version>${influxdb.java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.java-websocket</groupId>
+                <artifactId>Java-WebSocket</artifactId>
+                <version>${java-websocket.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.j2objc</groupId>
-                <artifactId>j2objc-annotations</artifactId>
-                <version>${j2objc-annotations.version}</version>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${jcl-over-slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>
@@ -337,11 +333,6 @@
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
                 <version>${errorprone-annotations.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-jaxb-annotations</artifactId>
-                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.media</groupId>
@@ -512,16 +503,6 @@
                 <version>${xerces.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.fusesource.mqtt-client</groupId>
-                <artifactId>mqtt-client</artifactId>
-                <version>${mqtt-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.fusesource.hawtbuf</groupId>
-                <artifactId>hawtbuf</artifactId>
-                <version>${hawtbuf.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
@@ -549,6 +530,12 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-test-utils_2.11</artifactId>
                 <version>${flink.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-slf4j-impl</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
@@ -627,7 +614,7 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.8.2</version>
                     <configuration>
-                        <skip>true</skip>
+                        <skip>${maven.deploy.skip}</skip>
                     </configuration>
                 </plugin>
             </plugins>

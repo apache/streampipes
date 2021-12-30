@@ -30,6 +30,10 @@
     </parent>
     <artifactId>streampipes-connect-adapters-iiot</artifactId>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
@@ -200,6 +204,10 @@
                 <exclusion>
                     <artifactId>jetty-webapp</artifactId>
                     <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.antlr</groupId>
+                    <artifactId>antlr4-runtime</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

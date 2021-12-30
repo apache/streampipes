@@ -18,21 +18,20 @@
 
 package org.apache.streampipes.connect.adapter.format.json.xml;
 
-import static org.junit.Assert.assertEquals;
-
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.format.xml.XmlParser;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.junit.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class XmlTest {
 
@@ -114,14 +113,7 @@ public class XmlTest {
     */
 
     private InputStream getInputStream(String s) {
-
-        try {
-            return IOUtils.toInputStream(s, "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return IOUtils.toInputStream(s, "UTF-8");
     }
 
     private String getCarParkExample() {

@@ -20,13 +20,17 @@ package org.apache.streampipes.processors.aggregation.flink.processor.count;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
 public class CountProgram extends AbstractAggregationProgram<CountParameters> {
 
-  public CountProgram(CountParameters params, boolean debug) {
-    super(params, debug);
+  public CountProgram(CountParameters params,
+                      ConfigExtractor configExtractor,
+                      StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
     setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
   }
 

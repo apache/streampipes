@@ -15,13 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.pe.flink.config;
 
-public class ConfigKeys {
-  final static String HOST = "SP_HOST";
-  final static String PORT = "SP_PORT";
-  final static String SERVICE_NAME = "SP_SERVICE_NAME";
-  final static String FLINK_HOST = "SP_FLINK_HOST";
-  final static String FLINK_PORT = "SP_FLINK_PORT";
-  final static String FLINK_DEBUG = "SP_FLINK_DEBUG";
-}
+import { DashboardUtils } from '../../../support/utils/DashboardUtils';
+
+describe('Validate StreamPipes after restart', () => {
+  beforeEach('Setup Test', () => {
+    cy.login();
+  });
+
+  it('Perform Test', () => {
+
+    // open dashboard
+    DashboardUtils.goToDashboard();
+    DashboardUtils.showDashboard('testDashboard');
+
+    // validate that data is coming
+    DashboardUtils.validateRawWidgetEvents(3);
+  });
+});
+

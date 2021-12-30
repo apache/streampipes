@@ -30,6 +30,7 @@
     <properties>
         <lightcouch.version>0.1.8</lightcouch.version>
         <influxdb.java.version>2.14</influxdb.java.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencies>

@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.util.Collector;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sdk.helpers.EpProperties;
-import org.apache.streampipes.sdk.helpers.Labels;
 
 import java.io.Serializable;
 import java.util.ArrayList;

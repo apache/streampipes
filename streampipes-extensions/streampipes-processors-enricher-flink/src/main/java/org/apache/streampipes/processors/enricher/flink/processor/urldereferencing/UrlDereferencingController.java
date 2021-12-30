@@ -24,7 +24,6 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.enricher.flink.config.EnricherFlinkConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -75,6 +74,6 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
 */
         UrlDereferencingParameter staticParam = new UrlDereferencingParameter(graph, urlString, APPEND_HTML);
 
-        return  new UrlDereferencingProgram(staticParam, EnricherFlinkConfig.INSTANCE.getDebug());
+        return  new UrlDereferencingProgram(staticParam, configExtractor, streamPipesClient);
     }
 }

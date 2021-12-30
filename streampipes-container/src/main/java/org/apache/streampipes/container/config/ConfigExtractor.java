@@ -20,7 +20,9 @@ package org.apache.streampipes.container.config;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.consul.ConsulSpConfig;
 
-public class ConfigExtractor {
+import java.io.Serializable;
+
+public class ConfigExtractor implements Serializable {
 
   private SpConfig config;
 

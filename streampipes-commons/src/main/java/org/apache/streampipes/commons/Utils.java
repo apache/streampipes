@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.commons;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.net.URI;
 import java.util.ArrayList;

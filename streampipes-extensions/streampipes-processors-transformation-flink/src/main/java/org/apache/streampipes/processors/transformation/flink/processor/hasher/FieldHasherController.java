@@ -27,11 +27,7 @@ import org.apache.streampipes.processors.transformation.flink.processor.hasher.a
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -67,7 +63,7 @@ public class FieldHasherController extends FlinkDataProcessorDeclarer<FieldHashe
     HashAlgorithmType hashAlgorithmType = HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class));
 
     return new FieldHasherProgram(
-            new FieldHasherParameters(graph, propertyName, hashAlgorithmType));
+            new FieldHasherParameters(graph, propertyName, hashAlgorithmType), configExtractor, streamPipesClient);
   }
 
 }

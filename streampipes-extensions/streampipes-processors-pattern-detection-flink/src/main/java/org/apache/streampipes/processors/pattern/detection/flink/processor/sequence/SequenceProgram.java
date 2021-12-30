@@ -20,13 +20,17 @@ package org.apache.streampipes.processors.pattern.detection.flink.processor.sequ
 
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
 public class SequenceProgram extends AbstractPatternDetectionProgram<SequenceParameters> {
 
-  public SequenceProgram(SequenceParameters params, boolean debug) {
-    super(params, debug);
+  public SequenceProgram(SequenceParameters params,
+                         ConfigExtractor configExtractor,
+                         StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
   }
 
   @Override

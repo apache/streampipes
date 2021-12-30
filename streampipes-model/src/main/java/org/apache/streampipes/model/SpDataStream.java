@@ -19,7 +19,7 @@
 package org.apache.streampipes.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
