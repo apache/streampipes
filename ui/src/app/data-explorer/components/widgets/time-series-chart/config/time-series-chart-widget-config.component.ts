@@ -82,7 +82,7 @@ export class TimeSeriesChartWidgetConfigComponent
       colors[field.fullDbName + field.sourceIndex] = this.presetColors[index];
       names[field.fullDbName + field.sourceIndex] = field.fullDbName;
       dTypes[field.fullDbName  + field.sourceIndex] = 'lines';
-      axes[field.fullDbName  + field.sourceIndex] = 'links';
+      axes[field.fullDbName  + field.sourceIndex] = 'left';
     });
 
     return {
