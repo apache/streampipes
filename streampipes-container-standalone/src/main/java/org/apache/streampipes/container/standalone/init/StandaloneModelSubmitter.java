@@ -19,7 +19,7 @@
 package org.apache.streampipes.container.standalone.init;
 
 
-import org.apache.streampipes.container.base.BaseNetworkingConfig;
+import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.container.model.SpServiceDefinition;

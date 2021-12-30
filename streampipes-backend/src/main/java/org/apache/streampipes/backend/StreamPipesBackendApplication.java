@@ -18,15 +18,15 @@
 package org.apache.streampipes.backend;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.container.base.BaseNetworkingConfig;
-import org.apache.streampipes.container.base.StreamPipesServiceBase;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.rest.notifications.NotificationListener;
+import org.apache.streampipes.rest.security.SpPermissionEvaluator;
+import org.apache.streampipes.service.base.BaseNetworkingConfig;
+import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;

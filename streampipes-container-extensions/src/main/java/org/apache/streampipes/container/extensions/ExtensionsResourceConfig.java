@@ -18,7 +18,7 @@
 package org.apache.streampipes.container.extensions;
 
 import org.apache.streampipes.connect.container.worker.init.AdapterServiceResourceProvider;
-import org.apache.streampipes.container.base.rest.BaseResourceConfig;
+import org.apache.streampipes.service.base.rest.BaseResourceConfig;
 import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
 import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
 import org.springframework.stereotype.Component;

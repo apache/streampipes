@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.base;
+package org.apache.streampipes.service.base;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;

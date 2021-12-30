@@ -927,7 +927,6 @@
         <module>streampipes-connect-container-master</module>
         <module>streampipes-connect-container-worker</module>
         <module>streampipes-container</module>
-        <module>streampipes-container-base</module>
         <module>streampipes-container-extensions</module>
         <module>streampipes-container-standalone</module>
         <module>streampipes-data-explorer</module>
@@ -957,6 +956,7 @@
         <module>streampipes-sdk</module>
         <module>streampipes-security-jwt</module>
         <module>streampipes-serializers-json</module>
+        <module>streampipes-service-base</module>
         <module>streampipes-service-discovery</module>
         <module>streampipes-service-discovery-consul</module>
         <module>streampipes-service-discovery-api</module>

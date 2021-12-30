@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.base;
+package org.apache.streampipes.service.base;
 
 import org.apache.streampipes.commons.networking.Networking;
 

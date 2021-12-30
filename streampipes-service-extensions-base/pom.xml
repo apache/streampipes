@@ -42,7 +42,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container-base</artifactId>
+            <artifactId>streampipes-service-base</artifactId>
             <version>0.69.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.base.rest;
+package org.apache.streampipes.service.base.rest;
 
 import org.glassfish.jersey.server.ResourceConfig;
 
