@@ -92,8 +92,8 @@
                 <mat-select
                     [(value)]="currentlyConfiguredWidget.visualizationConfig.chosenAxis[field.fullDbName + field.sourceIndex.toString()]"
                     (selectionChange)="triggerDataRefresh()">
-                    <mat-option [value]="'links'">Links</mat-option>
-                    <mat-option [value]="'rechts'">Rechts</mat-option>
+                    <mat-option [value]="'left'">Left</mat-option>
+                    <mat-option [value]="'right'">Right</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
