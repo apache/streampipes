@@ -11,6 +11,7 @@
     "start": "node ./deployment/prebuild.js && ng serve",
     "test": "node ./deployment/prebuild.js && ng test",
     "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --configuration production",
+    "build-dev": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build",
     "build-rc": "node ./deployment/prebuild.js rel && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --configuration production",
     "lint": "tslint -c tslint.json 'src/**/*.ts*",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
