@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
@@ -35,10 +35,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class PrepareStartPipelineOperation extends PipelineExecutionOperation {
+public class PrepareStartPipelineStep extends PipelineExecutionStep {
 
 
-    public PrepareStartPipelineOperation(PipelineExecutor pipelineExecutor) {
+    public PrepareStartPipelineStep(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 

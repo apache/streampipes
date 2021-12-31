@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineUtils;
@@ -26,9 +26,9 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
 
-public class StoreMigratedPipelineOperation extends PipelineExecutionOperation{
+public class StoreMigratedPipelineStep extends PipelineExecutionStep {
 
-    public StoreMigratedPipelineOperation(PipelineExecutor pipelineExecutor) {
+    public StoreMigratedPipelineStep(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 

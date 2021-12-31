@@ -17,10 +17,8 @@
  */
 package org.apache.streampipes.manager.execution.pipeline.executor;
 
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.LifecycleEntity;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.PipelineExecutionOperation;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.MigrationOperation;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.ReconfigurationOperation;
+import org.apache.streampipes.manager.execution.pipeline.executor.steps.EntitiesLifecycleObject;
+import org.apache.streampipes.manager.execution.pipeline.executor.steps.PipelineExecutionStep;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
@@ -48,16 +46,16 @@ public class PipelineExecutor {
 
     private PipelineElementReconfigurationEntity reconfigurationEntity;
 
-    private final LifecycleEntity<InvocableStreamPipesEntity> graphs;
+    private final EntitiesLifecycleObject<InvocableStreamPipesEntity> graphs;
 
-    private final LifecycleEntity<SpDataStreamRelayContainer> relays;
+    private final EntitiesLifecycleObject<SpDataStreamRelayContainer> relays;
 
-    private final LifecycleEntity<SpDataSet> dataSets;
+    private final EntitiesLifecycleObject<SpDataSet> dataSets;
 
 
     private PipelineOperationStatus status;
 
-    private final LinkedList<PipelineExecutionOperation> operations = new LinkedList<>();
+    private final LinkedList<PipelineExecutionStep> operations = new LinkedList<>();
 
     public PipelineExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus, boolean monitor){
         this.pipeline = pipeline;
@@ -66,19 +64,19 @@ public class PipelineExecutor {
         this.monitor = monitor;
         this.status = StatusUtils.initPipelineOperationStatus(pipeline);
 
-        this.graphs = new LifecycleEntity<>();
-        this.relays = new LifecycleEntity<>();
-        this.dataSets = new LifecycleEntity<>();
+        this.graphs = new EntitiesLifecycleObject<>();
+        this.relays = new EntitiesLifecycleObject<>();
+        this.dataSets = new EntitiesLifecycleObject<>();
     }
 
     public PipelineOperationStatus execute(){
-        for(PipelineExecutionOperation pipelineExecutionOperation: this.operations){
-            PipelineOperationStatus operationStatus = pipelineExecutionOperation.executeOperation();
+        for(PipelineExecutionStep pipelineExecutionStep : this.operations){
+            PipelineOperationStatus operationStatus = pipelineExecutionStep.executeOperation();
             StatusUtils.checkSuccess(operationStatus);
-            pipelineExecutionOperation.setStatus(operationStatus);
+            pipelineExecutionStep.setStatus(operationStatus);
             StatusUtils.updateStatus(operationStatus, this.status);
             if(!operationStatus.isSuccess()){
-                rollback(pipelineExecutionOperation);
+                rollback(pipelineExecutionStep);
                 break;
             }
         }
@@ -86,11 +84,11 @@ public class PipelineExecutor {
         return this.status;
     }
 
-    private void rollback(PipelineExecutionOperation failedOperation){
+    private void rollback(PipelineExecutionStep failedOperation){
         PipelineOperationStatus rollbackStatus = StatusUtils.initPipelineOperationStatus(pipeline);
         for(int currentOperationIndex = this.operations.indexOf(failedOperation);
-            currentOperationIndex<=0; currentOperationIndex--){
-            PipelineExecutionOperation currentOperation = this.operations.get(currentOperationIndex);
+            currentOperationIndex>=0; currentOperationIndex--){
+            PipelineExecutionStep currentOperation = this.operations.get(currentOperationIndex);
             PipelineOperationStatus rollbackOperationStatus = currentOperation.rollbackOperation();
             StatusUtils.checkSuccess(rollbackOperationStatus);
             StatusUtils.updateStatus(rollbackOperationStatus, rollbackStatus);
@@ -99,16 +97,8 @@ public class PipelineExecutor {
         StatusUtils.updateStatus(rollbackStatus, this.status);
     }
 
-    public void addOperation(PipelineExecutionOperation operation){
+    public void addStep(PipelineExecutionStep operation){
         this.operations.add(operation);
-    }
-
-    public boolean containsReconfigurationOperation(){
-        return this.operations.stream().anyMatch(operation -> operation instanceof ReconfigurationOperation);
-    }
-
-    public boolean containsMigrationOperation(){
-        return this.operations.stream().anyMatch(operation -> operation instanceof MigrationOperation);
     }
 
 
@@ -178,15 +168,15 @@ public class PipelineExecutor {
         this.reconfigurationEntity = reconfigurationEntity;
     }
 
-    public LifecycleEntity<InvocableStreamPipesEntity> getGraphs() {
+    public EntitiesLifecycleObject<InvocableStreamPipesEntity> getGraphs() {
         return graphs;
     }
 
-    public LifecycleEntity<SpDataStreamRelayContainer> getRelays() {
+    public EntitiesLifecycleObject<SpDataStreamRelayContainer> getRelays() {
         return relays;
     }
 
-    public LifecycleEntity<SpDataSet> getDataSets() {
+    public EntitiesLifecycleObject<SpDataSet> getDataSets() {
         return dataSets;
     }
 }

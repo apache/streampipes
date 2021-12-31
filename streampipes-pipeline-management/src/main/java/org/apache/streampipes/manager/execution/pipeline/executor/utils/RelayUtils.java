@@ -237,7 +237,7 @@ public class RelayUtils {
     public static List<SpDataStreamRelayContainer> filterRelaysById(List<SpDataStreamRelayContainer> relays,
                                                                     Set<String> relayIds) {
         return relays.stream().
-                filter(relay -> relayIds.contains(relay.getRunningStreamRelayInstanceId()))
+                filter(relay -> relayIds.contains(relay.getRunningStreamRelayInstanceId() + " relay"))
                 .collect(Collectors.toList());
     }
 }

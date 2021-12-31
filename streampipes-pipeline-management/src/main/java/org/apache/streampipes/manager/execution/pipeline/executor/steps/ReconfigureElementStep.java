@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.manager.execution.http.ReconfigurationSubmitter;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.ReconfigurationOperation;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
@@ -31,9 +30,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ReconfigureElementOperation extends PipelineExecutionOperation implements ReconfigurationOperation {
+public class ReconfigureElementStep extends PipelineExecutionStep {
 
-    public ReconfigureElementOperation(PipelineExecutor pipelineExecutor) {
+    public ReconfigureElementStep(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 

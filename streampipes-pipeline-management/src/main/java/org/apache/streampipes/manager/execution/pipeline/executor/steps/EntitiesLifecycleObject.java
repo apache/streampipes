@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LifecycleEntity<T> {
+public class EntitiesLifecycleObject<T> {
 
     private final List<T> entitiesToStart;
 
@@ -30,7 +30,7 @@ public class LifecycleEntity<T> {
 
     private final List<T> entitiesToDelete;
 
-    public LifecycleEntity(){
+    public EntitiesLifecycleObject(){
         entitiesToStart = new ArrayList<>();
         entitiesToStop = new ArrayList<>();
         entitiesToStore = new ArrayList<>();

@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.manager.execution.pipeline.executor;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.*;
+import org.apache.streampipes.manager.execution.pipeline.executor.steps.*;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineElementMigrationEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntity;
@@ -26,10 +25,6 @@ import org.apache.streampipes.model.pipeline.PipelineElementReconfigurationEntit
 public class PipelineExecutorBuilder {
 
     private PipelineExecutor pipelineExecutor;
-
-    private boolean reconfigurationParametersSet = false;
-
-    private boolean migrationParametersSet = false;
 
     public static PipelineExecutorBuilder getBuilder(){
         return new PipelineExecutorBuilder();
@@ -46,7 +41,6 @@ public class PipelineExecutorBuilder {
                                                           PipelineElementMigrationEntity migrationEntity){
         pipelineExecutor.setSecondaryPipeline(pipelineBeforeMigration);
         pipelineExecutor.setMigrationEntity(migrationEntity);
-        this.migrationParametersSet = true;
         return this;
     }
 
@@ -54,76 +48,70 @@ public class PipelineExecutorBuilder {
                                                                 PipelineElementReconfigurationEntity reconfigurationEntity){
         pipelineExecutor.setSecondaryPipeline(reconfiguredPipeline);
         pipelineExecutor.setReconfigurationEntity(reconfigurationEntity);
-        this.reconfigurationParametersSet = true;
         return this;
     }
 
-    public PipelineExecutorBuilder addPrepareMigrationOperation(){
-        pipelineExecutor.addOperation(new PrepareMigrationOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addPrepareMigrationStep(){
+        pipelineExecutor.addStep(new PrepareMigrationStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addGetStateOperation(){
-        pipelineExecutor.addOperation(new GetStateOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addGetStateStep(){
+        pipelineExecutor.addStep(new GetStateStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStartRelaysOperation(){
-        pipelineExecutor.addOperation(new StartRelaysOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStartRelaysStep(){
+        pipelineExecutor.addStep(new StartRelaysStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStartGraphsAndAssociatedRelaysOperation(){
-        pipelineExecutor.addOperation(new StartGraphsAndAssociatedRelaysOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStartGraphsAndAssociatedRelaysStep(){
+        pipelineExecutor.addStep(new StartGraphsAndAssociatedRelaysStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStopGraphsAndAssociatedRelaysOperation(){
-        pipelineExecutor.addOperation(new StopGraphsAndAssociatedRelaysOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStopGraphsAndAssociatedRelaysStep(){
+        pipelineExecutor.addStep(new StopGraphsAndAssociatedRelaysStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStopRelaysOperation(){
-        pipelineExecutor.addOperation(new StopRelaysOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStopRelaysStep(){
+        pipelineExecutor.addStep(new StopRelaysStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStoreMigratedPipelineOperation(){
-        pipelineExecutor.addOperation(new StoreMigratedPipelineOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStoreMigratedPipelineStep(){
+        pipelineExecutor.addStep(new StoreMigratedPipelineStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addReconfigureElementOperation(){
-        pipelineExecutor.addOperation(new ReconfigureElementOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addReconfigureElementStep(){
+        pipelineExecutor.addStep(new ReconfigureElementStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addPreparePipelineStartOperation(){
-        pipelineExecutor.addOperation(new PrepareStartPipelineOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addPreparePipelineStartStep(){
+        pipelineExecutor.addStep(new PrepareStartPipelineStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStartPipelineOperation(){
-        pipelineExecutor.addOperation(new StartPipelineOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStartPipelineStep(){
+        pipelineExecutor.addStep(new StartPipelineStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStorePipelineOperation(){
-        pipelineExecutor.addOperation(new StorePipelineOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStorePipelineStep(){
+        pipelineExecutor.addStep(new StorePipelineStep(pipelineExecutor));
         return this;
     }
 
-    public PipelineExecutorBuilder addStopPipelineOperation(){
-        pipelineExecutor.addOperation(new StopPipelineOperation(pipelineExecutor));
+    public PipelineExecutorBuilder addStopPipelineStep(){
+        pipelineExecutor.addStep(new StopPipelineStep(pipelineExecutor));
         return this;
     }
 
     public PipelineExecutor buildPipelineExecutor(){
-        //Is this check needed? Only relevant for core development not for users but gives a little more clarity at the
-        //cost of introducing some new boolean flags and marker interfaces
-        if((this.pipelineExecutor.containsMigrationOperation() && !this.migrationParametersSet)
-                || (this.pipelineExecutor.containsReconfigurationOperation() && !this.reconfigurationParametersSet))
-            throw new SpRuntimeException("PipelineExecutor can't be build since the required parameters have not been set");
-        return this.pipelineExecutor;    }
-
+        return this.pipelineExecutor;
+    }
 }

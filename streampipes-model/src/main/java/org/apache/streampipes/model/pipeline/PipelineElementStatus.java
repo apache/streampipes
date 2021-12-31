@@ -25,6 +25,8 @@ public class PipelineElementStatus {
 	private String optionalMessage;
 	private String operation;
 	private String elementNode;
+	//TODO: Assess if runningInstanceId is needed separately or if it can be combined with the elementId
+	private String runningInstanceId;
 	
 	private boolean success;
 
@@ -84,5 +86,13 @@ public class PipelineElementStatus {
 
 	public void setElementNode(String elementNode) {
 		this.elementNode = elementNode;
+	}
+
+	public String getRunningInstanceId() {
+		return runningInstanceId;
+	}
+
+	public void setRunningInstanceId(String runningInstanceId) {
+		this.runningInstanceId = runningInstanceId;
 	}
 }

@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
 import org.apache.streampipes.manager.data.PipelineGraphHelpers;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.MigrationOperation;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.RelayUtils;
@@ -37,13 +36,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PrepareMigrationOperation extends PipelineExecutionOperation implements MigrationOperation {
+public class PrepareMigrationStep extends PipelineExecutionStep {
 
     private List<NamedStreamPipesEntity> predecessorsAfterMigration;
     private final List<NamedStreamPipesEntity> predecessorsBeforeMigration = new ArrayList<>();
     private Pipeline pipeline;
 
-    public PrepareMigrationOperation(PipelineExecutor pipelineExecutor) {
+    public PrepareMigrationStep(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 

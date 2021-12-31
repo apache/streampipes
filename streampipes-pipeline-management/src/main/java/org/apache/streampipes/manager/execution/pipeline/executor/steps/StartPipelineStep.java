@@ -15,53 +15,37 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.manager.execution.http.GraphSubmitter;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
-import org.apache.streampipes.manager.execution.pipeline.executor.utils.*;
-import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
-import org.apache.streampipes.manager.util.TemporaryGraphStorage;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.DataSetUtils;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.PipelineElementUtils;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.RelayUtils;
+import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.eventrelay.SpDataStreamRelayContainer;
-import org.apache.streampipes.model.message.PipelineStatusMessage;
-import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
 import java.util.List;
 import java.util.Set;
 
-public class StopPipelineOperation extends PipelineExecutionOperation {
 
-    public StopPipelineOperation(PipelineExecutor pipelineExecutor) {
+public class StartPipelineStep extends PipelineExecutionStep {
+
+    public StartPipelineStep(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 
     @Override
     public PipelineOperationStatus executeOperation() {
         Pipeline pipeline = pipelineExecutor.getPipeline();
-        List<InvocableStreamPipesEntity> graphs = TemporaryGraphStorage.graphStorage.get(pipeline.getPipelineId());
-        List<SpDataSet> dataSets = TemporaryGraphStorage.datasetStorage.get(pipeline.getPipelineId());
-        List<SpDataStreamRelayContainer> relays = PipelineElementUtils.generateRelays(graphs, pipeline);
-
-        PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(), graphs,
-                dataSets, relays).detachPipelineElementsAndRelays();
-
-        if (status.isSuccess()) {
-            if (pipelineExecutor.isMonitor()) StorageUtils.deleteVisualization(pipeline.getPipelineId());
-            if (pipelineExecutor.isStoreStatus()) StorageUtils.setPipelineStopped(pipeline);
-
-            StorageUtils.deleteDataStreamRelayContainer(relays);
-
-            PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
-                    new PipelineStatusMessage(pipeline.getPipelineId(),
-                            System.currentTimeMillis(),
-                            PipelineStatusMessageType.PIPELINE_STOPPED.title(),
-                            PipelineStatusMessageType.PIPELINE_STOPPED.description()));
-        }
-        return status;
+        return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),
+                pipelineExecutor.getGraphs().getEntitiesToStart(),
+                pipelineExecutor.getDataSets().getEntitiesToStart(),
+                pipelineExecutor.getRelays().getEntitiesToStart()).invokePipelineElementsAndRelays();
     }
 
     @Override
@@ -72,7 +56,7 @@ public class StopPipelineOperation extends PipelineExecutionOperation {
 
         List<InvocableStreamPipesEntity> graphsToRollBack =
                 PipelineElementUtils.filterPipelineElementsById(
-                        pipelineExecutor.getGraphs().getEntitiesToStop(),
+                        pipelineExecutor.getGraphs().getEntitiesToStart(),
                         idsToRollback);
         List<SpDataSet> dataSetsToRollBack =
                 DataSetUtils.filterDataSetsById(
@@ -86,12 +70,15 @@ public class StopPipelineOperation extends PipelineExecutionOperation {
         return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),
                 graphsToRollBack,
                 dataSetsToRollBack,
-                relaysToRollBack).invokePipelineElementsAndRelays();
+                relaysToRollBack).detachPipelineElementsAndRelays();
     }
 
     @Override
     public PipelineOperationStatus rollbackOperationFully() {
-        //TODO: Implement sth?
-        return StatusUtils.initPipelineOperationStatus(pipelineExecutor.getPipeline());
+        Pipeline pipeline = pipelineExecutor.getPipeline();
+        return new GraphSubmitter(pipeline.getPipelineId(), pipeline.getName(),
+                pipelineExecutor.getGraphs().getEntitiesToStart(),
+                pipelineExecutor.getDataSets().getEntitiesToStart(),
+                pipelineExecutor.getRelays().getEntitiesToStart()).detachPipelineElementsAndRelays();
     }
 }

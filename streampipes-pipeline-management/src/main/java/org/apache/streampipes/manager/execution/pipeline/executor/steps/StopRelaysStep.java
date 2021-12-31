@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.logging.evaluation.EvaluationLogger;
 import org.apache.streampipes.manager.execution.pipeline.executor.*;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.MigrationOperation;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.CommunicationUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.RelayUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
@@ -29,9 +28,9 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import java.util.List;
 import java.util.Set;
 
-public class StopRelaysOperation extends PipelineExecutionOperation implements MigrationOperation {
+public class StopRelaysStep extends PipelineExecutionStep {
 
-    public StopRelaysOperation(PipelineExecutor pipelineExecutor){
+    public StopRelaysStep(PipelineExecutor pipelineExecutor){
         super(pipelineExecutor);
     }
 

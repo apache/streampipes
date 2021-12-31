@@ -50,7 +50,7 @@ public class StatusUtils {
     public static Set<String> extractUniqueSuccessfulIds(PipelineOperationStatus status) {
         return status.getElementStatus().stream()
                 .filter(PipelineElementStatus::isSuccess)
-                .map(PipelineElementStatus::getElementId)
+                .map(PipelineElementStatus::getRunningInstanceId)
                 .collect(Collectors.toSet());
     }
 

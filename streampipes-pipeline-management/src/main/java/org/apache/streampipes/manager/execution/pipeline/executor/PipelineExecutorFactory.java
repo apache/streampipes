@@ -29,14 +29,14 @@ public class PipelineExecutorFactory {
         PipelineExecutorBuilder builder = PipelineExecutorBuilder.getBuilder()
                 .initializePipelineExecutor(pipeline, visualize, storeStatus, monitor)
                 .setMigrationParameters(pipelineBeforeMigration, migrationEntity)
-                .addPrepareMigrationOperation();
+                .addPrepareMigrationStep();
         if(migrationEntity.getTargetElement().isStateful())
-            builder.addGetStateOperation();
-        builder.addStartGraphsAndAssociatedRelaysOperation()
-                .addStopRelaysOperation()
-                .addStartRelaysOperation()
-                .addStopGraphsAndAssociatedRelaysOperation()
-                .addStoreMigratedPipelineOperation();
+            builder.addGetStateStep();
+        builder.addStartGraphsAndAssociatedRelaysStep()
+                .addStopRelaysStep()
+                .addStartRelaysStep()
+                .addStopGraphsAndAssociatedRelaysStep()
+                .addStoreMigratedPipelineStep();
         return builder.buildPipelineExecutor();
     }
 
@@ -44,23 +44,23 @@ public class PipelineExecutorFactory {
                                                                  boolean monitor, Pipeline reconfiguredPipeline,
                                                                  PipelineElementReconfigurationEntity reconfigurationEntity){
         return PipelineExecutorBuilder.getBuilder().initializePipelineExecutor(pipeline, visualize, storeStatus, monitor)
-                .setReconfigurationParameters(reconfiguredPipeline, reconfigurationEntity).addReconfigureElementOperation()
+                .setReconfigurationParameters(reconfiguredPipeline, reconfigurationEntity).addReconfigureElementStep()
                 .buildPipelineExecutor();
     }
 
     public static PipelineExecutor createInvocationExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus,
                                                             boolean monitor){
         return PipelineExecutorBuilder.getBuilder().initializePipelineExecutor(pipeline, visualize, storeStatus, monitor)
-                .addPreparePipelineStartOperation()
-                .addStartPipelineOperation()
-                .addStorePipelineOperation()
+                .addPreparePipelineStartStep()
+                .addStartPipelineStep()
+                .addStorePipelineStep()
                 .buildPipelineExecutor();
     }
 
     public static PipelineExecutor createDetachExecutor(Pipeline pipeline, boolean visualize, boolean storeStatus,
                                                         boolean monitor){
         return PipelineExecutorBuilder.getBuilder().initializePipelineExecutor(pipeline, visualize, storeStatus, monitor)
-                .addStopPipelineOperation().buildPipelineExecutor();
+                .addStopPipelineStep().buildPipelineExecutor();
     }
 
 }

@@ -15,25 +15,26 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
-public abstract class PipelineExecutionOperation {
+public abstract class PipelineExecutionStep {
 
     protected final PipelineExecutor pipelineExecutor;
 
     private PipelineOperationStatus status;
 
-    public PipelineExecutionOperation(PipelineExecutor pipelineExecutor){
+    public PipelineExecutionStep(PipelineExecutor pipelineExecutor){
         this.pipelineExecutor = pipelineExecutor;
         this.status = StatusUtils.initPipelineOperationStatus(this.pipelineExecutor.getPipeline());
     }
 
     public abstract PipelineOperationStatus executeOperation();
 
+    //TODO: Check if partial and full rollback can be unified to single method
     public abstract PipelineOperationStatus rollbackOperationPartially();
 
     public abstract PipelineOperationStatus rollbackOperationFully();

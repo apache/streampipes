@@ -170,26 +170,29 @@ export class MigratePipelineProcessorsComponent implements OnInit {
 
   modifyPipelineElementsDeployments(pipelineElements) {
     pipelineElements.forEach(p => {
-      let selectedTargetNodeId = p.deploymentTargetNodeId
+      const selectedTargetNodeId = p.deploymentTargetNodeId
 
       // Currently relay only for data processors
       if (p instanceof DataProcessorInvocation) {
         p.eventRelayStrategy = this.selectedRelayStrategyVal;
       }
 
-      if(selectedTargetNodeId != "default") {
-        let selectedNode = this.edgeNodes
-            .filter(node => node.nodeControllerId === selectedTargetNodeId)
+      if (selectedTargetNodeId !== 'default') {
+        const selectedNode = this.edgeNodes
+            .filter(node => node.nodeControllerId === selectedTargetNodeId);
 
         p.deploymentTargetNodeHostname = selectedNode
-            .map(node => node.hostname)[0]
+            .map(node => node.hostname)[0];
 
         p.deploymentTargetNodePort = selectedNode
-            .map(node => node.port)[0]
-      }
-      else {
-        p.deploymentTargetNodeHostname = null
-        p.deploymentTargetNodePort = null
+            .map(node => node.port)[0];
+
+        p.elementEndpointHostname = selectedNode
+            .map(node => node.hostname)[0];
+      } else {
+        p.deploymentTargetNodeHostname = null;
+        p.deploymentTargetNodePort = null;
+        p.elementEndpointHostname = null;
       }
     })
   }

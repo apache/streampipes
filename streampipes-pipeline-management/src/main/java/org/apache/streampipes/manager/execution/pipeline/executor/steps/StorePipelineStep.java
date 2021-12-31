@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
@@ -26,9 +26,9 @@ import org.apache.streampipes.model.message.PipelineStatusMessageType;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 
-public class StorePipelineOperation extends PipelineExecutionOperation{
+public class StorePipelineStep extends PipelineExecutionStep {
 
-    public StorePipelineOperation(PipelineExecutor pipelineExecutor) {
+    public StorePipelineStep(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 

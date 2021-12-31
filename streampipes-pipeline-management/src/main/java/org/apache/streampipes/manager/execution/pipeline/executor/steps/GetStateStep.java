@@ -15,10 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.execution.pipeline.executor.operations;
+package org.apache.streampipes.manager.execution.pipeline.executor.steps;
 
 import org.apache.streampipes.logging.evaluation.EvaluationLogger;
-import org.apache.streampipes.manager.execution.pipeline.executor.operations.types.MigrationOperation;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.CommunicationUtils;
 import org.apache.streampipes.manager.execution.pipeline.executor.PipelineExecutor;
 import org.apache.streampipes.manager.execution.pipeline.executor.utils.StatusUtils;
@@ -29,9 +28,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-public class GetStateOperation extends PipelineExecutionOperation implements MigrationOperation {
+public class GetStateStep extends PipelineExecutionStep {
 
-    public GetStateOperation(PipelineExecutor pipelineExecutor) {
+    public GetStateStep(PipelineExecutor pipelineExecutor) {
         super(pipelineExecutor);
     }
 

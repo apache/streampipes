@@ -99,10 +99,12 @@ public class HttpRequestBuilder {
     PipelineElementStatus status = new PipelineElementStatus(endpointUrl, payload.getName(), response.isSuccess(),
             response.getOptionalMessage());
     if(payload instanceof InvocableStreamPipesEntity){
+      status.setRunningInstanceId(((InvocableStreamPipesEntity) payload).getDeploymentRunningInstanceId());
       status.setElementNode(((InvocableStreamPipesEntity)payload).getDeploymentTargetNodeId());
       status.setOperation(action);
     }
     else if(payload instanceof SpDataStreamRelayContainer){
+      status.setRunningInstanceId(((SpDataStreamRelayContainer) payload).getRunningStreamRelayInstanceId() + " relay");
       status.setElementNode(((SpDataStreamRelayContainer)payload).getDeploymentTargetNodeId());
       status.setOperation(action + " relay");
     }
