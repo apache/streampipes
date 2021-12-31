@@ -1,5 +1,5 @@
-${package}.pe.${packageName}.title=${classNamePrefix}
-${package}.pe.${packageName}.description=Description of data processor
+${package}.pe.${packageName}.sink.title=${classNamePrefix}Sink
+${package}.pe.${packageName}.sink.description=Description of data processor
 
 example-key.title=Example Text Parameter
 example-key.description=Example Text Parameter Description
