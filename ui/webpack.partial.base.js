@@ -15,6 +15,7 @@
  *   limitations under the License.
  */
 
+const webpack = require('webpack')
 const path = require('path');
 
 module.exports = {
@@ -31,5 +32,10 @@ module.exports = {
         fallback: {
             "assert": false
         }
-    }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
+    ]
 };

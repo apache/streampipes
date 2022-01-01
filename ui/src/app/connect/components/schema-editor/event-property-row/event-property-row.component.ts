@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { UUID } from 'angular2-uuid';
-import { TreeNode } from 'angular-tree-component';
+import { TreeNode } from '@circlon/angular-tree-component';
 import { MatDialog } from '@angular/material/dialog';
 import {
     EventProperty,
