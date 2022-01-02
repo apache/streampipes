@@ -22,10 +22,10 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.LocalAuthConfig;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.UserAccount;
-import org.apache.streampipes.model.client.user.UserInfo;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
+import org.apache.streampipes.user.management.util.UserInfoUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -73,7 +73,7 @@ public class JwtTokenProvider {
 	private Map<String, Object> makeClaims(Principal principal,
 																				 Set<String> roles) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put(CLAIM_USER, toUserInfo((UserAccount) principal, roles));
+		claims.put(CLAIM_USER, UserInfoUtil.toUserInfo((UserAccount) principal, roles));
 
 		return claims;
 	}
@@ -104,13 +104,5 @@ public class JwtTokenProvider {
 		return new Date(now.getTime() + authConfig().getTokenExpirationTimeMillis());
 	}
 
-	private UserInfo toUserInfo(UserAccount localUser,
-															Set<String> roles) {
-		UserInfo userInfo = new UserInfo();
-		userInfo.setUsername(localUser.getUsername());
-		userInfo.setDisplayName(localUser.getUsername());
-		userInfo.setShowTutorial(!localUser.isHideTutorial());
-		userInfo.setRoles(roles);
-		return userInfo;
-	}
+
 }

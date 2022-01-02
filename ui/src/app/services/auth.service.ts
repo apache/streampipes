@@ -101,11 +101,15 @@ export class AuthService {
             switchMap((expiresIn: Date) => timer(expiresIn.getTime() - Date.now() - 60000)),
         ).subscribe(() => {
             if (this.authenticated()) {
-                this.loginService.renewToken().subscribe(data => {
-                    this.login(data);
-                });
+                this.updateTokenAndUserInfo();
             }
         });
+    }
+
+    updateTokenAndUserInfo() {
+        this.loginService.renewToken().subscribe(data => {
+            this.login(data);
+        })
     }
 
     watchTokenExpiration() {

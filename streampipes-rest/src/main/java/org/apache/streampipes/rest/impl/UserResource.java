@@ -187,7 +187,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     String authenticatedUserId = getAuthenticatedUsername();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);
-      updateUser((UserAccount) existingUser, user);
+      updateUser((UserAccount) existingUser, user, isAdmin());
       user.setRev(existingUser.getRev());
       getUserStorage().updateUser(user);
       return ok(Notifications.success("User updated"));
@@ -206,6 +206,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
       Principal existingUser = getPrincipalById(principalId);
       user.setRev(existingUser.getRev());
+      if (!isAdmin()) {
+        replacePermissions(user, existingUser);
+      }
       if (!user.isSecretEncrypted()) {
         user.setClientSecret(SecretEncryptionManager.encrypt(user.getClientSecret()));
         user.setSecretEncrypted(true);
@@ -218,11 +221,21 @@ public class UserResource extends AbstractAuthGuardedRestResource {
   }
 
   private boolean isAdmin() {
-    return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ROLE_ADMIN.name()));
+    return SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getAuthorities()
+            .stream()
+            .anyMatch(r -> r.getAuthority().equals(Role.ROLE_ADMIN.name()));
   }
 
-  private void updateUser(UserAccount existingUser, UserAccount user) {
+  private void updateUser(UserAccount existingUser,
+                          UserAccount user,
+                          boolean adminPrivileges) {
     user.setPassword(existingUser.getPassword());
+    if (!adminPrivileges) {
+      replacePermissions(user, existingUser);
+    }
     user.setUserApiTokens(existingUser
             .getUserApiTokens()
             .stream()
@@ -261,5 +274,11 @@ public class UserResource extends AbstractAuthGuardedRestResource {
     if (principal instanceof UserAccount) {
       ((UserAccount) principal).setPassword("");
     }
+  }
+
+  private void replacePermissions(Principal principal, Principal existingPrincipal) {
+    principal.setGroups(existingPrincipal.getGroups());
+    principal.setObjectPermissions(existingPrincipal.getObjectPermissions());
+    principal.setRoles(existingPrincipal.getRoles());
   }
 }

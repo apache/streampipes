@@ -45,10 +45,6 @@ export class RestApi {
         return this.getServerUrl() + '/pe/' + appId + '/assets';
     }
 
-    updateUserDetails(user) {
-        return this.$http.put(this.urlApiBase() + '/users/profile', user);
-    }
-
     configured(): Observable<any> {
         return this.$http.get(this.getServerUrl() + '/setup/configured', {
             headers: { ignoreLoadingBar: '' }

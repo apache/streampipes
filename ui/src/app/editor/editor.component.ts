@@ -154,7 +154,7 @@ export class EditorComponent implements OnInit {
                     panelType: PanelType.STANDARD_PANEL,
                     title: 'Welcome to StreamPipes',
                     data: {
-                        'user': currentUser.displayName
+                        'userInfo': currentUser
                     }
                 });
             }

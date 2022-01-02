@@ -17,24 +17,36 @@
  */
 
 import { DialogRef } from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import { RestApi } from "../../../services/rest-api.service";
 import { ShepherdService } from "../../../services/tour/shepherd.service";
-import { Component } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { AppConstants } from "../../../services/app.constants";
+import { AuthService } from "../../../services/auth.service";
+import { UserAccount, UserInfo } from "../../../core-model/gen/streampipes-model-client";
+import { ProfileService } from "../../../profile/profile.service";
 
 @Component({
   selector: 'welcome-tour',
   templateUrl: './welcome-tour.component.html',
   styleUrls: ['./welcome-tour.component.scss']
 })
-export class WelcomeTourComponent {
+export class WelcomeTourComponent implements OnInit {
 
-  user: any;
+  @Input()
+  userInfo: UserInfo;
 
-  constructor(private DialogRef: DialogRef<WelcomeTourComponent>,
-              private RestApi: RestApi,
+  currentUser: UserAccount;
+
+  constructor(private authService: AuthService,
+              private DialogRef: DialogRef<WelcomeTourComponent>,
+              private profileService : ProfileService,
               private ShepherdService: ShepherdService,
               public appConstants: AppConstants) {
+  }
+
+  ngOnInit(): void {
+    this.profileService.getUserProfile(this.userInfo.username).subscribe(data => {
+      this.currentUser = data;
+    })
   }
 
   startCreatePipelineTour() {
@@ -43,8 +55,9 @@ export class WelcomeTourComponent {
   }
 
   hideTourForever() {
-    this.user.hideTutorial = true;
-    this.RestApi.updateUserDetails(this.user).subscribe(data => {
+    this.currentUser.hideTutorial = true;
+    this.profileService.updateUserProfile(this.currentUser).subscribe(data => {
+      this.authService.updateTokenAndUserInfo();
       this.close();
     });
   }
@@ -52,4 +65,5 @@ export class WelcomeTourComponent {
   close() {
     this.DialogRef.close();
   }
+
 }

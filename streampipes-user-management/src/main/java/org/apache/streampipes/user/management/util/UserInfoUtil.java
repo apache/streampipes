@@ -16,14 +16,22 @@
  *
  */
 
-package org.apache.streampipes.rest.impl;
+package org.apache.streampipes.user.management.util;
 
-import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.model.client.user.UserInfo;
 
-import javax.ws.rs.Path;
+import java.util.Set;
 
-@Path("/v2/users/profile")
-public class UserProfile extends AbstractAuthGuardedRestResource {
+public class UserInfoUtil {
 
-
+  public static UserInfo toUserInfo(UserAccount userAccount,
+                              Set<String> roles) {
+    UserInfo userInfo = new UserInfo();
+    userInfo.setUsername(userAccount.getUsername());
+    userInfo.setDisplayName(userAccount.getUsername());
+    userInfo.setShowTutorial(!userAccount.isHideTutorial());
+    userInfo.setRoles(roles);
+    return userInfo;
+  }
 }
