@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { RestService } from '../../../services/rest.service';
-import { ITreeOptions, TreeComponent } from 'angular-tree-component';
+import { ITreeOptions, TreeComponent } from '@circlon/angular-tree-component';
 import { UUID } from 'angular2-uuid';
 import { DataTypesService } from '../../../services/data-type.service';
 import {

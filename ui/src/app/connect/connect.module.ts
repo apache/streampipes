@@ -57,7 +57,7 @@ import { EditEventPropertyListComponent } from './dialog/edit-event-property/com
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
-import { TreeModule } from 'angular-tree-component';
+import { TreeModule } from '@circlon/angular-tree-component';
 import { XsService } from '../NS/xs.service';
 import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
 import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
@@ -97,7 +97,7 @@ import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/del
     MatFormFieldModule,
     MatSliderModule,
     CoreUiModule,
-    TreeModule.forRoot()
+    TreeModule
   ],
   exports: [
     PipelineElementRuntimeInfoComponent
