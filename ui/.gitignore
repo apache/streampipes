@@ -37,6 +37,8 @@ ui/src/assets/img/sp/logo-navigation.png
 # dependencies
 /node_modules
 
+
+
 # IDEs and editors
 /.idea
 .project
