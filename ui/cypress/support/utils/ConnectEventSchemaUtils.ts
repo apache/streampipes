@@ -62,6 +62,7 @@ export class ConnectEventSchemaUtils {
 
   public static numberTransformation(propertyName: string,  value: string) {
     cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    cy.wait(1000);
     cy.dataCy('connect-schema-correction-value').type(value);
     cy.dataCy('connect-schema-correction-operator').click().get('mat-option').contains('Multiply').click();
 

@@ -39,6 +39,9 @@
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
 
+# test dependencies
+ui/cypress/tests/experimental/testJvmArchetype/automated-test
+
 ## File-based project format:
 *.iws
 
