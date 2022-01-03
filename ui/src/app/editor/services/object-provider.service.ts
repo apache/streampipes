@@ -71,13 +71,7 @@ export class ObjectProvider {
     }
 
     findElement(elementId, rawPipelineModel: PipelineElementConfig[]): PipelineElementConfig {
-        let result = {} as PipelineElementConfig;
-        rawPipelineModel.forEach(pe => {
-            if (pe.payload.dom === elementId) {
-                result = pe;
-            }
-        });
-        return result;
+        return rawPipelineModel.find(pe => pe.payload.dom === elementId) || {} as PipelineElementConfig;
     }
 
     addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]): Pipeline {
@@ -88,7 +82,7 @@ export class ObjectProvider {
                     let payload = pe.payload;
                     payload = this.prepareElement(payload as InvocablePipelineElementUnion);
                     let connections = JsplumbBridge.getConnections({
-                        target: $("#" + payload.dom)
+                        target: document.getElementById(payload.dom)
                     });
                     for (let i = 0; i < connections.length; i++) {
                         payload.connectedTo.push(connections[i].sourceId);

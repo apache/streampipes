@@ -16,27 +16,23 @@
  *
  */
 
-import {JsplumbBridge} from "../../services/jsplumb-bridge.service";
-import {JsplumbService} from "../../services/jsplumb.service";
-import {PipelineValidationService} from "../../services/pipeline-validation.service";
-import {RestApi} from "../../../services/rest-api.service";
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from "@angular/core";
-import {PipelineElementRecommendationService} from "../../services/pipeline-element-recommendation.service";
-import {ObjectProvider} from "../../services/object-provider.service";
-import {
-  InvocablePipelineElementUnion,
-  PipelineElementConfig,
-  PipelineElementUnion
-} from "../../model/editor.model";
-import {SpDataStream, WildcardTopicDefinition} from "../../../core-model/gen/streampipes-model";
-import {EditorService} from "../../services/editor.service";
-import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
-import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
-import {CompatibleElementsComponent} from "../../dialog/compatible-elements/compatible-elements.component";
-import {Tuple2} from "../../../core-model/base/Tuple2";
-import { cloneDeep } from "lodash";
-import {Observable, Subscription} from "rxjs";
-import {JsplumbFactoryService} from "../../services/jsplumb-factory.service";
+import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
+import { JsplumbService } from '../../services/jsplumb.service';
+import { PipelineValidationService } from '../../services/pipeline-validation.service';
+import { RestApi } from '../../../services/rest-api.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { PipelineElementRecommendationService } from '../../services/pipeline-element-recommendation.service';
+import { ObjectProvider } from '../../services/object-provider.service';
+import { InvocablePipelineElementUnion, PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
+import { SpDataStream, WildcardTopicDefinition } from '../../../core-model/gen/streampipes-model';
+import { EditorService } from '../../services/editor.service';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { cloneDeep } from 'lodash';
+import { Subscription } from 'rxjs';
+import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 
 @Component({
   selector: 'pipeline-element-options',
@@ -83,25 +79,25 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
   JsplumbBridge: JsplumbBridge;
 
-  constructor(private ObjectProvider: ObjectProvider,
-              private PipelineElementRecommendationService: PipelineElementRecommendationService,
-              private DialogService: DialogService,
-              private EditorService: EditorService,
-              private JsplumbFactoryService: JsplumbFactoryService,
-              private JsplumbService: JsplumbService,
-              private PipelineValidationService: PipelineValidationService,
-              private RestApi: RestApi) {
+  constructor(private objectProvider: ObjectProvider,
+              private pipelineElementRecommendationService: PipelineElementRecommendationService,
+              private dialogService: DialogService,
+              private editorService: EditorService,
+              private jsplumbFactoryService: JsplumbFactoryService,
+              private jsplumbService: JsplumbService,
+              private pipelineValidationService: PipelineValidationService,
+              private restApi: RestApi) {
     this.recommendationsAvailable = false;
     this.possibleElements = [];
     this.recommendedElements = [];
     this.recommendationsShown = false;
-    this.JsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(false);
+    this.JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
   }
 
   ngOnInit() {
-    this.pipelineElementConfiguredObservable = this.EditorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
+    this.pipelineElementConfiguredObservable = this.editorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
       this.pipelineElement.settings.openCustomize = false;
-      this.RestApi.updateCachedPipeline(this.rawPipelineModel);
+      this.restApi.updateCachedPipeline(this.rawPipelineModel);
       if (pipelineElementDomId === this.pipelineElement.payload.dom) {
         this.initRecs(this.pipelineElement.payload.dom);
       }
@@ -120,39 +116,39 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   }
 
   customizeElement(pipelineElement: PipelineElementConfig) {
-    let restrictedEditMode = ! (this.isRootElement());
-    let customizeInfo = {a: restrictedEditMode, b: pipelineElement} as Tuple2<Boolean, PipelineElementConfig>;
+    const restrictedEditMode = ! (this.isRootElement());
+    const customizeInfo = {a: restrictedEditMode, b: pipelineElement} as Tuple2<Boolean, PipelineElementConfig>;
     this.customize.emit(customizeInfo);
   }
 
   openHelpDialog() {
-    this.EditorService.openHelpDialog(this.pipelineElement.payload);
+    this.editorService.openHelpDialog(this.pipelineElement.payload);
   }
 
   openCustomizeStreamDialog() {
-    //this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
+    // this.EditorDialogManager.showCustomizeStreamDialog(this.pipelineElement.payload);
   }
 
   initRecs(pipelineElementDomId) {
-    let clonedModel: PipelineElementConfig[] = cloneDeep(this.rawPipelineModel);
+    const clonedModel: PipelineElementConfig[] = cloneDeep(this.rawPipelineModel);
     clonedModel.forEach(pe => {
       if (pe.payload.dom === pipelineElementDomId && (pe.type !== 'stream'  && pe.type !== 'set')) {
         pe.settings.completed = false;
         (pe.payload as InvocablePipelineElementUnion).configured = false;
       }
-    })
-    var currentPipeline = this.ObjectProvider.makePipeline(clonedModel);
-    this.EditorService.recommendPipelineElement(currentPipeline).subscribe((result) => {
+    });
+    const currentPipeline = this.objectProvider.makePipeline(clonedModel);
+    this.editorService.recommendPipelineElement(currentPipeline).subscribe((result) => {
       if (result.success) {
-        this.possibleElements = cloneDeep(this.PipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements));
-        this.recommendedElements = cloneDeep(this.PipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements));
+        this.possibleElements = cloneDeep(this.pipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements));
+        this.recommendedElements = cloneDeep(this.pipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements));
         this.recommendationsAvailable = true;
       }
     });
   }
 
   openPossibleElementsDialog() {
-    const dialogRef = this.DialogService.open(CompatibleElementsComponent,{
+    const dialogRef = this.dialogService.open(CompatibleElementsComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
       title: 'Compatible Elements',
       data: {
@@ -173,12 +169,11 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   }
 
   isRootElement() {
-    return this.JsplumbBridge.getConnections({source: this.pipelineElement.payload.dom}).length === 0;
+    return this.JsplumbBridge.getConnections({source: document.getElementById(this.pipelineElement.payload.dom)}).length === 0;
   }
 
   isConfigured() {
-    if (this.isDataSource) return true;
-    else {
+    if (this.isDataSource) { return true; } else {
       return (this.pipelineElement.payload as InvocablePipelineElementUnion).configured;
     }
   }

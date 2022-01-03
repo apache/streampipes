@@ -16,16 +16,17 @@
  *
  */
 
-import {jsPlumbInstance} from 'jsplumb'
+import { BrowserJsPlumbInstance } from '@jsplumb/browser-ui';
+import { SelectOptions } from "@jsplumb/core";
 
 export class JsplumbBridge {
 
-    constructor(private jsPlumbInstance: jsPlumbInstance) {
+    constructor(private jsPlumbInstance: BrowserJsPlumbInstance) {
     }
 
     activateEndpoint(endpointId: string, endpointEnabled: boolean) {
         let endpoint = this.getEndpointById(endpointId);
-        endpoint.setEnabled(endpointEnabled);
+        endpoint.enabled = endpointEnabled;
     }
 
     activateEndpointWithType(endpointId: string, endpointEnabled: boolean, endpointType: string) {
@@ -48,15 +49,17 @@ export class JsplumbBridge {
     }
 
     repaintEverything() {
-        this.jsPlumbInstance.repaintEverything(true);
+        this.jsPlumbInstance.repaintEverything();
     }
 
     deleteEveryEndpoint() {
-        this.jsPlumbInstance.deleteEveryEndpoint();
+        // TODO
+        //this.jsPlumbInstance.destroy();
+        //this.jsPlumbInstance.deleteEveryEndpoint();
     }
 
     setContainer(container) {
-        this.jsPlumbInstance.setContainer(container);
+        this.jsPlumbInstance.setContainer(document.getElementById(container));
     }
 
     unbind(element) {
@@ -94,19 +97,21 @@ export class JsplumbBridge {
 
     getEndpointCount(id) {
         // @ts-ignore
-        return this.jsPlumbInstance.selectEndpoints({element: id}).length;
+        return this.jsPlumbInstance.selectEndpoints({element: document.getElementById(id)}).length;
     }
 
     detach(connection) {
         this.jsPlumbInstance.deleteConnection(connection);
     }
 
-    getConnections(filter) {
-        return this.jsPlumbInstance.getConnections(filter, {});
+    getConnections(filter: SelectOptions<Element>) {
+        return this.jsPlumbInstance.getConnections(filter);
     }
 
-    addEndpoint(element, options) {
-        return this.jsPlumbInstance.addEndpoint(element, options);
+    addEndpoint(pipelineElementDomId: string,
+                options: any) {
+        options.cssClass = "sp-no-pan";
+        return this.jsPlumbInstance.addEndpoint(document.getElementById(pipelineElementDomId), options);
     }
 
     connect(connection) {
@@ -114,15 +119,11 @@ export class JsplumbBridge {
     }
 
     removeAllEndpoints(element) {
-        this.jsPlumbInstance.removeAllEndpoints(element);
+        this.jsPlumbInstance.removeAllEndpoints(document.getElementById(element));
     }
 
     registerEndpointTypes(typeInfo) {
         this.jsPlumbInstance.registerEndpointTypes(typeInfo);
-    }
-
-    draggable(element, option) {
-        this.jsPlumbInstance.draggable(element, option);
     }
 
     // TODO: Overloading Functions?
@@ -135,12 +136,10 @@ export class JsplumbBridge {
     }
 
     getAllConnections() {
-        return this.jsPlumbInstance.getAllConnections();
+        return this.jsPlumbInstance.getConnections();
     }
 
     reset() {
         this.jsPlumbInstance.reset();
     }
 }
-
-//JsplumbBridge.$inject = [];

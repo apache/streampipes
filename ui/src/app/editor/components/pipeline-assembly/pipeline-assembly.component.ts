@@ -16,16 +16,7 @@
  *
  */
 
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    Input,
-    NgZone,
-    OnInit,
-    Output,
-    ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, NgZone, OnInit, Output, ViewChild, } from '@angular/core';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import { PipelineValidationService } from '../../services/pipeline-validation.service';
@@ -116,7 +107,6 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.JsplumbBridge = this.JsPlumbFactoryService.getJsplumbBridge(false);
         if (this.currentModifiedPipelineId) {
             this.displayPipelineById();
         } else {
@@ -141,21 +131,19 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     ngAfterViewInit() {
+        this.JsplumbBridge = this.JsPlumbFactoryService.getJsplumbBridge(this.preview);
         const elem = document.getElementById('assembly');
         this.panzoom = Panzoom(elem, {
             maxScale: 5,
-            excludeClass: 'jtk-draggable',
+            excludeClass: "sp-no-pan",
             canvas: true,
             contain: 'outside'
         });
     }
 
     autoLayout() {
-        this.PipelinePositioningService.layoutGraph('#assembly', 'span[id^=\'jsplumb\']', 110, false);
+        this.PipelinePositioningService.layoutGraph('#assembly', 'div[id^=\'jsplumb\']', 110, false);
         this.JsplumbBridge.repaintEverything();
-    }
-
-    toggleSelectMode() {
     }
 
     zoomOut() {

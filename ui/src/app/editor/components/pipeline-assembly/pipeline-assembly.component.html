@@ -121,8 +121,7 @@
                     </div>
                 </div>
             </div>
-            <div id="assembly" class="canvas" #assembly>
-                <pipeline #pipelineComponent
+                <pipeline class="canvas jtk-surface" id="assembly" #pipelineComponent
                           [pipelineValid]="pipelineValid"
                           [canvasId]="'assembly'"
                           [rawPipelineModel]="rawPipelineModel"
@@ -132,9 +131,8 @@
                           [pipelineCanvasMetadata]="pipelineCanvasMetadata"
                           [pipelineCacheRunning]="pipelineCacheRunning"
                           (pipelineCachedChanged)="pipelineCached=$event"
-                          (pipelineCacheRunningChanged)="pipelineCacheRunning=$event">
+                          (pipelineCacheRunningChanged)="pipelineCacheRunning=$event" style="position:absolute;">
                 </pipeline>
-            </div>
         </div>
     </div>
 </div>
