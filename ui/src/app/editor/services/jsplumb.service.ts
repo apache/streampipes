@@ -16,11 +16,11 @@
  *
  */
 
-import { JsplumbConfigService } from "./jsplumb-config.service";
-import { JsplumbBridge } from "./jsplumb-bridge.service";
-import { Injectable } from "@angular/core";
-import { InvocablePipelineElementUnion, PipelineElementConfig, PipelineElementUnion } from "../model/editor.model";
-import { PipelineElementTypeUtils } from "../utils/editor.utils";
+import { JsplumbConfigService } from './jsplumb-config.service';
+import { JsplumbBridge } from './jsplumb-bridge.service';
+import { Injectable } from '@angular/core';
+import { InvocablePipelineElementUnion, PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
+import { PipelineElementTypeUtils } from '../utils/editor.utils';
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
@@ -28,26 +28,26 @@ import {
     SpDataSet,
     SpDataStream,
     SpDataStreamUnion
-} from "../../core-model/gen/streampipes-model";
-import { JsplumbEndpointService } from "./jsplumb-endpoint.service";
-import { JsplumbFactoryService } from "./jsplumb-factory.service";
+} from '../../core-model/gen/streampipes-model';
+import { JsplumbEndpointService } from './jsplumb-endpoint.service';
+import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { EditorService } from './editor.service';
 
 @Injectable()
 export class JsplumbService {
 
-    idCounter: number = 0;
+    idCounter = 0;
 
-    constructor(private JsplumbConfigService: JsplumbConfigService,
-                private JsplumbFactory: JsplumbFactoryService,
+    constructor(private jsplumbConfigService: JsplumbConfigService,
+                private jsplumbFactory: JsplumbFactoryService,
                 private jsplumbEndpointService: JsplumbEndpointService,
                 private editorService: EditorService) {
     }
 
     isFullyConnected(pipelineElementConfig: PipelineElementConfig,
                      previewConfig: boolean) {
-        let jsplumbBridge = this.JsplumbFactory.getJsplumbBridge(previewConfig);
-        let payload = pipelineElementConfig.payload as InvocablePipelineElementUnion;
+        const jsplumbBridge = this.jsplumbFactory.getJsplumbBridge(previewConfig);
+        const payload = pipelineElementConfig.payload as InvocablePipelineElementUnion;
         return payload.inputStreams == null ||
           jsplumbBridge.getConnections({target: document.getElementById(payload.dom)}).length == payload.inputStreams.length;
     }
@@ -56,9 +56,9 @@ export class JsplumbService {
                     isPreview: boolean) {
         return pipelineModel
           .streams
-          .map(s => this.toConfig(s, "stream", isPreview))
-          .concat(pipelineModel.sepas.map(s => this.toConfig(s, "sepa", isPreview)))
-          .concat(pipelineModel.actions.map(s => this.toConfig(s, "action", isPreview)));
+          .map(s => this.toConfig(s, 'stream', isPreview))
+          .concat(pipelineModel.sepas.map(s => this.toConfig(s, 'sepa', isPreview)))
+          .concat(pipelineModel.actions.map(s => this.toConfig(s, 'action', isPreview)));
     }
 
     toConfig(pe: PipelineElementUnion,
@@ -72,7 +72,7 @@ export class JsplumbService {
                                    pipelineElement: PipelineElementUnion,
                                    x: number,
                                    y: number) {
-        let pipelineElementConfig = this.createNewPipelineElementConfigAtPosition(x, y, pipelineElement, false);
+        const pipelineElementConfig = this.createNewPipelineElementConfigAtPosition(x, y, pipelineElement, false);
         pipelineModel.push(pipelineElementConfig);
 
         if (pipelineElementConfig.payload instanceof SpDataSet) {
@@ -101,9 +101,9 @@ export class JsplumbService {
     createElement(pipelineModel: PipelineElementConfig[],
                   pipelineElement: InvocablePipelineElementUnion,
                   pipelineElementDomId: string) {
-        let pipelineElementDom = $("#" + pipelineElementDomId);
+        const pipelineElementDom = $('#' + pipelineElementDomId);
 
-        let pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
+        const pipelineElementConfig = this.createNewPipelineElementConfigWithFixedCoordinates(pipelineElementDom, pipelineElement, false);
         pipelineModel.push(pipelineElementConfig);
         setTimeout(() => {
             this.createAssemblyElement(pipelineElementConfig.payload.dom,
@@ -131,18 +131,15 @@ export class JsplumbService {
                  $target,
                  previewConfig: boolean) {
         let options;
-        let jsplumbBridge = this.getBridge(previewConfig);
-        if ($parentElement.hasClass("stream")) {
-            // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
-            options = this.jsplumbEndpointService.getJsplumbConfig(true).streamEndpointOptions;
-        } else {
-            // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
-            options = this.jsplumbEndpointService.getJsplumbConfig(true).sepaEndpointOptions;
-        }
+        const jsplumbBridge = this.getBridge(previewConfig);
+        // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
+        const jsplumbConfig = this.jsplumbEndpointService.getJsplumbConfig(true);
+        options = $parentElement.hasClass('stream') ?
+          jsplumbConfig.streamEndpointOptions : jsplumbConfig.sepaEndpointOptions;
         let sourceEndPoint;
         if (jsplumbBridge.selectEndpoints({source: $parentElement}).length > 0) {
             if (!(jsplumbBridge.selectEndpoints({source: $parentElement}).get(0).isFull())) {
-                sourceEndPoint = jsplumbBridge.selectEndpoints({source: $parentElement}).get(0)
+                sourceEndPoint = jsplumbBridge.selectEndpoints({source: $parentElement}).get(0);
             } else {
                 sourceEndPoint = jsplumbBridge.addEndpoint($parentElement, options);
             }
@@ -150,15 +147,15 @@ export class JsplumbService {
             sourceEndPoint = jsplumbBridge.addEndpoint($parentElement, options);
         }
 
-        let targetEndPoint = jsplumbBridge.selectEndpoints({target: $target}).get(0);
+        const targetEndPoint = jsplumbBridge.selectEndpoints({target: $target}).get(0);
 
         jsplumbBridge.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
         jsplumbBridge.repaintEverything();
     }
 
     createNewPipelineElementConfigWithFixedCoordinates($parentElement, json, isPreview): PipelineElementConfig {
-        let x = $parentElement.position().left;
-        let y = $parentElement.position().top;
+        const x = $parentElement.position().left;
+        const y = $parentElement.position().top;
         return this.createNewPipelineElementConfigAtPosition(x, y, json, isPreview);
     }
 
@@ -166,7 +163,7 @@ export class JsplumbService {
                                              y: number,
                                              json: any,
                                              isPreview: boolean): PipelineElementConfig {
-        let coord = {'x': x + 200, 'y': y};
+        const coord = {'x': x + 200, 'y': y};
         return this.createNewPipelineElementConfig(json, coord, isPreview, false);
     }
 
@@ -175,25 +172,25 @@ export class JsplumbService {
                                    isPreview: boolean,
                                    isCompleted: boolean,
                                    newElementId?: string): PipelineElementConfig {
-        let displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
-        let connectable = "connectable";
-        let pipelineElementConfig = {} as PipelineElementConfig;
+        const displaySettings = isPreview ? 'connectable-preview' : 'connectable-editor';
+        const connectable = 'connectable';
+        const pipelineElementConfig = {} as PipelineElementConfig;
         pipelineElementConfig.type = PipelineElementTypeUtils
-          .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement))
+          .toCssShortHand(PipelineElementTypeUtils.fromType(pipelineElement));
         pipelineElementConfig.payload = this.clone(pipelineElement, newElementId);
-        pipelineElementConfig.settings = {connectable: connectable,
+        pipelineElementConfig.settings = {connectable,
             openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
             completed: (pipelineElement instanceof SpDataStream || pipelineElement instanceof SpDataSet || isPreview || isCompleted),
             disabled: false,
             loadingStatus: false,
-            displaySettings: displaySettings,
+            displaySettings,
             position: {
                 x: coordinates.x,
                 y: coordinates.y
             }};
         if (!pipelineElementConfig.payload.dom) {
-            pipelineElementConfig.payload.dom = "jsplumb_" + this.idCounter + "_" + this.makeId(4);
+            pipelineElementConfig.payload.dom = 'jsplumb_' + this.idCounter + '_' + this.makeId(4);
             this.idCounter++;
         }
 
@@ -206,13 +203,13 @@ export class JsplumbService {
         } else if (pipelineElement instanceof SpDataStream) {
             return SpDataStream.fromData(pipelineElement, new SpDataStream());
         } else if (pipelineElement instanceof DataProcessorInvocation) {
-            let clonedPe = DataProcessorInvocation.fromData(pipelineElement, new DataProcessorInvocation());
+            const clonedPe = DataProcessorInvocation.fromData(pipelineElement, new DataProcessorInvocation());
             if (newElementId) {
-                this.updateElementIds(clonedPe, newElementId)
+                this.updateElementIds(clonedPe, newElementId);
             }
             return clonedPe;
         } else {
-            let clonedPe = DataSinkInvocation.fromData(pipelineElement, new DataSinkInvocation());
+            const clonedPe = DataSinkInvocation.fromData(pipelineElement, new DataSinkInvocation());
             if (newElementId) {
                 this.updateElementIds(clonedPe, newElementId);
             }
@@ -226,11 +223,12 @@ export class JsplumbService {
     }
 
     makeId(count: number) {
-        let text = "";
-        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let text = '';
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-        for (let i = 0; i < count; i++)
+        for (let i = 0; i < count; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
 
         return text;
     }
@@ -254,47 +252,47 @@ export class JsplumbService {
                    pipelineElement: SpDataSet,
                    endpoints: boolean,
                    preview: boolean) {
-        let jsplumbBridge = this.getBridge(preview);
+        const jsplumbBridge = this.getBridge(preview);
         if (endpoints) {
-            let endpointOptions = this.jsplumbEndpointService.getStreamEndpoint(preview, pipelineElementDomId);
+            const endpointOptions = this.jsplumbEndpointService.getStreamEndpoint(preview, pipelineElementDomId);
             jsplumbBridge.addEndpoint(pipelineElementDomId, endpointOptions);
         }
         return pipelineElementDomId;
-    };
+    }
 
 
     dataStreamDropped(pipelineElementDomId: string,
                       pipelineElement: SpDataStreamUnion,
                       endpoints: boolean,
                       preview: boolean) {
-        let jsplumbBridge = this.getBridge(preview);
+        const jsplumbBridge = this.getBridge(preview);
         if (endpoints) {
-            let endpointOptions = this.jsplumbEndpointService.getStreamEndpoint(preview, pipelineElementDomId);
+            const endpointOptions = this.jsplumbEndpointService.getStreamEndpoint(preview, pipelineElementDomId);
             jsplumbBridge.addEndpoint(pipelineElementDomId, endpointOptions);
         }
         return pipelineElementDomId;
-    };
+    }
 
     dataProcessorDropped(pipelineElementDomId: string,
                          pipelineElement: DataProcessorInvocation,
                          endpoints: boolean,
                          preview: boolean): string {
-        let jsplumbBridge = this.getBridge(preview);
+        const jsplumbBridge = this.getBridge(preview);
         this.dataSinkDropped(pipelineElementDomId, pipelineElement, endpoints, preview);
         if (endpoints) {
             jsplumbBridge.addEndpoint(pipelineElementDomId,
               this.jsplumbEndpointService.getOutputEndpoint(preview, pipelineElementDomId));
         }
         return pipelineElementDomId;
-    };
+    }
 
     dataSinkDropped(pipelineElementDomId: string,
                     pipelineElement: InvocablePipelineElementUnion,
                     endpoints: boolean,
                     preview: boolean): string {
-        let jsplumbBridge = this.getBridge(preview);
+        const jsplumbBridge = this.getBridge(preview);
         if (endpoints) {
-            if (pipelineElement.inputStreams.length < 2) { //1 InputNode
+            if (pipelineElement.inputStreams.length < 2) { // 1 InputNode
                 jsplumbBridge.addEndpoint(pipelineElementDomId,
                   this.jsplumbEndpointService.getInputEndpoint(preview, pipelineElementDomId, 0));
             } else {
@@ -305,9 +303,9 @@ export class JsplumbService {
             }
         }
         return pipelineElementDomId;
-    };
+    }
 
     getBridge(previewConfig: boolean): JsplumbBridge {
-        return this.JsplumbFactory.getJsplumbBridge(previewConfig);
+        return this.jsplumbFactory.getJsplumbBridge(previewConfig);
     }
 }

@@ -16,30 +16,30 @@
  *
  */
 
-import * as dagre from "dagre";
-import { JsplumbBridge } from "./jsplumb-bridge.service";
-import { JsplumbConfigService } from "./jsplumb-config.service";
-import { JsplumbService } from "./jsplumb.service";
-import { Injectable } from "@angular/core";
-import { PipelineElementConfig } from "../model/editor.model";
+import * as dagre from 'dagre';
+import { JsplumbBridge } from './jsplumb-bridge.service';
+import { JsplumbConfigService } from './jsplumb-config.service';
+import { JsplumbService } from './jsplumb.service';
+import { Injectable } from '@angular/core';
+import { PipelineElementConfig } from '../model/editor.model';
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
   PipelineCanvasMetadata,
   PipelineElementMetadata,
   SpDataStream
-} from "../../core-model/gen/streampipes-model";
-import { JsplumbFactoryService } from "./jsplumb-factory.service";
-import { ObjectProvider } from "./object-provider.service";
-import { Connection } from "@jsplumb/core";
+} from '../../core-model/gen/streampipes-model';
+import { JsplumbFactoryService } from './jsplumb-factory.service';
+import { ObjectProvider } from './object-provider.service';
+import { Connection } from '@jsplumb/core';
 
 @Injectable()
 export class PipelinePositioningService {
 
-  constructor(private JsplumbService: JsplumbService,
-              private JsplumbConfigService: JsplumbConfigService,
-              private JsplumbFactoryService: JsplumbFactoryService,
-              private ObjectProvider: ObjectProvider) {
+  constructor(private jsplumbService: JsplumbService,
+              private jsplumbConfigService: JsplumbConfigService,
+              private jsplumbFactoryService: JsplumbFactoryService,
+              private objectProvider: ObjectProvider) {
   }
 
   collectPipelineElementPositions(pipelineCanvasMetadata: PipelineCanvasMetadata,
@@ -52,10 +52,10 @@ export class PipelinePositioningService {
 
   collectPipelineElementPosition(domId: string,
                                  pipelineCanvasMetadata: PipelineCanvasMetadata) {
-    let elementRef = $(`#${domId}`);
+    const elementRef = $(`#${domId}`);
     if (elementRef && elementRef.position()) {
-      let leftPos = elementRef.position().left;
-      let topPos = elementRef.position().top;
+      const leftPos = elementRef.position().left;
+      const topPos = elementRef.position().top;
       if (!pipelineCanvasMetadata.pipelineElementMetadata) {
         pipelineCanvasMetadata.pipelineElementMetadata = {};
       }
@@ -74,32 +74,32 @@ export class PipelinePositioningService {
                   previewConfig: boolean,
                   autoLayout: boolean,
                   pipelineCanvasMetadata?: PipelineCanvasMetadata) {
-    let jsPlumbBridge = this.JsplumbFactoryService.getJsplumbBridge(previewConfig);
+    const jsPlumbBridge = this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
 
-    let jsplumbConfig = previewConfig ?
-      this.JsplumbConfigService.getPreviewConfig() :
-      this.JsplumbConfigService.getEditorConfig();
+    const jsplumbConfig = previewConfig ?
+      this.jsplumbConfigService.getPreviewConfig() :
+      this.jsplumbConfigService.getEditorConfig();
 
     rawPipelineModel.forEach(currentPe => {
       if (!currentPe.settings.disabled) {
-        if (currentPe.type === "stream" || currentPe.type === "set") {
-          this.JsplumbService.dataStreamDropped(
+        if (currentPe.type === 'stream' || currentPe.type === 'set') {
+          this.jsplumbService.dataStreamDropped(
             currentPe.payload.dom,
             currentPe.payload as SpDataStream,
             true,
             previewConfig
           );
         }
-        if (currentPe.type === "sepa") {
-          this.JsplumbService.dataProcessorDropped(
+        if (currentPe.type === 'sepa') {
+          this.jsplumbService.dataProcessorDropped(
             currentPe.payload.dom,
             currentPe.payload as DataProcessorInvocation,
             true,
             previewConfig
           );
         }
-        if (currentPe.type === "action") {
-          this.JsplumbService.dataSinkDropped(
+        if (currentPe.type === 'action') {
+          this.jsplumbService.dataSinkDropped(
             currentPe.payload.dom,
             currentPe.payload as DataSinkInvocation,
             true,
@@ -113,7 +113,7 @@ export class PipelinePositioningService {
     if (autoLayout) {
       this.layoutGraph(
         targetCanvas,
-        "div[id^='jsplumb']",
+        'div[id^=\'jsplumb\']',
         previewConfig ? 75 : 110,
         previewConfig
       );
@@ -128,37 +128,37 @@ export class PipelinePositioningService {
               dimension: number,
               previewConfig: boolean) {
 
-    let jsPlumbBridge = this.JsplumbFactoryService.getJsplumbBridge(previewConfig);
-    let g = new dagre.graphlib.Graph();
-    g.setGraph({rankdir: "LR", ranksep: previewConfig ? "50" : "100"});
+    const jsPlumbBridge = this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
+    const g = new dagre.graphlib.Graph();
+    g.setGraph({rankdir: 'LR', ranksep: previewConfig ? '50' : '100'});
     g.setDefaultEdgeLabel(function () {
-      return {}
+      return {};
     });
-    let nodes = $(canvasId).find(nodeIdentifier).get();
+    const nodes = $(canvasId).find(nodeIdentifier).get();
     nodes.forEach((n) => {
       g.setNode(n.id, {label: n.id, width: dimension, height: dimension});
     });
 
-    let edges = jsPlumbBridge.getAllConnections() as Connection[];
+    const edges = jsPlumbBridge.getAllConnections() as Connection[];
     edges.forEach(edge => {
       g.setEdge(edge.source.id, edge.target.id);
     });
 
     dagre.layout(g);
     g.nodes().forEach(v => {
-      let elementRef = $(`#${v}`);
-      elementRef.css("left", g.node(v).x + "px");
-      elementRef.css("top", g.node(v).y + "px");
+      const elementRef = $(`#${v}`);
+      elementRef.css('left', g.node(v).x + 'px');
+      elementRef.css('top', g.node(v).y + 'px');
     });
   }
 
   layoutGraphFromCanvasMetadata(pipelineCanvasMetadata: PipelineCanvasMetadata) {
     Object.entries(pipelineCanvasMetadata.pipelineElementMetadata).forEach(
       ([key, value]) => {
-        let elementRef = $(`#${key}`);
+        const elementRef = $(`#${key}`);
         if (elementRef) {
-          elementRef.css("left", value.position.x + "px");
-          elementRef.css("top", value.position.y + "px");
+          elementRef.css('left', value.position.x + 'px');
+          elementRef.css('top', value.position.y + 'px');
         }
       }
     );
@@ -168,30 +168,31 @@ export class PipelinePositioningService {
                           previewConfig: boolean,
                           jsplumbConfig: any,
                           jsPlumbBridge: JsplumbBridge) {
-    let source, target;
+    let source;
+    let target;
     jsPlumbBridge.setSuspendDrawing(true);
     rawPipelineModel.forEach(pe => {
-      if (pe.type == "sepa" || pe.type == "action") {
+      if (pe.type === 'sepa' || pe.type === 'action') {
         if (!(pe.settings.disabled) && pe.payload.connectedTo) {
           pe.payload.connectedTo.forEach((connection, index) => {
             source = connection;
             target = pe.payload.dom;
 
-            let sourceEndpointId = "out-" + connection;
-            let inTargetEndpointId = "in-" + index + "-" + pe.payload.dom;
+            const sourceEndpointId = 'out-' + connection;
+            const inTargetEndpointId = 'in-' + index + '-' + pe.payload.dom;
             jsPlumbBridge.connect(
               {
                 uuids: [sourceEndpointId, inTargetEndpointId],
                 detachable: !previewConfig
               }
             );
-            jsPlumbBridge.activateEndpointWithType(sourceEndpointId, true, "token");
-            jsPlumbBridge.activateEndpointWithType(inTargetEndpointId, true, "token");
+            jsPlumbBridge.activateEndpointWithType(sourceEndpointId, true, 'token');
+            jsPlumbBridge.activateEndpointWithType(inTargetEndpointId, true, 'token');
 
             if (!(pe.payload instanceof DataSinkInvocation) &&
-              !(this.ObjectProvider.hasConnectedPipelineElement(pe.payload.dom, rawPipelineModel))) {
-              let outTargetEndpointId = "out-" + pe.payload.dom;
-              jsPlumbBridge.activateEndpointWithType(outTargetEndpointId, true, "token");
+              !(this.objectProvider.hasConnectedPipelineElement(pe.payload.dom, rawPipelineModel))) {
+              const outTargetEndpointId = 'out-' + pe.payload.dom;
+              jsPlumbBridge.activateEndpointWithType(outTargetEndpointId, true, 'token');
             }
           });
         }

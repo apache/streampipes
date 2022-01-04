@@ -100,14 +100,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
   previewModeActive = false;
   pipelinePreview: PipelinePreviewModel;
 
-  constructor(private JsplumbService: JsplumbService,
-              private PipelineEditorService: PipelineEditorService,
-              private PipelinePositioningService: PipelinePositioningService,
-              private JsplumbFactoryService: JsplumbFactoryService,
-              private ObjectProvider: ObjectProvider,
-              private EditorService: EditorService,
-              private ShepherdService: ShepherdService,
-              private PipelineValidationService: PipelineValidationService,
+  constructor(private jsplumbService: JsplumbService,
+              private pipelineEditorService: PipelineEditorService,
+              private pipelinePositioningService: PipelinePositioningService,
+              private jsplumbFactoryService: JsplumbFactoryService,
+              private objectProvider: ObjectProvider,
+              private editorService: EditorService,
+              private shepherdService: ShepherdService,
+              private pipelineValidationService: PipelineValidationService,
               private dialogService: DialogService,
               private dialog: MatDialog,
               private ngZone: NgZone, ) {
@@ -120,7 +120,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.JsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(this.preview);
+    this.JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(this.preview);
     this.initAssembly();
     this.initPlumb();
   }
@@ -128,7 +128,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   validatePipeline() {
     setTimeout(() => {
       this.ngZone.run(() => {
-        this.pipelineValid = this.PipelineValidationService
+        this.pipelineValid = this.pipelineValidationService
             .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), this.preview);
       });
     });
@@ -136,7 +136,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.deletePipelineElementPreview(false);
-    this.JsplumbFactoryService.destroy(this.preview);
+    this.jsplumbFactoryService.destroy(this.preview);
     this.plumbReady = false;
   }
 
@@ -145,11 +145,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   updateOptionsClick(elementId) {
-    if (this.currentMouseOverElement == elementId) {
-      this.currentMouseOverElement = '';
-    } else {
-      this.currentMouseOverElement = elementId;
-    }
+    this.currentMouseOverElement = this.currentMouseOverElement === elementId ? '' : elementId;
   }
 
   getElementCss(currentPipelineElementSettings) {
@@ -175,7 +171,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   isInPipeline(type) {
-    return this.rawPipelineModel.some(x => (x.type == type && !(x.settings.disabled)));
+    return this.rawPipelineModel.some(x => (x.type === type && !(x.settings.disabled)));
   }
 
   showMixedStreamAlert() {
@@ -200,39 +196,52 @@ export class PipelineComponent implements OnInit, OnDestroy {
         const pipelineElementId = ui.draggable.data('pe');
         const pipelineElement: PipelineElementUnion = this.findPipelineElementByElementId(pipelineElementId);
         if (ui.draggable.hasClass('draggable-icon')) {
-          this.EditorService.makePipelineAssemblyEmpty(false);
-          const newElementId = pipelineElement.elementId + ':' + this.JsplumbService.makeId(5);
-          const pipelineElementConfig = this.JsplumbService.createNewPipelineElementConfig(pipelineElement,
-              this.PipelineEditorService.getCoordinates(ui, this.currentZoomLevel),
+          this.editorService.makePipelineAssemblyEmpty(false);
+          const newElementId = pipelineElement.elementId + ':' + this.jsplumbService.makeId(5);
+          const pipelineElementConfig = this.jsplumbService.createNewPipelineElementConfig(pipelineElement,
+              this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel),
               false,
               false,
               newElementId);
-          if ((this.isStreamInPipeline() && pipelineElementConfig.type == 'set') ||
-              this.isSetInPipeline() && pipelineElementConfig.type == 'stream') {
+          if ((this.isStreamInPipeline() && pipelineElementConfig.type === 'set') ||
+              this.isSetInPipeline() && pipelineElementConfig.type === 'stream') {
             this.showMixedStreamAlert();
           } else {
             this.rawPipelineModel.push(pipelineElementConfig);
             if (ui.draggable.hasClass('set')) {
               setTimeout(() => {
-                this.EditorService.updateDataSet(pipelineElementConfig.payload).subscribe(data => {
+                this.editorService.updateDataSet(pipelineElementConfig.payload).subscribe(data => {
                   (pipelineElementConfig.payload as SpDataSet).eventGrounding = data.eventGrounding;
                   (pipelineElementConfig.payload as SpDataSet).datasetInvocationId = data.invocationId;
-                  this.JsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as SpDataSet, true, false);
+                  this.jsplumbService.dataStreamDropped(
+                    pipelineElementConfig.payload.dom,
+                    pipelineElementConfig.payload as SpDataSet,
+                    true,
+                    false);
                 });
               }, 0);
             } else if (ui.draggable.hasClass('stream')) {
               this.checkTopicModel(pipelineElementConfig);
             } else if (ui.draggable.hasClass('sepa')) {
               setTimeout(() => {
-                this.JsplumbService.dataProcessorDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataProcessorInvocation, true, false);
+                this.jsplumbService.dataProcessorDropped(
+                  pipelineElementConfig.payload.dom,
+                  pipelineElementConfig.payload as DataProcessorInvocation,
+                  true,
+                  false
+                );
               }, 10);
             } else if (ui.draggable.hasClass('action')) {
               setTimeout(() => {
-                this.JsplumbService.dataSinkDropped(pipelineElementConfig.payload.dom, pipelineElementConfig.payload as DataSinkInvocation, true, false);
+                this.jsplumbService.dataSinkDropped(
+                  pipelineElementConfig.payload.dom,
+                  pipelineElementConfig.payload as DataSinkInvocation,
+                  true,
+                  false);
               }, 10);
             }
-            if (this.ShepherdService.isTourActive()) {
-              this.ShepherdService.trigger('drop-' + pipelineElementConfig.type);
+            if (this.shepherdService.isTourActive()) {
+              this.shepherdService.trigger('drop-' + pipelineElementConfig.type);
             }
           }
         }
@@ -246,7 +255,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
     setTimeout(() => {
-      this.JsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom,
+      this.jsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom,
           pipelineElementConfig.payload as SpDataStream,
           true,
           false);
@@ -264,12 +273,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
   handleDeleteOption(pipelineElement: PipelineElementConfig) {
     this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.dom);
     this.rawPipelineModel.forEach(pe => {
-      if (pe.payload.dom == pipelineElement.payload.dom) {
+      if (pe.payload.dom === pipelineElement.payload.dom) {
         pe.settings.disabled = true;
       }
     });
     if (this.rawPipelineModel.every(pe => pe.settings.disabled)) {
-      this.EditorService.makePipelineAssemblyEmpty(true);
+      this.editorService.makePipelineAssemblyEmpty(true);
     }
     this.JsplumbBridge.repaintEverything();
     this.validatePipeline();
@@ -283,14 +292,14 @@ export class PipelineComponent implements OnInit, OnDestroy {
     this.JsplumbBridge.unbind(EVENT_CONNECTION);
 
     this.JsplumbBridge.bind(EVENT_CONNECTION_MOVED, (info) => {
-      const pe = this.ObjectProvider.findElement(info.newTargetEndpoint.elementId, this.rawPipelineModel);
-      const oldPe = this.ObjectProvider.findElement(info.originalTargetEndpoint.elementId, this.rawPipelineModel);
+      const pe = this.objectProvider.findElement(info.newTargetEndpoint.elementId, this.rawPipelineModel);
+      const oldPe = this.objectProvider.findElement(info.originalTargetEndpoint.elementId, this.rawPipelineModel);
       (oldPe.payload as InvocablePipelineElementUnion).configured = false;
       (pe.payload as InvocablePipelineElementUnion).configured = false;
     });
 
     this.JsplumbBridge.bind(EVENT_CONNECTION_DETACHED, (info) => {
-      const pe = this.ObjectProvider.findElement(info.targetEndpoint.elementId, this.rawPipelineModel);
+      const pe = this.objectProvider.findElement(info.targetEndpoint.elementId, this.rawPipelineModel);
       (pe.payload as InvocablePipelineElementUnion).configured = false;
       pe.settings.openCustomize = true;
       info.targetEndpoint.setType('empty');
@@ -316,17 +325,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
     });
 
     this.JsplumbBridge.bind(EVENT_CONNECTION, (info) => {
-      const pe = this.ObjectProvider.findElement(info.target.id, this.rawPipelineModel);
+      const pe = this.objectProvider.findElement(info.target.id, this.rawPipelineModel);
       if (pe.settings.openCustomize) {
-        this.currentPipelineModel = this.ObjectProvider.makePipeline(this.rawPipelineModel);
+        this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
         pe.settings.loadingStatus = true;
-        this.ObjectProvider.updatePipeline(this.currentPipelineModel)
+        this.objectProvider.updatePipeline(this.currentPipelineModel)
             .subscribe(pipelineModificationMessage => {
               pe.settings.loadingStatus = false;
               info.targetEndpoint.setType('token');
               this.validatePipeline();
               this.modifyPipeline(pipelineModificationMessage.pipelineModifications);
-              if (this.JsplumbService.isFullyConnected(pe, this.preview)) {
+              if (this.jsplumbService.isFullyConnected(pe, this.preview)) {
                 const payload = pe.payload as InvocablePipelineElementUnion;
                 if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
                   this.showCustomizeDialog({a: false, b: pe});
@@ -363,7 +372,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       pipelineModifications.forEach(modification => {
         const id = modification.domId;
         if (id !== 'undefined') {
-          const pe = this.ObjectProvider.findElement(id, this.rawPipelineModel);
+          const pe = this.objectProvider.findElement(id, this.rawPipelineModel);
           (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
           (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
           (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
@@ -386,9 +395,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.pipelineCacheRunning = true;
       this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning);
-      this.PipelinePositioningService.collectPipelineElementPositions(this.pipelineCanvasMetadata, this.rawPipelineModel);
-      const updateCachedPipeline = this.EditorService.updateCachedPipeline(this.rawPipelineModel);
-      const updateCachedCanvasMetadata = this.EditorService.updateCachedCanvasMetadata(this.pipelineCanvasMetadata);
+      this.pipelinePositioningService.collectPipelineElementPositions(this.pipelineCanvasMetadata, this.rawPipelineModel);
+      const updateCachedPipeline = this.editorService.updateCachedPipeline(this.rawPipelineModel);
+      const updateCachedCanvasMetadata = this.editorService.updateCachedCanvasMetadata(this.pipelineCanvasMetadata);
       forkJoin([updateCachedPipeline, updateCachedCanvasMetadata]).subscribe(() => {
         this.pipelineCacheRunning = false;
         this.pipelineCacheRunningChanged.emit(this.pipelineCacheRunning);
@@ -420,7 +429,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     });
   }
 
-  showCustomizeDialog(pipelineElementInfo: Tuple2<Boolean, PipelineElementConfig>) {
+  showCustomizeDialog(pipelineElementInfo: Tuple2<boolean, PipelineElementConfig>) {
     const dialogRef = this.dialogService.open(CustomizeComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
       title: 'Customize ' + pipelineElementInfo.b.payload.name,
@@ -450,13 +459,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   announceConfiguredElement(pe: PipelineElementConfig) {
-    this.EditorService.announceConfiguredElement(pe.payload.dom);
+    this.editorService.announceConfiguredElement(pe.payload.dom);
   }
 
   initiatePipelineElementPreview() {
     if (!this.previewModeActive) {
-      const pipeline = this.ObjectProvider.makePipeline(this.rawPipelineModel);
-      this.EditorService.initiatePipelinePreview(pipeline).subscribe(response => {
+      const pipeline = this.objectProvider.makePipeline(this.rawPipelineModel);
+      this.editorService.initiatePipelinePreview(pipeline).subscribe(response => {
         this.pipelinePreview = response;
         this.previewModeActive = true;
       });
@@ -467,7 +476,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   deletePipelineElementPreview(resume: boolean) {
     if (this.previewModeActive) {
-      this.EditorService.deletePipelinePreviewRequest(this.pipelinePreview.previewId).subscribe(() => {
+      this.editorService.deletePipelinePreviewRequest(this.pipelinePreview.previewId).subscribe(() => {
         this.previewModeActive = false;
         if (resume) {
           this.initiatePipelineElementPreview();

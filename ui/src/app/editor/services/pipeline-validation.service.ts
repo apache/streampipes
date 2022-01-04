@@ -23,7 +23,7 @@ import { PipelineElementConfig } from '../model/editor.model';
 import { DataProcessorInvocation, DataSinkInvocation } from '../../core-model/gen/streampipes-model';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
-import { Connection } from "@jsplumb/core";
+import { Connection } from '@jsplumb/core';
 
 @Injectable()
 export class PipelineValidationService {
@@ -131,7 +131,7 @@ export class PipelineValidationService {
         const g = this.makeGraph(rawPipelineModel, jsplumbBridge);
         const tarjan = dagre.graphlib.alg.tarjan(g);
 
-        return tarjan.length == 1;
+        return tarjan.length === 1;
     }
 
     isInAssembly(rawPipelineModel: PipelineElementConfig[], type) {

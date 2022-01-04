@@ -17,7 +17,7 @@
  */
 
 import { BrowserJsPlumbInstance } from '@jsplumb/browser-ui';
-import { SelectOptions } from "@jsplumb/core";
+import { SelectOptions } from '@jsplumb/core';
 
 export class JsplumbBridge {
 
@@ -25,7 +25,7 @@ export class JsplumbBridge {
     }
 
     activateEndpoint(endpointId: string, endpointEnabled: boolean) {
-        let endpoint = this.getEndpointById(endpointId);
+        const endpoint = this.getEndpointById(endpointId);
         endpoint.enabled = endpointEnabled;
     }
 
@@ -35,7 +35,7 @@ export class JsplumbBridge {
     }
 
     setEndpointType(endpointId: string, endpointType: string) {
-        let endpoint = this.getEndpointById(endpointId);
+        const endpoint = this.getEndpointById(endpointId);
         // @ts-ignore
         endpoint.setType(endpointType);
     }
@@ -54,8 +54,8 @@ export class JsplumbBridge {
 
     deleteEveryEndpoint() {
         // TODO
-        //this.jsPlumbInstance.destroy();
-        //this.jsPlumbInstance.deleteEveryEndpoint();
+        // this.jsPlumbInstance.destroy();
+        // this.jsPlumbInstance.deleteEveryEndpoint();
     }
 
     setContainer(container) {
@@ -110,7 +110,7 @@ export class JsplumbBridge {
 
     addEndpoint(pipelineElementDomId: string,
                 options: any) {
-        options.cssClass = "sp-no-pan";
+        options.cssClass = 'sp-no-pan';
         return this.jsPlumbInstance.addEndpoint(document.getElementById(pipelineElementDomId), options);
     }
 

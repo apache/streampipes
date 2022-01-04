@@ -16,12 +16,12 @@
  *
  */
 
-import { JsPlumbInstance } from "@jsplumb/core";
-import { JsplumbBridge } from "./jsplumb-bridge.service";
-import { Injectable } from "@angular/core";
-import { BrowserJsPlumbInstance, ContainmentType, newInstance } from "@jsplumb/browser-ui";
-import { PipelineElementDraggedService } from "./pipeline-element-dragged.service";
-import { JsplumbConfigService } from "./jsplumb-config.service";
+import { JsPlumbInstance } from '@jsplumb/core';
+import { JsplumbBridge } from './jsplumb-bridge.service';
+import { Injectable } from '@angular/core';
+import { BrowserJsPlumbInstance, ContainmentType, newInstance } from '@jsplumb/browser-ui';
+import { PipelineElementDraggedService } from './pipeline-element-dragged.service';
+import { JsplumbConfigService } from './jsplumb-config.service';
 
 @Injectable()
 export class JsplumbFactoryService {
@@ -56,7 +56,7 @@ export class JsplumbFactoryService {
 
     makePipelineEditorInstance(): BrowserJsPlumbInstance {
         return newInstance({
-            container: document.getElementById("assembly"), dragOptions: {
+            container: document.getElementById('assembly'), dragOptions: {
                 containment: ContainmentType.parent,
                 cursor: 'pointer',
                 zIndex: 2000,
@@ -69,7 +69,7 @@ export class JsplumbFactoryService {
 
     makePipelinePreviewInstance(): BrowserJsPlumbInstance {
         return newInstance({
-            container: document.getElementById("assembly-preview"),
+            container: document.getElementById('assembly-preview'),
             elementsDraggable: false
         });
     }

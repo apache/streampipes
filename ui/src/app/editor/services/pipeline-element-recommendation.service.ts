@@ -16,39 +16,38 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {EditorService} from "./editor.service";
-import {PipelineElementUnion} from "../model/editor.model";
+import { Injectable } from '@angular/core';
+import { PipelineElementUnion } from '../model/editor.model';
 import {
   InvocableStreamPipesEntity,
   PipelineElementRecommendation,
   SpDataStream
-} from "../../core-model/gen/streampipes-model";
+} from '../../core-model/gen/streampipes-model';
 
 @Injectable()
 export class PipelineElementRecommendationService {
 
-    constructor(private EditorService: EditorService) {
+    constructor() {
     }
 
     collectPossibleElements(allElements: PipelineElementUnion[], possibleElements: PipelineElementRecommendation[]) {
-        var possibleElementConfigs = [];
+        const possibleElementConfigs = [];
         possibleElements.forEach(pe => {
             possibleElementConfigs.push(this.getPipelineElementContents(allElements, pe.elementId)[0]);
-        })
+        });
         return possibleElementConfigs;
     }
 
     populateRecommendedList(allElements, recs) {
-        let elementRecommendations: any = [];
-        recs.sort(function (a, b) {
+        const elementRecommendations: any = [];
+        recs.sort((a, b) => {
             return (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0);
         });
-        let maxRecs = recs.length > 7 ? 7 : recs.length;
+        const maxRecs = recs.length > 7 ? 7 : recs.length;
         for (let i = 0; i < maxRecs; i++) {
-            let el = recs[i];
-            let elements = this.getPipelineElementContents(allElements, el.elementId);
-            let element = elements[0];
+            const el = recs[i];
+            const elements = this.getPipelineElementContents(allElements, el.elementId);
+            const element = elements[0];
             (element as any).weight = el.weight;
             elementRecommendations.push(element);
         }

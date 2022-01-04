@@ -16,10 +16,10 @@
  *
  */
 
-import { Injectable } from "@angular/core";
-import { JsplumbSettings } from "../model/jsplumb.model";
-import { BezierConnector } from "@jsplumb/connector-bezier";
-import { EndpointTypeDescriptor } from "@jsplumb/core";
+import { Injectable } from '@angular/core';
+import { JsplumbSettings } from '../model/jsplumb.model';
+import { BezierConnector } from '@jsplumb/connector-bezier';
+import { EndpointTypeDescriptor } from '@jsplumb/core';
 
 @Injectable()
 export class JsplumbConfigService {
@@ -37,37 +37,37 @@ export class JsplumbConfigService {
 
     getEndpointTypeConfig(): Record<string, EndpointTypeDescriptor> {
         return {
-            "empty": {
+            'empty': {
                 paintStyle: {
-                    fill: "white",
-                    stroke: "#9E9E9E",
+                    fill: 'white',
+                    stroke: '#9E9E9E',
                     strokeWidth: 2,
                 }
             },
-            "token": {
+            'token': {
                 paintStyle: {
-                    fill: "#BDBDBD",
-                    stroke: "#9E9E9E",
+                    fill: '#BDBDBD',
+                    stroke: '#9E9E9E',
                     strokeWidth: 2
                 },
                 hoverPaintStyle: {
-                    fill: "#BDBDBD",
-                    stroke: "#4CAF50",
+                    fill: '#BDBDBD',
+                    stroke: '#4CAF50',
                     strokeWidth: 4,
                 }
             },
-            "highlight": {
+            'highlight': {
                 paintStyle: {
-                    fill: "white",
-                    stroke: "#4CAF50",
+                    fill: 'white',
+                    stroke: '#4CAF50',
                     strokeWidth: 4
                 }
             }
-        }
+        };
     }
 
     makeConfig(settings) {
-        let config = {} as any;
+        const config = {} as any;
         config.streamEndpointOptions = this.makeStreamEndpointOptions(settings);
         config.sepaEndpointOptions = this.makeSepaEndpointOptions(settings);
         config.leftTargetPointOptions = this.makeLeftTargetPointOptions(settings);
@@ -80,7 +80,7 @@ export class JsplumbConfigService {
                  arrowLength: number,
                  arrowLineWidth: number,
                  curviness: number) {
-        let settings = {} as JsplumbSettings;
+        const settings = {} as JsplumbSettings;
         settings.dotRadius = dotRadius;
         settings.lineWidth = lineWidth;
         settings.arrowWidth = arrowWidth;
@@ -92,50 +92,50 @@ export class JsplumbConfigService {
 
     makeStreamEndpointOptions(settings: JsplumbSettings) {
         return {
-            endpoint: {type: "Dot", options: {radius: settings.dotRadius}},
-            connectorStyle: {stroke: "#BDBDBD", outlineStroke: "#BDBDBD", strokeWidth: settings.lineWidth},
+            endpoint: {type: 'Dot', options: {radius: settings.dotRadius}},
+            connectorStyle: {stroke: '#BDBDBD', outlineStroke: '#BDBDBD', strokeWidth: settings.lineWidth},
             connector: {type: BezierConnector.type, options: {curviness: settings.curviness}},
             source: true,
-            type: "token",
+            type: 'token',
             maxConnections: -1,
-            anchor: "Right",
+            anchor: 'Right',
             connectorOverlays: this.defaultConnectorOverlay(settings)
-        }
+        };
     }
 
     makeSepaEndpointOptions(settings) {
         return {
-            endpoint: {type: "Dot", options: {radius: settings.dotRadius}},
+            endpoint: {type: 'Dot', options: {radius: settings.dotRadius}},
             connectorStyle: {
-                stroke: "#BDBDBD", outlineStroke: "#9E9E9E", strokeWidth: settings.lineWidth
+                stroke: '#BDBDBD', outlineStroke: '#9E9E9E', strokeWidth: settings.lineWidth
             },
             connector: {type: BezierConnector.type, options: {curviness: settings.curviness}},
             source: true,
             maxConnections: -1,
-            anchor: "Right",
-            type: "empty",
+            anchor: 'Right',
+            type: 'empty',
             connectorOverlays: this.defaultConnectorOverlay(settings),
             parameters: {
-                endpointType: "output"
+                endpointType: 'output'
             }
-        }
+        };
     }
 
     makeLeftTargetPointOptions(settings) {
         return {
-            endpoint: {type: "Dot", options: {radius: settings.dotRadius}},
-            type: "empty",
-            anchor: "Left",
+            endpoint: {type: 'Dot', options: {radius: settings.dotRadius}},
+            type: 'empty',
+            anchor: 'Left',
             target: true
-        }
+        };
     }
 
     defaultConnectorOverlay(settings) {
         return [{
-            type: "Arrow", options: {
-                width: settings.arrowWidth, length: settings.arrowLength, location: 0.5, id: "arrow", paintStyle: {
-                    fillStyle: "#BDBDBD",
-                    stroke: "#9E9E9E",
+            type: 'Arrow', options: {
+                width: settings.arrowWidth, length: settings.arrowLength, location: 0.5, id: 'arrow', paintStyle: {
+                    fillStyle: '#BDBDBD',
+                    stroke: '#9E9E9E',
                     strokeWidth: settings.arrowLineWidth
                 }
             }
