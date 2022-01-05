@@ -26,9 +26,9 @@ import { InvocablePipelineElementUnion, PipelineElementConfig, PipelineElementUn
 import {
   CustomOutputStrategy,
   DataProcessorInvocation,
-  DataSinkInvocation,
+  DataSinkInvocation, Notification,
   Pipeline,
-  PipelineCanvasMetadata,
+  PipelineCanvasMetadata, PipelineEdgeValidation, PipelineModificationMessage,
   PipelinePreviewModel,
   SpDataSet,
   SpDataStream
@@ -110,7 +110,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
               private pipelineValidationService: PipelineValidationService,
               private dialogService: DialogService,
               private dialog: MatDialog,
-              private ngZone: NgZone, ) {
+              private ngZone: NgZone) {
     this.plumbReady = false;
     this.currentMouseOverElement = '';
     this.currentPipelineModel = new Pipeline();
@@ -129,7 +129,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.ngZone.run(() => {
         this.pipelineValid = this.pipelineValidationService
-            .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), this.preview);
+          .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), this.preview);
       });
     });
   }
@@ -150,16 +150,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   getElementCss(currentPipelineElementSettings) {
     return 'position:absolute;'
-        + (this.preview ? 'width:75px;' : 'width:110px;')
-        + (this.preview ? 'height:75px;' : 'height:110px;')
-        + 'left: ' + currentPipelineElementSettings.position.x + 'px; '
-        + 'top: ' + currentPipelineElementSettings.position.y + 'px; ';
+      + (this.preview ? 'width:75px;' : 'width:110px;')
+      + (this.preview ? 'height:75px;' : 'height:110px;')
+      + 'left: ' + currentPipelineElementSettings.position.x + 'px; '
+      + 'top: ' + currentPipelineElementSettings.position.y + 'px; ';
   }
 
   getElementCssClasses(currentPipelineElement) {
     return currentPipelineElement.type + ' ' + (currentPipelineElement.settings.openCustomize ? '' : '')
-        + currentPipelineElement.settings.connectable + ' '
-        + currentPipelineElement.settings.displaySettings;
+      + currentPipelineElement.settings.connectable + ' '
+      + currentPipelineElement.settings.displaySettings;
   }
 
   isStreamInPipeline() {
@@ -199,12 +199,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
           this.editorService.makePipelineAssemblyEmpty(false);
           const newElementId = pipelineElement.elementId + ':' + this.jsplumbService.makeId(5);
           const pipelineElementConfig = this.jsplumbService.createNewPipelineElementConfig(pipelineElement,
-              this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel),
-              false,
-              false,
-              newElementId);
+            this.pipelineEditorService.getCoordinates(ui, this.currentZoomLevel),
+            false,
+            false,
+            newElementId);
           if ((this.isStreamInPipeline() && pipelineElementConfig.type === 'set') ||
-              this.isSetInPipeline() && pipelineElementConfig.type === 'stream') {
+            this.isSetInPipeline() && pipelineElementConfig.type === 'stream') {
             this.showMixedStreamAlert();
           } else {
             this.rawPipelineModel.push(pipelineElementConfig);
@@ -256,16 +256,16 @@ export class PipelineComponent implements OnInit, OnDestroy {
   checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
     setTimeout(() => {
       this.jsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom,
-          pipelineElementConfig.payload as SpDataStream,
-          true,
-          false);
+        pipelineElementConfig.payload as SpDataStream,
+        true,
+        false);
     }, 10);
 
     const streamDescription = pipelineElementConfig.payload as SpDataStream;
     if (streamDescription
-        .eventGrounding
-        .transportProtocols[0]
-        .topicDefinition['@class'] === 'org.apache.streampipes.model.grounding.WildcardTopicDefinition') {
+      .eventGrounding
+      .transportProtocols[0]
+      .topicDefinition['@class'] === 'org.apache.streampipes.model.grounding.WildcardTopicDefinition') {
       // this.EditorDialogManager.showCustomizeStreamDialog(streamDescription);
     }
   }
@@ -330,8 +330,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
         pe.settings.loadingStatus = true;
         this.objectProvider.updatePipeline(this.currentPipelineModel)
-            .subscribe(pipelineModificationMessage => {
-              pe.settings.loadingStatus = false;
+          .subscribe(pipelineModificationMessage => {
+            pe.settings.loadingStatus = false;
+            const edgeValidations = this.getTargetEdgeValidations(pipelineModificationMessage, info.target.id);
+            const currentConnectionValid = this.currentConnectionValid(pe, edgeValidations);
+            this.processEdgeValidations(pipelineModificationMessage, info.target.id);
+            if (currentConnectionValid) {
               info.targetEndpoint.setType('token');
               this.validatePipeline();
               this.modifyPipeline(pipelineModificationMessage.pipelineModifications);
@@ -345,16 +349,17 @@ export class PipelineComponent implements OnInit, OnDestroy {
                   this.announceConfiguredElement(pe);
                 }
               }
-            }, status => {
-              pe.settings.loadingStatus = false;
+            } else {
               this.JsplumbBridge.detach(info.connection);
-              if (Array.isArray(status.error)) {
-                const matchingResultMessage = (status.error as any[]).map(e => MatchingResultMessage.fromData(e as MatchingResultMessage));
-                this.showMatchingErrorDialog(matchingResultMessage);
-              } else {
-                this.showErrorDialog(status.error.title, status.error.description);
+              const invalidEdgeValidation = edgeValidations.find(e => e.sourceId === info.source.id);
+              console.log(invalidEdgeValidation);
+              if (invalidEdgeValidation) {
+                this.showMatchingErrorDialog(invalidEdgeValidation.status.notifications);
               }
-            });
+            }
+          }, status => {
+            this.showErrorDialog(status.error.title, status.error.description);
+          });
       }
     });
 
@@ -367,14 +372,34 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
+  currentConnectionValid(pe: PipelineElementConfig,
+                         targetEdges: PipelineEdgeValidation[]) {
+    const entity = pe.payload as InvocablePipelineElementUnion;
+    return entity.streamRequirements.length === targetEdges.length && targetEdges.every(e => e.status.validationStatusType === 'COMPLETE');
+  }
+
+  getTargetEdgeValidations(pipelineModificationMessage: PipelineModificationMessage,
+                           targetDomId: string): PipelineEdgeValidation[] {
+    const edgeValidations = pipelineModificationMessage.edgeValidations;
+    return edgeValidations.filter(ev => ev.targetId === targetDomId);
+  }
+
+  processEdgeValidations(pipelineModificationMessage: PipelineModificationMessage,
+                         targetDomId: string) {
+
+  }
+
   modifyPipeline(pipelineModifications) {
     if (pipelineModifications) {
+      console.log(pipelineModifications);
       pipelineModifications.forEach(modification => {
         const id = modification.domId;
         if (id !== 'undefined') {
           const pe = this.objectProvider.findElement(id, this.rawPipelineModel);
           (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
-          (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
+          if (pe instanceof DataProcessorInvocation) {
+            (pe.payload as DataProcessorInvocation).outputStrategies = modification.pipelineElement.outputStrategies;
+          }
           (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
         }
       });
@@ -419,12 +444,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
     });
   }
 
-  showMatchingErrorDialog(matchingResultMessage: MatchingResultMessage[]) {
+  showMatchingErrorDialog(notifications: Notification[]) {
     this.dialogService.open(MatchingErrorComponent, {
       panelType: PanelType.STANDARD_PANEL,
       title: 'Invalid Connection',
       data: {
-        'matchingResultMessage': matchingResultMessage
+        'notifications': notifications
       }
     });
   }

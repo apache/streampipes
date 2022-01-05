@@ -16,14 +16,23 @@
  *
  */
 
-package org.apache.streampipes.manager.data;
+package org.apache.streampipes.manager.matching.v2.pipeline;
 
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.jgrapht.graph.DirectedMultigraph;
+import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 
-public class PipelineGraph extends DirectedMultigraph<NamedStreamPipesEntity, String> {
+import java.util.List;
 
-    public PipelineGraph() {
-        super(String.class);
-    }
+public class SpValidationException extends Exception {
+
+  private List<MatchingResultMessage> errorLog;
+
+  public SpValidationException(List<MatchingResultMessage> errorLog) {
+    this.errorLog = errorLog;
+  }
+
+  public SpValidationException() {}
+
+  public List<MatchingResultMessage> getErrorLog() {
+    return errorLog;
+  }
 }

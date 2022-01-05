@@ -16,14 +16,22 @@
  *
  */
 
-package org.apache.streampipes.manager.data;
+package org.apache.streampipes.manager.matching.v2.pipeline;
 
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.jgrapht.graph.DirectedMultigraph;
+import java.util.Arrays;
+import java.util.List;
 
-public class PipelineGraph extends DirectedMultigraph<NamedStreamPipesEntity, String> {
+public class PipelineValidationSteps {
 
-    public PipelineGraph() {
-        super(String.class);
-    }
+  public List<AbstractPipelineValidationStep> collect() {
+    return Arrays.asList(
+            new PrepareStep(),
+            new ApplyGroundingStep(),
+            new SchemaValidationStep(),
+            new UpdateStaticPropertiesStep(),
+            new UpdateOutputStrategiesStep(),
+            new ComputeOutputStep(),
+            new CheckCompletedStep()
+    );
+  }
 }

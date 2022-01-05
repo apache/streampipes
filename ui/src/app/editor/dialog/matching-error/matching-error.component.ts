@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-client";
+import { Component, Input } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { Notification } from '../../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'matching-error',
@@ -28,18 +28,18 @@ import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-c
 export class MatchingErrorComponent {
 
   @Input()
-  matchingResultMessage: MatchingResultMessage[];
+  notifications: Notification[];
 
   msg: any;
   statusDetailsVisible: any;
 
-  constructor(private DialogRef: DialogRef<MatchingErrorComponent>) {
+  constructor(private dialogRef: DialogRef<MatchingErrorComponent>) {
 
   }
 
   close() {
-    this.DialogRef.close();
-  };
+    this.dialogRef.close();
+  }
 
   toggleStatusDetailsVisible() {
     this.statusDetailsVisible = !(this.statusDetailsVisible);

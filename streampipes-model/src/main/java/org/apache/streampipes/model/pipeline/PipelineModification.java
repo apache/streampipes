@@ -29,8 +29,9 @@ public class PipelineModification {
 
   private String domId;
   private String elementId;
+  private boolean pipelineElementValid;
 
-  private List<PipelineModificationErrorDescription> errorDescriptions;
+  private List<PipelineElementValidationInfo> validationInfos;
   private List<StaticProperty> staticProperties;
   private List<OutputStrategy> outputStrategies;
   private List<SpDataStream> inputStreams;
@@ -42,6 +43,8 @@ public class PipelineModification {
     this.elementId = elementId;
     this.staticProperties = staticProperties;
     this.inputStreams = new ArrayList<>();
+    this.outputStrategies = new ArrayList<>();
+    this.validationInfos = new ArrayList<>();
   }
 
   public PipelineModification() {
@@ -90,5 +93,21 @@ public class PipelineModification {
 
   public void addInputStream(SpDataStream inputStream) {
     this.inputStreams.add(inputStream);
+  }
+
+  public boolean isPipelineElementValid() {
+    return pipelineElementValid;
+  }
+
+  public void setPipelineElementValid(boolean pipelineElementValid) {
+    this.pipelineElementValid = pipelineElementValid;
+  }
+
+  public List<PipelineElementValidationInfo> getValidationInfos() {
+    return validationInfos;
+  }
+
+  public void setValidationInfos(List<PipelineElementValidationInfo> validationInfos) {
+    this.validationInfos = validationInfos;
   }
 }

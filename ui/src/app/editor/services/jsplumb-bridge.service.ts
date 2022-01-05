@@ -53,9 +53,8 @@ export class JsplumbBridge {
     }
 
     deleteEveryEndpoint() {
-        // TODO
-        // this.jsPlumbInstance.destroy();
-        // this.jsPlumbInstance.deleteEveryEndpoint();
+        this.jsPlumbInstance.selectEndpoints().deleteAll();
+        this.jsPlumbInstance.deleteEveryConnection();
     }
 
     setContainer(container) {

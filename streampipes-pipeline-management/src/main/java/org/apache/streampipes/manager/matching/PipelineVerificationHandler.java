@@ -191,21 +191,9 @@ public class PipelineVerificationHandler {
     return pipelineModificationMessage;
   }
 
-  public List<InvocableStreamPipesEntity> getInvocationGraphs() {
-    return this.invocationGraphs;
-  }
-
   public List<InvocableStreamPipesEntity> makeInvocationGraphs() {
     PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
     return new InvocationGraphBuilder(pipelineGraph, null).buildGraphs();
-  }
-
-  private boolean onlyStreamAncestorsPresentInPipeline() {
-    return rootPipelineElement
-            .getConnectedTo()
-            .stream()
-            .map(connectedTo -> TreeUtils.findSEPAElement(connectedTo, pipeline.getSepas(), pipeline.getStreams()))
-            .allMatch(pe -> pe instanceof SpDataStream);
   }
 
 }

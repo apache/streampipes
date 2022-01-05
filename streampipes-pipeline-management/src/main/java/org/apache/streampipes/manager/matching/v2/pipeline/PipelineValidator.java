@@ -16,14 +16,29 @@
  *
  */
 
-package org.apache.streampipes.manager.data;
+package org.apache.streampipes.manager.matching.v2.pipeline;
 
+import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.jgrapht.graph.DirectedMultigraph;
+import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 
-public class PipelineGraph extends DirectedMultigraph<NamedStreamPipesEntity, String> {
+import java.util.List;
+import java.util.Set;
 
-    public PipelineGraph() {
-        super(String.class);
+public class PipelineValidator {
+
+  private final List<AbstractPipelineValidationStep> steps;
+
+  public PipelineValidator() {
+    this.steps = new PipelineValidationSteps().collect();
+  }
+
+  public void apply(NamedStreamPipesEntity source,
+                    InvocableStreamPipesEntity target,
+                    Set<InvocableStreamPipesEntity> allTargets,
+                    List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
+    for (AbstractPipelineValidationStep step : steps) {
+      step.apply(source, target, allTargets, validationInfos);
     }
+  }
 }

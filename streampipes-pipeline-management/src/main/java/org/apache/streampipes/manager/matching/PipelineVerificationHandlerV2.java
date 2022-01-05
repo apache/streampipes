@@ -15,28 +15,23 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.manager.matching;
 
-package org.apache.streampipes.model.pipeline;
+import org.apache.streampipes.manager.data.PipelineGraph;
+import org.apache.streampipes.manager.data.PipelineGraphBuilder;
+import org.apache.streampipes.model.message.PipelineModificationMessage;
+import org.apache.streampipes.model.pipeline.Pipeline;
 
-public class PipelineModificationErrorDescription {
+public class PipelineVerificationHandlerV2 {
 
-	private String errorMessage;
-	
-	
-	public PipelineModificationErrorDescription(String errorMessage)
-	{
-		this.errorMessage = errorMessage;
-	}
+  private Pipeline pipeline;
 
+  public PipelineVerificationHandlerV2(Pipeline pipeline) {
+    this.pipeline = pipeline;
+  }
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-	
-	
+  public PipelineModificationMessage verifyPipeline() {
+    PipelineGraph graph = new PipelineGraphBuilder(pipeline).buildGraph();
+    return new PipelineModificationGenerator(graph).buildPipelineModificationMessage();
+  }
 }

@@ -28,15 +28,18 @@ import java.util.List;
 public class PipelineModificationMessage extends Message {
 
 	/**
-	 * Class that represents PipelineModification messages. Modifications are used to update a SEPA within an already created pipeline
+	 * Class that represents PipelineModification messages. Modifications are used to update a pipeline element within an already created pipeline
 	 */
 	
 	private List<PipelineModification> pipelineModifications;
+	private boolean pipelineValid;
+	private List<PipelineEdgeValidation> edgeValidations;
 	
 	public PipelineModificationMessage(
 			List<PipelineModification> pipelineModifications) {
 		super(true);
 		this.pipelineModifications = pipelineModifications;
+		this.edgeValidations = new ArrayList<>();
 	}
 
 	public PipelineModificationMessage() {
@@ -52,10 +55,29 @@ public class PipelineModificationMessage extends Message {
 			List<PipelineModification> pipelineModifications) {
 		this.pipelineModifications = pipelineModifications;
 	}
-	
-	public void addPipelineModification(PipelineModification pipelineModification)
-	{
+
+	public boolean isPipelineValid() {
+		return pipelineValid;
+	}
+
+	public void setPipelineValid(boolean pipelineValid) {
+		this.pipelineValid = pipelineValid;
+	}
+
+	public List<PipelineEdgeValidation> getEdgeValidations() {
+		return edgeValidations;
+	}
+
+	public void setEdgeValidations(List<PipelineEdgeValidation> edgeValidations) {
+		this.edgeValidations = edgeValidations;
+	}
+
+	public void addPipelineModification(PipelineModification pipelineModification) {
 		pipelineModifications.add(pipelineModification);
+	}
+
+	public void addEdgeValidation(PipelineEdgeValidation pipelineEdgeValidation) {
+		edgeValidations.add(pipelineEdgeValidation);
 	}
 	
 	public boolean existsModification(String domId)

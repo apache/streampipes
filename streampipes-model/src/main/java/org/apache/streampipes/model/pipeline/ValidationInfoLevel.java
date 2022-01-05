@@ -16,14 +16,9 @@
  *
  */
 
-package org.apache.streampipes.manager.data;
+package org.apache.streampipes.model.pipeline;
 
-import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.jgrapht.graph.DirectedMultigraph;
-
-public class PipelineGraph extends DirectedMultigraph<NamedStreamPipesEntity, String> {
-
-    public PipelineGraph() {
-        super(String.class);
-    }
+public enum ValidationInfoLevel {
+  INFO,
+  ERROR;
 }
