@@ -391,14 +391,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   modifyPipeline(pipelineModifications) {
     if (pipelineModifications) {
-      console.log(pipelineModifications);
       pipelineModifications.forEach(modification => {
         const id = modification.domId;
         if (id !== 'undefined') {
           const pe = this.objectProvider.findElement(id, this.rawPipelineModel);
           (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
-          if (pe instanceof DataProcessorInvocation) {
-            (pe.payload as DataProcessorInvocation).outputStrategies = modification.pipelineElement.outputStrategies;
+          if (pe.payload instanceof DataProcessorInvocation) {
+            (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
           }
           (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
         }

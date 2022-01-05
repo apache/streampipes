@@ -28,6 +28,7 @@ import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
 
@@ -45,6 +46,9 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
         .forEach(strategy -> {
           PropertySelectorGenerator generator = getGenerator(inputStreams, strategy);
           strategy.setAvailablePropertyKeys(generator.generateSelectors());
+          // delete selected keys that are not present as available keys
+          List<String> selected = getValidSelectedPropertyKeys(strategy);
+          strategy.setSelectedPropertyKeys(selected);
         });
     }
   }
@@ -63,5 +67,12 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
              false
      );
    }
+  }
+
+  private List<String> getValidSelectedPropertyKeys(CustomOutputStrategy strategy) {
+    return strategy
+            .getSelectedPropertyKeys()
+            .stream()
+            .filter(p -> strategy.getAvailablePropertyKeys().contains(p)).collect(Collectors.toList());
   }
 }
