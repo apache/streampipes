@@ -28,7 +28,7 @@ import {
   DataProcessorInvocation,
   DataSinkInvocation, Notification,
   Pipeline,
-  PipelineCanvasMetadata, PipelineEdgeValidation, PipelineModificationMessage,
+  PipelineCanvasMetadata, PipelineEdgeValidation, PipelineModification, PipelineModificationMessage,
   PipelinePreviewModel,
   SpDataSet,
   SpDataStream
@@ -84,7 +84,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   @Output()
   pipelineCacheRunningChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  plumbReady: boolean;
   currentMouseOverElement: string;
   currentPipelineModel: Pipeline;
   idCounter: any;
@@ -109,7 +108,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               private dialog: MatDialog,
               private ngZone: NgZone) {
-    this.plumbReady = false;
     this.currentMouseOverElement = '';
     this.currentPipelineModel = new Pipeline();
     this.idCounter = 0;
@@ -135,7 +133,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.deletePipelineElementPreview(false);
     this.jsplumbFactoryService.destroy(this.preview);
-    this.plumbReady = false;
   }
 
   updateMouseover(elementId) {
@@ -247,8 +244,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.validatePipeline();
         this.triggerPipelineCacheUpdate();
       }
-
-    }); // End #assembly.droppable()
+    });
   }
 
   checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
@@ -284,9 +280,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   initPlumb() {
-
-    // this.JsplumbService.prepareJsplumb();
-
     this.JsplumbBridge.unbind(EVENT_CONNECTION);
 
     this.JsplumbBridge.bind(EVENT_CONNECTION_MOVED, (info) => {
@@ -336,7 +329,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             if (currentConnectionValid) {
               info.targetEndpoint.setType('token');
               this.validatePipeline();
-              this.modifyPipeline(pipelineModificationMessage.pipelineModifications);
+              this.modifyPipeline(pipelineModificationMessage);
               if (this.jsplumbService.isFullyConnected(pe, this.preview)) {
                 const payload = pe.payload as InvocablePipelineElementUnion;
                 if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
@@ -364,10 +357,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
     window.onresize = () => {
       this.JsplumbBridge.repaintEverything();
     };
-
-    setTimeout(() => {
-      this.plumbReady = true;
-    }, 100);
   }
 
   currentConnectionValid(pe: PipelineElementConfig,
@@ -387,9 +376,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   }
 
-  modifyPipeline(pipelineModifications) {
-    if (pipelineModifications) {
-      pipelineModifications.forEach(modification => {
+  modifyPipeline(pm: PipelineModificationMessage) {
+    if (pm.pipelineModifications) {
+      pm.pipelineModifications.forEach(modification => {
         const id = modification.domId;
         if (id !== 'undefined') {
           const pe = this.objectProvider.findElement(id, this.rawPipelineModel);
@@ -465,17 +454,23 @@ export class PipelineComponent implements OnInit, OnDestroy {
       if (c) {
         pipelineElementConfig.settings.openCustomize = false;
         (pipelineElementConfig.payload as InvocablePipelineElementUnion).configured = true;
-        if (!(pipelineElementConfig.payload instanceof DataSinkInvocation)) {
-          this.JsplumbBridge.activateEndpoint('out-' + pipelineElementConfig.payload.dom, pipelineElementConfig.settings.completed);
-        }
-        this.JsplumbBridge.getSourceEndpoint(pipelineElementConfig.payload.dom).toggleType('token');
-        this.triggerPipelineCacheUpdate();
-        this.announceConfiguredElement(pipelineElementConfig);
-        if (this.previewModeActive) {
-          this.deletePipelineElementPreview(true);
-        }
+        this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
+        this.objectProvider.updatePipeline(this.currentPipelineModel).subscribe(pm => {
+          this.modifyPipeline(pm);
+          if (!(pipelineElementConfig.payload instanceof DataSinkInvocation)) {
+            this.JsplumbBridge.activateEndpoint('out-' + pipelineElementConfig.payload.dom, pipelineElementConfig.settings.completed);
+          }
+          this.JsplumbBridge.getSourceEndpoint(pipelineElementConfig.payload.dom).toggleType('token');
+          this.triggerPipelineCacheUpdate();
+          this.announceConfiguredElement(pipelineElementConfig);
+          if (this.previewModeActive) {
+            this.deletePipelineElementPreview(true);
+          }
+          this.validatePipeline();
+        });
+      } else {
+        this.validatePipeline();
       }
-      this.validatePipeline();
     });
   }
 

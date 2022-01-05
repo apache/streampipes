@@ -39,34 +39,39 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
                     List<PipelineElementValidationInfo> validationInfos) throws SpValidationException {
     List<SpDataStream> inputStreams = target.getInputStreams();
     if (target instanceof DataProcessorInvocation) {
-      ((DataProcessorInvocation) target).getOutputStrategies()
-        .stream()
-        .filter(strategy -> strategy instanceof CustomOutputStrategy)
-        .map(strategy -> (CustomOutputStrategy) strategy)
+      ((DataProcessorInvocation) target)
+        .getOutputStrategies()
         .forEach(strategy -> {
-          PropertySelectorGenerator generator = getGenerator(inputStreams, strategy);
-          strategy.setAvailablePropertyKeys(generator.generateSelectors());
-          // delete selected keys that are not present as available keys
-          List<String> selected = getValidSelectedPropertyKeys(strategy);
-          strategy.setSelectedPropertyKeys(selected);
+          if (strategy instanceof CustomOutputStrategy) {
+            handleCustomOutputStrategy(inputStreams, (CustomOutputStrategy) strategy);
+          }
         });
     }
   }
 
+  private void handleCustomOutputStrategy(List<SpDataStream> inputStreams,
+                                          CustomOutputStrategy strategy) {
+    PropertySelectorGenerator generator = getGenerator(inputStreams, strategy);
+    strategy.setAvailablePropertyKeys(generator.generateSelectors());
+    // delete selected keys that are not present as available keys
+    List<String> selected = getValidSelectedPropertyKeys(strategy);
+    strategy.setSelectedPropertyKeys(selected);
+  }
+
   private PropertySelectorGenerator getGenerator(List<SpDataStream> inputStreams,
                                                  CustomOutputStrategy strategy) {
-   if (inputStreams.size() == 1 || (inputStreams.size() > 1 && !strategy.isOutputRight())) {
-     return new PropertySelectorGenerator(
-             inputStreams.get(0).getEventSchema(),
-             false
-     );
-   } else {
-     return new PropertySelectorGenerator(
-             inputStreams.get(0).getEventSchema(),
-             inputStreams.get(1).getEventSchema(),
-             false
-     );
-   }
+    if (inputStreams.size() == 1 || (inputStreams.size() > 1 && !strategy.isOutputRight())) {
+      return new PropertySelectorGenerator(
+              inputStreams.get(0).getEventSchema(),
+              false
+      );
+    } else {
+      return new PropertySelectorGenerator(
+              inputStreams.get(0).getEventSchema(),
+              inputStreams.get(1).getEventSchema(),
+              false
+      );
+    }
   }
 
   private List<String> getValidSelectedPropertyKeys(CustomOutputStrategy strategy) {
