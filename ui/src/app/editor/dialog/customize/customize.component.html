@@ -46,19 +46,6 @@
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex="{{_showDocumentation ? 50: 100}}">
                     <div fxLayout="column" *ngIf="!templateMode">
-                        <div fxLayout="row" *ngIf="restrictedEditMode">
-                            <div fxLayout="column">
-                                <div fxLayout="column" class="customize-item-main-help"
-                                     style="border: 2px solid #ffc400">
-                                    <div class="customize-item-title-help" style="background: #ffc400;" fxFlex="100"
-                                         fxLayout="row">
-                                        You can only modify things that don't affect your pipeline structure. To fully
-                                        modify this element, make sure that it doesn't connect to any successors (remove
-                                        outgoing connectors).
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div fxFlex="100" fxLayout="column" class="customize-section p-15">
                             <form [formGroup]="parentForm" fxFlex="100">
                                 <app-static-property *ngFor="let config of cachedPipelineElement.staticProperties"
@@ -78,8 +65,7 @@
                                             *ngFor="let outputStrategy of cachedPipelineElement.outputStrategies"
                                             [parentForm]="parentForm"
                                             [outputStrategy]="outputStrategy"
-                                            [selectedElement]="cachedPipelineElement"
-                                            [restrictedEditMode]="restrictedEditMode">
+                                            [selectedElement]="cachedPipelineElement">
                                     </output-strategy>
                                 </div>
                             </form>

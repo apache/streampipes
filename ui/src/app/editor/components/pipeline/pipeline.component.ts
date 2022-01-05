@@ -38,9 +38,7 @@ import { CustomizeComponent } from '../../dialog/customize/customize.component';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { EditorService } from '../../services/editor.service';
-import { MatchingResultMessage } from '../../../core-model/gen/streampipes-model-client';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
@@ -342,7 +340,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
               if (this.jsplumbService.isFullyConnected(pe, this.preview)) {
                 const payload = pe.payload as InvocablePipelineElementUnion;
                 if ((payload.staticProperties && payload.staticProperties.length > 0) || this.isCustomOutput(pe)) {
-                  this.showCustomizeDialog({a: false, b: pe});
+                  this.showCustomizeDialog(pe);
                 } else {
                   (pe.payload as InvocablePipelineElementUnion).configured = true;
                   pe.settings.completed = true;
@@ -453,27 +451,26 @@ export class PipelineComponent implements OnInit, OnDestroy {
     });
   }
 
-  showCustomizeDialog(pipelineElementInfo: Tuple2<boolean, PipelineElementConfig>) {
+  showCustomizeDialog(pipelineElementConfig: PipelineElementConfig) {
     const dialogRef = this.dialogService.open(CustomizeComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
-      title: 'Customize ' + pipelineElementInfo.b.payload.name,
+      title: 'Customize ' + pipelineElementConfig.payload.name,
       width: '50vw',
       data: {
-        'pipelineElement': pipelineElementInfo.b,
-        'restrictedEditMode': pipelineElementInfo.a
+        'pipelineElement': pipelineElementConfig,
       }
     });
 
     dialogRef.afterClosed().subscribe(c => {
       if (c) {
-        pipelineElementInfo.b.settings.openCustomize = false;
-        (pipelineElementInfo.b.payload as InvocablePipelineElementUnion).configured = true;
-        if (!(pipelineElementInfo.b.payload instanceof DataSinkInvocation)) {
-          this.JsplumbBridge.activateEndpoint('out-' + pipelineElementInfo.b.payload.dom, pipelineElementInfo.b.settings.completed);
+        pipelineElementConfig.settings.openCustomize = false;
+        (pipelineElementConfig.payload as InvocablePipelineElementUnion).configured = true;
+        if (!(pipelineElementConfig.payload instanceof DataSinkInvocation)) {
+          this.JsplumbBridge.activateEndpoint('out-' + pipelineElementConfig.payload.dom, pipelineElementConfig.settings.completed);
         }
-        this.JsplumbBridge.getSourceEndpoint(pipelineElementInfo.b.payload.dom).toggleType('token');
+        this.JsplumbBridge.getSourceEndpoint(pipelineElementConfig.payload.dom).toggleType('token');
         this.triggerPipelineCacheUpdate();
-        this.announceConfiguredElement(pipelineElementInfo.b);
+        this.announceConfiguredElement(pipelineElementConfig);
         if (this.previewModeActive) {
           this.deletePipelineElementPreview(true);
         }

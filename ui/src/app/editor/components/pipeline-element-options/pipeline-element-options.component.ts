@@ -73,7 +73,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   delete: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
 
   @Output()
-  customize: EventEmitter<Tuple2<Boolean, PipelineElementConfig>> = new EventEmitter<Tuple2<Boolean, PipelineElementConfig>>();
+  customize: EventEmitter<PipelineElementConfig> = new EventEmitter<PipelineElementConfig>();
 
   pipelineElementConfiguredObservable: Subscription;
 
@@ -116,9 +116,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   }
 
   customizeElement(pipelineElement: PipelineElementConfig) {
-    const restrictedEditMode = ! (this.isRootElement());
-    const customizeInfo = {a: restrictedEditMode, b: pipelineElement} as Tuple2<Boolean, PipelineElementConfig>;
-    this.customize.emit(customizeInfo);
+    this.customize.emit(pipelineElement);
   }
 
   openHelpDialog() {
