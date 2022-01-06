@@ -67,19 +67,6 @@ public class DataLake implements EventSink<DataLakeParameters> {
     String user = configStore.getString(ConfigKeys.DATA_LAKE_USERNAME);
     String password = configStore.getString(ConfigKeys.DATA_LAKE_PASSWORD);
 
-    this.influxDbClient = new DataLakeInfluxDbClient(
-            influxHost,
-            influxPort,
-            databaseName,
-            parameters.getMeasurementName(),
-            user,
-            password,
-            parameters.getTimestampField(),
-            parameters.getBatchSize(),
-            parameters.getFlushDuration(),
-            LOG
-    );
-
     EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
     // Remove the timestamp field from the event schema
     List<EventProperty> eventPropertiesWithoutTimestamp = schema.getEventProperties()
@@ -91,11 +78,8 @@ public class DataLake implements EventSink<DataLakeParameters> {
     // deep copy of event schema. Event property runtime name is changed to lower case for the schema registration
     this.eventSchema = new EventSchema(schema);
 
-
-
-    schema.getEventProperties().stream().forEach(eventProperty -> {
-      eventProperty.setRuntimeName(prepareString(eventProperty.getRuntimeName()));
-    });
+    schema.getEventProperties().forEach(eventProperty ->
+            eventProperty.setRuntimeName(DataLakeUtils.sanitizePropertyRuntimeName(eventProperty.getRuntimeName())));
     registerAtDataLake(parameters.getMeasurementName(), schema, runtimeContext.getStreamPipesClient());
 
     imageProperties = schema.getEventProperties().stream()
@@ -106,13 +90,24 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
     imageDirectory = configStore.getString(ConfigKeys.IMAGE_STORAGE_LOCATION) + parameters.getMeasurementName() + "/";
 
+    InfluxDbConnectionSettings settings = InfluxDbConnectionSettings.from(
+            influxHost, influxPort, databaseName, parameters.getMeasurementName(), user, password);
+
+    this.influxDbClient = new DataLakeInfluxDbClient(
+            settings,
+            parameters.getTimestampField(),
+            parameters.getBatchSize(),
+            parameters.getFlushDuration(),
+            this.eventSchema,
+            LOG
+    );
   }
 
   @Override
   public void onEvent(Event event) {
     try {
 
-      this.imageProperties.stream().forEach(eventProperty -> {
+      this.imageProperties.forEach(eventProperty -> {
         String eventTimestamp = Long.toString(event.getFieldBySelector(this.timestampField).getAsPrimitive().getAsLong());
         String fileRoute = this.imageDirectory + eventProperty.getRuntimeName() + "/" + eventTimestamp + ".png";
         String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
@@ -141,12 +136,9 @@ public class DataLake implements EventSink<DataLakeParameters> {
       file.getParentFile().mkdirs();
       OutputStream stream = new FileOutputStream(file, false);
       stream.write(data);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
-
   }
 
   /**
@@ -163,7 +155,5 @@ public class DataLake implements EventSink<DataLakeParameters> {
         .sendPost("api/v3/datalake/measure/" + measure, eventSchema);
   }
 
-  public static String prepareString(String s) {
-    return s.toLowerCase().replaceAll(" ", "_");
-  }
+
 }
