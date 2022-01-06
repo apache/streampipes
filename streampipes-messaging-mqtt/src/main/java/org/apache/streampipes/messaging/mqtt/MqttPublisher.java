@@ -63,7 +63,7 @@ public class MqttPublisher extends AbstractMqttConnector implements EventProduce
   }
 
   @Override
-  public Boolean isConnected() {
+  public boolean isConnected() {
     return connected;
   }
 }

@@ -24,7 +24,7 @@ public class AbstractMqttConnector {
 
   protected MQTT mqtt;
   protected BlockingConnection connection;
-  protected Boolean connected = false;
+  protected boolean connected = false;
 
   protected void createBrokerConnection(MqttTransportProtocol protocolSettings) throws Exception {
     this.mqtt = new MQTT();
