@@ -22,7 +22,6 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Principal;
@@ -65,8 +64,7 @@ public class HttpRequestBuilder {
                       .execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
-      e.printStackTrace();
-      LOG.error(e.getMessage());
+      LOG.error("Could not perform invocation request", e);
       return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
   }
@@ -76,7 +74,7 @@ public class HttpRequestBuilder {
       Response httpResp = Request.Delete(endpointUrl).connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
-      LOG.error("Could not stop pipeline " + endpointUrl, e.getMessage());
+      LOG.error("Could not stop pipeline {}", endpointUrl, e);
       return new PipelineElementStatus(endpointUrl, payload.getName(), false, e.getMessage());
     }
   }
