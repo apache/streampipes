@@ -55,7 +55,7 @@ public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.logical")
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withAssets(Assets.DOCUMENTATION)
                 .withLocales(Locales.EN)
                 .category(DataProcessorType.ENRICH)
                 .requiredStream(

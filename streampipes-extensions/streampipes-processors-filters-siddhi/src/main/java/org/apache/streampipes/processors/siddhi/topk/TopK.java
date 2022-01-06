@@ -62,7 +62,7 @@ public class TopK extends StreamPipesSiddhiProcessor {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.topk")
             .withLocales(Locales.EN)
             .category(DataProcessorType.TRANSFORM)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
                             (VALUE_KEY), PropertyScope.NONE)
