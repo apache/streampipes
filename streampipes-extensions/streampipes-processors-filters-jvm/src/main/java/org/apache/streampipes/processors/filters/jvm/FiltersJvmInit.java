@@ -35,6 +35,7 @@ import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitPr
 import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterProcessor;
+import org.apache.streampipes.processors.filters.jvm.processor.throughputmon.ThroughputMonitorProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.projection.ProjectionProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.schema.MergeBySchemaProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterProcessor;
@@ -57,6 +58,7 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
                     new TextFilterProcessor(),
                     new NumericalFilterProcessor(),
                     new ThresholdDetectionProcessor(),
+                    new ThroughputMonitorProcessor(),
                     new ProjectionProcessor(),
                     new MergeByEnrichProcessor(),
                     new MergeByTimeProcessor(),
