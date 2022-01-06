@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../core-model/gen/streampipes-model';
 import { DataViewDataExplorerService } from '../../../../platform-services/apis/data-view-data-explorer.service';
 import { MatSelectChange } from '@angular/material/select';
@@ -25,7 +25,7 @@ import { DatalakeRestService } from '../../../../platform-services/apis/datalake
 import { zip } from 'rxjs';
 import { DataExplorerDataConfig, SourceConfig } from '../../../models/dataview-dashboard.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import {FieldSelectionPanelComponent} from "./field-selection-panel/field-selection-panel.component";
+import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 
 @Component({
   selector: 'sp-data-explorer-widget-data-settings',
@@ -44,7 +44,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> = new EventEmitter<DataLakeMeasure>();
   @Output() configureVisualizationEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-  @ViewChild("fieldSelectionPanel")
+  @ViewChild('fieldSelectionPanel')
   fieldSelectionPanel: FieldSelectionPanelComponent;
 
   availablePipelines: DataLakeMeasure[];
@@ -84,7 +84,9 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   updateMeasure(sourceConfig: SourceConfig, event: MatSelectChange) {
     sourceConfig.measure = this.findMeasure(event.value);
     sourceConfig.queryConfig.fields = [];
-    this.fieldSelectionPanel.applyDefaultFields();
+    if (this.fieldSelectionPanel) {
+      this.fieldSelectionPanel.applyDefaultFields();
+    }
 
   }
 
