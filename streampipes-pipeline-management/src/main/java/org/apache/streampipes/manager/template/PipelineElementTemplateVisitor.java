@@ -166,6 +166,11 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     }
   }
 
+  @Override
+  public void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty) {
+    // TODO support templates for tree input
+  }
+
   private Object getValue(StaticProperty sp) {
     return ((Map<String, Object>) configs.get(sp.getInternalName())).get("value");
   }
