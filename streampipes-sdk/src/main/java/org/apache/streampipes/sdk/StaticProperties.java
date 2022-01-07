@@ -110,6 +110,18 @@ public class StaticProperties {
     return rsp;
   }
 
+  public static RuntimeResolvableTreeInputStaticProperty runtimeResolvableTreeInput(Label label,
+                                                                                    List<String> dependsOn) {
+    RuntimeResolvableTreeInputStaticProperty treeInput = new RuntimeResolvableTreeInputStaticProperty(
+            label.getInternalId(),
+            label.getLabel(),
+            label.getDescription());
+
+    treeInput.setDependsOn(dependsOn);
+
+    return treeInput;
+  }
+
   public static StaticProperty integerFreeTextProperty(Label label,
                                                        PropertyValueSpecification propertyValueSpecification) {
     FreeTextStaticProperty fsp = integerFreeTextProperty(label);

@@ -18,32 +18,29 @@
 package org.apache.streampipes.model.runtime;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
-import org.apache.streampipes.model.staticproperty.Option;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 
 @TsModel
 public class RuntimeOptionsResponse extends RuntimeOptionsRequest {
 
-  private List<Option> options;
+  private StaticProperty staticProperty;
 
   public RuntimeOptionsResponse() {
     super();
-    this.options = new ArrayList<>();
   }
 
-  public RuntimeOptionsResponse(RuntimeOptionsRequest request, List<Option> options) {
+  public RuntimeOptionsResponse(RuntimeOptionsRequest request,
+                                StaticProperty staticProperty) {
     super();
     this.requestId = request.getRequestId();
-    this.options = options;
+    this.staticProperty = staticProperty;
   }
 
-  public List<Option> getOptions() {
-    return options;
+  public StaticProperty getStaticProperty() {
+    return staticProperty;
   }
 
-  public void setOptions(List<Option> options) {
-    this.options = options;
+  public void setStaticProperty(StaticProperty staticProperty) {
+    this.staticProperty = staticProperty;
   }
 }

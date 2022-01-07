@@ -21,7 +21,11 @@ import {
   RuntimeOptionsRequest,
   RuntimeOptionsResponse,
   RuntimeResolvableAnyStaticProperty,
-  RuntimeResolvableOneOfStaticProperty
+  RuntimeResolvableOneOfStaticProperty,
+  SelectionStaticProperty,
+  SelectionStaticPropertyUnion,
+  StaticProperty,
+  StaticPropertyUnion
 } from '../../../core-model/gen/streampipes-model';
 import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
@@ -75,7 +79,10 @@ export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyS
         this.runtimeResolvableService.fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest, this.adapterId) :
         this.runtimeResolvableService.fetchRemoteOptionsForPipelineElement(resolvableOptionsParameterRequest);
     observable.subscribe(msg => {
-      this.staticProperty.options = msg.options;
+      const property = StaticProperty.fromDataUnion(msg.staticProperty);
+      if (property instanceof SelectionStaticProperty) {
+      this.staticProperty.options = property.options;
+      }
       this.afterOptionsLoaded();
       this.loading = false;
       this.showOptions = true;

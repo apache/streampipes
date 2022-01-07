@@ -20,17 +20,15 @@ package org.apache.streampipes.connect.container.worker.rest;
 
 import org.apache.streampipes.connect.container.worker.management.RuntimeResovable;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.api.RuntimeResolvableRequestHandler;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/api/v1/worker/resolvable")
 public class RuntimeResolvableResource extends AbstractSharedRestInterface {
@@ -46,14 +44,9 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
         ResolvesContainerProvidedOptions adapterClass =
                 RuntimeResovable.getRuntimeResolvableAdapter(elementId);
 
-        List<Option> availableOptions =
-                adapterClass.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                        StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
-                                runtimeOptionsRequest.getInputStreams(),
-                                runtimeOptionsRequest.getAppId()));
+        RuntimeOptionsResponse response = new RuntimeResolvableRequestHandler().handleRuntimeResponse(adapterClass, runtimeOptionsRequest);
 
-        return ok(new RuntimeOptionsResponse(runtimeOptionsRequest,
-                availableOptions));
+        return ok(response);
     }
 
 }
