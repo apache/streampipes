@@ -62,6 +62,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makeProperties(protocol));
+    this.connected = true;
   }
 
   // TODO backwards compatibility, remove later
@@ -72,6 +73,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makePropertiesSaslPlain(protocol, username, password));
+    this.connected = true;
   }
 
   public void publish(String message) {
