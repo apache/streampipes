@@ -112,4 +112,9 @@ public class SecretVisitor implements StaticPropertyVisitor {
   public void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty) {
 
   }
+
+  @Override
+  public void visit(SlideToggleStaticProperty slideToggleStaticProperty) {
+    // Do nothing
+  }
 }

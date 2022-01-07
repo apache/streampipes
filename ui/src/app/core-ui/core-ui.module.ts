@@ -81,6 +81,8 @@ import { AddToCollectionComponent } from './static-properties/static-collection/
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
 import { SplitSectionComponent } from './split-section/split-section.component';
 import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
+import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [
@@ -100,6 +102,7 @@ import { ObjectPermissionDialogComponent } from './object-permission-dialog/obje
     NgxChartsModule,
     PlotlyViaWindowModule,
     MatSliderModule,
+    MatSlideToggleModule,
     MatChipsModule,
     PortalModule,
     OverlayModule,
@@ -136,6 +139,7 @@ import { ObjectPermissionDialogComponent } from './object-permission-dialog/obje
     StaticOneOfInputComponent,
     StaticRuntimeResolvableAnyInputComponent,
     StaticRuntimeResolvableOneOfInputComponent,
+    StaticSlideToggleComponent,
     StatusWidgetComponent,
     LabelListItemComponent,
     ErrorHintComponent,
@@ -178,6 +182,7 @@ import { ObjectPermissionDialogComponent } from './object-permission-dialog/obje
     StaticOneOfInputComponent,
     StaticRuntimeResolvableAnyInputComponent,
     StaticRuntimeResolvableOneOfInputComponent,
+    StaticSlideToggleComponent,
     ImageViewerComponent,
     StatusWidgetComponent,
     BarchartWidgetComponent,

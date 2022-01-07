@@ -19,6 +19,7 @@
 package org.apache.streampipes.manager.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 
 public class TopicGenerator {
 
@@ -27,6 +28,6 @@ public class TopicGenerator {
   }
 
   public static String generateInternalPipelineElementTopic(String appendix) {
-    return "org-apache-streampipes-internal-" + appendix;
+    return GlobalStreamPipesConstants.INTERNAL_TOPIC_PREFIX + appendix;
   }
 }

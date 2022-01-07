@@ -19,10 +19,7 @@
 package org.apache.streampipes.sdk.extractor;
 
 import com.github.drapostolos.typeparser.TypeParser;
-import org.apache.commons.codec.Charsets;
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
@@ -98,6 +95,10 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   public String secretValue(String internalName) {
     return (getStaticPropertyByName(internalName, SecretStaticProperty.class)
             .getValue());
+  }
+
+  public boolean slideToggleValue(String internalName) {
+    return (getStaticPropertyByName(internalName, SlideToggleStaticProperty.class)).isSelected();
   }
 
   public String codeblockValue(String internalName) {

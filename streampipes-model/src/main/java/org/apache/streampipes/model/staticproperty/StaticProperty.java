@@ -40,6 +40,7 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
         @JsonSubTypes.Type(StaticPropertyAlternative.class),
         @JsonSubTypes.Type(StaticPropertyAlternatives.class),
         @JsonSubTypes.Type(StaticPropertyGroup.class),
+        @JsonSubTypes.Type(SlideToggleStaticProperty.class)
 })
 @TsModel
 public abstract class StaticProperty extends UnnamedStreamPipesEntity {

@@ -159,6 +159,13 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   }
 
+  @Override
+  public void visit(SlideToggleStaticProperty slideToggleStaticProperty) {
+    if (hasKey(slideToggleStaticProperty)) {
+      slideToggleStaticProperty.setSelected(getAsBoolean(slideToggleStaticProperty));
+    }
+  }
+
   private Object getValue(StaticProperty sp) {
     return ((Map<String, Object>) configs.get(sp.getInternalName())).get("value");
   }
@@ -169,6 +176,10 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
 
   private String getAsString(StaticProperty sp) {
     return configs.get(sp.getInternalName()).toString();
+  }
+
+  private boolean getAsBoolean(StaticProperty sp) {
+    return Boolean.parseBoolean(configs.get(sp.getInternalName()).toString());
   }
 
   private Map<String, Object> getAsMap(StaticProperty sp) {

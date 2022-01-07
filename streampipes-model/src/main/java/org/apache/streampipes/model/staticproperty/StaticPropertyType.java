@@ -35,6 +35,7 @@ public enum StaticPropertyType {
     StaticPropertyAlternatives,
     StaticPropertyAlternative,
     SecretStaticProperty,
+    SlideToggleStaticProperty,
     CodeInputStaticProperty;
 
 }

@@ -35,7 +35,7 @@ import {
   OneOfStaticProperty,
   RuntimeResolvableAnyStaticProperty,
   RuntimeResolvableOneOfStaticProperty,
-  SecretStaticProperty,
+  SecretStaticProperty, SlideToggleStaticProperty,
   StaticProperty,
   StaticPropertyAlternatives,
   StaticPropertyGroup
@@ -157,6 +157,10 @@ export class StaticPropertyComponent implements OnInit {
 
   isCollectionStaticProperty(val) {
     return val instanceof CollectionStaticProperty;
+  }
+
+  isSlideToggleStaticProperty(val) {
+    return val instanceof SlideToggleStaticProperty;
   }
 
   valueChange(hasInput) {

@@ -144,6 +144,16 @@
                                   [staticProperty]="staticProperty" class="test fullWidth"
                                   (updateEmitter)="emitUpdate($event)">
             </sp-static-collection>
+
+            <sp-static-slide-toggle *ngIf="isSlideToggleStaticProperty(staticProperty)"
+                                    [adapterId]="adapterId"
+                                    [parentForm]="parentForm"
+                                    [fieldName]="fieldName"
+                                    [displayRecommended]="displayRecommended"
+                                    [staticProperty]="staticProperty" class="test fullWidth"
+                                    (updateEmitter)="emitUpdate($event)">
+
+            </sp-static-slide-toggle>
         </div>
     </div>
     <mat-divider></mat-divider>
