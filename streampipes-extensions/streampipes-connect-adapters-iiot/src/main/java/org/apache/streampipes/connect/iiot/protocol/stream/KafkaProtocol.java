@@ -26,6 +26,7 @@ import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
@@ -93,6 +94,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
                         KafkaConnectUtils.getAlternativesOne(), KafkaConnectUtils.getAlternativesTwo())
                 .requiredTextParameter(KafkaConnectUtils.getHostLabel())
                 .requiredIntegerParameter(KafkaConnectUtils.getPortLabel())
+                .requiredSlideToggle(KafkaConnectUtils.getHideInternalTopicsLabel(), true)
                 .requiredSingleValueSelectionFromContainer(KafkaConnectUtils.getTopicLabel(), Arrays.asList(
                         KafkaConnectUtils.getHostKey(),
                         KafkaConnectUtils.getPortKey()))
@@ -240,6 +242,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         String kafkaHost = extractor.singleValueParameter(KafkaConnectUtils.getHostKey(), String.class);
         Integer kafkaPort = extractor.singleValueParameter(KafkaConnectUtils.getPortKey(), Integer.class);
         String authenticationMode = extractor.selectedAlternativeInternalId(KafkaConnectUtils.getAccessModeKey());
+        boolean hideInternalTopics = extractor.slideToggleValue(KafkaConnectUtils.getHideInternalTopicsKey());
         boolean useAuthentication = authenticationMode.equals(KafkaConnectUtils.getSaslAccessKey());
 
         String kafkaAddress = kafkaHost + ":" + kafkaPort;
@@ -261,6 +264,13 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
         Set<String> topics = consumer.listTopics().keySet();
         consumer.close();
+
+        if (hideInternalTopics) {
+            topics = topics
+                    .stream()
+                    .filter(t -> !t.startsWith(GlobalStreamPipesConstants.INTERNAL_TOPIC_PREFIX))
+                    .collect(Collectors.toSet());
+        }
         return topics.stream().map(Option::new).collect(Collectors.toList());
     }
 

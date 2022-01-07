@@ -27,3 +27,6 @@ username.description=
 
 password.title=Password
 password.description=
+
+hide-internal-topics.title=Hide internal topics
+hide-internal-topics.description=Do not show topics that are only used internally
