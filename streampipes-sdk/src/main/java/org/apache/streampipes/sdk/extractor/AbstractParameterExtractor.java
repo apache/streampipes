@@ -240,7 +240,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .collect(Collectors.toList());
   }
 
-  private <S extends StaticProperty> S getStaticPropertyByName(String internalName, Class<S>
+  public <S extends StaticProperty> S getStaticPropertyByName(String internalName, Class<S>
           spType) {
     return spType.cast(getStaticPropertyByName(internalName));
   }

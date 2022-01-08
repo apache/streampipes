@@ -22,8 +22,7 @@ import {
   RuntimeOptionsResponse,
   RuntimeResolvableAnyStaticProperty,
   RuntimeResolvableOneOfStaticProperty,
-  SelectionStaticProperty,
-  SelectionStaticPropertyUnion,
+  RuntimeResolvableTreeInputStaticProperty,
   StaticProperty,
   StaticPropertyUnion
 } from '../../../core-model/gen/streampipes-model';
@@ -33,9 +32,9 @@ import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Directive()
-export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty>
-    extends AbstractStaticPropertyRenderer<T>
-    implements OnChanges {
+export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty | RuntimeResolvableTreeInputStaticProperty>
+  extends AbstractStaticPropertyRenderer<T>
+  implements OnChanges {
 
   @Input()
   completedStaticProperty: ConfigurationInfo;
@@ -49,12 +48,6 @@ export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyS
   }
 
   onInit() {
-    if (this.staticProperty.options.length === 0 && (!this.staticProperty.dependsOn || this.staticProperty.dependsOn.length == 0)) {
-      this.loadOptionsFromRestApi();
-    } else if (this.staticProperty.options.length > 0) {
-      this.showOptions = true;
-    }
-
     if (this.staticProperty.dependsOn && this.staticProperty.dependsOn.length > 0) {
       this.staticProperty.dependsOn.forEach(dp => {
         this.dependentStaticProperties.set(dp, false);
@@ -76,23 +69,31 @@ export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyS
     this.showOptions = false;
     this.loading = true;
     const observable: Observable<RuntimeOptionsResponse> = this.adapterId ?
-        this.runtimeResolvableService.fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest, this.adapterId) :
-        this.runtimeResolvableService.fetchRemoteOptionsForPipelineElement(resolvableOptionsParameterRequest);
+      this.runtimeResolvableService.fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest, this.adapterId) :
+      this.runtimeResolvableService.fetchRemoteOptionsForPipelineElement(resolvableOptionsParameterRequest);
     observable.subscribe(msg => {
       const property = StaticProperty.fromDataUnion(msg.staticProperty);
-      if (property instanceof SelectionStaticProperty) {
-      this.staticProperty.options = property.options;
+      if (this.isRuntimeResolvableProperty(property)) {
+        this.afterOptionsLoaded(this.parse(property));
       }
-      this.afterOptionsLoaded();
       this.loading = false;
       this.showOptions = true;
     });
   }
 
+  isRuntimeResolvableProperty(property: StaticPropertyUnion) {
+    return property instanceof RuntimeResolvableAnyStaticProperty ||
+      property instanceof RuntimeResolvableOneOfStaticProperty ||
+      property instanceof RuntimeResolvableTreeInputStaticProperty;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['completedStaticProperty']) {
       if (this.completedStaticProperty !== undefined) {
-        this.dependentStaticProperties.set(this.completedStaticProperty.staticPropertyInternalName, this.completedStaticProperty.configured);
+        this.dependentStaticProperties.set(
+          this.completedStaticProperty.staticPropertyInternalName,
+          this.completedStaticProperty.configured
+        );
         if (Array.from(this.dependentStaticProperties.values()).every(v => v === true)) {
           this.loadOptionsFromRestApi();
         }
@@ -100,6 +101,8 @@ export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyS
     }
   }
 
-  abstract afterOptionsLoaded();
+  abstract parse(staticProperty: StaticPropertyUnion): T;
+
+  abstract afterOptionsLoaded(staticProperty: T);
 
 }

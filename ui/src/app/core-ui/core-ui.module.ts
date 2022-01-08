@@ -83,6 +83,7 @@ import { SplitSectionComponent } from './split-section/split-section.component';
 import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
 
 @NgModule({
   imports: [
@@ -139,6 +140,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     StaticOneOfInputComponent,
     StaticRuntimeResolvableAnyInputComponent,
     StaticRuntimeResolvableOneOfInputComponent,
+    StaticRuntimeResolvableTreeInputComponent,
     StaticSlideToggleComponent,
     StatusWidgetComponent,
     LabelListItemComponent,

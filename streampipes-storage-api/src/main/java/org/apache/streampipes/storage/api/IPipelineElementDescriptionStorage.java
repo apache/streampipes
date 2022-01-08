@@ -73,6 +73,10 @@ public interface IPipelineElementDescriptionStorage {
 	
 	boolean exists(DataProcessorDescription processorDescription);
 
+	boolean existsDataProcessorByAppId(String appId);
+
+	boolean existsDataSinkByAppId(String appId);
+
 	boolean existsDataProcessor(String elementId);
 
 	boolean existsDataStream(String elementId);

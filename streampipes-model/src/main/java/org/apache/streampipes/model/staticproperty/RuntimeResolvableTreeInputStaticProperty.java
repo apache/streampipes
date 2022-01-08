@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.model.staticproperty;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,12 +29,16 @@ public class RuntimeResolvableTreeInputStaticProperty extends StaticProperty {
 
   public RuntimeResolvableTreeInputStaticProperty() {
     super(StaticPropertyType.RuntimeResolvableTreeInputStaticProperty);
+    this.dependsOn = new ArrayList<>();
+    this.nodes = new ArrayList<>();
   }
 
   public RuntimeResolvableTreeInputStaticProperty(String internalName,
                                                   String label,
                                                   String description) {
     super(StaticPropertyType.RuntimeResolvableTreeInputStaticProperty, internalName, label, description);
+    this.dependsOn = new ArrayList<>();
+    this.nodes = new ArrayList<>();
   }
 
   public RuntimeResolvableTreeInputStaticProperty(RuntimeResolvableTreeInputStaticProperty other) {
