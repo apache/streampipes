@@ -36,7 +36,9 @@
         <span>(waiting for input)</span>
     </div>
     <div fxLayout="column" *ngIf="loading">
-        <mat-spinner [mode]="'indeterminate'" [diameter]="20"></mat-spinner>
+        <mat-spinner color="accent"
+                     [mode]="'indeterminate'"
+                     [diameter]="20"></mat-spinner>
     </div>
 
     <div *ngIf="staticProperty.horizontalRendering">

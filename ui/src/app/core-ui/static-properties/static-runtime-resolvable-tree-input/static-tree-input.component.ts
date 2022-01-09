@@ -19,26 +19,39 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
 import {
-  RuntimeResolvableAnyStaticProperty,
-  RuntimeResolvableTreeInputStaticProperty, StaticPropertyUnion
+  RuntimeResolvableTreeInputStaticProperty,
+  StaticPropertyUnion,
+  TreeInputNode
 } from '../../../core-model/gen/streampipes-model';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 @Component({
   selector: 'sp-runtime-resolvable-tree-input',
   templateUrl: './static-tree-input.component.html',
   styleUrls: ['./static-tree-input.component.scss']
 })
-export class StaticRuntimeResolvableTreeInputComponent extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty> implements OnInit {
+export class StaticRuntimeResolvableTreeInputComponent
+  extends BaseRuntimeResolvableInput<RuntimeResolvableTreeInputStaticProperty> implements OnInit {
+
+  treeControl = new NestedTreeControl<TreeInputNode>(node => node.children);
+  dataSource = new MatTreeNestedDataSource<TreeInputNode>();
 
   constructor(runtimeResolvableService: RuntimeResolvableService) {
     super(runtimeResolvableService);
   }
 
+  hasChild = (_: number, node: TreeInputNode) => !!node.children && node.children.length > 0;
+
   ngOnInit(): void {
+    this.treeControl = new NestedTreeControl<TreeInputNode>(node => node.children);
+    this.dataSource = new MatTreeNestedDataSource<TreeInputNode>();
+
     if (this.staticProperty.nodes.length === 0 && (!this.staticProperty.dependsOn || this.staticProperty.dependsOn.length === 0)) {
       this.loadOptionsFromRestApi();
     } else if (this.staticProperty.nodes.length > 0) {
+      this.dataSource.data = this.staticProperty.nodes;
       this.showOptions = true;
     }
     super.onInit();
@@ -49,8 +62,35 @@ export class StaticRuntimeResolvableTreeInputComponent extends BaseRuntimeResolv
   }
 
   afterOptionsLoaded(staticProperty: RuntimeResolvableTreeInputStaticProperty) {
-    this.staticProperty = staticProperty;
-    console.log(staticProperty);
+    this.staticProperty.nodes = staticProperty.nodes;
+    this.dataSource.data = this.staticProperty.nodes;
+  }
+
+  toggleNodeSelection(node: TreeInputNode) {
+    node.selected = !node.selected;
+  }
+
+  toggleAllNodeSelection(node: any) {
+    const descendants = this.treeControl.getDescendants(node);
+    const newState = !node.selected;
+    node.selected = newState;
+    descendants.forEach(d => d.selected = newState);
+  }
+
+  descendantsAllSelected(node: TreeInputNode) {
+    const descendants = this.treeControl.getDescendants(node);
+    const allSelected = descendants.length > 0 &&
+      descendants.every(child => {
+        return child.selected;
+      });
+    node.selected = allSelected;
+    return allSelected;
+  }
+
+  descendantsPartiallySelected(node: TreeInputNode) {
+    const descendants = this.treeControl.getDescendants(node);
+    const result = descendants.some(child => child.selected);
+    return result && !this.descendantsAllSelected(node);
   }
 
 }

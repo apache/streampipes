@@ -84,6 +84,7 @@ import { ObjectPermissionDialogComponent } from './object-permission-dialog/obje
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
+import { MatTreeModule } from "@angular/material/tree";
 
 @NgModule({
   imports: [
@@ -105,9 +106,11 @@ import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/s
     MatSliderModule,
     MatSlideToggleModule,
     MatChipsModule,
+    MatTreeModule,
     PortalModule,
     OverlayModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    MatTreeModule
   ],
   declarations: [
     BarchartWidgetComponent,
