@@ -19,42 +19,29 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua;
 
 
-import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.retrieveDataTypesFromServer;
-import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
-import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
-
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
-import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
+import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfig;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaNodeVariants;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaTypes;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
-import org.eclipse.milo.opcua.sdk.client.api.identity.UsernameProvider;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
-import org.eclipse.milo.opcua.stack.client.DiscoveryClient;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
 import org.eclipse.milo.opcua.stack.core.Identifiers;
 import org.eclipse.milo.opcua.stack.core.UaException;
-import org.eclipse.milo.opcua.stack.core.security.SecurityPolicy;
 import org.eclipse.milo.opcua.stack.core.types.builtin.*;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseDirection;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.BrowseResultMask;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.MonitoringMode;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
-import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.*;
 import org.eclipse.milo.opcua.stack.core.types.structured.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -62,24 +49,26 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.retrieveDataTypesFromServer;
+import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
+import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
+
 /***
  * Wrapper class for all OPC UA specific stuff.
  */
 public class OpcUa {
 
-    static Logger LOG = LoggerFactory.getLogger(OpcUa.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OpcUa.class);
 
-    private NodeId originNodeId;
-    private String opcServerURL;
     private OpcUaClient client;
-    private boolean unauthenticated;
-    private Integer pullIntervalMilliSeconds;
-    private String user;
-    private String password;
+    private final SpOpcUaConfig spOpcConfig;
     private List<Map<String, Integer>> unitIDs = new ArrayList<>();
-    private List<String> selectedNodeNames;
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
+
+    public OpcUa(SpOpcUaConfig config) {
+        this.spOpcConfig = config;
+    }
 
     /***
      *
@@ -89,193 +78,14 @@ public class OpcUa {
         return this.client;
     }
 
-
-    /**
-     * Constructor for security level {@code None}, OPC server given by url and subscription-based
-     *
-     * @param opcServerURL complete OPC UA server url
-     * @param namespaceIndex namespace index of the given node
-     * @param nodeId node identifier
-     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
-     */
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
-
-        this.opcServerURL = opcServerURL;
-        this.unauthenticated = true;
-        this.pullIntervalMilliSeconds = pullIntervalMilliSeconds;
-        this.selectedNodeNames = selectedNodeNames;
-
-        if (isInteger(nodeId)) {
-            int integerNodeId = Integer.parseInt(nodeId);
-            this.originNodeId = new NodeId(namespaceIndex, integerNodeId);
-        } else {
-            this.originNodeId = new NodeId(namespaceIndex, nodeId);
-        }
-    }
-
-    /**
-     * Constructor for security level {@code None} and OPC server given by hostname and port number
-     *
-     * @param opcServer OPC UA hostname
-     * @param opcServerPort OPC UA port number
-     * @param namespaceIndex namespace index of the given node
-     * @param nodeId node identifier
-     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
-     */
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
-        this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
-    }
-
-    /**
-     * Constructor for security level {@code Sign} and OPC server given by url
-     *
-     * @param opcServerURL complete OPC UA server url
-     * @param namespaceIndex namespace index of the given node
-     * @param nodeId node identifier
-     * @param username username to authenticate at the OPC UA server
-     * @param password corresponding password to given user name
-     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
-     */
-    public OpcUa(String opcServerURL, int namespaceIndex, String nodeId, String username, String password, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
-        this(opcServerURL, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
-        this.unauthenticated = false;
-        this.user = username;
-        this.password = password;
-    }
-
-    /**
-     * Constructor for OPC UA security level {@code Sign} and OPC server given by hostname and port number
-     *
-     * @param opcServer OPC UA hostname
-     * @param opcServerPort OPC UA port number
-     * @param namespaceIndex namespace index of the given node
-     * @param nodeId node identifier
-     * @param username username to authenticate at the OPC UA server
-     * @param password corresponding password to given user name
-     * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-     * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveOptions(String, StaticPropertyExtractor)}
-     */
-    public OpcUa(String opcServer, int opcServerPort, int namespaceIndex, String nodeId, String username, String password, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
-        this (opcServer, opcServerPort, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
-        this.unauthenticated = false;
-        this.user = username;
-        this.password = password;
-    }
-
-    /**
-     * Creates {@link OpcUa}  instance in accordance with the given {@link org.apache.streampipes.sdk.extractor.StaticPropertyExtractor}.
-     * @param extractor extractor for user inputs
-     * @return {@link OpcUa}  instance based on information from {@code extractor}
-     */
-    public static OpcUa from(StaticPropertyExtractor extractor) {
-
-        String selectedAlternativeConnection = extractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
-        String selectedAlternativeAuthentication = extractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
-
-        int namespaceIndex = extractor.singleValueParameter(OpcUaLabels.NAMESPACE_INDEX.name(), int.class);
-        String nodeId = extractor.singleValueParameter(OpcUaLabels.NODE_ID.name(), String.class);
-
-        boolean usePullMode = extractor.selectedAlternativeInternalId(OpcUaLabels.ADAPTER_TYPE.name()).equals(OpcUaLabels.PULL_MODE.name());
-        boolean useURL = selectedAlternativeConnection.equals(OpcUaLabels.OPC_URL.name());
-        boolean unauthenticated =  selectedAlternativeAuthentication.equals(OpcUaLabels.UNAUTHENTICATED.name());
-
-        Integer pullIntervalSeconds = null;
-        if (usePullMode) {
-            pullIntervalSeconds = extractor.singleValueParameter(OpcUaLabels.PULLING_INTERVAL.name(), Integer.class);
-        }
-
-        List<String> selectedNodeNames = extractor.selectedMultiValues(OpcUaLabels.AVAILABLE_NODES.name(), String.class);
-
-        if (useURL && unauthenticated){
-
-            String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
-            serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
-
-            return new OpcUa(serverAddress, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
-
-        } else if(!useURL && unauthenticated){
-            String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
-            serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
-            int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
-
-            return new OpcUa(serverAddress, port, namespaceIndex, nodeId, pullIntervalSeconds, selectedNodeNames);
-        } else {
-
-            String username = extractor.singleValueParameter(OpcUaLabels.USERNAME.name(), String.class);
-            String password = extractor.secretValue(OpcUaLabels.PASSWORD.name());
-
-            if (useURL) {
-                String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_URL.name(), String.class);
-                serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
-
-                return new OpcUa(serverAddress, namespaceIndex, nodeId, username, password, pullIntervalSeconds, selectedNodeNames);
-            } else {
-                String serverAddress = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_HOST.name(), String.class);
-                serverAddress = OpcUaUtil.formatServerAddress(serverAddress);
-                int port = extractor.singleValueParameter(OpcUaLabels.OPC_SERVER_PORT.name(), int.class);
-
-                return new OpcUa(serverAddress, port, namespaceIndex, nodeId, username, password, pullIntervalSeconds, selectedNodeNames);
-            }
-        }
-
-    }
-
-    /***
-     * Creates {@link OpcUa}  instance in accordance with the given {@link org.apache.streampipes.model.connect.adapter.AdapterDescription}
-     * @param adapterDescription description of current adapter
-     * @return {@link OpcUa}  instance based on information from {@code adapterDescription}
-     */
-    public static OpcUa from(AdapterDescription adapterDescription){
-
-        StaticPropertyExtractor extractor =
-                StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
-
-        return from(extractor);
-    }
-
     /***
      * Establishes appropriate connection to OPC UA endpoint depending on the {@link OpcUa} instance
      *
-     * @throws Exception
+     * @throws Exception An exception occurring during OPC connection
      */
     public void connect() throws Exception {
-
-        List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(this.opcServerURL).get();
-        String host = this.opcServerURL.split("://")[1].split(":")[0];
-
-        EndpointDescription tmpEndpoint = endpoints
-                .stream()
-                .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
-                .findFirst()
-                .orElseThrow(() -> new Exception("No endpoint with security policy none"));
-
-        tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
-        endpoints = Collections.singletonList(tmpEndpoint);
-
-        EndpointDescription endpoint = endpoints
-                .stream()
-                .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
-                .findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
-
-        OpcUaClientConfig config;
-        if (this.unauthenticated) {
-            config = OpcUaClientConfig.builder()
-                    .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
-                    .setApplicationUri("urn:eclipse:milo:examples:client")
-                    .setEndpoint(endpoint)
-                    .build();
-        } else {
-            config = OpcUaClientConfig.builder()
-                    .setIdentityProvider(new UsernameProvider(this.user, this.password))
-                    .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
-                    .setApplicationUri("urn:eclipse:milo:examples:client")
-                    .setEndpoint(endpoint)
-                    .build();
-        }
-        this.client = OpcUaClient.create(config);
+        OpcUaClientConfig clientConfig = new MiloOpcUaConfigurationProvider().makeClientConfig(spOpcConfig);
+        this.client = OpcUaClient.create(clientConfig);
         client.connect().get();
     }
 
@@ -283,38 +93,14 @@ public class OpcUa {
         client.disconnect();
     }
 
-    private EndpointDescription updateEndpointUrl(
-            EndpointDescription original, String hostname) throws URISyntaxException {
-
-        URI uri = new URI(original.getEndpointUrl()).parseServerAuthority();
-
-        String endpointUrl = String.format(
-                "%s://%s:%s%s",
-                uri.getScheme(),
-                hostname,
-                uri.getPort(),
-                uri.getPath()
-        );
-
-        return new EndpointDescription(
-                endpointUrl,
-                original.getServer(),
-                original.getServerCertificate(),
-                original.getSecurityMode(),
-                original.getSecurityPolicyUri(),
-                original.getUserIdentityTokens(),
-                original.getTransportProfileUri(),
-                original.getSecurityLevel()
-        );
-    }
-
     /***
-     * Search for related nodes relative to {@link OpcUa#originNodeId}
-     * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
-     * @return List of {@link OpcNode}s related to {@link OpcUa#originNodeId}
+     * Search for related nodes relative to {@link SpOpcUaConfig#getOriginNodeId()}
+     * @param selectNodes indicates whether only nodes of {@link SpOpcUaConfig#getSelectedNodeNames()} should be returned
+     * @return List of {@link OpcNode}s related to {@link SpOpcUaConfig#getOriginNodeId()}
      * @throws AdapterException
      */
     public List<OpcNode> browseNode(boolean selectNodes) throws AdapterException {
+        NodeId originNodeId = spOpcConfig.getOriginNodeId();
         List<OpcNode> discoveredNodes = browseNode(originNodeId, selectNodes);
 
         if (discoveredNodes.size() == 0) {
@@ -367,9 +153,9 @@ public class OpcUa {
     }
 
     /***
-     * Search for related nodes relative to {@link OpcUa#originNodeId}
-     * @param selectNodes indicates whether only nodes of {@link OpcUa#selectedNodeNames} should be returned
-     * @return List of {@link OpcNode}s related to {@link OpcUa#originNodeId}
+     * Search for related nodes relative to {@link SpOpcUaConfig#getOriginNodeId()}
+     * @param selectNodes indicates whether only nodes of {@link SpOpcUaConfig#getSelectedNodeNames()} should be returned
+     * @return List of {@link OpcNode}s related to {@link SpOpcUaConfig#getOriginNodeId()}
      * @throws AdapterException
      */
     private List<OpcNode> browseNode(NodeId browseRoot, boolean selectNodes) throws AdapterException {
@@ -463,12 +249,13 @@ public class OpcUa {
 
         if (selectNodes) {
             // filter for nodes that were selected by the user during configuration
-            result = result.stream().filter(node -> this.getSelectedNodeNames().contains(node.getLabel()))
+//            result = result.stream().filter(node -> this.getSelectedNodeNames().contains(node.getLabel()))
+//                    .collect(Collectors.toList());
+            result = result.stream().filter(node -> this.getSelectedNodeNames().contains(node.getNodeId().getIdentifier().toString()))
                     .collect(Collectors.toList());
         }
 
         return result;
-
     }
 
 
@@ -483,7 +270,6 @@ public class OpcUa {
          * create a subscription @ 1000ms
          */
         UaSubscription subscription = this.client.getSubscriptionManager().createSubscription(1000.0).get();
-
 
         List<CompletableFuture<DataValue>> values = new ArrayList<>();
 
@@ -540,33 +326,17 @@ public class OpcUa {
                 System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
             }
         }
-
     }
 
-    public static boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-        } catch(NumberFormatException | NullPointerException e) {
-            return false;
-        }
-        // only got here if we didn't return false
-        return true;
-    }
-
-
-    public List<String> getSelectedNodeNames() {
-        return selectedNodeNames;
-    }
-
-    public String getOpcServerURL() {
-        return opcServerURL;
+    private List<String> getSelectedNodeNames() {
+        return spOpcConfig.getSelectedNodeNames();
     }
 
     public boolean inPullMode() {
-        return !(this.pullIntervalMilliSeconds == null);
+        return !(spOpcConfig.getPullIntervalMilliSeconds() == null);
     }
 
     public int getPullIntervalMilliSeconds() {
-        return this.pullIntervalMilliSeconds;
+        return spOpcConfig.getPullIntervalMilliSeconds();
     }
 }

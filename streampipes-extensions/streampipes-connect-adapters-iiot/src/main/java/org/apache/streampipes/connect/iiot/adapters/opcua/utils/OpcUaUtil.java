@@ -22,11 +22,13 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcNode;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUa;
+import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.TreeInputNode;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -35,7 +37,8 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /***
  * Collection of several utility functions in context of OPC UA
@@ -68,7 +71,7 @@ public class OpcUaUtil {
         EventSchema eventSchema = new EventSchema();
         List<EventProperty> allProperties = new ArrayList<>();
 
-        OpcUa opcUa = OpcUa.from(adapterStreamDescription);
+        OpcUa opcUa = new OpcUa(SpOpcUaConfigBuilder.from(adapterStreamDescription));
 
         try {
             opcUa.connect();
@@ -108,28 +111,32 @@ public class OpcUaUtil {
 
     /***
      * OPC UA specific implementation of {@link org.apache.streampipes.container.api.ResolvesContainerProvidedOptions#resolveOptions(String, StaticPropertyExtractor)}.  }
-     * @param requestId
+     * @param internalName The internal name of the Static Property
      * @param parameterExtractor
      * @return {@code List<Option>} with available node names for the given OPC UA configuration
      */
-    public static List<Option> resolveOptions (String requestId, StaticPropertyExtractor parameterExtractor) {
+    public static RuntimeResolvableTreeInputStaticProperty resolveConfiguration (String internalName,
+                                                                                 StaticPropertyExtractor parameterExtractor) {
 
+        RuntimeResolvableTreeInputStaticProperty config = parameterExtractor
+                .getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
         // access mode and host/url have to be selected
         try {
             parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
             parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
         } catch (NullPointerException nullPointerException) {
-            return new ArrayList<>();
+            return config;
         }
 
-        OpcUa opcUa = OpcUa.from(parameterExtractor);
+        OpcUa opcUa = new OpcUa(SpOpcUaConfigBuilder.from(parameterExtractor));
 
-        List<Option> nodeOptions = new ArrayList<>();
+        List<TreeInputNode> nodeOptions = new ArrayList<>();
         try{
             opcUa.connect();
 
             for(OpcNode opcNode: opcUa.browseNode(false)) {
-                nodeOptions.add(new Option(opcNode.getLabel(), opcNode.getNodeId().getIdentifier().toString()));
+                TreeInputNode node = makeTreeInputNode(opcNode);
+                nodeOptions.add(node);
             }
 
             opcUa.disconnect();
@@ -137,7 +144,17 @@ public class OpcUaUtil {
             e.printStackTrace();
         }
 
-        return nodeOptions;
+        config.setNodes(nodeOptions);
+
+        return config;
+    }
+
+    private static TreeInputNode makeTreeInputNode(OpcNode opcNode) {
+        TreeInputNode node = new TreeInputNode();
+        node.setNodeName(opcNode.getLabel());
+        node.setInternalNodeName(opcNode.getNodeId().getIdentifier().toString());
+        node.setDataNode(true);
+        return node;
     }
 
     public static String getRuntimeNameOfNode(NodeId nodeId) {
