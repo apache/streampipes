@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.BiConsumer;
 
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
 
@@ -104,7 +103,7 @@ public class SpOpcUaClient {
 
         for (CompletableFuture<DataValue> value : values) {
             if (value.get().getValue().toString().contains("null")) {
-                System.out.println("Node has no value");
+                LOG.error("Node has no value");
             }
         }
 
@@ -132,11 +131,12 @@ public class SpOpcUaClient {
             requests.add(new MonitoredItemCreateRequest(readValue, MonitoringMode.Reporting, parameters));
         }
 
-        BiConsumer<UaMonitoredItem, Integer> onItemCreated =
-                (item, id) -> {
-                    item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
-                };
-
+        UaSubscription.ItemCreationCallback onItemCreated = new UaSubscription.ItemCreationCallback() {
+            @Override
+            public void onItemCreated(UaMonitoredItem item, int i) {
+                item.setValueConsumer(opcUaAdapter::onSubscriptionValue);
+            }
+        };
         List<UaMonitoredItem> items = subscription.createMonitoredItems(
                 TimestampsToReturn.Both,
                 requests,
@@ -146,9 +146,9 @@ public class SpOpcUaClient {
         for (UaMonitoredItem item : items) {
             NodeId tagId = item.getReadValueId().getNodeId();
             if (item.getStatusCode().isGood()) {
-                System.out.println("item created for nodeId="+ tagId);
+                LOG.info("item created for nodeId="+ tagId);
             } else {
-                System.out.println("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
+                LOG.error("failed to create item for " + item.getReadValueId().getNodeId() + item.getStatusCode());
             }
         }
     }

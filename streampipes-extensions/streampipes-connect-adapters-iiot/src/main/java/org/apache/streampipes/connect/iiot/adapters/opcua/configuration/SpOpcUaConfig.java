@@ -53,10 +53,11 @@ public class SpOpcUaConfig {
   public SpOpcUaConfig(String opcServerURL,
                        int namespaceIndex,
                        String nodeId,
-                       int pullIntervalMilliSeconds,
+                       Integer pullIntervalMilliSeconds,
                        List<String> selectedNodeNames) {
 
     this.opcServerURL = opcServerURL;
+    this.namespaceIndex = namespaceIndex;
     this.unauthenticated = true;
     this.pullIntervalMilliSeconds = pullIntervalMilliSeconds;
     this.selectedNodeNames = selectedNodeNames;
@@ -83,7 +84,7 @@ public class SpOpcUaConfig {
                        int opcServerPort,
                        int namespaceIndex,
                        String nodeId,
-                       int pullIntervalMilliSeconds,
+                       Integer pullIntervalMilliSeconds,
                        List<String> selectedNodeNames) {
     this( opcServer + ":" + opcServerPort, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
   }
@@ -104,7 +105,7 @@ public class SpOpcUaConfig {
                        String nodeId,
                        String username,
                        String password,
-                       int pullIntervalMilliSeconds,
+                       Integer pullIntervalMilliSeconds,
                        List<String> selectedNodeNames) {
     this(opcServerURL, namespaceIndex, nodeId, pullIntervalMilliSeconds, selectedNodeNames);
     this.unauthenticated = false;

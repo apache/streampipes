@@ -29,7 +29,6 @@ import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
-import org.apache.streampipes.model.staticproperty.TreeInputNode;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -77,7 +76,7 @@ public class OpcUaUtil {
         try {
             spOpcUaClient.connect();
             OpcUaNodeBrowser nodeBrowser = new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
-            List<OpcNode> selectedNodes = nodeBrowser.browseNode(true);
+            List<OpcNode> selectedNodes = nodeBrowser.findNodes();
 
             if (!selectedNodes.isEmpty()) {
                 for (OpcNode opcNode : selectedNodes) {
@@ -107,7 +106,6 @@ public class OpcUaUtil {
         guessSchema.setEventSchema(eventSchema);
 
         return guessSchema;
-
     }
 
 
@@ -131,32 +129,16 @@ public class OpcUaUtil {
         }
 
         SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(parameterExtractor));
-
-        List<TreeInputNode> nodeOptions = new ArrayList<>();
         try{
-            spOpcUaClient.connect();
+            spOpcUaClient.connect();;
             OpcUaNodeBrowser nodeBrowser = new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
-            for(OpcNode opcNode: nodeBrowser.browseNode(false)) {
-                TreeInputNode node = makeTreeInputNode(opcNode);
-                nodeOptions.add(node);
-            }
-
+            config.setNodes(nodeBrowser.buildNodeTreeFromOrigin());
             spOpcUaClient.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        config.setNodes(nodeOptions);
-
         return config;
-    }
-
-    private static TreeInputNode makeTreeInputNode(OpcNode opcNode) {
-        TreeInputNode node = new TreeInputNode();
-        node.setNodeName(opcNode.getLabel());
-        node.setInternalNodeName(opcNode.getNodeId().getIdentifier().toString());
-        node.setDataNode(true);
-        return node;
     }
 
     public static String getRuntimeNameOfNode(NodeId nodeId) {
@@ -187,9 +169,6 @@ public class OpcUaUtil {
                throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
             }
         }
-
-
-
     }
 
     /***

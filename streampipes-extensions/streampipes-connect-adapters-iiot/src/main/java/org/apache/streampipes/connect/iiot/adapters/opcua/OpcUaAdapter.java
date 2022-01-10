@@ -78,7 +78,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
         try {
             this.spOpcUaClient.connect();
             OpcUaNodeBrowser browserClient = new OpcUaNodeBrowser(this.spOpcUaClient.getClient(), this.spOpcUaClient.getSpOpcConfig());
-            this.allNodes = browserClient.browseNode(true);
+            this.allNodes = browserClient.findNodes();
 
 
                 for (OpcNode node : this.allNodes) {
@@ -122,7 +122,6 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
 
     @Override
     protected void pullData() {
-
         CompletableFuture<List<DataValue>> response = this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
         try {
         List<DataValue> returnValues = response.get();
