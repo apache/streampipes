@@ -53,7 +53,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
     public static final String ID = "org.apache.streampipes.connect.iiot.adapters.opcua";
 
     private int pullingIntervalMilliSeconds;
-    private OpcUa opcUa;
+    private SpOpcUaClient spOpcUaClient;
     private List<OpcNode> allNodes;
     private List<NodeId> allNodeIds;
     private int numberProperties;
@@ -76,19 +76,19 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
 
         this.allNodeIds = new ArrayList<>();
         try {
-            this.opcUa.connect();
-            this.allNodes = this.opcUa.browseNode(true);
+            this.spOpcUaClient.connect();
+            this.allNodes = this.spOpcUaClient.browseNode(true);
 
 
                 for (OpcNode node : this.allNodes) {
                     this.allNodeIds.add(node.nodeId);
                 }
 
-            if (opcUa.inPullMode()) {
-                this.pullingIntervalMilliSeconds = opcUa.getPullIntervalMilliSeconds();
+            if (spOpcUaClient.inPullMode()) {
+                this.pullingIntervalMilliSeconds = spOpcUaClient.getPullIntervalMilliSeconds();
             } else {
                 this.numberProperties = this.allNodeIds.size();
-                this.opcUa.createListSubscription(this.allNodeIds, this);
+                this.spOpcUaClient.createListSubscription(this.allNodeIds, this);
             }
 
 
@@ -100,9 +100,9 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
         @Override
     public void startAdapter() throws AdapterException {
 
-        this.opcUa = new OpcUa(SpOpcUaConfigBuilder.from(this.adapterDescription));
+        this.spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(this.adapterDescription));
 
-        if (this.opcUa.inPullMode()) {
+        if (this.spOpcUaClient.inPullMode()) {
             super.startAdapter();
         } else {
             this.before();
@@ -112,9 +112,9 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
     @Override
     public void stopAdapter() throws AdapterException {
         // close connection
-        this.opcUa.disconnect();
+        this.spOpcUaClient.disconnect();
 
-        if (this.opcUa.inPullMode()){
+        if (this.spOpcUaClient.inPullMode()){
             super.stopAdapter();
         }
     }
@@ -122,7 +122,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
     @Override
     protected void pullData() {
 
-        CompletableFuture<List<DataValue>> response = this.opcUa.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
+        CompletableFuture<List<DataValue>> response = this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
         try {
         List<DataValue> returnValues = response.get();
             for (int i = 0; i<returnValues.size(); i++) {

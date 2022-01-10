@@ -21,7 +21,7 @@ package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcNode;
-import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUa;
+import org.apache.streampipes.connect.iiot.adapters.opcua.SpOpcUaClient;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -71,11 +71,11 @@ public class OpcUaUtil {
         EventSchema eventSchema = new EventSchema();
         List<EventProperty> allProperties = new ArrayList<>();
 
-        OpcUa opcUa = new OpcUa(SpOpcUaConfigBuilder.from(adapterStreamDescription));
+        SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(adapterStreamDescription));
 
         try {
-            opcUa.connect();
-            List<OpcNode> selectedNodes = opcUa.browseNode(true);
+            spOpcUaClient.connect();
+            List<OpcNode> selectedNodes = spOpcUaClient.browseNode(true);
 
             if (!selectedNodes.isEmpty()) {
                 for (OpcNode opcNode : selectedNodes) {
@@ -95,7 +95,7 @@ public class OpcUaUtil {
                 }
             }
 
-            opcUa.disconnect();
+            spOpcUaClient.disconnect();
 
         } catch (Exception e) {
             throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
@@ -128,18 +128,18 @@ public class OpcUaUtil {
             return config;
         }
 
-        OpcUa opcUa = new OpcUa(SpOpcUaConfigBuilder.from(parameterExtractor));
+        SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(parameterExtractor));
 
         List<TreeInputNode> nodeOptions = new ArrayList<>();
         try{
-            opcUa.connect();
+            spOpcUaClient.connect();
 
-            for(OpcNode opcNode: opcUa.browseNode(false)) {
+            for(OpcNode opcNode: spOpcUaClient.browseNode(false)) {
                 TreeInputNode node = makeTreeInputNode(opcNode);
                 nodeOptions.add(node);
             }
 
-            opcUa.disconnect();
+            spOpcUaClient.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }

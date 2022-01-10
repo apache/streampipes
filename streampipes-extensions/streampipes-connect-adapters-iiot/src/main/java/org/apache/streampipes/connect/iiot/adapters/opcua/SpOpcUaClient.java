@@ -56,9 +56,9 @@ import static org.eclipse.milo.opcua.stack.core.util.ConversionUtil.toList;
 /***
  * Wrapper class for all OPC UA specific stuff.
  */
-public class OpcUa {
+public class SpOpcUaClient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OpcUa.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SpOpcUaClient.class);
 
     private OpcUaClient client;
     private final SpOpcUaConfig spOpcConfig;
@@ -66,7 +66,7 @@ public class OpcUa {
 
     private static final AtomicLong clientHandles = new AtomicLong(1L);
 
-    public OpcUa(SpOpcUaConfig config) {
+    public SpOpcUaClient(SpOpcUaConfig config) {
         this.spOpcConfig = config;
     }
 
@@ -79,7 +79,7 @@ public class OpcUa {
     }
 
     /***
-     * Establishes appropriate connection to OPC UA endpoint depending on the {@link OpcUa} instance
+     * Establishes appropriate connection to OPC UA endpoint depending on the {@link SpOpcUaClient} instance
      *
      * @throws Exception An exception occurring during OPC connection
      */
