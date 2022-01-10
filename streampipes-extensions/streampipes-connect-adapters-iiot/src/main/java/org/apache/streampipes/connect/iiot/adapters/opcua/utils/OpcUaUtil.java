@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcNode;
+import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaNodeBrowser;
 import org.apache.streampipes.connect.iiot.adapters.opcua.SpOpcUaClient;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
@@ -75,7 +76,8 @@ public class OpcUaUtil {
 
         try {
             spOpcUaClient.connect();
-            List<OpcNode> selectedNodes = spOpcUaClient.browseNode(true);
+            OpcUaNodeBrowser nodeBrowser = new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
+            List<OpcNode> selectedNodes = nodeBrowser.browseNode(true);
 
             if (!selectedNodes.isEmpty()) {
                 for (OpcNode opcNode : selectedNodes) {
@@ -133,8 +135,8 @@ public class OpcUaUtil {
         List<TreeInputNode> nodeOptions = new ArrayList<>();
         try{
             spOpcUaClient.connect();
-
-            for(OpcNode opcNode: spOpcUaClient.browseNode(false)) {
+            OpcUaNodeBrowser nodeBrowser = new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
+            for(OpcNode opcNode: nodeBrowser.browseNode(false)) {
                 TreeInputNode node = makeTreeInputNode(opcNode);
                 nodeOptions.add(node);
             }

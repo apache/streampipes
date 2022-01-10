@@ -50,7 +50,11 @@ public class SpOpcUaConfig {
    * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
    * @param selectedNodeNames list of node names provided from {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)} (String, StaticPropertyExtractor)}
    */
-  public SpOpcUaConfig(String opcServerURL, int namespaceIndex, String nodeId, int pullIntervalMilliSeconds, List<String> selectedNodeNames) {
+  public SpOpcUaConfig(String opcServerURL,
+                       int namespaceIndex,
+                       String nodeId,
+                       int pullIntervalMilliSeconds,
+                       List<String> selectedNodeNames) {
 
     this.opcServerURL = opcServerURL;
     this.unauthenticated = true;

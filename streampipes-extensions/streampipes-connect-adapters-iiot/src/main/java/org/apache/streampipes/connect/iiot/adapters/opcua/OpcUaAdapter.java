@@ -77,7 +77,8 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
         this.allNodeIds = new ArrayList<>();
         try {
             this.spOpcUaClient.connect();
-            this.allNodes = this.spOpcUaClient.browseNode(true);
+            OpcUaNodeBrowser browserClient = new OpcUaNodeBrowser(this.spOpcUaClient.getClient(), this.spOpcUaClient.getSpOpcConfig());
+            this.allNodes = browserClient.browseNode(true);
 
 
                 for (OpcNode node : this.allNodes) {
