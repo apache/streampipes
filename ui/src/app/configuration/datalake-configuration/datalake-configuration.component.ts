@@ -30,7 +30,7 @@ import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { FieldConfig } from '../../data-explorer/models/dataview-dashboard.model';
-import { SpQueryResult } from '../../core-model/gen/streampipes-model';
+import { EventSchema, SpQueryResult } from '../../core-model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -79,8 +79,8 @@ export class DatalakeConfigurationComponent implements OnInit {
           });
 
           // get the amount of events from the database
-          const property = measurement.eventSchema.eventProperties[0];
-          const field: FieldConfig = { runtimeName: property.runtimeName, aggregations: ['COUNT'], selected: true, numeric: false };
+          const propertyName = this.getFirstNoneDimensionProperty(measurement.eventSchema);
+          const field: FieldConfig = { runtimeName: propertyName, aggregations: ['COUNT'], selected: true, numeric: false };
           this.datalakeRestService.getData(
             measurement.measureName,
             this.buildQ(field)).subscribe((res: SpQueryResult) => {
@@ -99,6 +99,15 @@ export class DatalakeConfigurationComponent implements OnInit {
       });
       // this.availableMeasurements = response;
     });
+  }
+
+  private getFirstNoneDimensionProperty(eventSchema: EventSchema): string {
+    const propertyName = eventSchema.eventProperties.find(ep => ep.propertyScope !== 'DIMENSION_PROPERTY');
+    if (!propertyName) {
+      return '*';
+    } else {
+      return propertyName.runtimeName;
+    }
   }
 
   cleanDatalakeIndex(measurementIndex: string) {
