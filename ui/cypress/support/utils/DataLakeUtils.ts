@@ -71,9 +71,36 @@ export class DataLakeUtils {
     cy.dataCy('save-data-view')
       .click();
 
+    this.editDataView();
+  }
+
+  public static editDataView() {
     // Click edit button
     cy.dataCy('edit-data-view')
-      .click();
+        .click();
+  }
+
+  public static saveDataExplorerWidgetConfiguration() {
+    cy.dataCy('save-data-explorer-widget-btn', { timeout: 10000 }).click();
+  }
+
+  public static editWidget(widgetName: string) {
+    cy.dataCy('edit-' + widgetName).click();
+  }
+
+  public static startEditWidget(widgetName: string) {
+    cy.dataCy('more-options-' + widgetName).click();
+    cy.dataCy('start-edit-' + widgetName).click();
+  }
+
+  public static saveAndReEditWidget() {
+    // Save configuration
+    DataLakeUtils.saveDataExplorerWidgetConfiguration();
+    // Click start tab to go to overview
+    cy.get('div').contains('Start').parent().click();
+    DataLakeUtils.editDataView();
+    // Edit widget again
+    DataLakeUtils.editWidget('datalake_configuration');
   }
 
   public static addNewWidget() {
@@ -87,6 +114,19 @@ export class DataLakeUtils {
       .get('mat-option')
       .contains(dataSet)
       .click();
+  }
+
+
+  /**
+   * Checks if in the widget configuration the filters are set or not
+   * @param amountOfFilter the amount of filters that should be set. 0 if no filter should be visible
+   */
+  public static checkIfFilterIsSet(amountOfFilter: number) {
+    if (amountOfFilter === 0) {
+      cy.dataCy('design-panel-data-settings-filter-field').should('not.exist');
+    } else {
+      cy.dataCy('design-panel-data-settings-filter-field').should('be.visible');
+    }
   }
 
   /**
@@ -124,6 +164,10 @@ export class DataLakeUtils {
     cy.dataCy('design-panel-data-settings-remove-filter')
       .first()
       .click();
+  }
+
+  public static clickGroupBy(propertyName: string) {
+    cy.dataCy('data-explorer-group-by-' + propertyName).children().click();
   }
 
   /**
