@@ -24,8 +24,7 @@ import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'sp-static-slide-toggle',
-  templateUrl: './static-slide-toggle.component.html',
-  styleUrls: ['./static-slide-toggle.component.scss']
+  templateUrl: './static-slide-toggle.component.html'
 })
 export class StaticSlideToggleComponent
   extends AbstractValidatedStaticPropertyRenderer<SlideToggleStaticProperty> implements OnInit {
