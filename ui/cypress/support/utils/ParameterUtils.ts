@@ -26,4 +26,12 @@ export class ParameterUtils {
             return containerVariable;
         }
     }
+
+    public static getEnvOrDefault(envVariableName, defaultValue): string {
+        if (Cypress.env(envVariableName)) {
+            return Cypress.env(envVariableName);
+        } else {
+            return defaultValue;
+        }
+    }
 }

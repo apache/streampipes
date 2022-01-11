@@ -130,7 +130,7 @@ public class OpcUaUtil {
 
         SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(parameterExtractor));
         try{
-            spOpcUaClient.connect();;
+            spOpcUaClient.connect();
             OpcUaNodeBrowser nodeBrowser = new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
             config.setNodes(nodeBrowser.buildNodeTreeFromOrigin());
             spOpcUaClient.disconnect();
