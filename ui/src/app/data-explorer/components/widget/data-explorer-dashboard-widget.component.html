@@ -29,22 +29,38 @@
                 <div class="time-counter" [ngStyle]="{background: configuredWidget.baseAppearanceConfig.textColor, color: configuredWidget.baseAppearanceConfig.backgroundColor}">
                     {{loadingTime}}
                 </div>
-                <button mat-button mat-icon-button (click)="triggerWidgetEditMode()" *ngIf="editMode" matTooltip="Edit widget">
+                <button
+                        mat-button
+                        mat-icon-button
+                        (click)="triggerWidgetEditMode()"
+                        *ngIf="editMode" matTooltip="Edit widget"
+                        [attr.data-cy]="'edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
                     <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More options" matTooltip="More options">
+                <button mat-button
+                        mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        aria-label="More options"
+                        matTooltip="More options"
+                        [attr.data-cy]="'more-options-' + configuredWidget.baseAppearanceConfig.widgetTitle">
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="downloadDataAsFile()">
+                    <button mat-menu-item
+                            (click)="downloadDataAsFile()">
                         <mat-icon>get_app</mat-icon>
                         <span>Download data</span>
                     </button>
-                    <button mat-menu-item (click)="startEditMode()" *ngIf="!editMode && hasDataExplorerWritePrivileges">
+                    <button mat-menu-item
+                            (click)="startEditMode()"
+                            *ngIf="!editMode && hasDataExplorerWritePrivileges"
+                            [attr.data-cy]="'start-edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
                         <mat-icon>edit</mat-icon>
                         <span>Edit Widget</span>
                     </button>
-                    <button mat-menu-item (click)="removeWidget()" *ngIf="editMode && hasDataExplorerDeletePrivileges">
+                    <button mat-menu-item
+                            (click)="removeWidget()"
+                            *ngIf="editMode && hasDataExplorerDeletePrivileges">
                         <mat-icon>clear</mat-icon>
                         <span>Delete widget</span>
                     </button>

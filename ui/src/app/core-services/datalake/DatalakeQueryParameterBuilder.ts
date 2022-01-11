@@ -103,16 +103,20 @@ export class DatalakeQueryParameterBuilder {
       if (!column.alias && !useAggregation) {
         finalColumns.push(column.runtimeName);
       } else {
+        // replace display name, when * is used instead of the name of a single property
+        const displayName = column.runtimeName === '*' ? 'all' : column.runtimeName;
+
         column.aggregations.forEach(agg => {
           finalColumns.push('['
-            + column.runtimeName
-            + ';'
-            + agg
-            + ';'
-            + agg.toLowerCase()
-            + '_'
-            + column.runtimeName + ']');
+              + column.runtimeName
+              + ';'
+              + agg
+              + ';'
+              + agg.toLowerCase()
+              + '_'
+              + displayName + ']');
         });
+
       }
     });
 

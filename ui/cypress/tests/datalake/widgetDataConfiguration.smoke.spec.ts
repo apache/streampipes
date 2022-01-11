@@ -29,24 +29,19 @@ describe('Test Table View in Data Explorer', () => {
 
   it('Perform Test', () => {
 
+    /**
+     * Prepare tests
+     */
     DataLakeUtils.goToDatalake();
-
     DataLakeUtils.createAndEditDataView();
-
     DataLakeUtils.selectTimeRange(
       new Date(2020, 10, 20, 22, 44),
       new Date(2021, 10, 20, 22, 44));
-
     DataLakeUtils.addNewWidget();
-
     DataLakeUtils.selectDataSet('Persist');
-
     DataLakeUtils.dataConfigSelectAllFields();
-
     DataLakeUtils.selectVisualizationConfig();
-
     DataLakeUtils.selectVisualizationType('Table');
-
     DataLakeUtils.clickCreateButton();
 
     // Validate that X lines are available
@@ -58,7 +53,7 @@ describe('Test Table View in Data Explorer', () => {
     /**
      * Test filter configuration
      */
-      // Test number
+        // Test number
     let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
     checkTableRows(2);
@@ -83,27 +78,33 @@ describe('Test Table View in Data Explorer', () => {
     checkTableRows(6);
     DataLakeUtils.dataConfigRemoveFilter();
 
-    // Test string
+    // Test string & if filter is persisted correctly
     filterConfig = new DataLakeFilterConfig('randomtext', 'a', '=');
+    DataLakeUtils.checkIfFilterIsSet(0);
     DataLakeUtils.dataConfigAddFilter(filterConfig);
+    DataLakeUtils.checkIfFilterIsSet(1);
+    checkTableRows(4);
+    DataLakeUtils.saveAndReEditWidget();
+    DataLakeUtils.checkIfFilterIsSet(1);
     checkTableRows(4);
     DataLakeUtils.dataConfigRemoveFilter();
 
     /**
-     * Test groupBy configuration
+     * Test groupBy configuration and if it is persisted correctly
      */
-    // Select group by option
-    cy.dataCy('data-explorer-group-by-randomtext').children().click();
-    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).first().contains('a');
-    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).last().contains('c');
+    DataLakeUtils.clickGroupBy('randomtext');
+    cy.wait(1000);
+    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).first({ timeout: 10000 }).contains('a', { timeout: 10000 });
+    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).last({ timeout: 10000 }).contains('c', { timeout: 10000 });
     checkTableRows(10);
-    cy.dataCy('data-explorer-group-by-randomtext').children().click();
+    DataLakeUtils.saveAndReEditWidget();
+    cy.dataCy('data-explorer-group-by-randomtext').find('input').should('be.checked');
+    DataLakeUtils.clickGroupBy('randomtext');
 
   });
 
   const checkTableRows = (numberOfRows: number) => {
     cy.dataCy('data-explorer-table-row-timestamp', { timeout: 10000 }).should('have.length', numberOfRows);
   };
-
 
 });
