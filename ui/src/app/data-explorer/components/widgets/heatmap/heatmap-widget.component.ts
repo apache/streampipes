@@ -25,7 +25,7 @@ import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 import { EChartsOption } from 'echarts';
 import { ECharts } from 'echarts/core';
-import { format } from 'echarts/core';
+import { time } from 'echarts/core';
 
 @Component({
   selector: 'sp-data-explorer-heatmap-widget',
@@ -99,6 +99,13 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
     const result = spQueryResult[0].allDataSeries;
     const xAxisData = this.transform(result[0].rows, 0);
+    
+    let convXAxisData = [];
+    xAxisData.forEach(x => {
+     const strDate = new Date(x).toLocaleString();
+     convXAxisData.push(strDate);
+    });
+
     const heatIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedHeatProperty, spQueryResult[0]);
 
     const yAxisData = [];
@@ -129,7 +136,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
       });
     });
 
-    const timeNames = xAxisData
+    const timeNames = convXAxisData
     const groupNames = yAxisData
 
     this.option['tooltip'] = {
@@ -161,7 +168,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
     
 
-    return [contentData, xAxisData, yAxisData, min, max];
+    return [contentData, convXAxisData, yAxisData, min, max];
   }
 
   initOptions() {
