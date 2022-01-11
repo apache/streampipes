@@ -25,7 +25,7 @@ import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 import { EChartsOption } from 'echarts';
 import { ECharts } from 'echarts/core';
-import { format } from 'echarts/core';
+import { time } from 'echarts/core';
 
 @Component({
   selector: 'sp-data-explorer-heatmap-widget',
@@ -98,7 +98,32 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
     let max = -100000;
 
     const result = spQueryResult[0].allDataSeries;
-    const xAxisData = this.transform(result[0].rows, 0);
+    // const xAxisData = this.transform(result[0].rows, 0);
+
+    const aggregatedXData = [];
+    result.forEach(x => {
+      const localXAxisData = this.transform(x.rows, 0);
+      aggregatedXData.push(...localXAxisData)
+    });
+
+    const xAxisData = aggregatedXData.sort();
+    
+    let convXAxisData = [];
+    xAxisData.forEach(x => {
+     const date = new Date(x);
+     const size = 2;
+     const year = date.getFullYear();
+     const month = this.pad(date.getMonth()+1, size);
+     const day = date.getDate();
+     const hours = this.pad(date.getHours(), size);
+     const minutes = this.pad(date.getMinutes(), size);
+     const seconds = this.pad(date.getSeconds(), size);
+     const milli = this.pad(date.getMilliseconds(), 3);
+
+     const strDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds + "." + milli;
+     convXAxisData.push(strDate);
+    });
+
     const heatIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedHeatProperty, spQueryResult[0]);
 
     const yAxisData = [];
@@ -124,12 +149,16 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
       max = localMax > max ? localMax : max;
       min = localMin < min ? localMin : min;
 
+      const localXAxisData = this.transform(groupedList.rows, 0);
+
       contentDataPure.map((cnt, colIndex) => {
-        contentData.push([colIndex, index, cnt]);
+        const currentX =  localXAxisData[colIndex];
+        const searchedIndex = aggregatedXData.indexOf(currentX)
+        contentData.push([searchedIndex, index, cnt]);
       });
     });
 
-    const timeNames = xAxisData
+    const timeNames = convXAxisData
     const groupNames = yAxisData
 
     this.option['tooltip'] = {
@@ -141,14 +170,20 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
         const time = timeNames[timeIndex];
         const groupName = groupNames[groupNameIndex];
 
-        return '<style>' +
-               'ul {margin: 0px; padding: 0px; list-style-type: none; text-align: left}' +
-               '</style>' +
-               '<ul>' +
-               '<li><b>' + 'Time: ' + '</b>'+ time + '</li>' + 
-               '<li><b>' + 'Name: ' + '</b>' + groupName + '</li>' + 
-               '<li><b>' + 'Value: ' + '</b>' + value + '</li>' +
-               '</ul>';
+        let formattedTip = '<style>' +
+                          'ul {margin: 0px; padding: 0px; list-style-type: none; text-align: left}' +
+                          '</style>' +
+                          '<ul>' +
+                          '<li><b>' + 'Time: ' + '</b>'+ time + '</li>';
+
+        if (groupName !== '') {
+          formattedTip = formattedTip + '<li><b>' + 'Group: ' + '</b>' + groupName + '</li>';
+        }
+
+        formattedTip = formattedTip + '<li><b>' + 'Value: ' + '</b>' + value + '</li>' +
+                                      '</ul>';
+
+        return formattedTip;
        },
        position: 'top',
     }
@@ -161,7 +196,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
     
 
-    return [contentData, xAxisData, yAxisData, min, max];
+    return [contentData, convXAxisData, yAxisData, min, max];
   }
 
   initOptions() {
@@ -228,5 +263,11 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
   transform(rows, index: number): any[] {
     return rows.map(row => row[index]);
   }
+
+  pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
 
 }

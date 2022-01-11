@@ -164,7 +164,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<Corr
           //   row: rowCount,
           //   column: colCount,
           // },
-        };
+        };    
 
         this.data.push(component2);
 
