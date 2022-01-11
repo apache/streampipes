@@ -98,7 +98,15 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
     let max = -100000;
 
     const result = spQueryResult[0].allDataSeries;
-    const xAxisData = this.transform(result[0].rows, 0);
+    // const xAxisData = this.transform(result[0].rows, 0);
+
+    const aggregatedXData = [];
+    result.forEach(x => {
+      const localXAxisData = this.transform(x.rows, 0);
+      aggregatedXData.push(...localXAxisData)
+    });
+
+    const xAxisData = aggregatedXData.sort();
     
     let convXAxisData = [];
     xAxisData.forEach(x => {
@@ -141,8 +149,12 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
       max = localMax > max ? localMax : max;
       min = localMin < min ? localMin : min;
 
+      const localXAxisData = this.transform(groupedList.rows, 0);
+
       contentDataPure.map((cnt, colIndex) => {
-        contentData.push([colIndex, index, cnt]);
+        const currentX =  localXAxisData[colIndex];
+        const searchedIndex = aggregatedXData.indexOf(currentX)
+        contentData.push([searchedIndex, index, cnt]);
       });
     });
 
