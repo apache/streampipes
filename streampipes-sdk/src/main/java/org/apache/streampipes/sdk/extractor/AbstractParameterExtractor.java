@@ -19,10 +19,7 @@
 package org.apache.streampipes.sdk.extractor;
 
 import com.github.drapostolos.typeparser.TypeParser;
-import org.apache.commons.codec.Charsets;
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
@@ -100,8 +97,12 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .getValue());
   }
 
+  public boolean slideToggleValue(String internalName) {
+    return (getStaticPropertyByName(internalName, SlideToggleStaticProperty.class)).isSelected();
+  }
+
   public String codeblockValue(String internalName) {
-    return getStaticPropertyByName(internalName,CodeInputStaticProperty.class).getValue();
+    return getStaticPropertyByName(internalName, CodeInputStaticProperty.class).getValue();
   }
 
   public String selectedColor(String internalName) {
@@ -109,8 +110,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   /**
-   * @deprecated
-   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
   @Deprecated
@@ -119,8 +119,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   /**
-   * @deprecated
-   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
   public byte[] fileContentsAsByteArray(String internalName) throws IOException {
@@ -128,8 +127,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   /**
-   * @deprecated
-   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
   public InputStream fileContentsAsStream(String internalName) throws IOException {
@@ -141,8 +139,7 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   /**
-   * @deprecated
-   * This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
+   * @deprecated This won't work after release 0.69.0 as all API requests against the core need to be authenticated.
    * Use the StreamPipes Client File API instead (e.g., StreamPipesClientResolver.makeStreamPipesClientInstance()).
    **/
   public String selectedFileFetchUrl(String internalName) {
@@ -197,8 +194,8 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
   }
 
   public Boolean comparePropertyRuntimeType(EventProperty eventProperty,
-                                                   Datatypes datatype,
-                                                   boolean ignoreListElements) {
+                                            Datatypes datatype,
+                                            boolean ignoreListElements) {
     EventPropertyPrimitive testProperty = null;
     if (eventProperty instanceof EventPropertyList && !ignoreListElements) {
       testProperty = (EventPropertyPrimitive) ((EventPropertyList) eventProperty).getEventProperty();
@@ -239,7 +236,41 @@ public abstract class AbstractParameterExtractor<T extends InvocableStreamPipesE
             .collect(Collectors.toList());
   }
 
-  private <S extends StaticProperty> S getStaticPropertyByName(String internalName, Class<S>
+  public <V> List<V> selectedTreeNodesInternalNames(String internalName,
+                                                    Class<V> targetClass,
+                                                    boolean onlyDataNodes) {
+    List<TreeInputNode> allNodes = new ArrayList<>();
+    RuntimeResolvableTreeInputStaticProperty sp = getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
+    if (sp.getNodes().size() > 0) {
+      sp.getNodes().forEach(node -> buildFlatTree(node, allNodes));
+    }
+
+    if (allNodes.size() > 0) {
+      return allNodes
+              .stream()
+              .filter(node -> {
+                if (!onlyDataNodes) {
+                  return true;
+                } else {
+                  return node.isDataNode();
+                }
+              })
+              .filter(TreeInputNode::isSelected)
+              .map(node -> typeParser.parse(node.getInternalNodeName(), targetClass))
+              .collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
+  }
+
+  private void buildFlatTree(TreeInputNode parent, List<TreeInputNode> collector) {
+    collector.add(parent);
+    if (parent.hasChildren()) {
+      parent.getChildren().forEach(child -> buildFlatTree(child, collector));
+    }
+  }
+
+  public <S extends StaticProperty> S getStaticPropertyByName(String internalName, Class<S>
           spType) {
     return spType.cast(getStaticPropertyByName(internalName));
   }

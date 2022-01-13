@@ -20,6 +20,7 @@ package org.apache.streampipes.model.staticproperty;
 
 public enum StaticPropertyType {
     AnyStaticProperty,
+    CodeInputStaticProperty,
     CollectionStaticProperty,
     ColorPickerStaticProperty,
     DomainStaticProperty,
@@ -31,10 +32,10 @@ public enum StaticPropertyType {
     OneOfStaticProperty,
     RuntimeResolvableAnyStaticProperty,
     RuntimeResolvableOneOfStaticProperty,
+    RuntimeResolvableTreeInputStaticProperty,
     StaticPropertyGroup,
     StaticPropertyAlternatives,
     StaticPropertyAlternative,
     SecretStaticProperty,
-    CodeInputStaticProperty;
-
+    SlideToggleStaticProperty
 }

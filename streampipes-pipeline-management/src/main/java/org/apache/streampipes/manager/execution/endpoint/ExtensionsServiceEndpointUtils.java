@@ -23,6 +23,8 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
+import java.util.NoSuchElementException;
+
 public class ExtensionsServiceEndpointUtils {
 
   public static SpServiceUrlProvider getPipelineElementType(NamedStreamPipesEntity entity) {
@@ -30,9 +32,12 @@ public class ExtensionsServiceEndpointUtils {
   }
 
   public static SpServiceUrlProvider getPipelineElementType(String appId) {
-    DataProcessorDescription desc = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage().getDataProcessorByAppId(appId);
-    return desc != null ? SpServiceUrlProvider.DATA_PROCESSOR : SpServiceUrlProvider.DATA_SINK;
-
+    try {
+      StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineElementDescriptionStorage().getDataProcessorByAppId(appId);
+      return SpServiceUrlProvider.DATA_PROCESSOR;
+    } catch (NoSuchElementException e) {
+      return SpServiceUrlProvider.DATA_SINK;
+    }
   }
 
   private static boolean isDataProcessor(NamedStreamPipesEntity entity) {

@@ -37,12 +37,14 @@ export class GroupSelectionPanelComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.applyDefaultFields();
+    if (this.sourceConfig.queryConfig.groupBy === undefined) {
+      this.applyDefaultFields();
+    }
   }
 
   applyDefaultFields() {
-    this.sourceConfig.queryConfig.groupBy = [];
-    this.addAllFields();
+      this.sourceConfig.queryConfig.groupBy = [];
+      this.addAllFields();
   }
 
   addAllFields() {

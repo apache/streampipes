@@ -18,10 +18,7 @@
 
 package org.apache.streampipes.messaging.kafka;
 
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.CreateTopicsResult;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -51,7 +48,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
   private String topic;
   private Producer<String, byte[]> producer;
 
-  private Boolean connected;
+  private boolean connected = false;
 
   private static final Logger LOG = LoggerFactory.getLogger(SpKafkaProducer.class);
 
@@ -65,6 +62,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makeProperties(protocol));
+    this.connected = true;
   }
 
   // TODO backwards compatibility, remove later
@@ -75,6 +73,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makePropertiesSaslPlain(protocol, username, password));
+    this.connected = true;
   }
 
   public void publish(String message) {
@@ -82,7 +81,9 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
   }
 
   public void publish(byte[] message) {
-    producer.send(new ProducerRecord<>(topic, message));
+    if (connected) {
+      producer.send(new ProducerRecord<>(topic, message));
+    }
   }
 
   private Properties makeProperties(KafkaTransportProtocol protocol) {
@@ -98,52 +99,69 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     LOG.info("Kafka producer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
     this.brokerUrl = protocol.getBrokerHostname() + ":" + protocol.getKafkaPort();
     this.topic = protocol.getTopicDefinition().getActualTopicName();
+    String zookeeperHost = protocol.getZookeeperHost() + ":" + protocol.getZookeeperPort();
 
-    createKafaTopic(protocol);
+    try {
+      createKafaTopic(protocol);
+    } catch (ExecutionException | InterruptedException e) {
+      LOG.error("Could not create topic: " + topic + " on broker " + zookeeperHost);
+    }
 
     this.producer = new KafkaProducer<>(makeProperties(protocol));
     this.connected = true;
+
+    LOG.info("Successfully created Kafka producer for topic " + this.topic);
   }
 
   /**
    * Create a new topic and define number partitions, replicas, and retention time
    *
-   * @param settings
+   * @param settings The settings to connect to a Kafka broker
    */
-  private void createKafaTopic(KafkaTransportProtocol settings) {
-    String zookeeperHost = settings.getZookeeperHost() + ":" + settings.getZookeeperPort();
-
+  private void createKafaTopic(KafkaTransportProtocol settings) throws ExecutionException, InterruptedException {
 
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokerUrl);
 
-    Map<String, String> topicConfig = new HashMap<>();
-    String retentionTime = Envs.SP_KAFKA_RETENTION_MS.exists() ? Envs.SP_KAFKA_RETENTION_MS.getValue() : SP_KAFKA_RETENTION_MS_DEFAULT;
-    topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, retentionTime);
-
     AdminClient adminClient = KafkaAdminClient.create(props);
 
-    final NewTopic newTopic = new NewTopic(topic, 1, (short) 1);
-    newTopic.configs(topicConfig);
+    ListTopicsResult topics = adminClient.listTopics();
 
-    final CreateTopicsResult createTopicsResult = adminClient.createTopics(Collections.singleton(newTopic));
+    if (!topicExists(topics)) {
+      Map<String, String> topicConfig = new HashMap<>();
+      String retentionTime = Envs.SP_KAFKA_RETENTION_MS.exists() ? Envs.SP_KAFKA_RETENTION_MS.getValue() : SP_KAFKA_RETENTION_MS_DEFAULT;
+      topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, retentionTime);
 
-    try {
+      final NewTopic newTopic = new NewTopic(topic, 1, (short) 1);
+      newTopic.configs(topicConfig);
+
+      final CreateTopicsResult createTopicsResult = adminClient.createTopics(Collections.singleton(newTopic));
       createTopicsResult.values().get(topic).get();
-    } catch (InterruptedException | ExecutionException e) {
-      LOG.error("Could not create topic: " + topic + " on broker " + zookeeperHost);
+      LOG.info("Successfully created Kafka topic " + topic);
+
+    } else {
+      LOG.info("Topic " + topic + "already exists in the broker, skipping topic creation");
     }
   }
 
   @Override
   public void disconnect() {
     LOG.info("Kafka producer: Disconnecting from " + topic);
-    this.producer.close();
     this.connected = false;
+    this.producer.close();
   }
 
   @Override
-  public Boolean isConnected() {
-    return connected != null && connected;
+  public boolean isConnected() {
+    return connected;
+  }
+
+  private boolean topicExists(ListTopicsResult topicsInKafka) {
+    try {
+      return topicsInKafka.names().get().stream().anyMatch(t -> t.equals(topic));
+    } catch (InterruptedException | ExecutionException e) {
+      LOG.error("Could not fetch existing topics", e);
+      return false;
+    }
   }
 }

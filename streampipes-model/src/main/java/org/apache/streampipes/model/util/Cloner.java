@@ -115,6 +115,10 @@ public class Cloner {
       return new CodeInputStaticProperty((CodeInputStaticProperty) o);
     } else if (o instanceof ColorPickerStaticProperty) {
       return new ColorPickerStaticProperty((ColorPickerStaticProperty) o);
+    } else if (o instanceof SlideToggleStaticProperty) {
+      return new SlideToggleStaticProperty((SlideToggleStaticProperty) o);
+    } else if (o instanceof RuntimeResolvableTreeInputStaticProperty) {
+      return new RuntimeResolvableTreeInputStaticProperty((RuntimeResolvableTreeInputStaticProperty) o);
     } else {
       return new StaticPropertyAlternative((StaticPropertyAlternative) o);
     }

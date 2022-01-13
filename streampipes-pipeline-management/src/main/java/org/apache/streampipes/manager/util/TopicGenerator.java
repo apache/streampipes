@@ -19,10 +19,15 @@
 package org.apache.streampipes.manager.util;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 
 public class TopicGenerator {
 
   public static String generateRandomTopic() {
-    return "org.apache.streampipes." + RandomStringUtils.randomAlphabetic(20);
+    return generateInternalPipelineElementTopic(RandomStringUtils.randomAlphabetic(15));
+  }
+
+  public static String generateInternalPipelineElementTopic(String appendix) {
+    return GlobalStreamPipesConstants.INTERNAL_TOPIC_PREFIX + appendix;
   }
 }

@@ -46,7 +46,6 @@ export class TimeSeriesChartWidgetConfigComponent
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
     this.currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties = selectedColumns;
-    console.log(selectedColumns);
     // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
     this.triggerDataRefresh();
   }

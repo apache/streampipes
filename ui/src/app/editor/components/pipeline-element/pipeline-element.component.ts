@@ -16,11 +16,11 @@
  *
  */
 
-import {Component, Input, OnInit,} from "@angular/core";
-import {RestApi} from "../../../services/rest-api.service";
-import {ElementIconText} from "../../../services/get-element-icon-text.service";
-import {ImageChecker} from "../../../services/image-checker.service";
-import {PipelineElementUnion} from "../../model/editor.model";
+import { Component, Input, OnInit, } from '@angular/core';
+import { RestApi } from '../../../services/rest-api.service';
+import { ElementIconText } from '../../../services/get-element-icon-text.service';
+import { PipelineElementUnion } from '../../model/editor.model';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -46,45 +46,39 @@ export class PipelineElementComponent implements OnInit {
     iconStandSize: any;
 
     iconUrl: any;
+    image: SafeUrl;
 
-    constructor(private ImageChecker: ImageChecker,
-                private RestApi: RestApi,
-                private ElementIconText: ElementIconText) {
+    constructor(private restApi: RestApi,
+                private elementIconText: ElementIconText,
+                private sanitizer: DomSanitizer) {
 
     }
 
     ngOnInit(): void {
-        this.iconText =  this.ElementIconText.getElementIconText(this.pipelineElement.name);
+        this.iconText =  this.elementIconText.getElementIconText(this.pipelineElement.name);
         this.checkImageAvailable();
     }
 
     checkImageAvailable() {
-        if (this.pipelineElement.includesAssets) {
-            this.fetchImage(this.makeAssetIconUrl())
+        if (this.pipelineElement.includesAssets && this.pipelineElement.includedAssets.indexOf('icon.png') > -1) {
+            this.image = this.sanitizer.bypassSecurityTrustUrl(this.makeAssetIconUrl());
+            this.showImage = true;
         } else {
-            this.fetchImage(this.pipelineElement.iconUrl);
+            this.showImage = false;
         }
     }
 
-    fetchImage(imageUrl) {
-        this.ImageChecker.imageExists(imageUrl, (exists) => {
-            this.iconUrl = imageUrl;
-            this.showImage = exists;
-        })
-    }
-
     makeAssetIconUrl() {
-        return this.RestApi.getAssetUrl(this.pipelineElement.appId) +"/icon";
+        return this.restApi.getAssetUrl(this.pipelineElement.appId) + '/icon';
     }
 
     iconSizeCss() {
         if (this.iconSize) {
             return 'width:35px;height:35px;';
-        }
-        else if (this.preview) {
+        } else if (this.preview) {
             return 'width:50px;height:50px;';
         } else if (this.iconStandSize) {
-            return 'width:50px;height:50px;margin-top:-5px;'
+            return 'width:50px;height:50px;margin-top:-5px;';
         } else {
             return 'width:70px;height:70px;';
         }

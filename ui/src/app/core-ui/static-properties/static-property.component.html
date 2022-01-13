@@ -25,11 +25,11 @@
         </div>
         <div fxFlex="100">
             <sp-static-code-input *ngIf="isCodeInputStaticProperty(staticProperty)"
-                                   [staticProperty]="staticProperty"
-                                   [parentForm]="parentForm"
-                                   [eventSchemas]="eventSchemas"
-                                   [fieldName]="fieldName"
-                                   (updateEmitter)="emitUpdate($event)">
+                                  [staticProperty]="staticProperty"
+                                  [parentForm]="parentForm"
+                                  [eventSchemas]="eventSchemas"
+                                  [fieldName]="fieldName"
+                                  (updateEmitter)="emitUpdate($event)">
             </sp-static-code-input>
 
             <app-static-secret-input *ngIf="isSecretStaticProperty(staticProperty)"
@@ -144,6 +144,28 @@
                                   [staticProperty]="staticProperty" class="test fullWidth"
                                   (updateEmitter)="emitUpdate($event)">
             </sp-static-collection>
+
+            <sp-static-slide-toggle *ngIf="isSlideToggleStaticProperty(staticProperty)"
+                                    [adapterId]="adapterId"
+                                    [parentForm]="parentForm"
+                                    [fieldName]="fieldName"
+                                    [displayRecommended]="displayRecommended"
+                                    [staticProperty]="staticProperty" class="test fullWidth"
+                                    (updateEmitter)="emitUpdate($event)">
+            </sp-static-slide-toggle>
+            <sp-runtime-resolvable-tree-input
+                    *ngIf="isTreeInputStaticProperty(staticProperty)"
+                    [adapterId]="adapterId"
+                    [parentForm]="parentForm"
+                    [completedStaticProperty]="completedStaticProperty"
+                    [pipelineElement]="pipelineElement"
+                    [eventSchemas]="eventSchemas"
+                    [staticProperties]="staticProperties"
+                    [fieldName]="fieldName"
+                    [displayRecommended]="displayRecommended"
+                    [staticProperty]="staticProperty" class="test fullWidth"
+                    (updateEmitter)="emitUpdate($event)">
+            </sp-runtime-resolvable-tree-input>
         </div>
     </div>
     <mat-divider></mat-divider>

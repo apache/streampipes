@@ -50,4 +50,8 @@ public interface StaticPropertyVisitor {
   void visit(StaticPropertyGroup staticPropertyGroup);
 
   void visit(RemoteOneOfStaticProperty remoteOneOfStaticProperty);
+
+  void visit(SlideToggleStaticProperty slideToggleStaticProperty);
+
+  void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty);
 }

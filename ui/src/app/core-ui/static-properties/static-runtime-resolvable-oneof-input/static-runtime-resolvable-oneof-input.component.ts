@@ -17,9 +17,9 @@
  */
 
 import { Component, OnChanges, OnInit } from '@angular/core';
-import { RuntimeResolvableOneOfStaticProperty } from '../../../core-model/gen/streampipes-model';
-import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
+import { RuntimeResolvableOneOfStaticProperty, StaticPropertyUnion } from '../../../core-model/gen/streampipes-model';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
+import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 
 @Component({
     selector: 'app-static-runtime-resolvable-oneof-input',
@@ -27,7 +27,7 @@ import { RuntimeResolvableService } from '../static-runtime-resolvable-input/run
     styleUrls: ['./static-runtime-resolvable-oneof-input.component.css']
 })
 export class StaticRuntimeResolvableOneOfInputComponent
-    extends BaseRuntimeResolvableInput<RuntimeResolvableOneOfStaticProperty> implements OnInit, OnChanges {
+    extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableOneOfStaticProperty> implements OnInit, OnChanges {
 
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);
@@ -37,7 +37,8 @@ export class StaticRuntimeResolvableOneOfInputComponent
         super.onInit();
     }
 
-    afterOptionsLoaded() {
+    afterOptionsLoaded(staticProperty: RuntimeResolvableOneOfStaticProperty) {
+        this.staticProperty.options = staticProperty.options;
         if (this.staticProperty.options && this.staticProperty.options.length > 0) {
             this.staticProperty.options[0].selected = true;
         }
@@ -48,5 +49,9 @@ export class StaticRuntimeResolvableOneOfInputComponent
             option.selected = false;
         }
         this.staticProperty.options.find(option => option.elementId === id).selected = true;
+    }
+
+    parse(staticProperty: StaticPropertyUnion): RuntimeResolvableOneOfStaticProperty {
+        return staticProperty as RuntimeResolvableOneOfStaticProperty;
     }
 }

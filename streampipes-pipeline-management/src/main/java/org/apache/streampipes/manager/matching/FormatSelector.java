@@ -20,14 +20,16 @@ package org.apache.streampipes.manager.matching;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpDataFormat;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.vocabulary.MessageFormat;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FormatSelector extends GroundingSelector {
 
@@ -46,12 +48,15 @@ public class FormatSelector extends GroundingSelector {
             List<SpDataFormat> prioritizedFormats =
                     BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedFormats();
 
-            return prioritizedFormats
+            List<SpDataFormat> supportedFormats = prioritizedFormats
                     .stream()
-                    .filter(pf -> supportsFormat(pf.getMessageFormat()))
-                    .findFirst()
-                    .map(pf -> new TransportFormat(pf.getMessageFormat()))
-                    .orElse(new TransportFormat(MessageFormat.Json));
+                    .filter(pf -> supportsFormat(pf.getMessageFormat())).collect(Collectors.toList());
+
+            if (supportedFormats.size() > 0) {
+                return new TransportFormat(supportedFormats.get(0).getMessageFormat());
+            } else {
+                return new TransportFormat(MessageFormat.Json);
+            }
         }
     }
 
@@ -63,6 +68,10 @@ public class FormatSelector extends GroundingSelector {
                         .getSupportedGrounding()
                         .getTransportFormats()
                         .stream()
-                        .anyMatch(s -> s.getRdfType().contains(format)));
+                        .anyMatch(s -> rdfTypesAsString(s.getRdfType()).contains(format)));
+    }
+
+    private List<String> rdfTypesAsString(List<URI> uri) {
+        return uri.stream().map(URI::toString).collect(Collectors.toList());
     }
 }

@@ -33,71 +33,51 @@ import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Code is the same as InfluxDB (org.apache.streampipes.sinks.databases.jvm.influxdb) sink. Changes applied here should also be applied in the InfluxDB sink
  */
 public class DataLakeInfluxDbClient {
-    private Integer influxDbPort;
-    private String influxDbHost;
-    private String databaseName;
-    private String measureName;
-    private String user;
-    private String password;
-    private String timestampField;
-    private Integer batchSize;
-    private Integer flushDuration;
 
-    private Logger logger;
+    private final String measureName;
+    private final String timestampField;
+    private final Integer batchSize;
+    private final Integer flushDuration;
+
+    private final Logger logger;
 
     private InfluxDB influxDb = null;
+    private final InfluxDbConnectionSettings settings;
+    private final EventSchema originalEventSchema;
 
-    DataLakeInfluxDbClient(String influxDbHost,
-                           Integer influxDbPort,
-                           String databaseName,
-                           String measureName,
-                           String user,
-                           String password,
+    Map<String, String> targetRuntimeNames = new HashMap<>();
+
+    DataLakeInfluxDbClient(InfluxDbConnectionSettings settings,
                            String timestampField,
                            Integer batchSize,
                            Integer flushDuration,
+                           EventSchema originalEventSchema,
                            Logger logger) throws SpRuntimeException {
-        this.influxDbHost = influxDbHost;
-        this.influxDbPort = influxDbPort;
-        this.databaseName = databaseName;
-        this.measureName = measureName;
-        this.user = user;
-        this.password = password;
+        this.settings = settings;
+        this.originalEventSchema = originalEventSchema;
         this.timestampField = timestampField;
         this.batchSize = batchSize;
         this.flushDuration = flushDuration;
         this.logger = logger;
+        this.measureName = settings.getMeasureName();
 
-        validate();
+        prepareSchema();
         connect();
     }
 
-    /**
-     * Checks whether the {@link DataLakeInfluxDbClient#influxDbHost} is valid
-     *
-     * @throws SpRuntimeException If the hostname is not valid
-     */
-    private void validate() throws SpRuntimeException {
-        //TODO: replace regex with validation method (import org.apache.commons.validator.routines.InetAddressValidator;)
-        // Validates the database name and the attributes
-        // See following link for regular expressions:
-        // https://stackoverflow.com/questions/106179/regular-expression-to-match-dns-hostname-or-ip-address
-    /*String ipRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|"
-        + "[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
-    String hostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*"
-        + "([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";*/
-        // https://stackoverflow.com/questions/3114595/java-regex-for-accepting-a-valid-hostname-ipv4-or-ipv6-address)
-        //if (!influxDbHost.matches(ipRegex) && !influxDbHost.matches(hostnameRegex)) {
-        //  throw new SpRuntimeException("Error: Hostname '" + influxDbHost
-        //      + "' not allowed");
-        //}
+    private void prepareSchema() {
+        originalEventSchema
+                .getEventProperties()
+                .forEach(ep -> targetRuntimeNames.put(ep.getRuntimeName(), DataLakeUtils.sanitizePropertyRuntimeName(ep.getRuntimeName())));
     }
 
     /**
@@ -109,8 +89,8 @@ public class DataLakeInfluxDbClient {
     private void connect() throws SpRuntimeException {
         // Connecting to the server
         // "http://" must be in front
-        String urlAndPort = influxDbHost + ":" + influxDbPort;
-        influxDb = InfluxDBFactory.connect(urlAndPort, user, password);
+        String urlAndPort = settings.getInfluxDbHost() + ":" + settings.getInfluxDbPort();
+        influxDb = InfluxDBFactory.connect(urlAndPort, settings.getUser(), settings.getPassword());
 
         // Checking, if server is available
         Pong response = influxDb.ping();
@@ -118,6 +98,7 @@ public class DataLakeInfluxDbClient {
             throw new SpRuntimeException("Could not connect to InfluxDb Server: " + urlAndPort);
         }
 
+        String databaseName = settings.getDatabaseName();
         // Checking whether the database exists
         if(!databaseExists(databaseName)) {
             logger.info("Database '" + databaseName + "' not found. Gets created ...");
@@ -177,10 +158,10 @@ public class DataLakeInfluxDbClient {
                 String runtimeName = ep.getRuntimeName();
 
                 if (!timestampField.endsWith(runtimeName)) {
-                    String preparedRuntimeName = DataLake.prepareString(runtimeName);
+                    String preparedRuntimeName = targetRuntimeNames.get(runtimeName);
                     PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
 
-                    // store property as tag when he field is a dimension property
+                    // store property as tag when the field is a dimension property
                     if ("DIMENSION_PROPERTY".equals(ep.getPropertyScope())) {
                         p.tag(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
                     } else {

@@ -16,7 +16,7 @@
   ~
   -->
 
-<img src="{{iconUrl}}" *ngIf="showImage" style="{{iconSizeCss()}}">
+<img [src]="image" *ngIf="showImage" style="{{iconSizeCss()}}">
 <span *ngIf="!showImage" class="element-text-icon">
             {{iconText}}
 </span>

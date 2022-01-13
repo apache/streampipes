@@ -19,17 +19,18 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua;
 
 import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
+import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
-import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.api.SupportsRuntimeConfig;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
@@ -47,12 +48,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvidedOptions {
+public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
 
     public static final String ID = "org.apache.streampipes.connect.iiot.adapters.opcua";
 
     private int pullingIntervalMilliSeconds;
-    private OpcUa opcUa;
+    private SpOpcUaClient spOpcUaClient;
     private List<OpcNode> allNodes;
     private List<NodeId> allNodeIds;
     private int numberProperties;
@@ -75,19 +76,20 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
 
         this.allNodeIds = new ArrayList<>();
         try {
-            this.opcUa.connect();
-            this.allNodes = this.opcUa.browseNode(true);
+            this.spOpcUaClient.connect();
+            OpcUaNodeBrowser browserClient = new OpcUaNodeBrowser(this.spOpcUaClient.getClient(), this.spOpcUaClient.getSpOpcConfig());
+            this.allNodes = browserClient.findNodes();
 
 
                 for (OpcNode node : this.allNodes) {
                     this.allNodeIds.add(node.nodeId);
                 }
 
-            if (opcUa.inPullMode()) {
-                this.pullingIntervalMilliSeconds = opcUa.getPullIntervalMilliSeconds();
+            if (spOpcUaClient.inPullMode()) {
+                this.pullingIntervalMilliSeconds = spOpcUaClient.getPullIntervalMilliSeconds();
             } else {
                 this.numberProperties = this.allNodeIds.size();
-                this.opcUa.createListSubscription(this.allNodeIds, this);
+                this.spOpcUaClient.createListSubscription(this.allNodeIds, this);
             }
 
 
@@ -99,9 +101,9 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
         @Override
     public void startAdapter() throws AdapterException {
 
-        this.opcUa = OpcUa.from(this.adapterDescription);
+        this.spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(this.adapterDescription));
 
-        if (this.opcUa.inPullMode()) {
+        if (this.spOpcUaClient.inPullMode()) {
             super.startAdapter();
         } else {
             this.before();
@@ -111,31 +113,29 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
     @Override
     public void stopAdapter() throws AdapterException {
         // close connection
-        this.opcUa.disconnect();
+        this.spOpcUaClient.disconnect();
 
-        if (this.opcUa.inPullMode()){
+        if (this.spOpcUaClient.inPullMode()){
             super.stopAdapter();
         }
     }
 
     @Override
     protected void pullData() {
+        CompletableFuture<List<DataValue>> response = this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
+        try {
+        List<DataValue> returnValues = response.get();
+            for (int i = 0; i<returnValues.size(); i++) {
 
-            CompletableFuture<List<DataValue>> response = this.opcUa.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
-            try {
+                Object value = returnValues.get(i).getValue().getValue();
+                this.event.put(this.allNodes.get(i).getLabel(), value);
 
-            List<DataValue> returnValues = response.get();
-                for (int i = 0; i<returnValues.size(); i++) {
+            }
+         } catch (InterruptedException | ExecutionException ie) {
+            ie.printStackTrace();
+         }
 
-                    Object value = returnValues.get(i).getValue().getValue();
-                    this.event.put(this.allNodes.get(i).getLabel(), value);
-
-                }
-             } catch (InterruptedException | ExecutionException ie) {
-                ie.printStackTrace();
-             }
-
-            adapterPipeline.process(this.event);
+        adapterPipeline.process(this.event);
 
     }
 
@@ -201,7 +201,7 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
                 )
                 .requiredTextParameter(Labels.withId(OpcUaLabels.NAMESPACE_INDEX.name()))
                 .requiredTextParameter(Labels.withId(OpcUaLabels.NODE_ID.name()))
-                .requiredMultiValueSelectionFromContainer(
+                .requiredRuntimeResolvableTreeInput(
                         Labels.withId(OpcUaLabels.AVAILABLE_NODES.name()),
                         Arrays.asList(OpcUaLabels.NAMESPACE_INDEX.name(), OpcUaLabels.NODE_ID.name())
                 )
@@ -219,7 +219,6 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
 
     @Override
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
-
         return OpcUaUtil.getSchema(adapterDescription);
     }
 
@@ -229,10 +228,7 @@ public class OpcUaAdapter extends PullAdapter implements ResolvesContainerProvid
     }
 
     @Override
-    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor parameterExtractor) {
-
-        return OpcUaUtil.resolveOptions(requestId, parameterExtractor);
-
+    public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor) {
+        return OpcUaUtil.resolveConfiguration(staticPropertyInternalName, extractor);
     }
-
 }

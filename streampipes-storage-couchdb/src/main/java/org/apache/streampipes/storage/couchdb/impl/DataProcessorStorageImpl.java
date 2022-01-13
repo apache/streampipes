@@ -23,6 +23,7 @@ import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescription> implements IDataProcessorStorage {
 
@@ -64,7 +65,7 @@ public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescripti
             .stream()
             .filter(p -> p.getAppId().equals(appId))
             .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(NoSuchElementException::new);
   }
 
   private String getCurrentRev(String elementId) {

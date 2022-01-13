@@ -1,0 +1,21 @@
+org.apache.streampipes.processors.filters.jvm.throughputmon.title=Throughput Monitor
+org.apache.streampipes.processors.filters.jvm.throughputmon.description=Monitors and forwards event throughput statistics
+
+batch-window-key.title=Batch Window Size
+batch-window-key.description=The number of events used for calculating the statistics
+
+startTime.title=Start Time
+startTime.description=
+
+endTime.title=End Time
+endTime.description=
+
+duration.title=Duration
+duration.description=
+
+eventCount.title=Event Count
+eventCount.description=
+
+throughput.title=Throughput
+throughput.description=
+

@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.processors.changedetection.jvm.cusum;
 
-import java.util.Arrays;
-
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -33,6 +31,8 @@ import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import java.util.Arrays;
+
 public class CusumController extends StandaloneEventProcessingDeclarer<CusumParameters> {
 
     private static final String NUMBER_MAPPING = "number-mapping";
@@ -43,7 +43,7 @@ public class CusumController extends StandaloneEventProcessingDeclarer<CusumPara
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.changedetection.jvm.cusum")
                 .category(DataProcessorType.FILTER)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+                .withAssets(Assets.DOCUMENTATION)
                 .withLocales(Locales.EN)
                 .requiredStream(StreamRequirementsBuilder
                         .create()

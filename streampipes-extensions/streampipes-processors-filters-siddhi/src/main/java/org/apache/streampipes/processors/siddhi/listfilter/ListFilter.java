@@ -52,7 +52,7 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listfilter")
             .withLocales(Locales.EN)
             .category(DataProcessorType.PATTERN_DETECT)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+            .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId
                             (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)

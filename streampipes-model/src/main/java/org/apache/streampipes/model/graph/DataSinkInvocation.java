@@ -36,21 +36,21 @@ public class DataSinkInvocation extends InvocableStreamPipesEntity {
     this.category = sec.getCategory();
   }
 
-  public DataSinkInvocation(DataSinkDescription sec) {
+  public DataSinkInvocation(DataSinkDescription other) {
     super();
-    this.setName(sec.getName());
-    this.setDescription(sec.getDescription());
-    this.setIconUrl(sec.getIconUrl());
-    this.setInputStreams(sec.getSpDataStreams());
-    this.setSupportedGrounding(sec.getSupportedGrounding());
-    this.setStaticProperties(sec.getStaticProperties());
-    this.setBelongsTo(sec.getElementId());
-    this.category = sec.getCategory();
-    this.setStreamRequirements(sec.getSpDataStreams());
-    this.setAppId(sec.getAppId());
-    this.setIncludesAssets(sec.isIncludesAssets());
+    this.setName(other.getName());
+    this.setDescription(other.getDescription());
+    this.setIconUrl(other.getIconUrl());
+    this.setInputStreams(other.getSpDataStreams());
+    this.setSupportedGrounding(other.getSupportedGrounding());
+    this.setStaticProperties(other.getStaticProperties());
+    this.setBelongsTo(other.getElementId());
+    this.category = other.getCategory();
+    this.setStreamRequirements(other.getSpDataStreams());
+    this.setAppId(other.getAppId());
+    this.setIncludesAssets(other.isIncludesAssets());
     this.setElementId(ElementIdGenerator.makeElementId(this));
-    //this.setUri(belongsTo +"/" +getElementId());
+    this.setIncludedAssets(other.getIncludedAssets());
   }
 
   public DataSinkInvocation(DataSinkDescription sec, String domId) {

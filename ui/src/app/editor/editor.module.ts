@@ -16,57 +16,55 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {GridsterModule} from 'angular-gridster2';
-import {MatTabsModule} from "@angular/material/tabs";
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {SemanticTypeUtilsService} from '../core-services/semantic-type/semantic-type-utils.service';
-import {EditorComponent} from "./editor.component";
-import {EditorService} from "./services/editor.service";
-import {PipelineElementIconStandComponent} from "./components/pipeline-element-icon-stand/pipeline-element-icon-stand.component";
-import {PipelineAssemblyComponent} from "./components/pipeline-assembly/pipeline-assembly.component";
-import {ImageChecker} from "../services/image-checker.service";
-import {PipelineElementComponent} from "./components/pipeline-element/pipeline-element.component";
-import {JsplumbBridge} from "./services/jsplumb-bridge.service";
-import {PipelinePositioningService} from "./services/pipeline-positioning.service";
-import {JsplumbService} from "./services/jsplumb.service";
-import {JsplumbConfigService} from "./services/jsplumb-config.service";
-import {PipelineEditorService} from "./services/pipeline-editor.service";
-import {PipelineValidationService} from "./services/pipeline-validation.service";
-import {PipelineComponent} from "./components/pipeline/pipeline.component";
-import {ObjectProvider} from "./services/object-provider.service";
-import {PipelineElementOptionsComponent} from "./components/pipeline-element-options/pipeline-element-options.component";
-import {PipelineElementRecommendationService} from "./services/pipeline-element-recommendation.service";
-import {CustomizeComponent} from "./dialog/customize/customize.component";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {CoreUiModule} from "../core-ui/core-ui.module";
-import {SavePipelineComponent} from "./dialog/save-pipeline/save-pipeline.component";
-import {PipelineElementRecommendationComponent} from "./components/pipeline-element-recommendation/pipeline-element-recommendation.component";
-import {CompatibleElementsComponent} from "./dialog/compatible-elements/compatible-elements.component";
-import {MatListModule} from "@angular/material/list";
-import {HelpComponent} from "./dialog/help/help.component";
-import {PipelineElementDocumentationComponent} from "./components/pipeline-element-documentation/pipeline-element-documentation.component";
-import {ShowdownModule} from 'ngx-showdown';
-import {SafeCss} from "./utils/style-sanitizer";
-import {MatchingErrorComponent} from "./dialog/matching-error/matching-error.component";
-import {WelcomeTourComponent} from "./dialog/welcome-tour/welcome-tour.component";
-import {MissingElementsForTutorialComponent} from "./dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component";
-import {OutputStrategyComponent} from "./components/output-strategy/output-strategy.component";
-import {CustomOutputStrategyComponent} from "./components/output-strategy/custom-output/custom-output-strategy.component";
-import {PropertySelectionComponent} from "./components/output-strategy/property-selection/property-selection.component";
-import {UserDefinedOutputStrategyComponent} from "./components/output-strategy/user-defined-output/user-defined-output.component";
-import {ConnectModule} from "../connect/connect.module";
-import {PipelineElementTemplateConfigComponent} from "./components/pipeline-element-template-config/pipeline-element-template-config.component";
-import {EnabledPipelineElementFilter} from "./filter/enabled-pipeline-element.filter";
-import {PipelineElementDraggedService} from "./services/pipeline-element-dragged.service";
-import {PipelineCanvasScrollingService} from "./services/pipeline-canvas-scrolling.service";
-import {JsplumbEndpointService} from "./services/jsplumb-endpoint.service";
-import {JsplumbFactoryService} from "./services/jsplumb-factory.service";
-import {PipelineElementPreviewComponent} from "./components/pipeline-element-preview/pipeline-element-preview.component";
-import {PipelineElementDiscoveryComponent} from "./dialog/pipeline-element-discovery/pipeline-element-discovery.component";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { GridsterModule } from 'angular-gridster2';
+import { MatTabsModule } from '@angular/material/tabs';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
+import { EditorComponent } from './editor.component';
+import { EditorService } from './services/editor.service';
+import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
+import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
+import { PipelineElementComponent } from './components/pipeline-element/pipeline-element.component';
+import { PipelinePositioningService } from './services/pipeline-positioning.service';
+import { JsplumbService } from './services/jsplumb.service';
+import { JsplumbConfigService } from './services/jsplumb-config.service';
+import { PipelineEditorService } from './services/pipeline-editor.service';
+import { PipelineValidationService } from './services/pipeline-validation.service';
+import { PipelineComponent } from './components/pipeline/pipeline.component';
+import { ObjectProvider } from './services/object-provider.service';
+import { PipelineElementOptionsComponent } from './components/pipeline-element-options/pipeline-element-options.component';
+import { PipelineElementRecommendationService } from './services/pipeline-element-recommendation.service';
+import { CustomizeComponent } from './dialog/customize/customize.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { SavePipelineComponent } from './dialog/save-pipeline/save-pipeline.component';
+import { PipelineElementRecommendationComponent } from './components/pipeline-element-recommendation/pipeline-element-recommendation.component';
+import { CompatibleElementsComponent } from './dialog/compatible-elements/compatible-elements.component';
+import { MatListModule } from '@angular/material/list';
+import { HelpComponent } from './dialog/help/help.component';
+import { PipelineElementDocumentationComponent } from './components/pipeline-element-documentation/pipeline-element-documentation.component';
+import { ShowdownModule } from 'ngx-showdown';
+import { SafeCss } from './utils/style-sanitizer';
+import { MatchingErrorComponent } from './dialog/matching-error/matching-error.component';
+import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
+import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
+import { OutputStrategyComponent } from './components/output-strategy/output-strategy.component';
+import { CustomOutputStrategyComponent } from './components/output-strategy/custom-output/custom-output-strategy.component';
+import { PropertySelectionComponent } from './components/output-strategy/property-selection/property-selection.component';
+import { UserDefinedOutputStrategyComponent } from './components/output-strategy/user-defined-output/user-defined-output.component';
+import { ConnectModule } from '../connect/connect.module';
+import { PipelineElementTemplateConfigComponent } from './components/pipeline-element-template-config/pipeline-element-template-config.component';
+import { EnabledPipelineElementFilter } from './filter/enabled-pipeline-element.filter';
+import { PipelineElementDraggedService } from './services/pipeline-element-dragged.service';
+import { PipelineCanvasScrollingService } from './services/pipeline-canvas-scrolling.service';
+import { JsplumbEndpointService } from './services/jsplumb-endpoint.service';
+import { JsplumbFactoryService } from './services/jsplumb-factory.service';
+import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
+import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 
 @NgModule({
     imports: [
@@ -125,7 +123,6 @@ import {PipelineElementDiscoveryComponent} from "./dialog/pipeline-element-disco
         PipelinePositioningService,
         PipelineValidationService,
         PipelineElementRecommendationService,
-        ImageChecker,
         SafeCss,
     ],
   exports: [

@@ -15,35 +15,15 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.model.runtime;
 
-public class RuntimeOptions {
+package org.apache.streampipes.container.api;
 
-  private String label;
-  private String additionalPayload;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
-  public RuntimeOptions(String label, String additionalPayload) {
-    this.label = label;
-    this.additionalPayload = additionalPayload;
-  }
+public interface SupportsRuntimeConfig {
 
-  public RuntimeOptions() {
+  StaticProperty resolveConfiguration(String staticPropertyInternalName,
+                                      StaticPropertyExtractor extractor);
 
-  }
-
-  public String getLabel() {
-    return label;
-  }
-
-  public void setLabel(String label) {
-    this.label = label;
-  }
-
-  public String getAdditionalPayload() {
-    return additionalPayload;
-  }
-
-  public void setAdditionalPayload(String additionalPayload) {
-    this.additionalPayload = additionalPayload;
-  }
 }

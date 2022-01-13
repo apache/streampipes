@@ -18,19 +18,19 @@
 
 package org.apache.streampipes.connect.container.worker.rest;
 
+import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.container.worker.management.RuntimeResovable;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.api.RuntimeResolvableRequestHandler;
+import org.apache.streampipes.container.api.SupportsRuntimeConfig;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/api/v1/worker/resolvable")
 public class RuntimeResolvableResource extends AbstractSharedRestInterface {
@@ -43,17 +43,19 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
     public Response fetchConfigurations(@PathParam("id") String elementId,
                                         RuntimeOptionsRequest runtimeOptionsRequest) {
 
-        ResolvesContainerProvidedOptions adapterClass =
-                RuntimeResovable.getRuntimeResolvableAdapter(elementId);
+        Connector connector = RuntimeResovable.getAdapterOrProtocol(elementId);
+        RuntimeOptionsResponse response;
+        RuntimeResolvableRequestHandler handler = new RuntimeResolvableRequestHandler();
 
-        List<Option> availableOptions =
-                adapterClass.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                        StaticPropertyExtractor.from(runtimeOptionsRequest.getStaticProperties(),
-                                runtimeOptionsRequest.getInputStreams(),
-                                runtimeOptionsRequest.getAppId()));
+        if (connector instanceof ResolvesContainerProvidedOptions) {
+            response = handler.handleRuntimeResponse((ResolvesContainerProvidedOptions) connector, runtimeOptionsRequest);
+        } else if (connector instanceof SupportsRuntimeConfig) {
+            response = handler.handleRuntimeResponse((SupportsRuntimeConfig) connector, runtimeOptionsRequest);
+        } else {
+            throw new WebApplicationException(javax.ws.rs.core.Response.Status.BAD_REQUEST);
+        }
 
-        return ok(new RuntimeOptionsResponse(runtimeOptionsRequest,
-                availableOptions));
+        return ok(response);
     }
 
 }

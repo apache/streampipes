@@ -41,22 +41,22 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 
   private List<String> category;
 
-  public DataProcessorInvocation(DataProcessorDescription sepa) {
+  public DataProcessorInvocation(DataProcessorDescription other) {
     super();
-    this.setName(sepa.getName());
-    this.setDescription(sepa.getDescription());
-    this.setIconUrl(sepa.getIconUrl());
-    this.setInputStreams(sepa.getSpDataStreams());
-    this.setSupportedGrounding(sepa.getSupportedGrounding());
-    this.setStaticProperties(sepa.getStaticProperties());
-    this.setOutputStrategies(sepa.getOutputStrategies());
-    this.setBelongsTo(sepa.getElementId());
-    this.category = sepa.getCategory();
-    this.setStreamRequirements(sepa.getSpDataStreams());
-    this.setAppId(sepa.getAppId());
-    this.setIncludesAssets(sepa.isIncludesAssets());
+    this.setName(other.getName());
+    this.setDescription(other.getDescription());
+    this.setIconUrl(other.getIconUrl());
+    this.setInputStreams(other.getSpDataStreams());
+    this.setSupportedGrounding(other.getSupportedGrounding());
+    this.setStaticProperties(other.getStaticProperties());
+    this.setOutputStrategies(other.getOutputStrategies());
+    this.setBelongsTo(other.getElementId());
+    this.category = other.getCategory();
+    this.setStreamRequirements(other.getSpDataStreams());
+    this.setAppId(other.getAppId());
+    this.setIncludesAssets(other.isIncludesAssets());
+    this.setIncludedAssets(other.getIncludedAssets());
     this.setElementId(ElementIdGenerator.makeElementId(this));
-    //this.setUri(belongsTo +"/" +getElementId());
   }
 
   public DataProcessorInvocation(DataProcessorInvocation other) {

@@ -56,16 +56,10 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
   public ConfiguredEventSink<DataLakeParameters> onInvocation(DataSinkInvocation graph,
                                                               DataSinkParameterExtractor extractor) {
 
-
     String measureName = extractor.singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
-    measureName = DataLake.prepareString(measureName);
+    measureName = DataLakeUtils.prepareString(measureName);
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
 
-//    String hostname = SinksInternalJvmConfig.INSTANCE.getDataLakeProtocol() + "://" + SinksInternalJvmConfig.INSTANCE.getDataLakeHost();
-//    Integer port = SinksInternalJvmConfig.INSTANCE.getDataLakePort();
-//    String dbName = SinksInternalJvmConfig.INSTANCE.getDataLakeDatabaseName();
-//    String user = SinksInternalJvmConfig.INSTANCE.getDataLakeUsername();
-//    String password = SinksInternalJvmConfig.INSTANCE.getDataLakePassword();
     Integer batch_size = 2000;
     Integer flush_duration = 500;
 

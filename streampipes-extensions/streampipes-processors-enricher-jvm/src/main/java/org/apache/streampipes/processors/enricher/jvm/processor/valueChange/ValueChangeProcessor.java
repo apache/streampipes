@@ -49,7 +49,7 @@ public class ValueChangeProcessor extends StreamPipesDataProcessor {
 	public DataProcessorDescription declareModel() {
 		return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valueChange")
 				.category(DataProcessorType.ENRICH)
-				.withAssets(Assets.DOCUMENTATION, Assets.ICON)
+				.withAssets(Assets.DOCUMENTATION)
 				.withLocales(Locales.EN)
 				.requiredFloatParameter(Labels.withId(FROM_PROPERTY_VALUE_ID))
 				.requiredFloatParameter(Labels.withId(TO_PROPERTY_VALUE_ID))

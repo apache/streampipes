@@ -16,42 +16,21 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-
-@Injectable()
-export class ImageChecker {
-
-    constructor() {}
-
-    imageExists(url, callback) {
-        if (url == null || url === 'undefined') {
-            callback(false);
-            return;
-        }
-        var img = new Image();
-        img.onload = function () {
-            callback(true);
-        };
-        img.onerror = function () {
-            callback(false);
-        };
-        img.src = url;
-    };
-
-    imageExistsBoolean(url) {
-        if (url == null || url === 'undefined') {
-            return false;
-        }
-        var img = new Image();
-        img.onload = function () {
-            //callback(true);
-        };
-        img.onerror = function () {
-            //callback(false);
-        };
-        img.src = url;
-    }
-
+.sp-tree-invisible {
+  display: none;
 }
 
+.sp-tree ul,
+.sp-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
 
+.sp-tree .mat-nested-tree-node div[role=group] {
+  padding-left: 40px;
+}
+
+.sp-tree div[role=group] > .mat-tree-node {
+  padding-left: 40px;
+}

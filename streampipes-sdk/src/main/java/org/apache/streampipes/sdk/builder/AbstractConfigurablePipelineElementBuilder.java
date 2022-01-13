@@ -172,6 +172,27 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
+   * Assigns a new required slide toggle for a true/false selection
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param defaultValue The toggle's default value
+   * @return this
+   */
+  public BU requiredSlideToggle(Label label, boolean defaultValue) {
+    SlideToggleStaticProperty slideToggle = new SlideToggleStaticProperty(
+            label.getInternalId(),
+            label.getLabel(),
+            label.getDescription(),
+            defaultValue);
+
+    slideToggle.setSelected(defaultValue);
+
+    this.staticProperties.add(slideToggle);
+
+    return me();
+  }
+
+  /**
    * Assigns a new code block parameter (without a specific language) which is required
    * by the processing element.
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
@@ -840,6 +861,12 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   public BU requiredMultiValueSelectionFromContainer(Label label,
                                                       List<String> dependsOn) {
     this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label, dependsOn));
+    return me();
+  }
+
+  public BU requiredRuntimeResolvableTreeInput(Label label,
+                                               List<String> dependsOn) {
+    this.staticProperties.add(StaticProperties.runtimeResolvableTreeInput(label, dependsOn));
     return me();
   }
 

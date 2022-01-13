@@ -35,6 +35,7 @@ public class KafkaConnectUtils {
     private static final String USERNAME_ACCESS = "username-alternative";
     private static final String USERNAME_GROUP = "username-group";
     private static final String USERNAME_KEY = "username";
+    private static final String HIDE_INTERNAL_TOPICS = "hide-internal-topics";
 
     public static String getUsernameKey() {
         return USERNAME_KEY;
@@ -52,6 +53,14 @@ public class KafkaConnectUtils {
 
     public static Label getTopicLabel() {
         return Labels.withId(TOPIC_KEY);
+    }
+
+    public static Label getHideInternalTopicsLabel() {
+        return Labels.withId(HIDE_INTERNAL_TOPICS);
+    }
+
+    public static String getHideInternalTopicsKey() {
+        return HIDE_INTERNAL_TOPICS;
     }
 
     public static Label getHostLabel() {

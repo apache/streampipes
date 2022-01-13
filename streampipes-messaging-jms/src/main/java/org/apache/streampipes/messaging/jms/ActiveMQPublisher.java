@@ -43,7 +43,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
   private Session session;
   private MessageProducer producer;
 
-  private Boolean connected = false;
+  private boolean connected = false;
 
   public ActiveMQPublisher() {
 
@@ -137,7 +137,7 @@ public class ActiveMQPublisher implements EventProducer<JmsTransportProtocol> {
   }
 
   @Override
-  public Boolean isConnected() {
+  public boolean isConnected() {
     return connected;
   }
 
