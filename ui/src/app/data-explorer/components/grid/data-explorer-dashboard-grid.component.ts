@@ -54,6 +54,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   options: IDataViewDashboardConfig;
   loaded = false;
 
+  @Input()
   currentlyConfiguredWidgetId: string;
 
   @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
@@ -111,12 +112,10 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   loadWidgetConfig(widgetId: string, setCurrentlyConfigured?: boolean) {
     this.dataViewDataExplorerService.getWidget(widgetId).subscribe(response => {
       this.configuredWidgets.set(widgetId, response);
-      //this.dataViewDataExplorerService.getPersistedDataStream(response.pipelineId, response.measureName).subscribe(ps => {
       this.dataLakeMeasures.set(widgetId, response.dataConfig.sourceConfigs[0].measure);
       if (setCurrentlyConfigured) {
         this.propagateWidgetSelection(this.configuredWidgets.get(widgetId));
       }
-      //});
     });
   }
 

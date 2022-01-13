@@ -73,6 +73,7 @@
         </sp-data-explorer-dashboard-overview>
         <sp-data-explorer-dashboard-panel fxLayout="column"
                                           #dashboardPanel
+                                          (resetDashboardChanges)="resetDashboardChanges()"
                                           [(editMode)]="editMode"
                                           [dashboard]="selectedDataViewDashboard"
                                           [timeSettings]="selectedDataViewDashboard.dashboardTimeSettings"

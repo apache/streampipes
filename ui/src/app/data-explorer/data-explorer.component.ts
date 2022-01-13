@@ -118,7 +118,7 @@ export class DataExplorerComponent implements OnInit {
     this.selectDashboard(this.dataViewDashboards.indexOf(currentDashboard) + 1);
   }
 
-  protected getDashboards(currentDashboardId?: string) {
+  getDashboards(currentDashboardId?: string) {
     this.dashboardsLoaded = false;
     this.dataViewService.getDataViews().subscribe(data => {
       this.dataViewDashboards = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -141,5 +141,9 @@ export class DataExplorerComponent implements OnInit {
     this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
       this.getDashboards();
     });
+  }
+
+  resetDashboardChanges() {
+    this.getDashboards(this.selectedDataViewDashboard._id);
   }
 }

@@ -47,6 +47,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
 
+  // TODO add emitter to reset dashboard
+  @Output() resetDashboardChanges: EventEmitter<boolean> = new EventEmitter();
+
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
   @ViewChild('designerDrawer') designerDrawer: MatDrawer;
   @ViewChild('designerPanel') designerPanel: DataExplorerDesignerPanelComponent;
@@ -57,8 +60,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
   currentlyConfiguredWidget: DataExplorerWidgetModel;
+  newWidgetMode = false;
   currentlyConfiguredWidgetId: string;
   dataLakeMeasure: DataLakeMeasure;
+
+  showDesignerPanel = false;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
@@ -82,7 +88,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
-    //this.currentlyConfiguredWidget = widget;
     const dashboardItem = {} as DashboardItem;
     dashboardItem.id = widget._id;
     dashboardItem.cols = 3;
@@ -93,7 +98,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.loadWidgetConfig(widget._id, true);
   }
 
-  updateDashboard() {
+  persistDashboardChanges() {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
       this.dashboard._rev = result._rev;
       if (this.widgetIdsToRemove.length > 0) {
@@ -101,6 +106,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
       }
       this.dashboardGrid.updateAllWidgets();
       this.editModeChange.emit(false);
+      this.closeDesignerPanel();
     });
   }
 
@@ -150,6 +156,31 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   updateCurrentlyConfiguredWidget(currentWidget: DataExplorerWidgetModel) {
     this.widgetsToUpdate.set(currentWidget._id, currentWidget);
     this.currentlyConfiguredWidget = currentWidget;
+    this.currentlyConfiguredWidgetId = currentWidget._id;
     this.designerPanel.modifyWidgetMode(currentWidget, false);
+    this.showDesignerPanel = true;
+  }
+
+  discardChanges() {
+    this.resetDashboardChanges.emit(true);
+  }
+
+  createW() {
+    this.dataLakeMeasure = new DataLakeMeasure();
+    this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
+    this.currentlyConfiguredWidget['@class'] = 'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
+    this.currentlyConfiguredWidget.baseAppearanceConfig = {};
+    this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle = 'New Widget';
+    this.currentlyConfiguredWidget.dataConfig = {};
+    this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+    this.newWidgetMode = true;
+    this.showDesignerPanel = true;
+  }
+
+  closeDesignerPanel() {
+   this.showDesignerPanel = false;
+   this.currentlyConfiguredWidget = undefined;
+   this.dataLakeMeasure = undefined;
+   this.currentlyConfiguredWidgetId = undefined;
   }
 }

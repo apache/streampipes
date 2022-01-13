@@ -29,7 +29,7 @@
                 <div class="time-counter"
                      *ngIf="editMode"
                      [ngStyle]="{background: configuredWidget.baseAppearanceConfig.textColor, color: configuredWidget.baseAppearanceConfig.backgroundColor}">
-                    {{loadingTime}} s
+                    {{loadingTime}}s
                 </div>
                 <button mat-button
                         mat-icon-button
@@ -62,16 +62,20 @@
                 </button>
                 <button mat-button
                         mat-icon-button
+                        [class.mat-raised-button]="currentlyConfiguredWidgetId === configuredWidget._id"
                         (click)="triggerWidgetEditMode()"
-                        *ngIf="editMode" matTooltip="Edit widget"
+                        *ngIf="editMode"
+                        [color]="currentlyConfiguredWidgetId === configuredWidget._id ? 'accent' : ''"
+                        matTooltip="Edit widget"
                         [attr.data-cy]="'edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
                     <mat-icon>edit</mat-icon>
                 </button>
                 <button mat-button
                         mat-icon-button
                         (click)="removeWidget()"
+                        matTooltip="Delete widget"
                         *ngIf="editMode && hasDataExplorerDeletePrivileges">
-                    <mat-icon>clear</mat-icon>
+                    <mat-icon>delete</mat-icon>
                 </button>
             </div>
         </div>
