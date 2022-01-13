@@ -26,22 +26,17 @@
                 {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
             </div>
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                <div class="time-counter" [ngStyle]="{background: configuredWidget.baseAppearanceConfig.textColor, color: configuredWidget.baseAppearanceConfig.backgroundColor}">
-                    {{loadingTime}}
+                <div class="time-counter"
+                     *ngIf="editMode"
+                     [ngStyle]="{background: configuredWidget.baseAppearanceConfig.textColor, color: configuredWidget.baseAppearanceConfig.backgroundColor}">
+                    {{loadingTime}} s
                 </div>
-                <button
-                        mat-button
-                        mat-icon-button
-                        (click)="triggerWidgetEditMode()"
-                        *ngIf="editMode" matTooltip="Edit widget"
-                        [attr.data-cy]="'edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
-                    <mat-icon>edit</mat-icon>
-                </button>
                 <button mat-button
                         mat-icon-button
                         [matMenuTriggerFor]="menu"
                         aria-label="More options"
                         matTooltip="More options"
+                        *ngIf="!editMode"
                         [attr.data-cy]="'more-options-' + configuredWidget.baseAppearanceConfig.widgetTitle">
                     <mat-icon>more_vert</mat-icon>
                 </button>
@@ -53,110 +48,35 @@
                     </button>
                     <button mat-menu-item
                             (click)="startEditMode()"
-                            *ngIf="!editMode && hasDataExplorerWritePrivileges"
+                            *ngIf="hasDataExplorerWritePrivileges"
                             [attr.data-cy]="'start-edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
                         <mat-icon>edit</mat-icon>
                         <span>Edit Widget</span>
                     </button>
-                    <button mat-menu-item
-                            (click)="removeWidget()"
-                            *ngIf="editMode && hasDataExplorerDeletePrivileges">
-                        <mat-icon>clear</mat-icon>
-                        <span>Delete widget</span>
-                    </button>
                 </mat-menu>
+                <button mat-button
+                        mat-icon-button
+                        *ngIf="editMode"
+                        (click)="downloadDataAsFile()">
+                    <mat-icon>get_app</mat-icon>
+                </button>
+                <button mat-button
+                        mat-icon-button
+                        (click)="triggerWidgetEditMode()"
+                        *ngIf="editMode" matTooltip="Edit widget"
+                        [attr.data-cy]="'edit-' + configuredWidget.baseAppearanceConfig.widgetTitle">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-button
+                        mat-icon-button
+                        (click)="removeWidget()"
+                        *ngIf="editMode && hasDataExplorerDeletePrivileges">
+                    <mat-icon>clear</mat-icon>
+                </button>
             </div>
         </div>
         <div class="widget-content p-0 gridster-item-content ml-0 mr-0 h-100">
             <ng-template widgetHost class="h-100 p-0"></ng-template>
-<!--            <div *ngIf="widgetLoaded" class="h-100">-->
-
-<!--                <div *ngIf="configuredWidget.widgetType === 'table'" class="h-100 p-0">-->
-<!--                    <sp-data-explorer-table-widget-->
-<!--                            (removeWidgetCallback)="removeWidget()"-->
-<!--                            (timerCallback)="handleTimer($event)"-->
-<!--                            [timeSettings]="timeSettings"-->
-<!--                            [gridsterItem]="dashboardItem"-->
-<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
-<!--                            [editMode]="editMode"-->
-<!--                            [dataViewDashboardItem]="dashboardItem"-->
-<!--                            [dataExplorerWidget]="configuredWidget"-->
-<!--                            class="h-100">-->
-<!--                    </sp-data-explorer-table-widget>-->
-<!--                </div>-->
-<!--                <div *ngIf="configuredWidget.widgetType === 'line-chart'" class="h-100 p-0">-->
-<!--                    <sp-data-explorer-line-chart-widget-->
-<!--                            (removeWidgetCallback)="removeWidget()"-->
-<!--                            (timerCallback)="handleTimer($event)"-->
-<!--                            [timeSettings]="timeSettings"-->
-<!--                            [gridsterItem]="dashboardItem"-->
-<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
-<!--                            [editMode]="editMode"-->
-<!--                            [dataViewDashboardItem]="dashboardItem"-->
-<!--                            [dataExplorerWidget]="configuredWidget"-->
-<!--                            class="h-100">-->
-<!--                    </sp-data-explorer-line-chart-widget>-->
-<!--                </div>-->
-<!--                <div *ngIf="configuredWidget.widgetType === 'image'" class="h-100 p-0">-->
-<!--                    <sp-data-explorer-image-widget-->
-<!--                            (removeWidgetCallback)="removeWidget()"-->
-<!--                            [timeSettings]="timeSettings"-->
-<!--                            [gridsterItem]="dashboardItem"-->
-<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
-<!--                            [editMode]="editMode"-->
-<!--                            [dataViewDashboardItem]="dashboardItem"-->
-<!--                            [dataExplorerWidget]="configuredWidget"-->
-<!--                            class="h-100"></sp-data-explorer-image-widget>-->
-<!--                </div>-->
-<!--                <div *ngIf="configuredWidget.widgetType === 'indicator-chart'" class="h-100 p-0">-->
-<!--                    <sp-data-explorer-indicator-chart-widget-->
-<!--                            (removeWidgetCallback)="removeWidget()"-->
-<!--                            [timeSettings]="timeSettings"-->
-<!--                            [gridsterItem]="dashboardItem"-->
-<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
-<!--                            [editMode]="editMode"-->
-<!--                            [dataViewDashboardItem]="dashboardItem"-->
-<!--                            [dataExplorerWidget]="configuredWidget"-->
-<!--                            class="h-100">-->
-<!--                    </sp-data-explorer-indicator-chart-widget>-->
-<!--                </div>-->
-<!--                <div *ngIf="configuredWidget.widgetType === 'histogram-chart'" class="h-100 p-0">-->
-<!--                    <sp-data-explorer-histogram-chart-widget-->
-<!--                            (removeWidgetCallback)="removeWidget()"-->
-<!--                            [timeSettings]="timeSettings"-->
-<!--                            [gridsterItem]="dashboardItem"-->
-<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
-<!--                            [editMode]="editMode"-->
-<!--                            [dataViewDashboardItem]="dashboardItem"-->
-<!--                            [dataExplorerWidget]="configuredWidget"-->
-<!--                            class="h-100">-->
-<!--                    </sp-data-explorer-histogram-chart-widget>-->
-<!--                </div>-->
-<!--                <div *ngIf="configuredWidget.widgetType === 'density-chart'" class="h-100 p-0">-->
-<!--                    <sp-data-explorer-density-chart-widget-->
-<!--                            (removeWidgetCallback)="removeWidget()"-->
-<!--                            [timeSettings]="timeSettings"-->
-<!--                            [gridsterItem]="dashboardItem"-->
-<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
-<!--                            [editMode]="editMode"-->
-<!--                            [dataViewDashboardItem]="dashboardItem"-->
-<!--                            [dataExplorerWidget]="configuredWidget"-->
-<!--                            class="h-100">-->
-<!--                    </sp-data-explorer-density-chart-widget>-->
-<!--                </div>-->
-<!--                <div *ngIf="configuredWidget.widgetType === 'pie-chart'" class="h-100 p-0">-->
-<!--                    <sp-data-explorer-pie-chart-widget-->
-<!--                            (removeWidgetCallback)="removeWidget()"-->
-<!--                            [timeSettings]="timeSettings"-->
-<!--                            [gridsterItem]="dashboardItem"-->
-<!--                            [gridsterItemComponent]="gridsterItemComponent"-->
-<!--                            [editMode]="editMode"-->
-<!--                            [dataViewDashboardItem]="dashboardItem"-->
-<!--                            [dataExplorerWidget]="configuredWidget"-->
-<!--                            class="h-100">-->
-<!--                    </sp-data-explorer-pie-chart-widget>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
     </div>
 </div>

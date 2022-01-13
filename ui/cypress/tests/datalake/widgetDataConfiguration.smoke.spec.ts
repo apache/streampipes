@@ -32,17 +32,7 @@ describe('Test Table View in Data Explorer', () => {
     /**
      * Prepare tests
      */
-    DataLakeUtils.goToDatalake();
-    DataLakeUtils.createAndEditDataView();
-    DataLakeUtils.selectTimeRange(
-      new Date(2020, 10, 20, 22, 44),
-      new Date(2021, 10, 20, 22, 44));
-    DataLakeUtils.addNewWidget();
-    DataLakeUtils.selectDataSet('Persist');
-    DataLakeUtils.dataConfigSelectAllFields();
-    DataLakeUtils.selectVisualizationConfig();
-    DataLakeUtils.selectVisualizationType('Table');
-    DataLakeUtils.clickCreateButton();
+    DataLakeUtils.addTableWidget();
 
     // Validate that X lines are available
     checkTableRows(10);

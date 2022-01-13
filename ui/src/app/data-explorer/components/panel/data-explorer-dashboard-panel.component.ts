@@ -27,6 +27,7 @@ import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
 import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
+import { TimeSelectionService } from '../../services/time-selection.service';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -42,6 +43,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
    */
   @Input() timeSettings: TimeSettings;
   @Input() editMode: boolean;
+  @Input() timeRangeVisible: boolean;
 
   @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
 
@@ -60,7 +62,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
-              private refreshDashboardService: RefreshDashboardService) {
+              private refreshDashboardService: RefreshDashboardService,
+              private timeSelectionService: TimeSelectionService) {
   }
 
   public ngOnInit() {
@@ -119,6 +122,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     const index = this.dashboard.widgets.findIndex(item => item.id === widget._id);
     this.dashboard.widgets.splice(index, 1);
     this.widgetIdsToRemove.push(widget._id);
+    if (this.currentlyConfiguredWidget._id === widget._id) {
+      this.currentlyConfiguredWidget = undefined;
+    }
   }
 
   updateAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
@@ -135,10 +141,15 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.toggleGrid();
   }
 
+  updateDateRange(timeSettings: TimeSettings) {
+    this.timeSettings = timeSettings;
+    this.dashboard.dashboardTimeSettings = timeSettings;
+    this.timeSelectionService.notify(timeSettings);
+  }
+
   updateCurrentlyConfiguredWidget(currentWidget: DataExplorerWidgetModel) {
     this.widgetsToUpdate.set(currentWidget._id, currentWidget);
     this.currentlyConfiguredWidget = currentWidget;
-    //this.dataLakeMeasure = currentWidget.b;
     this.designerPanel.modifyWidgetMode(currentWidget, false);
   }
 }

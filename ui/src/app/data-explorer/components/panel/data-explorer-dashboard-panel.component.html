@@ -16,6 +16,24 @@
   ~
   -->
 
+<div class="fixed-height data-explorer-options sp-tab-bg page-container-nav" fxLayout="row" *ngIf="(editMode || timeRangeVisible)">
+    <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
+        <button mat-button
+                mat-raised-button
+                color="accent"
+                matTooltip="Save"
+                [matTooltipPosition]="'above'"
+                (click)="updateDashboard()"
+                data-cy="save-data-explorer-widget-btn">
+            <mat-icon>save</mat-icon>&nbsp;<span>Save</span>
+        </button>
+    </div>
+    <div class="data-explorer-options-item" fxLayoutAlign="end center" fxFlex fxLayout="row">
+        <sp-time-range-selector (dateRangeEmitter)="updateDateRange($event)" [dateRange]="timeSettings">
+        </sp-time-range-selector>
+    </div>
+</div>
+
 <div fxFlex="100" fxLayout="column">
     <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
         <mat-drawer #designerDrawer [opened]="editMode" mode="side" position="end" class="designer-panel"
@@ -26,7 +44,6 @@
                                                  [dataLakeMeasure]="dataLakeMeasure"
                                                  (addWidgetEmitter)="addWidget($event)"
                                                  fxFlex="100">
-
                 </sp-data-explorer-designer-panel>
             </div>
         </mat-drawer>

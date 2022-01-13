@@ -42,7 +42,7 @@ export class DataLakeUtils {
     return adapterBuilder.build();
   }
 
-  public static loadDataIntoDataLake(dataSet: string) {
+  public static loadDataIntoDataLake(dataSet: string, wait = true) {
     // Create adapter with dataset
     FileManagementUtils.addFile(dataSet);
 
@@ -50,7 +50,23 @@ export class DataLakeUtils {
     ConnectUtils.addGenericSetAdapter(adapter);
 
     // Wait till data is stored
-    cy.wait(10000);
+    if (wait) {
+      cy.wait(10000);
+    }
+  }
+
+  public static addTableWidget() {
+    DataLakeUtils.goToDatalake();
+    DataLakeUtils.createAndEditDataView();
+    DataLakeUtils.selectTimeRange(
+        new Date(2020, 10, 20, 22, 44),
+        new Date(2021, 10, 20, 22, 44));
+    DataLakeUtils.addNewWidget();
+    DataLakeUtils.selectDataSet('Persist');
+    DataLakeUtils.dataConfigSelectAllFields();
+    DataLakeUtils.selectVisualizationConfig();
+    DataLakeUtils.selectVisualizationType('Table');
+    DataLakeUtils.clickCreateButton();
   }
 
   public static loadRandomDataSetIntoDataLake() {
