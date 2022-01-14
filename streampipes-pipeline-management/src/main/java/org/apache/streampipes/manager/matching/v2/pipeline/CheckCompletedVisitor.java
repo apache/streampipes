@@ -107,6 +107,16 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   }
 
+  @Override
+  public void visit(SlideToggleStaticProperty slideToggleStaticProperty) {
+
+  }
+
+  @Override
+  public void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty) {
+
+  }
+
   public List<PipelineElementValidationInfo> getValidationInfos() {
     return this.validationInfos;
   }

@@ -30,11 +30,13 @@ export class JsplumbBridge {
     }
 
     activateEndpointWithType(endpointId: string, endpointEnabled: boolean, endpointType: string) {
+        console.log("activate endpoint");
         this.activateEndpoint(endpointId, endpointEnabled);
         this.setEndpointType(endpointId, endpointType);
     }
 
     setEndpointType(endpointId: string, endpointType: string) {
+        console.log("set endpoint type");
         const endpoint = this.getEndpointById(endpointId);
         // @ts-ignore
         endpoint.setType(endpointType);
@@ -91,7 +93,7 @@ export class JsplumbBridge {
 
     getTargetEndpoint(id) {
         // @ts-ignore
-        return this.jsPlumbInstance.selectEndpoints({target: id});
+        return this.jsPlumbInstance.selectEndpoints({target: document.getElementById(id)});
     }
 
     getEndpointCount(id) {

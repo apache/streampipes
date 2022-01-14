@@ -96,6 +96,16 @@ public class UpdateStaticPropertiesVisitor extends DefaultStaticPropertyVisitor 
 
   }
 
+  @Override
+  public void visit(SlideToggleStaticProperty slideToggleStaticProperty) {
+
+  }
+
+  @Override
+  public void visit(RuntimeResolvableTreeInputStaticProperty treeInputStaticProperty) {
+
+  }
+
   private void updateMappingProperty(MappingProperty mappingProperty) {
     AbstractRequirementsSelectorGenerator generator = RequirementsSelectorGeneratorFactory
             .getRequirementsSelector(

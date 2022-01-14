@@ -46,6 +46,7 @@ import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import { PipelinePositioningService } from '../../services/pipeline-positioning.service';
 import { EVENT_CONNECTION_ABORT, EVENT_CONNECTION_DRAG } from '@jsplumb/browser-ui';
 import { EVENT_CONNECTION, EVENT_CONNECTION_DETACHED, EVENT_CONNECTION_MOVED } from '@jsplumb/core';
+import { PipelineStyleService } from "../../services/pipeline-style.service";
 
 @Component({
   selector: 'pipeline',
@@ -104,6 +105,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
               private objectProvider: ObjectProvider,
               private editorService: EditorService,
               private shepherdService: ShepherdService,
+              private pipelineStyleService: PipelineStyleService,
               private pipelineValidationService: PipelineValidationService,
               private dialogService: DialogService,
               private dialog: MatDialog,
@@ -325,9 +327,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             pe.settings.loadingStatus = false;
             const edgeValidations = this.getTargetEdgeValidations(pipelineModificationMessage, info.target.id);
             const currentConnectionValid = this.currentConnectionValid(pe, edgeValidations);
-            this.processEdgeValidations(pipelineModificationMessage, info.target.id);
             if (currentConnectionValid) {
-              info.targetEndpoint.setType('token');
               this.validatePipeline();
               this.modifyPipeline(pipelineModificationMessage);
               if (this.jsplumbService.isFullyConnected(pe, this.preview)) {
@@ -343,12 +343,12 @@ export class PipelineComponent implements OnInit, OnDestroy {
             } else {
               this.JsplumbBridge.detach(info.connection);
               const invalidEdgeValidation = edgeValidations.find(e => e.sourceId === info.source.id);
-              console.log(invalidEdgeValidation);
               if (invalidEdgeValidation) {
                 this.showMatchingErrorDialog(invalidEdgeValidation.status.notifications);
               }
             }
           }, status => {
+            pe.settings.loadingStatus = false;
             this.showErrorDialog(status.error.title, status.error.description);
           });
       }
@@ -371,24 +371,28 @@ export class PipelineComponent implements OnInit, OnDestroy {
     return edgeValidations.filter(ev => ev.targetId === targetDomId);
   }
 
-  processEdgeValidations(pipelineModificationMessage: PipelineModificationMessage,
-                         targetDomId: string) {
-
-  }
-
   modifyPipeline(pm: PipelineModificationMessage) {
     if (pm.pipelineModifications) {
       pm.pipelineModifications.forEach(modification => {
         const id = modification.domId;
         if (id !== 'undefined') {
           const pe = this.objectProvider.findElement(id, this.rawPipelineModel);
-          (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
-          if (pe.payload instanceof DataProcessorInvocation) {
+          if (modification.staticProperties) {
+            (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
+          }
+          if (pe.payload instanceof DataProcessorInvocation && modification.outputStrategies) {
             (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
           }
-          (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
+          if (modification.inputStreams) {
+            (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
+          }
         }
       });
+    }
+    if (pm.edgeValidations) {
+      this.pipelineStyleService.updateAllConnectorStyles(pm.edgeValidations);
+      this.pipelineStyleService.updateAllEndpointStyles(pm.edgeValidations);
+      this.JsplumbBridge.repaintEverything();
     }
   }
 
@@ -460,7 +464,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
           if (!(pipelineElementConfig.payload instanceof DataSinkInvocation)) {
             this.JsplumbBridge.activateEndpoint('out-' + pipelineElementConfig.payload.dom, pipelineElementConfig.settings.completed);
           }
-          this.JsplumbBridge.getSourceEndpoint(pipelineElementConfig.payload.dom).toggleType('token');
           this.triggerPipelineCacheUpdate();
           this.announceConfiguredElement(pipelineElementConfig);
           if (this.previewModeActive) {
@@ -499,5 +502,10 @@ export class PipelineComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  triggerPipelineModification() {
+    this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
+    this.objectProvider.updatePipeline(this.currentPipelineModel).subscribe(pm => this.modifyPipeline(pm));
   }
 }

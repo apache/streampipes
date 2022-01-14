@@ -282,6 +282,7 @@ export class PipelineAssemblyComponent implements OnInit, AfterViewInit {
                 this.pipelineValid = this.pipelineValidationService
                     .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), false);
             });
+            this.pipelineComponent.triggerPipelineModification();
         });
     }
 
