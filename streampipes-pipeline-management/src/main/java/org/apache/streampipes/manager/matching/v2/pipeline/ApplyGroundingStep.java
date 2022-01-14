@@ -62,7 +62,9 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
               .get(getIndex(target))
               .setEventGrounding(selectedGrounding);
 
-      this.visitorHistory.put(target.getDOM(), 1);
+      if (target.getInputStreams().size() > 1) {
+        this.visitorHistory.put(target.getDOM(), 1);
+      }
     }
   }
 

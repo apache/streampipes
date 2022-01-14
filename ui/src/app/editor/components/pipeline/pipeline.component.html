@@ -39,7 +39,8 @@
         </div>
         <pipeline-element [pipelineElement]="pipelineElement.payload" [preview]="preview"></pipeline-element>
     </div>
-    <pipeline-element-options *ngIf="!preview" (delete)="handleDeleteOption($event)"
+    <pipeline-element-options *ngIf="!preview && currentMouseOverElement==pipelineElement.payload.dom"
+                              (delete)="handleDeleteOption($event)"
                               (customize)="showCustomizeDialog($event)"
                               [currentMouseOverElement]="currentMouseOverElement"
                               [pipelineValid]="pipelineValid"

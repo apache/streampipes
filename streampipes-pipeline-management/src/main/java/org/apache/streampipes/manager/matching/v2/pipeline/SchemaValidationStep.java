@@ -47,7 +47,9 @@ public class SchemaValidationStep extends AbstractPipelineValidationStep {
       target.getInputStreams().get(getIndex(target)).setEventSchema(getSourceSchema(source));
     }
 
-    this.visitorHistory.put(target.getDOM(), 1);
+    if (target.getInputStreams().size() > 1) {
+      this.visitorHistory.put(target.getDOM(), 1);
+    }
   }
 
   private EventSchema getSourceSchema(NamedStreamPipesEntity source) {

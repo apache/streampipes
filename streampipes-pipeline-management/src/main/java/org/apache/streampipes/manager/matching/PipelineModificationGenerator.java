@@ -22,14 +22,14 @@ public class PipelineModificationGenerator {
 
   private final PipelineGraph pipelineGraph;
   private final Map<String, PipelineModification> pipelineModifications;
-  private List<PipelineEdgeValidation> edgeValidations;
+  private Map<String, PipelineEdgeValidation> edgeValidations;
   private final PipelineValidator pipelineValidator;
 
   public PipelineModificationGenerator(PipelineGraph pipelineGraph) {
     this.pipelineGraph = pipelineGraph;
     this.pipelineModifications = new HashMap<>();
     this.pipelineValidator = new PipelineValidator();
-    this.edgeValidations = new ArrayList<>();
+    this.edgeValidations = new HashMap<>();
   }
 
   public PipelineModificationMessage buildPipelineModificationMessage() {
@@ -42,7 +42,7 @@ public class PipelineModificationGenerator {
 
     PipelineModificationMessage message = new PipelineModificationMessage();
     message.setPipelineModifications(getModifications());
-    message.setEdgeValidations(this.edgeValidations);
+    message.setEdgeValidations(toList(this.edgeValidations));
     return message;
   }
 
@@ -57,10 +57,10 @@ public class PipelineModificationGenerator {
       try {
         pipelineValidator.apply(source, t, targets, validationInfos);
         buildModification(modification, t);
-        edgeValidations.add(PipelineEdgeValidation.complete(source.getDOM(), t.getDOM()));
+        edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.complete(source.getDOM(), t.getDOM()));
       } catch (SpValidationException e) {
         //e.getErrorLog().forEach(log -> validationInfos.add(PipelineElementValidationInfo.error(log.toString())));
-        edgeValidations.add(PipelineEdgeValidation.invalid(source.getDOM(), t.getDOM(), toNotifications(e.getErrorLog())));
+        edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.invalid(source.getDOM(), t.getDOM(), toNotifications(e.getErrorLog())));
         modification.setPipelineElementValid(false);
       }
       modification.setValidationInfos(validationInfos);
@@ -68,6 +68,16 @@ public class PipelineModificationGenerator {
 
       addModification(t, getConnections(t));
     });
+  }
+
+  private String makeKey(NamedStreamPipesEntity source,
+                         InvocableStreamPipesEntity t) {
+    return source.getDOM() + "-" + t.getDOM();
+  }
+
+  private List<PipelineEdgeValidation> toList(Map<String,
+          PipelineEdgeValidation> edgeValidations) {
+    return new ArrayList<>(edgeValidations.values());
   }
 
   private void buildModification(PipelineModification modification,
