@@ -21,6 +21,7 @@ import { JsplumbConfigService } from './jsplumb-config.service';
 import { EdgeValidationStatus, PipelineEdgeValidation } from '../../core-model/gen/streampipes-model';
 import { ArrowOverlay, Endpoint } from '@jsplumb/core';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
+import { PipelineElementConfig, PipelineElementConfigurationStatus } from "../model/editor.model";
 
 @Injectable()
 export class PipelineStyleService {
@@ -74,6 +75,11 @@ export class PipelineStyleService {
   updateEndpointStyle(endpoint: Endpoint,
                       endpointType: string) {
     endpoint.setType(endpointType);
+  }
+
+  updatePeConfigurationStatus(pe: PipelineElementConfig,
+                              status: PipelineElementConfigurationStatus) {
+    pe.settings.completed = status;
   }
 
   byId(id: string) {

@@ -22,13 +22,21 @@ import { PipelineEditorService } from '../../services/pipeline-editor.service';
 import { JsplumbBridge } from '../../services/jsplumb-bridge.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
-import { InvocablePipelineElementUnion, PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
+import {
+  InvocablePipelineElementUnion,
+  PipelineElementConfig,
+  PipelineElementConfigurationStatus,
+  PipelineElementUnion
+} from '../../model/editor.model';
 import {
   CustomOutputStrategy,
   DataProcessorInvocation,
-  DataSinkInvocation, Notification,
+  DataSinkInvocation,
+  Notification,
   Pipeline,
-  PipelineCanvasMetadata, PipelineEdgeValidation, PipelineModification, PipelineModificationMessage,
+  PipelineCanvasMetadata,
+  PipelineEdgeValidation,
+  PipelineModificationMessage,
   PipelinePreviewModel,
   SpDataSet,
   SpDataStream
@@ -268,11 +276,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   handleDeleteOption(pipelineElement: PipelineElementConfig) {
     this.JsplumbBridge.removeAllEndpoints(pipelineElement.payload.dom);
-    this.rawPipelineModel.forEach(pe => {
-      if (pe.payload.dom === pipelineElement.payload.dom) {
-        pe.settings.disabled = true;
-      }
-    });
+    this.rawPipelineModel = this.rawPipelineModel.filter(pe => !(pe.payload.dom === pipelineElement.payload.dom));
     if (this.rawPipelineModel.every(pe => pe.settings.disabled)) {
       this.editorService.makePipelineAssemblyEmpty(true);
     }
@@ -336,7 +340,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                   this.showCustomizeDialog(pe);
                 } else {
                   (pe.payload as InvocablePipelineElementUnion).configured = true;
-                  pe.settings.completed = true;
+                  this.pipelineStyleService.updatePeConfigurationStatus(pe, PipelineElementConfigurationStatus.INCOMPLETE);
                   this.announceConfiguredElement(pe);
                 }
               }
@@ -386,6 +390,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
           }
           if (modification.inputStreams) {
             (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;
+          }
+          if (modification.validationInfos.length > 0) {
+            this.pipelineStyleService.updatePeConfigurationStatus(pe, PipelineElementConfigurationStatus.MODIFIED);
           }
         }
       });
@@ -462,9 +469,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
         this.currentPipelineModel = this.objectProvider.makePipeline(this.rawPipelineModel);
         this.objectProvider.updatePipeline(this.currentPipelineModel).subscribe(pm => {
           this.modifyPipeline(pm);
-          if (!(pipelineElementConfig.payload instanceof DataSinkInvocation)) {
-            this.JsplumbBridge.activateEndpoint('out-' + pipelineElementConfig.payload.dom, pipelineElementConfig.settings.completed);
-          }
+          // if (!(pipelineElementConfig.payload instanceof DataSinkInvocation)) {
+          //   this.JsplumbBridge.activateEndpoint('out-' + pipelineElementConfig.payload.dom, pipelineElementConfig.settings.completed);
+          // }
           this.triggerPipelineCacheUpdate();
           this.announceConfiguredElement(pipelineElementConfig);
           if (this.previewModeActive) {

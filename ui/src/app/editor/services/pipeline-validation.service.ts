@@ -19,7 +19,7 @@
 import * as dagre from 'dagre';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { Injectable } from '@angular/core';
-import { PipelineElementConfig } from '../model/editor.model';
+import { PipelineElementConfig, PipelineElementConfigurationStatus } from '../model/editor.model';
 import { DataProcessorInvocation, DataSinkInvocation } from '../../core-model/gen/streampipes-model';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
@@ -102,7 +102,7 @@ export class PipelineValidationService {
     allElementsConfigured(rawPipelineModel: PipelineElementConfig[]): boolean {
         return rawPipelineModel
             .filter(config => ((config.payload instanceof DataProcessorInvocation) || (config.payload instanceof DataSinkInvocation)))
-            .every(config => config.settings.completed);
+            .every(config => (config.settings.completed === PipelineElementConfigurationStatus.OK));
     }
 
     allElementsConnected(rawPipelineModel, jsplumbBridge) {

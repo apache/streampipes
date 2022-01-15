@@ -19,7 +19,12 @@
 import { JsplumbConfigService } from './jsplumb-config.service';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { Injectable } from '@angular/core';
-import { InvocablePipelineElementUnion, PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
+import {
+    InvocablePipelineElementUnion,
+    PipelineElementConfig,
+    PipelineElementConfigurationStatus,
+    PipelineElementUnion
+} from '../model/editor.model';
 import { PipelineElementTypeUtils } from '../utils/editor.utils';
 import {
     DataProcessorInvocation,
@@ -181,7 +186,7 @@ export class JsplumbService {
         pipelineElementConfig.settings = {connectable,
             openCustomize: !(pipelineElement as any).configured,
             preview: isPreview,
-            completed: (pipelineElement instanceof SpDataStream || pipelineElement instanceof SpDataSet || isPreview || isCompleted),
+            completed: (pipelineElement instanceof SpDataStream || pipelineElement instanceof SpDataSet || isPreview || isCompleted) ? PipelineElementConfigurationStatus.OK : PipelineElementConfigurationStatus.INCOMPLETE,
             disabled: false,
             loadingStatus: false,
             displaySettings,

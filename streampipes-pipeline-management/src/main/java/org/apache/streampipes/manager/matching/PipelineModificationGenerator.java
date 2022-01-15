@@ -41,9 +41,21 @@ public class PipelineModificationGenerator {
     }
 
     PipelineModificationMessage message = new PipelineModificationMessage();
-    message.setPipelineModifications(getModifications());
-    message.setEdgeValidations(toList(this.edgeValidations));
+    List<PipelineModification> modifications = toList(this.pipelineModifications);
+    message.setPipelineModifications(modifications);
+
+    List<PipelineEdgeValidation> edgeValidations = toList(this.edgeValidations);
+    List<PipelineEdgeValidation> edgesWithoutConnectedStream = collectEdgesWithoutStream(modifications);
+    edgeValidations.addAll(edgesWithoutConnectedStream);
+    message.setEdgeValidations(edgeValidations);
     return message;
+  }
+
+  private List<PipelineEdgeValidation> collectEdgesWithoutStream(List<PipelineModification> modifications) {
+    List<PipelineEdgeValidation> edgeValidations = new ArrayList<>();
+    Set<String> edges = pipelineGraph.edgeSet();
+
+    return edgeValidations;
   }
 
   private void addModification(NamedStreamPipesEntity source,
@@ -75,9 +87,8 @@ public class PipelineModificationGenerator {
     return source.getDOM() + "-" + t.getDOM();
   }
 
-  private List<PipelineEdgeValidation> toList(Map<String,
-          PipelineEdgeValidation> edgeValidations) {
-    return new ArrayList<>(edgeValidations.values());
+  private <T> List<T> toList(Map<String,T> map) {
+    return new ArrayList<>(map.values());
   }
 
   private void buildModification(PipelineModification modification,
@@ -97,10 +108,6 @@ public class PipelineModificationGenerator {
             .map(pipelineGraph::getEdgeTarget)
             .map(g -> (InvocableStreamPipesEntity) g)
             .collect(Collectors.toSet());
-  }
-
-  private List<PipelineModification> getModifications() {
-    return new ArrayList<>(this.pipelineModifications.values());
   }
 
   private List<Notification> toNotifications(List<MatchingResultMessage> matchingResultMessages) {

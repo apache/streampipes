@@ -23,16 +23,21 @@ import { RestApi } from '../../../services/rest-api.service';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PipelineElementRecommendationService } from '../../services/pipeline-element-recommendation.service';
 import { ObjectProvider } from '../../services/object-provider.service';
-import { InvocablePipelineElementUnion, PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
+import {
+  InvocablePipelineElementUnion,
+  PipelineElementConfig,
+  PipelineElementConfigurationStatus,
+  PipelineElementUnion
+} from '../../model/editor.model';
 import { SpDataStream, WildcardTopicDefinition } from '../../../core-model/gen/streampipes-model';
 import { EditorService } from '../../services/editor.service';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
+import { PipelineStyleService } from "../../services/pipeline-style.service";
 
 @Component({
   selector: 'pipeline-element-options',
@@ -86,7 +91,8 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
               private jsplumbFactoryService: JsplumbFactoryService,
               private jsplumbService: JsplumbService,
               private pipelineValidationService: PipelineValidationService,
-              private restApi: RestApi) {
+              private restApi: RestApi,
+              private pipelineStyleService: PipelineStyleService) {
     this.recommendationsAvailable = false;
     this.possibleElements = [];
     this.recommendedElements = [];
@@ -106,7 +112,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
     this.isDataSource = this.pipelineElement.type === 'stream' || this.pipelineElement.type === 'set';
 
-    if (this.isDataSource || this.pipelineElement.settings.completed) {
+    if (this.isDataSource || this.pipelineElement.settings.completed === PipelineElementConfigurationStatus.OK) {
       this.initRecs(this.pipelineElement.payload.dom);
     }
   }
@@ -131,7 +137,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     const clonedModel: PipelineElementConfig[] = cloneDeep(this.rawPipelineModel);
     clonedModel.forEach(pe => {
       if (pe.payload.dom === pipelineElementDomId && (pe.type !== 'stream'  && pe.type !== 'set')) {
-        pe.settings.completed = false;
+        this.pipelineStyleService.updatePeConfigurationStatus(pe, PipelineElementConfigurationStatus.INCOMPLETE);
         (pe.payload as InvocablePipelineElementUnion).configured = false;
       }
     });

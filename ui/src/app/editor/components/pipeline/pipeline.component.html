@@ -31,10 +31,15 @@
         </div>
         <div class="pipeline-element-loading-container sp-fade-opacity"
              *ngIf="pipelineElement.settings.loadingStatus"></div>
-        <div class="pipeline-element-configuration-invalid {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}"
-             *ngIf="!pipelineElement.settings.completed">
-            <i class="material-icons pipeline-element-configuration-invalid-icon">
+        <div class="pipeline-element-configuration-status {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}">
+            <i class="material-icons pipeline-element-configuration-invalid-icon" *ngIf="pipelineElement.settings.completed === 3">
                 warning
+            </i>
+            <i class="material-icons pipeline-element-configuration-modified-icon" *ngIf="pipelineElement.settings.completed === 2">
+                warning
+            </i>
+            <i class="material-icons pipeline-element-configuration-ok-icon" *ngIf="pipelineElement.settings.completed === 1">
+                check_circle
             </i>
         </div>
         <pipeline-element [pipelineElement]="pipelineElement.payload" [preview]="preview"></pipeline-element>

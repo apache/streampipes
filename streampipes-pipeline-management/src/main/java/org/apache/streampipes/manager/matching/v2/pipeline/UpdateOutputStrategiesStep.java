@@ -43,19 +43,23 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
         .getOutputStrategies()
         .forEach(strategy -> {
           if (strategy instanceof CustomOutputStrategy) {
-            handleCustomOutputStrategy(inputStreams, (CustomOutputStrategy) strategy);
+            handleCustomOutputStrategy(inputStreams, (CustomOutputStrategy) strategy, validationInfos);
           }
         });
     }
   }
 
   private void handleCustomOutputStrategy(List<SpDataStream> inputStreams,
-                                          CustomOutputStrategy strategy) {
+                                          CustomOutputStrategy strategy,
+                                          List<PipelineElementValidationInfo> validationInfos) {
     PropertySelectorGenerator generator = getGenerator(inputStreams, strategy);
     strategy.setAvailablePropertyKeys(generator.generateSelectors());
     // delete selected keys that are not present as available keys
-    List<String> selected = getValidSelectedPropertyKeys(strategy);
-    strategy.setSelectedPropertyKeys(selected);
+    if (invalidPropertyKeysSelected(strategy)) {
+      List<String> selected = getValidSelectedPropertyKeys(strategy);
+      strategy.setSelectedPropertyKeys(selected);
+      validationInfos.add(PipelineElementValidationInfo.info("Auto-updated list of available fields"));
+    }
   }
 
   private PropertySelectorGenerator getGenerator(List<SpDataStream> inputStreams,
@@ -72,6 +76,10 @@ public class UpdateOutputStrategiesStep extends AbstractPipelineValidationStep {
               false
       );
     }
+  }
+
+  private boolean invalidPropertyKeysSelected(CustomOutputStrategy strategy) {
+    return !strategy.getAvailablePropertyKeys().containsAll(strategy.getSelectedPropertyKeys());
   }
 
   private List<String> getValidSelectedPropertyKeys(CustomOutputStrategy strategy) {

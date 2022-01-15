@@ -40,7 +40,6 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(CodeInputStaticProperty codeInputStaticProperty) {
-
   }
 
   @Override
@@ -65,7 +64,7 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   @Override
   public void visit(MappingPropertyNary mappingPropertyNary) {
-    if (mappingPropertyNary
+    if (existsSelection(mappingPropertyNary) && mappingPropertyNary
             .getSelectedProperties()
             .stream()
             .noneMatch((p -> mappingPropertyNary.getMapsFromOptions().contains(p)))) {
@@ -74,16 +73,23 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
               .stream()
               .filter(p -> mappingPropertyNary.getMapsFromOptions().contains(p))
               .collect(Collectors.toList()));
-      validationInfos.add(PipelineElementValidationInfo.info("Error in mapping property nary - removed invalid selection"));
+      validationInfos.add(PipelineElementValidationInfo.info("Auto-updated invalid field selection"));
     }
   }
 
   @Override
   public void visit(MappingPropertyUnary mappingPropertyUnary) {
-    if (!(mappingPropertyUnary.getMapsFromOptions().contains(mappingPropertyUnary.getSelectedProperty()))) {
-      // TODO only if element touched
-      mappingPropertyUnary.setSelectedProperty("");
-      validationInfos.add(PipelineElementValidationInfo.info("Error in mapping property unary - removed invalid selection"));
+    if (existsSelection(mappingPropertyUnary)) {
+      if (!(mappingPropertyUnary.getMapsFromOptions().contains(mappingPropertyUnary.getSelectedProperty()))) {
+        if (mappingPropertyUnary.getMapsFromOptions().size() > 0) {
+          String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
+          mappingPropertyUnary.setSelectedProperty(firstSelector);
+          validationInfos.add(PipelineElementValidationInfo.info("Auto-updated invalid field selection"));
+        }
+      }
+    } else {
+      String firstSelector = mappingPropertyUnary.getMapsFromOptions().get(0);
+      mappingPropertyUnary.setSelectedProperty(firstSelector);
     }
   }
 
@@ -119,5 +125,13 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
 
   public List<PipelineElementValidationInfo> getValidationInfos() {
     return this.validationInfos;
+  }
+
+  private boolean existsSelection(MappingPropertyUnary mappingProperty) {
+    return !(mappingProperty.getSelectedProperty() == null || mappingProperty.getSelectedProperty().equals(""));
+  }
+
+  private boolean existsSelection(MappingPropertyNary mappingProperty) {
+    return !(mappingProperty.getSelectedProperties() == null || mappingProperty.getSelectedProperties().size() == 0);
   }
 }

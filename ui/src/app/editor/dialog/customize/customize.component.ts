@@ -16,26 +16,25 @@
  *
  */
 
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
-import { InvocablePipelineElementUnion, PipelineElementConfig } from '../../model/editor.model';
+  InvocablePipelineElementUnion,
+  PipelineElementConfig,
+  PipelineElementConfigurationStatus
+} from '../../model/editor.model';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { JsplumbService } from '../../services/jsplumb.service';
 import {
   DataProcessorInvocation,
   EventSchema,
-  PipelineElementTemplate, PipelineElementTemplateConfig
+  PipelineElementTemplate,
+  PipelineElementTemplateConfig
 } from '../../../core-model/gen/streampipes-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { PipelineElementTemplateService } from '../../../platform-services/apis/pipeline-element-template.service';
+import { PipelineStyleService } from "../../services/pipeline-style.service";
 
 @Component({
   selector: 'customize-pipeline-element',
@@ -59,9 +58,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   matchingSelectionRight: any;
   invalid: any;
   helpDialogVisible: any;
-  currentStaticProperty: any;
   validationErrors: any;
-  configVisible: any;
 
   sourceEndpoint: any;
   sepa: any;
@@ -81,22 +78,23 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   templateConfigs: Map<string, any> = new Map();
 
   constructor(private dialogRef: DialogRef<CustomizeComponent>,
-              private JsPlumbService: JsplumbService,
-              private ShepherdService: ShepherdService,
+              private jsPlumbService: JsplumbService,
+              private shepherdService: ShepherdService,
               private fb: FormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
-              private pipelineElementTemplateService: PipelineElementTemplateService) {
+              private pipelineElementTemplateService: PipelineElementTemplateService,
+              private pipelineStyleService: PipelineStyleService) {
 
   }
 
   ngOnInit(): void {
     this.originalDialogWidth = this.dialogRef.currentConfig().width;
-    this.cachedPipelineElement = this.JsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
+    this.cachedPipelineElement = this.jsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
     this.isDataProcessor = this.cachedPipelineElement instanceof DataProcessorInvocation;
     this.cachedPipelineElement.inputStreams.forEach(is => {
       this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
     });
-    this.formValid = this.pipelineElement.settings.completed;
+    this.formValid = this.pipelineElement.settings.completed === PipelineElementConfigurationStatus.OK;
 
     this.parentForm = this.fb.group({});
 
@@ -106,8 +104,8 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
     this.parentForm.statusChanges.subscribe((status) => {
       this.formValid = this.viewInitialized && this.parentForm.valid;
     });
-    if (this.ShepherdService.isTourActive()) {
-      this.ShepherdService.trigger('customize-' + this.pipelineElement.type);
+    if (this.shepherdService.isTourActive()) {
+      this.shepherdService.trigger('customize-' + this.pipelineElement.type);
     }
     this.loadPipelineElementTemplates();
   }
@@ -126,10 +124,10 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
   save() {
     this.pipelineElement.payload = this.cachedPipelineElement;
-    this.pipelineElement.settings.completed = true;
+    this.pipelineStyleService.updatePeConfigurationStatus(this.pipelineElement, PipelineElementConfigurationStatus.OK);
     this.pipelineElement.payload.configured = true;
-    if (this.ShepherdService.isTourActive()) {
-      this.ShepherdService.trigger('save-' + this.pipelineElement.type);
+    if (this.shepherdService.isTourActive()) {
+      this.shepherdService.trigger('save-' + this.pipelineElement.type);
     }
     this.dialogRef.close(this.pipelineElement);
   }
@@ -191,7 +189,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
 
   loadTemplate(event: any) {
     if (!event.value) {
-      this.cachedPipelineElement = this.JsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
+      this.cachedPipelineElement = this.jsPlumbService.clone(this.pipelineElement.payload) as InvocablePipelineElementUnion;
       this.selectedTemplate = false;
     } else {
       this.selectedTemplate = event.value;

@@ -34,6 +34,12 @@ export interface PipelineElementPosition {
   y: number;
 }
 
+export enum PipelineElementConfigurationStatus {
+  OK = 1,
+  MODIFIED,
+  INCOMPLETE,
+}
+
 export interface PipelineElementConfig {
   type: string,
   settings: {
@@ -43,7 +49,7 @@ export interface PipelineElementConfig {
     connectable: string,
     disabled: boolean,
     loadingStatus: boolean,
-    completed: boolean
+    completed: PipelineElementConfigurationStatus
     position: {
       x: number,
       y: number
