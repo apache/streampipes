@@ -385,8 +385,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
           if (modification.staticProperties) {
             (pe.payload as InvocablePipelineElementUnion).staticProperties = modification.staticProperties;
           }
-          if (pe.payload instanceof DataProcessorInvocation && modification.outputStrategies) {
-            (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
+          if (pe.payload instanceof DataProcessorInvocation) {
+            if (modification.outputStrategies) {
+              (pe.payload as DataProcessorInvocation).outputStrategies = modification.outputStrategies;
+            }
+            if (modification.outputStream) {
+              (pe.payload as DataProcessorInvocation).outputStream = modification.outputStream;
+            }
           }
           if (modification.inputStreams) {
             (pe.payload as InvocablePipelineElementUnion).inputStreams = modification.inputStreams;

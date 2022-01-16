@@ -22,7 +22,7 @@ public class PipelineModificationGenerator {
 
   private final PipelineGraph pipelineGraph;
   private final Map<String, PipelineModification> pipelineModifications;
-  private Map<String, PipelineEdgeValidation> edgeValidations;
+  private final Map<String, PipelineEdgeValidation> edgeValidations;
   private final PipelineValidator pipelineValidator;
 
   public PipelineModificationGenerator(PipelineGraph pipelineGraph) {
@@ -95,6 +95,7 @@ public class PipelineModificationGenerator {
                                  InvocableStreamPipesEntity t) {
     if (t instanceof DataProcessorInvocation) {
       modification.setOutputStrategies(((DataProcessorInvocation) t).getOutputStrategies());
+      modification.setOutputStream(((DataProcessorInvocation) t).getOutputStream());
     }
     modification.setInputStreams(t.getInputStreams());
     modification.setStaticProperties(t.getStaticProperties());

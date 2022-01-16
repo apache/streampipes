@@ -20,6 +20,7 @@ package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
+import org.apache.streampipes.manager.matching.ConnectionStorageHandler;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
@@ -62,6 +63,8 @@ public class PipelineStorageService {
 
     pipeline.setSepas(sepas);
     pipeline.setActions(secs);
+
+    new ConnectionStorageHandler(pipeline).storeConnections();
   }
 
   private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {

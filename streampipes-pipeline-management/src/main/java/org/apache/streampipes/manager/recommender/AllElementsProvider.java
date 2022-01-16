@@ -15,23 +15,37 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.manager.matching;
 
-import org.apache.streampipes.manager.data.PipelineGraph;
-import org.apache.streampipes.manager.data.PipelineGraphBuilder;
-import org.apache.streampipes.model.message.PipelineModificationMessage;
+
+package org.apache.streampipes.manager.recommender;
+
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
-public class PipelineVerificationHandlerV2 {
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-  private final Pipeline pipeline;
+public class AllElementsProvider {
 
-  public PipelineVerificationHandlerV2(Pipeline pipeline) {
-    this.pipeline = pipeline;
+  private final List<NamedStreamPipesEntity> allElements;
+
+  public AllElementsProvider(Pipeline pipeline) {
+    this.allElements = Stream.of(
+                    pipeline.getStreams(),
+                    pipeline.getSepas(),
+                    pipeline.getActions())
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
   }
 
-  public PipelineModificationMessage verifyPipeline() {
-    PipelineGraph graph = new PipelineGraphBuilder(pipeline).buildGraph();
-    return new PipelineModificationGenerator(graph).buildPipelineModificationMessage();
+  public NamedStreamPipesEntity findElement(String domId) {
+    return this.allElements
+            .stream()
+            .filter(p -> p.getDOM().equals(domId))
+            .findFirst()
+            .orElseThrow(IllegalArgumentException::new);
   }
+
 }

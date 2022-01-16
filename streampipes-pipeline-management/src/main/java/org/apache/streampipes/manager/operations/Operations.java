@@ -102,8 +102,9 @@ public class Operations {
     return new TypeExtractor(graphData).getTypeVerifier().verifyAndUpdate();
   }
 
-  public static PipelineElementRecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException {
-    return new ElementRecommender(partialPipeline).findRecommendedElements();
+  public static PipelineElementRecommendationMessage findRecommendedElements(Pipeline partialPipeline,
+                                                                             String baseRecId) throws NoSuitableSepasAvailableException {
+    return new ElementRecommender(partialPipeline, baseRecId).findRecommendedElements();
   }
 
   public static void storePipeline(Pipeline pipeline) {

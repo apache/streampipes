@@ -120,39 +120,40 @@ export class JsplumbService {
 
     createAssemblyElement(pipelineElementDomId: string,
                           pipelineElement: InvocablePipelineElementUnion,
-                          $parentElement,
+                          sourceElement,
                           previewConfig: boolean) {
-        let $target;
+        let targetElementId;
         if (pipelineElement instanceof DataProcessorInvocation) {
-            $target = this.dataProcessorDropped(pipelineElementDomId, pipelineElement as DataProcessorInvocation, true, false);
-            this.connectNodes($parentElement, $target, previewConfig);
+            targetElementId = this.dataProcessorDropped(pipelineElementDomId, pipelineElement as DataProcessorInvocation, true, false);
+            this.connectNodes(sourceElement, targetElementId, previewConfig);
         } else {
-            $target = this.dataSinkDropped(pipelineElementDomId, pipelineElement, true, false);
-            this.connectNodes($parentElement, $target, previewConfig);
+            targetElementId = this.dataSinkDropped(pipelineElementDomId, pipelineElement, true, false);
+            this.connectNodes(sourceElement, targetElementId, previewConfig);
         }
     }
 
-    connectNodes($parentElement,
-                 $target,
+    connectNodes(sourceElement,
+                 targetElementId,
                  previewConfig: boolean) {
         let options;
         const jsplumbBridge = this.getBridge(previewConfig);
         // TODO: getJsplumbConfig depends on isPreview. Not implemented yet
         const jsplumbConfig = this.jsplumbEndpointService.getJsplumbConfig(true);
-        options = $parentElement.hasClass('stream') ?
+        options = sourceElement.hasClass('stream') ?
           jsplumbConfig.streamEndpointOptions : jsplumbConfig.sepaEndpointOptions;
         let sourceEndPoint;
-        if (jsplumbBridge.selectEndpoints({source: $parentElement}).length > 0) {
-            if (!(jsplumbBridge.selectEndpoints({source: $parentElement}).get(0).isFull())) {
-                sourceEndPoint = jsplumbBridge.selectEndpoints({source: $parentElement}).get(0);
+        if (jsplumbBridge.selectEndpoints({source: sourceElement}).length > 0) {
+            if (!(jsplumbBridge.selectEndpoints({source: sourceElement}).get(0).isFull())) {
+                sourceEndPoint = jsplumbBridge.selectEndpoints({source: sourceElement}).get(0);
             } else {
-                sourceEndPoint = jsplumbBridge.addEndpoint($parentElement, options);
+                sourceEndPoint = jsplumbBridge.addEndpoint(sourceElement, options);
             }
         } else {
-            sourceEndPoint = jsplumbBridge.addEndpoint($parentElement, options);
+            sourceEndPoint = jsplumbBridge.addEndpoint(sourceElement, options);
         }
 
-        const targetEndPoint = jsplumbBridge.selectEndpoints({target: $target}).get(0);
+        const targetElement = document.getElementById(targetElementId);
+        const targetEndPoint = jsplumbBridge.selectEndpoints({target: targetElement}).get(0);
 
         jsplumbBridge.connect({source: sourceEndPoint, target: targetEndPoint, detachable: true});
         jsplumbBridge.repaintEverything();

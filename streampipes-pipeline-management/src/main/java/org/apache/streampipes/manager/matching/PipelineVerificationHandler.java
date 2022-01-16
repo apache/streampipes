@@ -182,11 +182,6 @@ public class PipelineVerificationHandler {
     }
   }
 
-  public PipelineVerificationHandler storeConnection() {
-    new ConnectionStorageHandler(pipeline, rootPipelineElement).storeConnection();
-    return this;
-  }
-
   public PipelineModificationMessage getPipelineModificationMessage() {
     return pipelineModificationMessage;
   }

@@ -35,6 +35,7 @@ public class PipelineModification {
   private List<StaticProperty> staticProperties;
   private List<OutputStrategy> outputStrategies;
   private List<SpDataStream> inputStreams;
+  private SpDataStream outputStream;
 
   public PipelineModification(String domId, String elementId,
                               List<StaticProperty> staticProperties) {
@@ -109,5 +110,13 @@ public class PipelineModification {
 
   public void setValidationInfos(List<PipelineElementValidationInfo> validationInfos) {
     this.validationInfos = validationInfos;
+  }
+
+  public SpDataStream getOutputStream() {
+    return outputStream;
+  }
+
+  public void setOutputStream(SpDataStream outputStream) {
+    this.outputStream = outputStream;
   }
 }
