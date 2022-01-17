@@ -24,12 +24,16 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { PipelineElementRecommendationService } from '../../services/pipeline-element-recommendation.service';
 import { ObjectProvider } from '../../services/object-provider.service';
 import {
-  InvocablePipelineElementUnion,
   PipelineElementConfig,
   PipelineElementConfigurationStatus,
   PipelineElementUnion
 } from '../../model/editor.model';
-import { SpDataStream, WildcardTopicDefinition } from '../../../core-model/gen/streampipes-model';
+import {
+  DataProcessorInvocation,
+  DataSinkInvocation,
+  SpDataStream,
+  WildcardTopicDefinition
+} from '../../../core-model/gen/streampipes-model';
 import { EditorService } from '../../services/editor.service';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
@@ -37,7 +41,6 @@ import { CompatibleElementsComponent } from '../../dialog/compatible-elements/co
 import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
-import { PipelineStyleService } from "../../services/pipeline-style.service";
 
 @Component({
   selector: 'pipeline-element-options',
@@ -91,8 +94,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
               private jsplumbFactoryService: JsplumbFactoryService,
               private jsplumbService: JsplumbService,
               private pipelineValidationService: PipelineValidationService,
-              private restApi: RestApi,
-              private pipelineStyleService: PipelineStyleService) {
+              private restApi: RestApi) {
     this.recommendationsAvailable = false;
     this.possibleElements = [];
     this.recommendedElements = [];
@@ -104,7 +106,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     this.pipelineElementConfiguredObservable = this.editorService.pipelineElementConfigured$.subscribe(pipelineElementDomId => {
       this.pipelineElement.settings.openCustomize = false;
       this.restApi.updateCachedPipeline(this.rawPipelineModel);
-      if (pipelineElementDomId === this.pipelineElement.payload.dom) {
+      if (pipelineElementDomId === this.pipelineElement.payload.dom && ! (this.pipelineElement.payload instanceof DataSinkInvocation)) {
         this.initRecs(this.pipelineElement.payload.dom);
       }
     });
@@ -112,7 +114,8 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
     this.isDataSource = this.pipelineElement.type === 'stream' || this.pipelineElement.type === 'set';
 
-    if (this.isDataSource || this.pipelineElement.settings.completed === PipelineElementConfigurationStatus.OK) {
+    if (this.isDataSource ||
+      (this.pipelineElement.payload instanceof DataProcessorInvocation && this.pipelineElement.settings.completed === PipelineElementConfigurationStatus.OK)) {
       this.initRecs(this.pipelineElement.payload.dom);
     }
   }
@@ -135,12 +138,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
   initRecs(pipelineElementDomId) {
     const clonedModel: PipelineElementConfig[] = cloneDeep(this.rawPipelineModel);
-    clonedModel.forEach(pe => {
-      if (pe.payload.dom === pipelineElementDomId && (pe.type !== 'stream'  && pe.type !== 'set')) {
-        this.pipelineStyleService.updatePeConfigurationStatus(pe, PipelineElementConfigurationStatus.INCOMPLETE);
-        (pe.payload as InvocablePipelineElementUnion).configured = false;
-      }
-    });
     const currentPipeline = this.objectProvider.makePipeline(clonedModel);
     this.editorService.recommendPipelineElement(currentPipeline, pipelineElementDomId).subscribe((result) => {
       if (result.success) {
@@ -174,12 +171,6 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
 
   isRootElement() {
     return this.JsplumbBridge.getConnections({source: document.getElementById(this.pipelineElement.payload.dom)}).length === 0;
-  }
-
-  isConfigured() {
-    if (this.isDataSource) { return true; } else {
-      return (this.pipelineElement.payload as InvocablePipelineElementUnion).configured;
-    }
   }
 
   isWildcardTopic() {
