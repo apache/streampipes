@@ -17,7 +17,7 @@
  */
 
 import { BrowserJsPlumbInstance } from '@jsplumb/browser-ui';
-import { SelectOptions } from '@jsplumb/core';
+import { EndpointSelection, SelectOptions } from '@jsplumb/core';
 
 export class JsplumbBridge {
 
@@ -30,13 +30,11 @@ export class JsplumbBridge {
     }
 
     activateEndpointWithType(endpointId: string, endpointEnabled: boolean, endpointType: string) {
-        console.log("activate endpoint");
         this.activateEndpoint(endpointId, endpointEnabled);
         this.setEndpointType(endpointId, endpointType);
     }
 
     setEndpointType(endpointId: string, endpointType: string) {
-        console.log("set endpoint type");
         const endpoint = this.getEndpointById(endpointId);
         // @ts-ignore
         endpoint.setType(endpointType);
@@ -71,33 +69,19 @@ export class JsplumbBridge {
         return this.jsPlumbInstance.bind(event, fn);
     }
 
-    // TODO: Overloading Functions?
-    selectEndpoints(endpoint?) {
+    selectEndpoints(endpoint?): EndpointSelection  {
         if (endpoint === undefined) {
-            // @ts-ignore
             return this.jsPlumbInstance.selectEndpoints();
+        } else {
+            return this.jsPlumbInstance.selectEndpoints(endpoint);
         }
-        // @ts-ignore
-        return this.jsPlumbInstance.selectEndpoints(endpoint);
     }
 
-    selectEndpointsById(id) {
-        // @ts-ignore
-        return this.jsPlumbInstance.selectEndpoints({source: id});
-    }
-
-    getSourceEndpoint(id) {
-        // @ts-ignore
-        return this.jsPlumbInstance.selectEndpoints({source: id});
-    }
-
-    getTargetEndpoint(id) {
-        // @ts-ignore
+    getTargetEndpoint(id: string): EndpointSelection {
         return this.jsPlumbInstance.selectEndpoints({target: document.getElementById(id)});
     }
 
-    getEndpointCount(id) {
-        // @ts-ignore
+    getEndpointCount(id: string): number {
         return this.jsPlumbInstance.selectEndpoints({element: document.getElementById(id)}).length;
     }
 
