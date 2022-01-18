@@ -74,6 +74,7 @@
                                 </span>
                                 <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerDeletePrivileges">
                                 <button mat-button mat-icon-button color="accent"
+                                        [attr.data-cy]="'delete-dashboard-' + element.name"
                                         (click)="openDeleteDashboardDialog(element)">
                                     <i class="material-icons">delete</i>
                                 </button>

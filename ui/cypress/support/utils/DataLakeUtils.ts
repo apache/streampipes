@@ -83,7 +83,7 @@ export class DataLakeUtils {
       .click();
 
     // Configure data view
-    cy.dataCy('data-view-name').type('Test View');
+    cy.dataCy('data-view-name').type('TestView');
     cy.dataCy('save-data-view')
       .click();
 
@@ -104,6 +104,11 @@ export class DataLakeUtils {
     cy.dataCy('edit-' + widgetName).click();
   }
 
+  public static removeWidget(widgetName: string) {
+    cy.dataCy('remove-' + widgetName).click();
+  }
+
+
   public static startEditWidget(widgetName: string) {
     cy.dataCy('more-options-' + widgetName).click();
     cy.dataCy('start-edit-' + widgetName).click();
@@ -112,11 +117,17 @@ export class DataLakeUtils {
   public static saveAndReEditWidget() {
     // Save configuration
     DataLakeUtils.saveDataExplorerWidgetConfiguration();
-    // Click start tab to go to overview
-    cy.get('div').contains('Start').parent().click();
+
+    DataLakeUtils.clickStartTab();
+
     DataLakeUtils.editDataView();
     // Edit widget again
     DataLakeUtils.editWidget('datalake_configuration');
+  }
+
+  public static clickStartTab() {
+    // Click start tab to go to overview
+    cy.get('div').contains('Start').parent().click();
   }
 
   public static addNewWidget() {

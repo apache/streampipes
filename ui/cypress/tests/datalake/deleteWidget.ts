@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-
 import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 describe('Test Table View in Data Explorer', () => {
@@ -35,19 +34,32 @@ describe('Test Table View in Data Explorer', () => {
 
         cy.wait(1000);
 
-        DataLakeUtils.saveDataExplorerWidgetConfiguration();
+        // Check that widget is visible
+        cy.dataCy('widget-datalake_configuration', {timeout: 10000})
+            .should('be.visible');
 
         // Activate edit mode
-        // DataLakeUtils.editWidget();
+        DataLakeUtils.saveAndReEditWidget();
 
         // Delete widget
+        DataLakeUtils.removeWidget('datalake_configuration');
+
+        // Save dashboard
+        DataLakeUtils.saveDataExplorerWidgetConfiguration();
 
         // Check that widget is gone
+        cy.dataCy('widget-datalake_configuration', {timeout: 10000})
+            .should('not.exist');
 
         // Delete Dashboard
+        DataLakeUtils.clickStartTab();
 
         // Check that dashboard is gone
 
+        cy.dataCy('delete-dashboard-TestView', {timeout: 10000}).should('have.length', 1);
+        cy.dataCy('delete-dashboard-TestView', {timeout: 10000})
+            .click();
+        cy.dataCy('delete-dashboard-TestView', {timeout: 10000}).should('have.length', 0);
     });
 
 });
