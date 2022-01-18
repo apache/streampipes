@@ -61,7 +61,7 @@
                                 </span>
                                 <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerWritePrivileges">
                                 <button mat-button mat-icon-button color="accent"
-                                        data-cy="edit-data-view"
+                                        [attr.data-cy]="'edit-dashboard-' + element.name"
                                         (click)="showDashboard(element, true)">
                                     <i class="material-icons">edit</i>
                                 </button>

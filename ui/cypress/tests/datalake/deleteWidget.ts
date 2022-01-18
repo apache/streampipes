@@ -39,7 +39,7 @@ describe('Test Table View in Data Explorer', () => {
             .should('be.visible');
 
         // Activate edit mode
-        DataLakeUtils.saveAndReEditWidget();
+        DataLakeUtils.saveAndReEditWidget('TestView');
 
         // Delete widget
         DataLakeUtils.removeWidget('datalake_configuration');

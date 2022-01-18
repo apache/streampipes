@@ -28,13 +28,13 @@ export class DataLakeUtils {
 
   public static getDataLakeTestSetAdapter(name: string, storeInDataLake: boolean = true) {
     const adapterBuilder = GenericAdapterBuilder
-      .create('File_Set')
-      .setName(name)
-      .setTimestampProperty('timestamp')
-      .addDimensionProperty('randomtext')
-      .setFormat('csv')
-      .addFormatInput('input', 'delimiter', ';')
-      .addFormatInput('checkbox', 'header', 'check');
+        .create('File_Set')
+        .setName(name)
+        .setTimestampProperty('timestamp')
+        .addDimensionProperty('randomtext')
+        .setFormat('csv')
+        .addFormatInput('input', 'delimiter', ';')
+        .addFormatInput('checkbox', 'header', 'check');
 
     if (storeInDataLake) {
       adapterBuilder.setStoreInDataLake();
@@ -77,31 +77,32 @@ export class DataLakeUtils {
     cy.visit('#/dataexplorer');
   }
 
-  public static createAndEditDataView(name? : string) {
+  public static createAndEditDataView(name?: string) {
 
-    name = name === undefined ? 'Test View' : name
+    name = name === undefined ? 'TestView' : name;
 
     // Create new data view
     cy.dataCy('open-new-data-view-dialog')
-      .click();
+        .click();
 
     // Configure data view
     cy.dataCy('data-view-name').type(name);
     cy.dataCy('save-data-view')
-      .click();
+        .click();
 
-    // Click edit button
-    // following only works if single view is available
-    // cy.dataCy('edit-data-view')
-    //   .click();
-
-    cy.get('div').contains(name).parent().click()
+    this.editDataView(name);
+    // cy.get('div').contains(name).parent().click();
 
   }
 
-  public static editDataView() {
+  public static removeWidget(widgetName: string) {
+    cy.dataCy('remove-' + widgetName).click();
+  }
+
+  public static editDataView(dataViewName: string) {
     // Click edit button
-    cy.dataCy('edit-data-view')
+    // following only works if single view is available
+    cy.dataCy('edit-dashboard-' + dataViewName)
         .click();
   }
 
@@ -118,29 +119,31 @@ export class DataLakeUtils {
     cy.dataCy('start-edit-' + widgetName).click();
   }
 
-
-  
-  public static saveAndReEditWidget() {
+  public static saveAndReEditWidget(dataViewName: string) {
     // Save configuration
     DataLakeUtils.saveDataExplorerWidgetConfiguration();
-    // Click start tab to go to overview
-    cy.get('div').contains('Start').parent().click();
-    DataLakeUtils.editDataView();
+    DataLakeUtils.clickStartTab();
+    DataLakeUtils.editDataView(dataViewName);
     // Edit widget again
     DataLakeUtils.editWidget('datalake_configuration');
   }
 
+  public static clickStartTab() {
+    // Click start tab to go to overview
+    cy.get('div').contains('Start').parent().click();
+  }
+
   public static addNewWidget() {
     cy.dataCy('add-new-widget')
-      .click();
+        .click();
   }
 
   public static selectDataSet(dataSet: string) {
     cy.dataCy('data-explorer-select-data-set')
-      .click()
-      .get('mat-option')
-      .contains(dataSet)
-      .click();
+        .click()
+        .get('mat-option')
+        .contains(dataSet)
+        .click();
   }
 
 
@@ -161,36 +164,36 @@ export class DataLakeUtils {
    */
   public static dataConfigSelectAllFields() {
     cy.dataCy('data-explorer-data-set-field-select-all')
-      .click();
+        .click();
   }
 
 
   public static dataConfigAddFilter(filterConfig: DataLakeFilterConfig) {
     cy.dataCy('design-panel-data-settings-add-filter')
-      .click();
+        .click();
 
     // Select field
     cy.dataCy('design-panel-data-settings-filter-field')
-      .click()
-      .get('mat-option')
-      .contains(filterConfig.field)
-      .click();
+        .click()
+        .get('mat-option')
+        .contains(filterConfig.field)
+        .click();
 
     // Select value
     cy.dataCy('design-panel-data-settings-filter-value').type(filterConfig.value);
 
     // Select operator
     cy.dataCy('design-panel-data-settings-filter-operator')
-      .click()
-      .get('mat-option')
-      .contains(filterConfig.operator)
-      .click();
+        .click()
+        .get('mat-option')
+        .contains(filterConfig.operator)
+        .click();
   }
 
   public static dataConfigRemoveFilter() {
     cy.dataCy('design-panel-data-settings-remove-filter')
-      .first()
-      .click();
+        .first()
+        .click();
   }
 
   public static clickGroupBy(propertyName: string) {
@@ -203,10 +206,10 @@ export class DataLakeUtils {
   public static selectVisualizationType(type: string | 'Table') {
     // Select visualization type
     cy.dataCy('data-explorer-select-visualization-type')
-      .click()
-      .get('mat-option')
-      .contains(type)
-      .click();
+        .click()
+        .get('mat-option')
+        .contains(type)
+        .click();
   }
 
   public static selectDataConfig() {
@@ -225,7 +228,7 @@ export class DataLakeUtils {
   public static clickCreateButton() {
     // Create widget
     cy.dataCy('data-explorer-select-data-set-create-btn')
-      .click();
+        .click();
   }
 
   public static goToDatalakeConfiguration() {
@@ -262,12 +265,12 @@ export class DataLakeUtils {
 
   private static setTimeInput(selector: string, value: Date) {
     cy.dataCy(selector)
-      .click();
+        .click();
     cy.wait(500);
     cy.get('.owl-dt-control-button-content').contains('Set').click({ 'force': true });
     cy.dataCy(selector)
-      .clear()
-      .type(`${value.toLocaleString()}{enter}`);
+        .clear()
+        .type(`${value.toLocaleString()}{enter}`);
   }
 
   private static resultEqual(actual: string, expected: string, ignoreTime: boolean) {
