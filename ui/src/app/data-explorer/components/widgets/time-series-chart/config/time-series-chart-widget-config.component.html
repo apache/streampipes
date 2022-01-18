@@ -25,4 +25,8 @@
         [currentlyConfiguredWidget]="currentlyConfiguredWidget">
     </sp-select-color-properties>
 
+    <h5>Fine-Tune</h5>
+    <mat-checkbox [(ngModel)]="currentlyConfiguredWidget.visualizationConfig.showSpike" (change)="setShowSpikeProperty($event)">show selected values
+    </mat-checkbox>
+
 </div>
