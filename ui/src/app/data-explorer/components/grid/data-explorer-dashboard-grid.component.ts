@@ -138,7 +138,11 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   propagateWidgetSelection(configuredWidget: DataExplorerWidgetModel) {
     this.configureWidgetCallback.emit(configuredWidget);
-    this.currentlyConfiguredWidgetId = configuredWidget._id;
+    if (configuredWidget) {
+      this.currentlyConfiguredWidgetId = configuredWidget._id;
+    } else {
+      this.currentlyConfiguredWidgetId = undefined;
+    }
     this.options.api.optionsChanged();
   }
 

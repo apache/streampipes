@@ -154,11 +154,16 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   updateCurrentlyConfiguredWidget(currentWidget: DataExplorerWidgetModel) {
-    this.widgetsToUpdate.set(currentWidget._id, currentWidget);
-    this.currentlyConfiguredWidget = currentWidget;
-    this.currentlyConfiguredWidgetId = currentWidget._id;
-    this.designerPanel.modifyWidgetMode(currentWidget, false);
-    this.showDesignerPanel = true;
+    if (currentWidget) {
+      this.widgetsToUpdate.set(currentWidget._id, currentWidget);
+      this.currentlyConfiguredWidget = currentWidget;
+      this.currentlyConfiguredWidgetId = currentWidget._id;
+      this.designerPanel.modifyWidgetMode(currentWidget, false);
+      this.showDesignerPanel = true;
+    } else {
+      this.showDesignerPanel = false;
+    }
+
   }
 
   discardChanges() {
