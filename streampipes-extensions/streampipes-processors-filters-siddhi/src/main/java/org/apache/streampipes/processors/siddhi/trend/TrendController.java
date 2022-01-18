@@ -59,7 +59,7 @@ public class TrendController extends StandaloneEventProcessingDeclarer<TrendPara
     @Override
     public ConfiguredEventProcessor<TrendParameters> onInvocation(DataProcessorInvocation
                                                                              invocationGraph, ProcessingElementParameterExtractor extractor) {
-        String operation = extractor.selectedSingleValue( Operation, String.class);
+        String operation = extractor.selectedSingleValue(Operation, String.class);
         int increase = extractor.singleValueParameter(Increase, Integer.class);
         int duration = extractor.singleValueParameter(Duration, Integer.class);
         String mapping = extractor.mappingPropertyValue(Mapping);
