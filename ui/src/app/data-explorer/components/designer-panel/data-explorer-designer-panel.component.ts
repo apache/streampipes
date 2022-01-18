@@ -29,12 +29,14 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
 
   @Input() currentlyConfiguredWidget: DataExplorerWidgetModel;
   @Input() dataLakeMeasure: DataLakeMeasure;
+  @Input() newWidgetMode = false;
 
   @Output() addWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
     new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
 
+  @Output() closeDesignerPanelEmitter = new EventEmitter();
+
   selectedIndex = 0;
-  newWidgetMode = false;
 
   ngOnInit(): void {
   }
@@ -43,18 +45,20 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
     this.selectedIndex = index;
   }
 
-  addWidget() {
-    this.selectedIndex = 0;
-    this.dataLakeMeasure = new DataLakeMeasure();
-    this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
-    this.currentlyConfiguredWidget['@class'] = 'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
-    this.currentlyConfiguredWidget.baseAppearanceConfig = {};
-    this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle = 'New Widget';
-    this.currentlyConfiguredWidget.dataConfig = {};
-    this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
-    this.newWidgetMode = true;
-  }
+  // // TODO remove
+  // addWidget() {
+  //   this.selectedIndex = 0;
+  //   this.dataLakeMeasure = new DataLakeMeasure();
+  //   this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
+  //   this.currentlyConfiguredWidget['@class'] = 'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
+  //   this.currentlyConfiguredWidget.baseAppearanceConfig = {};
+  //   this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle = 'New Widget';
+  //   this.currentlyConfiguredWidget.dataConfig = {};
+  //   this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+  //   this.newWidgetMode = true;
+  // }
 
+  // TODO remove
   createNewWidget() {
     this.newWidgetMode = false;
 
@@ -72,4 +76,8 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
     this.newWidgetMode = newWidgetMode;
   }
 
+  closeDesignerPanel() {
+    this.closeDesignerPanelEmitter.emit();
+    // TODO implement
+  }
 }

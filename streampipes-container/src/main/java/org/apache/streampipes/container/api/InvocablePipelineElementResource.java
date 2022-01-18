@@ -28,16 +28,13 @@ import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
-import org.apache.streampipes.model.staticproperty.Option;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 import java.util.Map;
 
 public abstract class InvocablePipelineElementResource<I extends InvocableStreamPipesEntity, D extends Declarer<?>,
@@ -60,7 +57,8 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId, I graph) {
+  public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId,
+                                                 I graph) {
 
     try {
       if (isDebug()) {
@@ -103,19 +101,20 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
-                                                       RuntimeOptionsRequest runtimeOptionsRequest) {
+                                                       RuntimeOptionsRequest req) {
 
-    ResolvesContainerProvidedOptions resolvesOptions = (ResolvesContainerProvidedOptions) getDeclarerById(elementId);
+    D declarer = getDeclarerById(elementId);
+    RuntimeOptionsResponse responseOptions;
 
-    List<Option> availableOptions =
-            resolvesOptions.resolveOptions(runtimeOptionsRequest.getRequestId(),
-                    StaticPropertyExtractor.from(
-                            runtimeOptionsRequest.getStaticProperties(),
-                            runtimeOptionsRequest.getInputStreams(),
-                            runtimeOptionsRequest.getAppId()
-                    ));
-
-    return ok(new RuntimeOptionsResponse(runtimeOptionsRequest, availableOptions));
+    if (declarer instanceof ResolvesContainerProvidedOptions) {
+      responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((ResolvesContainerProvidedOptions) declarer, req);
+      return ok(responseOptions);
+    } else if (declarer instanceof SupportsRuntimeConfig) {
+      responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
+      return ok(responseOptions);
+    } else {
+      throw new WebApplicationException(javax.ws.rs.core.Response.Status.BAD_REQUEST);
+    }
   }
 
   @POST

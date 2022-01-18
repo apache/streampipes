@@ -21,17 +21,23 @@
         <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center">
-                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)" color="accent">
-                        <mat-tab label="Start"></mat-tab>
-                        <mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>
+                    <mat-tab-group [selectedIndex]="selectedIndex"
+                                   (selectedIndexChange)="selectDashboardInTab($event)"
+                                   color="accent">
+                        <mat-tab data-cy="data-explorer-start-tab"
+                                 label="Start"></mat-tab>
+                        <mat-tab *ngFor="let dataViewDashboard of dataViewDashboards"
+                                 label="{{dataViewDashboard.name}}"></mat-tab>
                     </mat-tab-group>
                 </div>
+
                 <div fxFlex fxLayoutAlign="end center" *ngIf="selectedIndex > 0">
                     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options" data-cy="options-data-explorer">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="triggerEditMode()" *ngIf="!editMode && hasDataExplorerWritePrivileges">
+                        <button mat-menu-item (click)="triggerEditMode()"
+                                *ngIf="!editMode && hasDataExplorerWritePrivileges">
                             <mat-icon>edit</mat-icon>
                             <span>Edit dashboard</span>
                         </button>
@@ -56,24 +62,7 @@
             </div>
         </div>
     </div>
-    <div class="fixed-height data-explorer-options sp-tab-bg page-container-nav" fxLayout="row" *ngIf="selectedIndex > 0 && (editMode || timeRangeVisible)">
-        <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
-            <button mat-button mat-raised-button color="accent" matTooltip="Save" [matTooltipPosition]="'above'" (click)="saveDashboard()">
-                <mat-icon>save</mat-icon>&nbsp;<span>Save</span>
-            </button>
-        </div>
-        <div class="data-explorer-options-item" fxLayoutAlign="end center" fxFlex fxLayout="row">
-            <sp-time-range-selector *ngIf="selectedIndex" (dateRangeEmitter)="updateDateRange($event)" [dateRange]="selectedDataViewDashboard.dashboardTimeSettings">
 
-            </sp-time-range-selector>
-        </div>
-<!--        <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row">-->
-<!--            <button mat-button mat-icon-button color="primary"-->
-<!--                    *ngIf="selectedIndex > 0" (click)="toggleEditMode()" [disabled]="editMode">-->
-<!--                <i class="material-icons">edit</i>-->
-<!--            </button>-->
-<!--        </div>-->
-    </div>
 
     <div fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
         <sp-data-explorer-dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
@@ -84,10 +73,13 @@
         </sp-data-explorer-dashboard-overview>
         <sp-data-explorer-dashboard-panel fxLayout="column"
                                           #dashboardPanel
+                                          (resetDashboardChanges)="resetDashboardChanges()"
                                           [(editMode)]="editMode"
                                           [dashboard]="selectedDataViewDashboard"
                                           [timeSettings]="selectedDataViewDashboard.dashboardTimeSettings"
-                                          class="dashboard-panel" *ngIf="dashboardTabSelected">
+                                          [timeRangeVisible]="timeRangeVisible"
+                                          class="dashboard-panel"
+                                          *ngIf="dashboardTabSelected">
         </sp-data-explorer-dashboard-panel>
     </div>
 </div>

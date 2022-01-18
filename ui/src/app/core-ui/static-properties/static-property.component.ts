@@ -34,7 +34,7 @@ import {
   MappingPropertyUnary,
   OneOfStaticProperty,
   RuntimeResolvableAnyStaticProperty,
-  RuntimeResolvableOneOfStaticProperty,
+  RuntimeResolvableOneOfStaticProperty, RuntimeResolvableTreeInputStaticProperty,
   SecretStaticProperty, SlideToggleStaticProperty,
   StaticProperty,
   StaticPropertyAlternatives,
@@ -161,6 +161,10 @@ export class StaticPropertyComponent implements OnInit {
 
   isSlideToggleStaticProperty(val) {
     return val instanceof SlideToggleStaticProperty;
+  }
+
+  isTreeInputStaticProperty(val) {
+    return val instanceof RuntimeResolvableTreeInputStaticProperty;
   }
 
   valueChange(hasInput) {

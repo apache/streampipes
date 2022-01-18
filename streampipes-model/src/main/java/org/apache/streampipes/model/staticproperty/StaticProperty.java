@@ -36,6 +36,7 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
         @JsonSubTypes.Type(OneOfStaticProperty.class),
         @JsonSubTypes.Type(RuntimeResolvableAnyStaticProperty.class),
         @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
+        @JsonSubTypes.Type(RuntimeResolvableTreeInputStaticProperty.class),
         @JsonSubTypes.Type(SecretStaticProperty.class),
         @JsonSubTypes.Type(StaticPropertyAlternative.class),
         @JsonSubTypes.Type(StaticPropertyAlternatives.class),

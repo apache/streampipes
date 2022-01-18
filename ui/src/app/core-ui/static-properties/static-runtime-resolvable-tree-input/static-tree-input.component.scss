@@ -16,32 +16,21 @@
  *
  */
 
-.m-20 {
-    margin: 20px;
+.sp-tree-invisible {
+  display: none;
 }
 
-.h-100 {
-    height:100%;
+.sp-tree ul,
+.sp-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
 }
 
-.dashboard-grid {
-    display:flex;
-    flex-direction: column;
-    flex: 1 1 100%;
+.sp-tree .mat-nested-tree-node div[role=group] {
+  padding-left: 40px;
 }
 
-.designer-panel-container {
-    width: 100%;
-    height: 100%;
+.sp-tree div[role=group] > .mat-tree-node {
+  padding-left: 40px;
 }
-
-.designer-panel {
-    width: 350px;
-    border: 1px solid var(--color-tab-border);
-}
-
-.edit-menu-btn {
-    margin-right: 5px;
-}
-
-

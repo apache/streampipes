@@ -16,32 +16,26 @@
  *
  */
 
-.m-20 {
-    margin: 20px;
-}
+import {
+  RuntimeResolvableAnyStaticProperty,
+  RuntimeResolvableOneOfStaticProperty
+} from '../../../core-model/gen/streampipes-model';
+import { Directive } from '@angular/core';
+import { BaseRuntimeResolvableInput } from './base-runtime-resolvable-input';
 
-.h-100 {
-    height:100%;
-}
-
-.dashboard-grid {
-    display:flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
-
-.designer-panel-container {
-    width: 100%;
-    height: 100%;
-}
-
-.designer-panel {
-    width: 350px;
-    border: 1px solid var(--color-tab-border);
-}
-
-.edit-menu-btn {
-    margin-right: 5px;
-}
+@Directive()
+export abstract class BaseRuntimeResolvableSelectionInput<T extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty>
+  extends BaseRuntimeResolvableInput<T> {
 
 
+  onInit() {
+    if (this.staticProperty.options.length === 0 && (!this.staticProperty.dependsOn || this.staticProperty.dependsOn.length == 0)) {
+      this.loadOptionsFromRestApi();
+    } else if (this.staticProperty.options.length > 0) {
+      this.showOptions = true;
+    }
+
+    super.onInit();
+  }
+
+  }

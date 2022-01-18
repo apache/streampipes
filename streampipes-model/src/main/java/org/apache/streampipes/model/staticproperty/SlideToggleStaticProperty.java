@@ -24,7 +24,7 @@ public class SlideToggleStaticProperty extends StaticProperty {
   private boolean defaultValue;
 
   public SlideToggleStaticProperty() {
-    super();
+    super(StaticPropertyType.SlideToggleStaticProperty);
   }
 
   public SlideToggleStaticProperty(String internalName,

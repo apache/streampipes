@@ -864,6 +864,12 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
+  public BU requiredRuntimeResolvableTreeInput(Label label,
+                                               List<String> dependsOn) {
+    this.staticProperties.add(StaticProperties.runtimeResolvableTreeInput(label, dependsOn));
+    return me();
+  }
+
   /**
    * Defines a collection of configuration parameters of the specified staticProperties.
    * The developer can fill the staticProperties multiply times.
