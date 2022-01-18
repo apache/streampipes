@@ -77,17 +77,26 @@ export class DataLakeUtils {
     cy.visit('#/dataexplorer');
   }
 
-  public static createAndEditDataView() {
+  public static createAndEditDataView(name? : string) {
+
+    name = name === undefined ? 'Test View' : name
+
     // Create new data view
     cy.dataCy('open-new-data-view-dialog')
       .click();
 
     // Configure data view
-    cy.dataCy('data-view-name').type('TestView');
+    cy.dataCy('data-view-name').type(name);
     cy.dataCy('save-data-view')
       .click();
 
-    this.editDataView();
+    // Click edit button
+    // following only works if single view is available
+    // cy.dataCy('edit-data-view')
+    //   .click();
+
+    cy.get('div').contains(name).parent().click()
+
   }
 
   public static editDataView() {
@@ -104,30 +113,21 @@ export class DataLakeUtils {
     cy.dataCy('edit-' + widgetName).click();
   }
 
-  public static removeWidget(widgetName: string) {
-    cy.dataCy('remove-' + widgetName).click();
-  }
-
-
   public static startEditWidget(widgetName: string) {
     cy.dataCy('more-options-' + widgetName).click();
     cy.dataCy('start-edit-' + widgetName).click();
   }
 
+
+  
   public static saveAndReEditWidget() {
     // Save configuration
     DataLakeUtils.saveDataExplorerWidgetConfiguration();
-
-    DataLakeUtils.clickStartTab();
-
+    // Click start tab to go to overview
+    cy.get('div').contains('Start').parent().click();
     DataLakeUtils.editDataView();
     // Edit widget again
     DataLakeUtils.editWidget('datalake_configuration');
-  }
-
-  public static clickStartTab() {
-    // Click start tab to go to overview
-    cy.get('div').contains('Start').parent().click();
   }
 
   public static addNewWidget() {

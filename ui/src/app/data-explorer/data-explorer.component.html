@@ -32,7 +32,7 @@
                 </div>
 
                 <div fxFlex fxLayoutAlign="end center" *ngIf="selectedIndex > 0">
-                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options" data-cy="options-data-explorer">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
