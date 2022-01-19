@@ -73,7 +73,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   public ngOnInit() {
-
+    // console.log(this.currentlyConfiguredWidget);
   }
 
   triggerResize() {

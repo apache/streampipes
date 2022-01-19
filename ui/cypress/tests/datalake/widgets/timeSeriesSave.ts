@@ -18,91 +18,58 @@
 
 import { DataLakeUtils } from '../../../support/utils/DataLakeUtils';
 
+const testView1 = 'TestView1';
+const testView2 = 'TestView2';
+const dataSet = 'Persist';
 
-describe('Test Table View in Data Explorer', () => {
-
-  const useGlobalEditOption = false;
+describe('Test if widget configuration is updated correctly', () => {
 
   beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
     DataLakeUtils.loadRandomDataSetIntoDataLake();
+
+    // Create first test data view with one time series widget
+    DataLakeUtils.addDataViewAndTimeSeriesWidget(testView1, dataSet);
+    DataLakeUtils.saveDataExplorerWidgetConfiguration();
+    DataLakeUtils.clickStartTab();
+
+    // Create second test data view with one time series widget
+    DataLakeUtils.addDataViewAndTimeSeriesWidget(testView2, dataSet);
+    DataLakeUtils.saveDataExplorerWidgetConfiguration();
+  });
+
+  // This test case has two different options. The first one selects the edit button of the data explorer on the top right
+  // and the second one uses the edit button of the widget
+  it('Perform Test', () => {
+    runTestCase(false);
   });
 
   it('Perform Test', () => {
-
-    DataLakeUtils.goToDatalake();
-
-    configureTimeSeriesView('Test View 1', false);
-
-    cy.get('div').contains('Start').parent().click();
-
-    configureTimeSeriesView('Test View 2', true);
-
-    cy.get('div').contains('Test View 1').parent().click();
-
-    cy.get('div').contains('Test View 2').parent().click();
-
-    changeConfigurationTimeSeriesView(useGlobalEditOption);
-
-    cy.get('path[class="scatterpts"]');
-
+    runTestCase(true);
   });
 
 });
 
-const configureTimeSeriesView = (name : string, useOptions : boolean) =>  
-{
-  
-  DataLakeUtils.createAndEditDataView(name);
+const runTestCase = (editOption: boolean) => {
+  // Go to test view 1 tab and then back to view 2
+  DataLakeUtils.clickTab(testView1);
+  DataLakeUtils.clickTab(testView2);
 
-  if (useOptions) {
-    cy.dataCy('options-data-explorer')
-        .click();
-    
-    cy.get('div').contains('Edit dashboard').click();
+  // Change one setting in widget
+  const widgetName = 'datalake_configuration';
+
+  if (editOption) {
+    cy.dataCy('more-options-' + widgetName).click();
+    cy.dataCy('start-edit-' + widgetName).click();
+  } else {
+    cy.dataCy('options-data-explorer').click();
+    cy.dataCy('options-edit-dashboard').click();
+    cy.dataCy('edit-' + widgetName).click();
   }
-
-  DataLakeUtils.addNewWidget();
-
-  DataLakeUtils.selectDataSet('Persist');
-
-  DataLakeUtils.dataConfigSelectAllFields();
 
   DataLakeUtils.selectVisualizationConfig();
-
-  DataLakeUtils.selectVisualizationType('Time Series');
-
-  DataLakeUtils.clickCreateButton();
-
-  DataLakeUtils.selectTimeRange(
-    new Date(2020, 10, 20, 22, 44),
-    new Date(2021, 10, 20, 22, 44));
-
-    cy.get('div').contains('Save').parent().click();
-
-};
-
-const changeConfigurationTimeSeriesView = (useGlobalEditOptions : boolean) =>  
-{
- 
-  if (useGlobalEditOptions) {
-
-    cy.dataCy('options-data-explorer')
-        .click();
-    
-    cy.get('div').contains('Edit dashboard').click();
-
-  } else{ 
-
-    cy.get('button[mattooltip*="options"]')
-        .click();
-
-    cy.get('div').contains('Edit Widget').click();
-
-  }
-
   cy.get('div').contains('Line').click();
-
   cy.get('div').contains('Scatter').click();
 
+  cy.get('path[class="scatterpts"]');
 };

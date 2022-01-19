@@ -37,7 +37,8 @@
                     </button>
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item (click)="triggerEditMode()"
-                                *ngIf="!editMode && hasDataExplorerWritePrivileges">
+                                *ngIf="!editMode && hasDataExplorerWritePrivileges"
+                                data-cy="options-edit-dashboard">
                             <mat-icon>edit</mat-icon>
                             <span>Edit dashboard</span>
                         </button>

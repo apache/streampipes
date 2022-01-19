@@ -30,9 +30,8 @@ describe('Test Table View in Data Explorer', () => {
         /**
          * Prepare tests
          */
-        DataLakeUtils.addTableWidget();
+        DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
 
-        cy.wait(1000);
 
         // Check that widget is visible
         cy.dataCy('widget-datalake_configuration', {timeout: 10000})

@@ -22,9 +22,13 @@ import { FileManagementUtils } from './FileManagementUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 import { ConnectUtils } from './ConnectUtils';
 import { DataLakeFilterConfig } from '../model/DataLakeFilterConfig';
+import { DataExplorerWidget } from '../model/DataExplorerWidget';
 
 export class DataLakeUtils {
 
+  public static goToDatalake() {
+    cy.visit('#/dataexplorer');
+  }
 
   public static getDataLakeTestSetAdapter(name: string, storeInDataLake: boolean = true) {
     const adapterBuilder = GenericAdapterBuilder
@@ -55,31 +59,36 @@ export class DataLakeUtils {
     }
   }
 
-  public static addTableWidget() {
+  public static addDataViewAndWidget(dataViewName: string, dataSet: string, widgetType: string) {
     DataLakeUtils.goToDatalake();
-    DataLakeUtils.createAndEditDataView();
+    DataLakeUtils.createAndEditDataView(dataViewName);
     DataLakeUtils.selectTimeRange(
         new Date(2020, 10, 20, 22, 44),
         new Date(2021, 10, 20, 22, 44));
     DataLakeUtils.addNewWidget();
-    DataLakeUtils.selectDataSet('Persist');
+    DataLakeUtils.selectDataSet(dataSet);
     DataLakeUtils.dataConfigSelectAllFields();
     DataLakeUtils.selectVisualizationConfig();
-    DataLakeUtils.selectVisualizationType('Table');
+    DataLakeUtils.selectVisualizationType(widgetType);
     DataLakeUtils.clickCreateButton();
+
+    cy.wait(1000);
+  }
+
+  public static addDataViewAndTableWidget(dataViewName: string, dataSet: string) {
+    this.addDataViewAndWidget(dataViewName, dataSet, DataExplorerWidget.TABLE);
+  }
+
+  public static addDataViewAndTimeSeriesWidget(dataViewName: string, dataSet: string) {
+    this.addDataViewAndWidget(dataViewName, dataSet, DataExplorerWidget.TIME_SERIES);
   }
 
   public static loadRandomDataSetIntoDataLake() {
     this.loadDataIntoDataLake('fileTest/random.csv');
   }
 
-  public static goToDatalake() {
-    cy.visit('#/dataexplorer');
-  }
 
-  public static createAndEditDataView(name?: string) {
-
-    name = name === undefined ? 'TestView' : name;
+  public static createAndEditDataView(name: string) {
 
     // Create new data view
     cy.dataCy('open-new-data-view-dialog')
@@ -128,9 +137,13 @@ export class DataLakeUtils {
     DataLakeUtils.editWidget('datalake_configuration');
   }
 
-  public static clickStartTab() {
+  public static clickTab(tabName: string) {
     // Click start tab to go to overview
-    cy.get('div').contains('Start').parent().click();
+    cy.get('div').contains(tabName).parent().click();
+  }
+
+  public static clickStartTab() {
+    this.clickTab('Start');
   }
 
   public static addNewWidget() {
