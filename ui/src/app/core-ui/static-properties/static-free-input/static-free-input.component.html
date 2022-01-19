@@ -33,11 +33,12 @@
     <div *ngIf="staticProperty.valueSpecification">
         <div fxLayout="column" fxFlex="100">
             <mat-slider thumbLabel formControlName="{{fieldName}}"
-                    [max]="staticProperty.valueSpecification.maxValue"
-                    [min]="staticProperty.valueSpecification.minValue"
-                    [step]="staticProperty.valueSpecification.step"
-                    [displayWith]="formatLabel"
-                    color="accent">
+                        [max]="staticProperty.valueSpecification.maxValue"
+                        [min]="staticProperty.valueSpecification.minValue"
+                        [step]="staticProperty.valueSpecification.step"
+                        [attr.data-cy]="fieldName"
+                        [displayWith]="formatLabel"
+                        color="accent">
             </mat-slider>
         </div>
     </div>
@@ -46,13 +47,17 @@
             <h5>Possible placeholders: </h5>
             <div fxFlex="100" fxLayout="row" style="background:white;">
                 <mat-chip-list style="margin-bottom:10px;">
-                    <mat-chip (click)="applyPlaceholder(property.runtimeName)" color="accent" *ngFor="let property of eventSchemas[0].eventProperties">#{{property.runtimeName}}#</mat-chip>
+                    <mat-chip (click)="applyPlaceholder(property.runtimeName)" color="accent"
+                              *ngFor="let property of eventSchemas[0].eventProperties">#{{property.runtimeName}}#
+                    </mat-chip>
                 </mat-chip-list>
             </div>
         </div>
         <div fxFlex="100" *ngIf="staticProperty.multiLine">
-            <quill-editor *ngIf="staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}" [modules]="quillModulesFontFormat"></quill-editor>
-            <quill-editor *ngIf="!staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}" [modules]="quillModules"></quill-editor>
+            <quill-editor *ngIf="staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}"
+                          [modules]="quillModulesFontFormat"></quill-editor>
+            <quill-editor *ngIf="!staticProperty.htmlFontFormat" #textEditor formControlName="{{fieldName}}"
+                          [modules]="quillModules"></quill-editor>
         </div>
     </div>
 </div>
