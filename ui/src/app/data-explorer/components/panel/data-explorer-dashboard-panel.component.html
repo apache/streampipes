@@ -54,8 +54,13 @@
 
 <div fxFlex="100" fxLayout="column">
     <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
-        <mat-drawer #designerDrawer [opened]="showDesignerPanel" mode="side" position="end" class="designer-panel"
-                    (opened)="triggerResize()" (closed)="triggerResize()">
+        <mat-drawer #designerDrawer
+                    [opened]="showDesignerPanel"
+                    (opened)="triggerResize()"
+                    (closed)="triggerResize()"
+                    mode="side"
+                    position="end"
+                    class="designer-panel">
             <div fxLayout="column" fxFlex="100">
                 <sp-data-explorer-designer-panel #designerPanel
                                                  [currentlyConfiguredWidget]="currentlyConfiguredWidget"
