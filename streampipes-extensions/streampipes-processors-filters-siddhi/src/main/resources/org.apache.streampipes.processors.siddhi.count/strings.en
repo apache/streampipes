@@ -1,4 +1,4 @@
-org.apache.streampipes.processors.siddhi.count.title=Count Aggregation
+org.apache.streampipes.processors.siddhi.count.title=Count Value Occurrence
 org.apache.streampipes.processors.siddhi.count.description=Performs an aggregation based on a given event property and outputs the number of occurrences.
 
 count-mapping.title=Field to count

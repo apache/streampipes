@@ -22,4 +22,5 @@ export class AdapterInput {
   timestampProperty: string;
   dimensionProperties: string[] = [];
   storeInDataLake: boolean;
+  autoAddTimestamp = false;
 }

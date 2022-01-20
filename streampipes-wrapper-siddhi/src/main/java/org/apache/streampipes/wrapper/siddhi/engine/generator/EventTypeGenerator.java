@@ -32,7 +32,16 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
     this.params = params;
   }
 
-  public Map<String, List<EventPropertyDef>> generateEventTypes() {
+  public List<EventPropertyDef> generateOutEventTypes() {
+    List<EventPropertyDef> sortedEventKeys = new ArrayList<>();
+    params.getOutEventType().forEach((key, value) -> {
+        sortedEventKeys.add(makeEventType(key, value));
+        sortedEventKeys.sort(Comparator.comparing(EventPropertyDef::getFieldName));
+    });
+    return sortedEventKeys;
+  }
+
+  public Map<String, List<EventPropertyDef>> generateInEventTypes() {
     Map<String, List<EventPropertyDef>> listOfEventKeys = new HashMap<>();
     AtomicReference<Integer> currentStreamIndex = new AtomicReference<>(0);
 
@@ -49,7 +58,14 @@ public class EventTypeGenerator<B extends EventProcessorBindingParams> {
     return listOfEventKeys;
   }
 
-  private EventPropertyDef makeEventType(Integer currentStreamIndex, String propertyName, Object propertyType) {
+  private EventPropertyDef makeEventType(String propertyName,
+                                         Object propertyType) {
+    return new EventPropertyDef(propertyName, toType((Class<?>) propertyType));
+  }
+
+  private EventPropertyDef makeEventType(Integer currentStreamIndex,
+                                         String propertyName,
+                                         Object propertyType) {
     return new EventPropertyDef(toSelectorPrefix(currentStreamIndex), propertyName, toType((Class<?>) propertyType));
   }
 

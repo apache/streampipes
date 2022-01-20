@@ -52,12 +52,13 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
     return this.siddhiAppString.toString();
   }
 
-  private void registerEventType(String eventTypeName, List<EventPropertyDef> eventSchema) {
+  private void registerEventType(String eventTypeName,
+                                 List<EventPropertyDef> eventSchema) {
     String defineStreamPrefix = "define stream " + SiddhiUtils.prepareName(eventTypeName);
     StringJoiner joiner = new StringJoiner(",");
 
     eventSchema.forEach(typeInfo -> {
-      joiner.add(typeInfo.getSelectorPrefix() + typeInfo.getFieldName() + " " + typeInfo.getFieldType());
+        joiner.add(typeInfo.getSelectorPrefix() + typeInfo.getFieldName() + " " + typeInfo.getFieldType());
     });
 
     this.siddhiAppString
@@ -77,12 +78,7 @@ public class SiddhiAppGenerator<B extends EventProcessorBindingParams> {
             .getQueries()
             .forEach(query -> this.siddhiAppString.append(query).append("\n"));
 
-//    this.siddhiAppString.append(siddhiAppConfig.getOutputConfig().isOutputAllEvents() ?
-//            "insert all events into " : "insert into ")
-//            .append(SiddhiUtils.prepareName(outputStream))
-//            .append(";");
-
-    LOG.info("Registering statement: \n" + this.siddhiAppString.toString());
+    LOG.info("Registering statement: \n" + this.siddhiAppString);
 
   }
 }

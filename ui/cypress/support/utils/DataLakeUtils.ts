@@ -249,7 +249,7 @@ export class DataLakeUtils {
     cy.get('div').contains('DataLake').parent().click();
   }
 
-  public static checkResults(dataLakeIndex: string, fileRoute: string, ignoreTime: boolean = false) {
+  public static checkResults(dataLakeIndex: string, fileRoute: string, ignoreTime?: boolean) {
 
     // Validate result in datalake
     cy.request({
@@ -295,7 +295,7 @@ export class DataLakeUtils {
     } else {
       actualResult = DataLakeUtils.parseCsv(actual);
     }
-    const expectedResult = DataLakeUtils.parseCsv(expected);
+    const expectedResult = ignoreTime ? DataLakeUtils.parseCsv(expected).map(row => row.splice(1)) : DataLakeUtils.parseCsv(expected);
     expect(actualResult).to.deep.equal(expectedResult);
   }
 

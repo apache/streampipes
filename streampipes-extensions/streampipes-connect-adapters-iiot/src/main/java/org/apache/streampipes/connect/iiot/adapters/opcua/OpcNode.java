@@ -31,6 +31,7 @@ public class OpcNode {
     Datatypes type;
     NodeId nodeId;
     int opcUnitId;
+    private boolean readable;
 
     /**
      * Constructor for class OpcNode without an OPC UA unit identifier. <br>
@@ -93,6 +94,14 @@ public class OpcNode {
     public boolean hasUnitId() {
         // zero is the default case when no unit id is present
         return this.opcUnitId !=0;
+    }
+
+    public boolean isReadable() {
+        return readable;
+    }
+
+    public void setReadable(boolean readable) {
+        this.readable = readable;
     }
 
     /**

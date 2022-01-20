@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.connect.container.worker.rest;
 
+import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.container.worker.management.RuntimeResovable;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.container.api.RuntimeResolvableRequestHandler;
+import org.apache.streampipes.container.api.SupportsRuntimeConfig;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
@@ -41,10 +43,17 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
     public Response fetchConfigurations(@PathParam("id") String elementId,
                                         RuntimeOptionsRequest runtimeOptionsRequest) {
 
-        ResolvesContainerProvidedOptions adapterClass =
-                RuntimeResovable.getRuntimeResolvableAdapter(elementId);
+        Connector connector = RuntimeResovable.getAdapterOrProtocol(elementId);
+        RuntimeOptionsResponse response;
+        RuntimeResolvableRequestHandler handler = new RuntimeResolvableRequestHandler();
 
-        RuntimeOptionsResponse response = new RuntimeResolvableRequestHandler().handleRuntimeResponse(adapterClass, runtimeOptionsRequest);
+        if (connector instanceof ResolvesContainerProvidedOptions) {
+            response = handler.handleRuntimeResponse((ResolvesContainerProvidedOptions) connector, runtimeOptionsRequest);
+        } else if (connector instanceof SupportsRuntimeConfig) {
+            response = handler.handleRuntimeResponse((SupportsRuntimeConfig) connector, runtimeOptionsRequest);
+        } else {
+            throw new WebApplicationException(javax.ws.rs.core.Response.Status.BAD_REQUEST);
+        }
 
         return ok(response);
     }

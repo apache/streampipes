@@ -58,9 +58,10 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
                             Labels.withId(COUNT_MAPPING), PropertyScope.DIMENSION_PROPERTY)
                     .build())
-            .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.empty(), "value",
-                    "http://schema.org/Text"), EpProperties.integerEp(Labels.empty(), "count",
-                    "http://schema.org/Number")))
+            .outputStrategy(OutputStrategies.fixed(
+                    EpProperties.timestampProperty("timestamp"),
+                    EpProperties.stringEp(Labels.empty(), "value","http://schema.org/Text"),
+                    EpProperties.integerEp(Labels.empty(), "count","http://schema.org/Number")))
             .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
             .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
                     Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
@@ -79,7 +80,9 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
     FromClause fromClause = FromClause.create();
     fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.timeWindow(timeWindowSize, toTimeUnit(scale))));
 
-    SelectClause selectClause = SelectClause.create(Expressions.as(Expressions.property(fieldToCount), "value"),
+    SelectClause selectClause = SelectClause.create(
+            Expressions.as(Expressions.property("currentTimeMillis()"), "timestamp"),
+            Expressions.as(Expressions.property(fieldToCount), "value"),
             Expressions.as(Expressions.count(Expressions.property(fieldToCount)), "count"));
 
     GroupByClause groupByClause = GroupByClause.create(Expressions.property(fieldToCount));

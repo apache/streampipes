@@ -79,7 +79,7 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
     List<String> outputFieldSelectors = siddhiParams.getParams().getOutputFieldSelectors();
     outputFieldSelectors
             .forEach(outputFieldSelector -> selectClause
-                    .addProperty(Expressions.property("e2", outputFieldSelector)));
+                    .addProperty(Expressions.property("e2", outputFieldSelector, "last")));
 
     return selectClause;
   }

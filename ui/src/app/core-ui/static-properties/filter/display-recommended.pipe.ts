@@ -16,17 +16,19 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
-import {EventPropertyUnion} from "../../../core-model/gen/streampipes-model";
+import { Pipe, PipeTransform } from '@angular/core';
+import { EventPropertyUnion } from '../../../core-model/gen/streampipes-model';
 
 @Pipe({name: 'displayRecommendedPipe'})
 export class DisplayRecommendedPipe implements PipeTransform {
-  transform(properties: EventPropertyUnion[], propertyScope: string, displayRecommended: boolean): any {
-    var result = [];
+  transform(properties: EventPropertyUnion[],
+            propertyScope: string,
+            displayRecommended: boolean): any {
+    const result = [];
     if (!displayRecommended) {
       return properties;
     } else {
-      if (propertyScope === undefined || propertyScope === "NONE") {
+      if (propertyScope === undefined || propertyScope === 'NONE') {
         return properties;
       } else {
         properties.forEach(property => {
@@ -35,10 +37,9 @@ export class DisplayRecommendedPipe implements PipeTransform {
           }
         });
       }
-      return result;
+      return result.length > 0 ? result : properties;
     }
   }
-
 
 
 }

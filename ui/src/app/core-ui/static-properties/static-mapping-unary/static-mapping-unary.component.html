@@ -19,7 +19,6 @@
 <div [formGroup]="parentForm" id="formWrapper">
     <div fxFlex="100" fxLayout="row">
             <mat-form-field class="example-full-width" color="accent">
-                <!--<mat-form-field class="example-full-width">-->
                 <mat-select formControlName="{{fieldName}}" [placeholder]="staticProperty.label" [attr.data-cy]="fieldName">
                     <mat-option *ngFor="let property of availableProperties | displayRecommendedPipe: staticProperty.propertyScope: displayRecommended" [value]="property.propertySelector">
                         {{property.runtimeName}}
