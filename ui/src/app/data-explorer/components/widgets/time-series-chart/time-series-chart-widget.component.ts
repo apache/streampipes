@@ -399,18 +399,6 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
           }
         }
       });
-
-      // forget all configurations if deselected: 
-      // for (const key in this.dataExplorerWidget.visualizationConfig.chosenColor) {
-      //   if (this.dataExplorerWidget.visualizationConfig.chosenColor.hasOwnProperty(key)) {
-      //     if (!collectNames.includes(key)) {
-      //       delete this.dataExplorerWidget.visualizationConfig.chosenColor[key];
-      //       delete this.dataExplorerWidget.visualizationConfig.displayName[key];
-      //       delete this.dataExplorerWidget.visualizationConfig.displayType[key];
-      //     }
-      //   }
-      // }
-
     }
   }
 
