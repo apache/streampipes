@@ -33,6 +33,7 @@ export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
   displayName: { [id: string]: string; };
   displayType: { [id: string]: string; };
   chosenAxis: { [id: string]: string; };
+  showSpike: boolean;
 }
 
 export interface TimeSeriesChartWidgetModel extends DataExplorerWidgetModel {
