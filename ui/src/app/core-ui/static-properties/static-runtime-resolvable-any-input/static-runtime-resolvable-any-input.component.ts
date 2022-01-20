@@ -17,16 +17,16 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { BaseRuntimeResolvableInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-input';
-import { RuntimeResolvableAnyStaticProperty } from '../../../core-model/gen/streampipes-model';
+import { RuntimeResolvableAnyStaticProperty, StaticPropertyUnion } from '../../../core-model/gen/streampipes-model';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
+import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 
 @Component({
     selector: 'app-static-runtime-resolvable-any-input',
     templateUrl: './static-runtime-resolvable-any-input.component.html',
     styleUrls: ['./static-runtime-resolvable-any-input.component.css']
 })
-export class StaticRuntimeResolvableAnyInputComponent extends BaseRuntimeResolvableInput<RuntimeResolvableAnyStaticProperty> implements OnInit {
+export class StaticRuntimeResolvableAnyInputComponent extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableAnyStaticProperty> implements OnInit {
 
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);
@@ -43,7 +43,12 @@ export class StaticRuntimeResolvableAnyInputComponent extends BaseRuntimeResolva
         this.staticProperty.options.find(option => option.elementId === id).selected = true;
     }
 
-    afterOptionsLoaded() {
+    afterOptionsLoaded(staticProperty: RuntimeResolvableAnyStaticProperty) {
+        this.staticProperty.options = staticProperty.options;
+    }
+
+    parse(staticProperty: StaticPropertyUnion): RuntimeResolvableAnyStaticProperty {
+        return staticProperty as RuntimeResolvableAnyStaticProperty;
     }
 
 }

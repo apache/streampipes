@@ -40,6 +40,10 @@ export class ConnectUtils {
       ConnectEventSchemaUtils.markPropertyAsTimestamp(adapterConfiguration.timestampProperty);
     }
 
+    if (adapterConfiguration.autoAddTimestamp) {
+      ConnectEventSchemaUtils.addTimestampProperty();
+    }
+
     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
     ConnectUtils.startStreamAdapter(adapterConfiguration);

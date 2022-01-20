@@ -21,6 +21,7 @@ import { OutputStrategyConfig } from './OutputStrategyConfig';
 
 export class PipelineElementInput {
     name: string;
+    ignoreTimestamp?: boolean;
     config: UserInput[];
     output: OutputStrategyConfig;
 }

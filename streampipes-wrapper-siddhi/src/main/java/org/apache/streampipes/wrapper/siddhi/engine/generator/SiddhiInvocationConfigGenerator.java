@@ -38,9 +38,10 @@ public class SiddhiInvocationConfigGenerator<B extends EventProcessorBindingPara
   public SiddhiInvocationConfigGenerator(B params,
                                          BiFunction<SiddhiProcessorParams<B>, String, SiddhiAppConfig> statementFunction) {
     List<String> inputStreamNames = new InputStreamNameGenerator<>(params).generateInputStreamNames();
-    Map<String, List<EventPropertyDef>> eventTypeInfo = new EventTypeGenerator<>(params).generateEventTypes();
+    Map<String, List<EventPropertyDef>> eventTypeInfo = new EventTypeGenerator<>(params).generateInEventTypes();
+    List<EventPropertyDef> outTypeInfo = new EventTypeGenerator<>(params).generateOutEventTypes();
     List<String> outputEventKeys = new ArrayList<>(params.getOutEventType().keySet());
-    this.siddhiProcessorParams = new SiddhiProcessorParams<>(params, inputStreamNames, eventTypeInfo, outputEventKeys);
+    this.siddhiProcessorParams = new SiddhiProcessorParams<>(params, inputStreamNames, eventTypeInfo, outputEventKeys, outTypeInfo);
     this.siddhiAppConfig = statementFunction.apply(siddhiProcessorParams, getOutputStreamName());
     this.siddhiAppString = new SiddhiAppGenerator<>(siddhiProcessorParams, siddhiAppConfig)
             .generateSiddhiApp();

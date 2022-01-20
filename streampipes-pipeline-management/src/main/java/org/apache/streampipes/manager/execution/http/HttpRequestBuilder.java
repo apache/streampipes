@@ -71,7 +71,9 @@ public class HttpRequestBuilder {
 
   public PipelineElementStatus detach() {
     try {
-      Response httpResp = Request.Delete(endpointUrl).connectTimeout(10000).execute();
+      Response httpResp = Request.Delete(endpointUrl)
+              .addHeader("Authorization", getAuthToken())
+              .connectTimeout(10000).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       LOG.error("Could not stop pipeline {}", endpointUrl, e);

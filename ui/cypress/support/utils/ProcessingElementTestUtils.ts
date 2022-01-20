@@ -73,7 +73,7 @@ export class ProcessingElementTestUtils {
         // Wait till data is stored
         cy.wait(10000);
 
-        DataLakeUtils.checkResults(dataLakeIndex, 'cypress/fixtures/' + expectedResultFile);
+        DataLakeUtils.checkResults(dataLakeIndex, 'cypress/fixtures/' + expectedResultFile, pipelineElementTest.processor.ignoreTimestamp);
 
     }
 }

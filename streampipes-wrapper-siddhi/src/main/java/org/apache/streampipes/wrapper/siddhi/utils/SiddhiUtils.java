@@ -65,7 +65,8 @@ public class SiddhiUtils {
               outputKey.startsWith(SiddhiConstants.SECOND_STREAM_PREFIX)) {
         outputKey = outputKey.substring(2);
       }
-      outMap.put(outputKey, event.getData(i));
+      Object data = event.getData(i);
+      outMap.put(outputKey, data);
     }
 
     return outMap;

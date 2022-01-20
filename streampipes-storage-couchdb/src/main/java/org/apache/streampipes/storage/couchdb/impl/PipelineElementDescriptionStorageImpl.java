@@ -29,6 +29,7 @@ import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCach
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class PipelineElementDescriptionStorageImpl implements IPipelineElementDescriptionStorageCache {
 
@@ -156,6 +157,26 @@ public class PipelineElementDescriptionStorageImpl implements IPipelineElementDe
   @Override
   public boolean exists(DataProcessorDescription processorDescription) {
     return getDataProcessorById(processorDescription.getElementId()) != null;
+  }
+
+  @Override
+  public boolean existsDataProcessorByAppId(String appId) {
+    try {
+      getDataProcessorByAppId(appId);
+      return true;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean existsDataSinkByAppId(String appId) {
+    try {
+      getDataSinkByAppId(appId);
+      return true;
+    } catch (NoSuchElementException e) {
+      return false;
+    }
   }
 
   @Override

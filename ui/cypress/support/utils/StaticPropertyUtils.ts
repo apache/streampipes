@@ -26,6 +26,8 @@ export class StaticPropertyUtils {
     configs.forEach(config => {
       if (config.type === 'checkbox') {
         cy.dataCy(config.selector).children().click();
+      } else if (config.type === 'button') {
+        cy.dataCy(config.selector).click();
       } else if (config.type === 'drop-down') {
         cy.dataCy(config.selector).click().get('mat-option').contains(config.value).click();
       } else if (config.type === 'radio') {
@@ -35,9 +37,11 @@ export class StaticPropertyUtils {
       } else if (config.type === 'code-input') {
         cy.dataCy('reset-code-' + config.selector).click();
         cy.dataCy('code-editor-' + config.selector).type(config.value);
-      } else {
+      } else if (config.type === 'input') {
+          cy.dataCy(config.selector).type(config.value).blur();
+        } else {
           cy.dataCy(config.selector).type(config.value);
-        }
+      }
     });
   }
 }

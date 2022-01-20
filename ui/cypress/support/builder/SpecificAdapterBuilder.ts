@@ -49,7 +49,12 @@ export class SpecificAdapterBuilder {
     return this;
   }
 
-  public addInput(type: string, selector: string, value: string) {
+  public withAutoAddedTimestamp() {
+    this.specificAdapterInput.autoAddTimestamp = true;
+    return this;
+  }
+
+  public addInput(type: string, selector: string, value?: string) {
     const userInput = new UserInput();
     userInput.type = type;
     userInput.selector = selector;

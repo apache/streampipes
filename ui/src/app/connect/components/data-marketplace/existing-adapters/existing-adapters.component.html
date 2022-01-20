@@ -20,6 +20,13 @@
     <div class="assemblyOptions sp-blue-bg mt-20" style="padding:5px;">
         <div fxLayout="row" fxLayoutAlign="start center">
             <h4>My adapters</h4>
+            <span fxFlex></span>
+            <button mat-button mat-icon-button matTooltip="Refresh adapters" matTooltipPosition="above"
+                    (click)="updateAdapterEmitter.emit()">
+                <i class="material-icons">
+                    refresh
+                </i>
+            </button>
         </div>
     </div>
     <div class="sp-blue-border">

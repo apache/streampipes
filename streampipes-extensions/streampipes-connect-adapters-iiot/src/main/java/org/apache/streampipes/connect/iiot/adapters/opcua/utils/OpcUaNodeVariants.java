@@ -29,7 +29,7 @@ public enum OpcUaNodeVariants {
     Property(68),
     EUInformation(887);
 
-    // ID as specific in OPC UA standard
+    // ID as specified in OPC UA standard
     private final int id;
 
     private OpcUaNodeVariants(int id){

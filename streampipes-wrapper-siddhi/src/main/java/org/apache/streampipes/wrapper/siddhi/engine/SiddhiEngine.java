@@ -71,8 +71,6 @@ public class SiddhiEngine {
     this.typeInfo = settings.getSiddhiProcessorParams().getEventTypeInfo();
     SiddhiManager siddhiManager = SpSiddhiManager.INSTANCE.getSiddhiManager();
 
-    //this.timestampField = removeStreamIdFromTimestamp(setTimestamp(parameters));
-
     siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(settings.getSiddhiAppString());
     settings.getSiddhiProcessorParams().getParams()
             .getInEventTypes()
@@ -93,7 +91,7 @@ public class SiddhiEngine {
     } else {
       callback = new SiddhiOutputStreamDebugCallback(debugCallback, settings.getSiddhiAppConfig().getOutputConfig());
     }
-    System.out.println(SiddhiUtils.getPreparedOutputTopicName(params));
+    LOG.info(SiddhiUtils.getPreparedOutputTopicName(params));
     siddhiAppRuntime.addCallback(SiddhiUtils.getPreparedOutputTopicName(params), callback);
     siddhiAppRuntime.start();
   }
@@ -117,14 +115,5 @@ public class SiddhiEngine {
   public void shutdownEngine() {
     this.siddhiAppRuntime.shutdown();
   }
-
-//  public void setSortedEventKeys(List<String> sortedEventKeys) {
-//    String streamId = (String) this.listOfEventKeys.keySet().toArray()[0];    // only reliable if there is only one stream, else use changeEventKeys() to respective streamId
-//    changeEventKeys(streamId, sortedEventKeys);
-//  }
-//
-//  public void changeEventKeys(String streamId, List<String> newEventKeys) {
-//    this.listOfEventKeys.put(streamId, newEventKeys);
-//  }
 
 }

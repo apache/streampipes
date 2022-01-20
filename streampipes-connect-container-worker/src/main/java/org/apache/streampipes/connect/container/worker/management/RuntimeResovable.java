@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.container.worker.management;
 
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IProtocol;
@@ -42,17 +43,17 @@ public class RuntimeResovable {
         }
     }
 
-     public static ResolvesContainerProvidedOptions getRuntimeResolvableAdapter(String id) throws IllegalArgumentException {
-        id = id.replaceAll("sp:", SP_NS);
-        Map<String, IAdapter> allAdapters = DeclarersSingleton.getInstance().getAllAdaptersMap();
-        Map<String, IProtocol> allProtocols =  DeclarersSingleton.getInstance().getAllProtocolsMap();
+    public static Connector getAdapterOrProtocol(String id) {
+      id = id.replaceAll("sp:", SP_NS);
+      Map<String, IAdapter> allAdapters = DeclarersSingleton.getInstance().getAllAdaptersMap();
+      Map<String, IProtocol> allProtocols =  DeclarersSingleton.getInstance().getAllProtocolsMap();
 
-        if (allAdapters.containsKey(id)) {
-            return (ResolvesContainerProvidedOptions) allAdapters.get(id);
-        } else if (allProtocols.containsKey(id)) {
-            return (ResolvesContainerProvidedOptions) allProtocols.get(id);
-        } else {
-            throw new IllegalArgumentException("Could not find adapter with id " + id);
-        }
+      if (allAdapters.containsKey(id)) {
+        return allAdapters.get(id);
+      } else if (allProtocols.containsKey(id)) {
+        return allProtocols.get(id);
+      } else {
+        throw new IllegalArgumentException("Could not find adapter with id " + id);
+      }
     }
 }

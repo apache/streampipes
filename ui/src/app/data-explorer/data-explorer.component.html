@@ -21,8 +21,11 @@
         <div fxFlex="100" class="page-container-nav">
             <div fxFlex="100" fxLayout="row">
                 <div fxFlex fxLayoutAlign="start center">
-                    <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectDashboard($event)" color="accent">
-                        <mat-tab label="Start"></mat-tab>
+                    <mat-tab-group [selectedIndex]="selectedIndex"
+                                   (selectedIndexChange)="selectDashboard($event)"
+                                   color="accent">
+                        <mat-tab data-cy="data-explorer-start-tab"
+                                 label="Start"></mat-tab>
                         <mat-tab *ngFor="let dataViewDashboard of dataViewDashboards" label="{{dataViewDashboard.name}}"></mat-tab>
                     </mat-tab-group>
                 </div>
@@ -58,7 +61,13 @@
     </div>
     <div class="fixed-height data-explorer-options sp-tab-bg page-container-nav" fxLayout="row" *ngIf="selectedIndex > 0 && (editMode || timeRangeVisible)">
         <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
-            <button mat-button mat-raised-button color="accent" matTooltip="Save" [matTooltipPosition]="'above'" (click)="saveDashboard()">
+            <button mat-button
+                    mat-raised-button
+                    color="accent"
+                    matTooltip="Save"
+                    [matTooltipPosition]="'above'"
+                    (click)="saveDashboard()"
+                    data-cy="save-data-explorer-widget-btn">
                 <mat-icon>save</mat-icon>&nbsp;<span>Save</span>
             </button>
         </div>

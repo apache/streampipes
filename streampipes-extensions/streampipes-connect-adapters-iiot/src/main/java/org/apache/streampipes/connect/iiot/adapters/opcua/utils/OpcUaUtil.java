@@ -21,12 +21,14 @@ package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcNode;
-import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUa;
+import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaNodeBrowser;
+import org.apache.streampipes.connect.iiot.adapters.opcua.SpOpcUaClient;
+import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
@@ -35,7 +37,8 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /***
  * Collection of several utility functions in context of OPC UA
@@ -68,11 +71,12 @@ public class OpcUaUtil {
         EventSchema eventSchema = new EventSchema();
         List<EventProperty> allProperties = new ArrayList<>();
 
-        OpcUa opcUa = OpcUa.from(adapterStreamDescription);
+        SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(adapterStreamDescription));
 
         try {
-            opcUa.connect();
-            List<OpcNode> selectedNodes = opcUa.browseNode(true);
+            spOpcUaClient.connect();
+            OpcUaNodeBrowser nodeBrowser = new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
+            List<OpcNode> selectedNodes = nodeBrowser.findNodes();
 
             if (!selectedNodes.isEmpty()) {
                 for (OpcNode opcNode : selectedNodes) {
@@ -92,7 +96,7 @@ public class OpcUaUtil {
                 }
             }
 
-            opcUa.disconnect();
+            spOpcUaClient.disconnect();
 
         } catch (Exception e) {
             throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
@@ -102,42 +106,39 @@ public class OpcUaUtil {
         guessSchema.setEventSchema(eventSchema);
 
         return guessSchema;
-
     }
 
 
     /***
      * OPC UA specific implementation of {@link org.apache.streampipes.container.api.ResolvesContainerProvidedOptions#resolveOptions(String, StaticPropertyExtractor)}.  }
-     * @param requestId
+     * @param internalName The internal name of the Static Property
      * @param parameterExtractor
      * @return {@code List<Option>} with available node names for the given OPC UA configuration
      */
-    public static List<Option> resolveOptions (String requestId, StaticPropertyExtractor parameterExtractor) {
+    public static RuntimeResolvableTreeInputStaticProperty resolveConfiguration (String internalName,
+                                                                                 StaticPropertyExtractor parameterExtractor) {
 
+        RuntimeResolvableTreeInputStaticProperty config = parameterExtractor
+                .getStaticPropertyByName(internalName, RuntimeResolvableTreeInputStaticProperty.class);
         // access mode and host/url have to be selected
         try {
             parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.OPC_HOST_OR_URL.name());
             parameterExtractor.selectedAlternativeInternalId(OpcUaLabels.ACCESS_MODE.name());
         } catch (NullPointerException nullPointerException) {
-            return new ArrayList<>();
+            return config;
         }
 
-        OpcUa opcUa = OpcUa.from(parameterExtractor);
-
-        List<Option> nodeOptions = new ArrayList<>();
+        SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(parameterExtractor));
         try{
-            opcUa.connect();
-
-            for(OpcNode opcNode: opcUa.browseNode(false)) {
-                nodeOptions.add(new Option(opcNode.getLabel(), opcNode.getNodeId().getIdentifier().toString()));
-            }
-
-            opcUa.disconnect();
+            spOpcUaClient.connect();
+            OpcUaNodeBrowser nodeBrowser = new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
+            config.setNodes(nodeBrowser.buildNodeTreeFromOrigin());
+            spOpcUaClient.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return nodeOptions;
+        return config;
     }
 
     public static String getRuntimeNameOfNode(NodeId nodeId) {
@@ -168,9 +169,6 @@ public class OpcUaUtil {
                throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
             }
         }
-
-
-
     }
 
     /***
