@@ -27,7 +27,7 @@
                     </div>
                     <div fxFlex fxLayoutAlign="end center">
                         <button mat-button mat-icon-button color="accent">
-                            <i class="material-icons" (click)="cloneSourceConfig(i)">+</i>
+                            <i class="material-icons plus-icon" (click)="cloneSourceConfig(i)">+</i>
                         </button>
                         <button mat-button mat-icon-button color="accent">
                             <i class="material-icons" (click)="removeSourceConfig(i)">delete</i>
@@ -130,9 +130,6 @@
                      *ngIf="sourceConfig.queryType && sourceConfig.measure">
                     <sp-group-selection-panel [sourceConfig]="sourceConfig"
                                               [widgetId]="widgetId"></sp-group-selection-panel>
-                </div>
-                <div>
-
                 </div>
             </div>
         </mat-expansion-panel>
