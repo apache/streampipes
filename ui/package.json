@@ -108,7 +108,7 @@
     "@types/showdown": "1.9.3",
     "assert": "^2.0.0",
     "codelyzer": "^6.0.0",
-    "compression-webpack-plugin": "^3.0.0",
+    "compression-webpack-plugin": "^9.2.0",
     "copy-webpack-plugin": "^5.1.2",
     "css-loader": "^0.28.11",
     "csv-string": "4.0.1",
