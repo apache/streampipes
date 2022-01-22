@@ -48,7 +48,6 @@
     "@circlon/angular-tree-component": "11.0.4",
     "angular-ui-tree": "2.9.0",
     "angular2-uuid": "1.1.1",
-    "bootstrap": "3.3.4",
     "codemirror": "^5.55.0",
     "core-js": "3.20.1",
     "dagre": "0.8.4",
