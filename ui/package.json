@@ -64,8 +64,6 @@
     "leaflet": "1.6.0",
     "lodash": "4.17.20",
     "material-icons": "^0.5.3",
-    "ng-file-upload": "9.0.13",
-    "ng-simple-slideshow": "1.2.9",
     "ng2-dragula": "1.5.0",
     "ngx-color-picker": "^11.0.0",
     "ngx-echarts": "^7.1.0",
