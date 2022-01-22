@@ -27,7 +27,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { AppAssetMonitoringModule } from '../app-asset-monitoring/app-asset-monitoring.module';
 import { AppImageLabelingModule } from '../app-image-labeling/app-image-labeling.module';
-import { AppTransportMonitoringModule } from '../app-transport-monitoring/app-transport-monitoring.module';
 import { AppOverviewComponent } from './app-overview.component';
 
 @NgModule({
@@ -40,7 +39,6 @@ import { AppOverviewComponent } from './app-overview.component';
         MatFormFieldModule,
         FormsModule,
         AppAssetMonitoringModule,
-        AppTransportMonitoringModule,
         AppImageLabelingModule,
     ],
     declarations: [
