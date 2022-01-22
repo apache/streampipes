@@ -75,7 +75,7 @@
     "ng-prettyjson": "0.1.8",
     "ng-simple-slideshow": "1.2.9",
     "ng2-dragula": "1.5.0",
-    "ngx-color-picker": "9.0.0",
+    "ngx-color-picker": "^11.0.0",
     "ngx-echarts": "^7.1.0",
     "ngx-quill": "15.0.0",
     "ngx-showdown": "6.0.0",
