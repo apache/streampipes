@@ -45,7 +45,6 @@
     "angular-datatables": "^12.0.2",
     "angular-gridster2": "12.1.1",
     "angular-loading-bar": "0.8.0",
-    "angular-material-icons": "0.4.0",
     "angular-plotly.js": "^4.0.0",
     "@circlon/angular-tree-component": "11.0.4",
     "angular-ui-tree": "2.9.0",
