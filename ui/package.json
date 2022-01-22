@@ -79,7 +79,7 @@
     "rxjs": "6.6.2",
     "shepherd.js": "^9.0.0",
     "showdown": "1.9.1",
-    "swagger-ui": "^3.42.0",
+    "swagger-ui": "^4.2.1",
     "systemjs": "0.21.6",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
