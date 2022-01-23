@@ -17,29 +17,24 @@
   -->
 
 <div fxLayout="column" fxLayoutAlign="center stretch">
-    <div fxLayout="row" fxFlex="100">
-        <div fxFlex="80">
-            <div fxLayout="column">
-                <div fxLayout="column" fxLayoutAlign="start start">
-                    <div fxLayout="row" fxLayoutAlign="start start">
-                        <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
-                        <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
-                        </mat-icon>
-                        <div fxLayoutAlign="start center">
-                            <p *ngIf="isDataSetDescription">Data Set</p>
-                            <p *ngIf="isDataStreamDescription">Data Stream</p>
-                        </div>
-                    </div>
-                </div>
-                <h1 *ngIf="!fromTemplate" class="new-adapter-title">New Source: {{adapter.templateTitle}}</h1>
-                <h1 *ngIf="fromTemplate" class="new-adapter-title">From Template: {{adapter.templateTitle}}</h1>
+    <div fxLayout="column" fxFlex="100" class="p-10">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
+            <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
+            </mat-icon>
+            <div fxLayoutAlign="start center">
+                <p *ngIf="isDataSetDescription">Data Set</p>
+                <p *ngIf="isDataStreamDescription">Data Stream</p>
+            </div>
+            <span fxFlex></span>
+            <div fxLayoutAlign="end start">
+                <button mat-icon-button (click)="removeSelection()">
+                    <i class="material-icons">close</i>
+                </button>
             </div>
         </div>
-        <div fxFlex="20" fxLayoutAlign="end start">
-            <button mat-icon-button (click)="removeSelection()">
-                <i class="material-icons">close</i>
-            </button>
-        </div>
+        <h1 *ngIf="!fromTemplate" class="new-adapter-title">New Source: {{adapter.templateTitle}}</h1>
+        <h1 *ngIf="fromTemplate" class="new-adapter-title">From Template: {{adapter.templateTitle}}</h1>
     </div>
 
     <mat-horizontal-stepper [linear]="true" #stepper color="accent" class="stepper">
