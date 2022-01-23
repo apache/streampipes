@@ -35,7 +35,7 @@
     "@asymmetrik/ngx-leaflet": "6.0.1",
     "@auth0/angular-jwt": "^5.0.2",
     "@ctrl/ngx-codemirror": "5.1.1",
-    "@danielmoncada/angular-datetime-picker": "13.0.0",
+    "@danielmoncada/angular-datetime-picker": "^13.1.1",
     "@fortawesome/fontawesome-free": "5.12.1",
     "@ngx-loading-bar/core": "5.1.2",
     "@ngx-loading-bar/http-client": "5.1.2",
