@@ -31,7 +31,6 @@
     "@angular/platform-browser": "^12.2.9",
     "@angular/platform-browser-dynamic": "^12.2.9",
     "@angular/router": "^12.2.9",
-    "@angular/upgrade": "^12.2.9",
     "@asymmetrik/ngx-leaflet": "6.0.1",
     "@auth0/angular-jwt": "^5.0.2",
     "@ctrl/ngx-codemirror": "5.1.1",
