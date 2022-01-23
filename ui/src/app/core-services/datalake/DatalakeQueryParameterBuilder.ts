@@ -37,6 +37,11 @@ export class DatalakeQueryParameterBuilder {
     this.queryParams.endDate = endTime;
   }
 
+  public withMaximumAmountOfEvents(maximumAmountOfEvents: number): DatalakeQueryParameterBuilder {
+   this.queryParams.maximumAmountOfEvents = maximumAmountOfEvents;
+   return this;
+  }
+
   public withCountOnly(): DatalakeQueryParameterBuilder {
     this.queryParams.countOnly = true;
 

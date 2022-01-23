@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { HeatmapWidgetModel } from './model/heatmap-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
@@ -32,7 +32,7 @@ import { time } from 'echarts/core';
   templateUrl: './heatmap-widget.component.html',
   styleUrls: ['./heatmap-widget.component.scss']
 })
-export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidgetModel> implements OnInit, OnDestroy {
+export class HeatmapWidgetComponent extends BaseDataExplorerWidgetDirective<HeatmapWidgetModel> implements OnInit, OnDestroy {
 
   eChartsInstance: ECharts;
   currentWidth: number;

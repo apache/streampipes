@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { CorrelationChartWidgetModel } from './model/correlation-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -28,7 +28,7 @@ import { throwToolbarMixedModesError } from '@angular/material/toolbar';
   templateUrl: './correlation-chart-widget.component.html',
   styleUrls: ['./correlation-chart-widget.component.scss']
 })
-export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<CorrelationChartWidgetModel> implements OnInit {
+export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirective<CorrelationChartWidgetModel> implements OnInit {
 
   colNo = 2;
   fixedColNo = 2;

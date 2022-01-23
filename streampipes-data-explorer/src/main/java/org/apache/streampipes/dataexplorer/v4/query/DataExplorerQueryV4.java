@@ -25,6 +25,7 @@ import org.apache.streampipes.dataexplorer.v4.query.elements.*;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
 import org.apache.streampipes.model.datalake.DataSeries;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.datalake.SpQueryStatus;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
@@ -41,16 +42,39 @@ public class DataExplorerQueryV4 {
 
     protected Map<String, QueryParamsV4> params;
 
+    protected int maximumAmountOfEvents;
+
     public DataExplorerQueryV4(Map<String, QueryParamsV4> params) {
         this.params = params;
+        this.maximumAmountOfEvents = -1;
+    }
+
+    public DataExplorerQueryV4(Map<String, QueryParamsV4> params, int maximumAmountOfEvents) {
+        this.params = params;
+        this.maximumAmountOfEvents = maximumAmountOfEvents;
     }
 
     public SpQueryResult executeQuery() throws RuntimeException {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
         List<QueryElement<?>> queryElements = getQueryElements();
 
+
+        // TODO get parameter maximumAmountOfEvents
+        if (this.maximumAmountOfEvents != -1) {
+            QueryBuilder countQueryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
+            Query countQuery = countQueryBuilder.build(queryElements, true);
+            Double amountOfQueryResults = getAmountOfResults(influxDB.query(countQuery));
+            if (amountOfQueryResults > this.maximumAmountOfEvents) {
+                SpQueryResult tooMuchData = new SpQueryResult();
+                tooMuchData.setSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA);
+                tooMuchData.setTotal(amountOfQueryResults.intValue());
+                influxDB.close();
+               return tooMuchData;
+            }
+        }
+
         QueryBuilder queryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
-        Query query = queryBuilder.build(queryElements);
+        Query query = queryBuilder.build(queryElements, false);
         LOG.debug("Data Lake Query (database:" + query.getDatabase() + "): " + query.getCommand());
 
         QueryResult result = influxDB.query(query);
@@ -60,6 +84,10 @@ public class DataExplorerQueryV4 {
 
         influxDB.close();
         return dataResult;
+    }
+
+    private double getAmountOfResults(QueryResult countQueryResult) {
+        return (double) countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);
     }
 
 

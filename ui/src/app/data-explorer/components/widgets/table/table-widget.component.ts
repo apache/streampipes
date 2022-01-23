@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TableWidgetModel } from './model/table-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -29,7 +29,7 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
   templateUrl: './table-widget.component.html',
   styleUrls: ['./table-widget.component.scss']
 })
-export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetModel> implements OnInit, OnDestroy {
+export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableWidgetModel> implements OnInit, OnDestroy {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -45,7 +45,10 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   transformData(spQueryResult: SpQueryResult) {
     const result = [];
     if (spQueryResult.total === 0) {
-      this.setShownComponents(true, false, false);
+      this.setShownComponents(true, false, false, false);
+    } else if (spQueryResult['spQueryStatus'] === 'TOO_MUCH_DATA') {
+      this.amountOfTooMuchEvents = spQueryResult.total;
+      this.setShownComponents(false, false, false, true);
     } else {
       spQueryResult.allDataSeries.forEach(series => {
         series.rows.forEach(row =>
@@ -53,7 +56,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
         );
       });
 
-      this.setShownComponents(false, true, false);
+      this.setShownComponents(false, true, false, false);
     }
     return result;
   }

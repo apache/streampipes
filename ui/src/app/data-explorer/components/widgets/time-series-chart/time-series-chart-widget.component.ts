@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -27,7 +27,7 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
   templateUrl: './time-series-chart-widget.component.html',
   styleUrls: ['./time-series-chart-widget.component.scss']
 })
-export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeSeriesChartWidgetModel> implements OnInit {
+export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirective<TimeSeriesChartWidgetModel> implements OnInit {
 
   presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
 

@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -27,7 +27,7 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
   templateUrl: './indicator-chart-widget.component.html',
   styleUrls: ['./indicator-chart-widget.component.scss']
 })
-export class IndicatorChartWidgetComponent extends BaseDataExplorerWidget<IndicatorChartWidgetModel> implements OnInit {
+export class IndicatorChartWidgetComponent extends BaseDataExplorerWidgetDirective<IndicatorChartWidgetModel> implements OnInit {
 
   data = [
     {

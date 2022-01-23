@@ -16,21 +16,29 @@
  *
  */
 
-export class DatalakeQueryParameters {
-  public columns: string;
-  public startDate: number;
-  public endDate: number;
-  public page: number;
-  public limit: number;
-  public offset: number;
-  public groupBy: string;
-  public order: string;
-  public aggregationFunction: string;
-  public timeInterval: string;
-  public countOnly: boolean;
-  public autoAggregate: boolean;
-  public filter: string;
-  public maximumAmountOfEvents: number;
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
+@Component({
+  selector: 'sp-too-much-data',
+  templateUrl: './too-much-data.component.html',
+  styleUrls: ['./too-much-data.component.scss']
+})
+export class TooMuchDataComponent implements OnInit {
+
+  @Input()
+  amountOfEvents: number;
+
+  @Output()
+  loadDataWithTooManyEventsEmitter: EventEmitter<boolean> = new EventEmitter();
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  loadDataWithTooManyEvents() {
+    this.loadDataWithTooManyEventsEmitter.emit();
+  }
 
 }
-

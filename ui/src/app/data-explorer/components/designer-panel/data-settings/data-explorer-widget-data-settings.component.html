@@ -26,11 +26,17 @@
                         {{sourceConfig.measureName ? sourceConfig.measureName : 'New Data Source'}}
                     </div>
                     <div fxFlex fxLayoutAlign="end center">
-                        <button mat-button mat-icon-button color="accent">
-                            <i class="material-icons plus-icon" (click)="cloneSourceConfig(i)">+</i>
+                        <button mat-button
+                                mat-icon-button
+                                color="accent"
+                                matTooltip="Clone Data Source">
+                            <i class="material-icons plus-icon align-btn" (click)="cloneSourceConfig(i)">flip_to_front</i>
                         </button>
-                        <button mat-button mat-icon-button color="accent">
-                            <i class="material-icons" (click)="removeSourceConfig(i)">delete</i>
+                        <button mat-button
+                                mat-icon-button
+                                color="accent"
+                                matTooltip="Delete Data Source">
+                            <i class="material-icons align-btn" (click)="removeSourceConfig(i)">delete</i>
                         </button>
                     </div>
                 </div>

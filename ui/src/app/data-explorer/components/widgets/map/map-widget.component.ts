@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Content, icon, LatLng, latLng, LatLngExpression, Map, marker, Marker, polyline, Polyline, tileLayer } from 'leaflet';
 
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { MapWidgetModel } from './model/map-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -29,7 +29,7 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
   templateUrl: './map-widget.component.html',
   styleUrls: ['./map-widget.component.scss']
 })
-export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> implements OnInit, OnDestroy {
+export class MapWidgetComponent extends BaseDataExplorerWidgetDirective<MapWidgetModel> implements OnInit, OnDestroy {
 
   item: any;
 
