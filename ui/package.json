@@ -64,7 +64,6 @@
     "leaflet": "1.6.0",
     "lodash": "4.17.20",
     "material-icons": "^0.5.3",
-    "ng2-dragula": "1.5.0",
     "ngx-color-picker": "^11.0.0",
     "ngx-echarts": "^7.1.0",
     "ngx-quill": "15.0.0",

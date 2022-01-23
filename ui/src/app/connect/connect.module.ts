@@ -35,7 +35,6 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { RestService } from './services/rest.service';
 
 import { MatInputModule } from '@angular/material/input';
-import { DragulaModule } from 'ng2-dragula';
 import { AdapterStartedDialog } from './dialog/adapter-started/adapter-started-dialog.component';
 import { DataTypesService } from './services/data-type.service';
 import { StaticPropertyUtilService } from '../core-ui/static-properties/static-property-util.service';
@@ -90,7 +89,6 @@ import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/del
     FlexLayoutModule,
     MatGridListModule,
     CustomMaterialModule,
-    DragulaModule,
     MatProgressSpinnerModule,
     MatChipsModule,
     MatInputModule,
