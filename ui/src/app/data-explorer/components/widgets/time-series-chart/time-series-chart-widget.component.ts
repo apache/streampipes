@@ -59,15 +59,13 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
       autosize: true,
       plot_bgcolor: '#fff',
       paper_bgcolor: '#fff',
-      xaxis: {
-        type: 'date'
-      },
       yaxis: {
         fixedrange: true
       },
       updatemenus: this.updatemenus,
 
-      hovermode: 'closest',
+      hovermode: 'x',
+      showlegend: true,
       shapes: [],
       selectdirection: 'h',
       dragmode: 'zoom'
@@ -125,11 +123,6 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
 
   transformData(data: SpQueryResult,
                 sourceIndex: number): any[] {
-
-    const numericPlusBooleanFields = this.fieldProvider.numericFields.concat(this.fieldProvider.booleanFields);
-
-    const columnsContainingNumbersPlusBooleans = this.dataExplorerWidget.visualizationConfig.selectedTimeSeriesChartProperties
-      .filter(f => numericPlusBooleanFields.find(field => field.fullDbName === f.fullDbName && f.sourceIndex === data.sourceIndex));
 
     const indexXkey = 0;
 
@@ -228,6 +221,26 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
     this.graph.layout.plot_bgcolor = this.dataExplorerWidget.baseAppearanceConfig.backgroundColor;
     this.graph.layout.font.color = this.dataExplorerWidget.baseAppearanceConfig.textColor;
 
+    if (this.dataExplorerWidget.visualizationConfig.showSpike) {
+      this.graph.layout['xaxis'] = {
+        type: 'date',
+        showspikes: true,
+        spikemode: 'across+toaxis',
+        spikesnap: 'cursor',
+        showline: true,
+        showgrid: true,
+        spikedash: 'dash',
+        spikecolor: '#666666',
+        spikethickness: 2,
+      }
+      this.graph.layout.hovermode = 'x';
+
+    } else {
+      this.graph.layout['xaxis'] = {
+        type: 'date',
+      }
+      this.graph.layout.hovermode = '';
+    }
     
     const colorKeeper = {};
     const dashTypeKeeper = {};
@@ -386,18 +399,6 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
           }
         }
       });
-
-      // forget all configurations if deselected: 
-      // for (const key in this.dataExplorerWidget.visualizationConfig.chosenColor) {
-      //   if (this.dataExplorerWidget.visualizationConfig.chosenColor.hasOwnProperty(key)) {
-      //     if (!collectNames.includes(key)) {
-      //       delete this.dataExplorerWidget.visualizationConfig.chosenColor[key];
-      //       delete this.dataExplorerWidget.visualizationConfig.displayName[key];
-      //       delete this.dataExplorerWidget.visualizationConfig.displayType[key];
-      //     }
-      //   }
-      // }
-
     }
   }
 
@@ -430,7 +431,13 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidget<TimeS
         this.data = this.data.concat(item);
       });
     });
-    this.setShownComponents(false, true, false);
+
+
+    if (spQueryResults[0].total > 0) {
+      this.setShownComponents(false, true, false);
+    } else {
+      this.setShownComponents(true, false, false);
+    }
 
   }
 
