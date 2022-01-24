@@ -44,20 +44,13 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
 
   transformData(spQueryResult: SpQueryResult) {
     const result = [];
-    if (spQueryResult.total === 0) {
-      this.setShownComponents(true, false, false, false);
-    } else if (spQueryResult['spQueryStatus'] === 'TOO_MUCH_DATA') {
-      this.amountOfTooMuchEvents = spQueryResult.total;
-      this.setShownComponents(false, false, false, true);
-    } else {
-      spQueryResult.allDataSeries.forEach(series => {
-        series.rows.forEach(row =>
+    spQueryResult.allDataSeries.forEach(series => {
+      series.rows.forEach(row =>
           result.push(this.createTableObject(spQueryResult.headers, row))
-        );
-      });
+      );
+    });
 
-      this.setShownComponents(false, true, false, false);
-    }
+    this.setShownComponents(false, true, false, false);
     return result;
   }
 
@@ -77,17 +70,17 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
   sortData(event) {
     if (event.direction === 'asc') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
+          (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
     }
 
     if (event.direction === 'desc') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
+          (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
     }
 
     if (event.direction === '') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
+          (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
     }
   }
 
@@ -99,7 +92,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
   }
 
   beforeDataFetched() {
-    this.setShownComponents(false, false, true);
+    this.setShownComponents(false, false, true, false);
   }
 
   onDataReceived(spQueryResults: SpQueryResult[]) {
@@ -114,12 +107,12 @@ export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableW
   handleUpdatedFields(addedFields: DataExplorerField[],
                       removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.selectedColumns =
-      this.updateFieldSelection(
-        this.dataExplorerWidget.visualizationConfig.selectedColumns,
-        addedFields,
-        removedFields,
-        (field) => true
-      );
+        this.updateFieldSelection(
+            this.dataExplorerWidget.visualizationConfig.selectedColumns,
+            addedFields,
+            removedFields,
+            (field) => true
+        );
     this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
   }
 

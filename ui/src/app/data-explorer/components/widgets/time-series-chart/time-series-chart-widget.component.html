@@ -22,7 +22,12 @@
 
         <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
 
-        <plotly-plot *ngIf="data !== undefined && data.length > 0 && !showNoDataInDateRange && !showIsLoadingData"
+        <sp-too-much-data
+                [amountOfEvents]="amountOfTooMuchEvents"
+                (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
+                *ngIf="showTooMuchData"></sp-too-much-data>
+
+        <plotly-plot *ngIf="showData"
                      [divId]="dataExplorerWidget._id"
                      class="plotly-container"
                      [data]="data"

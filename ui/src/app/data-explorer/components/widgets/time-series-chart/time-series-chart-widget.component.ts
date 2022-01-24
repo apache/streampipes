@@ -200,8 +200,11 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
   lightenColor(color: string, percent: number) {
     const num = parseInt(color.replace('#', ''), 16);
     const amt = Math.round(2.55 * percent);
+    // tslint:disable-next-line:no-bitwise
     const R = (num >> 16) + amt;
+    // tslint:disable-next-line:no-bitwise
     const B = (num >> 8 & 0x00FF) + amt;
+    // tslint:disable-next-line:no-bitwise
     const G = (num & 0x0000FF) + amt;
     const result = '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
                   (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
@@ -232,23 +235,23 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
         spikedash: 'dash',
         spikecolor: '#666666',
         spikethickness: 2,
-      }
+      };
       this.graph.layout.hovermode = 'x';
 
     } else {
       this.graph.layout['xaxis'] = {
         type: 'date',
-      }
+      };
       this.graph.layout.hovermode = '';
     }
-    
+
     const colorKeeper = {};
     const dashTypeKeeper = {};
     const lineVisualizationOptions = ['solid', 'dash', 'dot', 'dashdot'];
     const barVisualizationOptions = ['', '+', '/', '.'];
-    const symbolVisualizationOptions = ['diamond', 'star-triangle-up', 'pentagon', 'star-diamond', 'x']
-    const scatterVisualizationOptions = ['', 'diamond', 'star-triangle-up', 'pentagon', 'star-diamond', 'x']
-   
+    const symbolVisualizationOptions = ['diamond', 'star-triangle-up', 'pentagon', 'star-diamond', 'x'];
+    const scatterVisualizationOptions = ['', 'diamond', 'star-triangle-up', 'pentagon', 'star-diamond', 'x'];
+
     let pastGroups = 0;
     let index = 0;
 
@@ -296,10 +299,10 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
             let color = this.dataExplorerWidget.visualizationConfig.chosenColor[name];
             const setType = this.dataExplorerWidget.visualizationConfig.displayType[name];
 
-            let visualizationOptions = undefined;
+            let visualizationOptions;
             if (setType === 'bar') {
               visualizationOptions = barVisualizationOptions;
-            } 
+            }
             if (setType === 'lines' || setType === 'lines+markers')  {
               visualizationOptions = lineVisualizationOptions;
             }
@@ -310,18 +313,18 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
               visualizationOptions = scatterVisualizationOptions;
             }
 
-            let dashType = undefined;
+            let dashType;
 
             if (name in colorKeeper) {
               dashType = dashTypeKeeper[name];
-              const visualizationTypePosition = visualizationOptions.indexOf(dashType)
+              const visualizationTypePosition = visualizationOptions.indexOf(dashType);
               if (visualizationTypePosition === (visualizationOptions.length - 1)) {
                 dashType = visualizationOptions[0];
                 dashTypeKeeper[name] = dashType;
                 color = this.lightenColor(colorKeeper[name], 11.0);
                 colorKeeper[name] = color;
               } else {
-                dashType = visualizationOptions[visualizationTypePosition + 1]
+                dashType = visualizationOptions[visualizationTypePosition + 1];
                 dashTypeKeeper[name] = dashType;
                 color = colorKeeper[name];
               }
@@ -353,8 +356,8 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
                               'dash' : dashType,
                               'width' : 3,
                 };
-              };
-            };
+              }
+            }
 
             this.data[index].name = displayName;
 
@@ -414,31 +417,32 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
 
   beforeDataFetched() {
     this.graph.layout.shapes = [];
-    this.setShownComponents(false, false, true);
+    this.setShownComponents(false, false, true, false);
   }
 
   onDataReceived(spQueryResults: SpQueryResult[]) {
     this.data = [];
 
-    this.setShownComponents(true, false, false);
-    this.groupKeeper = {};
+      // this.setShownComponents(true, false, false, false);
+      this.groupKeeper = {};
 
-    this.orderedSelectedProperties = [];
+      this.orderedSelectedProperties = [];
 
-    spQueryResults.map((spQueryResult, index) => {
-      const res = this.transformData(spQueryResult, spQueryResult.sourceIndex);
-      res.forEach(item => {
-        this.data = this.data.concat(item);
+      spQueryResults.map((spQueryResult, index) => {
+        const res = this.transformData(spQueryResult, spQueryResult.sourceIndex);
+        res.forEach(item => {
+          this.data = this.data.concat(item);
+        });
       });
-    });
 
 
-    if (spQueryResults[0].total > 0) {
-      this.setShownComponents(false, true, false);
-    } else {
-      this.setShownComponents(true, false, false);
-    }
+      if (spQueryResults[0].total > 0) {
+        this.setShownComponents(false, true, false, false);
+      } else {
+        this.setShownComponents(true, false, false, false);
+      }
 
+    // }
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],

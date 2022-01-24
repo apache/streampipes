@@ -158,10 +158,26 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
     this.timerCallback.emit(true);
     zip(...observables).subscribe(results => {
       results.forEach((result, index) => result.sourceIndex = index);
-      this.onDataReceived(results);
+      this.validateReceivedData(results);
+      // this.onDataReceived(results);
       this.refreshView();
       this.timerCallback.emit(false);
     });
+  }
+
+  validateReceivedData(spQueryResults: SpQueryResult[]) {
+
+    const spQueryResult = spQueryResults[0];
+
+    if (spQueryResult.total === 0) {
+      this.setShownComponents(true, false, false, false);
+    } else if (spQueryResult['spQueryStatus'] === 'TOO_MUCH_DATA') {
+      this.amountOfTooMuchEvents = spQueryResult.total;
+      this.setShownComponents(false, false, false, true);
+    } else {
+      this.onDataReceived(spQueryResults);
+    }
+
   }
 
   loadDataWithTooManyEvents() {
