@@ -10,6 +10,9 @@
   "scripts": {
     "start": "node ./deployment/prebuild.js && ng serve",
     "test": "node ./deployment/prebuild.js && ng test",
+    "start-plain": "ng serve",
+    "build-plain": "set NODE_OPTIONS=--max-old-space-size=10192 && ng build --configuration production",
+    "run-prebuild-script": "node ./deployment/prebuild.js",
     "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --configuration production",
     "build-dev": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && ng build",
     "build-rc": "node ./deployment/prebuild.js rel && set NODE_OPTIONS=--max-old-space-size=10192 && ng build --configuration production",
