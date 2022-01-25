@@ -295,7 +295,7 @@ export class DataLakeUtils {
     } else {
       actualResult = DataLakeUtils.parseCsv(actual);
     }
-    const expectedResult = ignoreTime ? DataLakeUtils.parseCsv(expected).map(row => row.splice(1)) : DataLakeUtils.parseCsv(expected);
+    const expectedResult = DataLakeUtils.parseCsv(expected);
     expect(actualResult).to.deep.equal(expectedResult);
   }
 

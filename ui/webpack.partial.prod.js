@@ -21,6 +21,6 @@ const baseConfig = require('./webpack.partial.base.js');
 
 module.exports = merge(baseConfig, {
     plugins: [
-        new CompressionPlugin
+        new CompressionPlugin()
     ],
 });

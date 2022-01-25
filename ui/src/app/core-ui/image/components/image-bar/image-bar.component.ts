@@ -17,7 +17,6 @@
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
-import { DetectedBoxModel } from '../../../../app-transport-monitoring/model/detected-box.model';
 
 @Component({
   selector: 'sp-image-bar',
