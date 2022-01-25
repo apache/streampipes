@@ -30,7 +30,8 @@ export class ConnectEventSchemaUtils {
     // Mark property as timestamp
     this.eventSchemaNextBtnDisabled();
     // Edit timestamp
-    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
+
+    ConnectEventSchemaUtils.clickEditProperty(propertyName);
 
     // Mark as timestamp
     cy.dataCy('sp-mark-as-timestamp').children().click();
@@ -48,7 +49,7 @@ export class ConnectEventSchemaUtils {
   }
 
   public static editTimestampProperty(propertyName: string,  timestampRegex: string) {
-    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    ConnectEventSchemaUtils.clickEditProperty(propertyName);
     cy.dataCy('sp-mark-as-timestamp').children().click();
     cy.dataCy('connect-timestamp-converter').click().get('mat-option').contains('String').click();
     cy.dataCy('connect-timestamp-string-regex').type(timestampRegex);
@@ -61,8 +62,8 @@ export class ConnectEventSchemaUtils {
   }
 
   public static numberTransformation(propertyName: string,  value: string) {
-    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
-    cy.wait(1000);
+    ConnectEventSchemaUtils.clickEditProperty(propertyName);
+    // cy.wait(1000);
     cy.dataCy('connect-schema-correction-value').type(value);
     cy.dataCy('connect-schema-correction-operator').click().get('mat-option').contains('Multiply').click();
 
@@ -73,7 +74,7 @@ export class ConnectEventSchemaUtils {
   }
 
   public static unitTransformation(propertyName: string, fromUnit: string, toUnit: string) {
-    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    ConnectEventSchemaUtils.clickEditProperty(propertyName);
     cy.dataCy('connect-schema-unit-from-dropdown').type(fromUnit);
     cy.dataCy('connect-schema-unit-transform-btn').click();
     cy.dataCy('connect-schema-unit-to-dropdown').click().get('mat-option').contains(toUnit).click();
@@ -99,7 +100,8 @@ export class ConnectEventSchemaUtils {
     cy.dataCy('sp-save-edit-property').click();
 
     // validate that static value is persisted
-    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    ConnectEventSchemaUtils.clickEditProperty(propertyName);
+
     cy.dataCy('connect-edit-field-static-value', { timeout: 10000 }).should('have.value', propertyValue);
     cy.dataCy('sp-save-edit-property').click();
   }
@@ -111,7 +113,7 @@ export class ConnectEventSchemaUtils {
 
 
   public static changePropertyDataType(propertyName: string, dataType: string) {
-    cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click();
+    ConnectEventSchemaUtils.clickEditProperty(propertyName);
     cy.dataCy('connect-change-runtime-type').click().get('mat-option').contains(dataType).click();
     cy.dataCy('sp-save-edit-property').click();
     // validate that static value is persisted
@@ -131,6 +133,11 @@ export class ConnectEventSchemaUtils {
     // Click next
     cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should('be.visible');
     cy.get('#event-schema-next-button').click();
+  }
+
+  public static clickEditProperty(propertyName: string) {
+    cy.dataCy('edit-' + propertyName.toLowerCase(), { timeout: 10000 }).click();
+    cy.dataCy('connect-edit-field-runtime-name').should('have.value', propertyName, { timeout: 10000 });
   }
 
 }
