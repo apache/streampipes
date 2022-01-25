@@ -47,7 +47,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
 
-  // TODO add emitter to reset dashboard
   @Output() resetDashboardChanges: EventEmitter<boolean> = new EventEmitter();
 
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
@@ -73,7 +72,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   public ngOnInit() {
-    // console.log(this.currentlyConfiguredWidget);
   }
 
   triggerResize() {
@@ -88,6 +86,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
+    // tslint:disable-next-line:no-object-literal-type-assertion
     const dashboardItem = {} as DashboardItem;
     dashboardItem.id = widget._id;
     dashboardItem.cols = 3;

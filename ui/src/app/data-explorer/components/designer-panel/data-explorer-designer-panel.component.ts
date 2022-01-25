@@ -45,20 +45,6 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
     this.selectedIndex = index;
   }
 
-  // // TODO remove
-  // addWidget() {
-  //   this.selectedIndex = 0;
-  //   this.dataLakeMeasure = new DataLakeMeasure();
-  //   this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
-  //   this.currentlyConfiguredWidget['@class'] = 'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
-  //   this.currentlyConfiguredWidget.baseAppearanceConfig = {};
-  //   this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle = 'New Widget';
-  //   this.currentlyConfiguredWidget.dataConfig = {};
-  //   this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
-  //   this.newWidgetMode = true;
-  // }
-
-  // TODO remove
   createNewWidget() {
     this.newWidgetMode = false;
 
@@ -78,6 +64,5 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
 
   closeDesignerPanel() {
     this.closeDesignerPanelEmitter.emit();
-    // TODO implement
   }
 }
