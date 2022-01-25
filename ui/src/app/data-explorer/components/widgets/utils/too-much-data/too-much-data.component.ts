@@ -16,32 +16,29 @@
  *
  */
 
-.m-20 {
-    margin: 20px;
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
+@Component({
+  selector: 'sp-too-much-data',
+  templateUrl: './too-much-data.component.html',
+  styleUrls: ['./too-much-data.component.scss']
+})
+export class TooMuchDataComponent implements OnInit {
+
+  @Input()
+  amountOfEvents: number;
+
+  @Output()
+  loadDataWithTooManyEventsEmitter: EventEmitter<boolean> = new EventEmitter();
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+  loadDataWithTooManyEvents() {
+    this.loadDataWithTooManyEventsEmitter.emit();
+  }
+
 }
-
-.h-100 {
-    height:100%;
-}
-
-.dashboard-grid {
-    display:flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
-
-.designer-panel-container {
-    width: 100%;
-    height: 100%;
-}
-
-.designer-panel {
-    width: 400px;
-    border: 1px solid var(--color-tab-border);
-}
-
-.edit-menu-btn {
-    margin-right: 5px;
-}
-
-

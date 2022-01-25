@@ -36,6 +36,7 @@ public class SupportedDataLakeQueryParameters {
   public static final String QP_COUNT_ONLY = "countOnly";
   public static final String QP_AUTO_AGGREGATE = "autoAggregate";
   public static final String QP_FILTER = "filter";
+  public static final String QP_MAXIMUM_AMOUNT_OF_EVENTS = "maximumAmountOfEvents";
 
   public static final List<String> supportedParams = Arrays.asList(
           QP_COLUMNS,
@@ -51,7 +52,8 @@ public class SupportedDataLakeQueryParameters {
           QP_FORMAT,
           QP_COUNT_ONLY,
           QP_AUTO_AGGREGATE,
-          QP_FILTER
+          QP_FILTER,
+          QP_MAXIMUM_AMOUNT_OF_EVENTS
   );
 
 }

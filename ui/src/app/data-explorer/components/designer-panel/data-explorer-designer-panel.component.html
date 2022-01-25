@@ -17,19 +17,16 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <div fxLayout="row" class="sp-tab-bg designer-panel-header">
-        <div fxLayoutAlign="start center" class="designer-panel-title">Widget Configuration</div>
-        <div fxFlex fxLayoutAlign="end end">
-            <button mat-button mat-icon-button
-                    data-cy="add-new-widget"
-                    (click)="addWidget()" matTooltip="New widget">
-                <mat-icon>add</mat-icon>
-            </button>
-        </div>
-    </div>
     <div fxFlex="100" fxLayout="column" class="designer-panel-content" *ngIf="currentlyConfiguredWidget">
-        <div class="designer-panel-title">
-            <h4 *ngIf="currentlyConfiguredWidget">{{ currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle }}</h4>
+        <div fxLayout="row" class="sp-tab-bg designer-panel-header">
+            <div fxLayoutAlign="start center" class="designer-panel-title"><h4>{{ currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle }}</h4></div>
+            <div fxFlex fxLayoutAlign="end end">
+                <button mat-button mat-icon-button
+                        matTooltip="Close Widget Configuration"
+                        (click)="closeDesignerPanel()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
         </div>
         <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
                        class="small">
@@ -83,13 +80,5 @@
                 </button>
             </div>
         </div>
-    </div>
-    <div class="designer-panel-config" *ngIf="!currentlyConfiguredWidget" fxFlex="100"
-         fxLayoutAlign="center center" fxLayout="column">
-        <span class="text-center">Select a widget to open configuration options or add a new widget.</span>
-        <button mat-button color="accent" class="mt-10"
-                (click)="addWidget()">
-            <i class="material-icons">add</i><span>Add widget</span>
-        </button>
     </div>
 </div>

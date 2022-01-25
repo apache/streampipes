@@ -25,13 +25,15 @@ import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerDataConfig, DataExplorerField, FieldProvider } from '../../../models/dataview-dashboard.model';
-import { Subscription, zip } from 'rxjs';
+import { Observable, Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { BaseWidgetData } from './data-explorer-widget-data';
 import { TimeSelectionService } from '../../../services/time-selection.service';
 
 @Directive()
-export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> implements BaseWidgetData<T>, OnInit, OnDestroy {
+export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidgetModel> implements BaseWidgetData<T>, OnInit, OnDestroy {
+
+  private static TOO_MUCH_DATA_PARAMETER = 10000;
 
   @Output()
   removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
@@ -55,6 +57,8 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   public showNoDataInDateRange: boolean;
   public showData: boolean;
   public showIsLoadingData: boolean;
+  public showTooMuchData: boolean;
+  public amountOfTooMuchEvents: number;
 
   fieldProvider: FieldProvider;
 
@@ -71,6 +75,7 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
   }
 
   ngOnInit(): void {
+    this.showData = true;
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
     this.widgetConfigurationSub = this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
@@ -114,29 +119,70 @@ export abstract class BaseDataExplorerWidget<T extends DataExplorerWidgetModel> 
 
   public setShownComponents(showNoDataInDateRange: boolean,
                             showData: boolean,
-                            showIsLoadingData: boolean) {
+                            showIsLoadingData: boolean,
+                            showTooMuchData: boolean = false) {
 
     this.showNoDataInDateRange = showNoDataInDateRange;
     this.showData = showData;
     this.showIsLoadingData = showIsLoadingData;
+    this.showTooMuchData = showTooMuchData;
   }
 
-  public updateData() {
+  public updateData(includeTooMuchEventsParameter: boolean = true) {
     this.beforeDataFetched();
-    const observables = this
-      .dataViewQueryGeneratorService
-      .generateObservables(
-        this.timeSettings.startTime,
-        this.timeSettings.endTime,
-        this.dataExplorerWidget.dataConfig as DataExplorerDataConfig
-      );
+
+    this.loadData(includeTooMuchEventsParameter);
+  }
+
+  private loadData(includeTooMuchEventsParameter: boolean) {
+
+    let observables: Observable<SpQueryResult>[];
+
+    if (includeTooMuchEventsParameter) {
+      observables = this
+          .dataViewQueryGeneratorService
+          .generateObservables(
+              this.timeSettings.startTime,
+              this.timeSettings.endTime,
+              this.dataExplorerWidget.dataConfig as DataExplorerDataConfig,
+              BaseDataExplorerWidgetDirective.TOO_MUCH_DATA_PARAMETER
+          );
+    } else {
+      observables = this
+          .dataViewQueryGeneratorService
+          .generateObservables(
+              this.timeSettings.startTime,
+              this.timeSettings.endTime,
+              this.dataExplorerWidget.dataConfig as DataExplorerDataConfig);
+    }
+
     this.timerCallback.emit(true);
     zip(...observables).subscribe(results => {
       results.forEach((result, index) => result.sourceIndex = index);
-      this.onDataReceived(results);
+      this.validateReceivedData(results);
+      // this.onDataReceived(results);
       this.refreshView();
       this.timerCallback.emit(false);
     });
+  }
+
+  validateReceivedData(spQueryResults: SpQueryResult[]) {
+
+    const spQueryResult = spQueryResults[0];
+
+    if (spQueryResult.total === 0) {
+      this.setShownComponents(true, false, false, false);
+    } else if (spQueryResult['spQueryStatus'] === 'TOO_MUCH_DATA') {
+      this.amountOfTooMuchEvents = spQueryResult.total;
+      this.setShownComponents(false, false, false, true);
+    } else {
+      this.onDataReceived(spQueryResults);
+    }
+
+  }
+
+  loadDataWithTooManyEvents() {
+    this.updateData(false);
   }
 
   isTimestamp(field: DataExplorerField) {

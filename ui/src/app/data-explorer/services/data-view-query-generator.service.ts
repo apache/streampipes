@@ -23,6 +23,7 @@ import { Observable } from 'rxjs';
 import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQueryParameters';
 import { DatalakeRestService } from '../../platform-services/apis/datalake-rest.service';
 import { SpQueryResult } from '../../core-model/gen/streampipes-model';
+import { countColumn } from 'codemirror';
 
 
 @Injectable()
@@ -34,23 +35,32 @@ export class DataViewQueryGeneratorService {
 
   generateObservables(startTime: number,
                       endTime: number,
-                      dataConfig: DataExplorerDataConfig): Observable<SpQueryResult>[] {
-
+                      dataConfig: DataExplorerDataConfig,
+                      maximumResultingEvents: number = -1): Observable<SpQueryResult>[] {
     return dataConfig
-      .sourceConfigs
-      .map(sourceConfig => this.dataLakeRestService
-        .getData(sourceConfig.measureName, this.generateQuery(startTime, endTime, sourceConfig)));
+        .sourceConfigs
+        .map(sourceConfig => {
+          const dataLakeConfiguration = this.generateQuery(startTime,
+              endTime,
+              sourceConfig,
+              maximumResultingEvents);
+
+          return this.dataLakeRestService
+              .getData(sourceConfig.measureName, dataLakeConfiguration);
+        });
   }
 
   generateQuery(startTime: number,
                 endTime: number,
-                sourceConfig: SourceConfig): DatalakeQueryParameters {
+                sourceConfig: SourceConfig,
+                maximumResultingEvents: number = -1
+                ): DatalakeQueryParameters {
     const queryBuilder = DatalakeQueryParameterBuilder.create(startTime, endTime);
     const queryConfig = sourceConfig.queryConfig;
 
     queryBuilder.withColumnFilter(
-      queryConfig.fields.filter(f => f.selected),
-      sourceConfig.queryType === 'aggregated' || sourceConfig.queryType === 'single'
+        queryConfig.fields.filter(f => f.selected),
+        sourceConfig.queryType === 'aggregated' || sourceConfig.queryType === 'single'
     );
 
     if (sourceConfig.queryConfig.groupBy !== undefined) {
@@ -78,6 +88,12 @@ export class DataViewQueryGeneratorService {
       }
     }
 
-    return queryBuilder.build();
+    const dataLakeQueryParameter = queryBuilder.build();
+
+    if (maximumResultingEvents !== -1) {
+      queryBuilder.withMaximumAmountOfEvents(maximumResultingEvents);
+    }
+
+    return dataLakeQueryParameter;
   }
 }

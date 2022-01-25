@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { CorrelationChartWidgetModel } from './model/correlation-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -28,7 +28,7 @@ import { throwToolbarMixedModesError } from '@angular/material/toolbar';
   templateUrl: './correlation-chart-widget.component.html',
   styleUrls: ['./correlation-chart-widget.component.scss']
 })
-export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<CorrelationChartWidgetModel> implements OnInit {
+export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirective<CorrelationChartWidgetModel> implements OnInit {
 
   colNo = 2;
   fixedColNo = 2;
@@ -80,7 +80,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<Corr
   }
 
   prepareData(result: SpQueryResult[]) {
-    
+
     const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result[0]);
     const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result[0]);
 
@@ -164,7 +164,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<Corr
           //   row: rowCount,
           //   column: colCount,
           // },
-        };    
+        };
 
         this.data.push(component2);
 
@@ -210,6 +210,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidget<Corr
   onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
     this.updateAppearance();
+    this.setShownComponents(false, true, false, false);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {

@@ -142,6 +142,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @QueryParam(QP_COUNT_ONLY) String countOnly
             , @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload") @QueryParam(QP_AUTO_AGGREGATE) boolean autoAggregate
             , @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions such as [field,operator,condition])") @QueryParam(QP_FILTER) String filter
+            , @Parameter(in = ParameterIn.QUERY, description = "the maximum amount of resulting events, when too high the query status is set to TOO_MUCH_DATA") @QueryParam(QP_MAXIMUM_AMOUNT_OF_EVENTS) Integer maximumAmountOfResults
             , @Context UriInfo uriInfo) {
 
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();

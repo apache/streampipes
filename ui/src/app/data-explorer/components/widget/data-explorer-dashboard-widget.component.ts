@@ -164,7 +164,11 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   }
 
   triggerWidgetEditMode() {
-    this.configureWidgetCallback.emit(this.configuredWidget);
+    if (this.currentlyConfiguredWidgetId === this.configuredWidget._id) {
+      this.configureWidgetCallback.emit();
+    } else {
+      this.configureWidgetCallback.emit(this.configuredWidget);
+    }
   }
 
   startLoadingTimer() {

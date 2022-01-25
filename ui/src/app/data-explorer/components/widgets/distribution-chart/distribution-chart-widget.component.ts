@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { DistributionChartWidgetModel } from './model/distribution-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -28,7 +28,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   templateUrl: './distribution-chart-widget.component.html',
   styleUrls: ['./distribution-chart-widget.component.scss']
 })
-export class DistributionChartWidgetComponent extends BaseDataExplorerWidget<DistributionChartWidgetModel> implements OnInit {
+export class DistributionChartWidgetComponent extends BaseDataExplorerWidgetDirective<DistributionChartWidgetModel> implements OnInit {
 
   data = [];
 
@@ -185,6 +185,7 @@ export class DistributionChartWidgetComponent extends BaseDataExplorerWidget<Dis
 
   onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
+    this.setShownComponents(false, true, false, false);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {

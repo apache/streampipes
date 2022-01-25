@@ -39,6 +39,7 @@ public class DataLakeManagementUtils {
   public static final String LIMIT = "LIMIT";
   public static final String OFFSET = "OFFSET";
   public static final String FILL = "FILL";
+  public static final String MAXIMUM_AMOUNT_OF_EVENTS = "MAXIMUM_AMOUNT_OF_EVENTS";
 
   public static final String DELETE_FROM = "DELETE";
 

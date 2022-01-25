@@ -30,6 +30,7 @@ export class DatalakeQueryParameters {
   public countOnly: boolean;
   public autoAggregate: boolean;
   public filter: string;
+  public maximumAmountOfEvents: number;
 
 }
 

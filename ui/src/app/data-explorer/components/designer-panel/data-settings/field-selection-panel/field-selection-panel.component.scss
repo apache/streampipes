@@ -17,9 +17,16 @@
  */
 
 .field-scroll-panel {
-  max-height: 200px;
+  max-height: 100px;
   overflow-y:auto;
   overflow-x: hidden;
 }
 
+.pull-btn-right {
+  margin-left: auto;
+}
+
+.btn-margin {
+  margin-right:10px;
+}
 

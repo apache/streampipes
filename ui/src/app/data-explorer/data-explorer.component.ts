@@ -20,10 +20,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataViewDataExplorerService } from '../platform-services/apis/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { Dashboard, TimeSettings } from '../dashboard/models/dashboard.model';
+import { Dashboard } from '../dashboard/models/dashboard.model';
 import { Tuple2 } from '../core-model/base/Tuple2';
 import { ActivatedRoute } from '@angular/router';
-import { TimeSelectionService } from './services/time-selection.service';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 
@@ -38,6 +37,7 @@ export class DataExplorerComponent implements OnInit {
   selectedIndex = 0;
   dashboardsLoaded = false;
   dashboardTabSelected = false;
+
   timeRangeVisible = true;
 
   editMode = true;
@@ -53,7 +53,6 @@ export class DataExplorerComponent implements OnInit {
   constructor(private dataViewService: DataViewDataExplorerService,
               private refreshDashboardService: RefreshDashboardService,
               private route: ActivatedRoute,
-              private timeSelectionService: TimeSelectionService,
               private authService: AuthService,
               private dashboardService: DataViewDataExplorerService) {
   }
@@ -75,13 +74,19 @@ export class DataExplorerComponent implements OnInit {
   }
 
   openDashboard(dashboard: Tuple2<Dashboard, boolean>) {
-    this.editMode = dashboard.b;
     const index = this.dataViewDashboards.indexOf(dashboard.a);
-    this.selectDashboard((index + 1));
+    this.selectDashboard((index + 1), dashboard.b);
   }
 
-  selectDashboard(index: number) {
+  selectDashboardInTab(index: number) {
+    if (index !== this.selectedIndex) {
+      this.selectDashboard(index);
+    }
+  }
+
+  selectDashboard(index: number, editMode = false) {
     this.selectedIndex = index;
+    this.editMode = editMode;
     if (index === 0) {
       this.dashboardTabSelected = false;
     } else {
@@ -113,7 +118,7 @@ export class DataExplorerComponent implements OnInit {
     this.selectDashboard(this.dataViewDashboards.indexOf(currentDashboard) + 1);
   }
 
-  protected getDashboards(currentDashboardId?: string) {
+  getDashboards(currentDashboardId?: string) {
     this.dashboardsLoaded = false;
     this.dataViewService.getDataViews().subscribe(data => {
       this.dataViewDashboards = data.sort((a, b) => a.name.localeCompare(b.name));
@@ -128,15 +133,6 @@ export class DataExplorerComponent implements OnInit {
     });
   }
 
-  updateDateRange(timeSettings: TimeSettings) {
-    this.selectedDataViewDashboard.dashboardTimeSettings = timeSettings;
-    this.timeSelectionService.notify(timeSettings);
-  }
-
-  saveDashboard() {
-    this.dashboardPanel.updateDashboard();
-  }
-
   triggerEditMode() {
     this.editMode = true;
   }
@@ -145,5 +141,9 @@ export class DataExplorerComponent implements OnInit {
     this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
       this.getDashboards();
     });
+  }
+
+  resetDashboardChanges() {
+    this.getDashboards(this.selectedDataViewDashboard._id);
   }
 }

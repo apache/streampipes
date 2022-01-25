@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Content, icon, LatLng, latLng, LatLngExpression, Map, marker, Marker, polyline, Polyline, tileLayer } from 'leaflet';
 
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { MapWidgetModel } from './model/map-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -29,7 +29,7 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
   templateUrl: './map-widget.component.html',
   styleUrls: ['./map-widget.component.scss']
 })
-export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> implements OnInit, OnDestroy {
+export class MapWidgetComponent extends BaseDataExplorerWidgetDirective<MapWidgetModel> implements OnInit, OnDestroy {
 
   item: any;
 
@@ -109,14 +109,19 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
     const usedCenter = this.dataExplorerWidget.visualizationConfig.useLastEventCoordinates ? lastCoordinate : currentCenter;
 
     this.makeLayers(this.lastDataResults);
-    this.map.setView(usedCenter, zoom);
-    this.map.invalidateSize();
+    if (this.map) {
+      this.map.setView(usedCenter, zoom);
+      this.map.invalidateSize();
+    }
+
   }
 
   onResize(width: number, height: number) {
     this.mapWidth = width;
     this.mapHeight = height;
-    this.map.invalidateSize();
+    if (this.map) {
+      this.map.invalidateSize();
+    }
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
@@ -128,6 +133,8 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   }
 
   onDataReceived(spQueryResult: SpQueryResult[]) {
+
+    this.setShownComponents(false, true, false, false);
     this.lastDataResults = spQueryResult[0];
     this.makeLayers(spQueryResult[0]);
   }
@@ -137,7 +144,7 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   }
 
   getLastCoordinate(spQueryResults: SpQueryResult) {
-    if (spQueryResults.total > 0) {
+    if (spQueryResults && spQueryResults.total > 0) {
       const result = spQueryResults.allDataSeries;
 
       const latitudeIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedLatitudeProperty, spQueryResults);
@@ -155,7 +162,7 @@ export class MapWidgetComponent extends BaseDataExplorerWidget<MapWidgetModel> i
   makeLayers(spQueryResult: SpQueryResult) {
     this.layers = [];
 
-    if (spQueryResult.total > 0) {
+    if (spQueryResult && spQueryResult.total > 0) {
 
       for (let i = 0; i <= spQueryResult.allDataSeries.length - 1; i++) {
 

@@ -16,32 +16,10 @@
  *
  */
 
-.m-20 {
-    margin: 20px;
+
+import { TableConfig } from '../../../src/app/dashboard/components/widgets/table/table-config';
+
+export class DataExplorerWidget {
+    public static TABLE = 'Table';
+    public static TIME_SERIES = 'Time Series';
 }
-
-.h-100 {
-    height:100%;
-}
-
-.dashboard-grid {
-    display:flex;
-    flex-direction: column;
-    flex: 1 1 100%;
-}
-
-.designer-panel-container {
-    width: 100%;
-    height: 100%;
-}
-
-.designer-panel {
-    width: 400px;
-    border: 1px solid var(--color-tab-border);
-}
-
-.edit-menu-btn {
-    margin-right: 5px;
-}
-
-

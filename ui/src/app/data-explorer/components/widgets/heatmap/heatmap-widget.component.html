@@ -17,9 +17,23 @@
   -->
 
   <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel">
+
+    <sp-load-data-spinner *ngIf="showIsLoadingData" class="h-100"></sp-load-data-spinner>
+
+    <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
+
+    <sp-too-much-data
+            [amountOfEvents]="amountOfTooMuchEvents"
+            (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
+            *ngIf="showTooMuchData"></sp-too-much-data>
+
     <div class="value-panel">
-      <div echarts [options]="option" [ngStyle]="{'width': currentWidth, 'height': '100%'}"
-           (chartInit)="onChartInit($event)" [merge]= "dynamic" *ngIf="configReady">
+      <div echarts [options]="option"
+           [ngStyle]="{'width': currentWidth, 'height': '100%'}"
+           (chartInit)="onChartInit($event)"
+           [merge]= "dynamic"
+           [ngStyle]="(showData) ? {'visibility': 'visible'} : {'visibility': 'hidden'}"
+           *ngIf="configReady">
       </div>
   </div>
 </div>
