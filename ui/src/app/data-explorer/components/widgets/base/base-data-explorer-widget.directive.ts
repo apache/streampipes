@@ -33,7 +33,7 @@ import { TimeSelectionService } from '../../../services/time-selection.service';
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidgetModel> implements BaseWidgetData<T>, OnInit, OnDestroy {
 
-  private static TOO_MUCH_DATA = 10;
+  private static TOO_MUCH_DATA_PARAMETER = 10000;
 
   @Output()
   removeWidgetCallback: EventEmitter<boolean> = new EventEmitter();
@@ -145,7 +145,7 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
               this.timeSettings.startTime,
               this.timeSettings.endTime,
               this.dataExplorerWidget.dataConfig as DataExplorerDataConfig,
-              BaseDataExplorerWidgetDirective.TOO_MUCH_DATA
+              BaseDataExplorerWidgetDirective.TOO_MUCH_DATA_PARAMETER
           );
     } else {
       observables = this

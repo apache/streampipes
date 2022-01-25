@@ -170,7 +170,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.resetDashboardChanges.emit(true);
   }
 
-  createW() {
+  createWidget() {
     this.dataLakeMeasure = new DataLakeMeasure();
     this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
     this.currentlyConfiguredWidget['@class'] = 'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
@@ -180,6 +180,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
     this.newWidgetMode = true;
     this.showDesignerPanel = true;
+    this.newWidgetMode = true;
   }
 
   closeDesignerPanel() {
