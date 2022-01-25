@@ -15,8 +15,6 @@
 
 spEditor:
   ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
   ng5_moduleName: 'EditorModule'
   ng5_component: 'EditorComponent'
   ng5_componentPath: './editor/editor.component'
@@ -31,7 +29,6 @@ spEditor:
   pageNames: 'PageName.PIPELINE_EDITOR'
 spConnect:
   ng5: True
-  ng1_templateUrl: ''
   ng5_moduleName: 'ConnectModule'
   ng5_component: 'ConnectComponent'
   ng5_componentPath: './connect/connect.component'
@@ -46,7 +43,6 @@ spConnect:
   pageNames: 'PageName.CONNECT'
 spPipelines:
   ng5: True
-  ng1_templateUrl: ''
   ng5_moduleName: 'PipelinesModule'
   ng5_component: 'PipelinesComponent'
   ng5_componentPath: './pipelines/pipelines.component'
@@ -59,22 +55,8 @@ spPipelines:
   homeImage: '/assets/img/home/pipelines.png'
   admin: False
   pageNames: 'PageName.PIPELINE_OVERVIEW'
-spSensors:
-  ng5: False
-  ng1_templateUrl: '../sensors/sensors.html'
-  ng5_moduleName: ''
-  ng5_component: ''
-  ng5_componentPath: ''
-  path: './sensors/sensors.module'
-  link: 'streampipes.sensors'
-  title: 'Pipeline Element Generator'
-  description: 'Pipeline Element Generator'
-  icon: 'content:ic_add_24px'
-  homeImage: '/assets/img/home/sensors.png'
-  admin: False
 spAdd:
   ng5: True
-  ng1_templateUrl: ''
   ng5_moduleName: 'AddModule'
   ng5_component: 'AddComponent'
   ng5_componentPath: './add/add.component'
@@ -89,8 +71,6 @@ spAdd:
   pageNames: 'PageName.INSTALL_PIPELINE_ELEMENTS'
 spConfiguration:
   ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
   ng5_moduleName: 'ConfigurationModule'
   ng5_component: 'ConfigurationComponent'
   ng5_componentPath: './configuration/configuration.component'
@@ -105,8 +85,6 @@ spConfiguration:
   admin: True
 spAppOverview:
   ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
   ng5_moduleName: 'AppOverviewModule'
   ng5_component: 'AppOverviewComponent'
   ng5_componentPath: './app-overview/app-overview.component'
@@ -121,8 +99,6 @@ spAppOverview:
   pageNames: 'PageName.APPS'
 spDashboard:
   ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
   ng5_moduleName: 'DashboardModule'
   ng5_component: 'DashboardComponent'
   ng5_componentPath: './dashboard/dashboard.component'
@@ -137,8 +113,6 @@ spDashboard:
   pageNames: 'PageName.DASHBOARD'
 spDataExplorer:
   ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
   ng5_moduleName: 'DataExplorerModule'
   ng5_component: 'DataExplorerComponent'
   ng5_componentPath: './data-explorer/data-explorer.component'
@@ -153,8 +127,6 @@ spDataExplorer:
   pageNames: 'PageName.DATA_EXPLORER'
 spFiles:
   ng5: True
-  ng1_templateUrl: ''
-  ng1_controller: ''
   ng5_moduleName: 'FilesModule'
   ng5_component: 'FilesComponent'
   ng5_componentPath: './files/files.component'
