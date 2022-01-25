@@ -185,6 +185,7 @@ export class DistributionChartWidgetComponent extends BaseDataExplorerWidgetDire
 
   onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
+    this.setShownComponents(false, true, false, false);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {

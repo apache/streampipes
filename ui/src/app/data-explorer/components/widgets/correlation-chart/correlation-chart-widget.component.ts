@@ -80,7 +80,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirec
   }
 
   prepareData(result: SpQueryResult[]) {
-    
+
     const xIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.firstField, result[0]);
     const yIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.secondField, result[0]);
 
@@ -164,7 +164,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirec
           //   row: rowCount,
           //   column: colCount,
           // },
-        };    
+        };
 
         this.data.push(component2);
 
@@ -210,6 +210,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirec
   onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
     this.updateAppearance();
+    this.setShownComponents(false, true, false, false);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
