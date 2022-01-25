@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
@@ -101,12 +101,25 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
       this.dashboard._rev = result._rev;
       if (this.widgetIdsToRemove.length > 0) {
-        this.deleteWidgets();
+        const observables = this.deleteWidgets();
+        zip(...observables).subscribe(() => {
+          this.widgetIdsToRemove.forEach(id => {
+            this.dashboardGrid.configuredWidgets.delete(id);
+          });
+
+          this.afterDashboardChange();
+        });
+      } else {
+        this.afterDashboardChange();
       }
-      this.dashboardGrid.updateAllWidgets();
-      this.editModeChange.emit(false);
-      this.closeDesignerPanel();
+
     });
+  }
+
+  afterDashboardChange() {
+    this.dashboardGrid.updateAllWidgets();
+    this.editModeChange.emit(false);
+    this.closeDesignerPanel();
   }
 
   startEditMode(widgetModel: DataExplorerWidgetModel) {
@@ -136,9 +149,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.widgetsToUpdate.set(widget._id, widget);
   }
 
-  deleteWidgets() {
-    this.widgetIdsToRemove.forEach(widgetId => {
-      this.dataViewDataExplorerService.deleteWidget(widgetId).subscribe();
+  deleteWidgets(): Observable<any>[] {
+    return this.widgetIdsToRemove.map(widgetId => {
+      return this.dataViewDataExplorerService.deleteWidget(widgetId);
     });
   }
 
