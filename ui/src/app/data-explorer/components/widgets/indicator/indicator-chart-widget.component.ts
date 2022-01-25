@@ -102,6 +102,7 @@ export class IndicatorChartWidgetComponent extends BaseDataExplorerWidgetDirecti
 
   onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
+    this.setShownComponents(false, true, false, false);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {
