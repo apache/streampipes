@@ -18,11 +18,24 @@
 const webpack = require('webpack')
 const path = require('path');
 
+const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const mf = require("@angular-architects/module-federation/webpack");
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(
+    path.join(__dirname, 'tsconfig.json'),
+    [/* mapped paths to share */]);
+
+
 module.exports = {
     module: {
         rules: [
             { test: /\.html$/, loader: 'raw-loader' }
         ],
+    },
+    experiments: {
+        outputModule: true
     },
     resolve: {
         alias: {
@@ -37,5 +50,24 @@ module.exports = {
         new webpack.ProvidePlugin({
             process: 'process/browser',
         }),
+        new ModuleFederationPlugin({
+
+            library: { type: "module" },
+
+            name: "sp",
+            filename: "remoteEntry.js",
+            exposes: { },
+
+            shared: share({
+                "@angular/core": { singleton: true, strictVersion: true, requiredVersion: 'auto', eager: true },
+                "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
+                "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
+                "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
+
+                ...sharedMappings.getDescriptors()
+            })
+
+        }),
+        sharedMappings.getPlugin()
     ]
 };
