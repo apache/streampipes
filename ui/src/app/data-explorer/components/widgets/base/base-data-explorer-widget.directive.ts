@@ -75,6 +75,7 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   ngOnInit(): void {
+    this.showData = true;
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
     this.widgetConfigurationSub = this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {

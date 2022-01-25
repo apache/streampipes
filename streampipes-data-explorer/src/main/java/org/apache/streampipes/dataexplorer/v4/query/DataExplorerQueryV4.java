@@ -87,7 +87,12 @@ public class DataExplorerQueryV4 {
     }
 
     private double getAmountOfResults(QueryResult countQueryResult) {
-        return (double) countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);
+        if (countQueryResult.getResults().get(0).getSeries() != null &&
+                countQueryResult.getResults().get(0).getSeries().get(0).getValues() != null) {
+            return (double) countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);
+        } else {
+            return 0.0;
+        }
     }
 
 

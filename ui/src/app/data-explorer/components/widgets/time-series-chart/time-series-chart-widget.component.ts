@@ -435,14 +435,8 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
         });
       });
 
+      this.setShownComponents(false, true, false, false);
 
-      if (spQueryResults[0].total > 0) {
-        this.setShownComponents(false, true, false, false);
-      } else {
-        this.setShownComponents(true, false, false, false);
-      }
-
-    // }
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[],
