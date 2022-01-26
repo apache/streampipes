@@ -16,6 +16,13 @@
  *
  */
 
+/**
+ *
+ * Note: to change this file, change sp-theme.scss in deployment folder
+ * changes in the root folder will be overridden by prebuild script
+ *
+ */
+
 @import '~@angular/material/theming';
 @import '../variables';
 

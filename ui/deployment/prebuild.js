@@ -92,6 +92,12 @@ fs.writeFileSync('src/assets/img/login/logo.png', fs.readFileSync(config['login'
 console.log('Moved: logo.png');
 fs.writeFileSync('src/assets/img/sp/logo-navigation.png', fs.readFileSync(config['login']['logo-navigation']));
 console.log('Moved: sp-logo-navigation.png');
+fs.writeFileSync('src/assets/img/favicon/favicon-96x96.png', fs.readFileSync(config['login']['favicon']));
+console.log('Moved: favicon');
+fs.writeFileSync('src/scss/sp/sp-theme.scss', fs.readFileSync('deployment/sp-theme.scss', 'utf8'));
+console.log("Moved: theme file");
+fs.writeFileSync('webpack.partial.dev.js', fs.readFileSync('deployment/webpack.partial.dev.js', 'utf8'));
+console.log("Moved: webpack dev config");
 
 if (process.env.THEME_LOC !== undefined) {
     console.log('Using custom-provided theme ' + process.env.THEME_LOC);
