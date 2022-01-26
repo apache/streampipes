@@ -58,8 +58,6 @@ public class DataExplorerQueryV4 {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
         List<QueryElement<?>> queryElements = getQueryElements();
 
-
-        // TODO get parameter maximumAmountOfEvents
         if (this.maximumAmountOfEvents != -1) {
             QueryBuilder countQueryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
             Query countQuery = countQueryBuilder.build(queryElements, true);
