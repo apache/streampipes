@@ -24,8 +24,9 @@ src/app/app-routing.module.ts
 src/app/appng5.module.ts
 src/app/home/home.service.ts
 src/app/services/version/version.service.ts
+src/app/services/app.constants.ts
 src/app/core/components/base-navigation.component.ts
-src/assets/img/login/logo.png
+src/assets/img/sp/logo.png
 src/assets/img/sp/logo-navigation.png
 src/assets/img/favicon/favicon-96x96.png
 src/scss/sp/sp-theme.scss
