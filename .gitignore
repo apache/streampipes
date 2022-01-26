@@ -85,13 +85,6 @@ npm-debug.log
 ui/src/assets/lib/apps/*
 
 
-# prebuild
-ui/src/app/appng5.module.ts
-ui/src/app/core/components/base-navigation.component.ts
-ui/src/app/app-routing.module.ts
-ui/src/app/home/home.service.ts
-ui/src/scss/sp/sp-theme.scss
-
 # compiled output
 ui/dist
 ui/dist/**
