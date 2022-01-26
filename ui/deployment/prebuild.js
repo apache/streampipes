@@ -88,7 +88,7 @@ fs.writeFileSync('src/app/core/components/base-navigation.component.ts', mustach
 fs.writeFileSync('src/scss/sp/sp-theme.scss', fs.readFileSync('deployment/sp-theme.scss'));
 
 // Move Images
-fs.writeFileSync('src/assets/img/login/logo.png', fs.readFileSync(config['login']['logo']));
+fs.writeFileSync('src/assets/img/sp/logo.png', fs.readFileSync(config['login']['logo']));
 console.log('Moved: logo.png');
 fs.writeFileSync('src/assets/img/sp/logo-navigation.png', fs.readFileSync(config['login']['logo-navigation']));
 console.log('Moved: sp-logo-navigation.png');
