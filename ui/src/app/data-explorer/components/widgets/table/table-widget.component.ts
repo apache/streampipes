@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TableWidgetModel } from './model/table-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
@@ -29,7 +29,7 @@ import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
   templateUrl: './table-widget.component.html',
   styleUrls: ['./table-widget.component.scss']
 })
-export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetModel> implements OnInit, OnDestroy {
+export class TableWidgetComponent extends BaseDataExplorerWidgetDirective<TableWidgetModel> implements OnInit, OnDestroy {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -44,17 +44,13 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
 
   transformData(spQueryResult: SpQueryResult) {
     const result = [];
-    if (spQueryResult.total === 0) {
-      this.setShownComponents(true, false, false);
-    } else {
-      spQueryResult.allDataSeries.forEach(series => {
-        series.rows.forEach(row =>
+    spQueryResult.allDataSeries.forEach(series => {
+      series.rows.forEach(row =>
           result.push(this.createTableObject(spQueryResult.headers, row))
-        );
-      });
+      );
+    });
 
-      this.setShownComponents(false, true, false);
-    }
+    this.setShownComponents(false, true, false, false);
     return result;
   }
 
@@ -74,17 +70,17 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   sortData(event) {
     if (event.direction === 'asc') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
+          (a, b) => (a[event.active] > b[event.active]) ? 1 : ((b[event.active] > a[event.active]) ? -1 : 0));
     }
 
     if (event.direction === 'desc') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
+          (a, b) => (a[event.active] > b[event.active]) ? -1 : ((b[event.active] > a[event.active]) ? 1 : 0));
     }
 
     if (event.direction === '') {
       this.dataSource.data = this.dataSource.data.sort(
-        (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
+          (a, b) => (a['timestamp'] > b['timestamp']) ? 1 : ((b['timestamp'] > a['timestamp']) ? -1 : 0));
     }
   }
 
@@ -96,7 +92,7 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   }
 
   beforeDataFetched() {
-    this.setShownComponents(false, false, true);
+    this.setShownComponents(false, false, true, false);
   }
 
   onDataReceived(spQueryResults: SpQueryResult[]) {
@@ -111,12 +107,12 @@ export class TableWidgetComponent extends BaseDataExplorerWidget<TableWidgetMode
   handleUpdatedFields(addedFields: DataExplorerField[],
                       removedFields: DataExplorerField[]) {
     this.dataExplorerWidget.visualizationConfig.selectedColumns =
-      this.updateFieldSelection(
-        this.dataExplorerWidget.visualizationConfig.selectedColumns,
-        addedFields,
-        removedFields,
-        (field) => true
-      );
+        this.updateFieldSelection(
+            this.dataExplorerWidget.visualizationConfig.selectedColumns,
+            addedFields,
+            removedFields,
+            (field) => true
+        );
     this.columnNames = ['time'].concat(this.dataExplorerWidget.visualizationConfig.selectedColumns.map(c => c.fullDbName));
   }
 

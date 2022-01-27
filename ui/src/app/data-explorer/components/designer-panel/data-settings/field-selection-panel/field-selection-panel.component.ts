@@ -32,6 +32,8 @@ export class FieldSelectionPanelComponent implements OnInit {
   @Input() sourceConfig: SourceConfig;
   @Input() widgetId: string;
 
+  expandFields = false;
+
   constructor(private fieldProvider: DataExplorerFieldProviderService,
               private widgetConfigService: WidgetConfigurationService) {}
 
@@ -78,6 +80,10 @@ export class FieldSelectionPanelComponent implements OnInit {
         || this.fieldProvider.isString(property)) {
       return 'MODE';
     }
+  }
+
+  toggleExpandFields() {
+    this.expandFields = !this.expandFields;
   }
 
 }

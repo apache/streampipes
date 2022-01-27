@@ -61,11 +61,18 @@
   align-items: center;
 }
 
+.plus-icon {
+  vertical-align: text-bottom;
+}
 .data-source-selection-panel .mat-form-field + .mat-form-field {
   margin-left: 8px;
 }
 
 .small-form {
   margin-bottom: -1.25em;
+}
+
+.align-btn {
+  vertical-align: text-bottom;
 }
 

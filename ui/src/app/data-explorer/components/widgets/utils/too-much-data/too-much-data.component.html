@@ -1,0 +1,37 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+<div fxLayout="column" fxLayoutAlign="space-around center" >
+
+    <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
+        <i class="material-icons" style="margin-top: 8px">warning</i>
+        <h2>Warning</h2>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="center center" style="margin-top: 30px">
+        <div class="default-text">This widget tries to load too much data (#Events: {{amountOfEvents}})</div>
+        <div class="default-text date-range-text">Please change the widget settings or decrease the time range</div>
+
+
+        <button mat-button
+                color="accent"
+                style="margin-top: 30px"
+                (click)="loadDataWithTooManyEvents()">
+            <label>Load anyway</label>
+        </button>
+        <div class="default-text warning-text">(This might crash the browser)</div>
+    </div>
+</div>

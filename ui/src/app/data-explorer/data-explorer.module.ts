@@ -96,6 +96,7 @@ import { WidgetTypeService } from './services/widget-type.service';
 import { CorrelationWidgetConfigComponent } from './components/widgets/correlation-chart/config/correlation-chart-widget-config.component';
 import { TimeSelectionService } from './services/time-selection.service';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -191,6 +192,7 @@ export const MY_NATIVE_FORMATS = {
     GroupSelectionPanelComponent,
     DataExplorerVisualisationSettingsComponent,
     WidgetDirective,
+    TooMuchDataComponent,
   ],
   providers: [
     DatalakeRestService,

@@ -29,7 +29,7 @@
          fxLayout="column">
         <div fxFlex="100" fxLayout="column">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                <mat-form-field color="accent" class="w-50-px mr-15">
+                <mat-form-field color="accent" class="w-140-px mr-5">
                     <mat-label>Field</mat-label>
                     <mat-select
                             [(value)]="filter.field"
@@ -40,8 +40,7 @@
                                     [value]="field">{{field.runtimeName}}</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field color="accent" class="w-50-px mr-15">
-                    <mat-label>Operator</mat-label>
+                <mat-form-field color="accent" class="w-50-px mr-5">
                     <mat-select
                             [(value)]="filter.operator"
                             (selectionChange)="updateWidget()"
@@ -66,7 +65,7 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field color="accent" class="w-50-px mr-15">
+                <mat-form-field color="accent" class="w-140-px mr-5">
                     <mat-label>Value</mat-label>
                     <input matInput
                            [(ngModel)]="filter.value"

@@ -69,6 +69,12 @@ public class DataLakeManagementV4 {
             queryParams = new AutoAggregationHandler(queryParams).makeAutoAggregationQueryParams();
         }
         Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getSelectQueryParams(queryParams);
+
+        if (queryParams.getProvidedParams().containsKey(QP_MAXIMUM_AMOUNT_OF_EVENTS)) {
+            int maximumAmountOfEvents = Integer.parseInt(queryParams.getProvidedParams().get(QP_MAXIMUM_AMOUNT_OF_EVENTS));
+            return new DataExplorerQueryV4(queryParts, maximumAmountOfEvents).executeQuery();
+        }
+
         return new DataExplorerQueryV4(queryParts).executeQuery();
     }
 

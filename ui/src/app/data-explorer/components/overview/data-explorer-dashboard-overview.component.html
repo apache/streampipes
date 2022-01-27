@@ -27,9 +27,6 @@
                     <i class="material-icons">add</i>
                     <span>New Data View</span>
                 </button>
-                <!--                <button mat-button mat-raised-button color="accent" (click)="openEditLabelView()">-->
-                <!--                    Edit Labels-->
-                <!--                </button>-->
             </div>
         </div>
     </div>
@@ -64,7 +61,7 @@
                                 </span>
                                 <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerWritePrivileges">
                                 <button mat-button mat-icon-button color="accent"
-                                        data-cy="edit-data-view"
+                                        [attr.data-cy]="'edit-dashboard-' + element.name"
                                         (click)="showDashboard(element, true)">
                                     <i class="material-icons">edit</i>
                                 </button>
@@ -77,6 +74,7 @@
                                 </span>
                                 <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerDeletePrivileges">
                                 <button mat-button mat-icon-button color="accent"
+                                        [attr.data-cy]="'delete-dashboard-' + element.name"
                                         (click)="openDeleteDashboardDialog(element)">
                                     <i class="material-icons">delete</i>
                                 </button>
