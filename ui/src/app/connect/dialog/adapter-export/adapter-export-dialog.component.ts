@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input} from '@angular/core';
-import {AdapterDescriptionUnion} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { Component, Input } from '@angular/core';
+import { AdapterDescriptionUnion } from '@streampipes/platform-services';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
     selector: 'sp-dialog-adapter-started-dialog',
@@ -40,9 +40,9 @@ export class AdapterExportDialog {
     }
 
     download() {
-            let adapterDescriptionAsList = [this.adapter];
-            var data = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(adapterDescriptionAsList, null, 2));
-            var downloader = document.createElement('a');
+            const adapterDescriptionAsList = [this.adapter];
+            const data = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(adapterDescriptionAsList, null, 2));
+            const downloader = document.createElement('a');
             downloader.setAttribute('href', data);
             downloader.setAttribute('download', this.adapter.name + '-adapter-template.json');
             downloader.click();

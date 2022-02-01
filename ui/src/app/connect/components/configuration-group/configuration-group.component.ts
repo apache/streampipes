@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { StaticPropertyUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { StaticPropertyUnion } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 
 @Component({

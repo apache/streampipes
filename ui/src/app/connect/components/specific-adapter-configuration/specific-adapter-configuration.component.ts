@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AdapterDescriptionUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { AdapterDescriptionUnion } from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { UUID } from 'angular2-uuid';
 import { TreeNode } from '@circlon/angular-tree-component';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,7 +27,7 @@ import {
     EventPropertyPrimitive,
     EventPropertyUnion,
     EventSchema
-} from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../dialog/edit-event-property/edit-event-property.component';
 
 @Component({
@@ -35,24 +35,23 @@ import { EditEventPropertyComponent } from '../../../dialog/edit-event-property/
   templateUrl: './event-property-row.component.html',
   styleUrls: ['./event-property-row.component.scss']
 })
-export class EventPropertyRowComponent implements OnChanges {
+export class EventPropertyRowComponent implements OnInit, OnChanges {
 
   @Input() node: TreeNode;
   @Input() isEditable = true;
   @Input() eventSchema: EventSchema = new EventSchema();
   @Input() countSelected: number;
 
-  //@Output() nodeChange = new EventEmitter<TreeNode>();
   @Output() isEditableChange = new EventEmitter<boolean>();
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
   @Output() refreshTreeEmitter = new EventEmitter<void>();
   @Output() countSelectedChange = new EventEmitter<number>();
 
   label: string;
-  isPrimitive: boolean = false;
-  isNested: boolean = false;
-  isList: boolean = false;
-  timestampProperty: boolean = false;
+  isPrimitive = false;
+  isNested = false;
+  isList = false;
+  timestampProperty = false;
 
   constructor(private dialog: MatDialog) {
 
@@ -110,7 +109,7 @@ export class EventPropertyRowComponent implements OnChanges {
   }
 
   public openEditDialog(data): void {
-    let dialogRef = this.dialog.open(EditEventPropertyComponent, {
+    const dialogRef = this.dialog.open(EditEventPropertyComponent, {
       data: {
         property: data,
         isEditable: this.isEditable
@@ -178,7 +177,7 @@ export class EventPropertyRowComponent implements OnChanges {
     if (!eventProperty.eventProperties) {
       eventProperty.eventProperties = new Array<EventPropertyUnion>();
     }
-    let property: EventPropertyNested = new EventPropertyNested();
+    const property: EventPropertyNested = new EventPropertyNested();
     property.elementId = uuid;
     eventProperty.eventProperties.push(property);
     this.refreshTreeEmitter.emit();

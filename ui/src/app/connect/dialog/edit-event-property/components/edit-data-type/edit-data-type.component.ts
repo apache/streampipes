@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataTypesService} from '../../../../services/data-type.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DataTypesService } from '../../../../services/data-type.service';
 
 @Component({
   selector: 'sp-edit-data-type',

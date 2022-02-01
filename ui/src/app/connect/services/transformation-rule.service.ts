@@ -33,8 +33,7 @@ import {
   TimestampTranfsformationRuleDescription,
   TransformationRuleDescriptionUnion,
   UnitTransformRuleDescription
-} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { Logger } from '../../shared/logger/default-log.service';
+} from '@streampipes/platform-services';
 import { TimestampTransformationRuleMode } from '../model/TimestampTransformationRuleMode';
 
 @Injectable()
@@ -43,7 +42,7 @@ export class TransformationRuleService {
   private oldEventSchema: EventSchema = null;
   private newEventSchema: EventSchema = null;
 
-  constructor(public logger: Logger) {
+  constructor() {
   }
 
   public setOldEventSchema(oldEventSchema: EventSchema) {
@@ -58,7 +57,7 @@ export class TransformationRuleService {
     let transformationRuleDescription: TransformationRuleDescriptionUnion[] = [];
 
     if (this.oldEventSchema == null || this.newEventSchema == null) {
-      this.logger.error('Old and new schema must be defined');
+      console.log('Old and new schema must be defined');
     } else {
 
       const addedTimestampProperties = this.getTimestampProperty(this.newEventSchema.eventProperties);
@@ -144,11 +143,8 @@ export class TransformationRuleService {
 
           // old key is equals old route and new name
           let keyOfOldValue = '';
-          if (keyOldPrefix === '') {
-            keyOfOldValue = keyNew.substr(keyNew.lastIndexOf('.') + 1, keyNew.length);
-          } else {
-            keyOfOldValue = keyOldPrefix + '.' + keyNew.substr(keyNew.lastIndexOf('.') + 1, keyNew.length);
-          }
+          keyOfOldValue = keyOldPrefix === '' ? keyNew.substr(keyNew.lastIndexOf('.') + 1, keyNew.length) :
+              keyOldPrefix + '.' + keyNew.substr(keyNew.lastIndexOf('.') + 1, keyNew.length);
           const rule: MoveRuleDescription = new MoveRuleDescription();
           rule['@class'] = 'org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription';
           rule.oldRuntimeKey = keyOfOldValue;
@@ -202,7 +198,8 @@ export class TransformationRuleService {
       renameRule.newRuntimeKey = keyNew;
       result.push(renameRule);
       if (eventProperty instanceof EventPropertyNested) {
-        const tmpResults: RenameRuleDescription[] = this.getRenameRules((eventProperty as EventPropertyNested).eventProperties, oldEventSchema, newEventSchema);
+        const tmpResults: RenameRuleDescription[] =
+            this.getRenameRules((eventProperty as EventPropertyNested).eventProperties, oldEventSchema, newEventSchema);
         result = result.concat(tmpResults);
 
       }
@@ -229,7 +226,7 @@ export class TransformationRuleService {
 
     for (const id of allOldIds) {
       // if not in new ids create delete rule
-      if (allNewIds.indexOf(id) == -1) {
+      if (allNewIds.indexOf(id) === -1) {
         const key = this.getCompleteRuntimeNameKey(oldEventSchema.eventProperties, id);
         resultKeys.push(key);
       }
@@ -239,7 +236,7 @@ export class TransformationRuleService {
       return arrArg.filter((elem, pos, arr) => {
         let r = true;
         for (const a of arr) {
-          if (elem.startsWith(a) && a != elem) {
+          if (elem.startsWith(a) && a !== elem) {
             r = false;
           }
         }
@@ -333,7 +330,7 @@ export class TransformationRuleService {
     if (completeKey) {
       const keyElements = completeKey.split('.');
 
-      if (keyElements.length == 0) {
+      if (keyElements.length === 0) {
         return completeKey;
       } else {
         return keyElements[keyElements.length - 1];
@@ -443,7 +440,7 @@ export class TransformationRuleService {
     for (const res of result) {
       // TODO: better solution to check if the mode is valid
       if (res.mode === TimestampTransformationRuleMode.FORMAT_STRING
-        || (res.multiplier != 0 && res.mode === TimestampTransformationRuleMode.TIME_UNIT)) {
+        || (res.multiplier !== 0 && res.mode === TimestampTransformationRuleMode.TIME_UNIT)) {
         filteredResult.push(res);
       }
     }

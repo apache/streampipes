@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { AdapterDescriptionUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { AdapterDescriptionUnion } from '@streampipes/platform-services';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { DataMarketplaceService } from '../../services/data-marketplace.service';
 

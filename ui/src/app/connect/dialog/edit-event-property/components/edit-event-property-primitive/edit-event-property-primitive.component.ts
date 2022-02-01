@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataTypesService} from '../../../../services/data-type.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DataTypesService } from '../../../../services/data-type.service';
 
 @Component({
   selector: 'sp-edit-event-property-primitive',
@@ -50,7 +50,7 @@ export class EditEventPropertyPrimitiveComponent implements OnInit {
     this.hideUnitTransformation = this.isTimestampProperty ||
       !this.dataTypesService.isNumeric(this.cachedProperty.runtimeType);
 
-    if(this.dataTypesService.isNumeric(this.cachedProperty.runtimeType)) {
+    if (this.dataTypesService.isNumeric(this.cachedProperty.runtimeType)) {
       this.isNumericDataType.emit(true);
     } else {
       this.isNumericDataType.emit(false);

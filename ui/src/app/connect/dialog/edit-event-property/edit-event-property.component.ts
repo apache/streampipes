@@ -23,11 +23,11 @@ import {
     EventPropertyList,
     EventPropertyNested,
     EventPropertyPrimitive,
-    EventPropertyUnion
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+    EventPropertyUnion,
+    SemanticTypesService
+} from '@streampipes/platform-services';
 import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
 import { DataTypesService } from '../../services/data-type.service';
-import { SemanticTypesService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/semantic-types.service';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
 

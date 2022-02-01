@@ -17,7 +17,7 @@
  */
 
 import { Component } from '@angular/core';
-import { AdapterDescriptionUnion } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { AdapterDescriptionUnion } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-connect',

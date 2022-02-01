@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RestService } from '../../services/rest.service';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
@@ -25,10 +25,10 @@ import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
   templateUrl: './adapter-upload-dialog.html',
   styleUrls: ['./adapter-upload-dialog.component.scss']
 })
-export class AdapterUploadDialog {
+export class AdapterUploadDialog implements OnInit {
 
   private selectedUploadFile: File;
-  uploaded: boolean = false;
+  uploaded = false;
 
   constructor(private dialogRef: DialogRef<AdapterUploadDialog>,
               private restService: RestService) {
@@ -41,12 +41,12 @@ export class AdapterUploadDialog {
   handleFileInput(files: any) {
     this.selectedUploadFile = files[0];
 
-    let fileReader = new FileReader();
+    const fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.uploaded = true;
 
-      var jsonString: any = fileReader.result;
-      let allTemplates: any[] = JSON.parse(jsonString);
+      const jsonString: any = fileReader.result;
+      const allTemplates: any[] = JSON.parse(jsonString);
 
       // allTemplates.forEach(adapterTemplate => {
       //     this.restService.addAdapterTemplate(adapterTemplate).subscribe(x => {

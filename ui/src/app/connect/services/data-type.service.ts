@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DataTypesService {
-  private dataTypes: Array<{ label: string, url: string }> = [
+  private dataTypes: { label: string, url: string }[] = [
     {
       label: 'String - A textual datatype, e.g., \'machine1\'',
       url: 'http://www.w3.org/2001/XMLSchema#string'

@@ -79,6 +79,7 @@ import { LoadingMessageComponent } from './components/schema-editor/loading-mess
 import { SchemaEditorHeaderComponent } from './components/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/del
     MatInputModule,
     MatFormFieldModule,
     MatSliderModule,
+    PlatformServicesModule,
     CoreUiModule,
     TreeModule
   ],

@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {EventPropertyUnion, SpDataStream} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {RestService} from "../../services/rest.service";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { EventPropertyUnion, SpDataStream } from '@streampipes/platform-services';
+import { RestService } from '../../services/rest.service';
 
 @Component({
   selector: 'pipeline-element-runtime-info',
@@ -34,9 +34,9 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
 
   runtimeData: any;
   timer: any;
-  runtimeDataError: boolean = false;
+  runtimeDataError = false;
 
-  constructor(private RestService: RestService) {
+  constructor(private restService: RestService) {
 
   }
 
@@ -51,7 +51,7 @@ export class PipelineElementRuntimeInfoComponent implements OnInit, OnDestroy {
   }
 
   getLatestRuntimeInfo() {
-    this.RestService.getRuntimeInfo(this.streamDescription).subscribe(data => {
+    this.restService.getRuntimeInfo(this.streamDescription).subscribe(data => {
      if (data) {
        this.runtimeDataError = false;
        if (!(Object.keys(data).length === 0 && data.constructor === Object)) {

@@ -25,10 +25,10 @@ import {
   Message,
   PipelineOperationStatus,
   SpDataStream,
-  SpecificAdapterSetDescription
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+  SpecificAdapterSetDescription,
+  PipelineTemplateService,
+} from '@streampipes/platform-services';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { PipelineTemplateService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-template.service';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 
 

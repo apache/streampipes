@@ -25,12 +25,12 @@ import {
   AdapterDescriptionUnion,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
-  Message, SpDataStream, SpDataStreamUnion,
+  Message,
   SpecificAdapterSetDescription,
-  SpecificAdapterStreamDescription
-} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+  SpecificAdapterStreamDescription,
+  PlatformServicesCommons
+} from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
-import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 
 @Injectable()
 export class DataMarketplaceService {

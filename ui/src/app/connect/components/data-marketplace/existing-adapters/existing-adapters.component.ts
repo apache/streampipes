@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AdapterDescriptionUnion } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { AdapterDescriptionUnion, PipelineElementService } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../../services/connect.service';
 import { DataMarketplaceService } from '../../../services/data-marketplace.service';
@@ -30,8 +30,7 @@ import { MatSort } from '@angular/material/sort';
 import { ObjectPermissionDialogComponent } from '../../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../../_enums/user-role.enum';
 import { AuthService } from '../../../../services/auth.service';
-import {PipelineElementService} from "../../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service";
-import {HelpComponent} from "../../../../editor/dialog/help/help.component";
+import { HelpComponent } from '../../../../editor/dialog/help/help.component';
 
 @Component({
   selector: 'sp-existing-adapters',

@@ -22,7 +22,7 @@ import {
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
   ProtocolDescription
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 

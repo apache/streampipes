@@ -27,7 +27,7 @@ import {
     EventSchema,
     MoveRuleDescription,
     RenameRuleDescription
-} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 
 describe('TransformationRuleService', () => {
 

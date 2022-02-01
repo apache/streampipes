@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Notification } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { Notification } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-error-message',
