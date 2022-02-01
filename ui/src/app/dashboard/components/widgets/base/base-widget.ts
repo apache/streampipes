@@ -16,36 +16,41 @@
  *
  */
 
-import { Input, OnChanges, SimpleChanges, Directive } from "@angular/core";
-import {DashboardItem} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {Message} from "@stomp/stompjs";
-import {Subscription} from "rxjs";
-import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {ResizeService} from "../../../services/resize.service";
-import {GridsterInfo, WidgetInfo} from "../../../models/gridster-info.model";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Input, OnChanges, SimpleChanges, Directive } from '@angular/core';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { Message } from '@stomp/stompjs';
+import { Subscription } from 'rxjs';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { ResizeService } from '../../../services/resize.service';
+import { WidgetInfo } from '../../../models/gridster-info.model';
+import { DashboardService } from '../../../services/dashboard.service';
 import {
     DashboardWidgetModel,
     VisualizablePipeline
-} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Directive()
 export abstract class BaseStreamPipesWidget implements OnChanges {
 
-    //@Input() widget: DashboardItem;
+
+    protected constructor(private rxStompService: RxStompService,
+                          protected dashboardService: DashboardService,
+                          protected resizeService: ResizeService,
+                          protected adjustPadding: boolean) {
+    }
+
+    static readonly PADDING: number = 20;
+    static readonly EDIT_HEADER_HEIGHT: number = 40;
+
+    // @Input() widget: DashboardItem;
     @Input() widgetConfig: DashboardWidgetModel;
     @Input() widgetDataConfig: VisualizablePipeline;
     @Input() itemWidth: number;
     @Input() itemHeight: number;
-    //@Input() gridsterItem: GridsterItem;
-    //@Input() gridsterItemComponent: GridsterItemComponent;
+    // @Input() gridsterItem: GridsterItem;
+    // @Input() gridsterItemComponent: GridsterItemComponent;
     @Input() editMode: boolean;
-
-    static readonly PADDING: number = 20;
-    static readonly EDIT_HEADER_HEIGHT: number = 40;
 
     subscription: Subscription;
 
@@ -57,29 +62,22 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
     selectedSecondaryTextColor: string;
     selectedTitle: string;
 
-    defaultBackgroundColor: string = "#1B1464";
-    defaultPrimaryTextColor: string = "#FFFFFF";
-    defaultSecondaryTextColor: string = "#39B54A";
-
-
-    protected constructor(private rxStompService: RxStompService,
-                          protected dashboardService: DashboardService,
-                          protected resizeService: ResizeService,
-                          protected adjustPadding: boolean) {
-    }
+    defaultBackgroundColor = '#1B1464';
+    defaultPrimaryTextColor = '#FFFFFF';
+    defaultSecondaryTextColor = '#39B54A';
 
     ngOnInit(): void {
         this.prepareConfigExtraction();
         this.resizeService.resizeSubject.subscribe(info => {
             this.onResize(info);
         });
-        this.subscription = this.rxStompService.watch("/topic/" +this.widgetDataConfig.topic).subscribe((message: Message) => {
+        this.subscription = this.rxStompService.watch('/topic/' + this.widgetDataConfig.topic).subscribe((message: Message) => {
             this.onEvent(JSON.parse(message.body));
         });
     }
 
     prepareConfigExtraction() {
-        let extractor: StaticPropertyExtractor = new StaticPropertyExtractor(this.widgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
+        const extractor: StaticPropertyExtractor = new StaticPropertyExtractor(this.widgetDataConfig.schema, this.widgetConfig.dashboardWidgetSettings.config);
         if (extractor.hasStaticProperty(WidgetConfigBuilder.BACKGROUND_COLOR_KEY)) {
             this.hasSelectableColorSettings = true;
             this.selectedBackgroundColor = extractor.selectedColor(WidgetConfigBuilder.BACKGROUND_COLOR_KEY);
@@ -128,7 +126,7 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
     protected abstract onSizeChanged(width: number, height: number);
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes["widgetConfig"]) {
+        if (changes['widgetConfig']) {
             this.prepareConfigExtraction();
         }
     }
@@ -137,7 +135,7 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
         if (info.id === this.widgetConfig._id) {
             setTimeout(() => {
                 this.onSizeChanged(this.computeCurrentWidth(info.width),
-                    this.computeCurrentHeight(info.height))
+                    this.computeCurrentHeight(info.height));
             }, 100);
         }
     }

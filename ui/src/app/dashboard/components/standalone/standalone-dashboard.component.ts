@@ -15,10 +15,10 @@
  *   limitations under the License.
  */
 
-import {Component, OnInit} from "@angular/core";
-import {Dashboard} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
-import {DashboardService} from "../../services/dashboard.service";
-import {ActivatedRoute} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { Dashboard } from '@streampipes/platform-services';
+import { DashboardService } from '../../services/dashboard.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     templateUrl: './standalone-dashboard.component.html',
@@ -27,21 +27,21 @@ import {ActivatedRoute} from "@angular/router";
 export class StandaloneDashboardComponent implements OnInit {
 
     dashboard: Dashboard;
-    dashboardReady: boolean = false;
+    dashboardReady = false;
 
-    constructor(private ActivatedRoute: ActivatedRoute,
+    constructor(private activatedRoute: ActivatedRoute,
                 private dashboardService: DashboardService) {
     }
 
     ngOnInit(): void {
-        this.ActivatedRoute.params.subscribe(params => {
+        this.activatedRoute.params.subscribe(params => {
             if (params['dashboardId']) {
-                let dashboardId = params['dashboardId'];
+                const dashboardId = params['dashboardId'];
                 console.log(dashboardId);
                 this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
                     this.dashboard = dashboard;
                     this.dashboardReady = true;
-                })
+                });
             }
         });
     }

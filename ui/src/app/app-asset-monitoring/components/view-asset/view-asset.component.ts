@@ -16,19 +16,14 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import Konva from 'konva';
 import { WebsocketService } from '../../services/websocket.service';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { RestService } from '../../services/rest.service';
-import {DashboardService} from "../../../dashboard/services/dashboard.service";
-import {
-    DashboardWidgetModel,
-    Pipeline,
-    VisualizablePipeline
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {DashboardItem} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
+import { DashboardService } from '../../../dashboard/services/dashboard.service';
+import { DashboardItem } from '@streampipes/platform-services';
 
 interface Window {
     Image: any;
@@ -41,7 +36,7 @@ declare const window: Window;
     templateUrl: './view-asset.component.html',
     styleUrls: ['./view-asset.component.css']
 })
-export class ViewAssetComponent implements OnInit {
+export class ViewAssetComponent implements OnInit, AfterViewInit {
 
     @Input() dashboardConfig: DashboardConfiguration;
     @Output() dashboardClosed = new EventEmitter<boolean>();

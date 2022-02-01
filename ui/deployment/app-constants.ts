@@ -16,26 +16,12 @@
  *
  */
 
-import { GridsterConfig, GridsterItem } from 'angular-gridster2';
-import { TimeSettings } from '../datalake/DateRange';
+import { Injectable } from '@angular/core';
 
-// tslint:disable-next-line:no-empty-interface
-export interface DashboardConfig extends GridsterConfig {}
+@Injectable()
+export class AppConstants {
 
-export interface ClientDashboardItem extends GridsterItem {
-    widgetId: string;
-    widgetType: string;
-    id: string;
-}
-
-export interface Dashboard {
-    id?: string;
-    name?: string;
-    description?: string;
-    displayHeader?: boolean;
-    widgets?: ClientDashboardItem[];
-    dashboardTimeSettings?: TimeSettings;
-    dashboardGeneralSettings?: any;
-    _id?: string;
-    _rev?: string;
+    public readonly APP_NAME = 'Apache StreamPipes';
+    public readonly APP_TITLE = 'Apache StreamPipes';
+    public readonly EMAIL = 'dev@streampipes.apache.org';
 }

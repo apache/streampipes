@@ -24,11 +24,10 @@ import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashbo
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import {
-  Dashboard, DashboardItem, TimeSettings, DataExplorerWidgetModel,
-  DataLakeMeasure
+  Dashboard, TimeSettings, DataExplorerWidgetModel,
+  DataLakeMeasure, ClientDashboardItem, DataViewDataExplorerService
 } from '@streampipes/platform-services';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
-import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { TimeSelectionService } from '../../services/time-selection.service';
 
 @Component({
@@ -89,7 +88,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
     // tslint:disable-next-line:no-object-literal-type-assertion
-    const dashboardItem = {} as DashboardItem;
+    const dashboardItem = {} as ClientDashboardItem;
     dashboardItem.id = widget._id;
     dashboardItem.cols = 3;
     dashboardItem.rows = 4;

@@ -49,7 +49,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { SecurityUserConfigComponent } from './security-configuration/security-user-configuration/security-user-config.component';
 import { SecurityServiceConfigComponent } from './security-configuration/security-service-configuration/security-service-config.component';
 import { EditUserDialogComponent } from './security-configuration/edit-user-dialog/edit-user-dialog.component';
-import { PlatformServicesModule } from '../platform-services/platform.module';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SecurityUserGroupConfigComponent } from './security-configuration/user-group-configuration/user-group-configuration.component';
 import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
 import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';

@@ -16,20 +16,19 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {DashboardItem} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
-import {DashboardService} from "../../services/dashboard.service";
-import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
-import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DashboardItem } from '@streampipes/platform-services';
+import { DashboardService } from '../../services/dashboard.service';
+import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import {
   DashboardWidgetModel, Pipeline,
   VisualizablePipeline
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
-import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
-import {PipelineService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service";
-import {EditModeService} from "../../services/edit-mode.service";
-import {ReloadPipelineService} from "../../services/reload-pipeline.service";
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+import { EditModeService } from '../../services/edit-mode.service';
+import { ReloadPipelineService } from '../../services/reload-pipeline.service';
 
 @Component({
   selector: 'dashboard-widget',
@@ -40,22 +39,22 @@ export class DashboardWidgetComponent implements OnInit {
 
   @Input() widget: DashboardItem;
   @Input() editMode: boolean;
-  @Input() headerVisible: boolean = false;
+  @Input() headerVisible = false;
   @Input() itemWidth: number;
   @Input() itemHeight: number;
-  //@Input() item: GridsterItem;
-  //@Input() gridsterItemComponent: GridsterItemComponent;
+  // @Input() item: GridsterItem;
+  // @Input() gridsterItemComponent: GridsterItemComponent;
 
   @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
   @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
 
-  widgetLoaded: boolean = false;
+  widgetLoaded = false;
   configuredWidget: DashboardWidgetModel;
   widgetDataConfig: VisualizablePipeline;
   pipeline: Pipeline;
 
-  pipelineRunning: boolean = false;
-  widgetNotAvailable: boolean = false;
+  pipelineRunning = false;
+  widgetNotAvailable = false;
 
   constructor(private dashboardService: DashboardService,
               private dialogService: DialogService,
@@ -68,7 +67,7 @@ export class DashboardWidgetComponent implements OnInit {
     this.loadWidget();
     this.reloadPipelineService.reloadPipelineSubject.subscribe(() => {
       this.loadWidget();
-    })
+    });
   }
 
   loadWidget() {
@@ -103,7 +102,7 @@ export class DashboardWidgetComponent implements OnInit {
       this.pipelineService
           .startPipeline(this.pipeline._id)
           .subscribe(status => {
-            //this.loadWidget();
+            // this.loadWidget();
             this.reloadPipelineService.reloadPipelineSubject.next();
           });
     }
@@ -117,13 +116,13 @@ export class DashboardWidgetComponent implements OnInit {
   editWidget(): void {
     const dialogRef = this.dialogService.open(AddVisualizationDialogComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
-      title: "Edit widget",
-      width: "50vw",
+      title: 'Edit widget',
+      width: '50vw',
       data: {
-        "widget": this.configuredWidget,
-        "pipeline": this.widgetDataConfig,
-        "editMode": true,
-        "startPage": this.widgetNotAvailable ? "select-pipeline" : "configure-widget"
+        'widget': this.configuredWidget,
+        'pipeline': this.widgetDataConfig,
+        'editMode': true,
+        'startPage': this.widgetNotAvailable ? 'select-pipeline' : 'configure-widget'
       }
     });
 

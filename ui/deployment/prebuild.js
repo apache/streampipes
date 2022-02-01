@@ -86,6 +86,7 @@ fs.writeFileSync('src/app/home/home.service.ts', mustache.render(fs.readFileSync
 fs.writeFileSync('src/app/app-routing.module.ts', mustache.render(fs.readFileSync('deployment/app-routing.module.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/core/components/base-navigation.component.ts', mustache.render(fs.readFileSync('deployment/base-navigation.component.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/scss/sp/sp-theme.scss', fs.readFileSync('deployment/sp-theme.scss'));
+fs.writeFileSync('src/app/services/app.constants.ts', fs.readFileSync('deployment/app-constants.ts', 'utf8'));
 
 // Move Images
 fs.writeFileSync('src/assets/img/sp/logo.png', fs.readFileSync(config['login']['logo']));
