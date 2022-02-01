@@ -17,11 +17,12 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { DataViewDataExplorerService } from '../../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
+import { DataExplorerWidgetModel,
+  DataLakeMeasure,
+  DatalakeRestService,
+  DataViewDataExplorerService } from '@streampipes/platform-services';
 import { MatSelectChange } from '@angular/material/select';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
-import { DatalakeRestService } from '../../../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 import { zip } from 'rxjs';
 import { DataExplorerDataConfig, SourceConfig } from '../../../models/dataview-dashboard.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
@@ -40,7 +41,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   @Input() widgetId: string;
 
   @Output() createWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
-    new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+      new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
   @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> = new EventEmitter<DataLakeMeasure>();
   @Output() configureVisualizationEmitter: EventEmitter<void> = new EventEmitter<void>();
 
@@ -92,7 +93,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   findMeasure(measureName) {
     return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
-      this.availableMeasurements.find(m => m.measureName === measureName);
+        this.availableMeasurements.find(m => m.measureName === measureName);
   }
 
   setStep(index: number) {
@@ -135,33 +136,33 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   }
 
   deepCopy(obj) {
-    var copy;
+    let copy;
 
-    if (null == obj || "object" != typeof obj) return obj;
+    if (null == obj || 'object' !== typeof obj) { return obj; }
 
     if (obj instanceof Date) {
-        copy = new Date();
-        copy.setTime(obj.getTime());
-        return copy;
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
     }
 
     if (obj instanceof Array) {
-        copy = [];
-        for (var i = 0, len = obj.length; i < len; i++) {
-            copy[i] = this.deepCopy(obj[i]);
-        }
-        return copy;
+      copy = [];
+      for (let i = 0, len = obj.length; i < len; i++) {
+        copy[i] = this.deepCopy(obj[i]);
+      }
+      return copy;
     }
 
     if (obj instanceof Object) {
-        copy = {};
-        for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) copy[attr] = this.deepCopy(obj[attr]);
-        }
-        return copy;
+      copy = {};
+      for (const attr in obj) {
+        if (obj.hasOwnProperty(attr)) { copy[attr] = this.deepCopy(obj[attr]); }
+      }
+      return copy;
     }
 
-    throw new Error("Unable to copy.");
+    throw new Error('Unable to copy.');
   }
 
 }

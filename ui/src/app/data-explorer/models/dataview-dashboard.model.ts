@@ -17,7 +17,7 @@
  */
 
 import { GridsterConfig } from 'angular-gridster2';
-import { DataLakeMeasure } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { DataLakeMeasure } from '@streampipes/platform-services';
 import { WidgetType } from '../registry/data-explorer-widgets';
 
 

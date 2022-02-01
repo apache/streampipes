@@ -53,13 +53,14 @@ import { HtmlWidgetComponent } from './components/widgets/html/html-widget.compo
 import { TrafficLightWidgetComponent } from './components/widgets/trafficlight/traffic-light-widget.component';
 import { StandaloneDashboardComponent } from './components/standalone/standalone-dashboard.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import {WordcloudWidgetComponent} from "./components/widgets/wordcloud/wordcloud-widget.component";
-import {NgxEchartsModule} from "ngx-echarts";
-import {StatusWidgetComponent} from "./components/widgets/status/status-widget.component";
-import {BarRaceWidgetComponent} from "./components/widgets/bar-race/bar-race-widget.component";
-import {StackedLineChartWidgetComponent} from "./components/widgets/stacked-line-chart/stacked-line-chart-widget.component";
-import {EditModeService} from "./services/edit-mode.service";
-import {ReloadPipelineService} from "./services/reload-pipeline.service";
+import { WordcloudWidgetComponent } from './components/widgets/wordcloud/wordcloud-widget.component';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { StatusWidgetComponent } from './components/widgets/status/status-widget.component';
+import { BarRaceWidgetComponent } from './components/widgets/bar-race/bar-race-widget.component';
+import { StackedLineChartWidgetComponent } from './components/widgets/stacked-line-chart/stacked-line-chart-widget.component';
+import { EditModeService } from './services/edit-mode.service';
+import { ReloadPipelineService } from './services/reload-pipeline.service';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
     imports: [
@@ -82,7 +83,8 @@ import {ReloadPipelineService} from "./services/reload-pipeline.service";
         MatGridListModule,
         NgxChartsModule,
         CdkTableModule,
-        LeafletModule
+        LeafletModule,
+        PlatformServicesModule
     ],
     declarations: [
         BarRaceWidgetComponent,

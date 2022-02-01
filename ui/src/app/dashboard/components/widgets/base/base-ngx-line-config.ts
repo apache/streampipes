@@ -16,18 +16,18 @@
  *
  */
 
-import {WidgetConfig} from "./base-config";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfig } from './base-config';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export abstract class BaseNgxLineConfig extends WidgetConfig {
 
-    static readonly NUMBER_MAPPING_KEY: string = "number-mapping";
-    static readonly TIMESTAMP_MAPPING_KEY: string = "timestamp-mapping";
-    static readonly MIN_Y_AXIS_KEY: string = "min-y-axis-key";
-    static readonly MAX_Y_AXIS_KEY: string = "max-y-axis-key";
+    static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
+    static readonly TIMESTAMP_MAPPING_KEY: string = 'timestamp-mapping';
+    static readonly MIN_Y_AXIS_KEY: string = 'min-y-axis-key';
+    static readonly MAX_Y_AXIS_KEY: string = 'max-y-axis-key';
 
     getConfig(): DashboardWidgetSettings {
         return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel(this.getWidgetName(), this.getWidgetLabel())
@@ -35,11 +35,11 @@ export abstract class BaseNgxLineConfig extends WidgetConfig {
             .withIcon(this.getWidgetIcon())
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(BaseNgxLineConfig.TIMESTAMP_MAPPING_KEY, "Timestamp field", "", EpRequirements.timestampReq())
-                .requiredPropertyWithUnaryMapping(BaseNgxLineConfig.NUMBER_MAPPING_KEY, "Number field", "", EpRequirements.numberReq())
+                .requiredPropertyWithUnaryMapping(BaseNgxLineConfig.TIMESTAMP_MAPPING_KEY, 'Timestamp field', '', EpRequirements.timestampReq())
+                .requiredPropertyWithUnaryMapping(BaseNgxLineConfig.NUMBER_MAPPING_KEY, 'Number field', '', EpRequirements.numberReq())
                 .build())
-            .requiredIntegerParameter(BaseNgxLineConfig.MIN_Y_AXIS_KEY, "Y-axis range (min)", "")
-            .requiredIntegerParameter(BaseNgxLineConfig.MAX_Y_AXIS_KEY, "Y-axis range (max)", "")
+            .requiredIntegerParameter(BaseNgxLineConfig.MIN_Y_AXIS_KEY, 'Y-axis range (min)', '')
+            .requiredIntegerParameter(BaseNgxLineConfig.MAX_Y_AXIS_KEY, 'Y-axis range (max)', '')
             .build();
     }
 

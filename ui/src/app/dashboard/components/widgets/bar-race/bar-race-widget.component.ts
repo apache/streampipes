@@ -16,15 +16,15 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {DashboardService} from "../../../services/dashboard.service";
-import {ResizeService} from "../../../services/resize.service";
-import {ECharts} from "echarts/core";
-import {EChartsOption} from "echarts";
-import {BarRaceConfig} from "./bar-race-config";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { DashboardService } from '../../../services/dashboard.service';
+import { ResizeService } from '../../../services/resize.service';
+import { ECharts } from 'echarts/core';
+import { EChartsOption } from 'echarts';
+import { BarRaceConfig } from './bar-race-config';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
   currentWidth: number;
   currentHeight: number;
 
-  configReady: boolean = false;
+  configReady = false;
 
   eChartsInstance: ECharts;
   dynamicData: any;
@@ -61,7 +61,7 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
       },
       axisLabel: {
         textStyle: {
-          color: "#FFFFFF"
+          color: '#FFFFFF'
         }
       }
     },
@@ -79,14 +79,14 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
           return value;
         },
         textStyle: {
-          color: "#FFFFFF"
+          color: '#FFFFFF'
         }
       },
       animationDuration: 300,
       animationDurationUpdate: 300
     },
     series: [{
-      //data: [],
+      // data: [],
       data: [],
       realtimeSort: true,
       seriesLayoutBy: 'column',
@@ -97,8 +97,8 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
         }
       },
       encode: {
-        x: "value",
-        y: "name"
+        x: 'value',
+        y: 'name'
       },
       label: {
         show: true,
@@ -131,12 +131,12 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
 
   protected onEvent(event: any) {
     this.dynamicData = this.chartOption;
-    let partitionValue = event[this.partitionField];
-    let value = event[this.valueField];
+    const partitionValue = event[this.partitionField];
+    const value = event[this.valueField];
     if (this.dynamicData.series[0].data.some(d => d.name == partitionValue)) {
       this.dynamicData.series[0].data.find(d => d.name == partitionValue).value = value;
     } else {
-      this.dynamicData.series[0].data.push({name: partitionValue, value: value});
+      this.dynamicData.series[0].data.push({name: partitionValue, value});
       this.dynamicData.yAxis.data.push(partitionValue);
     }
 
@@ -159,7 +159,7 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
 
   applySize(width: number, height: number) {
     if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width: width, height: height});
+      this.eChartsInstance.resize({width, height});
     }
   }
 }

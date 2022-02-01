@@ -20,8 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { CorrelationChartWidgetModel } from './model/correlation-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { throwToolbarMixedModesError } from '@angular/material/toolbar';
+import { SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-explorer-correlation-chart-widget',

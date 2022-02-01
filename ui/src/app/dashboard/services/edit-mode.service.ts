@@ -16,9 +16,8 @@
  *
  */
 
-import {ReplaySubject, Subject} from "rxjs";
-import {Injectable} from "@angular/core";
-import {GridsterInfo} from "../models/gridster-info.model";
+import { Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class EditModeService {

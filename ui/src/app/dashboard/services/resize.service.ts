@@ -16,9 +16,9 @@
  *
  */
 
-import {ReplaySubject, Subject} from "rxjs";
-import {Injectable} from "@angular/core";
-import {GridsterInfo, WidgetInfo} from "../models/gridster-info.model";
+import { Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { WidgetInfo } from '../models/gridster-info.model';
 
 @Injectable()
 export class ResizeService {

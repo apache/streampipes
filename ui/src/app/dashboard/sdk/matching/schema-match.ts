@@ -15,8 +15,8 @@
  *   limitations under the License.
  */
 
-import {EventSchema} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {PropertyMatch} from "./property-match";
+import { EventSchema } from '@streampipes/platform-services';
+import { PropertyMatch } from './property-match';
 
 export class SchemaMatch {
 

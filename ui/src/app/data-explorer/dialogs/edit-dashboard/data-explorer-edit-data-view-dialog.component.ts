@@ -17,8 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
-import { Dashboard } from '@streampipes/platform-services';
+import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({

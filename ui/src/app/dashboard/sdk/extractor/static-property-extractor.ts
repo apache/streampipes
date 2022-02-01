@@ -22,12 +22,12 @@ import {
     EventSchema, FreeTextStaticProperty, MappingPropertyNary,
     MappingPropertyUnary, OneOfStaticProperty,
     StaticPropertyUnion
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@streampipes/platform-services';
 
 export class StaticPropertyExtractor {
 
     constructor(private inputSchema: EventSchema,
-                private staticProperties: Array<StaticPropertyUnion>) {
+                private staticProperties: StaticPropertyUnion[]) {
 
     }
 
@@ -36,16 +36,16 @@ export class StaticPropertyExtractor {
     }
 
     mappingPropertyValue(internalId: string): string {
-        let sp: MappingPropertyUnary = this.getStaticPropertyByName(internalId) as MappingPropertyUnary;
+        const sp: MappingPropertyUnary = this.getStaticPropertyByName(internalId) as MappingPropertyUnary;
         return this.removePrefix(sp.selectedProperty);
     }
 
-    mappingPropertyValues(internalId: string): Array<string> {
-        let sp: MappingPropertyNary = this.getStaticPropertyByName(internalId) as MappingPropertyNary;
-        let properties: Array<string> = [];
+    mappingPropertyValues(internalId: string): string[] {
+        const sp: MappingPropertyNary = this.getStaticPropertyByName(internalId) as MappingPropertyNary;
+        const properties: string[] = [];
         // TODO this quick-fixes a deserialization bug in Tson-LD
         if (sp.selectedProperties && !Array.isArray(sp.selectedProperties)) {
-            let value: string = sp.selectedProperties as any;
+            const value: string = sp.selectedProperties as any;
             sp.selectedProperties = [value];
         }
         if (sp.selectedProperties) {
@@ -57,17 +57,17 @@ export class StaticPropertyExtractor {
     }
 
     singleValueParameter(internalId: string): any {
-        let sp: FreeTextStaticProperty = this.getStaticPropertyByName(internalId) as FreeTextStaticProperty;
+        const sp: FreeTextStaticProperty = this.getStaticPropertyByName(internalId) as FreeTextStaticProperty;
         return sp.value;
     }
 
     selectedColor(internalId: string): any {
-        let sp: ColorPickerStaticProperty = this.getStaticPropertyByName(internalId) as ColorPickerStaticProperty;
+        const sp: ColorPickerStaticProperty = this.getStaticPropertyByName(internalId) as ColorPickerStaticProperty;
         return sp.selectedColor;
     }
 
     selectedSingleValue(internalId: string): string {
-        let sp: OneOfStaticProperty = this.getStaticPropertyByName(internalId) as OneOfStaticProperty;
+        const sp: OneOfStaticProperty = this.getStaticPropertyByName(internalId) as OneOfStaticProperty;
         return sp.options.find(o => o.selected).name;
     }
 
@@ -80,7 +80,7 @@ export class StaticPropertyExtractor {
     }
 
     getStaticPropertyByName(internalId: string): StaticPropertyUnion {
-        return this.staticProperties.find(sp => (sp.internalName == internalId));
+        return this.staticProperties.find(sp => (sp.internalName === internalId));
     }
 
     getEventPropertyByName(runtimeName: string): EventPropertyUnion {
@@ -89,7 +89,7 @@ export class StaticPropertyExtractor {
 
 
     removePrefix(propertyValue: string) {
-        return propertyValue.split("::").length > 1 ? propertyValue.split("::")[1] : propertyValue;
+        return propertyValue.split('::').length > 1 ? propertyValue.split('::')[1] : propertyValue;
     }
 
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '@streampipes/platform-services';
 import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface IndicatorChartVisConfig extends DataExplorerVisConfig {

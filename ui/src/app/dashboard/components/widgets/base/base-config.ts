@@ -16,17 +16,17 @@
  *
  */
 
-import {Tuple2} from "../../../../core-model/base/Tuple2";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Tuple2 } from '../../../../core-model/base/Tuple2';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export abstract class WidgetConfig {
 
     abstract getConfig(): DashboardWidgetSettings;
 
     makeOption(optionName: string): Tuple2<string, string> {
-        let option: Tuple2<string, string> = {} as Tuple2<string, string>;
+        const option: Tuple2<string, string> = {} as Tuple2<string, string>;
         option.a = optionName;
-        option.b = optionName.replace(" ", "-");
+        option.b = optionName.replace(' ', '-');
         return option;
     }
 }

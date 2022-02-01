@@ -16,18 +16,18 @@
  *
  */
 
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {ResizeService} from "../../../services/resize.service";
-import {BaseNgxChartsStreamPipesWidget} from "./base-ngx-charts-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {LineConfig} from "../line/line-config";
-import {DashboardService} from "../../../services/dashboard.service";
-import { Directive } from "@angular/core";
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { ResizeService } from '../../../services/resize.service';
+import { BaseNgxChartsStreamPipesWidget } from './base-ngx-charts-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { LineConfig } from '../line/line-config';
+import { DashboardService } from '../../../services/dashboard.service';
+import { Directive } from '@angular/core';
 
 @Directive()
 export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsStreamPipesWidget {
 
-    multi:any = [];
+    multi: any = [];
 
     selectedNumberProperty: string;
     selectedTimestampProperty: string;
@@ -42,8 +42,8 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
         super.ngOnInit();
         this.multi = [
             {
-                "name": this.selectedNumberProperty,
-                "series": [
+                'name': this.selectedNumberProperty,
+                'series': [
                 ]
             }];
     }
@@ -56,13 +56,13 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     }
 
     protected onEvent(event: any) {
-        let time = event[this.selectedTimestampProperty];
-        let value = event[this.selectedNumberProperty];
+        const time = event[this.selectedTimestampProperty];
+        const value = event[this.selectedNumberProperty];
         this.makeEvent(time, value);
     }
 
     makeEvent(time: any, value: any): void {
-        this.multi[0].series.push({"name": time, "value": value});
+        this.multi[0].series.push({'name': time, 'value': value});
         if (this.multi[0].series.length > 10) {
             this.multi[0].series.shift();
         }
@@ -70,8 +70,8 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     }
 
     timestampTickFormatting(timestamp: any): string {
-        var date = new Date(timestamp);
-        let timeString = date.getHours() + ':' + date.getMinutes().toString().substr(-2) + ':' + date.getSeconds().toString().substr(-2);
+        const date = new Date(timestamp);
+        const timeString = date.getHours() + ':' + date.getMinutes().toString().substr(-2) + ':' + date.getSeconds().toString().substr(-2);
         return timeString;
     }
 }

@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EventPropertyUnion } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-group-configuration',

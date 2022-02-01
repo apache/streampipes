@@ -20,13 +20,13 @@
 import {
   EventPropertyList,
   EventPropertyPrimitive,
-  EventPropertyUnion
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {PrimitivePropertyMatch} from "./primitive-property-match";
+} from '@streampipes/platform-services';
+import { PrimitivePropertyMatch } from './primitive-property-match';
 
 export class ListPropertyMatch {
 
   match(requirement: EventPropertyList, offer: EventPropertyList): boolean {
-    return new PrimitivePropertyMatch().match(requirement.eventProperty as EventPropertyPrimitive, offer.eventProperty as EventPropertyPrimitive);
+    return new PrimitivePropertyMatch()
+        .match(requirement.eventProperty as EventPropertyPrimitive, offer.eventProperty as EventPropertyPrimitive);
   }
 }

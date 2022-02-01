@@ -16,22 +16,22 @@
  *
  */
 
-import {CollectedSchemaRequirements} from "../sdk/collected-schema-requirements";
-import {Datatypes} from "../sdk/model/datatypes";
-import {Tuple2} from "../../core-model/base/Tuple2";
+import { CollectedSchemaRequirements } from '../sdk/collected-schema-requirements';
+import { Datatypes } from '../sdk/model/datatypes';
+import { Tuple2 } from '../../core-model/base/Tuple2';
 import {
     ColorPickerStaticProperty,
     DashboardWidgetSettings,
     FreeTextStaticProperty, OneOfStaticProperty, StaticProperty, Option
-} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@streampipes/platform-services';
 
 export class WidgetConfigBuilder {
 
-    static readonly BACKGROUND_COLOR_KEY: string = "spi-background-color-key";
-    static readonly PRIMARY_TEXT_COLOR_KEY: string = "spi-primary-text-color-key";
-    static readonly SECONDARY_TEXT_COLOR_KEY: string = "spi-secondary-text-color-key";
+    static readonly BACKGROUND_COLOR_KEY: string = 'spi-background-color-key';
+    static readonly PRIMARY_TEXT_COLOR_KEY: string = 'spi-primary-text-color-key';
+    static readonly SECONDARY_TEXT_COLOR_KEY: string = 'spi-secondary-text-color-key';
 
-    static readonly TITLE_KEY: string = "spi-title-key";
+    static readonly TITLE_KEY: string = 'spi-title-key';
 
     private widget: DashboardWidgetSettings;
 
@@ -41,16 +41,16 @@ export class WidgetConfigBuilder {
         this.widget.widgetName = widgetName;
         this.widget.config = [];
         if (withTitlePanel) {
-            this.requiredTextParameter(WidgetConfigBuilder.TITLE_KEY, "Widget title", "The title of the widget")
+            this.requiredTextParameter(WidgetConfigBuilder.TITLE_KEY, 'Widget title', 'The title of the widget');
         }
         if (withColors) {
-        this.requiredColorParameter(WidgetConfigBuilder.BACKGROUND_COLOR_KEY, "Background color", "The background" +
-            " color", "#1B1464");
-        this.requiredColorParameter(WidgetConfigBuilder.PRIMARY_TEXT_COLOR_KEY, "Primary text color", "The" +
-                " primary text color", "#FFFFFF");
-        this.requiredColorParameter(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY, "Secondary text color", "The" +
-            " secondary text" +
-            " color", "#39B54A");
+        this.requiredColorParameter(WidgetConfigBuilder.BACKGROUND_COLOR_KEY, 'Background color', 'The background' +
+            ' color', '#1B1464');
+        this.requiredColorParameter(WidgetConfigBuilder.PRIMARY_TEXT_COLOR_KEY, 'Primary text color', 'The' +
+                ' primary text color', '#FFFFFF');
+        this.requiredColorParameter(WidgetConfigBuilder.SECONDARY_TEXT_COLOR_KEY, 'Secondary text color', 'The' +
+            ' secondary text' +
+            ' color', '#39B54A');
         }
     }
 
@@ -77,14 +77,14 @@ export class WidgetConfigBuilder {
     }
 
     requiredTextParameter(id: string, label: string, description: string): WidgetConfigBuilder {
-        let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.String.toUri())
+        const fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.String.toUri());
         this.widget.config.push(fst);
         return this;
     }
 
     requiredColorParameter(id: string, label: string, description: string, defaultColor?: string): WidgetConfigBuilder {
-        let csp = new ColorPickerStaticProperty();
-        csp["@class"] = "org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty";
+        const csp = new ColorPickerStaticProperty();
+        csp['@class'] = 'org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty';
         csp.internalName = id;
         csp.label = label;
         csp.description = description;
@@ -97,20 +97,20 @@ export class WidgetConfigBuilder {
 
 
     requiredIntegerParameter(id: string, label: string, description: string): WidgetConfigBuilder {
-        let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Integer.toUri())
+        const fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Integer.toUri());
         this.widget.config.push(fst);
         return this;
     }
 
-    requiredSingleValueSelection(id: string, label: string, description: string, options: Array<Tuple2<string, string>>): WidgetConfigBuilder {
-        let osp: OneOfStaticProperty = new OneOfStaticProperty();
+    requiredSingleValueSelection(id: string, label: string, description: string, options: Tuple2<string, string>[]): WidgetConfigBuilder {
+        const osp: OneOfStaticProperty = new OneOfStaticProperty();
         this.prepareStaticProperty(id, label, description, osp,
-            "org.apache.streampipes.model.staticproperty.OneOfStaticProperty");
+            'org.apache.streampipes.model.staticproperty.OneOfStaticProperty');
 
         osp.options = [];
         options.forEach(o => {
-            let option = new Option();
-            option["@class"] = "org.apache.streampipes.model.staticproperty.Option";
+            const option = new Option();
+            option['@class'] = 'org.apache.streampipes.model.staticproperty.Option';
             option.name = o.a;
             option.internalName = o.b;
             osp.options.push(option);
@@ -120,7 +120,7 @@ export class WidgetConfigBuilder {
     }
 
     requiredFloatParameter(id: string, label: string, description: string): WidgetConfigBuilder {
-        let fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Float.toUri())
+        const fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Float.toUri());
         this.widget.config.push(fst);
         return this;
     }
@@ -140,19 +140,19 @@ export class WidgetConfigBuilder {
         sp.internalName = id;
         sp.label = label;
         sp.description = description;
-        sp["@class"] = targetClass;
+        sp['@class'] = targetClass;
     }
 
     prepareFreeTextStaticProperty(id: string, label: string, description: string, datatype: string) {
-        let fst: FreeTextStaticProperty = new FreeTextStaticProperty();
-        this.prepareStaticProperty(id, label, description, fst, "org.apache.streampipes.model.staticproperty.FreeTextStaticProperty");
+        const fst: FreeTextStaticProperty = new FreeTextStaticProperty();
+        this.prepareStaticProperty(id, label, description, fst, 'org.apache.streampipes.model.staticproperty.FreeTextStaticProperty');
         fst.requiredDatatype = datatype;
 
         return fst;
     }
 
     build(): DashboardWidgetSettings {
-        for(let i = 0; i < this.widget.config.length; i++) {
+        for (let i = 0; i < this.widget.config.length; i++) {
             this.widget.config[i].index = i;
         }
         return this.widget;

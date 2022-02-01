@@ -84,7 +84,7 @@ export class DashboardPanelComponent implements OnInit {
     updateDashboardAndCloseEditMode() {
         this.dashboardService.updateDashboard(this.dashboard).subscribe(result => {
             if (this.widgetsToUpdate.size > 0) {
-                forkJoin(this.prepareWidgetUpdates()).subscribe(result => {
+                forkJoin(this.prepareWidgetUpdates()).subscribe(() => {
                     this.closeEditModeAndReloadDashboard();
                 });
             } else {

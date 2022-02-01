@@ -27,14 +27,15 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItemComponent } from 'angular-gridster2';
-import { DateRange } from '../../../../../projects/streampipes/platform-services/src/lib/model/datalake/DateRange';
 import {
+  DateRange,
   DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+  DataLakeMeasure,
+  DataViewDataExplorerService,
+  DashboardItem,
+  TimeSettings
+} from '@streampipes/platform-services';
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
-import { DashboardItem, TimeSettings } from '@streampipes/platform-services';
-import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';

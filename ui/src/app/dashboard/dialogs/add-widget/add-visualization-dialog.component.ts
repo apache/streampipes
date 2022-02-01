@@ -18,12 +18,12 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
-import { Dashboard } from '@streampipes/platform-services';
 import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
 import { WidgetRegistry } from '../../registry/widget-registry';
 import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';
 import { DashboardService } from '../../services/dashboard.service';
 import {
+    Dashboard,
     DashboardWidgetModel,
     DashboardWidgetSettings,
     EventPropertyUnion,
@@ -31,9 +31,9 @@ import {
     FreeTextStaticProperty,
     MappingPropertyNary,
     MappingPropertyUnary,
-    VisualizablePipeline
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+    VisualizablePipeline,
+    PipelineService
+} from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 

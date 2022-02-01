@@ -18,7 +18,7 @@
 
 export interface MultiSeries {
     name?: string;
-    series?: Array<MultiSeriesEntry>;
+    series?: MultiSeriesEntry[];
 }
 
 export interface MultiSeriesEntry {

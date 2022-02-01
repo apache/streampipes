@@ -27,10 +27,9 @@ import {
     SimpleChanges,
     ViewChildren
 } from '@angular/core';
-import { Dashboard, DashboardConfig, DashboardItem } from '@streampipes/platform-services';
+import { Dashboard, DashboardConfig, DashboardItem, DashboardWidgetModel } from '@streampipes/platform-services';
 import { ResizeService } from '../../services/resize.service';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
-import { DashboardWidgetModel } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'dashboard-grid',

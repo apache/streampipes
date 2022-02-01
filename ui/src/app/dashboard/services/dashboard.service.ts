@@ -20,14 +20,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Dashboard } from '@streampipes/platform-services';
 import { MeasurementUnit } from '../../core-model/measurement-unit/MeasurementUnit';
 import {
+  Dashboard,
   DashboardWidgetModel,
   Pipeline,
-  VisualizablePipeline
-} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+  VisualizablePipeline,
+  PlatformServicesCommons
+} from '@streampipes/platform-services';
 
 @Injectable()
 export class DashboardService {

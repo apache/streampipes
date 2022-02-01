@@ -16,11 +16,11 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {BaseNgxLineChartsStreamPipesWidget} from "../base/base-ngx-line-charts-widget";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {ResizeService} from "../../../services/resize.service";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BaseNgxLineChartsStreamPipesWidget } from '../base/base-ngx-line-charts-widget';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { ResizeService } from '../../../services/resize.service';
+import { DashboardService } from '../../../services/dashboard.service';
 
 @Component({
     selector: 'area-widget',

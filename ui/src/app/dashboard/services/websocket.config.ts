@@ -16,8 +16,8 @@
  *
  */
 
-import {InjectableRxStompConfig} from "@stomp/ng2-stompjs";
-import {WebsocketSettings} from "./websocket.settings";
+import { InjectableRxStompConfig } from '@stomp/ng2-stompjs';
+import { WebsocketSettings } from './websocket.settings';
 
 export const streamPipesStompConfig: InjectableRxStompConfig = {
 

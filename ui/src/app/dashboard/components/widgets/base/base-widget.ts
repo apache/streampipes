@@ -28,7 +28,7 @@ import { DashboardService } from '../../../services/dashboard.service';
 import {
     DashboardWidgetModel,
     VisualizablePipeline
-} from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 
 @Directive()
 export abstract class BaseStreamPipesWidget implements OnChanges {

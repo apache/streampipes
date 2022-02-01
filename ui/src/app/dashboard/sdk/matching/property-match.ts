@@ -16,13 +16,13 @@
  *
  */
 
-import {PrimitivePropertyMatch} from "./primitive-property-match";
+import { PrimitivePropertyMatch } from './primitive-property-match';
 import {
     EventPropertyList,
     EventPropertyPrimitive,
     EventPropertyUnion
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {ListPropertyMatch} from "./list-property-match";
+} from '@streampipes/platform-services';
+import { ListPropertyMatch } from './list-property-match';
 
 export class PropertyMatch {
 

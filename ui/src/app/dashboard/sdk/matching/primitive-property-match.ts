@@ -16,14 +16,14 @@
  *
  */
 
-import {DatatypeMatch} from "./datatype-match";
-import {DomainPropertyMatch} from "./domain-property-match";
-import {EventPropertyPrimitive} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { DatatypeMatch } from './datatype-match';
+import { DomainPropertyMatch } from './domain-property-match';
+import { EventPropertyPrimitive } from '@streampipes/platform-services';
 
 export class PrimitivePropertyMatch {
 
     match(requirement: EventPropertyPrimitive, offer: EventPropertyPrimitive) {
-        if (requirement != undefined) {
+        if (requirement !== undefined) {
             return new DatatypeMatch().match(requirement.runtimeType, offer.runtimeType) &&
                 new DomainPropertyMatch().match(requirement.domainProperties, offer.domainProperties);
         } else {

@@ -24,8 +24,12 @@ import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashbo
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import {
-  Dashboard, TimeSettings, DataExplorerWidgetModel,
-  DataLakeMeasure, ClientDashboardItem, DataViewDataExplorerService
+  Dashboard,
+  TimeSettings,
+  DataExplorerWidgetModel,
+  DataLakeMeasure,
+  ClientDashboardItem,
+  DataViewDataExplorerService
 } from '@streampipes/platform-services';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
 import { TimeSelectionService } from '../../services/time-selection.service';

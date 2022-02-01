@@ -16,21 +16,21 @@
  *
  */
 
-import {PropertyMatch} from "./property-match";
-import {EventPropertyUnion} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { PropertyMatch } from './property-match';
+import { EventPropertyUnion } from '@streampipes/platform-services';
 
 export class MappingPropertyGenerator {
 
-    private selector: string = "s0";
-    private separator: string = "::";
+    private selector = 's0';
+    private separator = '::';
 
     constructor(private requiredEventProperty: EventPropertyUnion,
-                private providedEventProperties: Array<EventPropertyUnion>) {
+                private providedEventProperties: EventPropertyUnion[]) {
 
     }
 
-    computeMatchingProperties(): Array<string> {
-        let mapsFromOptions: Array<string> = [];
+    computeMatchingProperties(): string[] {
+        const mapsFromOptions: string[] = [];
 
         this.providedEventProperties.forEach(ep => {
            if (new PropertyMatch().match(this.requiredEventProperty, ep)) {

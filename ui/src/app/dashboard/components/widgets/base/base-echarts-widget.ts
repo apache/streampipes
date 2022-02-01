@@ -16,12 +16,12 @@
  *
  */
 
-import {BaseStreamPipesWidget} from "./base-widget";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {ResizeService} from "../../../services/resize.service";
-import {DashboardService} from "../../../services/dashboard.service";
-import { Directive } from "@angular/core";
-import {ECharts} from "echarts/core";
+import { BaseStreamPipesWidget } from './base-widget';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { ResizeService } from '../../../services/resize.service';
+import { DashboardService } from '../../../services/dashboard.service';
+import { Directive } from '@angular/core';
+import { ECharts } from 'echarts/core';
 
 @Directive()
 export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
@@ -29,7 +29,7 @@ export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
   currentWidth: number;
   currentHeight: number;
 
-  configReady: boolean = false;
+  configReady = false;
 
   eChartsInstance: ECharts;
   dynamicData: any;
@@ -52,7 +52,7 @@ export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
 
   applySize(width: number, height: number) {
     if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width: width, height: height});
+      this.eChartsInstance.resize({width, height});
     }
   }
 
