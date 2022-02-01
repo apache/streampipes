@@ -17,7 +17,7 @@
  */
 
 import { FieldConfig, SelectedFilter } from '../../data-explorer/models/dataview-dashboard.model';
-import { DatalakeQueryParameters } from '@streampipes/platform-services/src/lib/model/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameters } from '@streampipes/platform-services';
 
 export class DatalakeQueryParameterBuilder {
 

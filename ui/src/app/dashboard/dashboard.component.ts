@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Dashboard } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
+import { Dashboard } from '@streampipes/platform-services';
 import { DashboardService } from './services/dashboard.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { Tuple2 } from '../core-model/base/Tuple2';

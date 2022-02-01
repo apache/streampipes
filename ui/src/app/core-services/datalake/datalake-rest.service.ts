@@ -21,8 +21,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 // import { DataLakeMeasure, SpQueryResult } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
-import { DatalakeQueryParameters } from '@streampipes/platform-services/src/lib/model/datalake/DatalakeQueryParameters';
-import { DataLakeMeasure } from 'projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { DatalakeQueryParameters, DataLakeMeasure, SpQueryResult } from '@streampipes/platform-services';
 
 @Injectable()
 export class DatalakeRestService {

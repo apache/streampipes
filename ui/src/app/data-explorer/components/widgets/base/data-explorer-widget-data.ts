@@ -18,7 +18,7 @@
 
 import { EventEmitter } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DashboardItem, TimeSettings } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
+import { DashboardItem, TimeSettings } from '@streampipes/platform-services';
 import { DataExplorerWidgetModel } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 export interface BaseWidgetData<T extends DataExplorerWidgetModel> {

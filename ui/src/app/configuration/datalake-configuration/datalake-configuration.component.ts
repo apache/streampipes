@@ -21,7 +21,7 @@ import { DatalakeRestService } from '../../../../projects/streampipes/platform-s
 import { MatTableDataSource } from '@angular/material/table';
 import { DataViewDataExplorerService } from '../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
-import { DatalakeQueryParameters } from '@streampipes/platform-services/src/lib/model/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameters } from '@streampipes/platform-services';
 import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';

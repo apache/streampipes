@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { TimeSettings } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
+import { TimeSettings } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-time-range-selector',

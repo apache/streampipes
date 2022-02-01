@@ -41,7 +41,7 @@ import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
-import { SharedDatalakeRestService } from '@streampipes/platform-services/src/lib/apis/shared-dashboard.service';
+import { SharedDatalakeRestService } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { DataDownloadDialog } from './components/datadownloadDialog/dataDownload.dialog';

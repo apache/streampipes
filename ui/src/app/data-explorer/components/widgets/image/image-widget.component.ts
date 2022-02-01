@@ -21,7 +21,7 @@ import { MatSort } from '@angular/material/sort';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { EventPropertyUnion, EventSchema, SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { ImageWidgetModel } from './model/image-widget.model';
-import { DatalakeQueryParameters } from '@streampipes/platform-services/src/lib/model/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameters } from '@streampipes/platform-services';
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 

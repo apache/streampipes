@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {TimeSettings} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
+import { Component, Input, OnInit } from '@angular/core';
+import { TimeSettings } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-no-data-in-date-range',

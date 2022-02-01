@@ -20,7 +20,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Dashboard } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
+import { Dashboard } from '@streampipes/platform-services';
 import { MeasurementUnit } from '../../core-model/measurement-unit/MeasurementUnit';
 import {
   DashboardWidgetModel,

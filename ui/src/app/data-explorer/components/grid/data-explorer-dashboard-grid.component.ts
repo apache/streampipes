@@ -16,18 +16,34 @@
  *
  */
 
-import { EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  QueryList,
+  SimpleChanges,
+  ViewChildren
+} from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../models/dataview-dashboard.model';
 import { ResizeService } from '../../services/resize.service';
-import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
 import {
+  DataViewDataExplorerService,
+  Dashboard,
   DataExplorerWidgetModel,
-  DataLakeMeasure
-} from '../../../../../dist/streampipes/platform-services/lib/model/gen/streampipes-model';
-import { TimeSettings } from '../../../../../dist/streampipes/platform-services';
+  DataLakeMeasure,
+  TimeSettings
+} from '@streampipes/platform-services';
 
+@Component({
+  selector: 'sp-data-explorer-dashboard-grid',
+  templateUrl: './data-explorer-dashboard-grid.component.html',
+  styleUrls: ['./data-explorer-dashboard-grid.component.scss']
+})
 export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   @Input()
@@ -65,7 +81,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.options = {
       disablePushOnDrag: true,
-      draggable: { enabled: this.editMode },
+      draggable: {enabled: this.editMode},
       gridType: GridType.VerticalFixed,
       minCols: 8,
       maxCols: 8,
@@ -74,7 +90,7 @@ export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
       fixedColWidth: 100,
       margin: 5,
       displayGrid: this.editMode ? 'always' : 'none',
-      resizable: { enabled: this.editMode },
+      resizable: {enabled: this.editMode},
       itemResizeCallback: ((item, itemComponent) => {
         this.resizeService.notify({
           gridsterItem: item,
