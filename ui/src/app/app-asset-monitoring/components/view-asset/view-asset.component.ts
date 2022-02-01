@@ -28,7 +28,7 @@ import {
     Pipeline,
     VisualizablePipeline
 } from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {DashboardItem} from "../../../dashboard/models/dashboard.model";
+import {DashboardItem} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
 
 interface Window {
     Image: any;

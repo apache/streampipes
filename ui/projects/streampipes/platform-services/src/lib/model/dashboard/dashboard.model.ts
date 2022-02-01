@@ -17,11 +17,12 @@
  */
 
 import { GridsterConfig, GridsterItem } from 'angular-gridster2';
-import { TimeSettings } from '../../../../projects/streampipes/platform-services/src/lib/model/datalake/DateRange';
+import { TimeSettings } from '../datalake/DateRange';
 
+// tslint:disable-next-line:no-empty-interface
 export interface DashboardConfig extends GridsterConfig {}
 
-export interface DashboardItem extends GridsterItem {
+interface DashboardItem extends GridsterItem {
     widgetId: string;
     widgetType: string;
     id: string;

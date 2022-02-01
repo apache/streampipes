@@ -20,7 +20,7 @@ import { Directive, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output 
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DataExplorerWidgetModel, SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
+import { DashboardItem, TimeSettings } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
 import { ResizeService } from '../../../services/resize.service';
 import { DatalakeRestService } from '../../../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';

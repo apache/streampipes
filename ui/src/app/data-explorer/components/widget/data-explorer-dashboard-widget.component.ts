@@ -33,7 +33,7 @@ import {
   DataLakeMeasure
 } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
-import { DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { DashboardItem, TimeSettings } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
 import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';

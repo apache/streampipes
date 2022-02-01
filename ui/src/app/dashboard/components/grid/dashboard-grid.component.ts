@@ -26,14 +26,11 @@ import {
     QueryList,
     SimpleChanges,
     ViewChildren
-} from "@angular/core";
-import {Dashboard, DashboardConfig, DashboardItem} from "../../models/dashboard.model";
-import {GridsterInfo} from "../../models/gridster-info.model";
-import {ResizeService} from "../../services/resize.service";
-import {GridsterItemComponent, GridType} from "angular-gridster2";
-import {DashboardService} from "../../services/dashboard.service";
-import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
-import {DashboardWidgetModel} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@angular/core';
+import { Dashboard, DashboardConfig, DashboardItem } from '@streampipes/platform-services';
+import { ResizeService } from '../../services/resize.service';
+import { GridsterItemComponent, GridType } from 'angular-gridster2';
+import { DashboardWidgetModel } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'dashboard-grid',
@@ -50,13 +47,11 @@ export class DashboardGridComponent implements OnInit, OnChanges {
     @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
 
     options: DashboardConfig;
-    loaded: boolean = false;
+    loaded = false;
 
     @ViewChildren(GridsterItemComponent) gridsterItemComponents: QueryList<GridsterItemComponent>;
 
-    constructor(private resizeService: ResizeService,
-                private dashboardService: DashboardService,
-                private refreshDashboardService: RefreshDashboardService) {
+    constructor(private resizeService: ResizeService) {
 
     }
 
@@ -83,7 +78,7 @@ export class DashboardGridComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes["editMode"] && this.options) {
+        if (changes['editMode'] && this.options) {
             this.options.draggable.enabled = this.editMode;
             this.options.resizable.enabled = this.editMode;
             this.options.displayGrid = this.editMode ? 'always' : 'none';

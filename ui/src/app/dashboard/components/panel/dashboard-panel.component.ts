@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Dashboard, DashboardItem} from "../../models/dashboard.model";
+import {Dashboard, DashboardItem} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
 import {forkJoin, Observable, Subscription} from "rxjs";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {DashboardService} from "../../services/dashboard.service";

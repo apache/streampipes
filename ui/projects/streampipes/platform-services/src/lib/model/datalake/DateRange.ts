@@ -36,7 +36,7 @@ export class DateRange {
     }
 
     static fromTimeSettings(timeSettings: TimeSettings): DateRange {
-        let range = new DateRange();
+        const range = new DateRange();
         range.startDate = new Date(timeSettings.startTime);
         range.endDate = new Date(timeSettings.endTime);
         return range;

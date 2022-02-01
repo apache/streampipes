@@ -18,7 +18,7 @@
 
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
-import { Dashboard } from '../../models/dashboard.model';
+import { Dashboard } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
 import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
 import { WidgetRegistry } from '../../registry/widget-registry';
 import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';

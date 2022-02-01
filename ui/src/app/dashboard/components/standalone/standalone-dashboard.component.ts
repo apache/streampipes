@@ -16,7 +16,7 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {Dashboard} from "../../models/dashboard.model";
+import {Dashboard} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
 import {ActivatedRoute} from "@angular/router";
 

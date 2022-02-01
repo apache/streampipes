@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Dashboard } from '../../models/dashboard.model';
+import { Dashboard } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { DashboardService } from '../../services/dashboard.service';

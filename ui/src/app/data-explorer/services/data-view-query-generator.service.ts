@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { DataExplorerDataConfig, SourceConfig } from '../models/dataview-dashboard.model';
 import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { Observable } from 'rxjs';
-import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameters } from '@streampipes/platform-services/src/lib/model/datalake/DatalakeQueryParameters';
 import { DatalakeRestService } from '../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 import { SpQueryResult } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 

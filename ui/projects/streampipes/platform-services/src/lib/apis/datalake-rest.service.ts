@@ -21,7 +21,7 @@ import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DataLakeMeasure, PageResult, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
-import { DatalakeQueryParameters } from '../../../../../../src/app/core-services/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 
 @Injectable({
   providedIn: 'root'

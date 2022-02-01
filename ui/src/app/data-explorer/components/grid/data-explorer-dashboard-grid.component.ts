@@ -16,20 +16,18 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../models/dataview-dashboard.model';
 import { ResizeService } from '../../services/resize.service';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
-import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
+import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
+import {
+  DataExplorerWidgetModel,
+  DataLakeMeasure
+} from '../../../../../dist/streampipes/platform-services/lib/model/gen/streampipes-model';
+import { TimeSettings } from '../../../../../dist/streampipes/platform-services';
 
-@Component({
-  selector: 'sp-data-explorer-dashboard-grid',
-  templateUrl: './data-explorer-dashboard-grid.component.html',
-  styleUrls: ['./data-explorer-dashboard-grid.component.scss']
-})
 export class DataExplorerDashboardGridComponent implements OnInit, OnChanges {
 
   @Input()

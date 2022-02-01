@@ -16,11 +16,11 @@
  *
  */
 
-import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
+import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 
 export interface GridsterInfo {
     gridsterItem: GridsterItem;
-    gridsterItemComponent: GridsterItemComponent
+    gridsterItemComponent: GridsterItemComponent;
 }
 
 export interface WidgetInfo {

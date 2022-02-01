@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TimeSettings } from '../../dashboard/models/dashboard.model';
+import { TimeSettings } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
 
 @Injectable()
 export class TimeSelectionService {

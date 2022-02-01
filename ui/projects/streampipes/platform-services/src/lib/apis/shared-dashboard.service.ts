@@ -18,9 +18,9 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Dashboard } from '../../dashboard/models/dashboard.model';
-import { map } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Dashboard } from '../model/dashboard/dashboard.model';
 
 @Injectable()
 export class SharedDatalakeRestService {

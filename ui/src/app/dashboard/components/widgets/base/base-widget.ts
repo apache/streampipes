@@ -17,7 +17,7 @@
  */
 
 import { Input, OnChanges, SimpleChanges, Directive } from "@angular/core";
-import {DashboardItem} from "../../../models/dashboard.model";
+import {DashboardItem} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {RxStompService} from "@stomp/ng2-stompjs";
 import {Message} from "@stomp/stompjs";

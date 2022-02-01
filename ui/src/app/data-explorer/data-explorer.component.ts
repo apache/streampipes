@@ -20,7 +20,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataViewDataExplorerService } from '../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { Dashboard } from '../dashboard/models/dashboard.model';
+import { Dashboard } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
 import { Tuple2 } from '../core-model/base/Tuple2';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';

@@ -24,7 +24,7 @@ import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../../project
 import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
+import { Dashboard, DashboardItem, TimeSettings } from '@streampipes/platform-services/src/lib/model/dashboard/dashboard.model';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
 import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { TimeSelectionService } from '../../services/time-selection.service';

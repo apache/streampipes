@@ -18,7 +18,7 @@
 
 import { Component, Input } from "@angular/core";
 import { DashboardService } from "../../services/dashboard.service";
-import { Dashboard } from "../../models/dashboard.model";
+import { Dashboard } from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({

@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {DashboardItem} from "../../models/dashboard.model";
+import {DashboardItem} from "@streampipes/platform-services/src/lib/model/dashboard/dashboard.model";
 import {DashboardService} from "../../services/dashboard.service";
 import {GridsterItem, GridsterItemComponent} from "angular-gridster2";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
