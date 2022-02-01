@@ -31,14 +31,14 @@ import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { InfoModule } from './info/info.module';
-import {ProfileModule} from "./profile/profile.module";
+import {ProfileModule} from './profile/profile.module';
 import { PipelineDetailsModule } from './pipeline-details/pipeline-details.module';
-import { NotificationCountService } from "./services/notification-count-service";
-import { AuthService } from "./services/auth.service";
+import { NotificationCountService } from './services/notification-count-service';
+import { AuthService } from './services/auth.service';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
-import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 
 {{#modulesActive}}
 {{#ng5}}
@@ -52,9 +52,8 @@ import { NotificationModule } from './notifications/notifications.module';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { PlatformServicesModule } from "./platform-services/platform.module";
-import { ServicesModule } from "./services/services.module";
-import { ApidocsModule } from "./apidocs/apidocs.module";
+import { ServicesModule } from './services/services.module';
+import { ApidocsModule } from './apidocs/apidocs.module';
 import { HttpInterceptorProvider } from './http-interceptor';
 import { AvailableRolesService } from './services/available-roles.service';
 
@@ -81,7 +80,6 @@ import * as $ from 'jquery';
         HomeModule,
         InfoModule,
         NotificationModule,
-        PlatformServicesModule,
         PipelineDetailsModule,
         ServicesModule,
         ProfileModule,

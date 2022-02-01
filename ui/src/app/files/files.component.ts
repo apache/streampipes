@@ -16,10 +16,10 @@
  *
  */
 
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {PanelType} from "../core-ui/dialog/base-dialog/base-dialog.model";
-import {DialogService} from "../core-ui/dialog/base-dialog/base-dialog.service";
-import {FileUploadDialogComponent} from "./dialog/file-upload/file-upload-dialog.component";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
+import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
 
 @Component({
   templateUrl: './files.component.html',
@@ -27,7 +27,7 @@ import {FileUploadDialogComponent} from "./dialog/file-upload/file-upload-dialog
 })
 export class FilesComponent implements OnInit {
 
-  @ViewChild("fileOverviewComponent") fileOverviewComponent;
+  @ViewChild('fileOverviewComponent') fileOverviewComponent;
 
   constructor(private dialogService: DialogService) {
 
@@ -38,10 +38,10 @@ export class FilesComponent implements OnInit {
   }
 
   openFileUploadDialog() {
-    const dialogRef = this.dialogService.open(FileUploadDialogComponent,{
+    const dialogRef = this.dialogService.open(FileUploadDialogComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
-      title: "Upload file",
-      width: "40vw",
+      title: 'Upload file',
+      width: '40vw',
     });
 
     dialogRef.afterClosed().subscribe(() => this.fileOverviewComponent.refreshFiles());

@@ -25,7 +25,7 @@ import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/c
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'file-overview',
+  selector: 'sp-file-overview',
   templateUrl: './file-overview.component.html',
   styleUrls: ['./file-overview.component.scss']
 })
