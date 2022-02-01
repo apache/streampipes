@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, ElementRef, OnInit} from "@angular/core";
+import { Component, ElementRef, OnInit } from '@angular/core';
 import SwaggerUI from 'swagger-ui';
 
 

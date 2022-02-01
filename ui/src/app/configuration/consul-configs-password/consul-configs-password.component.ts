@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input} from '@angular/core';
-import {StreampipesPeContainerConifgs} from "../shared/streampipes-pe-container-configs";
-import {ConfigurationService} from '../shared/configuration.service'
+import { Component, Input } from '@angular/core';
+import { StreampipesPeContainerConifgs } from '../shared/streampipes-pe-container-configs';
+import { ConfigurationService } from '../shared/configuration.service';
 
 const hiddenPasswordString = '*****';
 
@@ -29,38 +29,33 @@ const hiddenPasswordString = '*****';
     providers: [ConfigurationService]
 })
 export class ConsulConfigsPasswordComponent {
-    
+
     @Input() configuration: StreampipesPeContainerConifgs;
 
-    password: string; 
-    show: Boolean;
-    className: String;
-    private hide: Boolean;
-    
+    password: string;
+    show: boolean;
+    className: string;
+    private hide: boolean;
+
     constructor(public configService: ConfigurationService) {
-        this.password = hiddenPasswordString; 
+        this.password = hiddenPasswordString;
         this.show = false;
-        this.className  = "hideText";
+        this.className  = 'hideText';
         this.hide = true;
     }
 
     changePw() {
         if (this.password == hiddenPasswordString) {
-            this.password = this.password.replace(hiddenPasswordString, "")
+            this.password = this.password.replace(hiddenPasswordString, '');
         }
         this.configuration.value = this.password;
-        this.show = true
+        this.show = true;
     }
 
     addCssClass() {
         this.hide = !this.hide;
 
-        if (!this.hide){
-            this.className = "";
-        }
-        else {
-            this.className = "hideText";
-        }
+        this.className = !this.hide ? '' : 'hideText';
     }
 
 }

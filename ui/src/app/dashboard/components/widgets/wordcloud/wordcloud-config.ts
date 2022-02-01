@@ -16,33 +16,33 @@
  *
  */
 
-import {WidgetConfig} from "../base/base-config";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfig } from '../base/base-config';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class WordCloudConfig extends WidgetConfig {
 
-  static readonly TITLE_KEY: string = "title-key";
-  static readonly COUNT_PROPERTY_KEY: string = "count-property-key";
-  static readonly NAME_PROPERTY_KEY: string = "name-property-key";
-  static readonly WINDOW_SIZE_KEY: string = "window-size-key";
+  static readonly TITLE_KEY: string = 'title-key';
+  static readonly COUNT_PROPERTY_KEY: string = 'count-property-key';
+  static readonly NAME_PROPERTY_KEY: string = 'name-property-key';
+  static readonly WINDOW_SIZE_KEY: string = 'window-size-key';
 
   constructor() {
     super();
   }
 
   getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("wordcloud", "Word Cloud")
-        .withIcon("fas fa-font")
-        .withDescription("A wordcloud visualization")
+    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('wordcloud', 'Word Cloud')
+        .withIcon('fas fa-font')
+        .withDescription('A wordcloud visualization')
         .requiredSchema(SchemaRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(WordCloudConfig.COUNT_PROPERTY_KEY, "Count field", "", EpRequirements.integerReq())
-            .requiredPropertyWithUnaryMapping(WordCloudConfig.NAME_PROPERTY_KEY, "Name field", "", EpRequirements.stringReq())
+            .requiredPropertyWithUnaryMapping(WordCloudConfig.COUNT_PROPERTY_KEY, 'Count field', '', EpRequirements.integerReq())
+            .requiredPropertyWithUnaryMapping(WordCloudConfig.NAME_PROPERTY_KEY, 'Name field', '', EpRequirements.stringReq())
             .build())
-        .requiredIntegerParameter(WordCloudConfig.WINDOW_SIZE_KEY, "Window size", "The maximum number of events")
+        .requiredIntegerParameter(WordCloudConfig.WINDOW_SIZE_KEY, 'Window size', 'The maximum number of events')
         .build();
   }
 }

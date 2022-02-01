@@ -27,5 +27,7 @@ export * from './lib/apis/shared-dashboard.service';
 export * from './lib/model/datalake/DateRange';
 export * from './lib/model/datalake/DatalakeQueryParameters';
 export * from './lib/model/dashboard/dashboard.model';
+export * from './lib/model/email-config.model';
+export * from './lib/model/general-config.model';
 export * from './lib/model/gen/streampipes-model-client';
 export * from './lib/model/gen/streampipes-model';

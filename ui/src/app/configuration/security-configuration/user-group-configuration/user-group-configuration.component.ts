@@ -17,11 +17,10 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Group } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
+import { Group, UserGroupService } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserGroupService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/user-group.service';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';

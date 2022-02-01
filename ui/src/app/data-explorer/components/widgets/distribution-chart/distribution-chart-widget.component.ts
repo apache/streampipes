@@ -20,8 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { DistributionChartWidgetModel } from './model/distribution-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-explorer-distribution-chart-widget',
@@ -66,8 +65,6 @@ export class DistributionChartWidgetComponent extends BaseDataExplorerWidgetDire
   }
 
   prepareData(spQueryResult: SpQueryResult[]) {
-
-    //todo tags als namen und labels unter pie und legende für histo
 
     this.data = [];
 

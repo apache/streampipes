@@ -23,8 +23,7 @@ import { HttpClient } from '@angular/common/http';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
-import { AdapterDescription, FormatDescription, GuessSchema, Message, SpDataStream } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+import { AdapterDescription, FormatDescription, GuessSchema, Message, SpDataStream, PlatformServicesCommons } from '@streampipes/platform-services';
 import { AuthService } from '../../services/auth.service';
 
 @Injectable()

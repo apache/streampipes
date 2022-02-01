@@ -17,11 +17,9 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DatalakeRestService } from '../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataViewDataExplorerService } from '../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
-import { DatalakeQueryParameters } from '@streampipes/platform-services';
+import { DataViewDataExplorerService, DatalakeRestService, DatalakeQueryParameters, EventSchema, SpQueryResult } from '@streampipes/platform-services';
 import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -30,7 +28,6 @@ import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { FieldConfig } from '../../data-explorer/models/dataview-dashboard.model';
-import { EventSchema, SpQueryResult } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-datalake-configuration',

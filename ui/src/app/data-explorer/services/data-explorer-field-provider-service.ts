@@ -27,7 +27,7 @@ import {
   EventProperty,
   EventPropertyPrimitive,
   EventPropertyUnion
-} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 
 
 @Injectable()

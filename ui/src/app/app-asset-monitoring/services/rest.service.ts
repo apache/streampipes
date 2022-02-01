@@ -21,7 +21,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { DashboardConfiguration } from '../model/dashboard-configuration.model';
-import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+import { PlatformServicesCommons } from '@streampipes/platform-services';
 
 @Injectable()
 export class RestService {

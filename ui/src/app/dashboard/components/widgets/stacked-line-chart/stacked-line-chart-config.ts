@@ -16,29 +16,29 @@
  *
  */
 
-import {WidgetConfig} from "../base/base-config";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfig } from '../base/base-config';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class StackedLineChartConfig extends WidgetConfig {
 
-  static readonly VALUE_KEY: string = "value-key";
-  static readonly TIMESTAMP_KEY: string = "timestamp-key";
+  static readonly VALUE_KEY: string = 'value-key';
+  static readonly TIMESTAMP_KEY: string = 'timestamp-key';
 
   constructor() {
     super();
   }
 
   getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("stacked-line-chart", "Stacked Line Chart")
-        .withIcon("fas fa-chart-line")
-        .withDescription("Shows a stacked line chart based on multiple measurements.")
+    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('stacked-line-chart', 'Stacked Line Chart')
+        .withIcon('fas fa-chart-line')
+        .withDescription('Shows a stacked line chart based on multiple measurements.')
         .requiredSchema(SchemaRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(StackedLineChartConfig.TIMESTAMP_KEY, "Timestamp field", "", EpRequirements.timestampReq())
-            .requiredPropertyWithNaryMapping(StackedLineChartConfig.VALUE_KEY, "Measurement fields", "", EpRequirements.numberReq())
+            .requiredPropertyWithUnaryMapping(StackedLineChartConfig.TIMESTAMP_KEY, 'Timestamp field', '', EpRequirements.timestampReq())
+            .requiredPropertyWithNaryMapping(StackedLineChartConfig.VALUE_KEY, 'Measurement fields', '', EpRequirements.numberReq())
             .build())
         .build();
   }

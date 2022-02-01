@@ -18,7 +18,7 @@
 
 import { ShepherdService } from '../../services/tour/shepherd.service';
 import { EventEmitter, Injectable } from '@angular/core';
-import { PipelineService } from '../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+import { PipelineService } from '@streampipes/platform-services';
 import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
 import { PipelineStatusDialogComponent } from '../dialog/pipeline-status/pipeline-status-dialog.component';

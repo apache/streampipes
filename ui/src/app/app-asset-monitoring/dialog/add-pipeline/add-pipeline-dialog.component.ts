@@ -23,7 +23,7 @@ import { ElementIconText } from '../../../services/get-element-icon-text.service
 import { SelectedVisualizationData } from '../../model/selected-visualization-data.model';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { VisualizablePipeline } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { VisualizablePipeline } from '@streampipes/platform-services';
 
 @Component({
     selector: 'add-pipeline-dialog-component',

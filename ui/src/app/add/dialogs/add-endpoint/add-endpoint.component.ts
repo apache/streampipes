@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {AddService} from "../../services/add.service";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { Component, OnInit } from '@angular/core';
+import { AddService } from '../../services/add.service';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
     selector: 'add-endpoint-dialog',
@@ -31,7 +31,7 @@ export class AddEndpointComponent implements OnInit {
     addSelected: any;
     newEndpoint: any;
 
-    endpointsChanged: boolean = false;
+    endpointsChanged = false;
 
     constructor(private AddService: AddService,
                 private DialogRef: DialogRef<AddEndpointComponent>) {

@@ -16,7 +16,7 @@
  *
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({name: 'orderBy'})
 export class OrderByPipe implements PipeTransform {
@@ -35,7 +35,7 @@ export class OrderByPipe implements PipeTransform {
         return value.sort().reverse();
       }
     }
-    let sortedValues = value.sort((a, b) => a[column].localeCompare(b[column]));
+    const sortedValues = value.sort((a, b) => a[column].localeCompare(b[column]));
     return order === 'asc' ? sortedValues : sortedValues.reverse();
   }
 }

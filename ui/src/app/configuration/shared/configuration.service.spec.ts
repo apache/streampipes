@@ -16,10 +16,10 @@
  *
  */
 
-import {getTestBed, TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {ConfigurationService} from './configuration.service';
-import {StreampipesPeContainer} from './streampipes-pe-container.model';
+import { getTestBed, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ConfigurationService } from './configuration.service';
+import { StreampipesPeContainer } from './streampipes-pe-container.model';
 
 describe('ConfigurationService', () => {
 
@@ -57,11 +57,11 @@ describe('ConfigurationService', () => {
     });
 
     it('should get Server URL', () => {
-        expect(service.getServerUrl()).toBe('/streampipes-backend')
-    })
+        expect(service.getServerUrl()).toBe('/streampipes-backend');
+    });
 
-    it('should modify key', () =>{
-        expect(service.adjustConfigurationKey("SP_A_TEST")).toBe("A TEST")
-    })
+    it('should modify key', () => {
+        expect(service.adjustConfigurationKey('SP_A_TEST')).toBe('A TEST');
+    });
 
 });

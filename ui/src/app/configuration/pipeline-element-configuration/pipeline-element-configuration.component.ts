@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, ViewChild} from "@angular/core";
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {ConfigurationService} from "../shared/configuration.service";
-import {StreampipesPeContainer} from "../shared/streampipes-pe-container.model";
-import {StreampipesPeContainerConifgs} from "../shared/streampipes-pe-container-configs";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import { Component, ViewChild } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { ConfigurationService } from '../shared/configuration.service';
+import { StreampipesPeContainer } from '../shared/streampipes-pe-container.model';
+import { StreampipesPeContainerConifgs } from '../shared/streampipes-pe-container-configs';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'pipeline-element-configuration',
@@ -47,7 +47,7 @@ export class PipelineElementConfigurationComponent {
     expandedElement: any;
 
     selectedConsulService: StreampipesPeContainer;
-    consulServiceSelected: boolean = false;
+    consulServiceSelected = false;
 
     constructor(private configurationService: ConfigurationService) {
         this.getConsulServices();
@@ -56,7 +56,7 @@ export class PipelineElementConfigurationComponent {
     getConsulServices(): void {
         this.configurationService.getConsulServices()
             .subscribe( response => {
-                let sortedServices = this.sort(response);
+                const sortedServices = this.sort(response);
                 this.consulServices = sortedServices;
                 this.dataSource.data = sortedServices;
             }, error => {
@@ -64,8 +64,8 @@ export class PipelineElementConfigurationComponent {
             });
     }
 
-    sort(consulServices: Array<StreampipesPeContainer>):Array<StreampipesPeContainer> {
-        if(!consulServices || consulServices.length === 0) return null;
+    sort(consulServices: StreampipesPeContainer[]): StreampipesPeContainer[] {
+        if (!consulServices || consulServices.length === 0) { return null; }
 
         consulServices.sort((a: StreampipesPeContainer, b: StreampipesPeContainer) => {
             if (a.name < b.name) {

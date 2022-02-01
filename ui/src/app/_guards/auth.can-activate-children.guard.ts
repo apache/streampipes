@@ -33,7 +33,6 @@ export class AuthCanActivateChildrenGuard implements CanActivateChild {
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    //this.authService.logout();
       if (this.authService.authenticated()) {
         return true;
       }

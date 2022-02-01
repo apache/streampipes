@@ -17,10 +17,9 @@
  */
 
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { PipelineOperationStatus } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineOperationStatus, PipelineService } from '@streampipes/platform-services';
 import { Component, Input, OnInit } from '@angular/core';
 import { PipelineAction } from '../../model/pipeline-model';
-import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 
 

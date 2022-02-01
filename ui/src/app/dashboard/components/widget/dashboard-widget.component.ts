@@ -17,16 +17,14 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DashboardItem } from '@streampipes/platform-services';
 import { DashboardService } from '../../services/dashboard.service';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import {
   DashboardWidgetModel, Pipeline,
-  VisualizablePipeline
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+  VisualizablePipeline, DashboardItem, PipelineService
+} from '@streampipes/platform-services';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
-import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { EditModeService } from '../../services/edit-mode.service';
 import { ReloadPipelineService } from '../../services/reload-pipeline.service';
 

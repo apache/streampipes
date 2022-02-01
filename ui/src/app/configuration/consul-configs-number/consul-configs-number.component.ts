@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input} from '@angular/core';
-import {StreampipesPeContainerConifgs} from "../shared/streampipes-pe-container-configs";
-import {ConfigurationService} from '../shared/configuration.service';
+import { Component, Input } from '@angular/core';
+import { StreampipesPeContainerConifgs } from '../shared/streampipes-pe-container-configs';
+import { ConfigurationService } from '../shared/configuration.service';
 
 @Component({
     selector: 'consul-configs-number',
@@ -26,8 +26,8 @@ import {ConfigurationService} from '../shared/configuration.service';
     styleUrls: ['./consul-configs-number.component.css']
 })
 export class ConsulConfigsNumberComponent {
-    @Input() configuration: StreampipesPeContainerConifgs
-    constructor(public configService:ConfigurationService) {
+    @Input() configuration: StreampipesPeContainerConifgs;
+    constructor(public configService: ConfigurationService) {
     }
 
 }

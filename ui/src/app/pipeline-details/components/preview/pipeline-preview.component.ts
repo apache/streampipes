@@ -17,7 +17,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Pipeline} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import {Pipeline} from "@streampipes/platform-services";
 import {PipelineElementConfig, PipelineElementUnion} from "../../../editor/model/editor.model";
 import {PipelinePositioningService} from "../../../editor/services/pipeline-positioning.service";
 import {JsplumbService} from "../../../editor/services/jsplumb.service";

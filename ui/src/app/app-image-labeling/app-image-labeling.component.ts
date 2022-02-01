@@ -17,8 +17,7 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
-import { DataLakeMeasure, EventPropertyUnion, EventSchema, SpQueryResult } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { DateRange } from '../../../projects/streampipes/platform-services/src/lib/model/datalake/DateRange';
+import { DataLakeMeasure, EventPropertyUnion, EventSchema, SpQueryResult, DateRange } from '@streampipes/platform-services';
 
 @Component({
   selector: 'app-image-labeling',

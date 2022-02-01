@@ -16,7 +16,7 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'pipelineElementNameFilter',
@@ -25,7 +25,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 export class PipelineElementNameFilter implements PipeTransform {
 
   transform(values: any[], filterTerm: string): any[] {
-    if (filterTerm === "") {
+    if (filterTerm === '') {
       return values;
     } else {
       return values.filter(v => v.name.toLowerCase().includes(filterTerm.toLowerCase()));

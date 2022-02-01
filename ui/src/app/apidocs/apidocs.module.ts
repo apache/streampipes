@@ -16,12 +16,12 @@
  *
  */
 
-import {NgModule} from "@angular/core";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {CommonModule} from "@angular/common";
-import {CoreUiModule} from "../core-ui/core-ui.module";
-import {ApidocsComponent} from "./apidocs.component";
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { CommonModule } from '@angular/common';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { ApidocsComponent } from './apidocs.component';
 
 @NgModule({
   imports: [

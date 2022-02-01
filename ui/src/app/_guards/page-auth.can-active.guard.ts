@@ -16,7 +16,7 @@
  *
  */
 
-import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateChild, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { PageName } from '../_enums/page-name.enum';
 import { Injectable } from '@angular/core';

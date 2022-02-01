@@ -16,11 +16,11 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 
-import {StreampipesPeContainer} from './streampipes-pe-container.model';
-import {StreampipesPeContainerConifgs} from './streampipes-pe-container-configs';
+import { StreampipesPeContainer } from './streampipes-pe-container.model';
+import { StreampipesPeContainerConifgs } from './streampipes-pe-container-configs';
 
 @Injectable()
 export class ConfigurationMockService {
@@ -34,15 +34,15 @@ export class ConfigurationMockService {
 
     getConsulServices(): Observable<StreampipesPeContainer[]> {
 
-        let config: StreampipesPeContainerConifgs []
-        config[0] = new StreampipesPeContainerConifgs
-        config[0].description = "test int"
-        config[0].key = 'testint'
-        config[0].value = '80'
-        config[0].valueType = 'xs:integer'
-        config[0].isPassword = false
+        const config: StreampipesPeContainerConifgs[] = [];
+        config[0] = new StreampipesPeContainerConifgs;
+        config[0].description = 'test int';
+        config[0].key = 'testint';
+        config[0].value = '80';
+        config[0].valueType = 'xs:integer';
+        config[0].isPassword = false;
 
-        
+
         return of([
             {
                 mainKey: 'sp/test/1',

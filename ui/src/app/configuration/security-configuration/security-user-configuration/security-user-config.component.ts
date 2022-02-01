@@ -17,7 +17,7 @@
  */
 
 import { Component } from '@angular/core';
-import { UserAccount } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
+import { UserAccount } from '@streampipes/platform-services';
 import { AbstractSecurityPrincipalConfig } from '../abstract-security-principal-config';
 import { Observable } from 'rxjs';
 

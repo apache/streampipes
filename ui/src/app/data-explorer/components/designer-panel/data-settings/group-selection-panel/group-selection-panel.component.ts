@@ -20,7 +20,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FieldConfig, SourceConfig } from '../../../../models/dataview-dashboard.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { EventPropertyUnion } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-group-selection-panel',

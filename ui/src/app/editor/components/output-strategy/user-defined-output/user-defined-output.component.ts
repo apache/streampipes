@@ -16,44 +16,44 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {BaseOutputStrategy} from "../base/BaseOutputStrategy";
+import { Component, OnInit } from '@angular/core';
+import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import {
   EventPropertyPrimitive,
   UserDefinedOutputStrategy
-} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {FormControl} from "@angular/forms";
+} from '@streampipes/platform-services';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'user-defined-output-strategy',
   templateUrl: './user-defined-output.component.html',
   styleUrls: ['./user-defined-output.component.scss']
 })
-export class UserDefinedOutputStrategyComponent extends BaseOutputStrategy<UserDefinedOutputStrategy> implements OnInit{
+export class UserDefinedOutputStrategyComponent extends BaseOutputStrategy<UserDefinedOutputStrategy> implements OnInit {
 
-  private prefix = "urn:streampipes.org:spi:";
-  private chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  private prefix = 'urn:streampipes.org:spi:';
+  private chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   collectedPropertiesFirstStream: any;
   collectedPropertiesSecondStream: any;
 
-  primitiveClasses = [{"label": "String", "id": "http://www.w3.org/2001/XMLSchema#string"},
-    {"label": "Boolean", "id": "http://www.w3.org/2001/XMLSchema#boolean"},
-    {"label": "Integer", "id": "http://www.w3.org/2001/XMLSchema#integer"},
-    {"label": "Long", "id": "http://www.w3.org/2001/XMLSchema#long"},
-    {"label": "Double", "id": "http://www.w3.org/2001/XMLSchema#double"},
-    {"label": "Float", "id": "http://www.w3.org/2001/XMLSchema#float"}];
+  primitiveClasses = [{'label': 'String', 'id': 'http://www.w3.org/2001/XMLSchema#string'},
+    {'label': 'Boolean', 'id': 'http://www.w3.org/2001/XMLSchema#boolean'},
+    {'label': 'Integer', 'id': 'http://www.w3.org/2001/XMLSchema#integer'},
+    {'label': 'Long', 'id': 'http://www.w3.org/2001/XMLSchema#long'},
+    {'label': 'Double', 'id': 'http://www.w3.org/2001/XMLSchema#double'},
+    {'label': 'Float', 'id': 'http://www.w3.org/2001/XMLSchema#float'}];
 
   constructor() {
     super();
   }
 
   ngOnInit() {
-    this.parentForm.addControl("output-strategy", new FormControl());
+    this.parentForm.addControl('output-strategy', new FormControl());
     if (!this.outputStrategy.eventProperties) {
       this.outputStrategy.eventProperties = [];
     }
-    this.checkFormValidity()
+    this.checkFormValidity();
   }
 
   applyDefaultSchema() {
@@ -74,10 +74,10 @@ export class UserDefinedOutputStrategyComponent extends BaseOutputStrategy<UserD
   }
 
   makeDefaultProperty() {
-    let ep = {} as EventPropertyPrimitive;
-    ep["@class"] = "org.apache.streampipes.model.schema.EventPropertyPrimitive";
+    const ep = {} as EventPropertyPrimitive;
+    ep['@class'] = 'org.apache.streampipes.model.schema.EventPropertyPrimitive';
     ep.domainProperties = [];
-    ep.elementId = "urn:streampipes.org:spi:eventpropertyprimitive:" + this.makeId();
+    ep.elementId = 'urn:streampipes.org:spi:eventpropertyprimitive:' + this.makeId();
 
     return ep;
   }
@@ -88,15 +88,15 @@ export class UserDefinedOutputStrategyComponent extends BaseOutputStrategy<UserD
 
   randomString(length) {
     let result = '';
-    for (let i = length; i > 0; --i) result += this.chars[Math.floor(Math.random() * this.chars.length)];
+    for (let i = length; i > 0; --i) { result += this.chars[Math.floor(Math.random() * this.chars.length)]; }
     return result;
   }
 
   checkFormValidity() {
     if (!this.outputStrategy.eventProperties || this.outputStrategy.eventProperties.length == 0) {
-      this.parentForm.controls["output-strategy"].setErrors({});
+      this.parentForm.controls['output-strategy'].setErrors({});
     } else {
-      this.parentForm.controls["output-strategy"].setErrors(undefined);
+      this.parentForm.controls['output-strategy'].setErrors(undefined);
     }
   }
 }

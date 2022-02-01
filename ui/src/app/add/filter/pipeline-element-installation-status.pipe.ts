@@ -16,7 +16,7 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'pipelineElementInstallationStatusFilter',
@@ -25,10 +25,10 @@ import {Pipe, PipeTransform} from "@angular/core";
 export class PipelineElementInstallationStatusFilter implements PipeTransform {
 
   transform(values: any[], filterTerm: string): any[] {
-    if (filterTerm === "all") {
+    if (filterTerm === 'all') {
       return values;
     } else {
-      let installed = filterTerm === "installed";
+      const installed = filterTerm === 'installed';
       return values.filter(v => v.installed === installed);
     }
   }

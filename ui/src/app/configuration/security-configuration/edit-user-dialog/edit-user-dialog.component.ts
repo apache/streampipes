@@ -16,14 +16,14 @@
  *
  */
 
-import { AfterViewInit, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import {
   Group,
   Role,
   ServiceAccount,
   UserAccount
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
+} from '@streampipes/platform-services';
 import {
   AbstractControl,
   FormBuilder,
@@ -39,9 +39,9 @@ import { UserService } from '../../../../../projects/streampipes/platform-servic
 import { UserGroupService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/user-group.service';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
-import {AuthService} from "../../../services/auth.service";
-import {Router} from "@angular/router";
-import {MailConfigService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/mail-config.service";
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { MailConfigService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/mail-config.service';
 
 @Component({
   selector: 'sp-edit-user-dialog',
@@ -82,7 +82,7 @@ export class EditUserDialogComponent implements OnInit {
 
   ngOnInit(): void {
     const filterObject = this.user instanceof UserAccount ? UserRole.ROLE_SERVICE_ADMIN : UserRole.ROLE_ADMIN;
-    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== filterObject)
+    this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== filterObject);
     this.mailConfigService.getMailConfig().subscribe(config => this.emailConfigured = config.emailConfigured);
     this.userGroupService.getAllUserGroups().subscribe(response => {
       this.availableGroups = response;
@@ -183,7 +183,7 @@ export class EditUserDialogComponent implements OnInit {
         this.userService.createServiceAccount(this.clonedUser as ServiceAccount).subscribe(() => {
           this.close(true);
         }, error => {
-          this.registrationError = error.error.notifications ? error.error.notifications[0].title: 'Unknown error';
+          this.registrationError = error.error.notifications ? error.error.notifications[0].title : 'Unknown error';
         });
       }
     }

@@ -16,23 +16,23 @@
  *
  */
 
-import {NgModule} from "@angular/core";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {FormsModule} from "@angular/forms";
-import {MatTabsModule} from "@angular/material/tabs";
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {CommonModule} from "@angular/common";
-import {AddComponent} from "./add.component";
-import {CoreUiModule} from "../core-ui/core-ui.module";
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {PipelineElementTypeFilter} from "./filter/pipeline-element-type.pipe";
-import {EndpointItemComponent} from "./components/endpoint-item/endpoint-item.component";
-import {AddService} from "./services/add.service";
-import {AddEndpointComponent} from "./dialogs/add-endpoint/add-endpoint.component";
-import {OrderByPipe} from "./filter/order-by.pipe";
-import {EndpointInstallationComponent} from "./dialogs/endpoint-installation/endpoint-installation.component";
-import {PipelineElementNameFilter} from "./filter/pipeline-element-name.pipe";
-import {PipelineElementInstallationStatusFilter} from "./filter/pipeline-element-installation-status.pipe";
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { CommonModule } from '@angular/common';
+import { AddComponent } from './add.component';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PipelineElementTypeFilter } from './filter/pipeline-element-type.pipe';
+import { EndpointItemComponent } from './components/endpoint-item/endpoint-item.component';
+import { AddService } from './services/add.service';
+import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
+import { OrderByPipe } from './filter/order-by.pipe';
+import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
+import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
+import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
 
 @NgModule({
   imports: [
