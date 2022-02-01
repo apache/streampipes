@@ -16,12 +16,11 @@
  *
  */
 
-import {Component, ElementRef, ViewChild} from "@angular/core";
-import {RestApi} from "../../../services/rest-api.service";
-import {FormGroup} from "@angular/forms";
-import {LoginService} from "../../services/login.service";
-import {Router} from "@angular/router";
-import {AppConstants} from "../../../services/app.constants";
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { RestApi } from '../../../services/rest-api.service';
+import { LoginService } from '../../services/login.service';
+import { Router } from '@angular/router';
+import { AppConstants } from '../../../services/app.constants';
 
 @Component({
   selector: 'setup',
@@ -45,7 +44,7 @@ export class SetupComponent {
   nextTaskTitle: any;
 
   constructor(private loginService: LoginService,
-              private RestApi: RestApi,
+              private restApi: RestApi,
               private router: Router,
               public appConstants: AppConstants) {
 
@@ -63,17 +62,19 @@ export class SetupComponent {
         this.installationResults = this.installationResults.concat(data.statusMessages);
         this.nextTaskTitle = data.nextTaskTitle;
         this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
-        let nextInstallationStep = currentInstallationStep + 1;
+        const nextInstallationStep = currentInstallationStep + 1;
         if (nextInstallationStep > (data.installationStepCount - 1)) {
-            this.RestApi.configured()
-                .subscribe(data => {
-                    if (data.configured) {
+            // tslint:disable-next-line:ban-comma-operator
+            this.restApi.configured()
+                .subscribe(res => {
+                    if (res.configured) {
                         this.installationFinished = true;
                         this.loading = false;
                     }
-                }), (data => {
+                    // tslint:disable-next-line:no-unused-expression
+                }), (() => {
                 this.loading = false;
-                //this.showToast("Fatal error, contact administrator");
+                // this.showToast("Fatal error, contact administrator");
             });
         } else {
             this.configure(nextInstallationStep);

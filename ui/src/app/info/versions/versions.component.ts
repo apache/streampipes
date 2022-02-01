@@ -16,10 +16,10 @@
  *
  */
 
-import {Component} from '@angular/core';
-import {VersionInfo} from "./service/version-info.model";
-import {SystemInfo} from "./service/system-info.model";
-import {RestApi} from "../../services/rest-api.service";
+import { Component } from '@angular/core';
+import { VersionInfo } from './service/version-info.model';
+import { SystemInfo } from './service/system-info.model';
+import { RestApi } from '../../services/rest-api.service';
 
 @Component({
     selector: 'sp-versions',
@@ -31,13 +31,13 @@ export class VersionsComponent  {
     versionInfo: VersionInfo;
     systemInfo: SystemInfo;
 
-    constructor(private RestApi: RestApi) {
+    constructor(private restApi: RestApi) {
         this.getVersionInfo();
         this.getSystemInfo();
     }
 
     getVersionInfo(): void {
-        this.RestApi.getVersionInfo()
+        this.restApi.getVersionInfo()
             .subscribe(response => {
                 this.versionInfo = response as VersionInfo;
             }, error => {
@@ -46,7 +46,7 @@ export class VersionsComponent  {
     }
 
     getSystemInfo(): void {
-        this.RestApi.getSystemInfo()
+        this.restApi.getSystemInfo()
             .subscribe(response => {
                 this.systemInfo = response as SystemInfo;
             }, error => {

@@ -16,18 +16,18 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {HomeComponent} from './home.component';
-import {HomeService} from './home.service';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {CommonModule} from '@angular/common';
-import {StatusComponent} from "./components/status.component";
-import {RestApi} from "../services/rest-api.service";
-import {MatDividerModule} from "@angular/material/divider";
-import {MatButtonModule} from "@angular/material/button";
-import {MatListModule} from "@angular/material/list";
+import { NgModule } from '@angular/core';
+import { HomeComponent } from './home.component';
+import { HomeService } from './home.service';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { CommonModule } from '@angular/common';
+import { StatusComponent } from './components/status.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
     imports: [
@@ -37,7 +37,8 @@ import {MatListModule} from "@angular/material/list";
         MatGridListModule,
         MatIconModule,
         MatDividerModule,
-        MatListModule
+        MatListModule,
+        PlatformServicesModule
     ],
     declarations: [
         HomeComponent,

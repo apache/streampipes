@@ -18,11 +18,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
-  FormGroup, ValidationErrors,
-  ValidatorFn,
+  FormGroup,
   Validators
 } from '@angular/forms';
 import { RegistrationModel } from './registration.model';

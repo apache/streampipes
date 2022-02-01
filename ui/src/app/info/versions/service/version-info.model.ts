@@ -22,5 +22,5 @@ export interface VersionInfo {
         itemType: string;
         itemName: string;
         itemVersion: string;
-    }]
+    }];
 }

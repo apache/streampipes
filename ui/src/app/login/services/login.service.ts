@@ -18,7 +18,7 @@
 
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 import { LoginModel } from '../components/login/login.model';
 import { map } from 'rxjs/operators';

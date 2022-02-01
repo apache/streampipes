@@ -42,6 +42,7 @@ import { RestorePasswordService } from './services/restore-password.service';
 import { SetNewPasswordComponent } from './components/set-new-password/set-new-password.component';
 import { ActivateAccountComponent } from './components/activate-account/activate-account.component';
 import { AccountActivationService } from './services/account-activation.service';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import { AccountActivationService } from './services/account-activation.service'
     MatFormFieldModule,
     ReactiveFormsModule,
     MatProgressBarModule,
+    PlatformServicesModule
   ],
   declarations: [
     ActivateAccountComponent,
