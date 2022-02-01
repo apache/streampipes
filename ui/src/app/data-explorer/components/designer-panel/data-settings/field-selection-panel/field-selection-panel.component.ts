@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { FieldConfig, SourceConfig } from '../../../../models/dataview-dashboard.model';
-import { EventPropertyUnion } from '../../../../../core-model/gen/streampipes-model';
+import { EventPropertyUnion } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 

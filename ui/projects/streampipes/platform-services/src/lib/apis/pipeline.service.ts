@@ -26,10 +26,12 @@ import {
   PipelineCategory,
   PipelineOperationStatus,
   PipelineStatusMessage
-} from '../../core-model/gen/streampipes-model';
+} from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PipelineService {
 
   constructor(private http: HttpClient,

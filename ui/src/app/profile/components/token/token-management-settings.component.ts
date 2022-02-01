@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from "@angular/core";
 import { BasicProfileSettings } from "../basic-profile-settings";
-import { RawUserApiToken, UserApiToken } from "../../../core-model/gen/streampipes-model-client";
+import { RawUserApiToken, UserApiToken } from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client";
 import { MatTableDataSource } from "@angular/material/table";
 
 @Component({

@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { FilesService } from '../../../platform-services/apis/files.service';
+import { FilesService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/files.service';
 
 @Component({
   selector: 'file-upload-dialog-component',

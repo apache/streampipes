@@ -39,7 +39,7 @@ import {
   StaticProperty,
   StaticPropertyAlternatives,
   StaticPropertyGroup
-} from '../../core-model/gen/streampipes-model';
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { FormGroup } from '@angular/forms';
 import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
 

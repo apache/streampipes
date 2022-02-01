@@ -23,11 +23,13 @@ import {
   DataProcessorInvocation,
   DataSinkInvocation,
   PipelineElementTemplate
-} from '../../core-model/gen/streampipes-model';
+} from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PipelineElementTemplateService {
 
   constructor(private http: HttpClient,

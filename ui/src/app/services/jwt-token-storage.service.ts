@@ -16,7 +16,7 @@
  *
  */
 
-import { UserInfo } from '../core-model/gen/streampipes-model-client';
+import { UserInfo } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';

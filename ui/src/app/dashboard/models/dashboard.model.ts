@@ -16,7 +16,8 @@
  *
  */
 
-import {GridsterConfig, GridsterItem} from "angular-gridster2";
+import { GridsterConfig, GridsterItem } from 'angular-gridster2';
+import { TimeSettings } from '../../../../projects/streampipes/platform-services/src/lib/model/datalake/DateRange';
 
 export interface DashboardConfig extends GridsterConfig {}
 
@@ -26,18 +27,12 @@ export interface DashboardItem extends GridsterItem {
     id: string;
 }
 
-export interface TimeSettings {
-    startTime: number;
-    endTime: number;
-    dynamicSelection: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
-}
-
 export interface Dashboard {
     id?: string;
     name?: string;
     description?: string;
     displayHeader?: boolean;
-    widgets?: Array<DashboardItem>;
+    widgets?: DashboardItem[];
     dashboardTimeSettings?: TimeSettings;
     dashboardGeneralSettings?: any;
     _id?: string;

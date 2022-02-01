@@ -21,7 +21,7 @@ import { ConnectService } from '../../../services/connect.service';
 import { DataMarketplaceService } from '../../../services/data-marketplace.service';
 import { AdapterExportDialog } from '../../../dialog/adapter-export/adapter-export-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AdapterDescription } from '../../../../core-model/gen/streampipes-model';
+import { AdapterDescription } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { PanelType } from '../../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../../core-ui/dialog/base-dialog/base-dialog.service';
 

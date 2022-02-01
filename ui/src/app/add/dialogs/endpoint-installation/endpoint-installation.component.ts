@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { PipelineElementEndpointService } from '../../../platform-services/apis/pipeline-element-endpoint.service';
+import { PipelineElementEndpointService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element-endpoint.service';
 
 @Component({
   selector: 'endpoint-installation-dialog',

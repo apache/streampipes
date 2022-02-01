@@ -18,34 +18,25 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
-import {
-  Message,
-  Pipeline,
-  PipelineCategory,
-  PipelineOperationStatus,
-  PipelineStatusMessage
-} from '../../core-model/gen/streampipes-model';
+import { PipelineMonitoringInfo } from '../model/gen/streampipes-model';
+import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
-import { Permission } from '../../core-model/gen/streampipes-model-client';
 
-@Injectable()
-export class PermissionsService {
+@Injectable({
+  providedIn: 'root'
+})
+export class PipelineMonitoringService {
 
   constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) { }
-
-
-  public getPermissionsForObject(objectInstanceId: string): Observable<Permission[]> {
-      return this.http.get(`${this.permissionsBasePath}/objects/${objectInstanceId}`).pipe(map(response => response as Permission[]));
+              private platformServicesCommons: PlatformServicesCommons) {
   }
 
-  public updatePermission(permission: Permission): Observable<any> {
-    return this.http.put(`${this.permissionsBasePath}/${permission.permissionId}`, permission);
+  getPipelineMonitoringInfo(pipelineId: string): Observable<PipelineMonitoringInfo> {
+    return this.http.get(this.platformServicesCommons.apiBasePath
+        + '/pipeline-monitoring/'
+        + pipelineId)
+        .pipe(map(response => PipelineMonitoringInfo.fromData(response as any)));
   }
 
-  get permissionsBasePath() {
-    return `${this.platformServicesCommons.apiBasePath}/admin/permissions`;
-  }
 }

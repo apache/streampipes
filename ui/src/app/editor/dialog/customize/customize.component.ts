@@ -31,11 +31,11 @@ import {
   DataProcessorInvocation,
   EventSchema,
   PipelineElementTemplate, PipelineElementTemplateConfig
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
-import {PipelineElementTemplateService} from "../../../platform-services/apis/pipeline-element-template.service";
+import {PipelineElementTemplateService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element-template.service";
 
 @Component({
   selector: 'customize-pipeline-element',

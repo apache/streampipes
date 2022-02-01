@@ -19,7 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { Dashboard } from '../../../dashboard/models/dashboard.model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';

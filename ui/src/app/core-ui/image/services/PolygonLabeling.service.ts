@@ -21,7 +21,7 @@ import { Annotation } from '../../../core-model/coco/Annotation';
 import { ICoordinates } from '../model/coordinates';
 import { ColorService } from './color.service';
 import { LabelingModeService } from './LabelingMode.service';
-import { Label } from '../../../core-model/gen/streampipes-model';
+import { Label } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable()
 export class PolygonLabelingService {

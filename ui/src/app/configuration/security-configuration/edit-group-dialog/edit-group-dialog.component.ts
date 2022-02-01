@@ -17,11 +17,11 @@
  */
 
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Group, Role } from '../../../core-model/gen/streampipes-model-client';
+import { Group, Role } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { UserGroupService } from '../../../platform-services/apis/user-group.service';
+import { UserGroupService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/user-group.service';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';

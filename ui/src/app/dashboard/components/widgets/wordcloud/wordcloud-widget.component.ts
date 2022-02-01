@@ -22,7 +22,7 @@ import {BaseStreamPipesWidget} from "../base/base-widget";
 import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
 import {ResizeService} from "../../../services/resize.service";
 import {DashboardService} from "../../../services/dashboard.service";
-import {EventPropertyList} from "../../../../core-model/gen/streampipes-model";
+import {EventPropertyList} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {WordCloudConfig} from "./wordcloud-config";
 
 import { EChartsOption } from 'echarts';

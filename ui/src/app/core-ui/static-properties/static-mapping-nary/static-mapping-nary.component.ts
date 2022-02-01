@@ -20,7 +20,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
 import {PropertySelectorService} from "../../../services/property-selector.service";
-import {EventProperty, MappingPropertyNary} from "../../../core-model/gen/streampipes-model";
+import {EventProperty, MappingPropertyNary} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 
 @Component({

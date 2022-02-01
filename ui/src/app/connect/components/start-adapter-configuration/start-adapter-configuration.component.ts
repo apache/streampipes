@@ -25,7 +25,7 @@ import {
   GenericAdapterSetDescription,
   RemoveDuplicatesTransformationRuleDescription,
   SpecificAdapterSetDescription
-} from '../../../core-model/gen/streampipes-model';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';

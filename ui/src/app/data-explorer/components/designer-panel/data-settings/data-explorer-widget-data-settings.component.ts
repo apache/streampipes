@@ -17,11 +17,11 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../core-model/gen/streampipes-model';
-import { DataViewDataExplorerService } from '../../../../platform-services/apis/data-view-data-explorer.service';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { DataViewDataExplorerService } from '../../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { MatSelectChange } from '@angular/material/select';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
-import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { DatalakeRestService } from '../../../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 import { zip } from 'rxjs';
 import { DataExplorerDataConfig, SourceConfig } from '../../../models/dataview-dashboard.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';

@@ -22,8 +22,8 @@ import {
   Pipeline, PipelineElementMonitoringInfo,
   PipelineMonitoringInfo,
   SpDataSet, SpDataStream
-} from '../../../core-model/gen/streampipes-model';
-import { PipelineMonitoringService } from '../../../platform-services/apis/pipeline-monitoring.service';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineMonitoringService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-monitoring.service';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';

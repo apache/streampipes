@@ -28,7 +28,7 @@ import {
   PipelineElementConfig,
   PipelineElementUnion
 } from "../../model/editor.model";
-import {SpDataStream, WildcardTopicDefinition} from "../../../core-model/gen/streampipes-model";
+import {SpDataStream, WildcardTopicDefinition} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {EditorService} from "../../services/editor.service";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";

@@ -20,18 +20,18 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '../dialog/base-dialog/dialog-ref';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { PermissionsService } from '../../platform-services/apis/permissions.service';
+import { PermissionsService } from '../../../../projects/streampipes/platform-services/src/lib/apis/permissions.service';
 import {
   Group,
   Permission,
   PermissionEntry,
   ServiceAccount,
   UserAccount
-} from '../../core-model/gen/streampipes-model-client';
-import { UserService } from '../../platform-services/apis/user.service';
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
+import { UserService } from '../../../../projects/streampipes/platform-services/src/lib/apis/user.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, zip } from 'rxjs';
-import { UserGroupService } from '../../platform-services/apis/user-group.service';
+import { UserGroupService } from '../../../../projects/streampipes/platform-services/src/lib/apis/user-group.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map, startWith } from 'rxjs/operators';
 

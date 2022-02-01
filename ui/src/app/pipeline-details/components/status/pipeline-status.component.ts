@@ -17,8 +17,8 @@
  */
 
 import {Component, Input, OnInit} from "@angular/core";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
-import {Pipeline, PipelineStatusMessage} from "../../../core-model/gen/streampipes-model";
+import {PipelineService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service";
+import {Pipeline, PipelineStatusMessage} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Component({
     selector: 'pipeline-status',

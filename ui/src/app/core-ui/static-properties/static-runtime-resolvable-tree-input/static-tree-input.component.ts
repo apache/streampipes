@@ -22,7 +22,7 @@ import {
   RuntimeResolvableTreeInputStaticProperty,
   StaticPropertyUnion,
   TreeInputNode
-} from '../../../core-model/gen/streampipes-model';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';

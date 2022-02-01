@@ -17,7 +17,7 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {CustomOutputStrategy} from "../../../../core-model/gen/streampipes-model";
+import {CustomOutputStrategy} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {BaseOutputStrategy} from "../base/BaseOutputStrategy";
 import {PropertySelectorService} from "../../../../services/property-selector.service";
 import {FormControl} from "@angular/forms";

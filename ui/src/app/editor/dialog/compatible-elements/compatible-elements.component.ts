@@ -19,7 +19,7 @@
 import {Component, Input} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {JsplumbService} from "../../services/jsplumb.service";
-import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
+import {DataProcessorInvocation} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
 
 @Component({

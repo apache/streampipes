@@ -16,7 +16,7 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '../../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 

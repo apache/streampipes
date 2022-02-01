@@ -21,9 +21,8 @@ import { DataExplorerDataConfig, SourceConfig } from '../models/dataview-dashboa
 import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { Observable } from 'rxjs';
 import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQueryParameters';
-import { DatalakeRestService } from '../../platform-services/apis/datalake-rest.service';
-import { SpQueryResult } from '../../core-model/gen/streampipes-model';
-import { countColumn } from 'codemirror';
+import { DatalakeRestService } from '../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
+import { SpQueryResult } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 
 @Injectable()

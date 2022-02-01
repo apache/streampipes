@@ -36,13 +36,13 @@ import {
   PipelinePreviewModel,
   SpDataSet,
   SpDataStream
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {CustomizeComponent} from "../../dialog/customize/customize.component";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 import {EditorService} from "../../services/editor.service";
-import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-client";
+import {MatchingResultMessage} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client";
 import {MatchingErrorComponent} from "../../dialog/matching-error/matching-error.component";
 import {Tuple2} from "../../../core-model/base/Tuple2";
 import {ConfirmDialogComponent} from "../../../core-ui/dialog/confirm-dialog/confirm-dialog.component";

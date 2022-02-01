@@ -18,11 +18,11 @@
 
 import { Directive, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DataExplorerWidgetModel, SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
 import { ResizeService } from '../../../services/resize.service';
-import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { DatalakeRestService } from '../../../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
 import { DataExplorerDataConfig, DataExplorerField, FieldProvider } from '../../../models/dataview-dashboard.model';
 import { Observable, Subscription, zip } from 'rxjs';

@@ -21,7 +21,7 @@ import { DataMarketplaceService } from '../../services/data-marketplace.service'
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
 import { FilterPipe } from '../../filter/filter.pipe';
-import { AdapterDescriptionUnion } from '../../../core-model/gen/streampipes-model';
+import { AdapterDescriptionUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 
 @Component({

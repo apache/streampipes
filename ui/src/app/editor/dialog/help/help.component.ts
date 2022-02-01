@@ -18,8 +18,8 @@
 
 import {Component, Input} from "@angular/core";
 import {PipelineElementUnion} from "../../model/editor.model";
-import {PipelineElementService} from "../../../platform-services/apis/pipeline-element.service";
-import {SpDataStream} from "../../../core-model/gen/streampipes-model";
+import {PipelineElementService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service";
+import {SpDataStream} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 import {PipelineElementTypeUtils} from "../../utils/editor.utils";
 

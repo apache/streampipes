@@ -23,7 +23,7 @@ import {
   InvocableStreamPipesEntity,
   PipelineElementRecommendation,
   SpDataStream
-} from "../../core-model/gen/streampipes-model";
+} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Injectable()
 export class PipelineElementRecommendationService {

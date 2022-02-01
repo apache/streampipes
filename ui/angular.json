@@ -117,6 +117,37 @@
       "root": "e2e",
       "sourceRoot": "e2e",
       "projectType": "application"
+    },
+    "@streampipes/platform-services": {
+      "projectType": "library",
+      "root": "projects/streampipes/platform-services",
+      "sourceRoot": "projects/streampipes/platform-services/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/streampipes/platform-services/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/streampipes/platform-services/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/streampipes/platform-services/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/streampipes/platform-services/src/test.ts",
+            "tsConfig": "projects/streampipes/platform-services/tsconfig.spec.json",
+            "karmaConfig": "projects/streampipes/platform-services/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "app"

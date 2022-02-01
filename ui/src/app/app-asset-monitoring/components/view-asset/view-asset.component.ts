@@ -27,7 +27,7 @@ import {
     DashboardWidgetModel,
     Pipeline,
     VisualizablePipeline
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {DashboardItem} from "../../../dashboard/models/dashboard.model";
 
 interface Window {

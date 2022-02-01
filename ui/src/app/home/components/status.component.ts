@@ -19,8 +19,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NotificationCountService } from '../../services/notification-count-service';
-import { PipelineElementService } from '../../platform-services/apis/pipeline-element.service';
-import { PipelineService } from '../../platform-services/apis/pipeline.service';
+import { PipelineElementService } from '../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service';
+import { PipelineService } from '../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 
 @Component({
     selector: 'status',

@@ -18,10 +18,10 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ExtensionsServiceEndpointItem } from '../../core-model/gen/streampipes-model-client';
+import { ExtensionsServiceEndpointItem } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 
 @Injectable()
 export class AddService {

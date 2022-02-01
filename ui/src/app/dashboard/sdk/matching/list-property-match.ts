@@ -21,7 +21,7 @@ import {
   EventPropertyList,
   EventPropertyPrimitive,
   EventPropertyUnion
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PrimitivePropertyMatch} from "./primitive-property-match";
 
 export class ListPropertyMatch {

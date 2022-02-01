@@ -22,12 +22,13 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
 import {
-  Principal,
   ServiceAccount,
   UserAccount
-} from '../../core-model/gen/streampipes-model-client';
+} from '../model/gen/streampipes-model-client';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
 
   constructor(private http: HttpClient,

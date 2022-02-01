@@ -21,7 +21,7 @@ import {FormGroup} from "@angular/forms";
 import {
   DataProcessorInvocation,
   OutputStrategy
-} from "../../../../core-model/gen/streampipes-model";
+} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Directive()
 export abstract class BaseOutputStrategy<T extends OutputStrategy> {

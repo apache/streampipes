@@ -17,7 +17,7 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {EventPropertyUnion, SpDataStream} from "../../../core-model/gen/streampipes-model";
+import {EventPropertyUnion, SpDataStream} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {RestService} from "../../services/rest.service";
 
 @Component({

@@ -16,7 +16,7 @@
  *
  */
 
-import { EventSchema, StaticProperty, StaticPropertyUnion } from '../../../core-model/gen/streampipes-model';
+import { EventSchema, StaticProperty, StaticPropertyUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';

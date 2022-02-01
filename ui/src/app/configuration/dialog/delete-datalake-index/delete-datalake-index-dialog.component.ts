@@ -18,7 +18,7 @@
 
 import { Component, Input } from '@angular/core';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { DatalakeRestService } from '../../../platform-services/apis/datalake-rest.service';
+import { DatalakeRestService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 
 @Component({
   selector: 'sp-delete-datalake-index-dialog',

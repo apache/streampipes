@@ -17,7 +17,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { HeatmapWidgetModel } from './model/heatmap-widget.model';

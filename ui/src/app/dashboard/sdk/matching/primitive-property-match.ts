@@ -18,7 +18,7 @@
 
 import {DatatypeMatch} from "./datatype-match";
 import {DomainPropertyMatch} from "./domain-property-match";
-import {EventPropertyPrimitive} from "../../../core-model/gen/streampipes-model";
+import {EventPropertyPrimitive} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 export class PrimitivePropertyMatch {
 

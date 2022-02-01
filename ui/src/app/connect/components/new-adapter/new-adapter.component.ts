@@ -27,7 +27,7 @@ import {
     SpecificAdapterSetDescription,
     SpecificAdapterStreamDescription,
     TransformationRuleDescriptionUnion
-} from '../../../core-model/gen/streampipes-model';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Logger } from '../../../shared/logger/default-log.service';
 import { ConnectService } from '../../services/connect.service';

@@ -17,20 +17,25 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { PlatformServicesCommons } from './commons.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-@Injectable()
-export class MeasurementUnitsService {
+@Injectable({
+  providedIn: 'root'
+})
+export class PlatformServicesCommons {
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) { }
+  constructor() { }
 
-  getAllMeasurementUnits(): Observable<any> {
-    return this.http.get(this.platformServicesCommons.apiBasePath + '/measurement-units').pipe(map(response => {
-      return response;
-    }));
+  get basePath(): string {
+    return '/streampipes-backend';
   }
+
+  get apiBasePath() {
+    return this.basePath + '/api/v2';
+  }
+
+  get unauthenticatedBasePath() {
+    return this.basePath + '/api/v2';
+  }
+
 }
+

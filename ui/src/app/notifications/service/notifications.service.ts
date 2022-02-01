@@ -25,7 +25,7 @@ import {
 import { Injectable } from '@angular/core';
 import { NotificationUtils } from '../utils/notifications.utils';
 import { map } from 'rxjs/operators';
-import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 
 @Injectable()
 export class NotificationsService {

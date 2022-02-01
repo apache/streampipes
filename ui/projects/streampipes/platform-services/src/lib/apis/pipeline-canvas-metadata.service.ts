@@ -19,11 +19,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PipelineCanvasMetadata } from '../../core-model/gen/streampipes-model';
+import { PipelineCanvasMetadata } from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PipelineCanvasMetadataService {
 
   constructor(private http: HttpClient,

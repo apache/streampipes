@@ -18,11 +18,11 @@
 
 import { ShepherdService } from '../../services/tour/shepherd.service';
 import { EventEmitter, Injectable } from '@angular/core';
-import { PipelineService } from '../../platform-services/apis/pipeline.service';
+import { PipelineService } from '../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
 import { PipelineStatusDialogComponent } from '../dialog/pipeline-status/pipeline-status-dialog.component';
-import { Pipeline } from '../../core-model/gen/streampipes-model';
+import { Pipeline } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { DeletePipelineDialogComponent } from '../dialog/delete-pipeline/delete-pipeline-dialog.component';
 import { DialogRef } from '../../core-ui/dialog/base-dialog/dialog-ref';
 import { Router } from '@angular/router';

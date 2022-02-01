@@ -31,7 +31,7 @@ import { CocoFormatService } from '../services/CocoFormat.service';
 import { LabelingModeService } from '../services/LabelingMode.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
-import { Label } from '../../../core-model/gen/streampipes-model';
+import { Label } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { LabelService } from '../../labels/services/label.service';
 
 @Component({

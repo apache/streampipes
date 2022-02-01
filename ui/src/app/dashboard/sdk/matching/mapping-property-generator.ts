@@ -17,7 +17,7 @@
  */
 
 import {PropertyMatch} from "./property-match";
-import {EventPropertyUnion} from "../../../core-model/gen/streampipes-model";
+import {EventPropertyUnion} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 export class MappingPropertyGenerator {
 

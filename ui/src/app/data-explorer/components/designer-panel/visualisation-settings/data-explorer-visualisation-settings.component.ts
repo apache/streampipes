@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataExplorerWidgetModel } from '../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { WidgetTypeService } from '../../../services/widget-type.service';
 import { MatSelectChange } from '@angular/material/select';
 import { IWidget } from '../../../models/dataview-dashboard.model';

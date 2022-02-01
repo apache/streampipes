@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ColorService } from '../../../image/services/color.service';
 import { LabelService } from '../../services/label.service';
-import { Category, Label } from '../../../../core-model/gen/streampipes-model';
+import { Category, Label } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-configure-labels',

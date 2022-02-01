@@ -25,13 +25,13 @@ import {
     OnInit,
     Output
 } from "@angular/core";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {PipelineService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service";
 import {
     DataProcessorInvocation,
     DataSinkInvocation,
     EventSchema,
     Pipeline
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PipelineElementUnion} from "../../../editor/model/editor.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 

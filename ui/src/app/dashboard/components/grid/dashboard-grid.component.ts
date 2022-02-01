@@ -33,7 +33,7 @@ import {ResizeService} from "../../services/resize.service";
 import {GridsterItemComponent, GridType} from "angular-gridster2";
 import {DashboardService} from "../../services/dashboard.service";
 import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
-import {DashboardWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {DashboardWidgetModel} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Component({
     selector: 'dashboard-grid',

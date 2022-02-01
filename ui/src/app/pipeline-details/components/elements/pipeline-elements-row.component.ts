@@ -18,7 +18,7 @@
 
 import {Component, Input, OnInit} from "@angular/core";
 import {PipelineElementUnion} from "../../../editor/model/editor.model";
-import {Pipeline} from "../../../core-model/gen/streampipes-model";
+import {Pipeline} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PipelineElementTypeUtils} from "../../../editor/utils/editor.utils";
 
 @Component({

@@ -20,13 +20,13 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, zip } from 'rxjs';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
-import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { TimeSelectionService } from '../../services/time-selection.service';
 
 @Component({

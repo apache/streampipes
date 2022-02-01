@@ -21,7 +21,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtTokenStorageService } from './jwt-token-storage.service';
-import { UserInfo } from '../core-model/gen/streampipes-model-client';
+import { UserInfo } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/services/login.service';

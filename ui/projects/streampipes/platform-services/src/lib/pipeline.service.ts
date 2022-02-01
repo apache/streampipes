@@ -16,25 +16,26 @@
  *
  */
 
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import {TimeSettings} from "../../dashboard/models/dashboard.model";
+@Injectable({
+  providedIn: 'root'
+})
+export class PipelineService {
 
-export class DateRange {
+  constructor(private http: HttpClient) { }
 
-    public startDate: Date;
-    public endDate: Date;
+  getPipelineCategories(): Observable<any[]> {
+    return this.http.get(`/streampipes-backend/api/v2/pipelinecategories`)
+        .pipe(map(response => {
+          console.log(response);
+          return (response as any[]);
+        }));
+  }
 
-    constructor(startDate?: Date, endDate?: Date) {
-        if (startDate && endDate) {
-            this.startDate = startDate;
-            this.endDate = endDate;
-        }
-    }
 
-    static fromTimeSettings(timeSettings: TimeSettings): DateRange {
-        let range = new DateRange();
-        range.startDate = new Date(timeSettings.startTime);
-        range.endDate = new Date(timeSettings.endTime);
-        return range;
-    }
+
 }

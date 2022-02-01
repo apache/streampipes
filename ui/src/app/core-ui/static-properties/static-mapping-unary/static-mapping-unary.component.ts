@@ -21,7 +21,7 @@ import {Validators} from '@angular/forms';
 import {StaticPropertyUtilService} from '../static-property-util.service';
 import {PropertySelectorService} from "../../../services/property-selector.service";
 import {StaticMappingComponent} from "../static-mapping/static-mapping";
-import {MappingPropertyUnary} from "../../../core-model/gen/streampipes-model";
+import {MappingPropertyUnary} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Component({
     selector: 'app-static-mapping-unary',

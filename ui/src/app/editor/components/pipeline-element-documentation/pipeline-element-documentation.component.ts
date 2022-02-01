@@ -17,7 +17,7 @@
  */
 
 import {Component, Input, OnInit} from "@angular/core";
-import {PipelineElementService} from "../../../platform-services/apis/pipeline-element.service";
+import {PipelineElementService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service";
 
 @Component({
   selector: 'pipeline-element-documentation',

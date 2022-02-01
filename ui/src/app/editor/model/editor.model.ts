@@ -21,7 +21,7 @@ import {
   DataSinkInvocation,
   SpDataSet,
   SpDataStream
-} from "../../core-model/gen/streampipes-model";
+} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {InjectionToken} from "@angular/core";
 import {EditorConstants} from "../constants/editor.constants";
 

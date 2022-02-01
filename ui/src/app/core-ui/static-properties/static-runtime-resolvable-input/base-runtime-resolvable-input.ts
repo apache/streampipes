@@ -25,7 +25,7 @@ import {
   RuntimeResolvableTreeInputStaticProperty,
   StaticProperty,
   StaticPropertyUnion
-} from '../../../core-model/gen/streampipes-model';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
 import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';

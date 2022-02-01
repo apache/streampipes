@@ -17,22 +17,22 @@
  */
 
 import { NgModule } from '@angular/core';
-import { PipelineElementService } from './apis/pipeline-element.service';
-import { PipelineService } from './apis/pipeline.service';
-import { PlatformServicesCommons } from './apis/commons.service';
-import { PipelineElementEndpointService } from './apis/pipeline-element-endpoint.service';
-import { FilesService } from './apis/files.service';
-import { MeasurementUnitsService } from './apis/measurement-units.service';
-import { PipelineElementTemplateService } from './apis/pipeline-element-template.service';
-import { PipelineMonitoringService } from './apis/pipeline-monitoring.service';
-import { SemanticTypesService } from './apis/semantic-types.service';
-import { PipelineCanvasMetadataService } from './apis/pipeline-canvas-metadata.service';
-import { PipelineTemplateService } from './apis/pipeline-template.service';
-import { UserService } from './apis/user.service';
-import { UserGroupService } from './apis/user-group.service';
-import { MailConfigService } from './apis/mail-config.service';
-import { PermissionsService } from './apis/permissions.service';
-import { GeneralConfigService } from './apis/general-config.service';
+import { PipelineElementService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service';
+import { PipelineService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+import { PlatformServicesCommons } from '../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+import { PipelineElementEndpointService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element-endpoint.service';
+import { FilesService } from '../../../projects/streampipes/platform-services/src/lib/apis/files.service';
+import { MeasurementUnitsService } from '../../../projects/streampipes/platform-services/src/lib/apis/measurement-units.service';
+import { PipelineElementTemplateService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element-template.service';
+import { PipelineMonitoringService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-monitoring.service';
+import { SemanticTypesService } from '../../../projects/streampipes/platform-services/src/lib/apis/semantic-types.service';
+import { PipelineCanvasMetadataService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-canvas-metadata.service';
+import { PipelineTemplateService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-template.service';
+import { UserService } from '../../../projects/streampipes/platform-services/src/lib/apis/user.service';
+import { UserGroupService } from '../../../projects/streampipes/platform-services/src/lib/apis/user-group.service';
+import { MailConfigService } from '../../../projects/streampipes/platform-services/src/lib/apis/mail-config.service';
+import { PermissionsService } from '../../../projects/streampipes/platform-services/src/lib/apis/permissions.service';
+import { GeneralConfigService } from '../../../projects/streampipes/platform-services/src/lib/apis/general-config.service';
 
 @NgModule({
   imports: [],

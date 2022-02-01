@@ -22,7 +22,7 @@ import {
   EventPropertyPrimitive,
   EventPropertyUnion,
   EventSchema
-} from '../../../../core-model/gen/streampipes-model';
+} from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { DataExplorerField, DataExplorerVisConfig, FieldProvider, SourceConfig } from '../../../models/dataview-dashboard.model';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';

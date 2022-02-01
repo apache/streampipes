@@ -18,14 +18,14 @@
 
 import {Component, Input, OnInit} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {Message, Pipeline, PipelineCanvasMetadata} from "../../../core-model/gen/streampipes-model";
+import {Message, Pipeline, PipelineCanvasMetadata} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {ObjectProvider} from "../../services/object-provider.service";
 import {EditorService} from "../../services/editor.service";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {PipelineService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service";
 import {ShepherdService} from "../../../services/tour/shepherd.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
-import {PipelineCanvasMetadataService} from "../../../platform-services/apis/pipeline-canvas-metadata.service";
+import {PipelineCanvasMetadataService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-canvas-metadata.service";
 
 @Component({
   selector: 'save-pipeline',

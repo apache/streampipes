@@ -24,8 +24,8 @@ import {
   DataSourceDescription,
   SpDataSet,
   SpDataStream
-} from '../core-model/gen/streampipes-model';
-import { PipelineElementService } from '../platform-services/apis/pipeline-element.service';
+} from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineElementService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service';
 import {
   PipelineElementConfig,
   PipelineElementIdentifier,

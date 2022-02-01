@@ -19,7 +19,7 @@
 import { EventEmitter } from '@angular/core';
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { DashboardItem, TimeSettings } from '../../../../dashboard/models/dashboard.model';
-import { DataExplorerWidgetModel } from '../../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
   removeWidgetCallback: EventEmitter<boolean>;

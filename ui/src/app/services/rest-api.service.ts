@@ -20,7 +20,7 @@
 
 
 import { Injectable } from '@angular/core';
-import { PlatformServicesCommons } from '../platform-services/apis/commons.service';
+import { PlatformServicesCommons } from '../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 

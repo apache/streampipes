@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Label } from '../../../../core-model/gen/streampipes-model';
+import { Label } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { LabelService } from '../../services/label.service';
 
 @Component({

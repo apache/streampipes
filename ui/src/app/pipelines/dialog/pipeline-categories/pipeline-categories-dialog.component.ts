@@ -17,8 +17,8 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Pipeline, PipelineCategory } from '../../../core-model/gen/streampipes-model';
-import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+import { Pipeline, PipelineCategory } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({

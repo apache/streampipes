@@ -22,7 +22,7 @@ import { Content, icon, LatLng, latLng, LatLngExpression, Map, marker, Marker, p
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { MapWidgetModel } from './model/map-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-map-widget',

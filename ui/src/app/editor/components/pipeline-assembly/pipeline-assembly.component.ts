@@ -39,14 +39,14 @@ import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.s
 import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditorService } from '../../services/editor.service';
-import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
 import { PipelineElementDraggedService } from '../../services/pipeline-element-dragged.service';
 import { PipelineComponent } from '../pipeline/pipeline.component';
-import { PipelineCanvasMetadata } from '../../../core-model/gen/streampipes-model';
+import { PipelineCanvasMetadata } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { forkJoin } from 'rxjs';
-import { PipelineCanvasMetadataService } from '../../../platform-services/apis/pipeline-canvas-metadata.service';
+import { PipelineCanvasMetadataService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-canvas-metadata.service';
 import { PipelineElementDiscoveryComponent } from '../../dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 
 

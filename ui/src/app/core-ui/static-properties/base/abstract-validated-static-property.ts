@@ -16,7 +16,7 @@
  *
  */
 
-import {StaticProperty} from "../../../core-model/gen/streampipes-model";
+import {StaticProperty} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {AbstractStaticPropertyRenderer} from "./abstract-static-property";
 import {FormControl, ValidatorFn} from "@angular/forms";
 import {Directive, OnDestroy} from "@angular/core";

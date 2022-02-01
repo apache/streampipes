@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormatDescription } from '../../../core-model/gen/streampipes-model';
+import { FormatDescription } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'sp-format-list',

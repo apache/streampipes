@@ -19,7 +19,7 @@
 import { Injectable } from "@angular/core";
 import { RestApi } from "../../services/rest-api.service";
 import { InvocablePipelineElementUnion, PipelineElementConfig } from "../model/editor.model";
-import { DataSinkInvocation, Pipeline } from "../../core-model/gen/streampipes-model";
+import { DataSinkInvocation, Pipeline } from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import { EditorService } from "./editor.service";
 import { JsplumbFactoryService } from "./jsplumb-factory.service";
 

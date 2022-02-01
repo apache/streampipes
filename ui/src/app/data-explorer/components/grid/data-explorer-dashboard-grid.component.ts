@@ -21,9 +21,9 @@ import { GridsterItemComponent, GridType } from 'angular-gridster2';
 import { GridsterInfo } from '../../../dashboard/models/gridster-info.model';
 import { IDataViewDashboardConfig } from '../../models/dataview-dashboard.model';
 import { ResizeService } from '../../services/resize.service';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Dashboard, TimeSettings } from '../../../dashboard/models/dashboard.model';
-import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-grid',

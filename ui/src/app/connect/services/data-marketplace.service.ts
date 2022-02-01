@@ -28,9 +28,9 @@ import {
   Message, SpDataStream, SpDataStreamUnion,
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription
-} from '../../core-model/gen/streampipes-model';
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Observable } from 'rxjs';
-import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 
 @Injectable()
 export class DataMarketplaceService {

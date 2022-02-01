@@ -33,7 +33,7 @@ import {
   TimestampTranfsformationRuleDescription,
   TransformationRuleDescriptionUnion,
   UnitTransformRuleDescription
-} from '../../core-model/gen/streampipes-model';
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Logger } from '../../shared/logger/default-log.service';
 import { TimestampTransformationRuleMode } from '../model/TimestampTransformationRuleMode';
 

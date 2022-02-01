@@ -19,7 +19,7 @@
 import {
   RuntimeResolvableAnyStaticProperty,
   RuntimeResolvableOneOfStaticProperty
-} from '../../../core-model/gen/streampipes-model';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Directive } from '@angular/core';
 import { BaseRuntimeResolvableInput } from './base-runtime-resolvable-input';
 

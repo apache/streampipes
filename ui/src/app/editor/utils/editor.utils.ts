@@ -27,7 +27,7 @@ import {
   DataSinkInvocation,
   SpDataSet,
   SpDataStream
-} from "../../core-model/gen/streampipes-model";
+} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 export class PipelineElementTypeUtils {
 

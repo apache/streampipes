@@ -1,6 +1,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@streampipes/platform-services": [
+        "dist/streampipes/platform-services"
+      ]
+    },
     "downlevelIteration": true,
     "importHelpers": true,
     "module": "es2020",

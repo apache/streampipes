@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
-import { EventPropertyUnion, EventSchema, SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { EventPropertyUnion, EventSchema, SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { ImageWidgetModel } from './model/image-widget.model';
 import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
 import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';

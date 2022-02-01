@@ -19,7 +19,7 @@
 import {JsplumbService} from "../../services/jsplumb.service";
 import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
 import {PipelineElementConfig} from "../../model/editor.model";
-import {DataProcessorInvocation} from "../../../core-model/gen/streampipes-model";
+import {DataProcessorInvocation} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {SafeCss} from "../../utils/style-sanitizer";
 
 @Component({

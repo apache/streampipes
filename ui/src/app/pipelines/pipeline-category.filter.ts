@@ -17,7 +17,7 @@
  */
 
 import {Pipe, PipeTransform} from "@angular/core";
-import {Pipeline} from "../core-model/gen/streampipes-model";
+import {Pipeline} from "../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Pipe({
 	name: 'pipelineInCategoryFilter',

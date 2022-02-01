@@ -20,7 +20,7 @@ import {Component, OnInit} from "@angular/core";
 import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
 import {StaticPropertyUtilService} from "../static-property-util.service";
 import {FormGroup, Validators} from "@angular/forms";
-import {ColorPickerStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {ColorPickerStaticProperty} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 
 @Component({

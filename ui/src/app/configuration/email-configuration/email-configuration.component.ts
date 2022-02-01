@@ -18,8 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { EmailConfig } from '../../platform-services/model/email-config.model';
-import { MailConfigService } from '../../platform-services/apis/mail-config.service';
+import { EmailConfig } from '../../../../projects/streampipes/platform-services/src/lib/model/email-config.model';
+import { MailConfigService } from '../../../../projects/streampipes/platform-services/src/lib/apis/mail-config.service';
 
 @Component({
   selector: 'sp-email-configuration',

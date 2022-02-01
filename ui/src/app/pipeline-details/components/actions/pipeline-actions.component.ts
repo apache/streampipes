@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
-import { Pipeline } from '../../../core-model/gen/streampipes-model';
+import { Pipeline } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../_enums/user-role.enum';

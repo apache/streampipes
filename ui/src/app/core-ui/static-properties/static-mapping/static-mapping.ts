@@ -25,7 +25,7 @@ import {
   EventPropertyPrimitive,
   EventPropertyUnion,
   MappingProperty
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
 import {Directive} from "@angular/core";
 import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";

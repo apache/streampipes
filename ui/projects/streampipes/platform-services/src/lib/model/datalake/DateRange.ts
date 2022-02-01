@@ -16,25 +16,29 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { PlatformServicesCommons } from './commons.service';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
-@Injectable()
-export class SemanticTypesService {
+export interface TimeSettings {
+    startTime: number;
+    endTime: number;
+    dynamicSelection: 15 | 60 | 1440 | 10080 | 43800 | 525600 | -1;
+}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
+export class DateRange {
 
-  }
+    public startDate: Date;
+    public endDate: Date;
 
-  getSemanticTypes(text: string): Observable<string[]> {
-    return this.http.get(this.platformServicesCommons.apiBasePath +
-        '/autocomplete/semantic-type?text=' + text).pipe(map(response => {
-      return response as string[];
-    }));
-  }
+    constructor(startDate?: Date, endDate?: Date) {
+        if (startDate && endDate) {
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+    }
 
+    static fromTimeSettings(timeSettings: TimeSettings): DateRange {
+        let range = new DateRange();
+        range.startDate = new Date(timeSettings.startTime);
+        range.endDate = new Date(timeSettings.endTime);
+        return range;
+    }
 }

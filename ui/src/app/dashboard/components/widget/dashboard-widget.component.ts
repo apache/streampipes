@@ -24,10 +24,10 @@ import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visu
 import {
   DashboardWidgetModel, Pipeline,
   VisualizablePipeline
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
-import {PipelineService} from "../../../platform-services/apis/pipeline.service";
+import {PipelineService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service";
 import {EditModeService} from "../../services/edit-mode.service";
 import {ReloadPipelineService} from "../../services/reload-pipeline.service";
 

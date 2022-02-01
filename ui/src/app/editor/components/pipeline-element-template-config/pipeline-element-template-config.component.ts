@@ -21,7 +21,7 @@ import {InvocablePipelineElementUnion} from "../../model/editor.model";
 import {
   PipelineElementTemplate,
   StaticPropertyUnion
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PipelineElementTemplateGenerator} from "./pipeline-element-template-generator";
 
 @Component({

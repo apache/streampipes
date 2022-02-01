@@ -23,7 +23,7 @@ import {
   Role,
   ServiceAccount,
   UserAccount
-} from '../../../core-model/gen/streampipes-model-client';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 import {
   AbstractControl,
   FormBuilder,
@@ -35,13 +35,13 @@ import {
 } from '@angular/forms';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { UserService } from '../../../platform-services/apis/user.service';
-import { UserGroupService } from '../../../platform-services/apis/user-group.service';
+import { UserService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/user.service';
+import { UserGroupService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/user-group.service';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
-import {MailConfigService} from "../../../platform-services/apis/mail-config.service";
+import {MailConfigService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/mail-config.service";
 
 @Component({
   selector: 'sp-edit-user-dialog',

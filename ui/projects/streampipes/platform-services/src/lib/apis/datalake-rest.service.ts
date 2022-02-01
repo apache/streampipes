@@ -19,11 +19,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DataLakeMeasure, PageResult, SpQueryResult } from '../../core-model/gen/streampipes-model';
+import { DataLakeMeasure, PageResult, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
-import { DatalakeQueryParameters } from '../../core-services/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameters } from '../../../../../../src/app/core-services/datalake/DatalakeQueryParameters';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DatalakeRestService {
   constructor(private http: HttpClient) {
   }

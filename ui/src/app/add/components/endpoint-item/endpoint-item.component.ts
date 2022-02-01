@@ -18,12 +18,12 @@
 
 import { Component, EventEmitter, Input, OnInit, Output, Sanitizer } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PipelineElementEndpointService } from '../../../platform-services/apis/pipeline-element-endpoint.service';
+import { PipelineElementEndpointService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element-endpoint.service';
 import { AddService } from '../../services/add.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ExtensionsServiceEndpointItem } from '../../../core-model/gen/streampipes-model-client';
+import { ExtensionsServiceEndpointItem } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 import { AppConstants } from '../../../services/app.constants';
-import { Pipeline } from '../../../core-model/gen/streampipes-model';
+import { Pipeline } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';

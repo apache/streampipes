@@ -24,7 +24,7 @@ import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
 import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
-import { ExtensionsServiceEndpointItem } from '../core-model/gen/streampipes-model-client';
+import { ExtensionsServiceEndpointItem } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 
 @Component({
     selector: 'add',

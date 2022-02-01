@@ -23,7 +23,7 @@ import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-ex
 import {NumberConfig} from "./number-config";
 import {ResizeService} from "../../../services/resize.service";
 import {DashboardService} from "../../../services/dashboard.service";
-import {EventPropertyPrimitive} from "../../../../core-model/gen/streampipes-model";
+import {EventPropertyPrimitive} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Component({
     selector: 'number-widget',

@@ -17,7 +17,7 @@
  */
 
 import {Tuple2} from "../../../../core-model/base/Tuple2";
-import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
+import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 export abstract class WidgetConfig {
 

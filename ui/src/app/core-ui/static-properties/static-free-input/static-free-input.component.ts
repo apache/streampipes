@@ -20,7 +20,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { StaticPropertyUtilService } from '../static-property-util.service';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { FreeTextStaticProperty } from '../../../core-model/gen/streampipes-model';
+import { FreeTextStaticProperty } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { XsService } from '../../../NS/xs.service';
 import { ValidateNumber, ValidateString, ValidateUrl } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';

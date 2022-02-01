@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { DistributionChartWidgetModel } from './model/distribution-chart-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { SpQueryResult } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({

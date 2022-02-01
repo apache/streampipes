@@ -19,7 +19,7 @@ import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
 import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
 import {WidgetConfig} from "../base/base-config";
 import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../core-model/gen/streampipes-model";
+import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 export class TrafficLightConfig extends WidgetConfig {
 

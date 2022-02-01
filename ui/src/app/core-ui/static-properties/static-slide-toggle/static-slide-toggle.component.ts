@@ -18,7 +18,7 @@
 
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { SlideToggleStaticProperty } from '../../../core-model/gen/streampipes-model';
+import { SlideToggleStaticProperty } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { Validators } from '@angular/forms';
 

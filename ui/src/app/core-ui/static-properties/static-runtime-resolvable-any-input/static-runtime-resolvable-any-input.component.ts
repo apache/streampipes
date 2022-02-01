@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { RuntimeResolvableAnyStaticProperty, StaticPropertyUnion } from '../../../core-model/gen/streampipes-model';
+import { RuntimeResolvableAnyStaticProperty, StaticPropertyUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 

@@ -18,7 +18,7 @@
 
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
-import { StaticPropertyAlternatives } from '../../../core-model/gen/streampipes-model';
+import { StaticPropertyAlternatives } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'app-static-alternatives',

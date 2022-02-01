@@ -17,10 +17,10 @@
  */
 
 import { Observable } from 'rxjs';
-import { RuntimeOptionsRequest, RuntimeOptionsResponse } from '../../../core-model/gen/streampipes-model';
+import { RuntimeOptionsRequest, RuntimeOptionsResponse } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { PlatformServicesCommons } from '../../../platform-services/apis/commons.service';
+import { PlatformServicesCommons } from '../../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 import { Injectable } from '@angular/core';
 
 @Injectable()

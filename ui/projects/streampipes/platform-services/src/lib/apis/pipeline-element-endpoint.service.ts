@@ -1,3 +1,8 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
+import { Observable } from 'rxjs';
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,32 +21,27 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { PlatformServicesCommons } from './commons.service';
-import { GeneralConfigModel } from '../model/general-config.model';
-
-@Injectable()
-export class GeneralConfigService {
+@Injectable({
+  providedIn: 'root'
+})
+export class PipelineElementEndpointService {
 
   constructor(private http: HttpClient,
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
-  getGeneralConfig(): Observable<GeneralConfigModel> {
-    return this.http
-        .get(this.generalConfigPath)
-        .pipe(map(response => response as GeneralConfigModel));
+  add(elementUri, ispublic): Observable<any> {
+    const payload = new HttpParams()
+        .set('uri', elementUri)
+        .set('publicElement', ispublic);
+    return this.http.post(this.platformServicesCommons.apiBasePath + '/element', payload);
   }
 
-  updateGeneralConfig(config: GeneralConfigModel): Observable<any> {
-    return this.http.put(this.generalConfigPath, config);
+  update(elementUri): Observable<any> {
+    return this.http.put(this.platformServicesCommons.apiBasePath + '/element/' + encodeURIComponent(elementUri), undefined);
   }
 
-  private get generalConfigPath() {
-    return this.platformServicesCommons.apiBasePath + '/admin/general-config';
+  del(elementUri): Observable<any> {
+    return this.http.delete(this.platformServicesCommons.apiBasePath + '/element/' + encodeURIComponent(elementUri));
   }
-
 }

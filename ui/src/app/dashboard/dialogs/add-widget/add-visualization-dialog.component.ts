@@ -32,8 +32,8 @@ import {
     MappingPropertyNary,
     MappingPropertyUnary,
     VisualizablePipeline
-} from '../../../core-model/gen/streampipes-model';
-import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 

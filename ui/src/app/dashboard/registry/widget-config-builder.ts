@@ -23,7 +23,7 @@ import {
     ColorPickerStaticProperty,
     DashboardWidgetSettings,
     FreeTextStaticProperty, OneOfStaticProperty, StaticProperty, Option
-} from "../../core-model/gen/streampipes-model";
+} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 export class WidgetConfigBuilder {
 

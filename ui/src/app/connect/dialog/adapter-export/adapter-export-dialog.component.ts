@@ -17,7 +17,7 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {AdapterDescriptionUnion} from "../../../core-model/gen/streampipes-model";
+import {AdapterDescriptionUnion} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
 
 @Component({

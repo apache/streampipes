@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 
 @Component({

@@ -17,10 +17,10 @@
  */
 
 import { Component } from '@angular/core';
-import { PipelineService } from '../../../platform-services/apis/pipeline.service';
+import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { forkJoin } from 'rxjs';
-import { Pipeline } from '../../../core-model/gen/streampipes-model';
+import { Pipeline } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
     selector: 'sp-import-pipeline-dialog',

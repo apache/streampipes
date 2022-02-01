@@ -22,7 +22,7 @@ import {
     EventSchema, FreeTextStaticProperty, MappingPropertyNary,
     MappingPropertyUnary, OneOfStaticProperty,
     StaticPropertyUnion
-} from "../../../core-model/gen/streampipes-model";
+} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 export class StaticPropertyExtractor {
 

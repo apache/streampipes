@@ -26,9 +26,9 @@ import {
   PipelineOperationStatus,
   SpDataStream,
   SpecificAdapterSetDescription
-} from '../../../core-model/gen/streampipes-model';
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { PipelineTemplateService } from '../../../platform-services/apis/pipeline-template.service';
+import { PipelineTemplateService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-template.service';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 
 

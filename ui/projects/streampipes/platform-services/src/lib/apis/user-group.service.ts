@@ -21,9 +21,11 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
-import { Group } from '../../core-model/gen/streampipes-model-client';
+import { Group } from '../model/gen/streampipes-model-client';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserGroupService {
 
   constructor(private http: HttpClient,

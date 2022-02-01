@@ -17,23 +17,33 @@
  */
 
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { PlatformServicesCommons } from './commons.service';
+import { GeneralConfigModel } from '../model/general-config.model';
 
-@Injectable()
-export class PlatformServicesCommons {
+@Injectable({
+  providedIn: 'root'
+})
+export class GeneralConfigService {
 
-  constructor() { }
-
-  get basePath(): string {
-    return '/streampipes-backend';
+  constructor(private http: HttpClient,
+              private platformServicesCommons: PlatformServicesCommons) {
   }
 
-  get apiBasePath() {
-    return this.basePath + '/api/v2';
+  getGeneralConfig(): Observable<GeneralConfigModel> {
+    return this.http
+        .get(this.generalConfigPath)
+        .pipe(map(response => response as GeneralConfigModel));
   }
 
-  get unauthenticatedBasePath() {
-    return this.basePath + '/api/v2';
+  updateGeneralConfig(config: GeneralConfigModel): Observable<any> {
+    return this.http.put(this.generalConfigPath, config);
+  }
+
+  private get generalConfigPath() {
+    return this.platformServicesCommons.apiBasePath + '/admin/general-config';
   }
 
 }
-

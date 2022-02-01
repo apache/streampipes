@@ -18,7 +18,7 @@
 
 import {Component, Input} from "@angular/core";
 import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {MatchingResultMessage} from "../../../core-model/gen/streampipes-model-client";
+import {MatchingResultMessage} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client";
 
 @Component({
   selector: 'matching-error',

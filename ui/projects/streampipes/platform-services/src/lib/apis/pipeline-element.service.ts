@@ -24,11 +24,13 @@ import {
   DataSinkInvocation,
   SpDataSet,
   SpDataStream
-} from '../../core-model/gen/streampipes-model';
+} from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PipelineElementService {
 
   constructor(private http: HttpClient,

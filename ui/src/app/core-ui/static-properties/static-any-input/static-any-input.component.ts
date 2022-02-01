@@ -18,7 +18,7 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {AnyStaticProperty} from "../../../core-model/gen/streampipes-model";
+import {AnyStaticProperty} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Component({
   selector: 'app-static-any-input',

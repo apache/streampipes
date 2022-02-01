@@ -63,6 +63,7 @@ module.exports = {
                 "@angular/common": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
                 "@angular/common/http": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
                 "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
+                //"@streampipes/platform-services": {singleton: true, strictVersion: true, requiredVersion: 'auto', eager: true},
 
                 ...sharedMappings.getDescriptors()
             })

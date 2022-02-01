@@ -29,9 +29,9 @@ import {
   PipelinePreviewModel,
   SpDataSet,
   SpDataStream
-} from '../../core-model/gen/streampipes-model';
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { Observable, Subject } from 'rxjs';
-import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 import { PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
 import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';

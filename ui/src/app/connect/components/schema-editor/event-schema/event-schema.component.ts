@@ -29,7 +29,7 @@ import {
   EventSchema,
   GuessSchema,
   Notification
-} from '../../../../core-model/gen/streampipes-model';
+} from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
 

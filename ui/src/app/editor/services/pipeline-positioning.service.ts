@@ -28,7 +28,7 @@ import {
     PipelineCanvasMetadata,
     PipelineElementMetadata,
     SpDataStream
-} from "../../core-model/gen/streampipes-model";
+} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {JsplumbFactoryService} from "./jsplumb-factory.service";
 import {ObjectProvider} from "./object-provider.service";
 

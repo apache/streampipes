@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { CollectionStaticProperty, StaticPropertyUnion } from '../../../core-model/gen/streampipes-model';
+import { CollectionStaticProperty, StaticPropertyUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 
 

@@ -21,10 +21,12 @@ import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FileMetadata } from '../../core-model/gen/streampipes-model';
+import { FileMetadata } from '../model/gen/streampipes-model';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FilesService {
 
   constructor(private http: HttpClient,

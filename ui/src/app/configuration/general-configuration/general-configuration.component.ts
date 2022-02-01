@@ -18,11 +18,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { GeneralConfigService } from '../../platform-services/apis/general-config.service';
-import { GeneralConfigModel } from '../../platform-services/model/general-config.model';
-import { MailConfigService } from '../../platform-services/apis/mail-config.service';
+import { GeneralConfigService } from '../../../../projects/streampipes/platform-services/src/lib/apis/general-config.service';
+import { GeneralConfigModel } from '../../../../projects/streampipes/platform-services/src/lib/model/general-config.model';
+import { MailConfigService } from '../../../../projects/streampipes/platform-services/src/lib/apis/mail-config.service';
 import { zip } from 'rxjs';
-import { EmailConfig } from '../../platform-services/model/email-config.model';
+import { EmailConfig } from '../../../../projects/streampipes/platform-services/src/lib/model/email-config.model';
 import { AvailableRolesService } from '../../services/available-roles.service';
 import { RoleDescription } from '../../_models/auth.model';
 import { UserRole } from '../../_enums/user-role.enum';

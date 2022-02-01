@@ -32,7 +32,7 @@ import {
     SpDataSet,
     SpDataStream,
     SpDataStreamUnion
-} from "../../core-model/gen/streampipes-model";
+} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PipelineElementDraggedService} from "./pipeline-element-dragged.service";
 import {JsplumbEndpointService} from "./jsplumb-endpoint.service";
 import {JsplumbFactoryService} from "./jsplumb-factory.service";

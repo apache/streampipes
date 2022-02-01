@@ -32,7 +32,7 @@ import {
     DashboardWidgetSettings,
     EventSchema,
     VisualizablePipeline
-} from '../../core-model/gen/streampipes-model';
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import {WordCloudConfig} from "../components/widgets/wordcloud/wordcloud-config";
 import {StatusWidgetConfig} from "../components/widgets/status/status-config";
 import {BarRaceConfig} from "../components/widgets/bar-race/bar-race-config";

@@ -25,8 +25,8 @@ import { Subscription } from 'rxjs';
 import { RxStompService } from '@stomp/ng2-stompjs';
 import { NotificationUtils } from './utils/notifications.utils';
 import { NotificationCountService } from '../services/notification-count-service';
-import { FreeTextStaticProperty, Pipeline } from '../core-model/gen/streampipes-model';
-import { PipelineService } from '../platform-services/apis/pipeline.service';
+import { FreeTextStaticProperty, Pipeline } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({

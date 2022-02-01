@@ -27,7 +27,7 @@ import {
     EventPropertyPrimitive,
     EventPropertyUnion,
     EventSchema
-} from '../../../../core-model/gen/streampipes-model';
+} from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { EditEventPropertyComponent } from '../../../dialog/edit-event-property/edit-event-property.component';
 
 @Component({

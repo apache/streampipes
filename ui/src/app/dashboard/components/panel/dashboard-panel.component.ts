@@ -22,7 +22,7 @@ import {forkJoin, Observable, Subscription} from "rxjs";
 import {AddVisualizationDialogComponent} from "../../dialogs/add-widget/add-visualization-dialog.component";
 import {DashboardService} from "../../services/dashboard.service";
 import {RefreshDashboardService} from "../../services/refresh-dashboard.service";
-import {DashboardWidgetModel} from "../../../core-model/gen/streampipes-model";
+import {DashboardWidgetModel} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 import {PanelType} from "../../../core-ui/dialog/base-dialog/base-dialog.model";
 import {DialogService} from "../../../core-ui/dialog/base-dialog/base-dialog.service";
 

@@ -18,35 +18,25 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { PlatformServicesCommons } from './commons.service';
-import { Group } from '../../core-model/gen/streampipes-model-client';
-import { EmailConfig } from '../model/email-config.model';
 
-@Injectable()
-export class MailConfigService {
+@Injectable({
+  providedIn: 'root'
+})
+export class SemanticTypesService {
 
   constructor(private http: HttpClient,
               private platformServicesCommons: PlatformServicesCommons) {
+
   }
 
-  getMailConfig(): Observable<EmailConfig> {
-    return this.http
-        .get(this.mailConfigPath)
-        .pipe(map(response => response as EmailConfig));
-  }
-
-  updateMailConfig(config: EmailConfig): Observable<any> {
-    return this.http.put(this.mailConfigPath, config);
-  }
-
-  sendTestMail(config: EmailConfig) {
-    return this.http.post(`${this.mailConfigPath}/test`, config);
-  }
-
-  private get mailConfigPath() {
-    return this.platformServicesCommons.apiBasePath + '/admin/mail-config';
+  getSemanticTypes(text: string): Observable<string[]> {
+    return this.http.get(this.platformServicesCommons.apiBasePath +
+        '/autocomplete/semantic-type?text=' + text).pipe(map(response => {
+      return response as string[];
+    }));
   }
 
 }

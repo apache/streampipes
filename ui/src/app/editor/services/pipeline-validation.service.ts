@@ -20,7 +20,7 @@ import * as dagre from 'dagre';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { Injectable } from '@angular/core';
 import { PipelineElementConfig } from '../model/editor.model';
-import { DataProcessorInvocation, DataSinkInvocation } from '../../core-model/gen/streampipes-model';
+import { DataProcessorInvocation, DataSinkInvocation } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 

@@ -17,7 +17,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {EventPropertyNested, EventPropertyUnion} from "../core-model/gen/streampipes-model";
+import {EventPropertyNested, EventPropertyUnion} from "../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
 
 @Injectable()
 export class PropertySelectorService {

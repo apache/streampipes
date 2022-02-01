@@ -19,14 +19,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SharedDatalakeRestService } from '../../core-services/shared/shared-dashboard.service';
-import { DataExplorerWidgetModel, DataLakeMeasure } from '../../core-model/gen/streampipes-model';
-import { Dashboard } from '../../dashboard/models/dashboard.model';
+import { SharedDatalakeRestService } from '../../../../../../src/app/core-services/shared/shared-dashboard.service';
+import { Dashboard } from '../../../../../../src/app/dashboard/models/dashboard.model';
 import { Injectable } from '@angular/core';
 import { DatalakeRestService } from './datalake-rest.service';
+import { DataExplorerWidgetModel, DataLakeMeasure } from '../model/gen/streampipes-model';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DataViewDataExplorerService {
 
   localDashboards: Dashboard[] = [];

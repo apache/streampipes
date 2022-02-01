@@ -16,25 +16,38 @@
  *
  */
 
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { PipelineMonitoringInfo } from "../../core-model/gen/streampipes-model";
-import { PlatformServicesCommons } from "./commons.service";
-import { map } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { PlatformServicesCommons } from './commons.service';
+import { EmailConfig } from '../model/email-config.model';
 
-@Injectable()
-export class PipelineMonitoringService {
+@Injectable({
+  providedIn: 'root'
+})
+export class MailConfigService {
 
   constructor(private http: HttpClient,
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
-  getPipelineMonitoringInfo(pipelineId: string): Observable<PipelineMonitoringInfo> {
-    return this.http.get(this.platformServicesCommons.apiBasePath
-        + '/pipeline-monitoring/'
-        + pipelineId)
-        .pipe(map(response => PipelineMonitoringInfo.fromData(response as any)));
+  getMailConfig(): Observable<EmailConfig> {
+    return this.http
+        .get(this.mailConfigPath)
+        .pipe(map(response => response as EmailConfig));
+  }
+
+  updateMailConfig(config: EmailConfig): Observable<any> {
+    return this.http.put(this.mailConfigPath, config);
+  }
+
+  sendTestMail(config: EmailConfig) {
+    return this.http.post(`${this.mailConfigPath}/test`, config);
+  }
+
+  private get mailConfigPath() {
+    return this.platformServicesCommons.apiBasePath + '/admin/mail-config';
   }
 
 }

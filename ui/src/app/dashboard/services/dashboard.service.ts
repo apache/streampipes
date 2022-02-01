@@ -26,8 +26,8 @@ import {
   DashboardWidgetModel,
   Pipeline,
   VisualizablePipeline
-} from '../../core-model/gen/streampipes-model';
-import { PlatformServicesCommons } from '../../platform-services/apis/commons.service';
+} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 
 @Injectable()
 export class DashboardService {

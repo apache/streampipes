@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataViewDataExplorerService } from '../platform-services/apis/data-view-data-explorer.service';
+import { DataViewDataExplorerService } from '../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
 import { Dashboard } from '../dashboard/models/dashboard.model';

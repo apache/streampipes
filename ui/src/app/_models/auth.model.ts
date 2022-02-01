@@ -16,7 +16,7 @@
  *
  */
 
-import { Privilege, Role } from '../core-model/gen/streampipes-model-client';
+import { Privilege, Role } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 import { UserRole } from '../_enums/user-role.enum';
 
 export type RoleModel = Privilege | Role;
