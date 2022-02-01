@@ -15,19 +15,18 @@
  * limitations under the License.
  */
 
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ImageClassification {
 
   private classes: string[];
-  public saved: boolean = true;
+  public saved = true;
   private src;
 
   newImage(src) {
     this.saved = true;
     this.src = src;
-    //TODO get class from backend
     this.classes = [];
   }
 
@@ -42,11 +41,10 @@ export class ImageClassification {
 
   removeClass(clazz) {
     this.saved = false;
-    this.classes = this.classes.filter(c => c != clazz);
+    this.classes = this.classes.filter(c => c !== clazz);
   }
 
   save(): boolean {
-    //todo: save  in backend
     this.saved = true;
     return true;
   }

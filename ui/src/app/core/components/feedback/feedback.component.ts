@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from "@angular/core";
-import {AppConstants} from "../../../services/app.constants";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AppConstants } from '../../../services/app.constants';
 
 @Component({
     selector: 'feedback',
@@ -30,12 +30,12 @@ export class FeedbackComponent implements OnInit {
 
     feedback: any = {};
 
-    sendingFeedback: boolean = false;
-    sendingFeedbackFinished: boolean = false;
+    sendingFeedback = false;
+    sendingFeedbackFinished = false;
 
     // deactivate direct feedback for Apache transition
-    feedbackUrl = "";
-    debugFeedbackUrl = "";
+    feedbackUrl = '';
+    debugFeedbackUrl = '';
 
     targetEmail: string;
 
@@ -54,9 +54,9 @@ export class FeedbackComponent implements OnInit {
         this.sendingFeedbackFinished = false;
     }
 
-    sendMail(){
+    sendMail() {
         this.sendingFeedback = true;
-        window.open("mailto:"+ this.targetEmail + "?subject=" +"[USER-FEEDBACK]" +"&body=" +this.feedback.feedbackText, "_self");
+        window.open('mailto:' + this.targetEmail + '?subject=' + '[USER-FEEDBACK]' + '&body=' + this.feedback.feedbackText, '_self');
         this.sendingFeedbackFinished = true;
-    };
+    }
 }

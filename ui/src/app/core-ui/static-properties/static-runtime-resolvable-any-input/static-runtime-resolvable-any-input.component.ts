@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { RuntimeResolvableAnyStaticProperty, StaticPropertyUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { RuntimeResolvableAnyStaticProperty, StaticPropertyUnion } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
 
@@ -26,7 +26,9 @@ import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvabl
     templateUrl: './static-runtime-resolvable-any-input.component.html',
     styleUrls: ['./static-runtime-resolvable-any-input.component.css']
 })
-export class StaticRuntimeResolvableAnyInputComponent extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableAnyStaticProperty> implements OnInit {
+export class StaticRuntimeResolvableAnyInputComponent
+    extends BaseRuntimeResolvableSelectionInput<RuntimeResolvableAnyStaticProperty>
+    implements OnInit {
 
     constructor(runtimeResolvableService: RuntimeResolvableService) {
         super(runtimeResolvableService);

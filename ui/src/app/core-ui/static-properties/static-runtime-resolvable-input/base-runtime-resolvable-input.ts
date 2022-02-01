@@ -25,14 +25,16 @@ import {
   RuntimeResolvableTreeInputStaticProperty,
   StaticProperty,
   StaticPropertyUnion
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
 import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 
 @Directive()
-export abstract class BaseRuntimeResolvableInput<T extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty | RuntimeResolvableTreeInputStaticProperty>
+// tslint:disable-next-line:directive-class-suffix
+export abstract class BaseRuntimeResolvableInput<T
+    extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty | RuntimeResolvableTreeInputStaticProperty>
   extends AbstractStaticPropertyRenderer<T>
   implements OnChanges {
 

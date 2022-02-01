@@ -73,9 +73,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ConfigureLabelsComponent } from './labels/components/configure-labels/configure-labels.component';
 import { LabelListItemComponent } from './labels/components/label-list-item/label-list-item.component';
-import { StatusWidgetComponent } from './widget/status/status-widget.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { BarchartWidgetComponent } from './widget/barchart/barchart-widget.component';
 import { ErrorHintComponent } from './error-hint/error-hint.component';
 import { AddToCollectionComponent } from './static-properties/static-collection/add-to-collection/add-to-collection.component';
 import { PipelineStartedStatusComponent } from './pipeline/pipeline-started-status/pipeline-started-status.component';
@@ -84,7 +82,10 @@ import { ObjectPermissionDialogComponent } from './object-permission-dialog/obje
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
-import { MatTreeModule } from "@angular/material/tree";
+import { MatTreeModule } from '@angular/material/tree';
+import { PlatformServicesModule } from '@streampipes/platform-services';
+import { BarchartWidgetComponent } from '../pipeline-details/components/monitoring/widget/barchart/barchart-widget.component';
+import { StatusWidgetComponent } from '../pipeline-details/components/monitoring/widget/status/status-widget.component';
 
 @NgModule({
   imports: [
@@ -107,13 +108,13 @@ import { MatTreeModule } from "@angular/material/tree";
     MatSlideToggleModule,
     MatChipsModule,
     MatTreeModule,
+    PlatformServicesModule,
     PortalModule,
     OverlayModule,
     QuillModule.forRoot(),
     MatTreeModule
   ],
   declarations: [
-    BarchartWidgetComponent,
     ConfigureLabelsComponent,
     ConfirmDialogComponent,
     DisplayRecommendedPipe,
@@ -145,11 +146,10 @@ import { MatTreeModule } from "@angular/material/tree";
     StaticRuntimeResolvableOneOfInputComponent,
     StaticRuntimeResolvableTreeInputComponent,
     StaticSlideToggleComponent,
-    StatusWidgetComponent,
     LabelListItemComponent,
     ErrorHintComponent,
     AddToCollectionComponent,
-    PipelineStartedStatusComponent
+    PipelineStartedStatusComponent,
   ],
   providers: [
     MatDatepickerModule,
@@ -189,11 +189,10 @@ import { MatTreeModule } from "@angular/material/tree";
     StaticRuntimeResolvableOneOfInputComponent,
     StaticSlideToggleComponent,
     ImageViewerComponent,
-    StatusWidgetComponent,
-    BarchartWidgetComponent,
     ErrorHintComponent,
     PipelineStartedStatusComponent,
-    SplitSectionComponent
+    SplitSectionComponent,
+
   ]
 })
 export class CoreUiModule {

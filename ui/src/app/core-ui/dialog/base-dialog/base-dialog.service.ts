@@ -16,20 +16,20 @@
  *
  */
 
-import {ComponentType, Overlay, OverlayRef} from "@angular/cdk/overlay";
-import {ComponentRef, Injectable, Injector} from "@angular/core";
-import {DialogRef} from "./dialog-ref";
-import {ComponentPortal, PortalInjector} from "@angular/cdk/portal";
-import {BaseDialogComponent} from "./base-dialog.component";
-import {BaseDialogComponentUnion, DialogConfig, PanelType} from "./base-dialog.model";
-import {PanelDialogComponent} from "../panel-dialog/panel-dialog.component";
-import {StandardDialogComponent} from "../standard-dialog/standard-dialog.component";
-import {BaseDialogConfig} from "./base-dialog.config";
-import {PanelDialogConfig} from "../panel-dialog/panel-dialog.config";
-import {StandardDialogConfig} from "../standard-dialog/standard-dialog.config";
+import { ComponentType, Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentRef, Injectable, Injector } from '@angular/core';
+import { DialogRef } from './dialog-ref';
+import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
+import { BaseDialogComponent } from './base-dialog.component';
+import { BaseDialogComponentUnion, DialogConfig, PanelType } from './base-dialog.model';
+import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
+import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
+import { BaseDialogConfig } from './base-dialog.config';
+import { PanelDialogConfig } from '../panel-dialog/panel-dialog.config';
+import { StandardDialogConfig } from '../standard-dialog/standard-dialog.config';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class DialogService {
 
@@ -39,7 +39,7 @@ export class DialogService {
 
   public open<T>(component: ComponentType<T>,
                  config?: DialogConfig): DialogRef<T> {
-    config = config || {width: "60vw", title: "", panelType: PanelType.SLIDE_IN_PANEL};
+    config = config || {width: '60vw', title: '', panelType: PanelType.SLIDE_IN_PANEL};
 
     const positionStrategy = this.getPositionStrategy(config.panelType);
     const panelConfig: BaseDialogConfig = this.getConfig(config.panelType);
@@ -59,7 +59,7 @@ export class DialogService {
     if (config.data) {
       Object.keys(config.data).forEach(key => {
         dialogRef.componentInstance[key] = config.data[key];
-      })
+      });
     }
 
     this.applyDialogProperties(panelDialogContainerRef, overlay, config);
@@ -77,7 +77,7 @@ export class DialogService {
                                 overlayRef: OverlayRef,
                                 config: DialogConfig) {
     panelDialogComponentRef.instance.containerEvent.subscribe(e => {
-      if (e.key === "CLOSE") {
+      if (e.key === 'CLOSE') {
         overlayRef.dispose();
       }
     });
@@ -88,7 +88,7 @@ export class DialogService {
 
   getPositionStrategy(panelType: PanelType) {
     return this.getConfig(panelType).getPosition(this.overlay);
-  };
+  }
 
   getPanel(panelType: PanelType): ComponentType<BaseDialogComponentUnion> {
     return panelType == PanelType.SLIDE_IN_PANEL ? PanelDialogComponent : StandardDialogComponent;

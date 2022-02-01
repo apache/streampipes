@@ -17,7 +17,7 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { EventPropertyUnion } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { EventPropertyUnion } from '@streampipes/platform-services';
 
 @Pipe({name: 'displayRecommendedPipe'})
 export class DisplayRecommendedPipe implements PipeTransform {

@@ -16,7 +16,7 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   AnyStaticProperty,
   CollectionStaticProperty,
@@ -34,107 +34,95 @@ import {
   StaticPropertyAlternative,
   StaticPropertyAlternatives,
   StaticPropertyGroup
-} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@streampipes/platform-services';
 
 @Injectable()
-export class StaticPropertyUtilService{
+export class StaticPropertyUtilService {
 
     public clone(val: StaticProperty) {
         let clone;
-        let id = 'urn:streampipes.org:spi::' + this.generateID(6);
+        const id = 'urn:streampipes.org:spi::' + this.generateID(6);
         if (val instanceof FreeTextStaticProperty) {
             clone = new FreeTextStaticProperty();
             clone.elementId = id;
             clone.value = val.value;
             clone.requiredDomainProperty = val.requiredDomainProperty;
-        }
-        else if (val instanceof FileStaticProperty) {
+        } else if (val instanceof FileStaticProperty) {
             clone = new FileStaticProperty();
             clone.elementId = id;
             clone.endpointUrl = val.endpointUrl;
             clone.locationPath = val.locationPath;
-        }
-        else if (val instanceof MappingPropertyUnary) {
+        } else if (val instanceof MappingPropertyUnary) {
             clone = new MappingPropertyUnary();
             clone.elementId = id;
             clone.requirementSelector = val.requirementSelector;
             clone.mapsFromOptions = val.mapsFromOptions;
             clone.propertyScope = val.propertyScope;
             clone.selectedProperty = val.selectedProperty;
-        }
-        else if (val instanceof MappingPropertyNary) {
+        } else if (val instanceof MappingPropertyNary) {
             clone = new MappingPropertyNary();
             clone.elementId = id;
             clone.requirementSelector = val.requirementSelector;
             clone.mapsFromOptions = val.mapsFromOptions;
             clone.propertyScope = val.propertyScope;
             clone.selectedProperties = val.selectedProperties;
-        }
-        else if (val instanceof SecretStaticProperty) {
+        } else if (val instanceof SecretStaticProperty) {
             clone = new SecretStaticProperty();
             clone.elementId = id;
             clone.value = val.value;
             clone.encrypted = val.encrypted;
-        }
-        else if (val instanceof ColorPickerStaticProperty) {
+        } else if (val instanceof ColorPickerStaticProperty) {
             clone = new ColorPickerStaticProperty();
             clone.id = id;
             clone.selectedProperty = val.selectedColor;
-        }
-        else if (val instanceof StaticPropertyGroup) {
+        } else if (val instanceof StaticPropertyGroup) {
             clone = new StaticPropertyGroup();
             clone.elementId = id;
             clone.staticProperties = val.staticProperties.map(elem => this.clone(elem));
             clone.showLabel = val.showLabel;
             clone.horizontalRendering = val.horizontalRendering;
-          }
-        else if (val instanceof StaticPropertyAlternatives) {
+          } else if (val instanceof StaticPropertyAlternatives) {
             clone = new StaticPropertyAlternatives();
             clone.elementId = id;
             clone.alternatives = val.alternatives.map(elem => this.clone(elem));
-        }
-        else if (val instanceof StaticPropertyAlternative) {
+        } else if (val instanceof StaticPropertyAlternative) {
             clone = new StaticPropertyAlternative();
             clone.elementId = id;
             clone.selected = val.selected;
             clone.staticProperty = this.clone(val.staticProperty);
-        }
-        else if (val instanceof CollectionStaticProperty) {
+        } else if (val instanceof CollectionStaticProperty) {
             clone = new CollectionStaticProperty();
             clone.elementId = id;
             clone.staticPropertyTemplate = this.clone(val.staticPropertyTemplate);
             clone.members = val.members.map(elem => this.clone(elem));
             clone.memberType = val.memberType;
-        }
-        //SelectionStaticProperty
-        else if (val instanceof RuntimeResolvableAnyStaticProperty ||  val instanceof RuntimeResolvableOneOfStaticProperty){
+        } else if (val instanceof RuntimeResolvableAnyStaticProperty ||  val instanceof RuntimeResolvableOneOfStaticProperty) {
             val instanceof RuntimeResolvableAnyStaticProperty ? clone = new RuntimeResolvableAnyStaticProperty() :
               clone = new RuntimeResolvableOneOfStaticProperty();
 
             clone.elementId = id;
             clone.dependsOn = val.dependsOn;
-            //clone.value = val.value;
-            //clone.requiredDomainProperty = val.requiredDomainProperty;
+            // clone.value = val.value;
+            // clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));
             clone.horizontalRendering = val.horizontalRendering;
-        }
-        else if (val instanceof AnyStaticProperty || val instanceof OneOfStaticProperty){
+        } else if (val instanceof AnyStaticProperty || val instanceof OneOfStaticProperty) {
             val instanceof AnyStaticProperty ? clone = new AnyStaticProperty() : clone = new OneOfStaticProperty();
 
             clone.elementId = id;
-            //clone.value = val.value;
-            //clone.requiredDomainProperty = val.requiredDomainProperty;
+            // clone.value = val.value;
+            // clone.requiredDomainProperty = val.requiredDomainProperty;
             clone.options = val.options.map(option => this.cloneOption(option));
             clone.horizontalRendering = val.horizontalRendering;
         }
         clone = this.copyStaticPropertyProperty(val, clone);
-        clone["@class"] = val["@class"];
+        clone['@class'] = val['@class'];
         return clone;
     }
 
     private copyStaticPropertyProperty(src: StaticProperty, dst: StaticProperty): StaticProperty {
         dst.label = src.label;
-        //dst.elementName = src.elementName;
+        // dst.elementName = src.elementName;
         dst.description = src.description;
         dst.internalName = src.internalName;
         dst.index = src.index;
@@ -142,10 +130,10 @@ export class StaticPropertyUtilService{
     }
 
     private cloneOption(val: Option) {
-        let clone = new Option();
+        const clone = new Option();
         clone['@class']  = 'org.apache.streampipes.model.staticproperty.Option';
         clone.elementId = 'urn:streampipes.org:spi::' + this.generateID(6);
-        //clone.elementName = val.elementName;
+        // clone.elementName = val.elementName;
         clone.name = val.name;
         clone.internalName = val.internalName;
         clone.selected = val.selected;
@@ -153,26 +141,26 @@ export class StaticPropertyUtilService{
     }
 
     private generateID(length): string {
-        let chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        var result = '';
-        for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let result = '';
+        for (let i = length; i > 0; --i) { result += chars[Math.round(Math.random() * (chars.length - 1))]; }
         return result;
     }
 
 
     public asFreeTextStaticProperty(val: StaticProperty): FreeTextStaticProperty {
-        return <FreeTextStaticProperty> val;
+        return val as FreeTextStaticProperty;
     }
 
     public asColorPickerStaticProperty(val: StaticProperty): ColorPickerStaticProperty {
-        return <ColorPickerStaticProperty> val;
+        return val as ColorPickerStaticProperty;
     }
 
     public asSecretStaticProperty(val: StaticProperty): SecretStaticProperty {
-        return <SecretStaticProperty> val;
+        return val as SecretStaticProperty;
     }
 
     public asCollectionProperty(val: StaticProperty): CollectionStaticProperty {
-        return <CollectionStaticProperty> val;
+        return val as CollectionStaticProperty;
     }
 }

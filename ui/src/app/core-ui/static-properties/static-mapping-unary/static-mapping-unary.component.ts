@@ -16,12 +16,10 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Validators} from '@angular/forms';
-import {StaticPropertyUtilService} from '../static-property-util.service';
-import {PropertySelectorService} from "../../../services/property-selector.service";
-import {StaticMappingComponent} from "../static-mapping/static-mapping";
-import {MappingPropertyUnary} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { StaticMappingComponent } from '../static-mapping/static-mapping';
+import { MappingPropertyUnary } from '@streampipes/platform-services';
 
 @Component({
     selector: 'app-static-mapping-unary',
@@ -30,9 +28,9 @@ import {MappingPropertyUnary} from "../../../../../projects/streampipes/platform
 })
 export class StaticMappingUnaryComponent extends StaticMappingComponent<MappingPropertyUnary> implements OnInit {
 
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    constructor(){
+    constructor() {
         super();
     }
 

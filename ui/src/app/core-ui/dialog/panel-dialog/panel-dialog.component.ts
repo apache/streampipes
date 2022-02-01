@@ -24,12 +24,12 @@ import {
   OnInit,
   Output,
   ViewEncapsulation
-} from "@angular/core";
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {BaseDialogComponent} from "../base-dialog/base-dialog.component";
+} from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 
 @Component({
-  selector: "app-dialog-container",
+  selector: 'app-dialog-container',
   templateUrl: './panel-dialog.component.html',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./panel-dialog.component.scss'],
@@ -48,26 +48,26 @@ import {BaseDialogComponent} from "../base-dialog/base-dialog.component";
 })
 export class PanelDialogComponent<T> extends BaseDialogComponent<T> implements OnInit {
 
-  @HostBinding('@flyInOut') slideDown = 'in';
-
-  @HostListener('@flyInOut.done', ['$event']) startDrawerHandler(event: any): void {
-    if (event.toState === "out") {
-      this.containerEvent.emit({key: "CLOSE"});
-    }
+  constructor() {
+    super();
   }
+
+  @HostBinding('@flyInOut') slideDown = 'in';
 
   @Output()
   animationStateChanged = new EventEmitter<AnimationEvent>();
 
-  constructor() {
-    super();
+  @HostListener('@flyInOut.done', ['$event']) startDrawerHandler(event: any): void {
+    if (event.toState === 'out') {
+      this.containerEvent.emit({key: 'CLOSE'});
+    }
   }
 
   ngOnInit() {
   }
 
   closeDialog() {
-    this.slideDown = "out";
+    this.slideDown = 'out';
   }
 
 }

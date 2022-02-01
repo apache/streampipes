@@ -16,7 +16,7 @@
  *
  */
 
-import { CodeInputStaticProperty } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { CodeInputStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 

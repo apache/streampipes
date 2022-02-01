@@ -16,23 +16,23 @@
  *
  */
 
-import { EventEmitter, Input, Output, ViewChild, Directive } from "@angular/core";
-import {CdkPortalOutlet, ComponentPortal, Portal} from "@angular/cdk/portal";
-import {DialogRef} from "./dialog-ref";
+import { EventEmitter, Input, Output, ViewChild, Directive } from '@angular/core';
+import { CdkPortalOutlet, ComponentPortal, Portal } from '@angular/cdk/portal';
+import { DialogRef } from './dialog-ref';
 
 @Directive()
 export abstract class BaseDialogComponent<T> {
 
   @Input()
-  dialogTitle = "";
+  dialogTitle = '';
 
   @Input()
   comp: ComponentPortal<T>;
 
   @Output()
-  containerEvent = new EventEmitter<{ key: "CLOSE" }>();
+  containerEvent = new EventEmitter<{ key: 'CLOSE' }>();
 
-  @ViewChild("portal", {read: CdkPortalOutlet, static: true})
+  @ViewChild('portal', {read: CdkPortalOutlet, static: true})
   portal: CdkPortalOutlet;
 
   @Input()

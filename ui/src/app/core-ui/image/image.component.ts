@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { SpQueryResult } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-image',

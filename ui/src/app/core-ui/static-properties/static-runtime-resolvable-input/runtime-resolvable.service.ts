@@ -17,10 +17,9 @@
  */
 
 import { Observable } from 'rxjs';
-import { RuntimeOptionsRequest, RuntimeOptionsResponse } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { RuntimeOptionsRequest, RuntimeOptionsResponse, PlatformServicesCommons } from '@streampipes/platform-services';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { PlatformServicesCommons } from '../../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -28,10 +27,10 @@ export class RuntimeResolvableService {
 
   constructor(private http: HttpClient,
               private platformServicesCommons: PlatformServicesCommons) {
-
   }
 
-  fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest: RuntimeOptionsRequest, adapterId: string): Observable<RuntimeOptionsResponse> {
+  fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest: RuntimeOptionsRequest,
+                               adapterId: string): Observable<RuntimeOptionsResponse> {
     const url: string = '/streampipes-backend/api/v2/connect/'
       + 'master/resolvable/'
       + encodeURIComponent(adapterId)

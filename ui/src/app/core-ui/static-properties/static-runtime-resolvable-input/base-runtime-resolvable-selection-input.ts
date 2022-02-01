@@ -19,12 +19,14 @@
 import {
   RuntimeResolvableAnyStaticProperty,
   RuntimeResolvableOneOfStaticProperty
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { BaseRuntimeResolvableInput } from './base-runtime-resolvable-input';
 
 @Directive()
-export abstract class BaseRuntimeResolvableSelectionInput<T extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty>
+// tslint:disable-next-line:directive-class-suffix
+export abstract class BaseRuntimeResolvableSelectionInput<T
+    extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty>
   extends BaseRuntimeResolvableInput<T> {
 
 

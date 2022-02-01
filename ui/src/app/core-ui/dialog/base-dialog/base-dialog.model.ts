@@ -16,8 +16,8 @@
  *
  */
 
-import {PanelDialogComponent} from "../panel-dialog/panel-dialog.component";
-import {StandardDialogComponent} from "../standard-dialog/standard-dialog.component";
+import { PanelDialogComponent } from '../panel-dialog/panel-dialog.component';
+import { StandardDialogComponent } from '../standard-dialog/standard-dialog.component';
 
 export type BaseDialogComponentUnion = PanelDialogComponent<unknown> | StandardDialogComponent<unknown>;
 
@@ -36,6 +36,6 @@ export interface DialogConfig {
 }
 
 export interface DialogPanelConfig {
-  maxWidth: string,
-  height: string,
+  maxWidth: string;
+  height: string;
 }

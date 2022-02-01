@@ -16,11 +16,11 @@
  *
  */
 
-import {Overlay} from "@angular/cdk/overlay";
+import { Overlay } from '@angular/cdk/overlay';
 
 export interface BaseDialogConfig {
 
   getPosition(overlay: Overlay);
 
-  getOverlayConfig(config: any, positionStrategy: any)
+  getOverlayConfig(config: any, positionStrategy: any);
 }

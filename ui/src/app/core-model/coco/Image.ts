@@ -17,11 +17,11 @@
  */
 
 export class Image {
-  id: Number;
-  width: Number;
-  height: Number;
+  id: number;
+  width: number;
+  height: number;
   file_name: Date;
-  license: Number;
+  license: number;
   flickr_url: Date;
   coco_url: Date;
   date_captured: Date;

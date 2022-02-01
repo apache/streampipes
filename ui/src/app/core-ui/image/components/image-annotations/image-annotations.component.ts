@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Annotation } from '../../../../core-model/coco/Annotation';
-import { Label } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { Label } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-image-annotations',

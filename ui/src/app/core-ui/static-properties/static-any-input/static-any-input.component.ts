@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {AbstractStaticPropertyRenderer} from "../base/abstract-static-property";
-import {AnyStaticProperty} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
+import { AnyStaticProperty } from '@streampipes/platform-services';
 
 @Component({
   selector: 'app-static-any-input',
@@ -27,7 +27,7 @@ import {AnyStaticProperty} from "../../../../../projects/streampipes/platform-se
 })
 export class StaticAnyInput extends AbstractStaticPropertyRenderer<AnyStaticProperty> implements OnInit {
 
-  @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+  @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   ngOnInit() {

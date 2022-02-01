@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PipelineOperationStatus } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineOperationStatus } from '@streampipes/platform-services';
 import { PipelineAction } from '../../../pipelines/model/pipeline-model';
 
 @Component({

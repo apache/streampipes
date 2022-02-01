@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { FreeTextStaticProperty, MappingPropertyUnary, PipelineTemplateInvocation } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { FreeTextStaticProperty, MappingPropertyUnary, PipelineTemplateInvocation } from '@streampipes/platform-services';
 
 export class PipelineInvocationBuilder {
 

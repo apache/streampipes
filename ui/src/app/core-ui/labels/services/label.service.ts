@@ -17,8 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Category, Label } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PlatformServicesCommons } from '../../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+import { Category, Label, PlatformServicesCommons } from '@streampipes/platform-services';
 import { HttpClient } from '@angular/common/http';
 import { Observable, ReplaySubject } from 'rxjs';
 

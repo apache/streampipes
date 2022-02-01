@@ -16,14 +16,14 @@
  *
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import {
   DataProcessorInvocation, DataSinkInvocation,
   Pipeline,
   PipelineElementMonitoringInfo, SpDataSet, SpDataStream,
-} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {HistoricalMonitoringData} from "../../model/pipeline-details.model";
+} from '@streampipes/platform-services';
+import { HistoricalMonitoringData } from '../../model/pipeline-details.model';
 
 @Component({
   selector: 'pipeline-element-statistics',
@@ -41,37 +41,37 @@ export class PipelineElementStatisticsComponent implements OnInit {
   _pipelineElementMonitoringInfo: PipelineElementMonitoringInfo;
 
   currentPipelineElement: SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation;
-  consumedMessagesFirstInputStream: string = "";
-  consumedMessagesSecondInputStream: string = "";
+  consumedMessagesFirstInputStream = '';
+  consumedMessagesSecondInputStream = '';
 
-  producedMessages: string | number = "";
+  producedMessages: string | number = '';
 
-  cardColor: string = "rgb(27, 20, 100)";
-  deactivatedCardColor: string = "rgb(241,241,241)";
+  cardColor = 'rgb(27, 20, 100)';
+  deactivatedCardColor = 'rgb(241,241,241)';
 
-  textColor: string = "rgb(208,208,208)";
-  deactivatedTextColor: string = "rgb(205,205,205)";
+  textColor = 'rgb(208,208,208)';
+  deactivatedTextColor = 'rgb(205,205,205)';
 
-  bandColor: string = "rgb(27, 20, 100)";
-  deactivatedBandColor: string = "rgb(241,241,241)";
-  okBandColor: string = "rgb(11,186,0)";
-  warningBandColor: string = "rgb(253,144,0)";
+  bandColor = 'rgb(27, 20, 100)';
+  deactivatedBandColor = 'rgb(241,241,241)';
+  okBandColor = 'rgb(11,186,0)';
+  warningBandColor = 'rgb(253,144,0)';
 
-  chartBackgroundColor: string = "rgb(27, 20, 100)";
-  chartTextColor: string = "rgb(208,208,208)";
+  chartBackgroundColor = 'rgb(27, 20, 100)';
+  chartTextColor = 'rgb(208,208,208)';
 
   consumedMessagesFirstStreamBandColor: string;
   consumedMessagesSecondStreamBandColor: string;
 
-  notAvailable: string = "-";
+  notAvailable = '-';
 
   historicFirstConsumedInputValues: HistoricalMonitoringData[] = [];
   historicSecondConsumedInputValues: HistoricalMonitoringData[] = [];
   historicProducedOutputValues: HistoricalMonitoringData[] = [];
 
-  consumedMessagesFirstStreamLastValue: number = -1;
-  consumedMessagesSecondStreamLastValue: number = -1;
-  producedMessageOutputLastValue: number = -1;
+  consumedMessagesFirstStreamLastValue = -1;
+  consumedMessagesSecondStreamLastValue = -1;
+  producedMessageOutputLastValue = -1;
 
   consumedMessagesFirstStreamAvailable = false;
   consumedMessagesSecondStreamAvailable = false;
@@ -85,13 +85,13 @@ export class PipelineElementStatisticsComponent implements OnInit {
 
   updateMonitoringInfo() {
     if (this.pipelineElementMonitoringInfo.consumedMessageInfoExists) {
-      let consumedMessages = this.pipelineElementMonitoringInfo.consumedMessagesInfos;
-      this.consumedMessagesFirstInputStream = consumedMessages[0].consumedMessagesSincePipelineStart + " / " + consumedMessages[0].lag;
-      this.consumedMessagesSecondInputStream = consumedMessages.length > 1 ? consumedMessages[1].consumedMessagesSincePipelineStart + " / " + consumedMessages[1].lag : this.notAvailable;
+      const consumedMessages = this.pipelineElementMonitoringInfo.consumedMessagesInfos;
+      this.consumedMessagesFirstInputStream = consumedMessages[0].consumedMessagesSincePipelineStart + ' / ' + consumedMessages[0].lag;
+      this.consumedMessagesSecondInputStream = consumedMessages.length > 1 ? consumedMessages[1].consumedMessagesSincePipelineStart + ' / ' + consumedMessages[1].lag : this.notAvailable;
       this.consumedMessagesFirstStreamBandColor = consumedMessages[0].lag > 10 ? this.warningBandColor : this.okBandColor;
       this.consumedMessagesSecondStreamBandColor = (consumedMessages.length > 1 ? (consumedMessages[1].lag > 10 ? this.warningBandColor : this.okBandColor) : this.deactivatedBandColor);
 
-      let consumedMessage = {"count": consumedMessages[0].consumedMessagesSincePipelineStart};
+      const consumedMessage = {'count': consumedMessages[0].consumedMessagesSincePipelineStart};
       this.makeHistoricData(consumedMessage, this.consumedMessagesFirstStreamLastValue, this.historicFirstConsumedInputValues);
       this.consumedMessagesFirstStreamLastValue = consumedMessages[0].consumedMessagesSincePipelineStart;
       this.historicFirstConsumedInputValues = [].concat(this.historicFirstConsumedInputValues);
@@ -109,7 +109,7 @@ export class PipelineElementStatisticsComponent implements OnInit {
     }
     if (this.pipelineElementMonitoringInfo.producedMessageInfoExists) {
       this.producedMessages = this.pipelineElementMonitoringInfo.producedMessagesInfo.totalProducedMessagesSincePipelineStart;
-      let producedMessage = {"count": this.producedMessages};
+      const producedMessage = {'count': this.producedMessages};
       this.makeHistoricData(producedMessage, this.producedMessageOutputLastValue, this.historicProducedOutputValues);
       this.producedMessageOutputLastValue = producedMessage.count;
       this.historicProducedOutputValues = [].concat(this.historicProducedOutputValues);
@@ -120,14 +120,14 @@ export class PipelineElementStatisticsComponent implements OnInit {
 
   makeHistoricData(consumedMessage: any, lastValue: number, historicData: HistoricalMonitoringData[]) {
     if (lastValue > -1) {
-      let entry: HistoricalMonitoringData = {"name": new Date().toLocaleTimeString(), value: (consumedMessage.count - lastValue)};
+      const entry: HistoricalMonitoringData = {'name': new Date().toLocaleTimeString(), value: (consumedMessage.count - lastValue)};
       historicData.push(entry);
     }
     if (historicData.length > 10) {
       historicData.shift();
     } else {
       for (let i = 0; i < (10 - historicData.length); i++) {
-        historicData.unshift({"name": i.toString(), "value": 0});
+        historicData.unshift({'name': i.toString(), 'value': 0});
       }
     }
   }

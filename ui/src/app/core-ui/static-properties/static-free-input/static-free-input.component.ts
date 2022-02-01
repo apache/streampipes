@@ -20,7 +20,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 import { StaticPropertyUtilService } from '../static-property-util.service';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
-import { FreeTextStaticProperty } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { FreeTextStaticProperty } from '@streampipes/platform-services';
 import { XsService } from '../../../NS/xs.service';
 import { ValidateNumber, ValidateString, ValidateUrl } from '../input.validator';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
@@ -65,7 +65,7 @@ export class StaticFreeInputComponent
   }
 
   collectValidators() {
-    let validators: ValidatorFn[] = [];
+    const validators: ValidatorFn[] = [];
     validators.push(Validators.required);
     if (this.xsService.isNumber(this.staticProperty.requiredDatatype) ||
       this.xsService.isNumber(this.staticProperty.requiredDomainProperty)) {
@@ -83,7 +83,7 @@ export class StaticFreeInputComponent
   }
 
   emitUpdate() {
-    let valid = (this.staticProperty.value != undefined && this.staticProperty.value !== '');
+    const valid = (this.staticProperty.value !== undefined && this.staticProperty.value !== '');
     this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
   }
 
@@ -97,9 +97,9 @@ export class StaticFreeInputComponent
   }
 
   applyPlaceholder(runtimeName) {
-    let valueToInsert = '#' + runtimeName + '#';
+    const valueToInsert = '#' + runtimeName + '#';
     if (this.quillEditorComponent) {
-      let currentIndex = this.quillEditorComponent.quillEditor.selection.savedRange.index;
+      const currentIndex = this.quillEditorComponent.quillEditor.selection.savedRange.index;
       this.quillEditorComponent.quillEditor.insertText(currentIndex, valueToInsert, 'user');
     } else {
       this.parentForm.controls[this.fieldName].setValue(this.parentForm.controls[this.fieldName].value + ' ' + valueToInsert);

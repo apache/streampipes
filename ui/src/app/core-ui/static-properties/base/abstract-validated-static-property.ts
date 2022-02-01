@@ -16,16 +16,16 @@
  *
  */
 
-import {StaticProperty} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {AbstractStaticPropertyRenderer} from "./abstract-static-property";
-import {FormControl, ValidatorFn} from "@angular/forms";
-import {Directive, OnDestroy} from "@angular/core";
+import { StaticProperty } from '@streampipes/platform-services';
+import { AbstractStaticPropertyRenderer } from './abstract-static-property';
+import { FormControl, ValidatorFn } from '@angular/forms';
+import { Directive, OnDestroy } from '@angular/core';
 
 @Directive()
 export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticProperty>
     extends AbstractStaticPropertyRenderer<T> implements OnDestroy {
 
-  errorMessage = "Please enter a value";
+  errorMessage = 'Please enter a value';
   fieldValid: boolean;
 
   constructor() {
@@ -37,9 +37,9 @@ export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticPr
      this.onValueChange(value);
     });
     this.parentForm.controls[this.fieldName].statusChanges.subscribe(status => {
-      this.fieldValid = status === "VALID";
+      this.fieldValid = status === 'VALID';
       this.onStatusChange(status);
-    })
+    });
   }
 
   addValidator(defaultValue: any, validators: ValidatorFn | ValidatorFn[]) {

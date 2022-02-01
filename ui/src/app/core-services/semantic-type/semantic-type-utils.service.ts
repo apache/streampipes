@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { EventProperty } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { EventProperty } from '@streampipes/platform-services';
 
 @Injectable()
 export class SemanticTypeUtilsService {

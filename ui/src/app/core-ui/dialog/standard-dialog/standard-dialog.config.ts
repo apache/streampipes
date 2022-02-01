@@ -16,16 +16,16 @@
  *
  */
 
-import {BaseDialogConfig} from "../base-dialog/base-dialog.config";
-import {DialogPanelConfig} from "../base-dialog/base-dialog.model";
-import {Overlay} from "@angular/cdk/overlay";
+import { BaseDialogConfig } from '../base-dialog/base-dialog.config';
+import { DialogPanelConfig } from '../base-dialog/base-dialog.model';
+import { Overlay } from '@angular/cdk/overlay';
 
 export class StandardDialogConfig implements BaseDialogConfig {
 
   getConfig(): DialogPanelConfig {
-    let config: DialogPanelConfig = {} as DialogPanelConfig;
-    config.maxWidth = "90vw";
-    config.height = "50vh";
+    const config: DialogPanelConfig = {} as DialogPanelConfig;
+    config.maxWidth = '90vw';
+    config.height = '50vh';
     return config;
   }
 
@@ -41,9 +41,9 @@ export class StandardDialogConfig implements BaseDialogConfig {
     return {
       hasBackdrop: true,
       positionStrategy,
-      panelClass: "dialog-container",
+      panelClass: 'dialog-container',
       width: config.width,
-      maxWidth: "90vw",
-    }
+      maxWidth: '90vw',
+    };
   }
 }

@@ -15,8 +15,7 @@
  * limitations under the License.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'sp-image-viewer',

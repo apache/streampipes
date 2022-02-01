@@ -16,8 +16,6 @@
  *
  */
 
-import {StaticPropertyUtilService} from "../static-property-util.service";
-import {PropertySelectorService} from "../../../services/property-selector.service";
 import {
   EventProperty,
   EventPropertyList,
@@ -25,22 +23,21 @@ import {
   EventPropertyPrimitive,
   EventPropertyUnion,
   MappingProperty
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
-import {Directive} from "@angular/core";
-import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
+} from '@streampipes/platform-services';
+import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
+import { Directive } from '@angular/core';
 
 
 @Directive()
 export abstract class StaticMappingComponent<T extends MappingProperty>
     extends AbstractValidatedStaticPropertyRenderer<T> {
 
-    protected firstStreamPropertySelector: string = "s0::";
-    protected secondStreamPropertySelector: string = "s1::";
+    protected firstStreamPropertySelector = 's0::';
+    protected secondStreamPropertySelector = 's1::';
 
-    availableProperties: Array<any> = [];
+    availableProperties: any[] = [];
 
-    constructor(){
+    constructor() {
         super();
     }
 
@@ -52,8 +49,8 @@ export abstract class StaticMappingComponent<T extends MappingProperty>
 
     extractPossibleSelections(): void {
         this.eventSchemas.forEach((schema, index) => {
-            let streamIdentifier = index == 0 ? this.firstStreamPropertySelector : this.secondStreamPropertySelector;
-            let streamProperties = schema
+            const streamIdentifier = index === 0 ? this.firstStreamPropertySelector : this.secondStreamPropertySelector;
+            const streamProperties = schema
                 .eventProperties
                 .filter(ep => this.isInSelection(ep, streamIdentifier))
                 .map(ep => this.cloneEp(ep));

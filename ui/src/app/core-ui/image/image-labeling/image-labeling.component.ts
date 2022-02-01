@@ -31,7 +31,7 @@ import { CocoFormatService } from '../services/CocoFormat.service';
 import { LabelingModeService } from '../services/LabelingMode.service';
 import { PolygonLabelingService } from '../services/PolygonLabeling.service';
 import { ReactLabelingService } from '../services/ReactLabeling.service';
-import { Label } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { Label } from '@streampipes/platform-services';
 import { LabelService } from '../../labels/services/label.service';
 
 @Component({
@@ -45,7 +45,7 @@ export class ImageLabelingComponent implements OnInit {
   public labels;
   public selectedLabel: Label;
 
-  public _imagesRoutes
+  public _imagesRoutes;
   @Input()
   set imagesRoutes(routes) {
    this._imagesRoutes = routes;

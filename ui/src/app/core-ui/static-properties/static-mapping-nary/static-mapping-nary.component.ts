@@ -16,11 +16,9 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {StaticPropertyUtilService} from '../static-property-util.service';
-import {StaticMappingComponent} from "../static-mapping/static-mapping";
-import {PropertySelectorService} from "../../../services/property-selector.service";
-import {EventProperty, MappingPropertyNary} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { StaticMappingComponent } from '../static-mapping/static-mapping';
+import { MappingPropertyNary } from '@streampipes/platform-services';
 
 
 @Component({
@@ -30,33 +28,33 @@ import {EventProperty, MappingPropertyNary} from "../../../../../projects/stream
 })
 export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPropertyNary> implements OnInit {
 
-    @Output() inputEmitter: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    constructor(){
+    constructor() {
         super();
     }
 
     ngOnInit() {
         this.extractPossibleSelections();
-        //this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
+        // this.availableProperties.forEach(ep => ep.propertySelector = this.firstStreamPropertySelector + ep.runtimeName);
         if (!this.staticProperty.selectedProperties) {
             this.selectNone();
         } else {
             this.availableProperties.forEach(ep => {
                 if (this.staticProperty.selectedProperties.indexOf(ep.propertySelector) > -1) {
-                    ep["checked"] = true;
+                    ep['checked'] = true;
                 }
-            })
+            });
         }
         this.inputEmitter.emit(true);
     }
 
     selectOption(property: any, $event) {
-        if (property["checked"]) {
+        if (property['checked']) {
             this.addProperty(property);
         } else {
             this.staticProperty.selectedProperties.splice(this.staticProperty.selectedProperties.indexOf(this.makeSelector(property)), 1);
-            property["checked"] = false;
+            property['checked'] = false;
         }
     }
 
@@ -73,15 +71,15 @@ export class StaticMappingNaryComponent extends StaticMappingComponent<MappingPr
     selectAll() {
         this.selectNone();
         this.availableProperties.forEach(ep => {
-            ep["checked"] = true;
+            ep['checked'] = true;
             this.addProperty(ep);
-        })
+        });
     }
 
     selectNone() {
         this.staticProperty.selectedProperties = [];
         this.availableProperties.forEach(ep => {
-            ep["checked"] = false;
+            ep['checked'] = false;
         });
     }
 

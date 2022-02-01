@@ -19,7 +19,6 @@
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-// import { DataLakeMeasure, SpQueryResult } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters, DataLakeMeasure, SpQueryResult } from '@streampipes/platform-services';
 

@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AbstractStaticPropertyRenderer } from '../base/abstract-static-property';
-import { OneOfStaticProperty } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { OneOfStaticProperty } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-static-one-of-input',

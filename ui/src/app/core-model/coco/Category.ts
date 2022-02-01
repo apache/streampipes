@@ -18,7 +18,6 @@
 
 export class Category {
 
-
   constructor(id: number, name: string, supercategory: string, label_name: string) {
     this.id = id;
     this.name = name;

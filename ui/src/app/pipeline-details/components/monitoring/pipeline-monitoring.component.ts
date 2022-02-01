@@ -22,11 +22,10 @@ import {
   Pipeline, PipelineElementMonitoringInfo,
   PipelineMonitoringInfo,
   SpDataSet, SpDataStream
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 import { PipelineMonitoringService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-monitoring.service';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { AuthService } from '../../../services/auth.service';
-import { UserRole } from '../../../_enums/user-role.enum';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({

@@ -16,8 +16,8 @@
  *
  */
 
-import {BaseDialogConfig} from "../base-dialog/base-dialog.config";
-import {Overlay} from "@angular/cdk/overlay";
+import { BaseDialogConfig } from '../base-dialog/base-dialog.config';
+import { Overlay } from '@angular/cdk/overlay';
 
 export class PanelDialogConfig implements BaseDialogConfig {
 
@@ -25,20 +25,18 @@ export class PanelDialogConfig implements BaseDialogConfig {
     return overlay
         .position()
         .global()
-        .top("0")
-        .right("0");
+        .top('0')
+        .right('0');
   }
 
   getOverlayConfig(config: any, positionStrategy: any) {
     return {
       hasBackdrop: true,
       positionStrategy,
-      panelClass: "dialog-container",
+      panelClass: 'dialog-container',
       width: config.width,
-      maxWidth: "90vw",
-      height: "100vh",
+      maxWidth: '90vw',
+      height: '100vh',
     };
   }
-
-
 }

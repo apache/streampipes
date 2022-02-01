@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ColorService } from '../../../image/services/color.service';
-import { Category, Label } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { Category, Label } from '@streampipes/platform-services';
 import { LabelService } from '../../services/label.service';
 
 @Component({

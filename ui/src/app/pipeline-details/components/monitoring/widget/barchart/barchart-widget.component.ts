@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'sp-barchart-widget',
@@ -28,10 +28,10 @@ export class BarchartWidgetComponent implements OnInit {
   _data = [];
 
   @Input()
-  backgroundColor = "#cccccc";
+  backgroundColor = '#cccccc';
 
   @Input()
-  textColor = "#1b1464";
+  textColor = '#1b1464';
 
   colorScheme = {
     domain: ['#1b1464']

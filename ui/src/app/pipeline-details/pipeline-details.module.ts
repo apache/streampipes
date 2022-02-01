@@ -36,6 +36,8 @@ import {CoreUiModule} from "../core-ui/core-ui.module";
 import {PipelineMonitoringComponent} from "./components/monitoring/pipeline-monitoring.component";
 import {PipelineElementStatisticsComponent} from "./components/monitoring/statistics/pipeline-element-statistics.component";
 import {NgxChartsModule} from "@swimlane/ngx-charts";
+import { BarchartWidgetComponent } from './components/monitoring/widget/barchart/barchart-widget.component';
+import { StatusWidgetComponent } from './components/monitoring/widget/status/status-widget.component';
 
 @NgModule({
   imports: [
@@ -61,7 +63,9 @@ import {NgxChartsModule} from "@swimlane/ngx-charts";
     PipelineMonitoringComponent,
     PipelineStatusComponent,
     PipelinePreviewComponent,
-    QuickEditComponent
+    QuickEditComponent,
+    StatusWidgetComponent,
+    BarchartWidgetComponent
   ],
   providers: [],
   exports: [

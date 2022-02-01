@@ -16,12 +16,12 @@
  *
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Validators} from '@angular/forms';
-import {StaticPropertyUtilService} from '../static-property-util.service';
-import {ConfigurationInfo} from "../../../connect/model/ConfigurationInfo";
-import {SecretStaticProperty} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validated-static-property";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { StaticPropertyUtilService } from '../static-property-util.service';
+import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { SecretStaticProperty } from '@streampipes/platform-services';
+import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 
 @Component({
     selector: 'app-static-secret-input',
@@ -31,7 +31,7 @@ import {AbstractValidatedStaticPropertyRenderer} from "../base/abstract-validate
 export class StaticSecretInputComponent
     extends AbstractValidatedStaticPropertyRenderer<SecretStaticProperty> implements OnInit {
 
-    constructor(public staticPropertyUtil: StaticPropertyUtilService){
+    constructor(public staticPropertyUtil: StaticPropertyUtilService) {
         super();
     }
 
@@ -44,7 +44,11 @@ export class StaticSecretInputComponent
 
 
     emitUpdate() {
-        this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value && this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== ""));
+        this.updateEmitter.emit(
+            new ConfigurationInfo(
+                this.staticProperty.internalName,
+                this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value &&
+                            this.staticPropertyUtil.asFreeTextStaticProperty(this.staticProperty).value !== ''));
     }
 
     onStatusChange(status: any) {
@@ -52,7 +56,7 @@ export class StaticSecretInputComponent
 
     onValueChange(value: any) {
         this.staticProperty.value = value;
-        this.staticProperty.encrypted=false;
+        this.staticProperty.encrypted = false;
     }
 
 }
