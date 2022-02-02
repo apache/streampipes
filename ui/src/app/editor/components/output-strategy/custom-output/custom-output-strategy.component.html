@@ -18,7 +18,7 @@
 <div fxFlex="100" fxLayout="column">
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
         <h5 style="margin-right:10px;">{{selectedElement.inputStreams[0].name}}</h5>
-        <button mat-button mat-raised-button color="primary" class="small-button"
+        <button mat-button mat-raised-button color="accent" class="small-button"
                 (click)="selectAll(collectedPropertiesFirstStream)"
                 style="margin-right:10px;margin-left:10px;" [disabled]="restrictedEditMode">Select all
         </button>
@@ -34,7 +34,7 @@
     <div fxLayout="column" fxFlex="100" *ngIf="collectedPropertiesSecondStream.length > 0">
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <h5 style="margin-right:10px;">{{selectedElement.inputStreams[1].name}}</h5>
-            <button mat-button mat-raised-button color="primary" class="small-button"
+            <button mat-button mat-raised-button color="accent" class="small-button"
                     (click)="selectAll(collectedPropertiesSecondStream)"
                     style="margin-right:10px;margin-left:10px;" [disabled]="restrictedEditMode">Select all
             </button>

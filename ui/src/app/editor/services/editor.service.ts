@@ -28,10 +28,10 @@ import {
   PipelineModificationMessage,
   PipelinePreviewModel,
   SpDataSet,
-  SpDataStream
-} from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+  SpDataStream,
+  PlatformServicesCommons
+} from '@streampipes/platform-services';
 import { Observable, Subject } from 'rxjs';
-import { PlatformServicesCommons } from '../../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
 import { PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
 import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
@@ -56,8 +56,9 @@ export class EditorService {
       return this.platformServicesCommons.apiBasePath;
     }
 
-    recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
-        return this.http.post(this.pipelinesResourceUrl + '/recommend', pipeline)
+    recommendPipelineElement(pipeline: Pipeline,
+                             currentDomId: string): Observable<PipelineElementRecommendationMessage> {
+        return this.http.post(this.pipelinesResourceUrl + '/recommend/' + currentDomId, pipeline)
             .pipe(map(data => PipelineElementRecommendationMessage.fromData(data as any)));
     }
 

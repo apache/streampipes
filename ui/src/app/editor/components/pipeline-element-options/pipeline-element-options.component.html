@@ -28,19 +28,19 @@
               *ngIf="pipelineElement.type=='stream' && isWildcardTopic()"
               style="z-index:10">
             <button mat-button mat-icon-button matTooltip="Configure Element" [matTooltipPosition]="'above'"
-                    (click)="openCustomizeStreamDialog()" [disabled]="!isRootElement()">
+                    (click)="openCustomizeStreamDialog()">
                 <i class="material-icons">settings</i>
             </button>
         </span>
         <span class="options-button delete-button" style="z-index:10">
             <button mat-button mat-icon-button matTooltip="Delete Element" [matTooltipPosition]="'above'"
-                    (click)="removeElement(pipelineElement)" [disabled]="!isRootElement()">
+                    (click)="removeElement(pipelineElement)">
                 <i class="material-icons">clear</i>
             </button>
         </span>
         <span class="options-button possible-button" *ngIf="pipelineElement.type!='action'" style="z-index:10">
             <button mat-button mat-icon-button matTooltip="Compatible Elements" [matTooltipPosition]="'below'"
-                    [disabled]="!possibleElements || possibleElements.length == 0 || !isConfigured()"
+                    [disabled]="!possibleElements || possibleElements.length == 0"
                     (click)="openPossibleElementsDialog()"
                     [attr.data-cy]="'sp-possible-elements-' + pipelineElement.payload.name.toLowerCase().replaceAll(' ', '_')"_>
                 <i class="material-icons">account_tree</i>
@@ -51,7 +51,7 @@
               style="z-index:10">
             <button mat-button mat-icon-button matTooltip="Recommended Elements" [matTooltipPosition]="'below'"
                     (click)="showRecommendations($event)"
-                    [disabled]="!recommendationsAvailable || !isConfigured()">
+                    [disabled]="!recommendationsAvailable">
                 <i class="material-icons">add</i>
             </button>
         </span>

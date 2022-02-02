@@ -16,19 +16,19 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   CustomOutputStrategy,
   EventPropertyNested,
   EventPropertyUnion
-} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@streampipes/platform-services';
 
 @Component({
   selector: 'property-selection',
   templateUrl: './property-selection.component.html',
   styleUrls: ['./property-selection.component.scss']
 })
-export class PropertySelectionComponent {
+export class PropertySelectionComponent implements OnInit {
 
   @Input()
   outputStrategy: CustomOutputStrategy;
@@ -45,7 +45,7 @@ export class PropertySelectionComponent {
   @Output()
   validateForm: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  isNestedProperty: boolean
+  isNestedProperty: boolean;
 
   ngOnInit() {
     this.isNestedProperty = this.eventProperty instanceof EventPropertyNested;
@@ -67,11 +67,11 @@ export class PropertySelectionComponent {
   add(runtimeId) {
     this.outputStrategy.selectedPropertyKeys.push(runtimeId);
     // This is needed to trigger update of scope
-    this.outputStrategy.selectedPropertyKeys = this.outputStrategy.selectedPropertyKeys.filter(el => {return true;});
+    this.outputStrategy.selectedPropertyKeys = this.outputStrategy.selectedPropertyKeys.filter(el => true);
   }
 
   remove(runtimeId) {
-    this.outputStrategy.selectedPropertyKeys =  this.outputStrategy.selectedPropertyKeys.filter(el => { return el != runtimeId; });
+    this.outputStrategy.selectedPropertyKeys =  this.outputStrategy.selectedPropertyKeys.filter(el => el !== runtimeId);
   }
 
   triggerFormValidation() {

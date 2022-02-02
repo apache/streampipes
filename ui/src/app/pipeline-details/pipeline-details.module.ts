@@ -16,28 +16,29 @@
  *
  */
 
-import {NgModule} from "@angular/core";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatButtonModule} from "@angular/material/button";
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {CommonModule} from "@angular/common";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {PipelineDetailsComponent} from "./pipeline-details.component";
-import {PipelinePreviewComponent} from "./components/preview/pipeline-preview.component";
-import {EditorModule} from "../editor/editor.module";
-import {PipelineActionsComponent} from "./components/actions/pipeline-actions.component";
-import {PipelineStatusComponent} from "./components/status/pipeline-status.component";
-import {PipelineElementsComponent} from "./components/elements/pipeline-elements.component";
-import {PipelineElementsRowComponent} from "./components/elements/pipeline-elements-row.component";
-import {QuickEditComponent} from "./components/edit/quickedit.component";
-import {CoreUiModule} from "../core-ui/core-ui.module";
-import {PipelineMonitoringComponent} from "./components/monitoring/pipeline-monitoring.component";
-import {PipelineElementStatisticsComponent} from "./components/monitoring/statistics/pipeline-element-statistics.component";
-import {NgxChartsModule} from "@swimlane/ngx-charts";
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PipelineDetailsComponent } from './pipeline-details.component';
+import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
+import { EditorModule } from '../editor/editor.module';
+import { PipelineActionsComponent } from './components/actions/pipeline-actions.component';
+import { PipelineStatusComponent } from './components/status/pipeline-status.component';
+import { PipelineElementsComponent } from './components/elements/pipeline-elements.component';
+import { PipelineElementsRowComponent } from './components/elements/pipeline-elements-row.component';
+import { QuickEditComponent } from './components/edit/quickedit.component';
+import { CoreUiModule } from '../core-ui/core-ui.module';
+import { PipelineMonitoringComponent } from './components/monitoring/pipeline-monitoring.component';
+import { PipelineElementStatisticsComponent } from './components/monitoring/statistics/pipeline-element-statistics.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BarchartWidgetComponent } from './components/monitoring/widget/barchart/barchart-widget.component';
 import { StatusWidgetComponent } from './components/monitoring/widget/status/status-widget.component';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ import { StatusWidgetComponent } from './components/monitoring/widget/status/sta
     NgxChartsModule,
     EditorModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PlatformServicesModule
   ],
   declarations: [
     PipelineActionsComponent,

@@ -16,26 +16,25 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {PipelineElementUnion} from "../../model/editor.model";
-import {PipelineElementService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service";
-import {SpDataStream} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {PipelineElementTypeUtils} from "../../utils/editor.utils";
+import { Component, Input, OnInit } from '@angular/core';
+import { PipelineElementUnion } from '../../model/editor.model';
+import { PipelineElementService, SpDataStream } from '@streampipes/platform-services';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { PipelineElementTypeUtils } from '../../utils/editor.utils';
 
 @Component({
   selector: 'pipeline-element-help',
   templateUrl: './help.component.html',
   styleUrls: ['./help.component.scss']
 })
-export class HelpComponent {
+export class HelpComponent implements OnInit {
 
   selectedTab = 0;
   pollingActive: boolean;
 
-  selectedIndex: number = 0;
+  selectedIndex = 0;
 
-  nsPrefix = "http://www.w3.org/2001/XMLSchema#";
+  nsPrefix = 'http://www.w3.org/2001/XMLSchema#';
   availableTabs = [
     {
       title: 'Fields',
@@ -60,8 +59,8 @@ export class HelpComponent {
   @Input()
   pipelineElement: PipelineElementUnion;
 
-  constructor(private PipelineElementService: PipelineElementService,
-              private DialogRef: DialogRef<HelpComponent>) {
+  constructor(private pipelineElementService: PipelineElementService,
+              private dialogRef: DialogRef<HelpComponent>) {
     this.pollingActive = true;
   }
 
@@ -77,37 +76,37 @@ export class HelpComponent {
 
   getFriendlyRuntimeType(runtimeType) {
     if (this.isNumber(runtimeType)) {
-      return "Number";
+      return 'Number';
     } else if (this.isBoolean(runtimeType)) {
-      return "Boolean";
+      return 'Boolean';
     } else {
-      return "Text";
+      return 'Text';
     }
   }
 
   isNumber(runtimeType) {
-    return (runtimeType == (this.nsPrefix + "float")) ||
-        (runtimeType == (this.nsPrefix + "integer")) ||
-        (runtimeType == (this.nsPrefix + "long")) ||
-        (runtimeType == (this.nsPrefix + "double"));
+    return (runtimeType === (this.nsPrefix + 'float')) ||
+        (runtimeType === (this.nsPrefix + 'integer')) ||
+        (runtimeType === (this.nsPrefix + 'long')) ||
+        (runtimeType === (this.nsPrefix + 'double'));
   }
 
   isBoolean(runtimeType) {
-    return runtimeType == this.nsPrefix + "boolean";
+    return runtimeType === this.nsPrefix + 'boolean';
   }
 
   close() {
     this.pollingActive = false;
     setTimeout(() => {
-      this.DialogRef.close();
+      this.dialogRef.close();
     });
   }
 
 
   filterTab(tab) {
-    let type = PipelineElementTypeUtils.fromType(this.pipelineElement);
-    let cssShortHand = PipelineElementTypeUtils.toCssShortHand(type);
-    return tab.targets.indexOf(cssShortHand) != -1;
+    const type = PipelineElementTypeUtils.fromType(this.pipelineElement);
+    const cssShortHand = PipelineElementTypeUtils.toCssShortHand(type);
+    return tab.targets.indexOf(cssShortHand) !== -1;
   }
 
 

@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {PipelineElementService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { PipelineElementService } from '@streampipes/platform-services';
 
 @Component({
   selector: 'pipeline-element-documentation',
@@ -35,12 +35,12 @@ export class PipelineElementDocumentationComponent implements OnInit {
   documentationMarkdown: any;
   error: any;
 
-  constructor(private PipelineElementService: PipelineElementService) {
+  constructor(private pipelineElementService: PipelineElementService) {
 
   }
 
   ngOnInit(): void {
-    this.PipelineElementService.getDocumentation(this.appId).subscribe(msg => {
+    this.pipelineElementService.getDocumentation(this.appId).subscribe(msg => {
       this.error = false;
       this.documentationMarkdown = msg;
     }, error => {

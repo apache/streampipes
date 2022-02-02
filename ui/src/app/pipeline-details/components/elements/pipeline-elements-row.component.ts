@@ -16,10 +16,10 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {PipelineElementUnion} from "../../../editor/model/editor.model";
-import {Pipeline} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {PipelineElementTypeUtils} from "../../../editor/utils/editor.utils";
+import { Component, Input, OnInit } from '@angular/core';
+import { PipelineElementUnion } from '../../../editor/model/editor.model';
+import { Pipeline } from '@streampipes/platform-services';
+import { PipelineElementTypeUtils } from '../../../editor/utils/editor.utils';
 
 @Component({
     selector: 'pipeline-elements-row',
@@ -33,7 +33,7 @@ export class PipelineElementsRowComponent implements OnInit {
     pipeline: Pipeline;
 
     @Input()
-    showDescription: boolean = true;
+    showDescription = true;
 
     _element: PipelineElementUnion;
 

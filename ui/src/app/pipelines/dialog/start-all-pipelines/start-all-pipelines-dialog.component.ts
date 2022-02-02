@@ -18,8 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { Pipeline } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+import { Pipeline, PipelineService } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-start-all-pipelines-dialog',

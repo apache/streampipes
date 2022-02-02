@@ -16,16 +16,14 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {Message, Pipeline, PipelineCanvasMetadata} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {ObjectProvider} from "../../services/object-provider.service";
-import {EditorService} from "../../services/editor.service";
-import {PipelineService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service";
-import {ShepherdService} from "../../../services/tour/shepherd.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
-import {PipelineCanvasMetadataService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-canvas-metadata.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { Message, Pipeline, PipelineCanvasMetadata, PipelineService, PipelineCanvasMetadataService } from '@streampipes/platform-services';
+import { ObjectProvider } from '../../services/object-provider.service';
+import { EditorService } from '../../services/editor.service';
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'save-pipeline',
@@ -52,11 +50,11 @@ export class SavePipelineComponent implements OnInit {
   @Input()
   pipelineCanvasMetadata: PipelineCanvasMetadata;
 
-  saving: boolean = false;
-  saved: boolean = false;
+  saving = false;
+  saved = false;
 
-  storageError: boolean = false;
-  errorMessage: string = '';
+  storageError = false;
+  errorMessage = '';
 
   currentPipelineName: string;
 
@@ -64,11 +62,11 @@ export class SavePipelineComponent implements OnInit {
               private dialogRef: DialogRef<SavePipelineComponent>,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
-              private Router: Router,
-              private ShepherdService: ShepherdService,
+              private router: Router,
+              private shepherdService: ShepherdService,
               private pipelineCanvasService: PipelineCanvasMetadataService) {
     this.pipelineCategories = [];
-    this.updateMode = "update";
+    this.updateMode = 'update';
   }
 
   ngOnInit() {
@@ -77,29 +75,29 @@ export class SavePipelineComponent implements OnInit {
       this.currentPipelineName = this.pipeline.name;
     }
 
-    this.submitPipelineForm.addControl("pipelineName", new FormControl(this.pipeline.name,
+    this.submitPipelineForm.addControl('pipelineName', new FormControl(this.pipeline.name,
         [Validators.required,
-          Validators.maxLength(40)]))
-    this.submitPipelineForm.addControl("pipelineDescription", new FormControl(this.pipeline.description,
-        [Validators.maxLength(80)]))
+          Validators.maxLength(40)]));
+    this.submitPipelineForm.addControl('pipelineDescription', new FormControl(this.pipeline.description,
+        [Validators.maxLength(80)]));
 
-    this.submitPipelineForm.controls["pipelineName"].valueChanges.subscribe(value => {
+    this.submitPipelineForm.controls['pipelineName'].valueChanges.subscribe(value => {
       this.pipeline.name = value;
     });
 
-    this.submitPipelineForm.controls["pipelineDescription"].valueChanges.subscribe(value => {
+    this.submitPipelineForm.controls['pipelineDescription'].valueChanges.subscribe(value => {
       this.pipeline.description = value;
     });
 
-    if (this.ShepherdService.isTourActive()) {
-      this.ShepherdService.trigger("enter-pipeline-name");
+    if (this.shepherdService.isTourActive()) {
+      this.shepherdService.trigger('enter-pipeline-name');
     }
 
   }
 
   triggerTutorial() {
-    if (this.ShepherdService.isTourActive()) {
-      this.ShepherdService.trigger("save-pipeline-dialog");
+    if (this.shepherdService.isTourActive()) {
+      this.shepherdService.trigger('save-pipeline-dialog');
     }
   }
 
@@ -112,12 +110,12 @@ export class SavePipelineComponent implements OnInit {
     this.pipelineService.getPipelineCategories().subscribe(pipelineCategories => {
       this.pipelineCategories = pipelineCategories;
     });
-  };
+  }
 
 
   savePipeline(switchTab) {
     let storageRequest;
-    let updateMode = this.currentModifiedPipelineId && this.updateMode === 'update';
+    const updateMode = this.currentModifiedPipelineId && this.updateMode === 'update';
 
     if (updateMode) {
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
@@ -129,7 +127,7 @@ export class SavePipelineComponent implements OnInit {
     storageRequest
         .subscribe(statusMessage => {
           if (statusMessage.success) {
-            let pipelineId: string = statusMessage.notifications[1].description;
+            const pipelineId: string = statusMessage.notifications[1].description;
             this.storePipelineCanvasMetadata(pipelineId, updateMode);
             this.afterStorage(statusMessage, switchTab, pipelineId);
           } else {
@@ -138,7 +136,7 @@ export class SavePipelineComponent implements OnInit {
         }, data => {
           this.displayErrors();
         });
-  };
+  }
 
   storePipelineCanvasMetadata(pipelineId: string,
                               updateMode: boolean) {
@@ -159,18 +157,18 @@ export class SavePipelineComponent implements OnInit {
     this.hide();
     this.editorService.makePipelineAssemblyEmpty(true);
     this.editorService.removePipelineFromCache().subscribe();
-    if (this.ShepherdService.isTourActive()) {
-      this.ShepherdService.hideCurrentStep();
+    if (this.shepherdService.isTourActive()) {
+      this.shepherdService.hideCurrentStep();
     }
     if (switchTab && !this.startPipelineAfterStorage) {
-      this.Router.navigate(["pipelines"]);
+      this.router.navigate(['pipelines']);
     }
     if (this.startPipelineAfterStorage) {
-      this.Router.navigate(["pipelines"], { queryParams: {pipeline: pipelineId}});
+      this.router.navigate(['pipelines'], { queryParams: {pipeline: pipelineId}});
     }
   }
 
   hide() {
     this.dialogRef.close();
-  };
+  }
 }

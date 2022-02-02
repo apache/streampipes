@@ -24,7 +24,7 @@ import {
   DataSinkInvocation,
   SpDataSet,
   SpDataStream
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+} from '@streampipes/platform-services';
 import { PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
 
 @Component({

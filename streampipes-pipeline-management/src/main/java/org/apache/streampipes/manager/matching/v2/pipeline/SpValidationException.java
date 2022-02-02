@@ -16,27 +16,23 @@
  *
  */
 
-package org.apache.streampipes.model.pipeline;
+package org.apache.streampipes.manager.matching.v2.pipeline;
 
-public class PipelineModificationErrorDescription {
+import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 
-	private String errorMessage;
-	
-	
-	public PipelineModificationErrorDescription(String errorMessage)
-	{
-		this.errorMessage = errorMessage;
-	}
+import java.util.List;
 
+public class SpValidationException extends Exception {
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
+  private List<MatchingResultMessage> errorLog;
 
+  public SpValidationException(List<MatchingResultMessage> errorLog) {
+    this.errorLog = errorLog;
+  }
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
-	
-	
+  public SpValidationException() {}
+
+  public List<MatchingResultMessage> getErrorLog() {
+    return errorLog;
+  }
 }

@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {InvocablePipelineElementUnion} from "../../model/editor.model";
+import { Component, Input, OnInit } from '@angular/core';
+import { InvocablePipelineElementUnion } from '../../model/editor.model';
 import {
   PipelineElementTemplate,
   StaticPropertyUnion
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {PipelineElementTemplateGenerator} from "./pipeline-element-template-generator";
+} from '@streampipes/platform-services';
+import { PipelineElementTemplateGenerator } from './pipeline-element-template-generator';
 
 @Component({
   selector: 'pipeline-element-template-config',
@@ -45,7 +45,7 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     this.template.basePipelineElementAppId = this.cachedPipelineElement.appId;
     this.cachedPipelineElement.staticProperties.forEach(sp => {
       this.templateConfigs.set(sp.internalName, this.makeTemplateValue(sp));
-    })
+    });
   }
 
   handleSelection(sp: StaticPropertyUnion) {
@@ -57,7 +57,7 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
   }
 
   makeTemplateValue(sp: StaticPropertyUnion) {
-    let config: any = {};
+    const config: any = {};
     config.displayed = false;
     config.editable = false;
     config.value = new PipelineElementTemplateGenerator(sp).toTemplateValue();
@@ -65,13 +65,13 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
   }
 
   toggleViewPermission(sp: StaticPropertyUnion) {
-    let config: any = this.templateConfigs.get(sp.internalName);
+    const config: any = this.templateConfigs.get(sp.internalName);
     config.displayed = ! config.displayed;
     this.templateConfigs.set(sp.internalName, config);
   }
 
   toggleEditPermission(sp: StaticPropertyUnion) {
-    let config: any = this.templateConfigs.get(sp.internalName);
+    const config: any = this.templateConfigs.get(sp.internalName);
     config.editable = ! config.editable;
     this.templateConfigs.set(sp.internalName, config);
   }

@@ -17,35 +17,54 @@
  */
 package org.apache.streampipes.manager.matching;
 
-import org.apache.streampipes.manager.util.TreeUtils;
+import org.apache.streampipes.manager.recommender.AllElementsProvider;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.connection.Connection;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
+import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConnectionStorageHandler {
 
+  private AllElementsProvider elementsProvider;
   private Pipeline pipeline;
-  private InvocableStreamPipesEntity rootPipelineElement;
 
-  public ConnectionStorageHandler(Pipeline pipeline,
-                                  InvocableStreamPipesEntity rootPipelineElement) {
+  public ConnectionStorageHandler(Pipeline pipeline) {
     this.pipeline = pipeline;
-    this.rootPipelineElement = rootPipelineElement;
+    this.elementsProvider = new AllElementsProvider(pipeline);
   }
 
-  public void storeConnection() {
-    String fromId = rootPipelineElement.getConnectedTo().get(rootPipelineElement.getConnectedTo().size() - 1);
-    NamedStreamPipesEntity sepaElement = TreeUtils.findSEPAElement(fromId, pipeline.getSepas(), pipeline.getStreams());
-    String sourceId;
-    if (sepaElement instanceof SpDataStream) {
-      sourceId = sepaElement.getElementId();
-    } else {
-      sourceId = ((InvocableStreamPipesEntity) sepaElement).getBelongsTo();
+  public void storeConnections() {
+    List<Connection> connections = new ArrayList<>();
+    pipeline.getActions().forEach(sink -> findConnections(sink, connections));
+
+    connections.forEach(connection -> StorageDispatcher.INSTANCE
+            .getNoSqlStore()
+            .getConnectionStorageApi()
+            .addConnection(connection));
+  }
+
+  private void findConnections(NamedStreamPipesEntity target,
+                               List<Connection> connections) {
+    if (target instanceof DataSinkInvocation || target instanceof DataProcessorInvocation) {
+      InvocableStreamPipesEntity pipelineElement = (InvocableStreamPipesEntity) target;
+      pipelineElement.getConnectedTo().forEach(conn -> {
+        NamedStreamPipesEntity source = this.elementsProvider.findElement(conn);
+        String sourceId;
+        if (source instanceof SpDataStream) {
+          sourceId = source.getElementId();
+        } else {
+          sourceId = ((InvocableStreamPipesEntity) source).getBelongsTo();
+        }
+        connections.add(new Connection(sourceId, ((InvocableStreamPipesEntity) target).getBelongsTo()));
+        findConnections(source, connections);
+      });
     }
-    Connection connection = new Connection(sourceId, rootPipelineElement.getBelongsTo());
-    StorageDispatcher.INSTANCE.getNoSqlStore().getConnectionStorageApi().addConnection(connection);
   }
 }

@@ -17,6 +17,7 @@
  */
 
 import {
+    AfterViewInit,
     Component,
     ElementRef,
     EventEmitter,
@@ -39,14 +40,12 @@ import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.s
 import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditorService } from '../../services/editor.service';
-import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+import { PipelineService, PipelineCanvasMetadataService, PipelineCanvasMetadata } from '@streampipes/platform-services';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
 import { PipelineElementDraggedService } from '../../services/pipeline-element-dragged.service';
 import { PipelineComponent } from '../pipeline/pipeline.component';
-import { PipelineCanvasMetadata } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { forkJoin } from 'rxjs';
-import { PipelineCanvasMetadataService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-canvas-metadata.service';
 import { PipelineElementDiscoveryComponent } from '../../dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 
 
@@ -55,7 +54,7 @@ import { PipelineElementDiscoveryComponent } from '../../dialog/pipeline-element
     templateUrl: './pipeline-assembly.component.html',
     styleUrls: ['./pipeline-assembly.component.scss']
 })
-export class PipelineAssemblyComponent implements OnInit {
+export class PipelineAssemblyComponent implements OnInit, AfterViewInit {
 
     @Input()
     rawPipelineModel: PipelineElementConfig[];
@@ -97,14 +96,14 @@ export class PipelineAssemblyComponent implements OnInit {
 
     panzoom: PanzoomObject;
 
-    constructor(private JsPlumbFactoryService: JsplumbFactoryService,
-                private PipelinePositioningService: PipelinePositioningService,
-                private ObjectProvider: ObjectProvider,
-                public EditorService: EditorService,
-                public PipelineValidationService: PipelineValidationService,
-                private PipelineService: PipelineService,
-                private JsplumbService: JsplumbService,
-                private ShepherdService: ShepherdService,
+    constructor(private jsPlumbFactoryService: JsplumbFactoryService,
+                private pipelinePositioningService: PipelinePositioningService,
+                private objectProvider: ObjectProvider,
+                public editorService: EditorService,
+                public pipelineValidationService: PipelineValidationService,
+                private pipelineService: PipelineService,
+                private jsplumbService: JsplumbService,
+                private shepherdService: ShepherdService,
                 private dialogService: DialogService,
                 private dialog: MatDialog,
                 private ngZone: NgZone,
@@ -116,7 +115,6 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.JsplumbBridge = this.JsPlumbFactoryService.getJsplumbBridge(false);
         if (this.currentModifiedPipelineId) {
             this.displayPipelineById();
         } else {
@@ -141,21 +139,19 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     ngAfterViewInit() {
+        this.JsplumbBridge = this.jsPlumbFactoryService.getJsplumbBridge(this.preview);
         const elem = document.getElementById('assembly');
         this.panzoom = Panzoom(elem, {
             maxScale: 5,
-            excludeClass: 'jtk-draggable',
+            excludeClass: 'sp-no-pan',
             canvas: true,
             contain: 'outside'
         });
     }
 
     autoLayout() {
-        this.PipelinePositioningService.layoutGraph('#assembly', 'span[id^=\'jsplumb\']', 110, false);
+        this.pipelinePositioningService.layoutGraph('#assembly', 'div[id^=\'jsplumb\']', 110, false);
         this.JsplumbBridge.repaintEverything();
-    }
-
-    toggleSelectMode() {
     }
 
     zoomOut() {
@@ -190,7 +186,7 @@ export class PipelineAssemblyComponent implements OnInit {
                     this.currentModifiedPipelineId = undefined;
                 }
                 this.clearAssembly();
-                this.EditorService.makePipelineAssemblyEmpty(true);
+                this.editorService.makePipelineAssemblyEmpty(true);
             }
         });
     }
@@ -206,8 +202,8 @@ export class PipelineAssemblyComponent implements OnInit {
         this.JsplumbBridge.setZoom(this.currentZoomLevel);
         this.JsplumbBridge.repaintEverything();
 
-        const removePipelineFromCache = this.EditorService.removePipelineFromCache();
-        const removeCanvasMetadataFromCache = this.EditorService.removeCanvasMetadataFromCache();
+        const removePipelineFromCache = this.editorService.removePipelineFromCache();
+        const removeCanvasMetadataFromCache = this.editorService.removeCanvasMetadataFromCache();
         forkJoin([removePipelineFromCache, removeCanvasMetadataFromCache]).subscribe(msg => {
             this.pipelineCached = false;
             this.pipelineCacheRunning = false;
@@ -218,8 +214,8 @@ export class PipelineAssemblyComponent implements OnInit {
      * Sends the pipeline to the server
      */
     submit() {
-        const pipeline = this.ObjectProvider.makeFinalPipeline(this.rawPipelineModel);
-        this.PipelinePositioningService.collectPipelineElementPositions(this.pipelineCanvasMetadata, this.rawPipelineModel);
+        const pipeline = this.objectProvider.makeFinalPipeline(this.rawPipelineModel);
+        this.pipelinePositioningService.collectPipelineElementPositions(this.pipelineCanvasMetadata, this.rawPipelineModel);
         pipeline.name = this.currentPipelineName;
         pipeline.description = this.currentPipelineDescription;
         if (this.currentModifiedPipelineId) {
@@ -238,8 +234,8 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     checkAndDisplayCachedPipeline() {
-        const cachedPipeline = this.EditorService.getCachedPipeline();
-        const cachedCanvasMetadata = this.EditorService.getCachedPipelineCanvasMetadata();
+        const cachedPipeline = this.editorService.getCachedPipeline();
+        const cachedCanvasMetadata = this.editorService.getCachedPipelineCanvasMetadata();
         forkJoin([cachedPipeline, cachedCanvasMetadata]).subscribe(results => {
             if (results[0] && results[0].length > 0) {
                 this.rawPipelineModel = results[0] as PipelineElementConfig[];
@@ -249,13 +245,13 @@ export class PipelineAssemblyComponent implements OnInit {
     }
 
     displayPipelineById() {
-        const pipelineRequest = this.PipelineService.getPipelineById(this.currentModifiedPipelineId);
+        const pipelineRequest = this.pipelineService.getPipelineById(this.currentModifiedPipelineId);
         const canvasRequest = this.pipelineCanvasMetadataService.getPipelineCanvasMetadata(this.currentModifiedPipelineId);
         pipelineRequest.subscribe(pipelineResp => {
                 const pipeline = pipelineResp;
                 this.currentPipelineName = pipeline.name;
                 this.currentPipelineDescription = pipeline.description;
-                this.rawPipelineModel = this.JsplumbService.makeRawPipeline(pipeline, false);
+                this.rawPipelineModel = this.jsplumbService.makeRawPipeline(pipeline, false);
                 canvasRequest.subscribe(canvasResp => {
                     this.handleCanvasMetadataResponse(canvasResp);
                 }, error => {
@@ -278,12 +274,13 @@ export class PipelineAssemblyComponent implements OnInit {
     displayPipelineInEditor(autoLayout,
                             pipelineCanvasMetadata?: PipelineCanvasMetadata) {
         setTimeout(() => {
-            this.PipelinePositioningService.displayPipeline(this.rawPipelineModel, '#assembly', false, autoLayout, pipelineCanvasMetadata);
-            this.EditorService.makePipelineAssemblyEmpty(false);
+            this.pipelinePositioningService.displayPipeline(this.rawPipelineModel, '#assembly', false, autoLayout, pipelineCanvasMetadata);
+            this.editorService.makePipelineAssemblyEmpty(false);
             this.ngZone.run(() => {
-                this.pipelineValid = this.PipelineValidationService
+                this.pipelineValid = this.pipelineValidationService
                     .isValidPipeline(this.rawPipelineModel.filter(pe => !(pe.settings.disabled)), false);
             });
+            this.pipelineComponent.triggerPipelineModification();
         });
     }
 

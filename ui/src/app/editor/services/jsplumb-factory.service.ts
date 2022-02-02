@@ -16,70 +16,75 @@
  *
  */
 
-import {jsPlumb, jsPlumbInstance} from "jsplumb";
-import {JsplumbBridge} from "./jsplumb-bridge.service";
-import {Injectable} from "@angular/core";
+import { JsPlumbInstance } from '@jsplumb/core';
+import { JsplumbBridge } from './jsplumb-bridge.service';
+import { Injectable } from '@angular/core';
+import { BrowserJsPlumbInstance, ContainmentType, newInstance } from '@jsplumb/browser-ui';
+import { PipelineElementDraggedService } from './pipeline-element-dragged.service';
+import { JsplumbConfigService } from './jsplumb-config.service';
 
 @Injectable()
 export class JsplumbFactoryService {
 
-  pipelineEditorInstance: jsPlumbInstance;
-  pipelinePreviewInstance: jsPlumbInstance;
+    pipelineEditorInstance: BrowserJsPlumbInstance;
+    pipelinePreviewInstance: BrowserJsPlumbInstance;
 
-  pipelineEditorBridge: JsplumbBridge;
-  pipelinePreviewBridge: JsplumbBridge;
+    pipelineEditorBridge: JsplumbBridge;
+    pipelinePreviewBridge: JsplumbBridge;
 
-  constructor() {
-    this.pipelineEditorInstance = this.makePipelineEditorInstance();
-    this.pipelinePreviewInstance = this.makePipelinePreviewInstance();
+    constructor(private pipelineElementDraggedService: PipelineElementDraggedService,
+                private jsplumbConfigService: JsplumbConfigService) {
+    }
 
-    this.pipelineEditorBridge = new JsplumbBridge(this.pipelineEditorInstance);
-    this.pipelinePreviewBridge = new JsplumbBridge(this.pipelinePreviewInstance);
-
-    this.prepareJsplumb(this.pipelineEditorInstance);
-    this.prepareJsplumb(this.pipelinePreviewInstance);
-  }
-
-  getJsplumbBridge(previewConfig: boolean): JsplumbBridge {
-    return previewConfig ? this.pipelineEditorBridge : this.pipelinePreviewBridge;
-  }
-
-  makePipelineEditorInstance(): jsPlumbInstance {
-    return jsPlumb.getInstance();
-  }
-
-  makePipelinePreviewInstance(): jsPlumbInstance {
-    return jsPlumb.getInstance();
-  }
-
-  prepareJsplumb(jsplumbInstance: jsPlumbInstance) {
-    jsplumbInstance.registerEndpointTypes({
-      "empty": {
-        paintStyle: {
-          fill: "white",
-          stroke: "#9E9E9E",
-          strokeWidth: 2,
+    getJsplumbBridge(previewConfig: boolean): JsplumbBridge {
+        if (!previewConfig) {
+            if (!this.pipelineEditorBridge) {
+                this.pipelineEditorInstance = this.makePipelineEditorInstance();
+                this.prepareJsplumb(this.pipelineEditorInstance);
+                this.pipelineEditorBridge = new JsplumbBridge(this.pipelineEditorInstance);
+            }
+            return this.pipelineEditorBridge;
+        } else {
+            if (!this.pipelinePreviewBridge) {
+                this.pipelinePreviewInstance = this.makePipelinePreviewInstance();
+                this.prepareJsplumb(this.pipelinePreviewInstance);
+                this.pipelinePreviewBridge = new JsplumbBridge(this.pipelinePreviewInstance);
+            }
+            return this.pipelinePreviewBridge;
         }
-      },
-      "token": {
-        paintStyle: {
-          fill: "#BDBDBD",
-          stroke: "#9E9E9E",
-          strokeWidth: 2
-        },
-        hoverPaintStyle: {
-          fill: "#BDBDBD",
-          stroke: "#4CAF50",
-          strokeWidth: 4,
+    }
+
+    makePipelineEditorInstance(): BrowserJsPlumbInstance {
+        return newInstance({
+            container: document.getElementById('assembly'), dragOptions: {
+                containment: ContainmentType.parent,
+                cursor: 'pointer',
+                zIndex: 2000,
+                drag: params => {
+                    this.pipelineElementDraggedService.notify({x: params.pos.x, y: params.pos.y});
+                }
+            },
+        });
+    }
+
+    makePipelinePreviewInstance(): BrowserJsPlumbInstance {
+        return newInstance({
+            container: document.getElementById('assembly-preview'),
+            elementsDraggable: false
+        });
+    }
+
+    prepareJsplumb(jsplumbInstance: JsPlumbInstance) {
+        jsplumbInstance.registerEndpointTypes(this.jsplumbConfigService.getEndpointTypeConfig());
+    }
+
+    destroy(preview: boolean) {
+        if (preview) {
+            this.pipelinePreviewInstance.destroy();
+            this.pipelinePreviewBridge = undefined;
+        } else {
+            this.pipelineEditorInstance.destroy();
+            this.pipelineEditorBridge = undefined;
         }
-      },
-      "highlight": {
-        paintStyle: {
-          fill: "white",
-          stroke: "#4CAF50",
-          strokeWidth: 4
-        }
-      }
-    });
-  }
+    }
 }

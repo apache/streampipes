@@ -16,13 +16,13 @@
  *
  */
 
-import { DialogRef } from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import { ShepherdService } from "../../../services/tour/shepherd.service";
-import { Component, Input, OnInit } from "@angular/core";
-import { AppConstants } from "../../../services/app.constants";
-import { AuthService } from "../../../services/auth.service";
-import { UserAccount, UserInfo } from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client";
-import { ProfileService } from "../../../profile/profile.service";
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { AppConstants } from '../../../services/app.constants';
+import { AuthService } from '../../../services/auth.service';
+import { UserAccount, UserInfo } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
+import { ProfileService } from '../../../profile/profile.service';
 
 @Component({
   selector: 'welcome-tour',
@@ -37,20 +37,20 @@ export class WelcomeTourComponent implements OnInit {
   currentUser: UserAccount;
 
   constructor(private authService: AuthService,
-              private DialogRef: DialogRef<WelcomeTourComponent>,
-              private profileService : ProfileService,
-              private ShepherdService: ShepherdService,
+              private dialogRef: DialogRef<WelcomeTourComponent>,
+              private profileService: ProfileService,
+              private shepherdService: ShepherdService,
               public appConstants: AppConstants) {
   }
 
   ngOnInit(): void {
     this.profileService.getUserProfile(this.userInfo.username).subscribe(data => {
       this.currentUser = data;
-    })
+    });
   }
 
   startCreatePipelineTour() {
-    this.ShepherdService.startCreatePipelineTour();
+    this.shepherdService.startCreatePipelineTour();
     this.close();
   }
 
@@ -63,7 +63,7 @@ export class WelcomeTourComponent implements OnInit {
   }
 
   close() {
-    this.DialogRef.close();
+    this.dialogRef.close();
   }
 
 }

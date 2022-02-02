@@ -23,7 +23,7 @@ import {
   PipelineMonitoringInfo,
   SpDataSet, SpDataStream
 } from '@streampipes/platform-services';
-import { PipelineMonitoringService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-monitoring.service';
+import { PipelineMonitoringService } from '@streampipes/platform-services';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';

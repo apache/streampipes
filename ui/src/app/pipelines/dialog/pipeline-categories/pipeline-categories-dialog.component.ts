@@ -17,8 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Pipeline, PipelineCategory } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+import { Pipeline, PipelineCategory, PipelineService } from '@streampipes/platform-services';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
@@ -45,17 +44,12 @@ export class PipelineCategoriesDialogComponent implements OnInit {
     @Input()
     systemPipelines: Pipeline[];
 
-    // getPipelineCategories;
-
     constructor(private pipelineService: PipelineService,
                 private dialogRef: DialogRef<PipelineCategoriesDialogComponent>) {
         this.addSelected = false;
         this.addPipelineToCategorySelected = [];
         this.categoryDetailsVisible = [];
         this.selectedPipelineId = '';
-        // this.getPipelineCategories = getPipelineCategories;
-        // this.refreshPipelines = refreshPipelines;
-
     }
 
     ngOnInit() {

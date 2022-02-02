@@ -16,18 +16,18 @@
  *
  */
 
-import {EditorConstants} from "../constants/editor.constants";
+import { EditorConstants } from '../constants/editor.constants';
 import {
   PipelineElementIdentifier,
   PipelineElementType,
   PipelineElementUnion
-} from "../model/editor.model";
+} from '../model/editor.model';
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
   SpDataSet,
   SpDataStream
-} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@streampipes/platform-services';
 
 export class PipelineElementTypeUtils {
 
@@ -57,13 +57,13 @@ export class PipelineElementTypeUtils {
 
   static toCssShortHand(elementType: PipelineElementType) {
     if (PipelineElementType.DataStream === elementType) {
-      return "stream";
+      return 'stream';
     } else if (PipelineElementType.DataSet === elementType) {
-      return "set";
+      return 'set';
     } else if (PipelineElementType.DataProcessor === elementType) {
-      return "sepa";
+      return 'sepa';
     } else {
-      return "action";
+      return 'action';
     }
   }
 

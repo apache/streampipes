@@ -19,10 +19,11 @@
 import * as dagre from 'dagre';
 import { JsplumbBridge } from './jsplumb-bridge.service';
 import { Injectable } from '@angular/core';
-import { PipelineElementConfig } from '../model/editor.model';
-import { DataProcessorInvocation, DataSinkInvocation } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineElementConfig, PipelineElementConfigurationStatus } from '../model/editor.model';
+import { DataProcessorInvocation, DataSinkInvocation } from '@streampipes/platform-services';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
+import { Connection } from '@jsplumb/core';
 
 @Injectable()
 export class PipelineValidationService {
@@ -31,11 +32,11 @@ export class PipelineValidationService {
     pipelineValid = false;
 
     availableErrorMessages: UserErrorMessage[] = [
-      new UserErrorMessage('Did you add a data stream?', 'Any pipeline needs at least one data stream.'),
-      new UserErrorMessage('Did you add a data sink?', 'Any pipeline needs at least one data sink.'),
-      new UserErrorMessage('Did you connect all elements?', 'No orphaned elements are allowed within a pipeline, make sure to connect all elements.'),
-      new UserErrorMessage('Separate pipelines', 'It seems you\'ve created more than one pipeline at once. Create only one pipeline at a time!'),
-      new UserErrorMessage('Did you configure all elements?', 'There\'s a pipeline element which is missing some configuration.')
+        new UserErrorMessage('Did you add a data stream?', 'Any pipeline needs at least one data stream.'),
+        new UserErrorMessage('Did you add a data sink?', 'Any pipeline needs at least one data sink.'),
+        new UserErrorMessage('Did you connect all elements?', 'No orphaned elements are allowed within a pipeline, make sure to connect all elements.'),
+        new UserErrorMessage('Separate pipelines', 'It seems you\'ve created more than one pipeline at once. Create only one pipeline at a time!'),
+        new UserErrorMessage('Did you configure all elements?', 'There\'s a pipeline element which is missing some configuration.')
     ];
 
     constructor(private jsplumbFactoryService: JsplumbFactoryService) {
@@ -61,10 +62,10 @@ export class PipelineValidationService {
 
         if (!this.isEmptyPipeline(rawPipelineModel)) {
             this.buildErrorMessages(streamInAssembly,
-              actionInAssembly,
-              allElementsConnected,
-              onlyOnePipelineCreated,
-              allElementsConfigured);
+                actionInAssembly,
+                allElementsConnected,
+                onlyOnePipelineCreated,
+                allElementsConfigured);
         } else {
             this.errorMessages = [];
         }
@@ -76,7 +77,7 @@ export class PipelineValidationService {
 
     isEmptyPipeline(rawPipelineModel) {
         return !this.isActionInAssembly(rawPipelineModel) &&
-          !this.isStreamInAssembly(rawPipelineModel) && !this.isInAssembly(rawPipelineModel, 'sepa');
+            !this.isStreamInAssembly(rawPipelineModel) && !this.isInAssembly(rawPipelineModel, 'sepa');
     }
 
     buildErrorMessages(streamInAssembly, actionInAssembly, allElementsConnected, onlyOnePipelineCreated, allElementsConfigured) {
@@ -101,7 +102,7 @@ export class PipelineValidationService {
     allElementsConfigured(rawPipelineModel: PipelineElementConfig[]): boolean {
         return rawPipelineModel
             .filter(config => ((config.payload instanceof DataProcessorInvocation) || (config.payload instanceof DataSinkInvocation)))
-            .every(config => config.settings.completed);
+            .every(config => (config.settings.completed === PipelineElementConfigurationStatus.OK));
     }
 
     allElementsConnected(rawPipelineModel, jsplumbBridge) {
@@ -130,7 +131,7 @@ export class PipelineValidationService {
         const g = this.makeGraph(rawPipelineModel, jsplumbBridge);
         const tarjan = dagre.graphlib.alg.tarjan(g);
 
-        return tarjan.length == 1;
+        return tarjan.length === 1;
     }
 
     isInAssembly(rawPipelineModel: PipelineElementConfig[], type) {
@@ -146,11 +147,10 @@ export class PipelineValidationService {
     makeGraph(rawPipelineModel: PipelineElementConfig[], jsplumbBridge: JsplumbBridge) {
         const g = new dagre.graphlib.Graph();
         g.setGraph({rankdir: 'LR'});
-        g.setDefaultEdgeLabel(function () {
+        g.setDefaultEdgeLabel(() => {
             return {};
         });
-        const nodes = $('#assembly').find('span[id^=\'jsplumb\']').get();
-
+        const nodes = $('#assembly').find('div[id^=\'jsplumb\']').get();
         for (let i = 0; i < nodes.length; i++) {
             const n = nodes[i];
             const elementOptions = this.getElementOptions(n.id, rawPipelineModel);
@@ -163,7 +163,7 @@ export class PipelineValidationService {
                 });
             }
         }
-        const edges = jsplumbBridge.getAllConnections();
+        const edges = jsplumbBridge.getAllConnections() as Connection[];
         edges.forEach((edge, i) => {
             const c = edges[i];
             g.setEdge(c.source.id, c.target.id);

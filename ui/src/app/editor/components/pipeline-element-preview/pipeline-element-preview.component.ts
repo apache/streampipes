@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, Input, OnDestroy, OnInit} from "@angular/core";
-import {EditorService} from "../../services/editor.service";
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { EditorService } from '../../services/editor.service';
 
 @Component({
   selector: 'pipeline-element-preview',
@@ -34,7 +34,7 @@ export class PipelineElementPreviewComponent implements OnInit, OnDestroy {
 
   runtimeData: ReadonlyMap<string, unknown>;
 
-  runtimeDataError: boolean = false;
+  runtimeDataError = false;
   timer: any;
 
   constructor(private editorService: EditorService) {

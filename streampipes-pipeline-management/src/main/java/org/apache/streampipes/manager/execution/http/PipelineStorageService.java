@@ -20,12 +20,12 @@ package org.apache.streampipes.manager.execution.http;
 
 import org.apache.streampipes.manager.data.PipelineGraph;
 import org.apache.streampipes.manager.data.PipelineGraphBuilder;
-import org.apache.streampipes.manager.matching.InvocationGraphBuilder;
-import org.apache.streampipes.resource.management.secret.SecretProvider;
+import org.apache.streampipes.manager.matching.ConnectionStorageHandler;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
+import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.List;
@@ -51,8 +51,11 @@ public class PipelineStorageService {
 
   private void preparePipeline() {
     PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
-    InvocationGraphBuilder builder = new InvocationGraphBuilder(pipelineGraph, pipeline.getPipelineId());
-    List<InvocableStreamPipesEntity> graphs = builder.buildGraphs();
+    List<InvocableStreamPipesEntity> graphs = pipelineGraph
+            .vertexSet()
+            .stream()
+            .filter(v -> v instanceof InvocableStreamPipesEntity).map(v -> (InvocableStreamPipesEntity) v)
+            .collect(Collectors.toList());
     encryptSecrets(graphs);
 
     List<DataSinkInvocation> secs = filter(graphs, DataSinkInvocation.class);
@@ -60,6 +63,8 @@ public class PipelineStorageService {
 
     pipeline.setSepas(sepas);
     pipeline.setActions(secs);
+
+    new ConnectionStorageHandler(pipeline).storeConnections();
   }
 
   private void encryptSecrets(List<InvocableStreamPipesEntity> graphs) {

@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {PipelineElementUnion} from "../../../editor/model/editor.model";
-import {Pipeline} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Component, Input } from '@angular/core';
+import { PipelineElementUnion } from '../../../editor/model/editor.model';
+import { Pipeline } from '@streampipes/platform-services';
 
 @Component({
   selector: 'pipeline-elements',
@@ -30,7 +30,7 @@ export class PipelineElementsComponent {
   pipeline: Pipeline;
 
   @Input()
-  selectedElement: PipelineElementUnion
+  selectedElement: PipelineElementUnion;
 
   constructor() {
 
