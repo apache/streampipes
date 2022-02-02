@@ -93,7 +93,7 @@ export class UserDefinedOutputStrategyComponent extends BaseOutputStrategy<UserD
   }
 
   checkFormValidity() {
-    if (!this.outputStrategy.eventProperties || this.outputStrategy.eventProperties.length == 0) {
+    if (!this.outputStrategy.eventProperties || this.outputStrategy.eventProperties.length === 0) {
       this.parentForm.controls['output-strategy'].setErrors({});
     } else {
       this.parentForm.controls['output-strategy'].setErrors(undefined);

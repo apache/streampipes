@@ -16,14 +16,15 @@
  *
  */
 
-import { Input, Directive } from "@angular/core";
-import {FormGroup} from "@angular/forms";
+import { Input, Directive } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import {
   DataProcessorInvocation,
   OutputStrategy
-} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@streampipes/platform-services';
 
 @Directive()
+// tslint:disable-next-line:directive-class-suffix
 export abstract class BaseOutputStrategy<T extends OutputStrategy> {
 
   @Input()
@@ -37,9 +38,9 @@ export abstract class BaseOutputStrategy<T extends OutputStrategy> {
 
   @Input()
   restrictedEditMode: boolean;
-  
+
   constructor() {
 
   }
-  
+
 }

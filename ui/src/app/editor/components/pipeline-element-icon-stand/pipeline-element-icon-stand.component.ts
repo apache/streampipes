@@ -16,16 +16,16 @@
  *
  */
 
-import {Component, Input, OnInit,} from "@angular/core";
-import {RestApi} from "../../../services/rest-api.service";
+import { AfterViewInit, Component, Input, OnInit, } from '@angular/core';
+import { RestApi } from '../../../services/rest-api.service';
 import {
     PipelineElementIdentifier,
     PipelineElementType,
     PipelineElementUnion
-} from "../../model/editor.model";
-import {PipelineElementTypeUtils} from "../../utils/editor.utils";
-import {EditorService} from "../../services/editor.service";
-import {zip} from "rxjs";
+} from '../../model/editor.model';
+import { PipelineElementTypeUtils } from '../../utils/editor.utils';
+import { EditorService } from '../../services/editor.service';
+import { zip } from 'rxjs';
 
 
 @Component({
@@ -33,14 +33,14 @@ import {zip} from "rxjs";
     templateUrl: './pipeline-element-icon-stand.component.html',
     styleUrls: ['./pipeline-element-icon-stand.component.scss']
 })
-export class PipelineElementIconStandComponent implements OnInit {
+export class PipelineElementIconStandComponent implements OnInit, AfterViewInit {
 
 
     _currentElements: PipelineElementUnion[];
 
     currentlyFilteredElements: PipelineElementUnion[];
 
-    elementFilter: string = "";
+    elementFilter = '';
     allCategories: any = [];
     currentCategories: any = [];
     selectedOptions: any = [];
@@ -50,8 +50,8 @@ export class PipelineElementIconStandComponent implements OnInit {
 
     currentElementName: string;
 
-    constructor(private RestApi: RestApi,
-                private EditorService: EditorService) {
+    constructor(private restApi: RestApi,
+                private editorService: EditorService) {
 
     }
 
@@ -64,7 +64,7 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     openHelpDialog(pipelineElement) {
-        this.EditorService.openHelpDialog(pipelineElement);
+        this.editorService.openHelpDialog(pipelineElement);
     }
 
     updateMouseOver(elementAppId: string) {
@@ -72,9 +72,9 @@ export class PipelineElementIconStandComponent implements OnInit {
     }
 
     loadOptions() {
-        zip(this.EditorService.getEpCategories(),
-            this.EditorService.getEpaCategories(),
-            this.EditorService.getEcCategories()).subscribe((results) => {
+        zip(this.editorService.getEpCategories(),
+            this.editorService.getEpaCategories(),
+            this.editorService.getEcCategories()).subscribe((results) => {
                 this.allCategories[PipelineElementType.DataStream] = results[0];
                 this.allCategories[PipelineElementType.DataSet] = results[0];
                 this.allCategories[PipelineElementType.DataProcessor] = results[1];
@@ -82,17 +82,17 @@ export class PipelineElementIconStandComponent implements OnInit {
                 this.currentCategories = this.allCategories[0];
                 this.selectedOptions = [...this.currentCategories];
             });
-    };
+    }
 
     applyFilter() {
         this.currentlyFilteredElements = this.currentElements.filter(el => {
             return this.matchesText(el) && this.matchesCategory(el);
-        })
+        });
         this.makeDraggable();
     }
 
     matchesText(el: PipelineElementUnion): boolean {
-        return this.elementFilter === "" || el.name.toLowerCase().includes(this.elementFilter.toLowerCase());
+        return this.elementFilter === '' || el.name.toLowerCase().includes(this.elementFilter.toLowerCase());
     }
 
     matchesCategory(el: PipelineElementUnion): boolean {
@@ -130,7 +130,7 @@ export class PipelineElementIconStandComponent implements OnInit {
 
     @Input()
     set activeType(value: PipelineElementIdentifier) {
-        let activeType = PipelineElementTypeUtils.fromClassName(value);
+        const activeType = PipelineElementTypeUtils.fromClassName(value);
         this._activeType = activeType;
         if (this.allCategories.length > 0) {
             this.currentCategories = this.allCategories[this._activeType];
@@ -139,13 +139,13 @@ export class PipelineElementIconStandComponent implements OnInit {
         this.activeCssClass = this.makeActiveCssClass(activeType);
         setTimeout(() => {
             this.makeDraggable();
-        })
-    };
+        });
+    }
 
     @Input()
     set currentElements(value: PipelineElementUnion[]) {
         this._currentElements = value;
-        this.elementFilter = "";
+        this.elementFilter = '';
         this.currentlyFilteredElements = this._currentElements;
     }
 
@@ -159,19 +159,19 @@ export class PipelineElementIconStandComponent implements OnInit {
 
     makeDraggable() {
        setTimeout(() => {
-           (<any>$('.draggable-icon')).draggable({
+           ($('.draggable-icon') as any).draggable({
                revert: 'invalid',
                helper: 'clone',
                stack: '.draggable-icon',
-               start: function (el, ui) {
+               start (el, ui) {
                    ui.helper.appendTo('#content');
                    $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
                },
-               stop: function (el, ui) {
+               stop (el, ui) {
                    $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156)');
                }
            });
        });
-    };
+    }
 
 }

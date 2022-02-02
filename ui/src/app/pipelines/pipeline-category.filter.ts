@@ -16,8 +16,8 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
-import {Pipeline} from "../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Pipeline } from '@streampipes/platform-services';
 
 @Pipe({
 	name: 'pipelineInCategoryFilter',
@@ -30,4 +30,4 @@ export class PipelineInCategoryPipe implements PipeTransform {
 			return pipeline.pipelineCategories && pipeline.pipelineCategories.some(pc => pc === categoryId);
 		});
 	}
-};
+}

@@ -23,12 +23,12 @@ import {
   ColorPickerStaticProperty,
   FileStaticProperty,
   FreeTextStaticProperty,
-  OneOfStaticProperty, Pipeline,
+  OneOfStaticProperty,
   SecretStaticProperty,
   StaticPropertyAlternative,
   StaticPropertyAlternatives, StaticPropertyGroup,
   StaticPropertyUnion
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+} from '@streampipes/platform-services';
 
 export class PipelineElementTemplateGenerator {
 
@@ -40,7 +40,7 @@ export class PipelineElementTemplateGenerator {
     if (this.sp instanceof FreeTextStaticProperty) {
       return this.sp.value;
     } else if (this.sp instanceof OneOfStaticProperty) {
-      return this.sp.options.find(o => o.selected) ? this.sp.options.find(o => o.selected).name : "";
+      return this.sp.options.find(o => o.selected) ? this.sp.options.find(o => o.selected).name : '';
     } else if (this.sp instanceof ColorPickerStaticProperty) {
       return this.sp.selectedColor;
     } else if (this.sp instanceof SecretStaticProperty) {
@@ -70,21 +70,21 @@ export class PipelineElementTemplateGenerator {
   }
 
   addEntry(sp: StaticPropertyUnion) {
-    let entry = {};
+    const entry = {};
     entry[sp.internalName] = new PipelineElementTemplateGenerator(sp).toTemplateValue();
     return entry;
   }
 
-  addListEntry(staticProperties: Array<StaticPropertyUnion>) {
-    let values = [];
+  addListEntry(staticProperties: StaticPropertyUnion[]) {
+    const values = [];
     staticProperties.forEach(sp => {
       values.push(this.addEntry(sp));
     });
     return values;
   }
 
-  addNestedEntry(staticProperties: Array<StaticPropertyUnion>) {
-    let entry = {};
+  addNestedEntry(staticProperties: StaticPropertyUnion[]) {
+    const entry = {};
     staticProperties.forEach(sp => {
       entry[sp.internalName] = new PipelineElementTemplateGenerator(sp).toTemplateValue();
     });

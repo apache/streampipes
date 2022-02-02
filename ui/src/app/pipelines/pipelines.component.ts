@@ -18,8 +18,7 @@
 
 import * as FileSaver from 'file-saver';
 import { Component, OnInit } from '@angular/core';
-import { PipelineService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
-import { Pipeline, PipelineCategory } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { Pipeline, PipelineCategory, PipelineService } from '@streampipes/platform-services';
 import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
 import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
 import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
@@ -29,7 +28,6 @@ import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/
 import { zip } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { UserRole } from '../_enums/user-role.enum';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 
 @Component({

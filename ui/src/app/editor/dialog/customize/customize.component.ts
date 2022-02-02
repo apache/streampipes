@@ -25,7 +25,7 @@ import {
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { JsplumbService } from '../../services/jsplumb.service';
 import {
-  DataProcessorInvocation,
+  DataProcessorInvocation, DataSinkInvocation,
   EventSchema,
   PipelineElementTemplate,
   PipelineElementTemplateConfig,
@@ -199,7 +199,8 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
           this.cachedPipelineElement = pe as InvocablePipelineElementUnion;
         });
       } else {
-        this.pipelineElementTemplateService.getConfiguredDataSinkForTemplate(event.value._id, this.cachedPipelineElement)
+        this.pipelineElementTemplateService.getConfiguredDataSinkForTemplate(event.value._id,
+            this.cachedPipelineElement as DataSinkInvocation)
             .subscribe(pe => {
           this.cachedPipelineElement = pe as InvocablePipelineElementUnion;
         });

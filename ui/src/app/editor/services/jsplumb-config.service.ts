@@ -19,8 +19,8 @@
 import { Injectable } from '@angular/core';
 import { JsplumbSettings } from '../model/jsplumb.model';
 import { BezierConnector } from '@jsplumb/connector-bezier';
-import { ArrowOverlay, EndpointTypeDescriptor } from '@jsplumb/core';
-import { ArrowOverlayOptions } from "@jsplumb/common";
+import { EndpointTypeDescriptor } from '@jsplumb/core';
+import { ArrowOverlayOptions } from '@jsplumb/common';
 
 @Injectable()
 export class JsplumbConfigService {

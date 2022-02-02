@@ -16,8 +16,8 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { Component, Input } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
   selector: 'missing-elements-for-tutorial',
@@ -30,11 +30,11 @@ export class MissingElementsForTutorialComponent {
   @Input()
   missingElementsForTutorial: any[];
 
-  constructor(private DialogRef: DialogRef<MissingElementsForTutorialComponent>) {
+  constructor(private dialogRef: DialogRef<MissingElementsForTutorialComponent>) {
 
   }
 
   close() {
-    this.DialogRef.close();
-  };
+    this.dialogRef.close();
+  }
 }

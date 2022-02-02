@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import {
   DataProcessorInvocation, DataSinkInvocation,
@@ -80,16 +80,21 @@ export class PipelineElementStatisticsComponent implements OnInit {
   ngOnInit(): void {
     this.producedMessagesAvailable = this.pipelineElementMonitoringInfo.producedMessageInfoExists;
     this.consumedMessagesFirstStreamAvailable = this.pipelineElementMonitoringInfo.consumedMessageInfoExists;
-    this.consumedMessagesSecondStreamAvailable = this.pipelineElementMonitoringInfo.consumedMessageInfoExists && this.pipelineElementMonitoringInfo.consumedMessagesInfos.length > 1;
+    this.consumedMessagesSecondStreamAvailable =
+        this.pipelineElementMonitoringInfo.consumedMessageInfoExists && this.pipelineElementMonitoringInfo.consumedMessagesInfos.length > 1;
   }
 
   updateMonitoringInfo() {
     if (this.pipelineElementMonitoringInfo.consumedMessageInfoExists) {
       const consumedMessages = this.pipelineElementMonitoringInfo.consumedMessagesInfos;
       this.consumedMessagesFirstInputStream = consumedMessages[0].consumedMessagesSincePipelineStart + ' / ' + consumedMessages[0].lag;
-      this.consumedMessagesSecondInputStream = consumedMessages.length > 1 ? consumedMessages[1].consumedMessagesSincePipelineStart + ' / ' + consumedMessages[1].lag : this.notAvailable;
+      this.consumedMessagesSecondInputStream =
+          consumedMessages.length > 1 ? consumedMessages[1].consumedMessagesSincePipelineStart +
+              ' / ' + consumedMessages[1].lag : this.notAvailable;
       this.consumedMessagesFirstStreamBandColor = consumedMessages[0].lag > 10 ? this.warningBandColor : this.okBandColor;
-      this.consumedMessagesSecondStreamBandColor = (consumedMessages.length > 1 ? (consumedMessages[1].lag > 10 ? this.warningBandColor : this.okBandColor) : this.deactivatedBandColor);
+      this.consumedMessagesSecondStreamBandColor =
+          (consumedMessages.length > 1 ? (consumedMessages[1].lag > 10 ? this.warningBandColor : this.okBandColor) :
+              this.deactivatedBandColor);
 
       const consumedMessage = {'count': consumedMessages[0].consumedMessagesSincePipelineStart};
       this.makeHistoricData(consumedMessage, this.consumedMessagesFirstStreamLastValue, this.historicFirstConsumedInputValues);

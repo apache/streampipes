@@ -16,8 +16,8 @@
  *
  */
 
-import {Pipe, PipeTransform} from "@angular/core";
-import {PipelineElementConfig} from "../model/editor.model";
+import { Pipe, PipeTransform } from '@angular/core';
+import { PipelineElementConfig } from '../model/editor.model';
 
 @Pipe({
   name: 'enabledPipelineElement',
@@ -28,6 +28,6 @@ export class EnabledPipelineElementFilter implements PipeTransform {
     if (!items) {
       return items;
     }
-    return items.filter(item => item.settings.disabled == undefined || !item.settings.disabled);
+    return items.filter(item => item.settings.disabled === undefined || !item.settings.disabled);
   }
 }

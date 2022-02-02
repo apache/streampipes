@@ -143,15 +143,9 @@ export class JsplumbService {
       jsplumbConfig.streamEndpointOptions : jsplumbConfig.sepaEndpointOptions;
     let sourceEndPoint;
     const selectedEndpoints = jsplumbBridge.selectEndpoints({source: sourceElement});
-    if (selectedEndpoints.length > 0) {
-      if (!(selectedEndpoints.get(0).isFull())) {
-        sourceEndPoint = jsplumbBridge.selectEndpoints({source: sourceElement}).get(0);
-      } else {
-        sourceEndPoint = jsplumbBridge.addEndpoint(sourceElement, options);
-      }
-    } else {
-      sourceEndPoint = jsplumbBridge.addEndpoint(sourceElement, options);
-    }
+    sourceEndPoint = selectedEndpoints.length > 0 ? !(selectedEndpoints.get(0).isFull()) ?
+        jsplumbBridge.selectEndpoints({source: sourceElement}).get(0) :
+        jsplumbBridge.addEndpoint(sourceElement, options) : jsplumbBridge.addEndpoint(sourceElement, options);
 
     const targetElement = document.getElementById(targetElementId);
     const targetEndPoint = jsplumbBridge.selectEndpoints({target: targetElement}).get(0);
@@ -191,7 +185,8 @@ export class JsplumbService {
       connectable,
       openCustomize: !(pipelineElement as any).configured,
       preview: isPreview,
-      completed: (pipelineElement instanceof SpDataStream || pipelineElement instanceof SpDataSet || isPreview || isCompleted) ? PipelineElementConfigurationStatus.OK : PipelineElementConfigurationStatus.INCOMPLETE,
+      completed: (pipelineElement instanceof SpDataStream || pipelineElement instanceof SpDataSet ||
+          isPreview || isCompleted) ? PipelineElementConfigurationStatus.OK : PipelineElementConfigurationStatus.INCOMPLETE,
       disabled: false,
       loadingStatus: false,
       displaySettings,
@@ -220,7 +215,7 @@ export class JsplumbService {
       }
       return clonedPe;
     } else {
-      const clonedPe = DataSinkInvocation.fromData(pipelineElement, new DataSinkInvocation());
+      const clonedPe = DataSinkInvocation.fromData(pipelineElement as DataSinkInvocation, new DataSinkInvocation());
       if (newElementId) {
         this.updateElementIds(clonedPe, newElementId);
       }

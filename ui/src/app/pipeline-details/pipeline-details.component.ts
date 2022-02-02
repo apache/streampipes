@@ -16,13 +16,11 @@
  *
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
-import { PipelineService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
-import { Pipeline } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { Component, OnInit } from '@angular/core';
+import { Pipeline, PipelineService } from '@streampipes/platform-services';
 import { PipelineElementUnion } from '../editor/model/editor.model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { UserRole } from '../_enums/user-role.enum';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 
 @Component({

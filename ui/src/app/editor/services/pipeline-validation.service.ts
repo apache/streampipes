@@ -147,7 +147,7 @@ export class PipelineValidationService {
     makeGraph(rawPipelineModel: PipelineElementConfig[], jsplumbBridge: JsplumbBridge) {
         const g = new dagre.graphlib.Graph();
         g.setGraph({rankdir: 'LR'});
-        g.setDefaultEdgeLabel(function () {
+        g.setDefaultEdgeLabel(() => {
             return {};
         });
         const nodes = $('#assembly').find('div[id^=\'jsplumb\']').get();

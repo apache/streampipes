@@ -66,6 +66,7 @@ import { JsplumbFactoryService } from './services/jsplumb-factory.service';
 import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 import { PipelineStyleService } from './services/pipeline-style.service';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [
@@ -83,6 +84,7 @@ import { PipelineStyleService } from './services/pipeline-style.service';
     MatProgressSpinnerModule,
     ShowdownModule,
     ReactiveFormsModule,
+    PlatformServicesModule,
   ],
   declarations: [
     CompatibleElementsComponent,

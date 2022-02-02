@@ -366,7 +366,6 @@ export class PipelineComponent implements OnInit, OnDestroy {
   currentConnectionValid(pe: PipelineElementConfig,
                          targetEdges: PipelineEdgeValidation[]) {
     const entity = pe.payload as InvocablePipelineElementUnion;
-    //return entity.streamRequirements.length === targetEdges.length && targetEdges.every(e => e.status.validationStatusType === 'COMPLETE');
     return targetEdges.every(e => e.status.validationStatusType === 'COMPLETE');
   }
 

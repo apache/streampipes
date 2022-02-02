@@ -24,22 +24,22 @@ import {
     Input,
     OnInit,
     Output
-} from "@angular/core";
-import {PipelineService} from "../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service";
+} from '@angular/core';
 import {
+    PipelineService,
     DataProcessorInvocation,
     DataSinkInvocation,
     EventSchema,
     Pipeline
-} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {PipelineElementUnion} from "../../../editor/model/editor.model";
-import {FormBuilder, FormGroup} from "@angular/forms";
+} from '@streampipes/platform-services';
+import { PipelineElementUnion } from '../../../editor/model/editor.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
     selector: 'quick-edit',
     templateUrl: './quickedit.component.html',
 })
-export class QuickEditComponent implements OnInit, AfterViewInit{
+export class QuickEditComponent implements OnInit, AfterViewInit {
 
     @Input()
     pipeline: Pipeline;
@@ -53,12 +53,12 @@ export class QuickEditComponent implements OnInit, AfterViewInit{
 
     parentForm: FormGroup;
     formValid: boolean;
-    viewInitialized: boolean = false;
+    viewInitialized = false;
 
-    isInvocable: boolean = false;
-    isDataProcessor: boolean = false;
+    isInvocable = false;
+    isDataProcessor = false;
 
-    pipelineUpdating: boolean = false;
+    pipelineUpdating = false;
 
     constructor(private pipelineService: PipelineService,
                 private fb: FormBuilder,
@@ -70,9 +70,9 @@ export class QuickEditComponent implements OnInit, AfterViewInit{
         this.parentForm = this.fb.group({
         });
 
-        this.parentForm.statusChanges.subscribe((status)=>{
+        this.parentForm.statusChanges.subscribe((status) => {
             this.formValid = this.viewInitialized && this.parentForm.valid;
-        })
+        });
     }
 
     ngAfterViewInit(): void {
@@ -99,7 +99,7 @@ export class QuickEditComponent implements OnInit, AfterViewInit{
     }
 
     updateDataProcessor() {
-        let dataProcessors: DataProcessorInvocation[] = [];
+        const dataProcessors: DataProcessorInvocation[] = [];
         this.pipeline.sepas.forEach(p => {
            if (p.dom === this._selectedElement.dom) {
                dataProcessors.push(this._selectedElement as DataProcessorInvocation);
@@ -111,7 +111,7 @@ export class QuickEditComponent implements OnInit, AfterViewInit{
     }
 
     updateDataSink() {
-        let dataSinks: DataSinkInvocation[] = [];
+        const dataSinks: DataSinkInvocation[] = [];
         this.pipeline.actions.forEach(p => {
             if (p.dom === this._selectedElement.dom) {
                 dataSinks.push(this._selectedElement as DataSinkInvocation);

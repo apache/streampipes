@@ -18,10 +18,10 @@
 
 import { Injectable } from '@angular/core';
 import { JsplumbConfigService } from './jsplumb-config.service';
-import { EdgeValidationStatus, PipelineEdgeValidation } from '../../core-model/gen/streampipes-model';
-import { ArrowOverlay, Endpoint } from '@jsplumb/core';
+import { EdgeValidationStatus, PipelineEdgeValidation } from '@streampipes/platform-services';
+import { Endpoint } from '@jsplumb/core';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
-import { PipelineElementConfig, PipelineElementConfigurationStatus } from "../model/editor.model";
+import { PipelineElementConfig, PipelineElementConfigurationStatus } from '../model/editor.model';
 
 @Injectable()
 export class PipelineStyleService {

@@ -141,8 +141,10 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
     const currentPipeline = this.objectProvider.makePipeline(clonedModel);
     this.editorService.recommendPipelineElement(currentPipeline, pipelineElementDomId).subscribe((result) => {
       if (result.success) {
-        this.possibleElements = cloneDeep(this.pipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements));
-        this.recommendedElements = cloneDeep(this.pipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements));
+        this.possibleElements =
+            cloneDeep(this.pipelineElementRecommendationService.collectPossibleElements(this.allElements, result.possibleElements));
+        this.recommendedElements =
+            cloneDeep(this.pipelineElementRecommendationService.populateRecommendedList(this.allElements, result.recommendedElements));
         this.recommendationsAvailable = true;
       }
     });

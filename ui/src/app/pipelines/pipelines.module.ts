@@ -38,6 +38,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { PipelineNotificationsComponent } from './dialog/pipeline-notifications/pipeline-notifications.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [
@@ -50,7 +51,8 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
     MatProgressSpinnerModule,
     MatSortModule,
     MatTableModule,
-    CoreUiModule
+    CoreUiModule,
+    PlatformServicesModule,
   ],
   declarations: [
     DeletePipelineDialogComponent,

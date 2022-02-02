@@ -21,13 +21,12 @@ import {
   DataSinkInvocation,
   SpDataSet,
   SpDataStream
-} from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {InjectionToken} from "@angular/core";
-import {EditorConstants} from "../constants/editor.constants";
+} from '@streampipes/platform-services';
+import { InjectionToken } from '@angular/core';
 
-export type PipelineElementHolder = {
-  [key: string]: Array<PipelineElementUnion>;
-};
+export interface PipelineElementHolder {
+  [key: string]: PipelineElementUnion[];
+}
 
 export interface PipelineElementPosition {
   x: number;
@@ -41,7 +40,7 @@ export enum PipelineElementConfigurationStatus {
 }
 
 export interface PipelineElementConfig {
-  type: string,
+  type: string;
   settings: {
     openCustomize: boolean,
     preview: boolean,
@@ -54,15 +53,15 @@ export interface PipelineElementConfig {
       x: number,
       y: number
     }
-  },
-  payload: PipelineElementUnion
+  };
+  payload: PipelineElementUnion;
 }
 
 export interface PipelineElementRecommendationLayout {
   skewStyle: any;
   unskewStyle: any;
   unskewStyleLabel: any;
-  type: string
+  type: string;
 }
 
 export enum PipelineElementType {
@@ -73,9 +72,9 @@ export enum PipelineElementType {
 }
 
 export interface TabsModel {
-  title: string,
-  type: PipelineElementIdentifier,
-  shorthand: string
+  title: string;
+  type: PipelineElementIdentifier;
+  shorthand: string;
 }
 
 export type PipelineElementUnion =
@@ -88,7 +87,7 @@ export type InvocablePipelineElementUnion = DataProcessorInvocation | DataSinkIn
 
 export const PIPELINE_ELEMENT_TOKEN = new InjectionToken<{}>('pipelineElement');
 
-export type PipelineElementIdentifier = "org.apache.streampipes.model.SpDataStream"
-    | "org.apache.streampipes.model.SpDataSet"
-    | "org.apache.streampipes.model.graph.DataProcessorInvocation"
-    | "org.apache.streampipes.model.graph.DataSinkInvocation";
+export type PipelineElementIdentifier = 'org.apache.streampipes.model.SpDataStream'
+    | 'org.apache.streampipes.model.SpDataSet'
+    | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
+    | 'org.apache.streampipes.model.graph.DataSinkInvocation';

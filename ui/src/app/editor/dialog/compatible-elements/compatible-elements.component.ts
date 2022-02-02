@@ -16,18 +16,18 @@
  *
  */
 
-import {Component, Input} from "@angular/core";
-import {DialogRef} from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import {JsplumbService} from "../../services/jsplumb.service";
-import {DataProcessorInvocation} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {PipelineElementConfig, PipelineElementUnion} from "../../model/editor.model";
+import { Component, Input, OnInit } from '@angular/core';
+import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { JsplumbService } from '../../services/jsplumb.service';
+import { DataProcessorInvocation } from '@streampipes/platform-services';
+import { PipelineElementConfig, PipelineElementUnion } from '../../model/editor.model';
 
 @Component({
   selector: 'compatible-elements',
   templateUrl: './compatible-elements.component.html',
   styleUrls: ['./compatible-elements.component.scss']
 })
-export class CompatibleElementsComponent {
+export class CompatibleElementsComponent implements OnInit {
 
   @Input()
   rawPipelineModel: PipelineElementConfig[];
@@ -43,14 +43,14 @@ export class CompatibleElementsComponent {
 
   constructor(private dialogRef: DialogRef<CompatibleElementsComponent>,
               private JsPlumbService: JsplumbService) {
-    //this.ElementIconText = ElementIconText;
+    // this.ElementIconText = ElementIconText;
   }
 
   ngOnInit() {
     this.possibleElements.sort((a, b) => a.name.localeCompare(b.name));
     this.possibleElements.forEach(pe => {
       this.styles.push(this.makeStandardStyle());
-    })
+    });
   }
 
   create(possibleElement) {
@@ -59,13 +59,13 @@ export class CompatibleElementsComponent {
   }
 
   iconText(elementId) {
-    //return this.ElementIconText.getElementIconText(elementId);
+    // return this.ElementIconText.getElementIconText(elementId);
   }
 
   hide() {
-    //this.$mdDialog.hide();
+    // this.$mdDialog.hide();
     this.dialogRef.close();
-  };
+  }
 
   isDataProcessor(possibleElement: PipelineElementUnion) {
     return possibleElement instanceof DataProcessorInvocation;
@@ -73,16 +73,16 @@ export class CompatibleElementsComponent {
 
   makeStandardStyle() {
     return {
-      background: "var(--color-bg-dialog)",
-      cursor: "auto"
-    }
+      background: 'var(--color-bg-dialog)',
+      cursor: 'auto'
+    };
   }
 
   makeHoverStyle() {
     return {
-      background: "var(--color-bg-1)",
-      cursor: "pointer"
-    }
+      background: 'var(--color-bg-1)',
+      cursor: 'pointer'
+    };
   }
 
   changeStyle(index: number, hover: boolean) {

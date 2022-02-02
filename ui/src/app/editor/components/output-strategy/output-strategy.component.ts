@@ -16,9 +16,9 @@
  *
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {DataProcessorInvocation, OutputStrategy} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {FormGroup} from "@angular/forms";
+import { Component, Input, OnInit } from '@angular/core';
+import { DataProcessorInvocation, OutputStrategy } from '@streampipes/platform-services';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'output-strategy',

@@ -16,7 +16,7 @@
  *
  */
 
-import { Pipeline } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { Pipeline } from '@streampipes/platform-services';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { PipelineOperationsService } from '../../services/pipeline-operations.service';
 import { MatTableDataSource } from '@angular/material/table';

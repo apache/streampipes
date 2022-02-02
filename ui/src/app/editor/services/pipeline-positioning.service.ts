@@ -131,7 +131,7 @@ export class PipelinePositioningService {
     const jsPlumbBridge = this.jsplumbFactoryService.getJsplumbBridge(previewConfig);
     const g = new dagre.graphlib.Graph();
     g.setGraph({rankdir: 'LR', ranksep: previewConfig ? '50' : '100'});
-    g.setDefaultEdgeLabel(function () {
+    g.setDefaultEdgeLabel(() => {
       return {};
     });
     const nodes = $(canvasId).find(nodeIdentifier).get();
