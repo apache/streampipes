@@ -16,19 +16,19 @@
  *
  */
 
-import { Injectable } from "@angular/core";
-import { RestApi } from "../../services/rest-api.service";
-import { InvocablePipelineElementUnion, PipelineElementConfig } from "../model/editor.model";
-import { DataSinkInvocation, Pipeline } from "../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import { EditorService } from "./editor.service";
-import { JsplumbFactoryService } from "./jsplumb-factory.service";
+import { Injectable } from '@angular/core';
+import { RestApi } from '../../services/rest-api.service';
+import { InvocablePipelineElementUnion, PipelineElementConfig } from '../model/editor.model';
+import { DataSinkInvocation, Pipeline } from '@streampipes/platform-services';
+import { EditorService } from './editor.service';
+import { JsplumbFactoryService } from './jsplumb-factory.service';
 
 @Injectable()
 export class ObjectProvider {
 
-    constructor(private RestApi: RestApi,
-                private EditorService: EditorService,
-                private JsplumbFactoryService: JsplumbFactoryService) {
+    constructor(private restApi: RestApi,
+                private editorService: EditorService,
+                private jsplumbFactoryService: JsplumbFactoryService) {
     }
 
     prepareElement(pipelineElement: InvocablePipelineElementUnion) {
@@ -37,9 +37,9 @@ export class ObjectProvider {
     }
 
     preparePipeline(): Pipeline {
-        var pipeline = new Pipeline();
-        pipeline.name = "";
-        pipeline.description = "";
+        const pipeline = new Pipeline();
+        pipeline.name = '';
+        pipeline.description = '';
         pipeline.streams = [];
         pipeline.sepas = [];
         pipeline.actions = [];
@@ -52,43 +52,37 @@ export class ObjectProvider {
     }
 
     makePipeline(currentPipelineElements): Pipeline {
-        var pipeline = this.preparePipeline();
+        let pipeline = this.preparePipeline();
         pipeline = this.addElementNew(pipeline, currentPipelineElements);
         return pipeline;
     }
 
     hasConnectedPipelineElement(pipelineElementDomId: string,
                                 rawPipelineModel: PipelineElementConfig[]) {
-        let pipelineElement = this.findElement(pipelineElementDomId, rawPipelineModel);
+        const pipelineElement = this.findElement(pipelineElementDomId, rawPipelineModel);
         if (pipelineElement.payload instanceof DataSinkInvocation) {
             return false;
         } else {
             return rawPipelineModel
                 .filter(pe => !pe.settings.disabled && pe.payload.connectedTo)
                 .find(pe => (pe.payload.connectedTo.indexOf(pipelineElementDomId) > -1))
-                != undefined;
+                !== undefined;
         }
     }
 
     findElement(elementId, rawPipelineModel: PipelineElementConfig[]): PipelineElementConfig {
-        let result = {} as PipelineElementConfig;
-        rawPipelineModel.forEach(pe => {
-            if (pe.payload.dom === elementId) {
-                result = pe;
-            }
-        });
-        return result;
+        return rawPipelineModel.find(pe => pe.payload.dom === elementId) || {} as PipelineElementConfig;
     }
 
     addElementNew(pipeline, currentPipelineElements: PipelineElementConfig[]): Pipeline {
-        let JsplumbBridge = this.JsplumbFactoryService.getJsplumbBridge(false);
+        const JsplumbBridge = this.jsplumbFactoryService.getJsplumbBridge(false);
         currentPipelineElements.forEach(pe => {
-            if (pe.settings.disabled == undefined || !(pe.settings.disabled)) {
+            if (pe.settings.disabled === undefined || !(pe.settings.disabled)) {
                 if (pe.type === 'sepa' || pe.type === 'action') {
                     let payload = pe.payload;
                     payload = this.prepareElement(payload as InvocablePipelineElementUnion);
-                    let connections = JsplumbBridge.getConnections({
-                        target: $("#" + payload.dom)
+                    const connections = JsplumbBridge.getConnections({
+                        target: document.getElementById(payload.dom)
                     });
                     for (let i = 0; i < connections.length; i++) {
                         payload.connectedTo.push(connections[i].sourceId);
@@ -96,8 +90,7 @@ export class ObjectProvider {
                     if (payload.connectedTo && payload.connectedTo.length > 0) {
                         pe.type === 'action' ? pipeline.actions.push(payload) : pipeline.sepas.push(payload);
                     }
-                }
-                else {
+                } else {
                     pipeline.streams.push(pe.payload);
                 }
             }
@@ -106,6 +99,6 @@ export class ObjectProvider {
     }
 
     updatePipeline(pipeline: Pipeline) {
-        return this.EditorService.updatePartialPipeline(pipeline);
+        return this.editorService.updatePartialPipeline(pipeline);
     }
 }

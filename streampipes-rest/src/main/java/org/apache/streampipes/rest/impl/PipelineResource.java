@@ -169,16 +169,17 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     return ok(message);
   }
 
-  @Path("/recommend")
+  @Path("/recommend/{recId}")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   @Hidden
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   @PostAuthorize("hasPermission(returnObject, 'READ')")
-  public PipelineElementRecommendationMessage recommend(Pipeline pipeline) {
+  public PipelineElementRecommendationMessage recommend(Pipeline pipeline,
+                                                        @PathParam("recId") String baseRecElement) {
     try {
-      return Operations.findRecommendedElements(pipeline);
+      return Operations.findRecommendedElements(pipeline, baseRecElement);
     } catch (JsonSyntaxException e) {
       throw new WebApplicationException(badRequest(new Notification(NotificationType.UNKNOWN_ERROR,
               e.getMessage())));
@@ -248,7 +249,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                                     Pipeline pipeline) {
     Pipeline storedPipeline = getPipelineStorage().getPipeline(pipelineId);
     if (!storedPipeline.isRunning()) {
-      storedPipeline.setActions(pipeline.getActions());
+      storedPipeline.setStreams(pipeline.getStreams());
       storedPipeline.setSepas(pipeline.getSepas());
       storedPipeline.setActions(pipeline.getActions());
     }

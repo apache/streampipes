@@ -26,17 +26,17 @@
                 <div *ngIf="statusDetailsVisible">Hide Details</div>
             </button>
             <div *ngIf="statusDetailsVisible">
-                <div *ngFor="let entry of matchingResultMessage">
+                <div *ngFor="let entry of notifications">
                     <div fxFlex="100" class="md-whiteframe-z1" style="margin-bottom:10px;">
                         <div fxFlex fxLayout="column" class="md-padding">
-                            <div>
-                                <i class="material-icons" *ngIf="entry.matchingResultMessage">done</i>
-                                <i class="material-icons" *ngIf="entry.matchingSuccessful">warning</i>
-                                <b>{{entry.title}} </b>
-                            </div>
+<!--                            <div>-->
+<!--                                <i class="material-icons" *ngIf="entry.matchingResultMessage">done</i>-->
+<!--                                <i class="material-icons" *ngIf="entry.matchingSuccessful">warning</i>-->
+<!--                                <b>{{entry.title}} </b>-->
+<!--                            </div>-->
                             <div fxFlex="column">
-                                {{entry.requirementSubject}}<br/>
-                                {{entry.reasonText}}
+                                {{entry.title}}<br/>
+                                {{entry.description}}
                             </div>
                         </div>
                     </div>

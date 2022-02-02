@@ -25,7 +25,7 @@ import org.apache.streampipes.manager.endpoint.EndpointItemFetcher;
 import org.apache.streampipes.manager.execution.http.PipelineExecutor;
 import org.apache.streampipes.manager.execution.http.PipelineStorageService;
 import org.apache.streampipes.manager.matching.DataSetGroundingSelector;
-import org.apache.streampipes.manager.matching.PipelineVerificationHandler;
+import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.manager.runtime.PipelineElementRuntimeInfoFetcher;
@@ -78,13 +78,14 @@ public class Operations {
    */
   public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial, String username)
           throws Exception {
-    PipelineVerificationHandler validator = new PipelineVerificationHandler(
-            pipeline);
-    return validator
-            .validateConnection()
-            .computeMappingProperties()
-            .storeConnection()
-            .getPipelineModificationMessage();
+    return new PipelineVerificationHandlerV2(pipeline).verifyPipeline();
+//    PipelineVerificationHandler validator = new PipelineVerificationHandler(
+//            pipeline);
+//    return validator
+//            .validateConnection()
+//            .computeMappingProperties()
+//            .storeConnection()
+//            .getPipelineModificationMessage();
   }
 
   public static DataSetModificationMessage updateDataSet(SpDataSet dataSet) {
@@ -101,8 +102,9 @@ public class Operations {
     return new TypeExtractor(graphData).getTypeVerifier().verifyAndUpdate();
   }
 
-  public static PipelineElementRecommendationMessage findRecommendedElements(Pipeline partialPipeline) throws NoSuitableSepasAvailableException {
-    return new ElementRecommender(partialPipeline).findRecommendedElements();
+  public static PipelineElementRecommendationMessage findRecommendedElements(Pipeline partialPipeline,
+                                                                             String baseRecId) throws NoSuitableSepasAvailableException {
+    return new ElementRecommender(partialPipeline, baseRecId).findRecommendedElements();
   }
 
   public static void storePipeline(Pipeline pipeline) {

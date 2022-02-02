@@ -65,78 +65,80 @@ import { JsplumbEndpointService } from './services/jsplumb-endpoint.service';
 import { JsplumbFactoryService } from './services/jsplumb-factory.service';
 import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
+import { PipelineStyleService } from './services/pipeline-style.service';
 
 @NgModule({
-    imports: [
-        CoreUiModule,
-        CommonModule,
-        ConnectModule,
-        MatTabsModule,
-        MatListModule,
-        FlexLayoutModule,
-        GridsterModule,
-        CommonModule,
-        FlexLayoutModule,
-        CustomMaterialModule,
-        FormsModule,
-        MatProgressSpinnerModule,
-        ShowdownModule,
-        ReactiveFormsModule,
-    ],
-    declarations: [
-        CompatibleElementsComponent,
-        CustomizeComponent,
-        CustomOutputStrategyComponent,
-        EditorComponent,
-        EnabledPipelineElementFilter,
-        HelpComponent,
-        MatchingErrorComponent,
-        MissingElementsForTutorialComponent,
-        OutputStrategyComponent,
-        UserDefinedOutputStrategyComponent,
-        PipelineAssemblyComponent,
-        PipelineElementComponent,
-        PipelineElementDiscoveryComponent,
-        PipelineElementDocumentationComponent,
-        PipelineElementIconStandComponent,
-        PipelineElementOptionsComponent,
-        PipelineElementPreviewComponent,
-        PipelineElementRecommendationComponent,
-        PipelineElementTemplateConfigComponent,
-        PipelineComponent,
-        PropertySelectionComponent,
-        SavePipelineComponent,
-        SafeCss,
-        WelcomeTourComponent
-    ],
-    providers: [
-        EditorService,
-        SemanticTypeUtilsService,
-        JsplumbFactoryService,
-        JsplumbEndpointService,
-        JsplumbService,
-        JsplumbConfigService,
-        ObjectProvider,
-        PipelineCanvasScrollingService,
-        PipelineElementDraggedService,
-        PipelineEditorService,
-        PipelinePositioningService,
-        PipelineValidationService,
-        PipelineElementRecommendationService,
-        SafeCss,
-    ],
+  imports: [
+    CoreUiModule,
+    CommonModule,
+    ConnectModule,
+    MatTabsModule,
+    MatListModule,
+    FlexLayoutModule,
+    GridsterModule,
+    CommonModule,
+    FlexLayoutModule,
+    CustomMaterialModule,
+    FormsModule,
+    MatProgressSpinnerModule,
+    ShowdownModule,
+    ReactiveFormsModule,
+  ],
+  declarations: [
+    CompatibleElementsComponent,
+    CustomizeComponent,
+    CustomOutputStrategyComponent,
+    EditorComponent,
+    EnabledPipelineElementFilter,
+    HelpComponent,
+    MatchingErrorComponent,
+    MissingElementsForTutorialComponent,
+    OutputStrategyComponent,
+    UserDefinedOutputStrategyComponent,
+    PipelineAssemblyComponent,
+    PipelineElementComponent,
+    PipelineElementDiscoveryComponent,
+    PipelineElementDocumentationComponent,
+    PipelineElementIconStandComponent,
+    PipelineElementOptionsComponent,
+    PipelineElementPreviewComponent,
+    PipelineElementRecommendationComponent,
+    PipelineElementTemplateConfigComponent,
+    PipelineComponent,
+    PropertySelectionComponent,
+    SavePipelineComponent,
+    SafeCss,
+    WelcomeTourComponent
+  ],
+  providers: [
+    EditorService,
+    SemanticTypeUtilsService,
+    JsplumbFactoryService,
+    JsplumbEndpointService,
+    JsplumbService,
+    JsplumbConfigService,
+    ObjectProvider,
+    PipelineCanvasScrollingService,
+    PipelineElementDraggedService,
+    PipelineEditorService,
+    PipelinePositioningService,
+    PipelineStyleService,
+    PipelineValidationService,
+    PipelineElementRecommendationService,
+    SafeCss,
+  ],
   exports: [
     EditorComponent,
     PipelineComponent,
     PipelineElementComponent
   ],
-    entryComponents: [
-        EditorComponent
-    ]
+  entryComponents: [
+    EditorComponent
+  ]
 })
 export class EditorModule {
 
-    constructor() {
-    }
+  constructor() {
+  }
 
 }

@@ -16,9 +16,9 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {Subject} from "rxjs";
-import {PipelineElementPosition} from "../model/editor.model";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { PipelineElementPosition } from '../model/editor.model';
 
 @Injectable()
 export class PipelineElementDraggedService {

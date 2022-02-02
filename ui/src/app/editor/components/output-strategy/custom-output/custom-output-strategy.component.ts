@@ -16,11 +16,11 @@
  *
  */
 
-import {Component, OnInit} from "@angular/core";
-import {CustomOutputStrategy} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {BaseOutputStrategy} from "../base/BaseOutputStrategy";
-import {PropertySelectorService} from "../../../../services/property-selector.service";
-import {FormControl} from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { CustomOutputStrategy } from '@streampipes/platform-services';
+import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
+import { PropertySelectorService } from '../../../../services/property-selector.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'custom-output-strategy',
@@ -32,41 +32,42 @@ export class CustomOutputStrategyComponent extends BaseOutputStrategy<CustomOutp
   collectedPropertiesFirstStream: any;
   collectedPropertiesSecondStream: any;
 
-  constructor(private PropertySelectorService: PropertySelectorService) {
+  constructor(private propertySelectorService: PropertySelectorService) {
     super();
   }
 
   ngOnInit() {
-    this.parentForm.addControl("output-strategy", new FormControl());
-    this.collectedPropertiesFirstStream = this.PropertySelectorService
-        .makeProperties(this.getProperties(0), this.outputStrategy.availablePropertyKeys, this.PropertySelectorService.firstStreamPrefix);
-    this.collectedPropertiesSecondStream = this.PropertySelectorService
-        .makeProperties(this.getProperties(1), this.outputStrategy.availablePropertyKeys, this.PropertySelectorService.secondStreamPrefix);
+    this.parentForm.addControl('output-strategy', new FormControl());
+    this.collectedPropertiesFirstStream = this.propertySelectorService
+        .makeProperties(this.getProperties(0), this.outputStrategy.availablePropertyKeys, this.propertySelectorService.firstStreamPrefix);
+    this.collectedPropertiesSecondStream = this.propertySelectorService
+        .makeProperties(this.getProperties(1), this.outputStrategy.availablePropertyKeys, this.propertySelectorService.secondStreamPrefix);
     this.checkFormValidity();
   }
 
   getProperties(streamIndex) {
-    return this.selectedElement.inputStreams[streamIndex] === undefined ? [] : this.selectedElement.inputStreams[streamIndex].eventSchema.eventProperties;
+    return this.selectedElement.inputStreams[streamIndex] === undefined ?
+      [] : this.selectedElement.inputStreams[streamIndex].eventSchema.eventProperties;
   }
 
   selectAll(collectedProperties) {
     collectedProperties.forEach(ep => this.outputStrategy.selectedPropertyKeys.push(ep.runtimeId));
     // This is needed to trigger update of scope
-    this.outputStrategy.selectedPropertyKeys = this.outputStrategy.selectedPropertyKeys.filter(el => {return true;});
-    this.checkFormValidity()
+    this.outputStrategy.selectedPropertyKeys = this.outputStrategy.selectedPropertyKeys.filter(el => true);
+    this.checkFormValidity();
   }
 
   deselectAll(collectedProperties) {
     collectedProperties.forEach(ep => this.outputStrategy.selectedPropertyKeys =
         this.outputStrategy.selectedPropertyKeys.filter(item => item !== ep.runtimeId));
-    this.checkFormValidity()
+    this.checkFormValidity();
   }
 
   checkFormValidity() {
-    if (!this.outputStrategy.selectedPropertyKeys || this.outputStrategy.selectedPropertyKeys.length == 0) {
-      this.parentForm.controls["output-strategy"].setErrors({});
+    if (!this.outputStrategy.selectedPropertyKeys || this.outputStrategy.selectedPropertyKeys.length === 0) {
+      this.parentForm.controls['output-strategy'].setErrors({});
     } else {
-      this.parentForm.controls["output-strategy"].setErrors(undefined);
+      this.parentForm.controls['output-strategy'].setErrors(undefined);
     }
   }
 }

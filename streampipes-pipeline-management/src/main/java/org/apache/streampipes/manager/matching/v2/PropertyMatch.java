@@ -31,7 +31,6 @@ public class PropertyMatch extends AbstractMatcher<EventProperty, EventProperty>
 
   public PropertyMatch() {
     super(MatchingResultType.PROPERTY_MATCH);
-    // TODO Auto-generated constructor stub
   }
 
   @Override

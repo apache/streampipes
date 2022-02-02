@@ -16,11 +16,11 @@
  *
  */
 
-import {JsplumbService} from "../../services/jsplumb.service";
-import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from "@angular/core";
-import {PipelineElementConfig} from "../../model/editor.model";
-import {DataProcessorInvocation} from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {SafeCss} from "../../utils/style-sanitizer";
+import { JsplumbService } from '../../services/jsplumb.service';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { InvocablePipelineElementUnion, PipelineElementConfig } from '../../model/editor.model';
+import { DataProcessorInvocation } from '@streampipes/platform-services';
+import { SafeCss } from '../../utils/style-sanitizer';
 
 @Component({
   selector: 'pipeline-element-recommendation',
@@ -40,9 +40,9 @@ export class PipelineElementRecommendationComponent implements OnInit, AfterView
 
   _recommendedElements: any;
 
-  recommendationsPrepared: boolean = false;
+  recommendationsPrepared = false;
 
-  constructor(private JsplumbService: JsplumbService,
+  constructor(private jsplumbService: JsplumbService,
               public safeCss: SafeCss) {
 
   }
@@ -63,65 +63,65 @@ export class PipelineElementRecommendationComponent implements OnInit, AfterView
   setLayoutSettings(element, index, recommendedElements) {
     element.layoutSettings = {
       skewStyle: element.name ? this.getSkewStyle(index, recommendedElements) : {'opacity': 0},
-      unskewStyle: this.getUnskewStyle(element, index,recommendedElements),
+      unskewStyle: this.getUnskewStyle(element, index, recommendedElements),
       unskewStyleLabel: this.getUnskewStyleLabel(index, recommendedElements),
-      type: element instanceof DataProcessorInvocation ? "sepa" : "action"
+      type: element instanceof DataProcessorInvocation ? 'sepa' : 'action'
     };
   }
 
-  create(recommendedElement) {
+  create(recommendedElement: InvocablePipelineElementUnion) {
     this.recommendationsShown = false;
-    this.JsplumbService.createElement(this.rawPipelineModel, recommendedElement, this.pipelineElementDomId);
+    this.jsplumbService.createElement(this.rawPipelineModel, recommendedElement, this.pipelineElementDomId);
   }
 
   getUnskewStyle(recommendedElement, index, recommendedElements) {
-    var unskew = -(this.getSkew(recommendedElements));
-    var rotate = -(90 - (this.getSkew(recommendedElements) / 2));
+    const unskew = -(this.getSkew(recommendedElements));
+    const rotate = -(90 - (this.getSkew(recommendedElements) / 2));
 
-    return "transform: skew(" + unskew + "deg)" + " rotate(" + rotate + "deg)" + " scale(1);"
-       +"background-color: " +this.getBackgroundColor(recommendedElement, index);
+    return 'transform: skew(' + unskew + 'deg)' + ' rotate(' + rotate + 'deg)' + ' scale(1);'
+       + 'background-color: ' + this.getBackgroundColor(recommendedElement, index);
   }
 
   getBackgroundColor(recommendedElement, index) {
-    var alpha = (recommendedElement.weight < 0.2 ? 0.2 : (recommendedElement.weight - 0.2));
+    let alpha = (recommendedElement.weight < 0.2 ? 0.2 : (recommendedElement.weight - 0.2));
     alpha = Math.round((alpha * 10)) / 10;
-    var rgb = recommendedElement instanceof DataProcessorInvocation ? this.getSepaColor(index) : this.getActionColor(index);
-    return "rgba(" +rgb +"," +alpha +")";
+    const rgb = recommendedElement instanceof DataProcessorInvocation ? this.getSepaColor(index) : this.getActionColor(index);
+    return 'rgba(' + rgb + ',' + alpha + ')';
   }
 
   getSepaColor(index) {
-    return (index % 2 === 0) ? "0, 150, 136" : "0, 164, 150";
+    return (index % 2 === 0) ? '0, 150, 136' : '0, 164, 150';
   }
 
   getActionColor(index) {
-    return (index % 2 === 0) ? "63, 81, 181" : "79, 101, 230";
+    return (index % 2 === 0) ? '63, 81, 181' : '79, 101, 230';
   }
 
   getSkewStyle(index, recommendedElements) {
     // transform: rotate(72deg) skew(18deg);
-    var skew = this.getSkew(recommendedElements);
-    var rotate = (index + 1) * this.getAngle(recommendedElements);
+    const skew = this.getSkew(recommendedElements);
+    const rotate = (index + 1) * this.getAngle(recommendedElements);
 
-    return "transform: rotate(" + rotate + "deg) skew(" + skew + "deg);";
+    return 'transform: rotate(' + rotate + 'deg) skew(' + skew + 'deg);';
   }
 
   getUnskewStyleLabel(index, recommendedElements) {
-    var unskew = -(this.getSkew(recommendedElements));
-    var rotate =  (index + 1) * this.getAngle(recommendedElements);
-    var unrotate = -360 + (rotate*-1);
+    const unskew = -(this.getSkew(recommendedElements));
+    const rotate =  (index + 1) * this.getAngle(recommendedElements);
+    const unrotate = -360 + (rotate * -1);
 
-    return "transform: skew(" + unskew + "deg)" + " rotate(" + unrotate + "deg)" + " scale(1);"
-      +"z-index: -1;"
-      +"margin-left: 50%;"
-      +"margin-top: 50%;"
-      +"position: absolute;"
-      +"background: white;"
-      +"height: 50px;"
-      +"width: 50px;"
-      +"font-size: 16px;"
-      +"text-align: center;"
-      +"line-height: 50px;"
-      +"top: 0px;";
+    return 'transform: skew(' + unskew + 'deg)' + ' rotate(' + unrotate + 'deg)' + ' scale(1);'
+      + 'z-index: -1;'
+      + 'margin-left: 50%;'
+      + 'margin-top: 50%;'
+      + 'position: absolute;'
+      + 'background: white;'
+      + 'height: 50px;'
+      + 'width: 50px;'
+      + 'font-size: 16px;'
+      + 'text-align: center;'
+      + 'line-height: 50px;'
+      + 'top: 0px;';
   }
 
   getSkew(recommendedElements) {
@@ -134,8 +134,8 @@ export class PipelineElementRecommendationComponent implements OnInit, AfterView
 
   fillRemainingItems(recommendedElements) {
     if (recommendedElements.length < 6) {
-      for (var i = recommendedElements.length; i < 6; i++) {
-        let element = {fakeElement: true, weight: 0};
+      for (let i = recommendedElements.length; i < 6; i++) {
+        const element = {fakeElement: true, weight: 0};
         recommendedElements.push(element);
       }
     }

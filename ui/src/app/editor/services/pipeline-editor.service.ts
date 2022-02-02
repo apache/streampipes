@@ -16,7 +16,7 @@
  *
  */
 
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PipelineEditorService {
@@ -25,9 +25,8 @@ export class PipelineEditorService {
     }
 
     getCoordinates(ui, currentZoomLevel) {
-
-        var newLeft = this.getDropPositionX(ui.helper, currentZoomLevel);
-        var newTop = this.getDropPositionY(ui.helper, currentZoomLevel);
+        const newLeft = this.getDropPositionX(ui.helper, currentZoomLevel);
+        const newTop = this.getDropPositionY(ui.helper, currentZoomLevel);
         return {
             'x': newLeft,
             'y': newTop
@@ -35,19 +34,19 @@ export class PipelineEditorService {
     }
 
     getDropPositionY(helper, currentZoomLevel) {
-        var newTop;
-        var helperPos = helper.offset();
-        var divPos = $('#assembly').offset();
-        newTop = (helperPos.top - divPos.top) + (1 - currentZoomLevel) * ((helperPos.top - divPos.top) * 2);
-        return newTop;
+        const helperPos = helper.offset();
+        const divPos = this.getDivPos();
+        return (helperPos.top - divPos.top) + (1 - currentZoomLevel) * ((helperPos.top - divPos.top) * 2);
     }
 
     getDropPositionX(helper, currentZoomLevel) {
-        var newLeft;
-        var helperPos = helper.offset();
-        var divPos = $('#assembly').offset();
-        newLeft = (helperPos.left - divPos.left) + (1 - currentZoomLevel) * ((helperPos.left - divPos.left) * 2);
-        return newLeft;
+        const helperPos = helper.offset();
+        const divPos = this.getDivPos();
+        return (helperPos.left - divPos.left) + (1 - currentZoomLevel) * ((helperPos.left - divPos.left) * 2);
+    }
+
+    getDivPos() {
+        return $('#assembly').offset();
     }
 
 }

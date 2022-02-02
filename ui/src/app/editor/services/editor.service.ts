@@ -56,8 +56,9 @@ export class EditorService {
       return this.platformServicesCommons.apiBasePath;
     }
 
-    recommendPipelineElement(pipeline): Observable<PipelineElementRecommendationMessage> {
-        return this.http.post(this.pipelinesResourceUrl + '/recommend', pipeline)
+    recommendPipelineElement(pipeline: Pipeline,
+                             currentDomId: string): Observable<PipelineElementRecommendationMessage> {
+        return this.http.post(this.pipelinesResourceUrl + '/recommend/' + currentDomId, pipeline)
             .pipe(map(data => PipelineElementRecommendationMessage.fromData(data as any)));
     }
 

@@ -20,7 +20,7 @@
     <div class="pipeline-assembly-options sp-blue-bg">
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
             <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
-                    [disabled]="!PipelineValidationService.pipelineValid"
+                    [disabled]="!pipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit"
                     data-cy="sp-editor-save-pipeline">
                 <div fxLayoutAlign="start center" fxLayout="row">
@@ -70,7 +70,7 @@
             <div style="position:relative;">
                 <sp-error-hint
                     [displayMessages]="!isPipelineAssemblyEmpty()"
-                    [errorMessages]="PipelineValidationService.errorMessages"
+                    [errorMessages]="pipelineValidationService.errorMessages"
                     [validationString]="'Pipeline'">
                 </sp-error-hint>
             </div>
@@ -83,7 +83,7 @@
             </button>
             <button mat-button mat-icon-button matTooltip="Clear Assembly Area"
                     [matTooltipPosition]="'above'"
-                    [disabled]="EditorService.pipelineAssemblyEmpty"
+                    [disabled]="editorService.pipelineAssemblyEmpty"
                     (click)="showClearAssemblyConfirmDialog($event)">
                 <i class="material-icons">clear</i>
             </button>
@@ -121,8 +121,7 @@
                     </div>
                 </div>
             </div>
-            <div id="assembly" class="canvas" #assembly>
-                <pipeline #pipelineComponent
+                <pipeline class="canvas jtk-surface" id="assembly" #pipelineComponent
                           [pipelineValid]="pipelineValid"
                           [canvasId]="'assembly'"
                           [rawPipelineModel]="rawPipelineModel"
@@ -132,9 +131,8 @@
                           [pipelineCanvasMetadata]="pipelineCanvasMetadata"
                           [pipelineCacheRunning]="pipelineCacheRunning"
                           (pipelineCachedChanged)="pipelineCached=$event"
-                          (pipelineCacheRunningChanged)="pipelineCacheRunning=$event">
+                          (pipelineCacheRunningChanged)="pipelineCacheRunning=$event" style="position:absolute;">
                 </pipeline>
-            </div>
         </div>
     </div>
 </div>

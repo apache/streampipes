@@ -85,5 +85,10 @@ public class MatchingResultMessage {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Override
+	public String toString() {
+		return title + " - " + description + "\n" + "(required: " +requirementSubject + ")";
+	}
 	
 }

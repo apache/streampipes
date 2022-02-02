@@ -16,8 +16,8 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {JsplumbConfigService} from "./jsplumb-config.service";
+import { Injectable } from '@angular/core';
+import { JsplumbConfigService } from './jsplumb-config.service';
 
 @Injectable()
 export class JsplumbEndpointService {
@@ -32,29 +32,29 @@ export class JsplumbEndpointService {
 
   getStreamEndpoint(preview: boolean,
                     pipelineElementDomId: string) {
-    let jsplumbConfig = this.getJsplumbConfig(preview);
-    let config = jsplumbConfig.streamEndpointOptions;
-    config.uuid = "out-" + pipelineElementDomId;
+    const jsplumbConfig = this.getJsplumbConfig(preview);
+    const config = jsplumbConfig.streamEndpointOptions;
+    config.uuid = 'out-' + pipelineElementDomId;
     return config;
   }
 
   getInputEndpoint(preview, pipelineElementDomId, index): any {
-    let jsplumbConfig = this.getJsplumbConfig(preview);
-    let inConfig = jsplumbConfig.leftTargetPointOptions;
-    inConfig.uuid = "in-" + index + "-" + pipelineElementDomId;
+    const jsplumbConfig = this.getJsplumbConfig(preview);
+    const inConfig = jsplumbConfig.leftTargetPointOptions;
+    inConfig.uuid = 'in-' + index + '-' + pipelineElementDomId;
     return inConfig;
   }
 
   getOutputEndpoint(preview, pipelineElementDomId): any {
-    let jsplumbConfig = this.getJsplumbConfig(preview);
-    let outConfig = jsplumbConfig.sepaEndpointOptions;
-    outConfig.uuid = "out-" + pipelineElementDomId;
+    const jsplumbConfig = this.getJsplumbConfig(preview);
+    const outConfig = jsplumbConfig.sepaEndpointOptions;
+    outConfig.uuid = 'out-' + pipelineElementDomId;
     return outConfig;
   }
 
   getNewTargetPoint(preview, x, y, pipelineElementDomId, index): any {
-    let inConfig = this.getInputEndpoint(preview, pipelineElementDomId, index);
-    inConfig.type = "empty";
+    const inConfig = this.getInputEndpoint(preview, pipelineElementDomId, index);
+    inConfig.type = 'empty';
     inConfig.anchor = [x, y, -1, 0];
     inConfig.isTarget = true;
 
