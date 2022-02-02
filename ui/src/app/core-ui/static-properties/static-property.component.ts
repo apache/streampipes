@@ -17,10 +17,8 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Logger } from '../../shared/logger/default-log.service';
 
 import { XsService } from '../../NS/xs.service';
-import { StaticPropertyUtilService } from './static-property-util.service';
 import { ConfigurationInfo } from '../../connect/model/ConfigurationInfo';
 import {
   AnyStaticProperty,
@@ -84,17 +82,12 @@ export class StaticPropertyComponent implements OnInit {
   @Input()
   pipelineElement: InvocablePipelineElementUnion;
 
-  showLabel: boolean = true;
+  showLabel = true;
 
   @Input()
-  showBorder: boolean = true;
+  showBorder = true;
 
-  constructor(
-    private logger: Logger,
-    public xsService: XsService,
-    public staticPropertyUtil: StaticPropertyUtilService
-  ) {
-    logger.log(this.staticProperty);
+  constructor() {
   }
 
   ngOnInit() {
@@ -168,7 +161,7 @@ export class StaticPropertyComponent implements OnInit {
   }
 
   valueChange(hasInput) {
-    //this.staticProperty.isValid = hasInput;
+    // this.staticProperty.isValid = hasInput;
     this.validateEmitter.emit();
   }
 

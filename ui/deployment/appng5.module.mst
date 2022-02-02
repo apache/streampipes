@@ -46,8 +46,6 @@ import { {{{ng5_moduleName}}} } from '{{{path}}}';
 {{/ng5}}
 {{/modulesActive}}
 
-import { ConsoleLogService } from './shared/logger/log.service';
-import { Logger } from './shared/logger/default-log.service';
 import { NotificationModule } from './notifications/notifications.module';
 
 import { AppComponent } from './app.component';
@@ -94,7 +92,6 @@ import * as $ from 'jquery';
         AvailableRolesService,
         NotificationCountService,
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
-        { provide: Logger, useClass: ConsoleLogService },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
         {
         			provide: RxStompService,

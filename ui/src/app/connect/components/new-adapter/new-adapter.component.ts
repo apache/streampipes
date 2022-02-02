@@ -29,7 +29,6 @@ import {
     TransformationRuleDescriptionUnion
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { Logger } from '../../../shared/logger/default-log.service';
 import { ConnectService } from '../../services/connect.service';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { RestService } from '../../services/rest.service';
@@ -93,7 +92,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
   viewInitialized = false;
 
   constructor(
-    private logger: Logger,
     private restService: RestService,
     private transformationRuleService: TransformationRuleService,
     private shepherdService: ShepherdService,

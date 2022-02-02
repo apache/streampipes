@@ -17,7 +17,6 @@
  */
 
 import { TransformationRuleService } from './transformation-rule.service';
-import { Logger } from '../../shared/logger/default-log.service';
 import {
     CreateNestedRuleDescription,
     DeleteRuleDescription,
@@ -31,7 +30,7 @@ import {
 
 describe('TransformationRuleService', () => {
 
-  const service = new TransformationRuleService(new Logger());
+  const service = new TransformationRuleService();
 
   it('Get complete key from schema nested', () => {
 
