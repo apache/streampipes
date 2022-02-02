@@ -17,7 +17,7 @@
  */
 
 import { ProfileService } from '../profile.service';
-import { UserAccount } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
+import { UserAccount } from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { AppConstants } from '../../services/app.constants';
 import { JwtTokenStorageService } from '../../services/jwt-token-storage.service';

@@ -17,12 +17,10 @@
  */
 
 import { Injectable } from '@angular/core';
-import { PlatformServicesCommons } from '../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+import { Message, PlatformServicesCommons, RawUserApiToken, UserAccount } from '@streampipes/platform-services';
 import { HttpClient } from '@angular/common/http';
-import { RawUserApiToken, UserAccount } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Message } from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable()
 export class ProfileService {

@@ -15,10 +15,10 @@
  *   limitations under the License.
  */
 
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {WidgetConfig} from "../base/base-config";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { WidgetConfig } from '../base/base-config';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class RawConfig extends WidgetConfig {
 
@@ -27,9 +27,9 @@ export class RawConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("raw", "Raw")
-            .withIcon("fas fa-terminal")
-            .withDescription("Displays the raw message as it comes in for testing purposes")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('raw', 'Raw')
+            .withIcon('fas fa-terminal')
+            .withDescription('Displays the raw message as it comes in for testing purposes')
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
                 .build())

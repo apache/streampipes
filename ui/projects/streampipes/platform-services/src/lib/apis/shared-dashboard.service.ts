@@ -22,7 +22,9 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Dashboard } from '../model/dashboard/dashboard.model';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SharedDatalakeRestService {
 
     constructor(private http: HttpClient) {

@@ -16,14 +16,14 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {NumberConfig} from "./number-config";
-import {ResizeService} from "../../../services/resize.service";
-import {DashboardService} from "../../../services/dashboard.service";
-import {EventPropertyPrimitive} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { NumberConfig } from './number-config';
+import { ResizeService } from '../../../services/resize.service';
+import { DashboardService } from '../../../services/dashboard.service';
+import { EventPropertyPrimitive } from '@streampipes/platform-services';
 
 @Component({
     selector: 'number-widget',
@@ -32,7 +32,7 @@ import {EventPropertyPrimitive} from "../../../../../../projects/streampipes/pla
 })
 export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
-    item: any = "-";
+    item: any = '-';
 
     selectedProperty: string;
     measurementUnitAbbrev: string;
@@ -51,11 +51,11 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
     extractConfig(extractor: StaticPropertyExtractor) {
         this.selectedProperty = extractor.mappingPropertyValue(NumberConfig.NUMBER_MAPPING_KEY);
-        let eventProperty: EventPropertyPrimitive = extractor.getEventPropertyByName(this.selectedProperty) as EventPropertyPrimitive;
+        const eventProperty: EventPropertyPrimitive = extractor.getEventPropertyByName(this.selectedProperty) as EventPropertyPrimitive;
         if (eventProperty.measurementUnit) {
             this.dashboardService.getMeasurementUnitInfo(eventProperty.measurementUnit).subscribe(unit => {
                 this.measurementUnitAbbrev = unit.abbreviation;
-            })
+            });
         }
     }
 

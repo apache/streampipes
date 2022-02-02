@@ -16,30 +16,30 @@
  *
  */
 
-import {WidgetConfig} from "../base/base-config";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfig } from '../base/base-config';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class ImageConfig extends WidgetConfig {
 
-    static readonly TITLE_KEY: string = "title-key";
-    static readonly NUMBER_MAPPING_KEY: string = "number-mapping";
+    static readonly TITLE_KEY: string = 'title-key';
+    static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
 
     constructor() {
         super();
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.create("image", "Image")
-            .withDescription("Displays an image (e.g., from a camera)")
-            .withIcon("fas fa-image")
+        return WidgetConfigBuilder.create('image', 'Image')
+            .withDescription('Displays an image (e.g., from a camera)')
+            .withIcon('fas fa-image')
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(ImageConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.imageReq())
+                .requiredPropertyWithUnaryMapping(ImageConfig.NUMBER_MAPPING_KEY, 'Select property', '', EpRequirements.imageReq())
                 .build())
-            .requiredTextParameter(ImageConfig.TITLE_KEY, "Title", "The title")
+            .requiredTextParameter(ImageConfig.TITLE_KEY, 'Title', 'The title')
             .build();
     }
 

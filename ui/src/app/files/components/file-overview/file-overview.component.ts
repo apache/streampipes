@@ -17,8 +17,7 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FilesService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/files.service';
-import { FileMetadata } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { FilesService, FileMetadata } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';

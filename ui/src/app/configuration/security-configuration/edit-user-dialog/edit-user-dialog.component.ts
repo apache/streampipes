@@ -22,7 +22,10 @@ import {
   Group,
   Role,
   ServiceAccount,
-  UserAccount
+  UserAccount,
+  MailConfigService,
+  UserService,
+  UserGroupService,
 } from '@streampipes/platform-services';
 import {
   AbstractControl,
@@ -35,13 +38,10 @@ import {
 } from '@angular/forms';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { UserService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/user.service';
-import { UserGroupService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/user-group.service';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
-import { MailConfigService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/mail-config.service';
 
 @Component({
   selector: 'sp-edit-user-dialog',

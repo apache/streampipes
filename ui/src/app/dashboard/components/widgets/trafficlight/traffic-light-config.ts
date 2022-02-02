@@ -15,18 +15,18 @@
  *   limitations under the License.
  */
 
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {WidgetConfig} from "../base/base-config";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { WidgetConfig } from '../base/base-config';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class TrafficLightConfig extends WidgetConfig {
 
-    static readonly NUMBER_MAPPING_KEY = "number-field";
-    static readonly CRITICAL_VALUE_KEY = "critical-value-key";
-    static readonly CRITICAL_VALUE_LIMIT = "critical-value-limit";
-    static readonly WARNING_RANGE_KEY = "warning-range";
+    static readonly NUMBER_MAPPING_KEY = 'number-field';
+    static readonly CRITICAL_VALUE_KEY = 'critical-value-key';
+    static readonly CRITICAL_VALUE_LIMIT = 'critical-value-limit';
+    static readonly WARNING_RANGE_KEY = 'warning-range';
 
 
     constructor() {
@@ -34,17 +34,17 @@ export class TrafficLightConfig extends WidgetConfig {
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("trafficlight", "Traffic Light")
-            .withIcon("fas fa-traffic-light")
-            .withDescription("A traffic light visualization with customizable warning range and threshold")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('trafficlight', 'Traffic Light')
+            .withIcon('fas fa-traffic-light')
+            .withDescription('A traffic light visualization with customizable warning range and threshold')
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(TrafficLightConfig.NUMBER_MAPPING_KEY, "Field to observe", "", EpRequirements.numberReq())
+                .requiredPropertyWithUnaryMapping(TrafficLightConfig.NUMBER_MAPPING_KEY, 'Field to observe', '', EpRequirements.numberReq())
                 .build())
-            .requiredIntegerParameter(TrafficLightConfig.CRITICAL_VALUE_KEY, "Threshold", "")
-            .requiredSingleValueSelection(TrafficLightConfig.CRITICAL_VALUE_LIMIT, "Operator", "", [this.makeOption("Upper" +
-            " Limit"), this.makeOption("Under Limit")])
-            .requiredIntegerParameter(TrafficLightConfig.WARNING_RANGE_KEY, "Warning range (percent)", "")
+            .requiredIntegerParameter(TrafficLightConfig.CRITICAL_VALUE_KEY, 'Threshold', '')
+            .requiredSingleValueSelection(TrafficLightConfig.CRITICAL_VALUE_LIMIT, 'Operator', '', [this.makeOption('Upper' +
+            ' Limit'), this.makeOption('Under Limit')])
+            .requiredIntegerParameter(TrafficLightConfig.WARNING_RANGE_KEY, 'Warning range (percent)', '')
             .build();
     }
 }

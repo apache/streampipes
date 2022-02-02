@@ -266,6 +266,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
     }, 10);
 
     const streamDescription = pipelineElementConfig.payload as SpDataStream;
+    console.log(streamDescription);
     if (streamDescription
       .eventGrounding
       .transportProtocols[0]

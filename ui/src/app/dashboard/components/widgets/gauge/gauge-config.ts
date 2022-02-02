@@ -16,34 +16,34 @@
  *
  */
 
-import {WidgetConfig} from "../base/base-config";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfig } from '../base/base-config';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class GaugeConfig extends WidgetConfig {
 
-    static readonly TITLE_KEY: string = "title-key";
-    static readonly NUMBER_MAPPING_KEY: string = "number-mapping";
-    static readonly COLOR_KEY: string = "color-key";
-    static readonly MIN_KEY: string = "min-key";
-    static readonly MAX_KEY: string = "max-key";
+    static readonly TITLE_KEY: string = 'title-key';
+    static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
+    static readonly COLOR_KEY: string = 'color-key';
+    static readonly MIN_KEY: string = 'min-key';
+    static readonly MAX_KEY: string = 'max-key';
 
     constructor() {
         super();
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("gauge", "Gauge")
-            .withDescription("A gauge visualization")
-            .withIcon("fas fa-tachometer-alt")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('gauge', 'Gauge')
+            .withDescription('A gauge visualization')
+            .withIcon('fas fa-tachometer-alt')
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(GaugeConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.numberReq())
+                .requiredPropertyWithUnaryMapping(GaugeConfig.NUMBER_MAPPING_KEY, 'Select property', '', EpRequirements.numberReq())
                 .build())
-            .requiredIntegerParameter(GaugeConfig.MIN_KEY, "Min Y axis value", "")
-            .requiredIntegerParameter(GaugeConfig.MAX_KEY, "Max Y axis value", "")
+            .requiredIntegerParameter(GaugeConfig.MIN_KEY, 'Min Y axis value', '')
+            .requiredIntegerParameter(GaugeConfig.MAX_KEY, 'Max Y axis value', '')
             .build();
     }
 

@@ -41,7 +41,12 @@ import { GridsterModule } from 'angular-gridster2';
 import { PlotlyViaWindowModule } from 'angular-plotly.js';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { SemanticTypeUtilsService } from '../core-services/semantic-type/semantic-type-utils.service';
-import { PlatformServicesModule, SharedDatalakeRestService } from '@streampipes/platform-services';
+import {
+  DatalakeRestService,
+  DataViewDataExplorerService,
+  PlatformServicesModule,
+  SharedDatalakeRestService
+} from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { DataDownloadDialog } from './components/datadownloadDialog/dataDownload.dialog';
@@ -60,7 +65,6 @@ import { SelectPropertiesComponent } from './components/widgets/utils/select-pro
 import { SelectColorPropertiesComponent } from './components/widgets/utils/select-color-properties/select-color-properties.component';
 import { DataExplorerComponent } from './data-explorer.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataViewDataExplorerService } from '../../../projects/streampipes/platform-services/src/lib/apis/data-view-data-explorer.service';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
 import { GroupConfigurationComponent } from './components/widgets/utils/group-configuration/group-configuration.component';
@@ -77,7 +81,6 @@ import { DataExplorerWidgetDataSettingsComponent } from './components/designer-p
 import { WidgetConfigurationService } from './services/widget-configuration.service';
 import { TimeSeriesChartWidgetConfigComponent } from './components/widgets/time-series-chart/config/time-series-chart-widget-config.component';
 import { ImageWidgetConfigComponent } from './components/widgets/image/config/image-widget-config.component';
-import { DatalakeRestService } from '../../../projects/streampipes/platform-services/src/lib/apis/datalake-rest.service';
 import { IndicatorChartWidgetComponent } from './components/widgets/indicator/indicator-chart-widget.component';
 import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/config/indicator-chart-widget-config.component';
 import { CorrelationChartWidgetComponent } from './components/widgets/correlation-chart/correlation-chart-widget.component';

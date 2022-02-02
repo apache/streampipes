@@ -195,6 +195,7 @@ export class JsplumbService {
         y: coordinates.y
       }
     };
+    console.log(pipelineElementConfig);
     if (!pipelineElementConfig.payload.dom) {
       pipelineElementConfig.payload.dom = 'jsplumb_' + this.idCounter + '_' + this.makeId(4);
       this.idCounter++;
@@ -207,14 +208,15 @@ export class JsplumbService {
     if (pipelineElement instanceof SpDataSet) {
       return SpDataSet.fromData(pipelineElement, new SpDataSet());
     } else if (pipelineElement instanceof SpDataStream) {
-      return SpDataStream.fromData(pipelineElement, new SpDataStream());
+      const cloned = SpDataStream.fromData(pipelineElement, new SpDataStream());
+      return cloned;
     } else if (pipelineElement instanceof DataProcessorInvocation) {
       const clonedPe = DataProcessorInvocation.fromData(pipelineElement, new DataProcessorInvocation());
       if (newElementId) {
         this.updateElementIds(clonedPe, newElementId);
       }
       return clonedPe;
-    } else {
+    } else if (pipelineElement instanceof DataSinkInvocation) {
       const clonedPe = DataSinkInvocation.fromData(pipelineElement as DataSinkInvocation, new DataSinkInvocation());
       if (newElementId) {
         this.updateElementIds(clonedPe, newElementId);

@@ -16,26 +16,26 @@
  *
  */
 
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {WidgetConfig} from "../base/base-config";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { EpRequirements } from '../../../sdk/ep-requirements';
+import { WidgetConfig } from '../base/base-config';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class NumberConfig extends WidgetConfig {
 
-    static readonly NUMBER_MAPPING_KEY: string = "number-mapping";
+    static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
 
     constructor() {
         super();
     }
 
     getConfig(): DashboardWidgetSettings {
-        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("number", "Single Value")
-            .withDescription("Displays a single number or text value")
+        return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('number', 'Single Value')
+            .withDescription('Displays a single number or text value')
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, "Select property", "", EpRequirements.anyProperty())
+                .requiredPropertyWithUnaryMapping(NumberConfig.NUMBER_MAPPING_KEY, 'Select property', '', EpRequirements.anyProperty())
                 .build())
             .build();
     }

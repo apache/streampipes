@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { StaticPropertyUtilService } from '../../static-property-util.service';
-import { FreeTextStaticProperty, OneOfStaticProperty, StaticProperty } from '../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { FreeTextStaticProperty, OneOfStaticProperty, StaticProperty } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
 
 @Component({

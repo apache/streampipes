@@ -16,18 +16,18 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {ResizeService} from "../../../services/resize.service";
-import {DashboardService} from "../../../services/dashboard.service";
-import {EventPropertyList} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
-import {WordCloudConfig} from "./wordcloud-config";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RxStompService } from '@stomp/ng2-stompjs';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { ResizeService } from '../../../services/resize.service';
+import { DashboardService } from '../../../services/dashboard.service';
+import { EventPropertyList } from '@streampipes/platform-services';
+import { WordCloudConfig } from './wordcloud-config';
 
 import { EChartsOption } from 'echarts';
 import 'echarts-wordcloud';
-import {ECharts} from "echarts/core";
+import { ECharts } from 'echarts/core';
 
 
 
@@ -43,12 +43,12 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
   windowSize: number;
   eventProperty: EventPropertyList;
 
-  words: Array<any> = new Array<any>();
+  words: any[] = new Array<any>();
 
   currentWidth: number;
   currentHeight: number;
 
-  configReady: boolean = false;
+  configReady = false;
 
   eChartsInstance: ECharts;
   dynamicData: EChartsOption;
@@ -73,7 +73,7 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
       textStyle: {
         fontFamily: 'sans-serif',
         fontWeight: 'bold',
-        color: function () {
+        color () {
           return 'rgb(' + [
             Math.round(Math.random() * 160),
             Math.round(Math.random() * 160),
@@ -109,13 +109,13 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
   }
 
   protected onEvent(event: any) {
-    let value = event[this.countProperty];
-    let name = event[this.nameProperty];
+    const value = event[this.countProperty];
+    const name = event[this.nameProperty];
     this.dynamicData = this.chartOption;
     if (this.dynamicData.series[0].data.some(d => d.name == name)) {
       this.dynamicData.series[0].data.find(d => d.name == name).value = value;
     } else {
-      this.dynamicData.series[0].data.push({name: name, value: value});
+      this.dynamicData.series[0].data.push({name, value});
     }
     if (this.dynamicData.series[0].data.length > this.windowSize) {
       this.dynamicData.series[0].data.shift();
@@ -139,7 +139,7 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
 
   applySize(width: number, height: number) {
     if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width: width, height: height});
+      this.eChartsInstance.resize({width, height});
     }
   }
 

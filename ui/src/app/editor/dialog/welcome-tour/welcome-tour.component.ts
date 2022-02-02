@@ -21,7 +21,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
-import { UserAccount, UserInfo } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client';
+import { UserAccount, UserInfo } from '@streampipes/platform-services';
 import { ProfileService } from '../../../profile/profile.service';
 
 @Component({

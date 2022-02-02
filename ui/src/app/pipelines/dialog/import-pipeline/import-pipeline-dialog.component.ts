@@ -17,10 +17,9 @@
  */
 
 import { Component } from '@angular/core';
-import { PipelineService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline.service';
+import { Pipeline, PipelineService } from '@streampipes/platform-services';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { forkJoin } from 'rxjs';
-import { Pipeline } from '@streampipes/platform-services';
 
 @Component({
     selector: 'sp-import-pipeline-dialog',

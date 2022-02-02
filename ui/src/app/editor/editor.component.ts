@@ -23,9 +23,9 @@ import {
   DataSinkInvocation,
   DataSourceDescription,
   SpDataSet,
-  SpDataStream
-} from '../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PipelineElementService } from '../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service';
+  SpDataStream,
+  PipelineElementService
+} from '@streampipes/platform-services';
 import {
   PipelineElementConfig,
   PipelineElementIdentifier,

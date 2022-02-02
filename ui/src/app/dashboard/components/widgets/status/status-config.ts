@@ -16,28 +16,27 @@
  *
  */
 
-import {WidgetConfig} from "../base/base-config";
-import {WidgetConfigBuilder} from "../../../registry/widget-config-builder";
-import {SchemaRequirementsBuilder} from "../../../sdk/schema-requirements-builder";
-import {EpRequirements} from "../../../sdk/ep-requirements";
-import {DashboardWidgetSettings} from "../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { WidgetConfig } from '../base/base-config';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { SchemaRequirementsBuilder } from '../../../sdk/schema-requirements-builder';
+import { DashboardWidgetSettings } from '@streampipes/platform-services';
 
 export class StatusWidgetConfig extends WidgetConfig {
 
-  static readonly INTERVAL_KEY: string = "interval-key";
+  static readonly INTERVAL_KEY: string = 'interval-key';
 
   constructor() {
     super();
   }
 
   getConfig(): DashboardWidgetSettings {
-    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel("status", "Status")
-        .withIcon("fas fa-lightbulb")
-        .withDescription("Status light")
+    return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('status', 'Status')
+        .withIcon('fas fa-lightbulb')
+        .withDescription('Status light')
         .requiredSchema(SchemaRequirementsBuilder
             .create()
             .build())
-        .requiredIntegerParameter(StatusWidgetConfig.INTERVAL_KEY, "Interval [sec]", "Interval in seconds in which an event must arrive")
+        .requiredIntegerParameter(StatusWidgetConfig.INTERVAL_KEY, 'Interval [sec]', 'Interval in seconds in which an event must arrive')
         .build();
   }
 }
