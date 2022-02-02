@@ -21,12 +21,10 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class HttpInterceptorProvider implements HttpInterceptor {

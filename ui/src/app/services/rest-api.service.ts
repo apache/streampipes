@@ -16,11 +16,8 @@
  *
  */
 
-// import _ from 'lodash';
-
-
 import { Injectable } from '@angular/core';
-import { PlatformServicesCommons } from '../../../projects/streampipes/platform-services/src/lib/apis/commons.service';
+import { PlatformServicesCommons } from '@streampipes/platform-services';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -55,81 +52,8 @@ export class RestApi {
         return this.$http.get(this.urlApiBase() + '/notifications/count');
     }
 
-    getOntologyProperties() {
-        return this.$http.get( this.getServerUrl() + '/ontology/properties');
-    }
-
-    getOntologyPropertyDetails(propertyId) {
-        return this.$http.get(this.getServerUrl() + '/ontology/properties/' + encodeURIComponent(propertyId));
-    }
-
-    addOntologyProperty(propertyData) {
-        return this.$http.post(this.getServerUrl() + '/ontology/properties', propertyData);
-    }
-
-    getOntologyConcepts() {
-        return this.$http.get(this.getServerUrl() + '/ontology/types');
-    }
-
-    getOntologyConceptDetails(conceptId) {
-        return this.$http.get(this.getServerUrl() + '/ontology/types/' + encodeURIComponent(conceptId));
-    }
-
-    getOntologyNamespaces() {
-        return this.$http.get(this.getServerUrl() + '/ontology/namespaces');
-    }
-
-    addOntologyNamespace(namespace) {
-        return this.$http.post(this.getServerUrl() + '/ontology/namespaces', namespace);
-    }
-
-    addOntologyConcept(conceptData) {
-        return this.$http.post(this.getServerUrl() + '/ontology/types', conceptData);
-    }
-
-    getOntologyInstanceDetails(instanceId) {
-        return this.$http.get(this.getServerUrl() + '/ontology/instances/' + encodeURIComponent(instanceId));
-    }
-
-    updateOntologyConcept(conceptId, conceptData) {
-        return this.$http.put(this.getServerUrl() + '/ontology/types/' + encodeURIComponent(conceptId), conceptData);
-    }
-
-    updateOntologyInstance(instanceId, instanceData) {
-        return this.$http.put(this.getServerUrl() + '/ontology/instances/' + encodeURIComponent(instanceId), instanceData);
-    }
-
-    getAvailableContexts() {
-        return this.$http.get(this.getServerUrl() + '/contexts');
-    }
-
     getDomainKnowledgeItems(query) {
         return this.$http.post(this.getServerUrl() + '/autocomplete/domain', query);
-    }
-
-
-    getSepasFromOntology() {
-        return this.$http.get(this.getServerUrl() + '/ontology/sepas');
-    }
-
-    getSepaDetailsFromOntology(uri, keepIds) {
-        return this.$http.get(this.getServerUrl() + '/ontology/sepas/' + encodeURIComponent(uri) + '?keepIds=' + keepIds);
-    }
-
-    getSourcesFromOntology() {
-        return this.$http.get(this.getServerUrl() + '/ontology/sources');
-    }
-
-    getSourceDetailsFromOntology(uri, keepIds) {
-        return this.$http.get(this.getServerUrl() + '/ontology/sources/' + encodeURIComponent(uri) + '?keepIds=' + keepIds);
-    }
-
-    getActionsFromOntology() {
-        return this.$http.get(this.getServerUrl() + '/ontology/actions');
-    }
-
-    getActionDetailsFromOntology(uri, keepIds) {
-        return this.$http.get(this.getServerUrl() + '/ontology/actions/' + encodeURIComponent(uri) + '?keepIds=' + keepIds);
     }
 
     getAllUnits() {

@@ -69,12 +69,12 @@ export class DeploymentService {
     }
 
     getFormData(deploymentConfig, model) {
-        var formData = new FormData();
-        formData.append("config", angular.toJson(deploymentConfig));
-        formData.append("model", angular.toJson(model));
+        const formData = new FormData();
+        formData.append('config', angular.toJson(deploymentConfig));
+        formData.append('model', angular.toJson(model));
         return formData;
     }
 
 }
 
-//DeploymentService.$inject = ['$http', '$rootScope', 'RestApi'];
+// DeploymentService.$inject = ['$http', '$rootScope', 'RestApi'];

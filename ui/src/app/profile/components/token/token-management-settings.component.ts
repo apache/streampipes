@@ -16,10 +16,10 @@
  *
  */
 
-import { Component, OnInit } from "@angular/core";
-import { BasicProfileSettings } from "../basic-profile-settings";
-import { RawUserApiToken, UserApiToken } from "../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model-client";
-import { MatTableDataSource } from "@angular/material/table";
+import { Component, OnInit } from '@angular/core';
+import { BasicProfileSettings } from '../basic-profile-settings';
+import { RawUserApiToken, UserApiToken } from '@streampipes/platform-services';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'token-management-settings',
@@ -29,7 +29,7 @@ import { MatTableDataSource } from "@angular/material/table";
 export class TokenManagementSettingsComponent extends BasicProfileSettings implements OnInit {
 
   newTokenName: string;
-  newTokenCreated: boolean = false;
+  newTokenCreated = false;
   newlyCreatedToken: RawUserApiToken;
 
   displayedColumns: string[] = ['name', 'action'];
@@ -40,23 +40,23 @@ export class TokenManagementSettingsComponent extends BasicProfileSettings imple
   }
 
   requestNewKey() {
-    let baseToken: RawUserApiToken = this.makeBaseToken();
+    const baseToken: RawUserApiToken = this.makeBaseToken();
     this.profileService.requestNewApiToken(this.userData.username, baseToken).subscribe(result => {
       this.newlyCreatedToken = result;
       this.newTokenCreated = true;
-      this.newTokenName = "";
+      this.newTokenName = '';
       this.receiveUserData();
     });
   }
 
   makeBaseToken(): RawUserApiToken {
-    let baseToken = new RawUserApiToken();
+    const baseToken = new RawUserApiToken();
     baseToken.tokenName = this.newTokenName;
     return baseToken;
   }
 
   revokeApiKey(apiKey: UserApiToken) {
-    var removeIndex = this.userData.userApiTokens.map(token => token.tokenId).indexOf(apiKey.tokenId);
+    const removeIndex = this.userData.userApiTokens.map(token => token.tokenId).indexOf(apiKey.tokenId);
     this.userData.userApiTokens.splice(removeIndex, 1);
     this.profileService.updateUserProfile(this.userData).subscribe(response => {
       this.receiveUserData();

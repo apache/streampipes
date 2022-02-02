@@ -16,7 +16,7 @@
  *
  */
 
-import {animate, animateChild, group, query, style, transition, trigger} from "@angular/animations";
+import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations';
 
 export const slideInAnimation =
     trigger('routeAnimations', [
@@ -40,7 +40,7 @@ export const slideInAnimation =
           ], { optional: true }),
           query(':enter', [
             animate('300ms', style({ opacity: 1 }))
-          ],{ optional: true })
+          ], { optional: true })
         ]),
         query(':enter', animateChild(), { optional: true }),
       ])

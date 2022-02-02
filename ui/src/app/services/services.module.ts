@@ -26,6 +26,7 @@ import { PropertySelectorService } from './property-selector.service';
 import { ElementIconText } from './get-element-icon-text.service';
 import { AppConstants } from './app.constants';
 import { JwtTokenStorageService } from './jwt-token-storage.service';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [],
@@ -40,6 +41,7 @@ import { JwtTokenStorageService } from './jwt-token-storage.service';
     TourProviderService,
     NotificationCountService,
     PropertySelectorService,
+    PlatformServicesModule,
   ],
   entryComponents: []
 })

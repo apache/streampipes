@@ -80,8 +80,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     createSubscription() {
         this.subscription = this.rxStompService.watch('/topic/' + this.notificationTopic).subscribe((message: Message) => {
             let scrollToBottom = false;
-            if ((this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) <= (this.notificationContainer.nativeElement.clientHeight + 10) &&
-                (this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) >= (this.notificationContainer.nativeElement.clientHeight - 10)) {
+            if ((this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) <=
+                (this.notificationContainer.nativeElement.clientHeight + 10) &&
+                (this.notificationContainer.nativeElement.scrollHeight - this.notificationContainer.nativeElement.scrollTop) >=
+                (this.notificationContainer.nativeElement.clientHeight - 10)) {
                 scrollToBottom = true;
             }
             this.newEventArriving = true;
@@ -130,8 +132,11 @@ export class NotificationsComponent implements OnInit, OnDestroy {
                     .filter(sp => sp.internalName === NotificationsComponent.NOTIFICATION_TITLE_KEY)
                     .map(sp => (sp as FreeTextStaticProperty).value)[0];
                 const pipelineName = pipeline.name;
-                this.existingNotifications.push({notificationTitle: notificationName,
-                    pipelineName, pipelineId: pipeline._id, notificationId: NotificationUtils.makeNotificationId(pipeline._id, notificationName)});
+                this.existingNotifications.push({
+                    notificationTitle: notificationName,
+                    pipelineName,
+                    pipelineId: pipeline._id,
+                    notificationId: NotificationUtils.makeNotificationId(pipeline._id, notificationName)});
              });
         });
     }
@@ -148,7 +153,8 @@ export class NotificationsComponent implements OnInit, OnDestroy {
                 });
             } else {
                 setTimeout(() => {
-                    this.notificationContainer.nativeElement.scrollTop = this.notificationContainer.nativeElement.scrollHeight - this.previousScrollHeight;
+                    this.notificationContainer.nativeElement.scrollTop =
+                        this.notificationContainer.nativeElement.scrollHeight - this.previousScrollHeight;
                 });
             }
             notifications.forEach(n => {

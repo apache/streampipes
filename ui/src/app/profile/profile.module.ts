@@ -16,20 +16,21 @@
  *
  */
 
-import {NgModule} from "@angular/core";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {FormsModule} from "@angular/forms";
-import {MatTabsModule} from "@angular/material/tabs";
-import {MatButtonModule} from "@angular/material/button";
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {CommonModule} from "@angular/common";
-import {ProfileComponent} from "./profile.component";
-import {TokenManagementSettingsComponent} from "./components/token/token-management-settings.component";
-import {GeneralProfileSettingsComponent} from "./components/general/general-profile-settings.component";
-import {ProfileService} from "./profile.service";
-import {MatDividerModule} from "@angular/material/divider";
+import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { CommonModule } from '@angular/common';
+import { ProfileComponent } from './profile.component';
+import { TokenManagementSettingsComponent } from './components/token/token-management-settings.component';
+import { GeneralProfileSettingsComponent } from './components/general/general-profile-settings.component';
+import { ProfileService } from './profile.service';
+import { MatDividerModule } from '@angular/material/divider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CoreUiModule } from '../core-ui/core-ui.module';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
     CommonModule,
     ClipboardModule,
     CoreUiModule,
+    PlatformServicesModule
   ],
   declarations: [
     GeneralProfileSettingsComponent,

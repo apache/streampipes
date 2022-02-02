@@ -22,7 +22,7 @@ import dashboardTourConstants from './dashboard-tour.constants';
 import adapterTourConstants from './adapter-tour.constants';
 import adapterTour2Constants from './adapter-tour-2.constants';
 import adapterTour3Constants from './adapter-tour-3.constants';
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class TourProviderService {
@@ -48,7 +48,7 @@ export class TourProviderService {
 
     getTourById(tourId) {
         return this.guidedTours.find(tour => {
-            return tour.id  === tourId
+            return tour.id  === tourId;
         });
     }
 

@@ -16,7 +16,7 @@
  *
  */
 
-import {Injectable} from "@angular/core";
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ElementIconText {
@@ -24,12 +24,12 @@ export class ElementIconText {
     constructor() {}
 
     getElementIconText(s) {
-        var result = "";
+        let result = '';
         if (s.length <= 4) {
             result = s;
         } else {
-            var words = s.split(" ");
-            words.forEach(function (word, i) {
+            const words = s.split(' ');
+            words.forEach((word, i) => {
                 if (i < 4) {
                     result += word.charAt(0);
                 }

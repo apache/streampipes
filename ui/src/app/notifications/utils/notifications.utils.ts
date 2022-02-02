@@ -15,7 +15,7 @@
  *   limitations under the License.
  */
 
-import {ExistingNotification} from "../model/notifications.model";
+import { ExistingNotification } from '../model/notifications.model';
 
 export class NotificationUtils {
 
@@ -24,7 +24,7 @@ export class NotificationUtils {
     }
 
     static makeNotificationId(pipelineId: string, notificationTitle: string) {
-        let vizName = notificationTitle.replace(/\s/g, '-');
+        const vizName = notificationTitle.replace(/\s/g, '-');
         return pipelineId + '-' + vizName;
     }
 }

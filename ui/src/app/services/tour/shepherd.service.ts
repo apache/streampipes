@@ -20,7 +20,7 @@ import Shepherd from 'shepherd.js';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourProviderService } from './tour-provider.service';
-import Step from "shepherd.js/src/types/step";
+import Step from 'shepherd.js/src/types/step';
 import StepOptions = Step.StepOptions;
 
 @Injectable()

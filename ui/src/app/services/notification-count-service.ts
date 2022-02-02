@@ -15,29 +15,29 @@
  *   limitations under the License.
  */
 
-import {Inject, Injectable} from '@angular/core';
-import {RestApi} from "./rest-api.service";
-import {NotificationItem} from "../notifications/model/notifications.model";
+import { Injectable } from '@angular/core';
+import { RestApi } from './rest-api.service';
+import { NotificationItem } from '../notifications/model/notifications.model';
 
 @Injectable()
 export class NotificationCountService {
 
-    unreadNotificationCount: number = 0;
+    unreadNotificationCount = 0;
     lockNotificationId: string;
-    lockActive: boolean = false;
+    lockActive = false;
 
-    constructor(private RestApi: RestApi) {
+    constructor(private restApi: RestApi) {
     }
 
     loadUnreadNotifications() {
-        this.RestApi.getUnreadNotificationsCount()
+        this.restApi.getUnreadNotificationsCount()
             .subscribe(response => {
                 this.unreadNotificationCount = response.count;
             });
     }
 
     increaseNotificationCount(notification: NotificationItem) {
-        let id = this.makeId(notification.correspondingPipelineId, notification.title);
+        const id = this.makeId(notification.correspondingPipelineId, notification.title);
         if (this.lockActive && (id === this.lockNotificationId)) {
         } else {
             this.unreadNotificationCount = this.unreadNotificationCount + 1;
@@ -58,7 +58,7 @@ export class NotificationCountService {
     }
 
     makeId(pipelineId: string, notificationTitle: string) {
-        let vizName = notificationTitle.replace(/\\s/g, '-');
+        const vizName = notificationTitle.replace(/\\s/g, '-');
         return pipelineId + '-' + vizName;
     }
 }

@@ -15,9 +15,9 @@
  *   limitations under the License.
  */
 
-import {Component, Input, OnInit} from "@angular/core";
-import {NotificationItem} from "../model/notifications.model";
-import {DomSanitizer} from "@angular/platform-browser";
+import { Component, Input, OnInit } from '@angular/core';
+import { NotificationItem } from '../model/notifications.model';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
     selector: 'notification-item',

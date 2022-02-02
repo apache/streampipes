@@ -16,28 +16,32 @@
  *
  */
 
-import {Injectable} from "@angular/core";
-import {EventPropertyNested, EventPropertyUnion} from "../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model";
+import { Injectable } from '@angular/core';
+import { EventPropertyNested, EventPropertyUnion } from '@streampipes/platform-services';
 
 @Injectable()
 export class PropertySelectorService {
 
-    firstStreamPrefix: string = "s0";
-    secondStreamPrefix: string = "s1";
-    propertyDelimiter: string = "::";
+    firstStreamPrefix = 's0';
+    secondStreamPrefix = 's1';
+    propertyDelimiter = '::';
 
     constructor() {
 
     }
 
-    makeProperties(eventProperties: Array<any>, availablePropertyKeys: Array<string>, currentPointer) {
-        let outputProperties = [];
+    makeProperties(eventProperties: any[], availablePropertyKeys: string[], currentPointer) {
+        const outputProperties = [];
         eventProperties.forEach(ep => {
             availablePropertyKeys.forEach(apk => {
                 if (this.isInSelection(ep, apk, currentPointer)) {
                     ep.runtimeId = this.makeSelector(currentPointer, ep.runtimeName);
                     if (this.isNested(ep)) {
-                        ep.eventProperties = this.makeProperties(ep.eventProperties, availablePropertyKeys, this.makeSelector(currentPointer, ep.runtimeName));
+                        ep.eventProperties =
+                            this.makeProperties(
+                                ep.eventProperties,
+                                availablePropertyKeys,
+                                this.makeSelector(currentPointer, ep.runtimeName));
                     }
                     outputProperties.push(ep);
                 }
@@ -46,18 +50,18 @@ export class PropertySelectorService {
         return outputProperties;
     }
 
-    makeFlatProperties(eventProperties: Array<EventPropertyUnion>, availablePropertyKeys: Array<string>) {
-        let outputProperties = [];
+    makeFlatProperties(eventProperties: EventPropertyUnion[], availablePropertyKeys: string[]) {
+        const outputProperties = [];
 
         availablePropertyKeys.forEach(apk => {
-            let keyArray = apk.split("::");
+            const keyArray = apk.split('::');
             keyArray.shift();
             outputProperties.push(this.makeProperty(eventProperties, keyArray, apk));
         });
         return outputProperties;
     }
 
-    makeProperty(eventProperties: Array<any>, propertySelector, originalSelector) {
+    makeProperty(eventProperties: any[], propertySelector, originalSelector) {
         let outputProperty;
         eventProperties.forEach(ep => {
             if (ep.runtimeName === propertySelector[0]) {
@@ -75,7 +79,7 @@ export class PropertySelectorService {
     }
 
     makeNiceLabel(originalSelector) {
-        return originalSelector.split("::").join(" \u{21D2} ");
+        return originalSelector.split('::').join(' \u{21D2} ');
     }
 
     isNested(ep) {

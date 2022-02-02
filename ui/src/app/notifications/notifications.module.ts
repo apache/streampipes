@@ -16,17 +16,17 @@
  *
  */
 
-import {NgModule} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {MatTabsModule} from "@angular/material/tabs";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {CustomMaterialModule} from "../CustomMaterial/custom-material.module";
-import {FormsModule} from "@angular/forms";
-import {NotificationsComponent} from "./notifications.component";
-import {NotificationItemComponent} from "./components/notification-item.component";
-import {NotificationsService} from "./service/notifications.service";
-import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from "@stomp/ng2-stompjs";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatTabsModule } from '@angular/material/tabs';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
+import { FormsModule } from '@angular/forms';
+import { NotificationsComponent } from './notifications.component';
+import { NotificationItemComponent } from './components/notification-item.component';
+import { NotificationsService } from './service/notifications.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
   imports: [
@@ -37,7 +37,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     CommonModule,
     FlexLayoutModule,
     CustomMaterialModule,
-    FormsModule
+    FormsModule,
+    PlatformServicesModule
   ],
   declarations: [
     NotificationsComponent,
