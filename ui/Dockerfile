@@ -16,7 +16,7 @@
 ARG BASE_IMAGE=nginx
 FROM $BASE_IMAGE
 
-COPY dist/ /usr/share/nginx/html/
+COPY dist/streampipes/ui /usr/share/nginx/html/
 #COPY dist/assets/img/ /usr/share/nginx/html/assets/img/
 #COPY dist/assets/css/ /usr/share/nginx/html/assets/css/
 #COPY dist/assets/lib/ /usr/share/nginx/html/assets/lib/
