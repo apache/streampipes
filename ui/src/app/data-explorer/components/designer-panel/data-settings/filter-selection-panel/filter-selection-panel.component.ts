@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { FieldConfig, SelectedFilter, SourceConfig } from '../../../../models/dataview-dashboard.model';
+import { FieldConfig, SelectedFilter, SourceConfig } from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({

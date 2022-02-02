@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-select-property',

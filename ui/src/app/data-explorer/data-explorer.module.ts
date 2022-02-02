@@ -44,6 +44,7 @@ import { SemanticTypeUtilsService } from '../core-services/semantic-type/semanti
 import {
   DatalakeRestService,
   DataViewDataExplorerService,
+  DataViewQueryGeneratorService,
   PlatformServicesModule,
   SharedDatalakeRestService
 } from '@streampipes/platform-services';
@@ -86,7 +87,6 @@ import { IndicatorWidgetConfigComponent } from './components/widgets/indicator/c
 import { CorrelationChartWidgetComponent } from './components/widgets/correlation-chart/correlation-chart-widget.component';
 import { DistributionChartWidgetComponent } from './components/widgets/distribution-chart/distribution-chart-widget.component';
 import { DistributionWidgetConfigComponent } from './components/widgets/distribution-chart/config/distribution-chart-widget-config.component';
-import { DataViewQueryGeneratorService } from './services/data-view-query-generator.service';
 import { DataExplorerFieldProviderService } from './services/data-explorer-field-provider-service';
 import { FieldSelectionPanelComponent } from './components/designer-panel/data-settings/field-selection-panel/field-selection-panel.component';
 import { FieldSelectionComponent } from './components/designer-panel/data-settings/field-selection/field-selection.component';

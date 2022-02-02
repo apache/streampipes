@@ -20,14 +20,16 @@ import { Directive, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output 
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import {
+  DataExplorerDataConfig,
+  DataExplorerField,
+  DataViewQueryGeneratorService,
   DataExplorerWidgetModel,
   SpQueryResult,
   DashboardItem,
   DatalakeRestService,
   TimeSettings } from '@streampipes/platform-services';
 import { ResizeService } from '../../../services/resize.service';
-import { DataViewQueryGeneratorService } from '../../../services/data-view-query-generator.service';
-import { DataExplorerDataConfig, DataExplorerField, FieldProvider } from '../../../models/dataview-dashboard.model';
+import { FieldProvider } from '../../../models/dataview-dashboard.model';
 import { Observable, Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { BaseWidgetData } from './data-explorer-widget-data';

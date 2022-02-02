@@ -17,14 +17,17 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { DataExplorerWidgetModel,
+import {
+  DataExplorerDataConfig,
+  DataExplorerWidgetModel,
   DataLakeMeasure,
   DatalakeRestService,
-  DataViewDataExplorerService } from '@streampipes/platform-services';
+  DataViewDataExplorerService,
+  SourceConfig
+} from '@streampipes/platform-services';
 import { MatSelectChange } from '@angular/material/select';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { zip } from 'rxjs';
-import { DataExplorerDataConfig, SourceConfig } from '../../../models/dataview-dashboard.model';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
 
@@ -41,7 +44,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   @Input() widgetId: string;
 
   @Output() createWidgetEmitter: EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>> =
-      new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
+    new EventEmitter<Tuple2<DataLakeMeasure, DataExplorerWidgetModel>>();
   @Output() dataLakeMeasureChange: EventEmitter<DataLakeMeasure> = new EventEmitter<DataLakeMeasure>();
   @Output() configureVisualizationEmitter: EventEmitter<void> = new EventEmitter<void>();
 
@@ -93,7 +96,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   findMeasure(measureName) {
     return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
-        this.availableMeasurements.find(m => m.measureName === measureName);
+      this.availableMeasurements.find(m => m.measureName === measureName);
   }
 
   setStep(index: number) {
@@ -138,7 +141,9 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   deepCopy(obj) {
     let copy;
 
-    if (null == obj || 'object' !== typeof obj) { return obj; }
+    if (null == obj || 'object' !== typeof obj) {
+      return obj;
+    }
 
     if (obj instanceof Date) {
       copy = new Date();
@@ -157,7 +162,9 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     if (obj instanceof Object) {
       copy = {};
       for (const attr in obj) {
-        if (obj.hasOwnProperty(attr)) { copy[attr] = this.deepCopy(obj[attr]); }
+        if (obj.hasOwnProperty(attr)) {
+          copy[attr] = this.deepCopy(obj[attr]);
+        }
       }
       return copy;
     }

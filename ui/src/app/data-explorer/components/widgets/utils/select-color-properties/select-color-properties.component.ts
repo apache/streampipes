@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerField } from '@streampipes/platform-services';
 import { TimeSeriesChartWidgetModel } from '../../time-series-chart/model/time-series-chart-widget.model';
 
 

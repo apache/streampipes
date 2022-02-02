@@ -31,3 +31,7 @@ export * from './lib/model/email-config.model';
 export * from './lib/model/general-config.model';
 export * from './lib/model/gen/streampipes-model-client';
 export * from './lib/model/gen/streampipes-model';
+
+export * from './lib/model/datalake/data-lake-query-config.model';
+export * from './lib/query/DatalakeQueryParameterBuilder';
+export * from './lib/query/data-view-query-generator.service';

@@ -21,7 +21,7 @@ import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 import { TableVisConfig, TableWidgetModel } from '../model/table-widget.model';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
-import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerField } from '@streampipes/platform-services';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({

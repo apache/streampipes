@@ -21,8 +21,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TableWidgetModel } from './model/table-widget.model';
-import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '@streampipes/platform-services';
+import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-explorer-table-widget',

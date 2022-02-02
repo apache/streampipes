@@ -19,8 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { DistributionChartWidgetModel } from './model/distribution-chart-widget.model';
-import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '@streampipes/platform-services';
+import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-explorer-distribution-chart-widget',

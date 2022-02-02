@@ -19,8 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { IndicatorChartWidgetModel } from './model/indicator-chart-widget.model';
-import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '@streampipes/platform-services';
+import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-explorer-indicator-chart-widget',

@@ -16,8 +16,8 @@
  *
  */
 
-import { DataExplorerWidgetModel, EventPropertyUnion } from '@streampipes/platform-services';
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel, EventPropertyUnion } from '@streampipes/platform-services';
+import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface TimeSeriesChartVisConfig extends DataExplorerVisConfig {
   selectedTimeSeriesChartProperties: DataExplorerField[];

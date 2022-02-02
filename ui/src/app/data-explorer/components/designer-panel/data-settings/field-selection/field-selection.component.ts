@@ -17,8 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FieldConfig, SourceConfig } from '../../../../models/dataview-dashboard.model';
-import { EventPropertyUnion } from '@streampipes/platform-services';
+import { EventPropertyUnion, FieldConfig, SourceConfig } from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({

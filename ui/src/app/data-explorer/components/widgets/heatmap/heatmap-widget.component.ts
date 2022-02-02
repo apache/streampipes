@@ -17,11 +17,10 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SpQueryResult } from '@streampipes/platform-services';
+import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services';
 
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { HeatmapWidgetModel } from './model/heatmap-widget.model';
-import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 import { EChartsOption } from 'echarts';
 import { ECharts } from 'echarts/core';

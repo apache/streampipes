@@ -17,16 +17,17 @@
  */
 
 import { Injectable } from '@angular/core';
-import { DataExplorerDataConfig, SourceConfig } from '../models/dataview-dashboard.model';
-import { DatalakeQueryParameterBuilder } from '../../core-services/datalake/DatalakeQueryParameterBuilder';
 import { Observable } from 'rxjs';
-import {
-  DatalakeQueryParameters,
-  DatalakeRestService,
-  SpQueryResult } from '@streampipes/platform-services';
+import { DatalakeRestService } from '../apis/datalake-rest.service';
+import { DataExplorerDataConfig, SourceConfig } from '../model/datalake/data-lake-query-config.model';
+import { SpQueryResult } from '../model/gen/streampipes-model';
+import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
+import { DatalakeQueryParameterBuilder } from './DatalakeQueryParameterBuilder';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DataViewQueryGeneratorService {
 
   constructor(protected dataLakeRestService: DatalakeRestService) {

@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { QueryConfig } from '../../../../models/dataview-dashboard.model';
+import { QueryConfig } from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
 
 @Component({

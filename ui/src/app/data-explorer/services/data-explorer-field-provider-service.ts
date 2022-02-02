@@ -18,15 +18,15 @@
 
 import { Injectable } from '@angular/core';
 import {
-  DataExplorerField,
-  FieldConfig,
   FieldProvider,
-  SourceConfig
 } from '../models/dataview-dashboard.model';
 import {
+  DataExplorerField,
   EventProperty,
   EventPropertyPrimitive,
-  EventPropertyUnion
+  EventPropertyUnion,
+  FieldConfig,
+  SourceConfig
 } from '@streampipes/platform-services';
 
 

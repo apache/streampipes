@@ -20,9 +20,8 @@ import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { TimeSeriesChartVisConfig, TimeSeriesChartWidgetModel } from '../model/time-series-chart-widget.model';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
-import { EventPropertyUnion } from '@streampipes/platform-services';
+import { DataExplorerField, EventPropertyUnion } from '@streampipes/platform-services';
 import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
-import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({

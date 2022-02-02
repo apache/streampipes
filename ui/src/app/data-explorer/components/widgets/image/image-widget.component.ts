@@ -19,10 +19,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
-import { EventPropertyUnion, EventSchema, SpQueryResult, DatalakeQueryParameters } from '@streampipes/platform-services';
+import {
+  DataExplorerField,
+  DatalakeQueryParameterBuilder,
+  DatalakeQueryParameters,
+  EventPropertyUnion,
+  EventSchema,
+  SpQueryResult
+} from '@streampipes/platform-services';
 import { ImageWidgetModel } from './model/image-widget.model';
-import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
-import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',

@@ -16,8 +16,8 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import { DataExplorerDataConfig, DataExplorerField, DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel } from '@streampipes/platform-services';
+import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface CorrelationChartVisConfig extends DataExplorerVisConfig {
   firstField: DataExplorerField;

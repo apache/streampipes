@@ -17,8 +17,8 @@
  */
 
 import { GridsterConfig } from 'angular-gridster2';
-import { DataLakeMeasure } from '@streampipes/platform-services';
 import { WidgetType } from '../registry/data-explorer-widgets';
+import { DataExplorerField } from '@streampipes/platform-services';
 
 
 // tslint:disable-next-line:no-empty-interface
@@ -48,58 +48,6 @@ export interface RefreshMessage {
   refreshView: boolean;
 }
 
-export interface DataExplorerFieldCharacteristics {
-  dimension: boolean;
-  numeric: boolean;
-  binary: boolean;
-  semanticTypes: string[];
-}
-
-export interface DataExplorerField {
-  runtimeName: string;
-  aggregation?: string;
-  measure: string;
-  fullDbName: string;
-  sourceIndex: number;
-  fieldCharacteristics: DataExplorerFieldCharacteristics;
-}
-
-export interface FieldConfig {
-  runtimeName: string;
-  aggregations?: string[];
-  alias?: string;
-  selected: boolean;
-  numeric: boolean;
-}
-
-export interface SelectedFilter {
-  index: number;
-  field?: DataExplorerField;
-  operator: string;
-  value: any;
-}
-
-export interface QueryConfig {
-  selectedFilters: SelectedFilter[];
-  fields?: FieldConfig[];
-  groupBy?: FieldConfig[];
-  limit?: number;
-  page?: number;
-  order?: 'ASC' | 'DESC';
-  autoAggregate?: boolean;
-  aggregationValue?: number;
-  aggregationTimeUnit?: string;
-  aggregationFunction?: string;
-}
-
-export interface SourceConfig {
-  measureName: string;
-  measure?: DataLakeMeasure;
-  queryConfig: QueryConfig;
-  queryType: 'raw' | 'aggregated' | 'single';
-  sourceType: 'pipeline' | 'measurement';
-}
-
 export interface FieldProvider {
   primaryTimestampField?: DataExplorerField;
   allFields: DataExplorerField[];
@@ -109,9 +57,7 @@ export interface FieldProvider {
   nonNumericFields: DataExplorerField[];
 }
 
-export interface DataExplorerDataConfig {
-  sourceConfigs: SourceConfig[];
-}
+
 
 export interface DataExplorerVisConfig {
   forType: WidgetType;

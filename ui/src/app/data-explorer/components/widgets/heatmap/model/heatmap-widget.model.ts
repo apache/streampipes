@@ -16,12 +16,8 @@
  *
  */
 
-import { DataExplorerWidgetModel } from '@streampipes/platform-services';
-import {
-  DataExplorerDataConfig,
-  DataExplorerField,
-  DataExplorerVisConfig
-} from '../../../../models/dataview-dashboard.model';
+import { DataExplorerDataConfig, DataExplorerField, DataExplorerWidgetModel } from '@streampipes/platform-services';
+import { DataExplorerVisConfig } from '../../../../models/dataview-dashboard.model';
 
 export interface HeatmapVisConfig extends DataExplorerVisConfig {
   showLabelsProperty: boolean;

@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { CorrelationChartVisConfig, CorrelationChartWidgetModel } from '../model/correlation-chart-widget.model';
-import { DataExplorerField } from '../../../../models/dataview-dashboard.model';
+import { DataExplorerField } from '@streampipes/platform-services';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
 
 @Component({

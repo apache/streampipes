@@ -18,13 +18,15 @@
 
 import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
+  DataExplorerField,
   DataExplorerWidgetModel,
   EventPropertyPrimitive,
   EventPropertyUnion,
-  EventSchema
+  EventSchema,
+  SourceConfig
 } from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
-import { DataExplorerField, DataExplorerVisConfig, FieldProvider, SourceConfig } from '../../../models/dataview-dashboard.model';
+import { DataExplorerVisConfig, FieldProvider } from '../../../models/dataview-dashboard.model';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { WidgetType } from '../../../registry/data-explorer-widgets';
 

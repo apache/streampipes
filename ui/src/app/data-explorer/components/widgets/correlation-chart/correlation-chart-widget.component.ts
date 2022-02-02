@@ -19,8 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { CorrelationChartWidgetModel } from './model/correlation-chart-widget.model';
-import { DataExplorerField } from '../../../models/dataview-dashboard.model';
-import { SpQueryResult } from '@streampipes/platform-services';
+import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-explorer-correlation-chart-widget',
