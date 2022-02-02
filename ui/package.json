@@ -8,7 +8,7 @@
     "url": "https://github.com/apache/incubator-streampipes"
   },
   "scripts": {
-    "start": "node ./deployment/prebuild.js && ng serve",
+    "start": "node ./deployment/prebuild.js && ng build @streampipes/platform-services && ng serve",
     "test": "node ./deployment/prebuild.js && ng test",
     "start-plain": "ng serve",
     "build-plain": "set NODE_OPTIONS=--max-old-space-size=10192 && ng build --configuration production",
@@ -45,7 +45,7 @@
     "@ngx-loading-bar/http-client": "5.1.2",
     "@panzoom/panzoom": "^4.3.2",
     "@stomp/ng2-stompjs": "7.2.0",
-    "@streampipes/platform-services": "0.0.1",
+    "@streampipes/platform-services": "file:./dist/streampipes/platform-services",
     "@swimlane/ngx-charts": "16.0.0",
     "angular-datatables": "^12.0.2",
     "angular-gridster2": "12.1.1",

@@ -12,7 +12,7 @@
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "aot": true,
-            "outputPath": "dist/",
+            "outputPath": "dist/streampipes/ui",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
