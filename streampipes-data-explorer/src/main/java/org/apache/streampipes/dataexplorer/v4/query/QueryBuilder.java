@@ -38,15 +38,24 @@ public class QueryBuilder {
         this.databaseName = databaseName;
     }
 
-    public Query build(List<QueryElement<?>> queryElements) {
+    public Query build(List<QueryElement<?>> queryElements, Boolean onlyCountResults) {
         for (QueryElement<?> queryPart : queryElements) {
             this.queryParts.add(queryPart.getStatement());
         }
-        return toQuery();
+        if (onlyCountResults) {
+            return toCountResultsQuery();
+        } else {
+            return toQuery();
+        }
     }
 
     public Query toQuery() {
         return new Query(this.queryParts.toString(), this.databaseName);
+    }
+
+    public Query toCountResultsQuery() {
+        String q = "SELECT COUNT(*) FROM (" + this.queryParts.toString() + ")";
+        return new Query(q, this.databaseName);
     }
 }
 

@@ -169,6 +169,10 @@ public class Expressions {
     return new PropertyExpression(streamName, propertyName);
   }
 
+  public static PropertyExpression property(String streamName, String propertyName, String eventIndex) {
+    return new PropertyExpression(streamName, propertyName, eventIndex);
+  }
+
   public static PropertyExpression property(String propertyName) {
     return new PropertyExpression(propertyName);
   }

@@ -32,17 +32,7 @@ describe('Test Table View in Data Explorer', () => {
     /**
      * Prepare tests
      */
-    DataLakeUtils.goToDatalake();
-    DataLakeUtils.createAndEditDataView();
-    DataLakeUtils.selectTimeRange(
-      new Date(2020, 10, 20, 22, 44),
-      new Date(2021, 10, 20, 22, 44));
-    DataLakeUtils.addNewWidget();
-    DataLakeUtils.selectDataSet('Persist');
-    DataLakeUtils.dataConfigSelectAllFields();
-    DataLakeUtils.selectVisualizationConfig();
-    DataLakeUtils.selectVisualizationType('Table');
-    DataLakeUtils.clickCreateButton();
+    DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
 
     // Validate that X lines are available
     checkTableRows(10);
@@ -84,7 +74,7 @@ describe('Test Table View in Data Explorer', () => {
     DataLakeUtils.dataConfigAddFilter(filterConfig);
     DataLakeUtils.checkIfFilterIsSet(1);
     checkTableRows(4);
-    DataLakeUtils.saveAndReEditWidget();
+    DataLakeUtils.saveAndReEditWidget('TestView');
     DataLakeUtils.checkIfFilterIsSet(1);
     checkTableRows(4);
     DataLakeUtils.dataConfigRemoveFilter();
@@ -97,7 +87,7 @@ describe('Test Table View in Data Explorer', () => {
     cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).first({ timeout: 10000 }).contains('a', { timeout: 10000 });
     cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).last({ timeout: 10000 }).contains('c', { timeout: 10000 });
     checkTableRows(10);
-    DataLakeUtils.saveAndReEditWidget();
+    DataLakeUtils.saveAndReEditWidget('TestView');
     cy.dataCy('data-explorer-group-by-randomtext').find('input').should('be.checked');
     DataLakeUtils.clickGroupBy('randomtext');
 

@@ -17,10 +17,11 @@
  */
 
 import Shepherd from 'shepherd.js';
-//import "shepherd.js/dist/css/shepherd-theme-arrows.css";
-import {Inject, Injectable} from "@angular/core";
-import {Router} from "@angular/router";
-import {TourProviderService} from "./tour-provider.service";
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { TourProviderService } from './tour-provider.service';
+import Step from "shepherd.js/src/types/step";
+import StepOptions = Step.StepOptions;
 
 @Injectable()
 export class ShepherdService {
@@ -29,33 +30,37 @@ export class ShepherdService {
     currentTourSettings: any;
     timeWaitMillis: number;
 
-    constructor(private Router: Router,
-                private TourProviderService: TourProviderService) {
-        this.timeWaitMillis = TourProviderService.getTime();
+    constructor(private router: Router,
+                private tourProviderService: TourProviderService) {
+        this.timeWaitMillis = tourProviderService.getTime();
     }
 
     makeTour(currentTourSettings) {
-        let tour = new Shepherd.Tour({
-            defaults: {
+        const tour = new Shepherd.Tour({
+            confirmCancel: true,
+            confirmCancelMessage: 'Do you really want to cancel the tour?',
+            defaultStepOptions: {
                 classes: 'shadow-md bg-purple-dark',
-                showCancelLink: true
+                scrollTo: true
+                // showCancelLink: true
             }
         });
 
         currentTourSettings.steps.forEach(step => {
-            tour.addStep(step.stepId, this.makeStep(tour, step));
+            tour.addStep(this.makeStep(tour, step));
         });
 
         return tour;
     }
 
     makeStep(tour, step) {
-        let stepDefinition = {
+        const stepDefinition: StepOptions = {
             title: step.title,
             text: step.text,
             classes: step.classes,
+            id: step.stepId,
             buttons: this.generateButtons(tour, step.buttons)
-        }
+        };
 
         if (step.attachToElement) {
             Object.assign(stepDefinition, {
@@ -70,7 +75,7 @@ export class ShepherdService {
     }
 
     generateButtons(tour, buttons) {
-        let generatedButtons = [];
+        const generatedButtons = [];
         buttons.forEach(button => {
             generatedButtons.push(this.generateButton(tour, button));
         });
@@ -78,13 +83,13 @@ export class ShepherdService {
     }
 
     generateButton(tour, button) {
-        if (button === "back") {
+        if (button === 'back') {
             return this.makeBackButton(tour);
-        } else if (button === "next") {
+        } else if (button === 'next') {
             return this.makeNextButton(tour);
-        } else if (button === "cancel") {
+        } else if (button === 'cancel') {
             return this.makeCancelButton(tour);
-        } else if (button === "dashboard") {
+        } else if (button === 'dashboard') {
             return this.makeStartDashboardTutorialButton();
         }
     }
@@ -101,14 +106,14 @@ export class ShepherdService {
             action: tour.cancel,
             classes: 'shepherd-button-secondary',
             text: 'Exit Tour'
-        }
+        };
     }
 
     makeNextButton(tour) {
         return {
             action: tour.next,
             text: 'Next'
-        }
+        };
     }
 
     makeBackButton(tour) {
@@ -129,7 +134,7 @@ export class ShepherdService {
     trigger(actionId) {
         if (Shepherd.activeTour) {
             if (this.shouldTrigger(actionId, this.currentTour.getCurrentStep().id)) {
-                 setTimeout(() => this.currentTour.next(), this.TourProviderService.getTime());
+                 setTimeout(() => this.currentTour.next(), this.tourProviderService.getTime());
             }
         }
     }
@@ -149,34 +154,34 @@ export class ShepherdService {
     }
 
     switchAndStartDashboardTour() {
-        this.Router.navigateByUrl("dashboard");
+        this.router.navigateByUrl('dashboard');
     }
 
     startCreatePipelineTour() {
-        this.startTour(this.TourProviderService.getTourById("create-pipeline"));
+        this.startTour(this.tourProviderService.getTourById('create-pipeline'));
     }
 
     startDashboardTour() {
-        this.startTour(this.TourProviderService.getTourById("dashboard"));
+        this.startTour(this.tourProviderService.getTourById('dashboard'));
     }
 
     startAdapterTour() {
-        this.startTour(this.TourProviderService.getTourById("adapter"));
+        this.startTour(this.tourProviderService.getTourById('adapter'));
     }
 
     startAdapterTour2() {
-        this.startTour(this.TourProviderService.getTourById("adapter2"));
+        this.startTour(this.tourProviderService.getTourById('adapter2'));
     }
 
     startAdapterTour3() {
-        this.startTour(this.TourProviderService.getTourById("adapter3"));
+        this.startTour(this.tourProviderService.getTourById('adapter3'));
     }
 
     setTimeWaitMillies(value) {
-        this.TourProviderService.setTime(value);
+        this.tourProviderService.setTime(value);
     }
 
     getTimeWaitMillies() {
-       return this.TourProviderService.getTime();
+       return this.tourProviderService.getTime();
     }
 }

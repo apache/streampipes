@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, zip } from 'rxjs';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import { DataExplorerWidgetModel, DataLakeMeasure } from '../../../core-model/gen/streampipes-model';
 import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
@@ -27,6 +27,7 @@ import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Dashboard, DashboardItem, TimeSettings } from '../../../dashboard/models/dashboard.model';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
 import { DataViewDataExplorerService } from '../../../platform-services/apis/data-view-data-explorer.service';
+import { TimeSelectionService } from '../../services/time-selection.service';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -42,8 +43,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
    */
   @Input() timeSettings: TimeSettings;
   @Input() editMode: boolean;
+  @Input() timeRangeVisible: boolean;
 
   @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
+
+  @Output() resetDashboardChanges: EventEmitter<boolean> = new EventEmitter();
 
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
   @ViewChild('designerDrawer') designerDrawer: MatDrawer;
@@ -55,16 +59,19 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
   currentlyConfiguredWidget: DataExplorerWidgetModel;
+  newWidgetMode = false;
   currentlyConfiguredWidgetId: string;
   dataLakeMeasure: DataLakeMeasure;
 
+  showDesignerPanel = false;
+
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
-              private refreshDashboardService: RefreshDashboardService) {
+              private refreshDashboardService: RefreshDashboardService,
+              private timeSelectionService: TimeSelectionService) {
   }
 
   public ngOnInit() {
-
   }
 
   triggerResize() {
@@ -79,7 +86,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
-    //this.currentlyConfiguredWidget = widget;
+    // tslint:disable-next-line:no-object-literal-type-assertion
     const dashboardItem = {} as DashboardItem;
     dashboardItem.id = widget._id;
     dashboardItem.cols = 3;
@@ -90,15 +97,29 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.loadWidgetConfig(widget._id, true);
   }
 
-  updateDashboard() {
+  persistDashboardChanges() {
     this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
       this.dashboard._rev = result._rev;
       if (this.widgetIdsToRemove.length > 0) {
-        this.deleteWidgets();
+        const observables = this.deleteWidgets();
+        zip(...observables).subscribe(() => {
+          this.widgetIdsToRemove.forEach(id => {
+            this.dashboardGrid.configuredWidgets.delete(id);
+          });
+
+          this.afterDashboardChange();
+        });
+      } else {
+        this.afterDashboardChange();
       }
-      this.dashboardGrid.updateAllWidgets();
-      this.editModeChange.emit(false);
+
     });
+  }
+
+  afterDashboardChange() {
+    this.dashboardGrid.updateAllWidgets();
+    this.editModeChange.emit(false);
+    this.closeDesignerPanel();
   }
 
   startEditMode(widgetModel: DataExplorerWidgetModel) {
@@ -119,15 +140,18 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     const index = this.dashboard.widgets.findIndex(item => item.id === widget._id);
     this.dashboard.widgets.splice(index, 1);
     this.widgetIdsToRemove.push(widget._id);
+    if (this.currentlyConfiguredWidget._id === widget._id) {
+      this.currentlyConfiguredWidget = undefined;
+    }
   }
 
   updateAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
     this.widgetsToUpdate.set(widget._id, widget);
   }
 
-  deleteWidgets() {
-    this.widgetIdsToRemove.forEach(widgetId => {
-      this.dataViewDataExplorerService.deleteWidget(widgetId).subscribe();
+  deleteWidgets(): Observable<any>[] {
+    return this.widgetIdsToRemove.map(widgetId => {
+      return this.dataViewDataExplorerService.deleteWidget(widgetId);
     });
   }
 
@@ -135,10 +159,46 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.dashboardGrid.toggleGrid();
   }
 
+  updateDateRange(timeSettings: TimeSettings) {
+    this.timeSettings = timeSettings;
+    this.dashboard.dashboardTimeSettings = timeSettings;
+    this.timeSelectionService.notify(timeSettings);
+  }
+
   updateCurrentlyConfiguredWidget(currentWidget: DataExplorerWidgetModel) {
-    this.widgetsToUpdate.set(currentWidget._id, currentWidget);
-    this.currentlyConfiguredWidget = currentWidget;
-    //this.dataLakeMeasure = currentWidget.b;
-    this.designerPanel.modifyWidgetMode(currentWidget, false);
+    if (currentWidget) {
+      this.widgetsToUpdate.set(currentWidget._id, currentWidget);
+      this.currentlyConfiguredWidget = currentWidget;
+      this.currentlyConfiguredWidgetId = currentWidget._id;
+      this.designerPanel.modifyWidgetMode(currentWidget, false);
+      this.showDesignerPanel = true;
+    } else {
+      this.showDesignerPanel = false;
+    }
+
+  }
+
+  discardChanges() {
+    this.resetDashboardChanges.emit(true);
+  }
+
+  createWidget() {
+    this.dataLakeMeasure = new DataLakeMeasure();
+    this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
+    this.currentlyConfiguredWidget['@class'] = 'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
+    this.currentlyConfiguredWidget.baseAppearanceConfig = {};
+    this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle = 'New Widget';
+    this.currentlyConfiguredWidget.dataConfig = {};
+    this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+    this.newWidgetMode = true;
+    this.showDesignerPanel = true;
+    this.newWidgetMode = true;
+  }
+
+  closeDesignerPanel() {
+   this.showDesignerPanel = false;
+   this.currentlyConfiguredWidget = undefined;
+   this.dataLakeMeasure = undefined;
+   this.currentlyConfiguredWidgetId = undefined;
   }
 }

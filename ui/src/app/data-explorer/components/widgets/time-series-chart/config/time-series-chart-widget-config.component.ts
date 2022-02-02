@@ -50,6 +50,11 @@ export class TimeSeriesChartWidgetConfigComponent
     this.triggerDataRefresh();
   }
 
+  setShowSpikeProperty(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.showSpike = field['checked'];
+    this.triggerDataRefresh();
+  }
+
   setSelectedBackgroundColorProperty(selectedBackgroundColorProperty: EventPropertyUnion) {
     if (selectedBackgroundColorProperty.runtimeName === '') {
       this.currentlyConfiguredWidget.visualizationConfig.selectedBackgroundColorProperty = undefined;
@@ -94,6 +99,7 @@ export class TimeSeriesChartWidgetConfigComponent
       displayName: names,
       displayType: dTypes,
       chosenAxis: axes,
+      showSpike: true,
     };
   }
 

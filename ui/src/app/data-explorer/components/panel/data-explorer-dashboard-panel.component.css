@@ -36,8 +36,12 @@
 }
 
 .designer-panel {
-    width: 350px;
+    width: 400px;
     border: 1px solid var(--color-tab-border);
+}
+
+.edit-menu-btn {
+    margin-right: 5px;
 }
 
 

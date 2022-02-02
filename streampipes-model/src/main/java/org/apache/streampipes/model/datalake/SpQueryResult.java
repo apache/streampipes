@@ -30,16 +30,19 @@ public class SpQueryResult {
     private List<String> headers;
     private List<DataSeries> allDataSeries;
     private int sourceIndex;
+    private SpQueryStatus spQueryStatus;
 
     public SpQueryResult() {
         this.total = 0;
         this.allDataSeries = new ArrayList<>();
+        this.spQueryStatus = SpQueryStatus.OK;
     }
 
     public SpQueryResult(int total, List<String> headers, List<DataSeries> allDataSeries) {
         this.total = total;
         this.allDataSeries = allDataSeries;
         this.headers = headers;
+        this.spQueryStatus = SpQueryStatus.OK;
     }
 
     public int getTotal() {
@@ -76,5 +79,17 @@ public class SpQueryResult {
 
     public void setSourceIndex(int sourceIndex) {
         this.sourceIndex = sourceIndex;
+    }
+
+    public void setAllDataSeries(List<DataSeries> allDataSeries) {
+        this.allDataSeries = allDataSeries;
+    }
+
+    public SpQueryStatus getSpQueryStatus() {
+        return spQueryStatus;
+    }
+
+    public void setSpQueryStatus(SpQueryStatus spQueryStatus) {
+        this.spQueryStatus = spQueryStatus;
     }
 }

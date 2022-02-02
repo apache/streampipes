@@ -1,0 +1,21 @@
+{
+  "name": "count_value_occurrence",
+  "ignoreTimestamp": true,
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "count-mapping",
+      "value": "text"
+    },
+    {
+      "type": "radio",
+      "selector": "scale",
+      "value": "Seconds"
+    },
+    {
+      "type": "input",
+      "selector": "time-window",
+      "value": "10"
+    }
+  ]
+}

@@ -18,7 +18,7 @@
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { EventPropertyUnion, EventSchema, SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 import { ImageWidgetModel } from './model/image-widget.model';
 import { DatalakeQueryParameters } from '../../../../core-services/datalake/DatalakeQueryParameters';
@@ -30,7 +30,7 @@ import { DataExplorerField } from '../../../models/dataview-dashboard.model';
   templateUrl: './image-widget.component.html',
   styleUrls: ['./image-widget.component.css']
 })
-export class ImageWidgetComponent extends BaseDataExplorerWidget<ImageWidgetModel> implements OnInit, OnDestroy {
+export class ImageWidgetComponent extends BaseDataExplorerWidgetDirective<ImageWidgetModel> implements OnInit, OnDestroy {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 

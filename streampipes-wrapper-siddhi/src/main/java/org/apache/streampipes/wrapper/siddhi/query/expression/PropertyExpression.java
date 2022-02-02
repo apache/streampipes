@@ -23,10 +23,14 @@ import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 
 public class PropertyExpression extends PropertyExpressionBase {
 
-  private String siddhiPropertyName;
+  private final String siddhiPropertyName;
 
   public PropertyExpression(String streamName, String property) {
     this.siddhiPropertyName = join(".", streamName, property);
+  }
+
+  public PropertyExpression(String streamName, String property, String eventIndex) {
+    this.siddhiPropertyName = join(".", streamName + "[" + eventIndex + "]", property);
   }
 
   public PropertyExpression(String property) {

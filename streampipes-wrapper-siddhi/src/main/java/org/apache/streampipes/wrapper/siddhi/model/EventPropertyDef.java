@@ -20,8 +20,14 @@ package org.apache.streampipes.wrapper.siddhi.model;
 public class EventPropertyDef {
 
   private String selectorPrefix;
-  private String fieldName;
-  private String fieldType;
+  private final String fieldName;
+  private final String fieldType;
+
+  public EventPropertyDef(String fieldName,
+                          String fieldType) {
+    this.fieldName = fieldName;
+    this.fieldType = fieldType;
+  }
 
   public EventPropertyDef(String selectorPrefix, String fieldName, String fieldType) {
     this.selectorPrefix = selectorPrefix;

@@ -19,20 +19,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SpQueryResult } from '../../../../core-model/gen/streampipes-model';
 
-import { BaseDataExplorerWidget } from '../base/base-data-explorer-widget';
+import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { HeatmapWidgetModel } from './model/heatmap-widget.model';
 import { DataExplorerField } from '../../../models/dataview-dashboard.model';
 
 import { EChartsOption } from 'echarts';
 import { ECharts } from 'echarts/core';
-import { time } from 'echarts/core';
 
 @Component({
   selector: 'sp-data-explorer-heatmap-widget',
   templateUrl: './heatmap-widget.component.html',
   styleUrls: ['./heatmap-widget.component.scss']
 })
-export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidgetModel> implements OnInit, OnDestroy {
+export class HeatmapWidgetComponent extends BaseDataExplorerWidgetDirective<HeatmapWidgetModel> implements OnInit, OnDestroy {
 
   eChartsInstance: ECharts;
   currentWidth: number;
@@ -46,6 +45,7 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
   ngOnInit(): void {
     super.ngOnInit();
     this.onSizeChanged(this.gridsterItemComponent.width, this.gridsterItemComponent.height);
+    this.initOptions();
   }
 
   ngOnDestroy(): void {
@@ -67,10 +67,12 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
   }
 
   onDataReceived(spQueryResult: SpQueryResult[]) {
+    this.setShownComponents(false, true, false, false);
     const dataBundle = this.convertData(spQueryResult);
     if (Object.keys(this.option).length > 0) {
       this.setOptions(dataBundle[0], dataBundle[1], dataBundle[2], dataBundle[3], dataBundle[4]);
     }
+
   }
 
   onChartInit(ec: ECharts) {
@@ -103,25 +105,25 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
     const aggregatedXData = [];
     result.forEach(x => {
       const localXAxisData = this.transform(x.rows, 0);
-      aggregatedXData.push(...localXAxisData)
+      aggregatedXData.push(...localXAxisData);
     });
 
     const xAxisData = aggregatedXData.sort();
-    
-    let convXAxisData = [];
-    xAxisData.forEach(x => {
-     const date = new Date(x);
-     const size = 2;
-     const year = date.getFullYear();
-     const month = this.pad(date.getMonth()+1, size);
-     const day = date.getDate();
-     const hours = this.pad(date.getHours(), size);
-     const minutes = this.pad(date.getMinutes(), size);
-     const seconds = this.pad(date.getSeconds(), size);
-     const milli = this.pad(date.getMilliseconds(), 3);
 
-     const strDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds + "." + milli;
-     convXAxisData.push(strDate);
+    const convXAxisData = [];
+    xAxisData.forEach(x => {
+      const date = new Date(x);
+      const size = 2;
+      const year = date.getFullYear();
+      const month = this.pad(date.getMonth() + 1, size);
+      const day = date.getDate();
+      const hours = this.pad(date.getHours(), size);
+      const minutes = this.pad(date.getMinutes(), size);
+      const seconds = this.pad(date.getSeconds(), size);
+      const milli = this.pad(date.getMilliseconds(), 3);
+
+      const strDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds + '.' + milli;
+      convXAxisData.push(strDate);
     });
 
     const heatIndex = this.getColumnIndex(this.dataExplorerWidget.visualizationConfig.selectedHeatProperty, spQueryResult[0]);
@@ -135,9 +137,9 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
       if (groupedList['tags'] != null) {
         Object.entries(groupedList['tags']).forEach(
-          ([key, value]) => {
-            groupedVal = value;
-          });
+            ([key, value]) => {
+              groupedVal = value;
+            });
       }
 
       yAxisData.push(groupedVal);
@@ -153,48 +155,48 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
       contentDataPure.map((cnt, colIndex) => {
         const currentX =  localXAxisData[colIndex];
-        const searchedIndex = aggregatedXData.indexOf(currentX)
+        const searchedIndex = aggregatedXData.indexOf(currentX);
         contentData.push([searchedIndex, index, cnt]);
       });
     });
 
-    const timeNames = convXAxisData
-    const groupNames = yAxisData
+    const timeNames = convXAxisData;
+    const groupNames = yAxisData;
 
     this.option['tooltip'] = {
-      formatter: function(params) {
-        const timeIndex = params.value[0]
-        const groupNameIndex = params.value[1]
+      formatter(params) {
+        const timeIndex = params.value[0];
+        const groupNameIndex = params.value[1];
 
-        const value = params.value[2]
+        const value = params.value[2];
         const time = timeNames[timeIndex];
         const groupName = groupNames[groupNameIndex];
 
         let formattedTip = '<style>' +
-                          'ul {margin: 0px; padding: 0px; list-style-type: none; text-align: left}' +
-                          '</style>' +
-                          '<ul>' +
-                          '<li><b>' + 'Time: ' + '</b>'+ time + '</li>';
+            'ul {margin: 0px; padding: 0px; list-style-type: none; text-align: left}' +
+            '</style>' +
+            '<ul>' +
+            '<li><b>' + 'Time: ' + '</b>' + time + '</li>';
 
         if (groupName !== '') {
           formattedTip = formattedTip + '<li><b>' + 'Group: ' + '</b>' + groupName + '</li>';
         }
 
         formattedTip = formattedTip + '<li><b>' + 'Value: ' + '</b>' + value + '</li>' +
-                                      '</ul>';
+            '</ul>';
 
         return formattedTip;
-       },
-       position: 'top',
-    }
+      },
+      position: 'top',
+    };
 
     if (groupNames.length === 1) {
-      this.option['tooltip']['position'] = function (point, params, dom, rect, size) {
-                                              return [point[0], '10%'];
-                                           }
+      this.option['tooltip']['position'] =  (point, params, dom, rect, size) => {
+        return [point[0], '10%'];
+      };
     }
 
-    
+
 
     return [contentData, convXAxisData, yAxisData, min, max];
   }
@@ -256,7 +258,9 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
     this.dynamic['yAxis']['data'] = yAxisData;
     this.dynamic['visualMap']['min'] = min;
     this.dynamic['visualMap']['max'] = max;
-    this.eChartsInstance.setOption(this.dynamic as EChartsOption);
+    if (this.eChartsInstance) {
+      this.eChartsInstance.setOption(this.dynamic as EChartsOption);
+    }
     this.option = this.dynamic;
   }
 
@@ -266,8 +270,8 @@ export class HeatmapWidgetComponent extends BaseDataExplorerWidget<HeatmapWidget
 
   pad(num, size) {
     num = num.toString();
-    while (num.length < size) num = "0" + num;
+    while (num.length < size) { num = '0' + num; }
     return num;
-}
+  }
 
 }

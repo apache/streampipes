@@ -22,6 +22,7 @@ import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiConstants;
 import org.apache.streampipes.wrapper.siddhi.constants.SiddhiStreamSelector;
+import org.apache.streampipes.wrapper.siddhi.utils.SiddhiUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -32,15 +33,18 @@ public class SiddhiProcessorParams<B extends EventProcessorBindingParams> {
   private final List<String> inputStreamNames;
   private final Map<String, List<EventPropertyDef>> eventTypeInfo;
   private final List<String> outputEventKeys;
+  private final List<EventPropertyDef> outTypeInfo;
 
   public SiddhiProcessorParams(B params,
                                List<String> inputStreamNames,
                                Map<String, List<EventPropertyDef>> eventTypeInfo,
-                               List<String> outputEventKeys) {
+                               List<String> outputEventKeys,
+                               List<EventPropertyDef> outTypeInfo) {
     this.params = params;
     this.inputStreamNames = inputStreamNames;
     this.eventTypeInfo = eventTypeInfo;
     this.outputEventKeys = outputEventKeys;
+    this.outTypeInfo = outTypeInfo;
   }
 
   public B getParams() {
@@ -96,5 +100,13 @@ public class SiddhiProcessorParams<B extends EventProcessorBindingParams> {
     }
 
     return selectString.toString();
+  }
+
+  public String getOutputStreamName() {
+    return SiddhiUtils.getPreparedOutputTopicName(params);
+  }
+
+  public List<EventPropertyDef> getOutTypeInfo() {
+    return outTypeInfo;
   }
 }
