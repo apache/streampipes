@@ -99,13 +99,13 @@
 
         </div>
         <div fxLayout="row wrap" class="w-100">
-            <endpoint-item fxFlex="33"
-                           [itemSelected]="endpointItem.selected"
-                           [item]="endpointItem"
-                           (triggerInstallation)="triggerInstallation($event)"
-                           *ngFor="let endpointItem of endpointItems | pipelineElementTypeFilter: selectedTab | pipelineElementNameFilter: filterTerm | pipelineElementInstallationStatusFilter: selectedInstallationStatus | orderBy: 'asc':'name'"
-                           class="p-15"
-                           (click)="toggleSelected(endpointItem)"></endpoint-item>
+            <sp-endpoint-item fxFlex="33"
+                              [itemSelected]="endpointItem.selected"
+                              [item]="endpointItem"
+                              (triggerInstallation)="triggerInstallation($event)"
+                              *ngFor="let endpointItem of endpointItems | pipelineElementTypeFilter: selectedTab | pipelineElementNameFilter: filterTerm | pipelineElementInstallationStatusFilter: selectedInstallationStatus | orderBy: 'asc':'name'"
+                              class="p-15"
+                              (click)="toggleSelected(endpointItem)"></sp-endpoint-item>
         </div>
     </div>
     <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center" *ngIf="!endpointItemsLoadingComplete">

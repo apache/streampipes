@@ -21,7 +21,7 @@ import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { PipelineElementEndpointService } from '@streampipes/platform-services';
 
 @Component({
-  selector: 'endpoint-installation-dialog',
+  selector: 'sp-endpoint-installation-dialog',
   templateUrl: './endpoint-installation.component.html',
   styleUrls: ['./endpoint-installation.component.scss']
 })
@@ -88,7 +88,7 @@ export class EndpointInstallationComponent {
             this.installationStatus[index].status = 'error';
             this.installationStatus[index].details = data.notifications[0].additionalInformation;
           }
-        }, data => {
+        }, () => {
           this.installationStatus[index].status = 'error';
         })
         .add(() => {
@@ -107,7 +107,7 @@ export class EndpointInstallationComponent {
     this.pipelineElementEndpointService.del(endpointUri.elementId)
         .subscribe(data => {
           this.installationStatus[index].status = data.success ? 'success' : 'error';
-        }, data => {
+        }, () => {
           this.installationStatus[index].status = 'error';
         })
         .add(() => {

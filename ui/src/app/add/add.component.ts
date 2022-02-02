@@ -27,7 +27,7 @@ import { EndpointInstallationComponent } from './dialogs/endpoint-installation/e
 import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'add',
+    selector: 'sp-add',
     templateUrl: './add.component.html',
     styleUrls: ['./add.component.scss']
 })

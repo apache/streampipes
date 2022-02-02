@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output, Sanitizer } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddService } from '../../services/add.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -27,7 +27,7 @@ import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 
 @Component({
-  selector: 'endpoint-item',
+  selector: 'sp-endpoint-item',
   templateUrl: './endpoint-item.component.html',
   styleUrls: ['./endpoint-item.component.scss']
 })
@@ -66,7 +66,7 @@ export class EndpointItemComponent implements OnInit {
        const objectURL = URL.createObjectURL(blob);
        this.image = this.sanitizer.bypassSecurityTrustUrl(objectURL);
        this.iconReady = true;
-     }, error => this.iconError = true);
+     }, () => this.iconError = true);
    }
   }
 
@@ -76,7 +76,7 @@ export class EndpointItemComponent implements OnInit {
       result = s;
     } else {
       const words = s.split(' ');
-      words.forEach(function (word, i) {
+      words.forEach((word, i) => {
         if (i < 4) {
           result += word.charAt(0);
         }
@@ -107,11 +107,11 @@ export class EndpointItemComponent implements OnInit {
 
   findItemStyle() {
     const baseType = 'pe-label ';
-    if (this.item.type == 'stream') {
+    if (this.item.type === 'stream') {
       this.itemTypeStyle = baseType + 'stream-label';
     } else if (this.item.type === 'set') {
       this.itemTypeStyle = baseType + 'set-label';
-    } else if (this.item.type == 'sepa') {
+    } else if (this.item.type === 'sepa') {
       this.itemTypeStyle = baseType + 'processor-label';
     } else {
       this.itemTypeStyle = baseType + 'sink-label';

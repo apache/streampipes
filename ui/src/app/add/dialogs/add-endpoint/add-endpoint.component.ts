@@ -21,7 +21,7 @@ import { AddService } from '../../services/add.service';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 
 @Component({
-    selector: 'add-endpoint-dialog',
+    selector: 'sp-add-endpoint-dialog',
     templateUrl: './add-endpoint.component.html',
     styleUrls: ['./add-endpoint.component.scss']
 })
@@ -33,8 +33,8 @@ export class AddEndpointComponent implements OnInit {
 
     endpointsChanged = false;
 
-    constructor(private AddService: AddService,
-                private DialogRef: DialogRef<AddEndpointComponent>) {
+    constructor(private addService: AddService,
+                private dialogRef: DialogRef<AddEndpointComponent>) {
         this.rdfEndpoints = [];
         this.addSelected = false;
         this.newEndpoint = {};
@@ -49,7 +49,7 @@ export class AddEndpointComponent implements OnInit {
     }
 
     loadRdfEndpoints() {
-        this.AddService.getRdfEndpoints()
+        this.addService.getRdfEndpoints()
             .subscribe(rdfEndpoints => {
                 this.rdfEndpoints = rdfEndpoints;
             });
@@ -57,22 +57,22 @@ export class AddEndpointComponent implements OnInit {
 
     addRdfEndpoint(rdfEndpoint) {
         console.log(rdfEndpoint);
-        this.AddService.addRdfEndpoint(rdfEndpoint)
-            .subscribe(message => {
+        this.addService.addRdfEndpoint(rdfEndpoint)
+            .subscribe(() => {
                 this.loadRdfEndpoints();
                 this.endpointsChanged = true;
             });
     }
 
     removeRdfEndpoint(rdfEndpointId) {
-        this.AddService.removeRdfEndpoint(rdfEndpointId)
-            .subscribe(message => {
+        this.addService.removeRdfEndpoint(rdfEndpointId)
+            .subscribe(() => {
                 this.loadRdfEndpoints();
                 this.endpointsChanged = true;
             });
     }
 
     close() {
-        this.DialogRef.close(this.endpointsChanged);
+        this.dialogRef.close(this.endpointsChanged);
     }
 }
