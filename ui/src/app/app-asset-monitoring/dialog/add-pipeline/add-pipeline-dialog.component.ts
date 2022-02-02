@@ -26,7 +26,7 @@ import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
 import { VisualizablePipeline } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'add-pipeline-dialog-component',
+    selector: 'sp-add-pipeline-dialog-component',
     templateUrl: './add-pipeline-dialog.component.html',
     styleUrls: ['./add-pipeline-dialog.component.scss']
 })

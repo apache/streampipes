@@ -29,8 +29,8 @@
     </div>
 
     <div fxLayout="column" fxFlex="100">
-        <asset-dashboard-overview *ngIf="selectedIndex == 0 && !dashboardSelected" fxFlex="100" (selectedDashboard)="openDashboard($event)"></asset-dashboard-overview>
-        <view-asset fxFlex="100" *ngIf="selectedIndex == 0 && dashboardSelected" [dashboardConfig]="selectedDashboard" (dashboardClosed)="closeDashboard($event)" (editDashboardEmitter)="editDashboard($event)"></view-asset>
-        <create-asset *ngIf="selectedIndex == 1" fxFlex="100" (dashboardClosed)="closeDashboard($event)" [dashboardConfig]="selectedDashboard"></create-asset>
+        <sp-asset-dashboard-overview *ngIf="selectedIndex == 0 && !dashboardSelected" fxFlex="100" (selectedDashboard)="openDashboard($event)"></sp-asset-dashboard-overview>
+        <sp-view-asset fxFlex="100" *ngIf="selectedIndex == 0 && dashboardSelected" [dashboardConfig]="selectedDashboard" (dashboardClosed)="closeDashboard($event)" (editDashboardEmitter)="editDashboard($event)"></sp-view-asset>
+        <sp-create-asset *ngIf="selectedIndex == 1" fxFlex="100" (dashboardClosed)="closeDashboard($event)" [dashboardConfig]="selectedDashboard"></sp-create-asset>
     </div>
 </div>

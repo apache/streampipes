@@ -25,7 +25,7 @@ import Konva from 'konva';
 import Stage = Konva.Stage;
 
 @Component({
-    selector: 'save-dashboard-dialog-component',
+    selector: 'sp-save-dashboard-dialog-component',
     templateUrl: 'save-dashboard-dialog.component.html',
     styleUrls: ['./save-dashboard-dialog.component.scss'],
 })

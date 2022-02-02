@@ -21,7 +21,7 @@ import { RestService } from '../../services/rest.service';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 
 @Component({
-    selector: 'asset-dashboard-overview',
+    selector: 'sp-asset-dashboard-overview',
     templateUrl: './dashboard-overview.component.html',
     styleUrls: ['./dashboard-overview.component.css']
 })

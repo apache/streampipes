@@ -36,7 +36,7 @@ interface Window {
 declare const window: Window;
 
 @Component({
-    selector: 'create-asset',
+    selector: 'sp-create-asset',
     templateUrl: './create-asset.component.html',
     styleUrls: ['./create-asset.component.css']
 })

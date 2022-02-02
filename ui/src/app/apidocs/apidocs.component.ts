@@ -21,7 +21,7 @@ import SwaggerUI from 'swagger-ui';
 
 
 @Component({
-  selector: 'apidocs',
+  selector: 'sp-apidocs',
   templateUrl: './apidocs.component.html',
   styleUrls: ['./apidocs.component.scss']
 })
@@ -32,7 +32,7 @@ export class ApidocsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const ui = SwaggerUI({
+    SwaggerUI({
       url: '/streampipes-backend/api/openapi.json',
       domNode: this.el.nativeElement.querySelector('.swagger-ui'),
       deepLinking: false,

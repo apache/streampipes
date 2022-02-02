@@ -32,7 +32,7 @@ interface Window {
 declare const window: Window;
 
 @Component({
-    selector: 'view-asset',
+    selector: 'sp-view-asset',
     templateUrl: './view-asset.component.html',
     styleUrls: ['./view-asset.component.css']
 })
