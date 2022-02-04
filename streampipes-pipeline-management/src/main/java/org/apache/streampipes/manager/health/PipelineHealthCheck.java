@@ -18,6 +18,7 @@
 package org.apache.streampipes.manager.health;
 
 
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
@@ -156,7 +157,7 @@ public class PipelineHealthCheck implements Runnable {
   }
 
   private String extractInstanceId(InvocableStreamPipesEntity graph) {
-    return graph.getElementId().replace(graph.getBelongsTo() + ":", "");
+    return InstanceIdExtractor.extractId(graph.getElementId());
   }
 
 
