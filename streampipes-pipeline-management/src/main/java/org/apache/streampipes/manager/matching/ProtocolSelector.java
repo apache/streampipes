@@ -39,7 +39,7 @@ public class ProtocolSelector extends GroundingSelector {
 
     public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         super(source, targets);
-        this.outputTopic = TopicGenerator.generateRandomTopic();
+        this.outputTopic = TopicGenerator.generateInternalPipelineElementTopic(source.getDOM());
         this.prioritizedProtocols =
                 BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
     }
