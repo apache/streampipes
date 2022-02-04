@@ -195,7 +195,6 @@ export class JsplumbService {
         y: coordinates.y
       }
     };
-    console.log(pipelineElementConfig);
     if (!pipelineElementConfig.payload.dom) {
       pipelineElementConfig.payload.dom = 'jsplumb_' + this.idCounter + '_' + this.makeId(4);
       this.idCounter++;

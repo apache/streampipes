@@ -29,15 +29,18 @@
             </div>
         </div>
     </div>
-
+    <div fxFlex="100" fxLayout="column">
+        <pipeline-preview [jspcanvas]="'assembly-preview'"
+                          [pipeline]="pipeline"
+                          (selectedElementEmitter)="selectElement($event)"
+                          style="margin-bottom:15px;"
+                          class="md-padding"
+                          *ngIf="pipelineAvailable"></pipeline-preview>
     <div fxFlex fxLayout="row" fxLayoutAlign="start top" *ngIf="pipelineAvailable && selectedIndex == 0">
         <div fxFlex="60" class="md-padding">
             <div fxFlex fxLayout="column">
-                <pipeline-preview [jspcanvas]="'assembly-preview'" [pipeline]="pipeline" (selectedElementEmitter)="selectElement($event)"
-                                  style="margin-bottom:15px;"></pipeline-preview>
                 <pipeline-elements [pipeline]="pipeline"
                                    [selectedElement]="selectedElement"></pipeline-elements>
-
             </div>
         </div>
         <div fxFlex="40" class="md-padding">
@@ -54,10 +57,9 @@
     <div fxFlex fxLayout="row" fxLayoutAlign="start top" *ngIf="pipelineAvailable && selectedIndex == 3">
         <div fxFlex="100" class="md-padding">
             <div fxFlex fxLayout="column">
-                <pipeline-preview [jspcanvas]="'assembly-quickedit'" [pipeline]="pipeline" (selectedElementEmitter)="selectElement($event)"
-                                  style="margin-bottom:15px;"></pipeline-preview>
                 <quick-edit [pipeline]="pipeline" [selectedElement]="selectedElement" (reloadPipelineEmitter)="loadPipeline()"></quick-edit>
             </div>
         </div>
+    </div>
     </div>
 </div>

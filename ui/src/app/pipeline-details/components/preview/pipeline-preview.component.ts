@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Pipeline } from '@streampipes/platform-services';
 import { PipelineElementConfig, PipelineElementUnion } from '../../../editor/model/editor.model';
 import { PipelinePositioningService } from '../../../editor/services/pipeline-positioning.service';

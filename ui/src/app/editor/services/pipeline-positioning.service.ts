@@ -177,7 +177,6 @@ export class PipelinePositioningService {
           pe.payload.connectedTo.forEach((connection, index) => {
             source = connection;
             target = pe.payload.dom;
-
             const sourceEndpointId = 'out-' + connection;
             const inTargetEndpointId = 'in-' + index + '-' + pe.payload.dom;
             jsPlumbBridge.connect(
