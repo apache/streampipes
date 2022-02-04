@@ -65,12 +65,30 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field color="accent" class="w-140-px mr-5">
+                <mat-form-field color="accent" class="w-140-px mr-5" *ngIf="!filter.field || !tagValues.has(filter.field.runtimeName)">
                     <mat-label>Value</mat-label>
-                    <input matInput
+                    <input type="text"
+                           placeholder="Value"
+                           aria-label="Number"
+                           matInput
                            [(ngModel)]="filter.value"
                            (change)="updateWidget()"
                            data-cy="design-panel-data-settings-filter-value">
+                </mat-form-field>
+                <mat-form-field color="accent" class="w-140-px mr-5" *ngIf="filter.field && tagValues.has(filter.field.runtimeName)">
+                    <input type="text"
+                           placeholder="Value"
+                           aria-label="Number"
+                           matInput
+                           [(ngModel)]="filter.value"
+                           (change)="updateWidget()"
+                           data-cy="design-panel-data-settings-filter-value"
+                           [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="updateWidget()">
+                        <mat-option *ngFor="let value of tagValues.get(filter.field.runtimeName)" [value]="value">
+                            {{value}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
                 <button mat-icon-button color="accent"
                         (click)="remove(sourceConfig, filter.index)"

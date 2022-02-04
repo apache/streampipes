@@ -120,6 +120,15 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         return ok(allMeasurements);
     }
 
+    @GET
+    @Path("/measurements/{measurementId}/tags")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTagValues(@PathParam("measurementId") String measurementId,
+                                 @QueryParam("fields") String fields) {
+        Map<String, Object> tagValues = dataLakeManagement.getTagValues(measurementId, fields);
+        return ok(tagValues);
+    }
+
 
     @GET
     @Path("/measurements/{measurementID}")

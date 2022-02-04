@@ -64,6 +64,12 @@ export class DatalakeRestService {
     return this.http.get<PageResult>(url, { params: queryParams });
   }
 
+  getTagValues(index: string,
+               fieldNames: string[]): Observable<Map<string, string[]>> {
+    return this.http.get(this.dataLakeUrl + '/measurements/' + index + '/tags?fields=' + fieldNames.toString())
+      .pipe(map(r => r as Map<string, string[]>));
+  }
+
   // getGroupedData(index: string, groupingTags: string, aggregationFunction?: string, columns?: string, startDate?: number, endDate?:
   //   number, aggregationTimeUnit?: string, aggregationTimeValue?: number, order?: string, limit?: number):
   //   Observable<SpQueryResult> {

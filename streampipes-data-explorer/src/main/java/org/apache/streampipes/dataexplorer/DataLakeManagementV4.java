@@ -20,6 +20,7 @@ package org.apache.streampipes.dataexplorer;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.dataexplorer.param.RetentionPolicyQueryParams;
 import org.apache.streampipes.dataexplorer.query.DeleteDataQuery;
 import org.apache.streampipes.dataexplorer.query.EditRetentionPolicyQuery;
@@ -31,24 +32,32 @@ import org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters;
 import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
 import org.apache.streampipes.dataexplorer.v4.query.DataExplorerQueryV4;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
-import org.apache.streampipes.model.datalake.*;
+import org.apache.streampipes.model.datalake.DataLakeConfiguration;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
+import org.apache.streampipes.model.datalake.SpQueryResult;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.influxdb.InfluxDB;
+import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.lightcouch.CouchDbClient;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
@@ -294,4 +303,27 @@ public class DataLakeManagementV4 {
         return Instant.EPOCH.until(instant, ChronoUnit.MILLIS);
     }
 
+    public Map<String, Object> getTagValues(String measurementId,
+                                            String fields) {
+        InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+        Map<String, Object> tags = new HashMap<>();
+        List<String> fieldList = Arrays.asList(fields.split(","));
+        fieldList.forEach(f -> {
+                String q = "SHOW TAG VALUES ON \"" + BackendConfig.INSTANCE.getInfluxDatabaseName() + "\" FROM \"" +measurementId + "\" WITH KEY = \"" +f + "\"";
+                Query query = new Query(q);
+                QueryResult queryResult = influxDB.query(query);
+                queryResult.getResults().forEach(res -> {
+                    res.getSeries().forEach(series -> {
+                        if (series.getValues().size() > 0) {
+                            String field = series.getValues().get(0).get(0).toString();
+                            List<String> values = series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());
+                            tags.put(field, values);
+                        }
+                    });
+                });
+                System.out.println(queryResult.getResults().size());
+        });
+
+        return tags;
+    }
 }

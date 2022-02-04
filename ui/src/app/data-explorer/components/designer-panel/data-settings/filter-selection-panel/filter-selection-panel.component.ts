@@ -16,21 +16,47 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { FieldConfig, SelectedFilter, SourceConfig } from '@streampipes/platform-services';
+import { Component, Input, OnInit } from '@angular/core';
+import { DatalakeRestService, FieldConfig, SelectedFilter, SourceConfig } from '@streampipes/platform-services';
 import { WidgetConfigurationService } from '../../../../services/widget-configuration.service';
+import { DataExplorerFieldProviderService } from '../../../../services/data-explorer-field-provider-service';
 
 @Component({
   selector: 'sp-filter-selection-panel',
   templateUrl: './filter-selection-panel.component.html',
   styleUrls: ['./filter-selection-panel.component.scss']
 })
-export class FilterSelectionPanelComponent {
+export class FilterSelectionPanelComponent implements OnInit {
 
   @Input() sourceConfig: SourceConfig;
   @Input() widgetId: string;
 
-  constructor(private widgetConfigService: WidgetConfigurationService) {
+  tagValues: Map<string, string[]> = new Map<string, string[]>();
+
+  constructor(private widgetConfigService: WidgetConfigurationService,
+              private fieldProviderService: DataExplorerFieldProviderService,
+              private dataLakeRestService: DatalakeRestService) {
+  }
+
+  ngOnInit(): void {
+    this.sourceConfig.queryConfig.fields.forEach(f => {
+      this.tagValues.set(f.runtimeName, []);
+    });
+    const fieldProvider = this.fieldProviderService.generateFieldLists([this.sourceConfig]);
+    this.sourceConfig.queryConfig.fields
+      .filter(f => fieldProvider.booleanFields
+        .find(df => df.measure === this.sourceConfig.measureName && df.runtimeName === f.runtimeName))
+      .forEach(f => this.tagValues.set(f.runtimeName, ['true', 'false']));
+    const fields = this.sourceConfig.queryConfig.fields
+      .filter(f =>
+        fieldProvider.dimensionFields.find(df => (df.measure === this.sourceConfig.measureName && df.runtimeName === f.runtimeName)))
+      .map(f => f.runtimeName);
+    this.dataLakeRestService.getTagValues(this.sourceConfig.measureName, fields).subscribe(response => {
+      Object.keys(response).forEach(key => {
+        this.tagValues.set(key, response[key]);
+      });
+    });
+
   }
 
   addFilter() {
@@ -40,7 +66,7 @@ export class FilterSelectionPanelComponent {
       value: ''
     };
     this.sourceConfig.queryConfig.selectedFilters.push(newFilter);
-    this.widgetConfigService.notify({ widgetId: this.widgetId, refreshData: true, refreshView: true });
+    this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
     this.updateWidget();
   }
 
@@ -58,11 +84,13 @@ export class FilterSelectionPanelComponent {
     });
 
     if (update) {
-      this.widgetConfigService.notify({ widgetId: this.widgetId, refreshData: true, refreshView: true });
+      this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
     }
   }
 
   compare(available: FieldConfig, selected: FieldConfig) {
     return (available.runtimeName === selected.runtimeName);
   }
+
+
 }
