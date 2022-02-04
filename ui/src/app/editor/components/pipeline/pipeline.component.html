@@ -31,7 +31,7 @@
         </div>
         <div class="pipeline-element-loading-container sp-fade-opacity"
              *ngIf="pipelineElement.settings.loadingStatus"></div>
-        <div class="pipeline-element-configuration-status {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}">
+        <div class="pipeline-element-configuration-status {{pipelineElement.type === 'stream' ? 'pi-stream' : 'pi-processor'}}" *ngIf="!preview">
             <i class="material-icons pipeline-element-configuration-invalid-icon" *ngIf="pipelineElement.settings.completed === 3">
                 warning
             </i>
