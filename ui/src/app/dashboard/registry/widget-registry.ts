@@ -29,7 +29,7 @@ import { TableConfig } from '../components/widgets/table/table-config';
 import { TrafficLightConfig } from '../components/widgets/trafficlight/traffic-light-config';
 import { SchemaMatch } from '../sdk/matching/schema-match';
 import {
-    DashboardWidgetSettings,
+    DashboardWidgetSettings, DataLakeMeasure,
     EventSchema,
     VisualizablePipeline
 } from '@streampipes/platform-services';
@@ -63,8 +63,8 @@ export class WidgetRegistry {
         return widgetTemplates;
     }
 
-    static getCompatibleWidgetTemplates(pipeline: VisualizablePipeline) {
-        const inputSchema: EventSchema = pipeline.schema;
+    static getCompatibleWidgetTemplates(dataLakeMeasure: DataLakeMeasure) {
+        const inputSchema: EventSchema = dataLakeMeasure.eventSchema;
         return this.getAvailableWidgetTemplates().filter(widget => WidgetRegistry.isCompatible(widget, inputSchema));
     }
 

@@ -33,8 +33,12 @@ export class DatalakeQueryParameterBuilder {
   private constructor(startTime?: number,
                       endTime?: number) {
     this.queryParams = new DatalakeQueryParameters();
-    this.queryParams.startDate = startTime;
-    this.queryParams.endDate = endTime;
+    if (startTime) {
+      this.queryParams.startDate = startTime;
+    }
+    if (endTime) {
+      this.queryParams.endDate = endTime;
+    }
   }
 
   public withMaximumAmountOfEvents(maximumAmountOfEvents: number): DatalakeQueryParameterBuilder {

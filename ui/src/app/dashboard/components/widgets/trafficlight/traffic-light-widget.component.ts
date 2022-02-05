@@ -15,13 +15,12 @@
  *   limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {ResizeService} from "../../../services/resize.service";
-import {TrafficLightConfig} from "./traffic-light-config";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { ResizeService } from '../../../services/resize.service';
+import { TrafficLightConfig } from './traffic-light-config';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
     selector: 'traffic-light-widget',
@@ -30,25 +29,25 @@ import {DashboardService} from "../../../services/dashboard.service";
 })
 export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
-    items: Array<string>;
+    items: string[];
     width: number;
     height: number;
-    
+
     containerWidth: number;
     containerHeight: number;
-    
+
     lightWidth: number;
     lightHeight: number;
 
     selectedWarningRange: number;
     selectedFieldToObserve: string;
-    selectedLimitGreaterThan: boolean
+    selectedLimitGreaterThan: boolean;
     selectedThreshold: number;
 
     activeClass = 'red';
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-        super(rxStompService, dashboardService, resizeService, false);
+    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+        super(dataLakeService, resizeService, false);
     }
 
     ngOnInit(): void {
@@ -78,18 +77,18 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
         this.selectedThreshold = extractor.integerParameter(TrafficLightConfig.CRITICAL_VALUE_KEY);
         this.selectedFieldToObserve = extractor.mappingPropertyValue(TrafficLightConfig.NUMBER_MAPPING_KEY);
         this.selectedWarningRange = extractor.integerParameter(TrafficLightConfig.WARNING_RANGE_KEY);
-        this.selectedLimitGreaterThan = extractor.selectedSingleValue(TrafficLightConfig.CRITICAL_VALUE_LIMIT) === "Upper Limit";
+        this.selectedLimitGreaterThan = extractor.selectedSingleValue(TrafficLightConfig.CRITICAL_VALUE_LIMIT) === 'Upper Limit';
     }
 
 
-    protected onEvent(event: any) {
-        let item = event[this.selectedFieldToObserve];
+    protected onEvent(events: any[]) {
+        const item = events[0][this.selectedFieldToObserve];
         if (this.isInOkRange(item)) {
-            this.activeClass = "green";
+            this.activeClass = 'green';
         } else if (this.isInWarningRange(item)) {
-            this.activeClass = "yellow";
+            this.activeClass = 'yellow';
         } else {
-            this.activeClass = "red";
+            this.activeClass = 'red';
         }
     }
 
@@ -102,12 +101,12 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
     }
 
     isInWarningRange(value) {
-        if (this.exceedsThreshold(value)) return false;
+        if (this.exceedsThreshold(value)) { return false; }
         else {
             if (this.selectedLimitGreaterThan) {
-                return value >= (this.selectedThreshold - this.selectedThreshold*(this.selectedWarningRange/100));
+                return value >= (this.selectedThreshold - this.selectedThreshold * (this.selectedWarningRange / 100));
             } else {
-                return value <= (this.selectedThreshold + this.selectedThreshold*(this.selectedWarningRange/100));
+                return value <= (this.selectedThreshold + this.selectedThreshold * (this.selectedWarningRange / 100));
             }
         }
     }
@@ -120,6 +119,10 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
         this.height = height;
         this.updateContainerSize();
         this.updateLightSize();
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return 1;
     }
 
 }

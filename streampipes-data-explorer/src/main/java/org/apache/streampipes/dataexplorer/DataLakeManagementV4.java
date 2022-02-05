@@ -321,7 +321,6 @@ public class DataLakeManagementV4 {
                         }
                     });
                 });
-                System.out.println(queryResult.getResults().size());
         });
 
         return tags;

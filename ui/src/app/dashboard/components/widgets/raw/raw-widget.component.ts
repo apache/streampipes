@@ -15,12 +15,12 @@
  *   limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {ResizeService} from "../../../services/resize.service";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { BaseStreamPipesWidget } from "../base/base-widget";
+import { StaticPropertyExtractor } from "../../../sdk/extractor/static-property-extractor";
+import { ResizeService } from "../../../services/resize.service";
+import { DatalakeRestService } from '@streampipes/platform-services';
+import { WidgetConfigBuilder } from "../../../registry/widget-config-builder";
 
 @Component({
     selector: 'raw-widget',
@@ -33,8 +33,8 @@ export class RawWidgetComponent extends BaseStreamPipesWidget implements OnInit,
     width: number;
     height: number;
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-        super(rxStompService, dashboardService, resizeService, false);
+    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+        super(dataLakeService, resizeService, false);
     }
 
     ngOnInit(): void {
@@ -52,17 +52,17 @@ export class RawWidgetComponent extends BaseStreamPipesWidget implements OnInit,
 
     }
 
-
-    protected onEvent(event: any) {
-        this.items.unshift(JSON.stringify(event));
-        if (this.items.length > 5) {
-            this.items.pop();
-        }
+    protected onEvent(events: any[]) {
+        this.items = events.map(ev => JSON.stringify(ev)).reverse();
     }
 
     protected onSizeChanged(width: number, height: number) {
         this.width = width;
         this.height = height;
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
     }
 
 }

@@ -16,11 +16,10 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {ResizeService} from "../../../services/resize.service";
-import {BaseNgxLineChartsStreamPipesWidget} from "../base/base-ngx-line-charts-widget";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ResizeService } from '../../../services/resize.service';
+import { BaseNgxLineChartsStreamPipesWidget } from '../base/base-ngx-line-charts-widget';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
     selector: 'line-widget',
@@ -29,8 +28,8 @@ import {DashboardService} from "../../../services/dashboard.service";
 })
 export class LineWidgetComponent extends BaseNgxLineChartsStreamPipesWidget implements OnInit, OnDestroy {
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-        super(rxStompService, dashboardService, resizeService);
+    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+        super(dataLakeService, resizeService);
     }
 
     ngOnInit(): void {

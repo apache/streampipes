@@ -16,15 +16,15 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {MatTableDataSource} from "@angular/material/table";
-import {TableConfig} from "./table-config";
-import {SemanticTypeUtilsService} from "../../../../core-services/semantic-type/semantic-type-utils.service";
-import {ResizeService} from "../../../services/resize.service";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { MatTableDataSource } from '@angular/material/table';
+import { TableConfig } from './table-config';
+import { SemanticTypeUtilsService } from '../../../../core-services/semantic-type/semantic-type-utils.service';
+import { ResizeService } from '../../../services/resize.service';
+import { DatalakeRestService } from '@streampipes/platform-services';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 
 @Component({
     selector: 'table-widget',
@@ -33,23 +33,26 @@ import {DashboardService} from "../../../services/dashboard.service";
 })
 export class TableWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
-    selectedProperties: Array<string>;
+    selectedProperties: string[];
 
-    displayedColumns: String[] = [];
+    displayedColumns: string[] = [];
     dataSource = new MatTableDataSource();
     semanticTypes: { [key: string]: string; } = {};
-    tableDisplayed: boolean = false;
+    tableDisplayed = false;
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService, private semanticTypeUtils: SemanticTypeUtilsService) {
-        super(rxStompService, dashboardService, resizeService, false);
+    constructor(dataLakeService: DatalakeRestService,
+                resizeService: ResizeService,
+                private semanticTypeUtils: SemanticTypeUtilsService) {
+        super(dataLakeService, resizeService, false);
     }
 
     ngOnInit(): void {
         super.ngOnInit();
 
-        this.widgetDataConfig.schema.eventProperties.forEach((key, index) => {
-            this.semanticTypes[key.runtimeName] = key.domainProperties[0]
+        this.widgetDataConfig.eventSchema.eventProperties.forEach((key, index) => {
+            this.semanticTypes[key.runtimeName] = key.domainProperties[0];
         });
+        this.semanticTypes[BaseStreamPipesWidget.TIMESTAMP_KEY] = this.semanticTypeUtils.TIMESTAMP;
     }
 
     ngOnDestroy(): void {
@@ -58,18 +61,16 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
 
     extractConfig(extractor: StaticPropertyExtractor) {
         this.selectedProperties = extractor.mappingPropertyValues(TableConfig.SELECTED_PROPERTIES_KEYS);
+        this.selectedProperties.push(BaseStreamPipesWidget.TIMESTAMP_KEY);
     }
 
-    protected onEvent(event: any) {
-        this.dataSource.data.unshift(this.createTableObject(event));
-        if (this.dataSource.data.length > 10) {
-            this.dataSource.data.pop();
-        }
+    protected onEvent(events: any[]) {
+        this.dataSource.data = events.map(ev => this.createTableObject(ev)).reverse();
         this.dataSource.data = [...this.dataSource.data];
     }
 
     createTableObject(event: any) {
-        let object = {};
+        const object = {};
         this.selectedProperties.forEach((key, index) => {
             event[key] = this.semanticTypeUtils.getValue(event[key], this.semanticTypes[key]);
             object[key] = event[key];
@@ -78,6 +79,10 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
     }
 
     protected onSizeChanged(width: number, height: number) {
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
     }
 
 }

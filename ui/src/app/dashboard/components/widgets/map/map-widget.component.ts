@@ -16,13 +16,12 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { MapConfig } from './map-config';
-import { latLng, marker, Marker, tileLayer, Map, LatLngExpression, LatLng, icon, Content } from 'leaflet';
+import { Content, icon, latLng, LatLng, LatLngExpression, Map, Marker, marker, tileLayer } from 'leaflet';
 import { ResizeService } from '../../../services/resize.service';
-import { DashboardService } from '../../../services/dashboard.service';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Component({
     selector: 'map-widget',
@@ -56,8 +55,8 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         center: latLng(46.879966, -121.726909)
     };
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-        super(rxStompService, dashboardService, resizeService, false);
+    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+        super(dataLakeService, resizeService, false);
     }
 
     ngOnInit(): void {
@@ -93,18 +92,18 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         this.map.invalidateSize();
     }
 
-    protected onEvent(event: any) {
+    protected onEvent(events: any[]) {
 
         // TODO handle when user selected id field
 
-        const tmpMarker = this.getMarker(event);
+        const tmpMarker = this.getMarker(events)[0];
 
         // Set one marker when no ids are selected
         if (this.idsToDisplay.length === 0) {
             this.markerLayers = [tmpMarker];
         } else {
 
-            const id = this.getId(event);
+            const id = this.getId(events[0]);
             const index = this.markerIds.indexOf(id);
             if (index > -1) {
                 this.markerLayers[index] = tmpMarker;
@@ -159,6 +158,10 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         this.mapWidth = width;
         this.mapHeight = height;
         this.map.invalidateSize();
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return 1;
     }
 
 }

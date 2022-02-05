@@ -17,18 +17,16 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { ResizeService } from '../../../services/resize.service';
-import { DashboardService } from '../../../services/dashboard.service';
-import { EventPropertyList } from '@streampipes/platform-services';
+import { DatalakeRestService, EventPropertyList } from '@streampipes/platform-services';
 import { WordCloudConfig } from './wordcloud-config';
 
 import { EChartsOption } from 'echarts';
 import 'echarts-wordcloud';
 import { ECharts } from 'echarts/core';
-
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 
 
 @Component({
@@ -93,8 +91,8 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
     }]
   };
 
-  constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-    super(rxStompService, dashboardService, resizeService, false);
+  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    super(dataLakeService, resizeService, false);
   }
 
   ngOnInit(): void {
@@ -141,6 +139,10 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
     if (this.eChartsInstance) {
       this.eChartsInstance.resize({width, height});
     }
+  }
+
+  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+    return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
   }
 
 }

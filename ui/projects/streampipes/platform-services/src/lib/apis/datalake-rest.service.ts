@@ -46,11 +46,12 @@ export class DatalakeRestService {
   }
 
   getData(index: string,
-          queryParams: DatalakeQueryParameters): Observable<SpQueryResult> {
+          queryParams: DatalakeQueryParameters,
+          ignoreLoadingBar?: boolean): Observable<SpQueryResult> {
     const url = this.dataLakeUrl + '/measurements/' + index;
-
+    const headers = ignoreLoadingBar ? { ignoreLoadingBar: '' } : {};
     // @ts-ignore
-    return this.http.get<SpQueryResult>(url, { params: queryParams });
+    return this.http.get<SpQueryResult>(url, { params: queryParams }, headers);
   }
 
 

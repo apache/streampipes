@@ -33,13 +33,13 @@ export class BarRaceConfig extends WidgetConfig {
 
   getConfig(): DashboardWidgetSettings {
     return WidgetConfigBuilder.createWithSelectableColorsAndTitlePanel('bar-race', 'Bar Race Chart')
-        .withIcon('fas fa-chart-bar')
-        .withDescription('Renders ordered, separate bar charts based on a partition field (e.g., device id).')
-        .requiredSchema(SchemaRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(BarRaceConfig.PARTITION_KEY, 'Partition field', '', EpRequirements.stringReq())
-            .requiredPropertyWithUnaryMapping(BarRaceConfig.VALUE_KEY, 'Value field', '', EpRequirements.numberReq())
-            .build())
-        .build();
+      .withIcon('fas fa-chart-bar')
+      .withDescription('Renders ordered, separate bar charts based on a partition field (e.g., device id).')
+      .requiredSchema(SchemaRequirementsBuilder
+        .create()
+        .requiredPropertyWithUnaryMapping(BarRaceConfig.PARTITION_KEY, 'Partition field', '', EpRequirements.stringReq())
+        .requiredPropertyWithUnaryMapping(BarRaceConfig.VALUE_KEY, 'Value field', '', EpRequirements.numberReq())
+        .build())
+      .build();
   }
 }

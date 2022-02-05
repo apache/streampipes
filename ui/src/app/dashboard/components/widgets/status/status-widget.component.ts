@@ -16,13 +16,12 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {BaseStreamPipesWidget} from "../base/base-widget";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {DashboardService} from "../../../services/dashboard.service";
-import {ResizeService} from "../../../services/resize.service";
-import {StatusWidgetConfig} from "./status-config";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BaseStreamPipesWidget } from '../base/base-widget';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { ResizeService } from '../../../services/resize.service';
+import { StatusWidgetConfig } from './status-config';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 
 @Component({
@@ -33,14 +32,14 @@ import {StatusWidgetConfig} from "./status-config";
 export class StatusWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
   interval: number;
-  active: boolean = false;
-  lastTimestamp: number = 0;
+  active = false;
+  lastTimestamp = 0;
 
   statusLightWidth: string;
   statusLightHeight: string;
 
-  constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-    super(rxStompService, dashboardService, resizeService, false);
+  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    super(dataLakeService, resizeService, false);
   }
 
   ngOnInit(): void {
@@ -52,9 +51,9 @@ export class StatusWidgetComponent extends BaseStreamPipesWidget implements OnIn
     this.interval = extractor.integerParameter(StatusWidgetConfig.INTERVAL_KEY);
   }
 
-  protected onEvent(event: any) {
+  protected onEvent(events: any[]) {
     this.active = true;
-    let timestamp = new Date().getTime();
+    const timestamp = new Date().getTime();
     this.lastTimestamp = timestamp;
     setTimeout(() => {
       if (this.lastTimestamp <= timestamp) {
@@ -64,9 +63,13 @@ export class StatusWidgetComponent extends BaseStreamPipesWidget implements OnIn
   }
 
   protected onSizeChanged(width: number, height: number) {
-    let size: string = Math.min(width, height) * 0.6 + "px";
+    const size: string = Math.min(width, height) * 0.6 + 'px';
     this.statusLightWidth = size;
     this.statusLightHeight = size;
+  }
+
+  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+    return 1;
   }
 
 }

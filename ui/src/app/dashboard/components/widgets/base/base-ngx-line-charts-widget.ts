@@ -16,13 +16,14 @@
  *
  */
 
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { ResizeService } from '../../../services/resize.service';
 import { BaseNgxChartsStreamPipesWidget } from './base-ngx-charts-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { LineConfig } from '../line/line-config';
-import { DashboardService } from '../../../services/dashboard.service';
 import { Directive } from '@angular/core';
+import { DatalakeRestService } from '@streampipes/platform-services';
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
+import { BaseStreamPipesWidget } from './base-widget';
 
 @Directive()
 export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsStreamPipesWidget {
@@ -34,8 +35,8 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     minYAxisRange: number;
     maxYAxisRange: number;
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-        super(rxStompService, dashboardService, resizeService);
+    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+        super(dataLakeService, resizeService);
     }
 
     ngOnInit(): void {
@@ -50,28 +51,23 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
 
     protected extractConfig(extractor: StaticPropertyExtractor) {
         this.selectedNumberProperty = extractor.mappingPropertyValue(LineConfig.NUMBER_MAPPING_KEY);
-        this.selectedTimestampProperty = extractor.mappingPropertyValue(LineConfig.TIMESTAMP_MAPPING_KEY);
         this.minYAxisRange = extractor.integerParameter(LineConfig.MIN_Y_AXIS_KEY);
         this.maxYAxisRange = extractor.integerParameter(LineConfig.MAX_Y_AXIS_KEY);
     }
 
-    protected onEvent(event: any) {
-        const time = event[this.selectedTimestampProperty];
-        const value = event[this.selectedNumberProperty];
-        this.makeEvent(time, value);
-    }
-
-    makeEvent(time: any, value: any): void {
-        this.multi[0].series.push({'name': time, 'value': value});
-        if (this.multi[0].series.length > 10) {
-            this.multi[0].series.shift();
-        }
+    protected onEvent(events: any[]) {
+        this.multi[0].series = events.map(ev => {
+            return { 'name': ev[BaseStreamPipesWidget.TIMESTAMP_KEY], 'value': ev[this.selectedNumberProperty]};
+        });
         this.multi = [...this.multi];
     }
 
     timestampTickFormatting(timestamp: any): string {
         const date = new Date(timestamp);
-        const timeString = date.getHours() + ':' + date.getMinutes().toString().substr(-2) + ':' + date.getSeconds().toString().substr(-2);
-        return timeString;
+        return date.getHours() + ':' + date.getMinutes().toString().substr(-2) + ':' + date.getSeconds().toString().substr(-2);
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
     }
 }

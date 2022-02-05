@@ -17,10 +17,9 @@
  */
 
 import { BaseStreamPipesWidget } from './base-widget';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { ResizeService } from '../../../services/resize.service';
-import { DashboardService } from '../../../services/dashboard.service';
 import { Directive } from '@angular/core';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Directive()
 export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidget {
@@ -30,8 +29,8 @@ export abstract class BaseNgxChartsStreamPipesWidget extends BaseStreamPipesWidg
 
     colorScheme: any;
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-        super(rxStompService, dashboardService, resizeService, true);
+    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+        super(dataLakeService, resizeService, true);
     }
 
     ngOnInit() {

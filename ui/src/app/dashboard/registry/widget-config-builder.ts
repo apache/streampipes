@@ -30,6 +30,8 @@ export class WidgetConfigBuilder {
     static readonly BACKGROUND_COLOR_KEY: string = 'spi-background-color-key';
     static readonly PRIMARY_TEXT_COLOR_KEY: string = 'spi-primary-text-color-key';
     static readonly SECONDARY_TEXT_COLOR_KEY: string = 'spi-secondary-text-color-key';
+    static readonly REFRESH_INTERVAL_KEY: string = 'spi-refresh-interval-key';
+    static readonly QUERY_LIMIT_KEY: string = 'spi-query-limit-key';
 
     static readonly TITLE_KEY: string = 'spi-title-key';
 
@@ -52,6 +54,11 @@ export class WidgetConfigBuilder {
             ' secondary text' +
             ' color', '#39B54A');
         }
+        this.requiredIntegerParameter(
+          WidgetConfigBuilder.REFRESH_INTERVAL_KEY,
+          'Refresh interval [seconds]',
+          'The interval in seconds in which new data should be fetched',
+          5);
     }
 
     static create(widgetName: string, widgetLabel: string): WidgetConfigBuilder {
@@ -76,6 +83,14 @@ export class WidgetConfigBuilder {
         return this;
     }
 
+    withNumberOfPastEvents(): WidgetConfigBuilder {
+        const fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(WidgetConfigBuilder.QUERY_LIMIT_KEY, 'Past data', 'The number of historic events that should be shown', Datatypes.Integer.toUri());
+        fst.value = '50';
+        this.widget.config.push(fst);
+
+        return this;
+    }
+
     requiredTextParameter(id: string, label: string, description: string): WidgetConfigBuilder {
         const fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.String.toUri());
         this.widget.config.push(fst);
@@ -96,8 +111,11 @@ export class WidgetConfigBuilder {
     }
 
 
-    requiredIntegerParameter(id: string, label: string, description: string): WidgetConfigBuilder {
+    requiredIntegerParameter(id: string, label: string, description: string, defaultValue?: number): WidgetConfigBuilder {
         const fst: FreeTextStaticProperty = this.prepareFreeTextStaticProperty(id, label, description, Datatypes.Integer.toUri());
+        if (defaultValue) {
+            fst.value = defaultValue.toString();
+        }
         this.widget.config.push(fst);
         return this;
     }

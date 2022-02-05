@@ -16,13 +16,12 @@
  *
  */
 
-import {Component, ElementRef, OnDestroy, OnInit} from "@angular/core";
-import {BaseNgxChartsStreamPipesWidget} from "../base/base-ngx-charts-widget";
-import {RxStompService} from "@stomp/ng2-stompjs";
-import {ResizeService} from "../../../services/resize.service";
-import {StaticPropertyExtractor} from "../../../sdk/extractor/static-property-extractor";
-import {GaugeConfig} from "./gauge-config";
-import {DashboardService} from "../../../services/dashboard.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BaseNgxChartsStreamPipesWidget } from '../base/base-ngx-charts-widget';
+import { ResizeService } from '../../../services/resize.service';
+import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
+import { GaugeConfig } from './gauge-config';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 
 @Component({
@@ -38,8 +37,8 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
 
     selectedProperty: string;
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService, private el: ElementRef) {
-        super(rxStompService, dashboardService, resizeService);
+    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+        super(dataLakeService, resizeService);
     }
 
     ngOnInit(): void {
@@ -60,9 +59,13 @@ export class GaugeWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
         return false;
     }
 
-    protected onEvent(event: any) {
-        this.data[0] = ({"name": "value", "value": event[this.selectedProperty]});
+    protected onEvent(events: any[]) {
+        this.data[0] = ({'name': 'value', 'value': events[0][this.selectedProperty]});
         this.data = [...this.data];
+    }
+
+    protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+        return 1;
     }
 
 }

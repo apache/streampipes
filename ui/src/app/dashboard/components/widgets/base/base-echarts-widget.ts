@@ -17,11 +17,10 @@
  */
 
 import { BaseStreamPipesWidget } from './base-widget';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { ResizeService } from '../../../services/resize.service';
-import { DashboardService } from '../../../services/dashboard.service';
 import { Directive } from '@angular/core';
 import { ECharts } from 'echarts/core';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 @Directive()
 export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
@@ -34,8 +33,8 @@ export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
   eChartsInstance: ECharts;
   dynamicData: any;
 
-  constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-    super(rxStompService, dashboardService, resizeService, false);
+  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    super(dataLakeService, resizeService, false);
   }
 
   protected onSizeChanged(width: number, height: number) {

@@ -17,61 +17,66 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { NumberConfig } from './number-config';
 import { ResizeService } from '../../../services/resize.service';
 import { DashboardService } from '../../../services/dashboard.service';
-import { EventPropertyPrimitive } from '@streampipes/platform-services';
+import { DatalakeRestService, EventPropertyPrimitive } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'number-widget',
-    templateUrl: './number-widget.component.html',
-    styleUrls: ['./number-widget.component.css']
+  selector: 'number-widget',
+  templateUrl: './number-widget.component.html',
+  styleUrls: ['./number-widget.component.css']
 })
 export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
-    item: any = '-';
+  item: any = '-';
 
-    selectedProperty: string;
-    measurementUnitAbbrev: string;
+  selectedProperty: string;
+  measurementUnitAbbrev: string;
 
-    constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-        super(rxStompService, dashboardService, resizeService, false);
+  constructor(dataLakeService: DatalakeRestService,
+              resizeService: ResizeService,
+              private dashboardService: DashboardService) {
+    super(dataLakeService, resizeService, false);
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
+  }
+
+  extractConfig(extractor: StaticPropertyExtractor) {
+    this.selectedProperty = extractor.mappingPropertyValue(NumberConfig.NUMBER_MAPPING_KEY);
+    const eventProperty: EventPropertyPrimitive = extractor.getEventPropertyByName(this.selectedProperty) as EventPropertyPrimitive;
+    if (eventProperty.measurementUnit) {
+      this.dashboardService.getMeasurementUnitInfo(eventProperty.measurementUnit).subscribe(unit => {
+        this.measurementUnitAbbrev = unit.abbreviation;
+      });
     }
+  }
 
-    ngOnInit(): void {
-        super.ngOnInit();
-    }
+  isNumber(item: any): boolean {
+    return false;
+  }
 
-    ngOnDestroy(): void {
-        super.ngOnDestroy();
+  protected onEvent(events: any[]) {
+    let value = events[0][this.selectedProperty];
+    if (!isNaN(value)) {
+      value = value.toFixed(2);
     }
+    this.item = value;
+  }
 
-    extractConfig(extractor: StaticPropertyExtractor) {
-        this.selectedProperty = extractor.mappingPropertyValue(NumberConfig.NUMBER_MAPPING_KEY);
-        const eventProperty: EventPropertyPrimitive = extractor.getEventPropertyByName(this.selectedProperty) as EventPropertyPrimitive;
-        if (eventProperty.measurementUnit) {
-            this.dashboardService.getMeasurementUnitInfo(eventProperty.measurementUnit).subscribe(unit => {
-                this.measurementUnitAbbrev = unit.abbreviation;
-            });
-        }
-    }
+  protected onSizeChanged(width: number, height: number) {
+  }
 
-    isNumber(item: any): boolean {
-        return false;
-    }
-
-    protected onEvent(event: any) {
-        let value = event[this.selectedProperty];
-        if (!isNaN(value)) {
-            value = value.toFixed(2);
-        }
-        this.item = value;
-    }
-
-    protected onSizeChanged(width: number, height: number) {
-    }
+  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+    return 1;
+  }
 
 }

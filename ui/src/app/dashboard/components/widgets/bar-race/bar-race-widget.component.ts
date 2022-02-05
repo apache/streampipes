@@ -17,14 +17,13 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { RxStompService } from '@stomp/ng2-stompjs';
 import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
-import { DashboardService } from '../../../services/dashboard.service';
 import { ResizeService } from '../../../services/resize.service';
 import { ECharts } from 'echarts/core';
 import { EChartsOption } from 'echarts';
 import { BarRaceConfig } from './bar-race-config';
+import { DatalakeRestService } from '@streampipes/platform-services';
 
 
 @Component({
@@ -118,8 +117,8 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
     animationEasingUpdate: 'linear',
   };
 
-  constructor(rxStompService: RxStompService, dashboardService: DashboardService, resizeService: ResizeService) {
-    super(rxStompService, dashboardService, resizeService, false);
+  constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    super(dataLakeService, resizeService, false);
   }
 
   protected extractConfig(extractor: StaticPropertyExtractor) {
@@ -129,12 +128,12 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
     this.chartOption.yAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
   }
 
-  protected onEvent(event: any) {
+  protected onEvent(events: any[]) {
     this.dynamicData = this.chartOption;
-    const partitionValue = event[this.partitionField];
-    const value = event[this.valueField];
-    if (this.dynamicData.series[0].data.some(d => d.name == partitionValue)) {
-      this.dynamicData.series[0].data.find(d => d.name == partitionValue).value = value;
+    const partitionValue = events[0][this.partitionField];
+    const value = events[0][this.valueField];
+    if (this.dynamicData.series[0].data.some(d => d.name === partitionValue)) {
+      this.dynamicData.series[0].data.find(d => d.name === partitionValue).value = value;
     } else {
       this.dynamicData.series[0].data.push({name: partitionValue, value});
       this.dynamicData.yAxis.data.push(partitionValue);
@@ -161,5 +160,9 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
     if (this.eChartsInstance) {
       this.eChartsInstance.resize({width, height});
     }
+  }
+
+  protected getQueryLimit(extractor: StaticPropertyExtractor): number {
+    return 1;
   }
 }
