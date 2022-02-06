@@ -62,7 +62,6 @@ services:
       - "80:80"
     depends_on:
       - couchdb
-      - activemq
       - consul
       - backend
     logging: *default-logging
@@ -92,13 +91,6 @@ services:
     image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
     volumes:
       - files:/spImages
-    logging: *default-logging
-    networks:
-      spnet:
-
-  #### Mandatory external services
-  activemq:
-    image: fogsyio/activemq:5.15.9
     logging: *default-logging
     networks:
       spnet:
