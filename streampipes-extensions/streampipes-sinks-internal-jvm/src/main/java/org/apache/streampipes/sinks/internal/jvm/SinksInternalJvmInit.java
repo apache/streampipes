@@ -29,7 +29,6 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
-import org.apache.streampipes.sinks.internal.jvm.dashboard.DashboardController;
 import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeController;
 import org.apache.streampipes.sinks.internal.jvm.notification.NotificationController;
 
@@ -46,7 +45,6 @@ public class SinksInternalJvmInit extends StandaloneModelSubmitter {
             "",
             8090)
             .registerPipelineElements(
-                    new DashboardController(),
                     new DataLakeController(),
                     new NotificationController())
             .registerMessagingFormats(
