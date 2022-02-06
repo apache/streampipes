@@ -14,14 +14,12 @@
 # limitations under the License.
 
 [environment:pipeline-element]
-activemq
 backend
 consul
-connect-adapters-iiot
+extensions-all-jvm
 couchdb
 kafka
 ui
 sources-watertank-simulator
 zookeeper
-pipeline-elements-all-jvm
 influxdb

@@ -14,13 +14,11 @@
 # limitations under the License.
 
 [environment:ui]
-activemq
 backend
 consul
-connect-adapters-iiot
+extensions-all-jvm
 couchdb
 kafka
 sources-watertank-simulator
 zookeeper
-pipeline-elements-all-jvm
 influxdb

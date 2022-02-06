@@ -72,17 +72,8 @@ services:
       - "80:80"
     depends_on:
       - couchdb
-      - activemq
       - consul
       - backend
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
-  # Mandatory external services
-  activemq:
-    image: fogsyio/activemq:5.15.9
     logging: *default-logging
     restart: unless-stopped
     networks:

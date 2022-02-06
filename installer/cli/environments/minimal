@@ -16,10 +16,8 @@
 [environment:minimal]
 ui
 backend
-connect-adapters-iiot
-activemq
 consul
 couchdb
 influxdb
 mosquitto
-pipeline-elements-all-jvm
+extensions-all-jvm

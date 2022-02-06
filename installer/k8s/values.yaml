@@ -24,7 +24,6 @@ streampipes:
   registry: "apachestreampipes"
 
 external:
-  activemqVersion: 5.15.9
   consulVersion: 1.9.6
   couchdbVersion: 2.3.1
   flinkVersion: 1.13.5-scala_2.11

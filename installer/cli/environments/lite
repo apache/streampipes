@@ -17,7 +17,6 @@
 ui
 backend
 connect-adapters-iiot
-activemq
 consul
 couchdb
 kafka
