@@ -31,6 +31,7 @@ export class StatusComponent implements OnInit {
     pipelines = 0;
     runningPipelines = 0;
     installedPipelineElements = 0;
+    unreadNotificationCount = 0;
 
     constructor(private pipelineElementService: PipelineElementService,
                 private router: Router,
@@ -42,6 +43,8 @@ export class StatusComponent implements OnInit {
         this.getStreams();
         this.getProcessors();
         this.getSinks();
+        this.notificationCountService.unreadNotificationCount$
+          .subscribe(count => this.unreadNotificationCount = count);
     }
 
     getPipelines() {

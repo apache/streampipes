@@ -18,14 +18,16 @@
 
 package org.apache.streampipes.model;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
 public class Notification {
 
-  private @SerializedName("_id") String id;
-  private @SerializedName("_rev") String rev;
+  private @JsonProperty("_id") @SerializedName("_id") String id;
+  private @JsonProperty("_rev") @SerializedName("_rev") String rev;
 
   private String title;
   private Date createdAt;

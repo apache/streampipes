@@ -108,6 +108,7 @@ public class PipelineExecutor {
       graphs.forEach(g -> {
         try {
           g.setSelectedEndpointUrl(findSelectedEndpoint(g));
+          g.setCorrespondingPipeline(pipeline.getPipelineId());
         } catch (NoServiceEndpointsAvailableException e) {
           failedServices.add(g);
         }

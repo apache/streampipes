@@ -19,14 +19,11 @@
 package org.apache.streampipes.sinks.internal.jvm.notification;
 
 
-import com.google.gson.Gson;
+import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
-import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
-import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
@@ -42,23 +39,17 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
   private String correspondingPipelineId;
   private String correspondingUser;
 
-  private ActiveMQPublisher publisher;
-  private Gson gson;
+  private StreamPipesClient client;
 
 
   @Override
   public void onInvocation(NotificationParameters parameters, EventSinkRuntimeContext context) throws
           SpRuntimeException {
-    this.gson = new Gson();
     this.title = parameters.getTitle();
     this.content = parameters.getContent();
     this.correspondingPipelineId = parameters.getGraph().getCorrespondingPipeline();
     this.correspondingUser = parameters.getGraph().getCorrespondingUser();
-    SpConfig configStore = context.getConfigStore().getConfig();
-    this.publisher = new ActiveMQPublisher(
-            configStore.getString(ConfigKeys.JMS_HOST),
-            configStore.getInteger(ConfigKeys.JMS_PORT),
-            "org.apache.streampipes.notifications." + this.correspondingUser);
+    this.client = context.getStreamPipesClient();
   }
 
   @Override
@@ -76,12 +67,12 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
 
     // TODO add targeted user to notification object
 
-    publisher.publish(gson.toJson(notification).getBytes());
+    client.notificationsApi().add(notification);
   }
 
   @Override
   public void onDetach() throws SpRuntimeException {
-    this.publisher.disconnect();
+
   }
 
 }

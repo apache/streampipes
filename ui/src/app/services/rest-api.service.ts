@@ -49,7 +49,7 @@ export class RestApi {
     }
 
     getUnreadNotificationsCount(): Observable<any> {
-        return this.$http.get(this.urlApiBase() + '/notifications/count');
+        return this.$http.get(this.urlApiBase() + '/notifications/count', { headers: { ignoreLoadingBar: '' }});
     }
 
     getDomainKnowledgeItems(query) {

@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -29,9 +29,18 @@ import javax.ws.rs.core.Response;
 @Path("/v2/notifications")
 public class Notification extends AbstractAuthGuardedRestResource {
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
+    public Response addNotification(org.apache.streampipes.model.Notification notification) {
+        getNotificationStorage().addNotification(notification);
+        return ok();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @GsonWithIds
+    @JacksonSerialized
+    @Path("/offset")
     public Response getNotifications(@QueryParam("notificationType") String notificationTypeId,
                                      @QueryParam("offset") Integer offset,
                                      @QueryParam("count") Integer count) {
@@ -41,10 +50,19 @@ public class Notification extends AbstractAuthGuardedRestResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @JacksonSerialized
+    @Path("/time")
+    public Response getNotifications(@QueryParam("startTime") long startTime) {
+        return ok(getNotificationStorage()
+                .getAllNotificationsFromTimestamp(startTime));
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/count")
     public Response getUnreadNotificationsCount() {
         return ok(getNotificationStorage()
-                .getUnreadNotificationsCount(getAuthenticatedUsername()));
+                .getUnreadNotificationsCount(getAuthenticatedUserSid()));
     }
 
     @GET

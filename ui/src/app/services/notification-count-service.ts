@@ -17,12 +17,12 @@
 
 import { Injectable } from '@angular/core';
 import { RestApi } from './rest-api.service';
-import { NotificationItem } from '../notifications/model/notifications.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class NotificationCountService {
 
-    unreadNotificationCount = 0;
+    public unreadNotificationCount$ = new BehaviorSubject(0);
     lockNotificationId: string;
     lockActive = false;
 
@@ -32,20 +32,13 @@ export class NotificationCountService {
     loadUnreadNotifications() {
         this.restApi.getUnreadNotificationsCount()
             .subscribe(response => {
-                this.unreadNotificationCount = response.count;
+                this.unreadNotificationCount$.next(response.count);
             });
     }
 
-    increaseNotificationCount(notification: NotificationItem) {
-        const id = this.makeId(notification.correspondingPipelineId, notification.title);
-        if (this.lockActive && (id === this.lockNotificationId)) {
-        } else {
-            this.unreadNotificationCount = this.unreadNotificationCount + 1;
-        }
-    }
-
     decreaseNotificationCount() {
-        this.unreadNotificationCount = this.unreadNotificationCount - 1;
+        const newValue = Math.max(this.unreadNotificationCount$.value - 1, 0);
+        this.unreadNotificationCount$.next(newValue);
     }
 
     lockIncreaseUpdateForId(notificationId: string) {

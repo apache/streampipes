@@ -50,20 +50,32 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
   public List<Notification> getAllNotifications(String notificationTypeId,
                                                 Integer offset,
                                                 Integer count) {
-    Gson gson = couchDbClientSupplier.get().getGson();
     List<JsonObject> notifications =
             couchDbClientSupplier
                     .get()
                     .view("notificationtypes/notificationtypes")
                     .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
-                    .endKey("\ufff0")
+                    .endKey(Arrays.asList(notificationTypeId, 0))
                     .descending(true)
                     .includeDocs(true)
                     .skip(offset)
                     .limit(count)
                     .query(JsonObject.class);
 
-    return notifications
+    return map(notifications);
+  }
+
+  @Override
+  public List<Notification> getAllNotificationsFromTimestamp(long startTime) {
+
+    return couchDbClientSupplier
+            .get()
+            .findDocs("{\"selector\": {\"createdAtTimestamp\": {\"$gt\": " +startTime + "}}}", Notification.class);
+  }
+
+  private List<Notification> map(List<JsonObject> jsonObjects) {
+    Gson gson = couchDbClientSupplier.get().getGson();
+    return jsonObjects
             .stream()
             .map(notification -> gson.fromJson(notification, Notification.class))
             .collect(Collectors.toList());

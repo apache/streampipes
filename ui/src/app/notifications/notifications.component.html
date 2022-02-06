@@ -65,8 +65,8 @@
                     <div class="notification-header-notification-name">{{currentlySelectedNotification.notificationTitle}}</div>
                     <hr class="header-divider"/>
                 </div>
-                <div #notificationPane class="notification-pane" (scroll)="onScroll($event)">
-                    <notification-item [notification]="notification" *ngFor="let notification of notifications"></notification-item>
+                <div #notificationPane class="notification-pane" (scroll)="onScroll()" *ngIf="currentlySelectedNotificationId">
+                    <notification-item [notification]="notification" *ngFor="let notification of allNotifications.get(currentlySelectedNotificationId)"></notification-item>
                 </div>
             </div>
 

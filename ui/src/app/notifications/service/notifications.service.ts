@@ -19,7 +19,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
     ExistingNotification,
-    NotificationCount,
     NotificationItem
 } from '../model/notifications.model';
 import { Injectable } from '@angular/core';
@@ -34,15 +33,21 @@ export class NotificationsService {
                 private platformServicesCommons: PlatformServicesCommons) {
     }
 
-    getUnreadNotificationsCount(): Observable<NotificationCount> {
-        return this.http.get(this.notificationUrl + '/count').pipe(map(data => {
-            return data as NotificationCount;
-        }));
+    getNotificationsFromTime(startTime: number): Observable<NotificationItem[]> {
+        return this.http
+          .get(this.notificationUrl
+            + '/time'
+            + '?'
+            + 'startTime=' + startTime)
+          .pipe(map(data => {
+              return data as NotificationItem[];
+          }));
     }
 
     getNotifications(existingNotification: ExistingNotification, offset: number, limit: number): Observable<NotificationItem[]> {
         return this.http
             .get(this.notificationUrl
+                + '/offset'
                 + '?'
                 + 'notificationType=' + NotificationUtils.makeNotificationIdFromNotification(existingNotification)
                 + '&'

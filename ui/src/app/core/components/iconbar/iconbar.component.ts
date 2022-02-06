@@ -16,58 +16,46 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
-import { Client } from '@stomp/stompjs';
-import { NotificationItem } from '../../../notifications/model/notifications.model';
 import { Router } from '@angular/router';
 import { NotificationCountService } from '../../../services/notification-count-service';
 import { AuthService } from '../../../services/auth.service';
+import { Subscription, timer } from "rxjs";
+import { exhaustMap, mergeMap } from "rxjs/operators";
+import { RestApi } from "../../../services/rest-api.service";
 
 @Component({
   selector: 'iconbar',
   templateUrl: './iconbar.component.html',
   styleUrls: ['./iconbar.component.scss']
 })
-export class IconbarComponent extends BaseNavigationComponent implements OnInit {
+export class IconbarComponent extends BaseNavigationComponent implements OnInit, OnDestroy {
 
-  unreadNotifications = 0;
+  unreadNotificationCount = 0;
+  unreadNotificationsSubscription: Subscription;
 
   constructor(router: Router,
               authService: AuthService,
-              public notificationCountService: NotificationCountService) {
+              public notificationCountService: NotificationCountService,
+              private restApi: RestApi) {
     super(authService, router);
   }
 
   ngOnInit(): void {
     super.onInit();
-    this.connectToBroker();
-    this.notificationCountService.loadUnreadNotifications();
+    this.unreadNotificationsSubscription = timer(0, 10000).pipe(
+      exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
+      .subscribe(response => {
+        this.notificationCountService.unreadNotificationCount$.next(response.count);
+      });
+
+    this.notificationCountService.unreadNotificationCount$.subscribe(count => {
+      this.unreadNotificationCount = count;
+    });
   }
 
-  connectToBroker() {
-    const login = 'admin';
-    const passcode = 'admin';
-    const websocketProtocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
-    const brokerUrl = websocketProtocol + '://' + window.location.hostname + ':' + window.location.port + '/streampipes/ws';
-    const inputTopic = '/topic/org.apache.streampipes.notifications.' + this.authService.getCurrentUser().username;
-
-    const stompClient = new Client({
-      brokerURL: brokerUrl,
-      connectHeaders: {
-        login,
-        passcode
-      },
-      reconnectDelay: 5000
-    });
-
-    stompClient.onConnect = (frame) => {
-
-      stompClient.subscribe(inputTopic, message => {
-        this.notificationCountService.increaseNotificationCount(JSON.parse(message.body) as NotificationItem);
-      });
-    };
-
-    stompClient.activate();
+  ngOnDestroy() {
+    this.unreadNotificationsSubscription.unsubscribe();
   }
 }
