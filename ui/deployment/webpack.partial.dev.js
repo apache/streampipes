@@ -54,12 +54,7 @@ module.exports = merge(baseConfig, {
             '/pipeline': {
                 target: 'http://localhost:5984',
                 secure: false,
-            },
-            '/streampipes/ws': {
-                target: 'ws://localhost:61614',
-                ws: true,
-                secure: false,
-            },
+            }
         },
     },
 });
