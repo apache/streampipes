@@ -25,7 +25,7 @@ import { DashboardWidgetSettings } from '@streampipes/platform-services';
 export class ImageConfig extends WidgetConfig {
 
     static readonly TITLE_KEY: string = 'title-key';
-    static readonly NUMBER_MAPPING_KEY: string = 'number-mapping';
+    static readonly IMAGE_MAPPING_KEY: string = 'image-mapping';
 
     constructor() {
         super();
@@ -37,7 +37,7 @@ export class ImageConfig extends WidgetConfig {
             .withIcon('fas fa-image')
             .requiredSchema(SchemaRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(ImageConfig.NUMBER_MAPPING_KEY, 'Select property', '', EpRequirements.imageReq())
+                .requiredPropertyWithUnaryMapping(ImageConfig.IMAGE_MAPPING_KEY, 'Select image field', '', EpRequirements.imageReq())
                 .build())
             .requiredTextParameter(ImageConfig.TITLE_KEY, 'Title', 'The title')
             .build();

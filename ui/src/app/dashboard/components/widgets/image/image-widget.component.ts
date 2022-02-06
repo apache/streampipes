@@ -22,6 +22,9 @@ import { ResizeService } from '../../../services/resize.service';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { GaugeConfig } from '../gauge/gauge-config';
 import { DatalakeRestService } from '@streampipes/platform-services';
+import { SafeUrl } from '@angular/platform-browser';
+import { SecurePipe } from '../../../../services/secure.pipe';
+import { ImageConfig } from './image-config';
 
 @Component({
     selector: 'image-widget',
@@ -33,13 +36,19 @@ export class ImageWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
     item: any;
     title: string;
     selectedProperty: string;
+    imageBaseUrl: string;
+    currentImageUrl: SafeUrl;
+    imageReady = false;
 
-    constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
+    constructor(dataLakeService: DatalakeRestService,
+                resizeService: ResizeService,
+                private securePipe: SecurePipe) {
         super(dataLakeService, resizeService);
     }
 
     ngOnInit(): void {
         super.ngOnInit();
+        this.imageBaseUrl = this.dataLakeService.dataLakeUrl + '/images/';
     }
 
     ngOnDestroy(): void {
@@ -48,15 +57,17 @@ export class ImageWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
 
     extractConfig(extractor: StaticPropertyExtractor) {
         this.title = extractor.singleValueParameter(GaugeConfig.TITLE_KEY);
-        this.selectedProperty = extractor.mappingPropertyValue(GaugeConfig.NUMBER_MAPPING_KEY);
-    }
-
-    isNumber(item: any): boolean {
-        return false;
+        this.selectedProperty = extractor.mappingPropertyValue(ImageConfig.IMAGE_MAPPING_KEY);
     }
 
     protected onEvent(events: any[]) {
-        this.item = events[0][this.selectedProperty];
+        const url = this.imageBaseUrl + events[0][this.selectedProperty];
+        this.securePipe.transform(url).subscribe(res => {
+           this.currentImageUrl = res;
+            if (!this.imageReady) {
+                this.imageReady = true;
+            }
+        });
     }
 
     protected getQueryLimit(extractor: StaticPropertyExtractor): number {

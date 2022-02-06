@@ -36,6 +36,10 @@ public class Utils {
     return getCouchDbGsonClient("data-sink");
   }
 
+  public static CouchDbClient getCouchDbImageClient() {
+    return getCouchDbGsonClient("images");
+  }
+
   public static CouchDbClient getCouchDbPipelineElementTemplateClient() {
     return getCouchDbGsonClient("pipelineelementtemplate");
   }

@@ -39,6 +39,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   public ICategoryStorage getCategoryStorageAPI() { return new CategoryStorageImpl(); }
 
   @Override
+  public IImageStorage getImageStorage() {
+    return new ImageStorageImpl();
+  }
+
+  @Override
   public IUserGroupStorage getUserGroupStorage() {
     return new UserGroupStorageImpl();
   }

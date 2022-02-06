@@ -31,8 +31,8 @@ import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
-import java.io.*;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -46,12 +46,10 @@ public class DataLake implements EventSink<DataLakeParameters> {
   private static Logger LOG;
 
   private List<EventProperty> imageProperties;
-
-  private String imageDirectory;
-
   private String timestampField;
 
   private EventSchema eventSchema;
+  private ImageStore imageStore;
 
   @Override
   public void onInvocation(DataLakeParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
@@ -66,6 +64,12 @@ public class DataLake implements EventSink<DataLakeParameters> {
     String databaseName = configStore.getString(ConfigKeys.DATA_LAKE_DATABASE_NAME);
     String user = configStore.getString(ConfigKeys.DATA_LAKE_USERNAME);
     String password = configStore.getString(ConfigKeys.DATA_LAKE_PASSWORD);
+
+    String couchDbProtocol = configStore.getString(ConfigKeys.COUCHDB_PROTOCOL);
+    String couchDbHost = configStore.getString(ConfigKeys.COUCHDB_HOST);
+    int couchDbPort = configStore.getInteger(ConfigKeys.COUCHDB_PORT);
+
+    this.imageStore = new ImageStore(couchDbProtocol, couchDbHost, couchDbPort);
 
     EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
     // Remove the timestamp field from the event schema
@@ -88,8 +92,6 @@ public class DataLake implements EventSink<DataLakeParameters> {
                     eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
             .collect(Collectors.toList());
 
-    imageDirectory = configStore.getString(ConfigKeys.IMAGE_STORAGE_LOCATION) + parameters.getMeasurementName() + "/";
-
     InfluxDbConnectionSettings settings = InfluxDbConnectionSettings.from(
             influxHost, influxPort, databaseName, parameters.getMeasurementName(), user, password);
 
@@ -108,14 +110,11 @@ public class DataLake implements EventSink<DataLakeParameters> {
     try {
 
       this.imageProperties.forEach(eventProperty -> {
-        String eventTimestamp = Long.toString(event.getFieldBySelector(this.timestampField).getAsPrimitive().getAsLong());
-        String fileRoute = this.imageDirectory + eventProperty.getRuntimeName() + "/" + eventTimestamp + ".png";
+        String imageDocId = UUID.randomUUID().toString();
         String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
 
-        this.writeToImageFile(image, fileRoute);
-        fileRoute = fileRoute.replace("/", "_");
-        fileRoute = fileRoute.replace("." , "_");
-        event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), fileRoute);
+        this.writeToImageFile(image, imageDocId);
+        event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), imageDocId);
       });
 
       influxDbClient.save(event, this.eventSchema);
@@ -129,16 +128,9 @@ public class DataLake implements EventSink<DataLakeParameters> {
     influxDbClient.stop();
   }
 
-  private void writeToImageFile(String image, String fileRoute) {
+  private void writeToImageFile(String image, String imageDocId) {
     byte[] data = Base64.decodeBase64(image);
-    try {
-      File file = new File(fileRoute);
-      file.getParentFile().mkdirs();
-      OutputStream stream = new FileOutputStream(file, false);
-      stream.write(data);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    this.imageStore.storeImage(data, imageDocId);
   }
 
   /**

@@ -20,16 +20,13 @@ package org.apache.streampipes.sinks.internal.jvm.dashboard;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
-import org.apache.streampipes.messaging.jms.ActiveMQPublisher;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
 public class Dashboard implements EventSink<DashboardParameters> {
 
-    private ActiveMQPublisher publisher;
     private JsonDataFormatDefinition jsonDataFormatDefinition;
 
     public Dashboard() {
@@ -39,10 +36,6 @@ public class Dashboard implements EventSink<DashboardParameters> {
     @Override
     public void onInvocation(DashboardParameters parameters,
                              EventSinkRuntimeContext context) throws SpRuntimeException {
-        this.publisher = new ActiveMQPublisher(
-                context.getConfigStore().getConfig().getString(ConfigKeys.JMS_HOST),
-                context.getConfigStore().getConfig().getInteger(ConfigKeys.JMS_PORT),
-                makeTopic(parameters.getGraph().getInputStreams().get(0), parameters.getVisualizationName()));
     }
 
     private String makeTopic(SpDataStream inputStream, String visualizationName) {
@@ -58,7 +51,6 @@ public class Dashboard implements EventSink<DashboardParameters> {
     @Override
     public void onEvent(Event event) {
         try {
-            publisher.publish(jsonDataFormatDefinition.fromMap(event.getRaw()));
         } catch (SpRuntimeException e) {
             e.printStackTrace();
         }
@@ -66,6 +58,5 @@ public class Dashboard implements EventSink<DashboardParameters> {
 
     @Override
     public void onDetach() throws SpRuntimeException {
-        this.publisher.disconnect();
     }
 }

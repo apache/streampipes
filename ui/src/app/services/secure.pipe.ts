@@ -16,17 +16,27 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.config;
 
-public class ConfigKeys {
-    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
-    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
-    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
-    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
-    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
-    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
+import { Pipe, PipeTransform } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
+@Pipe({
+  name: 'secure'
+})
+export class SecurePipe implements PipeTransform {
+
+  constructor(private http: HttpClient,
+              private sanitizer: DomSanitizer,
+              private authService: AuthService) { }
+
+  transform(url): Observable<SafeUrl> {
+    return this.http
+      .get(url, { responseType: 'blob', headers: {'Authorization': 'Bearer ' + this.authService.authToken$.value}})
+      .pipe(map(val => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(val))));
+  }
+
 }

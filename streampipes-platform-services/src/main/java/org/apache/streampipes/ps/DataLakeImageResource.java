@@ -1,3 +1,4 @@
+package org.apache.streampipes.ps;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,17 +17,22 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.config;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
-public class ConfigKeys {
-    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
-    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
-    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
-    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
-    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
-    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
-    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
+@Path("v4/datalake/images")
+public class DataLakeImageResource extends AbstractAuthGuardedRestResource {
+
+  @GET
+  @Path("{imageId}")
+  @Produces("image/jpeg")
+  public Response getImage(@PathParam("imageId") String imageId) {
+    return ok(StorageDispatcher.INSTANCE.getNoSqlStore().getImageStorage().getImageBytes(imageId));
+  }
 }

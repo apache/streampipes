@@ -27,10 +27,11 @@ import { ElementIconText } from './get-element-icon-text.service';
 import { AppConstants } from './app.constants';
 import { JwtTokenStorageService } from './jwt-token-storage.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { SecurePipe } from "./secure.pipe";
 
 @NgModule({
   imports: [],
-  declarations: [],
+  declarations: [SecurePipe],
   providers: [
     AppConstants,
     RestApi,
@@ -42,8 +43,10 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
     NotificationCountService,
     PropertySelectorService,
     PlatformServicesModule,
+    SecurePipe,
   ],
-  entryComponents: []
+  entryComponents: [],
+  exports: [SecurePipe]
 })
 export class ServicesModule {
 }

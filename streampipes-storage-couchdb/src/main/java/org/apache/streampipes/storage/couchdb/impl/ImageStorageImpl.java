@@ -16,17 +16,24 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.config;
+package org.apache.streampipes.storage.couchdb.impl;
 
-public class ConfigKeys {
-    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
-    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
-    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
-    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
-    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
-    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
+import org.apache.streampipes.storage.api.IImageStorage;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.lightcouch.CouchDbClient;
 
-    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
+import java.io.InputStream;
+
+public class ImageStorageImpl implements IImageStorage {
+
+  private final CouchDbClient couchDbClient;
+
+  public ImageStorageImpl() {
+    this.couchDbClient = Utils.getCouchDbImageClient();
+  }
+
+  @Override
+  public InputStream getImageBytes(String documentId) {
+    return couchDbClient.find(documentId + "/" + documentId);
+  }
 }

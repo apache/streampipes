@@ -34,7 +34,7 @@ export class DatalakeRestService {
     return '/streampipes-backend';
   }
 
-  private get dataLakeUrl() {
+  public get dataLakeUrl() {
     return this.baseUrl + '/api/v4' + '/datalake';
   }
 

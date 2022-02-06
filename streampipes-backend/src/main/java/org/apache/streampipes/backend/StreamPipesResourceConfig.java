@@ -19,6 +19,7 @@
 package org.apache.streampipes.backend;
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
+import org.apache.streampipes.ps.DataLakeImageResource;
 import org.apache.streampipes.ps.DataLakeResourceV3;
 import org.apache.streampipes.ps.DataLakeResourceV4;
 import org.apache.streampipes.ps.PipelineElementTemplateResource;
@@ -62,6 +63,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(ContainerProvidedOptions.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
+        register(DataLakeImageResource.class);
         register(DataLakeResourceV3.class);
         register(DataLakeMeasureResourceV3.class);
         register(DataStream.class);
