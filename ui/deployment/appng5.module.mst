@@ -38,8 +38,6 @@ import { AuthService } from './services/auth.service';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
-import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
-
 {{#modulesActive}}
 {{#ng5}}
 import { {{{ng5_moduleName}}} } from '{{{path}}}';
@@ -93,11 +91,6 @@ import * as $ from 'jquery';
         NotificationCountService,
         { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorProvider, multi: true },
         { provide: LOADING_BAR_CONFIG, useValue: { latencyThreshold: 100 }},
-        {
-        			provide: RxStompService,
-        			useFactory: rxStompServiceFactory,
-        			deps: [InjectableRxStompConfig]
-        }
     ],
     bootstrap: [AppComponent]
 })
