@@ -125,8 +125,7 @@ export class ShapeService {
 
         if (dynamicContent) {
             textSettings.name = 'dynamic-text';
-            textSettings.brokerUrl = config.brokerUrl;
-            textSettings.topic = config.topic;
+            textSettings.dataLakeMeasure = config.dataLakeMeasure;
             textSettings.fontSize = '30';
         }
 

@@ -21,9 +21,9 @@ import { RestApi } from '../../../services/rest-api.service';
 import { RestService } from '../../services/rest.service';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
 import { SelectedVisualizationData } from '../../model/selected-visualization-data.model';
-import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { VisualizablePipeline } from '@streampipes/platform-services';
+import { DataLakeMeasure, DatalakeRestService, DataViewDataExplorerService } from '@streampipes/platform-services';
+import { zip } from 'rxjs';
 
 @Component({
     selector: 'sp-add-pipeline-dialog-component',
@@ -46,9 +46,9 @@ export class AddPipelineDialogComponent implements OnInit {
         description: 'Choose label'
     }];
 
-    visualizablePipelines: VisualizablePipeline[] = [];
+    visualizablePipelines: DataLakeMeasure[] = [];
 
-    selectedVisualization: VisualizablePipeline;
+    selectedVisualization: DataLakeMeasure;
     selectedType: any;
     selectedMeasurement: any;
     page: any = 'select-pipeline';
@@ -64,14 +64,27 @@ export class AddPipelineDialogComponent implements OnInit {
         private dialogRef: DialogRef<AddPipelineDialogComponent>,
         private restApi: RestApi,
         private restService: RestService,
-        private dashboardService: DashboardService,
+        private dataLakeRestService: DatalakeRestService,
+        private dataExplorerService: DataViewDataExplorerService,
         public elementIconText: ElementIconText) {
     }
 
     ngOnInit() {
-        this.dashboardService.getVisualizablePipelines().subscribe(visualizations => {
-            this.visualizablePipelines = visualizations;
-        });
+        this.loadVisualizablePipelines();
+    }
+
+    loadVisualizablePipelines() {
+        zip(this.dataExplorerService.getAllPersistedDataStreams(), this.dataLakeRestService.getAllMeasurementSeries())
+          .subscribe(res => {
+              const visualizablePipelines = res[0];
+              visualizablePipelines.forEach(p => {
+                  const measurement = res[1].find(m => {
+                      return m.measureName === p.measureName;
+                  });
+                  p.eventSchema = measurement.eventSchema;
+              });
+              this.visualizablePipelines = visualizablePipelines;
+          });
     }
 
     onCancel(): void {
@@ -122,8 +135,7 @@ export class AddPipelineDialogComponent implements OnInit {
             selectedConfig.measurement = this.selectedMeasurement;
             selectedConfig.visualizationId = this.selectedVisualization.pipelineId;
             selectedConfig.label = this.selectedLabel;
-            selectedConfig.brokerUrl = (this.selectedVisualization as any).broker;
-            selectedConfig.topic = this.selectedVisualization.topic;
+            selectedConfig.dataLakeMeasure = this.selectedVisualization.measureName;
 
             this.dialogRef.close(selectedConfig);
         }

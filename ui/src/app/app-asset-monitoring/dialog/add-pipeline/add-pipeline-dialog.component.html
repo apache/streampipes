@@ -27,10 +27,10 @@
                             <mat-list-item *ngFor="let pipeline of visualizablePipelines"
                                            (click)="selectPipeline(pipeline)" class="list-item">
                                 <div mat-list-avatar
-                                     class="pipeline-avatar sp-accent-bg">{{iconText(pipeline.visualizationName)}}
+                                     class="pipeline-avatar sp-accent-bg">{{iconText(pipeline.pipelineName)}}
                                 </div>
                                 <h4 mat-line>{{pipeline.pipelineName}}</h4>
-                                <p mat-line>{{pipeline.visualizationName}} </p>
+                                <p mat-line>{{pipeline.measureName}} </p>
                             </mat-list-item>
                         </mat-list>
                     </div>
@@ -43,7 +43,7 @@
                         <mat-radio-group fxLayout="column" class="example-radio-group"
                                          [(ngModel)]="selectedMeasurement">
                             <mat-radio-button class="example-radio-button"
-                                              *ngFor="let prop of selectedVisualization.schema.eventProperties"
+                                              *ngFor="let prop of selectedVisualization.eventSchema.eventProperties"
                                               [value]="prop.runtimeName">
                                 {{prop.runtimeName}}
                             </mat-radio-button>

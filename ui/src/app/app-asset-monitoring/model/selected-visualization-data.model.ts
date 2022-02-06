@@ -24,8 +24,7 @@ export interface SelectedVisualizationData {
     visualizationId: string;
     measurement: string;
     label: string;
-    brokerUrl: string;
-    topic: string;
+    dataLakeMeasure: string;
 }
 
 export interface HyperlinkConfig {

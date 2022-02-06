@@ -16,14 +16,15 @@
  *
  */
 
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import Konva from 'konva';
-import { WebsocketService } from '../../services/websocket.service';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { RestService } from '../../services/rest.service';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
-import { DashboardItem } from '@streampipes/platform-services';
+import { DatalakeQueryParameterBuilder, DatalakeRestService, SpQueryResult } from '@streampipes/platform-services';
+import { Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 interface Window {
     Image: any;
@@ -36,7 +37,7 @@ declare const window: Window;
     templateUrl: './view-asset.component.html',
     styleUrls: ['./view-asset.component.css']
 })
-export class ViewAssetComponent implements OnInit, AfterViewInit {
+export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Input() dashboardConfig: DashboardConfiguration;
     @Output() dashboardClosed = new EventEmitter<boolean>();
@@ -46,12 +47,11 @@ export class ViewAssetComponent implements OnInit, AfterViewInit {
     mainLayer: any;
     backgroundImageLayer: any;
 
-    dashboardItem: DashboardItem;
-    widgetLoaded = false;
+    subscriptions: Subscription[] = [];
 
-    constructor(private websocketService: WebsocketService,
-                private restService: RestService,
-                private dashboardService: DashboardService) {
+    constructor(private restService: RestService,
+                private dashboardService: DashboardService,
+                private dataLakeRestService: DatalakeRestService) {
 
     }
 
@@ -97,11 +97,38 @@ export class ViewAssetComponent implements OnInit, AfterViewInit {
         const dynamicShapes = this.mainCanvasStage.find('.dynamic-text');
         dynamicShapes.forEach(ds => {
             const monitoredField = ds.text();
-           this.websocketService.connect(ds.attrs.brokerUrl, ds.attrs.topic).subscribe(msg => {
-               ds.text(msg[monitoredField]);
-               this.mainCanvasStage.draw();
-           });
+            const measurement = ds.attrs.dataLakeMeasure;
+            const subscription = timer(0, 2000).pipe(
+              switchMap(() => this.dataLakeRestService.getData(measurement, this.buildQuery())))
+              .subscribe(queryResult => {
+                  this.handleResponse(ds, monitoredField, queryResult);
+              });
+            this.subscriptions.push(subscription);
         });
+    }
+
+    handleResponse(ds: any,
+                   monitoredField: string,
+                   queryResult: SpQueryResult): void {
+        if (queryResult.total > 0) {
+            if (queryResult.allDataSeries.length === 1) {
+                const series = queryResult.allDataSeries[0];
+                if (series.rows.length > 0) {
+                    const row = series.rows[0];
+                    const event = {};
+                    series.headers.forEach((fieldName, index) => {
+                        event[fieldName] = row[index];
+                    });
+                    ds.text(event[monitoredField]);
+                    this.mainCanvasStage.draw();
+                }
+            }
+        }
+    }
+
+    buildQuery() {
+        const queryBuilder = DatalakeQueryParameterBuilder.create();
+        return queryBuilder.withLimit(1).withOrdering('DESC').build();
     }
 
     showImage() {
@@ -121,6 +148,10 @@ export class ViewAssetComponent implements OnInit, AfterViewInit {
 
     editDashboard() {
         this.editDashboardEmitter.emit(this.dashboardConfig);
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(s => s.unsubscribe());
     }
 
 }
