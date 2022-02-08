@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.extensions.all.jvm;
 
-import org.apache.streampipes.connect.ConnectAdapterInit;
 import org.apache.streampipes.connect.iiot.ConnectAdapterIiotInit;
 import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
@@ -43,7 +42,7 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
         return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.jvm",
                 "StreamPipes Extensions (JVM)",
                 "", 8090)
-                .merge(new ConnectAdapterInit().provideServiceDefinition())
+                //.merge(new ConnectAdapterInit().provideServiceDefinition())
                 .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
                 .merge(new AllPipelineElementsInit().provideServiceDefinition())
                 .registerMessagingFormats(
