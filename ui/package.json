@@ -8,7 +8,7 @@
     "url": "https://github.com/apache/incubator-streampipes"
   },
   "scripts": {
-    "build-platform-services": "ng build @streampipes/platform-services && npm install @streampipes/platform-services@file:./dist/streampipes/platform-services",
+    "build-platform-services": "ng build @streampipes/platform-services && npm install @streampipes/platform-services@file:./dist/streampipes/platform-services --no-save",
     "start": "node ./deployment/prebuild.js && npm run build-platform-services && ng serve",
     "test": "node ./deployment/prebuild.js && npm run build-platform-services && ng test",
     "start-plain": "ng serve",
@@ -50,7 +50,6 @@
     "@ngx-loading-bar/core": "5.1.2",
     "@ngx-loading-bar/http-client": "5.1.2",
     "@panzoom/panzoom": "^4.4.3",
-    "@streampipes/platform-services": "file:dist/streampipes/platform-services",
     "@swimlane/ngx-charts": "16.0.0",
     "angular-datatables": "^12.0.2",
     "angular-gridster2": "12.1.1",
