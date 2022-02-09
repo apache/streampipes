@@ -91,6 +91,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(PipelineElementRuntimeInfo.class);
         register(PipelineMonitoring.class);
         register(PipelineResource.class);
+        register(PipelineTemplate.class);
         register(DataSinkResource.class);
         register(DataProcessorResource.class);
         register(DataStreamResource.class);

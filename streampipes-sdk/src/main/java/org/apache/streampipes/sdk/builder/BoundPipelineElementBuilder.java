@@ -39,7 +39,7 @@ public class BoundPipelineElementBuilder {
   private BoundPipelineElementBuilder(InvocableStreamPipesEntity streamPipesEntity) {
     this.streamPipesEntity = streamPipesEntity;
     // TODO fix this hack
-    this.streamPipesEntity.setElementId(this.streamPipesEntity.getBelongsTo() +"/" + UUID.randomUUID().toString());
+    this.streamPipesEntity.setElementId(this.streamPipesEntity.getBelongsTo() +":" + UUID.randomUUID().toString());
     this.boundPipelineElement = new BoundPipelineElement();
     this.connectedTo = new ArrayList<>();
   }

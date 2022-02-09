@@ -29,6 +29,9 @@ import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.recommender.ElementRecommender;
 import org.apache.streampipes.manager.remote.ContainerProvidedOptionsHandler;
 import org.apache.streampipes.manager.runtime.PipelineElementRuntimeInfoFetcher;
+import org.apache.streampipes.manager.template.PipelineTemplateGenerator;
+import org.apache.streampipes.manager.template.PipelineTemplateInvocationGenerator;
+import org.apache.streampipes.manager.template.PipelineTemplateInvocationHandler;
 import org.apache.streampipes.manager.topic.WildcardTopicGenerator;
 import org.apache.streampipes.manager.verification.extractor.TypeExtractor;
 import org.apache.streampipes.model.SpDataSet;
@@ -43,6 +46,8 @@ import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessag
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.model.template.PipelineTemplateDescription;
+import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
@@ -161,5 +166,21 @@ public class Operations {
 
   public static String getRuntimeInfo(SpDataStream spDataStream) throws SpRuntimeException {
     return PipelineElementRuntimeInfoFetcher.INSTANCE.getCurrentData(spDataStream);
+  }
+
+  public static List<PipelineTemplateDescription> getAllPipelineTemplates() {
+    return new PipelineTemplateGenerator().getAllPipelineTemplates();
+  }
+
+  public static PipelineOperationStatus handlePipelineTemplateInvocation(String username, PipelineTemplateInvocation pipelineTemplateInvocation) {
+    return new PipelineTemplateInvocationHandler(username, pipelineTemplateInvocation).handlePipelineInvocation();
+  }
+
+  public static PipelineOperationStatus handlePipelineTemplateInvocation(String username, PipelineTemplateInvocation pipelineTemplateInvocation, PipelineTemplateDescription pipelineTemplateDescription) {
+    return new PipelineTemplateInvocationHandler(username, pipelineTemplateInvocation, pipelineTemplateDescription).handlePipelineInvocation();
+  }
+
+  public static PipelineTemplateInvocation getPipelineInvocationTemplate(SpDataStream dataStream, PipelineTemplateDescription pipelineTemplateDescription) {
+    return new PipelineTemplateInvocationGenerator(dataStream, pipelineTemplateDescription).generateInvocation();
   }
 }
