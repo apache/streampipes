@@ -24,6 +24,8 @@ import { EditorService } from '../../services/editor.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { InvocablePipelineElementUnion } from "../../model/editor.model";
+import { JsplumbService } from "../../services/jsplumb.service";
 
 @Component({
   selector: 'save-pipeline',
@@ -60,6 +62,7 @@ export class SavePipelineComponent implements OnInit {
 
   constructor(private editorService: EditorService,
               private dialogRef: DialogRef<SavePipelineComponent>,
+              private jsplumbService: JsplumbService,
               private objectProvider: ObjectProvider,
               private pipelineService: PipelineService,
               private router: Router,
@@ -120,6 +123,10 @@ export class SavePipelineComponent implements OnInit {
     if (updateMode) {
       storageRequest = this.pipelineService.updatePipeline(this.pipeline);
     } else {
+      if (this.currentModifiedPipelineId) {
+        this.pipeline.actions.forEach(element => this.updateId(element));
+        this.pipeline.sepas.forEach(element => this.updateId(element));
+      }
       this.pipeline._id = undefined;
       storageRequest = this.pipelineService.storePipeline(this.pipeline);
     }
@@ -136,6 +143,13 @@ export class SavePipelineComponent implements OnInit {
         }, data => {
           this.displayErrors();
         });
+  }
+
+  updateId(entity: InvocablePipelineElementUnion) {
+    const lastIdIndex = entity.elementId.lastIndexOf(':');
+    const newElementId = entity.elementId.substring(0, lastIdIndex + 1) + this.jsplumbService.makeId(5);
+    entity.elementId = newElementId;
+    entity.uri = newElementId;
   }
 
   storePipelineCanvasMetadata(pipelineId: string,
