@@ -28,7 +28,9 @@ public abstract class DefaultStaticPropertyVisitor implements StaticPropertyVisi
 
   @Override
   public void visit(StaticPropertyAlternative staticPropertyAlternative) {
-    staticPropertyAlternative.getStaticProperty().accept(this);
+    if (staticPropertyAlternative.getStaticProperty() != null) {
+      staticPropertyAlternative.getStaticProperty().accept(this);
+    }
   }
 
   @Override
