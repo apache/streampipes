@@ -172,8 +172,8 @@ public class Operations {
     return new PipelineTemplateGenerator().getAllPipelineTemplates();
   }
 
-  public static PipelineOperationStatus handlePipelineTemplateInvocation(String username, PipelineTemplateInvocation pipelineTemplateInvocation) {
-    return new PipelineTemplateInvocationHandler(username, pipelineTemplateInvocation).handlePipelineInvocation();
+  public static PipelineOperationStatus handlePipelineTemplateInvocation(String userSid, PipelineTemplateInvocation pipelineTemplateInvocation) {
+    return new PipelineTemplateInvocationHandler(userSid, pipelineTemplateInvocation).handlePipelineInvocation();
   }
 
   public static PipelineOperationStatus handlePipelineTemplateInvocation(String username, PipelineTemplateInvocation pipelineTemplateInvocation, PipelineTemplateDescription pipelineTemplateDescription) {

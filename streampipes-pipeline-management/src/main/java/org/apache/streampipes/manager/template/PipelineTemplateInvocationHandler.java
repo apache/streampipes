@@ -18,7 +18,9 @@
 package org.apache.streampipes.manager.template;
 
 import org.apache.streampipes.manager.operations.Operations;
+import org.apache.streampipes.manager.permission.PermissionManager;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
@@ -54,6 +56,8 @@ public class PipelineTemplateInvocationHandler {
     pipeline.setCreatedAt(System.currentTimeMillis());
     replaceStaticProperties(pipeline);
     Operations.storePipeline(pipeline);
+    Permission permission = new PermissionManager().makePermission(pipeline, username);
+    StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().addPermission(permission);
     Pipeline storedPipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipeline.getPipelineId());
     return Operations.startPipeline(storedPipeline);
   }

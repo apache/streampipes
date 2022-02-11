@@ -62,7 +62,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
             .stream()
             .filter(stream -> stream instanceof SpDataSet)
             .map(stream -> new SpDataSet((SpDataSet) stream))
-            .forEach(set -> datasets.add((SpDataSet) set));
+            .forEach(datasets::add);
 
     return ok(new SpDataStreamContainer(datasets));
   }
@@ -88,7 +88,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   public Response generatePipeline(PipelineTemplateInvocation pipelineTemplateInvocation) {
 
     PipelineOperationStatus status = Operations
-            .handlePipelineTemplateInvocation(getAuthenticatedUsername(), pipelineTemplateInvocation);
+            .handlePipelineTemplateInvocation(getAuthenticatedUserSid(), pipelineTemplateInvocation);
 
     return ok(status);
 
