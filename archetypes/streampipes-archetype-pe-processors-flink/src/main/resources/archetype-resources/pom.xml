@@ -81,6 +81,11 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-sdk-bundle</artifactId>
+            <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
             <version>${sp.version}</version>
         </dependency>

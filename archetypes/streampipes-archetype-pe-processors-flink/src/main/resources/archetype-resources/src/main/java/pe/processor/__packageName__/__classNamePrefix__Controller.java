@@ -21,10 +21,10 @@
 
 package ${package}.pe.processor.${packageName};
 
-import ${package}.config.Config;
-
 import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.utils.Datatypes;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -71,6 +71,6 @@ public class ${classNamePrefix}Controller extends FlinkDataProcessorDeclarer<${c
 		String exampleText = extractor.singleValueParameter(EXAMPLE_KEY, String.class);
 		${classNamePrefix}Parameters params = new ${classNamePrefix}Parameters(graph, exampleText);
 
-		return new ${classNamePrefix}Program(params, Config.INSTANCE.getFlinkDebug());
+		return new ${classNamePrefix}Program(params, configExtractor, streamPipesClient);
 	}
 }

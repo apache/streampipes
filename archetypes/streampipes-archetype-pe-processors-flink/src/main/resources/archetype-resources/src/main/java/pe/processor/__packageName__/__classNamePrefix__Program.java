@@ -21,12 +21,23 @@
 
 package ${package}.pe.processor.${packageName};
 
-import ${package}.config.Config;
+import ${package}.config.ConfigKeys;
 
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
+import org.myorga.config.ConfigKeys;
+import org.myorga.pe.processor.example.MyFlinkProcessor;
+import org.myorga.pe.processor.example.MyFlinkProcessorParameters;
+import org.myorga.pe.processor.example.MyFlinkProcessorProgram;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
+
 
 import java.io.Serializable;
 
@@ -35,22 +46,27 @@ public class ${classNamePrefix}Program extends FlinkDataProcessorRuntime<${class
   private static final long serialVersionUID = 1L;
   private final ${classNamePrefix}Parameters params;
 
-  public ${classNamePrefix}Program(${classNamePrefix}Parameters params, boolean debug) {
-    super(params, debug);
-    this.params = params;
-  }
+  public ${classNamePrefix}Program(${classNamePrefix}Parameters params,
+		  ConfigExtractor configExtractor,
+		  StreamPipesClient streamPipesClient)
+	{
+	  super(params, configExtractor, streamPipesClient);
+	  this.params = params;
+	}
+
 
   @Override
-  protected FlinkDeploymentConfig getDeploymentConfig() {
-    return new FlinkDeploymentConfig(Config.JAR_FILE,
-            Config.INSTANCE.getFlinkHost(), Config.INSTANCE.getFlinkPort());
-  }
+    protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
+		SpConfig config = configExtractor.getConfig();
+		return new FlinkDeploymentConfig(config.getString(ConfigKeys.FLINK_JAR_FILE_LOC),
+				config.getString(ConfigKeys.FLINK_HOST),
+				config.getInteger(ConfigKeys.FLINK_PORT),
+				config.getBoolean(ConfigKeys.DEBUG));
+	}
+	@Override
+    protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams){
 
-  @Override
-  protected DataStream<Event> getApplicationLogic(
-        DataStream<Event>... messageStream) {
-
-    return messageStream[0]
-        .flatMap(new ${classNamePrefix}(this.params.getExampleText()));
-  }
+		return dataStreams[0]
+				.flatMap(new ${classNamePrefix}(this.params.getExampleText()));
+	}
 }

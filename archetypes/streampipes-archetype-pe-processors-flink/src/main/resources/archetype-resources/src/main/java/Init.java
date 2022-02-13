@@ -23,8 +23,11 @@ package ${package};
 
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 
-import ${package}.config.Config;
+import ${package}.config.ConfigKeys;
+
 import ${package}.pe.processor.${packageName}.${classNamePrefix}Controller;
 
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -38,20 +41,31 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 public class Init extends StandaloneModelSubmitter {
 
   public static void main(String[] args) throws Exception {
-    DeclarersSingleton.getInstance()
-            .add(new ${classNamePrefix}Controller());
+	  new Init().init();
+  }
 
-    DeclarersSingleton.getInstance().registerDataFormats(
-            new JsonDataFormatFactory(),
-            new CborDataFormatFactory(),
-            new SmileDataFormatFactory(),
-            new FstDataFormatFactory());
-
-    DeclarersSingleton.getInstance().registerProtocols(
-            new SpKafkaProtocolFactory(),
-            new SpMqttProtocolFactory(),
-            new SpJmsProtocolFactory());
-
-    new Init().init(Config.INSTANCE);
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("${package}",
+              "Apache Flink processor",
+              "",
+              8090)
+	  .registerPipelineElement(new ${classNamePrefix}Controller())
+      .registerMessagingFormats(
+              new JsonDataFormatFactory(),
+              new CborDataFormatFactory(),
+              new SmileDataFormatFactory(),
+              new FstDataFormatFactory())
+      .registerMessagingProtocols(
+              new SpKafkaProtocolFactory(),
+              new SpJmsProtocolFactory(),
+              new SpMqttProtocolFactory())
+      .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+      .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+      .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+      .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+      .addConfig(ConfigKeys.SERVICE_NAME, "sp fft stream analytics metrics", "Data processor service name")
+      .addConfig(ConfigKeys.HOST, "${artifactId}", "Data processor host")
+      .build();
   }
 }
