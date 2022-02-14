@@ -11,7 +11,7 @@
     "build-platform-services": "ng build @streampipes/platform-services && npm install @streampipes/platform-services@file:./dist/streampipes/platform-services --no-save",
     "start": "node ./deployment/prebuild.js && npm run build-platform-services && ng serve",
     "test": "node ./deployment/prebuild.js && npm run build-platform-services && ng test",
-    "start-plain": "ng serve",
+    "start-plain": "npm run build-platform-services && ng serve",
     "build-plain": "set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-platform-services && ng build --configuration production",
     "run-prebuild-script": "node ./deployment/prebuild.js",
     "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-platform-services && ng build --configuration production",

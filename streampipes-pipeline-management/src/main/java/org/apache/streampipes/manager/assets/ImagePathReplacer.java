@@ -25,7 +25,7 @@ public class ImagePathReplacer {
   private static final String IMAGE_REGEX = "(<img.*src=\")(.*)(\")";
   private static final Pattern pattern = Pattern.compile(IMAGE_REGEX);
 
-  private static final String API_PREFIX = "streampipes-backend/api/v2/pe/";
+  private static final String API_PREFIX = "/streampipes-backend/api/v2/pe/";
   private static final String API_APPENDIX = "/assets/";
 
   private String originalContent;

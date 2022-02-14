@@ -19,6 +19,6 @@
 <p showdown="{{documentationMarkdown}}" *ngIf="documentationMarkdown && !error" [ngClass]="useStyling ? 'note' : ''">
 
 </p>
-<p *ngIf="error" ng-class="useStyling ? 'note' : ''">
+<p *ngIf="error" [ngClass]="useStyling ? 'note' : ''">
     (no documentation available)
 </p>

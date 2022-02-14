@@ -33,6 +33,7 @@ public class UnauthenticatedInterfaces {
             "/api/v2/restore-password/*",
             "/api/v2/activate-account/*",
             "/api/v2/pe/*/assets/icon",
+            "/api/v2/pe/*/assets/icon.png",
             "/api/v2/connect/master/description/*/assets/icon",
             "/api/openapi.json",
             "/api/auth/**",
