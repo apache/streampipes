@@ -32,12 +32,9 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
-import org.myorga.config.ConfigKeys;
-import org.myorga.pe.processor.example.MyFlinkProcessor;
-import org.myorga.pe.processor.example.MyFlinkProcessorParameters;
-import org.myorga.pe.processor.example.MyFlinkProcessorProgram;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
+import ${package}.config.ConfigKeys;
 
 import java.io.Serializable;
 
@@ -63,6 +60,7 @@ public class ${classNamePrefix}Program extends FlinkDataProcessorRuntime<${class
 				config.getInteger(ConfigKeys.FLINK_PORT),
 				config.getBoolean(ConfigKeys.DEBUG));
 	}
+
 	@Override
     protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams){
 
