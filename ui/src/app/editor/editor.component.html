@@ -17,43 +17,25 @@
   -->
 
 <div fxLayout="column" class="page-container">
-    <div fxLayout="row" class="border sp-tab-bg editor-canvas-options" *ngIf="!pipelineCanvasMaximized">
-        <div fxFlex="100" fxLayout="row" class="page-container-nav">
-            <div fxFlex fxLayoutAlign="start center" [attr.id]="'peType'">
-                <mat-tab-group [selectedIndex]="selectedIndex"
-                               (selectedIndexChange)="selectPipelineElements($event)" color="accent">
-                    <mat-tab
-                            *ngFor="let tab of tabs"
-                            [attr.id]="tab.shorthand"
-                            label="{{tab.title}}"></mat-tab>
-                </mat-tab-group>
+    <div class="fixed-height" fxLayout="row" fxFlex="100">
+        <div fxFlex="250px">
+            <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!allElementsLoaded">
+                <mat-spinner [diameter]="30" color="accent" mode="indeterminate"></mat-spinner>
+                <p>Loading pipeline elements...</p>
             </div>
-            <div fxFlex="30" fxLayout="row" fxLayoutAlign="end center" style="padding-left:10px;font-size:14px;line-height:24px;">
-                <button mat-button mat-icon-button (click)="startCreatePipelineTour()"
-                        [matTooltip]="'Tutorial'" style="margin-right: 5px;">
-                    <i class="material-icons text-color">
-                        school
-                    </i>
-                </button>
+            <div id="shepherd-test"
+                 style="padding:0px;border-bottom:1px solid #ffffff;margin-right: 5px;">
+                <pipeline-element-icon-stand
+                        [allElements]="allElements"
+                        *ngIf="allElementsLoaded"
+                        (startTourEmitter)="startCreatePipelineTour()">
+                </pipeline-element-icon-stand>
             </div>
         </div>
-    </div>
-
-    <div class="fixed-height" fxLayout="column" fxFlex="100">
-        <div id="shepherd-test"
-             style="padding:0px;border-bottom:1px solid #ffffff">
-            <pipeline-element-icon-stand
-                    [activeType]="activeType"
-                    [currentElements]="currentElements"
-                    *ngIf="allElementsLoaded && !pipelineCanvasMaximized">
-            </pipeline-element-icon-stand>
-        </div>
-        <pipeline-assembly fxFlex="1"
-                           class="pipeline-assembly-margin"
+        <pipeline-assembly fxFlex="100" style="margin-left: 10px;"
                            [rawPipelineModel]="rawPipelineModel"
                            [allElements]="allElements"
-                           [currentModifiedPipelineId]="currentModifiedPipelineId"
-                           (pipelineCanvasMaximizedEmitter)="togglePipelineCanvasMode($event)">
+                           [currentModifiedPipelineId]="currentModifiedPipelineId">
         </pipeline-assembly>
     </div>
 </div>

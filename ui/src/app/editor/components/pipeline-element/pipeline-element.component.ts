@@ -78,7 +78,7 @@ export class PipelineElementComponent implements OnInit {
         } else if (this.preview) {
             return 'width:50px;height:50px;';
         } else if (this.iconStandSize) {
-            return 'width:50px;height:50px;margin-top:-5px;';
+            return 'width:30px;height:30px;';
         } else {
             return 'width:70px;height:70px;';
         }

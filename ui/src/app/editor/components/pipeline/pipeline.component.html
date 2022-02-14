@@ -15,7 +15,6 @@
   ~ limitations under the License.
   ~
   -->
-
 <div [attr.data-jtk-managed]="pipelineElement.payload.dom"
      id="{{pipelineElement.payload.dom}}"
      style="{{getElementCss(pipelineElement.settings)}}"
@@ -44,7 +43,7 @@
         </div>
         <pipeline-element [pipelineElement]="pipelineElement.payload" [preview]="preview"></pipeline-element>
     </div>
-    <pipeline-element-options *ngIf="!preview && currentMouseOverElement==pipelineElement.payload.dom"
+    <pipeline-element-options *ngIf="!preview"
                               (delete)="handleDeleteOption($event)"
                               (customize)="showCustomizeDialog($event)"
                               [currentMouseOverElement]="currentMouseOverElement"
@@ -63,4 +62,3 @@
 
     </pipeline-element-preview>
 </div>
-

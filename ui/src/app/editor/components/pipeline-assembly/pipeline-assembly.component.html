@@ -17,9 +17,12 @@
   -->
 
 <div fxFlex="100" fxLayout="column">
-    <div class="pipeline-assembly-options sp-blue-bg">
+    <div class="pipeline-assembly-options sp-bg-lightgray page-container-nav">
         <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-            <button mat-button matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
+            <button mat-button
+                    mat-raised-button
+                    color="accent"
+                    matTooltip="Save Pipeline" [matTooltipPosition]="'above'"
                     [disabled]="!pipelineValidationService.pipelineValid"
                     (click)="submit()" type="submit"
                     data-cy="sp-editor-save-pipeline">
@@ -30,17 +33,20 @@
             </button>
             <span class="assembly-options-divider"></span>
             <!-- TODO: Use this once copying of elements is supported -->
-<!--            <button mat-button mat-icon-button matTooltip="Pan" [matTooltipPosition]="'above'"-->
-<!--                    [disabled]="!selectMode"-->
-<!--                    (click)="toggleSelectMode()">-->
-<!--                <i class="material-icons">open_with</i>-->
-<!--            </button>-->
-<!--            <button mat-button mat-icon-button matTooltip="Select" [matTooltipPosition]="'above'"-->
-<!--                    [disabled]="selectMode"-->
-<!--                    (click)="toggleSelectMode()">-->
-<!--                <i class="material-icons">mode_edit</i>-->
-<!--            </button>-->
-            <button mat-button matTooltip="Data Preview" [matTooltipPosition]="'above'"
+            <!--            <button mat-button mat-icon-button matTooltip="Pan" [matTooltipPosition]="'above'"-->
+            <!--                    [disabled]="!selectMode"-->
+            <!--                    (click)="toggleSelectMode()">-->
+            <!--                <i class="material-icons">open_with</i>-->
+            <!--            </button>-->
+            <!--            <button mat-button mat-icon-button matTooltip="Select" [matTooltipPosition]="'above'"-->
+            <!--                    [disabled]="selectMode"-->
+            <!--                    (click)="toggleSelectMode()">-->
+            <!--                <i class="material-icons">mode_edit</i>-->
+            <!--            </button>-->
+            <button mat-button
+                    color="accent"
+                    matTooltip="Data Preview"
+                    [matTooltipPosition]="'above'"
                     (click)="triggerPipelinePreview()" [disabled]="isPipelineAssemblyEmpty()">
                 <div fxLayoutAlign="start center" fxLayout="row">
                     <i class="material-icons">visibility</i>
@@ -49,39 +55,35 @@
                 </div>
             </button>
             <span class="assembly-options-divider"></span>
-            <button mat-button mat-icon-button matTooltip="Auto Layout" [matTooltipPosition]="'above'"
+            <button mat-button
+                    color="accent"
+                    mat-icon-button
+                    matTooltip="Auto Layout" [matTooltipPosition]="'above'"
                     (click)="autoLayout()">
                 <i class="material-icons">settings_overscan</i>
             </button>
-            <button mat-button mat-icon-button matTooltip="Add pipeline element" [matTooltipPosition]="'above'"
+            <button mat-button
+                    color="accent"
+                    mat-icon-button
+                    matTooltip="Add pipeline element" [matTooltipPosition]="'above'"
                     (click)="openDiscoverDialog()"
                     data-cy="sp-editor-add-pipeline-element">
                 <i class="material-icons">add</i>
             </button>
             <div fxLayout="column" fxLayoutAlign="start center" class="pipeline-cache-block">
-                <div fxFlex="100" fxLayoutAlign="start center" fxLayout="row" *ngIf="pipelineCached || pipelineCacheRunning">
+                <div fxFlex="100" fxLayoutAlign="start center" fxLayout="row"
+                     *ngIf="pipelineCached || pipelineCacheRunning">
                     <div *ngIf="pipelineCached" fxLayout="row" fxLayoutAlign="start center">
-                        <mat-spinner [mode]="'indeterminate'" class="mat-spinner-color" [diameter]="15" *ngIf="pipelineCacheRunning"></mat-spinner>
+                        <mat-spinner [mode]="'indeterminate'" class="mat-spinner-color" [diameter]="15"
+                                     *ngIf="pipelineCacheRunning"></mat-spinner>
                         <span>&nbsp;{{pipelineCacheRunning ? '&nbsp;Saving pipeline modifications' : 'All pipeline modifications saved.'}}</span>
                     </div>
                 </div>
             </div>
             <span fxFlex></span>
-            <div style="position:relative;">
-                <sp-error-hint
-                    [displayMessages]="!isPipelineAssemblyEmpty()"
-                    [errorMessages]="pipelineValidationService.errorMessages"
-                    [validationString]="'Pipeline'">
-                </sp-error-hint>
-            </div>
-            <button mat-button mat-icon-button
-                    [matTooltip]="pipelineCanvasMaximized ? 'Minimize' : 'Maximize'"
-                    [matTooltipPosition]="'above'"
-                    (click)="toggleCanvasMaximized()">
-                <i class="material-icons" *ngIf="!pipelineCanvasMaximized">open_in_full</i>
-                <i class="material-icons" *ngIf="pipelineCanvasMaximized">close_fullscreen</i>
-            </button>
-            <button mat-button mat-icon-button matTooltip="Clear Assembly Area"
+            <button mat-button
+                    color="accent"
+                    mat-icon-button matTooltip="Clear Assembly Area"
                     [matTooltipPosition]="'above'"
                     [disabled]="editorService.pipelineAssemblyEmpty"
                     (click)="showClearAssemblyConfirmDialog($event)">
@@ -89,8 +91,15 @@
             </button>
         </div>
     </div>
-    <div id="outerAssemblyArea" class="outerAssembly sp-blue-border-nopadding">
+    <div id="outerAssemblyArea" class="outerAssembly assembly-border">
         <div class="pipeline-canvas-outer" #outerCanvas>
+            <div class="pipeline-validation-hint">
+                <sp-error-hint
+                        [displayMessages]="!isPipelineAssemblyEmpty()"
+                        [errorMessages]="pipelineValidationService.errorMessages"
+                        [validationString]="'Pipeline'">
+                </sp-error-hint>
+            </div>
             <div class="pan-control">
                 <div class="pan-zoom-control-buttons">
                     <div class="pan-zoom-button pan-left" (click)="panLeft()">
@@ -121,18 +130,20 @@
                     </div>
                 </div>
             </div>
-                <pipeline class="canvas jtk-surface" id="assembly" #pipelineComponent
-                          [pipelineValid]="pipelineValid"
-                          [canvasId]="'assembly'"
-                          [rawPipelineModel]="rawPipelineModel"
-                          [allElements]="allElements"
-                          [preview]="false"
-                          [pipelineCached]="pipelineCached"
-                          [pipelineCanvasMetadata]="pipelineCanvasMetadata"
-                          [pipelineCacheRunning]="pipelineCacheRunning"
-                          (pipelineCachedChanged)="pipelineCached=$event"
-                          (pipelineCacheRunningChanged)="pipelineCacheRunning=$event" style="position:absolute;">
-                </pipeline>
+            <pipeline class="canvas jtk-surface" id="assembly"
+                      #pipelineComponent
+                      [pipelineValid]="pipelineValid"
+                      [canvasId]="'assembly'"
+                      [rawPipelineModel]="rawPipelineModel"
+                      [allElements]="allElements"
+                      [preview]="false"
+                      [pipelineCached]="pipelineCached"
+                      [pipelineCanvasMetadata]="pipelineCanvasMetadata"
+                      [pipelineCacheRunning]="pipelineCacheRunning"
+                      (pipelineCachedChanged)="pipelineCached=$event"
+                      (pipelineCacheRunningChanged)="pipelineCacheRunning=$event" style="position:absolute;">
+            </pipeline>
+
         </div>
     </div>
 </div>

@@ -25,12 +25,12 @@ export class ElementIconText {
 
     getElementIconText(s) {
         let result = '';
-        if (s.length <= 4) {
+        if (s.length <= 3) {
             result = s;
         } else {
             const words = s.split(' ');
             words.forEach((word, i) => {
-                if (i < 4) {
+                if (i < 3) {
                     result += word.charAt(0);
                 }
             });

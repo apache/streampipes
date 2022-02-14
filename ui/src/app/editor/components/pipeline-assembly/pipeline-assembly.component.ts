@@ -40,7 +40,7 @@ import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.s
 import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EditorService } from '../../services/editor.service';
-import { PipelineService, PipelineCanvasMetadataService, PipelineCanvasMetadata } from '@streampipes/platform-services';
+import { PipelineCanvasMetadata, PipelineCanvasMetadataService, PipelineService } from '@streampipes/platform-services';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';
 import Panzoom, { PanzoomObject } from '@panzoom/panzoom';
 import { PipelineElementDraggedService } from '../../services/pipeline-element-dragged.service';
@@ -290,11 +290,6 @@ export class PipelineAssemblyComponent implements OnInit, AfterViewInit {
         return this.rawPipelineModel.length === 0 || this.rawPipelineModel.every(pe => pe.settings.disabled);
     }
 
-    toggleCanvasMaximized() {
-        this.pipelineCanvasMaximized = !(this.pipelineCanvasMaximized);
-        this.pipelineCanvasMaximizedEmitter.emit(this.pipelineCanvasMaximized);
-    }
-
     panLeft() {
         this.pan(100, 0);
     }
@@ -341,5 +336,4 @@ export class PipelineAssemblyComponent implements OnInit, AfterViewInit {
             }
         });
     }
-
 }

@@ -16,162 +16,132 @@
  *
  */
 
-import { AfterViewInit, Component, Input, OnInit, } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, } from '@angular/core';
 import { RestApi } from '../../../services/rest-api.service';
-import {
-    PipelineElementIdentifier,
-    PipelineElementType,
-    PipelineElementUnion
-} from '../../model/editor.model';
-import { PipelineElementTypeUtils } from '../../utils/editor.utils';
+import { PeCategory, PipelineElementType, PipelineElementUnion } from '../../model/editor.model';
 import { EditorService } from '../../services/editor.service';
 import { zip } from 'rxjs';
 
 
 @Component({
-    selector: 'pipeline-element-icon-stand',
-    templateUrl: './pipeline-element-icon-stand.component.html',
-    styleUrls: ['./pipeline-element-icon-stand.component.scss']
+  selector: 'pipeline-element-icon-stand',
+  templateUrl: './pipeline-element-icon-stand.component.html',
+  styleUrls: ['./pipeline-element-icon-stand.component.scss']
 })
 export class PipelineElementIconStandComponent implements OnInit, AfterViewInit {
 
+  availableTypes = [
+    {
+      title: 'Data Sources',
+      filters: [PipelineElementType.DataStream, PipelineElementType.DataSet],
+      open: true,
+      color: 'var(--color-stream)',
+      sort: 'name'
+    },
+    {
+      title: 'Data Processors',
+      filters: [PipelineElementType.DataProcessor],
+      open: true,
+      color: 'var(--color-processor)',
+      sort: 'name'
+    },
+    {
+      title: 'Data Sinks',
+      filters: [PipelineElementType.DataSink],
+      open: true,
+      color: 'var(--color-sink)',
+      sort: 'name'
+    }];
 
-    _currentElements: PipelineElementUnion[];
+  @Input()
+  allElements: PipelineElementUnion[];
 
-    currentlyFilteredElements: PipelineElementUnion[];
+  @Output()
+  startTourEmitter: EventEmitter<void> = new EventEmitter<void>();
 
-    elementFilter = '';
-    allCategories: any = [];
-    currentCategories: any = [];
-    selectedOptions: any = [];
+  elementFilter = '';
+  allCategories: Map<PipelineElementType, PeCategory[]> = new Map();
+  categoriesReady = false;
+  uncategorized: PeCategory = {code: 'UNCATEGORIZED', label: 'Uncategorized', description: ''};
 
-    _activeType: PipelineElementType;
-    activeCssClass: string;
+  constructor(private restApi: RestApi,
+              private editorService: EditorService) {
 
-    currentElementName: string;
+  }
 
-    constructor(private restApi: RestApi,
-                private editorService: EditorService) {
+  ngOnInit(): void {
+    this.loadOptions();
+  }
 
-    }
+  ngAfterViewInit() {
+    this.makeDraggable();
+  }
 
-    ngOnInit(): void {
-        this.loadOptions();
-    }
+  loadOptions() {
+    zip(this.editorService.getEpCategories(),
+      this.editorService.getEpaCategories(),
+      this.editorService.getEcCategories()).subscribe((results) => {
+      results[0] = this.sort(results[0]).filter(category => this.filterForExistingCategories(category));
+      results[1] = this.sort(results[1]).filter(category => this.filterForExistingCategories(category));
+      results[2] = this.sort(results[2]).filter(category => this.filterForExistingCategories(category));
+      this.allCategories.set(PipelineElementType.DataStream, results[0]);
+      this.allCategories.set(PipelineElementType.DataProcessor, results[1]);
+      this.allCategories.set(PipelineElementType.DataSink, results[2]);
+      this.categoriesReady = true;
+    });
+  }
 
-    ngAfterViewInit() {
-        this.makeDraggable();
-    }
+  filterForExistingCategories(category: PeCategory): boolean {
+    return this.allElements
+      .filter(element => element.category)
+      .find(element => element.category.find(elCat => elCat === category.code)) !== undefined ||
+      ((category.code === this.uncategorized.code) && this.allElements.find(element => (!element.category)) !== undefined);
+  }
 
-    openHelpDialog(pipelineElement) {
-        this.editorService.openHelpDialog(pipelineElement);
-    }
+  sort(categories: PeCategory[]) {
+    return categories.sort((a, b) => {
+      return a.label.localeCompare(b.label);
+    });
+  }
 
-    updateMouseOver(elementAppId: string) {
-        this.currentElementName = elementAppId;
-    }
-
-    loadOptions() {
-        zip(this.editorService.getEpCategories(),
-            this.editorService.getEpaCategories(),
-            this.editorService.getEcCategories()).subscribe((results) => {
-                this.allCategories[PipelineElementType.DataStream] = results[0];
-                this.allCategories[PipelineElementType.DataSet] = results[0];
-                this.allCategories[PipelineElementType.DataProcessor] = results[1];
-                this.allCategories[PipelineElementType.DataSink] = results[2];
-                this.currentCategories = this.allCategories[0];
-                this.selectedOptions = [...this.currentCategories];
-            });
-    }
-
-    applyFilter() {
-        this.currentlyFilteredElements = this.currentElements.filter(el => {
-            return this.matchesText(el) && this.matchesCategory(el);
-        });
-        this.makeDraggable();
-    }
-
-    matchesText(el: PipelineElementUnion): boolean {
-        return this.elementFilter === '' || el.name.toLowerCase().includes(this.elementFilter.toLowerCase());
-    }
-
-    matchesCategory(el: PipelineElementUnion): boolean {
-        return this._activeType === PipelineElementType.DataStream ||
-            this._activeType === PipelineElementType.DataSet ?
-            this.selectedOptions.some(c => el.category.some(cg => c.type === cg)) :
-            this.selectedOptions.some(c => !(el.category) || el.category.length === 0 || el.category.some(cg => c.code === cg));
-    }
-
-    toggleOption(option) {
-        if (this.optionSelected(option)) {
-            this.selectedOptions.splice(option, 1);
-        } else {
-            this.selectedOptions.push(option);
+  makeDraggable() {
+    setTimeout(() => {
+      ($('.draggable-pipeline-element') as any).draggable({
+        revert: 'invalid',
+        helper: ((ev) => {
+          const draggable = $(ev.currentTarget).find('.draggable-icon-editor').first().clone();
+          const draggableContainer = $(draggable).find('.pe-container').first();
+          $(draggable).removeClass('draggable-icon-editor');
+          $(draggable).addClass('draggable-icon-drag');
+          $(draggableContainer).removeClass('pe-container');
+          $(draggableContainer).addClass('pe-container-drag');
+          return draggable.clone();
+        }),
+        stack: '.draggable-pipeline-element',
+        start(el, ui) {
+          ui.helper.appendTo('#content');
+          $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
+        },
+        stop(el, ui) {
+          $('#outerAssemblyArea').css('border', '1px solid var(--color-bg-3)');
         }
-        this.applyFilter();
-    }
+      });
+    });
+  }
 
-    optionSelected(option) {
-        return this._activeType === PipelineElementType.DataStream ||
-        this._activeType === PipelineElementType.DataSet ?
-            this.selectedOptions.map(o => o.type).indexOf(option.type) > -1 :
-            this.selectedOptions.map(o => o.code).indexOf(option.code) > -1;
-    }
+  toggleOpen(availableType: any): void {
+    availableType.open = !availableType.open;
+    this.makeDraggable();
+  }
 
-    selectAllOptions() {
-        this.selectedOptions = [...this.currentCategories];
-        this.applyFilter();
-    }
+  startCreatePipelineTour() {
+    this.startTourEmitter.emit();
+  }
 
-    deselectAllOptions() {
-        this.selectedOptions = [];
-        this.applyFilter();
-    }
-
-    @Input()
-    set activeType(value: PipelineElementIdentifier) {
-        const activeType = PipelineElementTypeUtils.fromClassName(value);
-        this._activeType = activeType;
-        if (this.allCategories.length > 0) {
-            this.currentCategories = this.allCategories[this._activeType];
-            this.selectedOptions = [...this.currentCategories];
-        }
-        this.activeCssClass = this.makeActiveCssClass(activeType);
-        setTimeout(() => {
-            this.makeDraggable();
-        });
-    }
-
-    @Input()
-    set currentElements(value: PipelineElementUnion[]) {
-        this._currentElements = value;
-        this.elementFilter = '';
-        this.currentlyFilteredElements = this._currentElements;
-    }
-
-    get currentElements() {
-        return this._currentElements;
-    }
-
-    makeActiveCssClass(elementType: PipelineElementType): string {
-        return PipelineElementTypeUtils.toCssShortHand(elementType);
-    }
-
-    makeDraggable() {
-       setTimeout(() => {
-           ($('.draggable-icon') as any).draggable({
-               revert: 'invalid',
-               helper: 'clone',
-               stack: '.draggable-icon',
-               start (el, ui) {
-                   ui.helper.appendTo('#content');
-                   $('#outerAssemblyArea').css('border', '3px dashed #39b54a');
-               },
-               stop (el, ui) {
-                   $('#outerAssemblyArea').css('border', '3px solid rgb(156, 156, 156)');
-               }
-           });
-       });
-    }
+  changeSorting(availableType: any,
+                sortMode: string) {
+    availableType.sort = sortMode;
+    this.makeDraggable();
+  }
 
 }

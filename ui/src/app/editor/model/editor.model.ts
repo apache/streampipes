@@ -16,12 +16,7 @@
  *
  */
 
-import {
-  DataProcessorInvocation,
-  DataSinkInvocation,
-  SpDataSet,
-  SpDataStream
-} from '@streampipes/platform-services';
+import { DataProcessorInvocation, DataSinkInvocation, SpDataSet, SpDataStream } from '@streampipes/platform-services';
 import { InjectionToken } from '@angular/core';
 
 export interface PipelineElementHolder {
@@ -91,3 +86,9 @@ export type PipelineElementIdentifier = 'org.apache.streampipes.model.SpDataStre
     | 'org.apache.streampipes.model.SpDataSet'
     | 'org.apache.streampipes.model.graph.DataProcessorInvocation'
     | 'org.apache.streampipes.model.graph.DataSinkInvocation';
+
+export interface PeCategory {
+  code: string;
+  label: string;
+  description: string;
+}

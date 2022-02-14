@@ -15,3 +15,20 @@
  * limitations under the License.
  *
  */
+
+import { Pipe, PipeTransform } from '@angular/core';
+import { PipelineElementType, PipelineElementUnion } from '../model/editor.model';
+import { PipelineElementTypeUtils } from '../utils/editor.utils';
+
+@Pipe({name: 'pipelineElementType'})
+export class PipelineElementTypeFilterPipe implements PipeTransform {
+
+  transform(pipelineElements: PipelineElementUnion[],
+            allowedTypes: PipelineElementType[]): PipelineElementUnion[] {
+    return pipelineElements.filter(pe => {
+      const peType = PipelineElementTypeUtils.fromClassName(pe['@class']);
+      return allowedTypes.find(t => t === peType) !== undefined;
+    });
+  }
+
+}

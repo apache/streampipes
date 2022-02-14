@@ -200,7 +200,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
       drop: (element, ui) => {
         const pipelineElementId = ui.draggable.data('pe');
         const pipelineElement: PipelineElementUnion = this.findPipelineElementByElementId(pipelineElementId);
-        if (ui.draggable.hasClass('draggable-icon')) {
+        if (ui.draggable.hasClass('draggable-pipeline-element')) {
           this.editorService.makePipelineAssemblyEmpty(false);
           const newElementId = pipelineElement.elementId + ':' + this.jsplumbService.makeId(5);
           const pipelineElementConfig = this.jsplumbService.createNewPipelineElementConfig(pipelineElement,
@@ -213,7 +213,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
             this.showMixedStreamAlert();
           } else {
             this.rawPipelineModel.push(pipelineElementConfig);
-            if (ui.draggable.hasClass('set')) {
+            if (pipelineElementConfig.type === 'set') {
               setTimeout(() => {
                 this.editorService.updateDataSet(pipelineElementConfig.payload).subscribe(data => {
                   (pipelineElementConfig.payload as SpDataSet).eventGrounding = data.eventGrounding;
@@ -225,9 +225,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
                     false);
                 });
               }, 0);
-            } else if (ui.draggable.hasClass('stream')) {
+            } else if (pipelineElementConfig.type === 'stream') {
               this.checkTopicModel(pipelineElementConfig);
-            } else if (ui.draggable.hasClass('sepa')) {
+            } else if (pipelineElementConfig.type === 'sepa') {
               setTimeout(() => {
                 this.jsplumbService.dataProcessorDropped(
                   pipelineElementConfig.payload.dom,
@@ -236,7 +236,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
                   false
                 );
               }, 10);
-            } else if (ui.draggable.hasClass('action')) {
+            } else if (pipelineElementConfig.type === 'action') {
               setTimeout(() => {
                 this.jsplumbService.dataSinkDropped(
                   pipelineElementConfig.payload.dom,

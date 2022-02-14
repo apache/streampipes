@@ -19,20 +19,94 @@
 @import '../../../../scss/_variables.scss';
 
 .menu-text-color {
-    color: var(--color-accent);
-    display: flex;
-    align-items: center;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
 }
 
 .icon-stand {
-    max-height: 200px;
-    padding-bottom: 1%;
-    overflow-y: auto;
-    border-top: 0px;
-    background: var(--color-bg-1);
+  max-height: calc(100vh - 118px);
+  overflow-y: auto;
+  background: var(--color-bg-1);
+  margin-top: 5px;
 }
 
 .border {
-    border: 1px solid var(--color-bg-2);
-    border-top: 0;
+  border: 1px solid var(--color-bg-3);
+}
+
+.pe-row {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+}
+
+
+.pe-row:nth-child(even) {
+  background-color: var(--color-bg-1);
+}
+
+.pe-row:nth-child(odd) {
+  background-color: var(--color-bg-0);
+}
+
+.pe-row:hover {
+  background-color: var(--color-bg-2);
+  cursor: pointer;
+}
+
+.panel-header {
+  padding: 3px;
+}
+
+.panel-title {
+  font-weight: 400;
+  padding-left: 5px;
+}
+
+.panel-options {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.panel-content {
+  margin-top: 10px;
+}
+
+.sort-selected {
+  padding: 3px;
+  background: var(--color-accent);
+  color: white;
+}
+
+.sort-unselected {
+  padding: 3px;
+  color: var(--color-accent);
+}
+
+.panel-outer {
+  margin-bottom: 10px;
+  margin-left: 0;
+  margin-right: 0px;
+  border-right: 1px solid var(--color-bg-3);
+  border-bottom: 1px solid var(--color-bg-3);
+  border-top: 1px solid var(--color-bg-3);
+}
+
+.group-outer {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.group-title {
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 3px;
+  font-size: small;
+  background: var(--color-primary);
+}
+
+.sort-option {
+  cursor: pointer;
 }

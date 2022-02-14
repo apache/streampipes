@@ -37,6 +37,12 @@ body {
   font-family: 'Roboto', 'Arial', sans-serif !important;
   height: auto !important;
   width: 100%;
+
+  --color-set: #{$sp-color-set};
+  --color-stream: #{$sp-color-stream};
+  --color-processor: #{$sp-color-processor};
+  --color-sink: #{$sp-color-sink};
+  --color-tab-border: var(--color-bg-3);
 }
 
 pre.version {
@@ -892,6 +898,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   /* 	border-bottom: 2px solid rgb(63,81,181); */
   color: black;
   background: var(--color-bg-1);
+  border-bottom: 1px solid var(--color-bg-3);
   padding: 0px;
   /* 	margin-top: 1%;  */
 }

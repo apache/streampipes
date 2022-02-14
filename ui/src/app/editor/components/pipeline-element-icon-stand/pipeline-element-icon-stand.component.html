@@ -16,60 +16,97 @@
   ~
   -->
 <div fxFlex="100" fxLayout="column" class="border">
-    <div class="editorIconStandOptions" style="padding:0px;">
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start" style="padding-top:2px;padding-left:10px;">
-
+    <div class="editorIconStandOptions sp-bg-lightgray page-container-nav" style="padding:0px;">
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" style="padding-left:5px;">
             <div fxLayoutAlign="start center" fxLayout="row">
-                <div fxLayout="row" style="margin-right: 5px">
+                <div fxLayout="row" fxLayoutAlign="start center">
                     <i class="material-icons sp-accent">search</i>
-                    <input type="text" (keyup)="applyFilter()" [(ngModel)]="elementFilter" placeholder="Find Element"
+                    <input type="text" (keyup)="makeDraggable()" [(ngModel)]="elementFilter" placeholder="Find Element"
                            style="border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
-                </div>
-                <div fxLayout="row">
-                    <button mat-button [matMenuTriggerFor]="menu"><div class="menu-text-color"><i class="material-icons">list</i>&nbsp;Filter by category</div></button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="selectAllOptions()">
-                            <div class="menu-text-color"><i class="material-icons">done</i>&nbsp;Select all</div>
-                        </button>
-                        <button mat-menu-item (click)="deselectAllOptions()">
-                            <div class="menu-text-color"><i class="material-icons">clear</i>&nbsp;Deselect all</div>
-                        </button>
-                        <mat-divider></mat-divider>
-                        <button (click)="toggleOption(option)" mat-menu-item *ngFor="let option of currentCategories">
-                            <div class="menu-text-color" *ngIf="optionSelected(option)">
-                                <i class="material-icons">visibility</i>&nbsp;{{option.label}}
-                            </div>
-                            <div  class="menu-text-color" *ngIf="!optionSelected(option)">
-                                <i class="material-icons">visibility_off</i>&nbsp;{{option.label}}
-                            </div>
-                        </button>
-                    </mat-menu>
+                    <button mat-button
+                            mat-icon-button
+                            color="accent"
+                            (click)="startCreatePipelineTour()"
+                            [matTooltip]="'Tutorial'" style="margin-right: 5px;">
+                        <i class="material-icons">
+                            school
+                        </i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-    <div flex id="editor-icon-stand" class="icon-stand" *ngIf="currentlyFilteredElements">
-        <span matTooltip="{{element.name}}" [matTooltipPosition]="'above'" [matTooltipClass]="tooltip" id="{{ element.appId }}" (mouseenter)="updateMouseOver(element.name)"
-              (mouseleave)="updateMouseOver('')"
-              *ngFor="let element of currentlyFilteredElements"
-              class="draggable-icon tt"
-              [attr.data-pe]="element.elementId"
-              [ngClass]="activeCssClass">
-            <span id="container" style="position:relative;display:block;width:80px;height:80px;">
-            <pipeline-element
-                    id="pe-icon-stand-{{ element.appId }}"
-                    style="margin-left:-3%" [iconStandSize]="true"
-                    [attr.data-cy]="'sp-pipeline-element-' + element.name.toLowerCase().replaceAll(' ', '_')"
-                    [pipelineElement]="element"
-                              [preview]="false"></pipeline-element>
-                <span style="display:block;width:100%;height:100%;position:absolute; top:0; left:0;"
-                      *ngIf="currentElementName===element.name">
-                    <span class="help-button-icon-stand" style="z-index:10"><button mat-button mat-icon-button
-                            (click)="openHelpDialog(element)"
-                            style="margin:0px;font-size:20px;">?</button>
-                    </span>
-                </span>
-            </span>
-        </span>
+    <div id="editor-icon-stand"
+         class="icon-stand"
+         *ngIf="allElements">
+        <div fxFlex="100"
+             fxLayout="column">
+            <div *ngFor="let availableType; let i = index of availableTypes"
+                 fxLayout="column"
+                 class="panel-outer">
+                <div class="panel-header"
+                     fxLayout="row"
+                     fxLayoutAlign="start center"
+                     [ngStyle]="{background: 'var(--color-bg-2)'}">
+                    <div class="panel-title"
+                         fxLayoutAlign="start center">
+                        {{availableType.title}}
+                    </div>
+                    <span fxFlex>
+                        </span>
+                    <button mat-icon-button
+                            (click)="toggleOpen(availableType)"
+                            *ngIf="!availableType.open">
+                        <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <button mat-icon-button
+                            (click)="toggleOpen(availableType)"
+                            *ngIf="availableType.open">
+                        <mat-icon>expand_less</mat-icon>
+                    </button>
+                </div>
+                <div fxFlex="100"
+                     fxLayout="column"
+                     *ngIf="availableType.open" class="panel-content">
+                    <div fxLayout="row"
+                         fxLayoutAlign="end center"
+                         class="panel-options"
+                         *ngIf="!(availableType.filters[0] === 1)">
+                        <small>Sort:&nbsp;<a (click)="changeSorting(availableType, 'group')"
+                                             class="sort-option"
+                                             [ngClass]="availableType.sort === 'group' ? 'sort-selected' : 'sort-unselected'">Group</a>&nbsp;|&nbsp;
+                            <a (click)="changeSorting(availableType, 'name')"
+                               class="sort-option"
+                               [ngClass]="availableType.sort === 'name' ? 'sort-selected' : 'sort-unselected'">Name</a></small>
+                    </div>
+                    <div fxFlex="100"
+                         fxLayout="column"
+                         *ngIf="availableType.sort === 'name'">
+                        <div fxLayout="column"
+                             fxFlex="100"
+                             *ngFor="let element of allElements | pipelineElementType:availableType.filters | pipelineElementName:elementFilter"
+                             class="pe-row">
+                            <sp-pe-icon-stand-row [element]="element" fxFlex="100"></sp-pe-icon-stand-row>
+                        </div>
+                    </div>
+                    <div fxFlex="100"
+                         fxLayout="column"
+                         *ngIf="availableType.sort === 'group' && categoriesReady">
+                        <div *ngFor="let category of allCategories.get(availableType.filters[0])"
+                             fxLayout="column">
+                            <div class="group-outer">
+                                <span class="group-title">{{category.label}}</span>
+                            </div>
+                            <div fxLayout="column"
+                                 fxFlex="100"
+                                 *ngFor="let element of allElements | pipelineElementType:availableType.filters | pipelineElementName:elementFilter | pipelineElementGroup:category"
+                                 class="pe-row">
+                                <sp-pe-icon-stand-row [element]="element" fxFlex="100"></sp-pe-icon-stand-row>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

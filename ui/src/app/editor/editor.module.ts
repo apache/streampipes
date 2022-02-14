@@ -67,6 +67,11 @@ import { PipelineElementPreviewComponent } from './components/pipeline-element-p
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
 import { PipelineStyleService } from './services/pipeline-style.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { PipelineElementIconStandRowComponent } from './components/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component';
+import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
+import { PipelineElementNameFilterPipe } from "./services/pipeline-element-name-filter.pipe";
+import { PipelineElementGroupFilterPipe } from "./services/pipeline-element-group-filter.pipe";
+
 
 @NgModule({
   imports: [
@@ -102,10 +107,14 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
     PipelineElementDiscoveryComponent,
     PipelineElementDocumentationComponent,
     PipelineElementIconStandComponent,
+    PipelineElementIconStandRowComponent,
+    PipelineElementGroupFilterPipe,
+    PipelineElementNameFilterPipe,
     PipelineElementOptionsComponent,
     PipelineElementPreviewComponent,
     PipelineElementRecommendationComponent,
     PipelineElementTemplateConfigComponent,
+    PipelineElementTypeFilterPipe,
     PipelineComponent,
     PropertySelectionComponent,
     SavePipelineComponent,

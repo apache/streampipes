@@ -27,12 +27,12 @@ import {
   PipelineElementRecommendationMessage,
   PipelineModificationMessage,
   PipelinePreviewModel,
+  PlatformServicesCommons,
   SpDataSet,
-  SpDataStream,
-  PlatformServicesCommons
+  SpDataStream
 } from '@streampipes/platform-services';
 import { Observable, Subject } from 'rxjs';
-import { PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
+import { PeCategory, PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
 import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
 import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
 import { HelpComponent } from '../dialog/help/help.component';
@@ -106,16 +106,19 @@ export class EditorService {
       }
     }
 
-    getEpCategories() {
-        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/ep');
+    getEpCategories(): Observable<PeCategory[]> {
+        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/ep')
+          .pipe(map(response => response as PeCategory[]));
     }
 
-    getEpaCategories() {
-        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/epa');
+    getEpaCategories(): Observable<PeCategory[]> {
+        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/epa')
+          .pipe(map(response => response as PeCategory[]));
     }
 
-    getEcCategories() {
-        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/ec');
+    getEcCategories(): Observable<PeCategory[]> {
+        return this.http.get(this.platformServicesCommons.apiBasePath + '/categories/ec')
+          .pipe(map(response => response as PeCategory[]));
     }
 
     updateCachedPipeline(rawPipelineModel: any) {
