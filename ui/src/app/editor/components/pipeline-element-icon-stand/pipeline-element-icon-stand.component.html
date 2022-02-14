@@ -21,8 +21,20 @@
             <div fxLayoutAlign="start center" fxLayout="row">
                 <div fxLayout="row" fxLayoutAlign="start center">
                     <i class="material-icons sp-accent">search</i>
-                    <input type="text" (keyup)="makeDraggable()" [(ngModel)]="elementFilter" placeholder="Find Element"
-                           style="border: none;border-bottom: solid 2px rgb(27, 20, 100);">&nbsp;
+                    <mat-form-field floatLabel="never" color="accent">
+                        <mat-label>Find element</mat-label>
+                        <input matInput
+                               type="text"
+                               (keyup)="makeDraggable()"
+                               placeholder="Find element"
+                               [(ngModel)]="elementFilter">
+                        <button *ngIf="elementFilter"
+                                matSuffix
+                                mat-icon-button
+                                aria-label="Find element" (click)="clearInput()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
                     <button mat-button
                             mat-icon-button
                             color="accent"

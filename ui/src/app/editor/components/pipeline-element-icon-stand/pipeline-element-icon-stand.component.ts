@@ -144,4 +144,9 @@ export class PipelineElementIconStandComponent implements OnInit, AfterViewInit 
     this.makeDraggable();
   }
 
+  clearInput() {
+    this.elementFilter = '';
+    this.makeDraggable();
+  }
+
 }
