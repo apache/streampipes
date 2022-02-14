@@ -60,14 +60,20 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
               staticProperties);
 
       if (mappingPropertyOpt.isPresent()) {
-        Optional<EventProperty> eventPropertyOpt = findEventProperty(mappingPropertyOpt.get().getSelectedProperty()
-                , inSchema
-                .getEventProperties());
+        MappingPropertyUnary mappingProperty = mappingPropertyOpt.get();
+        String selectedProperty = mappingProperty.getSelectedProperty();
 
-        if (eventPropertyOpt.isPresent()) {
-          EventProperty eventProperty = eventPropertyOpt.get();
-          modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(cloneEp(eventProperty), to,
-                  staticProperties));
+        if (selectedProperty != null) {
+          Optional<EventProperty> eventPropertyOpt = findEventProperty(
+                  mappingPropertyOpt.get().getSelectedProperty(),
+                  inSchema.getEventProperties()
+          );
+
+          if (eventPropertyOpt.isPresent()) {
+            EventProperty eventProperty = eventPropertyOpt.get();
+            modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(cloneEp(eventProperty), to,
+                    staticProperties));
+          }
         }
       }
     });
