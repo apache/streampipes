@@ -22,7 +22,7 @@ export default {
         steps: [
             {
                 stepId: 'step-1',
-                title: 'Welcome to StreamPipes!',
+                title: 'Welcome!',
                 classes: 'shepherd shepherd-welcome',
                 text: '<p>This tour will teach you how to create your first pipeline. You will learn how to select streams, how to connect data processors and sinks and how to start a pipeline.</p> Click <b>next</b> to continue.',
                 buttons: [
@@ -33,9 +33,9 @@ export default {
             {
                 stepId: 'step-2',
                 title: 'Pipeline Element Selection',
-                text: '<p>Let\'s start!</p> <p>This is the <b>Pipeline Element Selection</b> panel. Here you can select pipeline element types. The current panel, data streams, shows a list of currently available streams.</p>',
-                attachToElement: '#peType>mat-tab-group>mat-tab-header>div.mat-tab-label-container>div>div>div:nth-child(2)',
-                attachPosition: 'bottom',
+                text: '<p>Let\'s start!</p> <p>This is the <b>Pipeline Element Selection</b> panel. Here you can select and use all available pipeline elements.</p>',
+                attachToElement: '#editor-icon-stand',
+                attachPosition: 'left',
                 buttons: [
                     'cancel',
                     'next'
@@ -44,8 +44,8 @@ export default {
             {
                 stepId: 'step-3',
                 title: 'Selecting data streams',
-                text: 'The first element of a pipeline is a data stream, which produces data you\'d like to transform. <p>To select a stream, drag and drop the stream named <b>Flow Rate 1</b> to the assembly area below.</p>',
-                attachToElement: '#pe-icon-stand-org\\.apache\\.streampipes\\.sources\\.simulator\\.flowrate1',
+                text: 'The first element of a pipeline is a data stream, which produces data you\'d like to transform. <p>To select a stream, drag and drop the stream named <b>Flow Rate 1</b> to the assembly area on the right.</p>',
+                attachToElement: '#org\\.apache\\.streampipes\\.sources\\.simulator\\.flowrate1',
                 attachPosition: 'left',
                 buttons: [
                     'cancel',
@@ -65,18 +65,19 @@ export default {
             {
                 stepId: 'step-5',
                 title: 'Switching between pipeline element types',
-                text: 'No we will add a data processor. Select the data processor tab to see a list of currently available processors.',
-                attachToElement: '#peType>mat-tab-group>mat-tab-header>div.mat-tab-label-container>div>div>div:nth-child(3)',
-                attachPosition: 'bottom',
+                text: 'No we will add a data processor. This is the data processor list which shows all currently available data processors.<p>Click <b>Next</b> to continue.</p>',
+                attachToElement: '#panel-2',
+                attachPosition: 'left',
                 buttons: [
-                    'cancel'
+                    'cancel',
+                    'next'
                 ]
             },
             {
                 stepId: 'step-6',
                 title: 'Selecting data processors',
-                text: '<p>Now you can see a variety of available data processors.</p><p>Processors can provide simple capabilities such as filters or aggregations, but can also provide more advanced capabilities such as trend and pattern detection or even pre-trained neural networks.</p><p>Select the processor called <b>Numerical Filter</b> and move it to the assembly area.</p>',
-                attachToElement: '#pe-icon-stand-org\\.apache\\.streampipes\\.processors\\.filters\\.jvm\\.numericalfilter',
+                text: '<p>Processors can provide simple capabilities such as filters or aggregations, but can also provide more advanced capabilities such as trend and pattern detection or even pre-trained neural networks.</p><p>Select the processor called <b>Numerical Filter</b> and move it to the assembly area.</p>',
+                attachToElement: '#org\\.apache\\.streampipes\\.processors\\.filters\\.jvm\\.numericalfilter',
                 attachPosition: 'right',
                 buttons: [
                     'cancel'
@@ -105,18 +106,19 @@ export default {
             {
                 stepId: 'step-9',
                 title: 'Selecting data sinks',
-                text: '<p>What\'s missing?</p><p>Every pipeline needs a data sink. Sinks define what to do with the output of your pipeline and can be visualizations, notifications, or can trigger third party components or even actuators.</p><p>Click the tab above to see available data sinks.</p>',
-                attachToElement: '#peType>mat-tab-group>mat-tab-header>div.mat-tab-label-container>div>div>div:nth-child(4)',
-                attachPosition: 'bottom',
+                text: '<p>What\'s missing?</p><p>Every pipeline needs a data sink. Sinks define what to do with the output of your pipeline and can be visualizations, notifications, or can trigger third party components or even actuators.</p><p>Click <b>Next</b> to continue.</p>',
+                attachToElement: '#panel-3',
+                attachPosition: 'left',
                 buttons: [
-                    'cancel'
+                    'cancel',
+                    'next'
                 ]
             },
             {
                 stepId: 'step-10',
                 title: 'Finish Pipeline',
-                text: '<p>Almost there!</p>Select the <b>Dashboard</b> sink and connect the <b>Numerical Filter</b> to the Dashboard. Enter any visualization name in the configuration menu.</p>',
-                attachToElement: '#pe-icon-stand-org\\.apache\\.streampipes\\.sinks\\.internal\\.jvm\\.dashboard',
+                text: '<p>Almost there!</p>Select the <b>Data Lake</b> sink and connect the <b>Numerical Filter</b> to the Data Lake sink. Enter any storage name in the configuration menu.</p>',
+                attachToElement: '#org\\.apache\\.streampipes\\.sinks\\.internal\\.jvm\\.datalake',
                 attachPosition: 'left',
                 buttons: [
                     'cancel'
@@ -126,7 +128,7 @@ export default {
                 stepId: 'step-11',
                 title: 'Save Pipeline',
                 text: '<p>Great!</p><p>Your first pipeline is complete. No we\'re ready to start the pipeline.</p><p>Click the <b>Save</b> icon to open the save dialog.</p>',
-                attachToElement: '.assemblyOptions>div>button:nth-of-type(1)',
+                attachToElement: '.pipeline-assembly-options>div>button:nth-of-type(1)',
                 attachPosition: 'left',
                 buttons: [
                     'cancel'

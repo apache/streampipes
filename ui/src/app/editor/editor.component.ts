@@ -28,6 +28,7 @@ import { ShepherdService } from '../services/tour/shepherd.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { zip } from 'rxjs';
+import { AppConstants } from "../services/app.constants";
 
 @Component({
   selector: 'editor',
@@ -45,7 +46,7 @@ export class EditorComponent implements OnInit {
 
   requiredStreamForTutorialAppId: any = 'org.apache.streampipes.sources.simulator.flowrate1';
   requiredProcessorForTutorialAppId: any = 'org.apache.streampipes.processors.filters.jvm.numericalfilter';
-  requiredSinkForTutorialAppId: any = 'org.apache.streampipes.sinks.internal.jvm.dashboard';
+  requiredSinkForTutorialAppId: any = 'org.apache.streampipes.sinks.internal.jvm.datalake';
   missingElementsForTutorial: any = [];
 
   isTutorialOpen = false;
@@ -55,7 +56,8 @@ export class EditorComponent implements OnInit {
               private authService: AuthService,
               private dialogService: DialogService,
               private shepherdService: ShepherdService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private appConstants: AppConstants) {
   }
 
   ngOnInit() {
@@ -86,7 +88,7 @@ export class EditorComponent implements OnInit {
         this.isTutorialOpen = true;
         this.dialogService.open(WelcomeTourComponent, {
           panelType: PanelType.STANDARD_PANEL,
-          title: 'Welcome to StreamPipes',
+          title: 'Welcome to ' + this.appConstants.APP_NAME,
           data: {
             'userInfo': currentUser
           }
