@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.value.change;
 
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -42,6 +43,7 @@ public class ChangedValueDetectionController extends StandaloneEventProcessingDe
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.changed-value")
+            .category(DataProcessorType.VALUE_OBSERVER)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder.create()

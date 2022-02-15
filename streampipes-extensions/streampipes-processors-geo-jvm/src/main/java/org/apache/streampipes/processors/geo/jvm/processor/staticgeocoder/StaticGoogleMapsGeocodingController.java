@@ -41,7 +41,7 @@ public class StaticGoogleMapsGeocodingController extends StandaloneEventProcessi
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.geo.jvm.staticgeocoding")
-            .category(DataProcessorType.ENRICH)
+            .category(DataProcessorType.GEO)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

@@ -44,7 +44,7 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.couchdb")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
+            .category(DataSinkType.DATABASE)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

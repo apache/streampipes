@@ -49,7 +49,7 @@ public class SpeedCalculatorController extends StandaloneEventProcessingDeclarer
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.processor" +
             ".speed")
-            .category(DataProcessorType.ALGORITHM)
+            .category(DataProcessorType.GEO)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

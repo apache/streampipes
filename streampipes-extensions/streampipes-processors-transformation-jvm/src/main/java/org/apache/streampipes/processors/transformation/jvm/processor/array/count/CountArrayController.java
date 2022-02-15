@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.array.count;
 
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -42,6 +43,7 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.count-array")
+            .category(DataProcessorType.COUNT_OPERATOR)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(

@@ -51,7 +51,7 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listfilter")
             .withLocales(Locales.EN)
-            .category(DataProcessorType.PATTERN_DETECT)
+            .category(DataProcessorType.FILTER)
             .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId

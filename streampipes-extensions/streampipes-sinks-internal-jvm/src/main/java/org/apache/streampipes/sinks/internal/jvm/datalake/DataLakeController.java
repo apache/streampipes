@@ -43,7 +43,7 @@ public class DataLakeController extends StandaloneEventSinkDeclarer<DataLakePara
     return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.datalake")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
+            .category(DataSinkType.INTERNAL)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
                     EpRequirements.timestampReq(),
                     Labels.withId(TIMESTAMP_MAPPING_KEY),

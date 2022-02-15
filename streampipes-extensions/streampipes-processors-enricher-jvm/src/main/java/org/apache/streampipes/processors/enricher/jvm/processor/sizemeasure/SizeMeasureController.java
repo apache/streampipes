@@ -41,7 +41,7 @@ public class SizeMeasureController extends StandaloneEventProcessingDeclarer<Siz
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.sizemeasure")
-            .category(DataProcessorType.ENRICH)
+            .category(DataProcessorType.STRUCTURE_ANALYTICS)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

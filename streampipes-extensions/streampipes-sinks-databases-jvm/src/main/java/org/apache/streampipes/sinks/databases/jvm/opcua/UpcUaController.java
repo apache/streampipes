@@ -45,7 +45,7 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
+            .category(DataSinkType.FORWARD)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),

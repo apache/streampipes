@@ -48,7 +48,7 @@ public class StaticDistanceCalculatorController extends StandaloneEventProcessin
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.processor" +
             ".staticdistancecalculator")
-            .category(DataProcessorType.FILTER)
+            .category(DataProcessorType.GEO)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

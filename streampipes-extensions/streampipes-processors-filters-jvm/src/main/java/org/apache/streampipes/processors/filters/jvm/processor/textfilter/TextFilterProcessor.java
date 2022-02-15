@@ -51,7 +51,7 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.textfilter")
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
-            .category(DataProcessorType.FILTER)
+            .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredPropertyWithUnaryMapping(EpRequirements

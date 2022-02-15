@@ -19,6 +19,7 @@
 package org.apache.streampipes.sinks.brokers.jvm.rest;
 
 
+import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
@@ -38,6 +39,7 @@ public class RestController extends StandaloneEventSinkDeclarer<RestParameters> 
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rest")
+            .category(DataSinkType.FORWARD)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION)
             .requiredStream(StreamRequirementsBuilder

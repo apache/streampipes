@@ -42,7 +42,7 @@ public class ReverseGeocodingController extends StandaloneEventProcessingDeclare
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.geo.jvm.reversegeocoding")
-            .category(DataProcessorType.ENRICH)
+            .category(DataProcessorType.GEO)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

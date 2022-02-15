@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
-import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
-
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -33,6 +31,8 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
+
 public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer<ImageEnrichmentParameters> {
 
   @Override
@@ -40,7 +40,7 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-enricher")
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
-            .category(DataProcessorType.FILTER)
+            .category(DataProcessorType.IMAGE_PROCESSING)
             .requiredStream(RequiredBoxStream.getBoxStream())
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.stringEp(Labels.empty(), "image", "https://image.com")

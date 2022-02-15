@@ -41,7 +41,7 @@ public class NotificationController extends StandaloneEventSinkDeclarer<Notifica
     return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.notification")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.NOTIFICATION)
+            .category(DataSinkType.INTERNAL, DataSinkType.NOTIFICATION)
             .requiredStream(StreamRequirementsBuilder
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())

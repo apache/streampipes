@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.kafka;
 
+import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
@@ -52,6 +53,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka")
+            .category(DataSinkType.MESSAGING)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder

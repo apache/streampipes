@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state;
 
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -42,6 +43,7 @@ public class StringToStateController extends StandaloneEventProcessingDeclarer<S
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state")
+            .category(DataProcessorType.STRING_OPERATOR)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()

@@ -39,7 +39,7 @@ public class JSEvalController extends StandaloneEventProcessingDeclarer<JSEvalPa
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.jseval")
-                .category(DataProcessorType.ENRICH)
+                .category(DataProcessorType.SCRIPTING)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .requiredStream(StreamRequirementsBuilder

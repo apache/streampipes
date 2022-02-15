@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.value.duration;
 
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -52,6 +53,7 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.duration-value")
+            .category(DataProcessorType.TIME)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()

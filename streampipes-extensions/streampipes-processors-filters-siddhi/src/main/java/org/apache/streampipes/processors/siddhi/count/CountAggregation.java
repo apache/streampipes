@@ -50,7 +50,7 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.count")
-            .category(DataProcessorType.AGGREGATE)
+            .category(DataProcessorType.COUNT_OPERATOR)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

@@ -52,7 +52,7 @@ public class RedisController extends StandaloneEventSinkDeclarer<RedisParameters
         return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.redis")
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .category(DataSinkType.STORAGE)
+                .category(DataSinkType.DATABASE)
                 .requiredStream(StreamRequirementsBuilder
                         .create()
                         .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),

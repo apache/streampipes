@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.sinks.databases.jvm.mysql;
 
+import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
@@ -42,6 +43,7 @@ public class MysqlController extends StandaloneEventSinkDeclarer<MysqlParameters
     @Override
     public DataSinkDescription declareModel() {
         return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.mysql")
+                .category(DataSinkType.DATABASE)
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .requiredStream(StreamRequirementsBuilder

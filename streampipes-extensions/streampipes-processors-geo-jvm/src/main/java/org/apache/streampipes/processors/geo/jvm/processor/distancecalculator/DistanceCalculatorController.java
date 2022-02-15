@@ -44,7 +44,7 @@ public class DistanceCalculatorController extends StandaloneEventProcessingDecla
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.processor.distancecalculator")
-            .category(DataProcessorType.FILTER)
+            .category(DataProcessorType.GEO)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

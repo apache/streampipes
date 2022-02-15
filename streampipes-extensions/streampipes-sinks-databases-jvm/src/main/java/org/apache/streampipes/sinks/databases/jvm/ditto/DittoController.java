@@ -47,9 +47,9 @@ public class DittoController extends StandaloneEventSinkDeclarer<DittoParameters
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.ditto")
+            .category(DataSinkType.FORWARD)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithNaryMapping(
                     EpRequirements.anyProperty(),
                     Labels.withId(SELECTED_FIELDS_KEY),

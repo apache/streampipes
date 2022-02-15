@@ -18,6 +18,7 @@
 package org.apache.streampipes.sinks.brokers.jvm.mqtt;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.staticproperty.Option;
@@ -68,6 +69,7 @@ public class MqttPublisherSink extends StreamPipesDataSink {
     @Override
     public DataSinkDescription declareModel() {
         return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.mqtt")
+                .category(DataSinkType.MESSAGING)
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .requiredStream(StreamRequirementsBuilder.any())

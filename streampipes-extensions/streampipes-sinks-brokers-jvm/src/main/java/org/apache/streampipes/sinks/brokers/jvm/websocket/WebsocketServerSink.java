@@ -19,6 +19,7 @@
 package org.apache.streampipes.sinks.brokers.jvm.websocket;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
@@ -44,6 +45,7 @@ public class WebsocketServerSink extends StreamPipesDataSink {
     @Override
     public DataSinkDescription declareModel() {
         return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket")
+                .category(DataSinkType.MESSAGING)
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .requiredStream(StreamRequirementsBuilder

@@ -45,7 +45,7 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.qrcode")
-            .category(DataProcessorType.FILTER)
+            .category(DataProcessorType.IMAGE_PROCESSING)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements

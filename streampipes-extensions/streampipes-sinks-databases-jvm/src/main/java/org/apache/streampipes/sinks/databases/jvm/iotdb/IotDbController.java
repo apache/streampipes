@@ -46,7 +46,7 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.iotdb")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
+            .category(DataSinkType.DATABASE)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredPropertyWithUnaryMapping(
                             EpRequirements.timestampReq(),

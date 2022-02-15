@@ -19,6 +19,7 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.fieldrename;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
@@ -41,6 +42,7 @@ public class FiledRenameProcessor extends StreamPipesDataProcessor {
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldrename")
+                .category(DataProcessorType.TRANSFORM)
                 .withLocales(Locales.EN)
                 .withAssets(Assets.DOCUMENTATION)
                 .requiredStream(StreamRequirementsBuilder

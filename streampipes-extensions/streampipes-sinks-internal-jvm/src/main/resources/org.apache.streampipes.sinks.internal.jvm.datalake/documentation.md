@@ -26,7 +26,8 @@
 
 ## Description
 
-Stores events in an InfluxDB.
+Stores events in the internal data lake so that data can be visualized in the live dashboard or in the data explorer.
+Simply create a pipeline with a data lake sink, switch to one of the data exploration tool and start exploring your data!
 
 ***
 
@@ -39,41 +40,7 @@ This sink requires an event that provides a timestamp value (a field that is mar
 
 ## Configuration
 
-### Hostname
+### Index
 
-The hostname/URL of the InfluxDB instance. (Include http(s)://).
+The name of the storage group of this event. 
 
-### Port
-
-The port of the InfluxDB instance.
-
-### Database Name
-
-The name of the database where events will be stored.
-
-### Measurement Name
-
-The name of the Measurement where events will be stored (will be created if it does not exist).
-
-### Username
-
-The username for the InfluxDB Server.
-
-### Password
-
-The password for the InfluxDB Server.
-
-### Timestamp Field
-
-The field which contains the required timestamp.
-
-### Buffer Size
-
-Indicates how many events are written into a buffer, before they are written to the database.
-
-### Maximum Flush
-
-The maximum waiting time for the buffer to fill the Buffer size before it will be written to the database in ms.
-## Output
-
-(not applicable for data sinks)

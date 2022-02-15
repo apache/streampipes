@@ -36,7 +36,7 @@ public class GenericImageClassificationController extends StandaloneEventProcess
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.generic-image-classification")
-            .category(DataProcessorType.FILTER)
+            .category(DataProcessorType.IMAGE_PROCESSING)
             .withAssets(Assets.DOCUMENTATION)
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder

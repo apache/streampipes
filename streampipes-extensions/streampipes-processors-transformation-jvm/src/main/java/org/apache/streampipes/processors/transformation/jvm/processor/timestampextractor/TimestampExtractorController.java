@@ -20,6 +20,7 @@ package org.apache.streampipes.processors.transformation.jvm.processor.timestamp
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -50,6 +51,7 @@ public class TimestampExtractorController extends StandaloneEventProcessingDecla
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.timestampextractor")
+            .category(DataProcessorType.TIME)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION)
             .requiredStream(

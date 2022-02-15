@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.processors.transformation.jvm.processor.task;
 
+import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
@@ -46,6 +47,7 @@ public class TaskDurationController extends StandaloneEventProcessingDeclarer<Ta
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm"
             + ".taskduration")
+            .category(DataProcessorType.TIME)
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
             .requiredStream(StreamRequirementsBuilder.create()

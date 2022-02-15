@@ -50,7 +50,7 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
+            .category(DataSinkType.DATABASE)
             .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
                     EpRequirements.timestampReq(),
                     Labels.withId(TIMESTAMP_MAPPING_KEY),

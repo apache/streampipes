@@ -47,7 +47,7 @@ public class BooleanFilterProcessor extends StreamPipesDataProcessor {
     @Override
     public DataProcessorDescription declareModel() {
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.processor.booleanfilter")
-                .category(DataProcessorType.TRANSFORM)
+                .category(DataProcessorType.FILTER, DataProcessorType.BOOLEAN_OPERATOR)
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .requiredSingleValueSelection(Labels.withId(VALUE),

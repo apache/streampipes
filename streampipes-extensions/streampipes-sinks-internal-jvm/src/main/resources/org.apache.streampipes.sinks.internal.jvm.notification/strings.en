@@ -1,5 +1,5 @@
 org.apache.streampipes.sinks.internal.jvm.notification.title=Notification
-org.apache.streampipes.sinks.internal.jvm.notification.description=Publish a notification to the StreamPipes UI.
+org.apache.streampipes.sinks.internal.jvm.notification.description=Publish a notification directly to the notification pane.
 
 title.title=Notification Title
 title.description=

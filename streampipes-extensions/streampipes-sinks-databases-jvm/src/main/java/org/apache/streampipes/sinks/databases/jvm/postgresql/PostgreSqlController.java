@@ -46,7 +46,7 @@ public class PostgreSqlController extends StandaloneEventSinkDeclarer<PostgreSql
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.postgresql")
             .withLocales(Locales.EN)
             .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
+            .category(DataSinkType.DATABASE)
             .requiredStream(StreamRequirementsBuilder.create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
