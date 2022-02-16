@@ -23,7 +23,6 @@ import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.setup.AutoInstallation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
-import org.apache.streampipes.rest.notifications.NotificationListener;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
@@ -35,15 +34,12 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.servlet.ServletContextListener;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -104,7 +100,6 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
       doInitialSetup();
     }
 
-    new NotificationListener().contextInitialized(null);
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
     healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
@@ -242,17 +237,6 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
             .getPipelineStorageAPI();
   }
 
-  @Bean
-  public ServletListenerRegistrationBean streamPipesNotificationListenerBean() {
-    return listener(new NotificationListener());
-  }
-
-  private ServletListenerRegistrationBean listener(ServletContextListener listener) {
-    ServletListenerRegistrationBean<ServletContextListener> bean =
-            new ServletListenerRegistrationBean<>();
-    bean.setListener(listener);
-    return bean;
-  }
 
   @Override
   protected List<SpServiceTag> getServiceTags() {
