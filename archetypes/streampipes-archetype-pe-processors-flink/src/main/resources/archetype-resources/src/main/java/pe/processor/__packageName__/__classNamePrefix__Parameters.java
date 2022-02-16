@@ -27,6 +27,8 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 public class ${classNamePrefix}Parameters extends EventProcessorBindingParams {
 
   private String exampleText;
+  private static final long serialVersionUID = 1L;
+
 
   public ${classNamePrefix}Parameters(DataProcessorInvocation graph, String exampleText) {
     super(graph);
