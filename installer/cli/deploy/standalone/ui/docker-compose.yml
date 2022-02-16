@@ -21,7 +21,6 @@ services:
       - "80:80"
     depends_on:
       - couchdb
-      - activemq
       - consul
     logging:
       driver: "json-file"
