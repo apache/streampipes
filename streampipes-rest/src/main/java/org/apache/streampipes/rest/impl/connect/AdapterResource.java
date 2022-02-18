@@ -24,6 +24,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -116,13 +117,18 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize(AuthConstants.HAS_DELETE_ADAPTER_PRIVILEGE)
     public Response deleteAdapter(@PathParam("id") String elementId) {
+        List<String> pipelinesUsingAdapter = getPipelinesUsingAdapter(elementId);
 
-        try {
-            managementService.deleteAdapter(elementId);
-            return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
-        } catch (AdapterException e) {
-            LOG.error("Error while deleting adapter with id " + elementId, e);
-            return ok(Notifications.error(e.getMessage()));
+        if (pipelinesUsingAdapter.size() == 0) {
+            try {
+                managementService.deleteAdapter(elementId);
+                return ok(Notifications.success("Adapter with id: " + elementId + " is deleted."));
+            } catch (AdapterException e) {
+                LOG.error("Error while deleting adapter with id " + elementId, e);
+                return ok(Notifications.error(e.getMessage()));
+            }
+        } else {
+            return Response.status(409).entity(pipelinesUsingAdapter).build();
         }
     }
 
@@ -141,6 +147,13 @@ public class AdapterResource extends AbstractAdapterResource<AdapterMasterManage
 
     private AdapterDescription getAdapterDescription(String adapterId) throws AdapterException {
         return managementService.getAdapter(adapterId);
+    }
+
+    private List<String> getPipelinesUsingAdapter(String adapterId) {
+        return StorageDispatcher.INSTANCE
+                .getNoSqlStore()
+                .getPipelineStorageAPI()
+                .getPipelinesUsingAdapter(adapterId);
     }
 
 }

@@ -54,8 +54,16 @@ public class CrudDao {
     return cmd.execute();
   }
 
-  public <T> List<T> findAll(String viewName, Class<T> clazz) {
+  public <T> List<T> findAll(String viewName,
+                             Class<T> clazz) {
     DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClientSupplier, clazz, viewName);
+    return cmd.execute();
+  }
+
+  public <T> List<T> findAll(String viewName,
+                             Class<T> clazz,
+                             boolean ignoreDesignDocuments) {
+    DbCommand<List<T>, T> cmd = new FindAllCommand<>(couchDbClientSupplier, clazz, viewName, ignoreDesignDocuments);
     return cmd.execute();
   }
 

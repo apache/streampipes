@@ -18,6 +18,7 @@
 package org.apache.streampipes.storage.couchdb.dao;
 
 import org.lightcouch.CouchDbClient;
+import org.lightcouch.View;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.function.Supplier;
 public class FindAllCommand<T> extends DbCommand<List<T>, T> {
 
   private String viewName;
+  private boolean ignoreDesignDocuments;
 
   public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
                         Class<T> clazz,
@@ -34,12 +36,25 @@ public class FindAllCommand<T> extends DbCommand<List<T>, T> {
     this.viewName = viewName;
   }
 
+  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
+                        Class<T> clazz,
+                        String viewName,
+                        boolean ignoreDesignDocuments) {
+    this(couchDbClient, clazz, viewName);
+    this.ignoreDesignDocuments = ignoreDesignDocuments;
+  }
+
   @Override
   protected List<T> executeCommand(CouchDbClient couchDbClient) {
-    List<T> allResults = couchDbClient
+    View view = couchDbClient
             .view(viewName)
-            .includeDocs(true)
-            .query(clazz);
+            .includeDocs(true);
+
+    if (ignoreDesignDocuments) {
+      view.endKey("_design");
+    }
+
+    List<T> allResults = view.query(clazz);
 
     return allResults != null ? allResults : Collections.emptyList();
   }

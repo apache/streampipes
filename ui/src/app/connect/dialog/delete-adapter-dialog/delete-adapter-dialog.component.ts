@@ -33,6 +33,8 @@ export class DeleteAdapterDialogComponent {
 
     isInProgress = false;
     currentStatus: any;
+    adapterUsedByPipeline = false;
+    numberOfPipelinesWithAdapter = 0;
 
     constructor(private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
                 private dataMarketplaceService: DataMarketplaceService) {
@@ -48,6 +50,12 @@ export class DeleteAdapterDialogComponent {
 
         this.dataMarketplaceService.deleteAdapter(this.adapter).subscribe(data => {
             this.close(true);
+        }, error => {
+            if (error.status === 409) {
+                this.numberOfPipelinesWithAdapter = error.error.length;
+                this.adapterUsedByPipeline = true;
+                this.isInProgress = false;
+            }
         });
     }
 

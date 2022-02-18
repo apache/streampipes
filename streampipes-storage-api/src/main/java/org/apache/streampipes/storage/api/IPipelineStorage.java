@@ -25,6 +25,8 @@ import java.util.List;
 
 public interface IPipelineStorage {
 
+	List<String> getPipelinesUsingAdapter(String adapterId);
+
 	List<Pipeline> getAllPipelines();
 
 	List<Pipeline> getSystemPipelines();

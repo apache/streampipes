@@ -83,6 +83,7 @@ public class CouchDbInstallationStep extends InstallationStep {
     addConnectionView();
     addNotificationView();
     addLabelView();
+    addPipelineView();
   }
 
   private void addRdfEndpoints() {
@@ -134,6 +135,25 @@ public class CouchDbInstallationStep extends InstallationStep {
     } catch (Exception e) {
       logFailure(PREPARING_NOTIFICATIONS_TEXT, e);
     }
+  }
+
+  private void addPipelineView() {
+    DesignDocument pipelineDocument = prepareDocument("_design/adapters");
+    Map<String, MapReduce> views = new HashMap<>();
+
+    MapReduce adapterFunction = new MapReduce();
+    adapterFunction.setMap("function (doc) {\n" +
+            "  for(var i = 0; i < doc.streams.length; i++) {\n" +
+            "    var stream = doc.streams[i];\n" +
+            "    if (stream.correspondingAdapterId) {\n" +
+            "      emit(stream.correspondingAdapterId, doc._id);\n" +
+            "    }\n" +
+            "  }\n" +
+            "}");
+
+    views.put("used-adapters", adapterFunction);
+    pipelineDocument.setViews(views);
+    Response resp = Utils.getCouchDbPipelineClient().design().synchronizeWithDb(pipelineDocument);
   }
 
   private void addUserView() {

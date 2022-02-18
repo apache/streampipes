@@ -18,7 +18,13 @@
 
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div *ngIf="!isInProgress" fxLayout="column">
+        <div *ngIf="!isInProgress && adapterUsedByPipeline" fxLayout="column">
+            <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
+                <b><h4>This adapter is currently used by {{numberOfPipelinesWithAdapter}} pipeline{{numberOfPipelinesWithAdapter === 1 ? '' : 's'}}.</h4></b>
+                <h5>Delete these pipelines first before deleting the adapter.</h5>
+            </div>
+        </div>
+        <div *ngIf="!isInProgress && !adapterUsedByPipeline" fxLayout="column">
             <div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
                 <b><h4>Do you really want to delete adapter {{adapter.name}}?</h4></b>
                 <b><h5>This operation cannot be undone.</h5></b>
