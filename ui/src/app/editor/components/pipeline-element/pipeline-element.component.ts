@@ -33,8 +33,7 @@ export class PipelineElementComponent implements OnInit {
     showImage: any;
     iconText: any;
 
-    @Input()
-    pipelineElement: PipelineElementUnion;
+    pipelineElement_: PipelineElementUnion;
 
     @Input()
     preview: any;
@@ -55,8 +54,7 @@ export class PipelineElementComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.iconText =  this.elementIconText.getElementIconText(this.pipelineElement.name);
-        this.checkImageAvailable();
+
     }
 
     checkImageAvailable() {
@@ -82,6 +80,17 @@ export class PipelineElementComponent implements OnInit {
         } else {
             return 'width:70px;height:70px;';
         }
+    }
+
+    get pipelineElement() {
+        return this.pipelineElement_;
+    }
+
+    @Input()
+    set pipelineElement(pipelineElement: PipelineElementUnion) {
+        this.pipelineElement_ = pipelineElement;
+        this.iconText =  this.elementIconText.getElementIconText(this.pipelineElement.name);
+        this.checkImageAvailable();
     }
 
 }
