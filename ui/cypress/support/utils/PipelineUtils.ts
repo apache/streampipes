@@ -54,6 +54,7 @@ export class PipelineUtils {
 
   private static selectDataStream(pipelineInput: PipelineInput) {
     // Select a stream
+    cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 }).should('be.visible');
     cy.dataCy('sp-editor-add-pipeline-element').click();
     cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
   }

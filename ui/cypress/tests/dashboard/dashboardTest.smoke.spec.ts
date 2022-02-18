@@ -36,8 +36,8 @@ describe('Test live dashboard', () => {
     const pipelineInput = PipelineBuilder.create(pipelineName)
       .addSource(adapterName)
       .addSink(
-        PipelineElementBuilder.create('dashboard_sink')
-          .addInput('input', 'visualization-name', 'Demo')
+        PipelineElementBuilder.create('data_lake')
+          .addInput('input', 'db_measurement', 'demo')
           .build())
       .build();
 

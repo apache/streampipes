@@ -52,6 +52,6 @@ export class DashboardUtils {
   }
 
   public static validateRawWidgetEvents(amountOfEvents: number) {
-    cy.dataCy('dashboard-raw-item', {timeout: 10000}).should('have.length', amountOfEvents);
+    cy.dataCy('dashboard-raw-item', {timeout: 10000}).its('length').should('be.gte', amountOfEvents);
   }
 }
