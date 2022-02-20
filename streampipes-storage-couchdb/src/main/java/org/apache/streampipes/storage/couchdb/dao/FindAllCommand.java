@@ -51,7 +51,8 @@ public class FindAllCommand<T> extends DbCommand<List<T>, T> {
             .includeDocs(true);
 
     if (ignoreDesignDocuments) {
-      view.endKey("_design");
+      view.endKey("_design0");
+      view.descending(true);
     }
 
     List<T> allResults = view.query(clazz);
