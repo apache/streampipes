@@ -163,6 +163,7 @@ public class CouchDbInstallationStep extends InstallationStep {
             "}");
     views.put("all", allPipelinesFunction);
     allPipelinesDocument.setViews(views);
+    Utils.getCouchDbPipelineClient().design().synchronizeWithDb(allPipelinesDocument);
   }
 
   private void addUserView() {
