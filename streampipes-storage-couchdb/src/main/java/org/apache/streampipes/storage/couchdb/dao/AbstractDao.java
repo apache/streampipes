@@ -55,8 +55,8 @@ public class AbstractDao<T> extends CrudDao {
     return findAll(ALL_DOCS, clazz);
   }
 
-  public List<T> findAll(boolean ignoreDesignDocuments) {
-    return findAll(ALL_DOCS, clazz, ignoreDesignDocuments);
+  public List<T> findAll(String viewName) {
+    return findAll(viewName, clazz);
   }
 
   public T findWithNullIfEmpty(String id) {

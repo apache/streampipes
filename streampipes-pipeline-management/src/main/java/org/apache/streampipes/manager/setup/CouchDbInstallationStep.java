@@ -139,6 +139,7 @@ public class CouchDbInstallationStep extends InstallationStep {
 
   private void addPipelineView() {
     DesignDocument pipelineDocument = prepareDocument("_design/adapters");
+    DesignDocument allPipelinesDocument = prepareDocument("design/pipelines");
     Map<String, MapReduce> views = new HashMap<>();
 
     MapReduce adapterFunction = new MapReduce();
@@ -153,7 +154,15 @@ public class CouchDbInstallationStep extends InstallationStep {
 
     views.put("used-adapters", adapterFunction);
     pipelineDocument.setViews(views);
-    Response resp = Utils.getCouchDbPipelineClient().design().synchronizeWithDb(pipelineDocument);
+    Utils.getCouchDbPipelineClient().design().synchronizeWithDb(pipelineDocument);
+
+
+    MapReduce allPipelinesFunction = new MapReduce();
+    allPipelinesFunction.setMap("function (doc) {\n" +
+            "  emit(doc._id, doc);\n" +
+            "}");
+    views.put("all", allPipelinesFunction);
+    allPipelinesDocument.setViews(views);
   }
 
   private void addUserView() {

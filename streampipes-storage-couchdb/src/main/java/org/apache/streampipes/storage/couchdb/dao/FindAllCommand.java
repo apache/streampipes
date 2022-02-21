@@ -27,7 +27,6 @@ import java.util.function.Supplier;
 public class FindAllCommand<T> extends DbCommand<List<T>, T> {
 
   private String viewName;
-  private boolean ignoreDesignDocuments;
 
   public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
                         Class<T> clazz,
@@ -36,24 +35,11 @@ public class FindAllCommand<T> extends DbCommand<List<T>, T> {
     this.viewName = viewName;
   }
 
-  public FindAllCommand(Supplier<CouchDbClient> couchDbClient,
-                        Class<T> clazz,
-                        String viewName,
-                        boolean ignoreDesignDocuments) {
-    this(couchDbClient, clazz, viewName);
-    this.ignoreDesignDocuments = ignoreDesignDocuments;
-  }
-
   @Override
   protected List<T> executeCommand(CouchDbClient couchDbClient) {
     View view = couchDbClient
             .view(viewName)
             .includeDocs(true);
-
-    if (ignoreDesignDocuments) {
-      view.endKey("_design0");
-      view.descending(true);
-    }
 
     List<T> allResults = view.query(clazz);
 

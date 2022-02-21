@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipelineStorage {
 
   private static final String SYSTEM_USER = "system";
+  private static final String ADAPTER_VIEW = "adapters/used-adapters";
+  private static final String ALL_PIPELINES_VIEW = "pipelines/all";
 
   public PipelineStorageImpl() {
     super(Utils::getCouchDbPipelineClient, Pipeline.class);
@@ -43,7 +45,7 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
     List<JsonObject> pipelinesWithAdapter =
             couchDbClientSupplier
                     .get()
-                    .view("adapters/used-adapters")
+                    .view(ADAPTER_VIEW)
                     .key(adapterId)
                     .query(JsonObject.class);
     return pipelinesWithAdapter.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
@@ -51,7 +53,7 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
 
   @Override
   public List<Pipeline> getAllPipelines() {
-    List<Pipeline> pipelines = findAll(true);
+    List<Pipeline> pipelines = findAll(ALL_PIPELINES_VIEW);
 
     List<Pipeline> result = new ArrayList<>();
     for (Pipeline p : pipelines)
