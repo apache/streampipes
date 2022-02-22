@@ -100,8 +100,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
             parameters.getTimestampField(),
             parameters.getBatchSize(),
             parameters.getFlushDuration(),
-            this.eventSchema,
-            LOG
+            this.eventSchema
     );
   }
 
