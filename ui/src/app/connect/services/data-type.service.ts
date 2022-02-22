@@ -30,6 +30,10 @@ export class DataTypesService {
       url: 'http://www.w3.org/2001/XMLSchema#boolean'
     },
     {
+      label: 'Double - A number, e.g., \'1.25\'',
+      url: 'http://www.w3.org/2001/XMLSchema#double'
+    },
+    {
       label: 'Float - A number, e.g., \'1.25\'',
       url: 'http://www.w3.org/2001/XMLSchema#float'
     }, {
@@ -74,7 +78,11 @@ export class DataTypesService {
   }
 
   isNumeric(uri: string) {
-    const numericDataTypes = ['http://www.w3.org/2001/XMLSchema#float', 'http://www.w3.org/2001/XMLSchema#integer', 'http://www.w3.org/2001/XMLSchema#long'];
+    const numericDataTypes = [
+        'http://www.w3.org/2001/XMLSchema#float',
+        'http://www.w3.org/2001/XMLSchema#double',
+        'http://www.w3.org/2001/XMLSchema#integer',
+        'http://www.w3.org/2001/XMLSchema#long'];
     return numericDataTypes.includes(uri);
   }
 

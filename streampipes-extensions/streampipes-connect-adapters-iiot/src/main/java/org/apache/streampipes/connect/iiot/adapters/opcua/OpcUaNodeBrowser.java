@@ -81,7 +81,7 @@ public class OpcUaNodeBrowser {
     UaNode node = addressSpace.getNode(nodeId);
 
     if (node instanceof BaseDataVariableTypeNode) {
-      UInteger value = UInteger.valueOf(((BaseDataVariableTypeNode) node).getDataType().getType().getValue());
+      UInteger value = (UInteger) ((BaseDataVariableTypeNode) node).getDataType().getIdentifier();
       return new OpcNode(node.getDisplayName().getText(), OpcUaTypes.getType(value), node.getNodeId());
     }
 
