@@ -16,20 +16,9 @@
  *
  */
 
-.title-section {
-  width: 300px;
+@import '../../../../scss/sp/sp-dialog.scss';
+
+.mt-20 {
+  margin-top: 20px;
 }
 
-.appearance-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-}
-
-.appearance-radio-button {
-  margin: 5px;
-}
-
-.ml-15 {
-  margin-left: 15px;
-}

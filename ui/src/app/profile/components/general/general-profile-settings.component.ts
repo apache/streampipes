@@ -22,6 +22,13 @@ import { BasicProfileSettings } from '../basic-profile-settings';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
 import { JwtTokenStorageService } from '../../../services/jwt-token-storage.service';
+import { EditUserDialogComponent } from "../../../configuration/security-configuration/edit-user-dialog/edit-user-dialog.component";
+import { PanelType } from "../../../core-ui/dialog/base-dialog/base-dialog.model";
+import { DialogService } from "../../../core-ui/dialog/base-dialog/base-dialog.service";
+import { DialogRef } from "../../../core-ui/dialog/base-dialog/dialog-ref";
+import { ChangeEmailDialogComponent } from "../../dialog/change-email/change-email-dialog.component";
+import { ChangePasswordDialogComponent } from "../../dialog/change-password/change-password-dialog.component";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'general-profile-settings',
@@ -37,7 +44,9 @@ export class GeneralProfileSettingsComponent extends BasicProfileSettings implem
   constructor(authService: AuthService,
               profileService: ProfileService,
               appConstants: AppConstants,
-              tokenService: JwtTokenStorageService) {
+              tokenService: JwtTokenStorageService,
+              private dialogService: DialogService,
+              private router: Router) {
     super(profileService, appConstants, tokenService, authService);
   }
 
@@ -64,6 +73,41 @@ export class GeneralProfileSettingsComponent extends BasicProfileSettings implem
   updateAppearanceMode() {
     this.profileService.updateAppearanceMode(this.userData.username, this.darkMode).subscribe(response => {
       this.darkModeChanged = true;
+    });
+  }
+
+  openChangeEmailDialog() {
+    const dialogRef = this.dialogService.open(ChangeEmailDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Change email',
+      width: '50vw',
+      data: {
+        'user': this.userData,
+      }
+    });
+
+    this.afterClose(dialogRef);
+  }
+
+  openChangePasswordDialog() {
+    const dialogRef = this.dialogService.open(ChangePasswordDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Change password',
+      width: '50vw',
+      data: {
+        'user': this.userData,
+      }
+    });
+
+    this.afterClose(dialogRef);
+  }
+
+  afterClose(dialogRef: DialogRef<any>) {
+    dialogRef.afterClosed().subscribe(refresh => {
+      if (refresh) {
+        this.authService.logout();
+        this.router.navigate(['login']);
+      }
     });
   }
 

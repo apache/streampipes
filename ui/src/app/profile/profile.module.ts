@@ -18,7 +18,7 @@
 
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
@@ -31,11 +31,14 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { ChangePasswordDialogComponent } from './dialog/change-password/change-password-dialog.component';
+import { ChangeEmailDialogComponent } from './dialog/change-email/change-email-dialog.component';
 
 @NgModule({
   imports: [
     FlexLayoutModule,
     FormsModule,
+    ReactiveFormsModule,
     MatDividerModule,
     MatTabsModule,
     MatButtonModule,
@@ -46,6 +49,8 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
     PlatformServicesModule
   ],
   declarations: [
+    ChangeEmailDialogComponent,
+    ChangePasswordDialogComponent,
     GeneralProfileSettingsComponent,
     ProfileComponent,
     TokenManagementSettingsComponent

@@ -16,20 +16,30 @@
  *
  */
 
-.title-section {
-  width: 300px;
-}
+package org.apache.streampipes.model.client.user;
 
-.appearance-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-}
+public class ChangePasswordRequest {
 
-.appearance-radio-button {
-  margin: 5px;
-}
+  private String existingPassword;
+  private String newPassword;
 
-.ml-15 {
-  margin-left: 15px;
+  public ChangePasswordRequest() {
+
+  }
+
+  public String getNewPassword() {
+    return newPassword;
+  }
+
+  public String getExistingPassword() {
+    return existingPassword;
+  }
+
+  public void setExistingPassword(String existingPassword) {
+    this.existingPassword = existingPassword;
+  }
+
+  public void setNewPassword(String newPassword) {
+    this.newPassword = newPassword;
+  }
 }

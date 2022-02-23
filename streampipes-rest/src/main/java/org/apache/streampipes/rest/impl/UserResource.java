@@ -186,13 +186,71 @@ public class UserResource extends AbstractAuthGuardedRestResource {
                                     UserAccount user) {
     String authenticatedUserId = getAuthenticatedUsername();
     if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
-      Principal existingUser = getPrincipalById(principalId);
-      updateUser((UserAccount) existingUser, user, isAdmin());
+      UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
+      updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
       user.setRev(existingUser.getRev());
       getUserStorage().updateUser(user);
       return ok(Notifications.success("User updated"));
     } else {
       return statusMessage(Notifications.error("User not found"));
+    }
+  }
+
+  @PUT
+  @Path("user/{principalId}/username")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateUsername(@PathParam("principalId") String principalId,
+                                 UserAccount user) {
+    String authenticatedUserId = getAuthenticatedUsername();
+    if (user != null && (authenticatedUserId.equals(principalId) || isAdmin())) {
+      UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
+      try {
+        if (PasswordUtil.validatePassword(user.getPassword(), existingUser.getPassword())) {
+          existingUser.setUsername(user.getUsername());
+          if (getUserStorage().getAllUserAccounts().stream().noneMatch(u -> u.getUsername().equals(user.getUsername()))) {
+            updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
+            getUserStorage().updateUser(existingUser);
+            return ok();
+          } else {
+            return badRequest(Notifications.error("Username already taken"));
+          }
+        } else {
+          return badRequest(Notifications.error("Incorrect password"));
+        }
+      } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        return badRequest();
+      }
+    }
+
+    return Response.status(401).build();
+  }
+
+  @PUT
+  @Path("user/{principalId}/password")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updatePassword(@PathParam("principalId") String principalId,
+                                 ChangePasswordRequest passwordRequest) {
+    String authenticatedUserId = getAuthenticatedUsername();
+    UserAccount existingUser = (UserAccount) getPrincipalById(principalId);
+    if (principalId.equals(authenticatedUserId)  || isAdmin()) {
+      try {
+        String existingPw = passwordRequest.getExistingPassword();
+        if (PasswordUtil.validatePassword(existingPw, existingUser.getPassword())) {
+          String newEncryptedPw = PasswordUtil.encryptPassword(passwordRequest.getNewPassword());
+          updateUser(existingUser, existingUser, isAdmin(), newEncryptedPw);
+          getUserStorage().updateUser(existingUser);
+
+          return ok();
+        } else {
+          return badRequest(Notifications.error("Wrong password"));
+        }
+      } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        return badRequest();
+      }
+    } else {
+      return badRequest(Notifications.error("The user ID does not match the current user."));
     }
   }
 
@@ -231,8 +289,9 @@ public class UserResource extends AbstractAuthGuardedRestResource {
 
   private void updateUser(UserAccount existingUser,
                           UserAccount user,
-                          boolean adminPrivileges) {
-    user.setPassword(existingUser.getPassword());
+                          boolean adminPrivileges,
+                          String property) {
+    user.setPassword(property);
     if (!adminPrivileges) {
       replacePermissions(user, existingUser);
     }

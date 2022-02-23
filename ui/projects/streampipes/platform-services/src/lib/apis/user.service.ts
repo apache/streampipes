@@ -25,6 +25,7 @@ import {
   ServiceAccount,
   UserAccount
 } from '../model/gen/streampipes-model-client';
+import { ChangePasswordRequest } from "../model/user/user.model";
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,15 @@ export class UserService {
 
   public updateUser(user: (UserAccount)): Observable<any> {
     return this.http.put(`${this.usersPath}/user/${user.principalId}`, user);
+  }
+
+  public updateUsername(user: UserAccount): Observable<any> {
+    return this.http.put(`${this.usersPath}/user/${user.principalId}/username`, user);
+  }
+
+  public updatePassword(user: UserAccount,
+                        req: ChangePasswordRequest): Observable<any> {
+    return this.http.put(`${this.usersPath}/user/${user.principalId}/password`, req);
   }
 
   public updateService(user: (ServiceAccount)): Observable<any> {
