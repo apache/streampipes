@@ -23,13 +23,14 @@ import { AppConstants } from '../../../services/app.constants';
 
 @Component({
     selector: 'startup',
-    templateUrl: './startup.component.html'
+    templateUrl: './startup.component.html',
+    styleUrls: ['./startup.component.scss']
 })
 export class StartupComponent implements OnInit {
 
     progress = 0;
     currentStep = 0;
-    maxLoadingTimeInSeconds = 300;
+    maxLoadingTimeInSeconds = 100;
     loadingIntervalInSeconds = 1;
 
     constructor(private authService: AuthService,
