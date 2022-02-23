@@ -51,7 +51,7 @@ public class DomainPropertyMatch extends AbstractMatcher<List<URI>, List<URI>> {
 
 	private String buildText(List<URI> requirement) {
 		if (requirement == null || requirement.size() == 0) return "-";
-		else return "Required domain property: " +requirement.get(0).toString();
+		else return requirement.get(0).toString();
 	}
 
 }

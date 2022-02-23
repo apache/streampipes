@@ -20,6 +20,8 @@ package org.apache.streampipes.model.client.matching;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import java.util.Objects;
+
 @TsModel
 public class MatchingResultMessage {
 
@@ -90,5 +92,17 @@ public class MatchingResultMessage {
 	public String toString() {
 		return title + " - " + description + "\n" + "(required: " +requirementSubject + ")";
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MatchingResultMessage that = (MatchingResultMessage) o;
+		return matchingSuccessful == that.matchingSuccessful && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(offerSubject, that.offerSubject) && Objects.equals(requirementSubject, that.requirementSubject) && Objects.equals(reasonText, that.reasonText);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(matchingSuccessful, title, description, offerSubject, requirementSubject, reasonText);
+	}
 }

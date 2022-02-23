@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import java.util.List;
-
 import org.apache.streampipes.model.client.matching.MatchingResultFactory;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.client.matching.MatchingResultType;
+
+import java.util.List;
 
 public abstract class AbstractMatcher<L, R> implements Matcher<L, R>{
 
@@ -33,7 +33,10 @@ public abstract class AbstractMatcher<L, R> implements Matcher<L, R>{
 	}
 	
 	protected void buildErrorMessage(List<MatchingResultMessage> errorLog, String rightSubject) {
-		errorLog.add(MatchingResultFactory.build(matchingResultType, false, rightSubject));
+		MatchingResultMessage message = MatchingResultFactory.build(matchingResultType, false, rightSubject);
+		if (!containsMessage(errorLog, message)) {
+			errorLog.add(message);
+		}
 	}
 	
 	protected void buildErrorMessage(List<MatchingResultMessage> errorLog, MatchingResultType type, String rightSubject) {
@@ -41,4 +44,9 @@ public abstract class AbstractMatcher<L, R> implements Matcher<L, R>{
 	}
 		
 	public abstract boolean match(L offer, R requirement, List<MatchingResultMessage> errorLog);
+
+	private boolean containsMessage(List<MatchingResultMessage> errorLog,
+																	MatchingResultMessage message) {
+		return errorLog.contains(message);
+	}
 }
