@@ -18,12 +18,14 @@
 package org.apache.streampipes.container.extensions;
 
 import org.apache.streampipes.connect.container.worker.init.AdapterServiceResourceProvider;
-import org.apache.streampipes.service.base.rest.BaseResourceConfig;
 import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
 import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
+import org.apache.streampipes.service.base.rest.BaseResourceConfig;
+import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Component

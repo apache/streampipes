@@ -41,6 +41,7 @@ import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
 import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
+import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -98,6 +99,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(Setup.class);
         register(ResetResource.class);
         register(RestorePasswordResource.class);
+        register(ServiceHealthResource.class);
         register(UserResource.class);
         register(Version.class);
         register(PipelineElementAsset.class);

@@ -24,6 +24,7 @@ public class UnauthenticatedInterfaces {
 
   public static Collection<String> get() {
     return Arrays.asList(
+            "/api/svchealth/*",
             "/api/v2/setup/configured",
             "/api/v2/auth/login",
             "/api/v2/auth/register",

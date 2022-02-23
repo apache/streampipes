@@ -26,6 +26,7 @@ public abstract class BaseResourceConfig extends ResourceConfig {
   public BaseResourceConfig() {
     getClassesToRegister()
             .forEach(set -> set.forEach(this::register));
+    register(ServiceHealthResource.class);
   }
 
   public abstract List<List<Class<?>>> getClassesToRegister();

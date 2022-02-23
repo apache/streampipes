@@ -249,6 +249,6 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
 
   @Override
   protected String getHealthCheckPath() {
-    return "/streampipes-backend/";
+    return "/streampipes-backend/api/svchealth/" + AUTO_GENERATED_SERVICE_ID;
   }
 }

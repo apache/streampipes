@@ -33,7 +33,7 @@ public abstract class StreamPipesServiceBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesServiceBase.class);
 
-  protected static final String AUTO_GENERATED_SERVICE_ID = RandomStringUtils.randomAlphanumeric(6);
+  public static final String AUTO_GENERATED_SERVICE_ID = RandomStringUtils.randomAlphanumeric(6);
 
   protected void startStreamPipesService(Class<?> serviceClass,
                                          String serviceGroup,
@@ -74,7 +74,7 @@ public abstract class StreamPipesServiceBase {
   }
 
   protected String getHealthCheckPath() {
-    return "";
+    return "/svchealth/" + AUTO_GENERATED_SERVICE_ID;
   }
 
 }

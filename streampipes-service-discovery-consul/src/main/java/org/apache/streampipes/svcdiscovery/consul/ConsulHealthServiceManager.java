@@ -74,7 +74,7 @@ public enum ConsulHealthServiceManager {
     return activeServices
             .stream()
             .filter(service -> allFiltersSupported(service, filterByTags))
-            .filter(service -> !restrictToHealthy || service.getChecks().get(0).getStatus().equals("passing"))
+            .filter(service -> !restrictToHealthy || service.getChecks().stream().allMatch(check -> check.getStatus().equals("passing")))
             .map(this::makeServiceUrl)
             .collect(Collectors.toList());
   }
