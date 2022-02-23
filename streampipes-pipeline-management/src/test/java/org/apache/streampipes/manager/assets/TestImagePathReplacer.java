@@ -34,7 +34,7 @@ public class TestImagePathReplacer {
 
   private String TEST_CONTENT_REPLACED = "## Numerical Filter\n"
           + "\n"
-          + "<img src=\"streampipes-backend/api/v2/pe/app/assets/logo.png\"/>\n"
+          + "<img src=\"/streampipes-backend/api/v2/pe/app/assets/logo.png\"/>\n"
           + "\n"
           + "## Description\n"
           + "\n"
