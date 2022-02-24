@@ -20,6 +20,7 @@ package org.apache.streampipes.messaging.kafka;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -33,9 +34,7 @@ import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, Runnable,
@@ -44,10 +43,10 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   private String topic;
   private InternalEventProcessor<byte[]> eventProcessor;
   private KafkaTransportProtocol protocol;
-  private String username;
-  private String password;
   private volatile boolean isRunning;
   private Boolean patternTopic = false;
+
+  private List<KafkaConfigAppender> appenders = new ArrayList<>();
 
   private static final Logger LOG = LoggerFactory.getLogger(SpKafkaConsumer.class);
 
@@ -55,26 +54,31 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   }
 
-  public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor) {
-    this(protocol, topic, eventProcessor, null, null);
-  }
-
-  public SpKafkaConsumer(KafkaTransportProtocol protocol, String topic, InternalEventProcessor<byte[]> eventProcessor,
-                         String username, String password) {
+  public SpKafkaConsumer(KafkaTransportProtocol protocol,
+                         String topic,
+                         InternalEventProcessor<byte[]> eventProcessor) {
     this.protocol = protocol;
     this.topic = topic;
     this.eventProcessor = eventProcessor;
     this.isRunning = true;
-    this.username = username;
-    this.password = password;
+  }
+
+  public SpKafkaConsumer(KafkaTransportProtocol protocol,
+                         String topic,
+                         InternalEventProcessor<byte[]> eventProcessor,
+                         List<KafkaConfigAppender> appenders) {
+    this(protocol, topic, eventProcessor);
+    this.appenders = appenders;
   }
 
   // TODO backwards compatibility, remove later
-  public SpKafkaConsumer(String kafkaUrl, String topic, InternalEventProcessor<byte[]> callback) {
+  public SpKafkaConsumer(String kafkaUrl,String topic,InternalEventProcessor<byte[]> callback,
+                         KafkaConfigAppender... appenders) {
     KafkaTransportProtocol protocol = new KafkaTransportProtocol();
     protocol.setKafkaPort(Integer.parseInt(kafkaUrl.split(":")[1]));
     protocol.setBrokerHostname(kafkaUrl.split(":")[0]);
     protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
+    this.appenders = Arrays.asList(appenders);
 
     try {
       this.connect(protocol, callback);
@@ -85,12 +89,9 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
 
   @Override
   public void run() {
-    Properties props;
-    if (username != null && password != null) {
-      props = makePropertiesSaslPlain(protocol, username, password);
-    } else {
-      props = makeProperties(protocol);
-    }
+
+    Properties props = makeProperties(protocol, appenders);
+
     KafkaConsumer<String, byte[]> consumer = new KafkaConsumer<>(props);
     if (!patternTopic) {
       consumer.subscribe(Collections.singletonList(topic));
@@ -124,12 +125,9 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     return topic.replaceAll("\\*", ".*");
   }
 
-  private Properties makeProperties(KafkaTransportProtocol protocol) {
-    return new ConsumerConfigFactory(protocol).makeProperties();
-  }
-
-  private Properties makePropertiesSaslPlain(KafkaTransportProtocol protocol, String username, String password) {
-    return new ConsumerConfigFactory(protocol).makePropertiesSaslPlain(username, password);
+  private Properties makeProperties(KafkaTransportProtocol protocol,
+            List<KafkaConfigAppender> appenders) {
+    return new ConsumerConfigFactory(protocol).buildProperties(appenders);
   }
 
   @Override

@@ -22,6 +22,7 @@ import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.pe.shared.config.kafka.KafkaConnectUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
@@ -36,19 +37,15 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDec
 
 public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters> {
 
-//  private static final String KAFKA_BROKER_SETTINGS_KEY = "broker-settings";
-  private static final String TOPIC_KEY = "topic";
-  private static final String HOST_KEY = "host";
-  private static final String PORT_KEY = "port";
-  private static final String ACCESS_MODE = "access-mode";
-  private static final String ANONYMOUS_ACCESS = "anonymous-alternative";
-  private static final String USERNAME_ACCESS = "username-alternative";
-  private static final String USERNAME_GROUP = "username-group";
-  private static final String USERNAME_KEY = "username";
-  private static final String PASSWORD_KEY = "password";
-
-//  private static final String KAFKA_HOST_URI = "http://schema.org/kafkaHost";
-//  private static final String KAFKA_PORT_URI = "http://schema.org/kafkaPort";
+//  private static final String ACCESS_MODE = "access-mode";
+//  private static final String UNAUTHENTICATED_PLAIN = "unauthenticated-plain";
+//  private static final String UNAUTHENTICATED_SSL = "unauthenticated-ssl";
+//  private static final String SASL_PLAIN = "sasl-plain";
+//  private static final String SASL_SSL = "sasl-ssl";
+//
+//  private static final String USERNAME_GROUP = "username-group";
+//  private static final String USERNAME_KEY = "username";
+//  private static final String PASSWORD_KEY = "password";
 
   @Override
   public DataSinkDescription declareModel() {
@@ -60,49 +57,48 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
                     .create()
                     .requiredProperty(EpRequirements.anyProperty())
                     .build())
-            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
-            .requiredIntegerParameter(Labels.withId(PORT_KEY), 9092)
-            .requiredAlternatives(Labels.withId(ACCESS_MODE), getAlternativesOne(), getAlternativesTwo())
+
+            .requiredTextParameter(Labels.withId(KafkaConnectUtils.TOPIC_KEY), false, false)
+            .requiredTextParameter(Labels.withId(KafkaConnectUtils.HOST_KEY), false, false)
+            .requiredIntegerParameter(Labels.withId(KafkaConnectUtils.PORT_KEY), 9092)
+
+            .requiredAlternatives(Labels.withId(KafkaConnectUtils.ACCESS_MODE),
+                    KafkaConnectUtils.getAlternativeUnauthenticatedPlain(),
+                    KafkaConnectUtils.getAlternativeUnauthenticatedSSL(),
+                    KafkaConnectUtils.getAlternativesSaslPlain(),
+                    KafkaConnectUtils.getAlternativesSaslSSL())
             .build();
   }
 
   @Override
   public ConfiguredEventSink<KafkaParameters> onInvocation(DataSinkInvocation graph,
                                                            DataSinkParameterExtractor extractor) {
-    String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
+    String topic = extractor.singleValueParameter(KafkaConnectUtils.TOPIC_KEY, String.class);
 
-    String kafkaHost = extractor.singleValueParameter(HOST_KEY, String.class);
-    Integer kafkaPort = extractor.singleValueParameter(PORT_KEY, Integer.class);
-    String authentication = extractor.selectedAlternativeInternalId(ACCESS_MODE);
+    String kafkaHost = extractor.singleValueParameter(KafkaConnectUtils.HOST_KEY, String.class);
+    Integer kafkaPort = extractor.singleValueParameter(KafkaConnectUtils.PORT_KEY, Integer.class);
+    String authentication = extractor.selectedAlternativeInternalId(KafkaConnectUtils.ACCESS_MODE);
 
     KafkaParameters params;
-    if (authentication.equals(ANONYMOUS_ACCESS)) {
-      params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, null, null);
-    }
-    else {
-      String username = extractor.singleValueParameter(USERNAME_KEY, String.class);
-      String password = extractor.secretValue(PASSWORD_KEY);
-      params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, username, password);
+    if (authentication.equals(KafkaConnectUtils.UNAUTHENTICATED_PLAIN)) {
+      params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, null, null, false);
+    } else if (authentication.equals(KafkaConnectUtils.UNAUTHENTICATED_SSL)) {
+      params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, null, null, true);
+    } else {
+      String username = extractor.singleValueParameter(KafkaConnectUtils.USERNAME_KEY, String.class);
+      String password = extractor.secretValue(KafkaConnectUtils.PASSWORD_KEY);
+      if (authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
+        params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, username, password, false);
+      } else {
+        params = new KafkaParameters(graph, kafkaHost, kafkaPort, topic, authentication, username, password, true);
+      }
     }
 
     return new ConfiguredEventSink<>(params, KafkaPublisher::new);
   }
 
-  public static StaticPropertyAlternative getAlternativesOne() {
-    return Alternatives.from(Labels.withId(ANONYMOUS_ACCESS));
-
-  }
-
-  public static StaticPropertyAlternative getAlternativesTwo() {
-    return Alternatives.from(Labels.withId(USERNAME_ACCESS),
-            StaticProperties.group(Labels.withId(USERNAME_GROUP),
-                    StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
-                    StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
-
-  }
 
   public static  String getSaslAccessKey() {
-    return USERNAME_ACCESS;
+    return KafkaConnectUtils.SASL_PLAIN;
   }
 }

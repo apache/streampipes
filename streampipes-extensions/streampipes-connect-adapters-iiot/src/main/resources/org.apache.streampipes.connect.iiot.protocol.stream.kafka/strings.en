@@ -10,23 +10,28 @@ port.description=9092
 topic.title=Topic
 topic.description=Example: test.topic
 
-access-mode.title=Access Mode
-access-mode.description=
-
-anonymous-alternative.title=Unauthenticated
-anonymous-alternative.description=
-
-username-alternative.title=Username/Password
-username-alternative.description=
-
-username-group.title=User Group
-username-group.description=
-
 username.title=Username
 username.description=
 
 password.title=Password
 password.description=
+
+access-mode.title=Access Mode
+access-mode.description=Unauthenticated or SASL/PLAIN
+
+unauthenticated-plain.title=Unauthenticated Plain
+unauthenticated-plain.description=No authentication and plaintext
+
+unauthenticated-ssl.title=Unauthenticated SSL
+unauthenticated-ssl.description=Using SSL with no authentication
+
+sasl-plain.title=SASL/PLAIN
+sasl-plain.description=Username and password, no encryption
+
+sasl-ssl.title=SASL/SSL
+sasl-ssl.description=Username and password, with ssl encryption
+
+username-group.title=Username and password
 
 hide-internal-topics.title=Hide internal topics
 hide-internal-topics.description=Do not show topics that are only used internally

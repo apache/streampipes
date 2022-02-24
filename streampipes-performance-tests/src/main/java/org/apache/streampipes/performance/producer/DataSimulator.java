@@ -20,6 +20,7 @@ package org.apache.streampipes.performance.producer;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
 import org.apache.streampipes.performance.simulation.DataReplayStatusNotifier;
 
+import java.util.Collections;
 import java.util.Random;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class DataSimulator implements Runnable {
 
   public DataSimulator(String kafkaUrl, Long totalNumberOfEvents, Long waitTimeBetweenEvents, String threadId,
                        DataReplayStatusNotifier statusNotifier) {
-    this.kafkaProducer = new SpKafkaProducer(kafkaUrl, topic);
+    this.kafkaProducer = new SpKafkaProducer(kafkaUrl, topic, Collections.emptyList());
     this.threadId = threadId;
 
     this.totalNumberOfEvents = totalNumberOfEvents;

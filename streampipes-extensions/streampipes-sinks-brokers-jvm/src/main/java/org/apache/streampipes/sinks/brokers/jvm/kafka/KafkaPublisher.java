@@ -21,10 +21,14 @@ package org.apache.streampipes.sinks.brokers.jvm.kafka;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
+import org.apache.streampipes.messaging.kafka.security.*;
+import org.apache.streampipes.messaging.kafka.serializer.KafkaSerializerByteArrayConfig;
+import org.apache.streampipes.messaging.kafka.serializer.KafkaSerializerConfig;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class KafkaPublisher implements EventSink<KafkaParameters> {
@@ -36,19 +40,36 @@ public class KafkaPublisher implements EventSink<KafkaParameters> {
     this.dataFormatDefinition = new JsonDataFormatDefinition();
   }
 
+  // Serialization
+  // Key
+  // - StringSerializer
+  // Value
+  // - ByteArraySerializer
+
   @Override
   public void onInvocation(KafkaParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
     boolean useAuthentication = parameters.getAuthentication().equals(KafkaController.getSaslAccessKey());
+
+    KafkaSecurityConfig securityConfig;
+    //KafkaSerializerConfig serializerConfig = new KafkaSerializerByteArrayConfig();
+
+    // check if a user for the authentication is defined
     if (useAuthentication) {
-      this.producer = new SpKafkaProducer(parameters.getKafkaHost() + ":" + parameters.getKafkaPort(),
+      securityConfig = parameters.isUseSSL() ?
+              new KafkaSecuritySaslSSLConfig(parameters.getUsername(), parameters.getPassword()) :
+              new KafkaSecuritySaslPlainConfig(parameters.getUsername(), parameters.getPassword());
+    } else {
+        // set security config for none authenticated access
+        securityConfig = parameters.isUseSSL() ?
+                new KafkaSecurityUnauthenticatedSSLConfig() :
+                new KafkaSecurityUnauthenticatedPlainConfig();
+    }
+
+      this.producer = new SpKafkaProducer(
+              parameters.getKafkaHost() + ":" + parameters.getKafkaPort(),
               parameters.getTopic(),
-              parameters.getUsername(),
-              parameters.getPassword());
-    }
-    else {
-      this.producer = new SpKafkaProducer(parameters.getKafkaHost() + ":" + parameters.getKafkaPort(),
-              parameters.getTopic());
-    }
+              Arrays.asList(securityConfig));
+
   }
 
   @Override

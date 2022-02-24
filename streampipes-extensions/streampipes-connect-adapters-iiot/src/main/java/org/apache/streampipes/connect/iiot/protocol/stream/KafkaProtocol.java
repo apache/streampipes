@@ -19,11 +19,8 @@
 package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.kafka.common.config.SaslConfigs;
-import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
@@ -37,6 +34,7 @@ import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
+import org.apache.streampipes.messaging.kafka.security.*;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -47,6 +45,7 @@ import org.apache.streampipes.pe.shared.config.kafka.KafkaConnectUtils;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
@@ -78,7 +77,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
     public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
         StaticPropertyExtractor extractor = StaticPropertyExtractor
                 .from(protocolDescription.getConfig(), new ArrayList<>());
-        this.config = KafkaConnectUtils.getConfig(extractor);
+        this.config = KafkaConnectUtils.getConfig(extractor, true);
 
         return new KafkaProtocol(parser, format, config);
     }
@@ -90,27 +89,29 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
                 .withLocales(Locales.EN)
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .sourceType(AdapterSourceType.STREAM)
-                .requiredAlternatives(KafkaConnectUtils.getAccessModeLabel(),
-                        KafkaConnectUtils.getAlternativesOne(), KafkaConnectUtils.getAlternativesTwo())
+
+                .requiredAlternatives(Labels.withId(KafkaConnectUtils.ACCESS_MODE),
+                        KafkaConnectUtils.getAlternativeUnauthenticatedPlain(),
+                        KafkaConnectUtils.getAlternativeUnauthenticatedSSL(),
+                        KafkaConnectUtils.getAlternativesSaslPlain(),
+                        KafkaConnectUtils.getAlternativesSaslSSL())
+
                 .requiredTextParameter(KafkaConnectUtils.getHostLabel())
                 .requiredIntegerParameter(KafkaConnectUtils.getPortLabel())
+
                 .requiredSlideToggle(KafkaConnectUtils.getHideInternalTopicsLabel(), true)
+
                 .requiredSingleValueSelectionFromContainer(KafkaConnectUtils.getTopicLabel(), Arrays.asList(
-                        KafkaConnectUtils.getHostKey(),
-                        KafkaConnectUtils.getPortKey()))
+                        KafkaConnectUtils.HOST_KEY,
+                        KafkaConnectUtils.PORT_KEY))
                 .build();
     }
 
     @Override
     protected List<byte[]> getNByteElements(int n) throws ParseException {
         final Consumer<Long, String> consumer;
-        if (authenticationRequired()) {
-            consumer = createConsumer(this.brokerUrl, this.topic, config.getUsername(), config.getPassword());
-        }
-        else {
-            consumer = createConsumer(this.brokerUrl, this.topic);
-        }
 
+        consumer = createConsumer(this.config);
         consumer.subscribe(Arrays.asList(this.topic), new ConsumerRebalanceListener() {
             @Override
             public void onPartitionsRevoked(Collection<TopicPartition> collection) {
@@ -124,7 +125,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         });
 
         List<byte[]> nEventsByte = new ArrayList<>();
-        List<byte[]> resultEventsByte = new ArrayList<>();
+        List<byte[]> resultEventsByte;
 
 
         while (true) {
@@ -153,11 +154,15 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         return resultEventsByte;
     }
 
-    private static Consumer<Long, String> createConsumer(String broker, String topic) {
+    private static Consumer<Long, String> createConsumer(KafkaConfig kafkaConfig) {
         final Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                broker);
 
+        kafkaConfig.getSecurityConfig().appendConfig(props);
+
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort());
+
+        // TODO make serializer configurable
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
                 "KafkaExampleConsumer" + System.currentTimeMillis());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
@@ -170,35 +175,11 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
                 new KafkaConsumer<>(props);
 
         // Subscribe to the topic.
-        consumer.subscribe(Collections.singletonList(topic));
+        consumer.subscribe(Collections.singletonList(kafkaConfig.getTopic()));
 
         return consumer;
     }
 
-    private static Consumer<Long, String> createConsumer(String broker, String topic, String username, String password) {
-        final Properties props = new Properties();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                broker);
-
-        props.put(ConsumerConfig.GROUP_ID_CONFIG,
-                "KafkaExampleConsumer" + System.currentTimeMillis());
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                LongDeserializer.class.getName());
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class.getName());
-        props.put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username + "\" password=\"" + password + "\";");
-        props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
-        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
-
-        // Create the consumer using props.
-        final Consumer<Long, String> consumer =
-                new KafkaConsumer<>(props);
-
-        // Subscribe to the topic.
-        consumer.subscribe(Collections.singletonList(topic));
-
-        return consumer;
-    }
 
     @Override
     public void run(IAdapterPipeline adapterPipeline) {
@@ -207,13 +188,11 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         protocol.setKafkaPort(config.getKafkaPort());
         protocol.setBrokerHostname(config.getKafkaHost());
         protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
-        if (authenticationRequired()) {
-            this.kafkaConsumer = new SpKafkaConsumer(protocol, config.getTopic(), new EventProcessor(stk),
-                    config.getUsername(), config.getPassword());
-        }
-        else {
-            this.kafkaConsumer = new SpKafkaConsumer(protocol, config.getTopic(), new EventProcessor(stk));
-        }
+
+        this.kafkaConsumer = new SpKafkaConsumer(protocol,
+                config.getTopic(),
+                new EventProcessor(stk),
+                Arrays.asList(this.config.getSecurityConfig()));
 
         thread = new Thread(this.kafkaConsumer);
         thread.start();
@@ -239,27 +218,19 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
 
     @Override
     public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
-        String kafkaHost = extractor.singleValueParameter(KafkaConnectUtils.getHostKey(), String.class);
-        Integer kafkaPort = extractor.singleValueParameter(KafkaConnectUtils.getPortKey(), Integer.class);
-        String authenticationMode = extractor.selectedAlternativeInternalId(KafkaConnectUtils.getAccessModeKey());
+        KafkaConfig kafkaConfig = KafkaConnectUtils.getConfig(extractor, false);
         boolean hideInternalTopics = extractor.slideToggleValue(KafkaConnectUtils.getHideInternalTopicsKey());
-        boolean useAuthentication = authenticationMode.equals(KafkaConnectUtils.getSaslAccessKey());
 
-        String kafkaAddress = kafkaHost + ":" + kafkaPort;
-
+        String kafkaAddress = kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort();
         Properties props = new Properties();
+
+        // add security properties to kafka configuration
+        kafkaConfig.getSecurityConfig().appendConfig(props);
+
         props.put("bootstrap.servers", kafkaAddress);
         props.put("group.id", "test-consumer-group");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-
-        if (useAuthentication) {
-            String username = extractor.singleValueParameter(KafkaConnectUtils.getUsernameKey(), String.class);
-            String password = extractor.secretValue(KafkaConnectUtils.getPasswordKey());
-            props.put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username + "\" password=\"" + password + "\";");
-            props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
-            props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
-        }
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
         Set<String> topics = consumer.listTopics().keySet();
@@ -294,9 +265,5 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
     @Override
     public String getId() {
         return ID;
-    }
-
-    private boolean authenticationRequired() {
-        return config.getAuthentication().equals(KafkaConnectUtils.getSaslAccessKey());
     }
 }

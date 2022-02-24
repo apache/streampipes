@@ -39,7 +39,7 @@ public class ConsumerConfigFactory extends AbstractConfigFactory {
   }
 
   @Override
-  public Properties makeProperties() {
+  public Properties makeDefaultProperties() {
     Properties props = new Properties();
     props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, getBrokerUrl());
 //    props.put(ConsumerConfig.GROUP_ID_CONFIG, getConfigOrDefault(protocol::getGroupId,

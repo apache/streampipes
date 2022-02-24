@@ -25,6 +25,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.config.TopicConfig;
 import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.messaging.EventProducer;
@@ -32,10 +33,7 @@ import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, Serializable {
@@ -55,26 +53,28 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
   public SpKafkaProducer() { }
 
   // TODO backwards compatibility, remove later
-  public SpKafkaProducer(String url, String topic) {
+  public SpKafkaProducer(String url,
+                         String topic,
+                         List<KafkaConfigAppender> appenders) {
     String[] urlParts = url.split(COLON);
     KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
             Integer.parseInt(urlParts[1]), topic);
     this.brokerUrl = url;
     this.topic = topic;
-    this.producer = new KafkaProducer<>(makeProperties(protocol));
+    this.producer = new KafkaProducer<>(makeProperties(protocol, appenders));
     this.connected = true;
   }
 
   // TODO backwards compatibility, remove later
-  public SpKafkaProducer(String url, String topic, String username, String password) {
-    String[] urlParts = url.split(COLON);
-    KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
-            Integer.parseInt(urlParts[1]), topic);
-    this.brokerUrl = url;
-    this.topic = topic;
-    this.producer = new KafkaProducer<>(makePropertiesSaslPlain(protocol, username, password));
-    this.connected = true;
-  }
+//  public SpKafkaProducer(String url, String topic, String username, String password, boolean ssl) {
+//    String[] urlParts = url.split(COLON);
+//    KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
+//            Integer.parseInt(urlParts[1]), topic);
+//    this.brokerUrl = url;
+//    this.topic = topic;
+//    this.producer = new KafkaProducer<>(makePropertiesSaslPlain(protocol, username, password));
+//    this.connected = true;
+//  }
 
   public void publish(String message) {
     publish(message.getBytes());
@@ -86,13 +86,14 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     }
   }
 
-  private Properties makeProperties(KafkaTransportProtocol protocol) {
-    return new ProducerConfigFactory(protocol).makeProperties();
+  private Properties makeProperties(KafkaTransportProtocol protocol,
+                                    List<KafkaConfigAppender> appenders) {
+    return new ProducerConfigFactory(protocol).buildProperties(appenders);
   }
 
-  private Properties makePropertiesSaslPlain(KafkaTransportProtocol protocol, String username, String password) {
-    return new ProducerConfigFactory(protocol).makePropertiesSaslPlain(username, password);
-  }
+//  private Properties makePropertiesSaslPlain(KafkaTransportProtocol protocol, String username, String password) {
+//    return new ProducerConfigFactory(protocol).makePropertiesSaslPlain(username, password);
+//  }
 
   @Override
   public void connect(KafkaTransportProtocol protocol) {
@@ -107,7 +108,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
       LOG.error("Could not create topic: " + topic + " on broker " + zookeeperHost);
     }
 
-    this.producer = new KafkaProducer<>(makeProperties(protocol));
+    this.producer = new KafkaProducer<>(makeProperties(protocol, Collections.emptyList()));
     this.connected = true;
 
     LOG.info("Successfully created Kafka producer for topic " + this.topic);

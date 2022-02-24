@@ -30,9 +30,10 @@ public class KafkaParameters extends EventSinkBindingParams {
   private String authentication;
   private String username;
   private String password;
+  private boolean useSSL;
 
   public KafkaParameters(DataSinkInvocation graph, String kafkaHost, Integer kafkaPort, String topic,
-                         String authentication, String username, String password) {
+                         String authentication, String username, String password, boolean useSSL) {
     super(graph);
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;
@@ -40,6 +41,7 @@ public class KafkaParameters extends EventSinkBindingParams {
     this.authentication = authentication;
     this.username = username;
     this.password = password;
+    this.useSSL = useSSL;
   }
 
   public String getKafkaHost() {
@@ -59,4 +61,8 @@ public class KafkaParameters extends EventSinkBindingParams {
   public String getPassword() { return password; }
 
   public String getAuthentication() { return authentication; }
+
+  public boolean isUseSSL() {
+    return useSSL;
+  }
 }

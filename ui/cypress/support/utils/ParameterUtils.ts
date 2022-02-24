@@ -20,6 +20,7 @@
 export class ParameterUtils {
 
     public static get(localVariable: string, containerVariable: string): string {
+        return localVariable;
         if (Cypress.env('DEVELOPMENT')) {
             return localVariable;
         } else {

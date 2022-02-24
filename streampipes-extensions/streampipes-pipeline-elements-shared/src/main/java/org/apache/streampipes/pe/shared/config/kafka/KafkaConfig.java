@@ -18,41 +18,52 @@
 
 package org.apache.streampipes.pe.shared.config.kafka;
 
+import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
+
 public class KafkaConfig {
 
     private String kafkaHost;
     private Integer kafkaPort;
     private String topic;
-    private String authentication;
-    private String username;
-    private String password;
 
-    public KafkaConfig(String kafkaHost, Integer kafkaPort, String topic,
-                       String authentication, String username, String password) {
+    KafkaSecurityConfig securityConfig;
+
+    public KafkaConfig(String kafkaHost, Integer kafkaPort, String topic, KafkaSecurityConfig securityConfig) {
         this.kafkaHost = kafkaHost;
         this.kafkaPort = kafkaPort;
         this.topic = topic;
-        this.authentication = authentication;
-        this.username = username;
-        this.password = password;
+        this.securityConfig = securityConfig;
     }
 
     public String getKafkaHost() {
         return kafkaHost;
     }
 
+    public void setKafkaHost(String kafkaHost) {
+        this.kafkaHost = kafkaHost;
+    }
+
     public Integer getKafkaPort() {
         return kafkaPort;
+    }
+
+    public void setKafkaPort(Integer kafkaPort) {
+        this.kafkaPort = kafkaPort;
     }
 
     public String getTopic() {
         return topic;
     }
 
-    public String getUsername() { return username; }
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
 
-    public String getPassword() { return password; }
+    public KafkaSecurityConfig getSecurityConfig() {
+        return securityConfig;
+    }
 
-    public String getAuthentication() { return authentication; }
-
+    public void setSecurityConfig(KafkaSecurityConfig securityConfig) {
+        this.securityConfig = securityConfig;
+    }
 }

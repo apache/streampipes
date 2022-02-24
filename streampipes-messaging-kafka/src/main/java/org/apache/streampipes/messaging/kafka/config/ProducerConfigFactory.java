@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.messaging.kafka.config;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.Properties;
@@ -42,7 +44,7 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
   }
 
   @Override
-  public Properties makeProperties() {
+  public Properties makeDefaultProperties() {
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBrokerUrl());
     props.put(ProducerConfig.ACKS_CONFIG, getConfigOrDefault(protocol::getAcks,
