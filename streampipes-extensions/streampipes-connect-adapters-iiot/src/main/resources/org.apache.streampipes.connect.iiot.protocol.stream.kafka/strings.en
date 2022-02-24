@@ -33,5 +33,11 @@ sasl-ssl.description=Username and password, with ssl encryption
 
 username-group.title=Username and password
 
+key-deserialization.title=Key Deserializer
+key-deserialization.description=
+
+value-deserialization.title=Value Deserializer
+value-deserialization.description=
+
 hide-internal-topics.title=Hide internal topics
 hide-internal-topics.description=Do not show topics that are only used internally

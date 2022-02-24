@@ -696,8 +696,28 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
     this.staticProperties.add(osp);
     return me();
-
   }
+
+  /**
+   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
+   * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
+   * @param options A list of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
+   * @param horizontalRendering when set to true
+   * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
+   * @return this
+   */
+  public BU requiredSingleValueSelection(Label label,
+                                         List<Option> options,
+                                         boolean horizontalRendering) {
+    OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription(), horizontalRendering);
+    osp.setOptions(options);
+
+    this.staticProperties.add(osp);
+    return me();
+  }
+
 
   /**
    * @deprecated Use {@link #requiredMultiValueSelection(Label, Option...)} instead.

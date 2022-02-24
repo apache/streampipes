@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.messaging.kafka.config;
 
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.security.auth.SecurityProtocol;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.Properties;
@@ -33,14 +33,15 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
   private static final Integer BUFFER_MEMORY_CONFIG_DEFAULT = 33554432;
   private static final Integer MAX_REQUEST_SIZE_CONFIG_DEFAULT = 5000012;
 
-  private static final String KEY_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization" +
-          ".StringSerializer";
-  private static final String VALUE_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization" +
-          ".ByteArraySerializer";
+  private static final String KEY_SERIALIZER_DEFAULT = StringSerializer.class.getName();
+  private static final String VALUE_SERIALIZER_DEFAULT = ByteArraySerializer.class.getName();
+
 
 
   public ProducerConfigFactory(KafkaTransportProtocol protocol) {
     super(protocol);
+
+
   }
 
   @Override
@@ -57,8 +58,10 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
     props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, getConfigOrDefault(protocol::getMaxRequestSize,
             MAX_REQUEST_SIZE_CONFIG_DEFAULT));
     props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, BUFFER_MEMORY_CONFIG_DEFAULT);
+
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KEY_SERIALIZER_DEFAULT);
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VALUE_SERIALIZER_DEFAULT);
+
     return props;
   }
 

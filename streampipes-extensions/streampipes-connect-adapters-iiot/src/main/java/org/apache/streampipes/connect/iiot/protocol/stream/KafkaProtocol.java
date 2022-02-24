@@ -21,8 +21,7 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 import org.apache.commons.io.IOUtils;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.SendToPipeline;
@@ -34,7 +33,6 @@ import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
-import org.apache.streampipes.messaging.kafka.security.*;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
@@ -47,10 +45,12 @@ import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -109,7 +109,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
 
     @Override
     protected List<byte[]> getNByteElements(int n) throws ParseException {
-        final Consumer<Long, String> consumer;
+        final Consumer<byte[], byte[]> consumer;
 
         consumer = createConsumer(this.config);
         consumer.subscribe(Arrays.asList(this.topic), new ConsumerRebalanceListener() {
@@ -129,11 +129,11 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
 
 
         while (true) {
-            final ConsumerRecords<Long, String> consumerRecords =
+            final ConsumerRecords<byte[], byte[]> consumerRecords =
                     consumer.poll(1000);
 
             consumerRecords.forEach(record -> {
-                InputStream inputStream = IOUtils.toInputStream(record.value(), "UTF-8");
+                InputStream inputStream = new ByteArrayInputStream(record.value());
 
                 nEventsByte.addAll(parser.parseNEvents(inputStream, n));
             });
@@ -154,7 +154,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         return resultEventsByte;
     }
 
-    private static Consumer<Long, String> createConsumer(KafkaConfig kafkaConfig) {
+    private Consumer<byte[], byte[]> createConsumer(KafkaConfig kafkaConfig) {
         final Properties props = new Properties();
 
         kafkaConfig.getSecurityConfig().appendConfig(props);
@@ -162,20 +162,17 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort());
 
-        // TODO make serializer configurable
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
                 "KafkaExampleConsumer" + System.currentTimeMillis());
+
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                LongDeserializer.class.getName());
+                ByteArrayDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class.getName());
+                ByteArrayDeserializer.class.getName());
 
         // Create the consumer using props.
-        final Consumer<Long, String> consumer =
+        final Consumer<byte[], byte[]> consumer =
                 new KafkaConsumer<>(props);
-
-        // Subscribe to the topic.
-        consumer.subscribe(Collections.singletonList(kafkaConfig.getTopic()));
 
         return consumer;
     }
@@ -221,18 +218,8 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         KafkaConfig kafkaConfig = KafkaConnectUtils.getConfig(extractor, false);
         boolean hideInternalTopics = extractor.slideToggleValue(KafkaConnectUtils.getHideInternalTopicsKey());
 
-        String kafkaAddress = kafkaConfig.getKafkaHost() + ":" + kafkaConfig.getKafkaPort();
-        Properties props = new Properties();
+        Consumer<byte[], byte[]> consumer = createConsumer(kafkaConfig);
 
-        // add security properties to kafka configuration
-        kafkaConfig.getSecurityConfig().appendConfig(props);
-
-        props.put("bootstrap.servers", kafkaAddress);
-        props.put("group.id", "test-consumer-group");
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
         Set<String> topics = consumer.listTopics().keySet();
         consumer.close();
 

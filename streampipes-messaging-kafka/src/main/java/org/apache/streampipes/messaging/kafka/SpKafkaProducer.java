@@ -65,17 +65,6 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
     this.connected = true;
   }
 
-  // TODO backwards compatibility, remove later
-//  public SpKafkaProducer(String url, String topic, String username, String password, boolean ssl) {
-//    String[] urlParts = url.split(COLON);
-//    KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
-//            Integer.parseInt(urlParts[1]), topic);
-//    this.brokerUrl = url;
-//    this.topic = topic;
-//    this.producer = new KafkaProducer<>(makePropertiesSaslPlain(protocol, username, password));
-//    this.connected = true;
-//  }
-
   public void publish(String message) {
     publish(message.getBytes());
   }
@@ -90,10 +79,6 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
                                     List<KafkaConfigAppender> appenders) {
     return new ProducerConfigFactory(protocol).buildProperties(appenders);
   }
-
-//  private Properties makePropertiesSaslPlain(KafkaTransportProtocol protocol, String username, String password) {
-//    return new ProducerConfigFactory(protocol).makePropertiesSaslPlain(username, password);
-//  }
 
   @Override
   public void connect(KafkaTransportProtocol protocol) {

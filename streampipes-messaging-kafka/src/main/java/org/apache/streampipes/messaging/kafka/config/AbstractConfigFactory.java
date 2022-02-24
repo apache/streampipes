@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 public abstract class AbstractConfigFactory {
 
   private static final String COLON = ":";
-  private static final String SASL_MECHANISM = "PLAIN";
 
   protected KafkaTransportProtocol protocol;
 
@@ -50,19 +49,5 @@ public abstract class AbstractConfigFactory {
     appenders.forEach(appender -> appender.appendConfig(props));
 
     return  props;
-    // TODO check Kafka Security
   }
-
-//  public Properties makePropertiesSaslPlain(String username,
-//                                            String password) {
-//    Properties props = makeProperties();
-//    props.put(SaslConfigs.SASL_MECHANISM,SASL_MECHANISM);
-//    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_PLAINTEXT.toString());
-//
-////    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SASL_SSL.toString());
-//
-//    String SASL_JAAS_CONFIG = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + username + "\" password=\"" + password + "\";";
-//    props.put(SaslConfigs.SASL_JAAS_CONFIG, SASL_JAAS_CONFIG);
-//    return props;
-//  }
 }

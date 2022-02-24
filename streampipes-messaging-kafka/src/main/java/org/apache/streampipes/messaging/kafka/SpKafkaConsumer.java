@@ -71,28 +71,12 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     this.appenders = appenders;
   }
 
-  // TODO backwards compatibility, remove later
-  public SpKafkaConsumer(String kafkaUrl,String topic,InternalEventProcessor<byte[]> callback,
-                         KafkaConfigAppender... appenders) {
-    KafkaTransportProtocol protocol = new KafkaTransportProtocol();
-    protocol.setKafkaPort(Integer.parseInt(kafkaUrl.split(":")[1]));
-    protocol.setBrokerHostname(kafkaUrl.split(":")[0]);
-    protocol.setTopicDefinition(new SimpleTopicDefinition(topic));
-    this.appenders = Arrays.asList(appenders);
-
-    try {
-      this.connect(protocol, callback);
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
-    }
-  }
-
   @Override
   public void run() {
 
     Properties props = makeProperties(protocol, appenders);
 
-    KafkaConsumer<String, byte[]> consumer = new KafkaConsumer<>(props);
+    KafkaConsumer<byte[], byte[]> consumer = new KafkaConsumer<>(props);
     if (!patternTopic) {
       consumer.subscribe(Collections.singletonList(topic));
     } else {
@@ -111,7 +95,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     }
     Duration duration = Duration.of(100, ChronoUnit.MILLIS);
     while (isRunning) {
-      ConsumerRecords<String, byte[]> records = consumer.poll(duration);
+      ConsumerRecords<byte[], byte[]> records = consumer.poll(duration);
       records.forEach(record -> {
         eventProcessor.onEvent(record.value());
       });

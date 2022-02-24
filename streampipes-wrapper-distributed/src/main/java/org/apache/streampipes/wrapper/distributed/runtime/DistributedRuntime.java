@@ -64,11 +64,11 @@ public abstract class DistributedRuntime<RP extends RuntimeParams<B, I, RC>, B e
   }
 
   protected Properties getProperties(KafkaTransportProtocol protocol) {
-    return new ConsumerConfigFactory(protocol).makeProperties();
+    return new ConsumerConfigFactory(protocol).makeDefaultProperties();
   }
 
   protected Properties getProducerProperties(KafkaTransportProtocol protocol) {
-    return new ProducerConfigFactory(protocol).makeProperties();
+    return new ProducerConfigFactory(protocol).makeDefaultProperties();
   }
 
   protected SpDataFormatDefinition getDataFormatDefinition(TransportFormat transportFormat) {

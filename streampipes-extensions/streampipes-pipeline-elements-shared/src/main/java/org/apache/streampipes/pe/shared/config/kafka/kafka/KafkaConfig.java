@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.pe.shared.config.kafka;
+package org.apache.streampipes.pe.shared.config.kafka.kafka;
 
 import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 
@@ -27,7 +27,6 @@ public class KafkaConfig {
     private String topic;
 
     KafkaSecurityConfig securityConfig;
-
 
     public KafkaConfig(String kafkaHost,
                        Integer kafkaPort,

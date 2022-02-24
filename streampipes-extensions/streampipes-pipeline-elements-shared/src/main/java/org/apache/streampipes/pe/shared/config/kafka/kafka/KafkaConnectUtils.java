@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.pe.shared.config.kafka;
+package org.apache.streampipes.pe.shared.config.kafka.kafka;
 
 import org.apache.streampipes.messaging.kafka.security.*;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
@@ -31,6 +31,12 @@ public class KafkaConnectUtils {
     public static final String TOPIC_KEY = "topic";
     public static final String HOST_KEY = "host";
     public static final String PORT_KEY = "port";
+
+    public static final String KEY_SERIALIZATION = "key-serialization";
+    public static final String VALUE_SERIALIZATION = "value-serialization";
+
+    public static final String KEY_DESERIALIZATION = "key-deserialization";
+    public static final String VALUE_DESERIALIZATION = "value-deserialization";
 
     public static final String ACCESS_MODE = "access-mode";
     public static final String UNAUTHENTICATED_PLAIN = "unauthenticated-plain";
@@ -82,6 +88,8 @@ public class KafkaConnectUtils {
         boolean isUseSSL = isUseSSL(authentication);
 
         KafkaSecurityConfig securityConfig;
+
+        //KafkaSerializerConfig serializerConfig = new KafkaSerializerByteArrayConfig();
 
         // check if a user for the authentication is defined
         if (authentication.equals(KafkaConnectUtils.SASL_SSL) || authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
