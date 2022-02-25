@@ -118,8 +118,15 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     LOG.info("We will perform the initial setup, grab some coffee and cross your fingers ;-)...");
 
     BackendConfig.INSTANCE.updateSetupStatus(true);
-    new AutoInstallation().startAutoInstallation();
-    BackendConfig.INSTANCE.updateSetupStatus(false);
+    LOG.info("Auto-setup will start in 10 seconds to make sure extensions services are running...");
+    try {
+      TimeUnit.SECONDS.sleep(10);
+      LOG.info("Starting installation procedure");
+      new AutoInstallation().startAutoInstallation();
+      BackendConfig.INSTANCE.updateSetupStatus(false);
+    } catch (InterruptedException e) {
+      LOG.error("Ooops, something went wrong during the installation", e);
+    }
   }
 
   private void schedulePipelineStart(Pipeline pipeline, boolean restartOnReboot) {

@@ -21,11 +21,15 @@ package org.apache.streampipes.manager.setup;
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.setup.InitialSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InstallationConfiguration {
+
+	private static final Logger LOG = LoggerFactory.getLogger(InstallationConfiguration.class);
 
 	public static List<InstallationStep> getInstallationSteps(InitialSettings settings)
 	{
@@ -40,7 +44,10 @@ public class InstallationConfiguration {
 						settings.getInitialAdminUserSid()));
 
 		if (settings.getInstallPipelineElements()) {
-			for(ExtensionsServiceEndpoint endpoint : new EndpointFetcher().getEndpoints()) {
+			List<ExtensionsServiceEndpoint> endpoints = new EndpointFetcher().getEndpoints();
+			LOG.info("Found {} endpoints from which we will install extensions.", endpoints.size());
+			LOG.info("Further available extensions can always be installed by navigating to the 'Install pipeline elements' view");
+			for (ExtensionsServiceEndpoint endpoint : endpoints) {
 				steps.add(new PipelineElementInstallationStep(endpoint, settings.getInitialAdminUserSid()));
 			}
 		}
