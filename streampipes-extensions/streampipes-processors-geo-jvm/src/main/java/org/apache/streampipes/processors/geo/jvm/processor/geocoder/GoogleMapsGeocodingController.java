@@ -21,7 +21,6 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -62,10 +61,8 @@ public class GoogleMapsGeocodingController extends StandaloneEventProcessingDecl
   public ConfiguredEventProcessor<GoogleMapsGeocodingParameters> onInvocation(DataProcessorInvocation graph,
                                                                               ProcessingElementParameterExtractor extractor) {
     String placeField = extractor.mappingPropertyValue(PLACE_MAPPING);
-    String googleMapsApiKey = GeoJvmConfig.INSTANCE.getGoogleApiKey();
 
-    GoogleMapsGeocodingParameters params = new GoogleMapsGeocodingParameters(graph, placeField,
-            googleMapsApiKey);
+    GoogleMapsGeocodingParameters params = new GoogleMapsGeocodingParameters(graph, placeField);
 
     return new ConfiguredEventProcessor<>(params, GoogleMapsGeocoding::new);
   }

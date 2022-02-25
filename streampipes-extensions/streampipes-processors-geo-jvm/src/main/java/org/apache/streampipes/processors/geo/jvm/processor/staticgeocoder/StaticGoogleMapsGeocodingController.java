@@ -20,15 +20,10 @@ package org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.processors.geo.jvm.config.GeoJvmConfig;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.EpProperties;
-import org.apache.streampipes.sdk.helpers.EpRequirements;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
@@ -59,10 +54,8 @@ public class StaticGoogleMapsGeocodingController extends StandaloneEventProcessi
   @Override
   public ConfiguredEventProcessor<StaticGoogleMapsGeocodingParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
     String place = extractor.singleValueParameter(PLACE, String.class);
-    String googleMapsApiKey = GeoJvmConfig.INSTANCE.getGoogleApiKey();
 
-    StaticGoogleMapsGeocodingParameters params = new StaticGoogleMapsGeocodingParameters(graph, place,
-            googleMapsApiKey);
+    StaticGoogleMapsGeocodingParameters params = new StaticGoogleMapsGeocodingParameters(graph, place);
 
     return new ConfiguredEventProcessor<>(params, StaticGoogleMapsGeocoder::new);
   }

@@ -23,20 +23,14 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 public class StaticGoogleMapsGeocodingParameters extends EventProcessorBindingParams {
 
   private String place;
-  private String googleMapsApiKey;
 
-  public StaticGoogleMapsGeocodingParameters(DataProcessorInvocation graph, String place,
-                                             String googleMapsApiKey) {
+  public StaticGoogleMapsGeocodingParameters(DataProcessorInvocation graph,
+                                             String place) {
     super(graph);
     this.place = place;
-    this.googleMapsApiKey = googleMapsApiKey;
   }
 
   public String getPlace() {
     return place;
-  }
-
-  public String getGoogleMapsApiKey() {
-    return googleMapsApiKey;
   }
 }
