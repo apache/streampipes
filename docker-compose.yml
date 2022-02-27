@@ -68,23 +68,9 @@ services:
     networks:
       spnet:
 
-  connect-connect-adapters-iiot:
+  extensions-all-jvm:
     build:
-      context: ./streampipes-extensions/streampipes-connect-adapters-iiot
-      dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
-    image: incubator-streampipes_connect-worker-main:release-validation
-    environment:
-      - SP_CONNECT_CONTAINER_HOST=backend
-      - SP_CONNECT_CONTAINER_WORKER=connect-adapters-iiot
-    logging: *default-logging
-    networks:
-      spnet:
-
-  pipeline-elements-all-jvm:
-    build:
-      context: ./streampipes-extensions/streampipes-pipeline-elements-all-jvm
+      context: ./streampipes-extensions/streampipes-extensions-all-jvm
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
@@ -96,7 +82,7 @@ services:
       spnet:
 
   consul:
-    image: fogsyio/consul:1.7.1
+    image: fogsyio/consul:1.9.6
     environment:
       - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
       - "CONSUL_BIND_INTERFACE=eth0"
