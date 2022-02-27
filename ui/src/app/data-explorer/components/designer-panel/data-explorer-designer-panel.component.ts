@@ -65,4 +65,9 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
   closeDesignerPanel() {
     this.closeDesignerPanelEmitter.emit();
   }
+
+  resetIndex() {
+    this.selectedIndex = 0;
+    this.newWidgetMode = true;
+  }
 }

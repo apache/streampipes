@@ -198,6 +198,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.newWidgetMode = true;
     this.showDesignerPanel = true;
     this.newWidgetMode = true;
+    this.designerPanel.resetIndex();
   }
 
   closeDesignerPanel() {
