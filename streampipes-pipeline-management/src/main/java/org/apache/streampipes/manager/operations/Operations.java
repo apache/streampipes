@@ -56,36 +56,17 @@ import java.util.List;
 
 /**
  * class that provides several (partial) pipeline verification methods
- *
- * @author riemer
  */
 
 public class Operations {
 
-
-  public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial) throws Exception {
-    return validatePipeline(pipeline, isPartial, "");
-  }
-
   /**
-   * This method is a fix for the streamsets integration. Remove the username from the signature when you don't need it anymore
    *
-   * @param pipeline
-   * @param isPartial
-   * @param username
-   * @return
-   * @throws Exception
+   * @param pipeline the pipeline to validate
+   * @return PipelineModificationMessage a message containing desired pipeline modifications
    */
-  public static PipelineModificationMessage validatePipeline(Pipeline pipeline, boolean isPartial, String username)
-          throws Exception {
+  public static PipelineModificationMessage validatePipeline(Pipeline pipeline) throws Exception {
     return new PipelineVerificationHandlerV2(pipeline).verifyPipeline();
-//    PipelineVerificationHandler validator = new PipelineVerificationHandler(
-//            pipeline);
-//    return validator
-//            .validateConnection()
-//            .computeMappingProperties()
-//            .storeConnection()
-//            .getPipelineModificationMessage();
   }
 
   public static DataSetModificationMessage updateDataSet(SpDataSet dataSet) {
@@ -117,18 +98,17 @@ public class Operations {
 
   public static PipelineOperationStatus startPipeline(
           Pipeline pipeline) {
-    return startPipeline(pipeline,true, true, false);
+    return startPipeline(pipeline, true);
   }
 
   public static PipelineOperationStatus startPipeline(
-          Pipeline pipeline, boolean visualize, boolean storeStatus,
-          boolean monitor) {
-    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor, false).startPipeline();
+          Pipeline pipeline, boolean storeStatus) {
+    return new PipelineExecutor(pipeline, storeStatus, false).startPipeline();
   }
 
   public static PipelineOperationStatus stopPipeline(
           Pipeline pipeline, boolean forceStop) {
-    return stopPipeline(pipeline, true, true, false, forceStop);
+    return stopPipeline(pipeline, true, forceStop);
   }
 
   public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
@@ -145,11 +125,9 @@ public class Operations {
   }
 
   public static PipelineOperationStatus stopPipeline(Pipeline pipeline,
-                                                     boolean visualize,
                                                      boolean storeStatus,
-                                                     boolean monitor,
                                                      boolean forceStop) {
-    return new PipelineExecutor(pipeline, visualize, storeStatus, monitor, forceStop).stopPipeline();
+    return new PipelineExecutor(pipeline, storeStatus, forceStop).stopPipeline();
   }
 
   public static List<ExtensionsServiceEndpointItem> getEndpointUriContents(List<ExtensionsServiceEndpoint> endpoints) {
@@ -174,10 +152,6 @@ public class Operations {
 
   public static PipelineOperationStatus handlePipelineTemplateInvocation(String userSid, PipelineTemplateInvocation pipelineTemplateInvocation) {
     return new PipelineTemplateInvocationHandler(userSid, pipelineTemplateInvocation).handlePipelineInvocation();
-  }
-
-  public static PipelineOperationStatus handlePipelineTemplateInvocation(String username, PipelineTemplateInvocation pipelineTemplateInvocation, PipelineTemplateDescription pipelineTemplateDescription) {
-    return new PipelineTemplateInvocationHandler(username, pipelineTemplateInvocation, pipelineTemplateDescription).handlePipelineInvocation();
   }
 
   public static PipelineTemplateInvocation getPipelineInvocationTemplate(SpDataStream dataStream, PipelineTemplateDescription pipelineTemplateDescription) {

@@ -55,21 +55,15 @@ import java.util.stream.Collectors;
 
 public class PipelineExecutor {
 
-  private Pipeline pipeline;
-  private boolean visualize;
-  private boolean storeStatus;
-  private boolean monitor;
-  private boolean forceStop;
+  private final Pipeline pipeline;
+  private final boolean storeStatus;
+  private final boolean forceStop;
 
   public PipelineExecutor(Pipeline pipeline,
-                          boolean visualize,
                           boolean storeStatus,
-                          boolean monitor,
                           boolean forceStop) {
     this.pipeline = pipeline;
-    this.visualize = visualize;
     this.storeStatus = storeStatus;
-    this.monitor = monitor;
     this.forceStop = forceStop;
   }
 
@@ -200,14 +194,6 @@ public class PipelineExecutor {
             .detachGraphs();
 
     if (status.isSuccess()) {
-      if (visualize) {
-        StorageDispatcher
-                .INSTANCE
-                .getNoSqlStore()
-                .getVisualizationStorageApi()
-                .deleteVisualization(pipeline.getPipelineId());
-      }
-
       PipelineStatusManager.addPipelineStatus(pipeline.getPipelineId(),
               new PipelineStatusMessage(pipeline.getPipelineId(),
                       System.currentTimeMillis(),
