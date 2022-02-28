@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 
 public class PipelineGraphBuilder {
 
-    private Pipeline pipeline;
-    private List<NamedStreamPipesEntity> allPipelineElements;
-    private List<InvocableStreamPipesEntity> invocableElements;
+    private final Pipeline pipeline;
+    private final List<NamedStreamPipesEntity> allPipelineElements;
+    private final List<InvocableStreamPipesEntity> invocableElements;
 
     public PipelineGraphBuilder(Pipeline pipeline) {
         this.pipeline = pipeline;

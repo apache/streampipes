@@ -17,10 +17,12 @@
  */
 package org.apache.streampipes.manager.preview;
 
-import org.apache.streampipes.manager.data.PipelineGraph;
-import org.apache.streampipes.manager.data.PipelineGraphBuilder;
+import org.apache.streampipes.commons.constants.InstanceIdExtractor;
+import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
+import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointUtils;
 import org.apache.streampipes.manager.execution.http.HttpRequestBuilder;
-import org.apache.streampipes.manager.matching.InvocationGraphBuilder;
+import org.apache.streampipes.manager.matching.PipelineVerificationHandlerV2;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -41,14 +43,16 @@ public class PipelinePreview {
   public PipelinePreviewModel initiatePreview(Pipeline pipeline) {
     String previewId = generatePreviewId();
     pipeline.setActions(new ArrayList<>());
-    PipelineGraph pipelineGraph = new PipelineGraphBuilder(pipeline).buildGraph();
-    List<NamedStreamPipesEntity> graphs = new ArrayList<>(new InvocationGraphBuilder(pipelineGraph, previewId).buildGraphs());
-    graphs.addAll(pipeline.getStreams().stream().filter(stream -> !(stream instanceof SpDataSet)).collect(Collectors.toList()));
+    List<NamedStreamPipesEntity> pipelineElements = new PipelineVerificationHandlerV2(pipeline)
+            .verifyAndBuildGraphs(true)
+            .stream()
+            .filter(pe -> !(pe instanceof SpDataSet))
+            .collect(Collectors.toList());
 
-    invokeGraphs(filter(graphs));
-    storeGraphs(previewId, graphs);
+    invokeGraphs(filter(pipelineElements));
+    storeGraphs(previewId, pipelineElements);
 
-    return makePreviewModel(previewId, graphs);
+    return makePreviewModel(previewId, pipelineElements);
   }
 
   public void deletePreview(String previewId) {
@@ -77,12 +81,29 @@ public class PipelinePreview {
     }
   }
 
+  private String findSelectedEndpoint(InvocableStreamPipesEntity g) throws NoServiceEndpointsAvailableException {
+    return new ExtensionsServiceEndpointGenerator(
+            g.getAppId(),
+            ExtensionsServiceEndpointUtils.getPipelineElementType(g))
+            .getEndpointResourceUrl();
+  }
+
   private void invokeGraphs(List<InvocableStreamPipesEntity> graphs) {
-    graphs.forEach(g -> new HttpRequestBuilder(g, g.getBelongsTo(), null).invoke());
+    graphs.forEach(g -> {
+      try {
+        g.setSelectedEndpointUrl(findSelectedEndpoint(g));
+        new HttpRequestBuilder(g, g.getSelectedEndpointUrl(), null).invoke();
+      } catch (NoServiceEndpointsAvailableException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   private void detachGraphs(List<InvocableStreamPipesEntity> graphs) {
-    graphs.forEach(g -> new HttpRequestBuilder(g, g.getUri(), null).detach());
+    graphs.forEach(g -> {
+      String endpointUrl = g.getSelectedEndpointUrl() + "/" + InstanceIdExtractor.extractId(g.getElementId());
+      new HttpRequestBuilder(g, endpointUrl, null).detach();
+    });
   }
 
   private void deleteGraphs(String previewId) {

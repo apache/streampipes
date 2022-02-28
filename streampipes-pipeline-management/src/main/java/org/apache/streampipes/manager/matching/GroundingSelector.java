@@ -30,7 +30,8 @@ public abstract class GroundingSelector {
     protected NamedStreamPipesEntity source;
     protected Set<InvocableStreamPipesEntity> targets;
 
-    public GroundingSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
+    public GroundingSelector(NamedStreamPipesEntity source,
+                             Set<InvocableStreamPipesEntity> targets) {
         this.source = source;
         this.targets = targets;
     }

@@ -40,6 +40,10 @@ public class AllElementsProvider {
             .collect(Collectors.toList());
   }
 
+  public List<NamedStreamPipesEntity> getAllElements() {
+    return allElements;
+  }
+
   public NamedStreamPipesEntity findElement(String domId) {
     return this.allElements
             .stream()

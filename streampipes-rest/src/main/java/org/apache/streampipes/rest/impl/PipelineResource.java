@@ -213,7 +213,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @PreAuthorize(AuthConstants.HAS_WRITE_PIPELINE_PRIVILEGE)
   public Response update(Pipeline pipeline) {
     try {
-      return ok(Operations.validatePipeline(pipeline, true));
+      return ok(Operations.validatePipeline(pipeline));
     } catch (JsonSyntaxException e) {
       return badRequest(new Notification(NotificationType.UNKNOWN_ERROR,
               e.getMessage()));
