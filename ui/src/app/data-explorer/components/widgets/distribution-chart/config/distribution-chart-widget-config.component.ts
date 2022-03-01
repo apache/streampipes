@@ -49,6 +49,11 @@ export class DistributionWidgetConfigComponent
     this.triggerDataRefresh();
   }
 
+  onResolutionChange(resolution: number): void {
+    this.currentlyConfiguredWidget.visualizationConfig.resolution = resolution;
+    this.triggerDataRefresh();
+  }
+
   protected getWidgetType(): WidgetType {
     return WidgetType.DistributionChart;
   }
@@ -59,6 +64,7 @@ export class DistributionWidgetConfigComponent
       selectedProperty: this.fieldProvider.nonNumericFields[0],
       displayType: 'histogram',
       roundingValue: 0.1,
+      resolution: 1
     };
   }
 }
