@@ -28,6 +28,110 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Bug Fixes
 
+# [0.69.0]
+
+** Sub-task
+* [STREAMPIPES-427](https://issues.apache.org/jira/browse/STREAMPIPES-427) - Remove username from REST API paths
+* [STREAMPIPES-434](https://issues.apache.org/jira/browse/STREAMPIPES-434) - Use auto-setup over manual setup dialog
+* [STREAMPIPES-435](https://issues.apache.org/jira/browse/STREAMPIPES-435) - Add service account authentication
+* [STREAMPIPES-436](https://issues.apache.org/jira/browse/STREAMPIPES-436) - Prepare StreamPipes client for pipeline elements and adapters
+* [STREAMPIPES-437](https://issues.apache.org/jira/browse/STREAMPIPES-437) - Add initial authorization model
+* [STREAMPIPES-439](https://issues.apache.org/jira/browse/STREAMPIPES-439) - Add UI to manage users
+* [STREAMPIPES-441](https://issues.apache.org/jira/browse/STREAMPIPES-441) - Add email sending capability
+* [STREAMPIPES-453](https://issues.apache.org/jira/browse/STREAMPIPES-453) - Add object-level permission management
+* [STREAMPIPES-455](https://issues.apache.org/jira/browse/STREAMPIPES-455) - Add configuration option to provide external hostname
+* [STREAMPIPES-457](https://issues.apache.org/jira/browse/STREAMPIPES-457) - Add self-registration and password reset
+* [STREAMPIPES-458](https://issues.apache.org/jira/browse/STREAMPIPES-458) - Secure adapter endpoints
+* [STREAMPIPES-469](https://issues.apache.org/jira/browse/STREAMPIPES-469) - Merge LICENSE and NOTICE files
+* [STREAMPIPES-470](https://issues.apache.org/jira/browse/STREAMPIPES-470) - Fix Maven setup
+
+
+
+** Bug
+* [STREAMPIPES-226](https://issues.apache.org/jira/browse/STREAMPIPES-226) - Check usage of running adapter instances before deletion
+* [STREAMPIPES-237](https://issues.apache.org/jira/browse/STREAMPIPES-237) - Domain properties of imported connect adapter templates are not used
+* [STREAMPIPES-259](https://issues.apache.org/jira/browse/STREAMPIPES-259) - Use suitable descriptions in pipeline element config
+* [STREAMPIPES-396](https://issues.apache.org/jira/browse/STREAMPIPES-396) - Data Set Adapter does not work with JSON Array
+* [STREAMPIPES-407](https://issues.apache.org/jira/browse/STREAMPIPES-407) - Unable to register custom sink
+* [STREAMPIPES-424](https://issues.apache.org/jira/browse/STREAMPIPES-424) - ISS Adapter is broken
+* [STREAMPIPES-425](https://issues.apache.org/jira/browse/STREAMPIPES-425) - Time-Range in Data Explorer is not updated
+* [STREAMPIPES-429](https://issues.apache.org/jira/browse/STREAMPIPES-429) - Error on sinks.notifications.jvm.email
+* [STREAMPIPES-440](https://issues.apache.org/jira/browse/STREAMPIPES-440) - Access „Http Server“ adapter endpoint over ui container
+* [STREAMPIPES-444](https://issues.apache.org/jira/browse/STREAMPIPES-444) - Fix asset dashboard
+* [STREAMPIPES-460](https://issues.apache.org/jira/browse/STREAMPIPES-460) - Runtime options resolver does not support service discovery
+* [STREAMPIPES-479](https://issues.apache.org/jira/browse/STREAMPIPES-479) - Custom streampipes extensions missing Spring method
+* [STREAMPIPES-484](https://issues.apache.org/jira/browse/STREAMPIPES-484) - Replace SDK methods to receive files with StreamPipes Client requests
+* [STREAMPIPES-495](https://issues.apache.org/jira/browse/STREAMPIPES-495) - Icons in documentation are missing
+* [STREAMPIPES-496](https://issues.apache.org/jira/browse/STREAMPIPES-496) - streampipes-backend/api/v2/users/profile returning status 405 Method Not Allowed
+
+
+** New Feature
+* [STREAMPIPES-263](https://issues.apache.org/jira/browse/STREAMPIPES-263) - Add bundled extensions module for standalone jvm adapter and pipeline elements
+* [STREAMPIPES-295](https://issues.apache.org/jira/browse/STREAMPIPES-295) - HTTP Server adapter
+* [STREAMPIPES-335](https://issues.apache.org/jira/browse/STREAMPIPES-335) - Toggle slider as static property
+* [STREAMPIPES-398](https://issues.apache.org/jira/browse/STREAMPIPES-398) - Provide custom theme settings
+* [STREAMPIPES-408](https://issues.apache.org/jira/browse/STREAMPIPES-408) - Provide time settings in data explorer as query parameters
+* [STREAMPIPES-409](https://issues.apache.org/jira/browse/STREAMPIPES-409) - Support count query in data explorer
+* [STREAMPIPES-410](https://issues.apache.org/jira/browse/STREAMPIPES-410) - Support auto-aggregation in Data Explorer API v4
+* [STREAMPIPES-412](https://issues.apache.org/jira/browse/STREAMPIPES-412) - Add histogram widget to data explorer
+* [STREAMPIPES-413](https://issues.apache.org/jira/browse/STREAMPIPES-413) - Add density widget to data explorer
+* [STREAMPIPES-414](https://issues.apache.org/jira/browse/STREAMPIPES-414) - Support filtering in Data Explorer API
+* [STREAMPIPES-415](https://issues.apache.org/jira/browse/STREAMPIPES-415) - Add pie chart widget to data explorer
+* [STREAMPIPES-417](https://issues.apache.org/jira/browse/STREAMPIPES-417) - Provide dashboard id as url parameter in live dashboard
+* [STREAMPIPES-421](https://issues.apache.org/jira/browse/STREAMPIPES-421) - Configure collection static properties CSV file
+* [STREAMPIPES-423](https://issues.apache.org/jira/browse/STREAMPIPES-423) - Support other languages in CodeInput static property
+* [STREAMPIPES-428](https://issues.apache.org/jira/browse/STREAMPIPES-428) - Add map widget to data explorer
+* [STREAMPIPES-501](https://issues.apache.org/jira/browse/STREAMPIPES-501) - Add throughput monitoring processor
+* [STREAMPIPES-504](https://issues.apache.org/jira/browse/STREAMPIPES-504) - Support tree-based static property configuration
+
+
+** Improvement
+* [STREAMPIPES-204](https://issues.apache.org/jira/browse/STREAMPIPES-204) - Loading time of install pipeline element page takes long
+* [STREAMPIPES-229](https://issues.apache.org/jira/browse/STREAMPIPES-229) - Change location of save button in pipeline editor
+* [STREAMPIPES-281](https://issues.apache.org/jira/browse/STREAMPIPES-281) - Update consul version
+* [STREAMPIPES-376](https://issues.apache.org/jira/browse/STREAMPIPES-376) - Store pipeline element descriptions in CouchDB storage
+* [STREAMPIPES-380](https://issues.apache.org/jira/browse/STREAMPIPES-380) - Refactor connect UI
+* [STREAMPIPES-383](https://issues.apache.org/jira/browse/STREAMPIPES-383) - Harmonize web servers used by StreamPipes services
+* [STREAMPIPES-384](https://issues.apache.org/jira/browse/STREAMPIPES-384) - Show pipeline element icons in installation view
+* [STREAMPIPES-386](https://issues.apache.org/jira/browse/STREAMPIPES-386) - Harmonize StreamPipes Connect Service
+* [STREAMPIPES-387](https://issues.apache.org/jira/browse/STREAMPIPES-387) - Split StreamPipes Connect worker into two different services
+* [STREAMPIPES-397](https://issues.apache.org/jira/browse/STREAMPIPES-397) - Remove obsolete module configs from UI
+* [STREAMPIPES-399](https://issues.apache.org/jira/browse/STREAMPIPES-399) - Use new StreamPipes logo in UI
+* [STREAMPIPES-401](https://issues.apache.org/jira/browse/STREAMPIPES-401) - Persist data explorer settings
+* [STREAMPIPES-402](https://issues.apache.org/jira/browse/STREAMPIPES-402) - Improve data explorer widget config
+* [STREAMPIPES-406](https://issues.apache.org/jira/browse/STREAMPIPES-406) - Bump Flink Version
+* [STREAMPIPES-418](https://issues.apache.org/jira/browse/STREAMPIPES-418) - Datalake sink should use event schema to detect type of property
+* [STREAMPIPES-422](https://issues.apache.org/jira/browse/STREAMPIPES-422) - Word cloud dashboard widget not updating to new events
+* [STREAMPIPES-438](https://issues.apache.org/jira/browse/STREAMPIPES-438) - Harmonize Model Submitter
+* [STREAMPIPES-443](https://issues.apache.org/jira/browse/STREAMPIPES-443) - Remove duplicate code from the adapter modules
+* [STREAMPIPES-447](https://issues.apache.org/jira/browse/STREAMPIPES-447) - Processing Element: Detect Value Change
+* [STREAMPIPES-448](https://issues.apache.org/jira/browse/STREAMPIPES-448) - Processing Element: Boolean Filter
+* [STREAMPIPES-449](https://issues.apache.org/jira/browse/STREAMPIPES-449) - Update Processing Element API in module streampipes-processors-filters-jvm
+* [STREAMPIPES-472](https://issues.apache.org/jira/browse/STREAMPIPES-472) - Reduce dependency overhead of extensions modules
+* [STREAMPIPES-474](https://issues.apache.org/jira/browse/STREAMPIPES-474) - Update Maven archetypes
+* [STREAMPIPES-477](https://issues.apache.org/jira/browse/STREAMPIPES-477) - CLI logs service name optional
+* [STREAMPIPES-480](https://issues.apache.org/jira/browse/STREAMPIPES-480) - Update Spring version
+* [STREAMPIPES-486](https://issues.apache.org/jira/browse/STREAMPIPES-486) - Update Flink and add log4j to dependency management
+* [STREAMPIPES-487](https://issues.apache.org/jira/browse/STREAMPIPES-487) - Refactor Flink modules to use new service builder pattern
+* [STREAMPIPES-489](https://issues.apache.org/jira/browse/STREAMPIPES-489) - Properly stop Flink jobs when running in debug mode
+* [STREAMPIPES-490](https://issues.apache.org/jira/browse/STREAMPIPES-490) - Links on wiki page incorrect, they include .../docs/docs.. in url
+* [STREAMPIPES-499](https://issues.apache.org/jira/browse/STREAMPIPES-499) - Update Jsplumb dependency
+* [STREAMPIPES-502](https://issues.apache.org/jira/browse/STREAMPIPES-502) - Replace reserved keywords of events stored in data lake storage
+* [STREAMPIPES-503](https://issues.apache.org/jira/browse/STREAMPIPES-503) - Add slide toggle static property
+* [STREAMPIPES-505](https://issues.apache.org/jira/browse/STREAMPIPES-505) - Improve node discovery of OPC-UA adapter
+* [STREAMPIPES-509](https://issues.apache.org/jira/browse/STREAMPIPES-509) - Use data lake APIs in live dashboard
+* [STREAMPIPES-510](https://issues.apache.org/jira/browse/STREAMPIPES-510) - Provide better overview of pipeline elements in editor
+* [STREAMPIPES-511](https://issues.apache.org/jira/browse/STREAMPIPES-511) - Support change of username and password in profile view
+
+** Test
+* [STREAMPIPES-476](https://issues.apache.org/jira/browse/STREAMPIPES-476) - Implementation of Pipeline Tests
+* [STREAMPIPES-483](https://issues.apache.org/jira/browse/STREAMPIPES-483) - Provide E2E tests for preprocessing rules within the adapter
+
+
+** Task
+* [STREAMPIPES-442](https://issues.apache.org/jira/browse/STREAMPIPES-442) - Upgrade Angular to v12
+
+
 
 # [0.68.0]
 
