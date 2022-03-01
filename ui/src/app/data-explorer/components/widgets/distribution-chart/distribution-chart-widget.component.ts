@@ -29,10 +29,14 @@ import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services
 export class DistributionChartWidgetComponent extends BaseDataExplorerWidgetDirective<DistributionChartWidgetModel> implements OnInit {
 
   data = [];
+  latestData: SpQueryResult[];
 
   rowNo = 2;
   colNo = 2;
   fixedColNo = 2;
+
+  currentWidth: number;
+  currentHeight: number;
 
   graph = {
     layout: {
@@ -171,6 +175,8 @@ export class DistributionChartWidgetComponent extends BaseDataExplorerWidgetDire
   }
 
   onResize(width: number, height: number) {
+    this.currentWidth = width;
+    this.currentHeight = height;
     this.graph.layout.autosize = false;
     (this.graph.layout as any).width = width;
     (this.graph.layout as any).height = height;
@@ -181,6 +187,7 @@ export class DistributionChartWidgetComponent extends BaseDataExplorerWidgetDire
 
   onDataReceived(spQueryResult: SpQueryResult[]) {
     this.prepareData(spQueryResult);
+    this.latestData = spQueryResult;
     this.setShownComponents(false, true, false, false);
   }
 

@@ -100,6 +100,7 @@ import { CorrelationWidgetConfigComponent } from './components/widgets/correlati
 import { TimeSelectionService } from './services/time-selection.service';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
+import { SpValueHeatmapComponent } from "./components/widgets/distribution-chart/value-heatmap/value-heatmap.component";
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -185,6 +186,7 @@ export const MY_NATIVE_FORMATS = {
     SelectPropertiesComponent,
     SelectColorPropertiesComponent,
     SelectPropertyComponent,
+    SpValueHeatmapComponent,
     TableWidgetComponent,
     TableWidgetConfigComponent,
     MapWidgetConfigComponent,

@@ -28,11 +28,19 @@
             (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
             *ngIf="showTooMuchData"></sp-too-much-data>
 
-    <plotly-plot *ngIf="showData"
+    <plotly-plot *ngIf="showData && !(dataExplorerWidget.visualizationConfig.displayType === 'heatmap')"
                  [divId]="dataExplorerWidget._id"
                  class="plotly-container"
                  [data]="data"
                  [layout]="graph.layout"
                  [config]="graph.config">
     </plotly-plot>
+
+    <sp-data-explorer-value-heatmap-widget *ngIf="showData && (dataExplorerWidget.visualizationConfig.displayType === 'heatmap')"
+    [currentWidth]="currentWidth"
+    [currentHeight]="currentHeight"
+    [widgetConfig]="dataExplorerWidget"
+    [data]="latestData">
+
+    </sp-data-explorer-value-heatmap-widget>
 </div>
