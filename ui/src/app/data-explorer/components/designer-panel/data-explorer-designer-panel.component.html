@@ -31,7 +31,7 @@
         <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectOptionsPanel($event)" color="accent"
                        class="small">
             <mat-tab data-cy="designer-panel-data-config" label="Data"></mat-tab>
-            <mat-tab data-cy="designer-panel-visualization-config" label="Visualization"></mat-tab>
+            <mat-tab data-cy="designer-panel-visualization-config" label="Visualization" [disabled]="!currentlyConfiguredWidget.dataConfig.sourceConfigs || currentlyConfiguredWidget.dataConfig.sourceConfigs.length === 0"></mat-tab>
             <mat-tab data-cy="designer-panel-appearance-config" label="Appearance"></mat-tab>
         </mat-tab-group>
 
