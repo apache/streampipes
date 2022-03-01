@@ -195,6 +195,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle = 'New Widget';
     this.currentlyConfiguredWidget.dataConfig = {};
     this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
+    this.currentlyConfiguredWidget.baseAppearanceConfig.textColor = '#3e3e3e';
     this.newWidgetMode = true;
     this.showDesignerPanel = true;
     this.newWidgetMode = true;
