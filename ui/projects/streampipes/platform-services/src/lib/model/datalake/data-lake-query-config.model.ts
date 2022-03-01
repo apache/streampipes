@@ -72,4 +72,5 @@ export interface SourceConfig {
 
 export interface DataExplorerDataConfig {
   sourceConfigs: SourceConfig[];
+  ignoreTooMuchDataWarning: boolean;
 }
