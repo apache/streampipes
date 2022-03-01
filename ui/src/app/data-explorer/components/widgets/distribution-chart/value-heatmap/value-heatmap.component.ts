@@ -37,21 +37,27 @@ export class SpValueHeatmapComponent implements OnInit {
   widgetConfig: DistributionChartWidgetModel;
 
   configReady = true;
-  option = {
+  option: EChartsOption = {
+    grid: {
+      height: '80%',
+      top: '7%'
+    },
     tooltip: {},
     xAxis: {
       type: 'category',
-      data: [0, 1, 2, 3, 4, 5]
+      data: []
     },
     yAxis: {
       type: 'category',
-      data: [0]
+      data: []
     },
     visualMap: {
       min: 0,
       max: 1,
       calculable: true,
       realtime: false,
+      top: '10px',
+      left: '10px',
       inRange: {
         color: [
           '#313695',
@@ -72,7 +78,7 @@ export class SpValueHeatmapComponent implements OnInit {
       {
         name: 'Gaussian',
         type: 'heatmap',
-        data: [[1, 0, 0.2], [2, 0, 0.4]],
+        data: [],
         emphasis: {
           itemStyle: {
             borderColor: '#333',
@@ -98,28 +104,40 @@ export class SpValueHeatmapComponent implements OnInit {
   }
 
   initOptions() {
-    const dataResult = [];
-    const resolution: number = +this.widgetConfig.visualizationConfig.resolution;
-    const allRows = this.data_[0].allDataSeries[0].rows;
-    const allValues = allRows.map(row => row[1]);
-    const total = allValues.length;
-    let currentCount = 0;
-    allValues.sort((a, b) => (a - b));
-    let start = allValues[0];
-    for (let i = 0; i < allValues.length; i++) {
-      const value = allValues[i];
-      if (value < (start + resolution)) {
-        currentCount += 1;
+    if (this.data_) {
+      const dataResult = [];
+      const resolution: number = +this.widgetConfig.visualizationConfig.resolution;
+      const allRows = this.data_[0].allDataSeries[0].rows;
+      const fieldIndex = this.getFieldIndex(this.data_[0].allDataSeries[0].headers);
+      const allValues = allRows.map(row => row[fieldIndex]);
+      const total = allValues.length;
+      let currentCount = 0;
+      allValues.sort((a, b) => (a - b));
+      let start = allValues[0];
+      for (let i = 0; i < allValues.length; i++) {
+        const value = allValues[i];
+        if (value < (start + resolution)) {
+          currentCount += 1;
+        }
+        if (value >= (start + resolution) || (i + 1) === allValues.length) {
+          const currentRange = '>' + start.toFixed(2) + ((i + 1) < allValues.length ? '<' + (allValues[i + 1]).toFixed(2) : '');
+          dataResult.push([currentRange, 0, ((currentCount + 1) / total)]);
+          currentCount = 0;
+          start = allValues[i + 1];
+        }
       }
-      if (value >= (start + resolution) || (i + 1) === allValues.length) {
-        const currentRange = start.toFixed(2) + '-' + ((i + 1) < allValues.length ? (allValues[i + 1]).toFixed(2) : '');
-        dataResult.push([currentRange, 0, ((currentCount + 1) / total)]);
-        currentCount = 0;
-        start = allValues[i + 1];
+      this.dynamic = this.option;
+      (this.dynamic.xAxis as any).data = dataResult.map(r => r[0]);
+      this.dynamic.series[0].data = dataResult;
+      this.dynamic.series[0].name = this.data_[0].headers[fieldIndex];
+      if (this.eChartsInstance) {
+        this.eChartsInstance.setOption(this.dynamic);
       }
     }
-    this.option.xAxis.data = dataResult.map(r => r[0]);
-    this.option.series[0].data = dataResult;
+  }
+
+  getFieldIndex(headers: string[]) {
+    return headers.indexOf(this.widgetConfig.visualizationConfig.selectedProperty.fullDbName);
   }
 
   applySize(width: number, height: number) {
