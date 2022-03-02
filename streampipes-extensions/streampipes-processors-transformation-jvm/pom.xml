@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.69.0</version>
+        <version>0.69.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -44,12 +44,12 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk-bundle</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -88,8 +88,4 @@
         <finalName>streampipes-processors-transformation-jvm</finalName>
 
     </build>
-
-  <scm>
-    <tag>release/0.69.0</tag>
-  </scm>
 </project>

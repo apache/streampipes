@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.69.0</version>
+        <version>0.69.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-data-simulator</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -48,17 +48,17 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk-bundle</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sources</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -105,8 +105,4 @@
         <finalName>streampipes-sources-watertank-simulator</finalName>
 
     </build>
-
-  <scm>
-    <tag>release/0.69.0</tag>
-  </scm>
 </project>
