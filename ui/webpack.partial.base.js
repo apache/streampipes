@@ -43,7 +43,8 @@ module.exports = {
             legacy: path.join(__dirname, 'src', 'assets', 'lib'),
         },
         fallback: {
-            "assert": false
+					"assert": false,
+					"stream": require.resolve("stream-browserify")
         }
     },
     plugins: [
