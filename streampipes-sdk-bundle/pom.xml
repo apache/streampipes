@@ -16,13 +16,11 @@
   ~ limitations under the License.
   ~
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.69.0-SNAPSHOT</version>
+        <version>0.69.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,47 +30,47 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-extensions</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-json</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-cbor</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-smile</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-dataformat-fst</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-jms</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-kafka</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-mqtt</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.69.0</version>
         </dependency>
     </dependencies>
 

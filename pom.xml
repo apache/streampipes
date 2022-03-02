@@ -17,8 +17,7 @@
 ~
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 <modelVersion>4.0.0</modelVersion>
 
 <parent>
@@ -29,7 +28,7 @@
 
 <groupId>org.apache.streampipes</groupId>
 <artifactId>streampipes-parent</artifactId>
-<version>0.69.0-SNAPSHOT</version>
+<version>0.69.0</version>
 <packaging>pom</packaging>
 
 <properties>
@@ -1176,7 +1175,7 @@ IoT data streams.
 						</goals>
 						<configuration>
 							<rules>
-								<dependencyConvergence/>
+								<dependencyConvergence />
 							</rules>
 						</configuration>
 					</execution>
@@ -1405,7 +1404,7 @@ IoT data streams.
 		<developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
 		<connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
 		<url>https://github.com/apache/incubator-streampipes</url>
-		<tag>HEAD</tag>
+		<tag>release/0.69.0</tag>
 	</scm>
 
 	<issueManagement>
