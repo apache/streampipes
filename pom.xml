@@ -992,6 +992,7 @@ IoT data streams.
 							<groupId>net.nicoulaj.maven.plugins</groupId>
 							<artifactId>checksum-maven-plugin</artifactId>
 							<version>1.11</version>
+							<inherited>false</inherited>
 							<executions>
 								<execution>
 									<goals>
@@ -1094,9 +1095,8 @@ IoT data streams.
 					<artifactId>maven-release-plugin</artifactId>
 					<version>3.0.0-M5</version>
 					<configuration>
-						<arguments>-Papache-release</arguments>
 						<useReleaseProfile>true</useReleaseProfile>
-						<goals>deploy</goals>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
 						<releaseProfiles>apache-release</releaseProfiles>
 					</configuration>
 				</plugin>
