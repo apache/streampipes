@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.69.0</version>
+        <version>0.69.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,43 +35,43 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-aggregation-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-enricher-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-geo-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-pattern-detection-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-statistics-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-text-mining-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-processors-transformation-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sinks-databases-flink</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
 
         <!-- 3rd party dependencies to avoid convergence errors -->
@@ -124,8 +124,4 @@
         </plugins>
         <finalName>streampipes-pipeline-elements-all-flink</finalName>
     </build>
-
-  <scm>
-    <tag>release/0.69.0</tag>
-  </scm>
 </project>
