@@ -28,10 +28,14 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ApplyGroundingStep extends AbstractPipelineValidationStep {
+
+  private final Map<String, EventGrounding> sourceGroundingVisitorMap = new HashMap<>();
 
   @Override
   public void apply(NamedStreamPipesEntity source,
@@ -49,7 +53,13 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
     if (!match) {
       throw new SpValidationException(errorLog);
     } else {
-      EventGrounding selectedGrounding = new GroundingBuilder(source, allTargets).getEventGrounding();
+      EventGrounding selectedGrounding;
+      if (!sourceGroundingVisitorMap.containsKey(source.getDOM())) {
+        selectedGrounding = new GroundingBuilder(source, allTargets).getEventGrounding();
+        sourceGroundingVisitorMap.put(source.getDOM(), selectedGrounding);
+      } else {
+        selectedGrounding = new EventGrounding(sourceGroundingVisitorMap.get(source.getDOM()));
+      }
 
       if (source instanceof DataProcessorInvocation) {
         ((DataProcessorInvocation) source)
