@@ -24,6 +24,7 @@ import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -39,9 +40,39 @@ public class ProtocolSelector extends GroundingSelector {
 
     public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
         super(source, targets);
-        this.outputTopic = TopicGenerator.generateRandomTopic();
+        this.outputTopic = getTopic(source);
         this.prioritizedProtocols =
                 BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
+    }
+
+    private String getTopic(NamedStreamPipesEntity source) {
+        if (source instanceof DataProcessorInvocation) {
+            DataProcessorInvocation invocation = (DataProcessorInvocation) source;
+            if (invocation.getOutputStream() != null) {
+                if (existsGrounding(invocation) && existsTopic(invocation)) {
+                    return invocation
+                            .getOutputStream()
+                            .getEventGrounding()
+                            .getTransportProtocol()
+                            .getTopicDefinition()
+                            .getActualTopicName();
+                }
+            }
+        }
+        return TopicGenerator.generateRandomTopic();
+    }
+
+    private boolean existsTopic(DataProcessorInvocation invocation) {
+        return invocation
+                .getOutputStream()
+                .getEventGrounding()
+                .getTransportProtocol()
+                .getTopicDefinition()
+                .getActualTopicName() != null;
+    }
+
+    private boolean existsGrounding(DataProcessorInvocation invocation) {
+        return invocation.getOutputStream().getEventGrounding() != null;
     }
 
     public TransportProtocol getPreferredProtocol() {
