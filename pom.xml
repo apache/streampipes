@@ -28,7 +28,7 @@
 
 <groupId>org.apache.streampipes</groupId>
 <artifactId>streampipes-parent</artifactId>
-<version>0.69.0</version>
+<version>0.69.1-SNAPSHOT</version>
 <packaging>pom</packaging>
 
 <properties>
@@ -1404,7 +1404,7 @@ IoT data streams.
 		<developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
 		<connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
 		<url>https://github.com/apache/incubator-streampipes</url>
-		<tag>release/0.69.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>

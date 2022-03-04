@@ -21,7 +21,7 @@
     <parent>
         <artifactId>streampipes-parent</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.69.0</version>
+        <version>0.69.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -32,37 +32,37 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-config</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-client</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-service-extensions-base</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-rest-shared</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-serializers-json</artifactId>
-            <version>0.69.0</version>
+            <version>0.69.1-SNAPSHOT</version>
         </dependency>
         <!-- External dependencies -->
 
