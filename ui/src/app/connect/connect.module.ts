@@ -80,6 +80,7 @@ import { SchemaEditorHeaderComponent } from './components/schema-editor/schema-e
 import { StartAdapterConfigurationComponent } from './components/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { FormatItemJsonComponent } from './components/format-item-json/format-item-json.component';
 
 @NgModule({
   imports: [
@@ -134,7 +135,8 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
     ErrorMessageComponent,
     LoadingMessageComponent,
     SchemaEditorHeaderComponent,
-    StartAdapterConfigurationComponent
+    StartAdapterConfigurationComponent,
+    FormatItemJsonComponent
   ],
   providers: [
     RestService,

@@ -35,7 +35,8 @@ public class JsonArrayFormat extends AbstractJsonFormat {
 
     @Override
     public FormatDescription declareModel() {
-        return FormatDescriptionBuilder.create(ID, "Json Array No Key", "Transforms all objects within array to events")
+        return FormatDescriptionBuilder.create(ID, "Array", "Each event consists of only one array of json objects, e.g. [{'value': 1}, {'value': 2}]")
+                .addFormatType(JSON_FORMAT_TYPE)
                 .build();
     }
 

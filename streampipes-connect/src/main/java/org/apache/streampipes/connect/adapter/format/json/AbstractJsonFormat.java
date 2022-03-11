@@ -26,6 +26,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import java.util.Map;
 
 public abstract class AbstractJsonFormat implements IFormat {
+  public static String JSON_FORMAT_TYPE = "json";
 
   @Override
   public Map<String, Object> parse(byte[] object) throws ParseException {

@@ -59,11 +59,6 @@ export class FormatConfigurationComponent implements OnInit {
   selectedFormat: FormatDescription;
 
   /**
-   * Contains all the available formats that a user can select from
-   */
-  allFormats: FormatDescription[] = [];
-
-  /**
    * The form group to validate the configuration for the format
    */
   formatForm: FormGroup;
@@ -74,11 +69,6 @@ export class FormatConfigurationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    // fetch all available formats from backend
-    this.restService.getFormats().subscribe(res => {
-      this.allFormats = res;
-    });
 
     // initialize form for validation
     this.formatForm = this._formBuilder.group({});
@@ -101,6 +91,8 @@ export class FormatConfigurationComponent implements OnInit {
         this.formatConfigurationValid = this.formatForm.valid;
       }
     }
+
+    this.formatConfigurationValid = false;
   }
 
   formatSelected(selectedFormat) {

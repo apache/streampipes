@@ -34,8 +34,9 @@ public class JsonObjectFormat extends AbstractJsonFormat {
 
   @Override
   public FormatDescription declareModel() {
-    return FormatDescriptionBuilder.create(ID, "Json Object", "Requires an enclosing Json Object")
-                .build();
+    return FormatDescriptionBuilder.create(ID, "Single Object", "Each event is a single json object (e.g. {'value': 1})")
+            .addFormatType(JSON_FORMAT_TYPE)
+            .build();
   }
 
   @Override

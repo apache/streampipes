@@ -38,7 +38,8 @@ public class JsonFormat extends AbstractJsonFormat {
     @Override
     public FormatDescription declareModel() {
 
-        return FormatDescriptionBuilder.create(ID, "Json Array Key", "Transforms objects within an array into events")
+        return FormatDescriptionBuilder.create(ID, "Array Field", "Use one property of the json object that is an array, e.g. {'arrayKey': [{'value': 1}, {'value': 2}]}")
+                .addFormatType(JSON_FORMAT_TYPE)
                 .requiredTextParameter(Labels.from("key","Key",
                         "Key of the array within the Json object"))
                 .build();

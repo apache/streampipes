@@ -23,13 +23,13 @@
     </div>
     <div class="sp-blue-border padding">
         <sp-format-list fxFlex="100"
-                        [allFormats]="allFormats"
                         (selectedFormatEmitter)="formatSelected($event)"
                         [selectedFormat]="selectedFormat">
         </sp-format-list>
     </div>
 
-    <div class="assemblyOptions sp-blue-bg">
+    <div class="assemblyOptions sp-blue-bg"
+         *ngIf="selectedFormat">
         <h4>Configure format</h4>
     </div>
 
