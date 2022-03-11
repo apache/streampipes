@@ -104,16 +104,9 @@ export class StartAdapterConfigurationComponent implements OnInit {
       this.adapterDescription instanceof SpecificAdapterSetDescription) {
     }
 
-    // Auto selection of timestamp field for datalake
-    // const eventSchema = this.connectService.getEventSchema(this.adapterDescription);
-    // this.timestampPropertiesInSchema = this.timestampPipe.transform(eventSchema.eventProperties, '');
-    // if (this.timestampPropertiesInSchema.length > 0) {
-    //   this.dataLakeTimestampField = this.timestampPropertiesInSchema[0].runtimeName;
-    // }
-
   }
 
-  public triggerDialog(directlyStartAdapter: boolean) {
+  public triggerDialog() {
     if (this.removeDuplicates) {
       const removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
       removeDuplicates['@class'] = 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
@@ -134,7 +127,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
       width: '70vw',
       data: {
         'adapter': this.adapterDescription,
-        'directlyStartAdapter': directlyStartAdapter,
         'saveInDataLake': this.saveInDataLake,
         'dataLakeTimestampField': this.dataLakeTimestampField
       }
@@ -148,11 +140,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
   }
 
   public startAdapter() {
-    this.triggerDialog(true);
-  }
-
-  public createAdapter() {
-    this.triggerDialog(false);
+    this.triggerDialog();
   }
 
   public removeSelection() {

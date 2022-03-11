@@ -49,9 +49,6 @@ export class AdapterStartedDialog implements OnInit {
   public pipelineOperationStatus: PipelineOperationStatus;
 
   @Input()
-  directlyStartAdapter: boolean;
-
-  @Input()
   adapter: AdapterDescriptionUnion;
 
   @Input()

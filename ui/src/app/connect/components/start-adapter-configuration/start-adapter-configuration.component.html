@@ -32,18 +32,6 @@
                        placeholder="Adapter Description" [(ngModel)]="adapterDescription.description">
             </mat-form-field>
 
-            <!-- Provide icon for adapter -->
-            <!--                        <mat-form-field *ngIf="isEditable" style="width: 50%" (click)="fileInput.click();">-->
-            <!--                            <input matInput placeholder="Icon" disabled (value)="fileName">-->
-            <!--                            <input #fileInput type="file" style="display:none;"-->
-            <!--                                (change)="handleFileInput($event.target.files)">-->
-            <!--                            {{fileName}}-->
-            <!--                            <button color="primary" matSuffix mat-button style="min-width: 0px">-->
-            <!--                                <mat-icon>insert_drive_file</mat-icon>-->
-            <!--                            </button>-->
-            <!--                        </mat-form-field>-->
-
-
             <mat-checkbox [(ngModel)]="removeDuplicates"
                           [ngModelOptions]="{standalone: true}"
                           data-cy="connect-remove-duplicates-box">Remove Duplicates
@@ -100,11 +88,6 @@
     <div fxLayoutAlign="end">
         <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
         <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back
-        </button>
-        <button [disabled]="startAdapterSettingsFormValid" mat-raised-button
-                id="button-saveTemplate" color="accent" (click)="createAdapter()" mat-button
-                style="margin-left:10px;">
-            Create Adapter
         </button>
         <button [disabled]="startAdapterSettingsFormValid" mat-raised-button id="button-startAdapter"
                 color="accent" (click)="startAdapter()" mat-button style="margin-left:10px;">
