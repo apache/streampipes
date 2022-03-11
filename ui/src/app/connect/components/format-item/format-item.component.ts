@@ -51,16 +51,6 @@ export class FormatItemComponent {
 
   }
 
-  validateText(textValid) {
-    if (textValid && (this.format as any).edit) {
-      this.validateEmitter.emit(true);
-      this.selectedFormat = this.format;
-      this.selectedFormatEmitter.emit(this.selectedFormat);
-    } else {
-      this.validateEmitter.emit(false);
-      this.selectedFormat = null;
-    }
-  }
   isSelected(): boolean {
     if (!this.selectedFormat || !this.format) {
       return false;

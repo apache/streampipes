@@ -16,8 +16,9 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormatDescription } from '@streampipes/platform-services';
+import { RestService } from '../../services/rest.service';
 
 @Component({
     selector: 'sp-format-list',
@@ -25,15 +26,42 @@ import { FormatDescription } from '@streampipes/platform-services';
     styleUrls: ['./format-list.component.scss']
   })
 
-export class FormatListComponent {
+export class FormatListComponent implements OnInit {
 
     @Input() public selectedFormat: FormatDescription;
-    @Input() allFormats: FormatDescription[];
 
     @Output() validateEmitter = new EventEmitter();
     @Output() public selectedFormatEmitter = new EventEmitter<FormatDescription>();
 
-    constructor() {
+    /**
+     * Contains all the available formats that a user can select from
+     */
+    allFormats: FormatDescription[] = [];
+
+    allJsonFormats: FormatDescription[] = [];
+    showJsonFormats: FormatDescription[] = [];
+
+    jsonFormatDescription = new FormatDescription();
+    selectJsonFormats = false;
+
+    constructor(private restService: RestService) {
+        this.jsonFormatDescription.name = 'Json';
+    }
+
+    ngOnInit(): void {
+        // fetch all available formats from backend
+        this.restService.getFormats().subscribe(res => {
+            // this.allFormats.push(jsonFormatDescription);
+            // split resulting formats up to only show one button for Json Formats
+            res.forEach(format => {
+                if (format.formatType !== 'json') {
+                    this.allFormats.push(format);
+                } else {
+                    this.allJsonFormats.push(format);
+                }
+            });
+        });
+
     }
 
     formatEditable(selectedFormat) {
@@ -44,9 +72,23 @@ export class FormatListComponent {
       });
     }
 
-    formatSelected(selectedFormat) {
-      this.selectedFormat = selectedFormat;
-      this.selectedFormatEmitter.emit(this.selectedFormat);
+    formatSelected(selectedFormat: FormatDescription) {
+        if (selectedFormat.formatType !== 'json') {
+            this.showJsonFormats = [];
+            this.selectJsonFormats = false;
+        }
+
+        this.selectedFormat = selectedFormat;
+        this.selectedFormatEmitter.emit(this.selectedFormat);
+
+    }
+
+    selectJsonFormat() {
+        this.showJsonFormats = this.allJsonFormats;
+        this.selectJsonFormats = true;
+
+        this.selectedFormat = this.allJsonFormats[2];
+        this.selectedFormatEmitter.emit(this.selectedFormat);
 
     }
 

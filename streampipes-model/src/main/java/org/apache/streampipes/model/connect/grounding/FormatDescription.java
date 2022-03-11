@@ -30,6 +30,8 @@ public class FormatDescription extends NamedStreamPipesEntity {
 
     private List<StaticProperty> config;
 
+    private String formatType = "";
+
     public FormatDescription() {
         super();
         this.config = new ArrayList<>();
@@ -40,14 +42,16 @@ public class FormatDescription extends NamedStreamPipesEntity {
         this.config = new ArrayList<>();
     }
 
-    public FormatDescription(String uri, String name, String description, List<StaticProperty> config) {
+    public FormatDescription(String uri, String name, String description, List<StaticProperty> config, String formatType) {
         super(uri, name, description);
         this.config = config;
+        this.formatType = formatType;
     }
 
     public FormatDescription(FormatDescription other) {
         super(other);
         this.config = new Cloner().staticProperties(other.getConfig());
+        this.formatType = other.getFormatType();
     }
 
     public void addConfig(StaticProperty sp) {
@@ -62,9 +66,18 @@ public class FormatDescription extends NamedStreamPipesEntity {
         this.config = config;
     }
 
+    public String getFormatType() {
+        return formatType;
+    }
+
+    public void setFormatType(String formatType) {
+        this.formatType = formatType;
+    }
+
     @Override
     public String toString() {
         return "FormatDescription{" +
+                "formatType=" + formatType +
                 "config=" + config +
                 '}';
     }

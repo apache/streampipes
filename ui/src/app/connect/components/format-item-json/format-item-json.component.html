@@ -18,11 +18,10 @@
 
 <div fxFlex="100"
      fxLayout="column"
-     matTooltip="{{format.description}}"
-     [attr.data-cy]="format.name.split(' ').join('_').toLowerCase()"
-     *ngIf="!$any(format).edit || !hasConfig"
+     matTooltip="Select one of the supported json formats"
+     data-cy="connect-select-json-formats"
      class="format-box"
-     (click)="formatEditable()"
-     [ngClass]="{selectedItem: isSelected()}" >
-    <div class="format-label"> {{format.name}} </div>
+     [ngClass]="{selectedItem: isSelected}" >
+    <div class="format-label">Json</div>
 </div>
+

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter.format.geojson;
 
+import org.apache.streampipes.connect.adapter.format.json.AbstractJsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
@@ -40,6 +41,7 @@ public class GeoJsonFormat implements IFormat {
     public FormatDescription declareModel() {
 
         return FormatDescriptionBuilder.create(ID, "GeoJSON", "Reads GeoJson")
+                .addFormatType(AbstractJsonFormat.JSON_FORMAT_TYPE)
                 .build();
 
     }

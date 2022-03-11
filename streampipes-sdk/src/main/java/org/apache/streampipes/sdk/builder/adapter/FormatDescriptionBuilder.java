@@ -38,6 +38,16 @@ public class FormatDescriptionBuilder extends
     return new FormatDescriptionBuilder(id, label, description);
   }
 
+  /**
+   * Add a format type to the format description, e.g. json
+   * @param formatType
+   * @return
+   */
+  public FormatDescriptionBuilder addFormatType(String formatType) {
+    this.elementDescription.setFormatType(formatType);
+    return me();
+  }
+
   @Override
   protected FormatDescriptionBuilder me() {
     return this;

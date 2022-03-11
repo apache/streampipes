@@ -17,11 +17,33 @@
   -->
 
 <div fxLayout="row wrap" fxLayoutAlign="start stretch">
-    <div fxFlex="33" *ngFor="let format of allFormats">
+
+    <div fxFlex="25">
+        <sp-format-item-json
+                [isSelected]="selectJsonFormats"
+                (click)="selectJsonFormat()"></sp-format-item-json>
+    </div>
+    <div fxFlex="25"
+         *ngFor="let format of allFormats">
         <sp-format-item [format]="format" (validateEmitter)="validateAll($event)"
-        (editableEmitter)="formatEditable($event)"
-        [selectedFormat]="selectedFormat"
-        (selectedFormatEmitter)="formatSelected($event)">
+                        (editableEmitter)="formatEditable($event)"
+                        [selectedFormat]="selectedFormat"
+                        (selectedFormatEmitter)="formatSelected($event)">
+        </sp-format-item>
+    </div>
+
+    <div fxFlex="100"
+         class="assemblyOptions sp-blue-bg"
+         *ngIf="selectJsonFormats">
+        <h4>Select json format</h4>
+    </div>
+
+    <div fxFlex="25"
+         *ngFor="let format of showJsonFormats">
+        <sp-format-item [format]="format" (validateEmitter)="validateAll($event)"
+                        (editableEmitter)="formatEditable($event)"
+                        [selectedFormat]="selectedFormat"
+                        (selectedFormatEmitter)="formatSelected($event)">
         </sp-format-item>
     </div>
 </div>
