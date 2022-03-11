@@ -1,2 +1,0 @@
-${package}.pe.source.${packageName}.title=${classNamePrefix}
-${package}.pe.source.${packageName}.description=Description of data source
