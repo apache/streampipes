@@ -20,7 +20,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.69.0-SNAPSHOT</version>
+        <version>0.70.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,13 +34,13 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-extensions</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.70.0-SNAPSHOT</version>
         </dependency>
         <!-- StreamPipes pipeline elements all (JVM) -->
             <dependency>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-pipeline-elements-all-jvm</artifactId>
-                <version>0.69.0-SNAPSHOT</version>
+                <version>0.70.0-SNAPSHOT</version>
                 <classifier>embed</classifier>
             </dependency>
 
@@ -48,13 +48,13 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.70.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters-iiot</artifactId>
-            <version>0.69.0-SNAPSHOT</version>
+            <version>0.70.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
 
