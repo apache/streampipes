@@ -15,7 +15,7 @@
 # limitations under the License.
 
 mvn archetype:generate -DarchetypeGroupId=org.apache.streampipes \
-	-DarchetypeArtifactId=streampipes-archetype-extensions-jvm -DarchetypeVersion=0.69.0-SNAPSHOT \
+	-DarchetypeArtifactId=streampipes-archetype-extensions-jvm -DarchetypeVersion=0.70.0-SNAPSHOT \
 	-DgroupId=org.streampipes.test -DartifactId=automated-test -DclassNamePrefix=AutomatedTest -DpackageName=test -DinteractiveMode=false
 
 cd automated-test
