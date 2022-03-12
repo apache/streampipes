@@ -1,5 +1,5 @@
 org.apache.streampipes.connect.iiot.protocol.stream.file.title=File Stream
-org.apache.streampipes.connect.iioot.protocol.stream.file=Continuously streams the content from a file.
+org.apache.streampipes.connect.iiot.protocol.stream.file=Continuously streams the content from a file.
 
 filePath.title=File
 filePath.description=File Path
