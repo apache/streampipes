@@ -18,6 +18,7 @@
 
 import { UserInput } from '../model/UserInput';
 import { GenericAdapterInput } from '../model/GenericAdapterInput';
+import { UserInputType } from '../model/UserInputType';
 
 export class GenericAdapterBuilder {
   genericAdapterInput: GenericAdapterInput;
@@ -53,7 +54,7 @@ export class GenericAdapterBuilder {
     return this;
   }
 
-  public addProtocolInput(type: string, selector: string, value: string) {
+  public addProtocolInput(type: UserInputType, selector: string, value: string) {
     const userInput = new UserInput();
     userInput.type = type;
     userInput.selector = selector;
@@ -69,7 +70,7 @@ export class GenericAdapterBuilder {
     return this;
   }
 
-  public addFormatInput(type: string, selector: string, value: string) {
+  public addFormatInput(type: UserInputType, selector: string, value: string) {
     const userInput = new UserInput();
     userInput.type = type;
     userInput.selector = selector;

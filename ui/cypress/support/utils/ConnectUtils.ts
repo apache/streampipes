@@ -131,8 +131,18 @@ export class ConnectUtils {
   }
 
   public static configureFormat(adapterConfiguration: GenericAdapterInput) {
+
     // Select format
-    cy.dataCy(adapterConfiguration.format).click();
+    if (adapterConfiguration.format.indexOf('json') !== -1) {
+      cy.dataCy('connect-select-json-formats').click();
+      if (adapterConfiguration.format.indexOf('object') !== -1) {
+        cy.dataCy('single_object').click();
+      } else {
+        cy.dataCy('array').click();
+      }
+    } else {
+      cy.dataCy(adapterConfiguration.format).click();
+    }
 
     StaticPropertyUtils.input(adapterConfiguration.formatConfiguration);
 

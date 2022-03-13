@@ -16,14 +16,14 @@
  *
  */
 
-import { PipelineElementInput } from './PipelineElementInput';
+export type UserInputType =
+    'checkbox' |
+    'input' |
+    'file' |
+    'drop-down' |
+    'radio' |
+    'code-input' |
+    'click' |
+    'button' |
+    'select';
 
-export class PipelineInput {
-    pipelineName: string;
-    dataSource: string;
-    dataSourceType: string | 'stream' | 'set';
-
-    processingElement: PipelineElementInput;
-
-    dataSink: PipelineElementInput;
-}
