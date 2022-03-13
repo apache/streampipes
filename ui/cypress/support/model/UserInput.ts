@@ -16,8 +16,10 @@
  *
  */
 
+import { UserInputType } from './UserInputType';
+
 export class UserInput {
-    type: 'checkbox' | 'input' | 'file' | 'drop-down' | 'radio' | 'code-input' | 'click' | 'button';
+    type: UserInputType;
     selector: string;
     value: string;
 }

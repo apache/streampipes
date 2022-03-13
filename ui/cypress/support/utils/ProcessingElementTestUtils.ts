@@ -32,7 +32,7 @@ export class ProcessingElementTestUtils {
         const expectedResultFile = 'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
 
         let formatType;
-        pipelineElementTest.inputFile.endsWith('.csv') ? formatType = 'csv' : formatType = 'json_array_no_key';
+        pipelineElementTest.inputFile.endsWith('.csv') ? formatType = 'csv' : formatType = 'json_array';
 
         FileManagementUtils.addFile(inputFile);
 
