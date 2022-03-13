@@ -16,5 +16,7 @@
 version: "3.4"
 services:
   extensions-all-jvm:
+    labels:
+      org.apache.streampipes.dev.extensions-all-jvm.service.description: "Dev extensions-all-jvm service"
 #    ports:
 #      - "8098:8090"

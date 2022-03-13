@@ -16,5 +16,7 @@
 version: "3.4"
 services:
   pipeline-elements-all-flink:
+    labels:
+      org.apache.streampipes.dev.pipeline-elements-all-flink.service.description: "Dev pipeline-elements-all-flink service"
 #    ports:
 #      - "8098:8090"

@@ -16,5 +16,7 @@
 version: "3.4"
 services:
   sources-vehicle-simulator:
+    labels:
+      org.apache.streampipes.dev.sources-vehicle-simulator.service.description: "Dev sources-vehicle-simulator service"
 #    ports:
 #      - "8098:8090"
