@@ -16,5 +16,5 @@
 version: "3.4"
 services:
   sources-watertank-simulator:
-#    ports:
-#      - "8098:8090"
+    labels:
+      org.apache.streampipes.dev.sources-watertank-simulator.service.description: "Dev sources-watertank-simulator service"

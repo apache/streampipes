@@ -16,5 +16,7 @@
 version: "3.4"
 services:
   pipeline-elements-all-jvm:
+    labels:
+      org.apache.streampipes.dev.pipeline-elements-all-jvm.service.description: "Dev pipeline-elements-all-jvm service"
 #    ports:
 #      - "8098:8090"

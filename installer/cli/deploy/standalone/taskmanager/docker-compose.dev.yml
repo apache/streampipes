@@ -16,3 +16,5 @@
 version: "3.4"
 services:
   taskmanager:
+    labels:
+      org.apache.streampipes.dev.taskmanager.service.description: "Dev taskmanager service"
