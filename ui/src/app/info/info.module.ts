@@ -55,10 +55,7 @@ import { VersionsComponent } from './versions/versions.component';
         VersionsComponent,
         AboutComponent
     ],
-    providers: [],
-    entryComponents: [
-        InfoComponent
-    ]
+    providers: []
 })
 export class InfoModule {
 }

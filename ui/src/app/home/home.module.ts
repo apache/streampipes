@@ -46,9 +46,6 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
     ],
     providers: [
         HomeService
-    ],
-    entryComponents: [
-        HomeComponent
     ]
 })
 export class HomeModule {

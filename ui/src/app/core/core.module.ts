@@ -39,35 +39,32 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    MatGridListModule,
-    MatDividerModule,
-    MatListModule,
-    MatIconModule,
-    MatMenuModule,
-    MatBadgeModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-    MatInputModule,
-    MatToolbarModule,
-    FormsModule,
-    RouterModule,
-    MatSlideToggleModule,
-    ReactiveFormsModule
-  ],
-  declarations: [
-    StreampipesComponent,
-    FeedbackComponent,
-    IconbarComponent,
-    ToolbarComponent
-  ],
-  providers: [],
-  entryComponents: [
-    StreampipesComponent
-  ]
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+        MatGridListModule,
+        MatDividerModule,
+        MatListModule,
+        MatIconModule,
+        MatMenuModule,
+        MatBadgeModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        MatInputModule,
+        MatToolbarModule,
+        FormsModule,
+        RouterModule,
+        MatSlideToggleModule,
+        ReactiveFormsModule
+    ],
+    declarations: [
+        StreampipesComponent,
+        FeedbackComponent,
+        IconbarComponent,
+        ToolbarComponent
+    ],
+    providers: []
 })
 export class CoreModule {
 }

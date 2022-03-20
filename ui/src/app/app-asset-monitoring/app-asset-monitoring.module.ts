@@ -66,11 +66,6 @@ import { DashboardModule } from '../dashboard/dashboard.module';
         ShapeService,
         ElementIconText
     ],
-    entryComponents: [
-        AppAssetMonitoringComponent,
-        AddPipelineDialogComponent,
-        SaveDashboardDialogComponent
-    ],
     exports: [
         AppAssetMonitoringComponent
     ]

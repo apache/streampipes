@@ -41,37 +41,34 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    CoreUiModule,
-    FlexLayoutModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatDividerModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatTableModule,
-    MatTabsModule,
-    MatTooltipModule,
-    PlatformServicesModule,
-    ServicesModule
-  ],
-  declarations: [
-    FilesComponent,
-    FileOverviewComponent,
-    FileUploadDialogComponent
-  ],
-  providers: [],
-  entryComponents: [
-    FilesComponent
-  ]
+    imports: [
+        CommonModule,
+        CoreUiModule,
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatFormFieldModule,
+        MatGridListModule,
+        MatIconModule,
+        MatInputModule,
+        MatDividerModule,
+        MatListModule,
+        MatPaginatorModule,
+        MatProgressBarModule,
+        MatTableModule,
+        MatTabsModule,
+        MatTooltipModule,
+        PlatformServicesModule,
+        ServicesModule
+    ],
+    declarations: [
+        FilesComponent,
+        FileOverviewComponent,
+        FileUploadDialogComponent
+    ],
+    providers: []
 })
 export class FilesModule {
 }

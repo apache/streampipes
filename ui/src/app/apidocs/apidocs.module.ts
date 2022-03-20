@@ -24,24 +24,19 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { ApidocsComponent } from './apidocs.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    CoreUiModule,
-    CustomMaterialModule,
-  ],
-  declarations: [
-    ApidocsComponent
-  ],
-  providers: [
-
-  ],
-  exports: [
-    ApidocsComponent
-  ],
-  entryComponents: [
-    ApidocsComponent
-  ]
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+        CoreUiModule,
+        CustomMaterialModule,
+    ],
+    declarations: [
+        ApidocsComponent
+    ],
+    providers: [],
+    exports: [
+        ApidocsComponent
+    ]
 })
 export class ApidocsModule {
 

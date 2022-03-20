@@ -44,11 +44,7 @@ import { AppOverviewComponent } from './app-overview.component';
     declarations: [
         AppOverviewComponent,
     ],
-    providers: [
-    ],
-    entryComponents: [
-        AppOverviewComponent
-    ]
+    providers: []
 })
 export class AppOverviewModule {
 }

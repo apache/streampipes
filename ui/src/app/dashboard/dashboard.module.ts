@@ -63,72 +63,66 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { ServicesModule } from "../services/services.module";
 
 @NgModule({
-  imports: [
-    NgxEchartsModule.forRoot({
-      /**
-       * This will import all modules from echarts.
-       * If you only need custom modules,
-       * please refer to [Custom Build] section.
-       */
-      echarts: () => import('echarts'),
-    }),
-    CommonModule,
-    CoreUiModule,
-    MatTabsModule,
-    GridsterModule,
-    FlexLayoutModule,
-    CustomMaterialModule,
-    FormsModule,
-    ColorPickerModule,
-    MatGridListModule,
-    NgxChartsModule,
-    CdkTableModule,
-    LeafletModule,
-    PlatformServicesModule,
-    ServicesModule
-  ],
-  declarations: [
-    BarRaceWidgetComponent,
-    DashboardComponent,
-    DashboardGridComponent,
-    DashboardOverviewComponent,
-    DashboardPanelComponent,
-    DashboardWidgetComponent,
-    AddVisualizationDialogComponent,
-    EditDashboardDialogComponent,
-    AreaWidgetComponent,
-    LineWidgetComponent,
-    NumberWidgetComponent,
-    TableWidgetComponent,
-    GaugeWidgetComponent,
-    ImageWidgetComponent,
-    MapWidgetComponent,
-    RawWidgetComponent,
-    StackedLineChartWidgetComponent,
-    HtmlWidgetComponent,
-    StatusWidgetComponent,
-    TrafficLightWidgetComponent,
-    WordcloudWidgetComponent,
-    StandaloneDashboardComponent
-  ],
-  providers: [
-    DashboardService,
-    EditModeService,
-    ReloadPipelineService,
-    ResizeService,
-    RefreshDashboardService,
-    SemanticTypeUtilsService
-  ],
-  exports: [
-    DashboardComponent,
-    DashboardWidgetComponent
-  ],
-  entryComponents: [
-    DashboardComponent,
-    AddVisualizationDialogComponent,
-    EditDashboardDialogComponent,
-    StandaloneDashboardComponent
-  ]
+    imports: [
+        NgxEchartsModule.forRoot({
+            /**
+             * This will import all modules from echarts.
+             * If you only need custom modules,
+             * please refer to [Custom Build] section.
+             */
+            echarts: () => import('echarts'),
+        }),
+        CommonModule,
+        CoreUiModule,
+        MatTabsModule,
+        GridsterModule,
+        FlexLayoutModule,
+        CustomMaterialModule,
+        FormsModule,
+        ColorPickerModule,
+        MatGridListModule,
+        NgxChartsModule,
+        CdkTableModule,
+        LeafletModule,
+        PlatformServicesModule,
+        ServicesModule
+    ],
+    declarations: [
+        BarRaceWidgetComponent,
+        DashboardComponent,
+        DashboardGridComponent,
+        DashboardOverviewComponent,
+        DashboardPanelComponent,
+        DashboardWidgetComponent,
+        AddVisualizationDialogComponent,
+        EditDashboardDialogComponent,
+        AreaWidgetComponent,
+        LineWidgetComponent,
+        NumberWidgetComponent,
+        TableWidgetComponent,
+        GaugeWidgetComponent,
+        ImageWidgetComponent,
+        MapWidgetComponent,
+        RawWidgetComponent,
+        StackedLineChartWidgetComponent,
+        HtmlWidgetComponent,
+        StatusWidgetComponent,
+        TrafficLightWidgetComponent,
+        WordcloudWidgetComponent,
+        StandaloneDashboardComponent
+    ],
+    providers: [
+        DashboardService,
+        EditModeService,
+        ReloadPipelineService,
+        ResizeService,
+        RefreshDashboardService,
+        SemanticTypeUtilsService
+    ],
+    exports: [
+        DashboardComponent,
+        DashboardWidgetComponent
+    ]
 })
 export class DashboardModule {
 

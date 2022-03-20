@@ -30,11 +30,7 @@ import { AppImageLabelingComponent } from './app-image-labeling.component';
     declarations: [
         AppImageLabelingComponent
     ],
-    providers: [
-    ],
-    entryComponents: [
-        AppImageLabelingComponent,
-    ],
+    providers: [],
     exports: [
         AppImageLabelingComponent
     ]

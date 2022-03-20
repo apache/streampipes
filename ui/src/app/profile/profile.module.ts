@@ -35,35 +35,32 @@ import { ChangePasswordDialogComponent } from './dialog/change-password/change-p
 import { ChangeEmailDialogComponent } from './dialog/change-email/change-email-dialog.component';
 
 @NgModule({
-  imports: [
-    FlexLayoutModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDividerModule,
-    MatTabsModule,
-    MatButtonModule,
-    CustomMaterialModule,
-    CommonModule,
-    ClipboardModule,
-    CoreUiModule,
-    PlatformServicesModule
-  ],
-  declarations: [
-    ChangeEmailDialogComponent,
-    ChangePasswordDialogComponent,
-    GeneralProfileSettingsComponent,
-    ProfileComponent,
-    TokenManagementSettingsComponent
-  ],
-  providers: [
-    ProfileService
-  ],
-  exports: [
-    ProfileComponent
-  ],
-  entryComponents: [
-    ProfileComponent
-  ]
+    imports: [
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDividerModule,
+        MatTabsModule,
+        MatButtonModule,
+        CustomMaterialModule,
+        CommonModule,
+        ClipboardModule,
+        CoreUiModule,
+        PlatformServicesModule
+    ],
+    declarations: [
+        ChangeEmailDialogComponent,
+        ChangePasswordDialogComponent,
+        GeneralProfileSettingsComponent,
+        ProfileComponent,
+        TokenManagementSettingsComponent
+    ],
+    providers: [
+        ProfileService
+    ],
+    exports: [
+        ProfileComponent
+    ]
 })
 export class ProfileModule {
 

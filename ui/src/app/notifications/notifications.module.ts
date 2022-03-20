@@ -29,30 +29,27 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MatProgressSpinnerModule,
-    MatTabsModule,
-    FlexLayoutModule,
-    CommonModule,
-    FlexLayoutModule,
-    CustomMaterialModule,
-    FormsModule,
-    PlatformServicesModule
-  ],
-  declarations: [
-    NotificationsComponent,
-    NotificationItemComponent
-  ],
-  providers: [
-    NotificationsService
-  ],
-  exports: [
-    NotificationsComponent
-  ],
-  entryComponents: [
-    NotificationsComponent,
-  ]
+    imports: [
+        CommonModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        FlexLayoutModule,
+        CommonModule,
+        FlexLayoutModule,
+        CustomMaterialModule,
+        FormsModule,
+        PlatformServicesModule
+    ],
+    declarations: [
+        NotificationsComponent,
+        NotificationItemComponent
+    ],
+    providers: [
+        NotificationsService
+    ],
+    exports: [
+        NotificationsComponent
+    ]
 })
 export class NotificationModule {
 

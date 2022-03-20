@@ -41,42 +41,39 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
-  imports: [
-    FlexLayoutModule,
-    FormsModule,
-    MatTabsModule,
-    MatButtonModule,
-    CustomMaterialModule,
-    CommonModule,
-    MatProgressSpinnerModule,
-    MatSortModule,
-    MatTableModule,
-    CoreUiModule,
-    PlatformServicesModule,
-  ],
-  declarations: [
-    DeletePipelineDialogComponent,
-    ImportPipelineDialogComponent,
-    PipelinesComponent,
-    PipelineCategoriesDialogComponent,
-    PipelineNotificationsComponent,
-    PipelineOverviewComponent,
-    PipelineStatusDialogComponent,
-    StartAllPipelinesDialogComponent,
-    PipelineInCategoryPipe,
-    CategoryAlreadyInPipelinePipe
-  ],
-  providers: [
-    PipelineOperationsService,
-    CategoryAlreadyInPipelinePipe,
-    PipelineInCategoryPipe
-  ],
-  exports: [
-    PipelinesComponent
-  ],
-  entryComponents: [
-    PipelinesComponent
-  ]
+    imports: [
+        FlexLayoutModule,
+        FormsModule,
+        MatTabsModule,
+        MatButtonModule,
+        CustomMaterialModule,
+        CommonModule,
+        MatProgressSpinnerModule,
+        MatSortModule,
+        MatTableModule,
+        CoreUiModule,
+        PlatformServicesModule,
+    ],
+    declarations: [
+        DeletePipelineDialogComponent,
+        ImportPipelineDialogComponent,
+        PipelinesComponent,
+        PipelineCategoriesDialogComponent,
+        PipelineNotificationsComponent,
+        PipelineOverviewComponent,
+        PipelineStatusDialogComponent,
+        StartAllPipelinesDialogComponent,
+        PipelineInCategoryPipe,
+        CategoryAlreadyInPipelinePipe
+    ],
+    providers: [
+        PipelineOperationsService,
+        CategoryAlreadyInPipelinePipe,
+        PipelineInCategoryPipe
+    ],
+    exports: [
+        PipelinesComponent
+    ]
 })
 export class PipelinesModule {
 

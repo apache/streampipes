@@ -41,41 +41,38 @@ import { StatusWidgetComponent } from './components/monitoring/widget/status/sta
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
-  imports: [
-    CoreUiModule,
-    FlexLayoutModule,
-    FormsModule,
-    MatTabsModule,
-    MatButtonModule,
-    CustomMaterialModule,
-    CommonModule,
-    MatProgressSpinnerModule,
-    NgxChartsModule,
-    EditorModule,
-    FormsModule,
-    ReactiveFormsModule,
-    PlatformServicesModule
-  ],
-  declarations: [
-    PipelineActionsComponent,
-    PipelineElementsComponent,
-    PipelineElementsRowComponent,
-    PipelineElementStatisticsComponent,
-    PipelineDetailsComponent,
-    PipelineMonitoringComponent,
-    PipelineStatusComponent,
-    PipelinePreviewComponent,
-    QuickEditComponent,
-    StatusWidgetComponent,
-    BarchartWidgetComponent
-  ],
-  providers: [],
-  exports: [
-    PipelineDetailsComponent
-  ],
-  entryComponents: [
-    PipelineDetailsComponent
-  ]
+    imports: [
+        CoreUiModule,
+        FlexLayoutModule,
+        FormsModule,
+        MatTabsModule,
+        MatButtonModule,
+        CustomMaterialModule,
+        CommonModule,
+        MatProgressSpinnerModule,
+        NgxChartsModule,
+        EditorModule,
+        FormsModule,
+        ReactiveFormsModule,
+        PlatformServicesModule
+    ],
+    declarations: [
+        PipelineActionsComponent,
+        PipelineElementsComponent,
+        PipelineElementsRowComponent,
+        PipelineElementStatisticsComponent,
+        PipelineDetailsComponent,
+        PipelineMonitoringComponent,
+        PipelineStatusComponent,
+        PipelinePreviewComponent,
+        QuickEditComponent,
+        StatusWidgetComponent,
+        BarchartWidgetComponent
+    ],
+    providers: [],
+    exports: [
+        PipelineDetailsComponent
+    ]
 })
 export class PipelineDetailsModule {
 

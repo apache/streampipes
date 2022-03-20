@@ -30,23 +30,22 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SecurePipe } from "./secure.pipe";
 
 @NgModule({
-  imports: [],
-  declarations: [SecurePipe],
-  providers: [
-    AppConstants,
-    RestApi,
-    AuthService,
-    ElementIconText,
-    JwtTokenStorageService,
-    ShepherdService,
-    TourProviderService,
-    NotificationCountService,
-    PropertySelectorService,
-    PlatformServicesModule,
-    SecurePipe,
-  ],
-  entryComponents: [],
-  exports: [SecurePipe]
+    imports: [],
+    declarations: [SecurePipe],
+    providers: [
+        AppConstants,
+        RestApi,
+        AuthService,
+        ElementIconText,
+        JwtTokenStorageService,
+        ShepherdService,
+        TourProviderService,
+        NotificationCountService,
+        PropertySelectorService,
+        PlatformServicesModule,
+        SecurePipe,
+    ],
+    exports: [SecurePipe]
 })
 export class ServicesModule {
 }

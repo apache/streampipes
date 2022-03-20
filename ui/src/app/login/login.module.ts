@@ -45,44 +45,39 @@ import { AccountActivationService } from './services/account-activation.service'
 import { PlatformServicesModule } from '@streampipes/platform-services';
 
 @NgModule({
-  imports: [
-    AppRoutingModule,
-    CommonModule,
-    FlexLayoutModule,
-    FormsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatDividerModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatProgressBarModule,
-    PlatformServicesModule
-  ],
-  declarations: [
-    ActivateAccountComponent,
-    AuthBoxComponent,
-    LoginComponent,
-    RegisterComponent,
-    RestorePasswordComponent,
-    SetNewPasswordComponent,
-    SetupComponent,
-    StartupComponent,
-  ],
-  providers: [
-    AccountActivationService,
-    LoginService,
-    RestorePasswordService
-  ],
-  entryComponents: [
-    LoginComponent,
-    SetupComponent,
-    StartupComponent
-  ]
+    imports: [
+        AppRoutingModule,
+        CommonModule,
+        FlexLayoutModule,
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatDividerModule,
+        MatGridListModule,
+        MatIconModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatProgressBarModule,
+        PlatformServicesModule
+    ],
+    declarations: [
+        ActivateAccountComponent,
+        AuthBoxComponent,
+        LoginComponent,
+        RegisterComponent,
+        RestorePasswordComponent,
+        SetNewPasswordComponent,
+        SetupComponent,
+        StartupComponent,
+    ],
+    providers: [
+        AccountActivationService,
+        LoginService,
+        RestorePasswordService
+    ]
 })
 export class LoginModule {
 }

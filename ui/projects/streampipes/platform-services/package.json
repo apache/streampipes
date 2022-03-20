@@ -2,10 +2,10 @@
   "name": "@streampipes/platform-services",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^12.2.0",
-    "@angular/core": "^12.2.0",
+    "@angular/common": "^13.3.0",
+    "@angular/core": "^13.3.0",
     "rxjs": "6.6.2",
-    "angular-gridster2": "12.1.1"
+    "angular-gridster2": "^13.1.1"
   },
   "dependencies": {
     "tslib": "^2.3.0"
