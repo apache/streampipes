@@ -19,18 +19,20 @@
 
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%d{HH:mm:ss.SSS} SP [%thread] %-5level %logger{36} - %msg%n</Pattern>
-        </layout>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
     </appender>
 
-    <logger name="org.apache.streampipes" level="INFO"/>
     <logger name="org.lightcouch" level="ERROR"/>
     <logger name="org.apache.kafka" level="ERROR"/>
 
 
-    <root level="info">
-        <appender-ref ref="STDOUT" />
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
     </root>
 </configuration>

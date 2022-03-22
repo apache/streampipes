@@ -110,7 +110,7 @@ public class WorkerRestClient {
                     .socketTimeout(100000)
                     .execute().returnContent().asString();
 
-            logger.info("Adapter started on endpoint: " + url + " with Response: " + responseString);
+            logger.info("Adapter started on endpoint: " + url);
 
         } catch (IOException e) {
             logger.error("Adapter did not start", e);
