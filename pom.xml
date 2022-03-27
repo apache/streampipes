@@ -1027,7 +1027,7 @@ IoT data streams.
 									<additionalJOption>-Xdoclint:none</additionalJOption>
 									<doclint>none</doclint>
 									<additionalJOption>-Xdoclint:none</additionalJOption>
-									<source>8</source>
+									<source>11</source>
 								</configuration>
 							</execution>
 						</executions>
@@ -1068,8 +1068,7 @@ IoT data streams.
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
+						<release>11</release>
 						<encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
@@ -1152,7 +1151,7 @@ IoT data streams.
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>check-at-least-java-8</id>
+						<id>check-at-least-java-11</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>enforce</goal>
@@ -1160,7 +1159,7 @@ IoT data streams.
 						<configuration>
 							<rules>
 								<requireJavaVersion>
-									<version>1.8.0</version>
+									<version>1.11.0</version>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
@@ -1202,7 +1201,7 @@ IoT data streams.
 							<additionalJOption>-Xdoclint:none</additionalJOption>
 							<doclint>none</doclint>
 							<additionalJOption>-Xdoclint:none</additionalJOption>
-							<source>8</source>
+							<release>11</release>
 						</configuration>
 					</execution>
 				</executions>
@@ -1330,8 +1329,7 @@ IoT data streams.
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>11</release>
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
