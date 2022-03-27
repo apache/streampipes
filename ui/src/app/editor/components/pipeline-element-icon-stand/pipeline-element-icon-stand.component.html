@@ -64,8 +64,13 @@
                          fxLayoutAlign="start center">
                         {{availableType.title}}
                     </div>
-                    <span fxFlex>
-                        </span>
+                    <span fxFlex></span>
+                    <button mat-icon-button
+                            matTooltip="Create new source"
+                            (click)="navigateToConnect()"
+                            *ngIf="availableType.title === availableTypes[0].title">
+                        <mat-icon>add</mat-icon>
+                    </button>
                     <button mat-icon-button
                             (click)="toggleOpen(availableType)"
                             *ngIf="!availableType.open">

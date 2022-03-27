@@ -21,6 +21,7 @@ import { RestApi } from '../../../services/rest-api.service';
 import { PeCategory, PipelineElementType, PipelineElementUnion } from '../../model/editor.model';
 import { EditorService } from '../../services/editor.service';
 import { zip } from 'rxjs';
+import { Router } from "@angular/router";
 
 
 @Component({
@@ -65,7 +66,8 @@ export class PipelineElementIconStandComponent implements OnInit, AfterViewInit 
   uncategorized: PeCategory = {code: 'UNCATEGORIZED', label: 'Uncategorized', description: ''};
 
   constructor(private restApi: RestApi,
-              private editorService: EditorService) {
+              private editorService: EditorService,
+              private router: Router) {
 
   }
 
@@ -147,6 +149,10 @@ export class PipelineElementIconStandComponent implements OnInit, AfterViewInit 
   clearInput() {
     this.elementFilter = '';
     this.makeDraggable();
+  }
+
+  navigateToConnect() {
+    this.router.navigate(['connect']);
   }
 
 }
