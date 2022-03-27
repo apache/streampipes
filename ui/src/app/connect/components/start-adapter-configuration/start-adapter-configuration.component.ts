@@ -26,13 +26,15 @@ import {
   RemoveDuplicatesTransformationRuleDescription,
   SpecificAdapterSetDescription
 } from '@streampipes/platform-services';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
 import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { ConnectService } from '../../services/connect.service';
+import { TimestampPipe } from "../../filter/timestamp.pipe";
+import { MatCheckboxChange } from "@angular/material/checkbox";
 
 @Component({
   selector: 'sp-start-adapter-configuration',
@@ -90,20 +92,29 @@ export class StartAdapterConfigurationComponent implements OnInit {
     private dialogService: DialogService,
     private shepherdService: ShepherdService,
     private connectService: ConnectService,
-    private _formBuilder: FormBuilder) {
+    private _formBuilder: FormBuilder,
+    private timestampPipe: TimestampPipe) {
   }
 
   ngOnInit(): void {
     // initialize form for validation
     this.startAdapterForm = this._formBuilder.group({});
+    this.startAdapterForm.addControl('adapterName', new FormControl(this.adapterDescription.name, Validators.required));
+    this.startAdapterForm.valueChanges.subscribe(v => this.adapterDescription.name = v.adapterName);
     this.startAdapterForm.statusChanges.subscribe((status) => {
       this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
     });
+  }
 
-    if (this.adapterDescription instanceof GenericAdapterSetDescription ||
-      this.adapterDescription instanceof SpecificAdapterSetDescription) {
+  findDefaultTimestamp(event: MatCheckboxChange) {
+    if (event.checked) {
+      const timestampFields = this.timestampPipe.transform(this.eventSchema.eventProperties);
+      if (timestampFields.length > 0) {
+        this.dataLakeTimestampField = timestampFields[0].runtimeName;
+      }
+    } else {
+      this.dataLakeTimestampField = '';
     }
-
   }
 
   public triggerDialog() {

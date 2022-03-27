@@ -24,13 +24,7 @@ import { EventPropertyUnion } from '@streampipes/platform-services';
   pure: false
 })
 export class TimestampPipe implements PipeTransform {
-  transform(items: EventPropertyUnion[]): any {
-    return items.filter(item => {
-      if (item.domainProperties.some(dp => dp === 'http://schema.org/DateTime')) {
-        return true;
-      } else {
-        return false;
-      }
-    });
+  transform(items: EventPropertyUnion[]): EventPropertyUnion[] {
+    return items.filter(item => item.domainProperties.some(dp => dp === 'http://schema.org/DateTime'));
   }
 }
