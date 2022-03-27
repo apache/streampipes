@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG BASE_IMAGE=nginx
-FROM $BASE_IMAGE
+FROM nginx
 
 COPY dist/streampipes/ui/ /usr/share/nginx/html/
 
