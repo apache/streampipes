@@ -20,9 +20,7 @@ ENV CONSUL_LOCATION consul
 EXPOSE 8090
 
 # needed pkgs processors-image-processing-jvm
-RUN apk --update add --no-cache \
-    fontconfig \
-    ttf-dejavu
+RUN apt-get update && apt-get install ttf-dejavu-core && apt-get install fontconfig
 
 COPY target/streampipes-extensions-all-jvm.jar  /streampipes-extensions-all-jvm.jar
 
