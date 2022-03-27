@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG BASE_IMAGE=adoptopenjdk/openjdk9-openj9:alpine
+ARG BASE_IMAGE=eclipse-temurin:11-jre-focal
 FROM $BASE_IMAGE
 
 ENV CONSUL_LOCATION consul
