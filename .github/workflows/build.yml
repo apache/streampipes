@@ -26,58 +26,46 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v1
+
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
           java-version: '11'
+
       - name: Set up Node
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+
       - name: Build with Maven
         run: mvn clean verify -Dmaven.test.skip=true
+
       - name: Set env variables for Docker builds
         run: |
-          echo "DOCKER_CLI_EXPERIMENTAL=enabled" >> $GITHUB_ENV
           echo "MVN_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
           echo "DOCKERHUB_APACHE_REPO=apachestreampipes" >> $GITHUB_ENV
-          echo "BASE_IMG_JRE_DEFAULT=adoptopenjdk/openjdk8-openj9:alpine" >> $GITHUB_ENV
-          echo "BASE_IMG_JRE_ARM32V7=arm32v7/openjdk:11-jre-slim" >> $GITHUB_ENV
-          echo "BASE_IMG_JRE_ARM64V8=arm64v8/openjdk:11-jre-slim" >> $GITHUB_ENV
-          echo "BASE_IMG_NGINX_DEFAULT=nginx" >> $GITHUB_ENV
-          echo "BASE_IMG_NGINX_ARM32V7=arm32v7/nginx" >> $GITHUB_ENV
-          echo "BASE_IMG_NGINX_ARM64V8=arm64v8/nginx" >> $GITHUB_ENV
-      - name: Install qemu-user-static for multi-arch builds
-        run: |
-          sudo apt-get update
-          sudo apt-get install qemu-user-static
-          echo "./streampipes-backend/ ./ui/" | xargs -n 1 cp -v /usr/bin/qemu-*
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USER }} --password-stdin
-      - name: Enable Docker experimental feature for multi-arch builds
-        run: |
-          echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
-          sudo service docker restart
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and Push Docker Backend Image
-        working-directory: ./streampipes-backend
-        env:
-          IMG_NAME_DEFAULT: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
-          IMG_NAME_AMD64: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:amd64-${{ env.MVN_VERSION }}
-          IMG_NAME_ARM32V7: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm32v7-${{ env.MVN_VERSION }}
-          IMG_NAME_ARM64V8: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:arm64v8-${{ env.MVN_VERSION }}
-        run: |
-          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_DEFAULT -t $IMG_NAME_DEFAULT -t $IMG_NAME_AMD64 -f Dockerfile .
-          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM32V7 -t $IMG_NAME_ARM32V7 -f arm.Dockerfile .
-          docker build --pull --build-arg BASE_IMAGE=$BASE_IMG_JRE_ARM64V8 -t $IMG_NAME_ARM64V8 -f aarch64.Dockerfile .
-          docker push $IMG_NAME_DEFAULT
-          docker push $IMG_NAME_AMD64
-          docker push $IMG_NAME_ARM32V7
-          docker push $IMG_NAME_ARM64V8
-          docker manifest create $IMG_NAME_DEFAULT $IMG_NAME_AMD64 $IMG_NAME_ARM32V7 $IMG_NAME_ARM64V8
-          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM32V7 --os linux --arch arm
-          docker manifest annotate $IMG_NAME_DEFAULT $IMG_NAME_ARM64V8 --os linux --arch arm64
-          docker manifest push $IMG_NAME_DEFAULT
+        uses: docker/build-push-action@v2
+        with:
+          context: ./streampipes-backend
+          platforms: linux/amd64,linux/arm64,linux/arm32v7
+          push: true
+          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/backend:${{ env.MVN_VERSION }}
+
       - name: Build UI
         working-directory: ./ui
         run: |
