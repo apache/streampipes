@@ -28,7 +28,8 @@ jobs:
         uses: actions/checkout@v1
       - name: Set up JDK 11
         uses: actions/setup-java@v2
-        distribution: 'temurin'
+        with:
+          distribution: 'temurin'
           java-version: '11'
       - name: Set up Node
         uses: actions/setup-node@v1
