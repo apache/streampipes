@@ -23,6 +23,8 @@ github:
     - analytics
     - stream-processing
     - self-service
+  notifications:
+    jobs: issues@streampipes.apache.org
   features:
     wiki: false
     issues: false
