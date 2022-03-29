@@ -91,6 +91,7 @@
             <sp-static-one-of-input
                     *ngIf="isOneOfStaticProperty(staticProperty) && !isRuntimeResolvableOneOfStaticProperty(staticProperty)"
                     (inputEmitter)="valueChange($event)"
+                    [parentForm]="parentForm"
                     [staticProperty]="staticProperty">
             </sp-static-one-of-input>
 

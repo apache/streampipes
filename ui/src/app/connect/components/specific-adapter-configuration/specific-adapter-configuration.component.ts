@@ -47,9 +47,7 @@ export class SpecificAdapterConfigurationComponent implements OnInit {
 
   specificAdapterForm: FormGroup;
 
-  constructor(
-    private _formBuilder: FormBuilder
-  ) {
+  constructor(private _formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {

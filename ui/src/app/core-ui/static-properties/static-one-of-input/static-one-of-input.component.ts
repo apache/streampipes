@@ -46,6 +46,7 @@ export class StaticOneOfInputComponent extends AbstractStaticPropertyRenderer<On
       this.selectedOption = this.staticProperty.options.find(option => option.selected).elementId;
     }
     this.inputEmitter.emit(true);
+    this.parentForm.updateValueAndValidity();
   }
 
   noneSelected(): boolean {
