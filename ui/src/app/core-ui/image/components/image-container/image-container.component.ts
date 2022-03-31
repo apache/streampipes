@@ -18,7 +18,6 @@
 import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import Konva from 'konva';
 import { ICoordinates } from '../../model/coordinates';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 
 @Component({
   selector: 'sp-image-container',
@@ -79,7 +78,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
 
   public isDrawingVar: boolean;
 
-  constructor(private restService: DatalakeRestService) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.scale = 1;
@@ -127,7 +126,7 @@ export class ImageContainerComponent implements OnInit, AfterViewInit {
       this.initLayers();
       this.redrawAll();
     };
-    this.image.src = this.restService.getImageUrl(src);
+    // this.image.src = this.restService.getImageUrl(src);
   }
 
   getShift() {

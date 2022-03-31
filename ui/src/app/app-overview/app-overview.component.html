@@ -50,9 +50,5 @@
     <div class="fixed-height" fxLayout="column" fxFlex="100">
     <sp-app-asset-monitoring (appOpened)="appOpened($event)"
                              *ngIf="currentlySelectedApp === apps[0].appId"></sp-app-asset-monitoring>
-    <app-image-labeling (appOpened)="appOpened($event)"
-                          *ngIf="currentlySelectedApp === apps[1].appId"></app-image-labeling>
     </div>
-<!--    <app-new-app (appOpened)="appOpened($event)"-->
-<!--                          *ngIf="currentlySelectedApp === apps[2].appId"></app-new-app>-->
 </div>

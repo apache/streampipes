@@ -22,7 +22,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import Konva from 'konva';
 import { Annotation } from '../../../core-model/coco/Annotation';
 import { CocoFormat } from '../../../core-model/coco/Coco.format';
-import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
 import { ImageContainerComponent } from '../components/image-container/image-container.component';
 import { ICoordinates } from '../model/coordinates';
 import { LabelingMode } from '../model/labeling-mode';
@@ -63,9 +62,12 @@ export class ImageLabelingComponent implements OnInit {
 
   @ViewChild(ImageContainerComponent) imageView: ImageContainerComponent;
 
-  constructor(private restService: DatalakeRestService, private reactLabelingService: ReactLabelingService,
-              private polygonLabelingService: PolygonLabelingService, private brushLabelingService: BrushLabelingService,
-              private snackBar: MatSnackBar, private cocoFormatService: CocoFormatService, private labelService: LabelService,
+  constructor(private reactLabelingService: ReactLabelingService,
+              private polygonLabelingService: PolygonLabelingService,
+              private brushLabelingService: BrushLabelingService,
+              private snackBar: MatSnackBar,
+              private cocoFormatService: CocoFormatService,
+              private labelService: LabelService,
               public labelingMode: LabelingModeService) { }
 
   ngOnInit(): void {
@@ -84,18 +86,18 @@ export class ImageLabelingComponent implements OnInit {
 
   getCocoFile(routes, index) {
       // This is relevant for coco
-      this.restService.getCocoFileForImage(routes[index]).subscribe(
-        coco => {
-          if (coco === null) {
-            const cocoFile = new CocoFormat();
-            this.cocoFormatService.addImage(cocoFile, (routes[index]));
-            this.cocoFile = cocoFile;
-          } else {
-            this.cocoFile = coco as CocoFormat;
-          }
-          this.imagesIndex = index;
-        }
-      );
+      // this.restService.getCocoFileForImage(routes[index]).subscribe(
+      //   coco => {
+      //     if (coco === null) {
+      //       const cocoFile = new CocoFormat();
+      //       this.cocoFormatService.addImage(cocoFile, (routes[index]));
+      //       this.cocoFile = cocoFile;
+      //     } else {
+      //       this.cocoFile = coco as CocoFormat;
+      //     }
+      //     this.imagesIndex = index;
+      //   }
+      // );
   }
 
   /* sp-image-view handler */
@@ -256,9 +258,9 @@ export class ImageLabelingComponent implements OnInit {
     const coco = this.cocoFile;
     if (coco !== undefined) {
       const imageRoute = this._imagesRoutes[imageIndex];
-      this.restService.saveCocoFileForImage(imageRoute, JSON.stringify(coco)).subscribe(
-        res =>    this.openSnackBar('Saved')
-      );
+      // this.restService.saveCocoFileForImage(imageRoute, JSON.stringify(coco)).subscribe(
+      //   res =>    this.openSnackBar('Saved')
+      // );
     }
   }
 

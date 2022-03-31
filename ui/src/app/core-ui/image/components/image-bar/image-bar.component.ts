@@ -16,7 +16,6 @@
  */
 
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { DatalakeRestService } from '../../../../core-services/datalake/datalake-rest.service';
 
 @Component({
   selector: 'sp-image-bar',
@@ -41,7 +40,7 @@ export class ImageBarComponent implements OnInit {
   public maxImages;
 
 
-  constructor(public restService: DatalakeRestService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }

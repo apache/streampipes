@@ -16,7 +16,6 @@
  */
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { DataLakeMeasure, EventPropertyUnion, EventSchema, SpQueryResult, DateRange } from '@streampipes/platform-services';
 
 @Component({
@@ -35,9 +34,7 @@ export class AppImageLabelingComponent implements OnInit {
 
   @Output() appOpened = new EventEmitter<boolean>();
 
-  constructor(
-    protected dataLakeRestService: DatalakeRestService,
-    private restService: DatalakeRestService) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -59,23 +56,23 @@ export class AppImageLabelingComponent implements OnInit {
     const current = new Date();
     const dateRange = new DateRange(new Date(current.getTime() - 10000 * 60000), current);
 
-    this.dataLakeRestService.getDataAutoAggregation(
-      this.selectedMeasure.measureName, dateRange.startDate.getTime(), dateRange.endDate.getTime())
-      .subscribe(
-        (res: SpQueryResult) => {
-
-          const series = res.allDataSeries[0];
-          this.imageProperty = this.getImageProperties(this.selectedMeasure.eventSchema)[0].runtimeName;
-          // this.availableImageData = res;
-          this.imagesRoutes = [];
-          if (series.rows !== null) {
-            const imageField = res.headers.findIndex(name => name === this.imageProperty);
-            series.rows.forEach(row => {
-              this.imagesRoutes.push(row[imageField]);
-            });
-          }
-        }
-      );
+    // this.dataLakeRestService.getDataAutoAggregation(
+    //   this.selectedMeasure.measureName, dateRange.startDate.getTime(), dateRange.endDate.getTime())
+    //   .subscribe(
+    //     (res: SpQueryResult) => {
+    //
+    //       const series = res.allDataSeries[0];
+    //       this.imageProperty = this.getImageProperties(this.selectedMeasure.eventSchema)[0].runtimeName;
+    //       // this.availableImageData = res;
+    //       this.imagesRoutes = [];
+    //       if (series.rows !== null) {
+    //         const imageField = res.headers.findIndex(name => name === this.imageProperty);
+    //         series.rows.forEach(row => {
+    //           this.imagesRoutes.push(row[imageField]);
+    //         });
+    //       }
+    //     }
+    //   );
   }
 
   getImageProperties(eventSchema: EventSchema): EventPropertyUnion[] {

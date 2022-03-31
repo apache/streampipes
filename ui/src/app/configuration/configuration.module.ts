@@ -40,7 +40,6 @@ import { PipelineElementConfigurationComponent } from './pipeline-element-config
 import { MessagingConfigurationComponent } from './messaging-configuration/messaging-configuration.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DatalakeConfigurationComponent } from './datalake-configuration/datalake-configuration.component';
-import { DatalakeRestService } from '../core-services/datalake/datalake-rest.service';
 import { DeleteDatalakeIndexComponent } from './dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SecurityConfigurationComponent } from './security-configuration/security-configuration.component';
@@ -97,7 +96,6 @@ import { GeneralConfigurationComponent } from './general-configuration/general-c
     ],
     providers: [
         ConfigurationService,
-        DatalakeRestService
     ]
 })
 export class ConfigurationModule {

@@ -20,7 +20,8 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
-import { DatalakeRestService } from '../../../core-services/datalake/datalake-rest.service';
+import { DatalakeRestService } from '@streampipes/platform-services';
+
 
 @Component({
     selector: 'sp-data-download-dialog',
@@ -45,7 +46,7 @@ export class DataDownloadDialog {
 
     constructor(public dialogRef: MatDialogRef<DataDownloadDialog>,
                 @Inject(MAT_DIALOG_DATA) public data,
-                private restService: DatalakeRestService) {
+                public datalakeRestService: DatalakeRestService) {
         this.dateRange[0] = new Date();
         this.dateRange[1] = new Date(this.dateRange[0].getTime() + 60000 * 60 * 24);
     }
@@ -53,36 +54,11 @@ export class DataDownloadDialog {
     downloadData() {
         this.nextStep();
         switch (this.selectedData) {
-            case 'visible':
-
-              // TODO check if I can remove this
-                // if (this.data.yAxesKeys === undefined) {
-                //     this.createFile('', this.downloadFormat, this.data.index, this.getDateString(this.data.date[0]),
-                //       this.getDateString((this.data.date[1])));
-                //
-                // } else if (this.data.data['headers'] !== undefined) {
-                //  // Single Data
-                //     const result = this.convertData(this.data.data, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
-                //     this.createFile(result, this.data.downloadFormat, this.data.index, this.getDateString(this.data.date[0]),
-                //       this.getDateString(this.data.date[1]));
-                // } else {
-                //     // group data
-                //     Object.keys(this.data.data.dataResults).forEach( groupName => {
-                //         const dataResult = this.data.data.dataResults[groupName];
-                //         const result = this.convertData(dataResult, this.downloadFormat, this.data.xAxesKey, this.data.yAxesKeys);
-                //         const fileName = this.data.index + ' ' + groupName;
-                //         this.createFile(result, this.data.downloadFormat, fileName, this.getDateString(this.data.date[0]),
-                //           this.getDateString(this.data.date[1]));
-                //     });
-                //
-                // }
-                // this.downloadFinish = true;
-                // break;
             case 'all':
-                this.performRequest(this.restService.downloadRawData(this.data.index, this.downloadFormat), '', '');
+                this.performRequest(this.data.downloadRawData(this.data.index, this.downloadFormat), '', '');
                 break;
             case 'customInterval':
-                this.performRequest(this.restService.downloadRawDataTimeInterval(this.data.index, this.downloadFormat,
+                this.performRequest(this.datalakeRestService.downloadQueriedData(this.data.index, this.downloadFormat,
                     this.dateRange[0].getTime(), this.dateRange[1].getTime()), this.getDateString(this.dateRange[0]),
                   this.getDateString(this.dateRange[1]));
 
@@ -159,7 +135,6 @@ export class DataDownloadDialog {
         document.body.appendChild(a);
         a.style.display = 'display: none';
 
-        // let name = 'sp_' + startDate + '_' + endDate + '_' + fileName + '.' + this.downloadFormat;
         let name = 'sp_' + startDate + '_' + fileName + '.' + this.downloadFormat;
         name = name.replace('__', '_');
 
