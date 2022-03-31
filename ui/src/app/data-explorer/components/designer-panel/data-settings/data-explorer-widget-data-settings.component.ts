@@ -103,6 +103,11 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     this.step = index;
   }
 
+  changeDataAggregation() {
+    this.fieldSelectionPanel.applyDefaultFields();
+    this.triggerDataRefresh();
+  }
+
   addDataSource() {
     if (!this.dataConfig.sourceConfigs) {
       this.dataConfig.sourceConfigs = [];

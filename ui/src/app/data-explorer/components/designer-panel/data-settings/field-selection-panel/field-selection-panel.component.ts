@@ -31,6 +31,8 @@ export class FieldSelectionPanelComponent implements OnInit {
   @Input() sourceConfig: SourceConfig;
   @Input() widgetId: string;
 
+  fieldsForSelection: FieldConfig[];
+
   expandFields = false;
 
   constructor(private fieldProvider: DataExplorerFieldProviderService,
@@ -40,15 +42,27 @@ export class FieldSelectionPanelComponent implements OnInit {
     this.applyDefaultFields();
   }
 
+  getFieldsForSelection(): FieldConfig[] {
+     return this.sourceConfig.queryConfig.fields;
+  }
+
   applyDefaultFields() {
     if (this.sourceConfig.queryConfig.fields.length === 0) {
       this.addAllFields();
+    } else {
+      const oldFields = this.sourceConfig.queryConfig.fields;
+      this.sourceConfig.queryConfig.fields = [];
+      this.addAllFields(oldFields);
     }
   }
 
-  addAllFields() {
+  addAllFields(checkFields: FieldConfig[] = []) {
     this.sourceConfig.measure.eventSchema.eventProperties.forEach(property => {
-      this.addField(property);
+      // this ensures that dimension properties are not aggregated, this is not possible with the influxdb, See [STREAMPIPES-524]
+      if (this.sourceConfig.queryType === 'raw' || property.propertyScope !== 'DIMENSION_PROPERTY') {
+        const isSelected = checkFields.some(v => v.runtimeName === property.runtimeName);
+        this.addField(property, isSelected);
+      }
     });
   }
 
@@ -65,8 +79,11 @@ export class FieldSelectionPanelComponent implements OnInit {
     this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
   }
 
-  addField(property: EventPropertyUnion) {
-    const selection: FieldConfig = {runtimeName: property.runtimeName, selected: false, numeric: this.fieldProvider.isNumber(property)};
+  addField(property: EventPropertyUnion, isSelected = false) {
+    const selection: FieldConfig = {
+      runtimeName: property.runtimeName,
+      selected: isSelected,
+      numeric: this.fieldProvider.isNumber(property)};
     selection.aggregations = [this.findDefaultAggregation(property)];
     this.sourceConfig.queryConfig.fields.push(selection);
   }

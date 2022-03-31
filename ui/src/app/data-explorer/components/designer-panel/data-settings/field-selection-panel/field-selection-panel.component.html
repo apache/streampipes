@@ -45,7 +45,9 @@
     <div fxLayout="column" [class.field-scroll-panel]="!expandFields">
         <div fxLayout="column"
              *ngFor="let field of sourceConfig.queryConfig.fields">
-            <sp-field-selection [field]="field" [sourceConfig]="sourceConfig" [widgetId]="widgetId">
+            <sp-field-selection [field]="field"
+                                [sourceConfig]="sourceConfig"
+                                [widgetId]="widgetId">
             </sp-field-selection>
         </div>
     </div>

@@ -82,7 +82,7 @@
                         <span class="data-explorer-header">Query </span>
                         <mat-radio-group
                                 class="selection-radio-group"
-                                [(ngModel)]="sourceConfig.queryType" (change)="triggerDataRefresh()">
+                                [(ngModel)]="sourceConfig.queryType" (change)="changeDataAggregation()">
                             <mat-radio-button class="selection-radio-button" [value]="'raw'">Raw
                             </mat-radio-button>
                             <mat-radio-button class="selection-radio-button" [value]="'aggregated'">Aggregated
