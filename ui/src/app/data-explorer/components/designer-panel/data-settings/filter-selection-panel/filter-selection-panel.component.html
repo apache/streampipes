@@ -25,7 +25,7 @@
                 style="margin-right:10px;margin-bottom: 15px;">Add Filter
         </button>
     </div>
-    <div *ngFor="let filter of sourceConfig.queryConfig.selectedFilters" fxFlex="100"
+    <div *ngFor="let filter of sourceConfig.queryConfig.selectedFilters; let i = index" fxFlex="100"
          fxLayout="column">
         <div fxFlex="100" fxLayout="column">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
@@ -91,7 +91,7 @@
                     </mat-autocomplete>
                 </mat-form-field>
                 <button mat-icon-button color="accent"
-                        (click)="remove(sourceConfig, filter.index)"
+                        (click)="remove(sourceConfig, i)"
                         data-cy="design-panel-data-settings-remove-filter">
                     <i class="material-icons">remove</i>
                 </button>

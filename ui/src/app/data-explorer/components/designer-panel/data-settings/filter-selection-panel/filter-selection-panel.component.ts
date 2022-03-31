@@ -61,7 +61,6 @@ export class FilterSelectionPanelComponent implements OnInit {
 
   addFilter() {
     const newFilter: SelectedFilter = {
-      index: this.sourceConfig.queryConfig.selectedFilters.length,
       operator: '=',
       value: ''
     };
@@ -72,6 +71,8 @@ export class FilterSelectionPanelComponent implements OnInit {
 
   remove(sourceConfig: any, index: number) {
     sourceConfig.queryConfig.selectedFilters.splice(index, 1);
+
+    this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
     this.updateWidget();
   }
 

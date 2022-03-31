@@ -43,7 +43,6 @@ export interface FieldConfig {
 }
 
 export interface SelectedFilter {
-  index: number;
   field?: DataExplorerField;
   operator: string;
   value: any;
