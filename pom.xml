@@ -109,7 +109,6 @@
 	<slf4j.version>1.7.30</slf4j.version>
 	<snakeyaml.version>1.26</snakeyaml.version>
 	<snappy-java.version>1.1.7.7</snappy-java.version>
-	<spark.version>2.1.2</spark.version>
 	<spring.version>5.3.14</spring.version>
 	<spring-boot.version>2.6.2</spring-boot.version>
 	<spring-security.version>5.6.1</spring-security.version>
@@ -511,21 +510,6 @@ IoT data streams.
 					<groupId>org.apache.shiro</groupId>
 					<artifactId>shiro-web</artifactId>
 					<version>${shiro.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.spark</groupId>
-					<artifactId>spark-core_2.11</artifactId>
-					<version>${spark.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.spark</groupId>
-					<artifactId>spark-streaming_2.11</artifactId>
-					<version>${spark.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.spark</groupId>
-					<artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
-					<version>${spark.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.codehaus.plexus</groupId>
@@ -971,7 +955,6 @@ IoT data streams.
 			<module>streampipes-wrapper-kafka-streams</module>
 			<module>streampipes-wrapper-python</module>
 			<module>streampipes-wrapper-siddhi</module>
-			<!--        <module>streampipes-wrapper-spark</module>-->
 			<module>streampipes-wrapper-standalone</module>
 			<module>streampipes-mail</module>
 			<module>streampipes-resource-management</module>
