@@ -26,7 +26,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { AppAssetMonitoringModule } from '../app-asset-monitoring/app-asset-monitoring.module';
-import { AppImageLabelingModule } from '../app-image-labeling/app-image-labeling.module';
 import { AppOverviewComponent } from './app-overview.component';
 
 @NgModule({
@@ -39,7 +38,6 @@ import { AppOverviewComponent } from './app-overview.component';
         MatFormFieldModule,
         FormsModule,
         AppAssetMonitoringModule,
-        AppImageLabelingModule,
     ],
     declarations: [
         AppOverviewComponent,
