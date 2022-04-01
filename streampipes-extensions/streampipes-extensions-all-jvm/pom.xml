@@ -35,6 +35,12 @@
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-extensions</artifactId>
             <version>0.70.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.graalvm.nativeimage</groupId>
+                    <artifactId>svm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- StreamPipes pipeline elements all (JVM) -->
             <dependency>
