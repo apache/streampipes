@@ -66,7 +66,7 @@
         <owasp.check.skip>true</owasp.check.skip>
         <maven.deploy.skip>false</maven.deploy.skip>
 
-        <amqp-client.version>4.1.0</amqp-client.version>
+        <amqp-client.version>4.8.0</amqp-client.version>
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
         <boofcv.version>0.33</boofcv.version>
         <bcprov.version>1.66</bcprov.version>
@@ -126,7 +126,7 @@
         <eclipse.milo.version>0.6.3</eclipse.milo.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
         <mysql-connector-java.version>8.0.15</mysql-connector-java.version>
-        <netty.version>4.1.39.Final</netty.version>
+        <netty.version>4.1.72.Final</netty.version>
         <nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
         <opencsv.version>5.5.2</opencsv.version>
         <plc4x.version>0.8.0</plc4x.version>
