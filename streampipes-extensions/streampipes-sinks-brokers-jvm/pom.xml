@@ -95,6 +95,12 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-resolver</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.graalvm.nativeimage</groupId>
+                    <artifactId>svm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
