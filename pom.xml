@@ -104,7 +104,6 @@
 	<rdf4j.version>3.5.0</rdf4j.version>
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<retrofit.version>2.5.0</retrofit.version>
-	<shiro.version>1.8.0</shiro.version>
 	<siddhi.version>5.1.20</siddhi.version>
 	<simple-java-mail.version>6.7.5</simple-java-mail.version>
 	<slf4j.version>1.7.30</slf4j.version>
@@ -504,16 +503,6 @@ IoT data streams.
 					<groupId>org.apache.flink</groupId>
 					<artifactId>flink-streaming-java_2.11</artifactId>
 					<version>${flink.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.shiro</groupId>
-					<artifactId>shiro-core</artifactId>
-					<version>${shiro.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.shiro</groupId>
-					<artifactId>shiro-web</artifactId>
-					<version>${shiro.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.codehaus.plexus</groupId>
