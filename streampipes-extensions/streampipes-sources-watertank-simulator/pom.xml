@@ -49,6 +49,12 @@
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk-bundle</artifactId>
             <version>0.70.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.graalvm.nativeimage</groupId>
+                    <artifactId>svm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
