@@ -68,7 +68,7 @@
     "jshint": "^2.13.1",
     "konva": "3.2.4",
     "leaflet": "1.6.0",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "material-icons": "^0.5.3",
     "ngx-color-picker": "^11.0.0",
     "ngx-echarts": "^8.0.1",
