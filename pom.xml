@@ -76,7 +76,7 @@
 	<javax-servlet-api.version>4.0.1</javax-servlet-api.version>
 	<javax-validation.version>2.0.1.Final</javax-validation.version>
 	<javax.ws.rs.version>2.1</javax.ws.rs.version>
-	<javassist.version>3.19.0-GA</javassist.version>
+	<javassist.version>3.25.0-GA</javassist.version>
 	<jaxb-api.version>2.3.1</jaxb-api.version>
 	<jboss-logging.version>3.4.0.Final</jboss-logging.version>
 	<jboss-logging-annotations.version>2.2.1.Final</jboss-logging-annotations.version>
@@ -119,7 +119,7 @@
 	<hawtbuf.version>1.11</hawtbuf.version>
 
 	<!-- Test dependencies -->
-	<junit.version>4.12</junit.version>
+	<junit.version>4.13.2</junit.version>
 	<mockito.version>3.12.4</mockito.version>
 	<powermock.version>2.0.9</powermock.version>
 	<rest-assured.version>2.9.0</rest-assured.version>
