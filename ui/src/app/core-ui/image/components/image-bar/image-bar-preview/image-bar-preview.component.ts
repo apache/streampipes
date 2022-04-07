@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,33 +20,30 @@ import { SafeUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'sp-image-viewer',
-  templateUrl: './image-viewer.component.html',
-  styleUrls: ['./image-viewer.component.css']
+  selector: 'sp-image-bar-preview',
+  templateUrl: './image-bar-preview.component.html',
+  styleUrls: ['./image-bar-preview.component.scss']
 })
-export class ImageViewerComponent implements OnInit {
+export class ImageBarPreviewComponent implements OnInit {
 
   @Input()
-  public imagesRoutes: Observable<SafeUrl>[];
+  imagePreviewHeight: number;
 
   @Input()
-  public canvasHeight = 500;
+  focus = false;
+
+  imagePath: SafeUrl;
+  showImage = false;
 
   @Input()
-  public canvasWidth = 800;
-
-  @Input()
-  public imagePreviewHeight = 65;
-
-
-  public imagesIndex = 0;
-
-  constructor() {}
-
-  handleImageIndexChange(index) {
-    this.imagesIndex = index;
+  set imageSrc(src: Observable<SafeUrl>) {
+    src.subscribe(url => {
+      this.imagePath = url;
+      this.showImage = true;
+    });
   }
 
   ngOnInit(): void {
   }
+
 }

@@ -17,23 +17,20 @@
   -->
 
 
-<div class="widget-content">
-    <div class="widget-inner-options ml-0 mr-0 mt-0">
-        <div fxFlex="100" fxLayout="row">
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="ml-0 mr-0">
-                <sp-select-properties [availableProperties]="availableColumns" [selectedProperties]="selectedColumn"></sp-select-properties>
-            </div>
-        </div>
-    </div>
+<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column" class="main-panel">
+
+    <sp-load-data-spinner *ngIf="showIsLoadingData" class="h-100"></sp-load-data-spinner>
+
+    <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
+
 
     <div class="widget-inner-content">
-        <sp-load-data-spinner *ngIf="showIsLoadingData"></sp-load-data-spinner>
-        <sp-no-data-in-date-range *ngIf="imagesRoutes.length === 0" [viewDateRange]="viewDateRange"></sp-no-data-in-date-range>
-        <sp-image-viewer *ngIf="imagesRoutes.length > 0"
-                         [imagesRoutes]="imagesRoutes"
+        <sp-image-viewer *ngIf="imagePaths.length > 0"
+                         [imagesRoutes]="imagePaths"
                          [canvasHeight]="canvasHeight"
                          [canvasWidth]="canvasWidth"
                          [imagePreviewHeight]="imagePreviewHeight"
+                         [ngStyle]="{width: canvasWidth + 'px', height: canvasHeight + 'px'}"
         ></sp-image-viewer>
     </div>
 </div>

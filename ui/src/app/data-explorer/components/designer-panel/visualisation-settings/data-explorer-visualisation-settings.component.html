@@ -68,5 +68,10 @@
                     [currentlyConfiguredWidget]="currentlyConfiguredWidget">
             </sp-data-explorer-distribution-chart-widget-config>
         </div>
+        <div *ngIf="currentlyConfiguredWidget.widgetType === 'image'" class="h-100 p-0">
+            <sp-data-explorer-image-widget-config
+                    [currentlyConfiguredWidget]="currentlyConfiguredWidget">
+            </sp-data-explorer-image-widget-config>
+        </div>
     </div>
 </div>

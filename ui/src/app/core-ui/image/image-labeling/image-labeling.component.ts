@@ -228,7 +228,7 @@ export class ImageLabelingComponent implements OnInit {
       const categoryId = this.cocoFormatService.getLabelId(coco, change[0].category_id, change[1].name, change[1].name);
       change[0].category_id = categoryId;
       change[0].category_name = change[1].categoryId;
-      this.imageView.redrawAll();
+      //this.imageView.redrawAll();
     }
   }
 
@@ -237,7 +237,7 @@ export class ImageLabelingComponent implements OnInit {
       if (annotation !== undefined) {
         const coco = this.cocoFile;
         this.cocoFormatService.removeAnnotation(coco, annotation.id);
-        this.imageView.redrawAll();
+        //this.imageView.redrawAll();
       }
     }
   }

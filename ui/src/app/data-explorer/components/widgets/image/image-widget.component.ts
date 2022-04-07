@@ -23,11 +23,17 @@ import {
   DataExplorerField,
   DatalakeQueryParameterBuilder,
   DatalakeQueryParameters,
+  DatalakeRestService,
+  DataViewQueryGeneratorService,
   EventPropertyUnion,
-  EventSchema,
   SpQueryResult
 } from '@streampipes/platform-services';
 import { ImageWidgetModel } from './model/image-widget.model';
+import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
+import { ResizeService } from '../../../services/resize.service';
+import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
+import { TimeSelectionService } from '../../../services/time-selection.service';
+import { SecurePipe } from '../../../../services/secure.pipe';
 
 @Component({
   selector: 'sp-data-explorer-image-widget',
@@ -36,7 +42,10 @@ import { ImageWidgetModel } from './model/image-widget.model';
 })
 export class ImageWidgetComponent extends BaseDataExplorerWidgetDirective<ImageWidgetModel> implements OnInit, OnDestroy {
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+
+  imageBaseUrl: string;
+  imagePaths = [];
 
   availableColumns: EventPropertyUnion[];
   selectedColumn: EventPropertyUnion;
@@ -45,44 +54,31 @@ export class ImageWidgetComponent extends BaseDataExplorerWidgetDirective<ImageW
   canvasWidth;
   imagePreviewHeight;
 
-  public imagesRoutes = [];
-
-  ngOnInit(): void {
-    this.canvasHeight = this.gridsterItemComponent.height - 240;
-    this.canvasWidth = this.gridsterItemComponent.width - 20;
-    this.imagePreviewHeight = this.gridsterItemComponent.width / 14;
-
-    this.availableColumns = this.getImageProperties(this.dataExplorerWidget.dataConfig.sourceConfigs[0].measure.eventSchema);
-    this.selectedColumn = this.availableColumns[0];
-    this.updateData();
+  constructor(dataLakeRestService: DatalakeRestService,
+              widgetConfigurationService: WidgetConfigurationService,
+              resizeService: ResizeService,
+              dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+              fieldService: DataExplorerFieldProviderService,
+              timeSelectionService: TimeSelectionService,
+              private securePipe: SecurePipe) {
+    super(
+      dataLakeRestService,
+      widgetConfigurationService,
+      resizeService,
+      dataViewQueryGeneratorService,
+      fieldService,
+      timeSelectionService
+    );
   }
 
-  getImageProperties(eventSchema: EventSchema): EventPropertyUnion[] {
-    return eventSchema.eventProperties.filter(ep => ep.domainProperties.some(dp => dp === 'https://image.com'));
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
+    this.imageBaseUrl = this.dataLakeRestService.dataLakeUrl + '/images/';
   }
 
   ngOnDestroy(): void {
 
-  }
-
-  refreshData() {
-    this.setShownComponents(false, false, true);
-
-    this.dataLakeRestService.getData(
-      this.dataExplorerWidget.dataConfig.sourceConfigs[0].measureName, this.buildQuery())
-      .subscribe(
-        (res: SpQueryResult) => {
-          // this.availableImageData = res;
-          this.showIsLoadingData = false;
-          this.imagesRoutes = [];
-          if (res.allDataSeries[0].rows !== null) {
-            const imageField = res.headers.findIndex(name => name === this.selectedColumn.runtimeName);
-            res.allDataSeries[0].rows.forEach(row => {
-              this.imagesRoutes.push(row[imageField]);
-            });
-          }
-        }
-      );
   }
 
   refreshView() {
@@ -93,12 +89,26 @@ export class ImageWidgetComponent extends BaseDataExplorerWidgetDirective<ImageW
   }
 
   onResize(width: number, height: number) {
+    this.canvasHeight = height - 50;
+    this.canvasWidth = width - 20;
+    this.imagePreviewHeight = width / 14;
   }
 
   beforeDataFetched() {
+    this.setShownComponents(false, false, true, false);
   }
 
   onDataReceived(spQueryResult: SpQueryResult[]) {
+    const selectedField = this.dataExplorerWidget.visualizationConfig.selectedField;
+    if (spQueryResult.length > 0) {
+      const qr = spQueryResult[selectedField.sourceIndex];
+      const columnIndex = qr.headers.indexOf(selectedField.runtimeName);
+      this.imagePaths = qr.allDataSeries[0].rows
+        .map(row => row[columnIndex])
+        .map(imageId => this.imageBaseUrl + imageId)
+        .map(imageRoute => this.securePipe.transform(imageRoute));
+    }
+    this.setShownComponents(false, true, false, false);
   }
 
   handleUpdatedFields(addedFields: DataExplorerField[], removedFields: DataExplorerField[]) {

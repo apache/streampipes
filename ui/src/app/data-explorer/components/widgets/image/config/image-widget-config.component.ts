@@ -20,6 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { ImageWidgetModel, ImageWidgetVisConfig } from '../model/image-widget.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
+import { DataExplorerField } from "../../../../../../../dist/streampipes/platform-services";
 
 @Component({
   selector: 'sp-data-explorer-image-widget-config',
@@ -27,6 +28,9 @@ import { WidgetType } from '../../../../registry/data-explorer-widgets';
   styleUrls: ['./image-widget-config.component.scss']
 })
 export class ImageWidgetConfigComponent extends BaseWidgetConfig<ImageWidgetModel, ImageWidgetVisConfig> implements OnInit {
+
+  imageSemanticType = 'https://image.com';
+  imageFields: DataExplorerField[];
 
   ngOnInit(): void {
   }
@@ -36,10 +40,17 @@ export class ImageWidgetConfigComponent extends BaseWidgetConfig<ImageWidgetMode
   }
 
   protected initWidgetConfig(): ImageWidgetVisConfig {
+    this.imageFields = this.fieldProvider.allFields
+      .filter(field => field.fieldCharacteristics.semanticTypes.find(st => st === this.imageSemanticType));
     return {
       forType: this.getWidgetType(),
-      selectedField: this.fieldProvider.allFields[0]
+      selectedField: this.imageFields[0]
     };
+  }
+
+  setSelectedImageProperty(field: DataExplorerField) {
+    this.currentlyConfiguredWidget.visualizationConfig.selectedField = field;
+    this.triggerDataRefresh();
   }
 
 }
