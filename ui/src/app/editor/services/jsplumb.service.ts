@@ -304,9 +304,9 @@ export class JsplumbService {
           this.jsplumbEndpointService.getInputEndpoint(preview, pipelineElementDomId, 0));
       } else {
         jsplumbBridge.addEndpoint(pipelineElementDomId,
-          this.jsplumbEndpointService.getNewTargetPoint(preview, 0, 0.25, pipelineElementDomId, 0));
+          this.jsplumbEndpointService.getNewTargetPoint(preview, 0, 0.3, pipelineElementDomId, 0));
         jsplumbBridge.addEndpoint(pipelineElementDomId,
-          this.jsplumbEndpointService.getNewTargetPoint(preview, 0, 0.75, pipelineElementDomId, 1));
+          this.jsplumbEndpointService.getNewTargetPoint(preview, 0, 0.7, pipelineElementDomId, 1));
       }
     }
     return pipelineElementDomId;

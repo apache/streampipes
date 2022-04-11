@@ -21,9 +21,9 @@
 .options-button {
   cursor: pointer;
   position: absolute;
-  height: 40%;
-  width: 40%;
-  border-radius: 50%;
+  height: 30%;
+  width: 30%;
+  border-radius: 20%;
   box-shadow: 0 0 3px var(--color-accent);
   text-align: center;
   padding: 1px 1px;
@@ -31,36 +31,43 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
-.customize-button {
-  left: -20%;
-  top: -10%;
+.mat-icon-button.options-icon-button {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  border-radius: 0;
 }
 
-.preview-button {
-  left: 25%;
-  top: -10%;
+.options-icon-size {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.customize-button {
+  left: 2%;
+  top: -35%;
 }
 
 .delete-button {
-  left: 70%;
-  top: -10%;
+  left: 73%;
+  top: -35%;
   background-color: darkred;
   box-shadow: 0 0 3px darkred;
 }
 
 .help-button {
-  left: 70%;
-  top: 70%;
+  left: 37.5%;
+  top: -35%;
 }
 
 .recommended-button {
-  left: 25%;
-  top: 70%;
+  left: 53%;
+  top: 85%;
 }
 
 .possible-button {
-  left: -20%;
-  top: 70%;
+  left: 18%;
+  top: 85%;
 }
 
 .help-button-icon-stand {
@@ -81,8 +88,8 @@
   position: absolute;
   left: 0%;
   top: 50%;
-  width: 100%;
-  padding: 70px 0px 10px;
+  width: 104%;
+  padding: 65px 0px 10px;
   font-size: smaller;
   text-align: center;
   box-shadow: 0 0 2px #555;

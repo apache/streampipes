@@ -155,8 +155,8 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   getElementCss(currentPipelineElementSettings) {
     return 'position:absolute;'
-      + (this.preview ? 'width:75px;' : 'width:110px;')
-      + (this.preview ? 'height:75px;' : 'height:110px;')
+      + (this.preview ? 'width:75px;' : 'width:90px;')
+      + (this.preview ? 'height:75px;' : 'height:90px;')
       + 'left: ' + currentPipelineElementSettings.position.x + 'px; '
       + 'top: ' + currentPipelineElementSettings.position.y + 'px; ';
   }
