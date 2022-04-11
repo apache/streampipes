@@ -127,14 +127,18 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
   loadVisualizablePipelines() {
     zip(this.dataExplorerService.getAllPersistedDataStreams(), this.dataLakeRestService.getAllMeasurementSeries())
       .subscribe(res => {
+        const availableVisualizablePipelines = [];
         const visualizablePipelines = res[0];
         visualizablePipelines.forEach(p => {
           const measurement = res[1].find(m => {
             return m.measureName === p.measureName;
           });
-          p.eventSchema = measurement.eventSchema;
+          if (measurement) {
+            p.eventSchema = measurement.eventSchema;
+            availableVisualizablePipelines.push(p);
+          }
         });
-        this.visualizablePipelines = this.sortPipeline(visualizablePipelines);
+        this.visualizablePipelines = this.sortPipeline(availableVisualizablePipelines);
       });
   }
 
