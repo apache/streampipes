@@ -139,7 +139,7 @@ A description of the standard elements can be found in the Github repository [st
 
 ## Extending StreamPipes
 
-You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/dev-guide-tutorial-processors) and several [run-time wrappers](https://streampipes.apache.org/docs/docs/dev-guide-architecture) for popular streaming frameworks such as Apache Flink, Apache Spark and Apache 
+You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/dev-guide-tutorial-processors) and several [run-time wrappers](https://streampipes.apache.org/docs/docs/dev-guide-architecture) for popular streaming frameworks such as Apache Flink and Apache 
 Kafka Streams (and also plain Java programs) can be used to integrate your existing processing logic into StreamPipes. Pipeline elements are packaged as Docker images and can be installed at runtime, whenever your requirements change.
 
 Check our developer guide at [https://streampipes.apache.org/docs/docs/dev-guide-introduction](https://streampipes.apache.org/docs/docs/dev-guide-introduction).
