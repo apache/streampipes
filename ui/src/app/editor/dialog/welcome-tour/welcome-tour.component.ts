@@ -16,7 +16,7 @@
  *
  */
 
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { AppConstants } from '../../../services/app.constants';

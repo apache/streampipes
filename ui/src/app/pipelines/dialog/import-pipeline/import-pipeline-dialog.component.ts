@@ -18,7 +18,7 @@
 
 import { Component } from '@angular/core';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { forkJoin } from 'rxjs';
 
 @Component({

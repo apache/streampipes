@@ -20,15 +20,14 @@ import { Component, OnInit } from '@angular/core';
 import { EditorService } from './services/editor.service';
 import { DataSourceDescription, PipelineElementService, SpDataStream } from '@streampipes/platform-services';
 import { PipelineElementConfig, PipelineElementUnion } from './model/editor.model';
-import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
+import { PanelType, DialogService } from '@streampipes/shared-ui';
 import { WelcomeTourComponent } from './dialog/welcome-tour/welcome-tour.component';
-import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
 import { MissingElementsForTutorialComponent } from './dialog/missing-elements-for-tutorial/missing-elements-for-tutorial.component';
 import { ShepherdService } from '../services/tour/shepherd.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { zip } from 'rxjs';
-import { AppConstants } from "../services/app.constants";
+import { AppConstants } from '../services/app.constants';
 
 @Component({
   selector: 'editor',

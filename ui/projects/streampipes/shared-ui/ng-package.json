@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/streampipes/shared-ui",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  }
+}

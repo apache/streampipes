@@ -8,20 +8,26 @@
     "url": "https://github.com/apache/incubator-streampipes"
   },
   "scripts": {
-    "build-platform-services": "ng build @streampipes/platform-services && npm install @streampipes/platform-services@file:./dist/streampipes/platform-services --no-save",
-    "start": "node ./deployment/prebuild.js && npm run build-platform-services && ng serve",
-    "test": "node ./deployment/prebuild.js && npm run build-platform-services && ng test",
-    "start-plain": "npm run build-platform-services && ng serve",
-    "build-plain": "set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-platform-services && ng build --configuration production",
+    "build-libs": "ng build @streampipes/shared-ui && ng build @streampipes/platform-services",
+    "install-libs": "npm install @streampipes/shared-ui@file:./dist/streampipes/shared-ui @streampipes/platform-services@file:./dist/streampipes/platform-services --no-save",
+    "build-libraries": "npm run build-libs && npm run install-libs",
+    "start": "node ./deployment/prebuild.js && npm run build-libraries && ng serve",
+    "test": "node ./deployment/prebuild.js && npm run build-libraries && ng test",
+    "start-plain": "npm run build-libraries && ng serve",
+    "build-plain": "set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-libraries && ng build --configuration production",
     "run-prebuild-script": "node ./deployment/prebuild.js",
-    "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-platform-services && ng build --configuration production",
-    "build-dev": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-platform-services && ng build",
-    "build-rc": "node ./deployment/prebuild.js rel && set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-platform-services && ng build --configuration production",
+    "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-libraries && ng build --configuration production",
+    "build-dev": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-libraries && ng build",
+    "build-rc": "node ./deployment/prebuild.js rel && set NODE_OPTIONS=--max-old-space-size=10192 && npm run build-libraries && ng build --configuration production",
     "lint": "tslint -c tslint.json 'src/**/*.ts*",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "test-cypress-open": "cypress open",
     "test-cypress-smoke": "npx cypress run --spec 'cypress/tests/**/*.smoke.spec.ts'",
     "test-cypress-all": "npx cypress run --spec 'cypress/tests/**/*.spec.ts'"
+  },
+  "peerDependencies": {
+    "@streampipes/platform-services": "0.0.1",
+    "@streampipes/shared-ui": "0.0.1"
   },
   "dependencies": {
     "@angular-architects/module-federation": "^14.0.1",
@@ -131,7 +137,7 @@
     "tslint": "~6.1.0",
     "tslint-config-prettier": "^1.15.0",
     "typescript": "4.6.2",
-    "webpack": "^5.58.1",
+    "webpack": "^5.72.0",
     "webpack-cli": "^4.9.0",
     "webpack-merge": "^5.8.0"
   }

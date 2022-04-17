@@ -44,12 +44,8 @@ import { PolygonLabelingService } from './image/services/PolygonLabeling.service
 import { ReactLabelingService } from './image/services/ReactLabeling.service';
 import { CocoFormatService } from './image/services/CocoFormat.service';
 import { LabelingModeService } from './image/services/LabelingMode.service';
-import { StandardDialogComponent } from './dialog/standard-dialog/standard-dialog.component';
-import { PanelDialogComponent } from './dialog/panel-dialog/panel-dialog.component';
-import { DialogService } from './dialog/base-dialog/base-dialog.service';
 import { PortalModule } from '@angular/cdk/portal';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import { StaticAnyInput } from './static-properties/static-any-input/static-any-input.component';
 import { StaticPropertyComponent } from './static-properties/static-property.component';
 import { StaticFreeInputComponent } from './static-properties/static-free-input/static-free-input.component';
@@ -85,6 +81,7 @@ import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/s
 import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar-preview/image-bar-preview.component';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
   imports: [
@@ -109,13 +106,13 @@ import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar
     MatTreeModule,
     PlatformServicesModule,
     PortalModule,
+    SharedUiModule,
     OverlayModule,
     QuillModule.forRoot(),
     MatTreeModule
   ],
   declarations: [
     ConfigureLabelsComponent,
-    ConfirmDialogComponent,
     DisplayRecommendedPipe,
     ImageBarPreviewComponent,
     ImageComponent,
@@ -126,8 +123,6 @@ import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar
     ImageAnnotationsComponent,
     ImageViewerComponent,
     ObjectPermissionDialogComponent,
-    StandardDialogComponent,
-    PanelDialogComponent,
     SplitSectionComponent,
     StaticAnyInput,
     StaticPropertyComponent,
@@ -160,7 +155,6 @@ import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar
     BrushLabelingService,
     CocoFormatService,
     LabelingModeService,
-    DialogService,
     RuntimeResolvableService,
   ],
   exports: [
@@ -168,9 +162,6 @@ import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar
     ImageComponent,
     ImageLabelingComponent,
     SelectLabelComponent,
-    StandardDialogComponent,
-    PanelDialogComponent,
-    ConfirmDialogComponent,
     StaticAnyInput,
     StaticPropertyComponent,
     StaticFreeInputComponent,

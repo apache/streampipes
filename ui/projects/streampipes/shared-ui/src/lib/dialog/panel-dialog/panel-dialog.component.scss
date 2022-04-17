@@ -16,45 +16,42 @@
  *
  */
 
-import { EventEmitter, Input, Output, ViewChild, Directive } from '@angular/core';
-import { CdkPortalOutlet, ComponentPortal, Portal } from '@angular/cdk/portal';
-import { DialogRef } from './dialog-ref';
+@import '../../../../../../../src/scss/sp/colors';
 
-@Directive()
-export abstract class BaseDialogComponent<T> {
-
-  @Input()
-  dialogTitle = '';
-
-  @Input()
-  comp: ComponentPortal<T>;
-
-  @Output()
-  containerEvent = new EventEmitter<{ key: 'CLOSE' }>();
-
-  @ViewChild('portal', {read: CdkPortalOutlet, static: true})
-  portal: CdkPortalOutlet;
-
-  @Input()
-  selectedPortal: Portal<T>;
-
-  @Input()
-  dialogRef: DialogRef<T>;
-
-
-  protected constructor() {
-
-  }
-
-  attach() {
-    const c = this.portal.attach(this.selectedPortal);
-    return c.instance;
-  }
-
-  close() {
-    this.dialogRef.close();
-  }
-
-  abstract closeDialog();
+app-dialog-container {
+  width: 100%;
+  background-color: var(--color-bg-dialog);
+  color: var(--color-default-text);
+  box-shadow: -7px 0px 5px -5px #777;
 }
 
+.dialog-panel {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 50px auto;
+}
+
+.dialog-panel-header {
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+  min-height: 50px;
+  width: 100%;
+  background: var(--color-primary);
+  align-items: center;
+}
+
+.dialog-panel-content {
+  height: 100%;
+  overflow-y:auto;
+}
+
+.dialog-title {
+  padding: 5px 5px 5px 15px;
+  font-size:20px;
+  color: white;
+}
+
+#portal {
+  width:100%;
+}

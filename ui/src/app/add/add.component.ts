@@ -19,9 +19,7 @@
 import { RestApi } from '../services/rest-api.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AddService } from './services/add.service';
-import { DialogRef } from '../core-ui/dialog/base-dialog/dialog-ref';
-import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
 import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';

@@ -41,6 +41,7 @@ webpack.partial.dev.js
 # dependencies
 /node_modules
 projects/streampipes/platform-services/node_modules
+projects/streampipes/shared-ui/node_modules
 
 
 # IDEs and editors

@@ -20,7 +20,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { RestService } from '../../services/rest.service';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { ImageInfo } from '../../model/image-info.model';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import Konva from 'konva';
 import Stage = Konva.Stage;
 

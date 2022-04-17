@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { Message, Pipeline, PipelineCanvasMetadata, PipelineService, PipelineCanvasMetadataService } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
 import { EditorService } from '../../services/editor.service';

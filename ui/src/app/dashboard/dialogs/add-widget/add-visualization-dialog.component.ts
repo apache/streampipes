@@ -36,8 +36,8 @@ import {
   PipelineService
 } from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
-import { zip } from "rxjs";
+import { DialogRef } from '@streampipes/shared-ui';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'add-visualization-dialog-component',

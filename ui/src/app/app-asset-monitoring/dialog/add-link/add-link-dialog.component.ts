@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { ShapeService } from '../../services/shape.service';
 import { HyperlinkConfig } from '../../model/selected-visualization-data.model';
 

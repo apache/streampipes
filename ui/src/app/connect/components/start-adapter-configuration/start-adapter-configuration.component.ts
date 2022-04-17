@@ -29,12 +29,11 @@ import {
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
+import { PanelType, DialogService } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
 import { ConnectService } from '../../services/connect.service';
-import { TimestampPipe } from "../../filter/timestamp.pipe";
-import { MatCheckboxChange } from "@angular/material/checkbox";
+import { TimestampPipe } from '../../filter/timestamp.pipe';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'sp-start-adapter-configuration',

@@ -22,7 +22,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
 import { FilterPipe } from '../../filter/filter.pipe';
 import { AdapterDescriptionUnion } from '@streampipes/platform-services';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogService } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'sp-data-marketplace',

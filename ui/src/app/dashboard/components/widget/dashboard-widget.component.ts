@@ -27,8 +27,7 @@ import {
   Pipeline,
   PipelineService
 } from '@streampipes/platform-services';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditModeService } from '../../services/edit-mode.service';
 import { ReloadPipelineService } from '../../services/reload-pipeline.service';
 import { zip } from 'rxjs';

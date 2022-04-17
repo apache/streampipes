@@ -18,7 +18,7 @@
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { DialogRef } from '../dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   PermissionsService,

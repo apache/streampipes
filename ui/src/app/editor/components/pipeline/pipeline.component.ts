@@ -43,11 +43,9 @@ import {
 } from '@streampipes/platform-services';
 import { ObjectProvider } from '../../services/object-provider.service';
 import { CustomizeComponent } from '../../dialog/customize/customize.component';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogService, PanelType, ConfirmDialogComponent } from '@streampipes/shared-ui';
 import { EditorService } from '../../services/editor.service';
 import { MatchingErrorComponent } from '../../dialog/matching-error/matching-error.component';
-import { ConfirmDialogComponent } from '../../../core-ui/dialog/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { JsplumbFactoryService } from '../../services/jsplumb-factory.service';

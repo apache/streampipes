@@ -17,8 +17,7 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
 
 @Component({

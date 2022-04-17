@@ -21,8 +21,7 @@ import { Group, UserGroupService } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { PanelType, DialogService } from '@streampipes/shared-ui';
 import { EditGroupDialogComponent } from '../edit-group-dialog/edit-group-dialog.component';
 
 @Component({

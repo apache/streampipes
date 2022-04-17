@@ -30,9 +30,7 @@ import {
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { DialogRef } from '../../core-ui/dialog/base-dialog/dialog-ref';
-import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 
 @Component({

@@ -20,7 +20,9 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WidgetTypeChangeMessage } from '../models/dataview-dashboard.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class WidgetTypeService {
 
   public widgetTypeChangeSubject: Subject<WidgetTypeChangeMessage> = new Subject<WidgetTypeChangeMessage>();

@@ -22,13 +22,10 @@ import { BasicProfileSettings } from '../basic-profile-settings';
 import { AppConstants } from '../../../services/app.constants';
 import { AuthService } from '../../../services/auth.service';
 import { JwtTokenStorageService } from '../../../services/jwt-token-storage.service';
-import { EditUserDialogComponent } from "../../../configuration/security-configuration/edit-user-dialog/edit-user-dialog.component";
-import { PanelType } from "../../../core-ui/dialog/base-dialog/base-dialog.model";
-import { DialogService } from "../../../core-ui/dialog/base-dialog/base-dialog.service";
-import { DialogRef } from "../../../core-ui/dialog/base-dialog/dialog-ref";
-import { ChangeEmailDialogComponent } from "../../dialog/change-email/change-email-dialog.component";
-import { ChangePasswordDialogComponent } from "../../dialog/change-password/change-password-dialog.component";
-import { Router } from "@angular/router";
+import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
+import { ChangeEmailDialogComponent } from '../../dialog/change-email/change-email-dialog.component';
+import { ChangePasswordDialogComponent } from '../../dialog/change-password/change-password-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'general-profile-settings',

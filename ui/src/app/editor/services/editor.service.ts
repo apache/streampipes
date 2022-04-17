@@ -33,8 +33,7 @@ import {
 } from '@streampipes/platform-services';
 import { Observable, Subject } from 'rxjs';
 import { PeCategory, PipelineElementConfig, PipelineElementUnion } from '../model/editor.model';
-import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { HelpComponent } from '../dialog/help/help.component';
 import { map } from 'rxjs/operators';
 

@@ -91,11 +91,11 @@ export class DialogService {
   }
 
   getPanel(panelType: PanelType): ComponentType<BaseDialogComponentUnion> {
-    return panelType == PanelType.SLIDE_IN_PANEL ? PanelDialogComponent : StandardDialogComponent;
+    return panelType === PanelType.SLIDE_IN_PANEL ? PanelDialogComponent : StandardDialogComponent;
   }
 
   getConfig(panelType: PanelType): BaseDialogConfig {
-    return panelType == PanelType.SLIDE_IN_PANEL ? new PanelDialogConfig() :
+    return panelType === PanelType.SLIDE_IN_PANEL ? new PanelDialogConfig() :
         new StandardDialogConfig();
   }
 

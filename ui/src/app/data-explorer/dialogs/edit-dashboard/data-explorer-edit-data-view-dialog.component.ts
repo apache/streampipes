@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'sp-data-explorer-edit-data-view-dialog-component',

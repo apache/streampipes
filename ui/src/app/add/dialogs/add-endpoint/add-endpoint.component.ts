@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { AddService } from '../../services/add.service';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'sp-add-endpoint-dialog',

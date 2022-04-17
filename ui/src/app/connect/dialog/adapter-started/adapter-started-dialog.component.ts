@@ -28,7 +28,7 @@ import {
   SpecificAdapterSetDescription,
   PipelineTemplateService,
 } from '@streampipes/platform-services';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
 
 

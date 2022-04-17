@@ -22,7 +22,7 @@ import {
   PipelineElementConfig,
   PipelineElementConfigurationStatus
 } from '../../model/editor.model';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { JsplumbService } from '../../services/jsplumb.service';
 import {
   DataProcessorInvocation, DataSinkInvocation,

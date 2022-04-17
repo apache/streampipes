@@ -16,8 +16,45 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog';
+import { EventEmitter, Input, Output, ViewChild, Directive } from '@angular/core';
+import { CdkPortalOutlet, ComponentPortal, Portal } from '@angular/cdk/portal';
+import { DialogRef } from './dialog-ref';
 
-.footer {
-  margin-top:20px;
+@Directive()
+export abstract class BaseDialogComponent<T> {
+
+  @Input()
+  dialogTitle = '';
+
+  @Input()
+  comp: ComponentPortal<T>;
+
+  @Output()
+  containerEvent = new EventEmitter<{ key: 'CLOSE' }>();
+
+  @ViewChild('portal', {read: CdkPortalOutlet, static: true})
+  portal: CdkPortalOutlet;
+
+  @Input()
+  selectedPortal: Portal<T>;
+
+  @Input()
+  dialogRef: DialogRef<T>;
+
+
+  protected constructor() {
+
+  }
+
+  attach(): any {
+    const c = this.portal.attach(this.selectedPortal);
+    return c.instance;
+  }
+
+  close() {
+    this.dialogRef.close();
+  }
+
+  abstract closeDialog();
 }
+

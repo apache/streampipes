@@ -21,7 +21,7 @@ import { RestApi } from '../../../services/rest-api.service';
 import { RestService } from '../../services/rest.service';
 import { ElementIconText } from '../../../services/get-element-icon-text.service';
 import { SelectedVisualizationData } from '../../model/selected-visualization-data.model';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { DataLakeMeasure, DatalakeRestService, DataViewDataExplorerService } from '@streampipes/platform-services';
 import { zip } from 'rxjs';
 

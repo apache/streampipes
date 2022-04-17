@@ -4,6 +4,9 @@
     "paths": {
       "@streampipes/platform-services": [
         "dist/streampipes/platform-services"
+      ],
+      "@streampipes/shared-ui": [
+        "dist/streampipes/shared-ui"
       ]
     },
     "downlevelIteration": true,

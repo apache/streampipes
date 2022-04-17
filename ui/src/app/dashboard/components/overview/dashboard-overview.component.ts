@@ -25,8 +25,7 @@ import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Router } from '@angular/router';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { PanelType, DialogService } from '@streampipes/shared-ui';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';

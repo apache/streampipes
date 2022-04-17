@@ -34,36 +34,37 @@ import { EndpointInstallationComponent } from './dialogs/endpoint-installation/e
 import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
 import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
 
+
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        MatTabsModule,
-        FlexLayoutModule,
-        CoreUiModule,
-        CustomMaterialModule,
-        MatProgressSpinnerModule
-    ],
-    declarations: [
-        AddComponent,
-        AddEndpointComponent,
-        EndpointInstallationComponent,
-        EndpointItemComponent,
-        OrderByPipe,
-        PipelineElementNameFilter,
-        PipelineElementInstallationStatusFilter,
-        PipelineElementTypeFilter
-    ],
-    providers: [
-        AddService,
-        OrderByPipe,
-        PipelineElementInstallationStatusFilter,
-        PipelineElementNameFilter,
-        PipelineElementTypeFilter
-    ],
-    exports: [
-        AddComponent
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatTabsModule,
+    FlexLayoutModule,
+    CoreUiModule,
+    CustomMaterialModule,
+    MatProgressSpinnerModule,
+  ],
+  declarations: [
+    AddComponent,
+    AddEndpointComponent,
+    EndpointInstallationComponent,
+    EndpointItemComponent,
+    OrderByPipe,
+    PipelineElementNameFilter,
+    PipelineElementInstallationStatusFilter,
+    PipelineElementTypeFilter
+  ],
+  providers: [
+    AddService,
+    OrderByPipe,
+    PipelineElementInstallationStatusFilter,
+    PipelineElementNameFilter,
+    PipelineElementTypeFilter
+  ],
+  exports: [
+    AddComponent
+  ]
 })
 export class AddModule {
 

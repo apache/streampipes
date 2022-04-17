@@ -140,6 +140,37 @@
           }
         }
       }
+    },
+    "@streampipes/shared-ui": {
+      "projectType": "library",
+      "root": "projects/streampipes/shared-ui",
+      "sourceRoot": "projects/streampipes/shared-ui/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/streampipes/shared-ui/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/streampipes/shared-ui/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/streampipes/shared-ui/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/streampipes/shared-ui/src/test.ts",
+            "tsConfig": "projects/streampipes/shared-ui/tsconfig.spec.json",
+            "karmaConfig": "projects/streampipes/shared-ui/karma.conf.js"
+          }
+        }
+      }
     }
   },
   "defaultProject": "app"

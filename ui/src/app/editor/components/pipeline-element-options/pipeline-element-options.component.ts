@@ -35,8 +35,7 @@ import {
   WildcardTopicDefinition
 } from '@streampipes/platform-services';
 import { EditorService } from '../../services/editor.service';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { CompatibleElementsComponent } from '../../dialog/compatible-elements/compatible-elements.component';
 import { cloneDeep } from 'lodash';
 import { Subscription } from 'rxjs';

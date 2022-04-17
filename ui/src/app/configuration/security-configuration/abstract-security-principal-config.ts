@@ -20,10 +20,9 @@ import { Directive, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { UserService, ServiceAccount, UserAccount } from '@streampipes/platform-services';
+import { ServiceAccount, UserAccount, UserService } from '@streampipes/platform-services';
 import { Observable } from 'rxjs';
-import { PanelType } from '../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 
 @Directive()

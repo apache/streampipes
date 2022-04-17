@@ -19,7 +19,7 @@
 import { Component, Input } from '@angular/core';
 import { DashboardService } from '../../services/dashboard.service';
 import { Dashboard } from '@streampipes/platform-services';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
     selector: 'edit-dashboard-dialog-component',

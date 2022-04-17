@@ -16,7 +16,7 @@
  *
  */
 
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
 import { Component, Input, OnInit } from '@angular/core';
 

@@ -21,9 +21,7 @@ import { AdapterDescriptionUnion, PipelineElementService } from '@streampipes/pl
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../../services/connect.service';
 import { DataMarketplaceService } from '../../../services/data-marketplace.service';
-import { DialogRef } from '../../../../core-ui/dialog/base-dialog/dialog-ref';
-import { PanelType } from '../../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { DialogRef, PanelType, DialogService } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';

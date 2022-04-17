@@ -22,9 +22,7 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import { DashboardService } from '../../services/dashboard.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
-
+import { PanelType, DialogService } from '@streampipes/shared-ui';
 @Component({
     selector: 'dashboard-panel',
     templateUrl: './dashboard-panel.component.html',

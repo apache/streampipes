@@ -23,8 +23,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ExtensionsServiceEndpointItem, PipelineElementEndpointService } from '@streampipes/platform-services';
 import { AppConstants } from '../../../services/app.constants';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { PanelType } from '../../../core-ui/dialog/base-dialog/base-dialog.model';
-import { DialogService } from '../../../core-ui/dialog/base-dialog/base-dialog.service';
+import { PanelType, DialogService } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'sp-endpoint-item',

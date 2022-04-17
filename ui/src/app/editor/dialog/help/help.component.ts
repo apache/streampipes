@@ -19,7 +19,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PipelineElementUnion } from '../../model/editor.model';
 import { PipelineElementService, SpDataStream } from '@streampipes/platform-services';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineElementTypeUtils } from '../../utils/editor.utils';
 
 @Component({

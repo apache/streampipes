@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineElementEndpointService } from '@streampipes/platform-services';
 
 @Component({

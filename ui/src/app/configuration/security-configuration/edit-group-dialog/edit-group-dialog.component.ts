@@ -19,7 +19,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Group, Role, UserGroupService } from '@streampipes/platform-services';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DialogRef } from '../../../core-ui/dialog/base-dialog/dialog-ref';
+import { DialogRef } from '@streampipes/shared-ui';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { RoleDescription } from '../../../_models/auth.model';
 import { AvailableRolesService } from '../../../services/available-roles.service';

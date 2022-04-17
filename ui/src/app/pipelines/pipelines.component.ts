@@ -19,10 +19,8 @@
 import * as FileSaver from 'file-saver';
 import { Component, OnInit } from '@angular/core';
 import { Pipeline, PipelineCategory, PipelineService } from '@streampipes/platform-services';
-import { DialogService } from '../core-ui/dialog/base-dialog/base-dialog.service';
-import { PanelType } from '../core-ui/dialog/base-dialog/base-dialog.model';
+import { DialogService, PanelType, DialogRef } from '@streampipes/shared-ui';
 import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
-import { DialogRef } from '../core-ui/dialog/base-dialog/dialog-ref';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
 import { zip } from 'rxjs';
