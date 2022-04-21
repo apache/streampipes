@@ -27,7 +27,7 @@ import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,7 +48,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   public Response getAllEndpoints() {
     //TODO: return the endpoint of passing services
     return ok(getEndpoints());
@@ -56,7 +56,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   public Response addRdfEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint) {
     getRdfEndpointStorage()
             .addExtensionsServiceEndpoint(extensionsServiceEndpoint);
@@ -69,7 +69,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   @Path("/{rdfEndpointId}")
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
     getRdfEndpointStorage()
             .removeExtensionsServiceEndpoint(rdfEndpointId);
@@ -80,7 +80,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   @GET
   @Path("/items")
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   public Response getEndpointContents() {
     List<ExtensionsServiceEndpoint> endpoints = getEndpoints();
     String username = getAuthenticatedUsername();

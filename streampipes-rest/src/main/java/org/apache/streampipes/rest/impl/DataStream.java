@@ -20,7 +20,7 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
+import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,7 +34,7 @@ public class DataStream extends AbstractRestResource {
   @Path("/update")
   @POST
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   public Response getStreamsBySource(SpDataStream stream) {
     return ok(Operations.updateActualTopic(stream));
   }

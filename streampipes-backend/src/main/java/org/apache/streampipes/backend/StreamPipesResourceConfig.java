@@ -37,9 +37,6 @@ import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.pe.DataProcessorResource;
 import org.apache.streampipes.rest.impl.pe.DataSinkResource;
 import org.apache.streampipes.rest.impl.pe.DataStreamResource;
-import org.apache.streampipes.rest.shared.serializer.GsonClientModelProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithIdProvider;
-import org.apache.streampipes.rest.shared.serializer.GsonWithoutIdProvider;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.apache.streampipes.service.base.rest.ServiceHealthResource;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -68,7 +65,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataLakeResourceV3.class);
         register(DataLakeMeasureResourceV3.class);
         register(DataStream.class);
-        register(Deployment.class);
         register(EmailConfigurationResource.class);
         register(EmailResource.class);
         register(ExtensionsServiceEndpointResource.class);
@@ -114,9 +110,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(UserGroupResource.class);
 
         // Serializers
-        register(GsonWithIdProvider.class);
-        register(GsonWithoutIdProvider.class);
-        register(GsonClientModelProvider.class);
         register(JacksonSerializationProvider.class);
         register(MultiPartFeature.class);
 

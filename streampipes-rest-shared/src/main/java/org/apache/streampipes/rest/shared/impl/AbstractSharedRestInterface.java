@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.rest.shared.impl;
 
-import org.apache.streampipes.serializers.json.GsonSerializer;
-
 import javax.ws.rs.core.Response;
 
 public abstract class AbstractSharedRestInterface {
@@ -57,7 +55,4 @@ public abstract class AbstractSharedRestInterface {
     return Response.serverError().build();
   }
 
-  protected <T> String toJson(T element) {
-    return GsonSerializer.getGson().toJson(element);
-  }
 }

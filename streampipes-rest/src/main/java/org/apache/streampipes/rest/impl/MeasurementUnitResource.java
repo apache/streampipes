@@ -17,7 +17,6 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
-import org.apache.streampipes.rest.shared.annotation.GsonWithIds;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.units.UnitProvider;
 
@@ -41,7 +40,7 @@ public class MeasurementUnitResource extends AbstractRestResource {
   @GET
   @Path("/{measurementResourceUri}")
   @Produces(MediaType.APPLICATION_JSON)
-  @GsonWithIds
+  @JacksonSerialized
   public Response getMeasurementUnitInfo(@PathParam("measurementResourceUri") String measurementResourceUri) {
     return ok(UnitProvider.INSTANCE.getUnit(measurementResourceUri));
   }
