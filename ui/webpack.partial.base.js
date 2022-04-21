@@ -68,6 +68,7 @@ module.exports = {
                 "@angular/cdk": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
                 "@angular/material": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true},
                 "@angular/material/tooltip": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true },
+                "@angular/material/dialog": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true },
                 "@streampipes/shared-ui": { singleton: true, strictVersion: true, eager: true},
                 "@streampipes/platform-services": { singleton: true, strictVersion: true, eager: true},
                 ...sharedMappings.getDescriptors()
