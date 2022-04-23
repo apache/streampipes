@@ -15,15 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.serializers.utils;
+package org.apache.streampipes.test.generator.template;
 
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.model.template.PipelineElementTemplateConfig;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 public class PipelineElementTemplateHelpers {
 
@@ -33,17 +31,6 @@ public class PipelineElementTemplateHelpers {
     configs.put("test-key-2", makeConfig(true, false, 2));
 
     return new PipelineElementTemplate("name", "description", configs);
-  }
-
-  public static void assertions(PipelineElementTemplate template) {
-    assertEquals("name", template.getTemplateName());
-    assertEquals("description", template.getTemplateDescription());
-    assertEquals(2, template.getTemplateConfigs().size());
-    assertEquals("test-string", template.getTemplateConfigs().get("test-key").getValue());
-    assertTrue(template.getTemplateConfigs().get("test-key").isEditable());
-    assertTrue(template.getTemplateConfigs().get("test-key").isDisplayed());
-    assertTrue(template.getTemplateConfigs().get("test-key-2").isEditable());
-    assertFalse(template.getTemplateConfigs().get("test-key-2").isDisplayed());
   }
 
   private static PipelineElementTemplateConfig makeConfig(boolean editable, boolean displayed, Object value) {

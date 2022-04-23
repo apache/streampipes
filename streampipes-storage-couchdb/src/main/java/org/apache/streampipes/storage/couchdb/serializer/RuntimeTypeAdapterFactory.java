@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.serializers.json;
+package org.apache.streampipes.storage.couchdb.serializer;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

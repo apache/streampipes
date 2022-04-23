@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
-import org.apache.streampipes.serializers.json.GsonSerializer;
+import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.serializers.json;
+package org.apache.streampipes.storage.couchdb.serializer;
 
 import com.google.gson.*;
 import org.apache.streampipes.model.client.user.Principal;

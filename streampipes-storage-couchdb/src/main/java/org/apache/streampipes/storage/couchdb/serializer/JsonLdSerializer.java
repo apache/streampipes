@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.serializers.json;
+
+package org.apache.streampipes.storage.couchdb.serializer;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -25,20 +26,26 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.Type;
 
-public class ProcessingElementSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T> {
+public class JsonLdSerializer<T> implements JsonDeserializer<T>, JsonSerializer<T> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(JsonLdSerializer.class);
 
   @Override
   public T deserialize(JsonElement json, Type typeOfT,
                        JsonDeserializationContext context) throws JsonParseException {
 
     JsonObject jsonObject = json.getAsJsonObject();
-    String type = jsonObject.get("sourceClass").getAsString();
+    String type = jsonObject.get("type").getAsString();
+    JsonElement element = jsonObject.get("properties");
 
     try {
-      return context.deserialize(jsonObject, Class.forName(type));
+      return context.deserialize(element, Class.forName(type));
     } catch (ClassNotFoundException cnfe) {
       throw new JsonParseException("Unknown element type: " + type, cnfe);
     }
@@ -47,11 +54,15 @@ public class ProcessingElementSerializer<T> implements JsonDeserializer<T>, Json
   @Override
   public JsonElement serialize(T src, Type typeOfSrc,
                                JsonSerializationContext context) {
-    JsonElement result = context.serialize(src, src.getClass());
-    if (result.isJsonObject()) {
-      JsonObject jsonObject = (JsonObject) result;
-      jsonObject.add("sourceClass", new JsonPrimitive(src.getClass().getCanonicalName()));
+    JsonObject result = new JsonObject();
+    try {
+      result.add("type", new JsonPrimitive(src.getClass().getCanonicalName()));
+      result.add("properties", context.serialize(src, src.getClass()));
+    } catch (MalformedParameterizedTypeException e) {
+      LOG.error("Could not serialize class {}", src.getClass().getCanonicalName(), e);
     }
+
     return result;
   }
+
 }

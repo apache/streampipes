@@ -15,34 +15,30 @@
  * limitations under the License.
  *
  */
-
-package org.apache.streampipes.serializers.json;
+package org.apache.streampipes.storage.couchdb.serializer;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.AdapterType;
 
 import java.io.IOException;
 
-public class EpaTypeAdapter extends PeTypeAdapter<DataProcessorType> {
+public class AdapterTypeAdapter extends PeTypeAdapter<AdapterType> {
 
-	@Override
-	public void write(JsonWriter out, DataProcessorType value) throws IOException {
-		write(out, value.getLabel(), value.getDescription(), value.name());
-	}
+  @Override
+  public void write(JsonWriter out, AdapterType value) throws IOException {
+    write(out, value.getLabel(), value.getDescription(), value.name());
+  }
 
-	@Override
-	public DataProcessorType read(JsonReader in) throws IOException {
-		DataProcessorType dataProcessorType = null;
-		in.beginObject();
-		while(in.hasNext()) {
-			String name = in.nextName();
-			if (name.equals("type"))
-				dataProcessorType = DataProcessorType.valueOf(in.nextString());
-		}
-		in.endObject();
-		if (dataProcessorType != null) return dataProcessorType;
-		else throw new IOException();
-	}
-
+  @Override
+  public AdapterType read(JsonReader in) throws IOException {
+    in.beginObject();
+    while (in.hasNext()) {
+      String name = in.nextString();
+      if (name.equals("type")) {
+        return AdapterType.valueOf(name);
+      }
+    }
+    throw new IOException();
+  }
 }
