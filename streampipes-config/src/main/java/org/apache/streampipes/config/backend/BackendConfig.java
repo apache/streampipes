@@ -253,6 +253,10 @@ public enum BackendConfig {
     config.setObject(BackendConfigKeys.GENERAL_CONFIG, generalConfig);
   }
 
+  public void updateLocalAuthConfig(LocalAuthConfig authConfig) {
+    config.setObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, authConfig);
+  }
+
   public boolean isSetupRunning() {
     return config.getBoolean(BackendConfigKeys.IS_SETUP_RUNNING);
   }

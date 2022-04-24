@@ -19,7 +19,7 @@ package org.apache.streampipes.client.credentials;
 
 import org.apache.http.Header;
 import org.apache.streampipes.client.http.header.Headers;
-import org.apache.streampipes.security.jwt.JwtTokenUtils;
+import org.apache.streampipes.security.jwt.JwtTokenGenerator;
 
 import java.util.Collections;
 import java.util.Date;
@@ -46,7 +46,7 @@ public class StreamPipesTokenCredentials implements CredentialsProvider {
   }
 
   private String makeJwtToken() {
-    return JwtTokenUtils.makeJwtToken(username, tokenSecret, makeExpirationDate());
+    return JwtTokenGenerator.makeJwtToken(username, tokenSecret, makeExpirationDate());
   }
 
   private Date makeExpirationDate() {

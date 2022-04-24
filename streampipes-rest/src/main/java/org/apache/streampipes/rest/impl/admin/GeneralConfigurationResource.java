@@ -22,12 +22,19 @@ import org.apache.streampipes.config.backend.model.GeneralConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.glassfish.jersey.media.multipart.BodyPart;
+import org.glassfish.jersey.media.multipart.MultiPart;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.StringWriter;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.util.Base64;
 
 @Path("/v2/admin/general-config")
 @Component
@@ -50,5 +57,34 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
     BackendConfig.INSTANCE.updateGeneralConfig(config);
 
     return ok();
+  }
+
+  @GET
+  @Path("keys")
+  @Produces("multipart/mixed")
+  @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
+  public Response generateKeyPair() throws Exception {
+    KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+    kpg.initialize(2048);
+    KeyPair keyPair = kpg.genKeyPair();
+
+    String publicKeyPem = exportKeyAsPem(keyPair.getPublic(), "PUBLIC");
+    String privateKeyPem = exportKeyAsPem(keyPair.getPrivate(), "PRIVATE");
+
+    MultiPart multiPartEntity = new MultiPart()
+            .bodyPart(new BodyPart().entity(publicKeyPem))
+            .bodyPart(new BodyPart().entity(privateKeyPem));
+
+    return Response.ok(multiPartEntity).build();
+  }
+
+  private String exportKeyAsPem(Key key, String keyType) throws Exception {
+    StringWriter sw = new StringWriter();
+
+    sw.write("-----BEGIN " + keyType + " KEY-----\n");
+    sw.write(Base64.getEncoder().encodeToString(key.getEncoded()));
+    sw.write("\n-----END " + keyType + " KEY-----\n");
+
+    return sw.toString();
   }
 }

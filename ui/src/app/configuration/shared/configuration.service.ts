@@ -23,6 +23,7 @@ import { map } from 'rxjs/operators';
 
 import { StreampipesPeContainer } from './streampipes-pe-container.model';
 import { MessagingSettings } from './messaging-settings.model';
+import { MultipartUtils } from "./multipart-utils";
 
 @Injectable()
 export class ConfigurationService {
@@ -33,6 +34,13 @@ export class ConfigurationService {
 
     getServerUrl() {
         return '/streampipes-backend';
+    }
+
+    generateKeyPair(): Observable<string[]> {
+      return this.http.get(this.getServerUrl() + '/api/v2/admin/general-config/keys', {responseType: 'text', observe: 'response'})
+        .pipe(map(response => {
+          return new MultipartUtils().extractMultipartPlainTextContent(response);
+      }));
     }
 
     getMessagingSettings(): Observable<MessagingSettings> {
@@ -71,7 +79,6 @@ export class ConfigurationService {
     updateMessagingSettings(messagingSettings: MessagingSettings): Observable<Object> {
         return this.http.post(this.getServerUrl() + '/api/v2/consul/messaging', messagingSettings);
     }
-
 
     adjustConfigurationKey(consulKey) {
 

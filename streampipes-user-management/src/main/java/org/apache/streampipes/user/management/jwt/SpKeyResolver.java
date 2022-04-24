@@ -20,21 +20,21 @@ package org.apache.streampipes.user.management.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.SigningKeyResolver;
-import io.jsonwebtoken.security.Keys;
+import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.client.user.ServiceAccount;
 import org.apache.streampipes.model.client.user.UserAccount;
+import org.apache.streampipes.security.jwt.KeyGenerator;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
 public class SpKeyResolver implements SigningKeyResolver {
 
-  private String tokenSecret;
-  private IUserStorage userStorage;
+  private final String tokenSecret;
+  private final IUserStorage userStorage;
 
   public SpKeyResolver(String tokenSecret) {
     this.tokenSecret = tokenSecret;
@@ -48,10 +48,10 @@ public class SpKeyResolver implements SigningKeyResolver {
     if (principal == null) {
       return null;
     } else if (isRealUser(principal)) {
-      return makeKeyForSecret(this.tokenSecret);
+      return new KeyGenerator().makeKeyForSecret(jwsHeader.getAlgorithm(), this.tokenSecret, getPublicKeyFromConfig());
     } else {
       String decryptedSecret = SecretEncryptionManager.decrypt(((ServiceAccount) principal).getClientSecret());
-      return makeKeyForSecret(decryptedSecret);
+      return new KeyGenerator().makeKeyForSecret(jwsHeader.getAlgorithm(), decryptedSecret, getPublicKeyFromConfig());
     }
   }
 
@@ -68,7 +68,9 @@ public class SpKeyResolver implements SigningKeyResolver {
     return principal instanceof UserAccount;
   }
 
-  private Key makeKeyForSecret(String tokenSecret) {
-    return Keys.hmacShaKeyFor(tokenSecret.getBytes(StandardCharsets.UTF_8));
+  public String getPublicKeyFromConfig() {
+    return BackendConfig.INSTANCE.getLocalAuthConfig().getPublicKey();
   }
+
+
 }

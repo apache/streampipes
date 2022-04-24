@@ -100,6 +100,8 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
       doInitialSetup();
     }
 
+    new StreamPipesEnvChecker().updateEnvironmentVariables();
+
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
     healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),

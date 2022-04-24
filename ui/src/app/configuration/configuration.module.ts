@@ -53,50 +53,54 @@ import { SecurityUserGroupConfigComponent } from './security-configuration/user-
 import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
 import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';
 import { GeneralConfigurationComponent } from './general-configuration/general-configuration.component';
+import {
+  SecurityAuthenticationConfigurationComponent
+} from './security-configuration/authentication-configuration/authentication-configuration.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        CustomMaterialModule,
-        FlexLayoutModule,
-        MatGridListModule,
-        MatButtonModule,
-        MatProgressSpinnerModule,
-        MatIconModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatDividerModule,
-        MatTooltipModule,
-        FormsModule,
-        DragDropModule,
-        CoreUiModule,
-        ReactiveFormsModule,
-        PlatformServicesModule,
-    ],
-    declarations: [
-        ConfigurationComponent,
-        ConsulServiceComponent,
-        ConsulConfigsComponent,
-        ConsulConfigsTextComponent,
-        ConsulConfigsPasswordComponent,
-        ConsulConfigsBooleanComponent,
-        ConsulConfigsNumberComponent,
-        DeleteDatalakeIndexComponent,
-        EditUserDialogComponent,
-        EditGroupDialogComponent,
-        EmailConfigurationComponent,
-        GeneralConfigurationComponent,
-        PipelineElementConfigurationComponent,
-        SecurityConfigurationComponent,
-        SecurityUserConfigComponent,
-        SecurityUserGroupConfigComponent,
-        SecurityServiceConfigComponent,
-        MessagingConfigurationComponent,
-        DatalakeConfigurationComponent,
-    ],
-    providers: [
-        ConfigurationService,
-    ]
+  imports: [
+    CommonModule,
+    CustomMaterialModule,
+    FlexLayoutModule,
+    MatGridListModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatDividerModule,
+    MatTooltipModule,
+    FormsModule,
+    DragDropModule,
+    CoreUiModule,
+    ReactiveFormsModule,
+    PlatformServicesModule,
+  ],
+  declarations: [
+    ConfigurationComponent,
+    ConsulServiceComponent,
+    ConsulConfigsComponent,
+    ConsulConfigsTextComponent,
+    ConsulConfigsPasswordComponent,
+    ConsulConfigsBooleanComponent,
+    ConsulConfigsNumberComponent,
+    DeleteDatalakeIndexComponent,
+    EditUserDialogComponent,
+    EditGroupDialogComponent,
+    EmailConfigurationComponent,
+    GeneralConfigurationComponent,
+    PipelineElementConfigurationComponent,
+    SecurityAuthenticationConfigurationComponent,
+    SecurityConfigurationComponent,
+    SecurityUserConfigComponent,
+    SecurityUserGroupConfigComponent,
+    SecurityServiceConfigComponent,
+    MessagingConfigurationComponent,
+    DatalakeConfigurationComponent,
+  ],
+  providers: [
+    ConfigurationService,
+  ]
 })
 export class ConfigurationModule {
 }
