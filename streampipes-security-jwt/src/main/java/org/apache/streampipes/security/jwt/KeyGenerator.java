@@ -55,16 +55,16 @@ public class KeyGenerator {
         return makeKeyForRsa(pkContent);
       } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException e) {
         e.printStackTrace();
+        LOG.warn("Could not properly create the provided key, defaulting to an HMAC token, which will almost certainly lead to problems");
         return makeKeyForSecret(tokenSecret);
       }
     } else {
-      LOG.warn("Could not properly create the provided key, defaulting to an HMAC token, which will most certainly lead to problems");
       return makeKeyForSecret(tokenSecret);
     }
   }
 
   public String readKey() throws IOException {
-   return Files.readString(Paths.get(Envs.SP_JWT_PUBLIC_KEY_LOC.getValue()), Charset.defaultCharset());
+    return Files.readString(Paths.get(Envs.SP_JWT_PUBLIC_KEY_LOC.getValue()), Charset.defaultCharset());
   }
 
   public Key makeKeyForRsa(String key) throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
