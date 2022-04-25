@@ -78,7 +78,7 @@ public class GeneralConfigurationResource extends AbstractAuthGuardedRestResourc
     return Response.ok(multiPartEntity).build();
   }
 
-  private String exportKeyAsPem(Key key, String keyType) throws Exception {
+  private String exportKeyAsPem(Key key, String keyType) {
     StringWriter sw = new StringWriter();
 
     sw.write("-----BEGIN " + keyType + " KEY-----\n");

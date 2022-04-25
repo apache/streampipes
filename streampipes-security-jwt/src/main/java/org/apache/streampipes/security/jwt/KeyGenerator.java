@@ -54,8 +54,7 @@ public class KeyGenerator {
       try {
         return makeKeyForRsa(pkContent);
       } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException e) {
-        e.printStackTrace();
-        LOG.warn("Could not properly create the provided key, defaulting to an HMAC token, which will almost certainly lead to problems");
+        LOG.error("Could not properly create the provided key, defaulting to an HMAC token, which will almost certainly lead to problems");
         return makeKeyForSecret(tokenSecret);
       }
     } else {

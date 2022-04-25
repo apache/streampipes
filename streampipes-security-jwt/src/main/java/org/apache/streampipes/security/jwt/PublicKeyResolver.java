@@ -16,22 +16,29 @@
  *
  */
 
-package org.apache.streampipes.user.management.util;
+package org.apache.streampipes.security.jwt;
 
-import org.apache.streampipes.model.client.user.UserAccount;
-import org.apache.streampipes.model.UserInfo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.SigningKeyResolver;
 
-import java.util.Set;
+import java.io.IOException;
+import java.security.Key;
 
-public class UserInfoUtil {
+public class PublicKeyResolver implements SigningKeyResolver {
 
-  public static UserInfo toUserInfo(UserAccount userAccount,
-                              Set<String> roles) {
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUsername(userAccount.getUsername());
-    userInfo.setDisplayName(userAccount.getUsername());
-    userInfo.setShowTutorial(!userAccount.isHideTutorial());
-    userInfo.setRoles(roles);
-    return userInfo;
+  @Override
+  public Key resolveSigningKey(JwsHeader jwsHeader, Claims claims) {
+    try {
+      return new KeyGenerator().makeKeyForSecret(jwsHeader.getAlgorithm(), "");
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @Override
+  public Key resolveSigningKey(JwsHeader jwsHeader, String s) {
+    return null;
   }
 }

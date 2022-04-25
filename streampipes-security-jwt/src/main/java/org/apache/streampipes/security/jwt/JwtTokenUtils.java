@@ -37,6 +37,11 @@ public class JwtTokenUtils {
     return jwtParser(resolver).parseClaimsJws(token).getBody().getSubject();
   }
 
+  public static Claims getClaimsFromToken(String token,
+                                          SigningKeyResolver resolver) {
+    return jwtParser(resolver).parseClaimsJws(token).getBody();
+  }
+
   public static JwtParser jwtParser(String tokenSecret) {
     return Jwts.parserBuilder()
             .setSigningKey(tokenSecret.getBytes(StandardCharsets.UTF_8))

@@ -66,6 +66,13 @@
         </dependency>
         <!-- External dependencies -->
 
+
+        <!-- Dependency convergence -->
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+        </dependency>
+
         <!-- Test dependencies -->
         <dependency>
             <groupId>com.github.tomakehurst</groupId>

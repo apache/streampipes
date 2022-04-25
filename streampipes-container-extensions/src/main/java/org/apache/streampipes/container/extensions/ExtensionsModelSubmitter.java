@@ -24,6 +24,7 @@ import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.standalone.init.PipelineElementServiceShutdownHandler;
 import org.apache.streampipes.container.standalone.init.PipelineElementServiceTagProvider;
 import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
+import org.apache.streampipes.service.extensions.base.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({ ExtensionsResourceConfig.class })
+@Import({ ExtensionsResourceConfig.class, WebSecurityConfig.class})
 public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServiceBase {
 
     private static final Logger LOG =

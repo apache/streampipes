@@ -18,7 +18,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2022-03-11 16:37:33.
+// Generated using typescript-generator version 2.27.744 on 2022-04-25 13:56:53.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;
@@ -242,27 +242,6 @@ export class UserApiToken {
         const instance = target || new UserApiToken();
         instance.tokenId = data.tokenId;
         instance.tokenName = data.tokenName;
-        return instance;
-    }
-}
-
-export class UserInfo {
-    darkMode: boolean;
-    displayName: string;
-    roles: string[];
-    showTutorial: boolean;
-    username: string;
-
-    static fromData(data: UserInfo, target?: UserInfo): UserInfo {
-        if (!data) {
-            return data;
-        }
-        const instance = target || new UserInfo();
-        instance.username = data.username;
-        instance.displayName = data.displayName;
-        instance.roles = __getCopyArrayFn(__identity<string>())(data.roles);
-        instance.showTutorial = data.showTutorial;
-        instance.darkMode = data.darkMode;
         return instance;
     }
 }

@@ -16,22 +16,23 @@
  *
  */
 
-package org.apache.streampipes.user.management.util;
 
-import org.apache.streampipes.model.client.user.UserAccount;
-import org.apache.streampipes.model.UserInfo;
+package org.apache.streampipes.service.extensions.base.security;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Collection;
 
-public class UserInfoUtil {
 
-  public static UserInfo toUserInfo(UserAccount userAccount,
-                              Set<String> roles) {
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUsername(userAccount.getUsername());
-    userInfo.setDisplayName(userAccount.getUsername());
-    userInfo.setShowTutorial(!userAccount.isHideTutorial());
-    userInfo.setRoles(roles);
-    return userInfo;
+public class UnauthenticatedInterfaces {
+
+  public static Collection<String> get() {
+    return Arrays.asList(
+      "/svchealth/*",
+      "/",
+      "/sec/**",
+      "/sepa/**",
+      "/stream/**",
+      "/api/v1/worker/**"
+    );
   }
 }

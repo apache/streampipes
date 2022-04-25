@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.backend;
+package org.apache.streampipes.service.base.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class UnauthorizedRequestEntryPoint implements AuthenticationEntryPoint {
 
 	@Override
 	public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
-		LOG.error("Unauthorized request - {}", e.getMessage());
+		LOG.error("Unauthorized request to {}", httpServletRequest.getPathInfo());
 
 		httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getLocalizedMessage());
 	}
