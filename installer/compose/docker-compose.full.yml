@@ -113,33 +113,9 @@ services:
     networks:
       spnet:
 
-  kafka:
-    image: fogsyio/kafka:2.2.0
-    hostname: kafka
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
-      KAFKA_LISTENERS: PLAINTEXT://:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_MESSAGE_MAX_BYTES: 5000012
-      KAFKA_FETCH_MESSAGE_MAX_BYTES: 5000012
-      KAFKA_REPLICA_FETCH_MAX_BYTES: 10000000
-    volumes:
-      - kafka:/kafka
-      - /var/run/docker.sock:/var/run/docker.sock
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
-
-  zookeeper:
-    image: fogsyio/zookeeper:3.4.13
-    volumes:
-      - zookeeper:/opt/zookeeper-3.4.13
+  mosquitto:
+    image: eclipse-mosquitto:2.0.14
+    command: mosquitto -c /mosquitto-no-auth.conf
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -232,8 +208,6 @@ volumes:
   consul:
   connect:
   couchdb:
-  kafka:
-  zookeeper:
   influxdb:
   files:
 
