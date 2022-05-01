@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
+import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.util.TransportFormatSelector;
@@ -46,7 +47,7 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
             .getEventGrounding()
             .getTransportProtocol());
 
-    if ("true".equals(System.getenv("SP_DEBUG"))) {
+    if (Envs.SP_DEBUG.getValueAsBoolean()) {
       modifyProtocolForDebugging();
     }
 

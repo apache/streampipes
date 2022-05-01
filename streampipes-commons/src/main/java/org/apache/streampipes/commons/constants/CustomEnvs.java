@@ -32,6 +32,6 @@ public class CustomEnvs {
   }
 
   public static Boolean getEnvAsBoolean(String envVariable) {
-    return Boolean.parseBoolean(getEnv(envVariable));
+    return exists(envVariable) && Boolean.parseBoolean(getEnv(envVariable));
   }
 }

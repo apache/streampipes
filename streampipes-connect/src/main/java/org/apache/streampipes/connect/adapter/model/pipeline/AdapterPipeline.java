@@ -42,12 +42,6 @@ public class AdapterPipeline implements IAdapterPipeline {
     @Override
     public void process(Map<String, Object> event) {
 
-        // TODO remove, just for performance tests
-        if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
-            event.put("internal_t1", System.currentTimeMillis());
-        }
-
-
         for (IAdapterPipelineElement pipelineElement : pipelineElements) {
             event = pipelineElement.process(event);
         }

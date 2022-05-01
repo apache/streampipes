@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
@@ -74,7 +75,7 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
 
         if (transportProtocol instanceof JmsTransportProtocol) {
             SendToJmsAdapterSink sink = (SendToJmsAdapterSink) this.adapterPipeline.getPipelineSink();
-            if ("true".equals(System.getenv("SP_DEBUG"))) {
+            if (Envs.SP_DEBUG.getValueAsBoolean()) {
                 transportProtocol.setBrokerHostname("localhost");
                 //((JmsTransportProtocol) transportProtocol).setPort(61616);
             }
@@ -82,7 +83,7 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
         }
         else if (transportProtocol instanceof KafkaTransportProtocol) {
             SendToKafkaAdapterSink sink = (SendToKafkaAdapterSink) this.adapterPipeline.getPipelineSink();
-            if ("true".equals(System.getenv("SP_DEBUG"))) {
+            if (Envs.SP_DEBUG.getValueAsBoolean()) {
                 transportProtocol.setBrokerHostname("localhost");
                 ((KafkaTransportProtocol) transportProtocol).setKafkaPort(9094);
             }
@@ -90,7 +91,7 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
         }
         else if (transportProtocol instanceof MqttTransportProtocol) {
             SendToMqttAdapterSink sink = (SendToMqttAdapterSink) this.adapterPipeline.getPipelineSink();
-            if ("true".equals(System.getenv("SP_DEBUG"))) {
+            if (Envs.SP_DEBUG.getValueAsBoolean()) {
                 transportProtocol.setBrokerHostname("localhost");
                 //((MqttTransportProtocol) transportProtocol).setPort(1883);
             }
