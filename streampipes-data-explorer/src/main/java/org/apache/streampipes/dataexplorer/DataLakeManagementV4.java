@@ -312,15 +312,17 @@ public class DataLakeManagementV4 {
                 String q = "SHOW TAG VALUES ON \"" + BackendConfig.INSTANCE.getInfluxDatabaseName() + "\" FROM \"" +measurementId + "\" WITH KEY = \"" +f + "\"";
                 Query query = new Query(q);
                 QueryResult queryResult = influxDB.query(query);
-                queryResult.getResults().forEach(res -> {
-                    res.getSeries().forEach(series -> {
-                        if (series.getValues().size() > 0) {
-                            String field = series.getValues().get(0).get(0).toString();
-                            List<String> values = series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());
-                            tags.put(field, values);
-                        }
+                if (queryResult.getResults() != null) {
+                    queryResult.getResults().forEach(res -> {
+                        res.getSeries().forEach(series -> {
+                            if (series.getValues().size() > 0) {
+                                String field = series.getValues().get(0).get(0).toString();
+                                List<String> values = series.getValues().stream().map(v -> v.get(1).toString()).collect(Collectors.toList());
+                                tags.put(field, values);
+                            }
+                        });
                     });
-                });
+                }
         });
 
         return tags;

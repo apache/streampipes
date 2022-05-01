@@ -24,7 +24,7 @@ services:
       - backend:/root/.streampipes
       - files:/spImages
     environment:
-      - SP_PRIORITIZED_PROTOCOL=${SP_PRIORITIZED_PROTOCOL:-kafka}
+      - SP_PRIORITIZED_PROTOCOL=${SP_PRIORITIZED_PROTOCOL:-mqtt}
       - SP_MQTT_HOST=${SP_MQTT_HOST:-activemq}
     logging:
       driver: "json-file"

@@ -16,7 +16,8 @@
 version: "3.4"
 services:
   mosquitto:
-    image: eclipse-mosquitto:1.5.4
+    image: eclipse-mosquitto:2.0.14
+    command: mosquitto -c /mosquitto-no-auth.conf
     logging:
       driver: "json-file"
       options:

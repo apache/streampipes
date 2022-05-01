@@ -29,6 +29,8 @@ public class AbstractMqttConnector {
   protected void createBrokerConnection(MqttTransportProtocol protocolSettings) throws Exception {
     this.mqtt = new MQTT();
     this.mqtt.setHost(makeBrokerUrl(protocolSettings));
+    this.mqtt.setConnectAttemptsMax(3);
+    this.mqtt.setReconnectDelay(1000);
     this.connection = mqtt.blockingConnection();
     this.connection.connect();
     this.connected = true;

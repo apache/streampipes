@@ -17,4 +17,4 @@ version: "3.4"
 services:
   mosquitto:
     ports:
-      - "1884:1883"
+      - "1883:1883"

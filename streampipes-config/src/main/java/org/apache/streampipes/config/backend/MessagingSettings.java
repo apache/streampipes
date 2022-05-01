@@ -34,9 +34,6 @@ public class MessagingSettings {
     List<SpProtocol> protocolList;
     if (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL) != null) {
       switch (System.getenv(BackendConfigKeys.PRIORITIZED_PROTOCOL).toLowerCase()) {
-        case "mqtt":
-          protocolList = Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS);
-          break;
         case "kafka":
           protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
           break;
@@ -44,10 +41,10 @@ public class MessagingSettings {
           protocolList = Arrays.asList(SpProtocol.JMS, SpProtocol.KAFKA, SpProtocol.MQTT);
           break;
         default:
-          protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+          protocolList = Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS);
       }
     } else {
-      protocolList = Arrays.asList(SpProtocol.KAFKA, SpProtocol.MQTT, SpProtocol.JMS);
+      protocolList = Arrays.asList(SpProtocol.MQTT, SpProtocol.KAFKA, SpProtocol.JMS);
     }
 
     return new MessagingSettings(

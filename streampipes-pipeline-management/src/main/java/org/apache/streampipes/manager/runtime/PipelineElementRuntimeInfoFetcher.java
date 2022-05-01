@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.manager.runtime;
 
+import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.jms.ActiveMQConsumer;
@@ -27,16 +28,12 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum PipelineElementRuntimeInfoFetcher {
   INSTANCE;
-
-  Logger logger = LoggerFactory.getLogger(PipelineElementRuntimeInfoFetcher.class);
 
   private final int FETCH_INTERVAL_MS = 300;
   private final Map<String, SpDataFormatConverter> converterMap;
@@ -49,8 +46,7 @@ public enum PipelineElementRuntimeInfoFetcher {
 
     if (spDataStream.getEventGrounding().getTransportProtocol() instanceof KafkaTransportProtocol) {
       return getLatestEventFromKafka(spDataStream);
-    }
-    else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof JmsTransportProtocol){
+    } else if (spDataStream.getEventGrounding().getTransportProtocol() instanceof JmsTransportProtocol) {
       return getLatestEventFromJms(spDataStream);
     } else {
       return getLatestEventFromMqtt(spDataStream);
@@ -75,7 +71,7 @@ public enum PipelineElementRuntimeInfoFetcher {
     JmsTransportProtocol protocol = (JmsTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol();
 
     // Change jms config when running in development mode
-    if ("true".equals(System.getenv("SP_DEBUG"))) {
+    if (Envs.SP_DEBUG.getValueAsBoolean()) {
       protocol.setBrokerHostname("localhost");
     }
     if (!converterMap.containsKey(jmsTopic)) {
@@ -113,7 +109,7 @@ public enum PipelineElementRuntimeInfoFetcher {
     MqttTransportProtocol protocol = (MqttTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol();
 
     // Change mqtt config when running in development mode
-    if ("true".equals(System.getenv("SP_DEBUG"))) {
+    if (Envs.SP_DEBUG.getValueAsBoolean()) {
       protocol.setBrokerHostname("localhost");
     }
 
@@ -122,15 +118,12 @@ public enum PipelineElementRuntimeInfoFetcher {
               new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
     }
     MqttConsumer mqttConsumer = new MqttConsumer();
-    mqttConsumer.connect(protocol, new InternalEventProcessor<byte[]>() {
-      @Override
-      public void onEvent(byte[] event) {
-        try {
-          result[0] = converterMap.get(mqttTopic).convert(event);
-          mqttConsumer.disconnect();
-        } catch (SpRuntimeException e) {
-          e.printStackTrace();
-        }
+    mqttConsumer.connect(protocol, event -> {
+      try {
+        result[0] = converterMap.get(mqttTopic).convert(event);
+        mqttConsumer.disconnect();
+      } catch (SpRuntimeException e) {
+        e.printStackTrace();
       }
     });
 
@@ -151,7 +144,7 @@ public enum PipelineElementRuntimeInfoFetcher {
     KafkaTransportProtocol protocol = (KafkaTransportProtocol) spDataStream.getEventGrounding().getTransportProtocol();
 
     // Change kafka config when running in development mode
-    if ("true".equals(System.getenv("SP_DEBUG"))) {
+    if (Envs.SP_DEBUG.getValueAsBoolean()) {
       protocol.setBrokerHostname("localhost");
       protocol.setKafkaPort(9094);
     }
@@ -161,14 +154,11 @@ public enum PipelineElementRuntimeInfoFetcher {
               new SpDataFormatConverterGenerator(getTransportFormat(spDataStream)).makeConverter());
     }
 
-    SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(protocol, kafkaTopic, new InternalEventProcessor<byte[]>() {
-      @Override
-      public void onEvent(byte[] event) {
-        try {
-          result[0] = converterMap.get(kafkaTopic).convert(event);
-        } catch (SpRuntimeException e) {
-          e.printStackTrace();
-        }
+    SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(protocol, kafkaTopic, event -> {
+      try {
+        result[0] = converterMap.get(kafkaTopic).convert(event);
+      } catch (SpRuntimeException e) {
+        e.printStackTrace();
       }
     });
 
