@@ -47,7 +47,7 @@ set_version(){
 
         for opt in "${options[@]}"
         do
-          sed -i 's/**Current version:** .*/**Current version:** '$NEW_VERSION'/g' ./$opt/README.md
+          sed -i 's/\*\*Current version:\*\* .*/\*\*Current version:\*\* '$NEW_VERSION'/g' ./$opt/README.md
         done
         ;;
   esac
