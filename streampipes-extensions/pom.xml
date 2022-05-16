@@ -84,7 +84,7 @@
         <google-maps-services.version>0.10.0</google-maps-services.version>
         <graalvm.js.version>21.3.0</graalvm.js.version>
         <iotdb.version>0.12.0</iotdb.version>
-        <java-websocket.version>1.4.0</java-websocket.version>
+        <java-websocket.version>1.5.0</java-websocket.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jedis.version>3.3.0</jedis.version>
