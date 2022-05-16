@@ -72,10 +72,10 @@ spAdd:
 spConfiguration:
   ng5: True
   ng5_moduleName: 'ConfigurationModule'
-  ng5_component: 'ConfigurationComponent'
-  ng5_componentPath: './configuration/configuration.component'
+  ng5_component: 'GeneralConfigurationComponent'
+  ng5_componentPath: './configuration/general-configuration/general-configuration.component'
   path: './configuration/configuration.module'
-  link: 'configuration'
+  link: ''
   url: '/configuration'
   title: 'Configuration'
   description: 'In the configuration module, basic StreamPipes settings and services can be configured.'
