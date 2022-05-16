@@ -16,10 +16,12 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
+    selector: 'sp-configuration-component',
     templateUrl: './configuration.component.html',
     styleUrls: ['./configuration.component.css'],
     animations: [
@@ -32,13 +34,14 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class ConfigurationComponent {
 
-    selectedIndex = 0;
+    @Input()
+    activeLink: string;
 
-    constructor() {
+    constructor(private router: Router) {
     }
 
-    selectedIndexChange(index: number) {
-        this.selectedIndex = index;
+    navigateTo(routeId: string): void {
+      this.router.navigate(['configuration', routeId]);
     }
 
 }

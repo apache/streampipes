@@ -19,43 +19,44 @@
 <div fxLayout="column" class="page-container">
     <div fxLayout="row" class="p-0 sp-bg-lightgray page-container-nav">
         <div fxLayout="fill">
-            <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)"
-                           color="accent">
-                <mat-tab label="General"></mat-tab>
-                <mat-tab label="DataLake"></mat-tab>
-                <mat-tab label="Mail"></mat-tab>
-                <mat-tab label="Messaging"></mat-tab>
-                <mat-tab label="Pipeline Element Configuration"></mat-tab>
-                <mat-tab label="Security"></mat-tab>
-            </mat-tab-group>
+            <div fxFlex="100" class="page-container-nav">
+                <nav mat-tab-nav-bar color="accent">
+                  <a mat-tab-link
+                     (click)="navigateTo('general')"
+                     [active]="activeLink === 'general'"> 
+                      General
+                  </a>
+                  <a mat-tab-link
+                     (click)="navigateTo('datalake')"
+                     [active]="activeLink === 'datalake'"> 
+                      DataLake
+                  </a>
+                  <a mat-tab-link
+                     (click)="navigateTo('email')"
+                     [active]="activeLink === 'email'"> 
+                      Mail
+                  </a>
+                  <a mat-tab-link
+                     (click)="navigateTo('messaging')"
+                     [active]="activeLink === 'messaging'"> 
+                      Messaging
+                  </a>
+                  <a mat-tab-link
+                     (click)="navigateTo('pipelineelement')"
+                     [active]="activeLink === 'pipelineelement'"> 
+                      Pipeline Element Configuration
+                  </a>
+                  <a mat-tab-link
+                     (click)="navigateTo('security')"
+                     [active]="activeLink === 'security'"> 
+                     Security 
+                  </a>
+                </nav>
+              </div>
         </div>
     </div>
 
     <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
-        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
-             *ngIf="selectedIndex == 0">
-            <sp-general-configuration fxFlex="100"></sp-general-configuration>
-        </div>
-        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
-             *ngIf="selectedIndex == 1">
-            <sp-datalake-configuration fxFlex="100"></sp-datalake-configuration>
-        </div>
-        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
-             *ngIf="selectedIndex == 2">
-            <sp-email-configuration fxFlex="100"></sp-email-configuration>
-        </div>
-        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
-             *ngIf="selectedIndex == 3">
-            <messaging-configuration fxFlex="100"></messaging-configuration>
-        </div>
-        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
-             *ngIf="selectedIndex == 4">
-            <pipeline-element-configuration fxFlex="100"></pipeline-element-configuration>
-        </div>
-        <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100"
-             *ngIf="selectedIndex == 5">
-            <sp-security-configuration fxFlex="100"></sp-security-configuration>
-        </div>
+        <ng-content fxFlex="100"></ng-content>
     </div>
-
 </div>
