@@ -33,6 +33,7 @@ import { OrderByPipe } from './filter/order-by.pipe';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { PipelineElementNameFilter } from './filter/pipeline-element-name.pipe';
 import { PipelineElementInstallationStatusFilter } from './filter/pipeline-element-installation-status.pipe';
+import { RouterModule } from "@angular/router";
 
 
 @NgModule({
@@ -44,6 +45,17 @@ import { PipelineElementInstallationStatusFilter } from './filter/pipeline-eleme
     CoreUiModule,
     CustomMaterialModule,
     MatProgressSpinnerModule,
+    RouterModule.forChild([
+      {
+        path: 'add',
+        children: [
+          {
+            path: '',
+            component: AddComponent
+          }
+        ]
+      }
+    ]),
   ],
   declarations: [
     AddComponent,
