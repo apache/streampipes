@@ -39,6 +39,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { RouterModule } from "@angular/router";
 
 @NgModule({
     imports: [
@@ -61,7 +62,17 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         MatTabsModule,
         MatTooltipModule,
         PlatformServicesModule,
-        ServicesModule
+        ServicesModule,
+        RouterModule.forChild([
+        {
+            path: 'files',
+            children: [
+            {
+                path: '',
+                component: FilesComponent
+            }]
+        }])
+
     ],
     declarations: [
         FilesComponent,

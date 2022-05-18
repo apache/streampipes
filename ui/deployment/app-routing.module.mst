@@ -65,6 +65,7 @@ const routes: Routes = [
       {{/ng5}}
       {{/modulesActive}}
 
+      { path: '', data: { authPageNames: [PageName.SETTINGS]}, loadChildren: () => import('./files/files.module').then(m => m.FilesModule)},
       { path: '', data: { authPageNames: [PageName.SETTINGS]}, loadChildren: () => import('./configuration/configuration.module').then(m => m.ConfigurationModule)},
       
       { path: 'notifications', component: NotificationsComponent },
