@@ -66,9 +66,13 @@ module.exports = {
                 "@angular/forms": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
                 "@angular/router": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
                 "@angular/cdk": { singleton: true, strictVersion: true, requiredVersion: 'auto' , eager: true},
+                "@angular/cdk/overlay": { singleton: true, strictVersion: false, requiredVersion: 'auto', eager: true},
                 "@angular/material": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true},
+                "@angular/material/core": { singleton: true, strictVersion: false, requiredVersion: 'auto', eager: true},
                 "@angular/material/tooltip": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true },
                 "@angular/material/dialog": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true },
+                "@angular/material/select": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true },
+                "@angular/material/form-field": { singleton: true, strictVersion: true, requiredVersion:'auto', eager: true },
                 "@streampipes/shared-ui": { singleton: true, strictVersion: true, eager: true},
                 "@streampipes/platform-services": { singleton: true, strictVersion: true, eager: true},
                 ...sharedMappings.getDescriptors()
