@@ -165,7 +165,11 @@ export const MY_NATIVE_FORMATS = {
           },
           {
             path: 'all',
-            component: DataExplorerComponent
+            component: DataExplorerDashboardOverviewComponent
+          },
+{
+            path: ':id',
+            component: DataExplorerDashboardPanelComponent
           }
         ]
       }

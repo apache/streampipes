@@ -35,6 +35,7 @@ import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explo
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -43,12 +44,14 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 })
 export class DataExplorerDashboardPanelComponent implements OnInit {
 
-  @Input() dashboard: Dashboard;
+  dashboardLoaded = false;
+  dashboard: Dashboard;
 
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
-  @Input() timeSettings: TimeSettings;
+  // TODO maybe remove and use directly from dashboard object
+  timeSettings: TimeSettings;
 
   editMode: boolean = true;
   timeRangeVisible: boolean = true;
@@ -78,7 +81,13 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
               public dialog: MatDialog,
               private timeSelectionService: TimeSelectionService,
               private authService: AuthService,
-              private dashboardService: DataViewDataExplorerService) {
+              private dashboardService: DataViewDataExplorerService,
+              private route: ActivatedRoute,
+              private dataViewService: DataViewDataExplorerService) {
+
+              this.route.params.subscribe( (params) => {
+                this.getDashboard(params.id);
+              });
   }
 
   public ngOnInit() {
@@ -228,6 +237,14 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   deleteDashboard(dashboard: Dashboard) {
     this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
       // TODO relink to all dashboards
+    });
+  }
+
+  getDashboard(dashboardId: string) {
+    this.dataViewService.getDataViews().subscribe(data => {
+      this.dashboard = data.filter(dashboard => dashboard._id === dashboardId)[0];
+      this.timeSettings = this.dashboard.dashboardTimeSettings; 
+      this.dashboardLoaded = true;
     });
   }
 }

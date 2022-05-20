@@ -68,10 +68,10 @@ export class DataExplorerComponent implements OnInit {
 
   }
 
-  openDashboard(dashboard: Tuple2<Dashboard, boolean>) {
-    const index = this.dataViewDashboards.indexOf(dashboard.a);
-    this.selectDashboard((index + 1), dashboard.b);
-  }
+  // openDashboard(dashboard: Tuple2<Dashboard, boolean>) {
+  //   const index = this.dataViewDashboards.indexOf(dashboard.a);
+  //   this.selectDashboard((index + 1), dashboard.b);
+  // }
 
   selectDashboardInTab(index: number) {
     if (index !== this.selectedIndex) {

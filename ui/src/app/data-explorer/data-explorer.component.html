@@ -37,10 +37,7 @@
 
 
     <div fxLayout="column" fxFlex="100" *ngIf="dashboardsLoaded">
-        <sp-data-explorer-dashboard-overview (selectDashboardEmitter)="openDashboard($event)"
-                                             (reloadDashboardsEmitter)="getDashboards()"
-                                             [dataViewDashboards]="dataViewDashboards"
-                                             *ngIf="!dashboardTabSelected">
+        <sp-data-explorer-dashboard-overview *ngIf="!dashboardTabSelected">
 
         </sp-data-explorer-dashboard-overview>
         <sp-data-explorer-dashboard-panel fxLayout="column"

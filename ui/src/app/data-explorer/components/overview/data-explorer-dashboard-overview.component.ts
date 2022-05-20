@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
@@ -26,6 +26,7 @@ import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permiss
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-overview',
@@ -34,22 +35,21 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 })
 export class DataExplorerDashboardOverviewComponent implements OnInit {
 
-  @Input() dataViewDashboards: Dashboard[];
-  @Output() reloadDashboardsEmitter = new EventEmitter<void>();
-  @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
+  dataViewDashboards: Dashboard[];
 
   dataSource = new MatTableDataSource<Dashboard>();
   displayedColumns: string[] = [];
 
-  editLabels: boolean;
   isAdmin = false;
 
   hasDataExplorerWritePrivileges = false;
   hasDataExplorerDeletePrivileges = false;
 
-  constructor(private dashboardService: DataViewDataExplorerService,
+  constructor(private dataViewService: DataViewDataExplorerService,
+              private dashboardService: DataViewDataExplorerService,
               public dialogService: DialogService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private router: Router) {
 
   }
 
@@ -59,21 +59,24 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
       this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
       this.displayedColumns = ['name', 'actions'];
-
     });
-    this.dataSource.data = this.dataViewDashboards;
-    this.editLabels = false;
+
+    this.getDashboards();
   }
+
+  getDashboards() {
+    this.dataViewService.getDataViews().subscribe(data => {
+      this.dataViewDashboards = data.sort((a, b) => a.name.localeCompare(b.name));
+    this.dataSource.data = this.dataViewDashboards;
+    });
+  }
+
 
   openNewDataViewDialog() {
     const dataViewDashboard: Dashboard = {};
     dataViewDashboard.widgets = [];
 
     this.openDataViewModificationDialog(true, dataViewDashboard);
-  }
-
-  openEditLabelView() {
-    this.editLabels = true;
   }
 
   openDataViewModificationDialog(createMode: boolean, dashboard: Dashboard) {
@@ -88,7 +91,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.reloadDashboardsEmitter.emit();
+      // this.reloadDashboardsEmitter.emit();
     });
   }
 
@@ -106,7 +109,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(refresh => {
       if (refresh) {
-        this.reloadDashboardsEmitter.emit();
+        // this.reloadDashboardsEmitter.emit();
       }
     });
   }
@@ -118,12 +121,13 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
   openDeleteDashboardDialog(dashboard: Dashboard) {
     // TODO add confirm dialog
     this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-      this.reloadDashboardsEmitter.emit();
+      // this.reloadDashboardsEmitter.emit();
     });
   }
 
   showDashboard(dashboard: Dashboard, editMode: boolean) {
     const dashboardSettings: Tuple2<Dashboard, boolean> = { a: dashboard, b: editMode };
-    this.selectDashboardEmitter.emit(dashboardSettings);
+    this.router.navigate(['dataexplorer/', dashboard._id]);
+    // this.selectDashboardEmitter.emit(dashboardSettings);
   }
 }
