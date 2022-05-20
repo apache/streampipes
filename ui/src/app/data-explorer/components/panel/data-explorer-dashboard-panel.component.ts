@@ -33,6 +33,8 @@ import {
 } from '@streampipes/platform-services';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
 import { TimeSelectionService } from '../../services/time-selection.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -47,16 +49,18 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
   @Input() timeSettings: TimeSettings;
-  @Input() editMode: boolean;
-  @Input() timeRangeVisible: boolean;
+
+  editMode: boolean = true;
+  timeRangeVisible: boolean = true;
 
   @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
-
-  @Output() resetDashboardChanges: EventEmitter<boolean> = new EventEmitter();
 
   @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
   @ViewChild('designerDrawer') designerDrawer: MatDrawer;
   @ViewChild('designerPanel') designerPanel: DataExplorerDesignerPanelComponent;
+
+  hasDataExplorerWritePrivileges = false;
+  hasDataExplorerDeletePrivileges = false;
 
   public items: Dashboard[];
 
@@ -72,11 +76,16 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
               public dialog: MatDialog,
-              private refreshDashboardService: RefreshDashboardService,
-              private timeSelectionService: TimeSelectionService) {
+              private timeSelectionService: TimeSelectionService,
+              private authService: AuthService,
+              private dashboardService: DataViewDataExplorerService) {
   }
 
   public ngOnInit() {
+    this.authService.user$.subscribe(user => {
+      this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
+      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
+    });
   }
 
   triggerResize() {
@@ -119,6 +128,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
       }
 
     });
+
+    this.editMode = false;
   }
 
   afterDashboardChange() {
@@ -184,7 +195,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   discardChanges() {
-    this.resetDashboardChanges.emit(true);
+    this.editMode = false;
+  }
+
+  triggerEditMode() {
+    this.editMode = true;
   }
 
   createWidget() {
@@ -207,5 +222,12 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.currentlyConfiguredWidget = undefined;
     this.dataLakeMeasure = undefined;
     this.currentlyConfiguredWidgetId = undefined;
+  }
+
+
+  deleteDashboard(dashboard: Dashboard) {
+    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
+      // TODO relink to all dashboards
+    });
   }
 }

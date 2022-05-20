@@ -37,9 +37,6 @@ export class DataExplorerComponent implements OnInit {
   dashboardsLoaded = false;
   dashboardTabSelected = false;
 
-  timeRangeVisible = true;
-
-  editMode = true;
   dataViewDashboards: Dashboard[];
 
   routeParams: any;
@@ -52,8 +49,7 @@ export class DataExplorerComponent implements OnInit {
   constructor(private dataViewService: DataViewDataExplorerService,
               private refreshDashboardService: RefreshDashboardService,
               private route: ActivatedRoute,
-              private authService: AuthService,
-              private dashboardService: DataViewDataExplorerService) {
+              private authService: AuthService) {
   }
 
 
@@ -85,7 +81,6 @@ export class DataExplorerComponent implements OnInit {
 
   selectDashboard(index: number, editMode = false) {
     this.selectedIndex = index;
-    this.editMode = editMode;
     if (index === 0) {
       this.dashboardTabSelected = false;
     } else {
@@ -132,17 +127,8 @@ export class DataExplorerComponent implements OnInit {
     });
   }
 
-  triggerEditMode() {
-    this.editMode = true;
-  }
 
-  deleteDashboard(dashboard: Dashboard) {
-    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-      this.getDashboards();
-    });
-  }
-
-  resetDashboardChanges() {
-    this.getDashboards(this.selectedDataViewDashboard._id);
-  }
+  // resetDashboardChanges() {
+  //   this.getDashboards(this.selectedDataViewDashboard._id);
+  // }
 }

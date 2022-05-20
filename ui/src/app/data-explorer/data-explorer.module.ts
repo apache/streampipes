@@ -100,6 +100,7 @@ import { TimeSelectionService } from './services/time-selection.service';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
 import { SpValueHeatmapComponent } from './components/widgets/distribution-chart/value-heatmap/value-heatmap.component';
+import { RouterModule } from "@angular/router";
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -153,6 +154,23 @@ export const MY_NATIVE_FORMATS = {
        */
       echarts: () => import('echarts'),
     }),
+    RouterModule.forChild([
+      {
+        path: 'dataexplorer',
+        children: [
+          {
+            path: '',
+            redirectTo: 'all',
+            pathMatch: 'full'
+          },
+          {
+            path: 'all',
+            component: DataExplorerComponent
+          }
+        ]
+      }
+    ]),
+
   ],
   declarations: [
     AggregateConfigurationComponent,
