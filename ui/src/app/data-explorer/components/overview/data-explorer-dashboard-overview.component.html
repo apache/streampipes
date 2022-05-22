@@ -55,14 +55,14 @@
                             <div fxLayout="row" fxFlex="100">
                                 <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                                 <button mat-button mat-icon-button color="accent"
-                                        (click)="showDashboard(element, false)">
+                                        (click)="showDashboard(element)">
                                     <i class="material-icons">visibility</i>
                                 </button>
                                 </span>
                                 <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerWritePrivileges">
                                 <button mat-button mat-icon-button color="accent"
                                         [attr.data-cy]="'edit-dashboard-' + element.name"
-                                        (click)="showDashboard(element, true)">
+                                        (click)="editDashboard(element)">
                                     <i class="material-icons">edit</i>
                                 </button>
                                 </span>

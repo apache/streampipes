@@ -16,34 +16,39 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { Observable, zip } from 'rxjs';
-import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
-import { MatDrawer } from '@angular/material/sidenav';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { Observable, zip } from "rxjs";
+import { DataExplorerDashboardGridComponent } from "../grid/data-explorer-dashboard-grid.component";
+import { MatDrawer } from "@angular/material/sidenav";
+import { Tuple2 } from "../../../core-model/base/Tuple2";
 import {
   Dashboard,
   TimeSettings,
   DataExplorerWidgetModel,
   DataLakeMeasure,
   ClientDashboardItem,
-  DataViewDataExplorerService
-} from '@streampipes/platform-services';
-import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
-import { TimeSelectionService } from '../../services/time-selection.service';
-import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { ActivatedRoute } from '@angular/router';
+  DataViewDataExplorerService,
+} from "@streampipes/platform-services";
+import { DataExplorerDesignerPanelComponent } from "../designer-panel/data-explorer-designer-panel.component";
+import { TimeSelectionService } from "../../services/time-selection.service";
+import { AuthService } from "../../../services/auth.service";
+import { UserPrivilege } from "../../../_enums/user-privilege.enum";
+import { ActivatedRoute, Router } from "@angular/router";
+import { combineLatest } from "rxjs";
 
 @Component({
-  selector: 'sp-data-explorer-dashboard-panel',
-  templateUrl: './data-explorer-dashboard-panel.component.html',
-  styleUrls: ['./data-explorer-dashboard-panel.component.css']
+  selector: "sp-data-explorer-dashboard-panel",
+  templateUrl: "./data-explorer-dashboard-panel.component.html",
+  styleUrls: ["./data-explorer-dashboard-panel.component.css"],
 })
 export class DataExplorerDashboardPanelComponent implements OnInit {
-
   dashboardLoaded = false;
   dashboard: Dashboard;
 
@@ -53,14 +58,18 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   // TODO maybe remove and use directly from dashboard object
   timeSettings: TimeSettings;
 
-  editMode: boolean = true;
+  editMode: boolean = false;
   timeRangeVisible: boolean = true;
 
-  @Output() editModeChange: EventEmitter<boolean> = new EventEmitter();
+  @Output()
+  editModeChange: EventEmitter<boolean> = new EventEmitter();
 
-  @ViewChild('dashboardGrid') dashboardGrid: DataExplorerDashboardGridComponent;
-  @ViewChild('designerDrawer') designerDrawer: MatDrawer;
-  @ViewChild('designerPanel') designerPanel: DataExplorerDesignerPanelComponent;
+  @ViewChild("dashboardGrid")
+  dashboardGrid: DataExplorerDashboardGridComponent;
+  @ViewChild("designerDrawer")
+  designerDrawer: MatDrawer;
+  @ViewChild("designerPanel")
+  designerPanel: DataExplorerDesignerPanelComponent;
 
   hasDataExplorerWritePrivileges = false;
   hasDataExplorerDeletePrivileges = false;
@@ -68,7 +77,10 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   public items: Dashboard[];
 
   widgetIdsToRemove: string[] = [];
-  widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
+  widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<
+    string,
+    DataExplorerWidgetModel
+  >();
 
   currentlyConfiguredWidget: DataExplorerWidgetModel;
   newWidgetMode = false;
@@ -77,35 +89,50 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   showDesignerPanel = false;
 
-  constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
-              public dialog: MatDialog,
-              private timeSelectionService: TimeSelectionService,
-              private authService: AuthService,
-              private dashboardService: DataViewDataExplorerService,
-              private route: ActivatedRoute,
-              private dataViewService: DataViewDataExplorerService) {
-
-              this.route.params.subscribe( (params) => {
-                this.getDashboard(params.id);
-              });
+  constructor(
+    private dataViewDataExplorerService: DataViewDataExplorerService,
+    public dialog: MatDialog,
+    private timeSelectionService: TimeSelectionService,
+    private authService: AuthService,
+    private dashboardService: DataViewDataExplorerService,
+    private route: ActivatedRoute,
+    private dataViewService: DataViewDataExplorerService,
+    private router: Router
+  ) {
+    combineLatest([this.route.params, this.route.url]).subscribe(
+      ([params, url]) => {
+        if (url.length > 1 && url[1].path == 'edit') {
+          this.editMode = true;
+        }
+        this.getDashboard(params.id);
+      }
+    );
   }
 
   public ngOnInit() {
-    this.authService.user$.subscribe(user => {
-      this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
-      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
+    this.authService.user$.subscribe((user) => {
+      this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+        UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW
+      );
+      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
+        UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW
+      );
     });
   }
 
   triggerResize() {
-    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event("resize"));
   }
 
-  addWidget(widgetConfig: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>): void {
+  addWidget(
+    widgetConfig: Tuple2<DataLakeMeasure, DataExplorerWidgetModel>
+  ): void {
     this.dataLakeMeasure = widgetConfig.a;
-    this.dataViewDataExplorerService.saveWidget(widgetConfig.b).subscribe(response => {
-      this.addWidgetToDashboard(response);
-    });
+    this.dataViewDataExplorerService
+      .saveWidget(widgetConfig.b)
+      .subscribe((response) => {
+        this.addWidgetToDashboard(response);
+      });
   }
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
@@ -121,22 +148,23 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   persistDashboardChanges() {
-    this.dataViewDataExplorerService.updateDashboard(this.dashboard).subscribe(result => {
-      this.dashboard._rev = result._rev;
-      if (this.widgetIdsToRemove.length > 0) {
-        const observables = this.deleteWidgets();
-        zip(...observables).subscribe(() => {
-          this.widgetIdsToRemove.forEach(id => {
-            this.dashboardGrid.configuredWidgets.delete(id);
+    this.dataViewDataExplorerService
+      .updateDashboard(this.dashboard)
+      .subscribe((result) => {
+        this.dashboard._rev = result._rev;
+        if (this.widgetIdsToRemove.length > 0) {
+          const observables = this.deleteWidgets();
+          zip(...observables).subscribe(() => {
+            this.widgetIdsToRemove.forEach((id) => {
+              this.dashboardGrid.configuredWidgets.delete(id);
+            });
+
+            this.afterDashboardChange();
           });
-
+        } else {
           this.afterDashboardChange();
-        });
-      } else {
-        this.afterDashboardChange();
-      }
-
-    });
+        }
+      });
 
     this.editMode = false;
   }
@@ -162,7 +190,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   removeAndQueueItemForDeletion(widget: DataExplorerWidgetModel) {
-    const index = this.dashboard.widgets.findIndex(item => item.id === widget._id);
+    const index = this.dashboard.widgets.findIndex(
+      (item) => item.id === widget._id
+    );
     this.dashboard.widgets.splice(index, 1);
     this.widgetIdsToRemove.push(widget._id);
     if (this.currentlyConfiguredWidget._id === widget._id) {
@@ -175,7 +205,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   deleteWidgets(): Observable<any>[] {
-    return this.widgetIdsToRemove.map(widgetId => {
+    return this.widgetIdsToRemove.map((widgetId) => {
       return this.dataViewDataExplorerService.deleteWidget(widgetId);
     });
   }
@@ -200,7 +230,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     } else {
       this.showDesignerPanel = false;
     }
-
   }
 
   discardChanges() {
@@ -214,12 +243,15 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   createWidget() {
     this.dataLakeMeasure = new DataLakeMeasure();
     this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
-    this.currentlyConfiguredWidget['@class'] = 'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
+    this.currentlyConfiguredWidget["@class"] =
+      "org.apache.streampipes.model.datalake.DataExplorerWidgetModel";
     this.currentlyConfiguredWidget.baseAppearanceConfig = {};
-    this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle = 'New Widget';
+    this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle =
+      "New Widget";
     this.currentlyConfiguredWidget.dataConfig = {};
-    this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor = '#FFFFFF';
-    this.currentlyConfiguredWidget.baseAppearanceConfig.textColor = '#3e3e3e';
+    this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
+      "#FFFFFF";
+    this.currentlyConfiguredWidget.baseAppearanceConfig.textColor = "#3e3e3e";
     this.newWidgetMode = true;
     this.showDesignerPanel = true;
     this.newWidgetMode = true;
@@ -233,18 +265,23 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.currentlyConfiguredWidgetId = undefined;
   }
 
-
   deleteDashboard(dashboard: Dashboard) {
-    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
+    this.dashboardService.deleteDashboard(dashboard).subscribe((result) => {
       // TODO relink to all dashboards
     });
   }
 
   getDashboard(dashboardId: string) {
-    this.dataViewService.getDataViews().subscribe(data => {
-      this.dashboard = data.filter(dashboard => dashboard._id === dashboardId)[0];
-      this.timeSettings = this.dashboard.dashboardTimeSettings; 
+    this.dataViewService.getDataViews().subscribe((data) => {
+      this.dashboard = data.filter(
+        (dashboard) => dashboard._id === dashboardId
+      )[0];
+      this.timeSettings = this.dashboard.dashboardTimeSettings;
       this.dashboardLoaded = true;
     });
+  }
+
+  goBackToOverview() {
+    this.router.navigate(["dataexplorer/"]);
   }
 }

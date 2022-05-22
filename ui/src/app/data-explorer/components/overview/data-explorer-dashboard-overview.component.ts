@@ -125,9 +125,14 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     });
   }
 
-  showDashboard(dashboard: Dashboard, editMode: boolean) {
-    const dashboardSettings: Tuple2<Dashboard, boolean> = { a: dashboard, b: editMode };
+  showDashboard(dashboard: Dashboard) {
+    // const dashboardSettings: Tuple2<Dashboard, boolean> = { a: dashboard, b: editMode };
     this.router.navigate(['dataexplorer/', dashboard._id]);
     // this.selectDashboardEmitter.emit(dashboardSettings);
   }
+
+  editDashboard(dashboard: Dashboard) {
+    this.router.navigate(['dataexplorer/', dashboard._id, 'edit']);
+  }
+
 }
