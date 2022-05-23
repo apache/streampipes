@@ -35,7 +35,6 @@ import { Router } from '@angular/router';
 })
 export class DataExplorerDashboardOverviewComponent implements OnInit {
 
-  dataViewDashboards: Dashboard[];
 
   dataSource = new MatTableDataSource<Dashboard>();
   displayedColumns: string[] = [];
@@ -66,11 +65,9 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
   getDashboards() {
     this.dataViewService.getDataViews().subscribe(data => {
-      this.dataViewDashboards = data.sort((a, b) => a.name.localeCompare(b.name));
-    this.dataSource.data = this.dataViewDashboards;
+      this.dataSource.data = data.sort((a, b) => a.name.localeCompare(b.name));
     });
   }
-
 
   openNewDataViewDialog() {
     const dataViewDashboard: Dashboard = {};
@@ -91,7 +88,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // this.reloadDashboardsEmitter.emit();
+      this.getDashboards();
     });
   }
 
@@ -109,7 +106,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(refresh => {
       if (refresh) {
-        // this.reloadDashboardsEmitter.emit();
+        this.getDashboards();
       }
     });
   }
@@ -119,16 +116,13 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
   }
 
   openDeleteDashboardDialog(dashboard: Dashboard) {
-    // TODO add confirm dialog
-    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-      // this.reloadDashboardsEmitter.emit();
+    this.dashboardService.deleteDashboard(dashboard).subscribe(() => {
+      this.getDashboards();
     });
   }
 
   showDashboard(dashboard: Dashboard) {
-    // const dashboardSettings: Tuple2<Dashboard, boolean> = { a: dashboard, b: editMode };
     this.router.navigate(['dataexplorer/', dashboard._id]);
-    // this.selectDashboardEmitter.emit(dashboardSettings);
   }
 
   editDashboard(dashboard: Dashboard) {

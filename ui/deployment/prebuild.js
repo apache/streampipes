@@ -83,7 +83,7 @@ for (let module of config.modules) {
 // Create necessary JavaScript-Files from Template and move to respective Directory
 fs.writeFileSync('src/app/appng5.module.ts', mustache.render(fs.readFileSync('deployment/appng5.module.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/home/home.service.ts', mustache.render(fs.readFileSync('deployment/home.service.mst', 'utf8').toString(), modulesActive));
-fs.writeFileSync('src/app/app-routing.module.ts', mustache.render(fs.readFileSync('deployment/app-routing.module.mst', 'utf8').toString(), modulesActive));
+// fs.writeFileSync('src/app/app-routing.module.ts', mustache.render(fs.readFileSync('deployment/app-routing.module.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/core/components/base-navigation.component.ts', mustache.render(fs.readFileSync('deployment/base-navigation.component.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/scss/sp/sp-theme.scss', fs.readFileSync('deployment/sp-theme.scss'));
 fs.writeFileSync('src/app/services/app.constants.ts', fs.readFileSync('deployment/app-constants.ts', 'utf8'));
