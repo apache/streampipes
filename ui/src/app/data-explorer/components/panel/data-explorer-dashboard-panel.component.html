@@ -27,12 +27,19 @@
                    <mat-icon>arrow_back</mat-icon>
                 </button>
             <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
-                <button mat-button mat-raised-button color="accent" matTooltip="Save" class="edit-menu-btn"
-                    [matTooltipPosition]="'above'" (click)="persistDashboardChanges()"
-                    data-cy="save-data-explorer-widget-btn">
+                <button mat-button mat-raised-button 
+                        color="accent" 
+                        matTooltip="Save" 
+                        class="edit-menu-btn"
+                        [matTooltipPosition]="'above'" 
+                        (click)="persistDashboardChanges()"
+                        data-cy="save-data-explorer-widget-btn">
                     <mat-icon>save</mat-icon>&nbsp;<span>Save</span>
                 </button>
-                <button mat-button mat-raised-button class="mat-basic mr-10 edit-menu-btn" (click)="discardChanges()">
+                <button mat-button 
+                        mat-raised-button 
+                        class="mat-basic mr-10 edit-menu-btn" 
+                        (click)="discardChanges()">
                     <i class="material-icons">clear</i>
                     <span> Discard</span>
                 </button>
@@ -51,17 +58,16 @@
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item (click)="triggerEditMode()"
-                        *ngIf="!editMode && hasDataExplorerWritePrivileges" data-cy="options-edit-dashboard">
+                    <button mat-menu-item 
+                        (click)="triggerEditMode()"
+                        *ngIf="!editMode && hasDataExplorerWritePrivileges" 
+                        data-cy="options-edit-dashboard">
                         <mat-icon>edit</mat-icon>
                         <span>Edit dashboard</span>
                     </button>
-                    <!-- TODO reimplement with new logig-->
-                    <!-- <button mat-menu-item (click)="getDashboards(selectedDataViewDashboard._id)">
-                <mat-icon>refresh</mat-icon>
-                <span>Reload dashboard</span>
-            </button> -->
-                    <button mat-menu-item (click)="timeRangeVisible = true" *ngIf="!editMode && !timeRangeVisible">
+                    <button mat-menu-item 
+                            (click)="timeRangeVisible = true" 
+                            *ngIf="!editMode && !timeRangeVisible">
                         <mat-icon>alarm_on</mat-icon>
                         <span>Show time range selector</span>
                     </button>
@@ -81,19 +87,28 @@
 
         <div fxFlex="100" fxLayout="column">
             <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
-                <mat-drawer #designerDrawer [opened]="showDesignerPanel" (opened)="triggerResize()"
-                    (closed)="triggerResize()" mode="side" position="end" class="designer-panel">
+                <mat-drawer #designerDrawer 
+                            [opened]="showDesignerPanel" 
+                            (opened)="triggerResize()"
+                            (closed)="triggerResize()" 
+                            mode="side" 
+                            position="end" 
+                            class="designer-panel">
                     <div fxLayout="column" fxFlex="100">
                         <sp-data-explorer-designer-panel #designerPanel
-                            [currentlyConfiguredWidget]="currentlyConfiguredWidget" [dataLakeMeasure]="dataLakeMeasure"
-                            [newWidgetMode]="newWidgetMode" (addWidgetEmitter)="addWidget($event)"
+                            [currentlyConfiguredWidget]="currentlyConfiguredWidget" 
+                            [dataLakeMeasure]="dataLakeMeasure"
+                            [newWidgetMode]="newWidgetMode" 
+                            (addWidgetEmitter)="addWidget($event)"
                             (closeDesignerPanelEmitter)="closeDesignerPanel()" fxFlex="100">
                         </sp-data-explorer-designer-panel>
                     </div>
                 </mat-drawer>
                 <mat-drawer-content class="h-100 dashboard-grid">
-                    <sp-data-explorer-dashboard-grid #dashboardGrid [editMode]="editMode" [dashboard]="dashboard"
-                        [timeSettings]="timeSettings" [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
+                    <sp-data-explorer-dashboard-grid #dashboardGrid 
+                        [editMode]="editMode" [dashboard]="dashboard"
+                        [timeSettings]="timeSettings" 
+                        [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
                         (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
                         (updateCallback)="updateAndQueueItemForDeletion($event)"
                         (deleteCallback)="removeAndQueueItemForDeletion($event)"

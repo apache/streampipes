@@ -55,7 +55,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
-  // TODO maybe remove and use directly from dashboard object
   timeSettings: TimeSettings;
 
   editMode: boolean = false;
@@ -267,7 +266,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   deleteDashboard(dashboard: Dashboard) {
     this.dashboardService.deleteDashboard(dashboard).subscribe((result) => {
-      // TODO relink to all dashboards
+      this.goBackToOverview();
     });
   }
 

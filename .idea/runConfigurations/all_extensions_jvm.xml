@@ -9,7 +9,7 @@
       <env name="SP_DATA_LAKE_HOST" value="localhost" />
       <env name="SP_DATA_LAKE_PORT" value="8086" />
       <env name="SP_IMAGE_STORAGE_LOCATION" value=".streampipes/spImages/" />
-      <env name="SP_HOST" value="192.168.0.35" />
+      <env name="SP_HOST" value="10.0.61.59" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.extensions.all.jvm.AllExtensionsInit" />
     <module name="streampipes-extensions-all-jvm" />
