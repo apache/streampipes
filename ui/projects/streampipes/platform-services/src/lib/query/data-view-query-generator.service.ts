@@ -75,6 +75,10 @@ export class DataViewQueryGeneratorService {
       queryBuilder.withFilters(queryConfig.selectedFilters);
     }
 
+    if (queryConfig.order) {
+      queryBuilder.withOrdering(queryConfig.order);
+    }
+
     if (sourceConfig.queryType === 'single') {
       queryBuilder.withLimit(1);
     } else if (sourceConfig.queryType === 'raw') {
