@@ -17,10 +17,9 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
+import { Dashboard, DataViewDataExplorerService } from '@streampipes/platform-services';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
-import { Tuple2 } from '../core-model/base/Tuple2';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
@@ -59,7 +58,11 @@ export class DataExplorerComponent implements OnInit {
       this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
     });
     this.route.queryParams.subscribe(params => {
-      this.routeParams = { startTime: params['startTime'], endTime: params['endTime'], dashboardId: params['dashboardId'] };
+      this.routeParams = {
+        startTime: params['startTime'],
+        endTime: params['endTime'],
+        dashboardId: params['dashboardId']
+      };
       this.getDashboards();
     });
     this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
@@ -126,9 +129,4 @@ export class DataExplorerComponent implements OnInit {
       this.dashboardsLoaded = true;
     });
   }
-
-
-  // resetDashboardChanges() {
-  //   this.getDashboards(this.selectedDataViewDashboard._id);
-  // }
 }

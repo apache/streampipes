@@ -39,9 +39,7 @@ import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LOADING_BAR_CONFIG } from '@ngx-loading-bar/core';
 
 {{#modulesActive}}
-{{#ng5}}
 import { {{{ng5_moduleName}}} } from '{{{path}}}';
-{{/ng5}}
 {{/modulesActive}}
 
 import { NotificationModule } from './notifications/notifications.module';
@@ -80,9 +78,7 @@ import * as $ from 'jquery';
         ServicesModule,
         ProfileModule,
         {{#modulesActive}}
-        {{#ng5}}
         {{{ng5_moduleName}}},
-        {{/ng5}}
         {{/modulesActive}}
     ],
     providers: [
