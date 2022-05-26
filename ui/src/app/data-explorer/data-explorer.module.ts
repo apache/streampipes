@@ -160,11 +160,6 @@ export const MY_NATIVE_FORMATS = {
         children: [
           {
             path: '',
-            redirectTo: 'all',
-            pathMatch: 'full'
-          },
-          {
-            path: 'all',
             component: DataExplorerDashboardOverviewComponent
           },
           {
