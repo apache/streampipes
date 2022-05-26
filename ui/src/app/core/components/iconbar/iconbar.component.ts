@@ -21,9 +21,9 @@ import { BaseNavigationComponent } from '../base-navigation.component';
 import { Router } from '@angular/router';
 import { NotificationCountService } from '../../../services/notification-count-service';
 import { AuthService } from '../../../services/auth.service';
-import { Subscription, timer } from "rxjs";
-import { exhaustMap, mergeMap } from "rxjs/operators";
-import { RestApi } from "../../../services/rest-api.service";
+import { Subscription, timer } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
+import { RestApi } from '../../../services/rest-api.service';
 
 @Component({
   selector: 'iconbar',
