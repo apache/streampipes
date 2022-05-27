@@ -54,6 +54,9 @@ export class TimeRangeSelectorComponent implements OnInit {
       this.setCurrentDateRange(this.possibleTimeButtons[0]);
     } else if (this.dateRange.dynamicSelection !== -1) {
       this.setCurrentDateRange(this.possibleTimeButtons.find(tb => tb.offset === this.dateRange.dynamicSelection));
+    } else {
+      this.startDate = new Date(this._dateRange.startTime);
+      this.endDate = new Date(this._dateRange.endTime);
     }
   }
 

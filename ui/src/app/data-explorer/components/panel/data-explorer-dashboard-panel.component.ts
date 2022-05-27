@@ -273,7 +273,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
       this.dashboard = data.filter(
         (dashboard) => dashboard._id === dashboardId
       )[0];
-      this.timeSettings = (startTime && endTime) ? this.overrideTime(startTime, endTime) : this.dashboard.dashboardTimeSettings;
+      this.timeSettings = (startTime && endTime) ? this.overrideTime(+startTime, +endTime) : this.dashboard.dashboardTimeSettings;
       this.dashboardLoaded = true;
     });
   }
