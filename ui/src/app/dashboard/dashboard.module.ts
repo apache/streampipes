@@ -29,7 +29,6 @@ import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { AddVisualizationDialogComponent } from './dialogs/add-widget/add-visualization-dialog.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { DashboardService } from '../../../projects/streampipes/platform-services/src/lib/apis/dashboard.service';
 import { NumberWidgetComponent } from './components/widgets/number/number-widget.component';
 import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
 import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dashboard-dialog.component';
@@ -60,11 +59,8 @@ import { EditModeService } from './services/edit-mode.service';
 import { ReloadPipelineService } from './services/reload-pipeline.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { ServicesModule } from "../services/services.module";
+import { ServicesModule } from '../services/services.module';
 import { RouterModule } from '@angular/router';
-import { DataExplorerDashboardOverviewComponent } from '../data-explorer/components/overview/data-explorer-dashboard-overview.component';
-import { DataExplorerDashboardPanelComponent } from '../data-explorer/components/panel/data-explorer-dashboard-panel.component';
-
 @NgModule({
     imports: [
         NgxEchartsModule.forRoot({
