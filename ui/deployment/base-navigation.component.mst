@@ -69,7 +69,7 @@ export abstract class BaseNavigationComponent {
 
   constructor(protected authService: AuthService,
               protected router: Router,
-              private router: Router) {
+              private appConstants: AppConstants) {
 
     }
 
