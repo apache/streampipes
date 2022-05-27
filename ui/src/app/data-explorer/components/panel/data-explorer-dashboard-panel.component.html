@@ -19,37 +19,46 @@
 <div fxLayout="column" class="page-container">
     <div fxLayout="column" fxFlex="100" *ngIf="dashboardLoaded">
         <div class="fixed-height data-explorer-options sp-tab-bg page-container-nav" fxLayout="row">
-                <button mat-button 
-                        mat-raised-button 
-                        matTooltip="Back" 
+            <div class="data-explorer-options-item pl-10"
+                 fxLayout="row"
+                 fxLayoutAlign="start center"
+                style="border-right: 2px solid var(--color-bg-2)">
+                <button mat-button
+                        mat-icon-button
+                        color="accent"
+                        matTooltip="Back"
                         (click)="goBackToOverview()"
                         class="edit-menu-btn">
-                   <mat-icon>arrow_back</mat-icon>
+                    <mat-icon>arrow_back</mat-icon>
                 </button>
-            <div class="data-explorer-options-item pl-10" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
-                <button mat-button mat-raised-button 
+            </div>
+            <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
+                <button mat-button mat-icon-button
                         color="accent" 
                         matTooltip="Save" 
                         class="edit-menu-btn"
-                        [matTooltipPosition]="'above'" 
                         (click)="persistDashboardChanges()"
                         data-cy="save-data-explorer-widget-btn">
-                    <mat-icon>save</mat-icon>&nbsp;<span>Save</span>
+                    <mat-icon>save</mat-icon>
                 </button>
                 <button mat-button 
-                        mat-raised-button 
+                        mat-icon-button
+                        color="accent"
+                        matTooltip="Discard"
                         class="mat-basic mr-10 edit-menu-btn" 
                         (click)="discardChanges()">
-                    <i class="material-icons">clear</i>
-                    <span> Discard</span>
+                    <i class="material-icons">undo</i>
                 </button>
-                <button mat-button mat-raised-button color="accent" class="edit-menu-btn" (click)="createWidget()"
+                <button mat-button
+                        mat-icon-button
+                        matTooltip="Add widget"
+                        color="accent"
+                        class="edit-menu-btn" (click)="createWidget()"
                     [disabled]="!editMode" data-cy="add-new-widget">
                     <i class="material-icons">add</i>
-                    <span> Add Widget</span>
                 </button>
             </div>
-            <div class="data-explorer-options-item" fxLayoutAlign="end center" fxFlex fxLayout="row">
+            <div class="data-explorer-options-item" style="margin-right: 0" fxLayoutAlign="end center" fxFlex fxLayout="row">
                 <sp-time-range-selector *ngIf="(editMode || timeRangeVisible)"
                     (dateRangeEmitter)="updateDateRange($event)" [dateRange]="timeSettings">
                 </sp-time-range-selector>
