@@ -16,8 +16,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Dashboard } from '@streampipes/platform-services';
-import { DashboardService } from '../../services/dashboard.service';
+import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

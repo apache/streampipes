@@ -21,8 +21,7 @@ import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { NumberConfig } from './number-config';
 import { ResizeService } from '../../../services/resize.service';
-import { DashboardService } from '../../../services/dashboard.service';
-import { DatalakeRestService, EventPropertyPrimitive } from '@streampipes/platform-services';
+import { DashboardService, DatalakeRestService, EventPropertyPrimitive } from '@streampipes/platform-services';
 
 @Component({
   selector: 'number-widget',

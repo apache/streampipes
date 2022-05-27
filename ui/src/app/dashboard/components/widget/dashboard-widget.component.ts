@@ -17,10 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DashboardService } from '../../services/dashboard.service';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import {
   DashboardItem,
+  DashboardService,
   DashboardWidgetModel,
   DataLakeMeasure, DatalakeRestService,
   DataViewDataExplorerService,

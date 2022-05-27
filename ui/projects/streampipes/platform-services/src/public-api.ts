@@ -26,6 +26,7 @@ export * from './lib/platform-services.module';
 export * from './lib/apis/commons.service';
 export * from './lib/apis/data-view-data-explorer.service';
 export * from './lib/apis/datalake-rest.service';
+export * from './lib/apis/dashboard.service';
 export * from './lib/apis/files.service';
 export * from './lib/apis/general-config.service';
 export * from './lib/apis/mail-config.service';
@@ -48,6 +49,7 @@ export * from './lib/model/datalake/DatalakeQueryParameters';
 export * from './lib/model/dashboard/dashboard.model';
 export * from './lib/model/email-config.model';
 export * from './lib/model/general-config.model';
+export * from './lib/model/measurement-unit/MeasurementUnit';
 export * from './lib/model/gen/streampipes-model-client';
 export * from './lib/model/gen/streampipes-model';
 

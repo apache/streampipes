@@ -20,16 +20,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { MeasurementUnit } from '../../core-model/measurement-unit/MeasurementUnit';
-import {
-  Dashboard,
-  DashboardWidgetModel,
-  Pipeline,
-  VisualizablePipeline,
-  PlatformServicesCommons
-} from '@streampipes/platform-services';
+import { MeasurementUnit } from '../model/measurement-unit/MeasurementUnit';
+import { PlatformServicesCommons } from './commons.service';
+import { DashboardWidgetModel, Pipeline, VisualizablePipeline } from '../model/gen/streampipes-model';
+import { Dashboard } from '../model/dashboard/dashboard.model';
 
-@Injectable()
+
+@Injectable({
+  providedIn: 'root'
+})
 export class DashboardService {
 
 

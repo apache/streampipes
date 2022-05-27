@@ -17,10 +17,9 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Dashboard } from '@streampipes/platform-services';
+import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { DashboardService } from '../../services/dashboard.service';
 import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Router } from '@angular/router';

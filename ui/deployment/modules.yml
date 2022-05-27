@@ -98,7 +98,7 @@ spAppOverview:
   admin: false
   pageNames: 'PageName.APPS'
 spDashboard:
-  componentImport: True
+  componentImport: False
   ng5_moduleName: 'DashboardModule'
   ng5_component: 'DashboardComponent'
   ng5_componentPath: './dashboard/dashboard.component'

@@ -21,9 +21,9 @@ import { ElementIconText } from '../../../services/get-element-icon-text.service
 import { WidgetConfigBuilder } from '../../registry/widget-config-builder';
 import { WidgetRegistry } from '../../registry/widget-registry';
 import { MappingPropertyGenerator } from '../../sdk/matching/mapping-property-generator';
-import { DashboardService } from '../../services/dashboard.service';
 import {
   Dashboard,
+  DashboardService,
   DashboardWidgetModel,
   DashboardWidgetSettings,
   DataLakeMeasure, DatalakeRestService,

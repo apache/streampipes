@@ -17,12 +17,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Dashboard } from '@streampipes/platform-services';
-import { DashboardService } from './services/dashboard.service';
+import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { Tuple2 } from '../core-model/base/Tuple2';
 import { EditModeService } from './services/edit-mode.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 
@@ -49,12 +48,13 @@ export class DashboardComponent implements OnInit {
                 private refreshDashboardService: RefreshDashboardService,
                 private editModeService: EditModeService,
                 private route: ActivatedRoute,
+                private router: Router,
                 private authService: AuthService) {}
 
     ngOnInit() {
         this.hasDashboardWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DASHBOARD);
-        this.route.queryParams.subscribe(params => {
-            this.getDashboards(params['dashboardId']);
+        this.route.params.subscribe(params => {
+            this.getDashboards(params.id);
         });
         this.refreshDashboardService.refreshSubject.subscribe(currentDashboardId => {
             this.getDashboards(currentDashboardId);
@@ -75,9 +75,11 @@ export class DashboardComponent implements OnInit {
         this.selectedIndex = index;
         if (index === 0) {
             this.dashboardTabSelected = false;
+            this.router.navigate(['dashboard']);
         } else {
             this.dashboardTabSelected = true;
             this.selectedDashboard = this.dashboards[(index - 1)];
+            this.router.navigate(['dashboard', this.selectedDashboard._id]);
         }
     }
 

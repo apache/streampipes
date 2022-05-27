@@ -17,12 +17,12 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Dashboard, ClientDashboardItem, DashboardWidgetModel } from '@streampipes/platform-services';
+import { Dashboard, ClientDashboardItem, DashboardWidgetModel, DashboardService } from '@streampipes/platform-services';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
-import { DashboardService } from '../../services/dashboard.service';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import { PanelType, DialogService } from '@streampipes/shared-ui';
+
 @Component({
     selector: 'dashboard-panel',
     templateUrl: './dashboard-panel.component.html',
