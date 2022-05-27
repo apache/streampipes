@@ -60,7 +60,7 @@ export class FieldSelectionPanelComponent implements OnInit {
     this.sourceConfig.measure.eventSchema.eventProperties.forEach(property => {
       // this ensures that dimension properties are not aggregated, this is not possible with the influxdb, See [STREAMPIPES-524]
       if (this.sourceConfig.queryType === 'raw' || property.propertyScope !== 'DIMENSION_PROPERTY') {
-        const isSelected = checkFields.some(v => v.runtimeName === property.runtimeName);
+        const isSelected = checkFields.some(v => (v.runtimeName === property.runtimeName && v.selected));
         this.addField(property, isSelected);
       }
     });

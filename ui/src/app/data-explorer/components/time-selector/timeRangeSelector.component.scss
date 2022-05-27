@@ -31,14 +31,14 @@
 }
 
 .button-margin {
-    border-radius: 0;
-    padding-left: 4px;
-    padding-right:4px;
-    border-right: 1px solid #cccccc;
+    border-radius: 0 !important;
+    padding-left: 4px !important;
+    padding-right:4px !important;
+    border-right: 1px solid #cccccc !important;
 }
 
 .button-margin:last-of-type {
-    border-right: 0;
+    border-right: 0 !important;
 }
 
 .time-range-wrapper {
