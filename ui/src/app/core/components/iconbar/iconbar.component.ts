@@ -24,6 +24,7 @@ import { AuthService } from '../../../services/auth.service';
 import { Subscription, timer } from 'rxjs';
 import { exhaustMap } from 'rxjs/operators';
 import { RestApi } from '../../../services/rest-api.service';
+import { AppConstants } from '../../../services/app.constants';
 
 @Component({
   selector: 'iconbar',
@@ -38,8 +39,9 @@ export class IconbarComponent extends BaseNavigationComponent implements OnInit,
   constructor(router: Router,
               authService: AuthService,
               public notificationCountService: NotificationCountService,
-              private restApi: RestApi) {
-    super(authService, router);
+              private restApi: RestApi,
+              appConstants: AppConstants) {
+    super(authService, router, appConstants);
   }
 
   ngOnInit(): void {

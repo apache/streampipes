@@ -26,6 +26,7 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
 import { VersionInfo } from '../../../info/versions/service/version-info.model';
 import { AuthService } from '../../../services/auth.service';
+import { AppConstants } from '../../../services/app.constants';
 
 @Component({
   selector: 'toolbar',
@@ -47,8 +48,9 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
               private profileService: ProfileService,
               private restApi: RestApi,
               private overlay: OverlayContainer,
-              authService: AuthService) {
-    super(authService, router);
+              authService: AuthService,
+              appConstants: AppConstants) {
+    super(authService, router, appConstants);
   }
 
   ngOnInit(): void {
