@@ -22,12 +22,12 @@ import {
   OnInit,
   Output,
   ViewChild,
-} from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { Observable, zip } from "rxjs";
-import { DataExplorerDashboardGridComponent } from "../grid/data-explorer-dashboard-grid.component";
-import { MatDrawer } from "@angular/material/sidenav";
-import { Tuple2 } from "../../../core-model/base/Tuple2";
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, zip } from 'rxjs';
+import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
+import { MatDrawer } from '@angular/material/sidenav';
+import { Tuple2 } from '../../../core-model/base/Tuple2';
 import {
   Dashboard,
   TimeSettings,
@@ -35,18 +35,18 @@ import {
   DataLakeMeasure,
   ClientDashboardItem,
   DataViewDataExplorerService,
-} from "@streampipes/platform-services";
-import { DataExplorerDesignerPanelComponent } from "../designer-panel/data-explorer-designer-panel.component";
-import { TimeSelectionService } from "../../services/time-selection.service";
-import { AuthService } from "../../../services/auth.service";
-import { UserPrivilege } from "../../../_enums/user-privilege.enum";
-import { ActivatedRoute, Router } from "@angular/router";
-import { combineLatest } from "rxjs";
+} from '@streampipes/platform-services';
+import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
+import { TimeSelectionService } from '../../services/time-selection.service';
+import { AuthService } from '../../../services/auth.service';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest } from 'rxjs';
 
 @Component({
-  selector: "sp-data-explorer-dashboard-panel",
-  templateUrl: "./data-explorer-dashboard-panel.component.html",
-  styleUrls: ["./data-explorer-dashboard-panel.component.css"],
+  selector: 'sp-data-explorer-dashboard-panel',
+  templateUrl: './data-explorer-dashboard-panel.component.html',
+  styleUrls: ['./data-explorer-dashboard-panel.component.css'],
 })
 export class DataExplorerDashboardPanelComponent implements OnInit {
   dashboardLoaded = false;
@@ -57,17 +57,17 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
    */
   timeSettings: TimeSettings;
 
-  editMode: boolean = false;
-  timeRangeVisible: boolean = true;
+  editMode = false;
+  timeRangeVisible = true;
 
   @Output()
   editModeChange: EventEmitter<boolean> = new EventEmitter();
 
-  @ViewChild("dashboardGrid")
+  @ViewChild('dashboardGrid')
   dashboardGrid: DataExplorerDashboardGridComponent;
-  @ViewChild("designerDrawer")
+  @ViewChild('designerDrawer')
   designerDrawer: MatDrawer;
-  @ViewChild("designerPanel")
+  @ViewChild('designerPanel')
   designerPanel: DataExplorerDesignerPanelComponent;
 
   hasDataExplorerWritePrivileges = false;
@@ -76,10 +76,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   public items: Dashboard[];
 
   widgetIdsToRemove: string[] = [];
-  widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<
-    string,
-    DataExplorerWidgetModel
-  >();
+  widgetsToUpdate: Map<string, DataExplorerWidgetModel> = new Map<string, DataExplorerWidgetModel>();
 
   currentlyConfiguredWidget: DataExplorerWidgetModel;
   newWidgetMode = false;
@@ -97,30 +94,29 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     private route: ActivatedRoute,
     private dataViewService: DataViewDataExplorerService,
     private router: Router
-  ) {
-    combineLatest([this.route.params, this.route.url]).subscribe(
-      ([params, url]) => {
-        if (url.length > 1 && url[1].path == 'edit') {
+  ) { }
+
+  public ngOnInit() {
+    combineLatest([this.route.params, this.route.queryParams, this.authService.user$]).subscribe(
+      ([params, qp, user]) => {
+        this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+          UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW
+        );
+        this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
+          UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW
+        );
+        if (qp.action === 'edit' && this.hasDataExplorerWritePrivileges) {
           this.editMode = true;
         }
-        this.getDashboard(params.id);
+        const startTime = params.startTime;
+        const endTime = params.endTime;
+        this.getDashboard(params.id, startTime, endTime);
       }
     );
   }
 
-  public ngOnInit() {
-    this.authService.user$.subscribe((user) => {
-      this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-        UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW
-      );
-      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
-        UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW
-      );
-    });
-  }
-
   triggerResize() {
-    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event('resize'));
   }
 
   addWidget(
@@ -242,15 +238,15 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   createWidget() {
     this.dataLakeMeasure = new DataLakeMeasure();
     this.currentlyConfiguredWidget = new DataExplorerWidgetModel();
-    this.currentlyConfiguredWidget["@class"] =
-      "org.apache.streampipes.model.datalake.DataExplorerWidgetModel";
+    this.currentlyConfiguredWidget['@class'] =
+      'org.apache.streampipes.model.datalake.DataExplorerWidgetModel';
     this.currentlyConfiguredWidget.baseAppearanceConfig = {};
     this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle =
-      "New Widget";
+      'New Widget';
     this.currentlyConfiguredWidget.dataConfig = {};
     this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
-      "#FFFFFF";
-    this.currentlyConfiguredWidget.baseAppearanceConfig.textColor = "#3e3e3e";
+      '#FFFFFF';
+    this.currentlyConfiguredWidget.baseAppearanceConfig.textColor = '#3e3e3e';
     this.newWidgetMode = true;
     this.showDesignerPanel = true;
     this.newWidgetMode = true;
@@ -270,17 +266,24 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     });
   }
 
-  getDashboard(dashboardId: string) {
+  getDashboard(dashboardId: string,
+               startTime: number,
+               endTime: number) {
     this.dataViewService.getDataViews().subscribe((data) => {
       this.dashboard = data.filter(
         (dashboard) => dashboard._id === dashboardId
       )[0];
-      this.timeSettings = this.dashboard.dashboardTimeSettings;
+      this.timeSettings = (startTime && endTime) ? this.overrideTime(startTime, endTime) : this.dashboard.dashboardTimeSettings;
       this.dashboardLoaded = true;
     });
   }
 
+  overrideTime(startTime: number,
+               endTime: number): TimeSettings {
+    return {startTime, endTime, dynamicSelection: -1};
+  }
+
   goBackToOverview() {
-    this.router.navigate(["dataexplorer/"]);
+    this.router.navigate(['dataexplorer/']);
   }
 }

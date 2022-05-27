@@ -126,7 +126,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
   }
 
   editDashboard(dashboard: Dashboard) {
-    this.router.navigate(['dataexplorer/', dashboard._id, 'edit']);
+    this.router.navigate(['dataexplorer/', dashboard._id], {queryParams: {action: 'edit'}});
   }
 
 }

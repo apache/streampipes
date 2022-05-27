@@ -167,10 +167,9 @@ export const MY_NATIVE_FORMATS = {
             component: DataExplorerDashboardPanelComponent
           },
           {
-            path: ':id/edit',
+            path: ':id/:startTime/:endTime',
             component: DataExplorerDashboardPanelComponent
           }
-
         ]
       }
     ]),
