@@ -16,13 +16,13 @@
   ~
   -->
 
-<div class="h-100 shadow">
+<div class="h-100">
     <div class="box"
          [ngStyle]='{background: configuredWidget.baseAppearanceConfig.backgroundColor,
          color: configuredWidget.baseAppearanceConfig.textColor,
          border: currentlyConfiguredWidgetId === configuredWidget._id ? "2px solid var(--color-accent)" : "2px solid " + configuredWidget.baseAppearanceConfig.backgroundColor}'
          [attr.data-cy]="'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle">
-        <div class="widget-header h-40">
+        <div class="widget-header h-40" *ngIf="!previewMode">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="widget-header-text">
                 {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
             </div>

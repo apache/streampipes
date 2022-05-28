@@ -1,0 +1,47 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="h-100 dashboard-grid" fxLayout="column">
+    <div fxFlex="100px" fxLayout="row" class="selection-box" *ngIf="widgetsAvailable && currentWidget">
+        <div *ngFor="let item of dashboard.widgets; let i = index"
+             [ngClass]="item.id === currentWidget._id ? 'viz-preview viz-preview-selected' : 'viz-preview'"
+             fxLayoutAlign="center center" (click)="selectWidget(i, item.id)">
+            <div fxFlex="100"
+                 fxLayoutAlign="center center">
+                <h5 *ngIf="widgetsVisible">{{configuredWidgets.get(item.id).baseAppearanceConfig.widgetTitle}}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="h-100 dashboard-grid" fxLayout="column" id="slideViewOuter" fxFlex="100">
+        <sp-data-explorer-dashboard-widget
+                [ngStyle]="{height: gridsterItemComponent.height -5 + 'px'}"
+                [timeSettings]="timeSettings"
+                (updateCallback)="propagateItemUpdate($event)"
+                (deleteCallback)="propagateItemRemoval($event)"
+                (configureWidgetCallback)="propagateWidgetSelection($event)"
+                (startEditModeEmitter)="startEditMode($event)"
+                [dashboardItem]="currentDashboardItem"
+                [configuredWidget]="currentWidget"
+                [dataLakeMeasure]="currentMeasure"
+                [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
+                [editMode]="editMode"
+                [gridMode]="false"
+                [gridsterItemComponent]="gridsterItemComponent"
+                *ngIf="widgetsAvailable && displayWidget && currentWidget && widgetsVisible"></sp-data-explorer-dashboard-widget>
+    </div>
+</div>

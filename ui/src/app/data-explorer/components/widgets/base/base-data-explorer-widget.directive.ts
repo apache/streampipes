@@ -20,14 +20,15 @@ import { Directive, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output 
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import {
+  DashboardItem,
   DataExplorerDataConfig,
   DataExplorerField,
-  DataViewQueryGeneratorService,
   DataExplorerWidgetModel,
-  SpQueryResult,
-  DashboardItem,
   DatalakeRestService,
-  TimeSettings } from '@streampipes/platform-services';
+  DataViewQueryGeneratorService,
+  SpQueryResult,
+  TimeSettings
+} from '@streampipes/platform-services';
 import { ResizeService } from '../../../services/resize.service';
 import { FieldProvider } from '../../../models/dataview-dashboard.model';
 import { Observable, Subscription, zip } from 'rxjs';
@@ -51,6 +52,12 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   @Input() editMode: boolean;
 
   @Input() timeSettings: TimeSettings;
+
+  @Input()
+  previewMode = false;
+
+  @Input()
+  gridMode = true;
 
   @Input() dataViewDashboardItem: DashboardItem;
   @Input() dataExplorerWidget: T;
@@ -80,6 +87,7 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   ngOnInit(): void {
+    const heightOffset = this.gridMode ? 40 : 40;
     this.showData = true;
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
@@ -99,22 +107,26 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
         }
       }
     });
-    this.resizeSub = this.resizeService.resizeSubject.subscribe(info => {
-      if (info.gridsterItem.id === this.dataExplorerWidget._id) {
-        this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
-      }
-    });
+    if (!this.previewMode) {
+      this.resizeSub = this.resizeService.resizeSubject.subscribe(info => {
+        if (info.gridsterItem.id === this.dataExplorerWidget._id) {
+          this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - heightOffset);
+        }
+      });
+    }
     this.timeSelectionSub = this.timeSelectionService.timeSelectionChangeSubject.subscribe(ts => {
       this.timeSettings = ts;
       this.updateData();
     });
     this.updateData();
-    this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
+    this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - heightOffset);
   }
 
   ngOnDestroy(): void {
     this.widgetConfigurationSub.unsubscribe();
-    this.resizeSub.unsubscribe();
+    if (this.resizeSub) {
+      this.resizeSub.unsubscribe();
+    }
     this.timeSelectionSub.unsubscribe();
   }
 

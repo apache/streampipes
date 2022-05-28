@@ -16,23 +16,15 @@
  *
  */
 
-import {
-  Component,
-  ComponentFactoryResolver,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
-  DateRange,
+  DashboardItem,
   DataExplorerWidgetModel,
   DataLakeMeasure,
   DataViewDataExplorerService,
-  DashboardItem,
+  DateRange,
   TimeSettings
 } from '@streampipes/platform-services';
 import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
@@ -69,6 +61,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Input()
   currentlyConfiguredWidgetId: string;
+
+  @Input()
+  previewMode = false;
+
+  @Input()
+  gridMode = true;
 
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
@@ -136,6 +134,8 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     componentRef.instance.editMode = this.editMode;
     componentRef.instance.dataViewDashboardItem = this.dashboardItem;
     componentRef.instance.dataExplorerWidget = this.configuredWidget;
+    componentRef.instance.previewMode = this.previewMode;
+    componentRef.instance.gridMode = this.gridMode;
     const removeSub = componentRef.instance.removeWidgetCallback.subscribe(ev => this.removeWidget());
     const timerSub = componentRef.instance.timerCallback.subscribe(ev => this.handleTimer(ev));
 

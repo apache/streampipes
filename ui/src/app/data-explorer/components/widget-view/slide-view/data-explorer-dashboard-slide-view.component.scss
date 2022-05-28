@@ -16,22 +16,25 @@
  *
  */
 
-import { EventEmitter } from '@angular/core';
-import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
-import { DashboardItem, DataExplorerWidgetModel, TimeSettings } from '@streampipes/platform-services';
+.dashboard-grid {
+  display:flex;
+  flex-direction: column;
+  flex: 1 1 100%;
+}
 
-export interface BaseWidgetData<T extends DataExplorerWidgetModel> {
-  removeWidgetCallback: EventEmitter<boolean>;
-  timerCallback: EventEmitter<boolean>;
+.viz-preview {
+  max-height: 100px;
+  width: 200px;
+  border: 1px solid var(--color-bg-2);
+  cursor: pointer;
+}
 
-  gridsterItem: GridsterItem;
-  gridsterItemComponent: GridsterItemComponent;
-  editMode: boolean;
+.viz-preview-selected {
+  border: 3px solid var(--color-accent);
+}
 
-  timeSettings: TimeSettings;
-
-  dataViewDashboardItem: DashboardItem;
-  dataExplorerWidget: T;
-  previewMode: boolean;
-  gridMode: boolean;
+.selection-box {
+  border: 1px solid var(--color-accent);
+  overflow-x: auto;
+  margin-bottom: 5px;
 }

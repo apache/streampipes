@@ -22,7 +22,7 @@
             <div class="data-explorer-options-item pl-10"
                  fxLayout="row"
                  fxLayoutAlign="start center"
-                style="border-right: 2px solid var(--color-bg-2)">
+                 style="border-right: 2px solid var(--color-bg-2)">
                 <button mat-button
                         mat-icon-button
                         color="accent"
@@ -34,18 +34,18 @@
             </div>
             <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row" *ngIf="editMode">
                 <button mat-button mat-icon-button
-                        color="accent" 
-                        matTooltip="Save" 
+                        color="accent"
+                        matTooltip="Save"
                         class="edit-menu-btn"
                         (click)="persistDashboardChanges()"
                         data-cy="save-data-explorer-widget-btn">
                     <mat-icon>save</mat-icon>
                 </button>
-                <button mat-button 
+                <button mat-button
                         mat-icon-button
                         color="accent"
                         matTooltip="Discard"
-                        class="mat-basic mr-10 edit-menu-btn" 
+                        class="mat-basic mr-10 edit-menu-btn"
                         (click)="discardChanges()">
                     <i class="material-icons">undo</i>
                 </button>
@@ -54,28 +54,47 @@
                         matTooltip="Add widget"
                         color="accent"
                         class="edit-menu-btn" (click)="createWidget()"
-                    [disabled]="!editMode" data-cy="add-new-widget">
+                        [disabled]="!editMode" data-cy="add-new-widget">
                     <i class="material-icons">add</i>
                 </button>
             </div>
-            <div class="data-explorer-options-item" style="margin-right: 0" fxLayoutAlign="end center" fxFlex fxLayout="row">
-                <sp-time-range-selector *ngIf="(editMode || timeRangeVisible)"
-                    (dateRangeEmitter)="updateDateRange($event)" [dateRange]="timeSettings">
-                </sp-time-range-selector>
-
-                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Options" data-cy="options-data-explorer">
-                    <mat-icon>more_vert</mat-icon>
+            <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row" >
+                <button mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        aria-label="View mode"
+                        matTooltip="View mode">
+                    <mat-icon>{{viewMode === 'grid' ? 'grid_view' : 'web_asset'}}</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item 
-                        (click)="triggerEditMode()"
-                        *ngIf="!editMode && hasDataExplorerWritePrivileges" 
-                        data-cy="options-edit-dashboard">
+                    <button mat-menu-item (click)="viewMode = 'grid'">
+                        <mat-icon>grid_view</mat-icon>
+                        <span>Grid</span>
+                    </button>
+                    <button mat-menu-item (click)="viewMode = 'slide'">
+                        <mat-icon>web_asset</mat-icon>
+                        <span>Slides</span>
+                    </button>
+                </mat-menu>
+            </div>
+            <div class="data-explorer-options-item" style="margin-right: 0" fxLayoutAlign="end center" fxFlex
+                 fxLayout="row">
+                <sp-time-range-selector *ngIf="(editMode || timeRangeVisible)"
+                                        (dateRangeEmitter)="updateDateRange($event)" [dateRange]="timeSettings">
+                </sp-time-range-selector>
+
+                <button mat-icon-button [matMenuTriggerFor]="optMenu" aria-label="Options" data-cy="options-data-explorer">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #optMenu="matMenu">
+                    <button mat-menu-item
+                            (click)="triggerEditMode()"
+                            *ngIf="!editMode && hasDataExplorerWritePrivileges"
+                            data-cy="options-edit-dashboard">
                         <mat-icon>edit</mat-icon>
                         <span>Edit dashboard</span>
                     </button>
-                    <button mat-menu-item 
-                            (click)="timeRangeVisible = true" 
+                    <button mat-menu-item
+                            (click)="timeRangeVisible = true"
                             *ngIf="!editMode && !timeRangeVisible">
                         <mat-icon>alarm_on</mat-icon>
                         <span>Show time range selector</span>
@@ -85,7 +104,7 @@
                         <span>Hide time range selector</span>
                     </button>
                     <button mat-menu-item *ngIf="hasDataExplorerDeletePrivileges"
-                        (click)="deleteDashboard(dashboard)">
+                            (click)="deleteDashboard(dashboard)">
                         <mat-icon>clear</mat-icon>
                         <span>Delete dashboard</span>
                     </button>
@@ -96,33 +115,48 @@
 
         <div fxFlex="100" fxLayout="column">
             <mat-drawer-container class="designer-panel-container h-100 dashboard-grid">
-                <mat-drawer #designerDrawer 
-                            [opened]="showDesignerPanel" 
+                <mat-drawer #designerDrawer
+                            [opened]="showDesignerPanel"
                             (opened)="triggerResize()"
-                            (closed)="triggerResize()" 
-                            mode="side" 
-                            position="end" 
+                            (closed)="triggerResize()"
+                            mode="side"
+                            position="end"
                             class="designer-panel">
                     <div fxLayout="column" fxFlex="100">
                         <sp-data-explorer-designer-panel #designerPanel
-                            [currentlyConfiguredWidget]="currentlyConfiguredWidget" 
-                            [dataLakeMeasure]="dataLakeMeasure"
-                            [newWidgetMode]="newWidgetMode" 
-                            (addWidgetEmitter)="addWidget($event)"
-                            (closeDesignerPanelEmitter)="closeDesignerPanel()" fxFlex="100">
+                                                         [currentlyConfiguredWidget]="currentlyConfiguredWidget"
+                                                         [dataLakeMeasure]="dataLakeMeasure"
+                                                         [newWidgetMode]="newWidgetMode"
+                                                         (addWidgetEmitter)="addWidget($event)"
+                                                         (closeDesignerPanelEmitter)="closeDesignerPanel()"
+                                                         fxFlex="100">
                         </sp-data-explorer-designer-panel>
                     </div>
                 </mat-drawer>
                 <mat-drawer-content class="h-100 dashboard-grid">
-                    <sp-data-explorer-dashboard-grid #dashboardGrid 
-                        [editMode]="editMode" [dashboard]="dashboard"
-                        [timeSettings]="timeSettings" 
-                        [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
-                        (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
-                        (updateCallback)="updateAndQueueItemForDeletion($event)"
-                        (deleteCallback)="removeAndQueueItemForDeletion($event)"
-                        (startEditModeEmitter)="startEditMode($event)" class="h-100 dashboard-grid">
+                    <sp-data-explorer-dashboard-grid #dashboardGrid
+                                                     *ngIf="viewMode === 'grid'"
+                                                     [editMode]="editMode"
+                                                     [dashboard]="dashboard"
+                                                     [timeSettings]="timeSettings"
+                                                     [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
+                                                     (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
+                                                     (updateCallback)="updateAndQueueItemForDeletion($event)"
+                                                     (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                                                     (startEditModeEmitter)="startEditMode($event)"
+                                                     class="h-100 dashboard-grid">
                     </sp-data-explorer-dashboard-grid>
+                    <sp-data-explorer-dashboard-slide-view class="h-100 dashboard-grid" #dashboardSlide
+                            [editMode]="editMode"
+                            [dashboard]="dashboard"
+                            [timeSettings]="timeSettings"
+                            [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
+                            (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
+                            (updateCallback)="updateAndQueueItemForDeletion($event)"
+                            (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                            (startEditModeEmitter)="startEditMode($event)"
+                            *ngIf="viewMode === 'slide'">
+                    </sp-data-explorer-dashboard-slide-view>
                 </mat-drawer-content>
             </mat-drawer-container>
         </div>

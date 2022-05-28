@@ -16,32 +16,26 @@
  *
  */
 
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, zip } from 'rxjs';
-import { DataExplorerDashboardGridComponent } from '../grid/data-explorer-dashboard-grid.component';
+import { combineLatest, Observable, zip } from 'rxjs';
+import { DataExplorerDashboardGridComponent } from '../widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
 import {
+  ClientDashboardItem,
   Dashboard,
-  TimeSettings,
   DataExplorerWidgetModel,
   DataLakeMeasure,
-  ClientDashboardItem,
   DataViewDataExplorerService,
+  TimeSettings,
 } from '@streampipes/platform-services';
 import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explorer-designer-panel.component';
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest } from 'rxjs';
+import { DataExplorerDashboardSlideViewComponent } from '../widget-view/slide-view/data-explorer-dashboard-slide-view.component';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -56,6 +50,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
    */
   timeSettings: TimeSettings;
+  viewMode = 'grid';
 
   editMode = false;
   timeRangeVisible = true;
@@ -65,8 +60,13 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   @ViewChild('dashboardGrid')
   dashboardGrid: DataExplorerDashboardGridComponent;
+
+  @ViewChild('dashboardSlide')
+  dashboardSlide: DataExplorerDashboardSlideViewComponent;
+
   @ViewChild('designerDrawer')
   designerDrawer: MatDrawer;
+
   @ViewChild('designerPanel')
   designerPanel: DataExplorerDesignerPanelComponent;
 
@@ -139,7 +139,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     dashboardItem.x = 0;
     dashboardItem.y = 0;
     this.dashboard.widgets.push(dashboardItem);
-    this.dashboardGrid.loadWidgetConfig(widget._id, true);
+    if (this.viewMode === 'grid') {
+      this.dashboardGrid.loadWidgetConfig(widget._id, true);
+    } else {
+      this.dashboardSlide.loadWidgetConfig(widget._id, true);
+    }
   }
 
   persistDashboardChanges() {
@@ -151,7 +155,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
           const observables = this.deleteWidgets();
           zip(...observables).subscribe(() => {
             this.widgetIdsToRemove.forEach((id) => {
-              this.dashboardGrid.configuredWidgets.delete(id);
+              if (this.viewMode === 'grid') {
+                this.dashboardGrid.configuredWidgets.delete(id);
+              } else {
+                this.dashboardSlide.configuredWidgets.delete(id);
+              }
             });
 
             this.afterDashboardChange();
@@ -165,7 +173,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   afterDashboardChange() {
-    this.dashboardGrid.updateAllWidgets();
+    if (this.viewMode === 'grid') {
+      this.dashboardGrid.updateAllWidgets();
+    } else {
+      this.dashboardSlide.updateAllWidgets();
+    }
     this.editModeChange.emit(false);
     this.closeDesignerPanel();
   }
@@ -233,6 +245,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   triggerEditMode() {
     this.editMode = true;
+    this.editModeChange.emit(true);
   }
 
   createWidget() {

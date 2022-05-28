@@ -109,15 +109,17 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
     }];
 
     super.ngOnInit();
-    this.resizeService.resizeSubject.subscribe(info => {
-      if (info.gridsterItem.id === this.gridsterItem.id) {
-        setTimeout(() => {
-          this.graph.layout.autosize = false;
-          (this.graph.layout as any).width = (info.gridsterItemComponent.width - this.offsetRightLineChart);
-          (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
-        }, 100);
-      }
-    });
+    if (!this.previewMode) {
+      this.resizeService.resizeSubject.subscribe(info => {
+        if (info.gridsterItem.id === this.gridsterItem.id) {
+          setTimeout(() => {
+            this.graph.layout.autosize = false;
+            (this.graph.layout as any).width = (info.gridsterItemComponent.width - this.offsetRightLineChart);
+            (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
+          }, 100);
+        }
+      });
+    }
   }
 
   transformData(data: SpQueryResult,
