@@ -110,6 +110,7 @@ export abstract class AbstractWidgetViewDirective {
       if (!this.isGridView()) {
         this.widgetsVisible = true;
       }
+      this.widgetsAvailable = true;
     });
   }
 

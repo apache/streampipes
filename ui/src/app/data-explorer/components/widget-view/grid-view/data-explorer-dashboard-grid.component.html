@@ -36,7 +36,7 @@
                     [editMode]="editMode"
                     [gridMode]="true"
                     [gridsterItemComponent]="gridsterItemComponent"
-                    *ngIf="widgetsAvailable"></sp-data-explorer-dashboard-widget>
+                    *ngIf="widgetsAvailable && configuredWidgets.has(item.id)"></sp-data-explorer-dashboard-widget>
         </gridster-item>
     </ng-container>
 </gridster>
