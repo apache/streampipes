@@ -70,8 +70,15 @@ export class DataExplorerDashboardSlideViewComponent extends AbstractWidgetViewD
       this.currentMeasure = this.dataLakeMeasures.get(widgetId);
       this.currentDashboardItem = this.dashboard.widgets[index] as unknown as DashboardItem;
       this.currentlyConfiguredWidgetId = widgetId;
+
+      // Opens the design panel for the current widget when in edit mode 
+      if (this.editMode) {
+        this.startEditModeEmitter.emit(this.currentWidget);
+      }
+
       this.displayWidget = true;
     });
+
   }
 
   ngAfterViewInit(): void {
