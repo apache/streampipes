@@ -245,8 +245,7 @@ export class DataLakeUtils {
   }
 
   public static goToDatalakeConfiguration() {
-    cy.visit('#/configuration');
-    cy.get('div').contains('DataLake').parent().click();
+    cy.visit('#/configuration/datalake');
   }
 
   public static checkResults(dataLakeIndex: string, fileRoute: string, ignoreTime?: boolean) {
