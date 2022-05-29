@@ -183,6 +183,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   startEditMode(widgetModel: DataExplorerWidgetModel) {
+    this.editMode = true;
     this.editModeChange.emit(true);
     this.updateCurrentlyConfiguredWidget(widgetModel);
   }
