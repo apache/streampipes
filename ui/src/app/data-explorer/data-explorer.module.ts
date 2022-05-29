@@ -50,7 +50,7 @@ import {
 } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { DataDownloadDialog } from './components/datadownloadDialog/dataDownload.dialog';
+import { DataDownloadDialogComponent } from './components/data-download-dialog/data-download-dialog.component';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
@@ -100,7 +100,7 @@ import { TimeSelectionService } from './services/time-selection.service';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/too-much-data.component';
 import { SpValueHeatmapComponent } from './components/widgets/distribution-chart/value-heatmap/value-heatmap.component';
-import { RouterModule } from "@angular/router";
+import { RouterModule } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from './components/widget-view/slide-view/data-explorer-dashboard-slide-view.component';
 
 export const MY_NATIVE_FORMATS = {
@@ -178,7 +178,7 @@ export const MY_NATIVE_FORMATS = {
   ],
   declarations: [
     AggregateConfigurationComponent,
-    DataDownloadDialog,
+    DataDownloadDialogComponent,
     DataExplorerComponent,
     DataExplorerDashboardGridComponent,
     DataExplorerDashboardOverviewComponent,

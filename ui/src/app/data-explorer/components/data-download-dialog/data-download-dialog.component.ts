@@ -17,20 +17,22 @@
  */
 
 import { HttpEventType } from '@angular/common/http';
-import { Component, Inject, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { DatalakeRestService } from '@streampipes/platform-services';
+import { DatalakeRestService, DateRange } from '@streampipes/platform-services';
+import { DialogRef } from '@streampipes/shared-ui';
 
 
 @Component({
     selector: 'sp-data-download-dialog',
-    templateUrl: 'dataDownload.dialog.html',
-    styleUrls: ['./dataDownload.dialog.css']
+    templateUrl: 'data-download-dialog.component.html',
+    styleUrls: ['./data-download-dialog.component.scss']
 })
 // tslint:disable-next-line:component-class-suffix
-export class DataDownloadDialog {
+export class DataDownloadDialogComponent implements OnInit {
 
+    @Input() index: string;
+    @Input() date: DateRange;
 
     downloadFormat = 'csv';
     selectedData = 'visible';
@@ -44,23 +46,25 @@ export class DataDownloadDialog {
     dateRange: Date [] = []; // [0] start, [1] end
 
 
-    constructor(public dialogRef: MatDialogRef<DataDownloadDialog>,
-                @Inject(MAT_DIALOG_DATA) public data,
+    constructor(public dialogRef: DialogRef<DataDownloadDialogComponent>,
                 public datalakeRestService: DatalakeRestService) {
-        this.dateRange[0] = new Date();
-        this.dateRange[1] = new Date(this.dateRange[0].getTime() + 60000 * 60 * 24);
+    }
+
+    ngOnInit() {
+        this.dateRange[0] = this.date.startDate;
+        this.dateRange[1] = this.date.endDate;
     }
 
     downloadData() {
         this.nextStep();
         switch (this.selectedData) {
             case 'all':
-                this.performRequest(this.data.downloadRawData(this.data.index, this.downloadFormat), '', '');
+                this.performRequest(this.datalakeRestService.downloadRawData(this.index, this.downloadFormat), '', '');
                 break;
             case 'customInterval':
-                this.performRequest(this.datalakeRestService.downloadQueriedData(this.data.index, this.downloadFormat,
-                    this.dateRange[0].getTime(), this.dateRange[1].getTime()), this.getDateString(this.dateRange[0]),
-                  this.getDateString(this.dateRange[1]));
+                this.performRequest(this.datalakeRestService.downloadQueriedData(this.index, this.downloadFormat,
+                    this.date.startDate.getTime(), this.date.endDate.getTime()), this.getDateString(this.date.startDate),
+                  this.getDateString(this.date.endDate));
 
         }
     }
@@ -74,7 +78,7 @@ export class DataDownloadDialog {
 
             // finished
             if (event.type === HttpEventType.Response) {
-                this.createFile(event.body, this.downloadFormat, this.data.index, startDate, endDate);
+                this.createFile(event.body, this.downloadFormat, this.index, startDate, endDate);
                 this.downloadFinish = true;
             }
         });
@@ -166,8 +170,8 @@ export class DataDownloadDialog {
         this.stepper.previous();
     }
 
-    getDateString(date: Date) {
-        return date.toLocaleDateString() + 'T' + date.toLocaleTimeString().replace(':', '.')
+    getDateString(date: Date): string {
+       return date.toLocaleDateString() + 'T' + date.toLocaleTimeString().replace(':', '.')
                                                                           .replace(':', '.');
     }
 

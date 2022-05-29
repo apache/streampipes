@@ -17,7 +17,6 @@
  */
 
 import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
   DashboardItem,
@@ -27,7 +26,7 @@ import {
   DateRange,
   TimeSettings
 } from '@streampipes/platform-services';
-import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
+import { DataDownloadDialogComponent } from '../data-download-dialog/data-download-dialog.component';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
@@ -36,6 +35,7 @@ import { BaseWidgetData } from '../widgets/base/data-explorer-widget-data';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { DialogService, PanelType } from '../../../../../dist/streampipes/shared-ui';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -93,7 +93,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   @ViewChild(WidgetDirective, {static: true}) widgetHost!: WidgetDirective;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
-              private dialog: MatDialog,
+              private dialogService: DialogService,
               private componentFactoryResolver: ComponentFactoryResolver,
               private widgetTypeService: WidgetTypeService,
               private authService: AuthService) {
@@ -150,13 +150,14 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   }
 
   downloadDataAsFile() {
-    this.dialog.open(DataDownloadDialog, {
-      width: '600px',
+    this.dialogService.open(DataDownloadDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Download data',
+      width: '50vw',
       data: {
-        index: this.dataLakeMeasure.measureName,
-        date: DateRange.fromTimeSettings(this.timeSettings)
-      },
-      panelClass: 'custom-dialog-container'
+        'index': this.dataLakeMeasure.measureName,
+        'date': DateRange.fromTimeSettings(this.timeSettings),
+      }
     });
   }
 

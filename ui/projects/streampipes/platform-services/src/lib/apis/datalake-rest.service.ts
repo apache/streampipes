@@ -71,29 +71,6 @@ export class DatalakeRestService {
       .pipe(map(r => r as Map<string, string[]>));
   }
 
-  // getGroupedData(index: string, groupingTags: string, aggregationFunction?: string, columns?: string, startDate?: number, endDate?:
-  //   number, aggregationTimeUnit?: string, aggregationTimeValue?: number, order?: string, limit?: number):
-  //   Observable<SpQueryResult> {
-  //
-  //   const url = this.dataLakeUrl + '/measurements/' + index;
-  //   let _aggregationFunction = 'mean';
-  //   let timeInterval = '2000ms';
-  //
-  //   if (aggregationFunction) {
-  //     _aggregationFunction = aggregationFunction;
-  //   }
-  //
-  //   if (aggregationTimeUnit && aggregationTimeValue) {
-  //     timeInterval = aggregationTimeValue + aggregationTimeUnit;
-  //   }
-  //
-  //   const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined, limit,
-  //     undefined, groupingTags, order, _aggregationFunction, timeInterval);
-  //
-  //   // @ts-ignore
-  //   return this.http.get<GroupedDataResult>(url, { params: queryParams });
-  // }
-
   downloadRawData(index, format) {
     const url = this.dataLakeUrl + '/measurements/' + index + '/download?format=' + format;
 
@@ -118,19 +95,14 @@ export class DatalakeRestService {
     order?,
     limit?,
     offset?) {
-    const url = this.dataLakeUrl + '/measurements/' + index + '/download?format=' + format;
+    const url = this.dataLakeUrl + '/measurements/' + index + '/download';
     const timeInterval = aggregationTimeValue + aggregationTimeUnit;
 
     const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined,
       limit, offset, groupingsTags, order, aggregationFunction, timeInterval);
+    (queryParams as any).format = format;
 
-    const request = new HttpRequest('GET', url, {
-      reportProgress: true,
-      responseType: 'text',
-      params: queryParams
-    });
-
-    return this.http.request(request);
+    return this.http.get(url, {params: queryParams as any, responseType: 'text', reportProgress: true});
   }
 
   removeData(index: string) {
