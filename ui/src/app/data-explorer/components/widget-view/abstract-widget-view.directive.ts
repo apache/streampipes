@@ -91,6 +91,9 @@ export abstract class AbstractWidgetViewDirective {
         this.processWidget(r);
         this.onWidgetsAvailable();
         this.widgetsAvailable = true;
+        if (this.dashboard.widgets.length > 0 && this.editMode) {
+          this.startEditModeEmitter.emit(this.configuredWidgets.get(this.dashboard.widgets[0].id));
+        }
       });
     });
   }
