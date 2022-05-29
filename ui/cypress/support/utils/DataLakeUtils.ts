@@ -100,7 +100,6 @@ export class DataLakeUtils {
         .click();
 
     this.editDataView(name);
-    // cy.get('div').contains(name).parent().click();
 
   }
 
@@ -131,10 +130,8 @@ export class DataLakeUtils {
   public static saveAndReEditWidget(dataViewName: string) {
     // Save configuration
     DataLakeUtils.saveDataExplorerWidgetConfiguration();
-    DataLakeUtils.clickStartTab();
+    DataLakeUtils.goBackToOverview();
     DataLakeUtils.editDataView(dataViewName);
-    // Edit widget again
-    DataLakeUtils.editWidget('datalake_configuration');
   }
 
   public static clickTab(tabName: string) {
@@ -142,9 +139,12 @@ export class DataLakeUtils {
     cy.get('div').contains(tabName).parent().click();
   }
 
-  public static clickStartTab() {
-    this.clickTab('Start');
+
+  public static goBackToOverview() {
+    cy.dataCy('save-data-explorer-go-back-to-overview')
+        .click();
   }
+
 
   public static addNewWidget() {
     cy.dataCy('add-new-widget')
