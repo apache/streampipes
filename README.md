@@ -126,7 +126,7 @@ To build the ui, switch to the ``ui`` folder and perform the following steps:
 
 ### Starting
 
-To start StreamPipes, run ``docker-compose up -d`` from the root directory.
+To start StreamPipes, run ``docker-compose up --build -d`` from the root directory.
 
 You can also use the installer or CLI as described in the ``Installation`` section.
 
