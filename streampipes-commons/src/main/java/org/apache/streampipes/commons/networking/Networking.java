@@ -21,12 +21,14 @@ import org.apache.streampipes.commons.constants.Envs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.net.*;
 
 public class Networking {
 
   private static final Logger LOG = LoggerFactory.getLogger(Networking.class);
+
+  private static final String DEFAULT_LOCALHOST_IP = "127.0.0.1";
 
   public static String getHostname() throws UnknownHostException {
     String selectedAddress;
@@ -35,10 +37,41 @@ public class Networking {
       LOG.info("Using IP from provided environment variable {}: {}", Envs.SP_HOST, selectedAddress);
     } else {
       selectedAddress = InetAddress.getLocalHost().getHostAddress();
+
+      // this condition is only used as a workaround when the IP address was not derived correctly
+      // when this also does not work, you must set the environment variable SP_HOST manually
+      if (selectedAddress.equals(DEFAULT_LOCALHOST_IP)) {
+        selectedAddress = getIpAddressForOsx();
+      }
+
       LOG.info("Using auto-discovered IP: {}", selectedAddress);
     }
 
     return selectedAddress;
+  }
+
+  /**
+   * this method is a workaround for developers using osx
+   * in OSX InetAddress.getLocalHost().getHostAddress() always returns 127.0.0.1
+   * as a workaround developers must manually set the SP_HOST environment variable with the actual ip
+   * with this method the IP is set automatically
+   *
+   * @return IP
+   */
+  private static String getIpAddressForOsx() {
+
+    Socket socket = new Socket();
+    String result = DEFAULT_LOCALHOST_IP;
+    try {
+      socket.connect(new InetSocketAddress("streampipes.apache.org", 80));
+      result = socket.getLocalAddress().getHostAddress();
+      socket.close();
+    } catch (IOException e) {
+      LOG.error(e.getMessage());
+      LOG.error("IP address was not set automatically. Use the environment variable SP_HOST to set it manually.");
+    }
+
+    return result;
   }
 
   public static Integer getPort(Integer defaultPort) {
