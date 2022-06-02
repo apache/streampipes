@@ -103,8 +103,8 @@ For a more in-depth manual, read the [installation guide](https://streampipes.ap
 To properly build the StreamPipes core, the following tools should be installed:
 
 ### Prerequisites
-* Java 8 JDK (minimum)
-* Maven (tested with 3.6)
+* Java 11 JDK (minimum)
+* Maven (tested with 3.8)
 * NodeJS + NPM (tested with v12+/ v6+)
 * Docker + Docker-Compose
 
@@ -135,7 +135,7 @@ StreamPipes includes a repository of extensions for
 * **Connect adapters** for a variety of IoT data sources as well as 
 * **Data Processors** and **Data Sinks** as ready-to-use pipeline elements. 
 
-A description of the standard elements can be found in the Github repository [streampipes-extensions](https://www.github.com/apache/incubator-streampipes-extensions).
+A description of the standard elements can be found in [streampipes-extensions](https://github.com/apache/incubator-streampipes/tree/dev/streampipes-extensions).
 
 ## Extending StreamPipes
 
