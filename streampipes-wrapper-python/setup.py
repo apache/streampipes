@@ -43,7 +43,7 @@ setup(
         'Flask==1.1.2',
         'flask-classful==0.14.2',
         'Flask-Negotiate==0.1.0',
-        'waitress==2.1.1',
+        'waitress==2.1.2',
         'python-consul==1.1.0'
     ],
     tests_require=[],
