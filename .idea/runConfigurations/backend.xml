@@ -14,7 +14,6 @@
       <env name="SP_JMS_HOST" value="localhost" />
       <env name="SP_DEBUG" value="true " />
       <env name="SP_PRIORITIZED_PROTOCOL" value="kafka" />
-      <env name="SP_HOST" value="10.0.61.59" />
     </envs>
     <method v="2">
       <option name="Make" enabled="true" />
