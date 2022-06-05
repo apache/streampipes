@@ -293,6 +293,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
       this.dashboard = data.filter(
         (dashboard) => dashboard._id === dashboardId
       )[0];
+      this.viewMode = this.dashboard.dashboardGeneralSettings.defaultViewMode || 'grid';
       this.timeSettings = (startTime && endTime) ? this.overrideTime(+startTime, +endTime) : this.dashboard.dashboardTimeSettings;
       if (this.dashboard.widgets.length === 0 && this.editMode) {
         this.triggerEditMode();

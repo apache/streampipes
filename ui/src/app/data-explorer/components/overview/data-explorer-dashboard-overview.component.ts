@@ -20,7 +20,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';

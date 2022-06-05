@@ -54,26 +54,32 @@
                         <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
                             <div fxLayout="row" fxFlex="100">
                                 <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
-                                <button mat-button mat-icon-button color="accent"
+                                <button mat-button mat-icon-button color="accent" matTooltip="Show data view"
                                         (click)="showDashboard(element)">
                                     <i class="material-icons">visibility</i>
                                 </button>
                                 </span>
                                 <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerWritePrivileges">
-                                <button mat-button mat-icon-button color="accent"
+                                <button mat-button mat-icon-button color="accent" matTooltip="Edit data view"
                                         [attr.data-cy]="'edit-dashboard-' + element.name"
                                         (click)="editDashboard(element)">
                                     <i class="material-icons">edit</i>
                                 </button>
                                 </span>
-                                <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
-                                <button mat-button mat-icon-button color="accent"
+                                <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerWritePrivileges">
+                                <button mat-button mat-icon-button color="accent" matTooltip="Edit data view settings"
+                                        (click)="openEditDataViewDialog(element)">
+                                    <i class="material-icons">settings</i>
+                                </button>
+                                </span>
+                                <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
+                                <button mat-button mat-icon-button color="accent" matTooltip="Manage permissions"
                                         (click)="showPermissionsDialog(element)">
                                     <i class="material-icons">share</i>
                                 </button>
                                 </span>
-                                <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerDeletePrivileges">
-                                <button mat-button mat-icon-button color="accent"
+                                <span fxFlex fxFlexOrder="5" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDataExplorerDeletePrivileges">
+                                <button mat-button mat-icon-button color="accent" matTooltip="Delete data view"
                                         [attr.data-cy]="'delete-dashboard-' + element.name"
                                         (click)="openDeleteDashboardDialog(element)">
                                     <i class="material-icons">delete</i>
