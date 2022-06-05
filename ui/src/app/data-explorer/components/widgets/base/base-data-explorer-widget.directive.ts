@@ -87,7 +87,7 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   ngOnInit(): void {
-    const heightOffset = this.gridMode ? 40 : 40;
+    const heightOffset = this.gridMode ? 55 : 55;
     this.showData = true;
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);

@@ -59,7 +59,7 @@
                     <i class="material-icons">add</i>
                 </button>
             </div>
-            <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row" >
+            <div class="data-explorer-options-item" fxLayoutAlign="start center" fxLayout="row">
                 <button mat-icon-button
                         [matMenuTriggerFor]="menu"
                         aria-label="View mode"
@@ -83,7 +83,8 @@
                                         (dateRangeEmitter)="updateDateRange($event)" [dateRange]="timeSettings">
                 </sp-time-range-selector>
 
-                <button mat-icon-button [matMenuTriggerFor]="optMenu" aria-label="Options" data-cy="options-data-explorer">
+                <button mat-icon-button [matMenuTriggerFor]="optMenu" aria-label="Options"
+                        data-cy="options-data-explorer">
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #optMenu="matMenu">
@@ -135,8 +136,19 @@
                     </div>
                 </mat-drawer>
                 <mat-drawer-content class="h-100 dashboard-grid">
+                    <div *ngIf="showEditingHelpInfo" fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+                        <h4>This data view is empty and doesn't contain any widgets.</h4>
+                        <button mat-button
+                                mat-raised-button
+                                color="accent"
+                                *ngIf="hasDataExplorerWritePrivileges"
+                                (click)="triggerEditMode()">
+                            <mat-icon>add</mat-icon>
+                            Add widget
+                        </button>
+                    </div>
                     <sp-data-explorer-dashboard-grid #dashboardGrid
-                                                     *ngIf="viewMode === 'grid'"
+                                                     *ngIf="!showEditingHelpInfo && viewMode === 'grid'"
                                                      [editMode]="editMode"
                                                      [dashboard]="dashboard"
                                                      [timeSettings]="timeSettings"
@@ -148,15 +160,15 @@
                                                      class="h-100 dashboard-grid">
                     </sp-data-explorer-dashboard-grid>
                     <sp-data-explorer-dashboard-slide-view class="h-100 dashboard-grid" #dashboardSlide
-                            [editMode]="editMode"
-                            [dashboard]="dashboard"
-                            [timeSettings]="timeSettings"
-                            [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
-                            (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
-                            (updateCallback)="updateAndQueueItemForDeletion($event)"
-                            (deleteCallback)="removeAndQueueItemForDeletion($event)"
-                            (startEditModeEmitter)="startEditMode($event)"
-                            *ngIf="viewMode === 'slide'">
+                                                           [editMode]="editMode"
+                                                           [dashboard]="dashboard"
+                                                           [timeSettings]="timeSettings"
+                                                           [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
+                                                           (configureWidgetCallback)="updateCurrentlyConfiguredWidget($event)"
+                                                           (updateCallback)="updateAndQueueItemForDeletion($event)"
+                                                           (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                                                           (startEditModeEmitter)="startEditMode($event)"
+                                                           *ngIf="!showEditingHelpInfo && viewMode === 'slide'">
                     </sp-data-explorer-dashboard-slide-view>
                 </mat-drawer-content>
             </mat-drawer-container>

@@ -84,6 +84,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   dataLakeMeasure: DataLakeMeasure;
 
   showDesignerPanel = false;
+  showEditingHelpInfo = false;
 
   constructor(
     private dataViewDataExplorerService: DataViewDataExplorerService,
@@ -186,6 +187,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.editMode = true;
     this.editModeChange.emit(true);
     this.updateCurrentlyConfiguredWidget(widgetModel);
+    this.showEditingHelpInfo = false;
   }
 
   prepareWidgetUpdates(): Observable<any>[] {
@@ -245,8 +247,10 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   triggerEditMode() {
+    this.showEditingHelpInfo = false;
     this.editMode = true;
     this.editModeChange.emit(true);
+    this.createWidget();
   }
 
   createWidget() {
@@ -264,7 +268,9 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.newWidgetMode = true;
     this.showDesignerPanel = true;
     this.newWidgetMode = true;
-    this.designerPanel.resetIndex();
+    if (this.designerPanel) {
+      this.designerPanel.resetIndex();
+    }
   }
 
   closeDesignerPanel() {
@@ -288,6 +294,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
         (dashboard) => dashboard._id === dashboardId
       )[0];
       this.timeSettings = (startTime && endTime) ? this.overrideTime(+startTime, +endTime) : this.dashboard.dashboardTimeSettings;
+      if (this.dashboard.widgets.length === 0 && this.editMode) {
+        this.triggerEditMode();
+      } else if (this.dashboard.widgets.length === 0 && !(this.editMode)) {
+        this.showEditingHelpInfo = true;
+      }
       this.dashboardLoaded = true;
     });
   }
