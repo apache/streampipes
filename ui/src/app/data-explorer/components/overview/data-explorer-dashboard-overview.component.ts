@@ -70,6 +70,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
   openNewDataViewDialog() {
     const dataViewDashboard: Dashboard = {};
+    dataViewDashboard.dashboardGeneralSettings = {};
     dataViewDashboard.widgets = [];
 
     this.openDataViewModificationDialog(true, dataViewDashboard);
