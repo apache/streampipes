@@ -28,13 +28,8 @@ export class UserUtils {
       .addRole(UserRole.ROLE_ADMIN)
       .build();
 
-
-  // public static testUserName = 'admin@streampipes.apache.org';
-  // public static testUserPassword = 'admin';
-
   public static goToUserConfiguration() {
-    cy.visit('#/configuration');
-    cy.get('div').contains('Security').parent().click();
+    cy.visit('#/configuration/security');
   }
 
   public static addUser(user: User) {
