@@ -16,30 +16,18 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
 import { App } from './apps.model';
-import { AvailableAppsService } from './apps';
-import { Router } from '@angular/router';
 
-@Component({
-    templateUrl: './app-overview.component.html',
-    styleUrls: ['./app-overview.component.css']
-})
-export class AppOverviewComponent implements OnInit {
+export class AvailableAppsService {
 
-    apps: App[] = [];
-
-    constructor(private router: Router) {
-
+  public static apps: App[] = [
+    {
+      appName: 'Asset Dashboards',
+      appDescription: 'Monitor measurements of your assets by placing visualizations on an image of your asset.',
+      appId: 'asset-monitoring',
+      appLink: 'asset-monitoring',
+      appModuleLink: () =>
+        import('../app-asset-monitoring/app-asset-monitoring.module').then(m => m.AppAssetMonitoringModule)
     }
-
-    ngOnInit() {
-        this.apps = AvailableAppsService.apps;
-    }
-
-    selectApp(appLink: string) {
-        this.router.navigate(['apps', appLink]);
-    }
-
-
+  ];
 }

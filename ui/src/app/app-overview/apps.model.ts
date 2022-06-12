@@ -16,30 +16,10 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { App } from './apps.model';
-import { AvailableAppsService } from './apps';
-import { Router } from '@angular/router';
-
-@Component({
-    templateUrl: './app-overview.component.html',
-    styleUrls: ['./app-overview.component.css']
-})
-export class AppOverviewComponent implements OnInit {
-
-    apps: App[] = [];
-
-    constructor(private router: Router) {
-
-    }
-
-    ngOnInit() {
-        this.apps = AvailableAppsService.apps;
-    }
-
-    selectApp(appLink: string) {
-        this.router.navigate(['apps', appLink]);
-    }
-
-
+export interface App {
+  appName: string;
+  appDescription: string;
+  appId: string;
+  appLink: string;
+  appModuleLink?: any;
 }

@@ -27,22 +27,39 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { AppAssetMonitoringModule } from '../app-asset-monitoring/app-asset-monitoring.module';
 import { AppOverviewComponent } from './app-overview.component';
+import { RouterModule } from '@angular/router';
+import { AvailableAppsService } from './apps';
+import { PageName } from '../_enums/page-name.enum';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FlexLayoutModule,
-        CustomMaterialModule,
-        MatGridListModule,
-        MatInputModule,
-        MatFormFieldModule,
-        FormsModule,
-        AppAssetMonitoringModule,
-    ],
-    declarations: [
-        AppOverviewComponent,
-    ],
-    providers: []
+  imports: [
+    AppAssetMonitoringModule,
+    CommonModule,
+    CustomMaterialModule,
+    FlexLayoutModule,
+    FormsModule,
+    MatGridListModule,
+    MatInputModule,
+    MatFormFieldModule,
+    SharedUiModule,
+    RouterModule.forChild([
+      {
+        path: 'apps',
+        children: [{'path': '', component: AppOverviewComponent}, ...AvailableAppsService.apps.map(app => {
+          return {
+            path: app.appLink,
+            data: {authPageNames: [PageName.APPS]},
+            loadChildren: app.appModuleLink
+          };
+        }) as any]
+      }
+    ])
+  ],
+  declarations: [
+    AppOverviewComponent,
+  ],
+  providers: []
 })
 export class AppOverviewModule {
 }

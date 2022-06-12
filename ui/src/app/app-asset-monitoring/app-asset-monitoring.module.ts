@@ -39,36 +39,45 @@ import { SaveDashboardDialogComponent } from './dialog/save-dashboard/save-dashb
 import { AssetDashboardOverviewComponent } from './components/dashboard-overview/dashboard-overview.component';
 import { AddLinkDialogComponent } from './dialog/add-link/add-link-dialog.component';
 import { DashboardModule } from '../dashboard/dashboard.module';
+import { RouterModule } from '@angular/router';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FlexLayoutModule,
-        CustomMaterialModule,
-        MatGridListModule,
-        MatInputModule,
-        MatFormFieldModule,
-        FormsModule,
-        ColorPickerModule,
-        DashboardModule
-    ],
-    declarations: [
-        AppAssetMonitoringComponent,
-        CreateAssetComponent,
-        ViewAssetComponent,
-        AddLinkDialogComponent,
-        AddPipelineDialogComponent,
-        SaveDashboardDialogComponent,
-        AssetDashboardOverviewComponent
-    ],
-    providers: [
-        RestService,
-        ShapeService,
-        ElementIconText
-    ],
-    exports: [
-        AppAssetMonitoringComponent
-    ]
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    CustomMaterialModule,
+    MatGridListModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
+    ColorPickerModule,
+    DashboardModule,
+    RouterModule.forChild([
+      {
+        path: '',
+        component: AppAssetMonitoringComponent
+      }
+    ]),
+    SharedUiModule
+  ],
+  declarations: [
+    AppAssetMonitoringComponent,
+    CreateAssetComponent,
+    ViewAssetComponent,
+    AddLinkDialogComponent,
+    AddPipelineDialogComponent,
+    SaveDashboardDialogComponent,
+    AssetDashboardOverviewComponent
+  ],
+  providers: [
+    RestService,
+    ShapeService,
+    ElementIconText
+  ],
+  exports: [
+    AppAssetMonitoringComponent
+  ]
 })
 export class AppAssetMonitoringModule {
 }

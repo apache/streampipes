@@ -84,12 +84,12 @@ spConfiguration:
   pageNames: 'PageName.SETTINGS'
   admin: True
 spAppOverview:
-  componentImport: True
+  componentImport: False
   ng5_moduleName: 'AppOverviewModule'
   ng5_component: 'AppOverviewComponent'
   ng5_componentPath: './app-overview/app-overview.component'
   path: './app-overview/app-overview.module'
-  link: 'app-overview'
+  link: 'apps'
   url: '/apps'
   title: 'Apps'
   description: 'The app overview allows you to view and open additional StreamPipes plugins.'
