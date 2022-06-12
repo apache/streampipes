@@ -16,16 +16,34 @@
  *
  */
 
-export * from './lib/shared-ui.module';
+.page-container-nav {
+  line-height:24px;
+  height: 50px;
+  border-bottom:1px solid var(--color-bg-3);
+}
 
-export * from './lib/dialog/base-dialog/base-dialog.model';
-export * from './lib/dialog/base-dialog/base-dialog.service';
-export * from './lib/dialog/base-dialog/dialog-ref';
+.sp-bg-lightgray {
+  background-color: var(--color-bg-1);
+}
 
-export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
-export * from './lib/dialog/panel-dialog/panel-dialog.component';
-export * from './lib/dialog/standard-dialog/standard-dialog.component';
+.sp-tab-bg {
+  background-color: var(--color-bg-1);
+}
 
-export * from './lib/components/basic-view/basic-view.component';
+.page-container {
+  margin: 10px;
+  border: 1px solid var(--color-bg-3);
+  min-height: calc(100% - 20px);
+}
 
+.page-container-padding-inner {
+  margin: 10px;
+}
 
+.pl-5 {
+  padding-left: 5px;
+}
+
+.pr-5 {
+  padding-right: 5px;
+}

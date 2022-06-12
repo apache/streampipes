@@ -24,21 +24,29 @@ import { CommonModule } from '@angular/common';
 import { PortalModule } from '@angular/cdk/portal';
 import { MatButtonModule } from '@angular/material/button';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { SpBasicViewComponent } from './components/basic-view/basic-view.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
     ConfirmDialogComponent,
     PanelDialogComponent,
-    StandardDialogComponent
+    StandardDialogComponent,
+    SpBasicViewComponent
   ],
   imports: [
     CommonModule,
-    PortalModule,
+    FlexLayoutModule,
     MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    PortalModule,
     OverlayModule
   ],
   exports: [
-    ConfirmDialogComponent, PanelDialogComponent, StandardDialogComponent
+    ConfirmDialogComponent, PanelDialogComponent, StandardDialogComponent, SpBasicViewComponent
   ]
 })
 export class SharedUiModule { }

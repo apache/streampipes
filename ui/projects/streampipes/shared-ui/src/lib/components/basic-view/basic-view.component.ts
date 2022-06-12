@@ -16,16 +16,30 @@
  *
  */
 
-export * from './lib/shared-ui.module';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
-export * from './lib/dialog/base-dialog/base-dialog.model';
-export * from './lib/dialog/base-dialog/base-dialog.service';
-export * from './lib/dialog/base-dialog/dialog-ref';
+@Component({
+  selector: 'sp-basic-view',
+  templateUrl: './basic-view.component.html',
+  styleUrls: ['./basic-view.component.scss']
+})
+export class SpBasicViewComponent {
 
-export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
-export * from './lib/dialog/panel-dialog/panel-dialog.component';
-export * from './lib/dialog/standard-dialog/standard-dialog.component';
+  @Input()
+  padding = false;
 
-export * from './lib/components/basic-view/basic-view.component';
+  @Input()
+  showBackLink = false;
 
+  @Input()
+  backLinkTarget: string[];
 
+  constructor(private router: Router) {
+
+  }
+
+  navigateBack() {
+    this.router.navigate(this.backLinkTarget);
+  }
+}
