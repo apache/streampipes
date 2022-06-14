@@ -30,6 +30,11 @@ public enum CouchDbStorageManager implements INoSqlStorage {
   }
 
   @Override
+  public IGenericStorage getGenericStorage() {
+    return new GenericStorageImpl();
+  }
+
+  @Override
   public IAdapterStorage getAdapterInstanceStorage() {
     return new AdapterInstanceStorageImpl();
   }

@@ -27,6 +27,7 @@ import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
@@ -101,6 +102,7 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     }
 
     new StreamPipesEnvChecker().updateEnvironmentVariables();
+    new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);

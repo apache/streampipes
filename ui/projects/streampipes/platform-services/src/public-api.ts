@@ -24,6 +24,7 @@
 export * from './lib/platform-services.module';
 
 export * from './lib/apis/commons.service';
+export * from './lib/apis/asset-management.service';
 export * from './lib/apis/data-view-data-explorer.service';
 export * from './lib/apis/datalake-rest.service';
 export * from './lib/apis/dashboard.service';
@@ -57,3 +58,5 @@ export * from './lib/model/datalake/data-lake-query-config.model';
 export * from './lib/query/DatalakeQueryParameterBuilder';
 export * from './lib/query/data-view-query-generator.service';
 export * from './lib/model/user/user.model';
+
+export * from './lib/model/assets/asset.model';

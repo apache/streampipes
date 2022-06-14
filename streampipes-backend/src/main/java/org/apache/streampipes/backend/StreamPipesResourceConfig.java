@@ -55,6 +55,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(AccountActivationResource.class);
         register(Authentication.class);
         register(AssetDashboardResource.class);
+        register(AssetManagementResource.class);
         register(AutoComplete.class);
         register(CategoryResource.class);
         register(ConsulConfig.class);
