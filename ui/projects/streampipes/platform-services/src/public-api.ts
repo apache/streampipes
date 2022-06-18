@@ -30,6 +30,7 @@ export * from './lib/apis/datalake-rest.service';
 export * from './lib/apis/dashboard.service';
 export * from './lib/apis/files.service';
 export * from './lib/apis/general-config.service';
+export * from './lib/apis/generic-storage.service';
 export * from './lib/apis/mail-config.service';
 export * from './lib/apis/measurement-units.service';
 export * from './lib/apis/permissions.service';

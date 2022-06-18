@@ -36,7 +36,7 @@
 
 <div fxLayout="column" class="page-container">
     <div fxLayout="row" class="p-0 sp-bg-lightgray page-container-nav">
-        <div fxLayout="fill">
+        <div fxLayout="fill" fxFlex="100">
             <div class="pl-5 pr-5"
                  fxLayout="row"
                  fxLayoutAlign="start center"
@@ -51,7 +51,7 @@
                     <mat-icon>arrow_back</mat-icon>
                 </button>
             </div>
-            <ng-content select="[nav]"></ng-content>
+            <ng-content select="[nav]" fxFlex="100"></ng-content>
         </div>
     </div>
 
