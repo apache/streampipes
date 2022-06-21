@@ -125,7 +125,7 @@
         <influxdb.java.version>2.14</influxdb.java.version>
         <eclipse.milo.version>0.6.3</eclipse.milo.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
-        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.28</mysql-connector-java.version>
         <netty.version>4.1.72.Final</netty.version>
         <nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
         <opencsv.version>5.5.2</opencsv.version>
