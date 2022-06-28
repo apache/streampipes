@@ -59,7 +59,12 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
       plot_bgcolor: '#fff',
       paper_bgcolor: '#fff',
       yaxis: {
-        fixedrange: true
+        fixedrange: true,
+        automargin: true
+      },
+      margin: {
+        t: 35,
+        b: 35
       },
       updatemenus: this.updatemenus,
 
@@ -237,12 +242,14 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
         spikedash: 'dash',
         spikecolor: '#666666',
         spikethickness: 2,
+        automargin: true,
       };
       this.graph.layout.hovermode = 'x';
 
     } else {
       this.graph.layout['xaxis'] = {
         type: 'date',
+        automargin: true,
       };
       this.graph.layout.hovermode = '';
     }

@@ -37,12 +37,18 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirec
   graph = {
     layout: {
       grid: {rows: this.rowNo, columns: this.fixedColNo, pattern: 'independent'},
+      margin: {
+        t: 35,
+        b: 35
+      },
       xaxis: {
+        automargin: true,
         title: {
           text: ''
         }
       },
       yaxis: {
+        automargin: true,
         title: {
           text: ''
         }
