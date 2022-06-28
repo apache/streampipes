@@ -16,10 +16,10 @@
   ~
   -->
 
-<div class="sp-dialog-container">
-    <div class="sp-dialog-content p-15">
+<div class="sp-dialog-container" fxLayout="column">
+    <div class="sp-dialog-content p-15" fxFlex="100" fxLayout="column">
         <div class="info-message">Pipeline health monitoring discovered the following issues:</div>
-        <div class="log-message">
+        <div class="log-message" fxFlex="100" fxLayout="column">
             <span *ngFor="let notification of pipeline.pipelineNotifications">
                 <p>{{notification}}</p>
             </span>
