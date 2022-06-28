@@ -29,7 +29,7 @@
     </div>
     <div class="h-100 dashboard-grid" fxLayout="column" id="slideViewOuter" fxFlex="100">
         <sp-data-explorer-dashboard-widget
-                [ngStyle]="{height: gridsterItemComponent.height -5 + 'px'}"
+                [ngStyle]="{height: gridsterItemComponent.height -15 + 'px'}"
                 [timeSettings]="timeSettings"
                 (updateCallback)="propagateItemUpdate($event)"
                 (deleteCallback)="propagateItemRemoval($event)"

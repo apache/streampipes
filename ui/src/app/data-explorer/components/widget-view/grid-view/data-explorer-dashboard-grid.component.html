@@ -24,6 +24,7 @@
     <ng-container *ngFor="let item of dashboard.widgets;let i=index">
         <gridster-item [item]="item" #gridsterItemComponent class="shadow">
             <sp-data-explorer-dashboard-widget
+                    [ngStyle]="{height: gridsterItemComponent.height -13 + 'px'}"
                     [timeSettings]="timeSettings"
                     (updateCallback)="propagateItemUpdate($event)"
                     (deleteCallback)="propagateItemRemoval($event)"

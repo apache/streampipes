@@ -87,7 +87,8 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   ngOnInit(): void {
-    const heightOffset = this.gridMode ? 55 : 55;
+    const heightOffset = this.gridMode ? 70 : 55;
+    const widthOffset = this.gridMode ? 10 : 0;
     this.showData = true;
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
@@ -110,7 +111,7 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
     if (!this.previewMode) {
       this.resizeSub = this.resizeService.resizeSubject.subscribe(info => {
         if (info.gridsterItem.id === this.dataExplorerWidget._id) {
-          this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - heightOffset);
+          this.onResize(this.gridsterItemComponent.width - widthOffset, this.gridsterItemComponent.height - heightOffset);
         }
       });
     }
@@ -119,7 +120,7 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
       this.updateData();
     });
     this.updateData();
-    this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - heightOffset);
+    this.onResize(this.gridsterItemComponent.width - widthOffset, this.gridsterItemComponent.height - heightOffset);
   }
 
   ngOnDestroy(): void {
