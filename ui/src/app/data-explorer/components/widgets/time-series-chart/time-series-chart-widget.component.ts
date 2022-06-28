@@ -104,7 +104,8 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
       y: 1.3,
       yanchor: 'top',
       font: { color: this.dataExplorerWidget.baseAppearanceConfig.textColor },
-      bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
+      plot_bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
+      paper_bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
       bordercolor: '#000'
     }];
 
