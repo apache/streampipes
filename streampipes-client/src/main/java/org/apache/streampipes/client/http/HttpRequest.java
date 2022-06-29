@@ -74,11 +74,11 @@ public abstract class HttpRequest<SO, DSO, DT> {
     return headers.toArray(new Header[0]);
   }
 
-  protected String makeUrl() {
+  protected String makeUrl() throws SpRuntimeException {
     return makeUrl(true);
   }
 
-  protected String makeUrl(boolean includePath) {
+  protected String makeUrl(boolean includePath) throws SpRuntimeException {
     String baseUrl = clientConfig.getConnectionConfig().getBaseUrl();
     if (includePath) {
       baseUrl = baseUrl + "/" + apiPath.toString();
@@ -87,7 +87,7 @@ public abstract class HttpRequest<SO, DSO, DT> {
     return baseUrl;
   }
 
-  public DT executeRequest() throws SpRuntimeException {
+  public DT executeRequest() {
     Request request = makeRequest(serializer);
     try {
       HttpResponse response = request.execute().returnResponse();
@@ -101,10 +101,8 @@ public abstract class HttpRequest<SO, DSO, DT> {
           throw new SpRuntimeException(status.getStatusCode() + " - " + status.getReasonPhrase());
         }
       }
-    } catch (NoHttpResponseException e) {
-      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available at " + makeUrl(false));
-    } catch (IOException e) {
-      throw new SpRuntimeException(e.getMessage());
+    } catch (IOException | SpRuntimeException e) {
+      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available");
     }
   }
 
