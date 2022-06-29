@@ -114,6 +114,14 @@ jobs:
           push: true
           tags: ${{ env.DOCKERHUB_APACHE_REPO }}/pipeline-elements-all-flink:${{ env.MVN_VERSION }}
 
+      - name: Build and Push Docker Image extensions-all-iiot
+        uses: docker/build-push-action@v2
+        with:
+          context: ./streampipes-extensions/streampipes-extensions-all-iiot
+          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
+          push: true
+          tags: ${{ env.DOCKERHUB_APACHE_REPO }}/extensions-all-iiot:${{ env.MVN_VERSION }}
+
       - name: Build and Push Docker Image pipeline-elements-all-jvm
         uses: docker/build-push-action@v2
         with:
