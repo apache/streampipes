@@ -34,10 +34,6 @@ import org.apache.streampipes.sinks.internal.jvm.notification.NotificationContro
 
 public class SinksInternalJvmInit extends StandaloneModelSubmitter {
 
-  public static void main(String[] args) {
-    new SinksInternalJvmInit().init();
-  }
-
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.internal.jvm",
