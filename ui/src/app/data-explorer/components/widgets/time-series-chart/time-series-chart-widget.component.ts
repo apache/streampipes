@@ -28,7 +28,23 @@ import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services
 })
 export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirective<TimeSeriesChartWidgetModel> implements OnInit {
 
-  presetColors: string[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
+  presetColors: string[] = [
+                            '#39B54A', 
+                            '#1B1464', 
+                            '#f44336', 
+                            '#FFEB3B', 
+                            '#000000', 
+                            '#433BFF', 
+                            '#FF00E4', 
+                            '#FD8B00', 
+                            '#FD8B00',
+                            '#00FFD5',
+                            '#581845',
+                            '#767676',
+                            '#4300BF',
+                            '#6699D4',
+                            '#D466A1'
+                          ];
 
   groupKeeper: {} = {};
 
