@@ -65,7 +65,7 @@ public class ExtensionsServiceEndpointGenerator {
       return getServiceEndpoints().get(0);
     } else {
       LOG.error("Could not find any service endpoints for appId {}, serviceTag {}", appId, this.spServiceUrlProvider.getServiceTag(appId).asString());
-      throw new NoServiceEndpointsAvailableException("Could not find any matching service endpoints");
+      throw new NoServiceEndpointsAvailableException("Could not find any matching service endpoints - are all software components running?");
     }
   }
 }

@@ -60,7 +60,7 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
       } catch (WorkerAdapterException e) {
           return serverError(e.getContent());
       } catch (Exception e) {
-          LOG.error("Error while guess schema for AdapterDescription: ", e);
+          LOG.error("Error while guessing the schema for AdapterDescription: {}", e.getMessage());
           return serverError(Notifications.error(e.getMessage()));
       }
   }

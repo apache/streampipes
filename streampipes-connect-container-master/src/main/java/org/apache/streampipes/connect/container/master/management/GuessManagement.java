@@ -26,7 +26,6 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.api.exception.WorkerAdapterException;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
@@ -48,8 +47,7 @@ public class GuessManagement {
         this.workerUrlProvider = new WorkerUrlProvider();
     }
 
-    public GuessSchema guessSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException, WorkerAdapterException {
-        try {
+    public GuessSchema guessSchema(AdapterDescription adapterDescription) throws ParseException, WorkerAdapterException, NoServiceEndpointsAvailableException, IOException {
             String workerUrl = workerUrlProvider.getWorkerBaseUrl(adapterDescription.getAppId());
 
             workerUrl = workerUrl + WorkerPaths.getGuessSchemaPath();
@@ -74,11 +72,6 @@ public class GuessManagement {
                     LOG.error(errorMessage.getElementName());
                     throw new WorkerAdapterException(errorMessage);
             }
-
-        } catch (IOException | NoServiceEndpointsAvailableException e) {
-            LOG.error(e.getMessage());
-            throw new AdapterException("Error in connect worker: ", e);
-        }
     }
 
 }
