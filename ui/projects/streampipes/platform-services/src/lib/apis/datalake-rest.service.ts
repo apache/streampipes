@@ -17,7 +17,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { DataLakeMeasure, PageResult, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
@@ -49,9 +49,9 @@ export class DatalakeRestService {
           queryParams: DatalakeQueryParameters,
           ignoreLoadingBar?: boolean): Observable<SpQueryResult> {
     const url = this.dataLakeUrl + '/measurements/' + index;
-    const headers = ignoreLoadingBar ? { ignoreLoadingBar: '' } : {};
+    const headers = ignoreLoadingBar ? {ignoreLoadingBar: ''} : {};
     // @ts-ignore
-    return this.http.get<SpQueryResult>(url, { params: queryParams }, headers);
+    return this.http.get<SpQueryResult>(url, {params: queryParams}, headers);
   }
 
 
@@ -62,7 +62,7 @@ export class DatalakeRestService {
       itemsPerPage, undefined, undefined, order, undefined, undefined);
 
     // @ts-ignore
-    return this.http.get<PageResult>(url, { params: queryParams });
+    return this.http.get<PageResult>(url, {params: queryParams});
   }
 
   getTagValues(index: string,
@@ -71,38 +71,38 @@ export class DatalakeRestService {
       .pipe(map(r => r as Map<string, string[]>));
   }
 
-  downloadRawData(index, format) {
-    const url = this.dataLakeUrl + '/measurements/' + index + '/download?format=' + format;
+  downloadRawData(index: string,
+                  format: string,
+                  startTime?: number,
+                  endTime?: number) {
+    const queryParams = (startTime && endTime) ? {format, startDate: startTime, endDate: endTime} : {format};
+    return this.buildDownloadRequest(index, queryParams);
+  }
 
+  downloadQueriedData(
+    index: string,
+    format: string,
+    queryParams: DatalakeQueryParameters) {
+
+    (queryParams as any).format = format;
+    return this.buildDownloadRequest(index, queryParams);
+
+  }
+
+  buildDownloadRequest(index: string,
+                       queryParams: any) {
+    const url = this.dataLakeUrl + '/measurements/' + index + '/download';
     const request = new HttpRequest('GET', url, {
       reportProgress: true,
-      responseType: 'text'
+      responseType: 'text',
+      params: this.toHttpParams(queryParams)
     });
 
     return this.http.request(request);
   }
 
-  downloadQueriedData(
-    index,
-    format,
-    startDate?,
-    endDate?,
-    columns?,
-    aggregationFunction?,
-    aggregationTimeUnit?,
-    aggregationTimeValue?,
-    groupingsTags?,
-    order?,
-    limit?,
-    offset?) {
-    const url = this.dataLakeUrl + '/measurements/' + index + '/download';
-    const timeInterval = aggregationTimeValue + aggregationTimeUnit;
-
-    const queryParams: DatalakeQueryParameters = this.getQueryParameters(columns, startDate, endDate, undefined,
-      limit, offset, groupingsTags, order, aggregationFunction, timeInterval);
-    (queryParams as any).format = format;
-
-    return this.http.get(url, {params: queryParams as any, responseType: 'text', reportProgress: true});
+  toHttpParams(queryParamObject: any): HttpParams {
+    return new HttpParams({fromObject: queryParamObject});
   }
 
   removeData(index: string) {

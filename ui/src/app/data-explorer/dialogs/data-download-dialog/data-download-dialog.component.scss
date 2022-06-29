@@ -16,7 +16,7 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+@import 'src/scss/sp/sp-dialog';
 
 example-radio-group {
     display: flex;
@@ -59,6 +59,10 @@ mat-dialog-content {
 
 .ml-35 {
     margin-left: 35px;
+}
+
+.mt-35 {
+    margin-top: 35px;
 }
 
 .form-field-date {

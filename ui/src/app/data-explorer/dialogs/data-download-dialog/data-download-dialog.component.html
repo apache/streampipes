@@ -22,11 +22,19 @@
             <mat-horizontal-stepper #stepper>
                 <mat-step>
                     <ng-template matStepLabel>Select Data</ng-template>
-                    <div>
+                    <div class="mt-10">
                         <mat-radio-group class="example-radio-group" [(ngModel)]="selectedData">
-                            <!--                    <mat-radio-button value="visible" class="example-radio-button">-->
-                            <!--                        Visible data in charts-->
-                            <!--                    </mat-radio-button>-->
+                            <mat-radio-button value="visible" class="example-radio-button">
+                                Currently configured query
+                            </mat-radio-button>
+                            <div fxLayout="column" fxLayoutAlign="start start" class="ml-35 mb-10" *ngIf="selectedData === 'visible' && dataConfig.sourceConfigs.length > 1">
+                                <h5>Select source (only one source can be exported in a single file)</h5>
+                                <mat-radio-group class="example-radio-group" [(ngModel)]="selectedQueryIndex">
+                                    <mat-radio-button [value]="i" *ngFor="let sourceConfig of dataConfig.sourceConfigs; let i = index">
+                                        {{sourceConfig.measureName}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
                             <mat-radio-button value="all" class="example-radio-button">
                                 All data in database
                             </mat-radio-button>
@@ -69,13 +77,14 @@
 
                 <mat-step>
                     <ng-template matStepLabel>Download</ng-template>
-                    <div div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="!downloadFinish">
-                        <mat-spinner></mat-spinner>
-                        <label *ngIf="downloadedMBs !== undefined">{{downloadedMBs      | number : '1.0-2' }} Mb</label>
+                    <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!downloadFinish" class="mt-35">
+                        <mat-spinner [diameter]="30" color="accent"></mat-spinner>
+                        <label *ngIf="downloadedMBs !== undefined">{{downloadedMBs | number : '1.0-2' }} Mb</label>
                         <button mat-button warn color="warn" (click)="cancelDownload()">Cancel</button>
                     </div>
-                    <div div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="downloadFinish">
+                    <div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="downloadFinish">
                         <mat-icon class="icon-check">check</mat-icon>
+                        <h5>Download successful</h5>
                     </div>
                 </mat-step>
             </mat-horizontal-stepper>
@@ -85,14 +94,13 @@
 
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button *ngIf="stepper.selectedIndex == 1" (click)="previousStep()">Previous</button>
+        <button mat-button mat-raised-button class="mat-basic" style="margin-right: 10px;" (click)="exitDialog()">Close</button>
+        <button mat-button mat-raised-button class="mat-basic" style="margin-right: 10px;" *ngIf="stepper.selectedIndex == 1" (click)="previousStep()">Previous</button>
         <button mat-button mat-raised-button *ngIf="stepper.selectedIndex < 1" color="accent" (click)="nextStep()">
             Next
         </button>
         <button mat-button mat-raised-button *ngIf="stepper.selectedIndex == 1" color="accent" (click)="downloadData()">
             Download
-        </button>
-        <button mat-button mat-raised-button *ngIf="downloadFinish" (click)="exitDialog()">Close
         </button>
     </div>
 </div>

@@ -19,14 +19,14 @@
 import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
-  DashboardItem,
+  DashboardItem, DataExplorerDataConfig,
   DataExplorerWidgetModel,
   DataLakeMeasure,
   DataViewDataExplorerService,
   DateRange,
   TimeSettings
 } from '@streampipes/platform-services';
-import { DataDownloadDialogComponent } from '../data-download-dialog/data-download-dialog.component';
+import { DataDownloadDialogComponent } from '../../dialogs/data-download-dialog/data-download-dialog.component';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
@@ -157,6 +157,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
       data: {
         'index': this.dataLakeMeasure.measureName,
         'date': DateRange.fromTimeSettings(this.timeSettings),
+        'dataConfig': this.configuredWidget.dataConfig as DataExplorerDataConfig
       }
     });
   }
