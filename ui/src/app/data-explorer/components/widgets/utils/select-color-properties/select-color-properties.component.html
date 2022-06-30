@@ -38,7 +38,7 @@
                       [checked]="isSelected(field)" 
                       (change)="toggleFieldSelection(field)">
             <b>{{field.runtimeName}}</b>
-            {{'(' + (field.aggregation ? field.aggregation + ', ' : '') + field.measure + ')'}}
+            {{'(' + (field.aggregation ? field.aggregation + ', ' : '') + field.measure + ' #' + (field.sourceIndex + 1).toString() + ')'}}
         </mat-checkbox>
         <div fxFlex 
              fxLayoutAlign="end center" 
