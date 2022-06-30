@@ -20,15 +20,16 @@ package org.apache.streampipes.service.extensions.base.client;
 import org.apache.streampipes.client.credentials.CredentialsProvider;
 import org.apache.streampipes.client.credentials.StreamPipesTokenCredentials;
 import org.apache.streampipes.client.model.ClientConnectionUrlResolver;
-import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.constants.DefaultEnvValues;
+import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.networking.Networking;
-import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +48,7 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
   }
 
   @Override
-  public String getBaseUrl() {
+  public String getBaseUrl() throws SpRuntimeException {
     List<String> baseUrls = findClientServices();
     if (baseUrls.size() > 0) {
       if (Envs.SP_DEBUG.exists()) {
