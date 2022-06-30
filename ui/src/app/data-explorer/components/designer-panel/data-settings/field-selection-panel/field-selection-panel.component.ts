@@ -60,8 +60,9 @@ export class FieldSelectionPanelComponent implements OnInit {
     this.sourceConfig.measure.eventSchema.eventProperties.forEach(property => {
       // this ensures that dimension properties are not aggregated, this is not possible with the influxdb, See [STREAMPIPES-524]
       if (this.sourceConfig.queryType === 'raw' || property.propertyScope !== 'DIMENSION_PROPERTY') {
-        const isSelected = checkFields.some(v => (v.runtimeName === property.runtimeName && v.selected));
-        this.addField(property, isSelected);
+        const fieldConfig = checkFields.find(field => field.runtimeName === property.runtimeName);
+        const isSelected = fieldConfig && fieldConfig.selected;
+        this.addField(property, isSelected, fieldConfig);
       }
     });
   }
@@ -79,12 +80,12 @@ export class FieldSelectionPanelComponent implements OnInit {
     this.widgetConfigService.notify({widgetId: this.widgetId, refreshData: true, refreshView: true});
   }
 
-  addField(property: EventPropertyUnion, isSelected = false) {
+  addField(property: EventPropertyUnion, isSelected = false, fieldConfig: FieldConfig) {
     const selection: FieldConfig = {
       runtimeName: property.runtimeName,
       selected: isSelected,
       numeric: this.fieldProvider.isNumber(property)};
-    selection.aggregations = [this.findDefaultAggregation(property)];
+    selection.aggregations = fieldConfig && fieldConfig.aggregations ? fieldConfig.aggregations : [this.findDefaultAggregation(property)];
     this.sourceConfig.queryConfig.fields.push(selection);
   }
 
