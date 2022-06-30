@@ -21,7 +21,7 @@
     <mat-select [ngModel]="selectedProperty" (selectionChange)="triggerSelectedProperty($event.value)" [compareWith]="compare">
         <mat-option *ngFor="let column of availableProperties" [value]="column" style="background-color: #FFFFFF">
             <b>{{column.runtimeName}}</b>
-            {{'(' +(column.aggregation ? column.aggregation + ', ': '') + column.measure +')'}}
+            {{'(' +(column.aggregation ? column.aggregation + ', ': '') + column.measure + ' #' + (column.sourceIndex + 1).toString() + ')'}}
         </mat-option>
     </mat-select>
 </mat-form-field>
