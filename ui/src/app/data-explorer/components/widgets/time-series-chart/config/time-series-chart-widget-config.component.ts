@@ -61,6 +61,32 @@ export class TimeSeriesChartWidgetConfigComponent
 
   setSelectedProperties(selectedColumns: DataExplorerField[]) {
     this.currentlyConfiguredWidget.visualizationConfig.selectedTimeSeriesChartProperties = selectedColumns;
+
+    const numericPlusBooleanFields = this.fieldProvider.numericFields.concat(this.fieldProvider.booleanFields);
+
+    const currentColors =  this.currentlyConfiguredWidget.visualizationConfig.chosenColor;
+    const currentNames =  this.currentlyConfiguredWidget.visualizationConfig.displayName;
+    const currentTypes =  this.currentlyConfiguredWidget.visualizationConfig.displayType;
+    const currentAxis =  this.currentlyConfiguredWidget.visualizationConfig.chosenAxis;
+
+    const lenBefore = Object.keys(currentAxis).length
+
+    numericPlusBooleanFields.map((field, index) => {
+      const name = field.fullDbName + field.sourceIndex
+      if (!(name in currentColors)) {
+        console.log("choosing color " + lenBefore+index + "   " + this.presetColors[lenBefore+index]);
+        currentColors[name] = this.presetColors[lenBefore+index];
+        currentNames[name] = field.fullDbName;
+        currentTypes[name] = 'lines';
+        currentAxis[name] = 'left';
+      }
+    });
+
+    this.currentlyConfiguredWidget.visualizationConfig.chosenColor = currentColors;
+    this.currentlyConfiguredWidget.visualizationConfig.displayName = currentNames;
+    this.currentlyConfiguredWidget.visualizationConfig.displayType = currentTypes;
+    this.currentlyConfiguredWidget.visualizationConfig.chosenAxis = currentAxis
+
     // this.currentlyConfiguredWidget.dataConfig.yKeys = this.getRuntimeNames(selectedColumns);
     this.triggerDataRefresh();
   }
@@ -98,6 +124,7 @@ export class TimeSeriesChartWidgetConfigComponent
     const axes = {};
 
     numericPlusBooleanFields.map((field, index) => {
+      console.log("field full db name " + field.fullDbName)
       colors[field.fullDbName + field.sourceIndex] = this.presetColors[index];
       names[field.fullDbName + field.sourceIndex] = field.fullDbName;
       dTypes[field.fullDbName  + field.sourceIndex] = 'lines';
