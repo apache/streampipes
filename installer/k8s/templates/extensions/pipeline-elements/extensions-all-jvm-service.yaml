@@ -16,12 +16,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: pipeline-elements-all-jvm
+  name: extensions-all-jvm
   labels:
-    name: pipeline-elements-all-jvm
+    name: extensions-all-jvm
 spec:
   selector:
-    app: pipeline-elements-all-jvm
+    app: extensions-all-jvm
   ports:
     - name: main
       protocol: TCP

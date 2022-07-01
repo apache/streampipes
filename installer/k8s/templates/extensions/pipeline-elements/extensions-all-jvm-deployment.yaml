@@ -16,20 +16,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: connect-adapters
+  name: extensions-all-jvm
 spec:
   selector:
     matchLabels:
-      app: connect-adapters
+      app: extensions-all-jvm
   replicas: 1
   template:
     metadata:
       labels:
-        app: connect-adapters
-    spec:         
+        app: extensions-all-jvm
+    spec:
+      volumes:
+        - name: files-pv
+          persistentVolumeClaim:
+            claimName: files-pvc
       containers:
-        - name: connect-adapters
-          image: {{ .Values.streampipes.registry }}/connect-adapters:{{ .Values.streampipes.version }}
+        - name: extensions-all-jvm
+          image: {{ .Values.streampipes.registry }}/extensions-all-jvm:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8090
+          volumeMounts:
+            - mountPath: "/spImages"
+              name: files-pv
