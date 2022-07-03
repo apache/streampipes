@@ -15,8 +15,9 @@
 
 # lite or full (default: lite)
 deployment: lite
+preferredBroker: "kafka"
 pullPolicy: "IfNotPresent"
-persistentVolumeReclaimPolicy: "Retain"
+persistentVolumeReclaimPolicy: "Delete"
 persistentVolumeAccessModes: "ReadWriteOnce"
 
 streampipes:

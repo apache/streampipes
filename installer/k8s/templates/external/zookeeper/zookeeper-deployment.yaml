@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if (eq .Values.deployment "full") }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,4 +42,3 @@ spec:
           volumeMounts:
             - mountPath: "/opt/zookeeper-{{ .Values.external.zookeeperVersion }}/data"
               name: zookeeper-pv
-{{- end }}
