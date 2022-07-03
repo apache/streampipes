@@ -60,8 +60,7 @@ public class WorkerPaths {
     SpServiceUrlProvider serviceUrlProvider = SpServiceUrlProvider.ADAPTER;
     String endpointUrl = new ExtensionsServiceEndpointGenerator(appId, serviceUrlProvider).getEndpointResourceUrl();
     URI uri = new URI(endpointUrl);
-    String baseUrl = uri.getScheme() + "://" + uri.getAuthority();
-    return baseUrl;
+    return uri.getScheme() + "://" + uri.getAuthority();
   }
 
 

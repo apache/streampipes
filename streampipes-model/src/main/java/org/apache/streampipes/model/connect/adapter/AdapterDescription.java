@@ -162,8 +162,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.adapterType = adapterType;
     }
 
-    public List getValueRules() {
-        List tmp = new ArrayList<>();
+    public List<TransformationRuleDescription> getValueRules() {
+        var tmp = new ArrayList<TransformationRuleDescription>();
         rules.forEach(rule -> {
             if(rule instanceof ValueTransformationRuleDescription)
                 tmp.add(rule);
@@ -171,8 +171,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         return tmp;
     }
 
-    public List getStreamRules() {
-        List tmp = new ArrayList<>();
+    public List<TransformationRuleDescription> getStreamRules() {
+        var tmp = new ArrayList<TransformationRuleDescription>();
         rules.forEach(rule -> {
             if(rule instanceof StreamTransformationRuleDescription)
                 tmp.add(rule);
@@ -180,8 +180,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         return tmp;
     }
 
-    public List getSchemaRules() {
-        List tmp = new ArrayList<>();
+    public List<TransformationRuleDescription> getSchemaRules() {
+        var tmp = new ArrayList<TransformationRuleDescription>();
         rules.forEach(rule -> {
             if(rule instanceof SchemaTransformationRuleDescription)
                 tmp.add(rule);
@@ -231,10 +231,19 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.selectedEndpointUrl = selectedEndpointUrl;
     }
 
+    /**
+     * @deprecated check if the service group can be removed as a single pipeline element
+     * can correspond to different service groups
+     */
+    @Deprecated
     public String getCorrespondingServiceGroup() {
         return correspondingServiceGroup;
     }
 
+    /**
+     * @deprecated check if the service group can be removed as a single pipeline element
+     * can correspond to different service groups
+     */
     public void setCorrespondingServiceGroup(String correspondingServiceGroup) {
         this.correspondingServiceGroup = correspondingServiceGroup;
     }

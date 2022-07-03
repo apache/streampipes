@@ -18,16 +18,15 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.value.*;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +34,10 @@ import java.util.Map;
 
 public class TransformValueAdapterPipelineElement implements IAdapterPipelineElement {
 
-    private ValueEventTransformer eventTransformer;
-    private Logger logger = LoggerFactory.getLogger(TransformValueAdapterPipelineElement.class);
+    private final ValueEventTransformer eventTransformer;
+    private final static Logger logger = LoggerFactory.getLogger(TransformValueAdapterPipelineElement.class);
 
-    public TransformValueAdapterPipelineElement(List<ValueTransformationRuleDescription> transformationRuleDescriptions) {
+    public TransformValueAdapterPipelineElement(List<? extends TransformationRuleDescription> transformationRuleDescriptions) {
         List<ValueTransformationRule> rules = new ArrayList<>();
 
         // transforms description to actual rules
