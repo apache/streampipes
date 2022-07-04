@@ -24,7 +24,6 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { FormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
-import { VersionInfo } from '../../../info/versions/service/version-info.model';
 import { AuthService } from '../../../services/auth.service';
 import { AppConstants } from '../../../services/app.constants';
 
@@ -39,7 +38,6 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
 
   userEmail;
-  versionInfo: VersionInfo;
   darkMode: boolean;
 
   appearanceControl: FormControl;
@@ -54,7 +52,6 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   }
 
   ngOnInit(): void {
-    this.getVersion();
     this.authService.user$.subscribe(user => {
       this.userEmail = user.displayName;
       this.profileService.getUserProfile(user.username).subscribe(userInfo => {
@@ -81,11 +78,6 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
     }
   }
 
-  closeFeedbackWindow() {
-    // this.feedbackOpen = false;
-    this.feedbackOpen.closeMenu();
-  }
-
   openDocumentation() {
     window.open('https://streampipes.apache.org/docs', '_blank');
   }
@@ -103,12 +95,6 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   logout() {
     this.authService.logout();
     this.router.navigate(['login']);
-  }
-
-  getVersion() {
-    this.restApi.getVersionInfo().subscribe((response) => {
-      this.versionInfo = response as VersionInfo;
-    });
   }
 
 }

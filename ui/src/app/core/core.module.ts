@@ -22,7 +22,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { StreampipesComponent } from './components/streampipes/streampipes.component';
-import { FeedbackComponent } from './components/feedback/feedback.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
@@ -60,7 +59,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ],
     declarations: [
         StreampipesComponent,
-        FeedbackComponent,
         IconbarComponent,
         ToolbarComponent
     ],
