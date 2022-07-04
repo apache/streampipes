@@ -98,22 +98,28 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   ) { }
 
   public ngOnInit() {
-    combineLatest([this.route.params, this.route.queryParams, this.authService.user$]).subscribe(
-      ([params, qp, user]) => {
-        this.hasDataExplorerWritePrivileges = this.authService.hasRole(
-          UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW
-        );
-        this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
-          UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW
-        );
-        if (qp.action === 'edit' && this.hasDataExplorerWritePrivileges) {
-          this.editMode = true;
-        }
-        const startTime = params.startTime;
-        const endTime = params.endTime;
-        this.getDashboard(params.id, startTime, endTime);
+
+
+    const params = this.route.snapshot.params;
+    const queryParams = this.route.snapshot.queryParams;
+
+    const startTime = params.startTime;
+    const endTime = params.endTime;
+  
+    this.getDashboard(params.id, startTime, endTime);
+
+
+    this.authService.user$.subscribe(user => {
+      this.hasDataExplorerWritePrivileges = this.authService.hasRole(
+        UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW
+      );
+      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(
+        UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW
+      );
+      if (queryParams.action === 'edit' && this.hasDataExplorerWritePrivileges) {
+        this.editMode = true;
       }
-    );
+    });
   }
 
   triggerResize() {
