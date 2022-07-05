@@ -34,6 +34,22 @@
 <!--            <div>-->
 <!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->
 <!--            </div>-->
+            <div [ngClass]="'notifications' === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'"
+                 *ngIf="notificationsVisible" class="h-100">
+                <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar iconbar-size"
+                        (click)="go('notifications')"
+                        fxLayout fxLayoutAlign="center center"
+                        matTooltip="Notifications" matTooltipPosition="bottom">
+                    <mat-icon [matBadge]="unreadNotificationCount"
+                              matBadgeColor="accent"
+                              matBadgePosition="below after"
+                              [matBadgeHidden]="unreadNotificationCount == 0"
+                              [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
+                              data-cy="navigation-icon">chat
+
+                    </mat-icon>
+                </button>
+            </div>
             <div style="height:100%;">
                 <div [ngClass]="accountMenuOpen.menuOpen ? 'sp-navbar-item-selected' : 'sp-navbar-item'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
                     <button mat-button mat-icon-button

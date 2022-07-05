@@ -31,10 +31,8 @@ import { AppConstants } from '../../../services/app.constants';
   templateUrl: './iconbar.component.html',
   styleUrls: ['./iconbar.component.scss']
 })
-export class IconbarComponent extends BaseNavigationComponent implements OnInit, OnDestroy {
+export class IconbarComponent extends BaseNavigationComponent implements OnInit {
 
-  unreadNotificationCount = 0;
-  unreadNotificationsSubscription: Subscription;
 
   constructor(router: Router,
               authService: AuthService,
@@ -46,18 +44,6 @@ export class IconbarComponent extends BaseNavigationComponent implements OnInit,
 
   ngOnInit(): void {
     super.onInit();
-    this.unreadNotificationsSubscription = timer(0, 10000).pipe(
-      exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
-      .subscribe(response => {
-        this.notificationCountService.unreadNotificationCount$.next(response.count);
-      });
 
-    this.notificationCountService.unreadNotificationCount$.subscribe(count => {
-      this.unreadNotificationCount = count;
-    });
-  }
-
-  ngOnDestroy() {
-    this.unreadNotificationsSubscription.unsubscribe();
   }
 }

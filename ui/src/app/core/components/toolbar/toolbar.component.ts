@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BaseNavigationComponent } from '../base-navigation.component';
 import { Router } from '@angular/router';
 import { RestApi } from '../../../services/rest-api.service';
@@ -26,13 +26,16 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
 import { AuthService } from '../../../services/auth.service';
 import { AppConstants } from '../../../services/app.constants';
+import { Subscription, timer } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
+import { NotificationCountService } from '../../../services/notification-count-service';
 
 @Component({
   selector: 'toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent extends BaseNavigationComponent implements OnInit {
+export class ToolbarComponent extends BaseNavigationComponent implements OnInit, OnDestroy {
 
   @ViewChild('feedbackOpen') feedbackOpen: MatMenuTrigger;
   @ViewChild('accountMenuOpen') accountMenuOpen: MatMenuTrigger;
@@ -42,16 +45,29 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
 
   appearanceControl: FormControl;
 
+  unreadNotificationCount = 0;
+  unreadNotificationsSubscription: Subscription;
+
   constructor(router: Router,
               private profileService: ProfileService,
               private restApi: RestApi,
               private overlay: OverlayContainer,
               authService: AuthService,
-              appConstants: AppConstants) {
+              appConstants: AppConstants,
+              public notificationCountService: NotificationCountService) {
     super(authService, router, appConstants);
   }
 
   ngOnInit(): void {
+    this.unreadNotificationsSubscription = timer(0, 10000).pipe(
+      exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
+      .subscribe(response => {
+        this.notificationCountService.unreadNotificationCount$.next(response.count);
+      });
+
+    this.notificationCountService.unreadNotificationCount$.subscribe(count => {
+      this.unreadNotificationCount = count;
+    });
     this.authService.user$.subscribe(user => {
       this.userEmail = user.displayName;
       this.profileService.getUserProfile(user.username).subscribe(userInfo => {
@@ -95,6 +111,10 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit 
   logout() {
     this.authService.logout();
     this.router.navigate(['login']);
+  }
+
+  ngOnDestroy() {
+    this.unreadNotificationsSubscription.unsubscribe();
   }
 
 }
