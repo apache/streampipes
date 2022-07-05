@@ -6,3 +6,6 @@ title.description=
 
 content.title=Content
 content.description=Enter the notification text. You can  use placeholders like #fieldName# to add the value of a stream variable.
+
+silent-period.title=Silent Period [min]
+silent-period.description=The minimum number of minutes between two consecutive notifications that are sent.
