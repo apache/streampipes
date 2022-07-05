@@ -41,7 +41,7 @@ export class PipelineInvocationBuilder {
 
   public setFreeTextStaticProperty(name: string, value: string) {
     this.pipelineTemplateInvocation.staticProperties.forEach(property => {
-      if (property instanceof FreeTextStaticProperty && 'domId2' + name === property.internalName) {
+      if (property instanceof FreeTextStaticProperty && 'jsplumb_domId2' + name === property.internalName) {
         property.value = value;
       }
     });
@@ -51,7 +51,7 @@ export class PipelineInvocationBuilder {
 
   public setMappingPropertyUnary(name: string, value: string) {
     this.pipelineTemplateInvocation.staticProperties.forEach(property => {
-      if (property instanceof MappingPropertyUnary && 'domId2' + name === property.internalName) {
+      if (property instanceof MappingPropertyUnary && 'jsplumb_domId2' + name === property.internalName) {
         property.selectedProperty = value;
       }
     });
