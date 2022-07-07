@@ -20,6 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../shared/configuration.service';
 import { MessagingSettings } from '../shared/messaging-settings.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { SpConfigurationTabs } from '../configuration-tabs';
 
 @Component({
     selector: 'messaging-configuration',
@@ -27,6 +28,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
     styleUrls: ['./messaging-configuration.component.css']
 })
 export class MessagingConfigurationComponent implements OnInit {
+
+    tabs = SpConfigurationTabs.getTabs();
 
     messagingSettings: MessagingSettings;
     loadingCompleted = false;

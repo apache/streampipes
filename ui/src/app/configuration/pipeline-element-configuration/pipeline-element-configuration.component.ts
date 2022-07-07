@@ -23,85 +23,90 @@ import { StreampipesPeContainer } from '../shared/streampipes-pe-container.model
 import { StreampipesPeContainerConifgs } from '../shared/streampipes-pe-container-configs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SpConfigurationTabs } from '../configuration-tabs';
 
 @Component({
-    selector: 'pipeline-element-configuration',
-    templateUrl: './pipeline-element-configuration.component.html',
-    styleUrls: ['./pipeline-element-configuration.component.css'],
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ]
+  selector: 'pipeline-element-configuration',
+  templateUrl: './pipeline-element-configuration.component.html',
+  styleUrls: ['./pipeline-element-configuration.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ]
 })
 export class PipelineElementConfigurationComponent {
 
-    consulServices: StreampipesPeContainer[];
+  tabs = SpConfigurationTabs.getTabs();
 
-    displayedColumns: string[] = ['status', 'name', 'action'];
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    dataSource = new MatTableDataSource<StreampipesPeContainer>();
+  consulServices: StreampipesPeContainer[];
 
-    expandedElement: any;
+  displayedColumns: string[] = ['status', 'name', 'action'];
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  dataSource = new MatTableDataSource<StreampipesPeContainer>();
 
-    selectedConsulService: StreampipesPeContainer;
-    consulServiceSelected = false;
+  expandedElement: any;
 
-    constructor(private configurationService: ConfigurationService) {
-        this.getConsulServices();
+  selectedConsulService: StreampipesPeContainer;
+  consulServiceSelected = false;
+
+  constructor(private configurationService: ConfigurationService) {
+    this.getConsulServices();
+  }
+
+  getConsulServices(): void {
+    this.configurationService.getConsulServices()
+      .subscribe(response => {
+        const sortedServices = this.sort(response);
+        this.consulServices = sortedServices;
+        this.dataSource.data = sortedServices;
+      }, error => {
+        console.error(error);
+      });
+  }
+
+  sort(consulServices: StreampipesPeContainer[]): StreampipesPeContainer[] {
+    if (!consulServices || consulServices.length === 0) {
+      return null;
     }
 
-    getConsulServices(): void {
-        this.configurationService.getConsulServices()
-            .subscribe( response => {
-                const sortedServices = this.sort(response);
-                this.consulServices = sortedServices;
-                this.dataSource.data = sortedServices;
-            }, error => {
-                console.error(error);
-            });
+    consulServices.sort((a: StreampipesPeContainer, b: StreampipesPeContainer) => {
+      if (a.name < b.name) {
+        return -1;
+      } else if (a.name > b.name) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    consulServices.forEach(cs => cs.configs.sort((a: StreampipesPeContainerConifgs, b: StreampipesPeContainerConifgs) => {
+      if (a.key < b.key) {
+        return -1;
+      } else if (a.key > b.key) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }));
+    return consulServices;
+  }
+
+  updateConsulService(consulService: StreampipesPeContainer): void {
+    this.configurationService.updateConsulService(consulService)
+      .subscribe(response => {
+
+      }, error => {
+        console.error(error);
+      });
+  }
+
+  expand(element: StreampipesPeContainer) {
+    if (this.expandedElement === element) {
+      this.expandedElement = undefined;
+    } else {
+      this.expandedElement = element;
     }
-
-    sort(consulServices: StreampipesPeContainer[]): StreampipesPeContainer[] {
-        if (!consulServices || consulServices.length === 0) { return null; }
-
-        consulServices.sort((a: StreampipesPeContainer, b: StreampipesPeContainer) => {
-            if (a.name < b.name) {
-                return -1;
-            } else if (a.name > b.name) {
-                return 1;
-            } else {
-                return 0;
-            }
-        });
-        consulServices.forEach(cs => cs.configs.sort((a: StreampipesPeContainerConifgs, b: StreampipesPeContainerConifgs) => {
-            if (a.key < b.key) {
-                return -1;
-            } else if (a.key > b.key) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }));
-        return consulServices;
-    }
-
-    updateConsulService(consulService: StreampipesPeContainer): void {
-        this.configurationService.updateConsulService(consulService)
-            .subscribe(response => {
-
-            }, error => {
-                console.error(error);
-            });
-    }
-
-    expand(element: StreampipesPeContainer) {
-        if (this.expandedElement === element) {
-            this.expandedElement = undefined;
-        } else {
-            this.expandedElement = element;
-        }
-    }
+  }
 }

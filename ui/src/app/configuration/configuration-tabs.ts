@@ -16,21 +16,18 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
-import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpNavigationItem } from '@streampipes/shared-ui';
 
-@Component({
-  selector: 'sp-security-configuration',
-  templateUrl: './security-configuration.component.html',
-  styleUrls: ['./security-configuration.component.scss']
-})
-export class SecurityConfigurationComponent implements OnInit {
+export class SpConfigurationTabs {
 
-  tabs = SpConfigurationTabs.getTabs();
-
-  constructor() {}
-
-  ngOnInit(): void {
+  public static getTabs(): SpNavigationItem[] {
+    return [
+      {itemId: 'general', itemTitle: 'General', itemLink: ['configuration', 'general']},
+      {itemId: 'datalake', itemTitle: 'Data Lake', itemLink: ['configuration', 'datalake']},
+      {itemId: 'email', itemTitle: 'Mail', itemLink: ['configuration', 'email']},
+      {itemId: 'messaging', itemTitle: 'Messaging', itemLink: ['configuration', 'messaging']},
+      {itemId: 'pipelineelement', itemTitle: 'Pipeline Element Configuration', itemLink: ['configuration', 'pipelineelement']},
+      {itemId: 'security', itemTitle: 'Security', itemLink: ['configuration', 'security']}
+    ];
   }
-
 }

@@ -17,7 +17,7 @@
   -->
 
 
-<sp-configuration-component [activeLink]="'datalake'">
+<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'datalake'">
     <div fxLayout="row" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section title="Data Lake Settings" subtitle="Truncate and delete persisted data streams">
@@ -94,4 +94,4 @@
             </sp-split-section>
         </div>
     </div>
-</sp-configuration-component>
+</sp-basic-nav-tabs>

@@ -32,6 +32,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
+import { SpConfigurationTabs } from '../configuration-tabs';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -39,6 +40,8 @@ import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/de
   styleUrls: ['./datalake-configuration.component.css']
 })
 export class DatalakeConfigurationComponent implements OnInit {
+
+  tabs = SpConfigurationTabs.getTabs();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   pageSize = 1;

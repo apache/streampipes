@@ -55,6 +55,7 @@ import { EmailConfigurationComponent } from "./email-configuration/email-configu
 import { GeneralConfigurationComponent } from "./general-configuration/general-configuration.component";
 import { SecurityAuthenticationConfigurationComponent } from "./security-configuration/authentication-configuration/authentication-configuration.component";
 import { RouterModule } from "@angular/router";
+import { SharedUiModule } from '../../../dist/streampipes/shared-ui';
 
 @NgModule({
   imports: [
@@ -110,6 +111,7 @@ import { RouterModule } from "@angular/router";
         ]
       }
     ]),
+    SharedUiModule,
   ],
   declarations: [
     ConfigurationComponent,

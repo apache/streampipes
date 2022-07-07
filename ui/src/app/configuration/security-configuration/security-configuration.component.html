@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-component [activeLink]="'security'">
+<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'security'">
     <div fxLayout="column" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section title="User Accounts" subtitle="Add and edit user accounts">
@@ -46,4 +46,4 @@
             </sp-split-section>
         </div>
     </div>
-</sp-configuration-component>
+</sp-basic-nav-tabs>

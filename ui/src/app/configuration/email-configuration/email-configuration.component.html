@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-component [activeLink]="'email'">
+<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'email'">
     <div fxLayout="column" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" *ngIf="formReady">
             <sp-split-section title="Mail Settings" subtitle="Settings to connect to a mail server">
@@ -113,4 +113,4 @@
 
 
     </div>
-</sp-configuration-component>
+</sp-basic-nav-tabs>

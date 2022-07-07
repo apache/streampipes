@@ -16,7 +16,7 @@
   ~
   -->
 
-<sp-configuration-component [activeLink]="'pipelineelement'">
+<sp-basic-nav-tabs [spNavigationItems]="tabs" [activeLink]="'pipelineelement'">
     <div fxLayout="row" class="page-container-padding">
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section title="Pipeline Element Configuration"
@@ -75,4 +75,4 @@
             </sp-split-section>
         </div>
     </div>
-</sp-configuration-component>
+</sp-basic-nav-tabs>

@@ -24,6 +24,7 @@ import { AvailableRolesService } from '../../services/available-roles.service';
 import { RoleDescription } from '../../_models/auth.model';
 import { UserRole } from '../../_enums/user-role.enum';
 import { AppConstants } from '../../services/app.constants';
+import { SpConfigurationTabs } from '../configuration-tabs';
 
 @Component({
   selector: 'sp-general-configuration',
@@ -31,6 +32,8 @@ import { AppConstants } from '../../services/app.constants';
   styleUrls: ['./general-configuration.component.scss']
 })
 export class GeneralConfigurationComponent implements OnInit {
+
+  tabs = SpConfigurationTabs.getTabs();
 
   parentForm: FormGroup;
   formReady = false;

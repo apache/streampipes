@@ -19,6 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
+import { SpConfigurationTabs } from '../configuration-tabs';
 
 @Component({
   selector: 'sp-email-configuration',
@@ -26,6 +27,8 @@ import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
   styleUrls: ['./email-configuration.component.scss']
 })
 export class EmailConfigurationComponent implements OnInit {
+
+  tabs = SpConfigurationTabs.getTabs();
 
   parentForm: FormGroup;
 
