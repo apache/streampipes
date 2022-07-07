@@ -16,19 +16,28 @@
  *
  */
 
-export * from './lib/shared-ui.module';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { SpNavigationItem } from '../../models/sp-navigation.model';
 
-export * from './lib/dialog/base-dialog/base-dialog.model';
-export * from './lib/dialog/base-dialog/base-dialog.service';
-export * from './lib/dialog/base-dialog/dialog-ref';
+@Component({
+  selector: 'sp-basic-nav-tabs',
+  templateUrl: './basic-nav-tabs.component.html',
+  styleUrls: ['./basic-nav-tabs.component.scss']
+})
+export class SpBasicNavTabsComponent {
 
-export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
-export * from './lib/dialog/panel-dialog/panel-dialog.component';
-export * from './lib/dialog/standard-dialog/standard-dialog.component';
+  @Input()
+  spNavigationItems: SpNavigationItem[];
 
-export * from './lib/components/basic-view/basic-view.component';
+  @Input()
+  activeLink: string;
 
-export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
-export * from './lib/models/sp-navigation.model';
+  constructor(private router: Router) {
 
+  }
 
+  navigateTo(spNavigationItem: SpNavigationItem) {
+    this.router.navigate(spNavigationItem.itemLink);
+  }
+}

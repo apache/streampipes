@@ -28,25 +28,34 @@ import { SpBasicViewComponent } from './components/basic-view/basic-view.compone
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SpBasicNavTabsComponent } from './components/basic-nav-tabs/basic-nav-tabs.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
     ConfirmDialogComponent,
     PanelDialogComponent,
     StandardDialogComponent,
-    SpBasicViewComponent
+    SpBasicViewComponent,
+    SpBasicNavTabsComponent
   ],
   imports: [
     CommonModule,
     FlexLayoutModule,
     MatButtonModule,
     MatIconModule,
+    MatTabsModule,
     MatTooltipModule,
     PortalModule,
-    OverlayModule
+    OverlayModule,
   ],
   exports: [
-    ConfirmDialogComponent, PanelDialogComponent, StandardDialogComponent, SpBasicViewComponent
+    ConfirmDialogComponent,
+    PanelDialogComponent,
+    StandardDialogComponent,
+    SpBasicViewComponent,
+    SpBasicNavTabsComponent,
   ]
 })
-export class SharedUiModule { }
+export class SharedUiModule {
+}

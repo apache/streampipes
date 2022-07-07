@@ -16,19 +16,28 @@
  *
  */
 
-export * from './lib/shared-ui.module';
+.page-container-padding-inner {
+  padding: 10px;
+}
 
-export * from './lib/dialog/base-dialog/base-dialog.model';
-export * from './lib/dialog/base-dialog/base-dialog.service';
-export * from './lib/dialog/base-dialog/dialog-ref';
+.sp-bg-lightgray {
+  background-color: var(--color-bg-1);
+}
 
-export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
-export * from './lib/dialog/panel-dialog/panel-dialog.component';
-export * from './lib/dialog/standard-dialog/standard-dialog.component';
+.sp-tab-bg {
+  background-color: var(--color-bg-1);
+}
 
-export * from './lib/components/basic-view/basic-view.component';
+.page-container {
+  margin: 10px;
+  border: 1px solid var(--color-bg-3);
+  min-height: calc(100% - 20px);
+}
 
-export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
-export * from './lib/models/sp-navigation.model';
+.page-container-padding-inner {
+  margin: 10px;
+}
 
-
+.upper-case {
+  text-transform: uppercase;
+}
