@@ -28,7 +28,7 @@ import {
     EventPropertyUnion,
     EventSchema
 } from '@streampipes/platform-services';
-import { EditEventPropertyComponent } from '../../../dialog/edit-event-property/edit-event-property.component';
+import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 
 @Component({
   selector: 'event-property-row',

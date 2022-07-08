@@ -28,11 +28,11 @@ import {
 } from '@streampipes/platform-services';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { AdapterStartedDialog } from '../../dialog/adapter-started/adapter-started-dialog.component';
+import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-started-dialog.component';
 import { PanelType, DialogService } from '@streampipes/shared-ui';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { ConnectService } from '../../services/connect.service';
-import { TimestampPipe } from '../../filter/timestamp.pipe';
+import { ShepherdService } from '../../../../services/tour/shepherd.service';
+import { ConnectService } from '../../../services/connect.service';
+import { TimestampPipe } from '../../../filter/timestamp.pipe';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({

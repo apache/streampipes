@@ -41,7 +41,7 @@ import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { RestService } from '../../services/rest.service';
-import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
+import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { IconService } from '../../services/icon.service';
 import { ActivatedRoute, Router } from '@angular/router';

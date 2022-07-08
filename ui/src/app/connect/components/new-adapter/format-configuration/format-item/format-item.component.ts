@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ShepherdService } from '../../../services/tour/shepherd.service';
+import { ShepherdService } from '../../../../../services/tour/shepherd.service';
 import { FormatDescription } from '@streampipes/platform-services';
 
 @Component({

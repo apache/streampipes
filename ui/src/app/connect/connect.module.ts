@@ -28,7 +28,7 @@ import { ConnectComponent } from './connect.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 
 import { EditEventPropertyPrimitiveComponent } from './dialog/edit-event-property/components/edit-event-property-primitive/edit-event-property-primitive.component';
-import { EventSchemaComponent } from './components/schema-editor/event-schema/event-schema.component';
+import { EventSchemaComponent } from './components/new-adapter/schema-editor/event-schema/event-schema.component';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 
@@ -43,8 +43,8 @@ import { ConnectService } from './services/connect.service';
 import { AdapterDescriptionComponent } from './components/data-marketplace/adapter-description/adapter-description.component';
 import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
 import { DataMarketplaceService } from './services/data-marketplace.service';
-import { FormatItemComponent } from './components/format-item/format-item.component';
-import { FormatListComponent } from './components/format-list/format-list.component';
+import { FormatItemComponent } from './components/new-adapter/format-configuration/format-item/format-item.component';
+import { FormatListComponent } from './components/new-adapter/format-configuration/format-list/format-list.component';
 import { IconService } from './services/icon.service';
 import { UnitProviderService } from './services/unit-provider.service';
 
@@ -63,24 +63,24 @@ import { EditTimestampPropertyComponent } from './dialog/edit-event-property/com
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
 import { PipelineElementRuntimeInfoComponent } from './components/runtime-info/pipeline-element-runtime-info.component';
-import { EventPropertyRowComponent } from './components/schema-editor/event-property-row/event-property-row.component';
-import { EventSchemaPreviewComponent } from './components/schema-editor/event-schema-preview/event-schema-preview.component';
+import { EventPropertyRowComponent } from './components/new-adapter/schema-editor/event-property-row/event-property-row.component';
+import { EventSchemaPreviewComponent } from './components/new-adapter/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 // tslint:disable-next-line:max-line-length
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
 // tslint:disable-next-line:max-line-length
-import { SpecificAdapterConfigurationComponent } from './components/specific-adapter-configuration/specific-adapter-configuration.component';
+import { SpecificAdapterConfigurationComponent } from './components/new-adapter/specific-adapter-configuration/specific-adapter-configuration.component';
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
-import { FormatConfigurationComponent } from './components/format-configuration/format-configuration.component';
-import { GenericAdapterConfigurationComponent } from './components/generic-adapter-configuration/generic-adapter-configuration.component';
-import { ErrorMessageComponent } from './components/schema-editor/error-message/error-message.component';
-import { LoadingMessageComponent } from './components/schema-editor/loading-message/loading-message.component';
-import { SchemaEditorHeaderComponent } from './components/schema-editor/schema-editor-header/schema-editor-header.component';
-import { StartAdapterConfigurationComponent } from './components/start-adapter-configuration/start-adapter-configuration.component';
+import { FormatConfigurationComponent } from './components/new-adapter/format-configuration/format-configuration.component';
+import { GenericAdapterConfigurationComponent } from './components/new-adapter/generic-adapter-configuration/generic-adapter-configuration.component';
+import { ErrorMessageComponent } from './components/new-adapter/schema-editor/error-message/error-message.component';
+import { LoadingMessageComponent } from './components/new-adapter/schema-editor/loading-message/loading-message.component';
+import { SchemaEditorHeaderComponent } from './components/new-adapter/schema-editor/schema-editor-header/schema-editor-header.component';
+import { StartAdapterConfigurationComponent } from './components/new-adapter/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { FormatItemJsonComponent } from './components/format-item-json/format-item-json.component';
+import { FormatItemJsonComponent } from './components/new-adapter/format-configuration/format-item-json/format-item-json.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import {

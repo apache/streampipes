@@ -24,7 +24,7 @@ import {
   GenericAdapterStreamDescription
 } from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { RestService } from '../../services/rest.service';
+import { RestService } from '../../../services/rest.service';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({

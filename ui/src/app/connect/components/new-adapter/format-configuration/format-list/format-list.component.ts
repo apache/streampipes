@@ -18,7 +18,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormatDescription } from '@streampipes/platform-services';
-import { RestService } from '../../services/rest.service';
+import { RestService } from '../../../../services/rest.service';
 
 @Component({
     selector: 'sp-format-list',

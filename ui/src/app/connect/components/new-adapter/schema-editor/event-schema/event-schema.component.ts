@@ -17,10 +17,10 @@
  */
 
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { RestService } from '../../../services/rest.service';
+import { RestService } from '../../../../services/rest.service';
 import { ITreeOptions, TreeComponent } from '@circlon/angular-tree-component';
 import { UUID } from 'angular2-uuid';
-import { DataTypesService } from '../../../services/data-type.service';
+import { DataTypesService } from '../../../../services/data-type.service';
 import {
   AdapterDescription,
   EventProperty,
@@ -31,7 +31,7 @@ import {
   Notification
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
-import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
+import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 
 @Component({
   selector: 'sp-event-schema',

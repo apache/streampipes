@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UserErrorMessage } from '../../../../core-model/base/UserErrorMessage';
+import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 
 @Component({
   selector: 'sp-schema-editor-header',
