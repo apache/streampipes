@@ -16,17 +16,26 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
-    AdapterDescriptionUnion,
-    EventSchema,
-    GenericAdapterSetDescription,
-    GenericAdapterStreamDescription,
-    SpecificAdapterSetDescription,
-    SpecificAdapterStreamDescription,
-    TransformationRuleDescriptionUnion
+  AdapterDescriptionUnion,
+  EventSchema,
+  GenericAdapterSetDescription,
+  GenericAdapterStreamDescription,
+  SpecificAdapterSetDescription,
+  SpecificAdapterStreamDescription,
+  TransformationRuleDescriptionUnion
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
@@ -35,6 +44,8 @@ import { RestService } from '../../services/rest.service';
 import { EventSchemaComponent } from '../schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { IconService } from '../../services/icon.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DataMarketplaceService } from '../../services/data-marketplace.service';
 
 @Component({
   selector: 'sp-new-adapter',
@@ -54,15 +65,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
   @Input()
   adapter: AdapterDescriptionUnion;
 
-  @Output()
-  removeSelectionEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-  @Output()
-  updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-
-  @ViewChild('stepper', { static: true }) myStepper: MatStepper;
-
+  myStepper: MatStepper;
 
   protocolConfigurationValid: boolean;
   formatConfigurationValid: boolean;
@@ -79,9 +82,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
   // deactivates all edit functions when user starts a template
   isEditable = true;
 
-  @ViewChild(EventSchemaComponent, { static: true })
   private eventSchemaComponent: EventSchemaComponent;
-
 
   completedStaticProperty: ConfigurationInfo;
 
@@ -98,7 +99,10 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     private connectService: ConnectService,
     private _formBuilder: FormBuilder,
     private iconService: IconService,
-    private changeDetectorRef: ChangeDetectorRef) {
+    private changeDetectorRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private dataMarketplaceService: DataMarketplaceService,
+    private router: Router) {
   }
 
   handleFileInput(files: any) {
@@ -115,36 +119,44 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    this.parentForm = this._formBuilder.group({});
+    this.dataMarketplaceService.getAdapterDescriptions().subscribe(adapters => {
+      const adapter = adapters.find(a => a.appId === this.route.snapshot.params.appId);
+      this.adapter = this.dataMarketplaceService.cloneAdapterDescription(adapter);
+      (this.adapter as any).templateTitle = this.adapter.name;
+      this.adapter.name = '';
+      this.adapter.description = '';
+      this.parentForm = this._formBuilder.group({});
 
 
-    this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
-    this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
-    this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-    this.formatConfigurationValid = false;
+      this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
+      this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
+      this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
+      this.formatConfigurationValid = false;
 
 
-    // this.startAdapterFormGroup = this._formBuilder.group({
-    //     startAdapterFormCtrl: ['', Validators.required]
-    // });
+      // this.startAdapterFormGroup = this._formBuilder.group({
+      //     startAdapterFormCtrl: ['', Validators.required]
+      // });
 
-    this.protocolConfigurationValid = false;
+      this.protocolConfigurationValid = false;
 
-    this.eventSchema = this.connectService.getEventSchema(this.adapter);
+      this.eventSchema = this.connectService.getEventSchema(this.adapter);
 
-    if (this.eventSchema.eventProperties.length > 0) {
+      if (this.eventSchema.eventProperties.length > 0) {
 
-      // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
-      // step 2. Can be removed when a better solution is found.
-      setTimeout(() => {
-        this.goForward();
-        this.goForward();
-      }, 1);
+        // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
+        // step 2. Can be removed when a better solution is found.
+        setTimeout(() => {
+          this.goForward();
+          this.goForward();
+        }, 1);
 
-      this.fromTemplate = true;
-      this.isEditable = false;
-      this.oldEventSchema = this.eventSchema;
-    }
+        this.fromTemplate = true;
+        this.isEditable = false;
+        this.oldEventSchema = this.eventSchema;
+      }
+    });
+
 
     // this.parentForm.statusChanges.subscribe((status) => {
     //     this.genericadapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
@@ -159,7 +171,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
 
   removeSelection() {
-    this.removeSelectionEmitter.emit();
+    this.router.navigate(['connect', 'create']);
   }
 
   clickProtocolSettingsNextButton() {
@@ -230,7 +242,14 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
   }
 
   public adapterWasStarted() {
-    this.updateAdapterEmitter.emit();
-    this.removeSelectionEmitter.emit();
+    this.router.navigate(['connect']);
+  }
+
+  @ViewChild(EventSchemaComponent) set schemaComponent(eventSchemaComponent: EventSchemaComponent) {
+    this.eventSchemaComponent = eventSchemaComponent;
+  }
+
+  @ViewChild('stepper') set stepperComponent(stepperComponent: MatStepper) {
+    this.myStepper = stepperComponent;
   }
 }

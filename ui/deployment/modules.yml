@@ -28,7 +28,7 @@ spEditor:
   admin: false
   pageNames: 'PageName.PIPELINE_EDITOR'
 spConnect:
-  componentImport: True
+  componentImport: False
   ng5_moduleName: 'ConnectModule'
   ng5_component: 'ConnectComponent'
   ng5_componentPath: './connect/connect.component'

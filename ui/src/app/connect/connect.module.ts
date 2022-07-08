@@ -68,7 +68,7 @@ import { EventSchemaPreviewComponent } from './components/schema-editor/event-sc
 import { CoreUiModule } from '../core-ui/core-ui.module';
 // tslint:disable-next-line:max-line-length
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
-import { ExistingAdaptersComponent } from './components/data-marketplace/existing-adapters/existing-adapters.component';
+import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
 // tslint:disable-next-line:max-line-length
 import { SpecificAdapterConfigurationComponent } from './components/specific-adapter-configuration/specific-adapter-configuration.component';
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
@@ -81,75 +81,100 @@ import { StartAdapterConfigurationComponent } from './components/start-adapter-c
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { FormatItemJsonComponent } from './components/format-item-json/format-item-json.component';
+import { RouterModule } from '@angular/router';
+import { SharedUiModule } from '@streampipes/shared-ui';
+import {
+  SpConnectFilterToolbarComponent
+} from './components/filter-toolbar/filter-toolbar.component';
 
 @NgModule({
-    imports: [
-        CoreUiModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule,
-        FlexLayoutModule,
-        MatGridListModule,
-        CustomMaterialModule,
-        MatProgressSpinnerModule,
-        MatChipsModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatSliderModule,
-        PlatformServicesModule,
-        CoreUiModule,
-        TreeModule
-    ],
-    exports: [
-        PipelineElementRuntimeInfoComponent
-    ],
-    declarations: [
-        AdapterDescriptionComponent,
-        AdapterExportDialog,
-        AdapterStartedDialog,
-        AdapterUploadDialog,
-        ConnectComponent,
-        DataMarketplaceComponent,
-        DeleteAdapterDialogComponent,
-        EventSchemaComponent,
-        EditEventPropertyPrimitiveComponent,
-        EditEventPropertyComponent,
-        EventPropertyRowComponent,
-        EditEventPropertyListComponent,
-        EditUnitTransformationComponent,
-        EditTimestampPropertyComponent,
-        EditDataTypeComponent,
-        EventSchemaPreviewComponent,
-        ExistingAdaptersComponent,
-        FilterPipe,
-        FormatItemComponent,
-        FormatListComponent,
-        NewAdapterComponent,
-        PipelineElementRuntimeInfoComponent,
-        TimestampPipe,
-        EditCorrectionValueComponent,
-        FormatConfigurationComponent,
-        GenericAdapterConfigurationComponent,
-        SpecificAdapterConfigurationComponent,
-        ConfigurationGroupComponent,
-        ErrorMessageComponent,
-        LoadingMessageComponent,
-        SchemaEditorHeaderComponent,
-        StartAdapterConfigurationComponent,
-        FormatItemJsonComponent
-    ],
-    providers: [
-        RestService,
-        ConnectService,
-        DataTypesService,
-        TransformationRuleService,
-        StaticPropertyUtilService,
-        DataMarketplaceService,
-        IconService,
-        UnitProviderService,
-        TimestampPipe,
-        XsService
-    ]
+  imports: [
+    CoreUiModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    FlexLayoutModule,
+    MatGridListModule,
+    CustomMaterialModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSliderModule,
+    PlatformServicesModule,
+    CoreUiModule,
+    TreeModule,
+    RouterModule.forChild([
+      {
+        path: 'connect',
+        children: [
+          {
+            path: '',
+            component: ExistingAdaptersComponent,
+            pathMatch: 'full'
+          },
+          {
+            path: 'create',
+            component: DataMarketplaceComponent,
+          },
+          {
+            path: 'create/:appId',
+            component: NewAdapterComponent,
+          }]
+      }]),
+    SharedUiModule
+  ],
+  exports: [
+    PipelineElementRuntimeInfoComponent
+  ],
+  declarations: [
+    AdapterDescriptionComponent,
+    AdapterExportDialog,
+    AdapterStartedDialog,
+    AdapterUploadDialog,
+    ConnectComponent,
+    DataMarketplaceComponent,
+    DeleteAdapterDialogComponent,
+    EventSchemaComponent,
+    EditEventPropertyPrimitiveComponent,
+    EditEventPropertyComponent,
+    EventPropertyRowComponent,
+    EditEventPropertyListComponent,
+    EditUnitTransformationComponent,
+    EditTimestampPropertyComponent,
+    EditDataTypeComponent,
+    EventSchemaPreviewComponent,
+    ExistingAdaptersComponent,
+    FilterPipe,
+    FormatItemComponent,
+    FormatListComponent,
+    NewAdapterComponent,
+    PipelineElementRuntimeInfoComponent,
+    TimestampPipe,
+    EditCorrectionValueComponent,
+    FormatConfigurationComponent,
+    GenericAdapterConfigurationComponent,
+    SpecificAdapterConfigurationComponent,
+    ConfigurationGroupComponent,
+    ErrorMessageComponent,
+    LoadingMessageComponent,
+    SchemaEditorHeaderComponent,
+    StartAdapterConfigurationComponent,
+    FormatItemJsonComponent,
+    SpConnectFilterToolbarComponent
+  ],
+  providers: [
+    RestService,
+    ConnectService,
+    DataTypesService,
+    TransformationRuleService,
+    StaticPropertyUtilService,
+    DataMarketplaceService,
+    IconService,
+    UnitProviderService,
+    TimestampPipe,
+    XsService
+  ]
 })
 export class ConnectModule {
 }

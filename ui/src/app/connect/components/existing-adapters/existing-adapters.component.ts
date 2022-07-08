@@ -19,16 +19,17 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AdapterDescriptionUnion, PipelineElementService } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConnectService } from '../../../services/connect.service';
-import { DataMarketplaceService } from '../../../services/data-marketplace.service';
+import { ConnectService } from '../../services/connect.service';
+import { DataMarketplaceService } from '../../services/data-marketplace.service';
 import { DialogRef, PanelType, DialogService } from '@streampipes/shared-ui';
-import { DeleteAdapterDialogComponent } from '../../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
+import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ObjectPermissionDialogComponent } from '../../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { UserRole } from '../../../../_enums/user-role.enum';
-import { AuthService } from '../../../../services/auth.service';
-import { HelpComponent } from '../../../../editor/dialog/help/help.component';
+import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
+import { UserRole } from '../../../_enums/user-role.enum';
+import { AuthService } from '../../../services/auth.service';
+import { HelpComponent } from '../../../editor/dialog/help/help.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -37,7 +38,7 @@ import { HelpComponent } from '../../../../editor/dialog/help/help.component';
 })
 export class ExistingAdaptersComponent implements OnInit {
 
-  _existingAdapters: AdapterDescriptionUnion[];
+  existingAdapters: AdapterDescriptionUnion[] = [];
 
   @Input()
   filterTerm: string;
@@ -61,18 +62,15 @@ export class ExistingAdaptersComponent implements OnInit {
               private dataMarketplaceService: DataMarketplaceService,
               private dialogService: DialogService,
               private authService: AuthService,
-              private pipelineElementService: PipelineElementService) {
+              private pipelineElementService: PipelineElementService,
+              private router: Router) {
 
   }
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
-    });
-    this.dataSource = new MatTableDataSource(this.existingAdapters);
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.getAdaptersRunning();
     });
   }
 
@@ -154,14 +152,20 @@ export class ExistingAdaptersComponent implements OnInit {
     this.createTemplateEmitter.emit(adapter);
   }
 
-  @Input()
-  set existingAdapters(adapters: AdapterDescriptionUnion[]) {
-    this._existingAdapters = adapters;
-    this.dataSource = new MatTableDataSource(adapters);
+  getAdaptersRunning(): void {
+    this.dataMarketplaceService.getAdapters().subscribe(adapters => {
+      this.existingAdapters = adapters;
+      this.dataSource = new MatTableDataSource(this.existingAdapters);
+      setTimeout(() => {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
+      //this.filteredAdapters = this.existingAdapters;
+    });
   }
 
-  get existingAdapters(): AdapterDescriptionUnion[] {
-    return this._existingAdapters;
+  createNewAdapter(): void {
+    this.router.navigate(['connect', 'create']);
   }
 
 }
