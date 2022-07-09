@@ -17,24 +17,28 @@
   -->
 
 <div fxLayout="row">
-    <div fxFlex="1 1 auto" fxLayout="row">
+    <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center">
         <b>
             {{ label }}
         </b>
-        <mat-icon *ngIf="timestampProperty"
-                  style="font-size: 15px; padding: 4px;">
-            access_time
-        </mat-icon>
+        <span class="timestamp-property" *ngIf="timestampProperty" fxLayoutAlign="start center" fxLayout="row">
+            <mat-icon *ngIf="timestampProperty" class="timestamp-icon" fxLayout="row" fxLayoutAlign="start center">
+                access_time
+            </mat-icon>
+            marked as timestamp
+        </span>
         <p style="margin: 0px 10px 10px;" *ngIf="isList">[List]</p>
     </div>
 
-    <div fxFlex="15" *ngIf="isPrimitive">
-        <mat-select [(ngModel)]="node.data.propertyScope"
+    <div fxFlex="15" *ngIf="isPrimitive" fxLayoutAlign="center center">
+        <mat-form-field class="small-select" color="accent">
+        <mat-select [(ngModel)]="node.data.propertyScope" panelClass="small-select"
                     [attr.data-cy]="'property-scope-' + label">
             <mat-option value="MEASUREMENT_PROPERTY">Measurement</mat-option>
             <mat-option value="DIMENSION_PROPERTY">Dimension</mat-option>
             <mat-option value="HEADER_PROPERTY">Header</mat-option>
         </mat-select>
+        </mat-form-field>
     </div>
 
     <div fxFlex="0 1 auto" fxLayoutAlign="center center"
@@ -43,12 +47,14 @@
             <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
         </button>
     </div>
-    <div fxFlex="0 1 auto" fxLayoutAlign="center center"
+    <div fxFlex="0 1 auto"
+         fxLayoutAlign="center center"
+         class="ml-5 mr-5"
          *ngIf="isNested || isPrimitive || isList">
         <button [disabled]="!isEditable" color="accent" mat-button
                 (click)="openEditDialog(node.data)"
                 [attr.data-cy]="'edit-' + label.toLowerCase()">
-            <mat-icon>edit</mat-icon>
+            <mat-icon>edit</mat-icon>&nbsp;Edit field
         </button>
     </div>
     <div fxFlex="0 1 auto" fxLayoutAlign="center center">
