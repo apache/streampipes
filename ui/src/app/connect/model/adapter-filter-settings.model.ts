@@ -16,40 +16,8 @@
  *
  */
 
-.adapter-description-container {
-  width: 100%;
+export interface AdapterFilterSettingsModel {
+  textFilter: string;
+  selectedType: string;
+  selectedCategory: string;
 }
-
-.adapter-description {
-  padding: 15px;
-}
-.data-marketplace-container {
-  padding-bottom: 10px;
-}
-
-.marketplace-container {
-  width:100%;
-}
-
-.page-container-connect {
-  min-height: calc(100vh - 70px);
-}
-
-.pl-5 {
-  padding-left:5px;
-}
-
-.box {
-  width: 200px; height: 300px;
-  position: relative;
-  border: 1px solid #BBB;
-  background: #EEE;
-}
-
-.icon-style {
-  margin: 15px 4px 0px 0px;
-  color: var(--color-accent);
-}
-
-
-

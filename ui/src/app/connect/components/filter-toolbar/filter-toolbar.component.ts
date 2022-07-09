@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DataMarketplaceService } from '../../services/data-marketplace.service';
 import { MatSelectChange } from '@angular/material/select';
+import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 
 @Component({
   selector: 'sp-connect-filter-toolbar',
@@ -9,11 +10,13 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class SpConnectFilterToolbarComponent implements OnInit {
 
-  adapterTypes: string[] = ['All types', 'Data Set', 'Data Stream'];
-  selectedType = 'All types';
+  @Output()
+  filterChangedEmitter: EventEmitter<AdapterFilterSettingsModel> = new EventEmitter<AdapterFilterSettingsModel>();
 
+  adapterTypes: string[] = ['All types', 'Data Set', 'Data Stream'];
   adapterCategories: any;
-  selectedCategory: any = 'All';
+
+  currentFilter: AdapterFilterSettingsModel = {textFilter: '', selectedCategory: 'All', selectedType: 'All types'};
 
   constructor(private dataMarketplaceService: DataMarketplaceService) {
 
@@ -27,15 +30,17 @@ export class SpConnectFilterToolbarComponent implements OnInit {
     this.dataMarketplaceService.getAdapterCategories().subscribe(res => {
       this.adapterCategories = res;
       this.adapterCategories.unshift({ label: 'All categories', description: '', code: 'All' });
+      this.filterChangedEmitter.emit(this.currentFilter);
     });
   }
 
   filterAdapter(event: MatSelectChange) {
-
+    this.filterChangedEmitter.emit(this.currentFilter);
   }
 
   updateFilterTerm(event: string) {
-
+    this.currentFilter.textFilter = event;
+    this.filterChangedEmitter.emit(this.currentFilter);
   }
 
 

@@ -21,6 +21,10 @@
         <button mat-button mat-raised-button color="accent" (click)="createNewAdapter()">
             <i class="material-icons">add</i>&nbsp;New adapter
         </button>
+        <sp-connect-filter-toolbar
+                class="filter-bar-margin"
+                (filterChangedEmitter)="applyFilter($event)">
+        </sp-connect-filter-toolbar>
     </div>
     <div fxFlex="100" fxLayout="column">
         <div class="assemblyOptions sp-blue-bg mt-20" style="padding:5px;">

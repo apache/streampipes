@@ -16,14 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataMarketplaceService } from '../../services/data-marketplace.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
-import { FilterPipe } from '../../filter/filter.pipe';
 import { AdapterDescriptionUnion } from '@streampipes/platform-services';
 import { DialogService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
+import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 
 @Component({
   selector: 'sp-data-marketplace',
@@ -31,23 +31,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./data-marketplace.component.scss']
 })
 export class DataMarketplaceComponent implements OnInit {
+
   adapterDescriptions: AdapterDescriptionUnion[];
-  newAdapterFromDescription: AdapterDescriptionUnion;
-  filteredAdapterDescriptions: AdapterDescriptionUnion[];
-  adapters: AdapterDescriptionUnion[];
-  filteredAdapters: AdapterDescriptionUnion[];
-  visibleAdapters: AdapterDescriptionUnion[];
-
-  @Output()
-  selectAdapterEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
-
-  selectedIndex = 0;
-  filterTerm = '';
-  pipe: FilterPipe = new FilterPipe();
-
 
   adaptersLoading = true;
   adapterLoadingError = false;
+
+  currentFilter: AdapterFilterSettingsModel;
 
   constructor(private dataMarketplaceService: DataMarketplaceService,
               private shepherdService: ShepherdService,
@@ -57,11 +47,6 @@ export class DataMarketplaceComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.updateDescriptionsAndRunningAdatpers();
-    this.visibleAdapters = this.adapters;
-  }
-
-  updateDescriptionsAndRunningAdatpers() {
     this.getAdapterDescriptions();
   }
 
@@ -73,22 +58,14 @@ export class DataMarketplaceComponent implements OnInit {
       .getAdapterDescriptions()
       .subscribe((allAdapters) => {
         this.adapterDescriptions = allAdapters;
-        // this.adapterDescriptions = this.adapterDescriptions.concat(allAdapters[1]);
         this.adapterDescriptions
           .sort((a, b) => a.name.localeCompare(b.name));
-        this.filteredAdapterDescriptions = this.adapterDescriptions;
         this.adaptersLoading = false;
       }, error => {
         console.log(error);
         this.adaptersLoading = false;
         this.adapterLoadingError = true;
       });
-  }
-
-
-
-  selectedIndexChange(index: number) {
-    this.selectedIndex = index;
   }
 
   startAdapterTutorial() {
@@ -108,53 +85,7 @@ export class DataMarketplaceComponent implements OnInit {
     // this.shepherdService.trigger('select-adapter');
   }
 
-  templateFromRunningAdapter(adapter: AdapterDescriptionUnion) {
-    adapter.elementId = undefined;
-    adapter._rev = undefined;
-    this.selectedIndexChange(0);
-    //this.selectAdapter(adapter);
-
+  applyFilter(filter: AdapterFilterSettingsModel) {
+    this.currentFilter = { ...filter };
   }
-
-  removeSelection() {
-    this.newAdapterFromDescription = undefined;
-  }
-
-  updateFilterTerm(inputValue) {
-    this.filterTerm = inputValue;
-  }
-
-  filterAdapter(event) {
-    const filteredAdapterTypes = this.filterAdapterType(this.adapterDescriptions);
-    const filteredAdapterTemplateTypes = this.filterAdapterType(this.adapters);
-
-    const filteredAdapterCategories = this.filterAdapterCategory(filteredAdapterTypes);
-    const filteredAdapterTemplateCategories = this.filterAdapterCategory(filteredAdapterTemplateTypes);
-
-    this.filteredAdapterDescriptions = filteredAdapterCategories;
-    this.filteredAdapters = filteredAdapterTemplateCategories;
-  }
-
-  filterAdapterCategory(currentElements: AdapterDescriptionUnion[]): AdapterDescriptionUnion[] {
-    // TODO
-    // if (this.selectedCategory === this.adapterCategories[0].code) {
-    //   return currentElements;
-    // } else {
-    //   return currentElements.filter(adapterDescription => adapterDescription.category.indexOf(this.selectedCategory) !== -1);
-    // }
-    return [];
-  }
-
-  filterAdapterType(currentElements: AdapterDescriptionUnion[]): AdapterDescriptionUnion[] {
-    // TODO
-    // if (this.selectedType === this.adapterTypes[0]) {
-    //   return currentElements;
-    // } else if (this.selectedType === this.adapterTypes[1]) {
-    //   return currentElements.filter(adapterDescription => this.connectService.isDataSetDescription(adapterDescription));
-    // } else if (this.selectedType === this.adapterTypes[2]) {
-    //   return currentElements.filter(adapterDescription => !this.connectService.isDataSetDescription(adapterDescription));
-    // }
-    return [];
-  }
-
 }

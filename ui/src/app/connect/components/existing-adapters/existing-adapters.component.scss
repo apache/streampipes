@@ -44,3 +44,9 @@
   cursor: pointer;
   color: #FFEB3B;
 }
+
+.filter-bar-margin {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 2px solid var(--color-bg-2)
+}
