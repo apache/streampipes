@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdapterDescriptionUnion, PipelineElementService } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
@@ -31,6 +31,7 @@ import { AuthService } from '../../../services/auth.service';
 import { HelpComponent } from '../../../editor/dialog/help/help.component';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
+import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -40,15 +41,9 @@ import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.
 export class ExistingAdaptersComponent implements OnInit {
 
   existingAdapters: AdapterDescriptionUnion[] = [];
+  filteredAdapters: AdapterDescriptionUnion[] = [];
 
-  @Input()
-  filterTerm: string;
-
-  @Output()
-  updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
-
-  @Output()
-  createTemplateEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
+  currentFilter: AdapterFilterSettingsModel;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   pageSize = 1;
@@ -64,7 +59,8 @@ export class ExistingAdaptersComponent implements OnInit {
               private dialogService: DialogService,
               private authService: AuthService,
               private pipelineElementService: PipelineElementService,
-              private router: Router) {
+              private router: Router,
+              private adapterFilter: AdapterFilterPipe) {
 
   }
 
@@ -77,13 +73,13 @@ export class ExistingAdaptersComponent implements OnInit {
 
   startAdapter(adapter: AdapterDescriptionUnion) {
     this.dataMarketplaceService.startAdapter(adapter).subscribe(response => {
-      this.updateAdapterEmitter.emit();
+      this.getAdaptersRunning();
     });
   }
 
   stopAdapter(adapter: AdapterDescriptionUnion) {
     this.dataMarketplaceService.stopAdapter(adapter).subscribe(response => {
-      this.updateAdapterEmitter.emit();
+      this.getAdaptersRunning();
     });
   }
 
@@ -109,7 +105,7 @@ export class ExistingAdaptersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(refresh => {
       if (refresh) {
-        this.updateAdapterEmitter.emit();
+        this.getAdaptersRunning();
       }
     });
   }
@@ -126,7 +122,7 @@ export class ExistingAdaptersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
-        this.updateAdapterEmitter.emit();
+        this.getAdaptersRunning();
       }
     });
   }
@@ -148,20 +144,16 @@ export class ExistingAdaptersComponent implements OnInit {
     });
   }
 
-
-  createTemplate(adapter: AdapterDescriptionUnion): void {
-    this.createTemplateEmitter.emit(adapter);
-  }
-
   getAdaptersRunning(): void {
     this.dataMarketplaceService.getAdapters().subscribe(adapters => {
       this.existingAdapters = adapters;
-      this.dataSource = new MatTableDataSource(this.existingAdapters);
+      this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
+      this.filteredAdapters = this.adapterFilter.transform(this.existingAdapters, this.currentFilter);
+      this.dataSource = new MatTableDataSource(this.filteredAdapters);
       setTimeout(() => {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-      //this.filteredAdapters = this.existingAdapters;
     });
   }
 
@@ -170,7 +162,10 @@ export class ExistingAdaptersComponent implements OnInit {
   }
 
   applyFilter(filter: AdapterFilterSettingsModel) {
-
+    this.currentFilter = filter;
+    if (this.dataSource) {
+      this.dataSource.data = this.adapterFilter.transform(this.filteredAdapters, this.currentFilter);
+    }
   }
 
 }

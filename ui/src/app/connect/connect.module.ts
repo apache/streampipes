@@ -49,7 +49,7 @@ import { IconService } from './services/icon.service';
 import { UnitProviderService } from './services/unit-provider.service';
 
 
-import { FilterPipe } from './filter/filter.pipe';
+import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { AdapterExportDialog } from './dialog/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './dialog/adapter-upload/adapter-upload-dialog.component';
 import { EditEventPropertyListComponent } from './dialog/edit-event-property/components/edit-event-property-list/edit-event-property-list.component';
@@ -83,9 +83,7 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { FormatItemJsonComponent } from './components/new-adapter/format-configuration/format-item-json/format-item-json.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
-import {
-  SpConnectFilterToolbarComponent
-} from './components/filter-toolbar/filter-toolbar.component';
+import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
 
 @NgModule({
   imports: [
@@ -145,7 +143,7 @@ import {
     EditDataTypeComponent,
     EventSchemaPreviewComponent,
     ExistingAdaptersComponent,
-    FilterPipe,
+    AdapterFilterPipe,
     FormatItemComponent,
     FormatListComponent,
     NewAdapterComponent,

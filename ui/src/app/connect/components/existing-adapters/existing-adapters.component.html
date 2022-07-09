@@ -32,7 +32,7 @@
                 <h4>My adapters</h4>
                 <span fxFlex></span>
                 <button mat-button mat-icon-button matTooltip="Refresh adapters" matTooltipPosition="above"
-                        (click)="updateAdapterEmitter.emit()">
+                        (click)="getAdaptersRunning()">
                     <i class="material-icons">
                         refresh
                     </i>
@@ -102,38 +102,19 @@
                     <th mat-header-cell *matHeaderCellDef> Action</th>
                     <td mat-cell *matCellDef="let adapter">
                         <div fxLayout="row">
-                            <!--                <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">-->
-                            <!--                    <button color="primary" mat-button mat-icon-button matTooltip="Show adapter"-->
-                            <!--                            matTooltipPosition="above"><i-->
-                            <!--                            class="material-icons">search</i>-->
-                            <!--                    </button>-->
-                            <!--                </span>-->
-                            <!--                        <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">-->
-                            <!--                    <button color="primary" mat-button mat-icon-button matTooltip="Modify adapter"-->
-                            <!--                            matTooltipPosition="above"-->
-                            <!--                            [disabled]="adapter.running">-->
-                            <!--                        <i class="material-icons">mode_edit</i>-->
-                            <!--                    </button>-->
-                            <!--                </span>-->
                             <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                     <button color="accent" mat-button mat-icon-button matTooltip="Show info"
                             matTooltipPosition="above" (click)="openHelpDialog(adapter)"><i
                             class="material-icons">help_outline</i>
                     </button>
-                </span>
-                            <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">
-                    <button color="accent" mat-button mat-icon-button matTooltip="Create adapter template"
-                            matTooltipPosition="above" (click)="createTemplate(adapter)"><i
-                            class="material-icons">content_copy</i>
-                    </button>
-                </span>
-                            <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
+                        </span>
+                            <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
                     <button color="accent" mat-button mat-icon-button matTooltip="Manage permissions"
                             matTooltipPosition="above" (click)="showPermissionsDialog(adapter)"><i
                             class="material-icons">share</i>
                     </button>
                 </span>
-                            <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center">
+                            <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
                     <button color="accent" mat-button mat-icon-button matTooltip="Delete adapter"
                             data-cy="delete" matTooltipPosition="above" (click)="deleteAdapter(adapter)">
                         <i class="material-icons">delete</i>

@@ -16,23 +16,25 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
 import { AdapterDescriptionUnion } from '@streampipes/platform-services';
 import { AdapterFilterSettingsModel } from '../model/adapter-filter-settings.model';
 import { ConnectService } from '../services/connect.service';
 
-@Pipe({
-  name: 'adapterFilter'
-})
-
-export class FilterPipe implements PipeTransform {
+@Pipe({ name: 'adapterFilter' })
+@Injectable({ providedIn: 'root' })
+export class AdapterFilterPipe implements PipeTransform {
 
   constructor(private connectService: ConnectService) {
   }
 
   transform(adapterDescriptions: AdapterDescriptionUnion[],
             activeFilters: AdapterFilterSettingsModel): AdapterDescriptionUnion[] {
-    return adapterDescriptions.filter(a => this.meetsFilterCondition(a, activeFilters));
+    if (!activeFilters) {
+      return adapterDescriptions;
+    } else {
+      return adapterDescriptions.filter(a => this.meetsFilterCondition(a, activeFilters));
+    }
   }
 
   private meetsFilterCondition(adapterDescription: AdapterDescriptionUnion,
