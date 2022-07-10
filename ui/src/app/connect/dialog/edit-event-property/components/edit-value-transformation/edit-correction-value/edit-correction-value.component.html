@@ -17,18 +17,18 @@
   -->
 
 <div fxLayout="row" fxLayoutAlign="start">
-        <div class="form-group" fxFlexAlign="center">
-        <mat-form-field class="example-full-width" style="margin-right: 10px" color="accent">
+    <div fxFlex="70" fxLayoutAlign="start center">
+        <mat-form-field class="w-100" style="margin-right: 10px" color="accent">
             <input matInput
                    name="correction"
                    placeholder="Correction Value"
                    [(ngModel)]="cachedProperty.correctionValue"
                    (change)="valueChanged()"
-                    data-cy="connect-schema-correction-value">
+                   data-cy="connect-schema-correction-value">
         </mat-form-field>
     </div>
-    <div class="form-group" fxFlexAlign="center">
-        <mat-form-field class="example-full-width" color="accent">
+    <div fxFlex="30" fxLayoutAlign="start center">
+        <mat-form-field class="w-100" color="accent">
             <mat-select
                     required
                     placeholder="Math Operator"

@@ -29,6 +29,7 @@ import {
     EventSchema
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'event-property-row',
@@ -53,7 +54,8 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
   isList = false;
   timestampProperty = false;
 
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog,
+              private dialogService: DialogService) {
 
   }
 
@@ -109,16 +111,30 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
   }
 
   public openEditDialog(data): void {
-    const dialogRef = this.dialog.open(EditEventPropertyComponent, {
+    const dialogRef = this.dialogService.open(EditEventPropertyComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Edit field ' + data.runtimeName,
+      width: '50vw',
       data: {
-        property: data,
-        isEditable: this.isEditable
+        'property': data,
+        'isEditable': this.isEditable
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      this.timestampProperty = this.isTimestampProperty(this.node.data);
-      this.refreshTreeEmitter.emit();
+
+    dialogRef.afterClosed().subscribe(refresh => {
+        this.timestampProperty = this.isTimestampProperty(this.node.data);
+        this.refreshTreeEmitter.emit();
     });
+    // const dialogRef = this.dialog.open(EditEventPropertyComponent, {
+    //   data: {
+    //     property: data,
+    //     isEditable: this.isEditable
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe(result => {
+    //   this.timestampProperty = this.isTimestampProperty(this.node.data);
+    //   this.refreshTreeEmitter.emit();
+    // });
   }
 
   public selectProperty(id: string, eventProperties: any): void {

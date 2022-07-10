@@ -16,8 +16,9 @@
   ~
   -->
 
-<mat-form-field class="doubleWidth" color="accent">
-    <mat-select placeholder="Runtime Type"
+<mat-form-field class="w-100" color="accent" fxFlex="100">
+    <mat-label>Field data type</mat-label>
+    <mat-select placeholder="Data Type"
                 [(ngModel)]="cachedProperty.runtimeType"
                 (selectionChange)="valueChanged()"
                 data-cy="connect-change-runtime-type">

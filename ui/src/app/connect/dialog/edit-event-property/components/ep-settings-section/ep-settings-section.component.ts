@@ -16,6 +16,24 @@
  *
  */
 
-.doubleWidth {
-  width: 370px !important;
+
+import { Component, Input, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'sp-ep-settings-section',
+  templateUrl: './ep-settings-section.component.html',
+  styleUrls: ['./ep-settings-section.component.scss']
+})
+export class SpEpSettingsSectionComponent implements OnInit {
+
+  @Input()
+  sectionTitle: string;
+
+  @Input()
+  sectionDescription: string;
+
+  ngOnInit(): void {
+  }
+
+
 }

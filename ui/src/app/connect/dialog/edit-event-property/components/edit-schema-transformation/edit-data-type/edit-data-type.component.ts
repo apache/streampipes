@@ -16,17 +16,28 @@
  *
  */
 
-@import '../../../../scss/sp/sp-dialog.scss';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DataTypesService } from '../../../../../services/data-type.service';
 
-.doubleWidth {
-    width: 370px !important;
+@Component({
+  selector: 'sp-edit-data-type',
+  templateUrl: './edit-data-type.component.html',
+  styleUrls: ['./edit-data-type.component.scss']
+})
+export class EditDataTypeComponent implements OnInit {
+
+  @Input() cachedProperty: any;
+  @Output() dataTypeChanged = new EventEmitter<boolean>();
+
+  runtimeDataTypes;
+  constructor(private dataTypeService: DataTypesService) { }
+
+  ngOnInit() {
+    this.runtimeDataTypes = this.dataTypeService.getDataTypes();
+  }
+
+  valueChanged() {
+    this.dataTypeChanged.emit(true);
+  }
+
 }
-
-.mat-dialog-actions {
-    justify-content: flex-end;
-}
-
-.full-width {
-    width: 100%;
-}
-

@@ -26,8 +26,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ConnectComponent } from './connect.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
-
-import { EditEventPropertyPrimitiveComponent } from './dialog/edit-event-property/components/edit-event-property-primitive/edit-event-property-primitive.component';
 import { EventSchemaComponent } from './components/new-adapter/schema-editor/event-schema/event-schema.component';
 
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
@@ -52,14 +50,13 @@ import { UnitProviderService } from './services/unit-provider.service';
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { AdapterExportDialog } from './dialog/adapter-export/adapter-export-dialog.component';
 import { AdapterUploadDialog } from './dialog/adapter-upload/adapter-upload-dialog.component';
-import { EditEventPropertyListComponent } from './dialog/edit-event-property/components/edit-event-property-list/edit-event-property-list.component';
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { XsService } from '../NS/xs.service';
-import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-data-type/edit-data-type.component';
-import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-timestamp-property/edit-timestamp-property.component';
+import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
+import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
 import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
 import { PipelineElementRuntimeInfoComponent } from './components/runtime-info/pipeline-element-runtime-info.component';
@@ -67,7 +64,7 @@ import { EventPropertyRowComponent } from './components/new-adapter/schema-edito
 import { EventSchemaPreviewComponent } from './components/new-adapter/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 // tslint:disable-next-line:max-line-length
-import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-correction-value/edit-correction-value.component';
+import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
 // tslint:disable-next-line:max-line-length
 import { SpecificAdapterConfigurationComponent } from './components/new-adapter/specific-adapter-configuration/specific-adapter-configuration.component';
@@ -84,6 +81,9 @@ import { FormatItemJsonComponent } from './components/new-adapter/format-configu
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
+import { EditSchemaTransformationComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
+import { EditValueTransformationComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
+import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
 
 @NgModule({
   imports: [
@@ -134,11 +134,11 @@ import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/fil
     DataMarketplaceComponent,
     DeleteAdapterDialogComponent,
     EventSchemaComponent,
-    EditEventPropertyPrimitiveComponent,
     EditEventPropertyComponent,
     EventPropertyRowComponent,
-    EditEventPropertyListComponent,
     EditUnitTransformationComponent,
+    EditSchemaTransformationComponent,
+    EditValueTransformationComponent,
     EditTimestampPropertyComponent,
     EditDataTypeComponent,
     EventSchemaPreviewComponent,
@@ -157,6 +157,7 @@ import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/fil
     ErrorMessageComponent,
     LoadingMessageComponent,
     SchemaEditorHeaderComponent,
+    SpEpSettingsSectionComponent,
     StartAdapterConfigurationComponent,
     FormatItemJsonComponent,
     SpConnectFilterToolbarComponent

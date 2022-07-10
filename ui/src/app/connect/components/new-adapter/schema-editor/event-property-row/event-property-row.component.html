@@ -21,12 +21,12 @@
         <b>
             {{ label }}
         </b>
-        <span class="timestamp-property" *ngIf="timestampProperty" fxLayoutAlign="start center" fxLayout="row">
+        <div class="timestamp-property" *ngIf="timestampProperty" fxLayoutAlign="start center" fxLayout="row">
             <mat-icon *ngIf="timestampProperty" class="timestamp-icon" fxLayout="row" fxLayoutAlign="start center">
                 access_time
             </mat-icon>
-            marked as timestamp
-        </span>
+            <span style="margin-left: -5px;">marked as timestamp</span>
+        </div>
         <p style="margin: 0px 10px 10px;" *ngIf="isList">[List]</p>
     </div>
 

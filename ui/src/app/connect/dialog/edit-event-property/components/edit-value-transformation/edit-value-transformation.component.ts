@@ -16,44 +16,30 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DataTypesService } from '../../../../services/data-type.service';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'sp-edit-event-property-primitive',
-  templateUrl: './edit-event-property-primitive.component.html',
-  styleUrls: ['./edit-event-property-primitive.component.scss']
+  selector: 'sp-edit-value-transformation',
+  templateUrl: './edit-value-transformation.component.html',
+  styleUrls: ['./edit-value-transformation.component.scss']
 })
-export class EditEventPropertyPrimitiveComponent implements OnInit {
+export class EditValueTransformationComponent implements OnInit {
 
-  @Input() cachedProperty: any;
-  @Input() index: number;
+  @Input()
+  cachedProperty: any;
+
   @Input() isTimestampProperty: boolean;
-  @Output() isNumericDataType = new EventEmitter<boolean>();
-
-  hideUnitTransformation: boolean;
+  @Input() isNestedProperty: boolean;
+  @Input() isListProperty: boolean;
+  @Input() isPrimitiveProperty: boolean;
+  @Input() isNumericProperty: boolean;
 
   addedByUser: boolean;
 
-  constructor(private dataTypesService: DataTypesService) {
-  }
-
   ngOnInit(): void {
-    this.setShowUnitTransformation();
     this.addedByUser = this.staticValueAddedByUser();
     if (!this.cachedProperty.staticValue) {
       this.cachedProperty.staticValue = '';
-    }
-  }
-
-  setShowUnitTransformation() {
-    this.hideUnitTransformation = this.isTimestampProperty ||
-      !this.dataTypesService.isNumeric(this.cachedProperty.runtimeType);
-
-    if (this.dataTypesService.isNumeric(this.cachedProperty.runtimeType)) {
-      this.isNumericDataType.emit(true);
-    } else {
-      this.isNumericDataType.emit(false);
     }
   }
 
