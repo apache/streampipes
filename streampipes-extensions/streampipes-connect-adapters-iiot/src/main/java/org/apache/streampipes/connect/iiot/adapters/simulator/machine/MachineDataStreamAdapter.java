@@ -59,7 +59,7 @@ public class MachineDataStreamAdapter extends SpecificDataStreamAdapter {
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .withLocales(Locales.EN)
                 .category(AdapterType.Debugging)
-                .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS))
+                .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
                 .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
                         "flowrate", "pressure", "waterlevel"))
                 .build();
