@@ -75,7 +75,7 @@
     "konva": "3.2.4",
     "leaflet": "1.6.0",
     "lodash": "4.17.21",
-    "material-icons": "^0.5.3",
+    "material-icons": "^1.11.4",
     "ngx-color-picker": "^11.0.0",
     "ngx-echarts": "^8.0.1",
     "ngx-quill": "15.0.0",

@@ -105,8 +105,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     });
   }
 
-  findDefaultTimestamp(event: MatCheckboxChange) {
-    if (event.checked) {
+  findDefaultTimestamp(selected: boolean) {
+    if (selected) {
       const timestampFields = this.timestampPipe.transform(this.eventSchema.eventProperties);
       if (timestampFields.length > 0) {
         this.dataLakeTimestampField = timestampFields[0].runtimeName;
@@ -161,4 +161,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
     this.goBackEmitter.emit();
   }
 
+  handlePersistOption(selected: boolean) {
+    this.saveInDataLake = selected;
+    this.findDefaultTimestamp(selected);
+  }
 }

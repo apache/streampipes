@@ -17,7 +17,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -84,6 +84,7 @@ import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/fil
 import { EditSchemaTransformationComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
 import { EditValueTransformationComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
 import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
+import { SpAdapterOptionsPanelComponent } from './components/new-adapter/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 
 @NgModule({
   imports: [
@@ -160,7 +161,8 @@ import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/compo
     SpEpSettingsSectionComponent,
     StartAdapterConfigurationComponent,
     FormatItemJsonComponent,
-    SpConnectFilterToolbarComponent
+    SpConnectFilterToolbarComponent,
+    SpAdapterOptionsPanelComponent
   ],
   providers: [
     RestService,
@@ -173,7 +175,8 @@ import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/compo
     UnitProviderService,
     TimestampPipe,
     XsService
-  ]
+  ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class ConnectModule {
 }

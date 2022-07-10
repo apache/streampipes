@@ -16,26 +16,30 @@
  *
  */
 
-.general-panel {
-  border: 2px solid var(--color-bg-3);
-  padding: 15px;
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+
+@Component({
+  selector: 'sp-adapter-options-panel',
+  templateUrl: './adapter-options-panel.component.html',
+  styleUrls: ['./adapter-options-panel.component.scss']
+})
+export class SpAdapterOptionsPanelComponent {
+
+  @Input()
+  optionTitle: string;
+
+  @Input()
+  optionDescription: string;
+
+  @Input()
+  optionIcon: string;
+
+  @Input()
+  dataCy: string;
+
+  @Output()
+  optionSelectedEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+
 }
 
-.general-panel-header {
-  background: var(--color-bg-2);
-  border: 2px solid var(--color-bg-3);
-  border-bottom: 0;
-  padding-left: 5px;
-  height: 50px;
-  min-height: 50px;
-}
-
-.adapter-options-section {
-  margin-top: 6px;
-}
-
-.content-box-title {
-  padding-left: 8px;
-  border-left: 4px solid var(--color-accent);
-}
 

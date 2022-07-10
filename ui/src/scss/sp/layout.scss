@@ -195,3 +195,8 @@ img {
 .small-select .mat-form-field-wrapper {
   padding-bottom: 0;
 }
+
+.large-checkbox .mat-checkbox-inner-container {
+  width: 20px;
+  height: 20px;
+}
