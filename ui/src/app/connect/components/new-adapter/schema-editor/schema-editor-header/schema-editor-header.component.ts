@@ -28,8 +28,6 @@ export class SchemaEditorHeaderComponent implements OnInit {
 
 
   @Input() countSelected: number;
-  @Input() schemaErrorHints: UserErrorMessage[];
-  @Input() displayMessages: boolean;
 
   @Output() addNestedPropertyEmitter = new EventEmitter();
   @Output() addStaticValuePropertyEmitter = new EventEmitter();

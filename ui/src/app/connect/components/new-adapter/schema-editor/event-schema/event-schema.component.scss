@@ -171,3 +171,27 @@ opacity:0.5;
 .add-schema button:disabled {
   color: rgba(0, 0, 0, 0.26);
 }
+
+.schema-validation {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border: 2px solid var(--color-bg-3);
+  padding: 8px;
+  min-height: 50px;
+}
+
+.schema-validation-ok {
+  border: 2px solid #629f62;
+}
+
+.schema-validation-error {
+  border: 2px solid #963e3e;
+}
+
+.schema-validation-text-ok {
+  color: #629f62;
+}
+
+.schema-validation-text-error {
+  color: #963e3e;
+}

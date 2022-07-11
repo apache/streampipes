@@ -137,9 +137,14 @@
                         </table>
                     </div>
                     <div fxFlex="100" fxLayoutAlign="end end">
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="20"></mat-paginator>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                                       [pageSize]="20"
+                                       color="accent">
+                        </mat-paginator>
                     </div>
-                    <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center"
+                    <div fxFlex="100"
+                         fxLayout="column"
+                         fxLayoutAlign="center center"
                          *ngIf="existingAdapters.length == 0">
                         <h5>(no adapters available)</h5>
                     </div>

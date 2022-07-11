@@ -226,7 +226,7 @@ export class EventSchemaComponent implements OnChanges {
 
     this.schemaErrorHints = [];
     if (!hasTimestamp) {
-      this.schemaErrorHints.push(new UserErrorMessage('Missing Timestamp', 'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp event property or add a timestamp with the button on the top left.'));
+      this.schemaErrorHints.push(new UserErrorMessage('Missing Timestamp', 'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp field or add an ingestion timestamp.'));
     }
 
     return hasTimestamp;
