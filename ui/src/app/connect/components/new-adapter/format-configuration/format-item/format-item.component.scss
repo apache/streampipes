@@ -41,5 +41,6 @@
 
 .selectedItem {
   opacity: 1;
-  background-color: grey;
+  background-color: var(--color-accent);
+  color: var(--color-bg-2);
 }

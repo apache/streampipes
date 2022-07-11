@@ -16,26 +16,25 @@
   ~
   -->
 
-<div style="margin-bottom: 2%;">
-
-    <div >
-        <div class="assemblyOptions sp-blue-bg">
-            <h4 >Protocol settings</h4>
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <div fxFlex="100" fxLayout="column">
+            <sp-basic-inner-panel panelTitle="Protocol Settings" outerMargin="20px 0px">
+                <sp-configuration-group
+                        [configurationGroup]="genericAdapterForm"
+                        [adapterId]="adapterDescription.appId"
+                        [configuration]="protocolDescription.config">
+                </sp-configuration-group>
+            </sp-basic-inner-panel>
         </div>
-
-        <sp-configuration-group
-                [configurationGroup]="genericAdapterForm"
-                [adapterId]="adapterDescription.appId"
-                [configuration]="protocolDescription.config">
-        </sp-configuration-group>
     </div>
-</div>
 
-<div fxLayoutAlign="end">
-    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-    <div id="generic-settings-next-button">
-        <button class="stepper-button" [disabled]="!genericAdapterSettingsFormValid"
-                (click)="clickNext()" color="accent" mat-raised-button>Next
-        </button>
+    <div fxLayoutAlign="end">
+        <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+        <div id="generic-settings-next-button">
+            <button class="stepper-button" [disabled]="!genericAdapterSettingsFormValid"
+                    (click)="clickNext()" color="accent" mat-raised-button>Next
+            </button>
+        </div>
     </div>
 </div>

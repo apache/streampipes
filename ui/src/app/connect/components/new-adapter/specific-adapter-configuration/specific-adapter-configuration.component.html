@@ -16,26 +16,23 @@
   ~
   -->
 
-<div style="margin-bottom: 2%;">
-    <div>
-        <div class="assemblyOptions sp-blue-bg">
-            <h4>Basic settings</h4>
-        </div>
-
-        <sp-configuration-group
-                [configurationGroup]="specificAdapterForm"
-                [adapterId]="adapterDescription.appId"
-                [configuration]="adapterDescription.config">
-        </sp-configuration-group>
-
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <sp-basic-inner-panel panelTitle="Basic Settings" outerMargin="20px 0px">
+            <sp-configuration-group
+                    [configurationGroup]="specificAdapterForm"
+                    [adapterId]="adapterDescription.appId"
+                    [configuration]="adapterDescription.config">
+            </sp-configuration-group>
+        </sp-basic-inner-panel>
     </div>
-</div>
 
-<div fxLayoutAlign="end">
-    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-    <div id="specific-settings-next-button">
-        <button class="stepper-button" [disabled]="!specificAdapterSettingsFormValid"
-                (click)="clickNext()" color="accent" mat-raised-button>Next
-        </button>
+    <div fxLayoutAlign="end">
+        <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+        <div id="specific-settings-next-button">
+            <button class="stepper-button" [disabled]="!specificAdapterSettingsFormValid"
+                    (click)="clickNext()" color="accent" mat-raised-button>Next
+            </button>
+        </div>
     </div>
 </div>

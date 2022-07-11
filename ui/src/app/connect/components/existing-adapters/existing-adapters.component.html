@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-<sp-basic-view [showBackLink]="false" padding="0">
+<sp-basic-view [showBackLink]="false" padding="0" fxFlex="100" fxLayout="column">
 
     <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
         <button mat-button mat-raised-button color="accent" (click)="createNewAdapter()">
@@ -27,113 +27,124 @@
         </sp-connect-filter-toolbar>
     </div>
     <div fxFlex="100" fxLayout="column">
-        <div class="assemblyOptions sp-blue-bg mt-20" style="padding:5px;">
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <h4>My adapters</h4>
-                <span fxFlex></span>
-                <button mat-button mat-icon-button matTooltip="Refresh adapters" matTooltipPosition="above"
-                        (click)="getAdaptersRunning()">
-                    <i class="material-icons">
-                        refresh
-                    </i>
-                </button>
-            </div>
-        </div>
-        <div class="sp-blue-border">
-            <table fxFlex="100" mat-table [dataSource]="dataSource" style="width: 100%;" matSort>
-                <ng-container matColumnDef="start">
-                    <th mat-header-cell *matHeaderCellDef> Start</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <button color="accent" mat-button mat-icon-button matTooltip="Start adapter"
-                                matTooltipPosition="above"
-                                (click)="startAdapter(adapter)"
-                                *ngIf="(connectService.isDataStreamDescription(adapter)) && !adapter.running">
-                            <i class="material-icons">play_arrow</i>
+        <sp-basic-header-title-component title="My adapters" margin="20px 10px"></sp-basic-header-title-component>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+            <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90">
+                <div header fxLayoutAlign="end center" fxFlex="100">
+                    <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                        <button mat-button mat-icon-button matTooltip="Refresh adapters" matTooltipPosition="above"
+                                (click)="getAdaptersRunning()">
+                            <i class="material-icons">
+                                refresh
+                            </i>
                         </button>
-                        <button color="accent" mat-button mat-icon-button matTooltip="Stop adapter"
-                                matTooltipPosition="above"
-                                (click)="stopAdapter(adapter)"
-                                *ngIf="(connectService.isDataStreamDescription(adapter)) && adapter.running">
-                            <i class="material-icons">stop</i>
-                        </button>
-                    </td>
-                </ng-container>
+                    </div>
+                </div>
+                <div fxFlex="100" fxLayout="column">
+                    <div fxFlex="100" fxLayout="column">
+                        <table fxFlex="100" mat-table [dataSource]="dataSource" style="width: 100%;" matSort>
+                            <ng-container matColumnDef="start">
+                                <th mat-header-cell *matHeaderCellDef> Start</th>
+                                <td mat-cell *matCellDef="let adapter">
+                                    <button color="accent" mat-button mat-icon-button matTooltip="Start adapter"
+                                            matTooltipPosition="above"
+                                            (click)="startAdapter(adapter)"
+                                            *ngIf="(connectService.isDataStreamDescription(adapter)) && !adapter.running">
+                                        <i class="material-icons">play_arrow</i>
+                                    </button>
+                                    <button color="accent" mat-button mat-icon-button matTooltip="Stop adapter"
+                                            matTooltipPosition="above"
+                                            (click)="stopAdapter(adapter)"
+                                            *ngIf="(connectService.isDataStreamDescription(adapter)) && adapter.running">
+                                        <i class="material-icons">stop</i>
+                                    </button>
+                                </td>
+                            </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell mat-sort-header *matHeaderCellDef> Name</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <h4 style="margin-bottom:0px;">{{adapter.name}}</h4>
-                        <h5>{{adapter.description != '' ? adapter.description : '-'}}</h5>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="adapterBase">
-                    <th mat-header-cell *matHeaderCellDef> Adapter</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <img *ngIf="getIconUrl(adapter) && !adapter.icon" [src]="getIconUrl(adapter)"
-                             class="adapter-icon"/>
-                        <img *ngIf="adapter.icon" [src]="adapter.icon" class="adapter-icon"/>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="adapterType">
-                    <th mat-header-cell *matHeaderCellDef> Type</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <div class="type-data" fxLayout="row" fxLayoutAlign="start start">
-                            <div fxLayout="row" fxLayoutAlign="center center">
-                                <mat-icon *ngIf="connectService.isDataSetDescription(adapter)" class="historic">lens
-                                </mat-icon>
-                                <mat-icon *ngIf="connectService.isDataStreamDescription(adapter)" class="real-time">lens
-                                </mat-icon>
-                                <div fxFlex="100" fxLayoutAlign="center center">
-                                    <span *ngIf="connectService.isDataSetDescription(adapter)">&nbsp;Data Set</span>
-                                    <span *ngIf="connectService.isDataStreamDescription(adapter)">&nbsp;Data Stream</span>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="lastModified">
-                    <th mat-header-cell *matHeaderCellDef> Created</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <h5>{{adapter.createdAt | date:'dd.MM.yyyy HH:mm'}}</h5>
-                    </td>
-                </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell mat-sort-header *matHeaderCellDef> Name</th>
+                                <td mat-cell *matCellDef="let adapter">
+                                    <h4 style="margin-bottom:0px;">{{adapter.name}}</h4>
+                                    <h5>{{adapter.description != '' ? adapter.description : '-'}}</h5>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="adapterBase">
+                                <th mat-header-cell *matHeaderCellDef> Adapter</th>
+                                <td mat-cell *matCellDef="let adapter">
+                                    <img *ngIf="getIconUrl(adapter) && !adapter.icon" [src]="getIconUrl(adapter)"
+                                         class="adapter-icon"/>
+                                    <img *ngIf="adapter.icon" [src]="adapter.icon" class="adapter-icon"/>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="adapterType">
+                                <th mat-header-cell *matHeaderCellDef> Type</th>
+                                <td mat-cell *matCellDef="let adapter">
+                                    <div class="type-data" fxLayout="row" fxLayoutAlign="start start">
+                                        <div fxLayout="row" fxLayoutAlign="center center">
+                                            <mat-icon *ngIf="connectService.isDataSetDescription(adapter)"
+                                                      class="historic">
+                                                lens
+                                            </mat-icon>
+                                            <mat-icon *ngIf="connectService.isDataStreamDescription(adapter)"
+                                                      class="real-time">
+                                                lens
+                                            </mat-icon>
+                                            <div fxFlex="100" fxLayoutAlign="center center">
+                                                <span *ngIf="connectService.isDataSetDescription(adapter)">&nbsp;Data Set</span>
+                                                <span *ngIf="connectService.isDataStreamDescription(adapter)">&nbsp;Data Stream</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="lastModified">
+                                <th mat-header-cell *matHeaderCellDef> Created</th>
+                                <td mat-cell *matCellDef="let adapter">
+                                    <h5>{{adapter.createdAt | date:'dd.MM.yyyy HH:mm'}}</h5>
+                                </td>
+                            </ng-container>
 
-                <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef> Action</th>
-                    <td mat-cell *matCellDef="let adapter">
-                        <div fxLayout="row">
+                            <ng-container matColumnDef="action">
+                                <th mat-header-cell *matHeaderCellDef> Action</th>
+                                <td mat-cell *matCellDef="let adapter">
+                                    <div fxLayout="row">
                             <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                     <button color="accent" mat-button mat-icon-button matTooltip="Show info"
                             matTooltipPosition="above" (click)="openHelpDialog(adapter)"><i
                             class="material-icons">help_outline</i>
                     </button>
                         </span>
-                            <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
+                                        <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center"
+                                              *ngIf="isAdmin">
                     <button color="accent" mat-button mat-icon-button matTooltip="Manage permissions"
                             matTooltipPosition="above" (click)="showPermissionsDialog(adapter)"><i
                             class="material-icons">share</i>
                     </button>
                 </span>
-                            <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
+                                        <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
                     <button color="accent" mat-button mat-icon-button matTooltip="Delete adapter"
                             data-cy="delete" matTooltipPosition="above" (click)="deleteAdapter(adapter)">
                         <i class="material-icons">delete</i>
                     </button>
                 </span>
-                        </div>
-                    </td>
-                </ng-container>
+                                    </div>
+                                </td>
+                            </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-            </table>
-        </div>
-        <div fxFlex="100" fxLayoutAlign="end end">
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="20"></mat-paginator>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="existingAdapters.length == 0">
-            <h5>(no adapters available)</h5>
+                        </table>
+                    </div>
+                    <div fxFlex="100" fxLayoutAlign="end end">
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="20"></mat-paginator>
+                    </div>
+                    <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center"
+                         *ngIf="existingAdapters.length == 0">
+                        <h5>(no adapters available)</h5>
+                    </div>
+                </div>
+            </sp-basic-inner-panel>
         </div>
     </div>
 </sp-basic-view>

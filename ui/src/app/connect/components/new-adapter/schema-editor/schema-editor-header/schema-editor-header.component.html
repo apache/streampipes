@@ -16,52 +16,55 @@
   ~
   -->
 
-<div fxLayout="row">
-    <div fxLayoutAlign="space-between center" class="add-schema" fxFlex="0 1 100%">
-        <div>
-            <button color="primary"
-                    mat-button
-                    data-cy="connect-add-nested-property"
-                    (click)=addNestedProperty()>
-                <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
-            </button>
-            <button color="primary"
-                    mat-button
-                    data-cy="connect-add-static-property"
-                    (click)="addStaticValueProperty()">
-                <mat-icon matTooltip="Add a static value to event">add</mat-icon>
-            </button>
-            <button color="primary"
-                    mat-button
-                    data-cy="connect-add-timestamp-property"
-                    (click)=addTimestampProperty()
-                    data-cy="connect-schema-add-timestamp-btn">
-                <mat-icon matTooltip="Add timestamp to event schema">access_time</mat-icon>
-            </button>
-            <button color="primary"
-                    mat-button
-                    (click)=guessSchema()>
-                <mat-icon matTooltip="Refresh Schema">refresh</mat-icon>
-            </button>
-            <!--            <button color="primary" mat-button (click)=togglePreview()>-->
-            <!--                <mat-icon matTooltip="Show preview of schema">play_arrow</mat-icon>-->
-            <!--            </button>-->
-        </div>
-        <div fxLayout="row" style="align-items: center;">
-                <sp-error-hint
-                        [errorMessages]="schemaErrorHints"
-                        [displayMessages]="!displayMessages">
-                </sp-error-hint>
+<div fxLayout="row" fxFlex="100">
+    <div fxFlex fxLayoutAlign="start center" fxLayout="row">
+        <button color="accent"
+                mat-button
+                data-cy="connect-add-nested-property"
+                matTooltip="Add a Nested Property"
+                (click)=addNestedProperty()>
+            <mat-icon>queue</mat-icon>
+            <span>&nbsp;Add nested</span>
+        </button>
+        <button color="accent"
+                mat-button
+                data-cy="connect-add-static-property"
+                matTooltip="Add a static value to event"
+                (click)="addStaticValueProperty()">
+            <mat-icon>add</mat-icon>
+            <span>&nbsp;Add static value</span>
+        </button>
+        <button color="accent"
+                mat-button
+                data-cy="connect-add-timestamp-property"
+                matTooltip="Add timestamp to event schema"
+                (click)="addTimestampProperty()">
+            <mat-icon>access_time</mat-icon>
+            <span>&nbsp;Add timestamp</span>
+        </button>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center">
+        <sp-error-hint
+                [errorMessages]="schemaErrorHints"
+                [displayMessages]="!displayMessages">
+        </sp-error-hint>
+        <button color="accent"
+                mat-button
+                mat-icon-button
+                matTooltip="Refresh Schema"
+                (click)="guessSchema()">
+            <mat-icon>refresh</mat-icon>
+        </button>
 
-
-            <button style="padding-right:0"
-                    color="primary"
-                    mat-button
-                    [disabled]="countSelected == 0"
-                    (click)="removeSelectedProperties()"
-                    data-cy="connect-schema-delete-properties-btn">
-                <mat-icon matTooltip="Remove selected Properties">delete</mat-icon>
-            </button>
-        </div>
+        <button style="padding-right:0"
+                color="accent"
+                mat-button
+                mat-icon-button
+                matTooltip="Remove selected Properties"
+                [disabled]="countSelected == 0"
+                (click)="removeSelectedProperties()"
+                data-cy="connect-schema-delete-properties-btn">
+            <mat-icon>delete</mat-icon>
+        </button>
     </div>
 </div>

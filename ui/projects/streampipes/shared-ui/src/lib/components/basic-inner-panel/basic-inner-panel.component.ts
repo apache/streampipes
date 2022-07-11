@@ -15,3 +15,26 @@
  * limitations under the License.
  *
  */
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'sp-basic-inner-panel',
+  templateUrl: './basic-inner-panel.component.html',
+  styleUrls: ['./basic-inner-panel.component.scss']
+})
+export class SpBasicInnerPanelComponent {
+
+  @Input()
+  panelTitle: string;
+
+  @Input()
+  showTitle = true;
+
+  @Input()
+  innerPadding = '15px';
+
+  @Input()
+  outerMargin = '0px';
+
+}

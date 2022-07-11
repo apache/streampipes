@@ -30,12 +30,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpBasicNavTabsComponent } from './components/basic-nav-tabs/basic-nav-tabs.component';
 import { MatTabsModule } from '@angular/material/tabs';
+import { SpBasicInnerPanelComponent } from './components/basic-inner-panel/basic-inner-panel.component';
+import { SpBasicHeaderTitleComponent } from './components/basic-header-title/header-title.component';
 
 @NgModule({
   declarations: [
     ConfirmDialogComponent,
     PanelDialogComponent,
     StandardDialogComponent,
+    SpBasicInnerPanelComponent,
+    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBasicNavTabsComponent
   ],
@@ -53,6 +57,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     ConfirmDialogComponent,
     PanelDialogComponent,
     StandardDialogComponent,
+    SpBasicInnerPanelComponent,
+    SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBasicNavTabsComponent,
   ]

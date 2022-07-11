@@ -19,9 +19,9 @@
 
 <div fxLayout="row" fxLayoutAlign="center">
     <div fxFlex="0 1 80%">
-
-        <div class="assemblyOptions sp-blue-bg" *ngIf="!isLoading && !isError">
-            <sp-schema-editor-header
+        <sp-basic-inner-panel [showTitle]="false" outerMargin="20px 0px">
+        <div header *ngIf="!isLoading && !isError" fxFlex="100">
+            <sp-schema-editor-header fxFlex="100"
                     [countSelected]="countSelected"
                     [schemaErrorHints]="schemaErrorHints"
                     [displayMessages]="validEventSchema"
@@ -34,7 +34,7 @@
             </sp-schema-editor-header>
         </div>
 
-        <div class="sp-blue-border padding">
+        <div fxFlex="100">
 
             <sp-loading-message *ngIf="isLoading"></sp-loading-message>
 
@@ -63,6 +63,7 @@
                 </tree-root>
             </div>
         </div>
+        </sp-basic-inner-panel>
     </div>
     <div fxFlex="0 1 50%" *ngIf="isPreviewEnabled">
         <sp-event-schema-preview [eventSchema]="eventSchema"></sp-event-schema-preview>

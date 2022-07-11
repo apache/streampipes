@@ -16,50 +16,43 @@
   ~
   -->
 
-<div style="margin-bottom: 2%;">
-
-    <div class="assemblyOptions sp-blue-bg">
-        <h4>Select format</h4>
-    </div>
-    <div class="sp-blue-border padding">
+<div fxFlex="100" fxLayout="column">
+    <sp-basic-inner-panel panelTitle="Select format" outerMargin="20px 0px">
         <sp-format-list fxFlex="100"
                         (selectedFormatEmitter)="formatSelected($event)"
                         [selectedFormat]="selectedFormat">
         </sp-format-list>
-    </div>
+    </sp-basic-inner-panel>
 
-    <div class="assemblyOptions sp-blue-bg"
-         *ngIf="selectedFormat">
-        <h4>Configure format</h4>
-    </div>
+    <sp-basic-inner-panel panelTitle="Configure Format" outerMargin="10px 0px" *ngIf="selectedFormat">
 
-    <div *ngIf="selectedFormat">
-        <div *ngIf="selectedFormat.config.length > 0">
-            <sp-configuration-group
-                    [configurationGroup]="formatForm"
-                    [adapterId]="adapterDescription.appId"
-                    [configuration]="selectedFormat.config">
-            </sp-configuration-group>
-        </div>
+        <div *ngIf="selectedFormat">
+            <div *ngIf="selectedFormat.config.length > 0">
+                <sp-configuration-group
+                        [configurationGroup]="formatForm"
+                        [adapterId]="adapterDescription.appId"
+                        [configuration]="selectedFormat.config">
+                </sp-configuration-group>
+            </div>
 
-        <div *ngIf="selectedFormat.config.length === 0" class="sp-blue-border padding" style="padding: 15px;">
-            <div  style="text-align:center;">
-                <h5 >(no further configuration needed)</h5>
+            <div *ngIf="selectedFormat.config.length === 0" style="padding: 15px;">
+                <div style="text-align:center;">
+                    <h5>(no further configuration needed)</h5>
+                </div>
             </div>
         </div>
+    </sp-basic-inner-panel>
+
+    <div fxLayoutAlign="end">
+        <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+        <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
+        <button class="stepper-button"
+                id="format-selection-next-button"
+                data-cy="sp-format-selection-next-button"
+                [disabled]="!formatConfigurationValid"
+                (click)="clickNext()"
+                color="accent" mat-raised-button>
+            Next
+        </button>
     </div>
 </div>
-
-<div fxLayoutAlign="end">
-    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
-    <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
-    <button class="stepper-button"
-            id="format-selection-next-button"
-            data-cy="sp-format-selection-next-button"
-            [disabled]="!formatConfigurationValid"
-            (click)="clickNext()"
-            color="accent" mat-raised-button>
-        Next
-    </button>
-</div>
-
