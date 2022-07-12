@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
@@ -31,6 +31,7 @@ import { PipelineOperationsService } from '../../../pipelines/services/pipeline-
 import { AuthService } from '../../../services/auth.service';
 import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'pipeline-monitoring',
@@ -48,6 +49,9 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
 
   pipelineElementMonitoringInfo: Map<string, PipelineElementMonitoringInfo>;
 
+  reloadPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+  reloadSubscription: Subscription;
+
   constructor(activatedRoute: ActivatedRoute,
               pipelineService: PipelineService,
               authService: AuthService,
@@ -58,6 +62,7 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
 
   ngOnInit(): void {
     super.onInit();
+    this.reloadSubscription = this.reloadPipelinesEmitter.subscribe(reload => this.loadPipeline());
   }
 
   checkMonitoringInfoCollection() {
@@ -97,10 +102,11 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
 
   ngOnDestroy(): void {
     this.autoRefresh = false;
+    this.reloadSubscription.unsubscribe();
   }
 
   startPipeline() {
-    //this.pipelineOperationsService.startPipeline(this.pipeline._id, () => this.loadPipeline());
+    this.pipelineOperationsService.startPipeline(this.pipeline._id, this.reloadPipelinesEmitter);
   }
 
   onPipelineAvailable(): void {
