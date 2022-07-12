@@ -24,7 +24,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { ConnectComponent } from './connect.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EventSchemaComponent } from './components/new-adapter/schema-editor/event-schema/event-schema.component';
 
@@ -131,7 +130,6 @@ import { SpAdapterOptionsPanelComponent } from './components/new-adapter/start-a
     AdapterExportDialog,
     AdapterStartedDialog,
     AdapterUploadDialog,
-    ConnectComponent,
     DataMarketplaceComponent,
     DeleteAdapterDialogComponent,
     EventSchemaComponent,
