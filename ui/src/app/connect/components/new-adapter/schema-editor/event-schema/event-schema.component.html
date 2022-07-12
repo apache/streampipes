@@ -17,12 +17,12 @@
   -->
 
 
-<div fxLayout="row" fxLayoutAlign="center">
+<div fxLayout="row" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="80" fxLayout="column">
         <div fxLayout="column"
              fxFlex="100"
              fxLayoutAlign="start center"
-             [ngClass]="schemaErrorHints.length === 0 ? 'schema-validation schema-validation-ok' : 'schema-validation schema-validation-error'">
+             [ngClass]="schemaErrorHints.length === 0 ? 'schema-validation schema-validation-ok' : 'schema-validation schema-validation-error'" *ngIf="!isLoading && !isError">
             <div fxFlex="100"
                  fxLayout="row"
                  fxLayoutAlign="start center"

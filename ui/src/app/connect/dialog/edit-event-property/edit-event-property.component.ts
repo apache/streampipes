@@ -27,7 +27,7 @@ import {
 } from '@streampipes/platform-services';
 import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
 import { DataTypesService } from '../../services/data-type.service';
-import { DialogRef } from '../../../../../dist/streampipes/shared-ui';
+import { DialogRef } from '@streampipes/shared-ui';
 import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
 import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
 import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';

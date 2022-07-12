@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="column" fxFlex="100" class="panel-outer" [ngStyle]="{margin: outerMargin}">
-    <div class="general-panel-header" fxLayout="row" fxFlex="100" fxLayoutAlign="start center">
+    <div class="general-panel-header" fxLayout="row" fxFlex="100" fxLayoutAlign="start center" *ngIf="!hideToolbar">
         <div fxLayout="fill" fxFlex="100">
             <div class="content-box-title" *ngIf="showTitle">{{panelTitle}}</div>
             <ng-content select="[header]" fxFlex></ng-content>

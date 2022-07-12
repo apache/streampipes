@@ -37,4 +37,7 @@ export class SpBasicInnerPanelComponent {
   @Input()
   outerMargin = '0px';
 
+  @Input()
+  hideToolbar = false;
+
 }

@@ -371,6 +371,10 @@ md-content {
   //height: 100%;
 }
 
+.sp-full-height {
+  min-height: calc(100% - 20px);
+}
+
 .page-container-padding-inner {
   margin: 10px;
 }
