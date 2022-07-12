@@ -16,51 +16,52 @@
   ~
   -->
 
+<sp-basic-nav-tabs [spNavigationItems]="tabs"
+                   [activeLink]="'monitoring'"
+                   [showBackLink]="true"
+                   [backLinkTarget]="['pipelines']">
 
-<div fxFlex="100" fxLayout="column">
-    <div fxLayout="column" class="fixed-height add-options">
-        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-right:10px;">
-            <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-                <mat-slide-toggle [(ngModel)]="autoRefresh" color="accent">Auto refresh</mat-slide-toggle>
-            </div>
-        </div>
+    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+        <mat-slide-toggle [(ngModel)]="autoRefresh" color="accent">Auto refresh</mat-slide-toggle>
     </div>
-    <div fxFlex="100" fxLayout="column" class="page-container-padding-inner">
-        <div fxFlex="100" *ngIf="!pipeline.running" fxLayout="column" fxLayoutAlign="center center">
-            <div class="error-message">(monitoring info is only available for running pipelines)</div>
-            <button mat-button mat-raised-button color="accent"
-                    matTooltip="Start Pipeline" matTooltipPosition="above"
-                    *ngIf="hasPipelineWritePrivileges"
-                    (click)="startPipeline()">
-                <mat-icon>play_arrow</mat-icon>
-                <span>&nbsp;Start pipeline</span>
-            </button>
-        </div>
-        <div fxFlex="100" *ngIf="pipeline.running && pipelineMonitoringInfoAvailable">
-            <div *ngFor="let pipelineElement of allElements" fxLayout="column" class="mb-10">
-                <div class="assembly-options-preview sp-blue-bg" [id]="pipelineElement.elementId">
-                    <div fxLayout="row" fxLayoutAlign="start center">
-                        <h4>{{pipelineElement.name}}</h4>
-                    </div>
-                </div>
-                <div class="sp-blue-border pipeline-element-statistics-panel">
-                    <div fxFlex="100" fxLayout="row">
-                        <div fxFlex="20" fxLayoutAlign="start start">
-                            <pipeline-elements-row style="width: 100%;"
-                                                   [showDescription]="false"
-                                                   [pipeline]="pipeline"
-                                                   [element]="pipelineElement"></pipeline-elements-row>
+    <div fxLayout="column" class="page-container-padding" *ngIf="pipeline">
+        <div fxFlex="100" fxLayout="column" class="page-container-padding-inner">
+            <div fxFlex="100" *ngIf="!pipeline.running" fxLayout="column" fxLayoutAlign="center center">
+                <div class="error-message">(monitoring info is only available for running pipelines)</div>
+                <button mat-button mat-raised-button color="accent"
+                        matTooltip="Start Pipeline" matTooltipPosition="above"
+                        *ngIf="hasPipelineWritePrivileges"
+                        (click)="startPipeline()">
+                    <mat-icon>play_arrow</mat-icon>
+                    <span>&nbsp;Start pipeline</span>
+                </button>
+            </div>
+            <div fxFlex="100" *ngIf="pipeline.running && pipelineMonitoringInfoAvailable">
+                <div *ngFor="let pipelineElement of allElements" fxLayout="column" class="mb-10">
+                    <div class="assembly-options-preview sp-blue-bg" [id]="pipelineElement.elementId">
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <h4>{{pipelineElement.name}}</h4>
                         </div>
-                        <div fxFlex="80" fxLayoutAlign="start center">
-                            <pipeline-element-statistics
-                                    [pipeline]="pipeline"
-                                    [pipelineElement]="pipelineElement"
-                                    [pipelineElementMonitoringInfo]="pipelineElementMonitoringInfo.get(pipelineElement.elementId)">
-                            </pipeline-element-statistics>
+                    </div>
+                    <div class="sp-blue-border pipeline-element-statistics-panel">
+                        <div fxFlex="100" fxLayout="row">
+                            <div fxFlex="20" fxLayoutAlign="start start">
+                                <pipeline-elements-row style="width: 100%;"
+                                                       [showDescription]="false"
+                                                       [pipeline]="pipeline"
+                                                       [element]="pipelineElement"></pipeline-elements-row>
+                            </div>
+                            <div fxFlex="80" fxLayoutAlign="start center">
+                                <pipeline-element-statistics
+                                        [pipeline]="pipeline"
+                                        [pipelineElement]="pipelineElement"
+                                        [pipelineElementMonitoringInfo]="pipelineElementMonitoringInfo.get(pipelineElement.elementId)">
+                                </pipeline-element-statistics>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</sp-basic-nav-tabs>

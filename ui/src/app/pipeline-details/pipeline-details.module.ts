@@ -24,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { PipelineDetailsComponent } from './pipeline-details.component';
 import { PipelinePreviewComponent } from './components/preview/pipeline-preview.component';
 import { EditorModule } from '../editor/editor.module';
 import { PipelineActionsComponent } from './components/actions/pipeline-actions.component';
@@ -39,40 +38,42 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BarchartWidgetComponent } from './components/monitoring/widget/barchart/barchart-widget.component';
 import { StatusWidgetComponent } from './components/monitoring/widget/status/status-widget.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { SpPipelineDetailsOverviewComponent } from './components/overview/pipeline-details-overview.component';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-    imports: [
-        CoreUiModule,
-        FlexLayoutModule,
-        FormsModule,
-        MatTabsModule,
-        MatButtonModule,
-        CustomMaterialModule,
-        CommonModule,
-        MatProgressSpinnerModule,
-        NgxChartsModule,
-        EditorModule,
-        FormsModule,
-        ReactiveFormsModule,
-        PlatformServicesModule
-    ],
-    declarations: [
-        PipelineActionsComponent,
-        PipelineElementsComponent,
-        PipelineElementsRowComponent,
-        PipelineElementStatisticsComponent,
-        PipelineDetailsComponent,
-        PipelineMonitoringComponent,
-        PipelineStatusComponent,
-        PipelinePreviewComponent,
-        QuickEditComponent,
-        StatusWidgetComponent,
-        BarchartWidgetComponent
-    ],
-    providers: [],
-    exports: [
-        PipelineDetailsComponent
-    ]
+  imports: [
+    CoreUiModule,
+    FlexLayoutModule,
+    FormsModule,
+    MatTabsModule,
+    MatButtonModule,
+    CustomMaterialModule,
+    CommonModule,
+    MatProgressSpinnerModule,
+    NgxChartsModule,
+    EditorModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PlatformServicesModule,
+    SharedUiModule
+  ],
+  declarations: [
+    PipelineActionsComponent,
+    PipelineElementsComponent,
+    PipelineElementsRowComponent,
+    PipelineElementStatisticsComponent,
+    PipelineMonitoringComponent,
+    PipelineStatusComponent,
+    PipelinePreviewComponent,
+    QuickEditComponent,
+    StatusWidgetComponent,
+    BarchartWidgetComponent,
+    SpPipelineDetailsOverviewComponent,
+  ],
+  providers: [],
+  exports: [
+  ]
 })
 export class PipelineDetailsModule {
 

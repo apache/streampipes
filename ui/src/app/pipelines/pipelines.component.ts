@@ -24,7 +24,7 @@ import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-p
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
 import { zip } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 
@@ -56,7 +56,8 @@ export class PipelinesComponent implements OnInit {
   constructor(private pipelineService: PipelineService,
               private dialogService: DialogService,
               private activatedRoute: ActivatedRoute,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private router: Router) {
     this.pipelineCategories = [];
     this.starting = false;
     this.stopping = false;
@@ -191,5 +192,9 @@ export class PipelinesComponent implements OnInit {
 
   showPipeline(pipeline) {
     pipeline.display = !pipeline.display;
+  }
+
+  navigateToPipelineEditor() {
+    this.router.navigate(['pipelines', 'create']);
   }
 }

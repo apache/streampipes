@@ -33,11 +33,21 @@ export class SpBasicNavTabsComponent {
   @Input()
   activeLink: string;
 
+  @Input()
+  showBackLink = false;
+
+  @Input()
+  backLinkTarget: string[] = [];
+
   constructor(private router: Router) {
 
   }
 
   navigateTo(spNavigationItem: SpNavigationItem) {
     this.router.navigate(spNavigationItem.itemLink);
+  }
+
+  navigateBack() {
+    this.router.navigate(this.backLinkTarget);
   }
 }

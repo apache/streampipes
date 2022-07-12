@@ -22,7 +22,6 @@ import {HomeComponent} from "./home/home.component";
 import {LoginComponent} from "./login/components/login/login.component";
 import {SetupComponent} from "./login/components/setup/setup.component";
 import {StreampipesComponent} from "./core/components/streampipes/streampipes.component";
-import {PipelineDetailsComponent} from "./pipeline-details/pipeline-details.component";
 import {StandaloneDashboardComponent} from "./dashboard/components/standalone/standalone-dashboard.component";
 import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children.guard";
 import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
@@ -70,7 +69,6 @@ const routes: Routes = [
 
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
-      { path: 'pipeline-details', component: PipelineDetailsComponent },
       { path: 'profile', component: ProfileComponent},
     ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard] }
 ];

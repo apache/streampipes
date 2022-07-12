@@ -141,12 +141,12 @@ export class PipelineOperationsService {
     });
   }
 
-  showPipelineInEditor(id) {
-    this.router.navigate(['editor'], { queryParams: { pipeline: id }});
+  showPipelineInEditor(id: string) {
+    this.router.navigate(['pipelines', 'modify', id]);
   }
 
-  showPipelineDetails(id) {
-    this.router.navigate(['pipeline-details'], { queryParams: { pipeline: id }});
+  showPipelineDetails(id: string) {
+    this.router.navigate(['pipelines', 'details', id]);
   }
 
   modifyPipeline(pipeline) {

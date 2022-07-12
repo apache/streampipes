@@ -42,7 +42,7 @@ spConnect:
   admin: False
   pageNames: 'PageName.CONNECT'
 spPipelines:
-  componentImport: True
+  componentImport: False
   ng5_moduleName: 'PipelinesModule'
   ng5_component: 'PipelinesComponent'
   ng5_componentPath: './pipelines/pipelines.component'

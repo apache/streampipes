@@ -60,9 +60,9 @@ export class EditorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params['pipeline']) {
-        this.currentModifiedPipelineId = params['pipeline'];
+    this.activatedRoute.params.subscribe(params => {
+      if (params.pipelineId) {
+        this.currentModifiedPipelineId = params.pipelineId;
       }
     });
     zip(this.pipelineElementService.getDataStreams(),

@@ -16,32 +16,16 @@
  *
  */
 
-.page-container-padding-inner {
-  padding: 10px;
-}
+import { SpNavigationItem } from '@streampipes/shared-ui';
 
-.sp-bg-lightgray {
-  background-color: var(--color-bg-1);
-}
+export class SpPipelineDetailsTabs {
 
-.sp-tab-bg {
-  background-color: var(--color-bg-1);
-}
-
-.page-container {
-  margin: 10px;
-  border: 1px solid var(--color-bg-3);
-  min-height: calc(100% - 20px);
-}
-
-.page-container-padding-inner {
-  margin: 10px;
-}
-
-.upper-case {
-  text-transform: uppercase;
-}
-
-.pr-5 {
-  padding-right: 5px;
+  public getTabs(pipelineId: string): SpNavigationItem[] {
+    return [
+      {itemId: 'overview', itemTitle: 'Overview', itemLink: ['pipelines', 'details', pipelineId, 'overview']},
+      {itemId: 'monitoring', itemTitle: 'Monitoring', itemLink: ['pipelines', 'details', pipelineId, 'monitoring']},
+      // {itemId: 'errors', itemTitle: 'Errors', itemLink: ['pipelines', 'details', pipelineId, 'errors']},
+      {itemId: 'quick-edit', itemTitle: 'Quick Edit', itemLink: ['pipelines', 'details', pipelineId, 'quick-edit']}
+    ];
+  }
 }

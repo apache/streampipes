@@ -19,7 +19,6 @@ login:
   logo-navigation: 'deployment/dev/img/logo-navigation.png'
   favicon: 'deployment/dev/img/favicon.png'
 modules:
-  - spEditor
   - spPipelines
   - spConnect
   - spDashboard
