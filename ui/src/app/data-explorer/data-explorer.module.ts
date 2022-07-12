@@ -64,7 +64,6 @@ import { LoadDataSpinnerComponent } from './components/widgets/utils/load-data-s
 import { NoDataInDateRangeComponent } from './components/widgets/utils/no-data/no-data-in-date-range.component';
 import { SelectPropertiesComponent } from './components/widgets/utils/select-properties/select-properties.component';
 import { SelectColorPropertiesComponent } from './components/widgets/utils/select-color-properties/select-color-properties.component';
-import { DataExplorerComponent } from './data-explorer.component';
 import { DataExplorerEditDataViewDialogComponent } from './dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { RefreshDashboardService } from './services/refresh-dashboard.service';
 import { ResizeService } from './services/resize.service';
@@ -176,7 +175,6 @@ export const MY_NATIVE_FORMATS = {
   declarations: [
     AggregateConfigurationComponent,
     DataDownloadDialogComponent,
-    DataExplorerComponent,
     DataExplorerDashboardGridComponent,
     DataExplorerDashboardOverviewComponent,
     DataExplorerDashboardPanelComponent,
@@ -236,7 +234,6 @@ export const MY_NATIVE_FORMATS = {
     }
   ],
   exports: [
-    DataExplorerComponent
   ]
 })
 export class DataExplorerModule {
