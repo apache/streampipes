@@ -39,47 +39,49 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { RouterModule } from "@angular/router";
+import { RouterModule } from '@angular/router';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        CoreUiModule,
-        FlexLayoutModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatButtonModule,
-        MatChipsModule,
-        MatFormFieldModule,
-        MatGridListModule,
-        MatIconModule,
-        MatInputModule,
-        MatDividerModule,
-        MatListModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatTableModule,
-        MatTabsModule,
-        MatTooltipModule,
-        PlatformServicesModule,
-        ServicesModule,
-        RouterModule.forChild([
-        {
-            path: 'files',
-            children: [
-            {
-                path: '',
-                component: FilesComponent
-            }]
-        }])
+  imports: [
+    CommonModule,
+    CoreUiModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatDividerModule,
+    MatListModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatTableModule,
+    MatTabsModule,
+    MatTooltipModule,
+    PlatformServicesModule,
+    ServicesModule,
+    SharedUiModule,
+    RouterModule.forChild([
+      {
+        path: 'files',
+        children: [
+          {
+            path: '',
+            component: FilesComponent
+          }]
+      }])
 
-    ],
-    declarations: [
-        FilesComponent,
-        FileOverviewComponent,
-        FileUploadDialogComponent
-    ],
-    providers: []
+  ],
+  declarations: [
+    FilesComponent,
+    FileOverviewComponent,
+    FileUploadDialogComponent
+  ],
+  providers: []
 })
 export class FilesModule {
 }
