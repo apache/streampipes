@@ -20,7 +20,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { GridsterModule } from 'angular-gridster2';
-import { DashboardComponent } from './dashboard.component';
 import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DashboardWidgetComponent } from './components/widget/dashboard-widget.component';
@@ -107,7 +106,6 @@ import { SharedUiModule } from '@streampipes/shared-ui';
   ],
   declarations: [
     BarRaceWidgetComponent,
-    DashboardComponent,
     DashboardGridComponent,
     DashboardOverviewComponent,
     DashboardPanelComponent,
@@ -137,8 +135,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     SemanticTypeUtilsService
   ],
   exports: [
-    DashboardComponent,
-    DashboardWidgetComponent
+    DashboardWidgetComponent,
+    StandaloneDashboardComponent
   ]
 })
 export class DashboardModule {
