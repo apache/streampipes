@@ -22,6 +22,9 @@ import { forkJoin, Observable, Subscription } from 'rxjs';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
 import { PanelType, DialogService } from '@streampipes/shared-ui';
+import { ActivatedRoute } from '@angular/router';
+import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
     selector: 'dashboard-panel',
@@ -30,8 +33,8 @@ import { PanelType, DialogService } from '@streampipes/shared-ui';
 })
 export class DashboardPanelComponent implements OnInit {
 
-    @Input() dashboard: Dashboard;
-    @Input('editMode') editMode: boolean;
+    dashboard: Dashboard;
+    editMode: boolean;
     @Output('editModeChange') editModeChange: EventEmitter<boolean> = new EventEmitter();
 
     public items: ClientDashboardItem[];
@@ -45,12 +48,36 @@ export class DashboardPanelComponent implements OnInit {
 
     constructor(private dashboardService: DashboardService,
                 private dialogService: DialogService,
-                private refreshDashboardService: RefreshDashboardService) {
+                private refreshDashboardService: RefreshDashboardService,
+                private route: ActivatedRoute,
+                private authService: AuthService) {
     }
 
     public ngOnInit() {
+        const params = this.route.snapshot.params;
+        const queryParams = this.route.snapshot.queryParams;
+
+        this.authService.user$.subscribe(user => {
+             const hasDashboardWritePrivileges = this.authService.hasRole(
+              UserPrivilege.PRIVILEGE_WRITE_DASHBOARD
+            );
+            if (queryParams.action === 'edit' && hasDashboardWritePrivileges) {
+                this.editMode = true;
+            }
+        });
+
+        this.getDashboard(params.id);
 
     }
+
+    getDashboard(dashboardId: string): void {
+        this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
+            if (dashboard) {
+                this.dashboard = dashboard;
+            }
+        });
+    }
+
 
     addWidget(): void {
         const dialogRef = this.dialogService.open(AddVisualizationDialogComponent, {
@@ -93,8 +120,8 @@ export class DashboardPanelComponent implements OnInit {
     }
 
     closeEditModeAndReloadDashboard() {
-        this.editModeChange.emit(!(this.editMode));
-        this.refreshDashboardService.notify(this.dashboard._id);
+        this.editMode = !this.editMode;
+        this.getDashboard(this.dashboard._id);
     }
 
     prepareWidgetUpdates(): Observable<any>[] {

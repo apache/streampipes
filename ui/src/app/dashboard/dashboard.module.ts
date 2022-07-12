@@ -61,81 +61,85 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { ServicesModule } from '../services/services.module';
 import { RouterModule } from '@angular/router';
+import { SharedUiModule } from '@streampipes/shared-ui';
+
 @NgModule({
-    imports: [
-        NgxEchartsModule.forRoot({
-            /**
-             * This will import all modules from echarts.
-             * If you only need custom modules,
-             * please refer to [Custom Build] section.
-             */
-            echarts: () => import('echarts'),
-        }),
-        CommonModule,
-        CoreUiModule,
-        MatTabsModule,
-        GridsterModule,
-        FlexLayoutModule,
-        CustomMaterialModule,
-        FormsModule,
-        ColorPickerModule,
-        MatGridListModule,
-        NgxChartsModule,
-        CdkTableModule,
-        LeafletModule,
-        PlatformServicesModule,
-        ServicesModule,
-        RouterModule.forChild([
-            {
-                path: 'dashboard',
-                children: [
-                    {
-                        path: '',
-                        component: DashboardComponent
-                    },
-                    {
-                        path: ':id',
-                        component: DashboardComponent
-                    },
-                ]
-            }
-        ]),
-    ],
-    declarations: [
-        BarRaceWidgetComponent,
-        DashboardComponent,
-        DashboardGridComponent,
-        DashboardOverviewComponent,
-        DashboardPanelComponent,
-        DashboardWidgetComponent,
-        AddVisualizationDialogComponent,
-        EditDashboardDialogComponent,
-        AreaWidgetComponent,
-        LineWidgetComponent,
-        NumberWidgetComponent,
-        TableWidgetComponent,
-        GaugeWidgetComponent,
-        ImageWidgetComponent,
-        MapWidgetComponent,
-        RawWidgetComponent,
-        StackedLineChartWidgetComponent,
-        HtmlWidgetComponent,
-        StatusWidgetComponent,
-        TrafficLightWidgetComponent,
-        WordcloudWidgetComponent,
-        StandaloneDashboardComponent
-    ],
-    providers: [
-        EditModeService,
-        ReloadPipelineService,
-        ResizeService,
-        RefreshDashboardService,
-        SemanticTypeUtilsService
-    ],
-    exports: [
-        DashboardComponent,
-        DashboardWidgetComponent
-    ]
+  imports: [
+    NgxEchartsModule.forRoot({
+      /**
+       * This will import all modules from echarts.
+       * If you only need custom modules,
+       * please refer to [Custom Build] section.
+       */
+      echarts: () => import('echarts'),
+    }),
+    CommonModule,
+    CoreUiModule,
+    MatTabsModule,
+    GridsterModule,
+    FlexLayoutModule,
+    CustomMaterialModule,
+    FormsModule,
+    ColorPickerModule,
+    MatGridListModule,
+    NgxChartsModule,
+    CdkTableModule,
+    LeafletModule,
+    PlatformServicesModule,
+    ServicesModule,
+    SharedUiModule,
+    RouterModule.forChild([
+      {
+        path: 'dashboard',
+        children: [
+          {
+            path: '',
+            component: DashboardOverviewComponent
+          },
+          {
+            path: ':id',
+            component: DashboardPanelComponent
+          }
+        ]
+      }
+    ]),
+    SharedUiModule,
+  ],
+  declarations: [
+    BarRaceWidgetComponent,
+    DashboardComponent,
+    DashboardGridComponent,
+    DashboardOverviewComponent,
+    DashboardPanelComponent,
+    DashboardWidgetComponent,
+    AddVisualizationDialogComponent,
+    EditDashboardDialogComponent,
+    AreaWidgetComponent,
+    LineWidgetComponent,
+    NumberWidgetComponent,
+    TableWidgetComponent,
+    GaugeWidgetComponent,
+    ImageWidgetComponent,
+    MapWidgetComponent,
+    RawWidgetComponent,
+    StackedLineChartWidgetComponent,
+    HtmlWidgetComponent,
+    StatusWidgetComponent,
+    TrafficLightWidgetComponent,
+    WordcloudWidgetComponent,
+    StandaloneDashboardComponent
+  ],
+  providers: [
+    EditModeService,
+    ReloadPipelineService,
+    ResizeService,
+    RefreshDashboardService,
+    SemanticTypeUtilsService
+  ],
+  exports: [
+    DashboardComponent,
+    DashboardWidgetComponent
+  ]
 })
 export class DashboardModule {
 

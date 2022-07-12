@@ -16,15 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
 import { Router } from '@angular/router';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { PanelType, DialogService } from '@streampipes/shared-ui';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
@@ -36,9 +35,7 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 })
 export class DashboardOverviewComponent implements OnInit {
 
-  @Input() dashboards: Dashboard[];
-  @Output() reloadDashboardsEmitter = new EventEmitter<void>();
-  @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
+  dashboards: Dashboard[];
 
   dataSource = new MatTableDataSource<Dashboard>();
   displayedColumns: string[] = [];
@@ -63,7 +60,14 @@ export class DashboardOverviewComponent implements OnInit {
       this.displayedColumns = ['name', 'actions'];
 
     });
-    this.dataSource.data = this.dashboards;
+    this.getDashboards();
+  }
+
+  getDashboards() {
+    this.dashboardService.getDashboards().subscribe(data => {
+      this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
+      this.dataSource.data = this.dashboards;
+    });
   }
 
   openNewDashboardDialog() {
@@ -85,7 +89,7 @@ export class DashboardOverviewComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.reloadDashboardsEmitter.emit();
+      this.getDashboards();
     });
   }
 
@@ -96,15 +100,16 @@ export class DashboardOverviewComponent implements OnInit {
   openDeleteDashboardDialog(dashboard: Dashboard) {
     // TODO add confirm dialog
     this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-      this.reloadDashboardsEmitter.emit();
+      this.getDashboards();
     });
   }
 
-  showDashboard(dashboard: Dashboard, openInEditMode: boolean) {
-    const data: Tuple2<Dashboard, boolean> = {} as Tuple2<Dashboard, boolean>;
-    data.a = dashboard;
-    data.b = openInEditMode;
-    this.selectDashboardEmitter.emit(data);
+  showDashboard(dashboard: Dashboard): void {
+    this.router.navigate(['dashboard', dashboard._id]);
+  }
+
+  editDashboard(dashboard: Dashboard): void {
+    this.router.navigate(['dashboard', dashboard._id], {queryParams: {action: 'edit'}});
   }
 
   openExternalDashboard(dashboard: Dashboard) {
@@ -127,7 +132,7 @@ export class DashboardOverviewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(refresh => {
       if (refresh) {
-        this.reloadDashboardsEmitter.emit();
+        this.getDashboards();
       }
     });
   }
