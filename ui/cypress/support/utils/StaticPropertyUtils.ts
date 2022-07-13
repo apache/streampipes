@@ -38,7 +38,7 @@ export class StaticPropertyUtils {
         cy.dataCy('reset-code-' + config.selector).click();
         cy.dataCy('code-editor-' + config.selector).type(config.value);
       } else if (config.type === 'input') {
-          cy.dataCy(config.selector).type(config.value).blur();
+          cy.dataCy(config.selector).clear().type(config.value).blur();
         } else {
           cy.dataCy(config.selector).type(config.value);
       }

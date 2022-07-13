@@ -49,7 +49,8 @@ export class PipelineUtils {
 
   private static goToPipelineEditor() {
     // Go to StreamPipes editor
-    cy.visit('#/editor');
+    cy.visit('#/pipelines');
+    cy.dataCy('pipelines-navigate-to-editor').click();
   }
 
   private static selectDataStream(pipelineInput: PipelineInput) {

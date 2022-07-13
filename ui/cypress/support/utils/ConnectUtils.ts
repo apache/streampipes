@@ -32,6 +32,8 @@ export class ConnectUtils {
 
     ConnectUtils.goToConnect();
 
+    ConnectUtils.goToNewAdapterPage();
+
     ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
     ConnectUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
@@ -72,6 +74,8 @@ export class ConnectUtils {
   private static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
     ConnectUtils.goToConnect();
 
+    ConnectUtils.goToNewAdapterPage();
+
     ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
     ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
@@ -100,6 +104,8 @@ export class ConnectUtils {
 
     ConnectUtils.goToConnect();
 
+    ConnectUtils.goToNewAdapterPage();
+
     ConnectUtils.selectAdapter(configuration.adapterType);
 
     ConnectUtils.configureAdapter(configuration.adapterConfiguration);
@@ -114,13 +120,17 @@ export class ConnectUtils {
     cy.visit('#/connect');
   }
 
+  public static goToNewAdapterPage() {
+    cy.dataCy('connect-create-new-adapter-button').click();
+  }
+
   public static selectAdapter(name) {
     // Select adapter
     cy.get('#' + name).click();
   }
 
   public static configureAdapter(configs: UserInput[]) {
-
+    cy.wait(2000);
     StaticPropertyUtils.input(configs);
 
     // Next Button should not be disabled
@@ -185,7 +195,6 @@ export class ConnectUtils {
     // Delete adapter
     cy.visit('#/connect');
 
-    cy.get('div').contains('My Adapters').parent().click();
     cy.dataCy('delete').should('have.length', 1);
     cy.dataCy('delete').click();
     cy.dataCy('delete-adapter').click();
@@ -207,6 +216,7 @@ export class ConnectUtils {
 
 
     ConnectUtils.goToConnect();
+    ConnectUtils.goToNewAdapterPage();
     ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
     ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
     ConnectUtils.configureFormat(adapterConfiguration);
