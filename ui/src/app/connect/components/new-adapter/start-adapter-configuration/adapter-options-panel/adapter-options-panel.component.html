@@ -25,7 +25,7 @@
             <div fxFlex="100" class="title" fxLayout="row">
                 <div fxLayoutAlign="start start" class="mr-15">
                     <mat-checkbox (change)="optionSelectedEmitter.emit($event.checked)"
-                                  data-cy="{{dataCy}}" class="large-checkbox">
+                                  [attr.data-cy]="dataCy" class="large-checkbox">
                     </mat-checkbox>
                 </div>
                 <div fxFlex fxLayout="column">

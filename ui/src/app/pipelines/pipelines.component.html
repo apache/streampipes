@@ -18,7 +18,7 @@
 
 <sp-basic-view [showBackLink]="false" [padding]="true">
     <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
-        <button mat-button mat-raised-button color="accent" (click)="navigateToPipelineEditor()">
+        <button mat-button mat-raised-button color="accent" (click)="navigateToPipelineEditor()" data-cy="pipelines-navigate-to-editor">
             <i class="material-icons">add</i>&nbsp;New pipeline
         </button>
         <button class="mr-10" mat-button color="accent" (click)="startAllPipelines(true)"

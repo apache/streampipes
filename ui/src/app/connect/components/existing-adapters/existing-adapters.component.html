@@ -18,7 +18,11 @@
 <sp-basic-view [showBackLink]="false" [padding]="true">
 
     <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
-        <button mat-button mat-raised-button color="accent" (click)="createNewAdapter()">
+        <button mat-button
+                mat-raised-button
+                color="accent"
+                data-cy="connect-create-new-adapter-button"
+                (click)="createNewAdapter()">
             <i class="material-icons">add</i>&nbsp;New adapter
         </button>
         <sp-connect-filter-toolbar
