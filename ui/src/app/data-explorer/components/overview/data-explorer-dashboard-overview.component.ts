@@ -37,6 +37,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
   dataSource = new MatTableDataSource<Dashboard>();
   displayedColumns: string[] = [];
+  dashboards: Dashboard[] = [];
 
   isAdmin = false;
 
@@ -64,7 +65,8 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
   getDashboards() {
     this.dataViewService.getDataViews().subscribe(data => {
-      this.dataSource.data = data.sort((a, b) => a.name.localeCompare(b.name));
+      this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
+      this.dataSource.data = this.dashboards;
     });
   }
 
