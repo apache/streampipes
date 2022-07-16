@@ -84,6 +84,7 @@ import { EditSchemaTransformationComponent } from './dialog/edit-event-property/
 import { EditValueTransformationComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
 import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
 import { SpAdapterOptionsPanelComponent } from './components/new-adapter/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
+import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 
 @NgModule({
   imports: [
@@ -146,6 +147,7 @@ import { SpAdapterOptionsPanelComponent } from './components/new-adapter/start-a
     FormatItemComponent,
     FormatListComponent,
     NewAdapterComponent,
+    SpAdapterTemplateDialogComponent,
     PipelineElementRuntimeInfoComponent,
     TimestampPipe,
     EditCorrectionValueComponent,

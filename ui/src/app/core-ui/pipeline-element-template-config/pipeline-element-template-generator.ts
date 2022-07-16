@@ -27,7 +27,8 @@ import {
   SecretStaticProperty,
   StaticPropertyAlternative,
   StaticPropertyAlternatives, StaticPropertyGroup,
-  StaticPropertyUnion
+  StaticPropertyUnion,
+  SlideToggleStaticProperty
 } from '@streampipes/platform-services';
 
 export class PipelineElementTemplateGenerator {
@@ -49,6 +50,8 @@ export class PipelineElementTemplateGenerator {
       return this.sp.options.filter(o => o.selected).map(o => o.name);
     } else if (this.sp instanceof CodeInputStaticProperty) {
       return this.sp.value;
+    } else if (this.sp instanceof SlideToggleStaticProperty) {
+      return this.sp.selected;
     } else if (this.sp instanceof CollectionStaticProperty) {
       return {
         members: this.addListEntry(this.sp.members)
@@ -60,9 +63,10 @@ export class PipelineElementTemplateGenerator {
         alternatives: this.addNestedEntry(this.sp.alternatives)
       };
     } else if (this.sp instanceof StaticPropertyAlternative) {
+      const sp = this.sp.staticProperty ? this.addNestedEntry([this.sp.staticProperty]) : {};
       return {
         selected: this.sp.selected,
-        staticProperty: this.addNestedEntry([this.sp.staticProperty])
+        staticProperty: sp
       };
     } else if (this.sp instanceof StaticPropertyGroup) {
       return { staticProperties: this.addNestedEntry(this.sp.staticProperties)};

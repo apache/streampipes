@@ -127,8 +127,10 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
       Map<String, Object> values = getAsMap(staticPropertyAlternative);
       StaticProperty property = staticPropertyAlternative.getStaticProperty();
       staticPropertyAlternative.setSelected(Boolean.parseBoolean(String.valueOf(values.get("selected"))));
-      PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(getAsMap(values, "staticProperty"));
-      property.accept(visitor);
+      if (property != null) {
+        PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(getAsMap(values, "staticProperty"));
+        property.accept(visitor);
+      }
     }
   }
 

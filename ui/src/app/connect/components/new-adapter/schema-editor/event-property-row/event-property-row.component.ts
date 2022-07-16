@@ -125,16 +125,6 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
         this.timestampProperty = this.isTimestampProperty(this.node.data);
         this.refreshTreeEmitter.emit();
     });
-    // const dialogRef = this.dialog.open(EditEventPropertyComponent, {
-    //   data: {
-    //     property: data,
-    //     isEditable: this.isEditable
-    //   }
-    // });
-    // dialogRef.afterClosed().subscribe(result => {
-    //   this.timestampProperty = this.isTimestampProperty(this.node.data);
-    //   this.refreshTreeEmitter.emit();
-    // });
   }
 
   public selectProperty(id: string, eventProperties: any): void {

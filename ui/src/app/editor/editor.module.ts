@@ -57,7 +57,6 @@ import { CustomOutputStrategyComponent } from './components/output-strategy/cust
 import { PropertySelectionComponent } from './components/output-strategy/property-selection/property-selection.component';
 import { UserDefinedOutputStrategyComponent } from './components/output-strategy/user-defined-output/user-defined-output.component';
 import { ConnectModule } from '../connect/connect.module';
-import { PipelineElementTemplateConfigComponent } from './components/pipeline-element-template-config/pipeline-element-template-config.component';
 import { EnabledPipelineElementFilter } from './filter/enabled-pipeline-element.filter';
 import { PipelineElementDraggedService } from './services/pipeline-element-dragged.service';
 import { PipelineCanvasScrollingService } from './services/pipeline-canvas-scrolling.service';
@@ -69,8 +68,8 @@ import { PipelineStyleService } from './services/pipeline-style.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { PipelineElementIconStandRowComponent } from './components/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component';
 import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
-import { PipelineElementNameFilterPipe } from "./services/pipeline-element-name-filter.pipe";
-import { PipelineElementGroupFilterPipe } from "./services/pipeline-element-group-filter.pipe";
+import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
+import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
 
 
 @NgModule({
@@ -113,7 +112,6 @@ import { PipelineElementGroupFilterPipe } from "./services/pipeline-element-grou
         PipelineElementOptionsComponent,
         PipelineElementPreviewComponent,
         PipelineElementRecommendationComponent,
-        PipelineElementTemplateConfigComponent,
         PipelineElementTypeFilterPipe,
         PipelineComponent,
         PropertySelectionComponent,

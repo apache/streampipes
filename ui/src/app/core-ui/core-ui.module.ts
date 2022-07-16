@@ -82,6 +82,8 @@ import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar-preview/image-bar-preview.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
+import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
 
 @NgModule({
   imports: [
@@ -123,6 +125,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     ImageAnnotationsComponent,
     ImageViewerComponent,
     ObjectPermissionDialogComponent,
+    PipelineElementTemplateConfigComponent,
+    PipelineElementTemplatePipe,
     SplitSectionComponent,
     StaticAnyInput,
     StaticPropertyComponent,
@@ -161,6 +165,7 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     ConfigureLabelsComponent,
     ImageComponent,
     ImageLabelingComponent,
+    PipelineElementTemplateConfigComponent,
     SelectLabelComponent,
     StaticAnyInput,
     StaticPropertyComponent,

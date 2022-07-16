@@ -15,27 +15,32 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.manager.template;
 
-import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.connect.adapter.*;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPipesEntity> extends AbstractTemplateHandler<T> {
+public class AdapterTemplateHandler extends AbstractTemplateHandler<AdapterDescription> {
 
-  public PipelineElementTemplateHandler(PipelineElementTemplate template,
-                                        T pipelineElement,
+  public AdapterTemplateHandler(PipelineElementTemplate template,
+                                        AdapterDescription adapterDescription,
                                         boolean overwriteNameAndDescription) {
-    super(template, pipelineElement, overwriteNameAndDescription);
+    super(template, adapterDescription, overwriteNameAndDescription);
   }
 
+  @Override
   protected void visitStaticProperties(PipelineElementTemplateVisitor visitor) {
-    element.getStaticProperties().forEach(config -> config.accept(visitor));
+    if (element instanceof SpecificAdapterStreamDescription || element instanceof SpecificAdapterSetDescription) {
+      element.getConfig().forEach(config -> config.accept(visitor));
+    } else if (element instanceof GenericAdapterSetDescription || element instanceof GenericAdapterStreamDescription) {
+      ((GenericAdapterDescription) element).getProtocolDescription().getConfig().forEach(config -> config.accept(visitor));
+    }
   }
 
+  @Override
   protected void applyNameAndDescription(String name, String description) {
     element.setName(name);
     element.setDescription(description);
   }
-
-
 }

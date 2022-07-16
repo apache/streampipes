@@ -17,7 +17,6 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { InvocablePipelineElementUnion } from '../../model/editor.model';
 import {
   PipelineElementTemplate,
   StaticPropertyUnion
@@ -32,18 +31,21 @@ import { PipelineElementTemplateGenerator } from './pipeline-element-template-ge
 export class PipelineElementTemplateConfigComponent implements OnInit {
 
   @Input()
-  cachedPipelineElement: InvocablePipelineElementUnion;
-
-  @Input()
   template: PipelineElementTemplate;
 
   @Input()
   templateConfigs: Map<string, any>;
 
+  @Input()
+  appId: string;
+
+  @Input()
+  staticProperties: StaticPropertyUnion[];
+
 
   ngOnInit(): void {
-    this.template.basePipelineElementAppId = this.cachedPipelineElement.appId;
-    this.cachedPipelineElement.staticProperties.forEach(sp => {
+    this.template.basePipelineElementAppId = this.appId;
+    this.staticProperties.forEach(sp => {
       this.templateConfigs.set(sp.internalName, this.makeTemplateValue(sp));
     });
   }

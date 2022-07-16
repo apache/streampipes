@@ -16,41 +16,35 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AdapterDescriptionUnion } from '@streampipes/platform-services';
+import { Component, OnInit } from '@angular/core';
+import { AdapterDescription, PipelineElementTemplateService } from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
+import { DialogService } from '@streampipes/shared-ui';
+import { AdapterTemplateService } from '../../../services/adapter-template.service';
+import { AdapterConfigurationDirective } from '../adapter-configuration.directive';
 
 @Component({
   selector: 'sp-specific-adapter-configuration',
   templateUrl: './specific-adapter-configuration.component.html',
   styleUrls: ['./specific-adapter-configuration.component.scss']
 })
-export class SpecificAdapterConfigurationComponent implements OnInit {
-
-  /**
-   * Adapter description the selected format is added to
-   */
-  @Input() adapterDescription: AdapterDescriptionUnion;
-
-  /**
-   * Cancels the adapter configuration process
-   */
-  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
-
-  /**
-   * Go to next configuration step when this is complete
-   */
-  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
+export class SpecificAdapterConfigurationComponent extends AdapterConfigurationDirective implements OnInit {
 
   specificAdapterSettingsFormValid: boolean;
 
   specificAdapterForm: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) {
+
+  constructor(_formBuilder: FormBuilder,
+              dialogService: DialogService,
+              pipelineElementTemplateService: PipelineElementTemplateService,
+              adapterTemplateService: AdapterTemplateService) {
+    super(_formBuilder, dialogService, pipelineElementTemplateService, adapterTemplateService);
   }
 
   ngOnInit(): void {
+    super.onInit();
+    this.cachedAdapterDescription = {...this.adapterDescription};
     // initialize form for validation
     this.specificAdapterForm = this._formBuilder.group({});
     this.specificAdapterForm.statusChanges.subscribe((status) => {
@@ -63,11 +57,17 @@ export class SpecificAdapterConfigurationComponent implements OnInit {
     }
   }
 
-  public removeSelection() {
-    this.removeSelectionEmitter.emit();
+  openTemplateDialog(): void {
+    const dialogRef = this.adapterTemplateService.getDialog(this.adapterDescription.config, this.adapterDescription.appId);
+
+    dialogRef.afterClosed().subscribe(refresh => {
+      this.loadPipelineElementTemplates();
+    });
   }
 
-  public clickNext() {
-    this.clickNextEmitter.emit();
+  afterTemplateReceived(adapterDescription: any) {
+    this.adapterDescription = AdapterDescription.fromDataUnion(adapterDescription);
   }
+
 }
+

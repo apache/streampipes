@@ -16,38 +16,24 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
-  AdapterDescriptionUnion,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
-  ProtocolDescription
+  ProtocolDescription,
+  PipelineElementTemplateService
 } from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatStepper } from '@angular/material/stepper';
+import { AdapterConfigurationDirective } from '../adapter-configuration.directive';
+import { AdapterTemplateService } from '../../../services/adapter-template.service';
+import { DialogService } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'sp-generic-adapter-configuration',
   templateUrl: './generic-adapter-configuration.component.html',
   styleUrls: ['./generic-adapter-configuration.component.scss']
 })
-export class GenericAdapterConfigurationComponent implements OnInit {
-
-  /**
-   * Adapter description the selected format is added to
-   */
-  @Input() adapterDescription: AdapterDescriptionUnion;
-
-  /**
-   * Cancels the adapter configuration process
-   */
-  @Output() removeSelectionEmitter: EventEmitter<boolean> = new EventEmitter();
-
-  /**
-   * Go to next configuration step when this is complete
-   */
-  @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
-
+export class GenericAdapterConfigurationComponent extends AdapterConfigurationDirective implements OnInit {
 
   genericAdapterSettingsFormValid: boolean;
 
@@ -55,12 +41,15 @@ export class GenericAdapterConfigurationComponent implements OnInit {
 
   protocolDescription: ProtocolDescription;
 
-  constructor(
-    private _formBuilder: FormBuilder
-  ) { }
+  constructor(_formBuilder: FormBuilder,
+              dialogService: DialogService,
+              pipelineElementTemplateService: PipelineElementTemplateService,
+              adapterTemplateService: AdapterTemplateService) {
+    super(_formBuilder, dialogService, pipelineElementTemplateService, adapterTemplateService);
+  }
 
   ngOnInit(): void {
-
+    super.onInit();
     if (this.adapterDescription instanceof GenericAdapterSetDescription ||
       this.adapterDescription instanceof GenericAdapterStreamDescription) {
       this.protocolDescription = this.adapterDescription.protocolDescription;
@@ -73,11 +62,16 @@ export class GenericAdapterConfigurationComponent implements OnInit {
     });
   }
 
-  public removeSelection() {
-    this.removeSelectionEmitter.emit();
+  openTemplateDialog(): void {
+    const dialogRef = this.adapterTemplateService.getDialog(this.protocolDescription.config, this.protocolDescription.appId);
+
+    dialogRef.afterClosed().subscribe(refresh => {
+      this.loadPipelineElementTemplates();
+    });
   }
 
-  public clickNext() {
-    this.clickNextEmitter.emit();
+  afterTemplateReceived(adapterDescription: any) {
+    this.protocolDescription = ProtocolDescription.fromData(adapterDescription.protocolDescription);
   }
+
 }

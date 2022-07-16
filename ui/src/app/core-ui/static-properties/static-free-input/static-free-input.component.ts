@@ -38,10 +38,10 @@ export class StaticFreeInputComponent
 
   quillModules: any = {
     toolbar: [['bold', 'italic', 'underline', 'strike'],
-      [{ 'header': 1 }, { 'header': 2 }],
-      [{ 'size': ['small', false, 'large', 'huge'] }],
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'color': [] }, { 'background': [] }]
+      [{'header': 1}, {'header': 2}],
+      [{'size': ['small', false, 'large', 'huge']}],
+      [{'header': [1, 2, 3, 4, 5, 6, false]}],
+      [{'color': []}, {'background': []}]
     ]
   };
 
@@ -50,7 +50,7 @@ export class StaticFreeInputComponent
     ]
   };
 
-  @ViewChild('textEditor', { static: false })
+  @ViewChild('textEditor', {static: false})
   quillEditorComponent: QuillEditorComponent;
 
   constructor(public staticPropertyUtil: StaticPropertyUtilService,
@@ -62,6 +62,7 @@ export class StaticFreeInputComponent
   ngOnInit() {
     this.addValidator(this.staticProperty.value, this.collectValidators());
     this.enableValidators();
+    this.emitUpdate();
   }
 
   collectValidators() {
@@ -83,7 +84,9 @@ export class StaticFreeInputComponent
   }
 
   emitUpdate() {
-    const valid = (this.staticProperty.value !== undefined && this.staticProperty.value !== '');
+    const valid = (this.staticProperty.value !== undefined &&
+      this.staticProperty.value !== '' &&
+      this.staticProperty.value !== null);
     this.updateEmitter.emit(new ConfigurationInfo(this.staticProperty.internalName, valid));
   }
 

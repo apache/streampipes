@@ -24,8 +24,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.streampipes.manager.template.AdapterTemplateHandler;
 import org.apache.streampipes.manager.template.DataProcessorTemplateHandler;
 import org.apache.streampipes.manager.template.DataSinkTemplateHandler;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
@@ -193,5 +195,33 @@ public class PipelineElementTemplateResource extends AbstractRestResource {
     PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
     return ok(new DataProcessorTemplateHandler(template, invocation, Boolean.parseBoolean(overwriteNameAndDescription))
             .applyTemplateOnPipelineElement());
+  }
+
+  @POST
+  @Path("{id}/adapter")
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  @Operation(summary = "Configure an adapter with a pipeline element template.",
+    tags = {"Pipeline Element Templates"},
+    responses = {
+      @ApiResponse(content = {
+        @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = AdapterDescription.class))
+      }, responseCode = "200", description = "The configured adapter model"),
+    })
+  public Response getPipelineElementForTemplate(@Parameter(description = "The id of the pipeline element template", required = true)
+                                                @PathParam("id") String id,
+
+                                                @Parameter(description = "Overwrite the name and description of the pipeline element with the labels given in the pipeline element template")
+                                                @QueryParam("overwriteNames") String overwriteNameAndDescription,
+
+                                                @RequestBody(description = "The adapter that should be configured with the template contents",
+                                                  content = @Content(schema = @Schema(implementation = AdapterDescription.class))) AdapterDescription adapterDescription) {
+    PipelineElementTemplate template = getPipelineElementTemplateStorage().getElementById(id);
+    var desc = new AdapterTemplateHandler(template, adapterDescription, Boolean.parseBoolean(overwriteNameAndDescription))
+      .applyTemplateOnPipelineElement();
+    return ok(desc);
   }
 }
