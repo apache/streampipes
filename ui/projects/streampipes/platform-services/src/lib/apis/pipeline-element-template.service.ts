@@ -48,6 +48,10 @@ export class PipelineElementTemplateService {
         }));
   }
 
+  deletePipelineElementTemplate(templateId: string): Observable<any> {
+    return this.http.delete(`${this.platformServicesCommons.apiBasePath}/pipeline-element-templates/${templateId}`);
+  }
+
   getConfiguredDataProcessorForTemplate(templateId: string, invocation: DataProcessorInvocation): Observable<DataProcessorInvocation> {
     return this.http.post(this.platformServicesCommons.apiBasePath
         + '/pipeline-element-templates/' + templateId + '/processor', invocation)

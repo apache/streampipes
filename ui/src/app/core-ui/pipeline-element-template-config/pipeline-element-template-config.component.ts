@@ -18,8 +18,9 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import {
+  PipelineElementTemplateService,
   PipelineElementTemplate,
-  StaticPropertyUnion
+  StaticPropertyUnion,
 } from '@streampipes/platform-services';
 import { PipelineElementTemplateGenerator } from './pipeline-element-template-generator';
 
@@ -42,11 +43,24 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
   @Input()
   staticProperties: StaticPropertyUnion[];
 
+  existingTemplates: PipelineElementTemplate[];
+
+  constructor(private pipelineElementTemplateService: PipelineElementTemplateService) {
+
+  }
+
 
   ngOnInit(): void {
+    this.loadTemplates();
     this.template.basePipelineElementAppId = this.appId;
     this.staticProperties.forEach(sp => {
       this.templateConfigs.set(sp.internalName, this.makeTemplateValue(sp));
+    });
+  }
+
+  loadTemplates() {
+    this.pipelineElementTemplateService.getPipelineElementTemplates(this.appId).subscribe(templates => {
+      this.existingTemplates = templates;
     });
   }
 
@@ -76,6 +90,11 @@ export class PipelineElementTemplateConfigComponent implements OnInit {
     const config: any = this.templateConfigs.get(sp.internalName);
     config.editable = ! config.editable;
     this.templateConfigs.set(sp.internalName, config);
+  }
+
+  deleteTemplate(templateId: string) {
+    this.pipelineElementTemplateService
+      .deletePipelineElementTemplate(templateId).subscribe(result => this.loadTemplates());
   }
 
 }
