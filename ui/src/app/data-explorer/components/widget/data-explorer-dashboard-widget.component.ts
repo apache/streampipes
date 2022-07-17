@@ -35,7 +35,7 @@ import { BaseWidgetData } from '../widgets/base/data-explorer-widget-data';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { DialogService, PanelType } from '../../../../../dist/streampipes/shared-ui';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',

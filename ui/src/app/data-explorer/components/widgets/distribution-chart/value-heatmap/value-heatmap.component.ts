@@ -18,9 +18,9 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
-import { ECharts } from "echarts/core";
-import { DataExplorerWidgetModel, SpQueryResult } from "../../../../../../../dist/streampipes/platform-services";
-import { DistributionChartWidgetModel } from "../model/distribution-chart-widget.model";
+import { ECharts } from 'echarts/core';
+import { SpQueryResult } from '@streampipes/platform-services';
+import { DistributionChartWidgetModel } from '../model/distribution-chart-widget.model';
 
 @Component({
   selector: 'sp-data-explorer-value-heatmap-widget',

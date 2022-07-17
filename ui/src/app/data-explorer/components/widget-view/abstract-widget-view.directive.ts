@@ -23,7 +23,7 @@ import {
   DataLakeMeasure,
   DataViewDataExplorerService,
   TimeSettings
-} from '../../../../../dist/streampipes/platform-services';
+} from '@streampipes/platform-services';
 import { ResizeService } from '../../services/resize.service';
 import { zip } from 'rxjs';
 
