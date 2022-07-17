@@ -22,6 +22,8 @@ import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { AuthService } from '../../../services/auth.service';
 import { PipelineService } from '@streampipes/platform-services';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
   selector: 'sp-pipeline-details-overview-component',
@@ -35,8 +37,9 @@ export class SpPipelineDetailsOverviewComponent extends SpPipelineDetailsDirecti
 
   constructor(activatedRoute: ActivatedRoute,
               pipelineService: PipelineService,
-              authService: AuthService) {
-    super(activatedRoute, pipelineService, authService);
+              authService: AuthService,
+              breadcrumbService: SpBreadcrumbService) {
+    super(activatedRoute, pipelineService, authService, breadcrumbService);
   }
 
   ngOnInit(): void {
@@ -48,6 +51,7 @@ export class SpPipelineDetailsOverviewComponent extends SpPipelineDetailsDirecti
   }
 
   onPipelineAvailable(): void {
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Overview'} ]);
   }
 
 

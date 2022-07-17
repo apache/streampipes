@@ -20,6 +20,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
 import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationRoutes } from '../configuration.routes';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'sp-email-configuration',
@@ -42,9 +44,11 @@ export class EmailConfigurationComponent implements OnInit {
   sendingEmailErrorMessage = '';
 
   constructor(private fb: FormBuilder,
-              private mailConfigService: MailConfigService) {}
+              private mailConfigService: MailConfigService,
+              private breadcrumbService: SpBreadcrumbService) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[2].itemTitle}]);
     this.loadMailConfig(true);
   }
 

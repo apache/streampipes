@@ -36,33 +36,37 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { SpBreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { SharedUiModule } from '@streampipes/shared-ui';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FlexLayoutModule,
-        MatGridListModule,
-        MatDividerModule,
-        MatListModule,
-        MatIconModule,
-        MatMenuModule,
-        MatBadgeModule,
-        MatButtonModule,
-        MatTooltipModule,
-        MatProgressSpinnerModule,
-        MatInputModule,
-        MatToolbarModule,
-        FormsModule,
-        RouterModule,
-        MatSlideToggleModule,
-        ReactiveFormsModule
-    ],
-    declarations: [
-        StreampipesComponent,
-        IconbarComponent,
-        ToolbarComponent
-    ],
-    providers: []
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    MatGridListModule,
+    MatDividerModule,
+    MatListModule,
+    MatIconModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatInputModule,
+    MatToolbarModule,
+    FormsModule,
+    RouterModule,
+    MatSlideToggleModule,
+    ReactiveFormsModule,
+    SharedUiModule
+  ],
+  declarations: [
+    SpBreadcrumbComponent,
+    StreampipesComponent,
+    IconbarComponent,
+    ToolbarComponent
+  ],
+  providers: []
 })
 export class CoreModule {
 }

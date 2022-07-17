@@ -21,9 +21,10 @@ import { DataMarketplaceService } from '../../services/data-marketplace.service'
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
 import { AdapterDescriptionUnion } from '@streampipes/platform-services';
-import { DialogService } from '@streampipes/shared-ui';
+import { DialogService, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
+import { SpConnectRoutes } from '../../connect.routes';
 
 @Component({
   selector: 'sp-data-marketplace',
@@ -43,10 +44,12 @@ export class DataMarketplaceComponent implements OnInit {
               private shepherdService: ShepherdService,
               private connectService: ConnectService,
               private dialogService: DialogService,
-              private router: Router) {
+              private router: Router,
+              private breadcrumbService: SpBreadcrumbService) {
   }
 
   ngOnInit() {
+    this.breadcrumbService.updateBreadcrumb([SpConnectRoutes.BASE, this.breadcrumbService.removeLink(SpConnectRoutes.CREATE)]);
     this.getAdapterDescriptions();
   }
 

@@ -18,6 +18,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
   selector: 'sp-security-configuration',
@@ -28,9 +30,10 @@ export class SecurityConfigurationComponent implements OnInit {
 
   tabs = SpConfigurationTabs.getTabs();
 
-  constructor() {}
+  constructor(private breadcrumbService: SpBreadcrumbService) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[5].itemTitle}]);
   }
 
 }

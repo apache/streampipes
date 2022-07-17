@@ -20,6 +20,8 @@ import { Component, OnInit } from '@angular/core';
 import { App } from './apps.model';
 import { AvailableAppsService } from './apps';
 import { Router } from '@angular/router';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpAppRoutes } from './apps.routes';
 
 @Component({
     templateUrl: './app-overview.component.html',
@@ -29,11 +31,13 @@ export class AppOverviewComponent implements OnInit {
 
     apps: App[] = [];
 
-    constructor(private router: Router) {
+    constructor(private router: Router,
+                private breadcrumbService: SpBreadcrumbService) {
 
     }
 
     ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpAppRoutes.BASE));
         this.apps = AvailableAppsService.apps;
     }
 

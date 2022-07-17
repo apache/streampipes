@@ -16,13 +16,11 @@
  *
  */
 
-export interface SpNavigationItem {
-  itemId: string;
-  itemTitle: string;
-  itemLink: string[];
-}
+import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
 
-export interface SpBreadcrumbItem {
-  label: string;
-  link?: string[];
+export class SpConnectRoutes {
+
+  static BASE: SpBreadcrumbItem = {label: 'Connect', link: ['connect']};
+  static CREATE: SpBreadcrumbItem = {label: 'New Adapter', link: ['connect', 'create']};
+
 }

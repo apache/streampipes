@@ -32,6 +32,8 @@ import { AuthService } from '../../../services/auth.service';
 import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
   selector: 'pipeline-monitoring',
@@ -56,8 +58,9 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
               pipelineService: PipelineService,
               authService: AuthService,
               private pipelineMonitoringService: PipelineMonitoringService,
-              private pipelineOperationsService: PipelineOperationsService) {
-    super(activatedRoute, pipelineService, authService);
+              private pipelineOperationsService: PipelineOperationsService,
+              breadcrumbService: SpBreadcrumbService) {
+    super(activatedRoute, pipelineService, authService, breadcrumbService);
   }
 
   ngOnInit(): void {
@@ -110,6 +113,7 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
   }
 
   onPipelineAvailable(): void {
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Monitoring'} ]);
     this.collectAllElements();
     this.checkMonitoringInfoCollection();
   }

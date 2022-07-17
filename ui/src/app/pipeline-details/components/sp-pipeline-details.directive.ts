@@ -22,6 +22,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Pipeline, PipelineService } from '@streampipes/platform-services';
 import { SpPipelineDetailsTabs } from '../pipeline-details-tabs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Directive()
 export abstract class SpPipelineDetailsDirective {
@@ -36,7 +37,8 @@ export abstract class SpPipelineDetailsDirective {
 
   constructor(protected activatedRoute: ActivatedRoute,
               protected pipelineService: PipelineService,
-              protected authService: AuthService) {
+              protected authService: AuthService,
+              protected breadcrumbService: SpBreadcrumbService) {
   }
 
   onInit(): void {

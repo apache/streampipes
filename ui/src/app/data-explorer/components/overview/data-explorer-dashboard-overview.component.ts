@@ -19,13 +19,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { Dashboard, DataViewDataExplorerService } from '@streampipes/platform-services';
+import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { Router } from '@angular/router';
+import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-overview',
@@ -48,11 +49,13 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
               private dashboardService: DataViewDataExplorerService,
               public dialogService: DialogService,
               private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private breadcrumbService: SpBreadcrumbService) {
 
   }
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpDataExplorerRoutes.BASE));
     this.authService.user$.subscribe(user => {
       this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
       this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);

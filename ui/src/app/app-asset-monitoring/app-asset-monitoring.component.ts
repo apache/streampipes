@@ -18,6 +18,9 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { DashboardConfiguration } from './model/dashboard-configuration.model';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpAppRoutes } from '../app-overview/apps.routes';
+import { SpAppAssetMonitoringRoutes } from './app-asset-monitoring.routes';
 
 @Component({
     selector: 'sp-app-asset-monitoring',
@@ -32,11 +35,12 @@ export class AppAssetMonitoringComponent implements OnInit {
     selectedDashboard: DashboardConfiguration;
     @Output() appOpened = new EventEmitter<boolean>();
 
-    constructor() {
+    constructor(private breadcrumbService: SpBreadcrumbService) {
 
     }
 
     ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb([SpAppRoutes.BASE, this.breadcrumbService.removeLink(SpAppAssetMonitoringRoutes.BASE)]);
         this.appOpened.emit(true);
     }
 

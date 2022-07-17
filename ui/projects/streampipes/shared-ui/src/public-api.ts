@@ -33,4 +33,6 @@ export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
 
 export * from './lib/models/sp-navigation.model';
 
+export * from './lib/services/breadcrumb.service';
+
 

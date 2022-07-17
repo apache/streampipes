@@ -16,13 +16,10 @@
  *
  */
 
-export interface SpNavigationItem {
-  itemId: string;
-  itemTitle: string;
-  itemLink: string[];
-}
+import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
 
-export interface SpBreadcrumbItem {
-  label: string;
-  link?: string[];
+export class SpAddRoutes {
+
+  static ADD_BASE_LINK = 'add';
+  static BASE: SpBreadcrumbItem = {label: 'Install Pipeline Elements', link: [SpAddRoutes.ADD_BASE_LINK]};
 }

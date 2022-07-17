@@ -16,15 +16,16 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Dashboard, ClientDashboardItem, DashboardWidgetModel, DashboardService } from '@streampipes/platform-services';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ClientDashboardItem, Dashboard, DashboardService, DashboardWidgetModel } from '@streampipes/platform-services';
 import { forkJoin, Observable, Subscription } from 'rxjs';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import { PanelType, DialogService } from '@streampipes/shared-ui';
+import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ActivatedRoute } from '@angular/router';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { AuthService } from '../../../services/auth.service';
+import { SpDashboardRoutes } from '../../dashboard.routes';
 
 @Component({
     selector: 'dashboard-panel',
@@ -50,7 +51,8 @@ export class DashboardPanelComponent implements OnInit {
                 private dialogService: DialogService,
                 private refreshDashboardService: RefreshDashboardService,
                 private route: ActivatedRoute,
-                private authService: AuthService) {
+                private authService: AuthService,
+                private breadcrumbService: SpBreadcrumbService) {
     }
 
     public ngOnInit() {
@@ -74,6 +76,7 @@ export class DashboardPanelComponent implements OnInit {
         this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
             if (dashboard) {
                 this.dashboard = dashboard;
+                this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.makeRoute([SpDashboardRoutes.BASE], this.dashboard.name));
             }
         });
     }

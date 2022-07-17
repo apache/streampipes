@@ -16,13 +16,34 @@
  *
  */
 
-export interface SpNavigationItem {
-  itemId: string;
-  itemTitle: string;
-  itemLink: string[];
-}
+import { Component, OnInit } from '@angular/core';
+import { SpBreadcrumbItem, SpBreadcrumbService } from '@streampipes/shared-ui';
+import { Router } from '@angular/router';
 
-export interface SpBreadcrumbItem {
-  label: string;
-  link?: string[];
+@Component({
+  selector: 'sp-breadcrumb',
+  templateUrl: './breadcrumb.component.html',
+  styleUrls: ['./breadcrumb.component.scss']
+})
+export class SpBreadcrumbComponent implements OnInit {
+
+  currentNavItems: SpBreadcrumbItem[] = [];
+
+  constructor(private breadcrumbService: SpBreadcrumbService,
+              private router: Router) {
+
+  }
+
+  ngOnInit(): void {
+    this.breadcrumbService.currentNavHierarchy$.subscribe(currentNavItems => {
+      this.currentNavItems = currentNavItems;
+    });
+  }
+
+  navigateTo(target: string[]) {
+    this.router.navigate(target);
+  }
+
+
+
 }

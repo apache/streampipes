@@ -35,9 +35,10 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from '../widget-view/slide-view/data-explorer-dashboard-slide-view.component';
-import { ConfirmDialogComponent } from '@streampipes/shared-ui';
+import { ConfirmDialogComponent, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs/operators';
+import { SpDataExplorerRoutes } from '../../data-explorer.routes';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -96,8 +97,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     private dashboardService: DataViewDataExplorerService,
     private route: ActivatedRoute,
     private dataViewService: DataViewDataExplorerService,
-    private router: Router
-  ) {
+    private router: Router,
+    private breadcrumbService: SpBreadcrumbService) {
   }
 
   public ngOnInit() {
@@ -301,6 +302,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
       this.dashboard = data.filter(
         (dashboard) => dashboard._id === dashboardId
       )[0];
+      this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.makeRoute([SpDataExplorerRoutes.BASE], this.dashboard.name));
       this.viewMode = this.dashboard.dashboardGeneralSettings.defaultViewMode || 'grid';
       this.timeSettings = (startTime && endTime) ? this.overrideTime(+startTime, +endTime) : this.dashboard.dashboardTimeSettings;
       if (this.dashboard.widgets.length === 0 && this.editMode) {

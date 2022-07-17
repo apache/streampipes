@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ConfigurationService } from '../shared/configuration.service';
 import { StreampipesPeContainer } from '../shared/streampipes-pe-container.model';
@@ -24,6 +24,8 @@ import { StreampipesPeContainerConifgs } from '../shared/streampipes-pe-containe
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
   selector: 'pipeline-element-configuration',
@@ -37,7 +39,7 @@ import { SpConfigurationTabs } from '../configuration-tabs';
     ]),
   ]
 })
-export class PipelineElementConfigurationComponent {
+export class PipelineElementConfigurationComponent implements OnInit {
 
   tabs = SpConfigurationTabs.getTabs();
 
@@ -52,8 +54,13 @@ export class PipelineElementConfigurationComponent {
   selectedConsulService: StreampipesPeContainer;
   consulServiceSelected = false;
 
-  constructor(private configurationService: ConfigurationService) {
+  constructor(private configurationService: ConfigurationService,
+              private breadcrumbService: SpBreadcrumbService) {
     this.getConsulServices();
+  }
+
+  ngOnInit() {
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[4].itemTitle}]);
   }
 
   getConsulServices(): void {

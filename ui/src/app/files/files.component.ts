@@ -17,8 +17,9 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { FileUploadDialogComponent } from './dialog/file-upload/file-upload-dialog.component';
+import { SpFilesRoutes } from './files.routes';
 
 @Component({
   templateUrl: './files.component.html',
@@ -28,12 +29,13 @@ export class FilesComponent implements OnInit {
 
   @ViewChild('fileOverviewComponent') fileOverviewComponent;
 
-  constructor(private dialogService: DialogService) {
+  constructor(private dialogService: DialogService,
+              private breadcrumbService: SpBreadcrumbService) {
 
   }
 
   ngOnInit() {
-
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpFilesRoutes.BASE));
   }
 
   openFileUploadDialog() {

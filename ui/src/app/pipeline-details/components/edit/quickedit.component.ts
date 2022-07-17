@@ -28,6 +28,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
   selector: 'quick-edit',
@@ -52,8 +54,9 @@ export class QuickEditComponent extends SpPipelineDetailsDirective implements On
               pipelineService: PipelineService,
               authService: AuthService,
               private fb: FormBuilder,
-              private changeDetectorRef: ChangeDetectorRef) {
-    super(activatedRoute, pipelineService, authService);
+              private changeDetectorRef: ChangeDetectorRef,
+              breadcrumbService: SpBreadcrumbService) {
+    super(activatedRoute, pipelineService, authService, breadcrumbService);
   }
 
   ngOnInit() {
@@ -142,6 +145,7 @@ export class QuickEditComponent extends SpPipelineDetailsDirective implements On
   }
 
   onPipelineAvailable(): void {
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Quick Edit'} ]);
   }
 }
 

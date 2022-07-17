@@ -16,25 +16,29 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
-    templateUrl: './info.component.html',
-    styleUrls: ['./info.component.css']
+  templateUrl: './info.component.html',
+  styleUrls: ['./info.component.css']
 })
-export class InfoComponent {
+export class InfoComponent implements OnInit {
 
-    currentTabIndex = 0;
+  currentTabIndex = 0;
 
-    constructor() {
+  constructor(private breadcrumbService: SpBreadcrumbService) {
 
-    }
+  }
 
-    tabChanged(tabChangeEvent: MatTabChangeEvent): void {
-        this.currentTabIndex = tabChangeEvent.index;
-    }
+  ngOnInit() {
+    this.breadcrumbService.updateBreadcrumb([{label: 'Info'}]);
+  }
 
+  tabChanged(tabChangeEvent: MatTabChangeEvent): void {
+    this.currentTabIndex = tabChangeEvent.index;
+  }
 
 
 }

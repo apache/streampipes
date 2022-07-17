@@ -16,25 +16,31 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
     serviceLinks = [];
 
     constructor(private homeService: HomeService,
                 private sanitizer: DomSanitizer,
                 private router: Router,
-                public appConstants: AppConstants) {
+                public appConstants: AppConstants,
+                private breadcrumbService: SpBreadcrumbService) {
         this.serviceLinks = this.homeService.getFilteredServiceLinks();
+    }
+
+    ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb([]);
     }
 
     getBackground(url) {

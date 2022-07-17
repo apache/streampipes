@@ -16,16 +16,7 @@
  *
  */
 
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
@@ -46,6 +37,8 @@ import { TransformationRuleService } from '../../services/transformation-rule.se
 import { IconService } from '../../services/icon.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataMarketplaceService } from '../../services/data-marketplace.service';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConnectRoutes } from '../../connect.routes';
 
 @Component({
   selector: 'sp-new-adapter',
@@ -102,7 +95,8 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private dataMarketplaceService: DataMarketplaceService,
-    private router: Router) {
+    private router: Router,
+    private breadcrumbService: SpBreadcrumbService) {
   }
 
   handleFileInput(files: any) {
@@ -122,6 +116,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     this.dataMarketplaceService.getAdapterDescriptions().subscribe(adapters => {
       const adapter = adapters.find(a => a.appId === this.route.snapshot.params.appId);
       this.adapter = this.dataMarketplaceService.cloneAdapterDescription(adapter);
+      this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.makeRoute([SpConnectRoutes.BASE, SpConnectRoutes.CREATE], this.adapter.name));
       (this.adapter as any).templateTitle = this.adapter.name;
       this.adapter.name = '';
       this.adapter.description = '';

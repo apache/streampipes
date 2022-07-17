@@ -30,9 +30,10 @@ import {
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -56,10 +57,12 @@ export class DatalakeConfigurationComponent implements OnInit {
     // protected dataLakeRestService: DatalakeRestService,
     private datalakeRestService: DatalakeRestService,
     private dataViewDataExplorerService: DataViewDataExplorerService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private breadcrumbService: SpBreadcrumbService) {
   }
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[1].itemTitle}]);
     this.loadAvailableMeasurements();
   }
 

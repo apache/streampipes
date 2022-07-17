@@ -21,7 +21,7 @@ import { AdapterDescriptionUnion, PipelineElementService } from '@streampipes/pl
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
 import { DataMarketplaceService } from '../../services/data-marketplace.service';
-import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -32,6 +32,7 @@ import { HelpComponent } from '../../../editor/dialog/help/help.component';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
+import { SpConnectRoutes } from '../../connect.routes';
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -60,11 +61,13 @@ export class ExistingAdaptersComponent implements OnInit {
               private authService: AuthService,
               private pipelineElementService: PipelineElementService,
               private router: Router,
-              private adapterFilter: AdapterFilterPipe) {
+              private adapterFilter: AdapterFilterPipe,
+              private breadcrumbService: SpBreadcrumbService) {
 
   }
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpConnectRoutes.BASE));
     this.authService.user$.subscribe(user => {
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
       this.getAdaptersRunning();

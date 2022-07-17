@@ -16,14 +16,14 @@
  *
  */
 
-import { RestApi } from '../services/rest-api.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AddService } from './services/add.service';
-import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
+import { SpAddRoutes } from './add.routes';
 
 @Component({
     selector: 'sp-add',
@@ -52,7 +52,8 @@ export class AddComponent implements OnInit {
     constructor(private addService: AddService,
                 private dialogService: DialogService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private router: Router) {
+                private router: Router,
+                private breadcrumbService: SpBreadcrumbService) {
         this.results = [];
         this.loading = false;
         this.endpointItems = [];
@@ -60,6 +61,7 @@ export class AddComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpAddRoutes.BASE));
         this.getEndpointItems();
         this.selectedTab = 'all';
     }

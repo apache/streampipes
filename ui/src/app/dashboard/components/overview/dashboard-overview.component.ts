@@ -23,10 +23,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditDashboardDialogComponent } from '../../dialogs/edit-dashboard/edit-dashboard-dialog.component';
 import { Router } from '@angular/router';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { SpDashboardRoutes } from '../../dashboard.routes';
 
 @Component({
   selector: 'dashboard-overview',
@@ -48,11 +49,13 @@ export class DashboardOverviewComponent implements OnInit {
               public dialog: MatDialog,
               private router: Router,
               private dialogService: DialogService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private breadcrumbService: SpBreadcrumbService) {
 
   }
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpDashboardRoutes.BASE));
     this.authService.user$.subscribe(user => {
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
       this.hasDashboardWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DASHBOARD);

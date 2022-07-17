@@ -16,13 +16,21 @@
  *
  */
 
-export interface SpNavigationItem {
-  itemId: string;
-  itemTitle: string;
-  itemLink: string[];
+.breadcrumb-outer {
+  margin: 10px 10px 0 10px;
+  max-height: 20px;
+  height: 20px;
+  font-size: 10pt;
+  color: var(--color-accent);
 }
 
-export interface SpBreadcrumbItem {
-  label: string;
-  link?: string[];
+.divider {
+  font-size: 10pt;
+  width: 10pt;
+  height: 10pt;
+}
+
+.bc-item:hover {
+  color: var(--color-primary);
+  cursor: pointer;
 }
