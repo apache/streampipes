@@ -39,7 +39,8 @@
             <div fxFlex fxLayout="column" class="designer-panel-config">
 
                 <div *ngIf="selectedIndex == 0">
-                    <sp-data-explorer-widget-data-settings [(dataLakeMeasure)]="dataLakeMeasure"
+                    <sp-data-explorer-widget-data-settings #dataSettingsPanel
+                                                           [(dataLakeMeasure)]="dataLakeMeasure"
                                                            [dataConfig]="currentlyConfiguredWidget.dataConfig"
                                                            [newWidgetMode]="newWidgetMode"
                                                            [widgetId]="currentlyConfiguredWidget._id"
@@ -64,6 +65,7 @@
                  *ngIf="newWidgetMode">
                 <button mat-button mat-raised-button color="accent"
                         data-cy="data-explorer-select-data-set-next-btn"
+                        [disabled]="selectedIndex === 0 && (!(currentlyConfiguredWidget.dataConfig.sourceConfigs) || currentlyConfiguredWidget.dataConfig.sourceConfigs.length === 0 || currentlyConfiguredWidget.dataConfig.sourceConfigs[0].measureName === '')"
                         *ngIf="newWidgetMode && selectedIndex == 0"
                         (click)="selectedIndex = 1">
                     Next

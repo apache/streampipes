@@ -51,8 +51,8 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
   @ViewChild('fieldSelectionPanel')
   fieldSelectionPanel: FieldSelectionPanelComponent;
 
-  availablePipelines: DataLakeMeasure[];
-  availableMeasurements: DataLakeMeasure[];
+  availablePipelines: DataLakeMeasure[] = [];
+  availableMeasurements: DataLakeMeasure[] = [];
 
   step = 0;
 
@@ -79,14 +79,42 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
         p.eventSchema = measurement.eventSchema;
       });
 
-      if (!this.dataConfig.sourceConfigs) {
-        this.addDataSource();
+      if (!(this.dataConfig.sourceConfigs)) {
+        const defaultConfigs = this.findDefaultConfig();
+        this.addDataSource(defaultConfigs.measureName, defaultConfigs.sourceType);
+        if (defaultConfigs.measureName !== undefined) {
+          this.updateMeasure(this.dataConfig.sourceConfigs[0], defaultConfigs.measureName);
+        }
+      } else {
+        this.checkSourceTypes();
       }
     });
   }
 
-  updateMeasure(sourceConfig: SourceConfig, event: MatSelectChange) {
-    sourceConfig.measure = this.findMeasure(event.value);
+  checkSourceTypes() {
+    this.dataConfig.sourceConfigs.forEach(sourceConfig => {
+      if (sourceConfig.sourceType === 'pipeline' && !this.existsPipelineWithMeasure(sourceConfig.measureName)) {
+        sourceConfig.sourceType = 'measurement';
+      }
+    });
+  }
+
+  existsPipelineWithMeasure(measureName: string) {
+    return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) !== undefined;
+  }
+
+  findDefaultConfig(): { measureName: string, sourceType: 'pipeline' | 'measurement' } {
+    if (this.availablePipelines.length > 0) {
+      return { measureName: this.availablePipelines[0].measureName, sourceType: 'pipeline'};
+    } else if (this.availableMeasurements.length > 0) {
+      return { measureName:  this.availableMeasurements[0].measureName, sourceType: 'measurement'};
+    } else {
+      return { measureName: undefined, sourceType: undefined };
+    }
+  }
+
+  updateMeasure(sourceConfig: SourceConfig, measureName: string) {
+    sourceConfig.measure = this.findMeasure(measureName);
     sourceConfig.queryConfig.fields = [];
     if (this.fieldSelectionPanel) {
       this.fieldSelectionPanel.applyDefaultFields();
@@ -94,7 +122,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   }
 
-  findMeasure(measureName) {
+  findMeasure(measureName: string) {
     return this.availablePipelines.find(pipeline => pipeline.measureName === measureName) ||
       this.availableMeasurements.find(m => m.measureName === measureName);
   }
@@ -108,16 +136,18 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     this.triggerDataRefresh();
   }
 
-  addDataSource() {
+  addDataSource(measureName = '',
+                sourceType: 'pipeline' | 'measurement' = 'pipeline') {
     if (!this.dataConfig.sourceConfigs) {
       this.dataConfig.sourceConfigs = [];
     }
-    this.dataConfig.sourceConfigs.push(this.makeSourceConfig());
+    this.dataConfig.sourceConfigs.push(this.makeSourceConfig(measureName, sourceType));
   }
 
-  makeSourceConfig(): SourceConfig {
+  makeSourceConfig(measureName = '',
+                   sourceType: 'pipeline' | 'measurement' = 'pipeline'): SourceConfig {
     return {
-      measureName: '',
+      measureName,
       queryConfig: {
         selectedFilters: [],
         limit: 100,
@@ -126,7 +156,7 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
         aggregationValue: 1
       },
       queryType: 'raw',
-      sourceType: 'pipeline'
+      sourceType
     };
   }
 

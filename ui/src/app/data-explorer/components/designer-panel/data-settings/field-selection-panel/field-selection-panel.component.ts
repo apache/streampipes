@@ -28,6 +28,8 @@ import { WidgetConfigurationService } from '../../../../services/widget-configur
 })
 export class FieldSelectionPanelComponent implements OnInit {
 
+  MAX_INITIAL_FIELDS = 3;
+
   @Input() sourceConfig: SourceConfig;
   @Input() widgetId: string;
 
@@ -49,6 +51,7 @@ export class FieldSelectionPanelComponent implements OnInit {
   applyDefaultFields() {
     if (this.sourceConfig.queryConfig.fields.length === 0) {
       this.addAllFields();
+      this.selectInitialFields();
     } else {
       const oldFields = this.sourceConfig.queryConfig.fields;
       this.sourceConfig.queryConfig.fields = [];
@@ -63,6 +66,14 @@ export class FieldSelectionPanelComponent implements OnInit {
         const fieldConfig = checkFields.find(field => field.runtimeName === property.runtimeName);
         const isSelected = fieldConfig && fieldConfig.selected;
         this.addField(property, isSelected, fieldConfig);
+      }
+    });
+  }
+
+  selectInitialFields() {
+    this.sourceConfig.queryConfig.fields.forEach((field, index) => {
+      if (index < this.MAX_INITIAL_FIELDS) {
+        field.selected = true;
       }
     });
   }

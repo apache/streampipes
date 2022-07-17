@@ -48,16 +48,16 @@
                         <mat-radio-group
                                 class="selection-radio-group"
                                 [(ngModel)]="sourceConfig.sourceType">
-                            <mat-radio-button class="selection-radio-button" [value]="'pipeline'">Pipeline
+                            <mat-radio-button class="selection-radio-button" [value]="'pipeline'" [disabled]="availablePipelines.length === 0">Pipeline
                             </mat-radio-button>
                             <mat-radio-button class="selection-radio-button" [value]="'measurement'">Measurement
                             </mat-radio-button>
                         </mat-radio-group>
                     </div>
                     <mat-form-field color="accent" fxFlex="100" *ngIf="sourceConfig.sourceType == 'pipeline'">
-                        <mat-label>Data Explorer Sinks</mat-label>
+                        <mat-label>Select data explorer sink</mat-label>
                         <mat-select [(value)]="sourceConfig.measureName"
-                                    (selectionChange)="updateMeasure(sourceConfig, $event)"
+                                    (selectionChange)="updateMeasure(sourceConfig, $event.value)"
                                     data-cy="data-explorer-select-data-set">
                             <mat-option *ngFor="let pipeline of availablePipelines"
                                         [value]="pipeline.measureName">
@@ -66,9 +66,9 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field color="accent" fxFlex="100" *ngIf="sourceConfig.sourceType == 'measurement'">
-                        <mat-label>Data Lake Measurements</mat-label>
+                        <mat-label>Select measurement</mat-label>
                         <mat-select [(value)]="sourceConfig.measureName"
-                                    (selectionChange)="updateMeasure(sourceConfig, $event)">
+                                    (selectionChange)="updateMeasure(sourceConfig, $event.value)">
                             <mat-option [value]="measurement.measureName"
                                         *ngFor="let measurement of availableMeasurements">
                                 <span class="pipeline-name">{{ measurement.measureName }}</span>
