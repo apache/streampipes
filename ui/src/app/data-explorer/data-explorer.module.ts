@@ -101,7 +101,8 @@ import { TooMuchDataComponent } from './components/widgets/utils/too-much-data/t
 import { SpValueHeatmapComponent } from './components/widgets/distribution-chart/value-heatmap/value-heatmap.component';
 import { RouterModule } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from './components/widget-view/slide-view/data-explorer-dashboard-slide-view.component';
-import { SharedUiModule } from '../../../dist/streampipes/shared-ui';
+import { SharedUiModule } from '@streampipes/shared-ui';
+import { DataExplorerPanelCanDeactivateGuard } from './data-explorer-panel.can-deactivate.guard';
 
 export const MY_NATIVE_FORMATS = {
   fullPickerInput: {
@@ -161,11 +162,13 @@ export const MY_NATIVE_FORMATS = {
           },
           {
             path: ':id',
-            component: DataExplorerDashboardPanelComponent
+            component: DataExplorerDashboardPanelComponent,
+            canDeactivate: [DataExplorerPanelCanDeactivateGuard]
           },
           {
             path: ':id/:startTime/:endTime',
-            component: DataExplorerDashboardPanelComponent
+            component: DataExplorerDashboardPanelComponent,
+            canDeactivate: [DataExplorerPanelCanDeactivateGuard]
           }
         ]
       }

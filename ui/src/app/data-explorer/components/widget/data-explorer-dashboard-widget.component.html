@@ -21,7 +21,7 @@
          [ngStyle]="{background: configuredWidget.baseAppearanceConfig.backgroundColor,
          color: configuredWidget.baseAppearanceConfig.textColor,
          height: (gridsterItemComponent.height - 13) + 'px',
-         border: currentlyConfiguredWidgetId === configuredWidget._id ? '4px solid var(--color-accent)' : '2px solid ' + configuredWidget.baseAppearanceConfig.backgroundColor}"
+         border: editMode && currentlyConfiguredWidgetId === configuredWidget._id ? '4px solid var(--color-accent)' : '2px solid ' + configuredWidget.baseAppearanceConfig.backgroundColor}"
          [attr.data-cy]="'widget-' + configuredWidget.baseAppearanceConfig.widgetTitle">
         <div class="widget-header h-40" *ngIf="!previewMode">
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center" class="widget-header-text">

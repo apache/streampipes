@@ -35,7 +35,7 @@ import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 })
 export class DashboardOverviewComponent implements OnInit {
 
-  dashboards: Dashboard[];
+  dashboards: Dashboard[] = [];
 
   dataSource = new MatTableDataSource<Dashboard>();
   displayedColumns: string[] = [];

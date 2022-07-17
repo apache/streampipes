@@ -17,8 +17,7 @@
  */
 
 import { Component, EventEmitter, OnInit, Output, ViewChild, } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { combineLatest, Observable, zip } from 'rxjs';
+import { Observable, of, zip } from 'rxjs';
 import { DataExplorerDashboardGridComponent } from '../widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
@@ -34,8 +33,11 @@ import { DataExplorerDesignerPanelComponent } from '../designer-panel/data-explo
 import { TimeSelectionService } from '../../services/time-selection.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { DataExplorerDashboardSlideViewComponent } from '../widget-view/slide-view/data-explorer-dashboard-slide-view.component';
+import { ConfirmDialogComponent } from '@streampipes/shared-ui';
+import { MatDialog } from '@angular/material/dialog';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-panel',
@@ -88,24 +90,24 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
 
   constructor(
     private dataViewDataExplorerService: DataViewDataExplorerService,
-    public dialog: MatDialog,
+    private dialog: MatDialog,
     private timeSelectionService: TimeSelectionService,
     private authService: AuthService,
     private dashboardService: DataViewDataExplorerService,
     private route: ActivatedRoute,
     private dataViewService: DataViewDataExplorerService,
     private router: Router
-  ) { }
+  ) {
+  }
 
   public ngOnInit() {
-
 
     const params = this.route.snapshot.params;
     const queryParams = this.route.snapshot.queryParams;
 
     const startTime = params.startTime;
     const endTime = params.endTime;
-  
+
     this.getDashboard(params.id, startTime, endTime);
 
 
@@ -316,6 +318,30 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   }
 
   goBackToOverview() {
-    this.router.navigate(['dataexplorer/']);
+    this.router.navigate(['dataexplorer']);
+  }
+
+  confirmLeaveDashboard(route: ActivatedRouteSnapshot,
+                        state: RouterStateSnapshot): Observable<boolean> {
+    if (this.editMode) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '500px',
+        data: {
+          'title': 'Save changes?',
+          'subtitle': 'Update all changes to dashboard widgets or discard current changes.',
+          'cancelTitle': 'Discard changes',
+          'okTitle': 'Update',
+          'confirmAndCancel': true
+        },
+      });
+      return dialogRef.afterClosed().pipe(map(shouldUpdate => {
+        if (shouldUpdate) {
+          this.persistDashboardChanges();
+        }
+        return true;
+      }));
+    } else {
+      return of(true);
+    }
   }
 }
