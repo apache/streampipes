@@ -41,6 +41,9 @@ export class DistributionWidgetConfigComponent
 
   updateDisplayType(selectedType: string) {
     this.currentlyConfiguredWidget.visualizationConfig.displayType = selectedType;
+    if (this.fieldProvider.numericFields.find(field => field === this.currentlyConfiguredWidget.visualizationConfig.selectedProperty) === undefined) {
+      this.currentlyConfiguredWidget.visualizationConfig.selectedProperty = this.fieldProvider.numericFields[0];
+    }
     this.triggerDataRefresh();
   }
 
