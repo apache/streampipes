@@ -13,6 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+spAssets:
+  componentImport: False
+  ng5_moduleName: 'AssetsModule'
+  ng5_component: 'EditorComponent'
+  ng5_componentPath: './editor/editor.component'
+  path: './assets/assets.module'
+  link: 'assets'
+  url: '/editor/:pipeline'
+  title: 'Asset Management'
+  description: 'Manage assets which help assigning pipelines, dashboards and adapters to real-world objects such as machines and plants.'
+  icon: 'precision_manufacturing'
+  homeImage: ''
+  admin: true
+  pageNames: 'PageName.ASSETS'
 spEditor:
   componentImport: True
   ng5_moduleName: 'EditorModule'

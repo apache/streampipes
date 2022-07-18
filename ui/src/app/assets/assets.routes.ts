@@ -16,35 +16,11 @@
  *
  */
 
-export interface AssetType {
-  assetIcon: string;
-  assetIconColor: string;
-  assetTypeCategory: string;
-  assetTypeLabel: string;
+import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+
+export class SpAssetRoutes {
+
+  static BASE: SpBreadcrumbItem = {label: 'Asset Management', link: ['assets']};
+  static CREATE: SpBreadcrumbItem = {label: 'New Asset', link: ['assets', 'create']};
+
 }
-
-export interface AssetLink {
-  resourceId: string;
-  linkType: 'data-view' | 'dashboard' | 'adapter' | 'stream' | string;
-  linkLabel: string;
-  editingDisabled: boolean;
-}
-
-export interface SpAsset {
-  assetId: string;
-  assetName: string;
-  assetDescription: string;
-
-  assetType: AssetType;
-  assetLinks: AssetLink[];
-
-  assets: SpAsset[];
-}
-
-export interface SpAssetModel extends SpAsset {
-  _id: string;
-  _rev: string;
-
-  removable: boolean;
-}
-

@@ -16,35 +16,38 @@
  *
  */
 
-export interface AssetType {
-  assetIcon: string;
-  assetIconColor: string;
-  assetTypeCategory: string;
-  assetTypeLabel: string;
+.designer-panel-content {
+  padding: 0;
+  overflow-y: auto;
 }
 
-export interface AssetLink {
-  resourceId: string;
-  linkType: 'data-view' | 'dashboard' | 'adapter' | 'stream' | string;
-  linkLabel: string;
-  editingDisabled: boolean;
+.designer-panel-config {
+  padding: 0;
 }
 
-export interface SpAsset {
-  assetId: string;
-  assetName: string;
-  assetDescription: string;
-
-  assetType: AssetType;
-  assetLinks: AssetLink[];
-
-  assets: SpAsset[];
+.designer-panel-title {
+  margin-left: 5px;
 }
 
-export interface SpAssetModel extends SpAsset {
-  _id: string;
-  _rev: string;
-
-  removable: boolean;
+.designer-panel-header {
+  border-bottom:1px solid var(--color-tab-border);
 }
 
+.sp-tree-invisible {
+  display: none;
+}
+
+.sp-tree ul,
+.sp-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+.sp-tree .mat-nested-tree-node div[role=group] {
+  padding-left: 40px;
+}
+
+.sp-tree div[role=group] > .mat-tree-node {
+  padding-left: 40px;
+}

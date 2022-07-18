@@ -30,4 +30,5 @@ export enum PageName {
   FILE_UPLOAD,
   PROFILE,
   SETTINGS,
+  ASSETS
 }

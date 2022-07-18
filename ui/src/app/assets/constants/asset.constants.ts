@@ -16,35 +16,7 @@
  *
  */
 
-export interface AssetType {
-  assetIcon: string;
-  assetIconColor: string;
-  assetTypeCategory: string;
-  assetTypeLabel: string;
+export class AssetConstants {
+
+  public static ASSET_APP_DOC_NAME = 'asset-management';
 }
-
-export interface AssetLink {
-  resourceId: string;
-  linkType: 'data-view' | 'dashboard' | 'adapter' | 'stream' | string;
-  linkLabel: string;
-  editingDisabled: boolean;
-}
-
-export interface SpAsset {
-  assetId: string;
-  assetName: string;
-  assetDescription: string;
-
-  assetType: AssetType;
-  assetLinks: AssetLink[];
-
-  assets: SpAsset[];
-}
-
-export interface SpAssetModel extends SpAsset {
-  _id: string;
-  _rev: string;
-
-  removable: boolean;
-}
-

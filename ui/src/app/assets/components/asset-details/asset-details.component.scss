@@ -16,35 +16,17 @@
  *
  */
 
-export interface AssetType {
-  assetIcon: string;
-  assetIconColor: string;
-  assetTypeCategory: string;
-  assetTypeLabel: string;
+.dashboard-grid {
+  display:flex;
+  flex-direction: column;
+  flex: 1 1 100%;
 }
 
-export interface AssetLink {
-  resourceId: string;
-  linkType: 'data-view' | 'dashboard' | 'adapter' | 'stream' | string;
-  linkLabel: string;
-  editingDisabled: boolean;
+.designer-panel-container {
+  width: 100%;
+  height: 100%;
 }
 
-export interface SpAsset {
-  assetId: string;
-  assetName: string;
-  assetDescription: string;
-
-  assetType: AssetType;
-  assetLinks: AssetLink[];
-
-  assets: SpAsset[];
+.designer-panel {
+  width: 400px;
 }
-
-export interface SpAssetModel extends SpAsset {
-  _id: string;
-  _rev: string;
-
-  removable: boolean;
-}
-
