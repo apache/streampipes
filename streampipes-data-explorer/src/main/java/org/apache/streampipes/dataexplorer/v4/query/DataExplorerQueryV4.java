@@ -44,6 +44,10 @@ public class DataExplorerQueryV4 {
 
     protected int maximumAmountOfEvents;
 
+    public DataExplorerQueryV4() {
+
+    }
+
     public DataExplorerQueryV4(Map<String, QueryParamsV4> params) {
         this.params = params;
         this.maximumAmountOfEvents = -1;
@@ -81,6 +85,15 @@ public class DataExplorerQueryV4 {
         SpQueryResult dataResult = postQuery(result);
 
         influxDB.close();
+        return dataResult;
+    }
+
+    public SpQueryResult executeQuery(Query query) {
+        InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+        QueryResult result = influxDB.query(query);
+        SpQueryResult dataResult = postQuery(result);
+        influxDB.close();
+
         return dataResult;
     }
 
