@@ -27,4 +27,6 @@ public interface IDataLakeStorage {
     boolean storeDataLakeMeasure(DataLakeMeasure measure);
 
     List<DataLakeMeasure> getAllDataLakeMeasures();
+
+    DataLakeMeasure findOne(String id);
 }
