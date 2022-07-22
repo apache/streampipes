@@ -114,6 +114,12 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  public DataLakeQueryBuilder withFilter(NestedClause clause) {
+    this.whereClauses.add(clause);
+
+    return this;
+  }
+
   public DataLakeQueryBuilder withGroupByTime(String timeInterval) {
 
     this.groupByClauses.add(new RawTextClause("time(" + timeInterval + ")"));
