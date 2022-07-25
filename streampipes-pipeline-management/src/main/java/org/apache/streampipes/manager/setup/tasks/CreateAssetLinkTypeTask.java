@@ -31,12 +31,12 @@ import java.util.List;
 public class CreateAssetLinkTypeTask implements InstallationTask {
 
   private List<AssetLinkType> defaultLinkTypes = Arrays.asList(
-    new AssetLinkType("data-view", "Data View", "var(--color-data-view)", "search", "data-view"),
-    new AssetLinkType("dashboard", "Dashboard", "var(--color-dashboard)", "insert_chart", "dashboard"),
-    new AssetLinkType("adapter", "Adapter", "var(--color-adapter)", "power", "adapter"),
-    new AssetLinkType("data-source", "Data Source", "var(--color-data-source)", "", "data-source"),
-    new AssetLinkType("pipeline", "Pipeline", "var(--color-pipeline)", "play_arrow", "pipeline"),
-    new AssetLinkType("measurement", "Data Lake Storage", "var(--color-measurement", "", "measurement")
+    new AssetLinkType("data-view", "Data View", "var(--color-data-view)", "search", "data-view", List.of("dataexplorer"), true),
+    new AssetLinkType("dashboard", "Dashboard", "var(--color-dashboard)", "insert_chart", "dashboard", List.of("dashboard"), true),
+    new AssetLinkType("adapter", "Adapter", "var(--color-adapter)", "power", "adapter", List.of("connect"), true),
+    new AssetLinkType("data-source", "Data Source", "var(--color-data-source)", "", "data-source", List.of(), false),
+    new AssetLinkType("pipeline", "Pipeline", "var(--color-pipeline)", "play_arrow", "pipeline", List.of("pipeline", "details"), true),
+    new AssetLinkType("measurement", "Data Lake Storage", "var(--color-measurement", "", "measurement", List.of(), false)
   );
 
   @Override

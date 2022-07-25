@@ -22,6 +22,8 @@ export interface AssetLinkType {
   linkColor: string;
   linkIcon?: string;
   linkQueryHint?: string;
+  navPaths: string[];
+  navigationActive: boolean;
 }
 
 export interface AssetType {
@@ -36,6 +38,7 @@ export interface AssetLink {
   linkType: 'data-view' | 'dashboard' | 'adapter' | 'source' | string;
   linkLabel: string;
   editingDisabled: boolean;
+  navigationActive: boolean;
 }
 
 export interface SpAsset {

@@ -22,6 +22,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AssetLinkType {
 
   public final String appDocType = GenericDocTypes.DOC_ASSET_LINK_TYPE;
@@ -34,16 +37,27 @@ public class AssetLinkType {
   private String linkColor;
   private String linkIcon;
   private String linkQueryHint;
+  private List<String> navPaths;
+  private boolean navigationActive;
 
-  public AssetLinkType(String linkType, String linkLabel, String linkColor, String linkIcon, String linkQueryHint) {
+  public AssetLinkType(String linkType,
+                       String linkLabel,
+                       String linkColor,
+                       String linkIcon,
+                       String linkQueryHint,
+                       List<String> navPaths,
+                       boolean navigationActive) {
     this.linkType = linkType;
     this.linkLabel = linkLabel;
     this.linkColor = linkColor;
     this.linkIcon = linkIcon;
     this.linkQueryHint = linkQueryHint;
+    this.navPaths = navPaths;
+    this.navigationActive = navigationActive;
   }
 
   public AssetLinkType() {
+    this.navPaths = new ArrayList<>();
   }
 
   public String getLinkType() {
@@ -96,5 +110,21 @@ public class AssetLinkType {
 
   public String getAppDocType() {
     return appDocType;
+  }
+
+  public List<String> getNavPaths() {
+    return navPaths;
+  }
+
+  public void setNavPaths(List<String> navPaths) {
+    this.navPaths = navPaths;
+  }
+
+  public boolean isNavigationActive() {
+    return navigationActive;
+  }
+
+  public void setNavigationActive(boolean navigationActive) {
+    this.navigationActive = navigationActive;
   }
 }

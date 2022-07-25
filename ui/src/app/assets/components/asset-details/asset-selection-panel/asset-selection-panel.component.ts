@@ -66,14 +66,12 @@ export class SpAssetSelectionPanelComponent implements OnInit {
     node.assets.push(this.makeNewAsset());
     this.dataSource.data = [this.assetModel];
     this.treeControl.dataNodes = [this.assetModel];
-    this.dataSource.data = null;
-    this.dataSource.data = [this.assetModel];
+    this.rerenderTree();
   }
 
   deleteAsset(node: SpAsset) {
     this.removeAssetWithId(this.assetModel.assets, node.assetId);
-    this.dataSource.data = null;
-    this.dataSource.data = [this.assetModel];
+    this.rerenderTree();
   }
 
   removeAssetWithId(assets: SpAsset[], id: string) {
@@ -86,6 +84,14 @@ export class SpAssetSelectionPanelComponent implements OnInit {
         this.removeAssetWithId(assets[i].assets, id);
       }
     }
+  }
+
+  rerenderTree(): void {
+    this.dataSource.data = null;
+    this.dataSource.data = [this.assetModel];
+    this.treeControl.expandAll();
+
+
   }
 
   makeNewAsset(): SpAsset {

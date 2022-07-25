@@ -19,6 +19,7 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'sp-asset-link-item-component',
@@ -47,15 +48,16 @@ export class SpAssetLinkItemComponent implements OnInit {
 
   currentAssetLinkType: AssetLinkType;
 
+  constructor(private router: Router) {
+
+  }
+
   ngOnInit(): void {
-    console.log(this.assetLinkTypes);
-    console.log(this.assetLink);
     this.currentAssetLinkType = this.assetLinkTypes.find(t => t.linkType === this.assetLink.linkType);
-    console.log(this.currentAssetLinkType);
   }
 
   openLink(): void {
-
+    this.router.navigate([...this.currentAssetLinkType.navPaths, this.assetLink.resourceId]);
   }
 
   editLink(): void {

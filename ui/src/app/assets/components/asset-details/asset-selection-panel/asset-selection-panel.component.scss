@@ -58,9 +58,11 @@
   font-size: 13pt;
   width: 100%;
   margin-right: 10px;
+  padding-left: 5px;
 }
 
 .selected-node {
   font-weight: bold;
-  border-bottom: 4px solid var(--color-primary);
+  background: var(--color-bg-2);
+  border-bottom: 2px solid var(--color-primary);
 }

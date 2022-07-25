@@ -28,8 +28,8 @@
             <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="sp-tree" #tree>
                 <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
                     <div [ngClass]="node.assetId === selectedAsset.assetId ? 'asset-node selected-node' : 'asset-node'"
-                         fxLayout="row" fxFlex="100">
-                        <span (click)="selectNode(node)" fxLayoutAlign="end center">{{node.assetName}}</span>
+                         fxLayout="row" fxFlex="100" (click)="selectNode(node)" >
+                        <span fxLayoutAlign="end center">{{node.assetName}}</span>
                         <div fxLayoutAlign="end center" fxFlex *ngIf="editMode">
                             <button mat-button
                                     mat-icon-button
@@ -54,8 +54,8 @@
                             </mat-icon>
                         </button>
                         <div [ngClass]="node.assetId === selectedAsset.assetId ? 'asset-node selected-node' : 'asset-node'"
-                             fxLayout="row" fxFlex="100">
-                            <span (click)="selectNode(node)" fxLayoutAlign="start center">{{node.assetName}}</span>
+                             fxLayout="row" fxFlex="100" (click)="selectNode(node)" >
+                            <span fxLayoutAlign="start center">{{node.assetName}}</span>
                             <div fxLayoutAlign="end center" fxFlex *ngIf="editMode">
                                 <button mat-button
                                         mat-icon-button

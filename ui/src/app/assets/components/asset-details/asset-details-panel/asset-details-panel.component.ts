@@ -49,7 +49,7 @@ export class SpAssetDetailsPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this.genericStorageService.getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME).subscribe(assetLinkTypes => {
-      this.assetLinkTypes = assetLinkTypes;
+      this.assetLinkTypes = assetLinkTypes.sort((a, b) => a.linkLabel.localeCompare(b.linkLabel));
     });
   }
 

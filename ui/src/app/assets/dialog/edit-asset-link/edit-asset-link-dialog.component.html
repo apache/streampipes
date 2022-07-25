@@ -23,30 +23,57 @@
             <div fxFlex style="margin:5px;width:100%" fxLayout="column">
                 <mat-form-field color="accent">
                     <mat-label>Link Type</mat-label>
-                    <mat-select fxFlex [(ngModel)]="clonedAssetLink.linkType"
+                    <mat-select fxFlex [(value)]="clonedAssetLink.linkType"
                                 required (selectionChange)="onLinkTypeChanged($event)">
                         <mat-option *ngFor="let assetLinkType of assetLinkTypes"
-                                    [value]="assetLinkType.linkType">{{assetLinkType.linkLabel}}</mat-option>
+                                    [value]="assetLinkType.linkQueryHint">{{assetLinkType.linkLabel}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div *ngIf="selectedLinkType === 'pipeline'" fxLayout="column">
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Pipelines</mat-label>
-                    <mat-select [(ngModel)]="clonedAssetLink.resourceId" fxFlex
+                    <mat-select [(ngModel)]="currentResource"
+                                fxFlex (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
                                 required>
                         <mat-option *ngFor="let pipeline of pipelines"
-                                    [value]="pipeline._id">{{pipeline.name}}</mat-option>
+                                    [value]="pipeline">{{pipeline.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="selectedLinkType === 'dashboard'" fxLayout="column">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-label>Dashboards</mat-label>
+                    <mat-select (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
+                                [(value)]="currentResource"
+                                fxFlex
+                                required>
+                        <mat-option *ngFor="let dashboard of dashboards"
+                                    [value]="dashboard">{{dashboard.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div *ngIf="selectedLinkType === 'data-view'" fxLayout="column">
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Data Views</mat-label>
-                    <mat-select [(ngModel)]="clonedAssetLink.resourceId" fxFlex
+                    <mat-select (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
+                                [(value)]="currentResource"
+                                fxFlex
                                 required>
                         <mat-option *ngFor="let dataView of dataViews"
-                                    [value]="dataView._id">{{dataView.name}}</mat-option>
+                                    [value]="dataView">{{dataView.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="selectedLinkType === 'measurement'" fxLayout="column">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-label>Data Lake Storage</mat-label>
+                    <mat-select (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
+                                [(value)]="currentResource"
+                                fxFlex
+                                required>
+                        <mat-option *ngFor="let measure of dataLakeMeasures"
+                                    [value]="measure">{{measure.measureName}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -66,7 +93,7 @@
         <button mat-button
                 mat-raised-button
                 color="accent"
-                (click)="store()" data-cy="sp-file-management-store-file" style="margin-right:10px;">
+                (click)="store()" style="margin-right:10px;" [disabled]="!clonedAssetLink.resourceId">
             {{createMode ? 'Create ' : 'Update' }} link
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="cancel()" style="margin-right:10px;">

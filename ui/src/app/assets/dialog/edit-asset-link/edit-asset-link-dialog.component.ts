@@ -20,13 +20,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
   AssetLink,
-  AssetLinkType, Dashboard, DashboardService,
+  AssetLinkType,
+  Dashboard,
+  DashboardService,
+  DataLakeMeasure,
   DataViewDataExplorerService,
-  GenericStorageService, Pipeline,
+  GenericStorageService,
+  Pipeline,
   PipelineService
 } from '@streampipes/platform-services';
-import { AssetConstants } from '../../constants/asset.constants';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 
@@ -54,6 +57,10 @@ export class EditAssetLinkDialogComponent implements OnInit {
   pipelines: Pipeline[];
   dataViews: Dashboard[];
   dashboards: Dashboard[];
+  dataLakeMeasures: DataLakeMeasure[];
+
+  allResources: any[] = [];
+  currentResource: any;
 
   selectedLinkType: string;
 
@@ -67,14 +74,11 @@ export class EditAssetLinkDialogComponent implements OnInit {
   ngOnInit(): void {
     this.getAllResources();
     this.clonedAssetLink = {...this.assetLink};
+    this.selectedLinkType = this.getCurrAssetLinkType().linkType;
   }
 
   getCurrAssetLinkType(): AssetLinkType {
-    if (this.createMode) {
-      return this.assetLinkTypes[0];
-    } else {
-      return this.assetLinkTypes.find(a => a.linkType === this.assetLink.linkType);
-    }
+    return this.assetLinkTypes.find(a => a.linkType === this.assetLink.linkType);
   }
 
   store() {
@@ -90,15 +94,31 @@ export class EditAssetLinkDialogComponent implements OnInit {
     zip(
       this.pipelineService.getOwnPipelines(),
       this.dataViewService.getDataViews(),
-      this.dashboardService.getDashboards()).subscribe(response => {
+      this.dashboardService.getDashboards(),
+      this.dataViewService.getAllPersistedDataStreams()).subscribe(response => {
       this.pipelines = response[0];
       this.dataViews = response[1];
       this.dashboards = response[2];
+      this.dataLakeMeasures = response[3];
+
+      this.allResources = [...this.pipelines, ...this.dataViews, ...this.dashboards, ...this.dataLakeMeasures];
+      if (!this.createMode) {
+        this.currentResource = this.allResources.find(r => r._id === this.clonedAssetLink.resourceId);
+      }
     });
   }
 
   onLinkTypeChanged(event: MatSelectChange): void {
     this.selectedLinkType = event.value;
+    const linkType = this.assetLinkTypes.find(a => a.linkType === this.selectedLinkType);
+    this.clonedAssetLink.editingDisabled = false;
+    this.clonedAssetLink.linkType = linkType.linkType;
+  }
+
+  changeLabel(id: string, label: string, currentResource: any) {
+    this.clonedAssetLink.resourceId = id;
+    this.clonedAssetLink.linkLabel = label;
+    this.currentResource = currentResource;
   }
 
 }

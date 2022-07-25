@@ -18,13 +18,20 @@
 
 <div fxFlex="100" fxLayout="column">
     <div fxLayout="row" fxLayoutGap="10px">
+        <div fxLayoutAlign="center center">
+            <div fxLayoutAlign="center center" class="link-icon" [ngStyle]="{'background': currentAssetLinkType.linkColor}">
+            <i class="material-icons">{{currentAssetLinkType.linkIcon}}</i>
+            </div>
+        </div>
         <div fxLayoutAlign="start center"><span class="link-label">{{assetLink.linkLabel}}</span></div>
-        <div fxLayoutAlign="start center"><span class="link-type" [ngStyle]="{'background': currentAssetLinkType.linkColor}">{{assetLink.linkType}}</span></div>
         <div fxFlex></div>
         <div fxLayoutAlign="end center">
-            <button mat-button mat-icon-button color="accent" (click)="openLink()"><i class="material-icons">link</i></button>
-            <button mat-button mat-icon-button color="accent" (click)="editLink()" *ngIf="editMode"><i class="material-icons">edit</i></button>
-            <button mat-button mat-icon-button color="accent" (click)="deleteLink()" *ngIf="editMode"><i class="material-icons">delete</i></button>
+            <button mat-button mat-icon-button color="accent" (click)="openLink()"><i class="material-icons">link</i>
+            </button>
+            <button mat-button mat-icon-button color="accent" (click)="editLink()" *ngIf="editMode"><i
+                    class="material-icons">edit</i></button>
+            <button mat-button mat-icon-button color="accent" (click)="deleteLink()" *ngIf="editMode"><i
+                    class="material-icons">delete</i></button>
         </div>
     </div>
 </div>
