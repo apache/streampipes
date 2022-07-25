@@ -34,6 +34,9 @@ export class SpAssetSelectionPanelComponent implements OnInit {
   @Input()
   selectedAsset: SpAsset;
 
+  @Input()
+  editMode: boolean;
+
   @Output()
   selectedAssetEmitter: EventEmitter<SpAsset> = new EventEmitter<SpAsset>();
 
@@ -56,5 +59,40 @@ export class SpAssetSelectionPanelComponent implements OnInit {
     this.selectedAssetEmitter.emit(asset);
   }
 
+  addAsset(node: SpAsset) {
+    if (!node.assets) {
+      node.assets = [];
+    }
+    node.assets.push(this.makeNewAsset());
+    this.dataSource.data = [this.assetModel];
+    this.treeControl.dataNodes = [this.assetModel];
+    this.dataSource.data = null;
+    this.dataSource.data = [this.assetModel];
+  }
 
+  deleteAsset(node: SpAsset) {
+    this.removeAssetWithId(this.assetModel.assets, node.assetId);
+    this.dataSource.data = null;
+    this.dataSource.data = [this.assetModel];
+  }
+
+  removeAssetWithId(assets: SpAsset[], id: string) {
+    for (let i = 0; i < assets.length; i++) {
+      if (assets[i].assetId === id) {
+        assets.splice(i, 1);
+        return;
+      }
+      if (assets[i].assets) {
+        this.removeAssetWithId(assets[i].assets, id);
+      }
+    }
+  }
+
+  makeNewAsset(): SpAsset {
+    return {assetId: this.makeAssetId(), assetName: 'New Asset', assetDescription: '', assetLinks: [], assetType: undefined, assets: []};
+  }
+
+  makeAssetId(): string {
+    return 'a' + Math.random().toString(36).substring(2, 9);
+  }
 }

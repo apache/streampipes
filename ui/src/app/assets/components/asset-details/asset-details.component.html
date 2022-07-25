@@ -38,6 +38,7 @@
                         class="designer-panel">
                 <div fxLayout="column" fxFlex="100">
                     <sp-asset-selection-panel-component
+                            [editMode]="editMode"
                             [assetModel]="asset"
                             [selectedAsset]="selectedAsset"
                             (selectedAssetEmitter)="selectedAsset = $event">
