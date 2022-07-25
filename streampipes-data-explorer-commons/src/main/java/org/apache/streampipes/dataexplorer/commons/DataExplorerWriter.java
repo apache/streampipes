@@ -13,8 +13,9 @@ public class DataExplorerWriter {
 
     // TODO return a connection here
     public void connect(DataExplorerConnectionSettings dataExplorerConnectionSettings) {
-        this.influxDB = InfluxDBFactory.connect(dataExplorerConnectionSettings.getInfluxDbHost(),
+        this.influxDB = InfluxDBFactory.connect(dataExplorerConnectionSettings.getInfluxDbHost() + ":" + dataExplorerConnectionSettings.getInfluxDbPort(),
                 dataExplorerConnectionSettings.getUser(), dataExplorerConnectionSettings.getPassword());
+        this.influxDB.setDatabase(DataExplorerDefaults.DATA_LAKE_DATABASE_NAME);
     }
 
     public void close() {
@@ -38,7 +39,6 @@ public class DataExplorerWriter {
             }
         }
 
-        this.influxDB.setDatabase(DataExplorerDefaults.DATA_LAKE_DATABASE_NAME);
         this.influxDB.write(builder.build());
     }
 
