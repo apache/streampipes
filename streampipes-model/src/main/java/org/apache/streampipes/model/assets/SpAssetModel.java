@@ -16,15 +16,38 @@
  *
  */
 
-.asset-link-item:nth-child(odd) {
-  background: var(--color-bg-1);
-}
+package org.apache.streampipes.model.assets;
 
-.asset-link-item:nth-child(even) {
-  background: var(--color-bg-1);
-}
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+import org.apache.streampipes.commons.constants.GenericDocTypes;
 
-.asset-link-item {
-  border-bottom: 1px solid var(--color-bg-3);
-  padding: 10px;
+public class SpAssetModel extends SpAsset {
+
+  public static final String appDocType = GenericDocTypes.DOC_ASSET_MANGEMENT;
+
+  @JsonProperty("_id")
+  private @SerializedName("_id") String id;
+
+  private boolean removable;
+
+  public SpAssetModel() {
+    super();
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public boolean isRemovable() {
+    return removable;
+  }
+
+  public void setRemovable(boolean removable) {
+    this.removable = removable;
+  }
 }

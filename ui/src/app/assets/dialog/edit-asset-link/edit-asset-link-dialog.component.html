@@ -1,0 +1,76 @@
+<!--
+~ Licensed to the Apache Software Foundation (ASF) under one or more
+~ contributor license agreements.  See the NOTICE file distributed with
+~ this work for additional information regarding copyright ownership.
+~ The ASF licenses this file to You under the Apache License, Version 2.0
+~ (the "License"); you may not use this file except in compliance with
+~ the License.  You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+~
+-->
+
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <div fxFlex="100" fxLayout="column" *ngIf="clonedAssetLink">
+            <div fxFlex style="margin:5px;width:100%" fxLayout="column">
+                <mat-form-field color="accent">
+                    <mat-label>Link Type</mat-label>
+                    <mat-select fxFlex [(ngModel)]="clonedAssetLink.linkType"
+                                required (selectionChange)="onLinkTypeChanged($event)">
+                        <mat-option *ngFor="let assetLinkType of assetLinkTypes"
+                                    [value]="assetLinkType.linkType">{{assetLinkType.linkLabel}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="selectedLinkType === 'pipeline'" fxLayout="column">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-label>Pipelines</mat-label>
+                    <mat-select [(ngModel)]="clonedAssetLink.resourceId" fxFlex
+                                required>
+                        <mat-option *ngFor="let pipeline of pipelines"
+                                    [value]="pipeline._id">{{pipeline.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="selectedLinkType === 'data-view'" fxLayout="column">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-label>Data Views</mat-label>
+                    <mat-select [(ngModel)]="clonedAssetLink.resourceId" fxFlex
+                                required>
+                        <mat-option *ngFor="let dataView of dataViews"
+                                    [value]="dataView._id">{{dataView.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div fxFlex="100" fxLayout="column">
+                <mat-form-field color="accent">
+                    <mat-label>Resource ID</mat-label>
+                    <input matInput [(ngModel)]="clonedAssetLink.resourceId" required [disabled]="true">
+                </mat-form-field>
+            </div>
+            <div fxFlex="100">
+
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions">
+        <button mat-button
+                mat-raised-button
+                color="accent"
+                (click)="store()" data-cy="sp-file-management-store-file" style="margin-right:10px;">
+            {{createMode ? 'Create ' : 'Update' }} link
+        </button>
+        <button mat-button mat-raised-button class="mat-basic" (click)="cancel()" style="margin-right:10px;">
+            Cancel
+        </button>
+    </div>
+</div>

@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.backend;
 
+import org.apache.streampipes.backend.migrations.MigrationsHandler;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
@@ -103,6 +104,7 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
 
     new StreamPipesEnvChecker().updateEnvironmentVariables();
     new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
+    new MigrationsHandler().performMigrations();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);

@@ -16,15 +16,9 @@
  *
  */
 
-.asset-link-item:nth-child(odd) {
-  background: var(--color-bg-1);
-}
+package org.apache.streampipes.manager.setup.tasks;
 
-.asset-link-item:nth-child(even) {
-  background: var(--color-bg-1);
-}
+public interface InstallationTask {
 
-.asset-link-item {
-  border-bottom: 1px solid var(--color-bg-3);
-  padding: 10px;
+  void execute();
 }

@@ -16,15 +16,14 @@
  *
  */
 
-.asset-link-item:nth-child(odd) {
-  background: var(--color-bg-1);
-}
 
-.asset-link-item:nth-child(even) {
-  background: var(--color-bg-1);
-}
+package org.apache.streampipes.backend.migrations;
 
-.asset-link-item {
-  border-bottom: 1px solid var(--color-bg-3);
-  padding: 10px;
+public interface Migration {
+
+  boolean shouldExecute();
+
+  void executeMigration();
+
+  String getDescription();
 }

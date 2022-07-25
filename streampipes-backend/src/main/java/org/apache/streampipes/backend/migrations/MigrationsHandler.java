@@ -16,15 +16,27 @@
  *
  */
 
-.asset-link-item:nth-child(odd) {
-  background: var(--color-bg-1);
-}
 
-.asset-link-item:nth-child(even) {
-  background: var(--color-bg-1);
-}
+package org.apache.streampipes.backend.migrations;
 
-.asset-link-item {
-  border-bottom: 1px solid var(--color-bg-3);
-  padding: 10px;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class MigrationsHandler {
+
+  private static final Logger LOG = LoggerFactory.getLogger(MigrationsHandler.class);
+
+  public void performMigrations() {
+    LOG.info("Checking for required migrations...");
+    var availableMigrations = new AvailableMigrations().getAvailableMigrations();
+
+    availableMigrations.forEach(migration -> {
+      if (migration.shouldExecute()) {
+        LOG.info("Performing migration: {}", migration.getDescription());
+        migration.executeMigration();
+      }
+    });
+
+    LOG.info("All migrations completed.");
+  }
 }

@@ -20,6 +20,7 @@ package org.apache.streampipes.storage.couchdb.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.UrlEscapers;
 import org.apache.http.client.fluent.Content;
@@ -44,6 +45,7 @@ public class GenericStorageImpl implements IGenericStorage {
 
   public GenericStorageImpl() {
     this.mapper = new ObjectMapper();
+    this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   @Override
@@ -75,6 +77,12 @@ public class GenericStorageImpl implements IGenericStorage {
 
     Map<String, Object> requestResult = deserialize(content.asString());
     return this.findOne((String) requestResult.get(ID));
+  }
+
+  @Override
+  public <T> T create(T payload, Class<T> targetClass) throws IOException {
+    Map<String, Object> result = this.create(this.mapper.writeValueAsString(payload));
+    return this.mapper.convertValue(result, targetClass);
   }
 
   @Override

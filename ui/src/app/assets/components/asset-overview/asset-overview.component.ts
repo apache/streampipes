@@ -75,8 +75,13 @@ export class SpAssetOverviewComponent implements OnInit {
     });
   }
 
-  goToDetailsView(asset: SpAssetModel) {
-    this.router.navigate(['assets', 'details', asset._id]);
+  goToDetailsView(asset: SpAssetModel,
+                  editMode = false) {
+    if (!editMode) {
+      this.router.navigate(['assets', 'details', asset._id]);
+    } else {
+      this.router.navigate(['assets', 'details', asset._id], {queryParams: {'editMode': editMode}});
+    }
   }
 
   deleteAsset(asset: SpAssetModel) {

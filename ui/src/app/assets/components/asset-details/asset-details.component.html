@@ -15,10 +15,16 @@
   ~ limitations under the License.
   ~
   -->
-<sp-basic-view [showBackLink]="true" [backLinkTarget]="['assets']" [padding]="false">
+<sp-basic-view [showBackLink]="true"
+               [backLinkTarget]="['assets']"
+               [padding]="false">
 
     <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
-
+        <div fxLayout="row" fxLayoutAlign="start center" *ngIf="editMode">
+            <button mat-button mat-raised-button color="accent" (click)="updateAsset()">
+                <i class="material-icons">add</i><span>&nbsp;Save</span>
+            </button>
+        </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="end center">
 
         </div>
@@ -33,6 +39,7 @@
                 <div fxLayout="column" fxFlex="100">
                     <sp-asset-selection-panel-component
                             [assetModel]="asset"
+                            [selectedAsset]="selectedAsset"
                             (selectedAssetEmitter)="selectedAsset = $event">
                     </sp-asset-selection-panel-component>
                 </div>
@@ -41,6 +48,8 @@
                 <sp-asset-details-panel-component
                         *ngIf="selectedAsset"
                         [asset]="selectedAsset"
+                        [editMode]="editMode"
+                        (updateAssetEmitter)="updateAsset()"
                         fxFlex="100"
                         fxLayout="row">
 

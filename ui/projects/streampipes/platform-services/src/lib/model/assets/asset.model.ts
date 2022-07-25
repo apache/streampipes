@@ -16,6 +16,14 @@
  *
  */
 
+export interface AssetLinkType {
+  linkType: string;
+  linkLabel: string;
+  linkColor: string;
+  linkIcon?: string;
+  linkQueryHint?: string;
+}
+
 export interface AssetType {
   assetIcon: string;
   assetIconColor: string;
@@ -25,7 +33,7 @@ export interface AssetType {
 
 export interface AssetLink {
   resourceId: string;
-  linkType: 'data-view' | 'dashboard' | 'adapter' | 'stream' | string;
+  linkType: 'data-view' | 'dashboard' | 'adapter' | 'source' | string;
   linkLabel: string;
   editingDisabled: boolean;
 }
@@ -44,6 +52,8 @@ export interface SpAsset {
 export interface SpAssetModel extends SpAsset {
   _id: string;
   _rev: string;
+
+  appDocType: string;
 
   removable: boolean;
 }

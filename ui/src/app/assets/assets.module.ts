@@ -40,6 +40,8 @@ import { SpAssetDetailsComponent } from './components/asset-details/asset-detail
 import { SpAssetSelectionPanelComponent } from './components/asset-details/asset-selection-panel/asset-selection-panel.component';
 import { SpAssetDetailsPanelComponent } from './components/asset-details/asset-details-panel/asset-details-panel.component';
 import { MatTreeModule } from '@angular/material/tree';
+import { SpAssetLinkItemComponent } from './components/asset-details/asset-details-panel/asset-link-item/asset-link-item.component';
+import { EditAssetLinkDialogComponent } from './dialog/edit-asset-link/edit-asset-link-dialog.component';
 
 @NgModule({
   imports: [
@@ -84,8 +86,10 @@ import { MatTreeModule } from '@angular/material/tree';
   ],
   declarations: [
     AssetUploadDialogComponent,
+    EditAssetLinkDialogComponent,
     SpAssetDetailsComponent,
     SpAssetDetailsPanelComponent,
+    SpAssetLinkItemComponent,
     SpAssetOverviewComponent,
     SpAssetSelectionPanelComponent,
   ],

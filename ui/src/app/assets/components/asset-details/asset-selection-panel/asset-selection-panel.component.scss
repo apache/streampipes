@@ -45,9 +45,20 @@
 }
 
 .sp-tree .mat-nested-tree-node div[role=group] {
-  padding-left: 40px;
+  padding-left: 20px;
 }
 
 .sp-tree div[role=group] > .mat-tree-node {
-  padding-left: 40px;
+  padding-left: 20px;
+}
+
+.asset-node {
+  font-weight: normal;
+  cursor: pointer;
+  font-size: 13pt;
+}
+
+.selected-node {
+  font-weight: bold;
+  border-bottom: 4px solid var(--color-primary);
 }

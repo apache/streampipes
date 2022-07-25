@@ -16,15 +16,28 @@
  *
  */
 
-.asset-link-item:nth-child(odd) {
-  background: var(--color-bg-1);
-}
+package org.apache.streampipes.manager.setup.tasks;
 
-.asset-link-item:nth-child(even) {
-  background: var(--color-bg-1);
-}
+import org.apache.streampipes.commons.constants.GenericDocTypes;
+import org.apache.streampipes.model.assets.SpAssetModel;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
-.asset-link-item {
-  border-bottom: 1px solid var(--color-bg-3);
-  padding: 10px;
+import java.io.IOException;
+
+public class CreateDefaultAssetTask implements InstallationTask {
+
+  @Override
+  public void execute() {
+    var asset = new SpAssetModel();
+    asset.setId(GenericDocTypes.DEFAULT_ASSET_DOC_ID);
+    asset.setAssetId("default-asset");
+    asset.setAssetName("Default Asset");
+    asset.setRemovable(true);
+
+    try {
+      StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().create(asset, SpAssetModel.class);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

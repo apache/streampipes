@@ -30,6 +30,8 @@ public interface IGenericStorage {
 
   Map<String, Object> create(String payload) throws IOException;
 
+  <T> T create(T payload, Class<T> targetClass) throws IOException;
+
   Map<String, Object> update(String id, String payload) throws IOException;
 
   void delete(String id, String rev) throws IOException;

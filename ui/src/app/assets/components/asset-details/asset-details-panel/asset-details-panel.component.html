@@ -21,18 +21,37 @@
 
     <sp-basic-inner-panel panelTitle="Basics" outerMargin="20px 0px">
         <div fxLayout="column" fxFlex="100">
-            <div>Name: {{asset.assetName}}</div>
-            <div>Description: {{asset.assetDescription}}</div>
+            <mat-form-field color="accent">
+                <mat-label>Name</mat-label>
+                <input matInput [(ngModel)]="asset.assetName" [disabled]="!editMode">
+            </mat-form-field>
+            <mat-form-field color="accent">
+                <mat-label>Description</mat-label>
+                <input matInput [(ngModel)]="asset.assetDescription" [disabled]="!editMode">
+            </mat-form-field>
+            <mat-form-field color="accent">
+                <mat-label>ID</mat-label>
+                <input matInput [(ngModel)]="asset.assetId" [disabled]="!editMode">
+            </mat-form-field>
         </div>
     </sp-basic-inner-panel>
 
 
-    <sp-basic-inner-panel panelTitle="Asset Links" outerMargin="20px 0px">
-        <div fxLayout="column" fxFlex="100">
-            <div fxLayout="column" *ngFor="let link of asset.assetLinks">
-                <div>ResourceId: {{link.resourceId}}</div>
-                <div>Label: {{link.linkLabel}}</div>
-                <div>Link Type: {{link.linkType}}</div>
+    <sp-basic-inner-panel panelTitle="Asset Links" outerMargin="0px 0px">
+        <div header fxLayoutAlign="end center" fxLayout="row" fxFlex="100">
+            <button mat-button color="accent" *ngIf="editMode" (click)="openCreateAssetLinkDialog()"><i class="material-icons">add</i><span>&nbsp;Add link</span></button>
+        </div>
+        <div fxLayout="column" fxFlex="100" *ngIf="assetLinkTypes">
+            <div fxLayout="column" *ngFor="let link of asset.assetLinks; let i = index">
+                <sp-asset-link-item-component [assetLink]="link"
+                                              [assetLinkIndex]="i"
+                                              [assetLinkTypes]="assetLinkTypes"
+                                              [editMode]="editMode"
+                                              (openEditAssetLinkEmitter)="openEditAssetLinkDialog($event.assetLink, $event.index, false)"
+                                              (deleteAssetLinkEmitter)="deleteAssetLink($event)"
+                                              class="asset-link-item">
+                </sp-asset-link-item-component>
+
             </div>
         </div>
     </sp-basic-inner-panel>

@@ -16,15 +16,27 @@
  *
  */
 
-.asset-link-item:nth-child(odd) {
-  background: var(--color-bg-1);
-}
 
-.asset-link-item:nth-child(even) {
-  background: var(--color-bg-1);
-}
+package org.apache.streampipes.backend.migrations.v070;
 
-.asset-link-item {
-  border-bottom: 1px solid var(--color-bg-3);
-  padding: 10px;
+import org.apache.streampipes.backend.migrations.Migration;
+import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
+
+public class CreateDefaultAssetMigration implements Migration {
+
+  @Override
+  public boolean shouldExecute() {
+    return true;
+    //return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
+  }
+
+  @Override
+  public void executeMigration() {
+    new CreateDefaultAssetTask().execute();
+  }
+
+  @Override
+  public String getDescription() {
+    return "Creating a default asset representation";
+  }
 }

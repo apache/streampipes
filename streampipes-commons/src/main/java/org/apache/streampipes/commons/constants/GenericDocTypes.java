@@ -16,15 +16,13 @@
  *
  */
 
-.asset-link-item:nth-child(odd) {
-  background: var(--color-bg-1);
-}
+package org.apache.streampipes.commons.constants;
 
-.asset-link-item:nth-child(even) {
-  background: var(--color-bg-1);
-}
+public class GenericDocTypes {
 
-.asset-link-item {
-  border-bottom: 1px solid var(--color-bg-3);
-  padding: 10px;
+  public static final String DOC_ASSET_MANGEMENT = "asset-management";
+  public static final String DOC_ASSET_LINK_TYPE = "asset-link-type";
+
+
+  public static final String DEFAULT_ASSET_DOC_ID = "default-asset";
 }
