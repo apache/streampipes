@@ -20,7 +20,9 @@ package org.apache.streampipes.dataexplorer.sdk;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.dataexplorer.v4.params.ColumnFunction;
+import org.apache.streampipes.dataexplorer.v4.query.elements.OrderingByTime;
 import org.influxdb.dto.Query;
+import org.influxdb.querybuilder.Ordering;
 import org.influxdb.querybuilder.SelectionQueryImpl;
 import org.influxdb.querybuilder.clauses.*;
 
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.select;
+import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.*;
 
 public class DataLakeQueryBuilder {
 
@@ -36,6 +38,8 @@ public class DataLakeQueryBuilder {
   private final SelectionQueryImpl selectionQuery;
   private final List<Clause> whereClauses;
   private final List<Clause> groupByClauses;
+  private Ordering ordering;
+  private int limit = Integer.MIN_VALUE;
 
   public static DataLakeQueryBuilder create(String measurementId) {
     return new DataLakeQueryBuilder(measurementId);
@@ -127,6 +131,23 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  public DataLakeQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
+    if (DataLakeQueryOrdering.ASC.equals(ordering)) {
+      this.ordering =  asc();
+    } else {
+      this.ordering =  desc();
+    }
+
+    return this;
+  }
+
+  public DataLakeQueryBuilder withLimit(int limit) {
+    this.limit = limit;
+
+    return this;
+  }
+
+
   private String transform(String column) {
     return column.toLowerCase();
   }
@@ -136,15 +157,27 @@ public class DataLakeQueryBuilder {
     this.whereClauses.forEach(selectQuery::where);
     this.groupByClauses.forEach(selectQuery::groupBy);
 
+    if (this.ordering != null) {
+     selectQuery.orderBy(this.ordering);
+    }
+
+    if (this.limit != Integer.MIN_VALUE) {
+      selectQuery.limit(this.limit);
+    }
+
     return selectQuery;
   }
 
   public static void main(String[] args) {
     Query query = DataLakeQueryBuilder.create("abc")
-      .withSimpleColumn("test")
+//      .withSimpleColumn("test")
+//            .withAggregatedColumn("*", ColumnFunction.LAST, "abc")
       .withTimeBoundary(1, 2)
       .withExclusiveFilter("text", "!=", Arrays.asList("a", "b"))
       .withGroupByTime("1h")
+            .withOrderBy(DataLakeQueryOrdering.ASC)
+            .withLimit(1)
+
       .build();
     System.out.println(query.getCommand());
   }

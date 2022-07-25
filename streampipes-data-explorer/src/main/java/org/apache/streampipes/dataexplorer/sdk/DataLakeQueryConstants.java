@@ -26,4 +26,5 @@ public class DataLakeQueryConstants {
   public static final String GT = ">";
   public static final String EQ = "=";
   public static final String NEQ = "!=";
+
 }
