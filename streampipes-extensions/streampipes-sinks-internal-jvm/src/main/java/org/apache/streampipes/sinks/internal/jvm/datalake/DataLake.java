@@ -19,8 +19,9 @@
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataexplorer.commons.DataExplorerUtils;
+import org.apache.streampipes.dataexplorer.commons.DataExplorerConnectionSettings;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -59,12 +60,6 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
     SpConfig configStore = runtimeContext.getConfigStore().getConfig();
 
-    String influxHost = configStore.getString(ConfigKeys.DATA_LAKE_PROTOCOL) + "://" + configStore.getString(ConfigKeys.DATA_LAKE_HOST);
-    Integer influxPort = configStore.getInteger(ConfigKeys.DATA_LAKE_PORT);
-    String databaseName = configStore.getString(ConfigKeys.DATA_LAKE_DATABASE_NAME);
-    String user = configStore.getString(ConfigKeys.DATA_LAKE_USERNAME);
-    String password = configStore.getString(ConfigKeys.DATA_LAKE_PASSWORD);
-
     String couchDbProtocol = configStore.getString(ConfigKeys.COUCHDB_PROTOCOL);
     String couchDbHost = configStore.getString(ConfigKeys.COUCHDB_HOST);
     int couchDbPort = configStore.getInteger(ConfigKeys.COUCHDB_PORT);
@@ -84,7 +79,7 @@ public class DataLake implements EventSink<DataLakeParameters> {
 
     schema.getEventProperties().forEach(eventProperty ->
             eventProperty.setRuntimeName(DataLakeUtils.sanitizePropertyRuntimeName(eventProperty.getRuntimeName())));
-    registerAtDataLake(parameters.getMeasurementName(), schema, runtimeContext.getStreamPipesClient());
+    DataExplorerUtils.registerAtDataLake(parameters.getMeasurementName(), schema, runtimeContext.getStreamPipesClient());
 
     imageProperties = schema.getEventProperties().stream()
             .filter(eventProperty -> eventProperty.getDomainProperties() != null &&
@@ -92,8 +87,9 @@ public class DataLake implements EventSink<DataLakeParameters> {
                     eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
             .collect(Collectors.toList());
 
-    InfluxDbConnectionSettings settings = InfluxDbConnectionSettings.from(
-            influxHost, influxPort, databaseName, parameters.getMeasurementName(), user, password);
+    DataExplorerConnectionSettings settings = DataExplorerConnectionSettings.from(
+            configStore,
+            parameters.getMeasurementName());
 
     this.influxDbClient = new DataLakeInfluxDbClient(
             settings,
@@ -132,19 +128,6 @@ public class DataLake implements EventSink<DataLakeParameters> {
     this.imageStore.storeImage(data, imageDocId);
   }
 
-  /**
-   * Adds a new measurement to the StreamPipes data lake
-   * @param measure
-   * @param eventSchema
-   * @throws SpRuntimeException
-   */
-  private void registerAtDataLake(String measure,
-                                  EventSchema eventSchema,
-                                  StreamPipesClient client) throws SpRuntimeException {
-      client
-        .customRequest()
-        .sendPost("api/v3/datalake/measure/" + measure, eventSchema);
-  }
 
 
 }

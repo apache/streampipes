@@ -19,6 +19,7 @@
 package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.dataexplorer.commons.DataExplorerConnectionSettings;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
@@ -52,12 +53,12 @@ public class DataLakeInfluxDbClient {
     private final Integer flushDuration;
 
     private InfluxDB influxDb = null;
-    private final InfluxDbConnectionSettings settings;
+    private final DataExplorerConnectionSettings settings;
     private final EventSchema originalEventSchema;
 
     Map<String, String> targetRuntimeNames = new HashMap<>();
 
-    DataLakeInfluxDbClient(InfluxDbConnectionSettings settings,
+    DataLakeInfluxDbClient(DataExplorerConnectionSettings settings,
                            String timestampField,
                            Integer batchSize,
                            Integer flushDuration,

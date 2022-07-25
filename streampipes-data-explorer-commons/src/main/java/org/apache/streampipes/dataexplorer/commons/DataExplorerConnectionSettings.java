@@ -16,9 +16,11 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+package org.apache.streampipes.dataexplorer.commons;
 
-public class InfluxDbConnectionSettings {
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
+
+public class DataExplorerConnectionSettings {
 
   private final Integer influxDbPort;
   private final String influxDbHost;
@@ -27,27 +29,28 @@ public class InfluxDbConnectionSettings {
   private final String user;
   private final String password;
 
-  public static InfluxDbConnectionSettings from(String influxDbHost,
-                                                Integer influxDbPort,
-                                                String databaseName,
-                                                String measureName,
-                                                String user,
-                                                String password) {
-    return new InfluxDbConnectionSettings(
-            influxDbHost,
-            influxDbPort,
-            databaseName,
-            measureName,
-            user,
-            password);
+  public static DataExplorerConnectionSettings from(SpConfig configStore) {
+    return  from(configStore, "");
   }
 
-  private InfluxDbConnectionSettings(String influxDbHost,
-                                     Integer influxDbPort,
-                                     String databaseName,
-                                     String measureName,
-                                     String user,
-                                     String password) {
+  public static DataExplorerConnectionSettings from(SpConfig configStore, String measureName) {
+
+    return new DataExplorerConnectionSettings(
+            configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL) + "://" + configStore.getString(DataExplorerEnvKeys.DATA_LAKE_HOST),
+            configStore.getInteger(DataExplorerEnvKeys.DATA_LAKE_PORT),
+            configStore.getString(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME),
+            measureName,
+            configStore.getString(DataExplorerEnvKeys.DATA_LAKE_USERNAME),
+            configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PASSWORD));
+  }
+
+
+  private DataExplorerConnectionSettings(String influxDbHost,
+                                         Integer influxDbPort,
+                                         String databaseName,
+                                         String measureName,
+                                         String user,
+                                         String password) {
     this.influxDbHost = influxDbHost;
     this.influxDbPort = influxDbPort;
     this.databaseName = databaseName;

@@ -49,6 +49,11 @@
             <artifactId>streampipes-wrapper-standalone</artifactId>
             <version>0.70.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-data-explorer-commons</artifactId>
+            <version>0.70.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- External dependencies -->
         <dependency>
@@ -71,6 +76,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
+
     </dependencies>
 
 </project>
