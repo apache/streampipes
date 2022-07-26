@@ -30,7 +30,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkType === 'pipeline'" fxLayout="column" class="link-configuration">
+            <div *ngIf="selectedLinkType.linkQueryHint === 'pipeline'" fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Pipelines</mat-label>
                     <mat-select [(ngModel)]="currentResource"
@@ -41,7 +41,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkType === 'dashboard'" fxLayout="column" class="link-configuration">
+            <div *ngIf="selectedLinkType.linkQueryHint === 'dashboard'" fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Dashboards</mat-label>
                     <mat-select (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
@@ -53,7 +53,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkType === 'data-view'" fxLayout="column" class="link-configuration">
+            <div *ngIf="selectedLinkType.linkQueryHint === 'data-view'" fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Data Views</mat-label>
                     <mat-select (selectionChange)="changeLabel($event.value._id, $event.value.name, $event.value)"
@@ -65,7 +65,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="selectedLinkType.linkType === 'measurement'" fxLayout="column" class="link-configuration">
+            <div *ngIf="selectedLinkType.linkQueryHint === 'measurement'" fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Data Lake Storage</mat-label>
                     <mat-select (selectionChange)="changeLabel($event.value.elementId, $event.value.measureName, $event.value)"
