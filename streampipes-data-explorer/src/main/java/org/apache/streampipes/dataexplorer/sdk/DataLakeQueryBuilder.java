@@ -61,16 +61,14 @@ public class DataLakeQueryBuilder {
   public DataLakeQueryBuilder withAggregatedColumn(String columnName,
                                                    ColumnFunction columnFunction,
                                                    String targetName) {
-    String transformedColumnName = transform(columnName);
-    String transformedTargetName = transform(targetName);
     if (columnFunction == ColumnFunction.COUNT) {
-      this.selectionQuery.count(transformedColumnName).as(transformedTargetName);
+      this.selectionQuery.count(columnName).as(targetName);
     } else if (columnFunction == ColumnFunction.MEAN) {
-      this.selectionQuery.mean(transformedColumnName).as(transformedTargetName);
+      this.selectionQuery.mean(columnName).as(targetName);
     } else if (columnFunction == ColumnFunction.MIN) {
-      this.selectionQuery.min(transformedColumnName).as(transformedTargetName);
+      this.selectionQuery.min(columnName).as(targetName);
     } else if (columnFunction == ColumnFunction.MAX) {
-      this.selectionQuery.max(transformedColumnName).as(transformedTargetName);
+      this.selectionQuery.max(columnName).as(targetName);
     }
 
     // TODO implement all column functions
@@ -109,7 +107,7 @@ public class DataLakeQueryBuilder {
                                                   List<?> values) {
     List<ConjunctionClause> or = new ArrayList<>();
     values.forEach(value -> {
-      or.add(new OrConjunction(new SimpleClause(transform(field), operator, value)));
+      or.add(new OrConjunction(new SimpleClause(field, operator, value)));
     });
 
     NestedClause nestedClause = new NestedClause(or);
@@ -145,11 +143,6 @@ public class DataLakeQueryBuilder {
     this.limit = limit;
 
     return this;
-  }
-
-
-  private String transform(String column) {
-    return column.toLowerCase();
   }
 
   public Query build() {
