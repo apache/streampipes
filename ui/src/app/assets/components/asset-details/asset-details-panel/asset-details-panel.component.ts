@@ -78,12 +78,12 @@ export class SpAssetDetailsPanelComponent implements OnInit {
   }
 
   openCreateAssetLinkDialog(): void {
-    const assetLink: AssetLink = {linkLabel: '', linkType: 'data-view', editingDisabled: false, resourceId: ''};
+    const assetLink: AssetLink = {linkLabel: '', linkType: 'data-view', editingDisabled: false, resourceId: '', navigationActive: true};
     this.openEditAssetLinkDialog(assetLink, -1, true);
   }
 
   deleteAssetLink(index: number): void {
-    this.asset.assetLinks = this.asset.assetLinks.splice(index, 1);
+    this.asset.assetLinks.splice(index, 1);
     this.updateAssetEmitter.emit(this.asset);
   }
 

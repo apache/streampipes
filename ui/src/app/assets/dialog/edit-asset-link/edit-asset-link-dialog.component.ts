@@ -23,7 +23,7 @@ import {
   AssetLinkType,
   Dashboard,
   DashboardService,
-  DataLakeMeasure,
+  DataLakeMeasure, DatalakeRestService,
   DataViewDataExplorerService,
   GenericStorageService,
   Pipeline,
@@ -62,19 +62,20 @@ export class EditAssetLinkDialogComponent implements OnInit {
   allResources: any[] = [];
   currentResource: any;
 
-  selectedLinkType: string;
+  selectedLinkType: AssetLinkType;
 
   constructor(private dialogRef: DialogRef<EditAssetLinkDialogComponent>,
               private genericStorageService: GenericStorageService,
               private pipelineService: PipelineService,
               private dataViewService: DataViewDataExplorerService,
-              private dashboardService: DashboardService) {
+              private dashboardService: DashboardService,
+              private dataLakeService: DatalakeRestService) {
   }
 
   ngOnInit(): void {
     this.getAllResources();
     this.clonedAssetLink = {...this.assetLink};
-    this.selectedLinkType = this.getCurrAssetLinkType().linkType;
+    this.selectedLinkType = this.getCurrAssetLinkType();
   }
 
   getCurrAssetLinkType(): AssetLinkType {
@@ -95,7 +96,7 @@ export class EditAssetLinkDialogComponent implements OnInit {
       this.pipelineService.getOwnPipelines(),
       this.dataViewService.getDataViews(),
       this.dashboardService.getDashboards(),
-      this.dataViewService.getAllPersistedDataStreams()).subscribe(response => {
+      this.dataLakeService.getAllMeasurementSeries()).subscribe(response => {
       this.pipelines = response[0];
       this.dataViews = response[1];
       this.dashboards = response[2];
@@ -103,16 +104,18 @@ export class EditAssetLinkDialogComponent implements OnInit {
 
       this.allResources = [...this.pipelines, ...this.dataViews, ...this.dashboards, ...this.dataLakeMeasures];
       if (!this.createMode) {
-        this.currentResource = this.allResources.find(r => r._id === this.clonedAssetLink.resourceId);
+        this.currentResource = this.allResources.find(r => r._id === this.clonedAssetLink.resourceId ||
+          r.elementId === this.clonedAssetLink.resourceId);
       }
     });
   }
 
   onLinkTypeChanged(event: MatSelectChange): void {
     this.selectedLinkType = event.value;
-    const linkType = this.assetLinkTypes.find(a => a.linkType === this.selectedLinkType);
+    const linkType = this.assetLinkTypes.find(a => a.linkType === this.selectedLinkType.linkType);
     this.clonedAssetLink.editingDisabled = false;
     this.clonedAssetLink.linkType = linkType.linkType;
+    this.clonedAssetLink.navigationActive = linkType.navigationActive;
   }
 
   changeLabel(id: string, label: string, currentResource: any) {

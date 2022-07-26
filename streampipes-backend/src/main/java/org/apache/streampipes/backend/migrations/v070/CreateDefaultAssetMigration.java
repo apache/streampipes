@@ -20,14 +20,21 @@
 package org.apache.streampipes.backend.migrations.v070;
 
 import org.apache.streampipes.backend.migrations.Migration;
+import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
+import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import java.io.IOException;
 
 public class CreateDefaultAssetMigration implements Migration {
 
   @Override
   public boolean shouldExecute() {
-    return true;
-    //return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
+    try {
+      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
+    } catch (IOException e) {
+      return true;
+    }
   }
 
   @Override

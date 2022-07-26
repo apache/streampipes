@@ -26,7 +26,7 @@
         <div fxLayoutAlign="start center"><span class="link-label">{{assetLink.linkLabel}}</span></div>
         <div fxFlex></div>
         <div fxLayoutAlign="end center">
-            <button mat-button mat-icon-button color="accent" (click)="openLink()"><i class="material-icons">link</i>
+            <button mat-button mat-icon-button color="accent" (click)="openLink()" *ngIf="assetLink.navigationActive"><i class="material-icons">link</i>
             </button>
             <button mat-button mat-icon-button color="accent" (click)="editLink()" *ngIf="editMode"><i
                     class="material-icons">edit</i></button>

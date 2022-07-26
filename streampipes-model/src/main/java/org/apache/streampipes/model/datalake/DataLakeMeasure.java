@@ -86,4 +86,5 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
     public void setPipelineIsRunning(boolean pipelineIsRunning) {
         this.pipelineIsRunning = pipelineIsRunning;
     }
+
 }
