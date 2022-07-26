@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.commons;
 
-package org.apache.streampipes.sinks.internal.jvm.config;
+public class DataExplorerEnvKeys {
+    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
+    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
+    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
+    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
+    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
+    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
 
-public class ConfigKeys {
-
-    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
 }

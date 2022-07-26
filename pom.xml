@@ -956,7 +956,8 @@ IoT data streams.
 			<module>streampipes-mail</module>
 			<module>streampipes-resource-management</module>
 			<module>streampipes-sdk-bundle</module>
-		</modules>
+            <module>streampipes-data-explorer-commons</module>
+        </modules>
 
 		<profiles>
 			<profile>

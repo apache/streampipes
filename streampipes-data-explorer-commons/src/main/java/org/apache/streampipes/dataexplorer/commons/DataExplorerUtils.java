@@ -15,12 +15,26 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.commons;
 
-package org.apache.streampipes.sinks.internal.jvm.config;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.schema.EventSchema;
 
-public class ConfigKeys {
+public class DataExplorerUtils {
+    /**
+     * Adds a new measurement to the StreamPipes data lake
+     * @param measure
+     * @param eventSchema
+     * @throws SpRuntimeException
+     */
+    public static void registerAtDataLake(String measure,
+                                          EventSchema eventSchema,
+                                          StreamPipesClient client) throws SpRuntimeException {
+        client
+                .customRequest()
+                .sendPost("api/v3/datalake/measure/" + measure, eventSchema);
+    }
 
-    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
+
 }
