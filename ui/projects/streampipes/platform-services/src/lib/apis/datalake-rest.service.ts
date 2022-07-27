@@ -18,7 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { DataLakeMeasure, PageResult, SpQueryResult } from '../model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
@@ -48,10 +48,18 @@ export class DatalakeRestService {
   getData(index: string,
           queryParams: DatalakeQueryParameters,
           ignoreLoadingBar?: boolean): Observable<SpQueryResult> {
-    const url = this.dataLakeUrl + '/measurements/' + index;
-    const headers = ignoreLoadingBar ? {ignoreLoadingBar: ''} : {};
-    // @ts-ignore
-    return this.http.get<SpQueryResult>(url, {params: queryParams}, headers);
+
+    const columns = queryParams.columns;
+    if (columns === '') {
+      const emptyQueryResult = new SpQueryResult();
+      emptyQueryResult.total = 0
+      return of(emptyQueryResult);
+    } else {
+      const url = this.dataLakeUrl + '/measurements/' + index;
+      const headers = ignoreLoadingBar ? {ignoreLoadingBar: ''} : {};
+      // @ts-ignore
+      return this.http.get<SpQueryResult>(url, {params: queryParams}, headers);
+    }
   }
 
 
@@ -67,8 +75,14 @@ export class DatalakeRestService {
 
   getTagValues(index: string,
                fieldNames: string[]): Observable<Map<string, string[]>> {
-    return this.http.get(this.dataLakeUrl + '/measurements/' + index + '/tags?fields=' + fieldNames.toString())
+                
+    if (fieldNames.length === 0) {
+      return of(new Map<string, string[]>());
+    } else {
+      return this.http.get(this.dataLakeUrl + '/measurements/' + index + '/tags?fields=' + fieldNames.toString())
       .pipe(map(r => r as Map<string, string[]>));
+
+    }
   }
 
   downloadRawData(index: string,
