@@ -72,6 +72,11 @@ export class GenericAdapterConfigurationComponent extends AdapterConfigurationDi
 
   afterTemplateReceived(adapterDescription: any) {
     this.protocolDescription = ProtocolDescription.fromData(adapterDescription.protocolDescription);
+    if (this.adapterDescription instanceof GenericAdapterSetDescription ||
+      this.adapterDescription instanceof GenericAdapterStreamDescription) {
+      this.adapterDescription.protocolDescription = this.protocolDescription;
+      this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
+    }
   }
 
 }

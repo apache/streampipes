@@ -44,6 +44,7 @@
                 <ng-template matStepLabel>Settings</ng-template>
                 <sp-specific-adapter-configuration
                         [adapterDescription]="adapter"
+                        (updateAdapterDescriptionEmitter)="adapter = $event"
                         (clickNextEmitter)="clickSpecificSettingsNextButton()"
                         (removeSelectionEmitter)="removeSelection()">
                 </sp-specific-adapter-configuration>
@@ -53,6 +54,7 @@
                 <ng-template matStepLabel>Settings</ng-template>
                 <sp-generic-adapter-configuration
                         [adapterDescription]="adapter"
+                        (updateAdapterDescriptionEmitter)="adapter = $event"
                         (clickNextEmitter)="clickProtocolSettingsNextButton()"
                         (removeSelectionEmitter)="removeSelection()">
                 </sp-generic-adapter-configuration>
