@@ -156,7 +156,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
-        if (! (checkProvidedQueryParams(queryParams))) {
+        if (!(checkProvidedQueryParams(queryParams)) || columnsEmpty(queryParams)) {
             return badRequest();
         } else {
             ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
@@ -247,25 +247,25 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
 
     private boolean checkProvidedQueryParams(MultivaluedMap<String, String> providedParams) {
-        if (supportedParams.containsAll(providedParams.keySet()) && columnsNotEmpty(providedParams)) {
+        if (supportedParams.containsAll(providedParams.keySet())) {
             return true;
         } else {
             return false;
         }
     }
 
-    private boolean columnsNotEmpty(MultivaluedMap<String, String> providedParams) {
+    private boolean columnsEmpty(MultivaluedMap<String, String> providedParams) {
         if (providedParams.containsKey("columns")) {
             for (String column : providedParams.get("columns")) {
                 if ("".equals(column)) {
-                    return false;
+                    return true;
                 }
             };
         } else {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private ProvidedQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {
