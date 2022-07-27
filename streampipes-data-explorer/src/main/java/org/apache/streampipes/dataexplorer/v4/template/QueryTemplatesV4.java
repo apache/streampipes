@@ -42,11 +42,11 @@ public class QueryTemplatesV4 {
             joiner.add(builder);
         }
 
-        return "SELECT " + joiner + " FROM " + index;
+        return "SELECT " + joiner + " FROM \"" + index + "\"";
     }
 
     public static String deleteFrom(String index) {
-        return "DELETE FROM " + index;
+        return "DELETE FROM \"" + index + "\"";
     }
 
     public static String whereTimeWithin(long startDate, long endDate) {

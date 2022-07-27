@@ -307,9 +307,10 @@ public class DataLakeManagementV4 {
                                             String fields) {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
         Map<String, Object> tags = new HashMap<>();
-        List<String> fieldList = Arrays.asList(fields.split(","));
-        fieldList.forEach(f -> {
-                String q = "SHOW TAG VALUES ON \"" + BackendConfig.INSTANCE.getInfluxDatabaseName() + "\" FROM \"" +measurementId + "\" WITH KEY = \"" +f + "\"";
+        if (fields != null && !("".equals(fields))) {
+            List<String> fieldList = Arrays.asList(fields.split(","));
+            fieldList.forEach(f -> {
+                String q = "SHOW TAG VALUES ON \"" + BackendConfig.INSTANCE.getInfluxDatabaseName() + "\" FROM \"" + measurementId + "\" WITH KEY = \"" + f + "\"";
                 Query query = new Query(q);
                 QueryResult queryResult = influxDB.query(query);
                 queryResult.getResults().forEach(res -> {
@@ -321,7 +322,8 @@ public class DataLakeManagementV4 {
                         }
                     });
                 });
-        });
+            });
+        }
 
         return tags;
     }

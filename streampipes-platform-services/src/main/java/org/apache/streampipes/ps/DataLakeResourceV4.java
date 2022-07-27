@@ -247,7 +247,25 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
 
     private boolean checkProvidedQueryParams(MultivaluedMap<String, String> providedParams) {
-        return supportedParams.containsAll(providedParams.keySet());
+        if (supportedParams.containsAll(providedParams.keySet()) && columnsNotEmpty(providedParams)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean columnsNotEmpty(MultivaluedMap<String, String> providedParams) {
+        if (providedParams.containsKey("columns")) {
+            for (String column : providedParams.get("columns")) {
+                if ("".equals(column)) {
+                    return false;
+                }
+            };
+        } else {
+            return false;
+        }
+
+        return true;
     }
 
     private ProvidedQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {

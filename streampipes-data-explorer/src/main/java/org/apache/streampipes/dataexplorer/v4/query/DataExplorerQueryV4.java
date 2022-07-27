@@ -65,7 +65,8 @@ public class DataExplorerQueryV4 {
         if (this.maximumAmountOfEvents != -1) {
             QueryBuilder countQueryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
             Query countQuery = countQueryBuilder.build(queryElements, true);
-            Double amountOfQueryResults = getAmountOfResults(influxDB.query(countQuery));
+            QueryResult countQueryResult = influxDB.query(countQuery);
+            Double amountOfQueryResults = getAmountOfResults(countQueryResult);
             if (amountOfQueryResults > this.maximumAmountOfEvents) {
                 SpQueryResult tooMuchData = new SpQueryResult();
                 tooMuchData.setSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA);
