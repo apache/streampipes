@@ -30,7 +30,7 @@ public class DeleteDataQuery extends DataExplorerQuery<QueryResult> {
 
   @Override
   protected void getQuery(DataExplorerQueryBuilder queryBuilder) {
-    queryBuilder.add("DROP MEASUREMENT " + measure.getMeasureName());
+    queryBuilder.add("DROP MEASUREMENT \"" + measure.getMeasureName() + "\"");
   }
 
   @Override
