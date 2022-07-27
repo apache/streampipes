@@ -71,16 +71,16 @@ public class SelectColumn {
 
   private String makeField() {
     if (this.simpleField) {
-      return this.originalField;
+      return "\"" + this.originalField + "\"";
     } else {
-      return this.columnFunction.toDbName() + "(" + this.originalField + ")";
+      return this.columnFunction.toDbName() + "(\"" + this.originalField + "\")";
     }
   }
 
   public String toQueryString() {
     String field = makeField();
     if (this.rename) {
-      return field + " AS " + this.targetField;
+      return field + " AS \"" + this.targetField + "\"";
     } else {
       return field;
     }
