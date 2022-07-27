@@ -30,11 +30,11 @@ public class SelectFromStatement extends QueryElement<SelectFromStatementParams>
   @Override
   protected String buildStatement(SelectFromStatementParams params) {
     if (params.isSelectWildcard()) {
-      return "SELECT * FROM " + params.getIndex();
+      return "SELECT * FROM \"" + params.getIndex() + "\"";
     } else {
       StringJoiner joiner = new StringJoiner(",");
       String queryPrefix = "SELECT ";
-      String queryAppendix = " FROM " +params.getIndex();
+      String queryAppendix = " FROM \"" + params.getIndex() + "\"";
 
       params.getSelectedColumns().forEach(column -> {
         joiner.add(column.toQueryString());
@@ -42,12 +42,5 @@ public class SelectFromStatement extends QueryElement<SelectFromStatementParams>
 
       return queryPrefix + joiner + queryAppendix;
     }
-//        if (selectFromStatementParams.isCountOnly()) {
-//            return QueryTemplatesV4.selectCountFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
-//        } else if (selectFromStatementParams.getAggregationFunction() == null) {
-//            return QueryTemplatesV4.selectFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns());
-//        } else {
-//            return QueryTemplatesV4.selectAggregationFrom(selectFromStatementParams.getIndex(), selectFromStatementParams.getSelectedColumns(), selectFromStatementParams.getAggregationFunction());
-//        }
   }
 }
