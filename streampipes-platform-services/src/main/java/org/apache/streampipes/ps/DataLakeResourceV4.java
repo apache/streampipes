@@ -156,7 +156,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
-        if (!(checkProvidedQueryParams(queryParams)) || columnsEmpty(queryParams)) {
+        if (!(checkProvidedQueryParams(queryParams))) {
             return badRequest();
         } else {
             ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
