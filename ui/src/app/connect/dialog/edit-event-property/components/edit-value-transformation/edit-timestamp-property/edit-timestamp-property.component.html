@@ -30,12 +30,12 @@
 
 
 <div fxLayout="row" fxLayoutAlign="start">
-    <div class="form-group" fxFlexAlign="center">
+    <div class="form-group" fxFlexAlign="center" fxFlex="100">
         <mat-form-field class="w-100"
                         *ngIf="cachedProperty.timestampTransformationMode === 'formatString'"
                         color="accent"
                         fxFlex="100">
-            <input matInput
+            <input class="w-100" matInput
                    placeholder="E.g. yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
                    data-cy="connect-timestamp-string-regex"
                    [(ngModel)]="cachedProperty.timestampTransformationFormatString">
