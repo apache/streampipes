@@ -9,7 +9,6 @@
       <env name="SP_JMS_HOST" value="localhost" />
       <env name="SP_JMS_PORT" value="61616" />
       <env name="SP_PORT" value="7023" />
-      <env name="SP_HOST" value="141.21.12.92" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="org.apache.streampipes.extensions.all.jvm.AllExtensionsInit" />
     <module name="streampipes-extensions-all-jvm" />
