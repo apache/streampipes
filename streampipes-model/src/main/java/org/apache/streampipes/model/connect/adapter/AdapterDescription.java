@@ -23,6 +23,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -165,8 +166,9 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     public List<TransformationRuleDescription> getValueRules() {
         var tmp = new ArrayList<TransformationRuleDescription>();
         rules.forEach(rule -> {
-            if(rule instanceof ValueTransformationRuleDescription)
+            if(rule instanceof ValueTransformationRuleDescription && !(rule instanceof AddTimestampRuleDescription)) {
                 tmp.add(rule);
+            }
         });
         return tmp;
     }

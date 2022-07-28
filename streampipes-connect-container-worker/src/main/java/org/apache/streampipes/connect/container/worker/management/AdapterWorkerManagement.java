@@ -80,11 +80,9 @@ public class AdapterWorkerManagement {
 
         IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
 
-        if (adapter == null) {
-            throw new AdapterException("Adapter with id " + elementId + " was not found in this container and cannot be stopped.");
+        if (adapter != null) {
+            adapter.stopAdapter();
         }
-
-        adapter.stopAdapter();
     }
 
 }

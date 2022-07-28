@@ -47,6 +47,8 @@ export abstract class AdapterConfigurationDirective {
    */
   @Output() clickNextEmitter: EventEmitter<MatStepper> = new EventEmitter();
 
+  @Output() updateAdapterDescriptionEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
+
   availableTemplates: PipelineElementTemplate[];
   selectedTemplate: any = false;
 

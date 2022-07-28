@@ -67,6 +67,7 @@ export class SpecificAdapterConfigurationComponent extends AdapterConfigurationD
 
   afterTemplateReceived(adapterDescription: any) {
     this.adapterDescription = AdapterDescription.fromDataUnion(adapterDescription);
+    this.updateAdapterDescriptionEmitter.emit(this.adapterDescription);
   }
 
 }

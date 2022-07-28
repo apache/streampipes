@@ -163,7 +163,10 @@ $accent: map-get($custom-theme-light, accent);
 .small .mat-tab-label-content {
   text-transform: none;
   font-size: 11pt;
+}
 
+:root {
+  --color-loading-bar: #{mat-color($accent)};
 }
 
 .dark-mode {

@@ -25,6 +25,7 @@ import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseVariableTypeNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
+import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
@@ -81,7 +82,7 @@ public class OpcUaNodeBrowser {
     UaNode node = addressSpace.getNode(nodeId);
 
     if (node instanceof BaseVariableTypeNode) {
-      UInteger value = (UInteger) ((BaseVariableTypeNode) node).getDataType().getIdentifier();
+      UInteger value = (UInteger) ((UaVariableNode) node).getDataType().getIdentifier();
       return new OpcNode(node.getDisplayName().getText(), OpcUaTypes.getType(value), node.getNodeId());
     }
 
@@ -112,6 +113,6 @@ public class OpcUaNodeBrowser {
   }
 
   private boolean isDataNode(UaNode node) {
-    return node.getNodeClass().equals(NodeClass.Variable) && node instanceof BaseVariableTypeNode;
+    return (node.getNodeClass().equals(NodeClass.Variable) || (node.getNodeClass().equals(NodeClass.VariableType))) && node instanceof UaVariableNode;
   }
 }

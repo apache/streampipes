@@ -55,6 +55,17 @@
                                          (removeSelectedPropertiesEmitter)="removeSelectedProperties()">
                 </sp-schema-editor-header>
             </div>
+            <div header *ngIf="!isLoading && isError" fxFlex="100">
+                <div fxLayout="row" fxLayoutAlign="end center">
+                    <button color="accent"
+                            mat-button
+                            mat-icon-button
+                            matTooltip="Refresh Schema"
+                            (click)="guessSchema()">
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+            </div>
 
             <div fxFlex="100">
 

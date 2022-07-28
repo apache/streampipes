@@ -82,14 +82,18 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
     @Produces(MediaType.APPLICATION_JSON)
     public Response stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) {
 
+        String responseMessage;
         try {
-            adapterManagement.stopStreamAdapter(adapterStreamDescription);
+            if (adapterStreamDescription.isRunning()) {
+                adapterManagement.stopStreamAdapter(adapterStreamDescription);
+                responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId() + " successfully stopped";
+            } else {
+                responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId() + " seems not to be running";
+            }
         } catch (AdapterException e) {
-            logger.error("Error while stopping adapter with id " + adapterStreamDescription.getUri(), e);
+            logger.error("Error while stopping adapter with id " + adapterStreamDescription.getElementId(), e);
             return ok(Notifications.error(e.getMessage()));
         }
-
-        String responseMessage = "Stream adapter with id " + adapterStreamDescription.getUri() + " successfully stopped";
 
         logger.info(responseMessage);
         return ok(Notifications.success(responseMessage));
