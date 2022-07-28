@@ -53,7 +53,9 @@ export class SpAssetDetailsComponent implements OnInit {
   loadAsset(): void {
     this.genericStorageService.getDocument(AssetConstants.ASSET_APP_DOC_NAME, this.assetModelId).subscribe(asset => {
       this.asset = asset;
-      this.selectedAsset = this.asset;
+      if (!this.selectedAsset) {
+        this.selectedAsset = this.asset;
+      }
       this.breadcrumbService.updateBreadcrumb([SpAssetRoutes.BASE, {label: this.asset.assetName}]);
     });
   }

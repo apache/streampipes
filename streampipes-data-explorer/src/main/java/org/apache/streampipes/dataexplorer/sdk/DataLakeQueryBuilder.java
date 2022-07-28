@@ -20,7 +20,6 @@ package org.apache.streampipes.dataexplorer.sdk;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.dataexplorer.v4.params.ColumnFunction;
-import org.apache.streampipes.dataexplorer.v4.query.elements.OrderingByTime;
 import org.influxdb.dto.Query;
 import org.influxdb.querybuilder.Ordering;
 import org.influxdb.querybuilder.SelectionQueryImpl;
@@ -129,6 +128,13 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  public DataLakeQueryBuilder withGroupBy(String column) {
+
+    this.groupByClauses.add(new RawTextClause(column));
+
+    return this;
+  }
+
   public DataLakeQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
     if (DataLakeQueryOrdering.ASC.equals(ordering)) {
       this.ordering =  asc();
@@ -146,7 +152,7 @@ public class DataLakeQueryBuilder {
   }
 
   public Query build() {
-    var selectQuery = this.selectionQuery.from(BackendConfig.INSTANCE.getInfluxDatabaseName(), measurementId);
+    var selectQuery = this.selectionQuery.from(BackendConfig.INSTANCE.getInfluxDatabaseName(), "\"" +measurementId + "\"");
     this.whereClauses.forEach(selectQuery::where);
     this.groupByClauses.forEach(selectQuery::groupBy);
 
