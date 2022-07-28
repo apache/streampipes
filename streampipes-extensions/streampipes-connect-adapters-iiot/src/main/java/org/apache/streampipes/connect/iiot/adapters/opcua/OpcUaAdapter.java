@@ -190,7 +190,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
                 .requiredAlternatives(Labels.withId(OpcUaLabels.OPC_HOST_OR_URL.name()),
                         Alternatives.from(
                                 Labels.withId(OpcUaLabels.OPC_URL.name()),
-                                StaticProperties.stringFreeTextProperty(Labels.withId(OpcUaLabels.OPC_SERVER_URL.name())))
+                                StaticProperties.stringFreeTextProperty(Labels.withId(OpcUaLabels.OPC_SERVER_URL.name()), "opc.tcp://localhost:4840"))
                         ,
                         Alternatives.from(Labels.withId(OpcUaLabels.OPC_HOST.name()),
                                 StaticProperties.group(
