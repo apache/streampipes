@@ -61,8 +61,35 @@ export class SpAssetDetailsComponent implements OnInit {
   }
 
   updateAsset() {
+    this.updateSelected();
+  }
+
+  saveAsset() {
     this.genericStorageService.updateDocument(AssetConstants.ASSET_APP_DOC_NAME, this.asset).subscribe(res => {
       this.loadAsset();
+      this.editMode = false;
     });
+  }
+
+  updateSelected() {
+    if (this.asset.assetId === this.selectedAsset.assetId) {
+      this.asset = this.selectedAsset as SpAssetModel;
+    } else {
+      this.asset.assets.forEach(a => {
+        this.walk(a, this.selectedAsset);
+      });
+    }
+  }
+
+  walk(asset: SpAsset, selectedAsset: SpAsset) {
+    if (asset.assetId === selectedAsset.assetId) {
+      asset = selectedAsset;
+    } else {
+      if (asset.assets) {
+        asset.assets.forEach(a => {
+          this.walk(a, selectedAsset);
+        });
+      }
+    }
   }
 }
