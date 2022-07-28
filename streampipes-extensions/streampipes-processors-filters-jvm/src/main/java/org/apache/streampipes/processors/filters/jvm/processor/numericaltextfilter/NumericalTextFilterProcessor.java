@@ -71,7 +71,7 @@ public class NumericalTextFilterProcessor extends StreamPipesDataProcessor {
             .requiredFloatParameter(Labels.withId(NUMBER_VALUE), NUMBER_MAPPING)
             .requiredSingleValueSelection(Labels.withId(TEXT_OPERATION), Options.from("MATCHES",
                     "CONTAINS"))
-            .requiredTextParameter(Labels.withId(TEXT_KEYWORD), "text")
+            .requiredTextParameterWithLink(Labels.withId(TEXT_KEYWORD), "text")
             .outputStrategy(OutputStrategies.keep())
             .build();
 
