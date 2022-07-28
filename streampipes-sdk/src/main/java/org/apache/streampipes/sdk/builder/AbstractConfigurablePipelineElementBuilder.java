@@ -260,7 +260,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * @deprecated Use {@link #requiredTextParameter(Label, String)}
+   * @deprecated Use {@link #requiredTextParameterWithLink(Label, String)}
    * @param internalId
    * @param label
    * @param description
@@ -284,10 +284,27 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * value range of the parameter is restricted to the value specification of a selected input event property.
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
+   * @param defaultValue The default value is displayed to the user in the input field
+   * @return this
+   */
+  public BU requiredTextParameter(Label label,
+                                  String defaultValue) {
+    FreeTextStaticProperty fsp = StaticProperties.stringFreeTextProperty(label, defaultValue);
+
+    this.staticProperties.add(fsp);
+    return me();
+  }
+
+
+  /**
+   * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time. The
+   * value range of the parameter is restricted to the value specification of a selected input event property.
+   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
+   *              user-friendly manner.
    * @param linkedMappingPropertyInternalName The inernalId of the {@link org.apache.streampipes.model.staticproperty.MappingProperty}
    * @return this
    */
-  public BU requiredTextParameter(Label label, String
+  public BU requiredTextParameterWithLink(Label label, String
           linkedMappingPropertyInternalName) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
 
