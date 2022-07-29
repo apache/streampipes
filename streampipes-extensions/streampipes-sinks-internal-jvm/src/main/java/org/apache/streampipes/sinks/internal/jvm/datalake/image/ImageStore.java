@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+package org.apache.streampipes.sinks.internal.jvm.datalake.image;
 
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
