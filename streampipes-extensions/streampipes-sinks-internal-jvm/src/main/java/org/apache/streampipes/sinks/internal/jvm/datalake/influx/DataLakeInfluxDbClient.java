@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+package org.apache.streampipes.sinks.internal.jvm.datalake.influx;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.DataExplorerConnectionSettings;
@@ -49,25 +49,20 @@ public class DataLakeInfluxDbClient {
 
     private final String measureName;
     private final String timestampField;
-    private final Integer batchSize;
-    private final Integer flushDuration;
-
+    private final Integer batchSize = 2000;
+    private final Integer flushDuration = 500;
     private InfluxDB influxDb = null;
     private final DataExplorerConnectionSettings settings;
     private final EventSchema originalEventSchema;
 
     Map<String, String> targetRuntimeNames = new HashMap<>();
 
-    DataLakeInfluxDbClient(DataExplorerConnectionSettings settings,
+    public DataLakeInfluxDbClient(DataExplorerConnectionSettings settings,
                            String timestampField,
-                           Integer batchSize,
-                           Integer flushDuration,
                            EventSchema originalEventSchema) throws SpRuntimeException {
         this.settings = settings;
         this.originalEventSchema = originalEventSchema;
         this.timestampField = timestampField;
-        this.batchSize = batchSize;
-        this.flushDuration = flushDuration;
         this.measureName = settings.getMeasureName();
 
         prepareSchema();
@@ -145,7 +140,7 @@ public class DataLakeInfluxDbClient {
      * @param event The event which should be saved
      * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed
      */
-    void save(Event event, EventSchema schema) throws SpRuntimeException {
+    public void save(Event event, EventSchema schema) throws SpRuntimeException {
         if (event == null) {
             throw new SpRuntimeException("event is null");
         }
@@ -195,7 +190,7 @@ public class DataLakeInfluxDbClient {
     /**
      * Shuts down the connection to the InfluxDB server
      */
-    void stop() {
+    public void stop() {
         influxDb.flush();
         try {
             Thread.sleep(1000);

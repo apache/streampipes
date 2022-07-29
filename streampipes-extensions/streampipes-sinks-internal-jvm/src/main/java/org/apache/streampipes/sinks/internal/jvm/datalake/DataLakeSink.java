@@ -19,6 +19,8 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
 import org.apache.streampipes.sinks.internal.jvm.datalake.image.ImageStore;
+import org.apache.streampipes.sinks.internal.jvm.datalake.influx.DataLakeInfluxDbClient;
+import org.apache.streampipes.sinks.internal.jvm.datalake.influx.DataLakeUtils;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
@@ -65,15 +67,10 @@ public class DataLakeSink extends StreamPipesDataSink {
 
         this.timestampField = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
         String measureName = parameters.extractor().singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
+        // TODO check if still needed
         measureName = DataLakeUtils.prepareString(measureName);
 
-        SpConfig configStore = runtimeContext.getConfigStore().getConfig();
 
-        String couchDbProtocol = configStore.getString(ConfigKeys.COUCHDB_PROTOCOL);
-        String couchDbHost = configStore.getString(ConfigKeys.COUCHDB_HOST);
-        int couchDbPort = configStore.getInteger(ConfigKeys.COUCHDB_PORT);
-
-        this.imageStore = new ImageStore(couchDbProtocol, couchDbHost, couchDbPort);
 
         EventSchema schema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
         // Remove the timestamp field from the event schema
@@ -103,46 +100,55 @@ public class DataLakeSink extends StreamPipesDataSink {
                         eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
                 .collect(Collectors.toList());
 
+
+
+        SpConfig configStore = runtimeContext.getConfigStore().getConfig();
+        String couchDbProtocol = configStore.getString(ConfigKeys.COUCHDB_PROTOCOL);
+        String couchDbHost = configStore.getString(ConfigKeys.COUCHDB_HOST);
+        int couchDbPort = configStore.getInteger(ConfigKeys.COUCHDB_PORT);
+        this.imageStore = new ImageStore(couchDbProtocol, couchDbHost, couchDbPort);
+
         DataExplorerConnectionSettings settings = DataExplorerConnectionSettings.from(
                 configStore,
                 measureName);
 
-        Integer batchSize = 2000;
-        Integer flushDuration = 500;
+
 
         this.influxDbClient = new DataLakeInfluxDbClient(
                 settings,
                 this.timestampField,
-                batchSize,
-                flushDuration,
                 this.eventSchema
         );
     }
 
     @Override
     public void onEvent(Event event) throws SpRuntimeException {
+        // handles image properties by storing the image in couchdb and replacing the values with the document id
         try {
             this.imageProperties.forEach(eventProperty -> {
                 String imageDocId = UUID.randomUUID().toString();
                 String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
 
-                this.writeToImageFile(image, imageDocId);
+                byte[] data = Base64.decodeBase64(image);
+                this.imageStore.storeImage(data, imageDocId);
                 event.updateFieldBySelector("s0::" + eventProperty.getRuntimeName(), imageDocId);
             });
+        } catch (SpRuntimeException e) {
+            LOG.error(e.getMessage());
+        }
 
+
+        // store event in time series database
+        try {
             influxDbClient.save(event, this.eventSchema);
         } catch (SpRuntimeException e) {
             LOG.error(e.getMessage());
         }
+
     }
 
     @Override
     public void onDetach() throws SpRuntimeException {
         influxDbClient.stop();
-    }
-
-    private void writeToImageFile(String image, String imageDocId) {
-        byte[] data = Base64.decodeBase64(image);
-        this.imageStore.storeImage(data, imageDocId);
     }
 }
