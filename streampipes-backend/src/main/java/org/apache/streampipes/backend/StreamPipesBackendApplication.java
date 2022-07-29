@@ -98,12 +98,13 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+    new StreamPipesEnvChecker().updateEnvironmentVariables();
+    new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
+
     if (!isConfigured()) {
       doInitialSetup();
     }
 
-    new StreamPipesEnvChecker().updateEnvironmentVariables();
-    new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
     new MigrationsHandler().performMigrations();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
