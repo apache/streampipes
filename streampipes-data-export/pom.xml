@@ -26,14 +26,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>streampipes-data-explorer-commons</artifactId>
+    <artifactId>streampipes-data-export</artifactId>
+
     <dependencies>
-        <!-- StreamPipes -->
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-service-discovery-api</artifactId>
-            <version>0.70.0-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-model</artifactId>
@@ -41,26 +36,9 @@
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-client</artifactId>
+            <artifactId>streampipes-storage-management</artifactId>
             <version>0.70.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-commons</artifactId>
-            <version>0.70.0-SNAPSHOT</version>
-        </dependency>
-
-
-        <!-- Others -->
-        <dependency>
-            <groupId>org.influxdb</groupId>
-            <artifactId>influxdb-java</artifactId>
         </dependency>
     </dependencies>
-
-    <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-    </properties>
 
 </project>

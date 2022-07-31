@@ -16,8 +16,44 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.model.export;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+public class ExportItem {
+
+  private String resourceId;
+  private String label;
+  private boolean selected;
+
+  public ExportItem() {
+  }
+
+  public ExportItem(String resourceId, String label, boolean selected) {
+    this.resourceId = resourceId;
+    this.label = label;
+    this.selected = selected;
+  }
+
+  public String getResourceId() {
+    return resourceId;
+  }
+
+  public void setResourceId(String resourceId) {
+    this.resourceId = resourceId;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  public boolean isSelected() {
+    return selected;
+  }
+
+  public void setSelected(boolean selected) {
+    this.selected = selected;
+  }
 }

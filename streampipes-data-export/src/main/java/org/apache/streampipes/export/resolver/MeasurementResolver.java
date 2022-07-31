@@ -16,8 +16,20 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.export.resolver;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.export.ExportItem;
+
+public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
+
+  @Override
+  public DataLakeMeasure findDocument(String resourceId) {
+    return getNoSqlStore().getDataLakeStorage().findOne(resourceId);
+  }
+
+  @Override
+  public ExportItem convert(DataLakeMeasure document) {
+    return new ExportItem(document.getElementId(), document.getMeasureName(), true);
+  }
 }

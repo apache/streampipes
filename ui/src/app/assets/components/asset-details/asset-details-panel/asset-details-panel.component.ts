@@ -78,7 +78,14 @@ export class SpAssetDetailsPanelComponent implements OnInit {
   }
 
   openCreateAssetLinkDialog(): void {
-    const assetLink: AssetLink = {linkLabel: '', linkType: 'data-view', editingDisabled: false, resourceId: '', navigationActive: true};
+    const assetLink: AssetLink = {
+      linkLabel: '',
+      linkType: 'data-view',
+      editingDisabled: false,
+      resourceId: '',
+      navigationActive: true,
+      queryHint: 'data-view'
+    };
     this.openEditAssetLinkDialog(assetLink, -1, true);
   }
 

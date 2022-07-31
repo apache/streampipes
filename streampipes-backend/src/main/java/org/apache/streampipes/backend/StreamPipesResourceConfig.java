@@ -62,6 +62,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(ContainerProvidedOptions.class);
         register(DashboardWidget.class);
         register(Dashboard.class);
+        register(DataExportResource.class);
         register(DataLakeImageResource.class);
         register(DataLakeResourceV3.class);
         register(DataLakeMeasureResourceV3.class);

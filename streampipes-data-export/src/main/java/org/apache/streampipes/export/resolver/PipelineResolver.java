@@ -16,8 +16,20 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.export.resolver;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+import org.apache.streampipes.model.export.ExportItem;
+import org.apache.streampipes.model.pipeline.Pipeline;
+
+public class PipelineResolver extends AbstractResolver<Pipeline> {
+
+  @Override
+  public Pipeline findDocument(String resourceId) {
+    return getNoSqlStore().getPipelineStorageAPI().getPipeline(resourceId);
+  }
+
+  @Override
+  public ExportItem convert(Pipeline document) {
+    return new ExportItem(document.getPipelineId(), document.getName(), true);
+  }
 }

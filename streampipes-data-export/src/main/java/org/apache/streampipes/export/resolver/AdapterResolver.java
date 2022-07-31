@@ -16,8 +16,21 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+package org.apache.streampipes.export.resolver;
+
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.export.ExportItem;
+
+public class AdapterResolver extends AbstractResolver<AdapterDescription> {
+
+  @Override
+  public AdapterDescription findDocument(String resourceId) {
+    return getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
+  }
+
+  @Override
+  public ExportItem convert(AdapterDescription document) {
+    return new ExportItem(document.getElementId(), document.getName(), true);
+  }
 }

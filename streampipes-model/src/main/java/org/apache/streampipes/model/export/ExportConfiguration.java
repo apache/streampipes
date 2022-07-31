@@ -16,8 +16,28 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+package org.apache.streampipes.model.export;
+
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@TsModel
+public class ExportConfiguration {
+
+  private List<AssetExportConfiguration> assetExportConfiguration;
+
+  public ExportConfiguration() {
+    this.assetExportConfiguration = new ArrayList<>();
+  }
+
+  public List<AssetExportConfiguration> getAssetExportConfiguration() {
+    return assetExportConfiguration;
+  }
+
+  public void setAssetExportConfiguration(List<AssetExportConfiguration> assetExportConfiguration) {
+    this.assetExportConfiguration = assetExportConfiguration;
+  }
 }

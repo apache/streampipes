@@ -16,8 +16,17 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+import { Component, OnInit } from '@angular/core';
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+@Component({
+  selector: 'sp-data-import-dialog',
+  templateUrl: './data-import-dialog.component.html',
+  styleUrls: ['./data-import-dialog.component.scss'],
+})
+export class SpDataImportDialogComponent implements OnInit {
+
+  ngOnInit(): void {
+  }
+
+
 }

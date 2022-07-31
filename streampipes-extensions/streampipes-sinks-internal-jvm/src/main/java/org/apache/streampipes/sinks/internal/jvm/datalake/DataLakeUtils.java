@@ -21,7 +21,8 @@ package org.apache.streampipes.sinks.internal.jvm.datalake;
 public class DataLakeUtils {
 
   public static String prepareString(String s) {
-    return s.toLowerCase().replaceAll(" ", "_");
+    //return s.toLowerCase().replaceAll(" ", "_");
+    return s.replaceAll(" ", "_");
   }
 
   private static String renameReservedKeywords(String runtimeName) {

@@ -16,8 +16,22 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.export.utils;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+
+public class SerializationUtils {
+
+  public static ObjectMapper getSpObjectMapper() {
+    return JacksonSerializer.getObjectMapper();
+  }
+
+  public static ObjectMapper getDefaultObjectMapper() {
+    var mapper = new ObjectMapper();
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    return mapper;
+  }
 }

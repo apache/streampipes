@@ -54,6 +54,10 @@ import { GeneralConfigurationComponent } from './general-configuration/general-c
 import { SecurityAuthenticationConfigurationComponent } from './security-configuration/authentication-configuration/authentication-configuration.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { SpDataExportImportComponent } from './export/data-export-import.component';
+import { SpDataExportDialogComponent } from './export/export-dialog/data-export-dialog.component';
+import { SpDataImportDialogComponent } from './export/import-dialog/data-import-dialog.component';
+import { SpDataExportItemComponent } from './export/export-dialog/data-export-item/data-export-item.component';
 
 @NgModule({
   imports: [
@@ -95,6 +99,10 @@ import { SharedUiModule } from '@streampipes/shared-ui';
             component: EmailConfigurationComponent
           },
           {
+            path: 'export',
+            component: SpDataExportImportComponent
+          },
+          {
             path: 'messaging',
             component: MessagingConfigurationComponent
           },
@@ -131,6 +139,10 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     SecurityServiceConfigComponent,
     MessagingConfigurationComponent,
     DatalakeConfigurationComponent,
+    SpDataExportImportComponent,
+    SpDataExportDialogComponent,
+    SpDataExportItemComponent,
+    SpDataImportDialogComponent
   ],
   providers: [ConfigurationService],
 })

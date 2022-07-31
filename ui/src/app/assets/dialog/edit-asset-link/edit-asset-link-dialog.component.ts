@@ -19,6 +19,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
+  AdapterDescriptionUnion,
+  SpDataStream,
+  AdapterService,
   AssetLink,
   AssetLinkType,
   Dashboard,
@@ -27,16 +30,12 @@ import {
   DataViewDataExplorerService,
   GenericStorageService,
   Pipeline,
-  PipelineService
+  PipelineService,
+  PipelineElementService
 } from '@streampipes/platform-services';
 import { FormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
-import {
-  AdapterDescriptionUnion,
-  SpDataStream
-} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
-import { PipelineElementService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service';
 
 @Component({
   selector: 'sp-edit-asset-link-dialog-component',
@@ -77,7 +76,8 @@ export class EditAssetLinkDialogComponent implements OnInit {
               private dataViewService: DataViewDataExplorerService,
               private dashboardService: DashboardService,
               private dataLakeService: DatalakeRestService,
-              private pipelineElementService: PipelineElementService) {
+              private pipelineElementService: PipelineElementService,
+              private adapterService: AdapterService) {
   }
 
   ngOnInit(): void {
@@ -105,19 +105,22 @@ export class EditAssetLinkDialogComponent implements OnInit {
       this.dataViewService.getDataViews(),
       this.dashboardService.getDashboards(),
       this.pipelineElementService.getDataStreams(),
-      this.dataLakeService.getAllMeasurementSeries()).subscribe(response => {
+      this.dataLakeService.getAllMeasurementSeries(),
+      this.adapterService.getAdapters()).subscribe(response => {
       this.pipelines = response[0];
       this.dataViews = response[1];
       this.dashboards = response[2];
       this.dataSources = response[3];
       this.dataLakeMeasures = response[4];
+      this.adapters = response[5];
 
       this.allResources = [
         ...this.pipelines,
         ...this.dataViews,
         ...this.dashboards,
         ...this.dataSources,
-        ...this.dataLakeMeasures
+        ...this.dataLakeMeasures,
+        ...this.adapters
       ];
       if (!this.createMode) {
         this.currentResource = this.allResources.find(r => r._id === this.clonedAssetLink.resourceId ||
@@ -131,6 +134,7 @@ export class EditAssetLinkDialogComponent implements OnInit {
     const linkType = this.assetLinkTypes.find(a => a.linkType === this.selectedLinkType.linkType);
     this.clonedAssetLink.editingDisabled = false;
     this.clonedAssetLink.linkType = linkType.linkType;
+    this.clonedAssetLink.queryHint = linkType.linkQueryHint;
     this.clonedAssetLink.navigationActive = linkType.navigationActive;
   }
 

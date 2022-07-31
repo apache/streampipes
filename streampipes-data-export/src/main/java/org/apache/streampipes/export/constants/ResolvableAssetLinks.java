@@ -16,8 +16,14 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.export.constants;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+public class ResolvableAssetLinks {
+
+  public static final String DATA_VIEW = "data-view";
+  public static final String DASHBOARD = "dashboard";
+  public static final String MEASUREMENT = "measurement";
+  public static final String ADAPTER = "adapter";
+  public static final String DATA_SOURCE = "data-source";
+  public static final String PIPELINE = "pipeline";
 }

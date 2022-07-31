@@ -16,8 +16,20 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+package org.apache.streampipes.export.resolver;
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
+import org.apache.streampipes.model.export.ExportItem;
+
+public class DashboardWidgetResolver extends AbstractResolver<DashboardWidgetModel> {
+
+  @Override
+  public DashboardWidgetModel findDocument(String resourceId) {
+    return getNoSqlStore().getDashboardWidgetStorage().getDashboardWidget(resourceId);
+  }
+
+  @Override
+  public ExportItem convert(DashboardWidgetModel document) {
+    return new ExportItem(document.getId(), document.getVisualizationName(), true);
+  }
 }

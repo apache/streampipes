@@ -16,8 +16,30 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.sdk;
+import { Component, Input, OnInit } from '@angular/core';
+import { ExportItem } from '@streampipes/platform-services';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
-public enum DataLakeQueryOrdering {
-    ASC, DESC
+@Component({
+  selector: 'sp-data-export-item',
+  templateUrl: './data-export-item.component.html',
+  styleUrls: ['./data-export-item.component.scss'],
+})
+export class SpDataExportItemComponent implements OnInit {
+
+  @Input()
+  exportItems: ExportItem[];
+
+  @Input()
+  sectionTitle: string;
+
+  ngOnInit(): void {
+  }
+
+  changeItem(event: MatCheckboxChange,
+             index: number) {
+    this.exportItems[index].selected = event.checked;
+  }
+
+
 }
