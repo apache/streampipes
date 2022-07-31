@@ -17,9 +17,8 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { AdapterDescriptionUnion } from '@streampipes/platform-services';
+import { AdapterDescriptionUnion, AdapterService } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
-import { DataMarketplaceService } from '../../services/data-marketplace.service';
 
 @Component({
     selector: 'sp-delete-adapter-dialog',
@@ -37,7 +36,7 @@ export class DeleteAdapterDialogComponent {
     numberOfPipelinesWithAdapter = 0;
 
     constructor(private dialogRef: DialogRef<DeleteAdapterDialogComponent>,
-                private dataMarketplaceService: DataMarketplaceService) {
+                private dataMarketplaceService: AdapterService) {
     }
 
     close(refreshAdapters: boolean) {

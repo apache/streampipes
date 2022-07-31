@@ -17,10 +17,9 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AdapterDescriptionUnion, PipelineElementService } from '@streampipes/platform-services';
+import { AdapterDescriptionUnion, AdapterService, PipelineElementService } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
-import { DataMarketplaceService } from '../../services/data-marketplace.service';
 import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
@@ -56,7 +55,7 @@ export class ExistingAdaptersComponent implements OnInit {
   isAdmin = false;
 
   constructor(public connectService: ConnectService,
-              private dataMarketplaceService: DataMarketplaceService,
+              private dataMarketplaceService: AdapterService,
               private dialogService: DialogService,
               private authService: AuthService,
               private pipelineElementService: PipelineElementService,

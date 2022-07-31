@@ -19,25 +19,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { ConnectService } from './connect.service';
-import {
-  AdapterDescription,
-  AdapterDescriptionUnion,
-  GenericAdapterSetDescription,
-  GenericAdapterStreamDescription,
-  Message,
-  SpecificAdapterSetDescription,
-  SpecificAdapterStreamDescription,
-  PlatformServicesCommons
-} from '@streampipes/platform-services';
-import { Observable } from 'rxjs';
 
-@Injectable()
-export class DataMarketplaceService {
+import { Observable } from 'rxjs';
+import { PlatformServicesCommons } from './commons.service';
+import { AdapterDescription, AdapterDescriptionUnion, Message } from '../model/gen/streampipes-model';
+
+@Injectable({providedIn: 'root'})
+export class AdapterService {
 
   constructor(
       private http: HttpClient,
-      private connectService: ConnectService,
       private platformServicesCommons: PlatformServicesCommons) {
   }
 
@@ -98,26 +89,6 @@ export class DataMarketplaceService {
       url +
       adapter.elementId
     );
-  }
-
-  cloneAdapterDescription(toClone: AdapterDescriptionUnion): AdapterDescriptionUnion {
-    let result: AdapterDescriptionUnion;
-
-    if (this.connectService.isGenericDescription(toClone)) {
-      if (toClone instanceof GenericAdapterStreamDescription) {
-        result = GenericAdapterStreamDescription.fromData(toClone, new GenericAdapterStreamDescription());
-      } else if (toClone instanceof GenericAdapterSetDescription) {
-        result = GenericAdapterSetDescription.fromData(toClone, new GenericAdapterSetDescription());
-      }
-    } else {
-      if (toClone instanceof SpecificAdapterStreamDescription) {
-        result = SpecificAdapterStreamDescription.fromData(toClone, new SpecificAdapterStreamDescription());
-      } else if (toClone instanceof SpecificAdapterSetDescription) {
-        result = SpecificAdapterSetDescription.fromData(toClone, new SpecificAdapterSetDescription());
-      }
-    }
-
-    return result;
   }
 
   getAssetUrl(appId) {

@@ -24,6 +24,7 @@
 export * from './lib/platform-services.module';
 
 export * from './lib/apis/commons.service';
+export * from './lib/apis/adapter.service';
 export * from './lib/apis/asset-management.service';
 export * from './lib/apis/data-view-data-explorer.service';
 export * from './lib/apis/datalake-rest.service';

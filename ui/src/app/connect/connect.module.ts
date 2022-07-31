@@ -39,7 +39,6 @@ import { TransformationRuleService } from './services/transformation-rule.servic
 import { ConnectService } from './services/connect.service';
 import { AdapterDescriptionComponent } from './components/data-marketplace/adapter-description/adapter-description.component';
 import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
-import { DataMarketplaceService } from './services/data-marketplace.service';
 import { FormatItemComponent } from './components/new-adapter/format-configuration/format-item/format-item.component';
 import { FormatListComponent } from './components/new-adapter/format-configuration/format-list/format-list.component';
 import { IconService } from './services/icon.service';
@@ -170,7 +169,6 @@ import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adap
     DataTypesService,
     TransformationRuleService,
     StaticPropertyUtilService,
-    DataMarketplaceService,
     IconService,
     UnitProviderService,
     TimestampPipe,
