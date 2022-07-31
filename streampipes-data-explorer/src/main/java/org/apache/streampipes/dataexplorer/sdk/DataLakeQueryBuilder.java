@@ -82,7 +82,13 @@ public class DataLakeQueryBuilder {
 
 
   public DataLakeQueryBuilder withEndTime(long endTime) {
-    this.whereClauses.add(new SimpleClause("time", "<=", endTime * 1000000));
+    return withEndTime(endTime, true);
+  }
+
+  public DataLakeQueryBuilder withEndTime(long endTime,
+                                          boolean includeEndTime) {
+    String operator = includeEndTime ? "<=" : "<";
+    this.whereClauses.add(new SimpleClause("time", operator, endTime * 1000000));
     return this;
   }
 
