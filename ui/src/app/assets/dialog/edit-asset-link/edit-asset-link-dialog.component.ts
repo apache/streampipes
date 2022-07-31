@@ -32,6 +32,11 @@ import {
 import { FormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
+import {
+  AdapterDescriptionUnion,
+  SpDataStream
+} from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { PipelineElementService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/pipeline-element.service';
 
 @Component({
   selector: 'sp-edit-asset-link-dialog-component',
@@ -58,6 +63,8 @@ export class EditAssetLinkDialogComponent implements OnInit {
   dataViews: Dashboard[];
   dashboards: Dashboard[];
   dataLakeMeasures: DataLakeMeasure[];
+  dataSources: SpDataStream[];
+  adapters: AdapterDescriptionUnion[];
 
   allResources: any[] = [];
   currentResource: any;
@@ -69,7 +76,8 @@ export class EditAssetLinkDialogComponent implements OnInit {
               private pipelineService: PipelineService,
               private dataViewService: DataViewDataExplorerService,
               private dashboardService: DashboardService,
-              private dataLakeService: DatalakeRestService) {
+              private dataLakeService: DatalakeRestService,
+              private pipelineElementService: PipelineElementService) {
   }
 
   ngOnInit(): void {
@@ -96,13 +104,21 @@ export class EditAssetLinkDialogComponent implements OnInit {
       this.pipelineService.getOwnPipelines(),
       this.dataViewService.getDataViews(),
       this.dashboardService.getDashboards(),
+      this.pipelineElementService.getDataStreams(),
       this.dataLakeService.getAllMeasurementSeries()).subscribe(response => {
       this.pipelines = response[0];
       this.dataViews = response[1];
       this.dashboards = response[2];
-      this.dataLakeMeasures = response[3];
+      this.dataSources = response[3];
+      this.dataLakeMeasures = response[4];
 
-      this.allResources = [...this.pipelines, ...this.dataViews, ...this.dashboards, ...this.dataLakeMeasures];
+      this.allResources = [
+        ...this.pipelines,
+        ...this.dataViews,
+        ...this.dashboards,
+        ...this.dataSources,
+        ...this.dataLakeMeasures
+      ];
       if (!this.createMode) {
         this.currentResource = this.allResources.find(r => r._id === this.clonedAssetLink.resourceId ||
           r.elementId === this.clonedAssetLink.resourceId);
