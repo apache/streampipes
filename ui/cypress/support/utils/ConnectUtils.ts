@@ -94,13 +94,19 @@ export class ConnectUtils {
     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
   }
 
-  public static addMachineDataSimulator(name: string) {
+  public static addMachineDataSimulator(name: string, persist: boolean = false) {
 
-    const configuration = SpecificAdapterBuilder
+    const builder = SpecificAdapterBuilder
       .create('Machine_Data_Simulator')
       .setName(name)
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
+      .addInput('input', 'wait-time-ms', '1000');
+
+    if (persist) {
+      builder.setTimestampProperty('timestamp').
+                setStoreInDataLake();
+    }
+
+    const configuration = builder.build();
 
     ConnectUtils.goToConnect();
 
