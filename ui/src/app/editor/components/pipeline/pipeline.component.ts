@@ -338,8 +338,9 @@ export class PipelineComponent implements OnInit, OnDestroy {
                   this.showCustomizeDialog(pe);
                 } else {
                   (pe.payload as InvocablePipelineElementUnion).configured = true;
-                  this.pipelineStyleService.updatePeConfigurationStatus(pe, PipelineElementConfigurationStatus.INCOMPLETE);
+                  this.pipelineStyleService.updatePeConfigurationStatus(pe, PipelineElementConfigurationStatus.OK);
                   this.announceConfiguredElement(pe);
+                  this.triggerPipelineCacheUpdate();
                 }
               }
             } else {
@@ -408,11 +409,13 @@ export class PipelineComponent implements OnInit, OnDestroy {
 
   isCustomOutput(pe) {
     let custom = false;
-    pe.payload.outputStrategies.forEach(strategy => {
-      if (strategy instanceof CustomOutputStrategy) {
-        custom = true;
-      }
-    });
+    if (pe.payload instanceof DataProcessorInvocation) {
+      pe.payload.outputStrategies.forEach(strategy => {
+        if (strategy instanceof CustomOutputStrategy) {
+          custom = true;
+        }
+      });
+    }
     return custom;
   }
 
