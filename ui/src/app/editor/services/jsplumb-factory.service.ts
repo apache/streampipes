@@ -23,7 +23,7 @@ import { BrowserJsPlumbInstance, ContainmentType, newInstance } from '@jsplumb/b
 import { PipelineElementDraggedService } from './pipeline-element-dragged.service';
 import { JsplumbConfigService } from './jsplumb-config.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class JsplumbFactoryService {
 
     pipelineEditorInstance: BrowserJsPlumbInstance;

@@ -33,7 +33,7 @@ import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { ObjectProvider } from './object-provider.service';
 import { Connection } from '@jsplumb/core';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PipelinePositioningService {
 
   constructor(private jsplumbService: JsplumbService,

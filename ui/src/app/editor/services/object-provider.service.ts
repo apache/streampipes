@@ -23,7 +23,7 @@ import { DataSinkInvocation, Pipeline } from '@streampipes/platform-services';
 import { EditorService } from './editor.service';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ObjectProvider {
 
     constructor(private restApi: RestApi,

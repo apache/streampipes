@@ -37,7 +37,7 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { HelpComponent } from '../dialog/help/help.component';
 import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class EditorService {
 
     private pipelineElementConfigured = new Subject<string>();

@@ -22,7 +22,7 @@ import { BezierConnector } from '@jsplumb/connector-bezier';
 import { EndpointTypeDescriptor } from '@jsplumb/core';
 import { ArrowOverlayOptions } from '@jsplumb/common';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class JsplumbConfigService {
 
   constructor() {
