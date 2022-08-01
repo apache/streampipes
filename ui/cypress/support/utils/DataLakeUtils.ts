@@ -65,7 +65,7 @@ export class DataLakeUtils {
     DataLakeUtils.selectTimeRange(
         new Date(2020, 10, 20, 22, 44),
         new Date(2021, 10, 20, 22, 44));
-    DataLakeUtils.addNewWidget();
+    // DataLakeUtils.addNewWidget();
     DataLakeUtils.selectDataSet(dataSet);
     DataLakeUtils.dataConfigSelectAllFields();
     DataLakeUtils.selectVisualizationConfig();
