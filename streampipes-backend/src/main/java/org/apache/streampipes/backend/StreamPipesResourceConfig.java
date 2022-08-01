@@ -19,10 +19,7 @@
 package org.apache.streampipes.backend;
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
-import org.apache.streampipes.ps.DataLakeImageResource;
-import org.apache.streampipes.ps.DataLakeResourceV3;
-import org.apache.streampipes.ps.DataLakeResourceV4;
-import org.apache.streampipes.ps.PipelineElementTemplateResource;
+import org.apache.streampipes.ps.*;
 import org.apache.streampipes.rest.impl.*;
 import org.apache.streampipes.rest.impl.admin.*;
 import org.apache.streampipes.rest.impl.connect.*;
@@ -30,7 +27,6 @@ import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
 import org.apache.streampipes.rest.impl.dashboard.VisualizablePipelineResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
-import org.apache.streampipes.rest.impl.datalake.DataLakeMeasureResourceV3;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.datalake.PersistedDataStreamResource;
 import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
@@ -65,6 +61,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataLakeImageResource.class);
         register(DataLakeResourceV3.class);
         register(DataLakeMeasureResourceV3.class);
+        register(DataLakeMeasureResourceV4.class);
         register(DataStream.class);
         register(EmailConfigurationResource.class);
         register(EmailResource.class);
@@ -104,7 +101,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(DataLakeDashboardResource.class);
         register(DataLakeWidgetResource.class);
         register(DataLakeResourceV3.class);
-        register(DataLakeMeasureResourceV3.class);
         register(PipelineElementFile.class);
         register(DashboardWidget.class);
         register(Dashboard.class);

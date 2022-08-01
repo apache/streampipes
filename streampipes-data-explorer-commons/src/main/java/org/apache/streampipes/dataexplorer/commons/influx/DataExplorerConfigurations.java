@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.commons;
+package org.apache.streampipes.dataexplorer.commons.influx;
 
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 

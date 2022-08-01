@@ -16,18 +16,19 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.influx;
+package org.apache.streampipes.dataexplorer.commons.influx;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.commons.DataExplorerConnectionSettings;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
-import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.vocabulary.XSD;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
+
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
@@ -40,40 +41,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Code is the same as InfluxDB (org.apache.streampipes.sinks.databases.jvm.influxdb) sink. Changes applied here should also be applied in the InfluxDB sink
- */
-public class DataLakeInfluxDbClient {
+public class InfluxStore {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataLakeInfluxDbClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InfluxStore.class);
 
-    private final String measureName;
-    private final String timestampField;
     private final Integer batchSize = 2000;
     private final Integer flushDuration = 500;
     private InfluxDB influxDb = null;
-    private final DataExplorerConnectionSettings settings;
-    private final EventSchema originalEventSchema;
+    DataLakeMeasure measure;
+//    private final DataExplorerConnectionSettings settings;
 
     Map<String, String> targetRuntimeNames = new HashMap<>();
 
-    public DataLakeInfluxDbClient(DataExplorerConnectionSettings settings,
-                           String timestampField,
-                           EventSchema originalEventSchema) throws SpRuntimeException {
-        this.settings = settings;
-        this.originalEventSchema = originalEventSchema;
-        this.timestampField = timestampField;
-        this.measureName = settings.getMeasureName();
+    public InfluxStore(DataLakeMeasure measure,
+                       SpConfig configStore) throws SpRuntimeException {
 
-        prepareSchema();
-        connect();
-    }
+        this.measure = measure;
+        DataExplorerConnectionSettings settings = DataExplorerConnectionSettings.from(configStore, measure);
 
-    private void prepareSchema() {
-        originalEventSchema
+        // TODO check if this works
+        measure.getEventSchema()
                 .getEventProperties()
-                .forEach(ep -> targetRuntimeNames.put(ep.getRuntimeName(), DataLakeUtils.sanitizePropertyRuntimeName(ep.getRuntimeName())));
+                .forEach(ep -> targetRuntimeNames.put(ep.getRuntimeName(), InfluxNameSanitizer.sanitizePropertyRuntimeName(ep.getRuntimeName())));
+
+        connect(settings);
     }
+
+    /**
+     *
+     * @param measure
+     */
+
 
     /**
      * Connects to the InfluxDB Server, sets the database and initializes the batch-behaviour
@@ -81,7 +79,7 @@ public class DataLakeInfluxDbClient {
      * @throws SpRuntimeException If not connection can be established or if the database could not
      * be found
      */
-    private void connect() throws SpRuntimeException {
+    private void connect(DataExplorerConnectionSettings settings) throws SpRuntimeException {
         // Connecting to the server
         // "http://" must be in front
         String urlAndPort = settings.getInfluxDbHost() + ":" + settings.getInfluxDbPort();
@@ -105,13 +103,6 @@ public class DataLakeInfluxDbClient {
         influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * Checks whether the given database exists. Needs a working connection to an InfluxDB Server
-     * ({@link DataLakeInfluxDbClient#influxDb} needs to be initialized)
-     *
-     * @param dbName The name of the database, the method should look for
-     * @return True if the database exists, false otherwise
-     */
     private boolean databaseExists(String dbName) {
         QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
         for(List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
@@ -140,19 +131,20 @@ public class DataLakeInfluxDbClient {
      * @param event The event which should be saved
      * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed
      */
-    public void save(Event event, EventSchema schema) throws SpRuntimeException {
+    public void onEvent(Event event) throws SpRuntimeException {
         if (event == null) {
             throw new SpRuntimeException("event is null");
         }
 
-        Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
-        Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
+        Long timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
+        Point.Builder p = Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
 
-        for (EventProperty ep : schema.getEventProperties()) {
+        for (EventProperty ep : measure.getEventSchema().getEventProperties()) {
             if (ep instanceof EventPropertyPrimitive) {
                 String runtimeName = ep.getRuntimeName();
 
-                if (!timestampField.endsWith(runtimeName)) {
+                // timestamp should not be added as a field
+                if (!measure.getTimestampField().endsWith(runtimeName)) {
                     String preparedRuntimeName = targetRuntimeNames.get(runtimeName);
                     PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
 
@@ -190,12 +182,12 @@ public class DataLakeInfluxDbClient {
     /**
      * Shuts down the connection to the InfluxDB server
      */
-    public void stop() {
+    public void close() throws SpRuntimeException {
         influxDb.flush();
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new SpRuntimeException(e);
         }
         influxDb.close();
     }

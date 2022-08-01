@@ -16,11 +16,22 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.config;
+package org.apache.streampipes.dataexplorer.commons.image;
 
-public class ConfigKeys {
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.vocabulary.SPSensor;
 
-    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ImageStoreUtils {
+
+    public static List<EventProperty> getImageProperties(DataLakeMeasure measure) {
+        return  measure.getEventSchema().getEventProperties().stream()
+                .filter(eventProperty -> eventProperty.getDomainProperties() != null &&
+            eventProperty.getDomainProperties().size() > 0 &&
+            eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
+            .collect(Collectors.toList());
+    }
 }

@@ -18,31 +18,36 @@
 
 package org.apache.streampipes.ps;
 
-import org.apache.streampipes.dataexplorer.utils.DataExplorerUtils;
-import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+import org.apache.streampipes.dataexplorer.DataLakeNoUserManagementV3;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
-@Path("/v3/datalake")
+@Path("/v3/datalake/measure")
 @Deprecated
-public class DataLakeResourceV3 extends AbstractRestResource {
-  public DataLakeResourceV3() {
-  }
+public class DataLakeMeasureResourceV3 extends AbstractAuthGuardedRestResource {
 
-  @GET
-  @JacksonSerialized
-  @Produces(MediaType.APPLICATION_JSON)
-  @Path("/info")
-  public Response getAllInfos() {
-    List<DataLakeMeasure> result = DataExplorerUtils.getInfos();
-    return ok(result);
-  }
+    private DataLakeNoUserManagementV3 dataLakeManagement;
 
+    public DataLakeMeasureResourceV3() {
+        this.dataLakeManagement = new DataLakeNoUserManagementV3();
+    }
+
+    @POST
+    @JacksonSerialized
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{measure}")
+    public Response addDataLake(@PathParam("measure") String measure, EventSchema eventSchema) {
+        if (this.dataLakeManagement.addDataLake(measure, eventSchema)) {
+            return ok();
+        } else {
+            return Response.status(409).build();
+        }
+
+    }
 }

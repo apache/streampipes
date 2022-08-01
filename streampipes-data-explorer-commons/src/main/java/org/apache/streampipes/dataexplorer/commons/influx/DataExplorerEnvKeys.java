@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.commons;
+package org.apache.streampipes.dataexplorer.commons.influx;
 
-public class DataExplorerDefaults {
-    public final static String DATA_LAKE_HOST = "influxdb";
-    public final static String DATA_LAKE_PROTOCOL = "http";
-    public final static int DATA_LAKE_PORT = 8086;
-    public final static String DATA_LAKE_USERNAME = "default";
-    public final static String DATA_LAKE_PASSWORD = "default";
-    public final static String DATA_LAKE_DATABASE_NAME = "sp";
+public class DataExplorerEnvKeys {
+    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
+    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
+    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
+    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
+    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
+    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
 
 }

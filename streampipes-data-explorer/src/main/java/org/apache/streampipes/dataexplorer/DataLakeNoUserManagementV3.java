@@ -28,8 +28,11 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Deprecated
 public class DataLakeNoUserManagementV3 {
 
+
+  @Deprecated
   public boolean addDataLake(String measure, EventSchema eventSchema) {
     List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
     Optional<DataLakeMeasure> optional = dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure)).findFirst();

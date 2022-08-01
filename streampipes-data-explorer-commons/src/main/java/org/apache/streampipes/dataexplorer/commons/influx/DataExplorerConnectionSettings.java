@@ -16,8 +16,9 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.commons;
+package org.apache.streampipes.dataexplorer.commons.influx;
 
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
 public class DataExplorerConnectionSettings {
@@ -30,16 +31,16 @@ public class DataExplorerConnectionSettings {
   private final String password;
 
   public static DataExplorerConnectionSettings from(SpConfig configStore) {
-    return  from(configStore, "");
+    return  from(configStore, null);
   }
 
-  public static DataExplorerConnectionSettings from(SpConfig configStore, String measureName) {
+  public static DataExplorerConnectionSettings from(SpConfig configStore, DataLakeMeasure measure) {
 
     return new DataExplorerConnectionSettings(
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL) + "://" + configStore.getString(DataExplorerEnvKeys.DATA_LAKE_HOST),
             configStore.getInteger(DataExplorerEnvKeys.DATA_LAKE_PORT),
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME),
-            measureName,
+            measure.getMeasureName(),
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_USERNAME),
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PASSWORD));
   }

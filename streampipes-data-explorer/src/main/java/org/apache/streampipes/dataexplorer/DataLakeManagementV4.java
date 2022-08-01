@@ -36,12 +36,16 @@ import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.lightcouch.CouchDbClient;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Instant;
@@ -53,10 +57,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
@@ -326,5 +327,65 @@ public class DataLakeManagementV4 {
         }
 
         return tags;
+    }
+
+
+    // TODO validate method
+    public DataLakeMeasure addDataLake(DataLakeMeasure measure) {
+        List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
+        Optional<DataLakeMeasure> optional = dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure.getMeasureName())).findFirst();
+
+        if (optional.isPresent()) {
+            DataLakeMeasure oldEntry = optional.get();
+            if (!compareEventProperties(oldEntry.getEventSchema().getEventProperties(), measure.getEventSchema().getEventProperties())) {
+                return oldEntry;
+            }
+        } else {
+            measure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+            getDataLakeStorage().storeDataLakeMeasure(measure);
+            return measure;
+        }
+
+        return measure;
+    }
+
+    private boolean compareEventProperties(List<EventProperty> prop1, List<EventProperty> prop2) {
+        if (prop1.size() != prop2.size()) {
+            return false;
+        }
+
+        return prop1.stream().allMatch(prop -> {
+
+            for (EventProperty property : prop2) {
+                if (prop.getRuntimeName().equals(property.getRuntimeName())) {
+
+                    //primitive
+                    if (prop instanceof EventPropertyPrimitive && property instanceof EventPropertyPrimitive) {
+                        if (((EventPropertyPrimitive) prop)
+                          .getRuntimeType()
+                          .equals(((EventPropertyPrimitive) property).getRuntimeType())) {
+                            return true;
+                        }
+
+                        //list
+                    } else if (prop instanceof EventPropertyList && property instanceof EventPropertyList) {
+                        return compareEventProperties(Collections.singletonList(((EventPropertyList) prop).getEventProperty()),
+                          Collections.singletonList(((EventPropertyList) property).getEventProperty()));
+
+                        //nested
+                    } else if (prop instanceof EventPropertyNested && property instanceof EventPropertyNested) {
+                        return compareEventProperties(((EventPropertyNested) prop).getEventProperties(),
+                          ((EventPropertyNested) property).getEventProperties());
+                    }
+                }
+            }
+            return false;
+
+        });
+    }
+
+
+    private IDataLakeStorage getDataLakeStorage() {
+        return StorageDispatcher.INSTANCE.getNoSqlStore().getDataLakeStorage();
     }
 }

@@ -16,24 +16,10 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake.influx;
+package org.apache.streampipes.dataexplorer.commons.couchdb;
 
-public class DataLakeUtils {
-
-  public static String prepareString(String s) {
-    return s.toLowerCase().replaceAll(" ", "_");
-  }
-
-  private static String renameReservedKeywords(String runtimeName) {
-    if (InfluxDbReservedKeywords.keywordList.stream().anyMatch(k -> k.equalsIgnoreCase(runtimeName))) {
-      return runtimeName + "_";
-    } else {
-      return runtimeName;
-    }
-  }
-
-  public static String sanitizePropertyRuntimeName(String runtimeName) {
-    String sanitizedRuntimeName = prepareString(runtimeName);
-    return renameReservedKeywords(sanitizedRuntimeName);
-  }
+public class CouchDbEnvKeys {
+    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
+    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
+    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
 }
