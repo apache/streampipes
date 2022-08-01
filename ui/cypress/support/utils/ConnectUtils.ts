@@ -94,13 +94,19 @@ export class ConnectUtils {
     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
   }
 
-  public static addMachineDataSimulator(name: string) {
+  public static addMachineDataSimulator(name: string, persist: boolean = false) {
 
-    const configuration = SpecificAdapterBuilder
+    const builder = SpecificAdapterBuilder
       .create('Machine_Data_Simulator')
       .setName(name)
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
+      .addInput('input', 'wait-time-ms', '1000');
+
+    if (persist) {
+      builder.setTimestampProperty('timestamp').
+                setStoreInDataLake();
+    }
+
+    const configuration = builder.build();
 
     ConnectUtils.goToConnect();
 
@@ -195,12 +201,11 @@ export class ConnectUtils {
     // Delete adapter
     cy.visit('#/connect');
 
-    cy.dataCy('delete').should('have.length', 1);
-    cy.dataCy('delete').click();
+    cy.dataCy('delete-adapter').should('have.length', 1);
     cy.dataCy('delete-adapter').click();
+    cy.dataCy('delete-adapter-confirmation').click();
     cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should('be.visible');
-    cy.dataCy('delete', { timeout: 20000 }).should('have.length', 0);
-    // });
+    cy.dataCy('delete-adapter', { timeout: 20000 }).should('have.length', 0);
   }
 
   public static setUpPreprocessingRuleTest(): AdapterInput {

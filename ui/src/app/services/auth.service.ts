@@ -177,6 +177,8 @@ export class AuthService {
                 return this.hasAnyRole(['ROLE_ADMIN']);
             case PageName.NOTIFICATIONS:
                 return this.hasAnyRole(['ROLE_PIPELINE_ADMIN']);
+            case PageName.ASSETS:
+                return this.hasAnyRole(['ROLE_ADMIN']);
             case PageName.SETTINGS:
                 return this.hasAnyRole(['ROLE_ADMIN']);
             default:
