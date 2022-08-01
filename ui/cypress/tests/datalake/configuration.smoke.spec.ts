@@ -20,38 +20,38 @@ import { PipelineUtils } from '../../support/utils/PipelineUtils';
 import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
 
 
-describe('Test Truncate data in datalake', () => {
+// describe('Test Truncate data in datalake', () => {
 
-  beforeEach('Setup Test', () => {
-    cy.initStreamPipesTest();
-    DataLakeUtils.loadRandomDataSetIntoDataLake();
-  });
+//   beforeEach('Setup Test', () => {
+//     cy.initStreamPipesTest();
+//     DataLakeUtils.loadRandomDataSetIntoDataLake();
+//   });
 
-  it('Perform Test', () => {
+//   it('Perform Test', () => {
 
-    DataLakeUtils.goToDatalakeConfiguration();
+//     DataLakeUtils.goToDatalakeConfiguration();
 
-    // Check if amount of events is correct
-    cy.dataCy('datalake-number-of-events', { timeout: 10000 })
-      .should('be.visible')
-      .contains('10');
+//     // Check if amount of events is correct
+//     cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+//       .should('be.visible')
+//       .contains('10');
 
-    // Truncate data
-    cy.dataCy('datalake-truncate-btn')
-      .should('be.visible')
-      .click();
-    cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
-      .should('be.visible')
-      .click();
+//     // Truncate data
+//     cy.dataCy('datalake-truncate-btn')
+//       .should('be.visible')
+//       .click();
+//     cy.dataCy('confirm-truncate-data-btn', { timeout: 10000 })
+//       .should('be.visible')
+//       .click();
 
-    // Check if amount of events is zero
-    cy.dataCy('datalake-number-of-events', { timeout: 10000 })
-      .should('be.visible')
-      .contains('0');
+//     // Check if amount of events is zero
+//     cy.dataCy('datalake-number-of-events', { timeout: 10000 })
+//       .should('be.visible')
+//       .contains('0');
 
-  });
+//   });
 
-});
+// });
 
 describe('Delete data in datalake', () => {
 
