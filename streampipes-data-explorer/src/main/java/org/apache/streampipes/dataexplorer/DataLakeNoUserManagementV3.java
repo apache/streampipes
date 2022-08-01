@@ -39,7 +39,9 @@ public class DataLakeNoUserManagementV3 {
         return false;
       }
     } else {
-      getDataLakeStorage().storeDataLakeMeasure(new DataLakeMeasure(measure, eventSchema));
+      DataLakeMeasure dataLakeMeasure = new DataLakeMeasure(measure, eventSchema);
+      dataLakeMeasure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+      getDataLakeStorage().storeDataLakeMeasure(dataLakeMeasure);
     }
     return true;
   }

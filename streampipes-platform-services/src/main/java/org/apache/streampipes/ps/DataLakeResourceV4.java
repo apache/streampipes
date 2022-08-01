@@ -43,10 +43,6 @@ import java.util.Map;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
-class Placeholder {
-}
-
-
 @Path("v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
 
@@ -217,23 +213,6 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     @ApiResponse(responseCode = "200", description = "configuration parameters", content = @Content(schema = @Schema(implementation = DataLakeConfiguration.class)))})
     public Response getMeasurementConfiguration(@Parameter(in = ParameterIn.QUERY, description = "the id of a specific configuration parameter") @QueryParam("parameterID") String parameterID) {
         return ok(this.dataLakeManagement.getDataLakeConfiguration());
-    }
-
-    @POST
-    @Path("/measurements/{measurementID}/labeling")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Label data points of the measurement series with given id", tags = {"Data Lake"},
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Labeling was successful")})
-    public Response labelData(@Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.DEFAULT, description = "the label details that should be written into database") Placeholder body
-
-            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") String startDate
-            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") String endDate) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
     }
 
     @DELETE
