@@ -19,7 +19,7 @@
 export class ConnectEventSchemaUtils {
 
   public static markPropertyAsDimension(propertyName: string) {
-    cy.dataCy('property-scope-' + propertyName)
+    cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
       .click()
       .get('.mat-option-text')
       .contains('Dimension')

@@ -105,9 +105,11 @@ export class PipelineUtils {
   public static deletePipeline() {
     // Delete pipeline
     cy.visit('#/pipelines');
-    cy.dataCy('delete').should('have.length', 1);
-    cy.dataCy('delete').click({ force: true });
+    cy.dataCy('delete-pipeline').should('have.length', 1);
+    cy.dataCy('delete-pipeline').click({ force: true });
+
     cy.dataCy('sp-pipeline-stop-and-delete').click();
-    cy.dataCy('delete', { timeout: 10000 }).should('have.length', 0);
+
+    cy.dataCy('delete-pipeline', { timeout: 10000 }).should('have.length', 0);
   }
 }
