@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.export.resolver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.export.ExportItem;
 
@@ -25,11 +27,28 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public DataLakeMeasure findDocument(String resourceId) {
-    return getNoSqlStore().getDataLakeStorage().findOne(resourceId);
+    var doc = getNoSqlStore().getDataLakeStorage().findOne(resourceId);
+    doc.setRev(null);
+    return doc;
+  }
+
+  @Override
+  public DataLakeMeasure readDocument(String serializedDoc) throws JsonProcessingException {
+    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DataLakeMeasure.class);
   }
 
   @Override
   public ExportItem convert(DataLakeMeasure document) {
     return new ExportItem(document.getElementId(), document.getMeasureName(), true);
+  }
+
+  @Override
+  public void writeDocument(String document) throws JsonProcessingException {
+    getNoSqlStore().getDataLakeStorage().storeDataLakeMeasure(serializeDocument(document));
+  }
+
+  @Override
+  protected DataLakeMeasure serializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, DataLakeMeasure.class);
   }
 }

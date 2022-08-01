@@ -17,10 +17,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import { PlatformServicesCommons } from '@streampipes/platform-services';
-import { HttpClient } from '@angular/common/http';
+import { AssetExportConfiguration, PlatformServicesCommons, ExportConfiguration } from '@streampipes/platform-services';
+import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ExportConfiguration } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 import { map } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
@@ -31,16 +30,50 @@ export class DataExportService {
   }
 
   getExportPreview(assetIds: string[]): Observable<ExportConfiguration> {
-    return this.http.post(this.basePath + '/preview', assetIds)
+    return this.http.post(this.exportBasePath + '/preview', assetIds)
       .pipe(map(res => res as ExportConfiguration));
   }
 
   triggerExport(exportConfig: ExportConfiguration): Observable<Blob> {
-    return this.http.post(this.basePath + '/download', exportConfig, {responseType: 'blob'});
+    return this.http.post(this.exportBasePath + '/download', exportConfig, {responseType: 'blob'});
   }
 
-  private get basePath(): string {
+  triggerImport(file: File,
+                config: AssetExportConfiguration) {
+    const data: FormData = new FormData();
+    data.append('file_upload', file, file.name);
+    data.append('configuration', new Blob([JSON.stringify(config)], {type: 'application/json'}));
+
+    const params = new HttpParams();
+    const options = {
+      params,
+      reportProgress: true,
+    };
+
+    const req = new HttpRequest('POST', this.importBasePath, data, options);
+    return this.http.request(req);
+  }
+
+  getImportPreview(file: File): Observable<HttpEvent<any>> {
+    const data: FormData = new FormData();
+    data.append('file_upload', file, file.name);
+
+    const params = new HttpParams();
+    const options = {
+      params,
+      reportProgress: true,
+    };
+
+    const req = new HttpRequest('POST', this.importBasePath + '/preview', data, options);
+    return this.http.request(req);
+  }
+
+  private get exportBasePath(): string {
     return this.platformServicesCommons.apiBasePath + '/export';
+  }
+
+  private get importBasePath(): string {
+    return this.platformServicesCommons.apiBasePath + '/import';
   }
 
 }

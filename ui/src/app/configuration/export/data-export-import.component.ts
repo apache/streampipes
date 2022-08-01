@@ -23,6 +23,7 @@ import { SpConfigurationTabs } from '../configuration-tabs';
 import { AssetManagementService, SpAsset } from '@streampipes/platform-services';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { SpDataExportDialogComponent } from './export-dialog/data-export-dialog.component';
+import { SpDataImportDialogComponent } from './import-dialog/data-import-dialog.component';
 
 @Component({
   selector: 'sp-data-export-import',
@@ -63,13 +64,27 @@ export class SpDataExportImportComponent implements OnInit {
     }
   }
 
-  openExportDialog() {
+  openExportDialog(): void {
     const dialogRef = this.dialogService.open(SpDataExportDialogComponent, {
       panelType: PanelType.SLIDE_IN_PANEL,
       title: 'Export resources',
       width: '50vw',
       data: {
         'selectedAssets': this.selectedAssets,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+
+    });
+  }
+
+  openImportDialog(): void {
+    const dialogRef = this.dialogService.open(SpDataImportDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Import resources',
+      width: '50vw',
+      data: {
       }
     });
 

@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.export.resolver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
@@ -25,11 +27,30 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   @Override
   public Pipeline findDocument(String resourceId) {
-    return getNoSqlStore().getPipelineStorageAPI().getPipeline(resourceId);
+    var doc = getNoSqlStore().getPipelineStorageAPI().getPipeline(resourceId);
+    doc.setRev(null);
+    doc.setRestartOnSystemReboot(false);
+    doc.setRunning(false);
+    return doc;
+  }
+
+  @Override
+  public Pipeline readDocument(String serializedDoc) throws JsonProcessingException {
+    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, Pipeline.class);
   }
 
   @Override
   public ExportItem convert(Pipeline document) {
     return new ExportItem(document.getPipelineId(), document.getName(), true);
+  }
+
+  @Override
+  public void writeDocument(String document) throws JsonProcessingException {
+    getNoSqlStore().getPipelineStorageAPI().storePipeline(serializeDocument(document));
+  }
+
+  @Override
+  protected Pipeline serializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, Pipeline.class);
   }
 }

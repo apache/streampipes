@@ -19,6 +19,8 @@
 
 package org.apache.streampipes.export.resolver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.dashboard.DashboardItem;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.export.ExportItem;
@@ -30,12 +32,29 @@ public class DataViewResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel findDocument(String resourceId) {
-    return getNoSqlStore().getDataExplorerDashboardStorage().getDashboard(resourceId);
+    var doc = getNoSqlStore().getDataExplorerDashboardStorage().getDashboard(resourceId);
+    doc.setCouchDbRev(null);
+    return doc;
+  }
+
+  @Override
+  public DashboardModel readDocument(String serializedDoc) throws JsonProcessingException {
+    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DashboardModel.class);
   }
 
   @Override
   public ExportItem convert(DashboardModel document) {
     return new ExportItem(document.getCouchDbId(), document.getName(), true);
+  }
+
+  @Override
+  public void writeDocument(String document) throws JsonProcessingException {
+    getNoSqlStore().getDataExplorerDashboardStorage().storeDashboard(serializeDocument(document));
+  }
+
+  @Override
+  protected DashboardModel serializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, DashboardModel.class);
   }
 
   public List<String> getWidgets(String resourceId) {

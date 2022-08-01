@@ -18,12 +18,17 @@
 
 package org.apache.streampipes.model.datalake;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public class DataLakeMeasure extends UnnamedStreamPipesEntity {
+
+    @JsonProperty("_rev")
+    private @SerializedName("_rev") String rev;
 
     private String measureName;
     private EventSchema eventSchema;
@@ -87,4 +92,11 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
         this.pipelineIsRunning = pipelineIsRunning;
     }
 
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
+    }
 }

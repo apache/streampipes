@@ -19,18 +19,41 @@
 
 package org.apache.streampipes.export.resolver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.export.ExportItem;
 
 public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   @Override
   public AdapterDescription findDocument(String resourceId) {
-    return getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
+    var doc =  getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
+    doc.setRev(null);
+    if (doc instanceof AdapterStreamDescription) {
+      ((AdapterStreamDescription) doc).setRunning(false);
+    }
+    return doc;
+  }
+
+  @Override
+  public AdapterDescription readDocument(String serializedDoc) throws JsonProcessingException {
+    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, AdapterDescription.class);
   }
 
   @Override
   public ExportItem convert(AdapterDescription document) {
     return new ExportItem(document.getElementId(), document.getName(), true);
+  }
+
+  @Override
+  public void writeDocument(String document) throws JsonProcessingException {
+    getNoSqlStore().getAdapterInstanceStorage().storeAdapter(serializeDocument(document));
+  }
+
+  @Override
+  protected AdapterDescription serializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, AdapterDescription.class);
   }
 }

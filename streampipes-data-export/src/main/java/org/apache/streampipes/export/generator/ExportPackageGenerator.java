@@ -54,7 +54,7 @@ public class ExportPackageGenerator {
       .getAssetExportConfiguration()
       .stream()
       .map(AssetExportConfiguration::getAssetId)
-      .collect(Collectors.toList()));
+      .collect(Collectors.toList()), manifest);
 
     this.exportConfiguration.getAssetExportConfiguration().forEach(config -> {
 
@@ -135,11 +135,14 @@ public class ExportPackageGenerator {
   }
 
   private void addAssets(ZipFileBuilder builder,
-                         List<String> assetIds) {
+                         List<String> assetIds,
+                         StreamPipesApplicationPackage manifest) {
     assetIds.forEach(assetId -> {
       try {
         var asset = getAsset(assetId);
+        asset.remove("_rev");
         builder.addText(String.valueOf(asset.get("_id")), this.defaultMapper.writeValueAsString(asset));
+        manifest.addAsset(String.valueOf(asset.get("_id")));
       } catch (IOException e) {
         e.printStackTrace();
       }

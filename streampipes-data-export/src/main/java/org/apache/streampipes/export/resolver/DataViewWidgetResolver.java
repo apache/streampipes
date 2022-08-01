@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.export.resolver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.export.ExportItem;
 
@@ -25,11 +27,28 @@ public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetM
 
   @Override
   public DataExplorerWidgetModel findDocument(String resourceId) {
-    return getNoSqlStore().getDataExplorerWidgetStorage().getDataExplorerWidget(resourceId);
+    var doc = getNoSqlStore().getDataExplorerWidgetStorage().getDataExplorerWidget(resourceId);
+    doc.setRev(null);
+    return doc;
+  }
+
+  @Override
+  public DataExplorerWidgetModel readDocument(String serializedDoc) throws JsonProcessingException {
+   return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
   }
 
   @Override
   public ExportItem convert(DataExplorerWidgetModel document) {
     return new ExportItem(document.getId(), document.getWidgetId(), true);
+  }
+
+  @Override
+  public void writeDocument(String document) throws JsonProcessingException {
+    getNoSqlStore().getDataExplorerWidgetStorage().storeDataExplorerWidget(serializeDocument(document));
+  }
+
+  @Override
+  protected DataExplorerWidgetModel serializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, DataExplorerWidgetModel.class);
   }
 }

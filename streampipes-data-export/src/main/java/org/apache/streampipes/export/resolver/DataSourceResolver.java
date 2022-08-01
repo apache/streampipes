@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.export.resolver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.export.ExportItem;
 
@@ -25,11 +27,28 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
 
   @Override
   public SpDataStream findDocument(String resourceId) {
-    return getNoSqlStore().getDataStreamStorage().getElementById(resourceId);
+    var doc = getNoSqlStore().getDataStreamStorage().getElementById(resourceId);
+    doc.setRev(null);
+    return doc;
+  }
+
+  @Override
+  public SpDataStream readDocument(String serializedDoc) throws JsonProcessingException {
+    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, SpDataStream.class);
   }
 
   @Override
   public ExportItem convert(SpDataStream document) {
     return new ExportItem(document.getElementId(), document.getName(), true);
+  }
+
+  @Override
+  public void writeDocument(String document) throws JsonProcessingException {
+    getNoSqlStore().getDataStreamStorage().createElement(serializeDocument(document));
+  }
+
+  @Override
+  protected SpDataStream serializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, SpDataStream.class);
   }
 }

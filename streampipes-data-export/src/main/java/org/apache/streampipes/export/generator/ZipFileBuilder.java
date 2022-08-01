@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.export.generator;
 
+import org.apache.streampipes.export.constants.ExportConstants;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -84,7 +86,7 @@ public class ZipFileBuilder {
       addZipEntry(documentKey + ".json", document, out, buffer);
     }
 
-    addZipEntry("manifest.json", asBytes(manifest), out, buffer);
+    addZipEntry(ExportConstants.MANIFEST + ".json", asBytes(manifest), out, buffer);
     out.closeEntry();
     out.close();
     return outputStream.toByteArray();

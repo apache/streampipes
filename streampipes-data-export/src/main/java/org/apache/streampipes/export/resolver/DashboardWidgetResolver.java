@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.export.resolver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.export.ExportItem;
 
@@ -25,11 +27,28 @@ public class DashboardWidgetResolver extends AbstractResolver<DashboardWidgetMod
 
   @Override
   public DashboardWidgetModel findDocument(String resourceId) {
-    return getNoSqlStore().getDashboardWidgetStorage().getDashboardWidget(resourceId);
+    var doc = getNoSqlStore().getDashboardWidgetStorage().getDashboardWidget(resourceId);
+    doc.setRev(null);
+    return doc;
+  }
+
+  @Override
+  public DashboardWidgetModel readDocument(String serializedDoc) throws JsonProcessingException {
+    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DashboardWidgetModel.class);
   }
 
   @Override
   public ExportItem convert(DashboardWidgetModel document) {
     return new ExportItem(document.getId(), document.getVisualizationName(), true);
+  }
+
+  @Override
+  public void writeDocument(String document) throws JsonProcessingException {
+    getNoSqlStore().getDashboardWidgetStorage().storeDashboardWidget(serializeDocument(document));
+  }
+
+  @Override
+  protected DashboardWidgetModel serializeDocument(String document) throws JsonProcessingException {
+    return this.spMapper.readValue(document, DashboardWidgetModel.class);
   }
 }

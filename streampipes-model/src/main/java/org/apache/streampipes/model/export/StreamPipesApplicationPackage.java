@@ -30,6 +30,7 @@ public class StreamPipesApplicationPackage {
   private Set<String> requiredDataSinkAppIds;
   private Set<String> requiredAdapterAppIds;
 
+  private Set<String> assets;
   private Set<String> adapters;
   private Set<String> dashboards;
   private Set<String> dashboardWidgets;
@@ -46,6 +47,7 @@ public class StreamPipesApplicationPackage {
     this.requiredAdapterAppIds = new HashSet<>();
 
     this.adapters = new HashSet<>();
+    this.assets = new HashSet<>();
     this.dashboards = new HashSet<>();
     this.dashboardWidgets = new HashSet<>();
     this.dataViews = new HashSet<>();
@@ -186,5 +188,17 @@ public class StreamPipesApplicationPackage {
 
   public void addFile(String file) {
     this.files.add(file);
+  }
+
+  public Set<String> getAssets() {
+    return assets;
+  }
+
+  public void setAssets(Set<String> assets) {
+    this.assets = assets;
+  }
+
+  public void addAsset(String asset) {
+    this.assets.add(asset);
   }
 }

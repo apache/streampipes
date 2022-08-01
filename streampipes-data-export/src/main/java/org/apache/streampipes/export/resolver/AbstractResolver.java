@@ -19,6 +19,7 @@
 package org.apache.streampipes.export.resolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
@@ -30,6 +31,11 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractResolver<T> {
 
+  protected ObjectMapper spMapper;
+
+  public AbstractResolver() {
+    this.spMapper = SerializationUtils.getSpObjectMapper();
+  }
 
   public Set<ExportItem> resolve(Set<AssetLink> assetLinks) {
     return assetLinks
@@ -49,5 +55,11 @@ public abstract class AbstractResolver<T> {
 
   public abstract T findDocument(String resourceId);
 
+  public abstract T readDocument(String serializedDoc) throws JsonProcessingException;
+
   public abstract ExportItem convert(T document);
+
+  public abstract void writeDocument(String document) throws JsonProcessingException;
+
+  protected abstract T serializeDocument(String document) throws JsonProcessingException;
 }

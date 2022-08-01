@@ -26,6 +26,7 @@ public class AssetExportConfiguration {
   private String assetId;
   private String assetName;
 
+  private Set<ExportItem> assets;
   private Set<ExportItem> adapters;
   private Set<ExportItem> dashboards;
   private Set<ExportItem> dataViews;
@@ -42,6 +43,7 @@ public class AssetExportConfiguration {
     this.dataSources = new HashSet<>();
     this.pipelines = new HashSet<>();
     this.files = new HashSet<>();
+    this.assets = new HashSet<>();
   }
 
   public Set<ExportItem> getAdapters() {
@@ -52,12 +54,20 @@ public class AssetExportConfiguration {
     this.adapters = adapters;
   }
 
+  public void addAdapter(ExportItem item) {
+    this.adapters.add(item);
+  }
+
   public Set<ExportItem> getDashboards() {
     return dashboards;
   }
 
   public void setDashboards(Set<ExportItem> dashboards) {
     this.dashboards = dashboards;
+  }
+
+  public void addDashboard(ExportItem item) {
+    this.dashboards.add(item);
   }
 
   public Set<ExportItem> getDataViews() {
@@ -68,6 +78,10 @@ public class AssetExportConfiguration {
     this.dataViews = dataViews;
   }
 
+  public void addDataView(ExportItem item) {
+    this.dataViews.add(item);
+  }
+
   public Set<ExportItem> getDataLakeMeasures() {
     return dataLakeMeasures;
   }
@@ -76,12 +90,20 @@ public class AssetExportConfiguration {
     this.dataLakeMeasures = dataLakeMeasures;
   }
 
+  public void addDataLakeMeasure(ExportItem item) {
+    this.dataLakeMeasures.add(item);
+  }
+
   public Set<ExportItem> getDataSources() {
     return dataSources;
   }
 
   public void setDataSources(Set<ExportItem> dataSources) {
     this.dataSources = dataSources;
+  }
+
+  public void addDataSource(ExportItem item) {
+    this.dataSources.add(item);
   }
 
   public String getAssetId() {
@@ -100,12 +122,20 @@ public class AssetExportConfiguration {
     this.pipelines = pipelines;
   }
 
+  public void addPipeline(ExportItem item) {
+    this.pipelines.add(item);
+  }
+
   public Set<ExportItem> getFiles() {
     return files;
   }
 
   public void setFiles(Set<ExportItem> files) {
     this.files = files;
+  }
+
+  public void addFile(ExportItem item) {
+    this.files.add(item);
   }
 
   public String getAssetName() {
@@ -116,5 +146,15 @@ public class AssetExportConfiguration {
     this.assetName = assetName;
   }
 
+  public Set<ExportItem> getAssets() {
+    return assets;
+  }
 
+  public void setAssets(Set<ExportItem> assets) {
+    this.assets = assets;
+  }
+
+  public void addAsset(ExportItem asset) {
+    this.assets.add(asset);
+  }
 }

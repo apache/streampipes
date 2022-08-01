@@ -30,7 +30,7 @@
                             color="accent"
                             [disabled]="selectedAssets.length === 0"
                             (click)="openExportDialog()">
-                        <i class="material-icons">file_download</i><span>&nbsp;Start export process</span>
+                        <i class="material-icons">cloud_download</i><span>&nbsp;Start export process</span>
                     </button>
                 </div>
             </sp-split-section>
@@ -41,8 +41,8 @@
                 <div class="subsection-title">Import from application package</div>
 
                 <div class="mt-10">
-                    <button mat-button mat-raised-button color="accent">
-                        <i class="material-icons">save</i><span>&nbsp;Save</span>
+                    <button mat-button mat-raised-button color="accent" (click)="openImportDialog()">
+                        <i class="material-icons">cloud_upload</i><span>&nbsp;Start import process</span>
                     </button>
                 </div>
             </sp-split-section>

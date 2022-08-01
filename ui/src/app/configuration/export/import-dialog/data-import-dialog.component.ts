@@ -17,6 +17,10 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { DialogRef } from '@streampipes/shared-ui';
+import { DataExportService } from '../data-export.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { AssetExportConfiguration } from '../../../../../dist/streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-import-dialog',
@@ -25,7 +29,65 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SpDataImportDialogComponent implements OnInit {
 
+  currentImportStep = 0;
+
+  inputValue: string;
+  fileName: string;
+
+  selectedUploadFile: File;
+  importConfiguration: AssetExportConfiguration;
+
+  hasInput = false;
+  errorMessage = 'Please enter a value';
+
+  uploadStatus = 0;
+
+  constructor(private dialogRef: DialogRef<SpDataImportDialogComponent>,
+              private dataExportService: DataExportService) {
+
+  }
+
   ngOnInit(): void {
+  }
+
+  handleFileInput(files: any) {
+    this.hasInput = true;
+    this.selectedUploadFile = files[0];
+    this.fileName = this.selectedUploadFile.name;
+    this.uploadStatus = 0;
+    console.log(this.hasInput);
+  }
+
+  performPreview(): void {
+    this.uploadStatus = 0;
+    if (this.selectedUploadFile !== undefined) {
+      this.dataExportService.getImportPreview(this.selectedUploadFile).subscribe(
+        event => {
+          if (event.type === HttpEventType.UploadProgress) {
+            this.uploadStatus = Math.round(100 * event.loaded / event.total);
+          } else if (event instanceof HttpResponse) {
+           this.importConfiguration = event.body as AssetExportConfiguration;
+           this.currentImportStep++;
+          }
+        },
+        error => {
+        },
+      );
+    }
+  }
+
+  performImport(): void {
+    this.dataExportService.triggerImport(this.selectedUploadFile, this.importConfiguration).subscribe(result => {
+      this.dialogRef.close();
+    });
+  }
+
+  back(): void {
+    this.currentImportStep--;
+  }
+
+  close(): void {
+    this.dialogRef.close();
   }
 
 

@@ -58,6 +58,7 @@ export class SpDataExportDialogComponent implements OnInit {
     const blob = new Blob([data], { type: 'application/zip' });
     const url = window.URL.createObjectURL(blob);
     window.open(url);
+    this.dialogRef.close();
   }
 
 }
