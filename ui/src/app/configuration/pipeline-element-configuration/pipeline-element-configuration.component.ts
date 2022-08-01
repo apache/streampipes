@@ -60,7 +60,7 @@ export class PipelineElementConfigurationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[4].itemTitle}]);
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[5].itemTitle}]);
   }
 
   getConsulServices(): void {

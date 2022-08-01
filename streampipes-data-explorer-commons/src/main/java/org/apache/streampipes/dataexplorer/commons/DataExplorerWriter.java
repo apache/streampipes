@@ -55,7 +55,7 @@ public class DataExplorerWriter {
             } else if (data.get(key) instanceof Integer) {
                 builder.addField(key, (Integer) data.get(key));
             } else {
-                builder.addField(key, (String) data.get(key));
+                builder.tag(key, (String) data.get(key));
             }
         }
 

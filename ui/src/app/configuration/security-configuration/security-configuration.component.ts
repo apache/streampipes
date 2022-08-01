@@ -33,7 +33,7 @@ export class SecurityConfigurationComponent implements OnInit {
   constructor(private breadcrumbService: SpBreadcrumbService) {}
 
   ngOnInit(): void {
-    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[5].itemTitle}]);
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[6].itemTitle}]);
   }
 
 }

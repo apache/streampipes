@@ -18,11 +18,14 @@
 
 package org.apache.streampipes.model.assets;
 
+import java.util.Objects;
+
 public class AssetLink {
 
   private String resourceId;
   private String linkType;
   private String linkLabel;
+  private String queryHint;
   private boolean editingDisabled;
 
   public AssetLink() {
@@ -58,5 +61,26 @@ public class AssetLink {
 
   public void setEditingDisabled(boolean editingDisabled) {
     this.editingDisabled = editingDisabled;
+  }
+
+  public String getQueryHint() {
+    return queryHint;
+  }
+
+  public void setQueryHint(String queryHint) {
+    this.queryHint = queryHint;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    AssetLink assetLink = (AssetLink) o;
+    return resourceId.equals(assetLink.resourceId) && queryHint.equals(assetLink.queryHint);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(resourceId, queryHint);
   }
 }

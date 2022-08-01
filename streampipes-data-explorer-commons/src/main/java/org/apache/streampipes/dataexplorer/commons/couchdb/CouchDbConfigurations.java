@@ -22,7 +22,6 @@ import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class CouchDbConfigurations {
 
     public static List<ConfigItem> getDefaults() {

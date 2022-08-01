@@ -41,6 +41,18 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div *ngIf="selectedLinkType.linkQueryHint === 'data-source'" fxLayout="column" class="link-configuration">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-label>Data Source</mat-label>
+                    <mat-select (selectionChange)="changeLabel($event.value.elementId, $event.value.name, $event.value)"
+                                [(value)]="currentResource"
+                                fxFlex
+                                required>
+                        <mat-option *ngFor="let source of dataSources"
+                                    [value]="source">{{source.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <div *ngIf="selectedLinkType.linkQueryHint === 'dashboard'" fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent" fxFlex="100">
                     <mat-label>Dashboards</mat-label>
@@ -62,6 +74,18 @@
                                 required>
                         <mat-option *ngFor="let dataView of dataViews"
                                     [value]="dataView">{{dataView.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="selectedLinkType.linkQueryHint === 'adapter'" fxLayout="column" class="link-configuration">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-label>Data Views</mat-label>
+                    <mat-select (selectionChange)="changeLabel($event.value.elementId, $event.value.name, $event.value)"
+                                [(value)]="currentResource"
+                                fxFlex
+                                required>
+                        <mat-option *ngFor="let adapter of adapters"
+                                    [value]="adapter">{{adapter.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>

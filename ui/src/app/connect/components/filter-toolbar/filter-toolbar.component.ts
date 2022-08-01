@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { DataMarketplaceService } from '../../services/data-marketplace.service';
+import { AdapterService } from '@streampipes/platform-services';
 import { MatSelectChange } from '@angular/material/select';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 
@@ -36,7 +36,7 @@ export class SpConnectFilterToolbarComponent implements OnInit {
 
   currentFilter: AdapterFilterSettingsModel = {textFilter: '', selectedCategory: 'All', selectedType: 'All types'};
 
-  constructor(private dataMarketplaceService: DataMarketplaceService) {
+  constructor(private dataMarketplaceService: AdapterService) {
 
   }
 

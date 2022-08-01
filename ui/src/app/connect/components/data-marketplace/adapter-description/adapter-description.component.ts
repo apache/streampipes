@@ -18,10 +18,9 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConnectService } from '../../../services/connect.service';
-import { DataMarketplaceService } from '../../../services/data-marketplace.service';
 import { AdapterExportDialog } from '../../../dialog/adapter-export/adapter-export-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AdapterDescription } from '@streampipes/platform-services';
+import { AdapterDescription, AdapterService } from '@streampipes/platform-services';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 
 @Component({
@@ -49,7 +48,7 @@ export class AdapterDescriptionComponent implements OnInit {
   adapterLabel: string;
 
   constructor(private connectService: ConnectService,
-              private dataMarketplaceService: DataMarketplaceService,
+              private dataMarketplaceService: AdapterService,
               private dialogService: DialogService,
               public dialog: MatDialog) {
   }

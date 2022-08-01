@@ -22,7 +22,18 @@
         <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start">
             <sp-split-section title="Data Lake Settings" subtitle="Truncate and delete persisted data streams">
                 <div fxFlex="100" fxLayout="column">
-                    <div class="subsection-title">Existing data lake indices</div>
+                    <div fxFlex="100" fxLayout="row">
+                        <div fxFlex fxLayoutAlign="start center" class="subsection-title">Existing data lake indices</div>
+                        <div fxLayout="row" fxLayoutAlign="end center">
+                            <button color="accent"
+                                    mat-button
+                                    mat-icon-button
+                                    matTooltip="Refresh Schema"
+                                    (click)="loadAvailableMeasurements()">
+                                <mat-icon>refresh</mat-icon>
+                            </button>
+                        </div>
+                    </div>
                     <table fxFlex="100" mat-table data-cy="datalake-settings" [dataSource]="dataSource"
                         style="width: 100%;" matSort>
 

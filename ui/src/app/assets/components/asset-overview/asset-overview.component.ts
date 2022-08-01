@@ -24,6 +24,7 @@ import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shar
 import { SpAssetRoutes } from '../../assets.routes';
 import { AssetUploadDialogComponent } from '../../dialog/asset-upload/asset-upload-dialog.component';
 import { Router } from '@angular/router';
+import { SpCreateAssetDialogComponent } from '../../dialog/create-asset/create-asset-dialog.component';
 
 @Component({
   selector: 'sp-asset-overview-component',
@@ -57,8 +58,43 @@ export class SpAssetOverviewComponent implements OnInit {
     });
   }
 
-  createNewAsset() {
+  createNewAsset(assetModel?: SpAssetModel) {
+    if (!assetModel) {
+      assetModel = {
+        assetName: 'New Asset',
+        assetDescription: '',
+        assetLinks: [],
+        assetId: this.generateId(6),
+        _id: this.generateId(24),
+        appDocType: 'asset-management',
+        removable: true,
+        _rev: undefined,
+        assets: [],
+        assetType: undefined
+      };
+    }
+    const dialogRef = this.dialogService.open(SpCreateAssetDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: 'Create asset',
+      width: '40vw',
+      data: {
+        'createMode': true,
+        'assetModel': assetModel
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadAssets();
+    });
+  }
+
+  private generateId(length): string {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+    for (let i = length; i > 0; --i) {
+      result += chars[Math.round(Math.random() * (chars.length - 1))];
+    }
+    return result;
   }
 
   uploadAsset() {

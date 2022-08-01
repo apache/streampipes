@@ -17,10 +17,9 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { DataMarketplaceService } from '../../services/data-marketplace.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
-import { AdapterDescriptionUnion } from '@streampipes/platform-services';
+import { AdapterDescriptionUnion, AdapterService } from '@streampipes/platform-services';
 import { DialogService, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
@@ -40,7 +39,7 @@ export class DataMarketplaceComponent implements OnInit {
 
   currentFilter: AdapterFilterSettingsModel;
 
-  constructor(private dataMarketplaceService: DataMarketplaceService,
+  constructor(private dataMarketplaceService: AdapterService,
               private shepherdService: ShepherdService,
               private connectService: ConnectService,
               private dialogService: DialogService,

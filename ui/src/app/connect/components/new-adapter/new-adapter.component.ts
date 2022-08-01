@@ -21,6 +21,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
   AdapterDescriptionUnion,
+  AdapterService,
   EventSchema,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
@@ -36,7 +37,6 @@ import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { IconService } from '../../services/icon.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataMarketplaceService } from '../../services/data-marketplace.service';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../connect.routes';
 
@@ -94,7 +94,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     private iconService: IconService,
     private changeDetectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private dataMarketplaceService: DataMarketplaceService,
+    private dataMarketplaceService: AdapterService,
     private router: Router,
     private breadcrumbService: SpBreadcrumbService) {
   }
@@ -115,7 +115,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
     this.dataMarketplaceService.getAdapterDescriptions().subscribe(adapters => {
       const adapter = adapters.find(a => a.appId === this.route.snapshot.params.appId);
-      this.adapter = this.dataMarketplaceService.cloneAdapterDescription(adapter);
+      this.adapter = this.connectService.cloneAdapterDescription(adapter);
       this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.makeRoute([SpConnectRoutes.BASE, SpConnectRoutes.CREATE], this.adapter.name));
       (this.adapter as any).templateTitle = this.adapter.name;
       this.adapter.name = '';

@@ -37,6 +37,7 @@ export interface AssetLink {
   resourceId: string;
   linkType: 'data-view' | 'dashboard' | 'adapter' | 'source' | string;
   linkLabel: string;
+  queryHint: string;
   editingDisabled: boolean;
   navigationActive: boolean;
 }
