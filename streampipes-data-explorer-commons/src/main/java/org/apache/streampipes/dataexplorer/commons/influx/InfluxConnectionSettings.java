@@ -16,45 +16,39 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.commons;
+package org.apache.streampipes.dataexplorer.commons.influx;
 
+import org.apache.streampipes.dataexplorer.commons.configs.DataExplorerEnvKeys;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
-public class DataExplorerConnectionSettings {
+public class InfluxConnectionSettings {
 
   private final Integer influxDbPort;
   private final String influxDbHost;
   private final String databaseName;
-  private final String measureName;
   private final String user;
   private final String password;
 
-  public static DataExplorerConnectionSettings from(SpConfig configStore) {
-    return  from(configStore, "");
-  }
+  public static InfluxConnectionSettings from(SpConfig configStore) {
 
-  public static DataExplorerConnectionSettings from(SpConfig configStore, String measureName) {
-
-    return new DataExplorerConnectionSettings(
+    return new InfluxConnectionSettings(
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL) + "://" + configStore.getString(DataExplorerEnvKeys.DATA_LAKE_HOST),
             configStore.getInteger(DataExplorerEnvKeys.DATA_LAKE_PORT),
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME),
-            measureName,
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_USERNAME),
             configStore.getString(DataExplorerEnvKeys.DATA_LAKE_PASSWORD));
   }
 
 
-  private DataExplorerConnectionSettings(String influxDbHost,
-                                         Integer influxDbPort,
-                                         String databaseName,
-                                         String measureName,
-                                         String user,
-                                         String password) {
+  private InfluxConnectionSettings(String influxDbHost,
+                                   Integer influxDbPort,
+                                   String databaseName,
+                                   String user,
+                                   String password) {
     this.influxDbHost = influxDbHost;
     this.influxDbPort = influxDbPort;
     this.databaseName = databaseName;
-    this.measureName = measureName;
     this.user = user;
     this.password = password;
   }
@@ -69,10 +63,6 @@ public class DataExplorerConnectionSettings {
 
   public String getDatabaseName() {
     return databaseName;
-  }
-
-  public String getMeasureName() {
-    return measureName;
   }
 
   public String getUser() {

@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.dataexplorer.commons;
 
+import org.apache.streampipes.dataexplorer.commons.configs.DataExplorerConfigurations;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxConnectionSettings;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
@@ -25,14 +27,15 @@ import org.influxdb.dto.Point;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+@Deprecated
 public class DataExplorerWriter {
     private InfluxDB influxDB;
 
     // TODO return a connection here
-    public void connect(DataExplorerConnectionSettings dataExplorerConnectionSettings) {
+    public void connect(InfluxConnectionSettings dataExplorerConnectionSettings) {
         this.influxDB = InfluxDBFactory.connect(dataExplorerConnectionSettings.getInfluxDbHost() + ":" + dataExplorerConnectionSettings.getInfluxDbPort(),
                 dataExplorerConnectionSettings.getUser(), dataExplorerConnectionSettings.getPassword());
-        this.influxDB.setDatabase(DataExplorerDefaults.DATA_LAKE_DATABASE_NAME);
+        this.influxDB.setDatabase(DataExplorerConfigurations.DATA_LAKE_DATABASE_NAME);
     }
 
     public void close() {

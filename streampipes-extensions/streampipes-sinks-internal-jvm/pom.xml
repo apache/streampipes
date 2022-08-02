@@ -56,6 +56,7 @@
         </dependency>
 
         <!-- External dependencies -->
+        <!-- TODO remove after refactoring -->
         <dependency>
             <groupId>org.lightcouch</groupId>
             <artifactId>lightcouch</artifactId>
@@ -64,6 +65,8 @@
             <groupId>org.influxdb</groupId>
             <artifactId>influxdb-java</artifactId>
         </dependency>
+        <!-- TODO remove after refactoring -->
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>

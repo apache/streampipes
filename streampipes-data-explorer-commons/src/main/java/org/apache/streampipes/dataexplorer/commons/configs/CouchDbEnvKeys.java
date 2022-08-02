@@ -15,14 +15,11 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.commons;
 
-public class DataExplorerDefaults {
-    public final static String DATA_LAKE_HOST = "influxdb";
-    public final static String DATA_LAKE_PROTOCOL = "http";
-    public final static int DATA_LAKE_PORT = 8086;
-    public final static String DATA_LAKE_USERNAME = "default";
-    public final static String DATA_LAKE_PASSWORD = "default";
-    public final static String DATA_LAKE_DATABASE_NAME = "sp";
+package org.apache.streampipes.dataexplorer.commons.configs;
 
+public class CouchDbEnvKeys {
+    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
+    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
+    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
 }

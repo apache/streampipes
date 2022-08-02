@@ -15,14 +15,21 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.commons;
+package org.apache.streampipes.dataexplorer.commons.configs;
 
-public class DataExplorerEnvKeys {
-    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
-    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
-    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
-    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
-    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
-    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class CouchDbConfigurations {
+
+    public static List<ConfigItem> getDefaults() {
+        return Arrays.asList(
+                ConfigItem.from(CouchDbEnvKeys.COUCHDB_HOST, "couchdb", "Hostname for CouchDB to store image blobs"),
+                ConfigItem.from(CouchDbEnvKeys.COUCHDB_PORT, 5984, ""),
+                ConfigItem.from(CouchDbEnvKeys.COUCHDB_PROTOCOL, "http", "")
+        );
+    }
 
 }

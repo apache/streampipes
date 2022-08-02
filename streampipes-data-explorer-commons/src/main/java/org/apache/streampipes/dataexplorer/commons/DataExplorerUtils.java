@@ -19,22 +19,57 @@ package org.apache.streampipes.dataexplorer.commons;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.dataexplorer.commons.influx.InfluxNameSanitizer;
+import org.apache.streampipes.model.datalake.DataLakeMeasure;
+import org.apache.streampipes.model.schema.EventProperty;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DataExplorerUtils {
     /**
-     * Adds a new measurement to the StreamPipes data lake
-     * @param measure
-     * @param eventSchema
-     * @throws SpRuntimeException
+     * Sanitizes the event schema and stores the DataLakeMeasurement to the couchDB
+     *
+     * @param client StreamPipes client to store measure
+     * @param measure DataLakeMeasurement
      */
-    public static void registerAtDataLake(String measure,
-                                          EventSchema eventSchema,
-                                          StreamPipesClient client) throws SpRuntimeException {
-        client
-                .customRequest()
-                .sendPost("api/v3/datalake/measure/" + measure, eventSchema);
+    public static DataLakeMeasure sanitizeAndRegisterAtDataLake(StreamPipesClient client,
+                                                     DataLakeMeasure measure) throws SpRuntimeException {
+        sanitizeDataLakeMeasure(measure);
+        registerAtDataLake(client, measure);
+
+        return measure;
     }
 
+    private static void registerAtDataLake(StreamPipesClient client,
+                                                     DataLakeMeasure measure) throws SpRuntimeException {
+        client
+          .customRequest()
+          .sendPost("api/v4/datalake/measure/", measure);
+    }
+
+
+    private static void sanitizeDataLakeMeasure(DataLakeMeasure measure) throws SpRuntimeException {
+
+        // Removes selected timestamp from event schema
+        removeTimestampsFromEventSchema(measure);
+
+        // Escapes all spaces with _
+        measure.setMeasureName(InfluxNameSanitizer.prepareString(measure.getMeasureName()));
+
+        // Removes all spaces with _ and validates that no special terms are used as runtime names
+        measure.getEventSchema()
+                .getEventProperties()
+                .forEach(ep -> ep.setRuntimeName(InfluxNameSanitizer.sanitizePropertyRuntimeName(ep.getRuntimeName())));
+
+    }
+
+    private static void removeTimestampsFromEventSchema(DataLakeMeasure measure) {
+        List<EventProperty> eventPropertiesWithoutTimestamp = measure.getEventSchema().getEventProperties()
+          .stream()
+          .filter(eventProperty -> !measure.getTimestampField().endsWith(eventProperty.getRuntimeName()))
+          .collect(Collectors.toList());
+        measure.getEventSchema().setEventProperties(eventPropertiesWithoutTimestamp);
+    }
 
 }

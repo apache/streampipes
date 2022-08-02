@@ -21,7 +21,8 @@ package org.apache.streampipes.sinks.internal.jvm;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
-import org.apache.streampipes.dataexplorer.commons.DataExplorerConfigurations;
+import org.apache.streampipes.dataexplorer.commons.configs.CouchDbConfigurations;
+import org.apache.streampipes.dataexplorer.commons.configs.DataExplorerConfigurations;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -29,8 +30,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeController;
+import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
 import org.apache.streampipes.sinks.internal.jvm.notification.NotificationProducer;
 
 public class SinksInternalJvmInit extends StandaloneModelSubmitter {
@@ -42,7 +42,7 @@ public class SinksInternalJvmInit extends StandaloneModelSubmitter {
             "",
             8090)
             .registerPipelineElements(
-                    new DataLakeController(),
+                    new DataLakeSink(),
                     new NotificationProducer())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
@@ -53,10 +53,8 @@ public class SinksInternalJvmInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.COUCHDB_HOST, "couchdb", "Hostname for CouchDB to store image blobs")
-            .addConfig(ConfigKeys.COUCHDB_PORT, 5984, "")
-            .addConfig(ConfigKeys.COUCHDB_PROTOCOL, "http", "")
             .addConfigs(DataExplorerConfigurations.getDefaults())
+            .addConfigs(CouchDbConfigurations.getDefaults())
             .build();
 
 

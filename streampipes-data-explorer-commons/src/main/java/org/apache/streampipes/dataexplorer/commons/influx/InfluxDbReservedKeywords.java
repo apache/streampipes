@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+package org.apache.streampipes.dataexplorer.commons.influx;
 
 import java.util.Arrays;
 import java.util.List;

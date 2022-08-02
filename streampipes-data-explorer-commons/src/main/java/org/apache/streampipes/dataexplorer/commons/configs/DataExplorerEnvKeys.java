@@ -15,26 +15,14 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.dataexplorer.commons.configs;
 
-package org.apache.streampipes.sinks.internal.jvm.datalake;
+public class DataExplorerEnvKeys {
+    public final static String DATA_LAKE_HOST = "SP_DATA_LAKE_HOST";
+    public final static String DATA_LAKE_PROTOCOL = "SP_DATA_LAKE_PROTOCOL";
+    public final static String DATA_LAKE_PORT = "SP_DATA_LAKE_PORT";
+    public final static String DATA_LAKE_USERNAME = "SP_DATA_LAKE_USERNAME";
+    public final static String DATA_LAKE_PASSWORD = "SP_DATA_LAKE_PASSWORD";
+    public final static String DATA_LAKE_DATABASE_NAME = "SP_DATA_LAKE_DATABASE_NAME";
 
-public class DataLakeUtils {
-
-  public static String prepareString(String s) {
-    //return s.toLowerCase().replaceAll(" ", "_");
-    return s.replaceAll(" ", "_");
-  }
-
-  private static String renameReservedKeywords(String runtimeName) {
-    if (InfluxDbReservedKeywords.keywordList.stream().anyMatch(k -> k.equalsIgnoreCase(runtimeName))) {
-      return runtimeName + "_";
-    } else {
-      return runtimeName;
-    }
-  }
-
-  public static String sanitizePropertyRuntimeName(String runtimeName) {
-    String sanitizedRuntimeName = prepareString(runtimeName);
-    return renameReservedKeywords(sanitizedRuntimeName);
-  }
 }
