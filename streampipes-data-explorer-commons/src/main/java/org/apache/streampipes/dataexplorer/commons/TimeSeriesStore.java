@@ -35,7 +35,7 @@ public class TimeSeriesStore {
     private static final Logger LOG = LoggerFactory.getLogger(TimeSeriesStore.class);
 
     private ImageStore imageStore;
-    private InfluxStore influxStore;
+    private final InfluxStore influxStore;
 
 
     public TimeSeriesStore(SpConfig config,
@@ -72,7 +72,7 @@ public class TimeSeriesStore {
     }
 
     public void close() throws SpRuntimeException  {
-        if (influxStore != null) {
+        if (imageStore != null) {
             try {
                 this.imageStore.close();
             } catch (IOException e) {
