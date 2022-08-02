@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.dataexplorer.commons.couchdb;
+package org.apache.streampipes.dataexplorer.commons.configs;
 
 public class CouchDbEnvKeys {
     public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";

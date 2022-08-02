@@ -20,7 +20,7 @@ package org.apache.streampipes.dataexplorer.commons.image;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.dataexplorer.commons.couchdb.CouchDbEnvKeys;
+import org.apache.streampipes.dataexplorer.commons.configs.CouchDbEnvKeys;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;

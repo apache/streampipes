@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.commons.influx;
+package org.apache.streampipes.dataexplorer.commons.configs;
 
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 
@@ -24,15 +24,17 @@ import java.util.List;
 
 
 public class DataExplorerConfigurations {
+    public final static String DATA_LAKE_DATABASE_NAME = "sp";
 
     public static List<ConfigItem> getDefaults() {
+
         return Arrays.asList(
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_HOST, DataExplorerDefaults.DATA_LAKE_HOST, "Hostname for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL, DataExplorerDefaults.DATA_LAKE_PROTOCOL, "Protocol for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PORT, DataExplorerDefaults.DATA_LAKE_PORT, "Port for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_USERNAME, DataExplorerDefaults.DATA_LAKE_USERNAME, "Username for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PASSWORD, DataExplorerDefaults.DATA_LAKE_PASSWORD, "Password for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME, DataExplorerDefaults.DATA_LAKE_DATABASE_NAME, "Database name for the StreamPipes data lake database")
+                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_HOST, "influxdb", "Hostname for the StreamPipes data lake database"),
+                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL, "http", "Protocol for the StreamPipes data lake database"),
+                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database"),
+                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_USERNAME, "default", "Username for the StreamPipes data lake database"),
+                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PASSWORD, "default", "Password for the StreamPipes data lake database"),
+                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME, DATA_LAKE_DATABASE_NAME, "Database name for the StreamPipes data lake database")
         );
     }
 

@@ -45,11 +45,10 @@ public class InfluxStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(InfluxStore.class);
 
-    private final Integer batchSize = 2000;
-    private final Integer flushDuration = 500;
+    private final static Integer batchSize = 2000;
+    private final static Integer flushDuration = 500;
     private InfluxDB influxDb = null;
     DataLakeMeasure measure;
-//    private final DataExplorerConnectionSettings settings;
 
     Map<String, String> targetRuntimeNames = new HashMap<>();
 
@@ -57,21 +56,16 @@ public class InfluxStore {
                        SpConfig configStore) throws SpRuntimeException {
 
         this.measure = measure;
-        DataExplorerConnectionSettings settings = DataExplorerConnectionSettings.from(configStore, measure);
+        InfluxConnectionSettings settings = InfluxConnectionSettings.from(configStore);
 
-        // TODO check if this works
+        // store sanitized target property runtime names in local variable
         measure.getEventSchema()
                 .getEventProperties()
-                .forEach(ep -> targetRuntimeNames.put(ep.getRuntimeName(), InfluxNameSanitizer.sanitizePropertyRuntimeName(ep.getRuntimeName())));
+                .forEach(ep -> targetRuntimeNames.put(ep.getRuntimeName(),
+                  InfluxNameSanitizer.sanitizePropertyRuntimeName(ep.getRuntimeName())));
 
         connect(settings);
     }
-
-    /**
-     *
-     * @param measure
-     */
-
 
     /**
      * Connects to the InfluxDB Server, sets the database and initializes the batch-behaviour
@@ -79,7 +73,7 @@ public class InfluxStore {
      * @throws SpRuntimeException If not connection can be established or if the database could not
      * be found
      */
-    private void connect(DataExplorerConnectionSettings settings) throws SpRuntimeException {
+    private void connect(InfluxConnectionSettings settings) throws SpRuntimeException {
         // Connecting to the server
         // "http://" must be in front
         String urlAndPort = settings.getInfluxDbHost() + ":" + settings.getInfluxDbPort();
@@ -119,14 +113,14 @@ public class InfluxStore {
      * @param dbName The name of the database which should be created
      */
     private void createDatabase(String dbName) throws SpRuntimeException {
-        if(!dbName.matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
-            throw new SpRuntimeException("Databasename '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
+        if(!dbName.matches("^[a-zA-Z_]\\w*$")) {
+            throw new SpRuntimeException("Database name '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
         }
         influxDb.query(new Query("CREATE DATABASE \"" + dbName + "\"", ""));
     }
 
     /**
-     * Saves an event to the connnected InfluxDB database
+     * Saves an event to the connected InfluxDB database
      *
      * @param event The event which should be saved
      * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed

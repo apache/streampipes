@@ -30,13 +30,12 @@ public class DataExplorerUtils {
     /**
      * Sanitizes the event schema and stores the DataLakeMeasurement to the couchDB
      *
-     * @param client
-     * @param measure
-     * @throws SpRuntimeException
+     * @param client StreamPipes client to store measure
+     * @param measure DataLakeMeasurement
      */
     public static DataLakeMeasure sanitizeAndRegisterAtDataLake(StreamPipesClient client,
                                                      DataLakeMeasure measure) throws SpRuntimeException {
-        measure = sanitizeDataLakeMeasure(measure);
+        sanitizeDataLakeMeasure(measure);
         registerAtDataLake(client, measure);
 
         return measure;
@@ -50,10 +49,10 @@ public class DataExplorerUtils {
     }
 
 
-    private static DataLakeMeasure sanitizeDataLakeMeasure(DataLakeMeasure measure) throws SpRuntimeException {
+    private static void sanitizeDataLakeMeasure(DataLakeMeasure measure) throws SpRuntimeException {
 
         // Removes selected timestamp from event schema
-        measure = removeTimestampsFromEventSchema(measure);
+        removeTimestampsFromEventSchema(measure);
 
         // Escapes all spaces with _
         measure.setMeasureName(InfluxNameSanitizer.prepareString(measure.getMeasureName()));
@@ -63,17 +62,14 @@ public class DataExplorerUtils {
                 .getEventProperties()
                 .forEach(ep -> ep.setRuntimeName(InfluxNameSanitizer.sanitizePropertyRuntimeName(ep.getRuntimeName())));
 
-        return measure;
     }
 
-    private static DataLakeMeasure removeTimestampsFromEventSchema(DataLakeMeasure measure) {
+    private static void removeTimestampsFromEventSchema(DataLakeMeasure measure) {
         List<EventProperty> eventPropertiesWithoutTimestamp = measure.getEventSchema().getEventProperties()
           .stream()
           .filter(eventProperty -> !measure.getTimestampField().endsWith(eventProperty.getRuntimeName()))
           .collect(Collectors.toList());
         measure.getEventSchema().setEventProperties(eventPropertiesWithoutTimestamp);
-
-        return measure;
     }
 
 }
