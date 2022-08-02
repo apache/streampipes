@@ -12,7 +12,7 @@
       "value": "Increase"
     },
     {
-      "type": "input",
+      "type": "slider",
       "selector": "increase",
       "value": "100"
     },
