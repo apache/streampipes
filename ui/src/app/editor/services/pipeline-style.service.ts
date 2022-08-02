@@ -23,7 +23,7 @@ import { Endpoint } from '@jsplumb/core';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { PipelineElementConfig, PipelineElementConfigurationStatus } from '../model/editor.model';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PipelineStyleService {
 
   constructor(private jsPlumbConfigService: JsplumbConfigService,

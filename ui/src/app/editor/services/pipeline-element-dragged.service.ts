@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { PipelineElementPosition } from '../model/editor.model';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PipelineElementDraggedService {
 
   public pipelineElementMovedSubject: Subject<PipelineElementPosition> = new Subject<PipelineElementPosition>();

@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { JsplumbConfigService } from './jsplumb-config.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class JsplumbEndpointService {
 
   constructor(private jsplumbConfigService: JsplumbConfigService) {
