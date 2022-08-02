@@ -36,7 +36,7 @@
               *ngIf="item.visible">
             <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar iconbar-size"
                     (click)="go(item.link)"
-                    matTooltip="{{item.title}}" >
+                    matTooltip="{{item.title}}" matTooltipPosition="right" >
                 <mat-icon
                         [ngClass]="item.link === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
                         data-cy="navigation-icon">{{item.icon}}</mat-icon>
