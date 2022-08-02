@@ -26,7 +26,7 @@ import {
   DateRange,
   TimeSettings
 } from '@streampipes/platform-services';
-import { DataDownloadDialogComponent } from '../../dialogs/data-download-dialog/data-download-dialog.component';
+import { DataDownloadDialogComponent } from '../../../core-ui/data-download-dialog/data-download-dialog.component';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';

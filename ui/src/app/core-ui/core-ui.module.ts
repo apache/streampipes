@@ -84,6 +84,8 @@ import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
+import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @NgModule({
   imports: [
@@ -106,6 +108,8 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template-config/
     MatSlideToggleModule,
     MatChipsModule,
     MatTreeModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     PlatformServicesModule,
     PortalModule,
     SharedUiModule,
@@ -115,6 +119,7 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template-config/
   ],
   declarations: [
     ConfigureLabelsComponent,
+    DataDownloadDialogComponent,
     DisplayRecommendedPipe,
     ImageBarPreviewComponent,
     ImageComponent,
@@ -163,6 +168,7 @@ import { PipelineElementTemplatePipe } from './pipeline-element-template-config/
   ],
   exports: [
     ConfigureLabelsComponent,
+    DataDownloadDialogComponent,
     ImageComponent,
     ImageLabelingComponent,
     PipelineElementTemplateConfigComponent,

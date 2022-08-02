@@ -20,10 +20,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
+  DataExplorerDataConfig,
   DatalakeQueryParameterBuilder,
   DatalakeQueryParameters,
   DatalakeRestService,
-  DataViewDataExplorerService,
+  DataViewDataExplorerService, DateRange,
   EventSchema,
   FieldConfig,
   SpQueryResult
@@ -34,6 +35,7 @@ import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@strea
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
 import { SpConfigurationTabs } from '../configuration-tabs';
 import { SpConfigurationRoutes } from '../configuration.routes';
+import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -51,7 +53,7 @@ export class DatalakeConfigurationComponent implements OnInit {
   dataSource: MatTableDataSource<DataLakeConfigurationEntry>;
   availableMeasurements: DataLakeConfigurationEntry[] = [];
 
-  displayedColumns: string[] = ['name', 'pipeline', 'events', 'truncate', 'remove'];
+  displayedColumns: string[] = ['name', 'pipeline', 'events', 'download', 'truncate', 'remove'];
 
   constructor(
     // protected dataLakeRestService: DatalakeRestService,
@@ -149,6 +151,17 @@ export class DatalakeConfigurationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
         this.loadAvailableMeasurements();
+      }
+    });
+  }
+
+  openDownloadDialog(measurementName: string) {
+    this.dialogService.open(DataDownloadDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Download data',
+      width: '50vw',
+      data: {
+        'index': measurementName,
       }
     });
   }

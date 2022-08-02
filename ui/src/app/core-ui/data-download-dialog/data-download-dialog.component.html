@@ -24,13 +24,13 @@
                     <ng-template matStepLabel>Select Data</ng-template>
                     <div class="mt-10">
                         <mat-radio-group class="example-radio-group" [(ngModel)]="selectedData">
-                            <mat-radio-button value="visible" class="example-radio-button">
+                            <mat-radio-button value="visible" class="example-radio-button" *ngIf="dataConfig">
                                 Currently configured query
                             </mat-radio-button>
-                            <div fxLayout="column" fxLayoutAlign="start start" class="ml-35 mb-10" *ngIf="selectedData === 'visible' && dataConfig.sourceConfigs.length > 1">
+                            <div fxLayout="column" fxLayoutAlign="start start" class="ml-35 mb-10" *ngIf="selectedData === 'visible' && dataConfig && dataConfig.sourceConfigs.length > 1">
                                 <h5>Select source (only one source can be exported in a single file)</h5>
-                                <mat-radio-group class="example-radio-group" [(ngModel)]="selectedQueryIndex">
-                                    <mat-radio-button [value]="i" *ngFor="let sourceConfig of dataConfig.sourceConfigs; let i = index">
+                                <mat-radio-group class="example-radio-group" [(ngModel)]="selectedQueryIndex" fxLayout="column">
+                                    <mat-radio-button [value]="i" *ngFor="let sourceConfig of dataConfig.sourceConfigs; let i = index" class="p-5">
                                         {{sourceConfig.measureName}}
                                     </mat-radio-button>
                                 </mat-radio-group>

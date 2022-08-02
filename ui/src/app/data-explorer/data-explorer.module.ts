@@ -50,7 +50,6 @@ import {
 } from '@streampipes/platform-services';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { DataDownloadDialogComponent } from './dialogs/data-download-dialog/data-download-dialog.component';
 import { DataExplorerDashboardGridComponent } from './components/widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { DataExplorerDashboardOverviewComponent } from './components/overview/data-explorer-dashboard-overview.component';
 import { DataExplorerDashboardPanelComponent } from './components/panel/data-explorer-dashboard-panel.component';
@@ -177,7 +176,6 @@ export const MY_NATIVE_FORMATS = {
   ],
   declarations: [
     AggregateConfigurationComponent,
-    DataDownloadDialogComponent,
     DataExplorerDashboardGridComponent,
     DataExplorerDashboardOverviewComponent,
     DataExplorerDashboardPanelComponent,

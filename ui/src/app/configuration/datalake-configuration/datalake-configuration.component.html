@@ -58,11 +58,27 @@
                             </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="download">
+                            <th mat-header-cell *matHeaderCellDef>Download</th>
+                            <td mat-cell *matCellDef="let configurationEntry">
+                                <div fxLayout="row">
+                                    <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="start center">
+                                        <button color="accent" mat-button mat-icon-button
+                                                matTooltip="Download data from index" matTooltipPosition="above"
+                                                data-cy="datalake-download-btn"
+                                                (click)="openDownloadDialog(configurationEntry.name)">
+                                            <i class="material-icons">download</i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+
                         <ng-container matColumnDef="truncate">
                             <th mat-header-cell *matHeaderCellDef>Truncate</th>
                             <td mat-cell *matCellDef="let configurationEntry">
                                 <div fxLayout="row">
-                                    <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
+                                    <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="start center">
                                         <button color="accent" mat-button mat-icon-button
                                             matTooltip="Truncate all data from index" matTooltipPosition="above"
                                             data-cy="datalake-truncate-btn"
@@ -78,7 +94,7 @@
                             <th mat-header-cell *matHeaderCellDef>Remove</th>
                             <td mat-cell *matCellDef="let configurationEntry">
                                 <div fxLayout="row">
-                                    <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
+                                    <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="start center">
                                         <button color="accent" mat-button mat-icon-button
                                             matTooltip="Remove index from database" data-cy="datalake-delete-btn"
                                             matTooltipPosition="above" [disabled]="!configurationEntry.remove"

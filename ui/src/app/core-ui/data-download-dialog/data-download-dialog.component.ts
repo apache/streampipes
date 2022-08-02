@@ -59,8 +59,17 @@ export class DataDownloadDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (!this.date) {
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() - 5);
+      this.date = {startDate: new Date(), endDate};
+    }
     this.dateRange[0] = this.date.startDate;
     this.dateRange[1] = this.date.endDate;
+
+    if (!this.dataConfig) {
+      this.selectedData = 'all';
+    }
   }
 
   downloadData() {

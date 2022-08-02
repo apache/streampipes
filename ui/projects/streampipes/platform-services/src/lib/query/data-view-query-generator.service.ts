@@ -54,8 +54,7 @@ export class DataViewQueryGeneratorService {
   generateQuery(startTime: number,
                 endTime: number,
                 sourceConfig: SourceConfig,
-                maximumResultingEvents: number = -1
-                ): DatalakeQueryParameters {
+                maximumResultingEvents: number = -1): DatalakeQueryParameters {
     const queryBuilder = DatalakeQueryParameterBuilder.create(startTime, endTime);
     const queryConfig = sourceConfig.queryConfig;
 
