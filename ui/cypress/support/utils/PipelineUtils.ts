@@ -99,7 +99,7 @@ export class PipelineUtils {
 
   public static checkAmountOfPipelinesPipeline(amount: number) {
     cy.visit('#/pipelines');
-    cy.dataCy('delete').should('have.length', amount);
+    cy.dataCy('delete-pipeline').should('have.length', amount);
   }
 
   public static deletePipeline() {
