@@ -23,7 +23,6 @@ import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
-import org.eclipse.milo.opcua.sdk.client.model.nodes.variables.BaseVariableTypeNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaVariableNode;
 import org.eclipse.milo.opcua.stack.core.UaException;
@@ -31,12 +30,13 @@ import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.NodeClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OpcUaNodeBrowser {
@@ -44,21 +44,21 @@ public class OpcUaNodeBrowser {
   private final OpcUaClient client;
   private final SpOpcUaConfig spOpcConfig;
 
+  private static final Logger LOG = LoggerFactory.getLogger(OpcUaNodeBrowser.class);
+
   public OpcUaNodeBrowser(OpcUaClient client,
                           SpOpcUaConfig spOpcUaClientConfig) {
     this.client = client;
     this.spOpcConfig = spOpcUaClientConfig;
   }
 
-  public List<OpcNode> findNodes() {
-    return this.spOpcConfig.getSelectedNodeNames().stream().map(n -> {
-      try {
-        return toOpcNode(n);
-      } catch (UaException e) {
-        e.printStackTrace();
-        return null;
-      }
-    }).collect(Collectors.toList());
+  public List<OpcNode> findNodes() throws UaException {
+    var opcNodes = new ArrayList<OpcNode>();
+    for(String selectedNodeName: this.spOpcConfig.getSelectedNodeNames()) {
+      opcNodes.add(toOpcNode(selectedNodeName));
+    }
+
+    return opcNodes;
   }
 
   public List<TreeInputNode> buildNodeTreeFromOrigin() throws UaException, ExecutionException, InterruptedException {
@@ -81,10 +81,14 @@ public class OpcUaNodeBrowser {
     NodeId nodeId = NodeId.parse(nodeName);
     UaNode node = addressSpace.getNode(nodeId);
 
-    if (node instanceof BaseVariableTypeNode) {
+    LOG.info("Using node of type {}", node.getNodeClass().toString() );
+
+    if (node instanceof UaVariableNode) {
       UInteger value = (UInteger) ((UaVariableNode) node).getDataType().getIdentifier();
       return new OpcNode(node.getDisplayName().getText(), OpcUaTypes.getType(value), node.getNodeId());
     }
+
+    LOG.warn("Node {} not of type UaVariableNode", node.getDisplayName());
 
     throw new UaException(StatusCode.BAD, "Node is not of type BaseDataVariableTypeNode");
   }

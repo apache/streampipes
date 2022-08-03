@@ -99,7 +99,7 @@ public class OpcUaUtil {
             spOpcUaClient.disconnect();
 
         } catch (Exception e) {
-            throw new AdapterException("Could not guess schema for opc node! " + e.getMessage());
+            throw new AdapterException("Could not guess schema for opc node:  " + e.getMessage(), e.getCause());
         }
 
         eventSchema.setEventProperties(allProperties);

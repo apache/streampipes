@@ -94,7 +94,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
 
 
         } catch (Exception e) {
-            throw new AdapterException("The Connection to the OPC UA server could not be established.");
+            throw new AdapterException("The Connection to the OPC UA server could not be established.", e.getCause());
         }
     }
 
