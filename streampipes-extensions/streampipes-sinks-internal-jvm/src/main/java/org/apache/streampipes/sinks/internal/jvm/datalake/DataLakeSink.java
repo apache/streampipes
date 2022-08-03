@@ -53,10 +53,12 @@ public class DataLakeSink extends StreamPipesDataSink {
           .withLocales(Locales.EN)
           .withAssets(Assets.DOCUMENTATION, Assets.ICON)
           .category(DataSinkType.INTERNAL)
-          .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-            EpRequirements.timestampReq(),
-            Labels.withId(TIMESTAMP_MAPPING_KEY),
-            PropertyScope.NONE).build())
+          .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_MAPPING_KEY),
+                PropertyScope.NONE)
+                .build())
           .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
           .build();
     }

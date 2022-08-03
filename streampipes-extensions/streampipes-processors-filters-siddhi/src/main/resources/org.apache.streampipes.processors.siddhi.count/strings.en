@@ -9,3 +9,6 @@ time-window.description=Size of the time window
 
 scale.title=Time Window Scale
 scale.description=
+
+timestamp-mapping.title=Timestamp Field
+timestamp-mapping.description=The value which contains a timestamp
