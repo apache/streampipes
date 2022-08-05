@@ -50,8 +50,9 @@ export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
   }
 
   applySize(width: number, height: number) {
+    console.log(height);
     if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width, height});
+      this.eChartsInstance.resize({width, height: height});
     }
   }
 

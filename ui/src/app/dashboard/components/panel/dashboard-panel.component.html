@@ -58,6 +58,7 @@
                         [headerVisible]="headerVisible"
                         (updateCallback)="updateAndQueueItemForDeletion($event)"
                         (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                        *ngIf="dashboard"
                         class="h-100 dashboard-grid"></dashboard-grid>
     </div>
 </sp-basic-view>

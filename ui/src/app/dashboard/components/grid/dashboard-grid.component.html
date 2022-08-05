@@ -16,7 +16,7 @@
   ~
   -->
 
-<div *ngIf="dashboard.displayHeader" class="text-center">
+<div *ngIf="dashboard && dashboard.displayHeader" class="text-center">
     <h2>{{dashboard.name}}</h2>
     <h3>{{dashboard.description}}</h3>
 </div>
