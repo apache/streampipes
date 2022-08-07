@@ -30,6 +30,7 @@ import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { zip } from 'rxjs';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import { FieldSelectionPanelComponent } from './field-selection-panel/field-selection-panel.component';
+import { GroupSelectionPanelComponent } from './group-selection-panel/group-selection-panel.component';
 
 @Component({
   selector: 'sp-data-explorer-widget-data-settings',
@@ -50,6 +51,10 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
 
   @ViewChild('fieldSelectionPanel')
   fieldSelectionPanel: FieldSelectionPanelComponent;
+
+  @ViewChild('groupSelectionPanel')
+  groupSelectionPanel: GroupSelectionPanelComponent;
+
 
   availablePipelines: DataLakeMeasure[] = [];
   availableMeasurements: DataLakeMeasure[] = [];
@@ -118,6 +123,11 @@ export class DataExplorerWidgetDataSettingsComponent implements OnInit {
     sourceConfig.queryConfig.fields = [];
     if (this.fieldSelectionPanel) {
       this.fieldSelectionPanel.applyDefaultFields();
+    }
+
+    sourceConfig.queryConfig.groupBy = [];
+    if (this.groupSelectionPanel) {
+      this.groupSelectionPanel.applyDefaultFields();
     }
 
   }
