@@ -18,14 +18,16 @@
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ClientDashboardItem, Dashboard, DashboardService, DashboardWidgetModel } from '@streampipes/platform-services';
-import { forkJoin, Observable, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
-import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
-import { ActivatedRoute } from '@angular/router';
+import { ConfirmDialogComponent, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
+import { ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { AuthService } from '../../../services/auth.service';
 import { SpDashboardRoutes } from '../../dashboard.routes';
+import { map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'dashboard-panel',
@@ -49,6 +51,7 @@ export class DashboardPanelComponent implements OnInit {
 
     constructor(private dashboardService: DashboardService,
                 private dialogService: DialogService,
+                private dialog: MatDialog,
                 private refreshDashboardService: RefreshDashboardService,
                 private route: ActivatedRoute,
                 private authService: AuthService,
@@ -154,5 +157,29 @@ export class DashboardPanelComponent implements OnInit {
         this.widgetIdsToRemove.forEach(widgetId => {
             this.dashboardService.deleteWidget(widgetId).subscribe();
         });
+    }
+
+    confirmLeaveDashboard(route: ActivatedRouteSnapshot,
+                          state: RouterStateSnapshot): Observable<boolean> {
+        if (this.editMode) {
+            const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+                width: '500px',
+                data: {
+                    'title': 'Save changes?',
+                    'subtitle': 'Update all changes to dashboard widgets or discard current changes.',
+                    'cancelTitle': 'Discard changes',
+                    'okTitle': 'Update',
+                    'confirmAndCancel': true
+                },
+            });
+            return dialogRef.afterClosed().pipe(map(shouldUpdate => {
+                if (shouldUpdate) {
+                    this.updateDashboardAndCloseEditMode();
+                }
+                return true;
+            }));
+        } else {
+            return of(true);
+        }
     }
 }

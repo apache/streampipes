@@ -61,6 +61,8 @@ import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
 import { ServicesModule } from '../services/services.module';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer/data-explorer-panel.can-deactivate.guard';
+import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.guard';
 
 @NgModule({
   imports: [
@@ -97,7 +99,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
           },
           {
             path: ':id',
-            component: DashboardPanelComponent
+            component: DashboardPanelComponent,
+            canDeactivate: [DashboardPanelCanDeactivateGuard]
           }
         ]
       }
