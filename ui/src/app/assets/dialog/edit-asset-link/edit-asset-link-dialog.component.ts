@@ -31,7 +31,7 @@ import {
   GenericStorageService,
   Pipeline,
   PipelineService,
-  PipelineElementService
+  PipelineElementService, FileMetadata, FilesService
 } from '@streampipes/platform-services';
 import { FormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
@@ -64,6 +64,7 @@ export class EditAssetLinkDialogComponent implements OnInit {
   dataLakeMeasures: DataLakeMeasure[];
   dataSources: SpDataStream[];
   adapters: AdapterDescriptionUnion[];
+  files: FileMetadata[];
 
   allResources: any[] = [];
   currentResource: any;
@@ -77,7 +78,8 @@ export class EditAssetLinkDialogComponent implements OnInit {
               private dashboardService: DashboardService,
               private dataLakeService: DatalakeRestService,
               private pipelineElementService: PipelineElementService,
-              private adapterService: AdapterService) {
+              private adapterService: AdapterService,
+              private filesService: FilesService) {
   }
 
   ngOnInit(): void {
@@ -106,13 +108,15 @@ export class EditAssetLinkDialogComponent implements OnInit {
       this.dashboardService.getDashboards(),
       this.pipelineElementService.getDataStreams(),
       this.dataLakeService.getAllMeasurementSeries(),
+      this.filesService.getFileMetadata(),
       this.adapterService.getAdapters()).subscribe(response => {
       this.pipelines = response[0];
       this.dataViews = response[1];
       this.dashboards = response[2];
       this.dataSources = response[3];
       this.dataLakeMeasures = response[4];
-      this.adapters = response[5];
+      this.files = response[5];
+      this.adapters = response[6];
 
       this.allResources = [
         ...this.pipelines,
@@ -120,6 +124,7 @@ export class EditAssetLinkDialogComponent implements OnInit {
         ...this.dashboards,
         ...this.dataSources,
         ...this.dataLakeMeasures,
+        ...this.files,
         ...this.adapters
       ];
       if (!this.createMode) {

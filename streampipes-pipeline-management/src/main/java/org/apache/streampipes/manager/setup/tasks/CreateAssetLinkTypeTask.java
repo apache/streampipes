@@ -36,7 +36,8 @@ public class CreateAssetLinkTypeTask implements InstallationTask {
     new AssetLinkType("adapter", "Adapter", "var(--color-adapter)", "power", "adapter", List.of("connect"), true),
     new AssetLinkType("data-source", "Data Source", "var(--color-data-source)", "dataset", "data-source", List.of(), false),
     new AssetLinkType("pipeline", "Pipeline", "var(--color-pipeline)", "play_arrow", "pipeline", List.of("pipeline", "details"), true),
-    new AssetLinkType("measurement", "Data Lake Storage", "var(--color-measurement)", "folder", "measurement", List.of(), false)
+    new AssetLinkType("measurement", "Data Lake Storage", "var(--color-measurement)", "folder", "measurement", List.of(), false),
+    new AssetLinkType("file", "File", "var(--color-file)", "draft", "file", List.of(), false)
   );
 
   @Override

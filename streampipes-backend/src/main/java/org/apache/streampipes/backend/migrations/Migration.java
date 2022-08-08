@@ -19,11 +19,13 @@
 
 package org.apache.streampipes.backend.migrations;
 
+import java.io.IOException;
+
 public interface Migration {
 
   boolean shouldExecute();
 
-  void executeMigration();
+  void executeMigration() throws IOException;
 
   String getDescription();
 }

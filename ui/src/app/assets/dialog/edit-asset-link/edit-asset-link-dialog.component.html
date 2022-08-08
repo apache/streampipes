@@ -101,6 +101,18 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div *ngIf="selectedLinkType.linkQueryHint === 'file'" fxLayout="column" class="link-configuration">
+                <mat-form-field color="accent" fxFlex="100">
+                    <mat-label>Files</mat-label>
+                    <mat-select (selectionChange)="changeLabel($event.value.fileId, $event.value.originalFilename, $event.value)"
+                                [(value)]="currentResource"
+                                fxFlex
+                                required>
+                        <mat-option *ngFor="let file of files"
+                                    [value]="file">{{file.originalFilename}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <div fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent">
                     <mat-label>Label</mat-label>

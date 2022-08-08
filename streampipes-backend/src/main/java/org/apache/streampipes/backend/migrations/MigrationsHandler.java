@@ -22,6 +22,8 @@ package org.apache.streampipes.backend.migrations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class MigrationsHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationsHandler.class);
@@ -33,7 +35,11 @@ public class MigrationsHandler {
     availableMigrations.forEach(migration -> {
       if (migration.shouldExecute()) {
         LOG.info("Performing migration: {}", migration.getDescription());
-        migration.executeMigration();
+        try {
+          migration.executeMigration();
+        } catch (IOException e) {
+          LOG.error("An error has occurred while executing migration '{}'", migration.getDescription(), e);
+        }
       }
     });
 
