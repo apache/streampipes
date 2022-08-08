@@ -21,6 +21,7 @@ package org.apache.streampipes.export.dataimport;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.export.model.PermissionInfo;
 import org.apache.streampipes.export.resolver.*;
+import org.apache.streampipes.manager.file.FileHandler;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.dashboard.DashboardModel;
@@ -32,6 +33,7 @@ import org.apache.streampipes.resource.management.PermissionResourceManager;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
@@ -51,10 +53,9 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
     this.ownerSid = ownerSid;
   }
 
-
   @Override
-  protected void handleAsset(Map<String, String> previewFiles, String assetId) throws IOException {
-    storage.getGenericStorage().create(previewFiles.get(assetId));
+  protected void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws IOException {
+    storage.getGenericStorage().create(asString(previewFiles.get(assetId)));
   }
 
   @Override
@@ -113,6 +114,17 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleDataViewWidget(String document, String dataViewWidget) throws JsonProcessingException {
     new DataViewWidgetResolver().writeDocument(document);
+  }
+
+  @Override
+  protected void handleFile(String document,
+                            String fileMetadataId,
+                            Map<String, byte[]> zipContent) throws IOException {
+    var resolver = new FileResolver();
+    var fileMetadata = resolver.readDocument(document);
+    resolver.writeDocument(document);
+    byte[] file = zipContent.get(fileMetadata.getInternalFilename().substring(0, fileMetadata.getInternalFilename().lastIndexOf(".")));
+    new FileHandler().storeFile(fileMetadata.getInternalFilename(), new ByteArrayInputStream(file));
   }
 
   @Override

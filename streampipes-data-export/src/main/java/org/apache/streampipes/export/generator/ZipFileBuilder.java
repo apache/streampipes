@@ -86,6 +86,10 @@ public class ZipFileBuilder {
       addZipEntry(documentKey + ".json", document, out, buffer);
     }
 
+    for(String binary : this.binaryEntries.keySet()) {
+      addZipEntry(binary, this.binaryEntries.get(binary), out, buffer);
+    }
+
     addZipEntry(ExportConstants.MANIFEST + ".json", asBytes(manifest), out, buffer);
     out.closeEntry();
     out.close();

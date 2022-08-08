@@ -46,8 +46,8 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
 
 
   @Override
-  protected void handleAsset(Map<String, String> previewFiles, String assetId) throws JsonProcessingException {
-    Map<String, Object> assetDescription = this.defaultMapper.readValue(previewFiles.get(assetId), new TypeReference<Map<String, Object>>() {});
+  protected void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws JsonProcessingException {
+    Map<String, Object> assetDescription = this.defaultMapper.readValue(asString(previewFiles.get(assetId)), new TypeReference<Map<String, Object>>() {});
     importConfig.addAsset(new ExportItem(assetId, String.valueOf(assetDescription.get("assetName")), true));
   }
 
@@ -89,6 +89,13 @@ public class PreviewImportGenerator extends ImportGenerator<AssetExportConfigura
   @Override
   protected void handleDataViewWidget(String document, String dataViewWidget) {
 
+  }
+
+  @Override
+  protected void handleFile(String document,
+                            String fileMetadataId,
+                            Map<String, byte[]> zipContent) throws JsonProcessingException {
+    addExportItem(fileMetadataId, new FileResolver().readDocument(document).getOriginalFilename(), importConfig::addFile);
   }
 
   @Override

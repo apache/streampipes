@@ -27,6 +27,7 @@ import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public abstract class ImportGenerator<T> {
@@ -40,7 +41,7 @@ public abstract class ImportGenerator<T> {
   }
 
   public T generate(InputStream inputStream) throws IOException {
-    Map<String, String> previewFiles = new ZipFileExtractor(inputStream).extractZipToStringMap();
+    Map<String, byte[]> previewFiles = new ZipFileExtractor(inputStream).extractZipToMap();
 
     var manifest = getManifest(previewFiles);
 
@@ -49,35 +50,39 @@ public abstract class ImportGenerator<T> {
     }
 
     for (String adapterId: manifest.getAdapters()) {
-      handleAdapter(previewFiles.get(adapterId), adapterId);
+      handleAdapter(asString(previewFiles.get(adapterId)), adapterId);
     }
 
     for(String dashboardId: manifest.getDashboards()) {
-      handleDashboard(previewFiles.get(dashboardId), dashboardId);
+      handleDashboard(asString(previewFiles.get(dashboardId)), dashboardId);
     }
 
     for (String dataViewId: manifest.getDataViews()) {
-      handleDataView(previewFiles.get(dataViewId), dataViewId);
+      handleDataView(asString(previewFiles.get(dataViewId)), dataViewId);
     }
 
     for (String dataSourceId: manifest.getDataSources()) {
-      handleDataSource(previewFiles.get(dataSourceId), dataSourceId);
+      handleDataSource(asString(previewFiles.get(dataSourceId)), dataSourceId);
     }
 
     for (String pipelineId: manifest.getPipelines()) {
-      handlePipeline(previewFiles.get(pipelineId), pipelineId);
+      handlePipeline(asString(previewFiles.get(pipelineId)), pipelineId);
     }
 
     for (String measurementId: manifest.getDataLakeMeasures()) {
-      handleDataLakeMeasure(previewFiles.get(measurementId), measurementId);
+      handleDataLakeMeasure(asString(previewFiles.get(measurementId)), measurementId);
     }
 
     for (String dashboardWidgetId: manifest.getDashboardWidgets()) {
-      handleDashboardWidget(previewFiles.get(dashboardWidgetId), dashboardWidgetId);
+      handleDashboardWidget(asString(previewFiles.get(dashboardWidgetId)), dashboardWidgetId);
     }
 
     for (String dataViewWidgetId: manifest.getDataViewWidgets()) {
-      handleDataViewWidget(previewFiles.get(dataViewWidgetId), dataViewWidgetId);
+      handleDataViewWidget(asString(previewFiles.get(dataViewWidgetId)), dataViewWidgetId);
+    }
+
+    for(String fileMetadataId: manifest.getFiles()) {
+      handleFile(asString(previewFiles.get(fileMetadataId)), fileMetadataId, previewFiles);
     }
 
     afterResourcesCreated();
@@ -85,11 +90,15 @@ public abstract class ImportGenerator<T> {
     return getReturnObject();
   }
 
-  private StreamPipesApplicationPackage getManifest(Map<String, String> previewFiles) throws JsonProcessingException {
-    return this.defaultMapper.readValue(previewFiles.get(ExportConstants.MANIFEST), StreamPipesApplicationPackage.class);
+  protected String asString(byte[] bytes) {
+    return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  protected abstract void handleAsset(Map<String, String> previewFiles, String assetId) throws IOException;
+  private StreamPipesApplicationPackage getManifest(Map<String, byte[]> previewFiles) throws JsonProcessingException {
+    return this.defaultMapper.readValue(asString(previewFiles.get(ExportConstants.MANIFEST)), StreamPipesApplicationPackage.class);
+  }
+
+  protected abstract void handleAsset(Map<String, byte[]> previewFiles, String assetId) throws IOException;
   protected abstract void handleAdapter(String document, String adapterId) throws JsonProcessingException;
   protected abstract void handleDashboard(String document, String dashboardId) throws JsonProcessingException;
   protected abstract void handleDataView(String document, String dataViewId) throws JsonProcessingException;
@@ -97,7 +106,8 @@ public abstract class ImportGenerator<T> {
   protected abstract void handlePipeline(String document, String pipelineId) throws JsonProcessingException;
   protected abstract void handleDataLakeMeasure(String document, String dataLakeMeasureId) throws JsonProcessingException;
   protected abstract void handleDashboardWidget(String document, String dashboardWidgetId) throws JsonProcessingException;
-  protected abstract void handleDataViewWidget(String document, String dataViewWidget) throws JsonProcessingException;
+  protected abstract void handleDataViewWidget(String document, String dataViewWidgetId) throws JsonProcessingException;
+  protected abstract void handleFile(String document, String fileMetadataId, Map<String, byte[]> zipContent) throws IOException;
 
   protected abstract T getReturnObject();
 

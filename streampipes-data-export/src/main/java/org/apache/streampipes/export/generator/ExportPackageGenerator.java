@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.export.resolver.*;
 import org.apache.streampipes.export.utils.SerializationUtils;
+import org.apache.streampipes.manager.file.FileManager;
 import org.apache.streampipes.model.export.AssetExportConfiguration;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
@@ -29,6 +30,7 @@ import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -100,6 +102,17 @@ public class ExportPackageGenerator {
         var widgets = resolver.getWidgets(item.getResourceId());
         var widgetResolver = new DataViewWidgetResolver();
         widgets.forEach(widgetId -> addDoc(builder, widgetId, widgetResolver, manifest::addDataViewWidget));
+      });
+
+      config.getFiles().forEach(item -> {
+        var fileResolver = new FileResolver();
+        String filename = fileResolver.findDocument(item.getResourceId()).getInternalFilename();
+        addDoc(builder, item, new FileResolver(), manifest::addFile);
+        try {
+          builder.addBinary(filename, Files.readAllBytes(FileManager.getFile(filename).toPath()));
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       });
     });
 

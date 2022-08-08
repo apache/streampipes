@@ -18,7 +18,6 @@
 package org.apache.streampipes.commons.zip;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -33,9 +32,9 @@ public class ZipFileExtractor {
   }
 
   // TODO used by export feature - extend this to support binaries
-  public Map<String, String> extractZipToStringMap() throws IOException {
+  public Map<String, byte[]> extractZipToMap() throws IOException {
     byte[] buffer = new byte[1024];
-    Map<String, String> entries = new HashMap<>();
+    Map<String, byte[]> entries = new HashMap<>();
     ZipInputStream zis = new ZipInputStream(zipInputStream);
     ZipEntry zipEntry = zis.getNextEntry();
     while (zipEntry != null) {
@@ -44,7 +43,7 @@ public class ZipFileExtractor {
       while ((len = zis.read(buffer)) > 0) {
         fos.write(buffer, 0, len);
       }
-      entries.put(sanitizeName(zipEntry.getName()), fos.toString(StandardCharsets.UTF_8));
+      entries.put(sanitizeName(zipEntry.getName()), fos.toByteArray());
       fos.close();
       zipEntry = zis.getNextEntry();
     }

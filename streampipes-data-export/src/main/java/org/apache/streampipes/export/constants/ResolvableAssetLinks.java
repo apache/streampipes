@@ -26,4 +26,5 @@ public class ResolvableAssetLinks {
   public static final String ADAPTER = "adapter";
   public static final String DATA_SOURCE = "data-source";
   public static final String PIPELINE = "pipeline";
+  public static final String FILE = "file";
 }

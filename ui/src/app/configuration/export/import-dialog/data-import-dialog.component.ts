@@ -55,7 +55,6 @@ export class SpDataImportDialogComponent implements OnInit {
     this.selectedUploadFile = files[0];
     this.fileName = this.selectedUploadFile.name;
     this.uploadStatus = 0;
-    console.log(this.hasInput);
   }
 
   performPreview(): void {
