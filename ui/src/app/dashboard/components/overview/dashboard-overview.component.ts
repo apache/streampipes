@@ -28,6 +28,7 @@ import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { SpDashboardRoutes } from '../../dashboard.routes';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'dashboard-overview',
@@ -102,7 +103,8 @@ export class DashboardOverviewComponent implements OnInit {
 
   openDeleteDashboardDialog(dashboard: Dashboard) {
     // TODO add confirm dialog
-    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
+    const widgetsToDelete = dashboard.widgets.map(widget => this.dashboardService.deleteWidget(widget.id));
+    zip(...widgetsToDelete, this.dashboardService.deleteDashboard(dashboard)).subscribe(result => {
       this.getDashboards();
     });
   }
