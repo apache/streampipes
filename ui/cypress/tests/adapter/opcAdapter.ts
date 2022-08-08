@@ -47,7 +47,7 @@ describe('Test OPC-UA Adapter Subscription Mode', () => {
 
 const getAdapterBuilder = (pullMode: boolean) => {
 
-  const host: string = ParameterUtils.get('ipe-girlitz.fzi.de', 'opcua');
+  const host: string = ParameterUtils.get('localhost', 'opcua');
 
   const builder = SpecificAdapterBuilder
     .create('OPC_UA')
