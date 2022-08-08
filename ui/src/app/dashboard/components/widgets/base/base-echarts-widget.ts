@@ -41,19 +41,12 @@ export abstract class BaseEchartsWidget extends BaseStreamPipesWidget {
     this.currentWidth = width;
     this.currentHeight = height;
     this.configReady = true;
-    this.applySize(width, height);
+    if (this.eChartsInstance) {
+      this.eChartsInstance.resize({width, height});
+    }
   }
 
   onChartInit(ec) {
     this.eChartsInstance = ec;
-    this.applySize(this.currentWidth, this.currentHeight);
   }
-
-  applySize(width: number, height: number) {
-    console.log(height);
-    if (this.eChartsInstance) {
-      this.eChartsInstance.resize({width, height: height});
-    }
-  }
-
 }

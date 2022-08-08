@@ -36,7 +36,6 @@ export class StandaloneDashboardComponent implements OnInit {
         this.activatedRoute.params.subscribe(params => {
             if (params['dashboardId']) {
                 const dashboardId = params['dashboardId'];
-                console.log(dashboardId);
                 this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
                     this.dashboard = dashboard;
                     this.dashboardReady = true;

@@ -46,10 +46,10 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
 
   chartOption = {
     grid: {
+      left: 100,
       top: 10,
-      bottom: 30,
-      left: 150,
-      right: 80
+      right: 120,
+      bottom: 100
     },
     xAxis: {
       max: 'dataMax',

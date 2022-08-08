@@ -16,12 +16,11 @@
  *
  */
 
-import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 import { ResizeService } from '../../../services/resize.service';
-import { WidgetInfo } from '../../../models/gridster-info.model';
 import {
   DashboardWidgetModel,
   DataLakeMeasure,
@@ -30,9 +29,10 @@ import {
   SpQueryResult
 } from '@streampipes/platform-services';
 import { map, switchMap } from 'rxjs/operators';
+import { GridsterItemComponent } from 'angular-gridster2';
 
 @Directive()
-export abstract class BaseStreamPipesWidget implements OnChanges {
+export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDestroy {
 
   protected constructor(protected dataLakeService: DatalakeRestService,
                         protected resizeService: ResizeService,
@@ -45,6 +45,7 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
 
   @Input() widgetConfig: DashboardWidgetModel;
   @Input() widgetDataConfig: DataLakeMeasure;
+  @Input() gridsterItemComponent: GridsterItemComponent;
   @Input() itemWidth: number;
   @Input() itemHeight: number;
   @Input() editMode: boolean;
@@ -67,11 +68,19 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
   refreshIntervalInSeconds = 5;
   queryLimit = 1;
 
+  resizeSub: Subscription;
+
   ngOnInit(): void {
-    this.prepareConfigExtraction();
-    this.resizeService.resizeSubject.subscribe(info => {
-      this.onResize(info);
+    const widthOffset = 0;
+    const heightOffset = 0;
+    this.resizeSub = this.resizeService.resizeSubject.subscribe(info => {
+      if (info.gridsterItem.id === this.widgetConfig._id) {
+        this.onSizeChanged(this.computeCurrentWidth(this.gridsterItemComponent.width - widthOffset),
+          this.computeCurrentHeight(this.gridsterItemComponent.height - heightOffset));
+      }
     });
+
+    this.prepareConfigExtraction();
 
     this.fireQuery().subscribe(result => this.processQueryResult(result));
 
@@ -113,6 +122,7 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.resizeSub.unsubscribe();
   }
 
   computeCurrentWidth(width: number): number {
@@ -146,15 +156,6 @@ export abstract class BaseStreamPipesWidget implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['widgetConfig']) {
       this.prepareConfigExtraction();
-    }
-  }
-
-  onResize(info: WidgetInfo) {
-    if (info.id === this.widgetConfig._id) {
-      setTimeout(() => {
-        this.onSizeChanged(this.computeCurrentWidth(info.width),
-          this.computeCurrentHeight(info.height));
-      }, 100);
     }
   }
 

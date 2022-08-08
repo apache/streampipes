@@ -20,9 +20,9 @@
     <div class="title-panel mt-20" *ngIf="hasTitlePanelSettings">
         {{selectedTitle}}
     </div>
-    <div class="value-panel">
-        <div echarts [options]="chartOption" [ngStyle]="{'width': '100%', 'height': currentHeight}"
-             (chartInit)="onChartInit($event)" [merge]= "dynamicData" *ngIf="configReady">
+    <div fxFlex [ngStyle]="{height: currentHeight + 'px'}" *ngIf="configReady">
+        <div echarts [options]="chartOption" [ngStyle]="{'width': '100%', 'height': '100%'}"
+             (chartInit)="onChartInit($event)" [merge]= "dynamicData">
         </div>
     </div>
 </div>

@@ -27,9 +27,10 @@ import {
     SimpleChanges,
     ViewChildren
 } from '@angular/core';
-import { Dashboard, DashboardConfig, DashboardItem, DashboardWidgetModel } from '@streampipes/platform-services';
-import { ResizeService } from '../../services/resize.service';
-import { GridsterItemComponent, GridType } from 'angular-gridster2';
+import {Dashboard, DashboardConfig, DashboardItem, DashboardWidgetModel} from '@streampipes/platform-services';
+import {ResizeService} from '../../services/resize.service';
+import {GridsterItemComponent, GridType} from 'angular-gridster2';
+import {GridsterInfo} from "../../models/gridster-info.model";
 
 @Component({
     selector: 'dashboard-grid',
@@ -57,7 +58,7 @@ export class DashboardGridComponent implements OnInit, OnChanges {
     ngOnInit(): void {
         this.options = {
             disablePushOnDrag: true,
-            draggable: { enabled: this.editMode },
+            draggable: {enabled: this.editMode},
             gridType: GridType.VerticalFixed,
             minCols: 12,
             maxCols: 12,
@@ -65,13 +66,20 @@ export class DashboardGridComponent implements OnInit, OnChanges {
             fixedRowHeight: 50,
             fixedColWidth: 50,
             margin: 5,
-            resizable: { enabled: this.editMode },
+            resizable: {enabled: this.editMode},
             displayGrid: this.editMode ? 'always' : 'none',
             itemResizeCallback: ((item, itemComponent) => {
-                this.resizeService.notify({id: item.id, width: itemComponent.width, height: itemComponent.height});
+                this.resizeService.notify({
+                    gridsterItem: item,
+                    gridsterItemComponent: itemComponent
+                } as GridsterInfo);
             }),
             itemInitCallback: ((item, itemComponent) => {
-                this.resizeService.notify({id: item.id, width: itemComponent.width, height: itemComponent.height});
+                this.resizeService.notify({
+                    gridsterItem: item,
+                    gridsterItemComponent: itemComponent
+                } as GridsterInfo);
+                //window.dispatchEvent(new Event('resize'));
             })
         };
     }

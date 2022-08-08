@@ -22,7 +22,8 @@ import {
   DashboardItem,
   DashboardService,
   DashboardWidgetModel,
-  DataLakeMeasure, DatalakeRestService,
+  DataLakeMeasure,
+  DatalakeRestService,
   DataViewDataExplorerService,
   Pipeline,
   PipelineService
@@ -31,6 +32,9 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditModeService } from '../../services/edit-mode.service';
 import { ReloadPipelineService } from '../../services/reload-pipeline.service';
 import { zip } from 'rxjs';
+import { GridsterItemComponent } from 'angular-gridster2';
+import { ResizeService } from '../../services/resize.service';
+import { GridsterInfo } from '../../models/gridster-info.model';
 
 @Component({
   selector: 'dashboard-widget',
@@ -44,6 +48,7 @@ export class DashboardWidgetComponent implements OnInit {
   @Input() headerVisible = false;
   @Input() itemWidth: number;
   @Input() itemHeight: number;
+  @Input() gridsterItemComponent: GridsterItemComponent;
 
   @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
   @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
@@ -62,7 +67,8 @@ export class DashboardWidgetComponent implements OnInit {
               private editModeService: EditModeService,
               private reloadPipelineService: ReloadPipelineService,
               private dataExplorerService: DataViewDataExplorerService,
-              private dataLakeRestService: DatalakeRestService) {
+              private dataLakeRestService: DatalakeRestService,
+              private resizeService: ResizeService) {
   }
 
   ngOnInit(): void {
@@ -85,17 +91,23 @@ export class DashboardWidgetComponent implements OnInit {
         const vizPipeline = res[0];
         const measurement = res[1].find(m => m.measureName === vizPipeline.measureName);
         vizPipeline.eventSchema = measurement.eventSchema;
-      this.widgetDataConfig = vizPipeline;
-      this.dashboardService.getPipelineById(vizPipeline.pipelineId).subscribe(pipeline => {
-        this.pipeline = pipeline;
-        this.pipelineRunning = pipeline.running;
-        this.widgetNotAvailable = false;
+        this.widgetDataConfig = vizPipeline;
+        this.dashboardService.getPipelineById(vizPipeline.pipelineId).subscribe(pipeline => {
+          this.pipeline = pipeline;
+          this.pipelineRunning = pipeline.running;
+          this.widgetNotAvailable = false;
+          this.widgetLoaded = true;
+          setTimeout(() => {
+            this.resizeService.notify({
+              gridsterItem: this.widget,
+              gridsterItemComponent: this.gridsterItemComponent
+            } as GridsterInfo);
+          }, 20);
+        });
+      }, err => {
         this.widgetLoaded = true;
+        this.widgetNotAvailable = true;
       });
-    }, err => {
-      this.widgetLoaded = true;
-      this.widgetNotAvailable = true;
-    });
   }
 
   removeWidget() {
@@ -105,11 +117,11 @@ export class DashboardWidgetComponent implements OnInit {
   startPipeline() {
     if (!this.pipelineRunning) {
       this.pipelineService
-          .startPipeline(this.pipeline._id)
-          .subscribe(status => {
-            // this.loadWidget();
-            this.reloadPipelineService.reloadPipelineSubject.next();
-          });
+        .startPipeline(this.pipeline._id)
+        .subscribe(status => {
+          // this.loadWidget();
+          this.reloadPipelineService.reloadPipelineSubject.next();
+        });
     }
   }
 
