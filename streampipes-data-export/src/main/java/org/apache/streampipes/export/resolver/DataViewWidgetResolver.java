@@ -44,11 +44,12 @@ public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetM
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDataExplorerWidgetStorage().storeDataExplorerWidget(serializeDocument(document));
+    getNoSqlStore().getDataExplorerWidgetStorage().storeDataExplorerWidget(deserializeDocument(document));
   }
 
   @Override
-  protected DataExplorerWidgetModel serializeDocument(String document) throws JsonProcessingException {
-    return this.spMapper.readValue(document, DataExplorerWidgetModel.class);
+  protected DataExplorerWidgetModel deserializeDocument(String document) throws JsonProcessingException {
+    return this.defaultMapper.readValue(document, DataExplorerWidgetModel.class);
   }
+
 }

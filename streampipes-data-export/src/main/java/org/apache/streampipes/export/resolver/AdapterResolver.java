@@ -49,11 +49,11 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getAdapterInstanceStorage().storeAdapter(serializeDocument(document));
+    getNoSqlStore().getAdapterInstanceStorage().storeAdapter(deserializeDocument(document));
   }
 
   @Override
-  protected AdapterDescription serializeDocument(String document) throws JsonProcessingException {
+  protected AdapterDescription deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, AdapterDescription.class);
   }
 }

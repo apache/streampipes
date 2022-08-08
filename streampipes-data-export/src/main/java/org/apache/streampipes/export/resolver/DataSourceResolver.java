@@ -44,11 +44,11 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDataStreamStorage().createElement(serializeDocument(document));
+    getNoSqlStore().getDataStreamStorage().createElement(deserializeDocument(document));
   }
 
   @Override
-  protected SpDataStream serializeDocument(String document) throws JsonProcessingException {
+  protected SpDataStream deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, SpDataStream.class);
   }
 }

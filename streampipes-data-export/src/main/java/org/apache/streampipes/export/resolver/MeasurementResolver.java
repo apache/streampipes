@@ -44,11 +44,11 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDataLakeStorage().storeDataLakeMeasure(serializeDocument(document));
+    getNoSqlStore().getDataLakeStorage().storeDataLakeMeasure(deserializeDocument(document));
   }
 
   @Override
-  protected DataLakeMeasure serializeDocument(String document) throws JsonProcessingException {
+  protected DataLakeMeasure deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, DataLakeMeasure.class);
   }
 }

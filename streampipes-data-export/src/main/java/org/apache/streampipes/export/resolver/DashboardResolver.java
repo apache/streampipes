@@ -48,11 +48,11 @@ public class DashboardResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDashboardStorage().storeDashboard(serializeDocument(document));
+    getNoSqlStore().getDashboardStorage().storeDashboard(deserializeDocument(document));
   }
 
   @Override
-  protected DashboardModel serializeDocument(String document) throws JsonProcessingException {
+  protected DashboardModel deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, DashboardModel.class);
   }
 

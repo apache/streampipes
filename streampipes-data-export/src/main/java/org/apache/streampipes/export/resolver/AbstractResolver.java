@@ -32,9 +32,11 @@ import java.util.stream.Collectors;
 public abstract class AbstractResolver<T> {
 
   protected ObjectMapper spMapper;
+  protected ObjectMapper defaultMapper;
 
   public AbstractResolver() {
     this.spMapper = SerializationUtils.getSpObjectMapper();
+    this.defaultMapper = SerializationUtils.getDefaultObjectMapper();
   }
 
   public Set<ExportItem> resolve(Set<AssetLink> assetLinks) {
@@ -61,5 +63,5 @@ public abstract class AbstractResolver<T> {
 
   public abstract void writeDocument(String document) throws JsonProcessingException;
 
-  protected abstract T serializeDocument(String document) throws JsonProcessingException;
+  protected abstract T deserializeDocument(String document) throws JsonProcessingException;
 }

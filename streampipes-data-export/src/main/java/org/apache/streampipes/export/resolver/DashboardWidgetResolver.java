@@ -44,11 +44,11 @@ public class DashboardWidgetResolver extends AbstractResolver<DashboardWidgetMod
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getDashboardWidgetStorage().storeDashboardWidget(serializeDocument(document));
+    getNoSqlStore().getDashboardWidgetStorage().storeDashboardWidget(deserializeDocument(document));
   }
 
   @Override
-  protected DashboardWidgetModel serializeDocument(String document) throws JsonProcessingException {
+  protected DashboardWidgetModel deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, DashboardWidgetModel.class);
   }
 }

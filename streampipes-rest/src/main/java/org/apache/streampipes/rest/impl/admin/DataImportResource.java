@@ -24,6 +24,8 @@ import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResourc
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +43,8 @@ import java.io.InputStream;
 @PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class DataImportResource extends AbstractAuthGuardedRestResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(DataImportResource.class);
+
   @Path("/preview")
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -56,8 +60,14 @@ public class DataImportResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   public Response importData(@FormDataParam("file_upload") InputStream uploadedInputStream,
                              @FormDataParam("file_upload") FormDataContentDisposition fileDetail,
-                             @FormDataParam("configuration") AssetExportConfiguration exportConfiguration) throws IOException {
-    ImportManager.performImport(uploadedInputStream, exportConfiguration, getAuthenticatedUserSid());
-    return ok();
+                             @FormDataParam("configuration") AssetExportConfiguration exportConfiguration) {
+    try {
+      ImportManager.performImport(uploadedInputStream, exportConfiguration, getAuthenticatedUserSid());
+      return ok();
+    } catch (IOException e) {
+      LOG.error("An error occurred while importing resources", e);
+      return fail();
+    }
+
   }
 }

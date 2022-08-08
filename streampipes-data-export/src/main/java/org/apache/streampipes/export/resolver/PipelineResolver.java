@@ -46,11 +46,11 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
-    getNoSqlStore().getPipelineStorageAPI().storePipeline(serializeDocument(document));
+    getNoSqlStore().getPipelineStorageAPI().storePipeline(deserializeDocument(document));
   }
 
   @Override
-  protected Pipeline serializeDocument(String document) throws JsonProcessingException {
+  protected Pipeline deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, Pipeline.class);
   }
 }
