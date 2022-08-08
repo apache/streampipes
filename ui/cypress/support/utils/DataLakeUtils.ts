@@ -168,7 +168,7 @@ export class DataLakeUtils {
     if (amountOfFilter === 0) {
       cy.dataCy('design-panel-data-settings-filter-field').should('not.exist');
     } else {
-      cy.dataCy('design-panel-data-settings-filter-field').should('be.visible');
+      cy.dataCy('design-panel-data-settings-filter-field', { timeout: 20000 }).should('be.visible');
     }
   }
 

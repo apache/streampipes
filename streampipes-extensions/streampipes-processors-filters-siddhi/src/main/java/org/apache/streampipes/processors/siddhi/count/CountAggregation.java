@@ -40,6 +40,7 @@ import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 public class CountAggregation extends StreamPipesSiddhiProcessor {
 
   private static final String TIME_WINDOW_KEY = "time-window";
+  private static final String TIMESTAMP_MAPPING_KEY = "timestamp-mapping";
   private static final String SCALE_KEY = "scale";
   private static final String COUNT_MAPPING = "count-mapping";
 
@@ -55,8 +56,14 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
             .withLocales(Locales.EN)
             .requiredStream(StreamRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(COUNT_MAPPING), PropertyScope.DIMENSION_PROPERTY)
+                    .requiredPropertyWithUnaryMapping(
+                      EpRequirements.timestampReq(),
+                      Labels.withId(TIMESTAMP_MAPPING_KEY),
+                      PropertyScope.NONE)
+                    .requiredPropertyWithUnaryMapping(
+                      EpRequirements.anyProperty(),
+                      Labels.withId(COUNT_MAPPING),
+                      PropertyScope.DIMENSION_PROPERTY)
                     .build())
             .outputStrategy(OutputStrategies.fixed(
                     EpProperties.timestampProperty("timestamp"),
@@ -76,12 +83,14 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
     Integer timeWindowSize = siddhiParams.getParams().extractor().singleValueParameter(TIME_WINDOW_KEY, Integer.class);
     String scale = siddhiParams.getParams().extractor().selectedSingleValueInternalName(SCALE_KEY, String.class);
     String fieldToCount = siddhiParams.getParams().extractor().mappingPropertyValue(COUNT_MAPPING);
+    String timestampField = siddhiParams.getParams().extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
+
 
     FromClause fromClause = FromClause.create();
     fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.timeWindow(timeWindowSize, toTimeUnit(scale))));
 
     SelectClause selectClause = SelectClause.create(
-            Expressions.as(Expressions.property("currentTimeMillis()"), "timestamp"),
+            Expressions.as(Expressions.property(timestampField), "timestamp"),
             Expressions.as(Expressions.property(fieldToCount), "value"),
             Expressions.as(Expressions.count(Expressions.property(fieldToCount)), "count"));
 

@@ -92,8 +92,8 @@ export class PipelineUtils {
     cy.dataCy('sp-editor-pipeline-name').type(pipelineInput.pipelineName);
     cy.dataCy('sp-editor-checkbox-start-immediately').children().click();
     cy.dataCy('sp-editor-save').click();
-    cy.dataCy('sp-pipeline-started-dialog', { timeout: 10000 }).should('be.visible');
-    cy.dataCy('sp-pipeline-dialog-close', { timeout: 10000 }).click();
+    cy.dataCy('sp-pipeline-started-dialog', { timeout: 15000 }).should('be.visible');
+    cy.dataCy('sp-pipeline-dialog-close', { timeout: 15000 }).click();
   }
 
 
