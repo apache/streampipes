@@ -18,12 +18,12 @@
 
 @import 'src/scss/sp/sp-dialog';
 
-example-radio-group {
+.sp-radio-group {
     display: flex;
     flex-direction: column;
     margin: 15px 0;
 }
-.example-radio-button {
+.sp-radio-button {
     margin: 5px;
     width: 100%;
 }

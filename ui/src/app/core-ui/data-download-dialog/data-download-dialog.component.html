@@ -23,22 +23,22 @@
                 <mat-step>
                     <ng-template matStepLabel>Select Data</ng-template>
                     <div class="mt-10">
-                        <mat-radio-group class="example-radio-group" [(ngModel)]="selectedData">
-                            <mat-radio-button value="visible" class="example-radio-button" *ngIf="dataConfig">
+                        <mat-radio-group class="sp-radio-group" [(ngModel)]="selectedData">
+                            <mat-radio-button value="visible" class="sp-radio-button" *ngIf="dataConfig">
                                 Currently configured query
                             </mat-radio-button>
                             <div fxLayout="column" fxLayoutAlign="start start" class="ml-35 mb-10" *ngIf="selectedData === 'visible' && dataConfig && dataConfig.sourceConfigs.length > 1">
                                 <h5>Select source (only one source can be exported in a single file)</h5>
-                                <mat-radio-group class="example-radio-group" [(ngModel)]="selectedQueryIndex" fxLayout="column">
+                                <mat-radio-group class="sp-radio-group" [(ngModel)]="selectedQueryIndex" fxLayout="column">
                                     <mat-radio-button [value]="i" *ngFor="let sourceConfig of dataConfig.sourceConfigs; let i = index" class="p-5">
                                         {{sourceConfig.measureName}}
                                     </mat-radio-button>
                                 </mat-radio-group>
                             </div>
-                            <mat-radio-button value="all" class="example-radio-button">
+                            <mat-radio-button value="all" class="sp-radio-button">
                                 All data in database
                             </mat-radio-button>
-                            <mat-radio-button value="customInterval" class="example-radio-button">
+                            <mat-radio-button value="customInterval" class="sp-radio-button">
                                 All data in custom time interval
                             </mat-radio-button>
                         </mat-radio-group>
@@ -63,13 +63,21 @@
                 <mat-step>
                     <ng-template matStepLabel>Select Format</ng-template>
                     <div>
-                        <mat-radio-group class="example-radio-group" [(ngModel)]="downloadFormat">
-                            <mat-radio-button value="json" class="example-radio-button">
+                        <h5>Download Format</h5>
+                        <mat-radio-group class="sp-radio-group" [(ngModel)]="downloadFormat">
+                            <mat-radio-button value="json" class="sp-radio-button">
                                 JSON
                             </mat-radio-button>
-                            <mat-radio-button value="csv" class="example-radio-button">
+                            <mat-radio-button value="csv" class="sp-radio-button">
                                 CSV
                             </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div *ngIf="downloadFormat === 'csv'" class="mt-10">
+                        <h5>Delimiter</h5>
+                        <mat-radio-group [(ngModel)]="delimiter" class="sp-radio-group">
+                            <mat-radio-button value="comma" class="sp-radio-button">&nbsp;,</mat-radio-button>
+                            <mat-radio-button value="semicolon" class="sp-radio-button">&nbsp;;</mat-radio-button>
                         </mat-radio-group>
                     </div>
                 </mat-step>

@@ -17,13 +17,14 @@
  */
 
 import { HttpEventType } from '@angular/common/http';
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import {
-  DataExplorerDataConfig, DatalakeQueryParameters,
+  DataExplorerDataConfig,
+  DatalakeQueryParameters,
   DatalakeRestService,
   DataViewQueryGeneratorService,
-  DateRange, SourceConfig
+  DateRange
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
@@ -41,6 +42,7 @@ export class DataDownloadDialogComponent implements OnInit {
   @Input() dataConfig: DataExplorerDataConfig;
 
   downloadFormat = 'csv';
+  delimiter = ',';
   selectedData = 'visible';
   downloadFinish = false;
   downloadedMBs: number = undefined;
@@ -80,11 +82,18 @@ export class DataDownloadDialogComponent implements OnInit {
     const endDateString = this.getDateString(this.date.endDate);
     switch (this.selectedData) {
       case 'all':
-        this.performRequest(this.datalakeRestService.downloadRawData(this.index, this.downloadFormat), '', '');
+        this.performRequest(this.datalakeRestService.downloadRawData(
+          this.index,
+          this.downloadFormat,
+          this.delimiter), '', '');
         break;
       case 'customInterval':
-        this.performRequest(this.datalakeRestService.downloadRawData(this.index, this.downloadFormat,
-            startTime, endTime), startDateString,
+        this.performRequest(this.datalakeRestService.downloadRawData(
+            this.index,
+            this.downloadFormat,
+            this.delimiter,
+            startTime,
+            endTime), startDateString,
           endDateString);
         break;
       case 'visible':
@@ -93,6 +102,7 @@ export class DataDownloadDialogComponent implements OnInit {
             .downloadQueriedData(
               this.index,
               this.downloadFormat,
+              this.delimiter,
               this.generateQueryRequest(startTime, endTime)
             ),
           startDateString,

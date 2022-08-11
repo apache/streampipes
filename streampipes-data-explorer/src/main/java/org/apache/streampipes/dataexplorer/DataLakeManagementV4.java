@@ -36,7 +36,10 @@ import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.datalake.DataLakeRetentionPolicy;
 import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyList;
+import org.apache.streampipes.model.schema.EventPropertyNested;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.apache.streampipes.storage.management.StorageDispatcher;
@@ -45,7 +48,6 @@ import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.lightcouch.CouchDbClient;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Instant;
@@ -149,6 +151,11 @@ public class DataLakeManagementV4 {
             }
 
             boolean isFirstDataObject = true;
+            String delimiter = ",";
+
+            if (params.has(QP_CSV_DELIMITER)) {
+                delimiter = params.getAsString(QP_CSV_DELIMITER).equals("comma") ? "," : ";";
+            }
 
             do {
                 params.update(SupportedDataLakeQueryParameters.QP_PAGE, String.valueOf(i));
@@ -159,7 +166,7 @@ public class DataLakeManagementV4 {
                         boolean isFirst = true;
                         for (int i1 = 0; i1 < dataResult.getHeaders().size(); i1++) {
                             if (!isFirst) {
-                                outputStream.write(toBytes(";"));
+                                outputStream.write(toBytes(delimiter));
                             }
                             isFirst = false;
                             outputStream.write(toBytes(dataResult.getHeaders().get(i1)));
@@ -175,7 +182,7 @@ public class DataLakeManagementV4 {
                         for (int i1 = 0; i1 < row.size(); i1++) {
                             Object element = row.get(i1);
                             if (!isFirstInRow) {
-                                outputStream.write(toBytes(";"));
+                                outputStream.write(toBytes(delimiter));
                             }
                             isFirstInRow = false;
                             if (i1 == 0) {

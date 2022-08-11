@@ -52,7 +52,7 @@ export class DatalakeRestService {
     const columns = queryParams.columns;
     if (columns === '') {
       const emptyQueryResult = new SpQueryResult();
-      emptyQueryResult.total = 0
+      emptyQueryResult.total = 0;
       return of(emptyQueryResult);
     } else {
       const url = this.dataLakeUrl + '/measurements/' + index;
@@ -75,30 +75,36 @@ export class DatalakeRestService {
 
   getTagValues(index: string,
                fieldNames: string[]): Observable<Map<string, string[]>> {
-                
+
     if (fieldNames.length === 0) {
       return of(new Map<string, string[]>());
     } else {
       return this.http.get(this.dataLakeUrl + '/measurements/' + index + '/tags?fields=' + fieldNames.toString())
-      .pipe(map(r => r as Map<string, string[]>));
+        .pipe(map(r => r as Map<string, string[]>));
 
     }
   }
 
   downloadRawData(index: string,
                   format: string,
+                  delimiter: string,
                   startTime?: number,
                   endTime?: number) {
-    const queryParams = (startTime && endTime) ? {format, startDate: startTime, endDate: endTime} : {format};
+    const queryParams = (startTime && endTime) ? {format, delimiter, startDate: startTime, endDate: endTime} : {
+      format,
+      delimiter
+    };
     return this.buildDownloadRequest(index, queryParams);
   }
 
   downloadQueriedData(
     index: string,
     format: string,
+    delimiter: string,
     queryParams: DatalakeQueryParameters) {
 
     (queryParams as any).format = format;
+    (queryParams as any).delimiter = delimiter;
     return this.buildDownloadRequest(index, queryParams);
 
   }
