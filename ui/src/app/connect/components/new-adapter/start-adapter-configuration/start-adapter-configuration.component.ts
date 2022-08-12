@@ -22,18 +22,14 @@ import {
   EventProperty,
   EventRateTransformationRuleDescription,
   EventSchema,
-  GenericAdapterSetDescription,
   RemoveDuplicatesTransformationRuleDescription,
-  SpecificAdapterSetDescription
 } from '@streampipes/platform-services';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-started-dialog.component';
 import { PanelType, DialogService } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
-import { ConnectService } from '../../../services/connect.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'sp-start-adapter-configuration',
@@ -90,7 +86,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
   constructor(
     private dialogService: DialogService,
     private shepherdService: ShepherdService,
-    private connectService: ConnectService,
     private _formBuilder: FormBuilder,
     private timestampPipe: TimestampPipe) {
   }
@@ -100,7 +95,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     this.startAdapterForm = this._formBuilder.group({});
     this.startAdapterForm.addControl('adapterName', new FormControl(this.adapterDescription.name, Validators.required));
     this.startAdapterForm.valueChanges.subscribe(v => this.adapterDescription.name = v.adapterName);
-    this.startAdapterForm.statusChanges.subscribe((status) => {
+    this.startAdapterForm.statusChanges.subscribe(() => {
       this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
     });
   }
@@ -144,7 +139,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
 
     this.shepherdService.trigger('button-startAdapter');
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       this.adapterStartedEmitter.emit();
     });
   }

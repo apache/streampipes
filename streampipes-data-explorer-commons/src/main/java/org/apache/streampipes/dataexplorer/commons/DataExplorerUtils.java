@@ -54,13 +54,10 @@ public class DataExplorerUtils {
         // Removes selected timestamp from event schema
         removeTimestampsFromEventSchema(measure);
 
-        // Escapes all spaces with _
-        measure.setMeasureName(InfluxNameSanitizer.prepareString(measure.getMeasureName()));
-
         // Removes all spaces with _ and validates that no special terms are used as runtime names
         measure.getEventSchema()
                 .getEventProperties()
-                .forEach(ep -> ep.setRuntimeName(InfluxNameSanitizer.sanitizePropertyRuntimeName(ep.getRuntimeName())));
+                .forEach(ep -> ep.setRuntimeName(InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
 
     }
 
