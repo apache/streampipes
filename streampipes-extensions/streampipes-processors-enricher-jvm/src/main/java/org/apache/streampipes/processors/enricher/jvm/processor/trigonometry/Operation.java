@@ -16,26 +16,10 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+package org.apache.streampipes.processors.enricher.jvm.processor.trigonometry;
 
-const allTests = Cypress.env('processingElements');
-
-allTests.forEach(test => {
-  const testNames = ['trigonometry2'];
-
-  const processorTest = test as ProcessorTest;
-
-  if (testNames.includes(processorTest.name)) {
-
-    describe('Test Processor ' + test.dir, () => {
-      beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
-});
+public enum Operation {
+    SIN,
+    COS,
+    TAN
+}

@@ -1,0 +1,20 @@
+{
+  "name": "static_math",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "leftOperand",
+      "value": "temperature1"
+    },
+    {
+      "type": "input",
+      "selector": "rightOperandValue",
+      "value": "1.5"
+    },
+    {
+      "type": "radio",
+      "selector": "operation",
+      "value": "\\/"
+    }
+  ]
+}

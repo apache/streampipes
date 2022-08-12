@@ -1,0 +1,9 @@
+org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.title=Trigonometry Functions
+org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.description=Performs Trigonometric functions on event properties
+
+operand.title=Alpha
+operand.description=Select the alpha parameter
+
+operation.title=Operation
+operation.description=
+

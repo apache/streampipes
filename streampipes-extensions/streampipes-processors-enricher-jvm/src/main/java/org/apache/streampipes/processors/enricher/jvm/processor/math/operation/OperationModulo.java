@@ -16,26 +16,12 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+package org.apache.streampipes.processors.enricher.jvm.processor.math.operation;
 
-const allTests = Cypress.env('processingElements');
+public class OperationModulo implements Operation {
 
-allTests.forEach(test => {
-  const testNames = ['trigonometry2'];
-
-  const processorTest = test as ProcessorTest;
-
-  if (testNames.includes(processorTest.name)) {
-
-    describe('Test Processor ' + test.dir, () => {
-      beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
-});
+    @Override
+    public Double operate(Double valLeft, Double valRight) {
+        return valLeft % valRight;
+    }
+}

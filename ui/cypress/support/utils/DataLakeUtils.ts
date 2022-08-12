@@ -253,7 +253,7 @@ export class DataLakeUtils {
     // Validate result in datalake
     cy.request({
       method: 'GET',
-      url: `/streampipes-backend/api/v4/datalake/measurements/${dataLakeIndex}/download?format=csv`,
+      url: `/streampipes-backend/api/v4/datalake/measurements/${dataLakeIndex}/download?format=csv&delimiter=semicolon`,
       headers: {
         'content-type': 'application/octet-stream'
       },
