@@ -1,0 +1,7 @@
+{
+ "name": "field_hasher",
+ "config": [
+   {"type":  "drop-down", "selector": "property-mapping", "value":  "sensorId"},
+   {"type":  "radio", "selector": "hash-algorithm", "value":  "MD5"}
+ ]
+}

@@ -16,26 +16,17 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+package org.apache.streampipes.processors.transformation.jvm.processor.hasher.algorithm;
 
-const allTests = Cypress.env('processingElements');
+import org.apache.commons.codec.digest.DigestUtils;
 
-allTests.forEach(test => {
-  const testNames = ['fieldHasher1'];
+public class Sha1HashAlgorithm implements HashAlgorithm {
 
-  const processorTest = test as ProcessorTest;
+	private static final long serialVersionUID = 1L;
 
-  if (testNames.includes(processorTest.name)) {
+	@Override
+	public String toHashValue(Object value) {
+		return DigestUtils.shaHex(String.valueOf(value));
+	}
 
-    describe('Test Processor ' + test.dir, () => {
-      beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
-});
+}

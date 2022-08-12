@@ -39,6 +39,9 @@ import org.apache.streampipes.processors.transformation.jvm.processor.booloperat
 import org.apache.streampipes.processors.transformation.jvm.processor.booloperator.timer.BooleanTimerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata.CsvMetadataEnrichmentController;
 import org.apache.streampipes.processors.transformation.jvm.processor.fieldrename.FiledRenameProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.hasher.FieldHasherProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.mapper.FieldMapperProcessor;
+import org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter.MeasurementUnitConverterProcessor;
 import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.counter.StringCounterController;
 import org.apache.streampipes.processors.transformation.jvm.processor.stringoperator.state.StringToStateController;
@@ -72,6 +75,9 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
                     new BooleanTimekeepingController(),
                     new BooleanTimerController(),
                     new CsvMetadataEnrichmentController(),
+                    new FieldHasherProcessor(),
+                    new FieldMapperProcessor(),
+                    new MeasurementUnitConverterProcessor(),
                     new TaskDurationController(),
                     new TransformToBooleanController(),
                     new StringTimerController(),

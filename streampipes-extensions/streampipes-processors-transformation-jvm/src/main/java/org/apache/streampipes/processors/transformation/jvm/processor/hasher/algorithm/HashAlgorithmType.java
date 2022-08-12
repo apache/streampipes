@@ -16,26 +16,18 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+package org.apache.streampipes.processors.transformation.jvm.processor.hasher.algorithm;
 
-const allTests = Cypress.env('processingElements');
+public enum HashAlgorithmType {
+	MD5(new Md5HashAlgorithm()), SHA1(new Sha1HashAlgorithm()), SHA2(new Sha2HashAlgorithm());
 
-allTests.forEach(test => {
-  const testNames = ['fieldHasher1'];
-
-  const processorTest = test as ProcessorTest;
-
-  if (testNames.includes(processorTest.name)) {
-
-    describe('Test Processor ' + test.dir, () => {
-      beforeEach('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
-});
+	private HashAlgorithm hashAlgorithm;
+	
+	HashAlgorithmType(HashAlgorithm hashAlgorithm) {
+		this.hashAlgorithm = hashAlgorithm;
+	}
+	
+	public HashAlgorithm hashAlgorithm() {
+		return hashAlgorithm;
+	}
+}
