@@ -20,11 +20,7 @@ package org.apache.streampipes.dataexplorer.commons.influx;
 
 public class InfluxNameSanitizer {
 
-    public static String prepareString(String s) {
-        return s.replaceAll(" ", "_");
-    }
-
-    private static String renameReservedKeywords(String runtimeName) {
+    public static String renameReservedKeywords(String runtimeName) {
         if (InfluxDbReservedKeywords.keywordList.stream().anyMatch(k -> k.equalsIgnoreCase(runtimeName))) {
             return runtimeName + "_";
         } else {
@@ -32,8 +28,4 @@ public class InfluxNameSanitizer {
         }
     }
 
-    public static String sanitizePropertyRuntimeName(String runtimeName) {
-        String sanitizedRuntimeName = prepareString(runtimeName);
-        return renameReservedKeywords(sanitizedRuntimeName);
-    }
 }

@@ -28,7 +28,6 @@ import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.vocabulary.XSD;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
-
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
@@ -45,8 +44,6 @@ public class InfluxStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(InfluxStore.class);
 
-    private final static Integer batchSize = 2000;
-    private final static Integer flushDuration = 500;
     private InfluxDB influxDb = null;
     DataLakeMeasure measure;
 
@@ -62,7 +59,7 @@ public class InfluxStore {
         measure.getEventSchema()
                 .getEventProperties()
                 .forEach(ep -> targetRuntimeNames.put(ep.getRuntimeName(),
-                  InfluxNameSanitizer.sanitizePropertyRuntimeName(ep.getRuntimeName())));
+                        InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
 
         connect(settings);
     }
@@ -71,7 +68,7 @@ public class InfluxStore {
      * Connects to the InfluxDB Server, sets the database and initializes the batch-behaviour
      *
      * @throws SpRuntimeException If not connection can be established or if the database could not
-     * be found
+     *                            be found
      */
     private void connect(InfluxConnectionSettings settings) throws SpRuntimeException {
         // Connecting to the server
@@ -87,20 +84,22 @@ public class InfluxStore {
 
         String databaseName = settings.getDatabaseName();
         // Checking whether the database exists
-        if(!databaseExists(databaseName)) {
+        if (!databaseExists(databaseName)) {
             LOG.info("Database '" + databaseName + "' not found. Gets created ...");
             createDatabase(databaseName);
         }
 
         // setting up the database
         influxDb.setDatabase(databaseName);
+        int batchSize = 2000;
+        int flushDuration = 500;
         influxDb.enableBatch(batchSize, flushDuration, TimeUnit.MILLISECONDS);
     }
 
     private boolean databaseExists(String dbName) {
         QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
-        for(List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
-            if(a.get(0).equals(dbName)) {
+        for (List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
+            if (a.get(0).equals(dbName)) {
                 return true;
             }
         }
@@ -113,8 +112,9 @@ public class InfluxStore {
      * @param dbName The name of the database which should be created
      */
     private void createDatabase(String dbName) throws SpRuntimeException {
-        if(!dbName.matches("^[a-zA-Z_]\\w*$")) {
-            throw new SpRuntimeException("Database name '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
+        if (!dbName.matches("^[a-zA-Z_]\\w*$")) {
+            throw new SpRuntimeException(
+                    "Database name '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
         }
         influxDb.query(new Query("CREATE DATABASE \"" + dbName + "\"", ""));
     }
@@ -131,7 +131,8 @@ public class InfluxStore {
         }
 
         Long timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
-        Point.Builder p = Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
+        Point.Builder p =
+                Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
 
         for (EventProperty ep : measure.getEventSchema().getEventProperties()) {
             if (ep instanceof EventPropertyPrimitive) {
@@ -140,7 +141,8 @@ public class InfluxStore {
                 // timestamp should not be added as a field
                 if (!measure.getTimestampField().endsWith(runtimeName)) {
                     String preparedRuntimeName = targetRuntimeNames.get(runtimeName);
-                    PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
+                    PrimitiveField eventPropertyPrimitiveField =
+                            event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
 
                     // store property as tag when the field is a dimension property
                     if ("DIMENSION_PROPERTY".equals(ep.getPropertyScope())) {
