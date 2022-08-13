@@ -242,7 +242,7 @@ export class ConnectUtils {
     cy.wait(10000);
 
     DataLakeUtils.checkResults(
-        'adaptertotestrules',
+        'Adapter to test rules',
         expectedFile,
         ignoreTime);
   }
