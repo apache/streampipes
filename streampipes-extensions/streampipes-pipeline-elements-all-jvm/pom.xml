@@ -148,4 +148,8 @@
         </plugins>
         <finalName>streampipes-processors-all-jvm</finalName>
     </build>
+
+  <scm>
+    <tag>rel/0.70.0</tag>
+  </scm>
 </project>
