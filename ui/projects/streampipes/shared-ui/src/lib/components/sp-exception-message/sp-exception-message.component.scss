@@ -16,25 +16,15 @@
  *
  */
 
-package org.apache.streampipes.model;
+.error-panel {
+  background: var(--color-bg-1);
+  border-radius: 5px;
+}
 
-import java.util.List;
+.error {
+  border: 1px solid var(--color-warn);
+}
 
-public class ErrorMessageLd extends MessageLd {
-
-	public ErrorMessageLd() {
-		super(false);
-	}
-
-	public ErrorMessageLd(NotificationLd...notifications) {
-		super(false, notifications);
-	}
-
-	public ErrorMessageLd(List<NotificationLd> notifications) {
-		super(false, notifications.toArray(new NotificationLd[0]));
-	}
-
-	public ErrorMessageLd(String elementName, List<NotificationLd> notifications) {
-		super(false, notifications, elementName);
-	}
+.color-warn {
+  color: var(--color-warn);
 }

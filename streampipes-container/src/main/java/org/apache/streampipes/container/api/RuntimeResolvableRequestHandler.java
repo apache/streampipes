@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.container.api;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.staticproperty.Option;
@@ -31,7 +32,7 @@ public class RuntimeResolvableRequestHandler {
 
   // for backwards compatibility
   public RuntimeOptionsResponse handleRuntimeResponse(ResolvesContainerProvidedOptions resolvesOptions,
-                                                      RuntimeOptionsRequest req) {
+                                                      RuntimeOptionsRequest req) throws SpConfigurationException {
     List<Option> availableOptions =
             resolvesOptions.resolveOptions(req.getRequestId(),
                     makeExtractor(req));
@@ -43,7 +44,7 @@ public class RuntimeResolvableRequestHandler {
   }
 
   public RuntimeOptionsResponse handleRuntimeResponse(SupportsRuntimeConfig declarer,
-                                                      RuntimeOptionsRequest req) {
+                                                      RuntimeOptionsRequest req) throws SpConfigurationException {
     StaticProperty result = declarer.resolveConfiguration(
             req.getRequestId(),
             makeExtractor(req));

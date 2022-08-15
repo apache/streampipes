@@ -9,6 +9,7 @@
     "@angular/flex-layout": "^13.0.0-beta.38",
     "@angular/material": "^13.3.0",
     "@angular/router": "^13.3.0",
+    "@streampipes/platform-services": "0.0.1",
     "rxjs": "^6.6.2"
   },
   "dependencies": {

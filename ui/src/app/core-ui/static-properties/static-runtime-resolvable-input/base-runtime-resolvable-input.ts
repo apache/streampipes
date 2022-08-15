@@ -30,6 +30,7 @@ import { RuntimeResolvableService } from './runtime-resolvable.service';
 import { Observable } from 'rxjs';
 import { Directive, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
+import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
@@ -43,6 +44,8 @@ export abstract class BaseRuntimeResolvableInput<T
 
   showOptions = false;
   loading = false;
+  error = false;
+  errorMessage: StreamPipesErrorMessage;
   dependentStaticProperties: any = new Map();
 
   constructor(private runtimeResolvableService: RuntimeResolvableService) {
@@ -70,6 +73,8 @@ export abstract class BaseRuntimeResolvableInput<T
 
     this.showOptions = false;
     this.loading = true;
+    this.error = false;
+    this.errorMessage = undefined;
     const observable: Observable<RuntimeOptionsResponse> = this.adapterId ?
       this.runtimeResolvableService.fetchRemoteOptionsForAdapter(resolvableOptionsParameterRequest, this.adapterId) :
       this.runtimeResolvableService.fetchRemoteOptionsForPipelineElement(resolvableOptionsParameterRequest);
@@ -80,6 +85,12 @@ export abstract class BaseRuntimeResolvableInput<T
       }
       this.loading = false;
       this.showOptions = true;
+    }, errorMessage => {
+      this.loading = false;
+      this.showOptions = true;
+      this.error = true;
+      this.errorMessage = errorMessage.error as StreamPipesErrorMessage;
+      this.afterErrorReceived();
     });
   }
 
@@ -106,5 +117,7 @@ export abstract class BaseRuntimeResolvableInput<T
   abstract parse(staticProperty: StaticPropertyUnion): T;
 
   abstract afterOptionsLoaded(staticProperty: T);
+
+  abstract afterErrorReceived();
 
 }

@@ -54,4 +54,7 @@ export class StaticRuntimeResolvableOneOfInputComponent
     parse(staticProperty: StaticPropertyUnion): RuntimeResolvableOneOfStaticProperty {
         return staticProperty as RuntimeResolvableOneOfStaticProperty;
     }
+
+    afterErrorReceived() {
+    }
 }

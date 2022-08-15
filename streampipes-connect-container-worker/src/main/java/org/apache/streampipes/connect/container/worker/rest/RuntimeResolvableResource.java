@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.connect.container.worker.rest;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.container.worker.management.RuntimeResovable;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
@@ -47,15 +49,21 @@ public class RuntimeResolvableResource extends AbstractSharedRestInterface {
         RuntimeOptionsResponse response;
         RuntimeResolvableRequestHandler handler = new RuntimeResolvableRequestHandler();
 
-        if (connector instanceof ResolvesContainerProvidedOptions) {
-            response = handler.handleRuntimeResponse((ResolvesContainerProvidedOptions) connector, runtimeOptionsRequest);
-        } else if (connector instanceof SupportsRuntimeConfig) {
-            response = handler.handleRuntimeResponse((SupportsRuntimeConfig) connector, runtimeOptionsRequest);
-        } else {
-            throw new WebApplicationException(javax.ws.rs.core.Response.Status.BAD_REQUEST);
+        try {
+            if (connector instanceof ResolvesContainerProvidedOptions) {
+                response = handler.handleRuntimeResponse((ResolvesContainerProvidedOptions) connector, runtimeOptionsRequest);
+                return ok(response);
+            } else if (connector instanceof SupportsRuntimeConfig) {
+                response = handler.handleRuntimeResponse((SupportsRuntimeConfig) connector, runtimeOptionsRequest);
+                return ok(response);
+            } else {
+                throw new SpRuntimeException("This element does not support dynamic options - is the pipeline element description up to date?");
+            }
+        } catch (SpConfigurationException e) {
+            return javax.ws.rs.core.Response
+              .status(400)
+              .entity(e)
+              .build();
         }
-
-        return ok(response);
     }
-
 }
