@@ -8,8 +8,8 @@
     "url": "https://github.com/apache/incubator-streampipes"
   },
   "scripts": {
-    "build-libs": "ng build @streampipes/shared-ui && ng build @streampipes/platform-services",
-    "install-libs": "npm install @streampipes/shared-ui@file:./dist/streampipes/shared-ui @streampipes/platform-services@file:./dist/streampipes/platform-services --no-save",
+    "build-libs": "ng build @streampipes/platform-services && ng build @streampipes/shared-ui",
+    "install-libs": "npm install @streampipes/platform-services@file:./dist/streampipes/platform-services @streampipes/shared-ui@file:./dist/streampipes/shared-ui --no-save",
     "build-libraries": "npm run build-libs && npm run install-libs",
     "start": "node ./deployment/prebuild.js && npm run build-libraries && ng serve",
     "test": "node ./deployment/prebuild.js && npm run build-libraries && ng test",

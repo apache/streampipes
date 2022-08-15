@@ -18,6 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Notification } from '@streampipes/platform-services';
+import { StreamPipesErrorMessage } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-error-message',
@@ -26,7 +27,7 @@ import { Notification } from '@streampipes/platform-services';
 })
 export class ErrorMessageComponent implements OnInit {
 
-  @Input() errorMessages: Notification[];
+  @Input() errorMessage: StreamPipesErrorMessage;
 
   showErrorMessage = false;
 

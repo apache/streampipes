@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.iiot.adapters.opcua;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -270,7 +271,8 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
     }
 
     @Override
-    public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor) {
+    public StaticProperty resolveConfiguration(String staticPropertyInternalName,
+                                               StaticPropertyExtractor extractor) throws SpConfigurationException {
         return OpcUaUtil.resolveConfiguration(staticPropertyInternalName, extractor);
     }
 }

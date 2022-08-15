@@ -67,10 +67,10 @@ public class GuessManagement {
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 return mapper.readValue(responseString, GuessSchema.class);
             }  else {
-                    ErrorMessage errorMessage = mapper.readValue(responseString, ErrorMessage.class);
+                ErrorMessage errorMessage = mapper.readValue(responseString, ErrorMessage.class);
 
-                    LOG.error(errorMessage.getElementName());
-                    throw new WorkerAdapterException(errorMessage);
+                LOG.error(errorMessage.getElementName());
+                throw new WorkerAdapterException(errorMessage);
             }
     }
 

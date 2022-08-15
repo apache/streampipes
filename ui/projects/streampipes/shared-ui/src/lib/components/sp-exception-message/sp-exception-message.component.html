@@ -16,11 +16,23 @@
   ~
   -->
 
-<div fxLayout="column" fxFlex="100">
-    <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
-        <div fxLayoutAlign="start center" class="error-text">&nbsp;There was an error while guessing the schema of your configured data source:</div>
+<div fxLayout="column" fxFlex="100" class="error-panel error">
+    <div fxLayout="row">
+        <div fxFlex="100" fxLayoutAlign="start center">
+            <div fxLayout="row" fxLayoutAlign="start center" class="p-5" fxFlex="100">
+                <div fxLayoutAlign="start center">
+                <i class="material-icons color-warn" style="margin-right: 15px;">warning</i>
+                <h5 fxFlex class="color-warn">{{message.title}}</h5>
+                </div>
+                <span fxFlex></span>
+                <div fxLayoutAlign="end center" *ngIf="showDetails">
+                    <button mat-button (click)="openDetailsDialog()">
+                        <i class="material-icons">visibility</i>&nbsp;Details
+                    </button>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" class="mt-10">
-        <sp-exception-message [message]="errorMessage"></sp-exception-message>
-    </div>
+
 </div>

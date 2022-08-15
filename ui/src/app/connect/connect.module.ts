@@ -123,7 +123,8 @@ import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adap
     SharedUiModule
   ],
   exports: [
-    PipelineElementRuntimeInfoComponent
+    PipelineElementRuntimeInfoComponent,
+    ErrorMessageComponent
   ],
   declarations: [
     AdapterDescriptionComponent,

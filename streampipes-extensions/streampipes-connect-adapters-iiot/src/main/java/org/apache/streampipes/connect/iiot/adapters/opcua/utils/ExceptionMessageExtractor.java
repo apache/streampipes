@@ -15,20 +15,24 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.api;
 
-import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
 
-import java.util.List;
+import org.eclipse.milo.opcua.stack.core.UaException;
 
-/**
- * deprecated: use {@link SupportsRuntimeConfig} instead
- */
-@Deprecated
-public interface ResolvesContainerProvidedOptions {
+public class ExceptionMessageExtractor {
 
-  List<Option> resolveOptions(String staticPropertyInternalName,
-                              StaticPropertyExtractor parameterExtractor) throws SpConfigurationException;
+  public static String getDescription(UaException e) {
+    String[] parts = e.getMessage().split(", ");
+    if (parts.length > 1) {
+      String[] kv = parts[1].split("=");
+      if (kv.length > 1) {
+        return kv[1];
+      } else {
+        return parts[1];
+      }
+    } else {
+      return e.getMessage();
+    }
+  }
 }

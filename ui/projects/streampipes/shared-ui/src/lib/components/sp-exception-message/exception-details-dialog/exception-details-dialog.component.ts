@@ -15,20 +15,29 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.api;
 
-import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.model.staticproperty.Option;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import { Component, Input } from '@angular/core';
+import { StreamPipesErrorMessage } from '@streampipes/platform-services';
+import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
 
-import java.util.List;
+@Component({
+  selector: 'sp-exception-details-dialog',
+  templateUrl: './exception-details-dialog.component.html',
+  styleUrls: ['./exception-details-dialog.component.scss', '../../../../../../../../src/scss/sp/sp-dialog.scss']
+})
+export class SpExceptionDetailsDialogComponent {
 
-/**
- * deprecated: use {@link SupportsRuntimeConfig} instead
- */
-@Deprecated
-public interface ResolvesContainerProvidedOptions {
+  @Input()
+  message: StreamPipesErrorMessage;
 
-  List<Option> resolveOptions(String staticPropertyInternalName,
-                              StaticPropertyExtractor parameterExtractor) throws SpConfigurationException;
+  showDetails = false;
+
+  constructor(private dialogRef: DialogRef<SpExceptionDetailsDialogComponent>) {
+
+  }
+
+  close() {
+    this.dialogRef.close();
+  }
+
 }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.iiot.adapters.opcua;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfig;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
@@ -31,10 +32,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MiloOpcUaConfigurationProvider {
 
-  public OpcUaClientConfig makeClientConfig(SpOpcUaConfig spOpcConfig) throws Exception {
+  public OpcUaClientConfig makeClientConfig(SpOpcUaConfig spOpcConfig) throws ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
     String opcServerUrl = spOpcConfig.getOpcServerURL();
     List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(opcServerUrl).get();
     String host = opcServerUrl.split("://")[1].split(":")[0];
@@ -43,7 +45,7 @@ public class MiloOpcUaConfigurationProvider {
             .stream()
             .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
             .findFirst()
-            .orElseThrow(() -> new Exception("No endpoint with security policy none"));
+            .orElseThrow(() -> new SpConfigurationException("No endpoint with security policy none"));
 
     tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
     endpoints = Collections.singletonList(tmpEndpoint);
@@ -51,7 +53,7 @@ public class MiloOpcUaConfigurationProvider {
     EndpointDescription endpoint = endpoints
             .stream()
             .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
-            .findFirst().orElseThrow(() -> new Exception("no desired endpoints returned"));
+            .findFirst().orElseThrow(() -> new SpConfigurationException("no desired endpoints returned"));
 
     return buildConfig(endpoint, spOpcConfig);
   }

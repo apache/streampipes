@@ -32,6 +32,7 @@ import {
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
+import { StreamPipesErrorMessage } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-event-schema',
@@ -73,7 +74,7 @@ export class EventSchemaComponent implements OnChanges {
   isLoading = false;
   isError = false;
   isPreviewEnabled = false;
-  errorMessages: Notification[];
+  errorMessage: StreamPipesErrorMessage;
   nodes: EventProperty[] = new Array<EventProperty>();
   validEventSchema = false;
   schemaErrorHints: UserErrorMessage[] = [];
@@ -117,7 +118,7 @@ export class EventSchemaComponent implements OnChanges {
         this.isLoading = false;
       },
       errorMessage => {
-        this.errorMessages = errorMessage.error.notifications;
+        this.errorMessage = errorMessage.error;
         this.isError = true;
         this.isLoading = false;
         this.eventSchema = new EventSchema();

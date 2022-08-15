@@ -26,6 +26,7 @@ import {
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { AbstractControl, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'sp-runtime-resolvable-tree-input',
@@ -55,6 +56,7 @@ export class StaticRuntimeResolvableTreeInputComponent
       this.showOptions = true;
     }
     super.onInit();
+    this.parentForm.addControl(this.staticProperty.internalName, new FormControl(this.staticProperty.nodes, []));
   }
 
   parse(staticProperty: StaticPropertyUnion): RuntimeResolvableTreeInputStaticProperty {
@@ -64,10 +66,12 @@ export class StaticRuntimeResolvableTreeInputComponent
   afterOptionsLoaded(staticProperty: RuntimeResolvableTreeInputStaticProperty) {
     this.staticProperty.nodes = staticProperty.nodes;
     this.dataSource.data = this.staticProperty.nodes;
+    this.performValidation();
   }
 
   toggleNodeSelection(node: TreeInputNode) {
     node.selected = !node.selected;
+    this.performValidation();
   }
 
   toggleAllNodeSelection(node: any) {
@@ -75,6 +79,7 @@ export class StaticRuntimeResolvableTreeInputComponent
     const newState = !node.selected;
     node.selected = newState;
     descendants.forEach(d => d.selected = newState);
+    this.performValidation();
   }
 
   descendantsAllSelected(node: TreeInputNode) {
@@ -91,6 +96,32 @@ export class StaticRuntimeResolvableTreeInputComponent
     const descendants = this.treeControl.getDescendants(node);
     const result = descendants.some(child => child.selected);
     return result && !this.descendantsAllSelected(node);
+  }
+
+  performValidation() {
+    let error = {error: true};
+    if (this.anyNodeSelected()) {
+      error = undefined;
+    }
+    this.parentForm.controls[this.staticProperty.internalName].setErrors(error);
+  }
+
+  anyNodeSelected(): boolean {
+    return this.dataSource.data.find(d => this.anySelected(d)) !== undefined;
+  }
+
+  anySelected(node: TreeInputNode): boolean {
+    if (node.selected) {
+      return true;
+    } else {
+      return node.children.find(n => this.anySelected(n)) !== undefined;
+    }
+  }
+
+  afterErrorReceived() {
+    this.staticProperty.nodes = [];
+    this.dataSource.data = [];
+    this.performValidation();
   }
 
 }
