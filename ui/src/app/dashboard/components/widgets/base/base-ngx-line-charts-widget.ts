@@ -63,8 +63,9 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     }
 
     timestampTickFormatting(timestamp: any): string {
+        const padL = (nr, len = 2, chr = `0`) => `${nr}`.padStart(2, chr);
         const date = new Date(timestamp);
-        return date.getHours() + ':' + date.getMinutes().toString().substr(-2) + ':' + date.getSeconds().toString().substr(-2);
+        return date.getHours() + ':' + `${padL(date.getMinutes())}` + ':' + `${padL(date.getSeconds())}`;
     }
 
     protected getQueryLimit(extractor: StaticPropertyExtractor): number {
