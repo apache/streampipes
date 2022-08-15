@@ -124,4 +124,8 @@
         </plugins>
         <finalName>streampipes-pipeline-elements-all-flink</finalName>
     </build>
+
+  <scm>
+    <tag>rel/0.70.0</tag>
+  </scm>
 </project>

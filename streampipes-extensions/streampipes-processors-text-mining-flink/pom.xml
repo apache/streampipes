@@ -138,4 +138,8 @@
         </plugins>
         <finalName>streampipes-processors-textmining-flink</finalName>
     </build>
+
+  <scm>
+    <tag>rel/0.70.0</tag>
+  </scm>
 </project>

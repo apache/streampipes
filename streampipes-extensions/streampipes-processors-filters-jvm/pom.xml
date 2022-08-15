@@ -45,4 +45,8 @@
         </dependency>
     </dependencies>
 
+
+  <scm>
+    <tag>rel/0.70.0</tag>
+  </scm>
 </project>
