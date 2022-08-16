@@ -16,14 +16,18 @@
  *
  */
 
-.preview-text {
-  background-color: black;
-  font: 9pt Inconsolata, monospace;
-  text-shadow: 0 0 5px #C8C8C8;
-  color: white;
-  padding: 10px;
-  max-width: 100%;
-  max-height: 300px;
-  overflow-y: scroll;
-  white-space: pre-wrap;
+import { Injectable, Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'jsonpretty'
+})
+@Injectable({providedIn: 'root'})
+export class JsonPrettyPrintPipe implements PipeTransform {
+
+  transform(json) {
+    return JSON.stringify(json, undefined, 4)
+      .replace(/ /g, '&nbsp;')
+      .replace(/\n/g, '<br/>');
+  }
+
 }

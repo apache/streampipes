@@ -28,28 +28,30 @@ import {
   EventPropertyUnion,
   EventSchema,
   FieldStatusInfo,
+  GuessTypeInfo
 
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { GuessTypeInfo } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'event-property-row',
   templateUrl: './event-property-row.component.html',
   styleUrls: ['./event-property-row.component.scss']
 })
-export class EventPropertyRowComponent implements OnInit, OnChanges {
+export class EventPropertyRowComponent implements OnInit {
 
   @Input() node: TreeNode;
   @Input() isEditable = true;
   @Input() eventSchema: EventSchema = new EventSchema();
+  @Input() originalEventSchema: EventSchema;
   @Input() countSelected: number;
   @Input() eventPreview: Record<string, GuessTypeInfo>[];
   @Input() fieldStatusInfo: Record<string, FieldStatusInfo>;
 
   @Output() isEditableChange = new EventEmitter<boolean>();
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
+  @Output() originalEventSchemaChange = new EventEmitter<EventSchema>();
   @Output() refreshTreeEmitter = new EventEmitter<void>();
   @Output() countSelectedChange = new EventEmitter<number>();
 
@@ -62,6 +64,8 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
   showFieldStatus = false;
 
   runtimeType: string;
+  originalRuntimeType: string;
+  originalRuntimeName: string;
 
   constructor(private dialog: MatDialog,
               private dialogService: DialogService) {
@@ -69,16 +73,20 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.showFieldStatus = this.fieldStatusInfo && this.fieldStatusInfo[this.node.data.runtimeName] !== undefined;
-    this.showEventPreview = this.eventPreview && this.eventPreview.length > 0 && this.eventPreview[0][this.node.data.runtimeName] !== undefined;
     this.label = this.getLabel(this.node.data);
     this.isPrimitive = this.isEventPropertyPrimitive(this.node.data);
     this.isList = this.isEventPropertyList(this.node.data);
     this.isNested = this.isEventPropertyNested(this.node.data);
     this.timestampProperty = this.isTimestampProperty(this.node.data);
 
-    if (this.isPrimitive) {
-      this.runtimeType = this.parseType(this.node.data.runtimeType);
+    if (this.node.data instanceof EventProperty) {
+      this.originalRuntimeName = this.findOriginalProperty().runtimeName;
+      this.showFieldStatus = this.fieldStatusInfo && this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
+      this.showEventPreview = this.eventPreview && this.eventPreview.length > 0 && this.eventPreview[0][this.originalRuntimeName] !== undefined;
+      if (this.isPrimitive) {
+        this.originalRuntimeType = this.parseType(this.findOriginalProperty().runtimeType);
+        this.runtimeType = this.parseType((this.node.data as EventPropertyPrimitive).runtimeType);
+      }
     }
 
     if (!this.node.data.propertyScope) {
@@ -86,7 +94,9 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  private findOriginalProperty(): any {
+    return this.originalEventSchema.eventProperties
+      .find(ep => ep.elementId === this.node.data.elementId);
   }
 
   private parseType(runtimeType: string) {

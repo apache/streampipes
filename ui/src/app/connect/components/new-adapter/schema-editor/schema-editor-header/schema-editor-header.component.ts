@@ -33,7 +33,7 @@ export class SchemaEditorHeaderComponent implements OnInit {
   @Output() addStaticValuePropertyEmitter = new EventEmitter();
   @Output() addTimestampPropertyEmitter = new EventEmitter();
   @Output() guessSchemaEmitter = new EventEmitter();
-  @Output() togglePreviewEmitter = new EventEmitter();
+  @Output() updatePreviewEmitter = new EventEmitter();
   @Output() removeSelectedPropertiesEmitter = new EventEmitter();
 
   constructor() { }
@@ -55,10 +55,6 @@ export class SchemaEditorHeaderComponent implements OnInit {
 
   public guessSchema() {
     this.guessSchemaEmitter.emit();
-  }
-
-  public togglePreview() {
-    this.togglePreviewEmitter.emit();
   }
 
   public removeSelectedProperties() {

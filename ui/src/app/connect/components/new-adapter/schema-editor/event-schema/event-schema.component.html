@@ -17,12 +17,13 @@
   -->
 
 
-<div fxLayout="row" fxLayoutAlign="center" class="mt-20">
+<div fxLayout="column" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="90" fxLayout="column">
         <div fxLayout="column"
              fxFlex="100"
              fxLayoutAlign="start center"
-            *ngIf="!isLoading && !isError && schemaErrorHints.length === 0" class="schema-validation schema-validation-ok">
+             *ngIf="!isLoading && !isError && schemaErrorHints.length === 0"
+             class="schema-validation schema-validation-ok">
             <div fxFlex="100"
                  fxLayout="row"
                  fxLayoutAlign="start center"
@@ -36,7 +37,8 @@
                  fxLayout="column"
                  [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation schema-validation-error' : 'schema-validation schema-validation-warning'"
                  fxLayoutAlign="start center" *ngFor="let schemaErrorHint of schemaErrorHints">
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start" [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation-text-error' : 'schema-validation-text-warning'">
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start"
+                     [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation-text-error' : 'schema-validation-text-warning'">
                     <i class="material-icons">warning</i>&nbsp;
                     <b>{{schemaErrorHint.title}}</b>
                 </div>
@@ -53,7 +55,7 @@
                                          (addStaticValuePropertyEmitter)="addStaticValueProperty()"
                                          (addTimestampPropertyEmitter)="addTimestampProperty()"
                                          (guessSchemaEmitter)="guessSchema()"
-                                         (togglePreviewEmitter)="togglePreview()"
+                                         (updatePreviewEmitter)="updatePreview()"
                                          (removeSelectedPropertiesEmitter)="removeSelectedProperties()">
                 </sp-schema-editor-header>
             </div>
@@ -78,7 +80,7 @@
                         *ngIf="isError && !isLoading">
                 </sp-error-message>
 
-                <div *ngIf="!isError && !isLoading && eventSchema"
+                <div *ngIf="!isError && !isLoading && eventSchema && oldEventSchema && nodes"
                      fxLayout="column"
                      fxLayoutAlign="space-evenly stretched"
                      class="drag-drop-tree"
@@ -92,6 +94,7 @@
                                     [node]="node"
                                     [(isEditable)]="isEditable"
                                     [(eventSchema)]="eventSchema"
+                                    [(originalEventSchema)]="oldEventSchema"
                                     [eventPreview]="eventPreview"
                                     [fieldStatusInfo]="fieldStatusInfo"
                                     (refreshTreeEmitter)="refreshTree()"
@@ -102,13 +105,17 @@
             </div>
         </sp-basic-inner-panel>
     </div>
-    <div fxFlex="0 1 50%" *ngIf="isPreviewEnabled">
-        <sp-event-schema-preview [eventSchema]="eventSchema"></sp-event-schema-preview>
+    <div fxFlex="100" *ngIf="desiredPreview && isPreviewEnabled && !isLoading && !isError">
+        <sp-event-schema-preview [originalEventSchema]="oldEventSchema"
+                                 [desiredEventSchema]="eventSchema"
+                                 [originalPreview]="eventPreview[0]"
+                                 [desiredPreview]="desiredPreview"
+                                 (updatePreviewEmitter)="updatePreview()"></sp-event-schema-preview>
     </div>
 </div>
 
 
-<div fxLayoutAlign="end">
+<div fxLayoutAlign="end" class="mt-10">
     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
     <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
     <button class="stepper-button"

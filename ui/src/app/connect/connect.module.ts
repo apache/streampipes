@@ -84,6 +84,7 @@ import { EditValueTransformationComponent } from './dialog/edit-event-property/c
 import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
 import { SpAdapterOptionsPanelComponent } from './components/new-adapter/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
+import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
 
 @NgModule({
   imports: [
@@ -146,6 +147,7 @@ import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adap
     AdapterFilterPipe,
     FormatItemComponent,
     FormatListComponent,
+    JsonPrettyPrintPipe,
     NewAdapterComponent,
     SpAdapterTemplateDialogComponent,
     PipelineElementRuntimeInfoComponent,
