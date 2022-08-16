@@ -32,7 +32,10 @@ import {
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
-import { StreamPipesErrorMessage } from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import {
+  FieldStatusInfo, GuessTypeInfo,
+  StreamPipesErrorMessage
+} from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-event-schema',
@@ -79,6 +82,9 @@ export class EventSchemaComponent implements OnChanges {
   validEventSchema = false;
   schemaErrorHints: UserErrorMessage[] = [];
 
+  eventPreview: Record<string, GuessTypeInfo>[];
+  fieldStatusInfo: Record<string, FieldStatusInfo>;
+
   options: ITreeOptions = {
     childrenField: 'eventProperties',
     allowDrag: () => {
@@ -99,6 +105,8 @@ export class EventSchemaComponent implements OnChanges {
     this.isLoading = true;
     this.isError = false;
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
+        this.eventPreview = guessSchema.eventPreview;
+        this.fieldStatusInfo = guessSchema.fieldStatusInfo;
         this.eventSchema = guessSchema.eventSchema;
         this.eventSchema.eventProperties.sort((a, b) => {
           return a.runtimeName < b.runtimeName ? -1 : 1;

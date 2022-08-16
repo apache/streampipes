@@ -31,6 +31,7 @@ import org.apache.streampipes.container.api.SupportsRuntimeConfig;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
@@ -47,14 +48,10 @@ import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
 
@@ -91,11 +88,18 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
     protected void before() throws AdapterException {
 
         this.allNodeIds = new ArrayList<>();
+        List<String> deleteKeys = this.adapterDescription
+          .getSchemaRules()
+          .stream()
+          .filter(rule -> rule instanceof DeleteRuleDescription)
+          .map(rule -> ((DeleteRuleDescription) rule).getRuntimeKey())
+          .collect(Collectors.toList());
+
         try {
             this.spOpcUaClient.connect();
             OpcUaNodeBrowser browserClient =
                     new OpcUaNodeBrowser(this.spOpcUaClient.getClient(), this.spOpcUaClient.getSpOpcConfig());
-            this.allNodes = browserClient.findNodes();
+            this.allNodes = browserClient.findNodes(deleteKeys);
 
 
             for (OpcNode node : this.allNodes) {
@@ -141,8 +145,8 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
 
     @Override
     protected void pullData() {
-        CompletableFuture<List<DataValue>> response =
-                this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
+        var response =
+          this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
         boolean badStatusCodeReceived = false;
         boolean emptyValueReceived = false;
         try {

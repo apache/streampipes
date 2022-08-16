@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class OpcUaNodeBrowser {
@@ -59,6 +60,15 @@ public class OpcUaNodeBrowser {
     }
 
     return opcNodes;
+  }
+
+  public List<OpcNode> findNodes(List<String> runtimeNameFilters) throws UaException {
+    return findNodes()
+      .stream()
+      .filter(node -> runtimeNameFilters
+        .stream()
+        .noneMatch(f -> f.equals(node.getLabel())))
+      .collect(Collectors.toList());
   }
 
   public List<TreeInputNode> buildNodeTreeFromOrigin() throws UaException, ExecutionException, InterruptedException {
