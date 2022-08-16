@@ -42,5 +42,30 @@
     font-size: 12px;
 }
 
+.status-good {
+    background: #75c575;
+    color: white;
+}
+
+.status-bad {
+    background: #d2a169;
+    color: white;
+}
+
+.status {
+    width: 60px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.runtime-type-info {
+    padding: 5px;
+    border-radius: 3px;
+    background: var(--color-bg-3);
+    color: var(--color-default-text);
+    width: 70px;
+    text-align: center;
+}
 
 

@@ -18,7 +18,7 @@
 
 
 <div fxLayout="row" fxLayoutAlign="center" class="mt-20">
-    <div fxFlex="80" fxLayout="column">
+    <div fxFlex="90" fxLayout="column">
         <div fxLayout="column"
              fxFlex="100"
              fxLayoutAlign="start center"
@@ -73,10 +73,10 @@
 
                 <sp-error-message
                         [errorMessage]="errorMessage"
-                        *ngIf="isError">
+                        *ngIf="isError && !isLoading">
                 </sp-error-message>
 
-                <div *ngIf="!isError && !isLoading"
+                <div *ngIf="!isError && !isLoading && eventSchema"
                      fxLayout="column"
                      fxLayoutAlign="space-evenly stretched"
                      class="drag-drop-tree"
@@ -90,6 +90,8 @@
                                     [node]="node"
                                     [(isEditable)]="isEditable"
                                     [(eventSchema)]="eventSchema"
+                                    [eventPreview]="eventPreview"
+                                    [fieldStatusInfo]="fieldStatusInfo"
                                     (refreshTreeEmitter)="refreshTree()"
                                     [(countSelected)]="countSelected"></event-property-row>
                         </ng-template>

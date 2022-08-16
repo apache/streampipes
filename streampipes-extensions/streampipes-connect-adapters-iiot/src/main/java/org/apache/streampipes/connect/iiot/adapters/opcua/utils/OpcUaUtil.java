@@ -26,7 +26,9 @@ import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaNodeBrowser;
 import org.apache.streampipes.connect.iiot.adapters.opcua.SpOpcUaClient;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
@@ -34,14 +36,20 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.stack.core.UaException;
+import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
+import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
+import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /***
  * Collection of several utility functions in context of OPC UA
@@ -73,6 +81,8 @@ public class OpcUaUtil {
     throws AdapterException, ParseException {
     GuessSchema guessSchema = new GuessSchema();
     EventSchema eventSchema = new EventSchema();
+    List<Map<String, GuessTypeInfo>> eventPreview = new ArrayList<>();
+    Map<String, FieldStatusInfo> fieldStatusInfos = new HashMap<>();
     List<EventProperty> allProperties = new ArrayList<>();
 
     SpOpcUaClient spOpcUaClient = new SpOpcUaClient(SpOpcUaConfigBuilder.from(adapterStreamDescription));
@@ -97,20 +107,51 @@ public class OpcUaUtil {
               .label(opcNode.getLabel())
               .build());
           }
-
         }
       }
 
-      spOpcUaClient.disconnect();
+      var nodeIds = selectedNodes.stream().map(OpcNode::getNodeId).collect(Collectors.toList());
+      var response = spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, nodeIds);
+
+      var returnValues = response.get();
+
+      makeEventPreview(selectedNodes, eventPreview, fieldStatusInfos, returnValues);
+
 
     } catch (Exception e) {
-      throw new AdapterException("Could not guess schema for opc node:  " + e.getMessage(), e.getCause());
+      throw new AdapterException("Could not guess schema for opc node:  " + e.getMessage(), e);
+    } finally {
+      spOpcUaClient.disconnect();
     }
 
     eventSchema.setEventProperties(allProperties);
     guessSchema.setEventSchema(eventSchema);
+    guessSchema.setEventPreview(eventPreview);
+    guessSchema.setFieldStatusInfo(fieldStatusInfos);
 
     return guessSchema;
+  }
+
+  private static void makeEventPreview(List<OpcNode> selectedNodes,
+                                       List<Map<String, GuessTypeInfo>> eventPreview,
+                                       Map<String, FieldStatusInfo> fieldStatusInfos,
+                                       List<DataValue> dataValues) {
+    var singlePreview = new HashMap<String, GuessTypeInfo>();
+
+    for (int i = 0; i < dataValues.size(); i++) {
+      var dv = dataValues.get(i);
+      String label = selectedNodes.get(i).getLabel();
+      if (StatusCode.GOOD.equals(dv.getStatusCode())) {
+        var value = dv.getValue().getValue();
+        singlePreview.put(label, new GuessTypeInfo(value.getClass().getCanonicalName(), value));
+        fieldStatusInfos.put(label, FieldStatusInfo.good());
+      } else {
+        String additionalInfo = dv.getStatusCode() != null ? dv.getStatusCode().toString() : "Status code is null";
+        fieldStatusInfos.put(label, FieldStatusInfo.bad(additionalInfo, false));
+      }
+    }
+
+    eventPreview.add(singlePreview);
   }
 
 
@@ -142,13 +183,14 @@ public class OpcUaUtil {
       OpcUaNodeBrowser nodeBrowser =
         new OpcUaNodeBrowser(spOpcUaClient.getClient(), spOpcUaClient.getSpOpcConfig());
       config.setNodes(nodeBrowser.buildNodeTreeFromOrigin());
-      spOpcUaClient.disconnect();
 
       return config;
     } catch (UaException e) {
       throw new SpConfigurationException(ExceptionMessageExtractor.getDescription(e), e);
     } catch (ExecutionException | InterruptedException | URISyntaxException e) {
       throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
+    } finally {
+      spOpcUaClient.disconnect();
     }
   }
 

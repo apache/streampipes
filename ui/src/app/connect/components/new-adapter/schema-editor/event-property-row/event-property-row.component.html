@@ -16,8 +16,8 @@
   ~
   -->
 
-<div fxLayout="row">
-    <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start center">
+<div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+    <div fxFlex fxLayout="row" fxLayoutAlign="start center">
         <b>
             {{ label }}
         </b>
@@ -29,8 +29,20 @@
         </div>
         <p style="margin: 0px 10px 10px;" *ngIf="isList">[List]</p>
     </div>
+    <div fxFlex="15" fxLayoutAlign="start center" *ngIf="runtimeType">
+        <span class="runtime-type-info">{{runtimeType}}</span>
+    </div>
+    <div fxFlex="15" fxLayoutAlign="start center">
+        <span *ngIf="showEventPreview">{{eventPreview[0][node.data.runtimeName].value || 'n/a'}}</span>
+    </div>
+    <div fxFlex="15" fxLayoutAlign="start center">
+        <span *ngIf="showFieldStatus"
+              [ngClass]="'status status-' +fieldStatusInfo[node.data.runtimeName].fieldStatus.toLowerCase()"
+        [matTooltip]="fieldStatusInfo[node.data.runtimeName].additionalInfo">{{fieldStatusInfo[node.data.runtimeName].fieldStatus}}</span>
+    </div>
 
-    <div fxFlex="15" *ngIf="isPrimitive" fxLayoutAlign="center center">
+    <div fxLayout="row" fxLayoutAlign="end center">
+    <div fxFlex="15" *ngIf="isPrimitive" fxLayoutAlign="end center">
         <mat-form-field class="small-select" color="accent">
         <mat-select [(ngModel)]="node.data.propertyScope" panelClass="small-select"
                     [attr.data-cy]="'property-scope-' + label">
@@ -41,14 +53,14 @@
         </mat-form-field>
     </div>
 
-    <div fxFlex="0 1 auto" fxLayoutAlign="center center"
+    <div fxLayoutAlign="end center"
          *ngIf="isNested">
         <button [disabled]="!isEditable" color="accent" mat-button (click)=addNestedProperty(node.data)>
             <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
         </button>
     </div>
-    <div fxFlex="0 1 auto"
-         fxLayoutAlign="center center"
+    <div
+         fxLayoutAlign="end center"
          class="ml-5 mr-5"
          *ngIf="isNested || isPrimitive || isList">
         <button [disabled]="!isEditable" color="accent" mat-button
@@ -57,7 +69,7 @@
             <mat-icon>edit</mat-icon>&nbsp;Edit field
         </button>
     </div>
-    <div fxFlex="0 1 auto" fxLayoutAlign="center center">
+    <div fxLayoutAlign="end center">
         <mat-checkbox
                 *ngIf="isNested || isPrimitive || isList"
                 (click)="selectProperty(node.data.id, undefined)"
@@ -66,5 +78,6 @@
                 [checked]="node.data.selected"
                 [attr.data-cy]="'delete-property-' + label.toLowerCase()">
         </mat-checkbox>
+    </div>
     </div>
 </div>

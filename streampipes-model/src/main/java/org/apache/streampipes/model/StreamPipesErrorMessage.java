@@ -31,9 +31,6 @@ public class StreamPipesErrorMessage {
   private String cause;
   private String fullStackTrace;
 
-  public StreamPipesErrorMessage() {
-  }
-
   public static StreamPipesErrorMessage from(Exception exception) {
     String cause = exception.getCause() != null ? exception.getCause().getMessage() : exception.getMessage();
     return new StreamPipesErrorMessage(
@@ -42,6 +39,14 @@ public class StreamPipesErrorMessage {
       "",
       ExceptionUtils.getStackTrace(exception),
       cause);
+  }
+
+  public StreamPipesErrorMessage(String level,
+                                 String title,
+                                 String detail) {
+    this.level = level;
+    this.title = title;
+    this.detail = detail;
   }
 
   public StreamPipesErrorMessage(String level,
