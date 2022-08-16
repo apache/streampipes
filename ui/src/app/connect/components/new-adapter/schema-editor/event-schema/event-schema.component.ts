@@ -238,6 +238,11 @@ export class EventSchemaComponent implements OnChanges {
       this.schemaErrorHints.push(new UserErrorMessage('Missing Timestamp', 'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp field or add an ingestion timestamp.'));
     }
 
+    const badFields = eventSchema.eventProperties.map(ep => this.fieldStatusInfo[ep.runtimeName]).find(field => field.fieldStatus !== 'GOOD');
+    if (badFields !== undefined) {
+      this.schemaErrorHints.push(new UserErrorMessage('Bad reading', 'At least one field could not be properly read. If this is a permanent problem, consider removing it - keeping this field might cause the adapter to fail or to omit sending events.', 'warning'));
+    }
+
     return hasTimestamp;
   }
 }
