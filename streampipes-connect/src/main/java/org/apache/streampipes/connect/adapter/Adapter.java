@@ -18,32 +18,18 @@
 
 package org.apache.streampipes.connect.adapter;
 
-import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Adapter<T extends AdapterDescription> implements IAdapter<T> {
-    Logger logger = LoggerFactory.getLogger(Adapter.class);
 
     private boolean debug;
 
@@ -99,97 +85,7 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
     }
 
     private AdapterPipeline getAdapterPipeline(T adapterDescription) {
-
-        List<IAdapterPipelineElement> pipelineElements = new ArrayList<>();
-
-        // Must be before the schema transformations to ensure that user can move this event property
-        AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(adapterDescription);
-        if (timestampTransformationRuleDescription != null) {
-            pipelineElements.add(new AddTimestampPipelineElement(
-                    timestampTransformationRuleDescription.getRuntimeKey()));
-        }
-
-        AddValueTransformationRuleDescription valueTransformationRuleDescription = getAddValueRule(adapterDescription);
-        if (valueTransformationRuleDescription != null) {
-            pipelineElements.add(new AddValuePipelineElement(
-                    valueTransformationRuleDescription.getRuntimeKey(),
-                    valueTransformationRuleDescription.getStaticValue()));
-        }
-
-
-        // first transform schema before transforming vales
-        // value rules should use unique keys for of new schema
-        pipelineElements.add(new TransformSchemaAdapterPipelineElement(adapterDescription.getSchemaRules()));
-        pipelineElements.add(new TransformValueAdapterPipelineElement(adapterDescription.getValueRules()));
-
-
-        RemoveDuplicatesTransformationRuleDescription duplicatesTransformationRuleDescription = getRemoveDuplicateRule(adapterDescription);
-        if (duplicatesTransformationRuleDescription != null) {
-            pipelineElements.add(new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
-        }
-
-        TransformStreamAdapterElement transformStreamAdapterElement = new TransformStreamAdapterElement();
-        EventRateTransformationRuleDescription eventRateTransformationRuleDescription = getEventRateTransformationRule(adapterDescription);
-        if (eventRateTransformationRuleDescription != null) {
-            transformStreamAdapterElement.addStreamTransformationRuleDescription(eventRateTransformationRuleDescription);
-        }
-        pipelineElements.add(transformStreamAdapterElement);
-
-        // Needed when adapter is (
-        if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
-                && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
-            return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
-        }
-
-        return new AdapterPipeline(pipelineElements);
-    }
-
-    private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {
-        SpProtocol prioritizedProtocol =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
-
-        if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-            return new SendToJmsAdapterSink(adapterDescription);
-        }
-        else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
-            return new SendToKafkaAdapterSink(adapterDescription);
-        }
-        else {
-            return new SendToMqttAdapterSink(adapterDescription);
-        }
-    }
-
-    private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(T adapterDescription) {
-        return getRule(adapterDescription, RemoveDuplicatesTransformationRuleDescription.class);
-    }
-
-    private EventRateTransformationRuleDescription getEventRateTransformationRule(T adapterDescription) {
-        return getRule(adapterDescription, EventRateTransformationRuleDescription.class);
-    }
-
-    private AddTimestampRuleDescription getTimestampRule(T adapterDescription) {
-        return getRule(adapterDescription, AddTimestampRuleDescription.class);
-    }
-
-    private AddValueTransformationRuleDescription getAddValueRule(T adapterDescription) {
-        return getRule(adapterDescription, AddValueTransformationRuleDescription.class);
-    }
-
-    private CorrectionValueTransformationRuleDescription getCorrectionValueRule(T adapterDescription) {
-        return getRule(adapterDescription, CorrectionValueTransformationRuleDescription.class);
-    }
-
-    private <G extends TransformationRuleDescription> G getRule(T adapterDescription, Class<G> type) {
-
-        if (adapterDescription != null) {
-            for (TransformationRuleDescription tr : adapterDescription.getRules()) {
-                if (type.isInstance(tr)) {
-                    return type.cast(tr);
-                }
-            }
-        }
-
-        return null;
+        return new AdapterPipelineGenerator().generatePipeline(adapterDescription);
     }
 
     @Override

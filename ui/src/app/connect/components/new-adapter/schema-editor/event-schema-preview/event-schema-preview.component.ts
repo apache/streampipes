@@ -16,14 +16,43 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-import { EventSchema } from '@streampipes/platform-services';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EventSchema, GuessTypeInfo } from '@streampipes/platform-services';
 
 @Component({
-    selector: 'sp-event-schema-preview',
-    templateUrl: './event-schema-preview.component.html',
-    styleUrls: ['./event-schema-preview.component.scss']
+  selector: 'sp-event-schema-preview',
+  templateUrl: './event-schema-preview.component.html',
+  styleUrls: ['./event-schema-preview.component.scss']
 })
-export class EventSchemaPreviewComponent {
-    @Input() eventSchema: EventSchema;
+export class EventSchemaPreviewComponent implements OnInit {
+
+  @Input() originalEventSchema: EventSchema;
+  @Input() desiredEventSchema: EventSchema;
+
+  @Input() originalPreview: Record<string, GuessTypeInfo>;
+  @Input() desiredPreview: Record<string, GuessTypeInfo>;
+
+  @Output() updatePreviewEmitter = new EventEmitter();
+
+  originalField: Record<string, any>;
+  desiredField: Record<string, any>;
+
+  ngOnInit(): void {
+    this.originalField = this.toSimpleMap(this.originalPreview);
+    this.desiredField = this.toSimpleMap(this.desiredPreview);
+  }
+
+  toSimpleMap(event: Record<string, GuessTypeInfo>): Record<string, any> {
+    const result = {};
+    for (const key in event) {
+      result[key] = event[key].value;
+    }
+
+
+    return result;
+  }
+
+  public updateEventPreview() {
+    this.updatePreviewEmitter.emit();
+  }
 }

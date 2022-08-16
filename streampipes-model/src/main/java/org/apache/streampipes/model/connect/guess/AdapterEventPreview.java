@@ -16,14 +16,34 @@
  *
  */
 
-.preview-text {
-  background-color: black;
-  font: 9pt Inconsolata, monospace;
-  text-shadow: 0 0 5px #C8C8C8;
-  color: white;
-  padding: 10px;
-  max-width: 100%;
-  max-height: 300px;
-  overflow-y: scroll;
-  white-space: pre-wrap;
+package org.apache.streampipes.model.connect.guess;
+
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import java.util.List;
+import java.util.Map;
+
+@TsModel
+public class AdapterEventPreview {
+
+  private List<TransformationRuleDescription> rules;
+
+  private Map<String, GuessTypeInfo> inputData;
+
+  public List<TransformationRuleDescription> getRules() {
+    return rules;
+  }
+
+  public void setRules(List<TransformationRuleDescription> rules) {
+    this.rules = rules;
+  }
+
+  public Map<String, GuessTypeInfo> getInputData() {
+    return inputData;
+  }
+
+  public void setInputData(Map<String, GuessTypeInfo> inputData) {
+    this.inputData = inputData;
+  }
 }
