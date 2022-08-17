@@ -60,6 +60,11 @@
   border-radius: 5px;
 }
 
+.status-outer {
+  width: 70px;
+  min-width: 70px;
+}
+
 .runtime-info {
   border-radius: 5px;
   color: var(--color-default-text);
@@ -70,15 +75,18 @@
 .runtime-type-info {
   border-radius: 5px;
   color: var(--color-default-text);
-  width: 60px;
   font-size: 10pt;
+  width: 70px;
+  border: 1px solid var(--color-bg-3);
   text-align: center;
 }
 
 .runtime-type-info-outer {
   padding: 3px;
   border-radius: 5px;
-  background: var(--color-bg-3);
+  width: 170px;
+  text-align: center;
+
 }
 
 

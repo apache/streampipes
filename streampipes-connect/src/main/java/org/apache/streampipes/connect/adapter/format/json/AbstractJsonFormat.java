@@ -21,7 +21,6 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
-import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.Map;
 
@@ -30,8 +29,6 @@ public abstract class AbstractJsonFormat implements IFormat {
 
   @Override
   public Map<String, Object> parse(byte[] object) throws ParseException {
-    EventSchema resultSchema = new EventSchema();
-
     JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
 
     Map<String, Object> result = null;
