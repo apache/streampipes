@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 public class AdapterPipelineGenerator {
 
-  // TODO improve this code
   public AdapterPipeline generatePipeline(AdapterDescription adapterDescription) {
 
     var pipelineElements = makeAdapterPipelineElements(adapterDescription.getRules());
