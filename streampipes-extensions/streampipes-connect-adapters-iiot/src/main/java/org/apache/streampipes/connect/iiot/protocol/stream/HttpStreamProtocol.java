@@ -112,7 +112,7 @@ public class HttpStreamProtocol extends PullProtocol {
             dataByte.addAll(dataByte);
         }
         EventSchema eventSchema= parser.getEventSchema(dataByte);
-        GuessSchema result = SchemaGuesser.guessSchma(eventSchema);
+        GuessSchema result = SchemaGuesser.guessSchema(eventSchema);
 
         return result;
     }

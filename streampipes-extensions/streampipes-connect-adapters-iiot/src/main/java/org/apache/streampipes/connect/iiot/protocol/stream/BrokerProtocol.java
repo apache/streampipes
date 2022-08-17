@@ -23,7 +23,6 @@ import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.EventSchema;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +47,12 @@ public abstract class BrokerProtocol extends Protocol {
   public GuessSchema getGuessSchema() throws ParseException {
 
     List<byte[]> eventByte = getNByteElements(1);
-    EventSchema eventSchema = parser.getEventSchema(eventByte);
 
-    return SchemaGuesser.guessSchma(eventSchema);
+    if (parser.supportsPreview()) {
+      return SchemaGuesser.guessSchema(parser.getSchemaAndSample(eventByte));
+    } else {
+      return SchemaGuesser.guessSchema(parser.getEventSchema(eventByte));
+    }
   }
 
   @Override

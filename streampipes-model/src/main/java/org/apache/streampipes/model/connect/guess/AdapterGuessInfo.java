@@ -15,37 +15,41 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.api;
 
-import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+package org.apache.streampipes.model.connect.guess;
+
 import org.apache.streampipes.model.schema.EventSchema;
 
-import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
-public interface IParser {
+public class AdapterGuessInfo {
 
-  IParser getInstance(FormatDescription formatDescription);
+  private EventSchema eventSchema;
+  private List<Map<String, GuessTypeInfo>> eventPreview;
 
-  void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException;
-
-  List<byte[]> parseNEvents(InputStream data, int n) throws ParseException;
-
-  /**
-   * Pass one event to Parser to get the event schema
-   *
-   * @param oneEvent
-   * @return
-   */
-  EventSchema getEventSchema(List<byte[]> oneEvent);
-
-  default boolean supportsPreview() {
-    return false;
+  public AdapterGuessInfo() {
   }
 
-  default AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
-    throw new RuntimeException("Not yet implemented!");
+  public AdapterGuessInfo(EventSchema eventSchema,
+                          Map<String, GuessTypeInfo> singleEventSample) {
+    this.eventSchema = eventSchema;
+    this.eventPreview = List.of(singleEventSample);
+  }
+
+  public EventSchema getEventSchema() {
+    return eventSchema;
+  }
+
+  public void setEventSchema(EventSchema eventSchema) {
+    this.eventSchema = eventSchema;
+  }
+
+  public List<Map<String, GuessTypeInfo>> getEventPreview() {
+    return eventPreview;
+  }
+
+  public void setEventPreview(List<Map<String, GuessTypeInfo>> eventPreview) {
+    this.eventPreview = eventPreview;
   }
 }
