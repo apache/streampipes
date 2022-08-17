@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.adapter.format.csv;
 
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.adapter.util.DatatypeUtils;
 import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
@@ -28,7 +29,6 @@ import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.vocabulary.XSD;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -108,9 +108,11 @@ public class CsvParser extends Parser {
         EventSchema resultSchema = new EventSchema();
         for (int i = 0; i < keys.length; i++) {
             EventPropertyPrimitive p = new EventPropertyPrimitive();
+            var runtimeType = DatatypeUtils.getXsdDatatype(data[i]);
+            var convertedValue = DatatypeUtils.convertValue(data[i], runtimeType);
             p.setRuntimeName(keys[i]);
-            p.setRuntimeType(getTypeString(data[i]));
-            sample.put(keys[i], new GuessTypeInfo(getTypeString(data[i]), data[i]));
+            p.setRuntimeType(runtimeType);
+            sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i]), convertedValue));
             resultSchema.addEventProperty(p);
         }
 
@@ -120,35 +122,6 @@ public class CsvParser extends Parser {
     @Override
     public EventSchema getEventSchema(List<byte[]> oneEvent) {
         return getSchemaAndSample(oneEvent).getEventSchema();
-    }
-
-    private String getTypeString(String o) {
-
-        String typeClass = getTypeClass(o);
-
-        if (Float.class.getCanonicalName().equals(typeClass)) {
-            return XSD._float.toString();
-        } else if (Boolean.class.getCanonicalName().equals(typeClass)) {
-            return XSD._boolean.toString();
-        } else {
-            return XSD._string.toString();
-        }
-    }
-
-    private String getTypeClass(String o) {
-
-        try {
-            Double.parseDouble(o);
-            return Float.class.getCanonicalName();
-        } catch (NumberFormatException e) {
-
-        }
-
-        if (o.equalsIgnoreCase("true") || o.equalsIgnoreCase("false")) {
-            return Boolean.class.getCanonicalName();
-        }
-
-        return String.class.getCanonicalName();
     }
 
 

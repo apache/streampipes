@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.connect.adapter.util;
 
 import java.util.concurrent.TimeUnit;
