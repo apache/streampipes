@@ -19,11 +19,13 @@
 package org.apache.streampipes.connect.adapter.format.csv;
 
 
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.vocabulary.XSD;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -81,7 +84,13 @@ public class CsvParser extends Parser {
     }
 
     @Override
-    public EventSchema getEventSchema(List<byte[]> oneEvent) {
+    public boolean supportsPreview() {
+        return true;
+    }
+
+    @Override
+    public AdapterGuessInfo getSchemaAndSample(List<byte[]> oneEvent) {
+        var sample = new HashMap<String, GuessTypeInfo>();
         String[] keys;
         String[] data;
 
@@ -101,26 +110,45 @@ public class CsvParser extends Parser {
             EventPropertyPrimitive p = new EventPropertyPrimitive();
             p.setRuntimeName(keys[i]);
             p.setRuntimeType(getTypeString(data[i]));
+            sample.put(keys[i], new GuessTypeInfo(getTypeString(data[i]), data[i]));
             resultSchema.addEventProperty(p);
         }
 
-        return resultSchema;
+        return new AdapterGuessInfo(resultSchema, sample);
+    }
+
+    @Override
+    public EventSchema getEventSchema(List<byte[]> oneEvent) {
+        return getSchemaAndSample(oneEvent).getEventSchema();
     }
 
     private String getTypeString(String o) {
 
+        String typeClass = getTypeClass(o);
+
+        if (Float.class.getCanonicalName().equals(typeClass)) {
+            return XSD._float.toString();
+        } else if (Boolean.class.getCanonicalName().equals(typeClass)) {
+            return XSD._boolean.toString();
+        } else {
+            return XSD._string.toString();
+        }
+    }
+
+    private String getTypeClass(String o) {
+
         try {
             Double.parseDouble(o);
-            return XSD._float.toString();
+            return Float.class.getCanonicalName();
         } catch (NumberFormatException e) {
 
         }
 
         if (o.equalsIgnoreCase("true") || o.equalsIgnoreCase("false")) {
-            return XSD._boolean.toString();
+            return Boolean.class.getCanonicalName();
         }
 
-        return XSD._string.toString();
+        return String.class.getCanonicalName();
     }
 
 

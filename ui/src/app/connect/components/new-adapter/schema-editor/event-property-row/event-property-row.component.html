@@ -43,12 +43,14 @@
             </mat-icon>
             <span style="margin-left: -5px;">marked as timestamp</span>
         </div>
-        <div fxLayoutAlign="end center" *ngIf="runtimeType" class="runtime-type-info-outer">
+        <div fxLayoutAlign="end center" class="runtime-type-info-outer">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100" *ngIf="runtimeType" >
             <span class="runtime-info runtime-type-info">{{originalRuntimeType}}</span>
-            <span fxLayoutAlign="center center"><i class="material-icons">arrow_right</i></span>
-            <span class="runtime-info runtime-type-info">{{runtimeType}}</span>
+            <span fxLayoutAlign="center center" *ngIf="originalRuntimeType !== runtimeType"><i class="material-icons">arrow_right</i></span>
+            <span class="runtime-info runtime-type-info" *ngIf="originalRuntimeType !== runtimeType">{{runtimeType}}</span>
+            </div>
         </div>
-        <div fxLayoutAlign="end center">
+        <div fxLayoutAlign="end center" class="status-outer">
         <span *ngIf="showFieldStatus"
               [ngClass]="'status status-' +fieldStatusInfo[originalRuntimeName].fieldStatus.toLowerCase()"
               [matTooltip]="fieldStatusInfo[originalRuntimeName].additionalInfo">{{fieldStatusInfo[originalRuntimeName].fieldStatus}}</span>

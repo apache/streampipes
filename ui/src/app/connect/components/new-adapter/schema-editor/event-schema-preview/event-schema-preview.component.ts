@@ -43,11 +43,19 @@ export class EventSchemaPreviewComponent implements OnInit {
   }
 
   toSimpleMap(event: Record<string, GuessTypeInfo>): Record<string, any> {
-    const result = {};
+    let result: Record<string, any> = {};
+
     for (const key in event) {
       result[key] = event[key].value;
     }
 
+   result = Object.keys(result).sort().reduce(
+      (obj, key) => {
+        obj[key] = result[key];
+        return obj;
+      },
+      {}
+    );
 
     return result;
   }
