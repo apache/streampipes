@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <div fxLayout="column" fxFlex="100" *ngIf="!isLoading && schemaErrorHints.length > 0">
+        <div fxLayout="column" fxFlex="100" *ngIf="!isLoading && !isError && schemaErrorHints.length > 0">
             <div fxFlex="100"
                  fxLayout="column"
                  [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation schema-validation-error' : 'schema-validation schema-validation-warning'"
