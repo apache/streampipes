@@ -18,18 +18,20 @@
 package org.apache.streampipes.sdk.builder.adapter;
 
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GuessSchemaBuilder {
 
   private List<EventProperty> eventProperties;
+  private Map<String, GuessTypeInfo> samples;
 
   private GuessSchemaBuilder() {
     this.eventProperties = new ArrayList<>();
+    this.samples = new HashMap<>();
   }
 
   /**
@@ -37,6 +39,13 @@ public class GuessSchemaBuilder {
    */
   public static GuessSchemaBuilder create() {
     return new GuessSchemaBuilder();
+  }
+
+  public GuessSchemaBuilder sample(String runtimeName,
+                                   Object sampleValue) {
+    this.samples.put(runtimeName, new GuessTypeInfo(sampleValue.getClass().getCanonicalName(), sampleValue));
+
+    return this;
   }
 
   public GuessSchemaBuilder property(EventProperty property) {
@@ -56,6 +65,7 @@ public class GuessSchemaBuilder {
     eventSchema.setEventProperties(eventProperties);
 
     guessSchema.setEventSchema(eventSchema);
+    guessSchema.setEventPreview(List.of(this.samples));
 
     return guessSchema;
   }

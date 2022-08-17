@@ -116,7 +116,7 @@ public class HttpProtocol extends Protocol {
 
         EventSchema eventSchema= parser.getEventSchema(dataByte);
 
-        GuessSchema result = SchemaGuesser.guessSchma(eventSchema);
+        GuessSchema result = SchemaGuesser.guessSchema(eventSchema);
 
         return result;
     }
