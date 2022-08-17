@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.adapter;
 
 import org.apache.streampipes.config.backend.BackendConfig;
-import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
@@ -29,10 +28,7 @@ import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.*;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
@@ -47,13 +43,13 @@ public class AdapterPipelineGenerator {
 
     var pipelineElements = makeAdapterPipelineElements(adapterDescription.getRules());
 
-    RemoveDuplicatesTransformationRuleDescription duplicatesTransformationRuleDescription = getRemoveDuplicateRule(adapterDescription.getRules());
+    var duplicatesTransformationRuleDescription = getRemoveDuplicateRule(adapterDescription.getRules());
     if (duplicatesTransformationRuleDescription != null) {
       pipelineElements.add(new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
     }
 
-    TransformStreamAdapterElement transformStreamAdapterElement = new TransformStreamAdapterElement();
-    EventRateTransformationRuleDescription eventRateTransformationRuleDescription = getEventRateTransformationRule(adapterDescription.getRules());
+    var transformStreamAdapterElement = new TransformStreamAdapterElement();
+    var eventRateTransformationRuleDescription = getEventRateTransformationRule(adapterDescription.getRules());
     if (eventRateTransformationRuleDescription != null) {
       transformStreamAdapterElement.addStreamTransformationRuleDescription(eventRateTransformationRuleDescription);
     }
@@ -73,13 +69,13 @@ public class AdapterPipelineGenerator {
     List<IAdapterPipelineElement> pipelineElements = new ArrayList<>();
 
     // Must be before the schema transformations to ensure that user can move this event property
-    AddTimestampRuleDescription timestampTransformationRuleDescription = getTimestampRule(rules);
+    var timestampTransformationRuleDescription = getTimestampRule(rules);
     if (timestampTransformationRuleDescription != null) {
       pipelineElements.add(new AddTimestampPipelineElement(
         timestampTransformationRuleDescription.getRuntimeKey()));
     }
 
-    AddValueTransformationRuleDescription valueTransformationRuleDescription = getAddValueRule(rules);
+    var valueTransformationRuleDescription = getAddValueRule(rules);
     if (valueTransformationRuleDescription != null) {
       pipelineElements.add(new AddValuePipelineElement(
         valueTransformationRuleDescription.getRuntimeKey(),
@@ -95,7 +91,7 @@ public class AdapterPipelineGenerator {
   }
 
   private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {
-    SpProtocol prioritizedProtocol =
+    var prioritizedProtocol =
       BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
 
     if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
@@ -123,10 +119,6 @@ public class AdapterPipelineGenerator {
 
   private AddValueTransformationRuleDescription getAddValueRule(List<TransformationRuleDescription> rules) {
     return getRule(rules, AddValueTransformationRuleDescription.class);
-  }
-
-  private CorrectionValueTransformationRuleDescription getCorrectionValueRule(List<TransformationRuleDescription> rules) {
-    return getRule(rules, CorrectionValueTransformationRuleDescription.class);
   }
 
   private <G extends TransformationRuleDescription> G getRule(List<TransformationRuleDescription> rules,

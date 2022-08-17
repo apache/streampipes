@@ -41,6 +41,7 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
         @JsonSubTypes.Type(DeleteRuleDescription.class),
         @JsonSubTypes.Type(RenameRuleDescription.class),
         @JsonSubTypes.Type(MoveRuleDescription.class),
+        @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
         @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
 })
 public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
