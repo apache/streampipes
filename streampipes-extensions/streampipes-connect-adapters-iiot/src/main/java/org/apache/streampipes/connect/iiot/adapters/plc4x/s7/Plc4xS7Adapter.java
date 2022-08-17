@@ -136,7 +136,7 @@ public class Plc4xS7Adapter extends PullAdapter {
         getConfigurations(adapterDescription);
 
         if (this.pollingInterval < 10) {
-            throw new AdapterException("Polling interval must be higher then 10. Current value: " + this.pollingInterval);
+            throw new AdapterException("Polling interval must be higher than 10. Current value: " + this.pollingInterval);
         }
 
         GuessSchema guessSchema = new GuessSchema();
