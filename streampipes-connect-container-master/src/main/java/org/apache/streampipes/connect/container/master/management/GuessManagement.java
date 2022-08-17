@@ -26,6 +26,7 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterEventPreviewPipeline;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.api.exception.WorkerAdapterException;
@@ -34,7 +35,6 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
-import org.apache.streampipes.model.message.ErrorMessage;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,12 +69,10 @@ public class GuessManagement {
             String responseString = EntityUtils.toString(httpResponse.getEntity());
 
             if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                return mapper.readValue(responseString, GuessSchema.class);
-            }  else {
-                ErrorMessage errorMessage = mapper.readValue(responseString, ErrorMessage.class);
-
-                LOG.error(errorMessage.getElementName());
-                throw new WorkerAdapterException(errorMessage);
+              return mapper.readValue(responseString, GuessSchema.class);
+            } else {
+              var exception = mapper.readValue(responseString, SpConfigurationException.class);
+              throw new WorkerAdapterException(exception.getMessage(), exception.getCause());
             }
     }
 

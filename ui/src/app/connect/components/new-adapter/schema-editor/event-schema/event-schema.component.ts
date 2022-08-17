@@ -129,7 +129,7 @@ export class EventSchemaComponent implements OnChanges {
         this.isEditableChange.emit(true);
         this.isLoading = false;
 
-        if (guessSchema.eventPreview) {
+        if (guessSchema.eventPreview && guessSchema.eventPreview.length > 0) {
           this.updatePreview();
         }
       },
