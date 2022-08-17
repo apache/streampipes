@@ -19,6 +19,7 @@
 package org.apache.streampipes.container.api;
 
 import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
@@ -106,14 +107,21 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     D declarer = getDeclarerById(elementId);
     RuntimeOptionsResponse responseOptions;
 
-    if (declarer instanceof ResolvesContainerProvidedOptions) {
-      responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((ResolvesContainerProvidedOptions) declarer, req);
-      return ok(responseOptions);
-    } else if (declarer instanceof SupportsRuntimeConfig) {
-      responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
-      return ok(responseOptions);
-    } else {
-      throw new WebApplicationException(javax.ws.rs.core.Response.Status.BAD_REQUEST);
+    try {
+      if (declarer instanceof ResolvesContainerProvidedOptions) {
+        responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((ResolvesContainerProvidedOptions) declarer, req);
+        return ok(responseOptions);
+      } else if (declarer instanceof SupportsRuntimeConfig) {
+          responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
+          return ok(responseOptions);
+      } else {
+        return javax.ws.rs.core.Response.status(500).build();
+      }
+    } catch (SpConfigurationException e) {
+      return javax.ws.rs.core.Response
+        .status(400)
+        .entity(e)
+        .build();
     }
   }
 
@@ -131,8 +139,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
                               (elementId);
       return ok(resolvesOutput.resolveOutputStrategy
               (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
+    } catch (SpRuntimeException | SpConfigurationException e) {
       return ok(new Response(elementId, false));
     }
   }

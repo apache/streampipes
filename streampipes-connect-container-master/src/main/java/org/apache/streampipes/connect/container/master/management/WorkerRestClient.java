@@ -18,8 +18,11 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -37,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -146,19 +150,26 @@ public class WorkerRestClient {
 
     public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
                                                           String appId,
-                                                          RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException {
+                                                          RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException, SpConfigurationException {
         String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
 
         try {
             String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
-            String responseString = Request.Post(url)
+            var response = Request.Post(url)
                        .bodyString(payload, ContentType.APPLICATION_JSON)
                        .connectTimeout(1000)
                        .socketTimeout(100000)
-                       .execute().returnContent().asString();
+                       .execute()
+                        .returnResponse();
 
-            return JacksonSerializer.getObjectMapper().readValue(responseString, RuntimeOptionsResponse.class);
+            String responseString = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
+            if (response.getStatusLine().getStatusCode() == 200) {
+                return getSerializer().readValue(responseString, RuntimeOptionsResponse.class);
+            } else {
+                var exception = getSerializer().readValue(responseString, SpConfigurationException.class);
+                throw new SpConfigurationException(exception.getMessage(), exception.getCause());
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new AdapterException("Could not resolve runtime configurations from " + url);
@@ -244,6 +255,10 @@ public class WorkerRestClient {
 
     private static IAdapterStorage getAdapterStorage() {
         return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+    }
+
+    private static ObjectMapper getSerializer() {
+        return JacksonSerializer.getObjectMapper();
     }
 }
 

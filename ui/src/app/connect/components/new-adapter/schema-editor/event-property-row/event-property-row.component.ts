@@ -21,12 +21,15 @@ import { UUID } from 'angular2-uuid';
 import { TreeNode } from '@circlon/angular-tree-component';
 import { MatDialog } from '@angular/material/dialog';
 import {
-    EventProperty,
-    EventPropertyList,
-    EventPropertyNested,
-    EventPropertyPrimitive,
-    EventPropertyUnion,
-    EventSchema
+  EventProperty,
+  EventPropertyList,
+  EventPropertyNested,
+  EventPropertyPrimitive,
+  EventPropertyUnion,
+  EventSchema,
+  FieldStatusInfo,
+  GuessTypeInfo
+
 } from '@streampipes/platform-services';
 import { EditEventPropertyComponent } from '../../../../dialog/edit-event-property/edit-event-property.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
@@ -36,15 +39,19 @@ import { DialogService, PanelType } from '@streampipes/shared-ui';
   templateUrl: './event-property-row.component.html',
   styleUrls: ['./event-property-row.component.scss']
 })
-export class EventPropertyRowComponent implements OnInit, OnChanges {
+export class EventPropertyRowComponent implements OnInit {
 
   @Input() node: TreeNode;
   @Input() isEditable = true;
   @Input() eventSchema: EventSchema = new EventSchema();
+  @Input() originalEventSchema: EventSchema;
   @Input() countSelected: number;
+  @Input() eventPreview: Record<string, GuessTypeInfo>[];
+  @Input() fieldStatusInfo: Record<string, FieldStatusInfo>;
 
   @Output() isEditableChange = new EventEmitter<boolean>();
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
+  @Output() originalEventSchemaChange = new EventEmitter<EventSchema>();
   @Output() refreshTreeEmitter = new EventEmitter<void>();
   @Output() countSelectedChange = new EventEmitter<number>();
 
@@ -53,6 +60,12 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
   isNested = false;
   isList = false;
   timestampProperty = false;
+  showEventPreview = false;
+  showFieldStatus = false;
+
+  runtimeType: string;
+  originalRuntimeType: string;
+  originalRuntimeName: string;
 
   constructor(private dialog: MatDialog,
               private dialogService: DialogService) {
@@ -66,12 +79,28 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
     this.isNested = this.isEventPropertyNested(this.node.data);
     this.timestampProperty = this.isTimestampProperty(this.node.data);
 
+    if (this.node.data instanceof EventProperty) {
+      this.originalRuntimeName = this.findOriginalProperty().runtimeName;
+      this.showFieldStatus = this.fieldStatusInfo && this.fieldStatusInfo[this.originalRuntimeName] !== undefined;
+      this.showEventPreview = this.eventPreview && this.eventPreview.length > 0 && this.eventPreview[0][this.originalRuntimeName] !== undefined;
+      if (this.isPrimitive) {
+        this.originalRuntimeType = this.parseType(this.findOriginalProperty().runtimeType);
+        this.runtimeType = this.parseType((this.node.data as EventPropertyPrimitive).runtimeType);
+      }
+    }
+
     if (!this.node.data.propertyScope) {
       this.node.data.propertyScope = 'MEASUREMENT_PROPERTY';
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  private findOriginalProperty(): any {
+    return this.originalEventSchema.eventProperties
+      .find(ep => ep.elementId === this.node.data.elementId);
+  }
+
+  private parseType(runtimeType: string) {
+    return runtimeType.split('#')[1].toUpperCase();
   }
 
   private isEventPropertyPrimitive(instance: EventProperty): boolean {
@@ -122,8 +151,8 @@ export class EventPropertyRowComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(refresh => {
-        this.timestampProperty = this.isTimestampProperty(this.node.data);
-        this.refreshTreeEmitter.emit();
+      this.timestampProperty = this.isTimestampProperty(this.node.data);
+      this.refreshTreeEmitter.emit();
     });
   }
 

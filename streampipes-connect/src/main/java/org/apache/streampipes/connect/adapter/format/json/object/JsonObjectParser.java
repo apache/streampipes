@@ -20,24 +20,26 @@ package org.apache.streampipes.connect.adapter.format.json.object;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.format.util.JsonEventProperty;
+import org.apache.streampipes.connect.adapter.model.generic.Parser;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JsonObjectParser extends Parser {
 
@@ -75,9 +77,17 @@ public class JsonObjectParser extends Parser {
 
     @Override
     public EventSchema getEventSchema(List<byte[]> oneEvent) {
-        EventSchema resultSchema = new EventSchema();
+        return getSchemaAndSample(oneEvent).getEventSchema();
+    }
 
-//        resultSchema.setEventProperties(Arrays.asList(EpProperties.timestampProperty("timestamp")));
+    @Override
+    public boolean supportsPreview() {
+        return true;
+    }
+
+    @Override
+    public AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
+        EventSchema resultSchema = new EventSchema();
 
         JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
 
@@ -85,107 +95,22 @@ public class JsonObjectParser extends Parser {
         Map<String, Object> exampleEvent = null;
 
         try {
-            exampleEvent = jsonDefinition.toMap(oneEvent.get(0));
-        } catch (SpRuntimeException e) {
-            e.printStackTrace();
-        }
+            exampleEvent = jsonDefinition.toMap(eventSample.get(0));
+            var sample = exampleEvent
+              .entrySet()
+              .stream()
+              .collect(Collectors.toMap(Map.Entry::getKey, e ->
+                new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
 
-        for (Map.Entry<String, Object> entry : exampleEvent.entrySet())
-        {
-//            System.out.println(entry.getKey() + "/" + entry.getValue());
-            EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
+            for (Map.Entry<String, Object> entry : exampleEvent.entrySet()) {
+                EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
 
-            resultSchema.addEventProperty(p);
-
-        }
-
-        return resultSchema;
-    }
-
-    public Map<String, Object> parseObject(javax.json.stream.JsonParser jsonParser, boolean root, int start) {
-        // this variable is needed to skip the first object start
-        String mapKey = "";
-        Map<String, Object> result = new HashMap<>();
-        List<Object> arr = null;
-
-        while (jsonParser.hasNext()) {
-            javax.json.stream.JsonParser.Event event = jsonParser.next();
-            switch (event) {
-                case KEY_NAME:
-                    mapKey = jsonParser.getString();
-                    logger.debug("key: " + mapKey );
-                    break;
-                case START_OBJECT:
-                    if (start == 0) {
-                        Map<String, Object> ob = parseObject(jsonParser, false, 0);
-                        if (arr == null) {
-                            result.put(mapKey, ob);
-                        } else {
-                            arr.add(ob);
-                        }
-                    } else {
-                        start--;
-                    }
-                    logger.debug("start object");
-                    break;
-                case END_OBJECT:
-
-                    logger.debug("end object");
-                    return result;
-                case START_ARRAY:
-                    arr = new ArrayList<>();
-                    logger.debug("start array");
-                    break;
-                case END_ARRAY:
-                    // Check if just the end of array is entered
-                    if (result.keySet().size() == 0 && mapKey.equals("")) {
-                        return null;
-                    }
-                    result.put(mapKey, arr);
-                    arr = null;
-                    logger.debug("end array");
-                    break;
-                case VALUE_TRUE:
-                    if (arr == null) {
-                        result.put(mapKey, true);
-                    } else {
-                        arr.add(true);
-                    }
-                    logger.debug("value: true");
-                    break;
-                case VALUE_FALSE:
-                    if (arr == null) {
-                        result.put(mapKey, false);
-                    } else {
-                        arr.add(false);
-                    }
-                    logger.debug("value: false");
-                    break;
-                case VALUE_STRING:
-                    if (arr == null) {
-                        result.put(mapKey, jsonParser.getString());
-                    } else {
-                        arr.add(jsonParser.getString());
-                    }
-                    logger.debug("value string: " + jsonParser.getString());
-                    break;
-                case VALUE_NUMBER:
-                    if (arr == null) {
-                        result.put(mapKey, jsonParser.getBigDecimal());
-                    } else {
-                        arr.add(jsonParser.getBigDecimal());
-                    }
-                    logger.debug("value number: " + jsonParser.getBigDecimal());
-                    break;
-                case VALUE_NULL:
-                    logger.debug("value null");
-                    break;
-                default:
-                    logger.error("Error: " + event + " event is not handled in the JSON parser");
-                    break;
+                resultSchema.addEventProperty(p);
             }
-        }
 
-        return result;
+            return new AdapterGuessInfo(resultSchema, sample);
+        } catch (SpRuntimeException e) {
+            throw new ParseException("Could not serialize event, did you choose the correct format?", e);
+        }
     }
 }

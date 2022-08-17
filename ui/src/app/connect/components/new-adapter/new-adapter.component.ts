@@ -176,7 +176,6 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
   clickSpecificSettingsNextButton() {
     this.shepherdService.trigger('specific-settings-next-button');
-    console.log(this.adapter);
     this.guessEventSchema();
     this.goForward();
   }

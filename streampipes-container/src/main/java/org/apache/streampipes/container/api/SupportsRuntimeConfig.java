@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.container.api;
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 public interface SupportsRuntimeConfig {
 
   StaticProperty resolveConfiguration(String staticPropertyInternalName,
-                                      StaticPropertyExtractor extractor);
+                                      StaticPropertyExtractor extractor) throws SpConfigurationException;
 
 }

@@ -20,6 +20,7 @@ import { Component, OnChanges, OnInit } from '@angular/core';
 import { RuntimeResolvableOneOfStaticProperty, StaticPropertyUnion } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-static-runtime-resolvable-oneof-input',
@@ -35,6 +36,8 @@ export class StaticRuntimeResolvableOneOfInputComponent
 
     ngOnInit() {
         super.onInit();
+        this.parentForm.addControl(this.staticProperty.internalName, new FormControl(this.staticProperty.options, []));
+        this.performValidation();
     }
 
     afterOptionsLoaded(staticProperty: RuntimeResolvableOneOfStaticProperty) {
@@ -49,9 +52,24 @@ export class StaticRuntimeResolvableOneOfInputComponent
             option.selected = false;
         }
         this.staticProperty.options.find(option => option.elementId === id).selected = true;
+        this.performValidation();
     }
 
     parse(staticProperty: StaticPropertyUnion): RuntimeResolvableOneOfStaticProperty {
         return staticProperty as RuntimeResolvableOneOfStaticProperty;
+    }
+
+    afterErrorReceived() {
+        this.staticProperty.options = [];
+        this.performValidation();
+    }
+
+    performValidation() {
+        let error = {error: true};
+        if (this.staticProperty.options && this.staticProperty.options.find(o => o.selected) !== undefined) {
+            error = undefined;
+        }
+        console.log(error);
+        this.parentForm.controls[this.staticProperty.internalName].setErrors(error);
     }
 }

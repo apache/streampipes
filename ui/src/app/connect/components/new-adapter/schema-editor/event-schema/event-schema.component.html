@@ -17,29 +17,33 @@
   -->
 
 
-<div fxLayout="row" fxLayoutAlign="center" class="mt-20">
-    <div fxFlex="80" fxLayout="column">
+<div fxLayout="column" fxLayoutAlign="center" class="mt-20">
+    <div fxFlex="90" fxLayout="column">
         <div fxLayout="column"
              fxFlex="100"
              fxLayoutAlign="start center"
-             [ngClass]="schemaErrorHints.length === 0 ? 'schema-validation schema-validation-ok' : 'schema-validation schema-validation-error'" *ngIf="!isLoading && !isError">
+             *ngIf="!isLoading && !isError && schemaErrorHints.length === 0"
+             class="schema-validation schema-validation-ok">
             <div fxFlex="100"
                  fxLayout="row"
                  fxLayoutAlign="start center"
-                 class="schema-validation-text-ok"
-                 *ngIf="schemaErrorHints.length === 0">
+                 class="schema-validation-text-ok">
                 <i class="material-icons">check_circle</i>&nbsp;<b>Schema ok</b>
             </div>
+        </div>
+
+        <div fxLayout="column" fxFlex="100" *ngIf="!isLoading && !isError && schemaErrorHints.length > 0">
             <div fxFlex="100"
                  fxLayout="column"
-                 fxLayoutAlign="start center"
-                 *ngIf="schemaErrorHints.length > 0">
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start" class="schema-validation-text-error">
-                <i class="material-icons">warning</i>&nbsp;
-                    <b>{{schemaErrorHints[0].title}}</b>
+                 [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation schema-validation-error' : 'schema-validation schema-validation-warning'"
+                 fxLayoutAlign="start center" *ngFor="let schemaErrorHint of schemaErrorHints">
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start"
+                     [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation-text-error' : 'schema-validation-text-warning'">
+                    <i class="material-icons">warning</i>&nbsp;
+                    <b>{{schemaErrorHint.title}}</b>
                 </div>
-                <div *ngFor="let errorMessage of schemaErrorHints">
-                    <span>{{errorMessage.content}}</span>
+                <div>
+                    <span>{{schemaErrorHint.content}}</span>
                 </div>
             </div>
         </div>
@@ -51,7 +55,7 @@
                                          (addStaticValuePropertyEmitter)="addStaticValueProperty()"
                                          (addTimestampPropertyEmitter)="addTimestampProperty()"
                                          (guessSchemaEmitter)="guessSchema()"
-                                         (togglePreviewEmitter)="togglePreview()"
+                                         (updatePreviewEmitter)="updatePreview()"
                                          (removeSelectedPropertiesEmitter)="removeSelectedProperties()">
                 </sp-schema-editor-header>
             </div>
@@ -72,11 +76,11 @@
                 <sp-loading-message *ngIf="isLoading"></sp-loading-message>
 
                 <sp-error-message
-                        [errorMessages]="errorMessages"
-                        *ngIf="isError">
+                        [errorMessage]="errorMessage"
+                        *ngIf="isError && !isLoading">
                 </sp-error-message>
 
-                <div *ngIf="!isError && !isLoading"
+                <div *ngIf="!isError && !isLoading && eventSchema && oldEventSchema && nodes"
                      fxLayout="column"
                      fxLayoutAlign="space-evenly stretched"
                      class="drag-drop-tree"
@@ -90,6 +94,9 @@
                                     [node]="node"
                                     [(isEditable)]="isEditable"
                                     [(eventSchema)]="eventSchema"
+                                    [(originalEventSchema)]="oldEventSchema"
+                                    [eventPreview]="eventPreview"
+                                    [fieldStatusInfo]="fieldStatusInfo"
                                     (refreshTreeEmitter)="refreshTree()"
                                     [(countSelected)]="countSelected"></event-property-row>
                         </ng-template>
@@ -98,13 +105,17 @@
             </div>
         </sp-basic-inner-panel>
     </div>
-    <div fxFlex="0 1 50%" *ngIf="isPreviewEnabled">
-        <sp-event-schema-preview [eventSchema]="eventSchema"></sp-event-schema-preview>
+    <div fxFlex="100" *ngIf="desiredPreview && isPreviewEnabled && !isLoading && !isError">
+        <sp-event-schema-preview [originalEventSchema]="oldEventSchema"
+                                 [desiredEventSchema]="eventSchema"
+                                 [originalPreview]="eventPreview[0]"
+                                 [desiredPreview]="desiredPreview"
+                                 (updatePreviewEmitter)="updatePreview()"></sp-event-schema-preview>
     </div>
 </div>
 
 
-<div fxLayoutAlign="end">
+<div fxLayoutAlign="end" class="mt-10">
     <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
     <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
     <button class="stepper-button"

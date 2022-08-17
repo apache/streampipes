@@ -32,6 +32,9 @@ import { SpBasicNavTabsComponent } from './components/basic-nav-tabs/basic-nav-t
 import { MatTabsModule } from '@angular/material/tabs';
 import { SpBasicInnerPanelComponent } from './components/basic-inner-panel/basic-inner-panel.component';
 import { SpBasicHeaderTitleComponent } from './components/basic-header-title/header-title.component';
+import { SpExceptionMessageComponent } from './components/sp-exception-message/sp-exception-message.component';
+import { SpExceptionDetailsDialogComponent } from './components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -41,12 +44,15 @@ import { SpBasicHeaderTitleComponent } from './components/basic-header-title/hea
     SpBasicInnerPanelComponent,
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
-    SpBasicNavTabsComponent
+    SpBasicNavTabsComponent,
+    SpExceptionMessageComponent,
+    SpExceptionDetailsDialogComponent
   ],
   imports: [
     CommonModule,
     FlexLayoutModule,
     MatButtonModule,
+    MatDividerModule,
     MatIconModule,
     MatTabsModule,
     MatTooltipModule,
@@ -61,6 +67,8 @@ import { SpBasicHeaderTitleComponent } from './components/basic-header-title/hea
     SpBasicHeaderTitleComponent,
     SpBasicViewComponent,
     SpBasicNavTabsComponent,
+    SpExceptionMessageComponent,
+    SpExceptionDetailsDialogComponent
   ]
 })
 export class SharedUiModule {

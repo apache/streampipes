@@ -17,22 +17,10 @@
   -->
 
 <div fxLayout="column" fxFlex="100">
-    <div fxLayout="row" fxLayoutAlign="center center" class="error-color" fxFlex="100">
-        <mat-icon fxLayoutAlign="start center">warning</mat-icon>
-        <div fxLayoutAlign="start center" class="error-text">&nbsp;Sorry, there was an error while guessing the schema of your configured data source...</div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
+        <div fxLayoutAlign="start center" class="error-text">&nbsp;There was an error while guessing the schema of your configured data source:</div>
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" class="mt-10">
-        <button mat-button color="accent">
-            <div *ngIf="!showErrorMessage" (click)="showErrorMessage = true">Show Details</div>
-            <div *ngIf="showErrorMessage" (click)="showErrorMessage = false">Hide Details</div>
-        </button>
-    </div>
-    <div fxLayoutAlign="center center" *ngIf="showErrorMessage">
-        <div class="error-message">
-            <div *ngFor="let error of errorMessages" style="margin-bottom: 5px; margin-top: 5px">
-                <div>{{error.title}}</div>
-                <div>{{error.description}}</div>
-            </div>
-        </div>
+        <sp-exception-message [message]="errorMessage"></sp-exception-message>
     </div>
 </div>

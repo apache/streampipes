@@ -19,9 +19,11 @@
 export class UserErrorMessage {
   public title: string;
   public content: string;
+  public level: string;
 
-  constructor(title: string, content: string) {
+  constructor(title: string, content: string, level = 'error') {
     this.title = title;
     this.content = content;
+    this.level = level;
   }
 }

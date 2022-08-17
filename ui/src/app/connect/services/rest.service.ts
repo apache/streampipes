@@ -23,16 +23,20 @@ import { HttpClient } from '@angular/common/http';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
-import { AdapterDescription, FormatDescription, GuessSchema, Message, SpDataStream, PlatformServicesCommons } from '@streampipes/platform-services';
+import {
+  AdapterDescription, FormatDescription, GuessSchema, Message, SpDataStream, PlatformServicesCommons,
+  AdapterEventPreview,
+  GuessTypeInfo
+} from '@streampipes/platform-services';
 import { AuthService } from '../../services/auth.service';
 
 @Injectable()
 export class RestService {
 
   constructor(
-      private http: HttpClient,
-      private platformServicesCommons: PlatformServicesCommons,
-      private authService: AuthService) {
+    private http: HttpClient,
+    private platformServicesCommons: PlatformServicesCommons,
+    private authService: AuthService) {
   }
 
   get connectPath() {
@@ -66,7 +70,11 @@ export class RestService {
       .pipe(map(response => {
         return GuessSchema.fromData(response as GuessSchema);
       }));
+  }
 
+  getAdapterEventPreview(adapterEventPreview: AdapterEventPreview): Observable<Record<string, GuessTypeInfo>> {
+    return this.http.post(`${this.connectPath}/master/guess/schema/preview`, adapterEventPreview)
+      .pipe(map(response => response as Record<string, GuessTypeInfo>));
   }
 
   getSourceDetails(sourceElementId): Observable<SpDataStream> {
@@ -78,7 +86,7 @@ export class RestService {
 
   getRuntimeInfo(sourceDescription): Observable<any> {
     return this.http.post(`${this.platformServicesCommons.apiBasePath}/pipeline-element/runtime`, sourceDescription, {
-      headers: { ignoreLoadingBar: '' }
+      headers: {ignoreLoadingBar: ''}
     });
   }
 

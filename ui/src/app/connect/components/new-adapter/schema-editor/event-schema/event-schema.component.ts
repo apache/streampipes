@@ -32,6 +32,11 @@ import {
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
+import {
+  FieldStatusInfo, GuessTypeInfo,
+  StreamPipesErrorMessage
+} from '../../../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
+import { TransformationRuleService } from '../../../../services/transformation-rule.service';
 
 @Component({
   selector: 'sp-event-schema',
@@ -40,7 +45,9 @@ import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessag
 })
 export class EventSchemaComponent implements OnChanges {
 
-  constructor(private restService: RestService, private dataTypesService: DataTypesService) {
+  constructor(private restService: RestService,
+              private dataTypesService: DataTypesService,
+              private transformationRuleService: TransformationRuleService ) {
   }
 
   @Input() adapterDescription: AdapterDescription;
@@ -73,10 +80,14 @@ export class EventSchemaComponent implements OnChanges {
   isLoading = false;
   isError = false;
   isPreviewEnabled = false;
-  errorMessages: Notification[];
+  errorMessage: StreamPipesErrorMessage;
   nodes: EventProperty[] = new Array<EventProperty>();
   validEventSchema = false;
   schemaErrorHints: UserErrorMessage[] = [];
+
+  eventPreview: Record<string, GuessTypeInfo>[];
+  desiredPreview: Record<string, GuessTypeInfo>;
+  fieldStatusInfo: Record<string, FieldStatusInfo>;
 
   options: ITreeOptions = {
     childrenField: 'eventProperties',
@@ -98,6 +109,8 @@ export class EventSchemaComponent implements OnChanges {
     this.isLoading = true;
     this.isError = false;
     this.restService.getGuessSchema(this.adapterDescription).subscribe(guessSchema => {
+        this.eventPreview = guessSchema.eventPreview;
+        this.fieldStatusInfo = guessSchema.fieldStatusInfo;
         this.eventSchema = guessSchema.eventSchema;
         this.eventSchema.eventProperties.sort((a, b) => {
           return a.runtimeName < b.runtimeName ? -1 : 1;
@@ -115,9 +128,13 @@ export class EventSchemaComponent implements OnChanges {
         this.isEditable = true;
         this.isEditableChange.emit(true);
         this.isLoading = false;
+
+        if (guessSchema.eventPreview && guessSchema.eventPreview.length > 0) {
+          this.updatePreview();
+        }
       },
       errorMessage => {
-        this.errorMessages = errorMessage.error.notifications;
+        this.errorMessage = errorMessage.error;
         this.isError = true;
         this.isLoading = false;
         this.eventSchema = new EventSchema();
@@ -129,7 +146,6 @@ export class EventSchemaComponent implements OnChanges {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
     this.validEventSchema = this.checkIfValid(this.eventSchema);
-    // this.tree.treeModel.update();
   }
 
   public addNestedProperty(eventProperty?: EventPropertyNested): void {
@@ -192,8 +208,15 @@ export class EventSchemaComponent implements OnChanges {
     this.refreshTree();
   }
 
-  public togglePreview(): void {
-    this.isPreviewEnabled = !this.isPreviewEnabled;
+  public updatePreview(): void {
+    this.isPreviewEnabled = false;
+    this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
+    this.transformationRuleService.setNewEventSchema(this.eventSchema);
+    const ruleDescriptions = this.transformationRuleService.getTransformationRuleDescriptions();
+    this.restService.getAdapterEventPreview({rules: ruleDescriptions, inputData: this.eventPreview[0]}).subscribe(preview => {
+      this.desiredPreview = preview;
+      this.isPreviewEnabled = true;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -227,6 +250,19 @@ export class EventSchemaComponent implements OnChanges {
     this.schemaErrorHints = [];
     if (!hasTimestamp) {
       this.schemaErrorHints.push(new UserErrorMessage('Missing Timestamp', 'The timestamp must be a UNIX timestamp in milliseconds. Edit the timestamp field or add an ingestion timestamp.'));
+    }
+
+    if (this.fieldStatusInfo) {
+      const badFields = eventSchema.eventProperties
+        .filter(ep => this.fieldStatusInfo[ep.runtimeName] !== undefined)
+        .map(ep => this.fieldStatusInfo[ep.runtimeName])
+        .find(field => field.fieldStatus !== 'GOOD');
+      if (badFields !== undefined) {
+        this.schemaErrorHints.push(new UserErrorMessage(
+          'Bad reading',
+          'At least one field could not be properly read. If this is a permanent problem, consider removing it - keeping this field might cause the adapter to fail or to omit sending events.',
+          'warning'));
+      }
     }
 
     return hasTimestamp;

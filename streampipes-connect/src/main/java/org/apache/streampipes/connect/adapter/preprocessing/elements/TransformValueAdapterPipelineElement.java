@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.adapter.preprocessing.Util;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.value.*;
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
@@ -43,11 +44,11 @@ public class TransformValueAdapterPipelineElement implements IAdapterPipelineEle
         // transforms description to actual rules
         for (TransformationRuleDescription ruleDescription : transformationRuleDescriptions) {
             if (ruleDescription instanceof UnitTransformRuleDescription) {
-                UnitTransformRuleDescription tmp = (UnitTransformRuleDescription) ruleDescription;
+                var tmp = (UnitTransformRuleDescription) ruleDescription;
                 rules.add(new UnitTransformationRule(Util.toKeyArray(tmp.getRuntimeKey()),
                         tmp.getFromUnitRessourceURL(), tmp.getToUnitRessourceURL()));
-            } else if(ruleDescription instanceof TimestampTranfsformationRuleDescription) {
-                TimestampTranfsformationRuleDescription tmp = (TimestampTranfsformationRuleDescription) ruleDescription;
+            } else if (ruleDescription instanceof TimestampTranfsformationRuleDescription) {
+                var tmp = (TimestampTranfsformationRuleDescription) ruleDescription;
                 TimestampTranformationRuleMode mode = null;
                 switch (tmp.getMode()) {
                     case "formatString": mode = TimestampTranformationRuleMode.FORMAT_STRING;
@@ -57,9 +58,12 @@ public class TransformValueAdapterPipelineElement implements IAdapterPipelineEle
                 rules.add(new TimestampTranformationRule(Util.toKeyArray(tmp.getRuntimeKey()), mode,
                         tmp.getFormatString(), tmp.getMultiplier()));
             }
-            else if(ruleDescription instanceof CorrectionValueTransformationRuleDescription) {
-                CorrectionValueTransformationRuleDescription tmp = (CorrectionValueTransformationRuleDescription) ruleDescription;
+            else if (ruleDescription instanceof CorrectionValueTransformationRuleDescription) {
+                var tmp = (CorrectionValueTransformationRuleDescription) ruleDescription;
                 rules.add(new CorrectionValueTransformationRule(Util.toKeyArray(tmp.getRuntimeKey()), tmp.getCorrectionValue(), tmp.getOperator()));
+            } else if (ruleDescription instanceof ChangeDatatypeTransformationRuleDescription) {
+                var tmp = (ChangeDatatypeTransformationRuleDescription) ruleDescription;
+                rules.add(new DatatypeTransformationRule(tmp.getRuntimeKey(), tmp.getOriginalDatatypeXsd(), tmp.getTargetDatatypeXsd()));
             }
 
             else {
