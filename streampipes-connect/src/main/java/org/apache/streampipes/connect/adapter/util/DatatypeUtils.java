@@ -42,10 +42,10 @@ public class DatatypeUtils {
           return Boolean.parseBoolean(stringValue);
         } else if (XSD._integer.toString().equals(targetDatatypeXsd)) {
           var floatingNumber = Float.parseFloat(stringValue);
-          return Math.round(floatingNumber);
+          return Integer.parseInt(String.valueOf(Math.round(floatingNumber)));
         } else if (XSD._long.toString().equals(targetDatatypeXsd)) {
           var floatingNumber = Double.parseDouble(stringValue);
-          return Math.round(floatingNumber);
+          return Long.parseLong(String.valueOf(Math.round(floatingNumber)));
         }
       } catch (NumberFormatException e) {
         LOG.error("Number format exception {}", value);
@@ -56,12 +56,14 @@ public class DatatypeUtils {
     return value;
   }
 
-  public static String getCanonicalTypeClassName(String value) {
-    return getTypeClass(value).getCanonicalName();
+  public static String getCanonicalTypeClassName(String value,
+                                                 boolean preferFloat) {
+    return getTypeClass(value, preferFloat).getCanonicalName();
   }
 
-  public static String getXsdDatatype(String value) {
-    var clazz = getTypeClass(value);
+  public static String getXsdDatatype(String value,
+                                      boolean preferFloat) {
+    var clazz = getTypeClass(value, preferFloat);
     if (clazz.equals(Integer.class)) {
       return XSD._integer.toString();
     } else if (clazz.equals(Long.class)) {
@@ -77,17 +79,18 @@ public class DatatypeUtils {
     }
   }
 
-  public static Class<?> getTypeClass(String value) {
+  public static Class<?> getTypeClass(String value,
+                                      boolean preferFloat) {
     if (NumberUtils.isParsable(value)) {
       try {
         Integer.parseInt(value);
-        return Integer.class;
+        return preferFloat ? Float.class : Integer.class;
       } catch (NumberFormatException ignored) {
       }
 
       try {
         Long.parseLong(value);
-        return Long.class;
+        return preferFloat ? Float.class : Long.class;
       } catch (NumberFormatException ignored) {
       }
 
@@ -104,5 +107,12 @@ public class DatatypeUtils {
     }
 
     return String.class;
+  }
+
+  public static void main(String[] args) {
+    long max = Long.MAX_VALUE;
+    String className = getCanonicalTypeClassName(String.valueOf(max), true);
+    System.out.println(className);
+    System.out.println(convertValue(max, className));
   }
 }
