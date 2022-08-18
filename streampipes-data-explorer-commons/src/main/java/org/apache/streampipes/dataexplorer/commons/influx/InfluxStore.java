@@ -152,7 +152,11 @@ public class InfluxStore {
                             // Store property according to property type
                             String runtimeType = ((EventPropertyPrimitive) ep).getRuntimeType();
                             if (XSD._integer.toString().equals(runtimeType)) {
-                                p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
+                                try {
+                                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
+                                } catch (NumberFormatException ef) {
+                                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+                                }
                             } else if (XSD._float.toString().equals(runtimeType)) {
                                 p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
                             } else if (XSD._double.toString().equals(runtimeType)) {
@@ -160,7 +164,11 @@ public class InfluxStore {
                             } else if (XSD._boolean.toString().equals(runtimeType)) {
                                 p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
                             } else if (XSD._long.toString().equals(runtimeType)) {
-                                p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
+                                try {
+                                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
+                                } catch (NumberFormatException ef) {
+                                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+                                }
                             } else {
                                 p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
                             }
