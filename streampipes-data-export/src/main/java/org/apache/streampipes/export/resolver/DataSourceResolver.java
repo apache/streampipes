@@ -19,6 +19,7 @@
 package org.apache.streampipes.export.resolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.export.ExportItem;
@@ -45,6 +46,15 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
     getNoSqlStore().getDataStreamStorage().createElement(deserializeDocument(document));
+  }
+
+  public void writeDocument(String document,
+                            boolean overrideDocument) throws JsonProcessingException {
+    var dataStream = deserializeDocument(document);
+    if (overrideDocument) {
+      EventGroundingProcessor.applyOverride(dataStream.getEventGrounding().getTransportProtocol());
+    }
+    getNoSqlStore().getDataStreamStorage().createElement(dataStream);
   }
 
   @Override

@@ -20,6 +20,7 @@
 package org.apache.streampipes.export.resolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
@@ -31,6 +32,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   public AdapterDescription findDocument(String resourceId) {
     var doc =  getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
     doc.setRev(null);
+    doc.setSelectedEndpointUrl(null);
     if (doc instanceof AdapterStreamDescription) {
       ((AdapterStreamDescription) doc).setRunning(false);
     }
@@ -50,6 +52,15 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
     getNoSqlStore().getAdapterInstanceStorage().storeAdapter(deserializeDocument(document));
+  }
+
+  public void writeDocument(String document,
+                            boolean overrideDocument) throws JsonProcessingException {
+    var adapterDescription = deserializeDocument(document);
+    if (overrideDocument) {
+      EventGroundingProcessor.applyOverride(adapterDescription.getEventGrounding().getTransportProtocol());
+    }
+    getNoSqlStore().getAdapterInstanceStorage().storeAdapter(adapterDescription);
   }
 
   @Override

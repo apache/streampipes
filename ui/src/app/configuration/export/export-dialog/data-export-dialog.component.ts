@@ -32,6 +32,7 @@ export class SpDataExportDialogComponent implements OnInit {
   selectedAssets: string[];
 
   preview: ExportConfiguration;
+  exportInProgress = false;
 
   constructor(private dialogRef: DialogRef<SpDataExportDialogComponent>,
               private dataExportService: DataExportService) {
@@ -49,6 +50,7 @@ export class SpDataExportDialogComponent implements OnInit {
   }
 
   generateDownloadPackage(): void {
+    this.exportInProgress = true;
     this.dataExportService.triggerExport(this.preview).subscribe(result => {
       this.downloadFile(result);
     });
