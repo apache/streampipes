@@ -55,9 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandler {
@@ -159,6 +157,7 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
                     .build());
             }
 
+            this.before();
             var event = readPlcDataSynchronized();
             var preview = event
               .entrySet()
@@ -171,7 +170,7 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
             guessSchema.setEventPreview(List.of(preview));
 
             return guessSchema;
-        } catch (PlcConnectionException | ExecutionException | InterruptedException | TimeoutException e) {
+        } catch (Exception e) {
             throw new AdapterException(e.getMessage(), e);
         }
     }
@@ -204,17 +203,14 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
     @Override
     protected void pullData() {
         // Create PLC read request
-        try {
-            readPlcData(this);
-        } catch (PlcConnectionException e) {
-            this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
-            e.printStackTrace();
+        try(PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
+            readPlcData(plcConnection, this);
+        } catch (Exception e) {
+            LOG.error("Error while reading from PLC with IP {} ", this.ip, e);
         }
-
     }
 
-    private PlcReadRequest makeReadRequest() throws PlcConnectionException {
-        PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip);
+    private PlcReadRequest makeReadRequest(PlcConnection plcConnection) throws PlcConnectionException {
         PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
         for (Map<String, String> node : this.nodes) {
             builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
@@ -222,19 +218,20 @@ public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandle
         return builder.build();
     }
 
-    private void readPlcData(PlcReadResponseHandler handler) throws PlcConnectionException {
-        var readRequest = makeReadRequest();
+    private void readPlcData(PlcConnection plcConnection, PlcReadResponseHandler handler) throws PlcConnectionException {
+        var readRequest = makeReadRequest(plcConnection);
         // Execute the request
         CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
         asyncResponse.whenComplete(handler::onReadResult);
     }
 
-    private Map<String, Object> readPlcDataSynchronized() throws PlcConnectionException, ExecutionException, InterruptedException, TimeoutException, AdapterException {
-        this.before();
-        var readRequest = makeReadRequest();
-        // Execute the request
-        var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
-        return makeEvent(readResponse);
+    private Map<String, Object> readPlcDataSynchronized() throws Exception {
+        try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
+            var readRequest = makeReadRequest(plcConnection);
+            // Execute the request
+            var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
+            return makeEvent(readResponse);
+        }
     }
 
     /**
