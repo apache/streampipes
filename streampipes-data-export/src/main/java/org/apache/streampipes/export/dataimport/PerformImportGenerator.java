@@ -61,7 +61,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleAdapter(String document, String adapterId) throws JsonProcessingException {
     if (shouldStore(adapterId, config.getAdapters())) {
-      new AdapterResolver().writeDocument(document);
+      new AdapterResolver().writeDocument(document, config.isOverrideBrokerSettings());
       permissionsToStore.add(new PermissionInfo(adapterId, AdapterDescription.class));
     }
   }
@@ -85,7 +85,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handleDataSource(String document, String dataSourceId) throws JsonProcessingException {
     if (shouldStore(dataSourceId, config.getDataSources())) {
-      new DataSourceResolver().writeDocument(document);
+      new DataSourceResolver().writeDocument(document, config.isOverrideBrokerSettings());
       permissionsToStore.add(new PermissionInfo(dataSourceId, SpDataStream.class));
     }
   }
@@ -93,7 +93,7 @@ public class PerformImportGenerator extends ImportGenerator<Void> {
   @Override
   protected void handlePipeline(String document, String pipelineId) throws JsonProcessingException {
     if (shouldStore(pipelineId, config.getPipelines())) {
-      new PipelineResolver().writeDocument(document);
+      new PipelineResolver().writeDocument(document, config.isOverrideBrokerSettings());
       permissionsToStore.add(new PermissionInfo(pipelineId, Pipeline.class));
     }
   }

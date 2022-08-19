@@ -19,9 +19,13 @@
 package org.apache.streampipes.export.resolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
+import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
+
+import java.util.stream.Collectors;
 
 public class PipelineResolver extends AbstractResolver<Pipeline> {
 
@@ -31,6 +35,12 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     doc.setRev(null);
     doc.setRestartOnSystemReboot(false);
     doc.setRunning(false);
+    doc.setSepas(doc.getSepas().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
+    doc.setActions(doc.getActions().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
+    doc.setStreams(doc.getStreams()
+      .stream()
+      .filter(s -> s instanceof SpDataSet).peek(s -> ((SpDataSet) s).setSelectedEndpointUrl(null))
+      .collect(Collectors.toList()));
     return doc;
   }
 
@@ -47,6 +57,27 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
   @Override
   public void writeDocument(String document) throws JsonProcessingException {
     getNoSqlStore().getPipelineStorageAPI().storePipeline(deserializeDocument(document));
+  }
+
+  public void writeDocument(String document,
+                            boolean overrideDocument) throws JsonProcessingException {
+    var pipeline = deserializeDocument(document);
+    if (overrideDocument) {
+      pipeline.setSepas(pipeline.getSepas().stream().peek(processor -> {
+        processor.getInputStreams().forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
+        EventGroundingProcessor.applyOverride(processor.getOutputStream().getEventGrounding().getTransportProtocol());
+      }).collect(Collectors.toList()));
+
+      pipeline.setStreams(pipeline.getStreams().stream().peek(stream -> {
+        EventGroundingProcessor.applyOverride(stream.getEventGrounding().getTransportProtocol());
+      }).collect(Collectors.toList()));
+
+      pipeline.setActions(pipeline.getActions().stream().peek(sink -> {
+        sink.getInputStreams().forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
+      }).collect(Collectors.toList()));
+
+    }
+    getNoSqlStore().getPipelineStorageAPI().storePipeline(pipeline);
   }
 
   @Override

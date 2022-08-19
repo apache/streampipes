@@ -35,6 +35,8 @@ public class AssetExportConfiguration {
   private Set<ExportItem> pipelines;
   private Set<ExportItem> files;
 
+  private boolean overrideBrokerSettings;
+
   public AssetExportConfiguration() {
     this.adapters = new HashSet<>();
     this.dashboards = new HashSet<>();
@@ -156,5 +158,13 @@ public class AssetExportConfiguration {
 
   public void addAsset(ExportItem asset) {
     this.assets.add(asset);
+  }
+
+  public boolean isOverrideBrokerSettings() {
+    return overrideBrokerSettings;
+  }
+
+  public void setOverrideBrokerSettings(boolean overrideBrokerSettings) {
+    this.overrideBrokerSettings = overrideBrokerSettings;
   }
 }

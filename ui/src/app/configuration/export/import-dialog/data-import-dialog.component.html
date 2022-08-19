@@ -53,7 +53,19 @@
             <sp-data-export-item [exportItems]="importConfiguration.dataLakeMeasures" sectionTitle="Data Lake Storage"></sp-data-export-item>
             <sp-data-export-item [exportItems]="importConfiguration.files" sectionTitle="Files"></sp-data-export-item>
             <sp-data-export-item [exportItems]="importConfiguration.pipelines" sectionTitle="Pipelines"></sp-data-export-item>
+
+            <div fxFlex="100" fxLayout="column" *ngIf="currentImportStep === 1" class="mt-10">
+                <h4>Import options</h4>
+                <div fxLayout="column"*ngIf="importConfiguration">
+                    <mat-checkbox [(ngModel)]="importConfiguration.overrideBrokerSettings">Use broker settings from this instance</mat-checkbox>
+                </div>
+            </div>
         </div>
+        <div fxFlex="100" fxLayout="column" *ngIf="currentImportStep === 2" class="mt-10" fxLayoutAlign="center center">
+            <mat-spinner [diameter]="50" color="accent"></mat-spinner>
+            <h4 class="mt-10">Importing resources...</h4>
+        </div>
+
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">

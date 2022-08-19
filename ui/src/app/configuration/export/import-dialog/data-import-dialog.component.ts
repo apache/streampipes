@@ -66,6 +66,7 @@ export class SpDataImportDialogComponent implements OnInit {
             this.uploadStatus = Math.round(100 * event.loaded / event.total);
           } else if (event instanceof HttpResponse) {
            this.importConfiguration = event.body as AssetExportConfiguration;
+           this.importConfiguration.overrideBrokerSettings = true;
            this.currentImportStep++;
           }
         },
@@ -76,6 +77,7 @@ export class SpDataImportDialogComponent implements OnInit {
   }
 
   performImport(): void {
+    this.currentImportStep = 2;
     this.dataExportService.triggerImport(this.selectedUploadFile, this.importConfiguration).subscribe(result => {
       this.dialogRef.close();
     });
