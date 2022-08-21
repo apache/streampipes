@@ -25,6 +25,7 @@ import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.lightcouch.DocumentConflictException;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public abstract class AbstractResolver<T> {
 
   public abstract ExportItem convert(T document);
 
-  public abstract void writeDocument(String document) throws JsonProcessingException;
+  public abstract void writeDocument(String document) throws JsonProcessingException, DocumentConflictException;
 
   protected abstract T deserializeDocument(String document) throws JsonProcessingException;
 }

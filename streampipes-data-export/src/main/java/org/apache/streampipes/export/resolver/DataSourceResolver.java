@@ -52,7 +52,9 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
                             boolean overrideDocument) throws JsonProcessingException {
     var dataStream = deserializeDocument(document);
     if (overrideDocument) {
-      EventGroundingProcessor.applyOverride(dataStream.getEventGrounding().getTransportProtocol());
+      if (dataStream.getEventGrounding() != null) {
+        EventGroundingProcessor.applyOverride(dataStream.getEventGrounding().getTransportProtocol());
+      }
     }
     getNoSqlStore().getDataStreamStorage().createElement(dataStream);
   }

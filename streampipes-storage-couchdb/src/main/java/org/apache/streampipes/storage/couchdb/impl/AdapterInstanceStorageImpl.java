@@ -58,7 +58,7 @@ public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> 
     @Override
     public AdapterDescription getAdapter(String adapterId) {
         DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
-        return cmd.execute().get();
+        return cmd.execute().orElse(null);
     }
 
     @Override

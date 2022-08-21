@@ -36,13 +36,14 @@ import {
 import { FormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
+import { BaseAssetLinksDirective } from '../base-asset-links.directive';
 
 @Component({
   selector: 'sp-edit-asset-link-dialog-component',
   templateUrl: './edit-asset-link-dialog.component.html',
   styleUrls: ['./edit-asset-link-dialog.component.scss']
 })
-export class EditAssetLinkDialogComponent implements OnInit {
+export class EditAssetLinkDialogComponent extends BaseAssetLinksDirective implements OnInit {
 
   @Input()
   assetLink: AssetLink;
@@ -57,33 +58,33 @@ export class EditAssetLinkDialogComponent implements OnInit {
 
   clonedAssetLink: AssetLink;
 
-  // Resources
-  pipelines: Pipeline[];
-  dataViews: Dashboard[];
-  dashboards: Dashboard[];
-  dataLakeMeasures: DataLakeMeasure[];
-  dataSources: SpDataStream[];
-  adapters: AdapterDescriptionUnion[];
-  files: FileMetadata[];
 
-  allResources: any[] = [];
   currentResource: any;
 
   selectedLinkType: AssetLinkType;
 
   constructor(private dialogRef: DialogRef<EditAssetLinkDialogComponent>,
-              private genericStorageService: GenericStorageService,
-              private pipelineService: PipelineService,
-              private dataViewService: DataViewDataExplorerService,
-              private dashboardService: DashboardService,
-              private dataLakeService: DatalakeRestService,
-              private pipelineElementService: PipelineElementService,
-              private adapterService: AdapterService,
-              private filesService: FilesService) {
+              protected genericStorageService: GenericStorageService,
+              protected pipelineService: PipelineService,
+              protected dataViewService: DataViewDataExplorerService,
+              protected dashboardService: DashboardService,
+              protected dataLakeService: DatalakeRestService,
+              protected pipelineElementService: PipelineElementService,
+              protected adapterService: AdapterService,
+              protected filesService: FilesService) {
+    super(
+      genericStorageService,
+      pipelineService,
+      dataViewService,
+      dashboardService,
+      dataLakeService,
+      pipelineElementService,
+      adapterService,
+      filesService);
   }
 
   ngOnInit(): void {
-    this.getAllResources();
+    super.onInit();
     this.clonedAssetLink = {...this.assetLink};
     this.selectedLinkType = this.getCurrAssetLinkType();
   }
@@ -101,39 +102,6 @@ export class EditAssetLinkDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  getAllResources() {
-    zip(
-      this.pipelineService.getOwnPipelines(),
-      this.dataViewService.getDataViews(),
-      this.dashboardService.getDashboards(),
-      this.pipelineElementService.getDataStreams(),
-      this.dataLakeService.getAllMeasurementSeries(),
-      this.filesService.getFileMetadata(),
-      this.adapterService.getAdapters()).subscribe(response => {
-      this.pipelines = response[0];
-      this.dataViews = response[1];
-      this.dashboards = response[2];
-      this.dataSources = response[3];
-      this.dataLakeMeasures = response[4];
-      this.files = response[5];
-      this.adapters = response[6];
-
-      this.allResources = [
-        ...this.pipelines,
-        ...this.dataViews,
-        ...this.dashboards,
-        ...this.dataSources,
-        ...this.dataLakeMeasures,
-        ...this.files,
-        ...this.adapters
-      ];
-      if (!this.createMode) {
-        this.currentResource = this.allResources.find(r => r._id === this.clonedAssetLink.resourceId ||
-          r.elementId === this.clonedAssetLink.resourceId);
-      }
-    });
-  }
-
   onLinkTypeChanged(event: MatSelectChange): void {
     this.selectedLinkType = event.value;
     const linkType = this.assetLinkTypes.find(a => a.linkType === this.selectedLinkType.linkType);
@@ -147,6 +115,13 @@ export class EditAssetLinkDialogComponent implements OnInit {
     this.clonedAssetLink.resourceId = id;
     this.clonedAssetLink.linkLabel = label;
     this.currentResource = currentResource;
+  }
+
+  afterResourcesLoaded(): void {
+    if (!this.createMode) {
+      this.currentResource = this.allResources.find(r => r._id === this.clonedAssetLink.resourceId ||
+        r.elementId === this.clonedAssetLink.resourceId);
+    }
   }
 
 }

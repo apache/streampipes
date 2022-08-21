@@ -39,6 +39,7 @@
 
     <sp-basic-inner-panel panelTitle="Linked Resources" outerMargin="0px 0px">
         <div header fxLayoutAlign="end center" fxLayout="row" fxFlex="100">
+            <button mat-button color="accent" *ngIf="editMode" (click)="openManageAssetLinksDialog()"><i class="material-icons">add</i><span>&nbsp;Manage links</span></button>
             <button mat-button color="accent" *ngIf="editMode" (click)="openCreateAssetLinkDialog()"><i class="material-icons">add</i><span>&nbsp;Add link</span></button>
         </div>
         <div fxLayout="column" fxFlex="100" *ngIf="assetLinkTypes">
