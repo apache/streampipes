@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.netio.model;
+package org.apache.streampipes.connect.adapters.netio.model;
 
 import com.google.gson.annotations.SerializedName;
 
