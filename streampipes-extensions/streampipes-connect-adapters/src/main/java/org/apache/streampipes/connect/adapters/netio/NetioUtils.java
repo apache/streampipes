@@ -16,10 +16,10 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.netio;
+package org.apache.streampipes.connect.adapters.netio;
 
-import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioGlobalMeasure;
-import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioPowerOutput;
+import org.apache.streampipes.connect.adapters.netio.model.NetioGlobalMeasure;
+import org.apache.streampipes.connect.adapters.netio.model.NetioPowerOutput;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;

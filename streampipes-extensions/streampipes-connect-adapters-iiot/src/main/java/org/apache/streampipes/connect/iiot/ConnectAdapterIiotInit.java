@@ -22,18 +22,16 @@ import org.apache.streampipes.connect.iiot.adapters.influxdb.InfluxDbSetAdapter;
 import org.apache.streampipes.connect.iiot.adapters.influxdb.InfluxDbStreamAdapter;
 import org.apache.streampipes.connect.iiot.adapters.mysql.MySqlSetAdapter;
 import org.apache.streampipes.connect.iiot.adapters.mysql.MySqlStreamAdapter;
-import org.apache.streampipes.connect.iiot.adapters.netio.NetioMQTTAdapter;
-import org.apache.streampipes.connect.iiot.adapters.netio.NetioRestAdapter;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
 import org.apache.streampipes.connect.iiot.adapters.ros.RosBridgeAdapter;
 import org.apache.streampipes.connect.iiot.adapters.simulator.machine.MachineDataStreamAdapter;
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.connect.iiot.protocol.set.FileProtocol;
 import org.apache.streampipes.connect.iiot.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.*;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 
@@ -55,8 +53,6 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
 				.registerAdapter(new OpcUaAdapter())
 				.registerAdapter(new InfluxDbStreamAdapter())
 				.registerAdapter(new InfluxDbSetAdapter())
-				.registerAdapter(new NetioRestAdapter())
-				.registerAdapter(new NetioMQTTAdapter())
 				.registerAdapter(new Plc4xS7Adapter())
 				.registerAdapter(new Plc4xModbusAdapter())
 				.registerAdapter(new FileProtocol())

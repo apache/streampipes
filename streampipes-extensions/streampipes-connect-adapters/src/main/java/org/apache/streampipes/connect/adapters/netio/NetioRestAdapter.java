@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.iiot.adapters.netio;
+package org.apache.streampipes.connect.adapters.netio;
 
 import com.google.gson.Gson;
 import org.apache.http.HttpHost;
@@ -24,12 +24,12 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
-import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioAllPowerOutputs;
-import org.apache.streampipes.connect.iiot.adapters.netio.model.NetioPowerOutput;
+import org.apache.streampipes.connect.adapters.PullAdapter;
+import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;
+import org.apache.streampipes.connect.adapters.netio.model.NetioPowerOutput;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
