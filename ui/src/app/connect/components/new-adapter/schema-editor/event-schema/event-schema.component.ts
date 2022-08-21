@@ -146,6 +146,7 @@ export class EventSchemaComponent implements OnChanges {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
     this.validEventSchema = this.checkIfValid(this.eventSchema);
+    this.updatePreview();
   }
 
   public addNestedProperty(eventProperty?: EventPropertyNested): void {
@@ -213,10 +214,15 @@ export class EventSchemaComponent implements OnChanges {
     this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
     this.transformationRuleService.setNewEventSchema(this.eventSchema);
     const ruleDescriptions = this.transformationRuleService.getTransformationRuleDescriptions();
-    this.restService.getAdapterEventPreview({rules: ruleDescriptions, inputData: this.eventPreview[0]}).subscribe(preview => {
-      this.desiredPreview = preview;
-      this.isPreviewEnabled = true;
-    });
+    if (this.eventPreview && this.eventPreview.length > 0) {
+      this.restService.getAdapterEventPreview({
+        rules: ruleDescriptions,
+        inputData: this.eventPreview[0]
+      }).subscribe(preview => {
+        this.desiredPreview = preview;
+        this.isPreviewEnabled = true;
+      });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

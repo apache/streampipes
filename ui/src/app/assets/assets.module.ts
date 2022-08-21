@@ -43,6 +43,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { SpAssetLinkItemComponent } from './components/asset-details/asset-details-panel/asset-link-item/asset-link-item.component';
 import { EditAssetLinkDialogComponent } from './dialog/edit-asset-link/edit-asset-link-dialog.component';
 import { SpCreateAssetDialogComponent } from './dialog/create-asset/create-asset-dialog.component';
+import { SpManageAssetLinksDialogComponent } from './dialog/manage-asset-links/manage-asset-links-dialog.component';
 
 @NgModule({
   imports: [
@@ -93,7 +94,8 @@ import { SpCreateAssetDialogComponent } from './dialog/create-asset/create-asset
     SpAssetLinkItemComponent,
     SpAssetOverviewComponent,
     SpAssetSelectionPanelComponent,
-    SpCreateAssetDialogComponent
+    SpCreateAssetDialogComponent,
+    SpManageAssetLinksDialogComponent
   ],
   providers: [],
 })

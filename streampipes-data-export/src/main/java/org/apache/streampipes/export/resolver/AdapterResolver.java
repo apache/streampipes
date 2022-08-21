@@ -30,7 +30,7 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   @Override
   public AdapterDescription findDocument(String resourceId) {
-    var doc =  getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
+    var doc = getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
     doc.setRev(null);
     doc.setSelectedEndpointUrl(null);
     if (doc instanceof AdapterStreamDescription) {
@@ -67,4 +67,5 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
   protected AdapterDescription deserializeDocument(String document) throws JsonProcessingException {
     return this.spMapper.readValue(document, AdapterDescription.class);
   }
+
 }

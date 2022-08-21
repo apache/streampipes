@@ -22,6 +22,7 @@ import { AssetConstants } from '../../../constants/asset.constants';
 import { AssetUploadDialogComponent } from '../../../dialog/asset-upload/asset-upload-dialog.component';
 import { DialogService, PanelType } from '../../../../../../dist/streampipes/shared-ui';
 import { EditAssetLinkDialogComponent } from '../../../dialog/edit-asset-link/edit-asset-link-dialog.component';
+import { SpManageAssetLinksDialogComponent } from '../../../dialog/manage-asset-links/manage-asset-links-dialog.component';
 
 
 @Component({
@@ -50,6 +51,24 @@ export class SpAssetDetailsPanelComponent implements OnInit {
   ngOnInit(): void {
     this.genericStorageService.getAllDocuments(AssetConstants.ASSET_LINK_TYPES_DOC_NAME).subscribe(assetLinkTypes => {
       this.assetLinkTypes = assetLinkTypes.sort((a, b) => a.linkLabel.localeCompare(b.linkLabel));
+    });
+  }
+
+  openManageAssetLinksDialog(): void {
+    const dialogRef = this.dialogService.open(SpManageAssetLinksDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Manage asset links',
+      width: '50vw',
+      data: {
+        'assetLinks': this.asset.assetLinks,
+        'assetLinkTypes': this.assetLinkTypes
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(assetLinks => {
+      if (assetLinks) {
+        this.asset.assetLinks = assetLinks;
+      }
     });
   }
 
