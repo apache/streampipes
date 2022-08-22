@@ -165,4 +165,8 @@ export class BarRaceWidgetComponent extends BaseStreamPipesWidget implements OnI
   protected getQueryLimit(extractor: StaticPropertyExtractor): number {
     return 1;
   }
+
+  getFieldsToQuery(): string[] {
+    return [this.partitionField, this.valueField];
+  }
 }

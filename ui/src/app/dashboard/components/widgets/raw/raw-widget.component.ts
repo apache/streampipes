@@ -65,4 +65,8 @@ export class RawWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
     }
 
+    getFieldsToQuery(): string[] {
+        return undefined;
+    }
+
 }

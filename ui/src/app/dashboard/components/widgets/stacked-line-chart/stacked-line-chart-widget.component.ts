@@ -91,6 +91,10 @@ export class StackedLineChartWidgetComponent extends BaseEchartsWidget implement
     this.chartOption.yAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
   }
 
+  getFieldsToQuery(): string[] {
+    return this.valueFields;
+  }
+
   protected onEvent(events: any) {
     this.dynamicData = this.chartOption;
     this.dynamicData.series = [];

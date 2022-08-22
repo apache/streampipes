@@ -66,4 +66,8 @@ export class HtmlWidgetComponent extends BaseStreamPipesWidget implements OnInit
         return 1;
     }
 
+    getFieldsToQuery(): string[] {
+        return [this.selectedHtmlField];
+    }
+
 }

@@ -39,5 +39,4 @@ export class AreaWidgetComponent extends BaseNgxLineChartsStreamPipesWidget impl
     ngOnDestroy(): void {
         super.ngOnDestroy();
     }
-
 }
