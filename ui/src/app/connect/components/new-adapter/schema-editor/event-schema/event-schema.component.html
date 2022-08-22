@@ -97,7 +97,7 @@
                                     [(originalEventSchema)]="oldEventSchema"
                                     [eventPreview]="eventPreview"
                                     [fieldStatusInfo]="fieldStatusInfo"
-                                    (refreshTreeEmitter)="refreshTree()"
+                                    (refreshTreeEmitter)="refreshTree($event)"
                                     [(countSelected)]="countSelected"></event-property-row>
                         </ng-template>
                     </tree-root>
