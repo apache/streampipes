@@ -52,7 +52,7 @@ export class EventPropertyRowComponent implements OnInit {
   @Output() isEditableChange = new EventEmitter<boolean>();
   @Output() eventSchemaChange = new EventEmitter<EventSchema>();
   @Output() originalEventSchemaChange = new EventEmitter<EventSchema>();
-  @Output() refreshTreeEmitter = new EventEmitter<void>();
+  @Output() refreshTreeEmitter = new EventEmitter<boolean>();
   @Output() countSelectedChange = new EventEmitter<number>();
 
   label: string;
@@ -152,7 +152,7 @@ export class EventPropertyRowComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(refresh => {
       this.timestampProperty = this.isTimestampProperty(this.node.data);
-      this.refreshTreeEmitter.emit();
+      this.refreshTreeEmitter.emit(true);
     });
   }
 
@@ -204,7 +204,7 @@ export class EventPropertyRowComponent implements OnInit {
       }
     }
     this.countSelectedChange.emit(this.countSelected);
-    this.refreshTreeEmitter.emit();
+    this.refreshTreeEmitter.emit(false);
   }
 
   public addNestedProperty(eventProperty: EventPropertyNested): void {
@@ -215,6 +215,6 @@ export class EventPropertyRowComponent implements OnInit {
     const property: EventPropertyNested = new EventPropertyNested();
     property.elementId = uuid;
     eventProperty.eventProperties.push(property);
-    this.refreshTreeEmitter.emit();
+    this.refreshTreeEmitter.emit(false);
   }
 }
