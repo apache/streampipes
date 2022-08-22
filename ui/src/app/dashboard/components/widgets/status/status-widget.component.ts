@@ -72,4 +72,8 @@ export class StatusWidgetComponent extends BaseStreamPipesWidget implements OnIn
     return 1;
   }
 
+  getFieldsToQuery(): string[] {
+    return undefined;
+  }
+
 }

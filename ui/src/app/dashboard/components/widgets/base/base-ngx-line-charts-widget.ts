@@ -71,4 +71,8 @@ export abstract class BaseNgxLineChartsStreamPipesWidget extends BaseNgxChartsSt
     protected getQueryLimit(extractor: StaticPropertyExtractor): number {
         return extractor.integerParameter(WidgetConfigBuilder.QUERY_LIMIT_KEY);
     }
+
+    getFieldsToQuery(): string[] {
+        return [this.selectedNumberProperty];
+    }
 }

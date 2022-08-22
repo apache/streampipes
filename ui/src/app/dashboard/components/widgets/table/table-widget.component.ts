@@ -34,6 +34,7 @@ import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 export class TableWidgetComponent extends BaseStreamPipesWidget implements OnInit, OnDestroy {
 
     selectedProperties: string[];
+    fields: string[];
 
     displayedColumns: string[] = [];
     dataSource = new MatTableDataSource();
@@ -61,7 +62,12 @@ export class TableWidgetComponent extends BaseStreamPipesWidget implements OnIni
 
     extractConfig(extractor: StaticPropertyExtractor) {
         this.selectedProperties = extractor.mappingPropertyValues(TableConfig.SELECTED_PROPERTIES_KEYS);
+        this.fields = extractor.mappingPropertyValues(TableConfig.SELECTED_PROPERTIES_KEYS);
         this.selectedProperties.push(BaseStreamPipesWidget.TIMESTAMP_KEY);
+    }
+
+    getFieldsToQuery(): string[] {
+        return this.fields;
     }
 
     protected onEvent(events: any[]) {

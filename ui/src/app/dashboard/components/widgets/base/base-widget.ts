@@ -18,18 +18,19 @@
 
 import { Directive, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
-import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, interval, Observable, Subscription, timer } from 'rxjs';
 import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 import { ResizeService } from '../../../services/resize.service';
 import {
   DashboardWidgetModel,
   DataLakeMeasure,
   DatalakeQueryParameterBuilder,
-  DatalakeRestService,
+  DatalakeRestService, EventPropertyPrimitive, EventPropertyUnion, FieldConfig,
   SpQueryResult
 } from '@streampipes/platform-services';
-import { map, switchMap } from 'rxjs/operators';
+import { exhaustMap, map, switchMap } from 'rxjs/operators';
 import { GridsterItemComponent } from 'angular-gridster2';
+import { query } from '@angular/animations';
 
 @Directive()
 export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDestroy {
@@ -87,10 +88,9 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
     this.intervalSubject = new BehaviorSubject<number>(this.refreshIntervalInSeconds);
     this.subscription = this.intervalSubject.pipe(
       switchMap(val => interval(val * 1000)))
-      .subscribe(() => {
-        this.fireQuery().subscribe(result => {
-          this.processQueryResult(result);
-        });
+      .pipe(exhaustMap(() => this.fireQuery()))
+      .subscribe((result) => {
+        this.processQueryResult(result);
       });
   }
 
@@ -122,6 +122,7 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.intervalSubject.unsubscribe();
     this.resizeSub.unsubscribe();
   }
 
@@ -184,6 +185,38 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
 
   buildQuery() {
     const queryBuilder = DatalakeQueryParameterBuilder.create();
-    return queryBuilder.withLimit(this.queryLimit).withOrdering('DESC').build();
+    const columns = this.getFieldsToQuery();
+    if (columns) {
+      if (this.hasOnlyDimensionFields(this.widgetDataConfig.eventSchema.eventProperties, columns)) {
+        const firstMeasurementField = this.getAnyMeasurementField(this.widgetDataConfig.eventSchema.eventProperties);
+        columns.push(firstMeasurementField);
+      }
+      const fields: FieldConfig[] = columns.map(f => {
+        return {runtimeName: f, selected: false, numeric: false};
+      });
+      queryBuilder.withColumnFilter(fields, false);
+    }
+
+    return queryBuilder
+      .withLimit(this.queryLimit)
+      .withOrdering('DESC')
+      .build();
   }
+
+  getAnyMeasurementField(eventProperties: EventPropertyUnion[]): string {
+    return eventProperties
+      .filter(ep => ep instanceof EventPropertyPrimitive)
+      .find(ep => ep.propertyScope === 'MEASUREMENT_PROPERTY').runtimeName;
+  }
+
+  hasOnlyDimensionFields(eventProperties: EventPropertyUnion[],
+                         columns: string[]): boolean {
+    return columns
+      .map(column => eventProperties
+        .find(ep => ep.runtimeName === column))
+      .filter(ep => ep instanceof EventPropertyPrimitive)
+      .every(ep => (ep as EventPropertyPrimitive).propertyScope === 'DIMENSION_PROPERTY');
+  }
+
+  abstract getFieldsToQuery(): string[];
 }

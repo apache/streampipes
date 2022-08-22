@@ -58,7 +58,7 @@ export class DatalakeRestService {
       const url = this.dataLakeUrl + '/measurements/' + index;
       const headers = ignoreLoadingBar ? {ignoreLoadingBar: ''} : {};
       // @ts-ignore
-      return this.http.get<SpQueryResult>(url, {params: queryParams}, headers);
+      return this.http.get<SpQueryResult>(url, {params: queryParams, headers});
     }
   }
 

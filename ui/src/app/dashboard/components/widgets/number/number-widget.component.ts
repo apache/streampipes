@@ -65,7 +65,7 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
   protected onEvent(events: any[]) {
     let value = events[0][this.selectedProperty];
-    if (!isNaN(value)) {
+    if (typeof value === 'number') {
       value = value.toFixed(2);
     }
     this.item = value;
@@ -76,6 +76,10 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
   protected getQueryLimit(extractor: StaticPropertyExtractor): number {
     return 1;
+  }
+
+  getFieldsToQuery(): string[] {
+    return [this.selectedProperty];
   }
 
 }

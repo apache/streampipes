@@ -106,6 +106,10 @@ export class WordcloudWidgetComponent extends BaseStreamPipesWidget implements O
     this.windowSize = extractor.integerParameter(WordCloudConfig.WINDOW_SIZE_KEY);
   }
 
+  getFieldsToQuery(): string[] {
+    return [this.countProperty, this.nameProperty];
+  }
+
   protected onEvent(event: any) {
     const value = event[this.countProperty];
     const name = event[this.nameProperty];

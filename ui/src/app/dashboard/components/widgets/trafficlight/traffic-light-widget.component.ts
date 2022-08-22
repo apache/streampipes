@@ -80,6 +80,9 @@ export class TrafficLightWidgetComponent extends BaseStreamPipesWidget implement
         this.selectedLimitGreaterThan = extractor.selectedSingleValue(TrafficLightConfig.CRITICAL_VALUE_LIMIT) === 'Upper Limit';
     }
 
+    getFieldsToQuery(): string[] {
+        return [this.selectedFieldToObserve];
+    }
 
     protected onEvent(events: any[]) {
         const item = events[0][this.selectedFieldToObserve];
