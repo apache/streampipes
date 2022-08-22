@@ -155,7 +155,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
       title: 'Download data',
       width: '50vw',
       data: {
-        'index': this.dataLakeMeasure.measureName,
         'date': DateRange.fromTimeSettings(this.timeSettings),
         'dataConfig': this.configuredWidget.dataConfig as DataExplorerDataConfig
       }
