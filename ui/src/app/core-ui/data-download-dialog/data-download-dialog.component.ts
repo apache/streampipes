@@ -37,12 +37,17 @@ import { DialogRef } from '@streampipes/shared-ui';
 // tslint:disable-next-line:component-class-suffix
 export class DataDownloadDialogComponent implements OnInit {
 
-  @Input() index: string;
-  @Input() date: DateRange;
+  /**
+   * Provide either measureName without additional configuration
+   * or dataConfig to allow selection of multiple sources
+   */
+  @Input() measureName: string;
   @Input() dataConfig: DataExplorerDataConfig;
 
+  @Input() date: DateRange;
+
   downloadFormat = 'csv';
-  delimiter = ',';
+  delimiter = 'comma';
   selectedData = 'visible';
   downloadFinish = false;
   downloadedMBs: number = undefined;
@@ -75,6 +80,8 @@ export class DataDownloadDialogComponent implements OnInit {
   }
 
   downloadData() {
+    const index = !this.dataConfig ?
+      this.measureName : this.dataConfig.sourceConfigs[this.selectedQueryIndex].measureName;
     this.nextStep();
     const startTime = this.date.startDate.getTime();
     const endTime = this.date.endDate.getTime();
@@ -83,13 +90,13 @@ export class DataDownloadDialogComponent implements OnInit {
     switch (this.selectedData) {
       case 'all':
         this.performRequest(this.datalakeRestService.downloadRawData(
-          this.index,
+          index,
           this.downloadFormat,
           this.delimiter), '', '');
         break;
       case 'customInterval':
         this.performRequest(this.datalakeRestService.downloadRawData(
-            this.index,
+            index,
             this.downloadFormat,
             this.delimiter,
             startTime,
@@ -100,7 +107,7 @@ export class DataDownloadDialogComponent implements OnInit {
         this.performRequest(
           this.datalakeRestService
             .downloadQueriedData(
-              this.index,
+              index,
               this.downloadFormat,
               this.delimiter,
               this.generateQueryRequest(startTime, endTime)
@@ -127,7 +134,7 @@ export class DataDownloadDialogComponent implements OnInit {
 
       // finished
       if (event.type === HttpEventType.Response) {
-        this.createFile(event.body, this.downloadFormat, this.index, startDate, endDate);
+        this.createFile(event.body, this.downloadFormat, this.measureName, startDate, endDate);
         this.downloadFinish = true;
       }
     });

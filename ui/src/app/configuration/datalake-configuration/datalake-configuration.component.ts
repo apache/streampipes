@@ -161,7 +161,7 @@ export class DatalakeConfigurationComponent implements OnInit {
       title: 'Download data',
       width: '50vw',
       data: {
-        'index': measurementName,
+        'measureName': measurementName,
       }
     });
   }
