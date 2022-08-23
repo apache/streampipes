@@ -77,6 +77,7 @@ export class DashboardOverviewComponent implements OnInit {
   openNewDashboardDialog() {
     const dashboard = {} as Dashboard;
     dashboard.widgets = [];
+    dashboard.dashboardGeneralSettings = {};
 
     this.openDashboardModificationDialog(true, dashboard);
   }

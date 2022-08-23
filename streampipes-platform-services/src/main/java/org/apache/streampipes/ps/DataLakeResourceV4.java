@@ -40,6 +40,7 @@ import javax.ws.rs.core.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
 
@@ -163,6 +164,20 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                 return badRequest(e.getMessage());
             }
         }
+    }
+
+    @POST
+    @Path("/query")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getData(List<Map<String, String>> queryParams) {
+        var results = queryParams
+          .stream()
+          .map(qp -> new ProvidedQueryParams(qp.get("measureName"), qp))
+          .map(params -> this.dataLakeManagement.getData(params))
+          .collect(Collectors.toList());
+
+        return ok(results);
     }
 
     @GET

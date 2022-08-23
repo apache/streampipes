@@ -45,6 +45,11 @@ export class DatalakeRestService {
     }));
   }
 
+  performMultiQuery(queryParams: DatalakeQueryParameters[]): Observable<SpQueryResult[]> {
+    return this.http.post(`${this.dataLakeUrl}/query`, queryParams, {headers: {ignoreLoadingBar: ''}})
+      .pipe(map(response => response as SpQueryResult[]));
+  }
+
   getData(index: string,
           queryParams: DatalakeQueryParameters,
           ignoreLoadingBar?: boolean): Observable<SpQueryResult> {
