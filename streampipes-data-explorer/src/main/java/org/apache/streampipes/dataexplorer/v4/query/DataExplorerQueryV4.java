@@ -44,8 +44,18 @@ public class DataExplorerQueryV4 {
 
     protected int maximumAmountOfEvents;
 
+    private boolean appendId = false;
+    private String forId;
+
     public DataExplorerQueryV4() {
 
+    }
+
+    public DataExplorerQueryV4(Map<String, QueryParamsV4> params,
+                               String forId) {
+        this(params);
+        this.appendId = true;
+        this.forId = forId;
     }
 
     public DataExplorerQueryV4(Map<String, QueryParamsV4> params) {
@@ -134,6 +144,11 @@ public class DataExplorerQueryV4 {
                 result.addDataResult(series);
             });
         }
+
+        if (this.appendId) {
+            result.setForId(this.forId);
+        }
+
         return result;
     }
 

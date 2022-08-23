@@ -16,17 +16,26 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList, ViewChild,
+  ViewChildren,
+  ViewContainerRef
+} from '@angular/core';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import {
   DashboardItem,
   DashboardService,
   DashboardWidgetModel,
-  DataLakeMeasure,
+  DataLakeMeasure, DatalakeQueryParameters,
   DatalakeRestService,
   DataViewDataExplorerService,
   Pipeline,
-  PipelineService
+  PipelineService, SpQueryResult
 } from '@streampipes/platform-services';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { EditModeService } from '../../services/edit-mode.service';
@@ -35,6 +44,8 @@ import { zip } from 'rxjs';
 import { GridsterItemComponent } from 'angular-gridster2';
 import { ResizeService } from '../../services/resize.service';
 import { GridsterInfo } from '../../models/gridster-info.model';
+import { BaseDataExplorerWidgetDirective } from '../../../data-explorer/components/widgets/base/base-data-explorer-widget.directive';
+import { BaseStreamPipesWidget } from '../widgets/base/base-widget';
 
 @Component({
   selector: 'dashboard-widget',
@@ -49,6 +60,8 @@ export class DashboardWidgetComponent implements OnInit {
   @Input() itemWidth: number;
   @Input() itemHeight: number;
   @Input() gridsterItemComponent: GridsterItemComponent;
+  @Input() globalRefresh: boolean;
+  @Input() allMeasurements: DataLakeMeasure[];
 
   @Output() deleteCallback: EventEmitter<DashboardItem> = new EventEmitter<DashboardItem>();
   @Output() updateCallback: EventEmitter<DashboardWidgetModel> = new EventEmitter<DashboardWidgetModel>();
@@ -60,6 +73,8 @@ export class DashboardWidgetComponent implements OnInit {
 
   pipelineRunning = false;
   widgetNotAvailable = false;
+
+  _activeWidget: BaseStreamPipesWidget;
 
   constructor(private dashboardService: DashboardService,
               private dialogService: DialogService,
@@ -86,10 +101,10 @@ export class DashboardWidgetComponent implements OnInit {
   }
 
   loadVisualizablePipeline() {
-    zip(this.dataExplorerService.getPersistedDataStream(this.configuredWidget.pipelineId, this.configuredWidget.visualizationName), this.dataLakeRestService.getAllMeasurementSeries())
+    zip(this.dataExplorerService.getPersistedDataStream(this.configuredWidget.pipelineId, this.configuredWidget.visualizationName))
       .subscribe(res => {
         const vizPipeline = res[0];
-        const measurement = res[1].find(m => m.measureName === vizPipeline.measureName);
+        const measurement = this.allMeasurements.find(m => m.measureName === vizPipeline.measureName);
         vizPipeline.eventSchema = measurement.eventSchema;
         this.widgetDataConfig = vizPipeline;
         this.dashboardService.getPipelineById(vizPipeline.pipelineId).subscribe(pipeline => {
@@ -150,5 +165,26 @@ export class DashboardWidgetComponent implements OnInit {
         this.updateCallback.emit(this.configuredWidget);
       }
     });
+  }
+
+  @ViewChild('activeWidget')
+  set activeWidget(activeWidget: BaseStreamPipesWidget) {
+    this._activeWidget = activeWidget;
+  }
+
+  getWidgetQuery(): DatalakeQueryParameters {
+    if (this._activeWidget) {
+      return this._activeWidget.buildQuery(true);
+    } else {
+      return undefined;
+    }
+  }
+
+  processQueryResponse(res: SpQueryResult) {
+    this._activeWidget.processQueryResult(res);
+  }
+
+  getWidgetId(): string {
+    return this.widget.id;
   }
 }

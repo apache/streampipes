@@ -66,6 +66,8 @@ import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParam
 
 public class DataLakeManagementV4 {
 
+    public static final String FOR_ID_KEY = "forId";
+
     private static final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
             .appendPattern("uuuu[-MM[-dd]]['T'HH[:mm[:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]]]][XXX]")
             .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
@@ -87,7 +89,12 @@ public class DataLakeManagementV4 {
             return new DataExplorerQueryV4(queryParts, maximumAmountOfEvents).executeQuery();
         }
 
-        return new DataExplorerQueryV4(queryParts).executeQuery();
+        if (queryParams.getProvidedParams().containsKey(FOR_ID_KEY)) {
+            String forWidgetId = queryParams.getProvidedParams().get(FOR_ID_KEY);
+            return new DataExplorerQueryV4(queryParts, forWidgetId).executeQuery();
+        } else {
+            return new DataExplorerQueryV4(queryParts).executeQuery();
+        }
     }
 
     public void getDataAsStream(ProvidedQueryParams params, String format, OutputStream outputStream) throws IOException {

@@ -24,7 +24,7 @@ import { ResizeService } from '../../../services/resize.service';
 import {
   DashboardWidgetModel,
   DataLakeMeasure,
-  DatalakeQueryParameterBuilder,
+  DatalakeQueryParameterBuilder, DatalakeQueryParameters,
   DatalakeRestService, EventPropertyPrimitive, EventPropertyUnion, FieldConfig,
   SpQueryResult
 } from '@streampipes/platform-services';
@@ -50,6 +50,7 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
   @Input() itemWidth: number;
   @Input() itemHeight: number;
   @Input() editMode: boolean;
+  @Input() globalRefresh: boolean;
 
   subscription: Subscription;
   intervalSubject: BehaviorSubject<number>;
@@ -83,15 +84,17 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
 
     this.prepareConfigExtraction();
 
-    this.fireQuery().subscribe(result => this.processQueryResult(result));
+    if (!(this.globalRefresh)) {
+      this.fireQuery().subscribe(result => this.processQueryResult(result));
 
-    this.intervalSubject = new BehaviorSubject<number>(this.refreshIntervalInSeconds);
-    this.subscription = this.intervalSubject.pipe(
-      switchMap(val => interval(val * 1000)))
-      .pipe(exhaustMap(() => this.fireQuery()))
-      .subscribe((result) => {
-        this.processQueryResult(result);
-      });
+      this.intervalSubject = new BehaviorSubject<number>(this.refreshIntervalInSeconds);
+      this.subscription = this.intervalSubject.pipe(
+        switchMap(val => interval(val * 1000)))
+        .pipe(exhaustMap(() => this.fireQuery()))
+        .subscribe((result) => {
+          this.processQueryResult(result);
+        });
+    }
   }
 
   prepareConfigExtraction() {
@@ -121,9 +124,13 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-    this.intervalSubject.unsubscribe();
-    this.resizeSub.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      this.intervalSubject.unsubscribe();
+    }
+    if (this.resizeSub) {
+      this.resizeSub.unsubscribe();
+    }
   }
 
   computeCurrentWidth(width: number): number {
@@ -183,7 +190,7 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
     }
   }
 
-  buildQuery() {
+  public buildQuery(includeMeasure = false): DatalakeQueryParameters {
     const queryBuilder = DatalakeQueryParameterBuilder.create();
     const columns = this.getFieldsToQuery();
     if (columns) {
@@ -197,10 +204,17 @@ export abstract class BaseStreamPipesWidget implements OnInit, OnChanges, OnDest
       queryBuilder.withColumnFilter(fields, false);
     }
 
-    return queryBuilder
+    const queryParams = queryBuilder
       .withLimit(this.queryLimit)
       .withOrdering('DESC')
       .build();
+
+    if (includeMeasure) {
+      queryParams.measureName = this.widgetDataConfig.measureName;
+      queryParams.forId = this.widgetConfig._id;
+    }
+
+    return queryParams;
   }
 
   getAnyMeasurementField(eventProperties: EventPropertyUnion[]): string {

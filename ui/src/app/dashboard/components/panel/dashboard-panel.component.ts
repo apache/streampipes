@@ -17,7 +17,13 @@
  */
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ClientDashboardItem, Dashboard, DashboardService, DashboardWidgetModel } from '@streampipes/platform-services';
+import {
+    ClientDashboardItem,
+    Dashboard,
+    DashboardService,
+    DashboardWidgetModel, DataLakeMeasure,
+    DatalakeRestService
+} from '@streampipes/platform-services';
 import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { AddVisualizationDialogComponent } from '../../dialogs/add-widget/add-visualization-dialog.component';
 import { RefreshDashboardService } from '../../services/refresh-dashboard.service';
@@ -46,10 +52,12 @@ export class DashboardPanelComponent implements OnInit {
 
     widgetIdsToRemove: string[] = [];
     widgetsToUpdate: Map<string, DashboardWidgetModel> = new Map<string, DashboardWidgetModel>();
+    allMeasurements: DataLakeMeasure[];
 
     headerVisible = true;
 
     constructor(private dashboardService: DashboardService,
+                private datalakeRestService: DatalakeRestService,
                 private dialogService: DialogService,
                 private dialog: MatDialog,
                 private refreshDashboardService: RefreshDashboardService,
@@ -72,6 +80,7 @@ export class DashboardPanelComponent implements OnInit {
         });
 
         this.getDashboard(params.id);
+        this.getAllMeasurements();
 
     }
 
@@ -84,6 +93,9 @@ export class DashboardPanelComponent implements OnInit {
         });
     }
 
+    getAllMeasurements(): void {
+        this.datalakeRestService.getAllMeasurementSeries().subscribe(res => this.allMeasurements = res);
+    }
 
     addWidget(): void {
         const dialogRef = this.dialogService.open(AddVisualizationDialogComponent, {
