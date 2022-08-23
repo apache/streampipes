@@ -31,6 +31,7 @@ public class SpQueryResult {
     private List<DataSeries> allDataSeries;
     private int sourceIndex;
     private SpQueryStatus spQueryStatus;
+    private String forId;
 
     public SpQueryResult() {
         this.total = 0;
@@ -91,5 +92,13 @@ public class SpQueryResult {
 
     public void setSpQueryStatus(SpQueryStatus spQueryStatus) {
         this.spQueryStatus = spQueryStatus;
+    }
+
+    public String getForId() {
+        return forId;
+    }
+
+    public void setForId(String forId) {
+        this.forId = forId;
     }
 }

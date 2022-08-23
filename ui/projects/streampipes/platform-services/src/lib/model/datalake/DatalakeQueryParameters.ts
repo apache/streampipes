@@ -32,5 +32,8 @@ export class DatalakeQueryParameters {
   public filter: string;
   public maximumAmountOfEvents: number;
 
+  // should be only used for multi-query requests
+  public measureName: string;
+  public forId: string;
 }
 

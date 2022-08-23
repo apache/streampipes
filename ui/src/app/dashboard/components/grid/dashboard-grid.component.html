@@ -23,10 +23,12 @@
 <gridster [options]="options" [ngClass]="editMode ? 'edit' : ''">
     <ng-container *ngFor="let item of dashboard.widgets;let i=index">
         <gridster-item [item]="item" #gridsterItemComponent>
-            <dashboard-widget (updateCallback)="propagateItemUpdate($event)"
+            <dashboard-widget (updateCallback)="propagateItemUpdate($event)" #dashboardWidgetComponent
                               (deleteCallback)="propagateItemRemoval($event)"
                               [widget]="item"
                               [editMode]="editMode"
+                              [allMeasurements]="allMeasurements"
+                              [globalRefresh]="dashboard.dashboardGeneralSettings.globalRefresh"
                               [headerVisible]="headerVisible"
                               [gridsterItemComponent]="gridsterItemComponent"
                               [itemWidth]="gridsterItemComponent.width"
