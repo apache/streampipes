@@ -19,12 +19,22 @@
 <div [className]="className" fxFlex="100"
      fxLayout="column">
     <div fxLayout="column">
-        <div class="type" fxLayout="column" fxLayoutAlign="start start">
-            <div class="type-data" fxLayout="row" fxLayoutAlign="start start">
+        <div class="type" fxLayout="row" fxLayoutAlign="start start" fxFlex="100">
+            <div class="type-data" fxLayout="row" fxLayoutAlign="start center" fxFlex>
                 <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
                 <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens</mat-icon>
                 <p *ngIf="isDataSetDescription">Data Set</p>
                 <p *ngIf="isDataStreamDescription">Data Stream</p>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="end end" style="margin-left:5px;">
+                <button class="small-button-add mat-basic no-min-width" (click)="$event.stopPropagation();"
+                        mat-raised-button mat-button [matMenuTriggerFor]="menu"><span style="font-size:12px;">...</span></button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="removeAdapter()">
+                        <mat-icon>delete</mat-icon>
+                        <span>&nbsp;Remove adapter</span>
+                    </button>
+                </mat-menu>
             </div>
         </div>
         <div fxLayoutAlign="start center" fxLayout="column" class="icon">
