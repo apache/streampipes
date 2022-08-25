@@ -262,9 +262,4 @@
         </plugins>
         <finalName>streampipes-connect-adapters-iiot</finalName>
     </build>
-
-
-  <scm>
-    <tag>rel/0.70.0</tag>
-  </scm>
 </project>
