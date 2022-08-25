@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.DescriptionManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
@@ -27,10 +28,7 @@ import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -152,6 +150,17 @@ public class DescriptionResource extends AbstractAdapterResource<DescriptionMana
             return fail();
         } catch (NoServiceEndpointsAvailableException e) {
             return fail();
+        }
+    }
+
+    @DELETE
+    @Path("{adapterId}")
+    public Response deleteAdapter(@PathParam("adapterId") String adapterId) {
+        try {
+            this.managementService.deleteAdapterDescription(adapterId);
+            return ok();
+        } catch (SpRuntimeException e) {
+            return badRequest(e);
         }
     }
 }

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -25,6 +26,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
+import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,15 @@ public class DescriptionManagement {
                 .findFirst();
     }
 
+    public void deleteAdapterDescription(String id) throws SpRuntimeException {
+        var adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+        var adapter = adapterStorage.getAdapter(id);
+        if (!isAdapterUsed(adapter)) {
+            adapterStorage.deleteAdapter(id);
+        } else {
+            throw new SpRuntimeException("This adapter is used by an existing instance and cannot be deleted");
+        }
+    }
     public String getAssets(String baseUrl) throws AdapterException {
         return WorkerRestClient.getAssets(baseUrl);
     }
@@ -65,6 +76,14 @@ public class DescriptionManagement {
 
     public String getDocumentationAsset(String baseUrl) throws AdapterException {
         return WorkerRestClient.getDocumentationAsset(baseUrl);
+    }
+
+    private boolean isAdapterUsed(AdapterDescription adapter) {
+        var allAdapters = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage().getAllAdapters();
+
+        return allAdapters
+          .stream()
+          .anyMatch(runningAdapter -> runningAdapter.getAppId().equals(adapter.getAppId()));
     }
 
 }

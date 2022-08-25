@@ -85,6 +85,7 @@ import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/compo
 import { SpAdapterOptionsPanelComponent } from './components/new-adapter/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
@@ -100,6 +101,7 @@ import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
     MatInputModule,
     MatFormFieldModule,
     MatSliderModule,
+    MatSnackBarModule,
     PlatformServicesModule,
     CoreUiModule,
     TreeModule,

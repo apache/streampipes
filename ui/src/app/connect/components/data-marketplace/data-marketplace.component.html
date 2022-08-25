@@ -50,6 +50,7 @@
                     <sp-adapter-description attr.id="{{adapterDescription.name.replaceAll(' ', '_')}}"
                                             class="adapter-description"
                                             fxFlex="33"
+                                            (updateAdapterEmitter)="getAdapterDescriptions()"
                                             (click)="selectAdapter(adapterDescription.appId)"
                                             *ngFor="let adapterDescription of adapterDescriptions | adapterFilter:currentFilter"
                                             [adapter]="adapterDescription"></sp-adapter-description>

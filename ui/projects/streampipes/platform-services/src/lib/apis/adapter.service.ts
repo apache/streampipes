@@ -38,11 +38,14 @@ export class AdapterService {
 
   getAdapterDescriptions(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/description/adapters');
-
   }
 
   getAdapters(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/adapters');
+  }
+
+  deleteAdapterDescription(adapterId: string): Observable<any> {
+    return this.http.delete(`${this.connectPath}/master/description/${adapterId}`);
   }
 
   requestAdapterDescriptions(path: string): Observable<AdapterDescriptionUnion[]> {
