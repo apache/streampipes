@@ -32,7 +32,6 @@ import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
 import org.apache.streampipes.sinks.databases.jvm.influxdb.InfluxDbController;
 import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
-import org.apache.streampipes.sinks.databases.jvm.mysql.MysqlController;
 import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
@@ -56,8 +55,7 @@ public class DatabasesJvmInit extends StandaloneModelSubmitter {
                     new PostgreSqlController(),
                     new IotDbController(),
                     new DittoController(),
-                    new RedisController(),
-                    new MysqlController())
+                    new RedisController())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),
