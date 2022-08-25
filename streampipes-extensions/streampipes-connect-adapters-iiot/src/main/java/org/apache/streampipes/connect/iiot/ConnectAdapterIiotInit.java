@@ -20,8 +20,6 @@ package org.apache.streampipes.connect.iiot;
 
 import org.apache.streampipes.connect.iiot.adapters.influxdb.InfluxDbSetAdapter;
 import org.apache.streampipes.connect.iiot.adapters.influxdb.InfluxDbStreamAdapter;
-import org.apache.streampipes.connect.iiot.adapters.mysql.MySqlSetAdapter;
-import org.apache.streampipes.connect.iiot.adapters.mysql.MySqlStreamAdapter;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.modbus.Plc4xModbusAdapter;
 import org.apache.streampipes.connect.iiot.adapters.plc4x.s7.Plc4xS7Adapter;
@@ -46,8 +44,6 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
 						"StreamPipes connect worker containing adapters relevant for the IIoT",
 						"",
 						8001)
-				.registerAdapter(new MySqlStreamAdapter())
-				.registerAdapter(new MySqlSetAdapter())
 				.registerAdapter(new MachineDataStreamAdapter())
 				.registerAdapter(new RosBridgeAdapter())
 				.registerAdapter(new OpcUaAdapter())
