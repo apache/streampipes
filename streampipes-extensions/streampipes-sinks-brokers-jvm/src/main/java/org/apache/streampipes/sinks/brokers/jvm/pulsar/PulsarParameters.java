@@ -17,21 +17,22 @@
  */
 package org.apache.streampipes.sinks.brokers.jvm.pulsar;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
 
-public class PulsarParameters extends EventSinkBindingParams {
+import static org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink.*;
 
+public class PulsarParameters {
   private String pulsarHost;
   private Integer pulsarPort;
   private String topic;
 
-  public PulsarParameters(DataSinkInvocation graph, String pulsarHost, Integer pulsarPort,
-                          String topic) {
-    super(graph);
-    this.pulsarHost = pulsarHost;
-    this.pulsarPort = pulsarPort;
-    this.topic = topic;
+  public PulsarParameters(SinkParams parameters) {
+    DataSinkParameterExtractor extractor = parameters.extractor();
+
+    this.pulsarHost = extractor.singleValueParameter(PULSAR_HOST_KEY, String.class);
+    this.pulsarPort = extractor.singleValueParameter(PULSAR_PORT_KEY, Integer.class);
+    this.topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
   }
 
   public String getPulsarHost() {
