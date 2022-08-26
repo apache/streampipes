@@ -28,7 +28,11 @@ public class DataSourceResolver extends AbstractResolver<SpDataStream> {
 
   @Override
   public SpDataStream findDocument(String resourceId) {
-    var doc = getNoSqlStore().getDataStreamStorage().getElementById(resourceId);
+    return getNoSqlStore().getDataStreamStorage().getElementById(resourceId);
+  }
+
+  @Override
+  public SpDataStream modifyDocumentForExport(SpDataStream doc) {
     doc.setRev(null);
     return doc;
   }

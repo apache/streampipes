@@ -27,7 +27,11 @@ public class DashboardWidgetResolver extends AbstractResolver<DashboardWidgetMod
 
   @Override
   public DashboardWidgetModel findDocument(String resourceId) {
-    var doc = getNoSqlStore().getDashboardWidgetStorage().getDashboardWidget(resourceId);
+    return getNoSqlStore().getDashboardWidgetStorage().getDashboardWidget(resourceId);
+  }
+
+  @Override
+  public DashboardWidgetModel modifyDocumentForExport(DashboardWidgetModel doc) {
     doc.setRev(null);
     return doc;
   }
