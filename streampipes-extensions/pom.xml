@@ -104,7 +104,7 @@
         <okhttp.version>3.13.1</okhttp.version>
         <opennlp.version>1.9.0</opennlp.version>
         <postgresql.version>42.4.1</postgresql.version>
-        <pulsar.version>2.9.1</pulsar.version>
+        <pulsar.version>2.10.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <scala-lang.version>2.11.12</scala-lang.version>
         <scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
