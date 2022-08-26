@@ -116,6 +116,7 @@
 	<underscore.version>1.47</underscore.version>
 	<wildfly-common.version>1.5.4.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
+	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
@@ -838,6 +839,11 @@ IoT data streams.
 					<groupId>io.siddhi</groupId>
 					<artifactId>siddhi-query-compiler</artifactId>
 					<version>${siddhi.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>io.netty</groupId>
+					<artifactId>netty-tcnative-classes</artifactId>
+					<version>${netty-tc-native.version}</version>
 				</dependency>
 
 				<!-- Test dependencies -->
