@@ -26,15 +26,25 @@ import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.export.ExportItem;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DataViewResolver extends AbstractResolver<DashboardModel> {
 
   @Override
   public DashboardModel findDocument(String resourceId) {
-    var doc = getNoSqlStore().getDataExplorerDashboardStorage().getDashboard(resourceId);
+    return getNoSqlStore().getDataExplorerDashboardStorage().getDashboard(resourceId);
+  }
+
+  @Override
+  public DashboardModel modifyDocumentForExport(DashboardModel doc) {
     doc.setCouchDbRev(null);
     return doc;
+  }
+
+  @Override
+  protected boolean existsDoc(DashboardModel doc) {
+    return Objects.nonNull(doc) && doc.getCouchDbId() != null;
   }
 
   @Override

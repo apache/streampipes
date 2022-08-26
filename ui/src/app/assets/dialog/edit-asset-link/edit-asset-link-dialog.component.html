@@ -79,7 +79,7 @@
             </div>
             <div *ngIf="selectedLinkType.linkQueryHint === 'adapter'" fxLayout="column" class="link-configuration">
                 <mat-form-field color="accent" fxFlex="100">
-                    <mat-label>Data Views</mat-label>
+                    <mat-label>Adapter</mat-label>
                     <mat-select (selectionChange)="changeLabel($event.value.elementId, $event.value.name, $event.value)"
                                 [(value)]="currentResource"
                                 fxFlex

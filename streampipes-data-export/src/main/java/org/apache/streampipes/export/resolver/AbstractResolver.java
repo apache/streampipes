@@ -20,6 +20,7 @@ package org.apache.streampipes.export.resolver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.assets.AssetLink;
 import org.apache.streampipes.model.export.ExportItem;
@@ -27,6 +28,7 @@ import org.apache.streampipes.storage.api.INoSqlStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.lightcouch.DocumentConflictException;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,12 +46,22 @@ public abstract class AbstractResolver<T> {
     return assetLinks
       .stream()
       .map(link -> findDocument(link.getResourceId()))
+      .filter(this::existsDoc)
       .map(this::convert)
       .collect(Collectors.toSet());
   }
 
-  public String getSerializedDocument(String resourceId) throws JsonProcessingException {
-    return SerializationUtils.getSpObjectMapper().writeValueAsString(findDocument(resourceId));
+  protected boolean existsDoc(T doc) {
+    return Objects.nonNull(doc);
+  }
+
+  public String getSerializedDocument(String resourceId) throws JsonProcessingException, ElementNotFoundException {
+    var document = findDocument(resourceId);
+    if (document != null) {
+      return SerializationUtils.getSpObjectMapper().writeValueAsString(modifyDocumentForExport(document));
+    } else {
+      throw new ElementNotFoundException("Could not find element with resource id " + resourceId);
+    }
   }
 
   protected INoSqlStorage getNoSqlStore() {
@@ -57,6 +69,8 @@ public abstract class AbstractResolver<T> {
   }
 
   public abstract T findDocument(String resourceId);
+
+  public abstract T modifyDocumentForExport(T doc);
 
   public abstract T readDocument(String serializedDoc) throws JsonProcessingException;
 

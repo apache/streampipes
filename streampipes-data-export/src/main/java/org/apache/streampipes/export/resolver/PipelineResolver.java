@@ -31,7 +31,11 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
 
   @Override
   public Pipeline findDocument(String resourceId) {
-    var doc = getNoSqlStore().getPipelineStorageAPI().getPipeline(resourceId);
+    return getNoSqlStore().getPipelineStorageAPI().getPipeline(resourceId);
+  }
+
+  @Override
+  public Pipeline modifyDocumentForExport(Pipeline doc) {
     doc.setRev(null);
     doc.setRestartOnSystemReboot(false);
     doc.setRunning(false);

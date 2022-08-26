@@ -90,7 +90,7 @@ export class EditAssetLinkDialogComponent extends BaseAssetLinksDirective implem
   }
 
   getCurrAssetLinkType(): AssetLinkType {
-    return this.assetLinkTypes.find(a => a.linkType === this.assetLink.linkType);
+    return this.assetLinkTypes.find(a => a.linkType === this.clonedAssetLink.linkType);
   }
 
   store() {
