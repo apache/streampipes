@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.70.0</version>
+        <version>0.70.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-extensions</artifactId>
@@ -621,7 +621,7 @@
             <plugin>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-maven-plugin</artifactId>
-                <version>0.70.0</version>
+                <version>0.70.1-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>
