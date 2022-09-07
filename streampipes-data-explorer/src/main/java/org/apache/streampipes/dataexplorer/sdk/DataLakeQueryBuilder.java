@@ -26,7 +26,6 @@ import org.influxdb.querybuilder.SelectionQueryImpl;
 import org.influxdb.querybuilder.clauses.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.*;
@@ -68,6 +67,10 @@ public class DataLakeQueryBuilder {
       this.selectionQuery.min(columnName).as(targetName);
     } else if (columnFunction == ColumnFunction.MAX) {
       this.selectionQuery.max(columnName).as(targetName);
+    } else if (columnFunction == ColumnFunction.FIRST) {
+      this.selectionQuery.function("FIRST", columnName).as(targetName);
+    } else if (columnFunction == ColumnFunction.LAST) {
+      this.selectionQuery.function("LAST", columnName).as(targetName);
     }
 
     // TODO implement all column functions
@@ -160,7 +163,10 @@ public class DataLakeQueryBuilder {
   public Query build() {
     var selectQuery = this.selectionQuery.from(BackendConfig.INSTANCE.getInfluxDatabaseName(), "\"" +measurementId + "\"");
     this.whereClauses.forEach(selectQuery::where);
-    this.groupByClauses.forEach(selectQuery::groupBy);
+
+    if (this.groupByClauses.size() > 0) {
+      selectQuery.groupBy(this.groupByClauses.toArray());
+    }
 
     if (this.ordering != null) {
      selectQuery.orderBy(this.ordering);
@@ -172,19 +178,4 @@ public class DataLakeQueryBuilder {
 
     return selectQuery;
   }
-
-  public static void main(String[] args) {
-    Query query = DataLakeQueryBuilder.create("abc")
-//      .withSimpleColumn("test")
-//            .withAggregatedColumn("*", ColumnFunction.LAST, "abc")
-      .withTimeBoundary(1, 2)
-      .withExclusiveFilter("text", "!=", Arrays.asList("a", "b"))
-      .withGroupByTime("1h")
-            .withOrderBy(DataLakeQueryOrdering.ASC)
-            .withLimit(1)
-
-      .build();
-    System.out.println(query.getCommand());
-  }
-
 }
