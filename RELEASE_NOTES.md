@@ -21,12 +21,72 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-# [Unreleased]
-### New Features
+# [0.70.0]
 
-### Improvements
+## Sub-task
 
-### Bug Fixes
+*   [[STREAMPIPES-535](https://issues.apache.org/jira/browse/STREAMPIPES-535)] - Support JWT signing with private/public key
+
+## Bug
+
+*   [[STREAMPIPES-243](https://issues.apache.org/jira/browse/STREAMPIPES-243)] - Configuration of And Processor is broken
+*   [[STREAMPIPES-255](https://issues.apache.org/jira/browse/STREAMPIPES-255)] - Error when importing AdapterDescriptions with file upload references
+*   [[STREAMPIPES-515](https://issues.apache.org/jira/browse/STREAMPIPES-515)] - Missing mapping in dev compose files for new docker-compose versions
+*   [[STREAMPIPES-521](https://issues.apache.org/jira/browse/STREAMPIPES-521)] - Filter can not be deleted in data explorer
+*   [[STREAMPIPES-524](https://issues.apache.org/jira/browse/STREAMPIPES-524)] - No data is shown in data explorer
+*   [[STREAMPIPES-529](https://issues.apache.org/jira/browse/STREAMPIPES-529)] - Newly created pipelines break dashboard
+*   [[STREAMPIPES-540](https://issues.apache.org/jira/browse/STREAMPIPES-540)] - Data download returns error
+*   [[STREAMPIPES-542](https://issues.apache.org/jira/browse/STREAMPIPES-542)] - Web UI pipelines won't import multiple pipelines
+*   [[STREAMPIPES-543](https://issues.apache.org/jira/browse/STREAMPIPES-543)] - Using UI can't choose a source for the new dashboard
+*   [[STREAMPIPES-547](https://issues.apache.org/jira/browse/STREAMPIPES-547)] - Fix repeating colors for time-series chart
+*   [[STREAMPIPES-548](https://issues.apache.org/jira/browse/STREAMPIPES-548)] - Aggregation settings for data-explorer partially not persisted
+*   [[STREAMPIPES-550](https://issues.apache.org/jira/browse/STREAMPIPES-550)] - Empty property configuration in data-explorer visualization config
+*   [[STREAMPIPES-551](https://issues.apache.org/jira/browse/STREAMPIPES-551)] - Missing naming for (multiple) data sources in visualization config of data-explorer
+*   [[STREAMPIPES-553](https://issues.apache.org/jira/browse/STREAMPIPES-553)] - Lite configuration for k8s does not include message broker
+*   [[STREAMPIPES-554](https://issues.apache.org/jira/browse/STREAMPIPES-554)] - Data-explorer widgets reload when token is renewed
+*   [[STREAMPIPES-564](https://issues.apache.org/jira/browse/STREAMPIPES-564)] - Group by fields don't change in data explorer
+*   [[STREAMPIPES-572](https://issues.apache.org/jira/browse/STREAMPIPES-572)] - Fix automatic lower casing when persisting data in connect
+*   [[STREAMPIPES-578](https://issues.apache.org/jira/browse/STREAMPIPES-578)] - Data Explorer download does not update measurement
+*   [[STREAMPIPES-579](https://issues.apache.org/jira/browse/STREAMPIPES-579)] - Larger live dashboards become unresponsive
+
+## New Feature
+
+*   [[STREAMPIPES-209](https://issues.apache.org/jira/browse/STREAMPIPES-209)] - FileStaticProperty should support filtering for extensions
+*   [[STREAMPIPES-534](https://issues.apache.org/jira/browse/STREAMPIPES-534)] - Support authentication for extensions services
+*   [[STREAMPIPES-539](https://issues.apache.org/jira/browse/STREAMPIPES-539)] - Support full screen data view in data explorer
+*   [[STREAMPIPES-546](https://issues.apache.org/jira/browse/STREAMPIPES-546)] - Support data download of configured query in data explorer
+*   [[STREAMPIPES-549](https://issues.apache.org/jira/browse/STREAMPIPES-549)] - Add extensions service for IIoT-related processors and sinks
+*   [[STREAMPIPES-559](https://issues.apache.org/jira/browse/STREAMPIPES-559)] - Support templates for adapter configurations
+*   [[STREAMPIPES-561](https://issues.apache.org/jira/browse/STREAMPIPES-561)] - Add breadcrumb navigation
+*   [[STREAMPIPES-565](https://issues.apache.org/jira/browse/STREAMPIPES-565)] - Allow to export and import StreamPipes resources
+*   [[STREAMPIPES-569](https://issues.apache.org/jira/browse/STREAMPIPES-569)] - Export data from data lake configuration
+*   [[STREAMPIPES-570](https://issues.apache.org/jira/browse/STREAMPIPES-570)] - Import multiple files at once
+*   [[STREAMPIPES-573](https://issues.apache.org/jira/browse/STREAMPIPES-573)] - Make CSV delimiter selectable in download dialog
+
+## Improvement
+
+*   [[STREAMPIPES-192](https://issues.apache.org/jira/browse/STREAMPIPES-192)] - A user has to enter too many names when using the system
+*   [[STREAMPIPES-223](https://issues.apache.org/jira/browse/STREAMPIPES-223)] - Add connection retry to consul for pipeline elements when starting up
+*   [[STREAMPIPES-228](https://issues.apache.org/jira/browse/STREAMPIPES-228)] - Edit dashboard
+*   [[STREAMPIPES-517](https://issues.apache.org/jira/browse/STREAMPIPES-517)] - Update UI to Angular 13
+*   [[STREAMPIPES-522](https://issues.apache.org/jira/browse/STREAMPIPES-522)] - Deleting adapter instance after previously stopping adapter throws error
+*   [[STREAMPIPES-528](https://issues.apache.org/jira/browse/STREAMPIPES-528)] - Support images in data explorer
+*   [[STREAMPIPES-531](https://issues.apache.org/jira/browse/STREAMPIPES-531)] - Extract shared UI modules to Angular library
+*   [[STREAMPIPES-533](https://issues.apache.org/jira/browse/STREAMPIPES-533)] - Bump Spring dependencies
+*   [[STREAMPIPES-536](https://issues.apache.org/jira/browse/STREAMPIPES-536)] - Escape asterisk in installer/upgrade_versions.sh
+*   [[STREAMPIPES-552](https://issues.apache.org/jira/browse/STREAMPIPES-552)] - Cancel subscriptions in data explorer when config changes
+*   [[STREAMPIPES-556](https://issues.apache.org/jira/browse/STREAMPIPES-556)] - Add silent period to notifications sink
+*   [[STREAMPIPES-557](https://issues.apache.org/jira/browse/STREAMPIPES-557)] - Move notifications icon from iconbar to toolbar
+*   [[STREAMPIPES-558](https://issues.apache.org/jira/browse/STREAMPIPES-558)] - Change navigation of connect module
+*   [[STREAMPIPES-560](https://issues.apache.org/jira/browse/STREAMPIPES-560)] - Add confirm dialog before leaving data explorer widget view
+*   [[STREAMPIPES-575](https://issues.apache.org/jira/browse/STREAMPIPES-575)] - Migrate Math operators from Flink to plain JVM wrapper
+*   [[STREAMPIPES-576](https://issues.apache.org/jira/browse/STREAMPIPES-576)] - Migrate transformation processors from Flink to JVM
+
+## Task
+
+*   [[STREAMPIPES-463](https://issues.apache.org/jira/browse/STREAMPIPES-463)] - Merge StreamPipes repos into a single repo
+*   [[STREAMPIPES-555](https://issues.apache.org/jira/browse/STREAMPIPES-555)] - Remove feedback button from UI
+*   [[STREAMPIPES-581](https://issues.apache.org/jira/browse/STREAMPIPES-581)] - Restructure documentantion
 
 # [0.69.0]
 
