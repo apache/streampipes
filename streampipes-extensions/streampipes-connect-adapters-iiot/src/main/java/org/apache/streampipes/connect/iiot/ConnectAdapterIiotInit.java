@@ -29,6 +29,7 @@ import org.apache.streampipes.connect.iiot.protocol.set.FileProtocol;
 import org.apache.streampipes.connect.iiot.protocol.set.HttpProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.*;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
+import org.apache.streampipes.connect.iiot.protocol.stream.websocket.WebsocketAdapter;
 import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
@@ -59,6 +60,7 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
 				.registerAdapter(new HttpStreamProtocol())
 				.registerAdapter(new PulsarProtocol())
 				.registerAdapter(new HttpServerProtocol())
+				.registerAdapter(new WebsocketAdapter())
 				.build();
 	}
 }

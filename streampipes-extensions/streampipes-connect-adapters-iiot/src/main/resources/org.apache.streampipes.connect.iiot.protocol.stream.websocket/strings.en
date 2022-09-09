@@ -1,0 +1,17 @@
+org.apache.streampipes.connect.iiot.protocol.stream.websocket.title=inoCube Websocket
+org.apache.streampipes.connect.iiot.protocol.stream.websocket.description=Consumes messages from the inoCube via a Websocket connection
+
+uri.title=Websocket URI
+uri.description=Example: ws://localhost:3333
+
+auth-key.title=Authentication Token
+auth-key.description=Token to authenticate against Azure Websocket
+
+message-type.title=Message Type
+message-type.description=Select the kind of messages the adapter should process
+
+temperature-alternative.title=Temperature
+temperature-alternative.description=
+
+euler-alternative.title=Euler
+euler-alternative.description=
