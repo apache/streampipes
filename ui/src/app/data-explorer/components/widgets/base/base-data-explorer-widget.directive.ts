@@ -169,7 +169,6 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   private loadData(includeTooMuchEventsParameter: boolean) {
 
     let observables: Observable<SpQueryResult>[];
-
     if (includeTooMuchEventsParameter && !this.dataExplorerWidget.dataConfig.ignoreTooMuchDataWarning) {
       observables = this
         .dataViewQueryGeneratorService
