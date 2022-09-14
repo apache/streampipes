@@ -35,6 +35,9 @@ export class SpBasicViewComponent {
   @Input()
   backLinkTarget: string[];
 
+  @Input()
+  hideNavbar = false;
+
   constructor(private router: Router) {
 
   }
