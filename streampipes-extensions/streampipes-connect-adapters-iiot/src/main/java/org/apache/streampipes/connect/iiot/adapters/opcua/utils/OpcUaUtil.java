@@ -190,7 +190,9 @@ public class OpcUaUtil {
     } catch (ExecutionException | InterruptedException | URISyntaxException e) {
       throw new SpConfigurationException("Could not connect to the OPC UA server with the provided settings", e);
     } finally {
-      spOpcUaClient.disconnect();
+      if (spOpcUaClient.getClient() != null) {
+        spOpcUaClient.disconnect();
+      }
     }
   }
 

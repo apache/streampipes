@@ -23,6 +23,7 @@
   color: white;
   padding: 10px;
   max-width: 100%;
+  min-height: 50px;
   max-height: 300px;
   overflow-y: scroll;
   white-space: pre-wrap;
@@ -42,4 +43,13 @@
 
 .p-20 {
   padding: 20px;
+}
+
+.color-warn {
+  color: var(--color-warn);
+}
+
+.title-message {
+  font-size: 16pt;
+  margin-bottom: 15px;
 }
