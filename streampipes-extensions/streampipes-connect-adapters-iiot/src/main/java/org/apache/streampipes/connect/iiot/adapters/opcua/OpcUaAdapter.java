@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
@@ -150,7 +151,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
         boolean badStatusCodeReceived = false;
         boolean emptyValueReceived = false;
         try {
-            List<DataValue> returnValues = response.get();
+            List<DataValue> returnValues = response.get(this.getPollingInterval().getValue(), this.getPollingInterval().getTimeUnit());
             if (returnValues.size() == 0) {
                 emptyValueReceived = true;
                 LOG.warn("Empty value object returned - event will not be sent");
@@ -171,7 +172,7 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
             if (!badStatusCodeReceived && !emptyValueReceived) {
                 adapterPipeline.process(this.event);
             }
-        } catch (InterruptedException | ExecutionException ie) {
+        } catch (InterruptedException | ExecutionException | TimeoutException ie) {
             LOG.error("Exception while reading data", ie);
         }
     }

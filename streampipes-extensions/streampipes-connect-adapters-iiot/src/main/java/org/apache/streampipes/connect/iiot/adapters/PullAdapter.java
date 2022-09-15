@@ -51,9 +51,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
     public void startAdapter() throws AdapterException {
         before();
 
-        final Runnable errorThread = () -> {
-            executeAdpaterLogic();
-        };
+        final Runnable errorThread = this::executeAdpaterLogic;
 
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
@@ -61,11 +59,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
     }
 
     private void executeAdpaterLogic() {
-        final Runnable task = () -> {
-
-            pullData();
-
-        };
+        final Runnable task = this::pullData;
 
         scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
