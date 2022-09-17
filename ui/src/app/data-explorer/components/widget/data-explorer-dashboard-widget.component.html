@@ -28,6 +28,8 @@
                 {{ configuredWidget.baseAppearanceConfig.widgetTitle }}
             </div>
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+                <mat-spinner [diameter]="20" color="primary" class="mr-10" *ngIf="timerActive">
+                </mat-spinner>
                 <div class="time-counter"
                      *ngIf="editMode"
                      [ngStyle]="{background: configuredWidget.baseAppearanceConfig.textColor, color: configuredWidget.baseAppearanceConfig.backgroundColor}">
