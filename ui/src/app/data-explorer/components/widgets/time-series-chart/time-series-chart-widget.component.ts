@@ -29,22 +29,22 @@ import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services
 export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirective<TimeSeriesChartWidgetModel> implements OnInit {
 
   presetColors: string[] = [
-                            '#39B54A', 
-                            '#1B1464', 
-                            '#f44336', 
-                            '#FFEB3B', 
-                            '#000000', 
-                            '#433BFF', 
-                            '#FF00E4', 
-                            '#FD8B00', 
-                            '#FD8B00',
-                            '#00FFD5',
-                            '#581845',
-                            '#767676',
-                            '#4300BF',
-                            '#6699D4',
-                            '#D466A1'
-                          ];
+    '#39B54A',
+    '#1B1464',
+    '#f44336',
+    '#FFEB3B',
+    '#000000',
+    '#433BFF',
+    '#FF00E4',
+    '#FD8B00',
+    '#FD8B00',
+    '#00FFD5',
+    '#581845',
+    '#767676',
+    '#4300BF',
+    '#6699D4',
+    '#D466A1'
+  ];
 
   groupKeeper: {} = {};
 
@@ -117,31 +117,20 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
         }
       ],
       direction: 'left',
-      pad: { 'r': 10, 't': 10 },
+      pad: {'r': 10, 't': 10},
       showactive: true,
       type: 'buttons',
       x: 0.0,
       xanchor: 'left',
       y: 1.3,
       yanchor: 'top',
-      font: { color: this.dataExplorerWidget.baseAppearanceConfig.textColor },
+      font: {color: this.dataExplorerWidget.baseAppearanceConfig.textColor},
       plot_bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
       paper_bgcolor: this.dataExplorerWidget.baseAppearanceConfig.backgroundColor,
       bordercolor: '#000'
     }];
 
     super.ngOnInit();
-    if (!this.previewMode) {
-      this.resizeService.resizeSubject.subscribe(info => {
-        if (info.gridsterItem.id === this.gridsterItem.id) {
-          setTimeout(() => {
-            this.graph.layout.autosize = false;
-            (this.graph.layout as any).width = (info.gridsterItemComponent.width - this.offsetRightLineChart);
-            (this.graph.layout as any).height = (info.gridsterItemComponent.height - 80);
-          }, 100);
-        }
-      });
-    }
   }
 
   transformData(data: SpQueryResult,
@@ -181,7 +170,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
               Object.entries(group['tags']).forEach(
                 ([key, val]) => {
                   if (name in this.groupKeeper) {
-                    if (this.groupKeeper[name].indexOf(val) === - 1) {
+                    if (this.groupKeeper[name].indexOf(val) === -1) {
                       this.groupKeeper[name].push(val);
                     }
                   } else {
@@ -230,7 +219,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
     // tslint:disable-next-line:no-bitwise
     const G = (num & 0x0000FF) + amt;
     const result = '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                  (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
+      (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
     return result;
   }
 
@@ -302,7 +291,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
           index = pastGroups;
 
           if (this.data[index] !== undefined) {
-            this.data[index]['marker'] = { 'color': '' };
+            this.data[index]['marker'] = {'color': ''};
 
             if (!(name in this.dataExplorerWidget.visualizationConfig.chosenColor)) {
               this.dataExplorerWidget.visualizationConfig.chosenColor[name] = this.presetColors[index];
@@ -328,7 +317,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
             if (setType === 'bar') {
               visualizationOptions = barVisualizationOptions;
             }
-            if (setType === 'lines' || setType === 'lines+markers')  {
+            if (setType === 'lines' || setType === 'lines+markers') {
               visualizationOptions = lineVisualizationOptions;
             }
             if (setType === 'symbol_markers') {
@@ -370,16 +359,16 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
 
             if (setType === 'bar') {
               this.data[index].marker['pattern'] = {
-                  'shape' : dashType,
-                  'fillmode' : 'overlay',
-                  'fgcolor' : '#ffffff',
-                  // 'size' : 3,
+                'shape': dashType,
+                'fillmode': 'overlay',
+                'fgcolor': '#ffffff',
+                // 'size' : 3,
               };
             } else {
               if (setType === 'lines' || setType === 'lines+markers') {
                 this.data[index]['line'] = {
-                              'dash' : dashType,
-                              'width' : 3,
+                  'dash': dashType,
+                  'width': 3,
                 };
               }
             }
@@ -417,10 +406,10 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
 
             if (setAxis === 'y2') {
               this.graph.layout['yaxis2'] = {
-                                              title: '',
-                                              overlaying: 'y',
-                                              side: 'right'
-                                            };
+                title: '',
+                overlaying: 'y',
+                side: 'right'
+              };
             }
 
             pastGroups += 1;
@@ -435,9 +424,11 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
   }
 
   onResize(width: number, height: number) {
-    this.graph.layout.autosize = false;
-    (this.graph.layout as any).width = width;
-    (this.graph.layout as any).height = height;
+    setTimeout(() => {
+      this.graph.layout.autosize = false;
+      (this.graph.layout as any).width = width - this.offsetRightLineChart;
+      (this.graph.layout as any).height = height;
+    }, 10);
   }
 
   beforeDataFetched() {
@@ -448,19 +439,19 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
   onDataReceived(spQueryResults: SpQueryResult[]) {
     this.data = [];
 
-      // this.setShownComponents(true, false, false, false);
-      this.groupKeeper = {};
+    // this.setShownComponents(true, false, false, false);
+    this.groupKeeper = {};
 
-      this.orderedSelectedProperties = [];
+    this.orderedSelectedProperties = [];
 
-      spQueryResults.map((spQueryResult, index) => {
-        const res = this.transformData(spQueryResult, spQueryResult.sourceIndex);
-        res.forEach(item => {
-          this.data = this.data.concat(item);
-        });
+    spQueryResults.map((spQueryResult, index) => {
+      const res = this.transformData(spQueryResult, spQueryResult.sourceIndex);
+      res.forEach(item => {
+        this.data = this.data.concat(item);
       });
+    });
 
-      this.setShownComponents(false, true, false, false);
+    this.setShownComponents(false, true, false, false);
 
   }
 

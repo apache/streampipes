@@ -85,7 +85,8 @@ export class DataExplorerDashboardSlideViewComponent extends AbstractWidgetViewD
     const obs = new ResizeObserver(entries => {
       entries.forEach(entry => {
         const cr = entry.contentRect;
-        this.gridsterItemComponent = {width: cr.width, height: cr.height};
+        this.gridsterItemComponent.width = cr.width;
+        this.gridsterItemComponent.height = cr.height;
         this.resizeService.notify({
           gridsterItem: this.dashboard.widgets[this.selectedWidgetIndex],
           gridsterItemComponent: this.gridsterItemComponent
