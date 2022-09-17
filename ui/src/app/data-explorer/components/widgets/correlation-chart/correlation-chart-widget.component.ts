@@ -20,6 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { CorrelationChartWidgetModel } from './model/correlation-chart-widget.model';
 import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services';
+import { ColorUtils } from '../utils/color-utils';
 
 @Component({
   selector: 'sp-data-explorer-correlation-chart-widget',
@@ -70,17 +71,6 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirec
 
   refreshView() {
     this.updateAppearance();
-  }
-
-  lightenColor(color: string, percent: number) {
-    const num = parseInt(color.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = (num >> 16) + amt;
-    const B = (num >> 8 & 0x00FF) + amt;
-    const G = (num & 0x0000FF) + amt;
-    const result = '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                  (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
-    return result;
   }
 
   prepareData(result: SpQueryResult[]) {
@@ -180,7 +170,7 @@ export class CorrelationChartWidgetComponent extends BaseDataExplorerWidgetDirec
          colCount += 1;
        }
 
-       colorVal = this.lightenColor(colorVal, 11.);
+       colorVal = ColorUtils.lightenColor(colorVal, 11.);
 
     });
   }

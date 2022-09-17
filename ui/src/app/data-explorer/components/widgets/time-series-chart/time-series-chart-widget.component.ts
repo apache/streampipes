@@ -20,6 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseDataExplorerWidgetDirective } from '../base/base-data-explorer-widget.directive';
 import { TimeSeriesChartWidgetModel } from './model/time-series-chart-widget.model';
 import { DataExplorerField, SpQueryResult } from '@streampipes/platform-services';
+import { ColorUtils } from '../utils/color-utils';
 
 @Component({
   selector: 'sp-data-explorer-time-series-chart-widget',
@@ -209,20 +210,6 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
     return Object.values(tmpLineChartTraces);
   }
 
-  lightenColor(color: string, percent: number) {
-    const num = parseInt(color.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    // tslint:disable-next-line:no-bitwise
-    const R = (num >> 16) + amt;
-    // tslint:disable-next-line:no-bitwise
-    const B = (num >> 8 & 0x00FF) + amt;
-    // tslint:disable-next-line:no-bitwise
-    const G = (num & 0x0000FF) + amt;
-    const result = '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-      (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
-    return result;
-  }
-
   setStartX(startX: string) {
     this.selectedStartX = startX;
   }
@@ -335,7 +322,7 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
               if (visualizationTypePosition === (visualizationOptions.length - 1)) {
                 dashType = visualizationOptions[0];
                 dashTypeKeeper[name] = dashType;
-                color = this.lightenColor(colorKeeper[name], 11.0);
+                color = ColorUtils.lightenColor(colorKeeper[name], 11.0);
                 colorKeeper[name] = color;
               } else {
                 dashType = visualizationOptions[visualizationTypePosition + 1];
