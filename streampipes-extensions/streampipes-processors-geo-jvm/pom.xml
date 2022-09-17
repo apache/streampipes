@@ -64,5 +64,10 @@
             <artifactId>jts-core</artifactId>
             <version>1.19.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.sis.core</groupId>
+            <artifactId>sis-referencing</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 </project>
