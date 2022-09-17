@@ -99,7 +99,7 @@ public class SpGeometryBuilder {
    * @param max          max value to check
    * @return true if value is in min max range
    */
-  private static boolean isInWGSCoordinateRange(double valueToCheck, double min, double max){
+  public static boolean isInWGSCoordinateRange(double valueToCheck, double min, double max){
     return valueToCheck > min && valueToCheck < max;
   }
 
@@ -112,7 +112,7 @@ public class SpGeometryBuilder {
    * @param epsg EPSG Code representing SRID
    * @return {@link org.locationtech.jts.geom.PrecisionModel}
    */
-  private static PrecisionModel getPrecisionModel(Integer epsg) {
+  protected static PrecisionModel getPrecisionModel(Integer epsg) {
     PrecisionModel precisionModel;
 
     if (epsg == 4326) {
