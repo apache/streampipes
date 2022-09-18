@@ -86,6 +86,9 @@ export class TimeSeriesChartWidgetComponent extends BaseDataExplorerWidgetDirect
       updatemenus: this.updatemenus,
 
       hovermode: 'x',
+      hoverlabel: {
+        namelength: 200
+      },
       showlegend: true,
       shapes: [],
       selectdirection: 'h',
