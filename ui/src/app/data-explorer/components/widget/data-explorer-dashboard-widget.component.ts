@@ -45,6 +45,7 @@ import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
@@ -103,6 +104,8 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
   widgetTypeChangedSubscription: Subscription;
   intervalSubscription: Subscription;
 
+  errorMessage: StreamPipesErrorMessage;
+
   @ViewChild(WidgetDirective, {static: true}) widgetHost!: WidgetDirective;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
@@ -160,10 +163,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
     componentRef.instance.gridMode = this.gridMode;
     const removeSub = componentRef.instance.removeWidgetCallback.subscribe(ev => this.removeWidget());
     const timerSub = componentRef.instance.timerCallback.subscribe(ev => this.handleTimer(ev));
+    const errorSub = componentRef.instance.errorCallback.subscribe(ev => this.errorMessage = ev);
 
     componentRef.onDestroy(destroy => {
       removeSub.unsubscribe();
       timerSub.unsubscribe();
+      errorSub.unsubscribe();
     });
   }
 
@@ -212,4 +217,5 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
   handleTimer(start: boolean) {
     start ? this.startLoadingTimer() : this.stopLoadingTimer();
   }
+
 }

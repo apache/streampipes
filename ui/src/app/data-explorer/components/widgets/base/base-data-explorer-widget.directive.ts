@@ -27,6 +27,7 @@ import {
   DatalakeRestService,
   DataViewQueryGeneratorService,
   SpQueryResult,
+  StreamPipesErrorMessage,
   TimeSettings
 } from '@streampipes/platform-services';
 import { ResizeService } from '../../../services/resize.service';
@@ -35,7 +36,7 @@ import { Observable, Subject, Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { BaseWidgetData } from './data-explorer-widget-data';
 import { TimeSelectionService } from '../../../services/time-selection.service';
-import { switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidgetModel> implements BaseWidgetData<T>, OnInit, OnDestroy {
@@ -47,6 +48,9 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
 
   @Output()
   timerCallback: EventEmitter<boolean> = new EventEmitter();
+
+  @Output()
+  errorCallback: EventEmitter<StreamPipesErrorMessage> = new EventEmitter<StreamPipesErrorMessage>();
 
   @Input() gridsterItem: GridsterItem;
   @Input() gridsterItemComponent: GridsterItemComponent;
@@ -96,9 +100,16 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
 
-    this.requestQueue$.pipe(switchMap((observables) => {
-      return zip(...observables);
-    })).subscribe(results => {
+    this.requestQueue$
+      .pipe(switchMap((observables) => {
+      this.errorCallback.emit(undefined);
+      return zip(...observables).pipe(catchError((err) => {
+        this.timerCallback.emit(false);
+        this.errorCallback.emit(err.error);
+        return [];
+      }));
+    }))
+      .subscribe(results => {
       results.forEach((result, index) => result.sourceIndex = index);
       this.validateReceivedData(results);
       this.refreshView();
@@ -167,7 +178,6 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   private loadData(includeTooMuchEventsParameter: boolean) {
-
     let observables: Observable<SpQueryResult>[];
     if (includeTooMuchEventsParameter && !this.dataExplorerWidget.dataConfig.ignoreTooMuchDataWarning) {
       observables = this
