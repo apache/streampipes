@@ -19,3 +19,9 @@
 .mat-tab-label-content {
   text-transform: uppercase;
 }
+
+.small .mat-tab-label {
+  min-width: 100px;
+  height: 32px;
+  font-size: 10pt;
+}
