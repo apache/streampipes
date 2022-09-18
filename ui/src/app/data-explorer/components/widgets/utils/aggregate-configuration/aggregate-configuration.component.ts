@@ -36,9 +36,7 @@ export class AggregateConfigurationComponent {
     {value: 'm', label: 'Minute'},
     {value: 'h', label: 'Hour'},
     {value: 'd', label: 'Day'},
-    {value: 'w', label: 'Week'},
-    {value: 'month', label: 'Month'},
-    {value: 'year', label: 'Year'}
+    {value: 'w', label: 'Week'}
   ];
 
   constructor(private widgetConfigService: WidgetConfigurationService) {

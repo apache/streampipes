@@ -78,6 +78,10 @@ public class DataLakeManagementV4 {
         return DataExplorerUtils.getInfos();
     }
 
+    public DataLakeMeasure getById(String measureId) {
+        return getDataLakeStorage().findOne(measureId);
+    }
+
     public SpQueryResult getData(ProvidedQueryParams queryParams) throws IllegalArgumentException {
         if (queryParams.has(QP_AUTO_AGGREGATE)) {
             queryParams = new AutoAggregationHandler(queryParams).makeAutoAggregationQueryParams();

@@ -16,12 +16,12 @@
   ~
   -->
 
-<div fxLayout="column" fxLayoutAlign="space-around center" >
+<div fxLayout="column" fxLayoutAlign="center center" fxFlex="100">
 
-    <div  fxLayout="row" fxLayoutAlign="center center" style="margin-top: 30px">
+    <div  fxLayout="row" fxLayoutAlign="center center">
         <!-- TODO Icon -->
     </div>
-    <div fxLayout="column" fxLayoutAlign="center center" style="margin-top: 30px">
+    <div fxLayout="column" fxLayoutAlign="center center" style="margin-top: 10px">
         <div class="default-text">Found no data in selected time range</div>
         <div class="default-text date-range-text">{{viewDateRange.startTime | date:'MM/dd/yyyy HH:mm'}} - {{viewDateRange.endTime | date:'MM/dd/yyyy HH:mm'}}</div>
 

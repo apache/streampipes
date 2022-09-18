@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.container.worker.rest;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.worker.management.AdapterWorkerManagement;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.message.Notifications;
@@ -65,14 +66,13 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
 
         try {
             adapterManagement.invokeStreamAdapter(adapterStreamDescription);
+            String responseMessage = "Stream adapter with id " + adapterStreamDescription.getUri() + " successfully started";
+            logger.info(responseMessage);
+            return ok(Notifications.success(responseMessage));
         } catch (AdapterException e) {
             logger.error("Error while starting adapter with id " + adapterStreamDescription.getUri(), e);
-            return ok(Notifications.error(e.getMessage()));
+            return serverError(StreamPipesErrorMessage.from(e));
         }
-        String responseMessage = "Stream adapter with id " + adapterStreamDescription.getUri() + " successfully started";
-
-        logger.info(responseMessage);
-        return ok(Notifications.success(responseMessage));
     }
 
     @POST
@@ -90,13 +90,12 @@ public class AdapterWorkerResource extends AbstractSharedRestInterface {
             } else {
                 responseMessage = "Stream adapter with id " + adapterStreamDescription.getElementId() + " seems not to be running";
             }
+            logger.info(responseMessage);
+            return ok(Notifications.success(responseMessage));
         } catch (AdapterException e) {
             logger.error("Error while stopping adapter with id " + adapterStreamDescription.getElementId(), e);
-            return ok(Notifications.error(e.getMessage()));
+            return serverError(StreamPipesErrorMessage.from(e));
         }
-
-        logger.info(responseMessage);
-        return ok(Notifications.success(responseMessage));
     }
 
     @POST

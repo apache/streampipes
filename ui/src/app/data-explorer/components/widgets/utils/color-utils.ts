@@ -16,40 +16,20 @@
  *
  */
 
-.log-message {
-  background-color: black;
-  font: 9pt Inconsolata, monospace;
-  text-shadow: 0 0 5px #C8C8C8;
-  color: white;
-  padding: 10px;
-  max-width: 100%;
-  min-height: 50px;
-  max-height: 300px;
-  overflow-y: scroll;
-  white-space: pre-wrap;
-}
+export class ColorUtils {
 
-.error-details-title {
-  font-size: 13pt;
-  font-weight: var(--color-default-text);
-  border-left: 3px solid var(--color-accent);
-  padding-left: 10px;
-  margin-bottom: 15px;
-}
-
-.mt-10 {
-  margin-top: 10px;
-}
-
-.p-20 {
-  padding: 20px;
-}
-
-.color-warn {
-  color: var(--color-warn);
-}
-
-.title-message {
-  font-size: 16pt;
-  margin-bottom: 15px;
+  static lightenColor(color: string,
+                      percent: number): string {
+    const num = parseInt(color.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    // tslint:disable-next-line:no-bitwise
+    const R = (num >> 16) + amt;
+    // tslint:disable-next-line:no-bitwise
+    const B = (num >> 8 & 0x00FF) + amt;
+    // tslint:disable-next-line:no-bitwise
+    const G = (num & 0x0000FF) + amt;
+    const result = '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+      (B < 255 ? B < 1 ? 0 : B : 255) * 0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
+    return result;
+  }
 }

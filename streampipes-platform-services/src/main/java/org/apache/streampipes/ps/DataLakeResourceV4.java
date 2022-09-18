@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
@@ -160,8 +161,8 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             try {
                 SpQueryResult result = this.dataLakeManagement.getData(sanitizedParams);
                 return ok(result);
-            } catch (IllegalArgumentException e) {
-                return badRequest(e.getMessage());
+            } catch (RuntimeException e) {
+                return badRequest(StreamPipesErrorMessage.from(e));
             }
         }
     }
@@ -242,25 +243,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
 
     private boolean checkProvidedQueryParams(MultivaluedMap<String, String> providedParams) {
-        if (supportedParams.containsAll(providedParams.keySet())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean columnsEmpty(MultivaluedMap<String, String> providedParams) {
-        if (providedParams.containsKey("columns")) {
-            for (String column : providedParams.get("columns")) {
-                if ("".equals(column)) {
-                    return true;
-                }
-            };
-        } else {
-            return true;
-        }
-
-        return false;
+        return supportedParams.containsAll(providedParams.keySet());
     }
 
     private ProvidedQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {
