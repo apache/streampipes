@@ -27,6 +27,7 @@ import {
   DateRange
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
+import { ExportDataConfiguration } from './export-data-configuration.model';
 
 
 @Component({
@@ -42,13 +43,16 @@ export class DataDownloadDialogComponent implements OnInit {
    * or dataConfig to allow selection of multiple sources
    */
   @Input() measureName: string;
-  @Input() dataConfig: DataExplorerDataConfig;
 
   @Input() date: DateRange;
+  @Input() dataConfig: DataExplorerDataConfig;
+  // selectedData = 'visible';
+  // dateRange: Date [] = []; // [0] start, [1] end
+
+  exportDataConfiguration: ExportDataConfiguration;
 
   downloadFormat = 'csv';
   delimiter = 'comma';
-  selectedData = 'visible';
   downloadFinish = false;
   downloadedMBs: number = undefined;
   selectedQueryIndex = 0;
@@ -57,8 +61,7 @@ export class DataDownloadDialogComponent implements OnInit {
 
   downloadHttpRequestSubscribtion;
 
-  dateRange: Date [] = []; // [0] start, [1] end
-
+  delme = '';
 
   constructor(public dialogRef: DialogRef<DataDownloadDialogComponent>,
               public datalakeRestService: DatalakeRestService,
@@ -66,17 +69,18 @@ export class DataDownloadDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.date) {
-      const endDate = new Date();
-      endDate.setDate(endDate.getDate() - 5);
-      this.date = {startDate: new Date(), endDate};
-    }
-    this.dateRange[0] = this.date.startDate;
-    this.dateRange[1] = this.date.endDate;
+    this.exportDataConfiguration = new ExportDataConfiguration();
+    // if (!this.date) {
+    //   const endDate = new Date();
+    //   endDate.setDate(endDate.getDate() - 5);
+    //   this.date = {startDate: new Date(), endDate};
+    // }
+    // this.dateRange[0] = this.date.startDate;
+    // this.dateRange[1] = this.date.endDate;
 
-    if (!this.dataConfig) {
-      this.selectedData = 'all';
-    }
+    // if (!this.dataConfig) {
+    //   this.selectedData = 'all';
+    // }
   }
 
   downloadData() {
@@ -87,7 +91,9 @@ export class DataDownloadDialogComponent implements OnInit {
     const endTime = this.date.endDate.getTime();
     const startDateString = this.getDateString(this.date.startDate);
     const endDateString = this.getDateString(this.date.endDate);
-    switch (this.selectedData) {
+    // TODO
+    // switch (this.selectedData) {
+    switch (this.delme) {
       case 'all':
         this.performRequest(this.datalakeRestService.downloadRawData(
           index,

@@ -109,8 +109,8 @@ public class DataExplorerQueryV4 {
     }
 
     private double getAmountOfResults(QueryResult countQueryResult) {
-        if (countQueryResult.getResults().get(0).getSeries() != null &&
-                countQueryResult.getResults().get(0).getSeries().get(0).getValues() != null) {
+        if (countQueryResult.getResults().get(0).getSeries() != null
+                && countQueryResult.getResults().get(0).getSeries().get(0).getValues() != null) {
             return (double) countQueryResult.getResults().get(0).getSeries().get(0).getValues().get(0).get(1);
         } else {
             return 0.0;
@@ -125,9 +125,9 @@ public class DataExplorerQueryV4 {
         List<List<Object>> resultingValues = new ArrayList<>();
 
         values.forEach(v -> {
-            if (!v.contains(null)) {
+//            if (!v.contains(null)) {
                 resultingValues.add(v);
-            }
+//            }
         });
 
         return new DataSeries(values.size(), resultingValues, columns, series.getTags());
