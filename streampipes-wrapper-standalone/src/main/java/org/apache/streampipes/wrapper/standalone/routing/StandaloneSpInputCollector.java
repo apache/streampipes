@@ -49,11 +49,7 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   }
 
   private void send(RawDataProcessor rawDataProcessor, byte[] event) {
-    try {
       rawDataProcessor.process(dataFormatDefinition.toMap(event), topic);
-    } catch (SpRuntimeException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override

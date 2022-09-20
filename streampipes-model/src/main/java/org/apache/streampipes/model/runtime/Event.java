@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.model.runtime;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
@@ -71,7 +72,7 @@ public class Event {
             .map(Map.Entry::getValue)
             .filter(entry -> entry.getFieldNameIn().equals(runtimeName))
             .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Field " + runtimeName + " not found"));
+            .orElseThrow(() -> new SpRuntimeException("Field " + runtimeName + " not found"));
   }
 
   public void removeFieldBySelector(String fieldSelector) {
