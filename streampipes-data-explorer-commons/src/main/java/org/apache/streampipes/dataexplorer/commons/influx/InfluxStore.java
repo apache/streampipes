@@ -24,6 +24,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.vocabulary.XSD;
 import org.influxdb.InfluxDB;
@@ -47,7 +48,7 @@ public class InfluxStore {
   private InfluxDB influxDb = null;
   DataLakeMeasure measure;
 
-  Map<String, String> targetRuntimeNames = new HashMap<>();
+  Map<String, String> sanitizedRuntimeNames = new HashMap<>();
 
   public InfluxStore(DataLakeMeasure measure,
                      SpConfig configStore) throws SpRuntimeException {
@@ -58,7 +59,7 @@ public class InfluxStore {
     // store sanitized target property runtime names in local variable
     measure.getEventSchema()
         .getEventProperties()
-        .forEach(ep -> targetRuntimeNames.put(ep.getRuntimeName(),
+        .forEach(ep -> sanitizedRuntimeNames.put(ep.getRuntimeName(),
             InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
 
     connect(settings);
@@ -131,7 +132,7 @@ public class InfluxStore {
     }
 
     Long timestampValue = event.getFieldBySelector(measure.getTimestampField()).getAsPrimitive().getAsLong();
-    Point.Builder p =
+    Point.Builder point =
         Point.measurement(measure.getMeasureName()).time((long) timestampValue, TimeUnit.MILLISECONDS);
 
     for (EventProperty ep : measure.getEventSchema().getEventProperties()) {
@@ -140,46 +141,23 @@ public class InfluxStore {
 
         // timestamp should not be added as a field
         if (!measure.getTimestampField().endsWith(runtimeName)) {
-          String preparedRuntimeName = targetRuntimeNames.get(runtimeName);
+          String sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
 
           try {
             PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
             if (eventPropertyPrimitiveField.getRawValue() == null) {
-              LOG.warn("Field value for {} is null, ignoring value.", preparedRuntimeName);
+              LOG.warn("Field value for {} is null, ignoring value.", sanitizedRuntimeName);
             } else {
 
               // store property as tag when the field is a dimension property
-              if ("DIMENSION_PROPERTY".equals(ep.getPropertyScope())) {
-                p.tag(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
+              if (PropertyScope.DIMENSION_PROPERTY.name().equals(ep.getPropertyScope())) {
+                point.tag(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsString());
               } else {
-
-                try {
-                  // Store property according to property type
-                  String runtimeType = ((EventPropertyPrimitive) ep).getRuntimeType();
-                  if (XSD._integer.toString().equals(runtimeType)) {
-                    try {
-                      p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
-                    } catch (NumberFormatException ef) {
-                      p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
-                    }
-                  } else if (XSD._float.toString().equals(runtimeType)) {
-                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
-                  } else if (XSD._double.toString().equals(runtimeType)) {
-                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
-                  } else if (XSD._boolean.toString().equals(runtimeType)) {
-                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
-                  } else if (XSD._long.toString().equals(runtimeType)) {
-                    try {
-                      p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
-                    } catch (NumberFormatException ef) {
-                      p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
-                    }
-                  } else {
-                    p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
-                  }
-                } catch (NumberFormatException e) {
-                  LOG.warn("Wrong number format for field {}, ignoring.", preparedRuntimeName);
-                }
+                handleMeasurementProperty(
+                    point,
+                    (EventPropertyPrimitive) ep,
+                    sanitizedRuntimeName,
+                    eventPropertyPrimitiveField);
               }
             }
           } catch (SpRuntimeException iae) {
@@ -191,7 +169,40 @@ public class InfluxStore {
       }
     }
 
-    influxDb.write(p.build());
+    influxDb.write(point.build());
+  }
+
+  private void handleMeasurementProperty(Point.Builder p,
+                                         EventPropertyPrimitive ep,
+                                         String preparedRuntimeName,
+                                         PrimitiveField eventPropertyPrimitiveField) {
+    try {
+      // Store property according to property type
+      String runtimeType = ep.getRuntimeType();
+      if (XSD._integer.toString().equals(runtimeType)) {
+        try {
+          p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
+        } catch (NumberFormatException ef) {
+          p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+        }
+      } else if (XSD._float.toString().equals(runtimeType)) {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+      } else if (XSD._double.toString().equals(runtimeType)) {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
+      } else if (XSD._boolean.toString().equals(runtimeType)) {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
+      } else if (XSD._long.toString().equals(runtimeType)) {
+        try {
+          p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
+        } catch (NumberFormatException ef) {
+          p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
+        }
+      } else {
+        p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsString());
+      }
+    } catch (NumberFormatException e) {
+      LOG.warn("Wrong number format for field {}, ignoring.", preparedRuntimeName);
+    }
   }
 
   /**
