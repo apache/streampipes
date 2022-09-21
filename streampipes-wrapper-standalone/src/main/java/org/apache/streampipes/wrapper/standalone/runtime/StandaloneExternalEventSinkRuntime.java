@@ -41,7 +41,7 @@ public class StandaloneExternalEventSinkRuntime<B extends EventSinkBindingParams
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException {
+  public void process(Map<String, Object> rawEvent, String sourceInfo) {
 
   }
 

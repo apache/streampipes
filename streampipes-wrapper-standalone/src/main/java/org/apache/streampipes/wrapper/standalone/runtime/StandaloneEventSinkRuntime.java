@@ -25,16 +25,20 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extends
-        StandalonePipelineElementRuntime<B, DataSinkInvocation,
-                EventSinkRuntimeParams<B>, EventSinkRuntimeContext, EventSink<B>> {
+    StandalonePipelineElementRuntime<B, DataSinkInvocation,
+        EventSinkRuntimeParams<B>, EventSinkRuntimeContext, EventSink<B>> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventSinkRuntime.class);
 
   public StandaloneEventSinkRuntime(Supplier<EventSink<B>> supplier, EventSinkRuntimeParams<B>
-          params) {
+      params) {
     super(supplier, params);
   }
 
@@ -46,8 +50,12 @@ public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extend
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException {
-    engine.onEvent(params.makeEvent(rawEvent, sourceInfo));
+  public void process(Map<String, Object> rawEvent, String sourceInfo) {
+    try {
+      engine.onEvent(params.makeEvent(rawEvent, sourceInfo));
+    } catch (RuntimeException e) {
+      LOG.error("RuntimeException while processing event in {}", engine.getClass().getCanonicalName() , e);
+    }
   }
 
   @Override
@@ -66,7 +74,7 @@ public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extend
 
   @Override
   public void postDiscard() throws SpRuntimeException {
-    for(SpInputCollector spInputCollector : getInputCollectors()) {
+    for (SpInputCollector spInputCollector : getInputCollectors()) {
       spInputCollector.disconnect();
     }
   }
