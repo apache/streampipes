@@ -1,8 +1,8 @@
 org.apache.streampipes.connect.iiot.protocol.stream.websocket.title=inoCube Websocket
 org.apache.streampipes.connect.iiot.protocol.stream.websocket.description=Consumes messages from the inoCube via a Websocket connection
 
-uri.title=Websocket URI
-uri.description=Example: ws://localhost:3333
+device-id.title=Device Id
+device-id.description=Device Id of the inoCube
 
 auth-key.title=Authentication Token
 auth-key.description=Token to authenticate against Azure Websocket

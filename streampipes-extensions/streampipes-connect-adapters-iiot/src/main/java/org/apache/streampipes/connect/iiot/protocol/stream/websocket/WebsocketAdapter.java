@@ -43,7 +43,7 @@ public class WebsocketAdapter extends BrokerProtocol {
 
     public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.websocket";
 
-    public static final String URI_KEY = "uri";
+    public static final String DEVICE_ID = "device-id";
     public static final String AUTH_KEY = "auth-key";
     public static final String MESSAGE_TYPE = "message-type";
     public static final String TEMPERATURE = "temperature-alternative";
@@ -66,14 +66,14 @@ public class WebsocketAdapter extends BrokerProtocol {
         StaticPropertyExtractor extractor =
                 StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
-        String uri = extractor.singleValueParameter(URI_KEY, String.class);
+        String deviceId = extractor.singleValueParameter(DEVICE_ID, String.class);
         String authToken = extractor.secretValue(AUTH_KEY);
         String selectedMessageType = extractor.selectedAlternativeInternalId(MESSAGE_TYPE);
 
         if (selectedMessageType.equals(TEMPERATURE)) {
-            return new WebsocketAdapter(parser, format, uri, authToken, "temperature");
+            return new WebsocketAdapter(parser, format, "wss://cubebroker.dashboard.inocube.inovex.io/ws?subscribe_to=" + deviceId, authToken, "temperature");
         } else {
-            return new WebsocketAdapter(parser, format, uri, authToken, "euler");
+            return new WebsocketAdapter(parser, format, "wss://cubebroker.dashboard.inocube.inovex.io/ws?subscribe_to=" + deviceId, authToken, "euler");
         }
 
     }
@@ -85,7 +85,7 @@ public class WebsocketAdapter extends BrokerProtocol {
                 .withAssets(Assets.DOCUMENTATION, Assets.ICON)
                 .category(AdapterType.Generic, AdapterType.Manufacturing)
                 .sourceType(AdapterSourceType.STREAM)
-                .requiredTextParameter(Labels.withId(URI_KEY))
+                .requiredTextParameter(Labels.withId(DEVICE_ID))
                 .requiredSecret(Labels.withId(AUTH_KEY))
                 .requiredAlternatives(Labels.withId(MESSAGE_TYPE), Alternatives.from(Labels.withId(TEMPERATURE)), Alternatives.from(Labels.withId(EULER)))
                 .build();
