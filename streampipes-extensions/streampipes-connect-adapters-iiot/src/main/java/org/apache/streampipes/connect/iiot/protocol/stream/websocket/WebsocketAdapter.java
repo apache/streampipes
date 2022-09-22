@@ -95,7 +95,7 @@ public class WebsocketAdapter extends BrokerProtocol {
     public void run(IAdapterPipeline adapterPipeline) {
         SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
         HashMap<String, String> httpHeader = new HashMap<>();
-        httpHeader.put("auth", this.authToken);
+        httpHeader.put("Authorization", "Bearer " + this.authToken);
         this.webSocketClient = new SpWebSocketClient(URI.create(this.brokerUrl), new WebsocketAdapter.EventProcessor(stk, this.messageType), httpHeader);
 
         this.webSocketClient.connect();
