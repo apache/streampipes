@@ -117,7 +117,10 @@ public class WebsocketAdapter extends BrokerProtocol {
         List<byte[]> elements = new ArrayList<>();
         InternalEventProcessor<byte[]> eventProcessor = elements::add;
 
-        SpWebSocketClient socketClient = new SpWebSocketClient(URI.create(this.brokerUrl), eventProcessor);
+        HashMap<String, String> httpHeader = new HashMap<>();
+        httpHeader.put("Authorization", "Bearer " + this.authToken);
+
+        SpWebSocketClient socketClient = new SpWebSocketClient(URI.create(this.brokerUrl), eventProcessor, httpHeader);
 
         socketClient.connect();
 
