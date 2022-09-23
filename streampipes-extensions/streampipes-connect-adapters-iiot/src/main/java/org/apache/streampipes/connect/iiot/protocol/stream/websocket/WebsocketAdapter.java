@@ -18,146 +18,145 @@
 
 package org.apache.streampipes.connect.iiot.protocol.stream.websocket;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.connect.SendToPipeline;
-import org.apache.streampipes.connect.adapter.model.generic.Protocol;
-import org.apache.streampipes.connect.api.IAdapterPipeline;
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.IParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.connect.iiot.protocol.stream.BrokerProtocol;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
-import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
-public class WebsocketAdapter extends BrokerProtocol {
+public class WebsocketAdapter extends SpecificDataStreamAdapter {
 
-    public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.websocket";
+  public static final Logger LOG = LoggerFactory.getLogger(WebsocketAdapter.class);
+  public static final String BROKER_URL = "wss://cubebroker.dashboard.inocube.inovex.io/ws?subscribe_to=";
 
-    public static final String DEVICE_ID = "device-id";
-    public static final String AUTH_KEY = "auth-key";
-    public static final String MESSAGE_TYPE = "message-type";
-    public static final String TEMPERATURE = "temperature-alternative";
-    public static final String EULER = "euler-alternative";
-    private String authToken = null;
-    private String messageType = null;
+  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.websocket";
 
-    private SpWebSocketClient webSocketClient;
+  public static final String DEVICE_ID = "device-id";
+  public static final String AUTH_KEY = "auth-key";
+  public static final String MESSAGE_TYPE = "message-type";
+  public static final String TEMPERATURE = "temperature-alternative";
+  public static final String EULER = "euler-alternative";
 
-    public WebsocketAdapter() {}
 
-    public WebsocketAdapter(IParser parser, IFormat format, String uri, String authToken, String messageType) {
-        super(parser, format, uri, "");
-        this.authToken = authToken;
-        this.messageType = messageType;
+  private String authToken;
+  private String deviceId;
+  private String messageType;
+
+  private SpWebSocketClient webSocketClient;
+
+
+  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final TypeReference<HashMap<String, Object>> typeRef = new TypeReference<>() {
+  };
+
+  public WebsocketAdapter() {
+  }
+
+  public WebsocketAdapter(SpecificAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+  }
+
+  @Override
+  public SpecificAdapterStreamDescription declareModel() {
+    return SpecificDataStreamAdapterBuilder.create(ID)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(AdapterType.Generic, AdapterType.Manufacturing)
+        .requiredTextParameter(Labels.withId(DEVICE_ID))
+        .requiredSecret(Labels.withId(AUTH_KEY))
+        .requiredAlternatives(Labels.withId(MESSAGE_TYPE),
+            Alternatives.from(Labels.withId(TEMPERATURE)),
+            Alternatives.from(Labels.withId(EULER))).build();
+  }
+
+
+  private void getConfigurations(SpecificAdapterStreamDescription adapterDescription) {
+    StaticPropertyExtractor extractor = StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+    this.deviceId = extractor.singleValueParameter(DEVICE_ID, String.class);
+    this.authToken = extractor.secretValue(AUTH_KEY);
+    this.messageType = extractor.selectedAlternativeInternalId(MESSAGE_TYPE);
+  }
+
+  @Override
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+      throws AdapterException, ParseException {
+
+    this.getConfigurations(adapterDescription);
+
+    if (this.messageType.equals(TEMPERATURE)) {
+      return WebsocketSchemaUtils.getTemperatureSchema();
+    } else {
+      return WebsocketSchemaUtils.getEulerSchema();
     }
+  }
 
-    @Override
-    public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-        StaticPropertyExtractor extractor =
-                StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
-        String deviceId = extractor.singleValueParameter(DEVICE_ID, String.class);
-        String authToken = extractor.secretValue(AUTH_KEY);
-        String selectedMessageType = extractor.selectedAlternativeInternalId(MESSAGE_TYPE);
+  @Override
+  public void startAdapter() {
 
-        if (selectedMessageType.equals(TEMPERATURE)) {
-            return new WebsocketAdapter(parser, format, "wss://cubebroker.dashboard.inocube.inovex.io/ws?subscribe_to=" + deviceId, authToken, "temperature");
-        } else {
-            return new WebsocketAdapter(parser, format, "wss://cubebroker.dashboard.inocube.inovex.io/ws?subscribe_to=" + deviceId, authToken, "euler");
+    URI connectionUri = URI.create(BROKER_URL + this.deviceId);
+    HashMap<String, String> httpHeader = new HashMap<>();
+    httpHeader.put("Authorization", "Bearer " + this.authToken);
+
+    this.webSocketClient =
+        new SpWebSocketClient(
+            connectionUri,
+            httpHeader,
+            this);
+
+    this.webSocketClient.connect();
+
+  }
+
+  @Override
+  public void stopAdapter() {
+    this.webSocketClient.close();
+  }
+
+  public void onEvent(String eventPayload) {
+
+    if (eventPayload.contains(this.messageType)) {
+      try {
+        Map<String, Object> event = objectMapper.readValue(eventPayload, typeRef);
+
+        if (this.messageType.equals(TEMPERATURE)) {
+          event = WebsocketSchemaUtils.prepareTemperatureEvent(event);
+        } else if (this.messageType.equals(EULER)) {
+          event = WebsocketSchemaUtils.prepareEulerEvent(event);
         }
 
+        adapterPipeline.process(event);
+      } catch (JsonProcessingException e) {
+        LOG.error("Event e: {} of websocket adapter could not be parsed.", eventPayload, e);
+      }
     }
+  }
 
-    @Override
-    public ProtocolDescription declareModel() {
-        return ProtocolDescriptionBuilder.create(ID)
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .category(AdapterType.Generic, AdapterType.Manufacturing)
-                .sourceType(AdapterSourceType.STREAM)
-                .requiredTextParameter(Labels.withId(DEVICE_ID))
-                .requiredSecret(Labels.withId(AUTH_KEY))
-                .requiredAlternatives(Labels.withId(MESSAGE_TYPE), Alternatives.from(Labels.withId(TEMPERATURE)), Alternatives.from(Labels.withId(EULER)))
-                .build();
-    }
+  @Override
+  public IAdapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+    return new WebsocketAdapter();
+  }
 
-    @Override
-    public void run(IAdapterPipeline adapterPipeline) {
-        SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-        HashMap<String, String> httpHeader = new HashMap<>();
-        httpHeader.put("Authorization", "Bearer " + this.authToken);
-        this.webSocketClient = new SpWebSocketClient(URI.create(this.brokerUrl), new WebsocketAdapter.EventProcessor(stk, this.messageType), httpHeader);
-
-        this.webSocketClient.connect();
-
-    }
-
-    @Override
-    public void stop() {
-        this.webSocketClient.close();
-    }
-
-    @Override
-    public String getId() {
-        return WebsocketAdapter.ID;
-    }
-
-    @Override
-    protected List<byte[]> getNByteElements(int n) throws ParseException {
-        List<byte[]> elements = new ArrayList<>();
-        InternalEventProcessor<byte[]> eventProcessor = elements::add;
-
-        HashMap<String, String> httpHeader = new HashMap<>();
-        httpHeader.put("Authorization", "Bearer " + this.authToken);
-
-        SpWebSocketClient socketClient = new SpWebSocketClient(URI.create(this.brokerUrl), eventProcessor, httpHeader);
-
-        socketClient.connect();
-
-        while (socketClient.getMessageCount() < n) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        socketClient.close();
-        return elements;
-    }
-
-    private class EventProcessor implements InternalEventProcessor<byte[]> {
-        private SendToPipeline stk;
-        private String messageType;
-
-        public EventProcessor(SendToPipeline stk, String messageType) {
-            this.stk = stk;
-            this.messageType = messageType;
-        }
-
-        @Override
-        public void onEvent(byte[] payload) {
-
-            String message = new String(payload);
-
-            if ((this.messageType.equals("temperature") && message.contains("temperature")) || (this.messageType.equals("euler") && message.contains("euler"))){
-                try {
-                    parser.parse(IOUtils.toInputStream(new String(payload), "UTF-8"), stk);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    //logger.error("Adapter " + ID + " could not read value!",e);
-                }
-            }
-        }
-    }
+  @Override
+  public String getId() {
+    return WebsocketAdapter.ID;
+  }
 }
