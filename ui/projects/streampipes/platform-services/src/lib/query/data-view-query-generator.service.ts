@@ -64,9 +64,9 @@ export class DataViewQueryGeneratorService {
     );
 
     if (sourceConfig.queryConfig.groupBy !== undefined) {
-      const selectedGroupByFields = sourceConfig.queryConfig.groupBy.filter(field => field.selected);
+      const selectedGroupByFields = sourceConfig.queryConfig.groupBy.filter(field => field.selected === true);
       if (selectedGroupByFields.length > 0) {
-        queryBuilder.withGrouping(sourceConfig.queryConfig.groupBy);
+        queryBuilder.withGrouping(selectedGroupByFields);
       }
     }
 

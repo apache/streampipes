@@ -38,11 +38,19 @@ export class DatalakeRestService {
     return this.baseUrl + '/api/v4' + '/datalake';
   }
 
+  public get dataLakeMeasureUrl() {
+    return this.baseUrl + '/api/v4/datalake/measure';
+  }
+
   getAllMeasurementSeries(): Observable<DataLakeMeasure[]> {
     const url = this.dataLakeUrl + '/measurements/';
     return this.http.get(url).pipe(map(response => {
       return (response as any[]).map(p => DataLakeMeasure.fromData(p));
     }));
+  }
+
+  getMeasurement(id: string): Observable<DataLakeMeasure> {
+    return this.http.get(`${this.dataLakeMeasureUrl}/${id}`).pipe(map(res => res as DataLakeMeasure));
   }
 
   performMultiQuery(queryParams: DatalakeQueryParameters[]): Observable<SpQueryResult[]> {

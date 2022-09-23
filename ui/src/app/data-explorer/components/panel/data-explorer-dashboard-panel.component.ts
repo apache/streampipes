@@ -16,8 +16,8 @@
  *
  */
 
-import { Component, EventEmitter, OnInit, Output, ViewChild, } from '@angular/core';
-import { Observable, of, zip } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, } from '@angular/core';
+import { Observable, of, Subscription, zip } from 'rxjs';
 import { DataExplorerDashboardGridComponent } from '../widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
@@ -45,7 +45,7 @@ import { SpDataExplorerRoutes } from '../../data-explorer.routes';
   templateUrl: './data-explorer-dashboard-panel.component.html',
   styleUrls: ['./data-explorer-dashboard-panel.component.css'],
 })
-export class DataExplorerDashboardPanelComponent implements OnInit {
+export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
   dashboardLoaded = false;
   dashboard: Dashboard;
 
@@ -89,6 +89,8 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
   showDesignerPanel = false;
   showEditingHelpInfo = false;
 
+  authSubscription: Subscription;
+
   constructor(
     private dataViewDataExplorerService: DataViewDataExplorerService,
     private dialog: MatDialog,
@@ -112,7 +114,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
     this.getDashboard(params.id, startTime, endTime);
 
 
-    this.authService.user$.subscribe(user => {
+    this.authSubscription = this.authService.user$.subscribe(user => {
       this.hasDataExplorerWritePrivileges = this.authService.hasRole(
         UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW
       );
@@ -123,6 +125,12 @@ export class DataExplorerDashboardPanelComponent implements OnInit {
         this.editMode = true;
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   triggerResize() {

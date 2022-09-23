@@ -27,7 +27,11 @@ public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetM
 
   @Override
   public DataExplorerWidgetModel findDocument(String resourceId) {
-    var doc = getNoSqlStore().getDataExplorerWidgetStorage().getDataExplorerWidget(resourceId);
+    return getNoSqlStore().getDataExplorerWidgetStorage().getDataExplorerWidget(resourceId);
+  }
+
+  @Override
+  public DataExplorerWidgetModel modifyDocumentForExport(DataExplorerWidgetModel doc) {
     doc.setRev(null);
     return doc;
   }

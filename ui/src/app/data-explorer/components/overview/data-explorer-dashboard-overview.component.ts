@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
 import { Dashboard, DataViewDataExplorerService } from '@streampipes/platform-services';
@@ -27,13 +27,14 @@ import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
 import { Router } from '@angular/router';
 import { SpDataExplorerRoutes } from '../../data-explorer.routes';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-overview',
   templateUrl: './data-explorer-dashboard-overview.component.html',
   styleUrls: ['./data-explorer-dashboard-overview.component.scss']
 })
-export class DataExplorerDashboardOverviewComponent implements OnInit {
+export class DataExplorerDashboardOverviewComponent implements OnInit, OnDestroy {
 
 
   dataSource = new MatTableDataSource<Dashboard>();
@@ -44,6 +45,8 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
   hasDataExplorerWritePrivileges = false;
   hasDataExplorerDeletePrivileges = false;
+
+  authSubscription: Subscription;
 
   constructor(private dataViewService: DataViewDataExplorerService,
               private dashboardService: DataViewDataExplorerService,
@@ -56,7 +59,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpDataExplorerRoutes.BASE));
-    this.authService.user$.subscribe(user => {
+    this.authSubscription = this.authService.user$.subscribe(user => {
       this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
       this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
@@ -64,6 +67,12 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     });
 
     this.getDashboards();
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   getDashboards() {

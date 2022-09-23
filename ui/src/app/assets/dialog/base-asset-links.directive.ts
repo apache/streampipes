@@ -89,6 +89,7 @@ export abstract class BaseAssetLinksDirective {
         ...this.files,
         ...this.adapters
       ];
+      this.afterResourcesLoaded();
     });
   }
 

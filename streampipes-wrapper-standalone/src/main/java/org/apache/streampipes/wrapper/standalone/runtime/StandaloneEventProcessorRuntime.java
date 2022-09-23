@@ -27,13 +27,17 @@ import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingParams> extends
-        StandalonePipelineElementRuntime<B, DataProcessorInvocation,
-                EventProcessorRuntimeParams<B>, EventProcessorRuntimeContext, EventProcessor<B>> {
+    StandalonePipelineElementRuntime<B, DataProcessorInvocation,
+        EventProcessorRuntimeParams<B>, EventProcessorRuntimeContext, EventProcessor<B>> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventProcessorRuntime.class);
 
   public StandaloneEventProcessorRuntime(Supplier<EventProcessor<B>> supplier,
                                          EventProcessorRuntimeParams<B> params) {
@@ -43,18 +47,18 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
 
   public SpOutputCollector getOutputCollector() throws SpRuntimeException {
     return ProtocolManager.findOutputCollector(
-            params
-                    .getBindingParams()
-                    .getGraph()
-                    .getOutputStream()
-                    .getEventGrounding()
-                    .getTransportProtocol(),
-            params.getBindingParams()
-                    .getGraph()
-                    .getOutputStream()
-                    .getEventGrounding()
-                    .getTransportFormats()
-                    .get(0));
+        params
+            .getBindingParams()
+            .getGraph()
+            .getOutputStream()
+            .getEventGrounding()
+            .getTransportProtocol(),
+        params.getBindingParams()
+            .getGraph()
+            .getOutputStream()
+            .getEventGrounding()
+            .getTransportFormats()
+            .get(0));
   }
 
   @Override
@@ -65,8 +69,12 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException {
-    getEngine().onEvent(params.makeEvent(rawEvent, sourceInfo), getOutputCollector());
+  public void process(Map<String, Object> rawEvent, String sourceInfo) {
+    try {
+      engine.onEvent(params.makeEvent(rawEvent, sourceInfo), getOutputCollector());
+    } catch (RuntimeException e) {
+      LOG.error("RuntimeException while processing event in {}", engine.getClass().getCanonicalName(), e);
+    }
   }
 
   @Override

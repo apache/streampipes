@@ -16,32 +16,40 @@
   ~
   -->
 
-<div class="h-100 dashboard-grid" fxLayout="column">
-    <div fxFlex="100px" fxLayout="row" class="selection-box" *ngIf="widgetsAvailable && currentWidget">
-        <div *ngFor="let item of dashboard.widgets; let i = index"
-             [ngClass]="item.id === currentWidget._id ? 'viz-preview viz-preview-selected' : 'viz-preview'"
-             fxLayoutAlign="center center" (click)="selectWidget(i, item.id)">
-            <div fxFlex="100"
-                 fxLayoutAlign="center center">
-                <h5 *ngIf="widgetsVisible">{{configuredWidgets.get(item.id).baseAppearanceConfig.widgetTitle}}</h5>
-            </div>
+<div fxFlex="100" fxLayout="column" style="overflow-y:hidden">
+  <div class="h-100" fxLayout="row" fxFlex="100">
+    <div fxFlex="200px"
+         fxLayout="column"
+         class="selection-box" *ngIf="widgetsAvailable && currentWidget">
+      <div *ngFor="let item of dashboard.widgets; let i = index"
+           [ngClass]="item.id === currentWidget._id ? 'viz-preview viz-preview-selected' : 'viz-preview'"
+           fxLayoutAlign="center center"
+           (click)="selectWidget(i, item.id)">
+        <div fxFlex="100"
+             fxLayout="column"
+             fxLayoutAlign="center center">
+          <span class="slide-view-title" *ngIf="widgetsVisible">{{configuredWidgets.get(item.id).baseAppearanceConfig.widgetTitle}}</span>
         </div>
+      </div>
     </div>
-    <div class="h-100 dashboard-grid" fxLayout="column" id="slideViewOuter" fxFlex="100">
-        <sp-data-explorer-dashboard-widget
-                [ngStyle]="{height: gridsterItemComponent.height -15 + 'px'}"
-                [timeSettings]="timeSettings"
-                (updateCallback)="propagateItemUpdate($event)"
-                (deleteCallback)="propagateItemRemoval($event)"
-                (configureWidgetCallback)="propagateWidgetSelection($event)"
-                (startEditModeEmitter)="startEditMode($event)"
-                [dashboardItem]="currentDashboardItem"
-                [configuredWidget]="currentWidget"
-                [dataLakeMeasure]="currentMeasure"
-                [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
-                [editMode]="editMode"
-                [gridMode]="false"
-                [gridsterItemComponent]="gridsterItemComponent"
-                *ngIf="widgetsAvailable && displayWidget && currentWidget && widgetsVisible"></sp-data-explorer-dashboard-widget>
+    <div fxFlex="100">
+      <div class="h-100 w-100 mw-100" id="slideViewOuter" fxFlex="100">
+                <sp-data-explorer-dashboard-widget
+                        [ngStyle]="{height: gridsterItemComponent.height -15 + 'px'}"
+                        [timeSettings]="timeSettings"
+                        (updateCallback)="propagateItemUpdate($event)"
+                        (deleteCallback)="propagateItemRemoval($event)"
+                        (configureWidgetCallback)="propagateWidgetSelection($event)"
+                        (startEditModeEmitter)="startEditMode($event)"
+                        [dashboardItem]="currentDashboardItem"
+                        [configuredWidget]="currentWidget"
+                        [dataLakeMeasure]="currentMeasure"
+                        [currentlyConfiguredWidgetId]="currentlyConfiguredWidgetId"
+                        [editMode]="editMode"
+                        [gridMode]="false"
+                        [gridsterItemComponent]="gridsterItemComponent"
+                        *ngIf="widgetsAvailable && displayWidget && currentWidget && widgetsVisible"></sp-data-explorer-dashboard-widget>
+      </div>
     </div>
+  </div>
 </div>

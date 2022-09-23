@@ -27,7 +27,11 @@ public class FileResolver extends AbstractResolver<FileMetadata> {
 
   @Override
   public FileMetadata findDocument(String resourceId) {
-    var doc = getNoSqlStore().getFileMetadataStorage().getMetadataById(resourceId);
+    return getNoSqlStore().getFileMetadataStorage().getMetadataById(resourceId);
+  }
+
+  @Override
+  public FileMetadata modifyDocumentForExport(FileMetadata doc) {
     doc.setRev(null);
     return doc;
   }

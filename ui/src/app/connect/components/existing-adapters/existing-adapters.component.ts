@@ -17,10 +17,21 @@
  */
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AdapterDescriptionUnion, AdapterService, PipelineElementService } from '@streampipes/platform-services';
+import {
+  AdapterDescriptionUnion,
+  AdapterService,
+  PipelineElementService,
+  StreamPipesErrorMessage
+} from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConnectService } from '../../services/connect.service';
-import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+  DialogRef,
+  DialogService,
+  PanelType,
+  SpBreadcrumbService,
+  SpExceptionDetailsDialogComponent
+} from '@streampipes/shared-ui';
 import { DeleteAdapterDialogComponent } from '../../dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -76,12 +87,29 @@ export class ExistingAdaptersComponent implements OnInit {
   startAdapter(adapter: AdapterDescriptionUnion) {
     this.dataMarketplaceService.startAdapter(adapter).subscribe(response => {
       this.getAdaptersRunning();
+    }, error => {
+      this.openAdapterStatusErrorDialog(error.error, 'Could not start adapter');
     });
   }
 
   stopAdapter(adapter: AdapterDescriptionUnion) {
     this.dataMarketplaceService.stopAdapter(adapter).subscribe(response => {
       this.getAdaptersRunning();
+    }, error => {
+      this.openAdapterStatusErrorDialog(error.error, 'Could not stop adapter');
+    });
+  }
+
+  openAdapterStatusErrorDialog(message: StreamPipesErrorMessage,
+                               title: string) {
+    this.dialogService.open(SpExceptionDetailsDialogComponent, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: 'Adapter Status',
+      width: '70vw',
+      data: {
+        'message': message,
+        'title': title
+      }
     });
   }
 

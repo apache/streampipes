@@ -30,12 +30,17 @@ public class AdapterResolver extends AbstractResolver<AdapterDescription> {
 
   @Override
   public AdapterDescription findDocument(String resourceId) {
-    var doc = getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
+    return getNoSqlStore().getAdapterInstanceStorage().getAdapter(resourceId);
+  }
+
+  @Override
+  public AdapterDescription modifyDocumentForExport(AdapterDescription doc) {
     doc.setRev(null);
     doc.setSelectedEndpointUrl(null);
     if (doc instanceof AdapterStreamDescription) {
       ((AdapterStreamDescription) doc).setRunning(false);
     }
+
     return doc;
   }
 

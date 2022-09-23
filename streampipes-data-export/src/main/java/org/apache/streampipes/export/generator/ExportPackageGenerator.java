@@ -20,6 +20,7 @@ package org.apache.streampipes.export.generator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.streampipes.commons.exceptions.ElementNotFoundException;
 import org.apache.streampipes.export.resolver.*;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.manager.file.FileManager;
@@ -28,6 +29,8 @@ import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.export.StreamPipesApplicationPackage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,6 +40,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ExportPackageGenerator {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ExportPackageGenerator.class);
 
   private final ExportConfiguration exportConfiguration;
   private ObjectMapper defaultMapper;
@@ -138,8 +143,12 @@ public class ExportPackageGenerator {
       var sanitizedResourceId = sanitize(resourceId);
       builder.addText(sanitizedResourceId, resolver.getSerializedDocument(resourceId));
       function.accept(sanitizedResourceId);
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
+    } catch (JsonProcessingException | ElementNotFoundException e) {
+      LOG.warn(
+        "Could not find document with resource id {} with resolver {}",
+        exportItem.getResourceId(),
+        resolver.getClass().getCanonicalName(),
+        e);
     }
   }
 

@@ -16,17 +16,13 @@
  *
  */
 
-.dashboard-grid {
-  display:flex;
-  flex-direction: column;
-  flex: 1 1 100%;
-}
-
 .viz-preview {
-  max-height: 100px;
-  width: 200px;
+  height: 100px;
+  min-height: 100px;
   border: 1px solid var(--color-bg-2);
   cursor: pointer;
+  margin: 5px 10px;
+  padding: 5px;
 }
 
 .viz-preview-selected {
@@ -34,7 +30,19 @@
 }
 
 .selection-box {
-  border: 1px solid var(--color-accent);
-  overflow-x: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   margin-bottom: 5px;
+  height: calc(100vh - 147px);
+  max-width: 100%;
+}
+
+.slide-view-title {
+  text-align: center;
+  font-size: 10pt;
+}
+
+.mw-100 {
+  max-width: 100%;
+  overflow-x: hidden;
 }

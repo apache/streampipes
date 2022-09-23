@@ -27,7 +27,11 @@ public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 
   @Override
   public DataLakeMeasure findDocument(String resourceId) {
-    var doc = getNoSqlStore().getDataLakeStorage().findOne(resourceId);
+    return getNoSqlStore().getDataLakeStorage().findOne(resourceId);
+  }
+
+  @Override
+  public DataLakeMeasure modifyDocumentForExport(DataLakeMeasure doc) {
     doc.setRev(null);
     return doc;
   }
