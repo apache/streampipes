@@ -15,24 +15,13 @@
   ~  limitations under the License.
   ~
   -->
-
-<h5>Behaviour in case of missing values</h5>
-<mat-radio-group
-    class="sp-radio-group"
-    [ngModel]="missingValueBehaviour">
-  <mat-radio-button
-      value="ignore"
-      class="sp-radio-button">
-    Ignore lines with missing value
-  </mat-radio-button>
-  <mat-radio-button
-      value="default"
-      class="sp-radio-button">
-    Add default value
-  </mat-radio-button>
-  <mat-radio-button
-      value="empty"
-      class="sp-radio-button">
-    Leave entry empty
-  </mat-radio-button>
-</mat-radio-group>
+<ng-template matStepLabel>Download</ng-template>
+<div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!downloadFinish" class="mt-35">
+  <mat-spinner [diameter]="30" color="accent"></mat-spinner>
+  <label *ngIf="downloadedMBs !== undefined">{{downloadedMBs | number : '1.0-2' }} Mb</label>
+  <button mat-button warn color="warn" (click)="cancelDownload()">Cancel</button>
+</div>
+<div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="downloadFinish">
+  <mat-icon class="icon-check">check</mat-icon>
+  <h5>Download successful</h5>
+</div>

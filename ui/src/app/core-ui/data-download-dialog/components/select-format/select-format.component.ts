@@ -16,13 +16,22 @@
  *
  */
 
-export class ExportDataConfiguration {
-  dataRangeConfiguration: 'all' | 'customInterval' | 'visible';
-  missingValueBehaviour: 'ignore' | 'default' | 'empty';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormatExportConfig } from '../../model/format-export-config.model';
+
+@Component({
+  selector: 'sp-select-format',
+  templateUrl: './select-format.component.html',
+  styleUrls: ['./select-format.component.scss', '../../data-download-dialog.component.scss']
+})
+export class SelectFormatComponent implements OnInit {
+
+  @Input() formatExportConfig: FormatExportConfig;
 
   constructor() {
-    this.dataRangeConfiguration = 'all';
-    this.missingValueBehaviour = 'ignore';
   }
-}
 
+  ngOnInit(): void {
+  }
+
+}

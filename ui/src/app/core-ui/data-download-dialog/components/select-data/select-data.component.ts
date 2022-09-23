@@ -16,19 +16,27 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+
+import { DataExplorerDataConfig } from '@streampipes/platform-services';
+import { DataExportConfig } from '../../model/data-export-config.model';
 
 @Component({
-  selector: 'sp-select-format',
-  templateUrl: './select-format.component.html',
-  styleUrls: ['./select-format.component.scss']
+  selector: 'sp-select-data',
+  templateUrl: './select-data.component.html',
+  styleUrls: ['./select-data.component.scss']
 })
-export class SelectFormatComponent implements OnInit {
+export class SelectDataComponent {
 
-  constructor() {
-  }
+  /**
+   * Contains the measurement and date range for a selected data widget
+   * This value is not required
+   */
+  @Input() dataExplorerDataConfig: DataExplorerDataConfig;
 
-  ngOnInit(): void {
-  }
+  /**
+   * Represents the user configurations for the download
+   */
+  @Input() dataExportConfig: DataExportConfig;
 
 }

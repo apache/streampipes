@@ -17,32 +17,22 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { DataExplorerDataConfig, DateRange } from '@streampipes/platform-services';
+import { DataExportConfig } from '../../../model/data-export-config.model';
 
 @Component({
-  selector: 'sp-select-data-range',
-  templateUrl: './select-data-range.component.html',
-  styleUrls: ['./select-data-range.component.scss']
+  selector: 'sp-select-data-missing-values',
+  templateUrl: './select-data-missing-values.component.html',
+  styleUrls: ['./select-data-missing-values.component.scss',
+              '../select-data.component.scss']
 })
-export class SelectDataRangeComponent implements OnInit {
-  @Input() date: DateRange;
-  @Input() dataConfig: DataExplorerDataConfig;
-  @Input() dataRangeConfiguration: 'all' | 'customInterval' | 'visible';
+export class SelectDataMissingValuesComponent implements OnInit {
 
-  dateRange: Date[] = []; // [0] start, [1] end
+  @Input() dataExportConfig: DataExportConfig;
+
+  constructor() {
+  }
 
   ngOnInit(): void {
-    if (!this.date) {
-      const endDate = new Date();
-
-      endDate.setDate(endDate.getDate() - 5);
-      this.date = {startDate: new Date(), endDate};
-    }
-    this.dateRange[0] = this.date.startDate;
-    this.dateRange[1] = this.date.endDate;
-
-    if (this.dataConfig) {
-      this.dataRangeConfiguration = 'visible';
-    }
   }
+
 }

@@ -19,52 +19,23 @@
 <div class="sp-dialog-container">
   <div class="sp-dialog-content p-15">
     <div fxFlex="100">
-      <mat-horizontal-stepper #stepper>
+      <mat-horizontal-stepper #downloadDialogStepper>
+
         <mat-step>
           <sp-select-data
-              [dataConfig]="dataConfig"
-              [date]="date"
-              [exportDataConfiguration]="exportDataConfiguration">
+              [dataExplorerDataConfig]="dataDownloadDialogModel.dataExplorerDataConfig"
+              [dataExportConfig]="exportConfig.dataExportConfig">
           </sp-select-data>
           <ng-template matStepLabel>Select Data</ng-template>
         </mat-step>
 
         <mat-step>
-          <sp-select-format></sp-select-format>
-          <ng-template matStepLabel>Select Format</ng-template>
-          <div>
-            <h5>Download Format</h5>
-            <mat-radio-group class="sp-radio-group" [(ngModel)]="downloadFormat">
-              <mat-radio-button value="json" class="sp-radio-button">
-                JSON
-              </mat-radio-button>
-              <mat-radio-button value="csv" class="sp-radio-button">
-                CSV
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
-          <div *ngIf="downloadFormat === 'csv'" class="mt-10">
-            <h5>Delimiter</h5>
-            <mat-radio-group [(ngModel)]="delimiter" class="sp-radio-group">
-              <mat-radio-button value="comma" class="sp-radio-button">&nbsp;,</mat-radio-button>
-              <mat-radio-button value="semicolon" class="sp-radio-button">&nbsp;;</mat-radio-button>
-            </mat-radio-group>
-          </div>
+          <sp-select-format
+            [formatExportConfig]="exportConfig.formatExportConfig"></sp-select-format>
         </mat-step>
-
 
         <mat-step>
           <sp-download></sp-download>
-          <ng-template matStepLabel>Download</ng-template>
-          <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!downloadFinish" class="mt-35">
-            <mat-spinner [diameter]="30" color="accent"></mat-spinner>
-            <label *ngIf="downloadedMBs !== undefined">{{downloadedMBs | number : '1.0-2' }} Mb</label>
-            <button mat-button warn color="warn" (click)="cancelDownload()">Cancel</button>
-          </div>
-          <div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="downloadFinish">
-            <mat-icon class="icon-check">check</mat-icon>
-            <h5>Download successful</h5>
-          </div>
         </mat-step>
       </mat-horizontal-stepper>
 
@@ -80,21 +51,21 @@
         mat-raised-button
         class="mat-basic"
         style="margin-right: 10px;"
-        *ngIf="stepper.selectedIndex == 1"
+        *ngIf="downloadDialogStepper.selectedIndex == 1"
         (click)="previousStep()">
       Previous
     </button>
     <button
         mat-button
         mat-raised-button
-        *ngIf="stepper.selectedIndex < 1" color="accent"
+        *ngIf="downloadDialogStepper.selectedIndex < 1" color="accent"
         (click)="nextStep()">
       Next
     </button>
     <button
         mat-button
         mat-raised-button
-        *ngIf="stepper.selectedIndex == 1" color="accent"
+        *ngIf="downloadDialogStepper.selectedIndex == 1" color="accent"
         (click)="downloadData()">
       Download
     </button>

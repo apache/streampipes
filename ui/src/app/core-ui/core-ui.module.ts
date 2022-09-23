@@ -92,11 +92,11 @@ import { PipelineElementTemplateConfigComponent } from './pipeline-element-templ
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
 import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
-import { SelectDataComponent } from './data-download-dialog/select-data/select-data.component';
-import { SelectFormatComponent } from './data-download-dialog/select-format/select-format.component';
-import { DownloadComponent } from './data-download-dialog/download/download.component';
-import { SelectDataRangeComponent } from './data-download-dialog/select-data/select-data-range/select-data-range.component';
-import { SelectDataMissingValuesComponent } from './data-download-dialog/select-data/select-data-missing-values/select-data-missing-values.component';
+import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
+import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
+import { DownloadComponent } from './data-download-dialog/components/download/download.component';
+import { SelectDataRangeComponent } from './data-download-dialog/components/select-data/select-data-range/select-data-range.component';
+import { SelectDataMissingValuesComponent } from './data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
 
 @NgModule({
   imports: [

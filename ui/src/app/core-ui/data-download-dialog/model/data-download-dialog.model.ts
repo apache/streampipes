@@ -15,20 +15,19 @@
  *  limitations under the License.
  *
  */
+import { DataExplorerDataConfig, DateRange } from '@streampipes/platform-services';
 
-import { Component, OnInit } from '@angular/core';
+/**
+ * Provide either measureName without additional configuration
+ * or dataConfig to allow selection of multiple sources
+ */
+export interface DataDownloadDialogModel {
 
-@Component({
-  selector: 'sp-download',
-  templateUrl: './download.component.html',
-  styleUrls: ['./download.component.scss']
-})
-export class DownloadComponent implements OnInit {
+  // option 1 provide a measurement name
+  measureName?: string;
 
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+  // option 2 provide data explorer configs
+  dataExplorerDateRange?: DateRange;
+  dataExplorerDataConfig?: DataExplorerDataConfig;
 }
+

@@ -16,24 +16,30 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
-
-import { DataExplorerDataConfig, DateRange } from '@streampipes/platform-services';
-import { ExportDataConfiguration } from '../export-data-configuration.model';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'sp-select-data',
-  templateUrl: './select-data.component.html',
-  styleUrls: ['./select-data.component.scss']
+  selector: 'sp-download',
+  templateUrl: './download.component.html',
+  styleUrls: ['./download.component.scss']
 })
-export class SelectDataComponent {
+export class DownloadComponent implements OnInit {
 
-  @Input() dataConfig: DataExplorerDataConfig;
-  @Input() date: DateRange;
+  downloadFinish = false;
+  downloadedMBs: number = undefined;
+  downloadHttpRequestSubscription;
 
-  @Input() exportDataConfiguration: ExportDataConfiguration;
+  constructor() {
+  }
 
-  selectedQueryIndex = 0;
-  // selectedData = 'visible';
+  ngOnInit(): void {
+  }
 
+  cancelDownload() {
+  try {
+    this.downloadHttpRequestSubscription.unsubscribe();
+  } finally {
+    // this.exitDialog();
+  }
+}
 }

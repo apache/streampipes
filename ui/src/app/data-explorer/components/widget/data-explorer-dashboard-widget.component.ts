@@ -182,8 +182,10 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
       title: 'Download data',
       width: '50vw',
       data: {
-        'date': DateRange.fromTimeSettings(this.timeSettings),
-        'dataConfig': this.configuredWidget.dataConfig as DataExplorerDataConfig
+        'dataDownloadDialogModel': {
+          'dataExplorerDateRange': DateRange.fromTimeSettings(this.timeSettings),
+          'dataExplorerDataConfig': this.configuredWidget.dataConfig as DataExplorerDataConfig
+        }
       }
     });
   }
