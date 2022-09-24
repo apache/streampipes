@@ -16,20 +16,65 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { ExportConfig } from '../model/export-config.model';
-import { DatalakeRestService } from '@streampipes/platform-services';
+import { DatalakeQueryParameters, DatalakeRestService, DataViewQueryGeneratorService } from '@streampipes/platform-services';
+import { HttpEventType } from '@angular/common/http';
 import { DataDownloadDialogModel } from '../model/data-download-dialog.model';
+import { DownloadProgress } from '../model/download-progress.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataExportService {
 
-  constructor(public datalakeRestService: DatalakeRestService) {
+  public updateDownloadProgress: EventEmitter<DownloadProgress> = new EventEmitter();
+
+  constructor(public dataLakeRestService: DatalakeRestService,
+              public dataViewQueryGeneratorService: DataViewQueryGeneratorService) {
   }
 
-  downloadData(exportConfig: ExportConfig) {
+  public downloadData(exportConfig: ExportConfig,
+               dataDownloadDialogModel: DataDownloadDialogModel) {
+
+    let downloadRequest;
+
+    if (exportConfig.dataExportConfig.dataRangeConfiguration === 'visible') {
+      downloadRequest = this.dataLakeRestService.downloadQueriedData(
+        exportConfig.dataExportConfig.measurement,
+        exportConfig.formatExportConfig.exportFormat,
+        exportConfig.formatExportConfig.exportFormat['delimiter'],
+        this.generateQueryRequest(exportConfig, dataDownloadDialogModel));
+    } else {
+      // case for 'all' & 'customInterval'
+      downloadRequest = this.dataLakeRestService.downloadRawData(
+        exportConfig.dataExportConfig.measurement,
+        exportConfig.formatExportConfig.exportFormat,
+        exportConfig.formatExportConfig.exportFormat['delimiter']);
+    }
+
+    downloadRequest.subscribe(event => {
+      let downloadProgress: DownloadProgress;
+      // progress
+      if (event.type === HttpEventType.DownloadProgress) {
+        downloadProgress = {
+          downloadedMBs: event.loaded / 1024 / 1014,
+          finished: false,
+        };
+        this.updateDownloadProgress.emit(downloadProgress);
+      }
+
+      // finished
+      if (event.type === HttpEventType.Response) {
+        // this.createFile(event.body, this.downloadFormat, this.measureName, startDate, endDate);
+        downloadProgress = {
+          downloadedMBs: event.loaded / 1024 / 1014,
+          finished: true,
+        };
+        this.updateDownloadProgress.emit(downloadProgress);
+      }
+    });
+
 
     // const index = !this.dataExplorerDataConfig ?
     //   this.measureName : this.dataExplorerDataConfig.sourceConfigs[this.selectedQueryIndex].measureName;
@@ -38,62 +83,110 @@ export class DataExportService {
     // const endTime = this.date.endDate.getTime();
     // const startDateString = this.getDateString(this.date.startDate);
     // const endDateString = this.getDateString(this.date.endDate);
-    switch (exportConfig.dataExportConfig.dataRangeConfiguration) {
-      case 'all':
-        this.performRequest(this.datalakeRestService.downloadRawData(
-          exportConfig.dataExportConfig.measurement,
-          exportConfig.formatExportConfig.exportFormat,
-          exportConfig.formatExportConfig.exportFormat['delimiter']),
-          '',
-          '');
-        break;
-      case 'customInterval':
-        this.performRequest(this.datalakeRestService.downloadRawData(
-            index,
-            this.downloadFormat,
-            this.delimiter,
-            startTime,
-            endTime), startDateString,
-          endDateString);
-        break;
-      case 'visible':
-        this.performRequest(
-          this.datalakeRestService
-            .downloadQueriedData(
-              index,
-              this.downloadFormat,
-              this.delimiter,
-              this.generateQueryRequest(startTime, endTime)
-            ),
-          startDateString,
-          endDateString
-        );
 
-    }
+    // this.performRequest(
+    //   this.datalakeRestService.downloadRawData(
+    //     exportConfig.dataExportConfig.measurement,
+    //     exportConfig.formatExportConfig.exportFormat,
+    //     exportConfig.formatExportConfig.exportFormat['delimiter']),
+    //   '',
+    //   '');
+    // this.performRequest(
+    //   this.datalakeRestService
+    //     .downloadQueriedData(
+    //       index,
+    //       this.downloadFormat,
+    //       this.delimiter,
+    //       this.generateQueryRequest(startTime, endTime)
+    //     ),
+    //   startDateString,
+    //   endDateString
+    // );
+    //   this.performRequest(
+    //     this.datalakeRestService.downloadRawData(
+    //       exportConfig.dataExportConfig.measurement,
+    //       exportConfig.formatExportConfig.exportFormat,
+    //       exportConfig.formatExportConfig.exportFormat['delimiter']),
+    //     exportConfig.dataExportConfig.dateRange.startDate,
+    //     exportConfig.dataExportConfig.dateRange.endDate),
+    //     this.getDateString(exportConfig.dataExportConfig.dateRange.startDate),
+    //     this.getDateString(exportConfig.dataExportConfig.dateRange.endDate);
+    // )
+    //   ;
+    //   break;
+    // case 'visible':
+    //   this.performRequest(
+    //     this.datalakeRestService
+    //       .downloadQueriedData(
+    //         index,
+    //         this.downloadFormat,
+    //         this.delimiter,
+    //         this.generateQueryRequest(startTime, endTime)
+    //       ),
+    //     startDateString,
+    //     endDateString
+    //   );
+
   }
 
-    generateQueryRequest(startTime: number,
-                       endTime: number): DatalakeQueryParameters {
-    return this.dataViewQueryService
-      .generateQuery(startTime, endTime, this.dataExplorerDataConfig.sourceConfigs[this.selectedQueryIndex]);
+  // TODO how to set the selected Query Index
+  private generateQueryRequest(
+    exportConfig: ExportConfig,
+    dataDownloadDialogModel: DataDownloadDialogModel,
+    selectedQueryIndex: number = 0): DatalakeQueryParameters {
+    return this.dataViewQueryGeneratorService
+      .generateQuery(
+        exportConfig.dataExportConfig.dateRange.startDate.getTime(),
+        exportConfig.dataExportConfig.dateRange.startDate.getTime(),
+        dataDownloadDialogModel.dataExplorerDataConfig.sourceConfigs[selectedQueryIndex]);
   }
 
-  performRequest(request, startDate, endDate) {
-    this.downloadHttpRequestSubscription = request.subscribe(event => {
-      // progress
-      if (event.type === HttpEventType.DownloadProgress) {
-        this.downloadedMBs = event.loaded / 1024 / 1014;
-      }
+  // performRequest(request, startDate, endDate) {
+  //   const downloadHttpRequestSubscription = request.subscribe(event => {
+  //     let downloadProgress: DownloadProgress;
+  //     // progress
+  //     if (event.type === HttpEventType.DownloadProgress) {
+  //       downloadProgress = {
+  //         downloadedMBs: event.loaded / 1024 / 1014,
+  //         finished: false,
+  //       };
+  //       // this.downloadedMBs = event.loaded / 1024 / 1014;
+  //     }
+  //
+  //     // finished
+  //     if (event.type === HttpEventType.Response) {
+  //       // this.createFile(event.body, this.downloadFormat, this.measureName, startDate, endDate);
+  //       downloadProgress = {
+  //         finished: true,
+  //       };
+  //
+  //       // this.downloadFinish = true;
+  //     }
+  //   });
+  // }
 
-      // finished
-      if (event.type === HttpEventType.Response) {
-        this.createFile(event.body, this.downloadFormat, this.measureName, startDate, endDate);
-        this.downloadFinish = true;
-      }
-    });
+
+  private createFile(data, format, fileName, startDate, endDate, downloadFormat) {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    a.style.display = 'display: none';
+
+    let name = 'sp_' + startDate + '_' + fileName + '.' + downloadFormat;
+    name = name.replace('__', '_');
+
+    const url = window.URL.createObjectURL(new Blob([String(data)], {type: 'data:text/' + format + ';charset=utf-8'}));
+    a.href = url;
+    a.download = name;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
-  convertData(data, format, xAxesKey, yAxesKeys) {
+  private getDateString(date: Date): string {
+    return date.toLocaleDateString() + 'T' + date.toLocaleTimeString().replace(':', '.')
+      .replace(':', '.');
+  }
+
+  private convertData(data, format, xAxesKey, yAxesKeys) {
     const indexXKey = data.headers.findIndex(headerName => headerName === xAxesKey);
     const indicesYKeys = [];
     yAxesKeys.forEach(key => {
@@ -142,26 +235,5 @@ export class DataExportService {
       return resultCsv;
     }
   }
-
-  createFile(data, format, fileName, startDate, endDate) {
-    const a = document.createElement('a');
-    document.body.appendChild(a);
-    a.style.display = 'display: none';
-
-    let name = 'sp_' + startDate + '_' + fileName + '.' + this.downloadFormat;
-    name = name.replace('__', '_');
-
-    const url = window.URL.createObjectURL(new Blob([String(data)], {type: 'data:text/' + format + ';charset=utf-8'}));
-    a.href = url;
-    a.download = name;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }
-
-  getDateString(date: Date): string {
-    return date.toLocaleDateString() + 'T' + date.toLocaleTimeString().replace(':', '.')
-      .replace(':', '.');
-  }
-
 
 }

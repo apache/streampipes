@@ -16,30 +16,40 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DataExportService } from '../../services/data-export.service';
+import { DownloadProgress } from '../../model/download-progress.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'sp-download',
   templateUrl: './download.component.html',
   styleUrls: ['./download.component.scss']
 })
-export class DownloadComponent implements OnInit {
+export class DownloadComponent implements OnInit, OnDestroy {
 
-  downloadFinish = false;
-  downloadedMBs: number = undefined;
-  downloadHttpRequestSubscription;
+  downloadProgress: DownloadProgress;
+  downloadProgressSubscription: Subscription;
 
-  constructor() {
+  constructor(public dataExportService: DataExportService) {
   }
 
   ngOnInit(): void {
+    this.downloadProgress = {
+      downloadedMBs: 0,
+      finished: false,
+    };
+
+    this.downloadProgressSubscription = this.dataExportService.updateDownloadProgress.subscribe(progress => {
+      this.downloadProgress = progress;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.downloadProgressSubscription.unsubscribe();
   }
 
   cancelDownload() {
-  try {
-    this.downloadHttpRequestSubscription.unsubscribe();
-  } finally {
-    // this.exitDialog();
+    // TODO implement
   }
-}
 }

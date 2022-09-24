@@ -21,6 +21,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { DialogRef } from '@streampipes/shared-ui';
 import { ExportConfig } from './model/export-config.model';
 import { DataDownloadDialogModel } from './model/data-download-dialog.model';
+import { DataExportService } from './services/data-export.service';
 
 
 @Component({
@@ -36,18 +37,19 @@ export class DataDownloadDialogComponent implements OnInit {
 
   exportConfig: ExportConfig;
 
-  constructor(public dialogRef: DialogRef<DataDownloadDialogComponent>) {
+  constructor(public dialogRef: DialogRef<DataDownloadDialogComponent>,
+              public dataExportService: DataExportService) {
   }
 
   ngOnInit() {
-    const measurement = this.dataDownloadDialogModel.measureName !== undefined ?
+    const measurementName = this.dataDownloadDialogModel.measureName !== undefined ?
       this.dataDownloadDialogModel.measureName : this.dataDownloadDialogModel.dataExplorerDataConfig.sourceConfigs[0].measureName;
 
     this.exportConfig = {
       dataExportConfig: {
         dataRangeConfiguration: 'all',
         missingValueBehaviour: 'ignore',
-        measurement: measurement
+        measurement: measurementName
       },
       formatExportConfig: {
         exportFormat: 'csv',
@@ -69,10 +71,12 @@ export class DataDownloadDialogComponent implements OnInit {
   }
 
   downloadData() {
-    // if (this.exportConfig.dataExportConfig.dataRangeConfiguration === 'visible') {
-    //  this.exportConfig.dataExportConfig.dateRange = this.dataDownloadDialogModel.dataExplorerDateRange;
-    // }
+    // TODO check if I still need it
+    if (this.exportConfig.dataExportConfig.dataRangeConfiguration === 'visible') {
+     this.exportConfig.dataExportConfig.dateRange = this.dataDownloadDialogModel.dataExplorerDateRange;
+    }
 
-    console.log(this.exportConfig);
+    this.dataExportService.downloadData(this.exportConfig, this.dataDownloadDialogModel);
+    this.downloadDialogStepper.next();
   }
 }
