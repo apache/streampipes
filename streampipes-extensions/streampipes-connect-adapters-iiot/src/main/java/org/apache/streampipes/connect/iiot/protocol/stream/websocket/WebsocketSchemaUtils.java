@@ -27,19 +27,35 @@ import org.apache.streampipes.sdk.helpers.EpProperties;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class WebsocketSchemaUtils {
 
   public static Map<String, Object> prepareTemperatureEvent(Map<String, Object> input) {
-    // TODO implement
-    return input;
+
+    Map<String, Object> temperatureEvent = new HashMap<>();
+
+    temperatureEvent.put("temperature", input.get("temperature"));
+    temperatureEvent.put("timestamp", input.get("timestamp"));
+
+    return temperatureEvent;
   }
 
-  public static Map<String, Object> prepareEulerEvent(Map<String, Object> input) {
-    // TODO implement
-    return input;
+  public static Map<String, Object> prepareAccelerometerEvent(Map<String, Object> input) {
+
+    Map<String, Object> accelerationEvent = new HashMap<>();
+
+    HashMap<String, Object> accelerometerEvent = (HashMap<String, Object>) input.get("accelerometer");
+
+    accelerationEvent.put("x", accelerometerEvent.get("x"));
+    accelerationEvent.put("y", accelerometerEvent.get("y"));
+    accelerationEvent.put("z", accelerometerEvent.get("z"));
+    accelerationEvent.put("timestamp", input.get("timestamp"));
+
+
+    return accelerationEvent;
   }
 
   public static GuessSchema getTemperatureSchema() {
@@ -53,7 +69,7 @@ public class WebsocketSchemaUtils {
 
     allProperties.add(
         PrimitivePropertyBuilder
-            .create(Datatypes.String, "temperature")
+            .create(Datatypes.Double, "temperature")
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .label("Temperature")
             .description("")
@@ -65,7 +81,7 @@ public class WebsocketSchemaUtils {
     return guessSchema;
   }
 
-  public static GuessSchema getEulerSchema() {
+  public static GuessSchema getAccelerometerSchema() {
 
     GuessSchema guessSchema = new GuessSchema();
 
@@ -75,13 +91,33 @@ public class WebsocketSchemaUtils {
     allProperties.add(EpProperties.timestampProperty("timestamp"));
 
     // TODO implement
-//    allProperties.add(
-//        PrimitivePropertyBuilder
-//            .create(Datatypes.String, "temperature")
-//            .scope(PropertyScope.MEASUREMENT_PROPERTY)
-//            .label("Temperature")
-//            .description("")
-//            .build());
+    allProperties.add(
+        PrimitivePropertyBuilder
+            .create(Datatypes.Double, "x")
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .label("accelerationX")
+                .domainProperty("http://streampipes.org/hmi/accelerationX")
+            .description("")
+            .build()
+    );
+    allProperties.add(
+            PrimitivePropertyBuilder
+                    .create(Datatypes.Double, "y")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .label("accelerationY")
+                    .domainProperty("http://streampipes.org/hmi/accelerationY")
+                    .description("")
+                    .build()
+    );
+    allProperties.add(
+            PrimitivePropertyBuilder
+                    .create(Datatypes.Double, "z")
+                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
+                    .label("accelerationZ")
+                    .domainProperty("http://streampipes.org/hmi/accelerationZ")
+                    .description("")
+                    .build()
+    );
 
 
     eventSchema.setEventProperties(allProperties);

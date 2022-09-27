@@ -52,8 +52,8 @@ public class WebsocketAdapter extends SpecificDataStreamAdapter {
   public static final String DEVICE_ID = "device-id";
   public static final String AUTH_KEY = "auth-key";
   public static final String MESSAGE_TYPE = "message-type";
-  public static final String TEMPERATURE = "temperature-alternative";
-  public static final String EULER = "euler-alternative";
+  public static final String TEMPERATURE = "temperature";
+  public static final String ACCELEROMETER = "accelerometer";
 
 
   private String authToken;
@@ -84,7 +84,7 @@ public class WebsocketAdapter extends SpecificDataStreamAdapter {
         .requiredSecret(Labels.withId(AUTH_KEY))
         .requiredAlternatives(Labels.withId(MESSAGE_TYPE),
             Alternatives.from(Labels.withId(TEMPERATURE)),
-            Alternatives.from(Labels.withId(EULER))).build();
+            Alternatives.from(Labels.withId(ACCELEROMETER))).build();
   }
 
 
@@ -104,13 +104,15 @@ public class WebsocketAdapter extends SpecificDataStreamAdapter {
     if (this.messageType.equals(TEMPERATURE)) {
       return WebsocketSchemaUtils.getTemperatureSchema();
     } else {
-      return WebsocketSchemaUtils.getEulerSchema();
+      return WebsocketSchemaUtils.getAccelerometerSchema();
     }
   }
 
 
   @Override
   public void startAdapter() {
+
+    this.getConfigurations(adapterDescription);
 
     URI connectionUri = URI.create(BROKER_URL + this.deviceId);
     HashMap<String, String> httpHeader = new HashMap<>();
@@ -133,26 +135,28 @@ public class WebsocketAdapter extends SpecificDataStreamAdapter {
 
   public void onEvent(String eventPayload) {
 
-    if (eventPayload.contains(this.messageType)) {
-      try {
-        Map<String, Object> event = objectMapper.readValue(eventPayload, typeRef);
+    try {
+      Map<String, Object> event = objectMapper.readValue(eventPayload, typeRef);
+      event = (Map<String, Object>) event.get("Message");
+
+      if (event.containsKey(this.messageType)) {
 
         if (this.messageType.equals(TEMPERATURE)) {
           event = WebsocketSchemaUtils.prepareTemperatureEvent(event);
-        } else if (this.messageType.equals(EULER)) {
-          event = WebsocketSchemaUtils.prepareEulerEvent(event);
+        } else if (this.messageType.equals(ACCELEROMETER)) {
+          event = WebsocketSchemaUtils.prepareAccelerometerEvent(event);
         }
 
         adapterPipeline.process(event);
-      } catch (JsonProcessingException e) {
-        LOG.error("Event e: {} of websocket adapter could not be parsed.", eventPayload, e);
       }
+    } catch (JsonProcessingException e) {
+      LOG.error("Event e: {} of websocket adapter could not be parsed.", eventPayload, e);
     }
   }
 
   @Override
   public IAdapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-    return new WebsocketAdapter();
+    return new WebsocketAdapter(adapterDescription);
   }
 
   @Override

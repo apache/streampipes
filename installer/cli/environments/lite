@@ -16,7 +16,7 @@
 [environment:lite]
 ui
 backend
-connect-adapters-iiot
+# connect-adapters-iiot
 consul
 couchdb
 kafka

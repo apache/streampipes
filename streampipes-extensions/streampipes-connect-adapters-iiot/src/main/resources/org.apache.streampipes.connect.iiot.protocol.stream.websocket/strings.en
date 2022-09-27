@@ -10,8 +10,8 @@ auth-key.description=Token to authenticate against Azure Websocket
 message-type.title=Message Type
 message-type.description=Select the kind of messages the adapter should process
 
-temperature-alternative.title=Temperature
-temperature-alternative.description=
+temperature.title=Temperature
+temperature.description=
 
-euler-alternative.title=Euler
-euler-alternative.description=
+accelerometer.title=Accelerometer
+accelerometer.description=
