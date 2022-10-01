@@ -71,7 +71,6 @@ export class DataDownloadDialogComponent implements OnInit {
   }
 
   downloadData() {
-    // TODO check if I still need it
     if (this.exportConfig.dataExportConfig.dataRangeConfiguration === 'visible') {
      this.exportConfig.dataExportConfig.dateRange = this.dataDownloadDialogModel.dataExplorerDateRange;
     }

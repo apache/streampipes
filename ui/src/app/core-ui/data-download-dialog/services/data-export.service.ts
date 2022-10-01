@@ -35,7 +35,7 @@ export class DataExportService {
   }
 
   public downloadData(exportConfig: ExportConfig,
-               dataDownloadDialogModel: DataDownloadDialogModel) {
+                      dataDownloadDialogModel: DataDownloadDialogModel) {
 
     let downloadRequest;
 
@@ -43,14 +43,14 @@ export class DataExportService {
       downloadRequest = this.dataLakeRestService.downloadQueriedData(
         exportConfig.dataExportConfig.measurement,
         exportConfig.formatExportConfig.exportFormat,
-        exportConfig.formatExportConfig.exportFormat['delimiter'],
+        exportConfig.formatExportConfig['delimiter'],
         this.generateQueryRequest(exportConfig, dataDownloadDialogModel));
     } else {
       // case for 'all' & 'customInterval'
       downloadRequest = this.dataLakeRestService.downloadRawData(
         exportConfig.dataExportConfig.measurement,
         exportConfig.formatExportConfig.exportFormat,
-        exportConfig.formatExportConfig.exportFormat['delimiter']);
+        exportConfig.formatExportConfig['delimiter']);
     }
 
     downloadRequest.subscribe(event => {
@@ -66,7 +66,7 @@ export class DataExportService {
 
       // finished
       if (event.type === HttpEventType.Response) {
-        // this.createFile(event.body, this.downloadFormat, this.measureName, startDate, endDate);
+        this.createFile(event.body, exportConfig);
         downloadProgress = {
           downloadedMBs: event.loaded / 1024 / 1014,
           finished: true,
@@ -74,59 +74,6 @@ export class DataExportService {
         this.updateDownloadProgress.emit(downloadProgress);
       }
     });
-
-
-    // const index = !this.dataExplorerDataConfig ?
-    //   this.measureName : this.dataExplorerDataConfig.sourceConfigs[this.selectedQueryIndex].measureName;
-    // // this.nextStep();
-    // const startTime = this.date.startDate.getTime();
-    // const endTime = this.date.endDate.getTime();
-    // const startDateString = this.getDateString(this.date.startDate);
-    // const endDateString = this.getDateString(this.date.endDate);
-
-    // this.performRequest(
-    //   this.datalakeRestService.downloadRawData(
-    //     exportConfig.dataExportConfig.measurement,
-    //     exportConfig.formatExportConfig.exportFormat,
-    //     exportConfig.formatExportConfig.exportFormat['delimiter']),
-    //   '',
-    //   '');
-    // this.performRequest(
-    //   this.datalakeRestService
-    //     .downloadQueriedData(
-    //       index,
-    //       this.downloadFormat,
-    //       this.delimiter,
-    //       this.generateQueryRequest(startTime, endTime)
-    //     ),
-    //   startDateString,
-    //   endDateString
-    // );
-    //   this.performRequest(
-    //     this.datalakeRestService.downloadRawData(
-    //       exportConfig.dataExportConfig.measurement,
-    //       exportConfig.formatExportConfig.exportFormat,
-    //       exportConfig.formatExportConfig.exportFormat['delimiter']),
-    //     exportConfig.dataExportConfig.dateRange.startDate,
-    //     exportConfig.dataExportConfig.dateRange.endDate),
-    //     this.getDateString(exportConfig.dataExportConfig.dateRange.startDate),
-    //     this.getDateString(exportConfig.dataExportConfig.dateRange.endDate);
-    // )
-    //   ;
-    //   break;
-    // case 'visible':
-    //   this.performRequest(
-    //     this.datalakeRestService
-    //       .downloadQueriedData(
-    //         index,
-    //         this.downloadFormat,
-    //         this.delimiter,
-    //         this.generateQueryRequest(startTime, endTime)
-    //       ),
-    //     startDateString,
-    //     endDateString
-    //   );
-
   }
 
   // TODO how to set the selected Query Index
@@ -141,99 +88,50 @@ export class DataExportService {
         dataDownloadDialogModel.dataExplorerDataConfig.sourceConfigs[selectedQueryIndex]);
   }
 
-  // performRequest(request, startDate, endDate) {
-  //   const downloadHttpRequestSubscription = request.subscribe(event => {
-  //     let downloadProgress: DownloadProgress;
-  //     // progress
-  //     if (event.type === HttpEventType.DownloadProgress) {
-  //       downloadProgress = {
-  //         downloadedMBs: event.loaded / 1024 / 1014,
-  //         finished: false,
-  //       };
-  //       // this.downloadedMBs = event.loaded / 1024 / 1014;
-  //     }
-  //
-  //     // finished
-  //     if (event.type === HttpEventType.Response) {
-  //       // this.createFile(event.body, this.downloadFormat, this.measureName, startDate, endDate);
-  //       downloadProgress = {
-  //         finished: true,
-  //       };
-  //
-  //       // this.downloadFinish = true;
-  //     }
-  //   });
-  // }
-
-
-  private createFile(data, format, fileName, startDate, endDate, downloadFormat) {
+  /**
+   * The code in this method can be updated. Currently, it uses a native approach to download a file.
+   * At other places we use the fileSaver library (https://www.npmjs.com/package/file-saver) to download files.
+   * However, this library only supports files up to 2GB.
+   * There are other alternatives like StreamSaver.js (https://github.com/jimmywarting/StreamSaver.js).
+   * But then we probably should replace the fileSaver library with StreamSaver to only have one dependency.
+   * In the documentation it is also stated that an alternative approach is under development.
+   * It is probably also worth in looking into this one.
+   */
+  private createFile(data, exportConfig: ExportConfig) {
     const a = document.createElement('a');
     document.body.appendChild(a);
     a.style.display = 'display: none';
 
-    let name = 'sp_' + startDate + '_' + fileName + '.' + downloadFormat;
-    name = name.replace('__', '_');
+    const name = this.getFileName(exportConfig, new Date());
 
-    const url = window.URL.createObjectURL(new Blob([String(data)], {type: 'data:text/' + format + ';charset=utf-8'}));
+    const url = window.URL.createObjectURL(new Blob([String(data)], {type: `data:text/${exportConfig.formatExportConfig.exportFormat};charset=utf-8`}));
     a.href = url;
     a.download = name;
     a.click();
     window.URL.revokeObjectURL(url);
   }
 
-  private getDateString(date: Date): string {
-    return date.toLocaleDateString() + 'T' + date.toLocaleTimeString().replace(':', '.')
-      .replace(':', '.');
+  public getFileName(exportConfig: ExportConfig, exportDate: Date): string {
+    const baseName = `${this.getDateString(exportDate)}_${exportConfig.dataExportConfig.measurement}_`;
+    const dataRangeOption = exportConfig.dataExportConfig.dataRangeConfiguration;
+    let dateRange = '';
+    const fileExtension = `.${exportConfig.formatExportConfig.exportFormat}`;
+
+    if (exportConfig.dataExportConfig.dateRange !== undefined && (dataRangeOption === 'customInterval' || dataRangeOption === 'visible')) {
+      if (exportConfig.dataExportConfig.dateRange.startDate) {
+        dateRange += `_${this.getDateString(exportConfig.dataExportConfig.dateRange.startDate)}`;
+      }
+
+      if (exportConfig.dataExportConfig.dateRange.endDate) {
+        dateRange += `_${this.getDateString(exportConfig.dataExportConfig.dateRange.endDate)}`;
+      }
+    }
+
+    return baseName + dataRangeOption + dateRange + fileExtension;
   }
 
-  private convertData(data, format, xAxesKey, yAxesKeys) {
-    const indexXKey = data.headers.findIndex(headerName => headerName === xAxesKey);
-    const indicesYKeys = [];
-    yAxesKeys.forEach(key => {
-      indicesYKeys.push(data.headers.findIndex(headerName => headerName === key));
-    });
-
-    if (format === 'json') {
-      const resultJson = [];
-
-
-      data.rows.forEach(row => {
-        const tmp = {'time': new Date(row[indexXKey]).getTime()};
-        indicesYKeys.forEach(index => {
-          if (row[index] !== undefined) {
-            tmp[data.headers[index]] = row[index];
-          }
-        });
-        resultJson.push(tmp);
-      });
-
-      return JSON.stringify(resultJson);
-    } else {
-      // CSV
-      let resultCsv = '';
-
-      // header
-      resultCsv += xAxesKey;
-      yAxesKeys.forEach(key => {
-        resultCsv += ';';
-        resultCsv += key;
-      });
-
-
-      // content
-      data.rows.forEach(row => {
-        resultCsv += '\n';
-        resultCsv += new Date(row[indexXKey]).getTime();
-        indicesYKeys.forEach(index => {
-          resultCsv += ';';
-          if (row[index] !== undefined) {
-            resultCsv += row[index];
-          }
-        });
-      });
-
-      return resultCsv;
-    }
+  public getDateString(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 
 }
