@@ -23,6 +23,7 @@
   <mat-radio-button
       value="visible"
       class="sp-radio-button"
+      data-cy="download-configuration-visible"
       *ngIf="dataExplorerDataConfig">
     Currently configured query
   </mat-radio-button>
@@ -46,12 +47,14 @@
   <!--  </div>-->
   <mat-radio-button
       value="all"
-      class="sp-radio-button">
+      class="sp-radio-button"
+      data-cy="download-configuration-all">
     All data in database
   </mat-radio-button>
   <mat-radio-button
       value="customInterval"
-      class="sp-radio-button">
+      class="sp-radio-button"
+      data-cy="download-configuration-customInterval">
     All data in custom time interval
   </mat-radio-button>
 

@@ -16,13 +16,12 @@
  *
  */
 
-// tslint:disable-next-line:no-implicit-dependencies
-import * as CSV from 'csv-string';
 import { FileManagementUtils } from './FileManagementUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 import { ConnectUtils } from './ConnectUtils';
 import { DataLakeFilterConfig } from '../model/DataLakeFilterConfig';
 import { DataExplorerWidget } from '../model/DataExplorerWidget';
+import { DataSetUtils } from './DataSetUtils';
 
 export class DataLakeUtils {
 
@@ -263,7 +262,7 @@ export class DataLakeUtils {
     }).should((response) => {
       const actualResultString = response.body;
       cy.readFile(fileRoute).then((expectedResultString) => {
-        DataLakeUtils.resultEqual(actualResultString, expectedResultString, ignoreTime);
+        DataSetUtils.csvEqual(actualResultString, expectedResultString, ignoreTime);
       });
     });
   }
@@ -285,20 +284,4 @@ export class DataLakeUtils {
         .type(`${value.toLocaleString()}{enter}`);
   }
 
-  private static resultEqual(actual: string, expected: string, ignoreTime: boolean) {
-    let actualResult;
-    if (ignoreTime) {
-      actualResult = DataLakeUtils.parseCsv(actual).map(row => {
-        return row.splice(1);
-      });
-    } else {
-      actualResult = DataLakeUtils.parseCsv(actual);
-    }
-    const expectedResult = DataLakeUtils.parseCsv(expected);
-    expect(actualResult).to.deep.equal(expectedResult);
-  }
-
-  private static parseCsv(csv: string) {
-    return CSV.parse(csv, ';');
-  }
 }

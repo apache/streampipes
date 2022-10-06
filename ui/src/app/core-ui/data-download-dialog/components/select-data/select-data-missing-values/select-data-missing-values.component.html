@@ -22,17 +22,20 @@
     [(ngModel)]="dataExportConfig.missingValueBehaviour">
   <mat-radio-button
       value="ignore"
-      class="sp-radio-button">
+      class="sp-radio-button"
+      data-cy="download-configuration-ignore">
     Ignore lines with missing value
   </mat-radio-button>
   <mat-radio-button
       value="default"
-      class="sp-radio-button">
+      class="sp-radio-button"
+      data-cy="download-configuration-default">
     Add default value
   </mat-radio-button>
   <mat-radio-button
       value="empty"
-      class="sp-radio-button">
+      class="sp-radio-button"
+      data-cy="download-configuration-empty">
     Leave entry empty
   </mat-radio-button>
 </mat-radio-group>

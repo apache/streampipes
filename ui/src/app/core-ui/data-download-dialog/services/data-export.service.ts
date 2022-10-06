@@ -22,6 +22,7 @@ import { DatalakeQueryParameters, DatalakeRestService, DataViewQueryGeneratorSer
 import { HttpEventType } from '@angular/common/http';
 import { DataDownloadDialogModel } from '../model/data-download-dialog.model';
 import { DownloadProgress } from '../model/download-progress.model';
+import { FileNameService } from './file-name.service';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,8 @@ export class DataExportService {
   public updateDownloadProgress: EventEmitter<DownloadProgress> = new EventEmitter();
 
   constructor(public dataLakeRestService: DatalakeRestService,
-              public dataViewQueryGeneratorService: DataViewQueryGeneratorService) {
+              public dataViewQueryGeneratorService: DataViewQueryGeneratorService,
+              public fileNameService: FileNameService) {
   }
 
   public downloadData(exportConfig: ExportConfig,
@@ -102,7 +104,7 @@ export class DataExportService {
     document.body.appendChild(a);
     a.style.display = 'display: none';
 
-    const name = this.getFileName(exportConfig, new Date());
+    const name = this.fileNameService.generateName(exportConfig, new Date());
 
     const url = window.URL.createObjectURL(new Blob([String(data)], {type: `data:text/${exportConfig.formatExportConfig.exportFormat};charset=utf-8`}));
     a.href = url;
@@ -111,27 +113,5 @@ export class DataExportService {
     window.URL.revokeObjectURL(url);
   }
 
-  public getFileName(exportConfig: ExportConfig, exportDate: Date): string {
-    const baseName = `${this.getDateString(exportDate)}_${exportConfig.dataExportConfig.measurement}_`;
-    const dataRangeOption = exportConfig.dataExportConfig.dataRangeConfiguration;
-    let dateRange = '';
-    const fileExtension = `.${exportConfig.formatExportConfig.exportFormat}`;
-
-    if (exportConfig.dataExportConfig.dateRange !== undefined && (dataRangeOption === 'customInterval' || dataRangeOption === 'visible')) {
-      if (exportConfig.dataExportConfig.dateRange.startDate) {
-        dateRange += `_${this.getDateString(exportConfig.dataExportConfig.dateRange.startDate)}`;
-      }
-
-      if (exportConfig.dataExportConfig.dateRange.endDate) {
-        dateRange += `_${this.getDateString(exportConfig.dataExportConfig.dateRange.endDate)}`;
-      }
-    }
-
-    return baseName + dataRangeOption + dateRange + fileExtension;
-  }
-
-  public getDateString(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
 
 }

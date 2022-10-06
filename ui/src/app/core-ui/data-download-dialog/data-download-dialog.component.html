@@ -59,14 +59,16 @@
         mat-button
         mat-raised-button
         *ngIf="downloadDialogStepper.selectedIndex < 1" color="accent"
-        (click)="nextStep()">
+        (click)="nextStep()"
+        data-cy="download-configuration-next-btn">
       Next
     </button>
     <button
         mat-button
         mat-raised-button
         *ngIf="downloadDialogStepper.selectedIndex == 1" color="accent"
-        (click)="downloadData()">
+        (click)="downloadData()"
+        data-cy="download-configuration-download-btn">
       Download
     </button>
   </div>

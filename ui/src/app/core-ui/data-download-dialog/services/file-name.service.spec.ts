@@ -16,13 +16,13 @@
  *
  */
 
-import { DataExportService } from './data-export.service';
 import { ExportConfig } from '../model/export-config.model';
 import { DateRange } from '@streampipes/platform-services';
+import { FileNameService } from './file-name.service';
 
-describe('DataExportService', () => {
+describe('FileNameService', () => {
 
-  const service = new DataExportService(undefined, undefined);
+  const service = new FileNameService();
 
   // Testing data
   const defaultExportDate = new Date(2022, 11, 11, 3);
@@ -48,13 +48,13 @@ describe('DataExportService', () => {
   });
 
   it('Name for all data csv', () => {
-    const result = service.getFileName(defaultExportConfig, defaultExportDate);
+    const result = service.generateName(defaultExportConfig, defaultExportDate);
     expect(result).toBe(`${expectedBaseName}all.csv`);
   });
 
   it('Name for all data json', () => {
     defaultExportConfig.formatExportConfig.exportFormat = 'json';
-    const result = service.getFileName(defaultExportConfig, defaultExportDate);
+    const result = service.generateName(defaultExportConfig, defaultExportDate);
     expect(result).toBe(`${expectedBaseName}all.json`);
   });
 
@@ -62,7 +62,7 @@ describe('DataExportService', () => {
     defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'customInterval';
     defaultExportConfig.dataExportConfig.dateRange = defaultDateRange;
 
-    const result = service.getFileName(defaultExportConfig, defaultExportDate);
+    const result = service.generateName(defaultExportConfig, defaultExportDate);
     expect(result).toBe(`${expectedBaseName}customInterval_2022-12-02_2022-12-06.csv`);
   });
 
@@ -71,7 +71,7 @@ describe('DataExportService', () => {
     defaultExportConfig.dataExportConfig.dataRangeConfiguration = 'visible';
     defaultExportConfig.dataExportConfig.dateRange = defaultDateRange;
 
-    const result = service.getFileName(defaultExportConfig, defaultExportDate);
+    const result = service.generateName(defaultExportConfig, defaultExportDate);
     expect(result).toBe(`${expectedBaseName}visible_2022-12-02_2022-12-06.json`);
   });
 
@@ -80,7 +80,7 @@ describe('DataExportService', () => {
     defaultExportConfig.dataExportConfig.dateRange = new DateRange();
     defaultExportConfig.dataExportConfig.dateRange.endDate = defaultEndDate;
 
-    const result = service.getFileName(defaultExportConfig, defaultExportDate);
+    const result = service.generateName(defaultExportConfig, defaultExportDate);
     expect(result).toBe(`${expectedBaseName}visible_2022-12-06.csv`);
   });
 
@@ -89,7 +89,7 @@ describe('DataExportService', () => {
     defaultExportConfig.dataExportConfig.dateRange = new DateRange();
     defaultExportConfig.dataExportConfig.dateRange.startDate = defaultStartDate;
 
-    const result = service.getFileName(defaultExportConfig, defaultExportDate);
+    const result = service.generateName(defaultExportConfig, defaultExportDate);
     expect(result).toBe(`${expectedBaseName}visible_2022-12-02.csv`);
   });
 
