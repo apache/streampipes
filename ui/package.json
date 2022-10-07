@@ -43,7 +43,7 @@
     "@angular/platform-browser-dynamic": "^13.3.0",
     "@angular/router": "^13.3.0",
     "@asymmetrik/ngx-leaflet": "6.0.1",
-    "@auth0/angular-jwt": "^5.0.2",
+    "@auth0/angular-jwt": "^5.1.0",
     "@circlon/angular-tree-component": "^11.0.4",
     "@ctrl/ngx-codemirror": "5.1.1",
     "@danielmoncada/angular-datetime-picker": "^13.1.1",
