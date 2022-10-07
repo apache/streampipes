@@ -22,6 +22,6 @@ export default defineConfig({
       return require('./cypress/plugins/index.ts')(on, config);
     },
     specPattern: 'cypress/tests/**/*.{js,jsx,ts,tsx}',
-    baseUrl: 'http://localhost:8082',
+    baseUrl: 'http://localhost:80',
   },
 });
