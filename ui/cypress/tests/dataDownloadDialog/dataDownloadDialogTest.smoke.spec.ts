@@ -18,44 +18,62 @@
 
 import { ExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/export-config.model';
 import { DataDownloadDialogUtils } from '../../support/utils/DataDownloadDialogUtils';
-import { CsvFormatExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/format-export-config.model';
 import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
+import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 
 
 describe('Test live data download dialog', () => {
   before('Setup Test', () => {
     cy.initStreamPipesTest();
-    DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+    PrepareTestDataUtils.loadDataIntoDataLake('dataDownloadDialog/input.json', 'json_array');
     DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
     DataLakeUtils.saveDataExplorerWidgetConfiguration();
   });
 
   beforeEach('Setup Test', () => {
     cy.login();
+    cy.removeDownloadDirectory();
   });
 
   const dataViewName = 'TestView';
 
-  const exportConfig: ExportConfig = {
+  const formatTestsExportConfig: ExportConfig = {
+    formatExportConfig: undefined,
     dataExportConfig: {
       dataRangeConfiguration: 'all',
       missingValueBehaviour: 'ignore',
-      measurement: 'datalake_configuration'
-    },
-    formatExportConfig: {
-      exportFormat: 'csv',
-      delimiter: 'semicolon'
+      measurement: 'prepared_data'
     }
   };
 
-  it('Data Explorer CSV with Semicolon', () => {
-    const resultFile = 'test1.csv';
-    DataDownloadDialogUtils.testDownload(exportConfig, resultFile, dataViewName);
+  it('Test csv export with semicolon', () => {
+    formatTestsExportConfig.formatExportConfig = {
+      exportFormat: 'csv',
+      delimiter: 'semicolon'
+    };
+    const resultFile = 'testCsvSemicolon.csv';
+
+    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
   });
 
-  it('Data Explorer CSV with Semicolon', () => {
-    (exportConfig.formatExportConfig as CsvFormatExportConfig).delimiter = 'comma';
-    const resultFile = 'test2.csv';
-    DataDownloadDialogUtils.testDownload(exportConfig, resultFile, dataViewName);
+  it('Test csv export with comma', () => {
+    formatTestsExportConfig.formatExportConfig = {
+      exportFormat: 'csv',
+      delimiter: 'comma'
+    };
+    const resultFile = 'testCsvComma.csv';
+
+    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
   });
+
+  it('Test json export', () => {
+    formatTestsExportConfig.formatExportConfig = {
+      exportFormat: 'json'
+    };
+
+    const resultFile = 'testJson.json';
+    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
+  });
+
+  // TODO make a list of all configurations
 });

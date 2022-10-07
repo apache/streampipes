@@ -22,6 +22,18 @@ import { FileNameService } from '../../../src/app/core-ui/data-download-dialog/s
 import { CsvFormatExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/format-export-config.model';
 
 export class DataDownloadDialogUtils {
+
+  // public static getDataDownloadTestAdapter() {
+  //   return GenericAdapterBuilder
+  //     .create('File_Set')
+  //     .setName('dataDownloadDialogTest/input.json')
+  //     .setTimestampProperty('timestamp')
+  //     .setFormat('json_array')
+  //     .setStoreInDataLake()
+  //     .build();
+  //
+  // }
+
   public static testDownload(exportConfig: ExportConfig,
                              resultFileLocation: string,
                              dataViewName: string) {
@@ -32,8 +44,7 @@ export class DataDownloadDialogUtils {
     DataLakeUtils.editDataView(dataViewName);
 
     // select download button
-    const widgetName = 'download-datalake_configuration-table';
-    cy.dataCy(widgetName)
+    cy.dataCy('download-prepared_data-table')
       .click();
 
     // download-customInterval, download-all, download-visible
@@ -61,9 +72,9 @@ export class DataDownloadDialogUtils {
     const fileNameService: FileNameService = new FileNameService();
     const fileName = fileNameService.generateName(exportConfig, new Date());
     const downloadsFolder = Cypress.config('downloadsFolder');
-    cy.readFile(downloadsFolder + '/' + fileName).then((downloadFileString) => {
+    cy.readFile(downloadsFolder + '/' + fileName).then((downloadFileString: string) => {
       cy.readFile(`cypress/fixtures/dataDownloadDialog/${resultFileLocation}`).then((expectedResultString) => {
-        expect(downloadFileString === expectedResultString);
+        expect(expectedResultString).to.deep.equal(downloadFileString);
       });
     });
   }
