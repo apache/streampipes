@@ -41,7 +41,7 @@ describe('Test live data download dialog', () => {
     formatExportConfig: undefined,
     dataExportConfig: {
       dataRangeConfiguration: 'all',
-      missingValueBehaviour: 'ignore',
+      missingValueBehaviour: 'empty',
       measurement: 'prepared_data'
     }
   };
@@ -75,5 +75,16 @@ describe('Test live data download dialog', () => {
     DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
   });
 
-  // TODO make a list of all configurations
+  it('Test csv export with semicolon and remove missing values', () => {
+    formatTestsExportConfig.formatExportConfig = {
+      exportFormat: 'csv',
+      delimiter: 'semicolon'
+    };
+    formatTestsExportConfig.dataExportConfig.missingValueBehaviour = 'ignore';
+    const resultFile = 'testRemoveLinesWithMissingValues.csv';
+
+    DataDownloadDialogUtils.testDownload(formatTestsExportConfig, resultFile, dataViewName);
+  });
+
+
 });

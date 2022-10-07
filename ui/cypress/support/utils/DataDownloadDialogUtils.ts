@@ -23,17 +23,6 @@ import { CsvFormatExportConfig } from '../../../src/app/core-ui/data-download-di
 
 export class DataDownloadDialogUtils {
 
-  // public static getDataDownloadTestAdapter() {
-  //   return GenericAdapterBuilder
-  //     .create('File_Set')
-  //     .setName('dataDownloadDialogTest/input.json')
-  //     .setTimestampProperty('timestamp')
-  //     .setFormat('json_array')
-  //     .setStoreInDataLake()
-  //     .build();
-  //
-  // }
-
   public static testDownload(exportConfig: ExportConfig,
                              resultFileLocation: string,
                              dataViewName: string) {
@@ -51,9 +40,9 @@ export class DataDownloadDialogUtils {
     cy.dataCy(`download-configuration-${exportConfig.dataExportConfig.dataRangeConfiguration}`)
       .click();
 
-    // download-ignore, download-default, download-emtpy
-    // cy.dataCy(`download-configuration-${exportConfig.dataExportConfig.missingBehaviour}`)
-    //     .click();
+    // download-ignore, download-emtpy
+    cy.dataCy(`download-configuration-${exportConfig.dataExportConfig.missingValueBehaviour}`)
+        .click();
 
     // click next
     cy.dataCy('download-configuration-next-btn').click();
