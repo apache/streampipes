@@ -23,9 +23,9 @@ import {
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
   SpecificAdapterSetDescription,
-  SpecificAdapterStreamDescription
+  SpecificAdapterStreamDescription,
+  AdapterDescriptionUnion
 } from '@streampipes/platform-services';
-import { AdapterDescriptionUnion } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable()
 export class ConnectService {

@@ -31,6 +31,7 @@ import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransfo
 import org.apache.streampipes.model.connect.rules.value.*;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,8 +100,10 @@ public class AdapterPipelineGenerator {
     else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
       return new SendToKafkaAdapterSink(adapterDescription);
     }
-    else {
+    else if (GroundingService.isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
       return new SendToMqttAdapterSink(adapterDescription);
+    } else {
+      return new SendToNatsAdapterSink(adapterDescription);
     }
   }
 

@@ -14,23 +14,26 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+
 package org.apache.streampipes.model.grounding;
 
-public class MqttTransportProtocol extends TransportProtocol {
+public class NatsTransportProtocol extends TransportProtocol {
 
   private int port;
 
-  public MqttTransportProtocol(String hostname, int port, String topicName) {
+  public NatsTransportProtocol(String hostname,
+                               int port,
+                               String topicName) {
     super(hostname, new SimpleTopicDefinition(topicName));
     this.port = port;
   }
 
-  public MqttTransportProtocol(MqttTransportProtocol other) {
+  public NatsTransportProtocol(NatsTransportProtocol other) {
     super(other);
     this.port = other.getPort();
   }
 
-  public MqttTransportProtocol() {
+  public NatsTransportProtocol() {
     super();
   }
 

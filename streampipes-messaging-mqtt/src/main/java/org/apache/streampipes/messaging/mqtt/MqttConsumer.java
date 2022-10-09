@@ -78,7 +78,7 @@ public class MqttConsumer extends AbstractMqttConnector implements
   }
 
   @Override
-  public Boolean isConnected() {
+  public boolean isConnected() {
     return this.connected;
   }
 

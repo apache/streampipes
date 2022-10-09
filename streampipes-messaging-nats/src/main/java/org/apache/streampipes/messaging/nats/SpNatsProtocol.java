@@ -14,36 +14,30 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.apache.streampipes.model.grounding;
 
-public class MqttTransportProtocol extends TransportProtocol {
+package org.apache.streampipes.messaging.nats;
 
-  private int port;
+import org.apache.streampipes.messaging.EventConsumer;
+import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.messaging.SpProtocolDefinition;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
-  public MqttTransportProtocol(String hostname, int port, String topicName) {
-    super(hostname, new SimpleTopicDefinition(topicName));
-    this.port = port;
+public class SpNatsProtocol implements SpProtocolDefinition<NatsTransportProtocol> {
+
+  private EventConsumer<NatsTransportProtocol> natsConsumer;
+  private EventProducer<NatsTransportProtocol> natsProducer;
+
+  public SpNatsProtocol() {
+    this.natsConsumer = new NatsConsumer();
+    this.natsProducer = new NatsPublisher();
   }
-
-  public MqttTransportProtocol(MqttTransportProtocol other) {
-    super(other);
-    this.port = other.getPort();
-  }
-
-  public MqttTransportProtocol() {
-    super();
-  }
-
-  public int getPort() {
-    return port;
-  }
-
-  public void setPort(int port) {
-    this.port = port;
+  @Override
+  public EventConsumer<NatsTransportProtocol> getConsumer() {
+    return this.natsConsumer;
   }
 
   @Override
-  public String toString() {
-    return getBrokerHostname() + ":" + getPort();
+  public EventProducer<NatsTransportProtocol> getProducer() {
+    return this.natsProducer;
   }
 }

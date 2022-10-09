@@ -21,7 +21,8 @@ public enum SpProtocol {
 
   KAFKA("Kafka", "org.apache.streampipes.model.grounding.KafkaTransportProtocol"),
   JMS("JMS", "org.apache.streampipes.model.grounding.JmsTransportProtocol"),
-  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol");
+  MQTT("MQTT", "org.apache.streampipes.model.grounding.MqttTransportProtocol"),
+  NATS("NATS", "org.apache.streampipes.model.grounding.NatsTransportProtocol");
 
   private final String name;
   private final String protocolClass;

@@ -24,80 +24,86 @@ import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.grounding.JmsTransportProtocol;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.MqttTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.*;
 
 import java.util.List;
 import java.util.Set;
 
 public class ProtocolSelector extends GroundingSelector {
 
-    private final String outputTopic;
-    private final List<SpProtocol> prioritizedProtocols;
+  private final String outputTopic;
+  private final List<SpProtocol> prioritizedProtocols;
 
-    public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
-        super(source, targets);
-        this.outputTopic = TopicGenerator.generateRandomTopic();
-        this.prioritizedProtocols =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
-    }
+  public ProtocolSelector(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
+    super(source, targets);
+    this.outputTopic = TopicGenerator.generateRandomTopic();
+    this.prioritizedProtocols =
+        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols();
+  }
 
-    public TransportProtocol getPreferredProtocol() {
-        if (source instanceof SpDataStream) {
-            return ((SpDataStream) source)
-                    .getEventGrounding()
-                    .getTransportProtocol();
-        } else {
-            for(SpProtocol prioritizedProtocol: prioritizedProtocols) {
-                if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName()) &&
-                        supportsProtocol(KafkaTransportProtocol.class)) {
-                    return kafkaTopic();
-                }
-                else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName()) &&
-                        supportsProtocol(JmsTransportProtocol.class)) {
-                    return jmsTopic();
-                } else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName()) &&
-                        supportsProtocol(MqttTransportProtocol.class)) {
-                    return mqttTopic();
-                }
-            }
+  public TransportProtocol getPreferredProtocol() {
+    if (source instanceof SpDataStream) {
+      return ((SpDataStream) source)
+          .getEventGrounding()
+          .getTransportProtocol();
+    } else {
+      for (SpProtocol prioritizedProtocol : prioritizedProtocols) {
+        if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName()) &&
+            supportsProtocol(KafkaTransportProtocol.class)) {
+          return kafkaTopic();
+        } else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName()) &&
+            supportsProtocol(JmsTransportProtocol.class)) {
+          return jmsTopic();
+        } else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName()) &&
+            supportsProtocol(MqttTransportProtocol.class)) {
+          return mqttTopic();
+        } else if (prioritizedProtocol.getProtocolClass().equals(NatsTransportProtocol.class.getCanonicalName()) &&
+            supportsProtocol(NatsTransportProtocol.class)) {
+          return natsTopic();
         }
-        return kafkaTopic();
+      }
     }
+    return kafkaTopic();
+  }
 
-    private TransportProtocol mqttTopic() {
-        return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
-                BackendConfig.INSTANCE.getMqttPort(),
-                outputTopic);
-    }
+  private TransportProtocol mqttTopic() {
+    return new MqttTransportProtocol(BackendConfig.INSTANCE.getMqttHost(),
+        BackendConfig.INSTANCE.getMqttPort(),
+        outputTopic);
+  }
 
-    private TransportProtocol jmsTopic() {
-        return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
-                BackendConfig.INSTANCE.getJmsPort(),
-                outputTopic);
-    }
+  private TransportProtocol jmsTopic() {
+    return new JmsTransportProtocol(BackendConfig.INSTANCE.getJmsHost(),
+        BackendConfig.INSTANCE.getJmsPort(),
+        outputTopic);
+  }
 
-    private TransportProtocol kafkaTopic() {
-        return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
-                BackendConfig.INSTANCE.getKafkaPort(),
-                outputTopic,
-                BackendConfig.INSTANCE.getZookeeperHost(),
-                BackendConfig.INSTANCE.getZookeeperPort());
-    }
+  private TransportProtocol natsTopic() {
+    return new NatsTransportProtocol(
+        BackendConfig.INSTANCE.getNatsHost(),
+        BackendConfig.INSTANCE.getNatsPort(),
+        outputTopic);
+  }
+
+  private TransportProtocol kafkaTopic() {
+    return new KafkaTransportProtocol(BackendConfig.INSTANCE.getKafkaHost(),
+        BackendConfig.INSTANCE.getKafkaPort(),
+        outputTopic,
+        BackendConfig.INSTANCE.getZookeeperHost(),
+        BackendConfig.INSTANCE.getZookeeperPort());
+  }
 
 
-    public <T extends TransportProtocol> boolean supportsProtocol(Class<T> protocol) {
-        List<InvocableStreamPipesEntity> elements = buildInvocables();
+  public <T extends TransportProtocol> boolean supportsProtocol(Class<T> protocol) {
+    List<InvocableStreamPipesEntity> elements = buildInvocables();
 
-        return elements
-                .stream()
-                .allMatch(e -> e
-                        .getSupportedGrounding()
-                        .getTransportProtocols()
-                        .stream()
-                        .anyMatch(protocol::isInstance));
+    return elements
+        .stream()
+        .allMatch(e -> e
+            .getSupportedGrounding()
+            .getTransportProtocols()
+            .stream()
+            .anyMatch(protocol::isInstance));
 
-    }
+  }
 }
