@@ -46,13 +46,15 @@ export class DataExportService {
         exportConfig.dataExportConfig.measurement,
         exportConfig.formatExportConfig.exportFormat,
         exportConfig.formatExportConfig['delimiter'],
+        exportConfig.dataExportConfig.missingValueBehaviour,
         this.generateQueryRequest(exportConfig, dataDownloadDialogModel));
     } else {
       // case for 'all' & 'customInterval'
       downloadRequest = this.dataLakeRestService.downloadRawData(
         exportConfig.dataExportConfig.measurement,
         exportConfig.formatExportConfig.exportFormat,
-        exportConfig.formatExportConfig['delimiter']);
+        exportConfig.formatExportConfig['delimiter'],
+        exportConfig.dataExportConfig.missingValueBehaviour);
     }
 
     downloadRequest.subscribe(event => {
@@ -78,7 +80,6 @@ export class DataExportService {
     });
   }
 
-  // TODO how to set the selected Query Index
   private generateQueryRequest(
     exportConfig: ExportConfig,
     dataDownloadDialogModel: DataDownloadDialogModel,

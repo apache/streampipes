@@ -68,7 +68,7 @@ public class DataExplorerQueryV4 {
         this.maximumAmountOfEvents = maximumAmountOfEvents;
     }
 
-    public SpQueryResult executeQuery() throws RuntimeException {
+    public SpQueryResult executeQuery(boolean ignoreMissingValues) throws RuntimeException {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
         List<QueryElement<?>> queryElements = getQueryElements();
 
@@ -93,16 +93,16 @@ public class DataExplorerQueryV4 {
         QueryResult result = influxDB.query(query);
         LOG.debug("Data Lake Query Result: " + result.toString());
 
-        SpQueryResult dataResult = postQuery(result);
+        SpQueryResult dataResult = postQuery(result, ignoreMissingValues);
 
         influxDB.close();
         return dataResult;
     }
 
-    public SpQueryResult executeQuery(Query query) {
+    public SpQueryResult executeQuery(Query query, boolean ignoreMissingValues) {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
         QueryResult result = influxDB.query(query);
-        SpQueryResult dataResult = postQuery(result);
+        SpQueryResult dataResult = postQuery(result, ignoreMissingValues);
         influxDB.close();
 
         return dataResult;
@@ -118,28 +118,35 @@ public class DataExplorerQueryV4 {
     }
 
 
-    protected DataSeries convertResult(QueryResult.Series series) {
+    protected DataSeries convertResult(QueryResult.Series series,
+                                       boolean ignoreMissingValues) {
         List<String> columns = series.getColumns();
         List<List<Object>> values = series.getValues();
 
         List<List<Object>> resultingValues = new ArrayList<>();
 
         values.forEach(v -> {
-//            if (!v.contains(null)) {
+            if (ignoreMissingValues) {
+                if (!v.contains(null)) {
+                    resultingValues.add(v);
+                }
+            } else {
                 resultingValues.add(v);
-//            }
+            }
+
         });
 
         return new DataSeries(values.size(), resultingValues, columns, series.getTags());
     }
 
-    protected SpQueryResult postQuery(QueryResult queryResult) throws RuntimeException {
+    protected SpQueryResult postQuery(QueryResult queryResult,
+                                      boolean ignoreMissingValues) throws RuntimeException {
         SpQueryResult result = new SpQueryResult();
 
         if (queryResult.getResults().get(0).getSeries() != null) {
             result.setTotal(queryResult.getResults().get(0).getSeries().size());
             queryResult.getResults().get(0).getSeries().forEach(rs -> {
-                DataSeries series = convertResult(rs);
+                DataSeries series = convertResult(rs, ignoreMissingValues);
                 result.setHeaders(series.getHeaders());
                 result.addDataResult(series);
             });
