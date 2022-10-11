@@ -26,6 +26,7 @@ import org.apache.streampipes.model.util.Cloner;
 				@JsonSubTypes.Type(JmsTransportProtocol.class),
 				@JsonSubTypes.Type(KafkaTransportProtocol.class),
 				@JsonSubTypes.Type(MqttTransportProtocol.class),
+				@JsonSubTypes.Type(NatsTransportProtocol.class)
 })
 public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
 	

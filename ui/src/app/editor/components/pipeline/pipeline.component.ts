@@ -256,6 +256,7 @@ export class PipelineComponent implements OnInit, OnDestroy {
   }
 
   checkTopicModel(pipelineElementConfig: PipelineElementConfig) {
+    console.log(pipelineElementConfig);
     setTimeout(() => {
       this.jsplumbService.dataStreamDropped(pipelineElementConfig.payload.dom,
         pipelineElementConfig.payload as SpDataStream,

@@ -25,12 +25,11 @@ import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
-import java.io.Serializable;
-
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
+import java.io.Serializable;
 
 public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
         EventConsumer<JmsTransportProtocol>,
@@ -85,7 +84,7 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
   }
 
   @Override
-  public Boolean isConnected() {
+  public boolean isConnected() {
     return connected;
   }
 

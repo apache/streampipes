@@ -28,32 +28,34 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
 
 
 public class AllExtensionsInit extends ExtensionsModelSubmitter {
 
-    public static void main (String[] args) {
-        new AllExtensionsInit().init();
-    }
+  public static void main(String[] args) {
+    new AllExtensionsInit().init();
+  }
 
-    @Override
-    public SpServiceDefinition provideServiceDefinition() {
-        return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.jvm",
-                "StreamPipes Extensions (JVM)",
-                "", 8090)
-                //.merge(new ConnectAdapterInit().provideServiceDefinition())
-                .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
-                .merge(new AllPipelineElementsInit().provideServiceDefinition())
-                .registerMessagingFormats(
-                        new JsonDataFormatFactory(),
-                        new CborDataFormatFactory(),
-                        new SmileDataFormatFactory(),
-                        new FstDataFormatFactory())
-                .registerMessagingProtocols(
-                        new SpKafkaProtocolFactory(),
-                        new SpJmsProtocolFactory(),
-                        new SpMqttProtocolFactory())
-                .build();
-    }
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.jvm",
+            "StreamPipes Extensions (JVM)",
+            "", 8090)
+        //.merge(new ConnectAdapterInit().provideServiceDefinition())
+        .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
+        .merge(new AllPipelineElementsInit().provideServiceDefinition())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
+        .build();
+  }
 }

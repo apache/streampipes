@@ -175,6 +175,7 @@ export class PipelineElementOptionsComponent implements OnInit, OnDestroy {
   }
 
   isWildcardTopic() {
+    console.log(this.pipelineElement);
     return (this.pipelineElement
         .payload as SpDataStream)
         .eventGrounding

@@ -19,43 +19,20 @@
 package org.apache.streampipes.sinks.brokers.jvm.nats;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.pe.shared.config.nats.NatsConfig;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class NatsParameters extends EventSinkBindingParams {
 
-    private String natsUrls;
-    private String subject;
-    private String username;
-    private String password;
-    private String properties;
+    private final NatsConfig natsConfig;
 
-    public NatsParameters(DataSinkInvocation graph, String natsUrls, String subject, String username, String password,
-                          String properties) {
+    public NatsParameters(DataSinkInvocation graph,
+                          NatsConfig natsConfig) {
         super(graph);
-        this.natsUrls = natsUrls;
-        this.subject = subject;
-        this.username = username;
-        this.password = password;
-        this.properties = properties;
+       this.natsConfig = natsConfig;
     }
 
-    public String getNatsUrls() {
-        return natsUrls;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getProperties() {
-        return properties;
+    public NatsConfig getNatsConfig() {
+        return natsConfig;
     }
 }

@@ -34,7 +34,6 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
   protected AdapterDescription adapterDescription;
   protected SpDataFormatDefinition dataFormatDefinition;
   protected T protocol;
-  private Class<T> protocolClass;
   private EventProducer<T> producer;
 
   public SendToBrokerAdapterSink(AdapterDescription adapterDescription,

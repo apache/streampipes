@@ -28,6 +28,7 @@ import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
@@ -39,33 +40,13 @@ public class GroundingService {
 
     private static final String TOPIC_PREFIX = "org.apache.streampipes.connect.";
 
-    public static String extractBroker(AdapterDescription adapterDescription) {
-        EventGrounding eventGrounding = getEventGrounding(adapterDescription);
-
-        SpProtocol prioritizedProtocol =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
-
-        String host = eventGrounding.getTransportProtocol().getBrokerHostname();
-        int port = 0;
-
-        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-            port = ((JmsTransportProtocol) eventGrounding.getTransportProtocol()).getPort();
-        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
-            port = ((KafkaTransportProtocol) eventGrounding.getTransportProtocol()).getKafkaPort();
-        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
-            port = ((MqttTransportProtocol) eventGrounding.getTransportProtocol()).getPort();
-        }
-
-        return host + ":" + port;
-    }
-
     public static String extractTopic(AdapterDescription adapterDescription) {
         EventGrounding eventGrounding = getEventGrounding(adapterDescription);
         return eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
     }
 
     private static EventGrounding getEventGrounding(AdapterDescription adapterDescription) {
-        EventGrounding eventGrounding = null;
+        EventGrounding eventGrounding;
 
         if (adapterDescription instanceof SpecificAdapterSetDescription) {
             eventGrounding = ((SpecificAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
@@ -105,6 +86,12 @@ public class GroundingService {
                             BackendConfig.INSTANCE.getMqttHost(),
                             BackendConfig.INSTANCE.getMqttPort(),
                             topicDefinition));
+        } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
+            eventGrounding.setTransportProtocol(
+                makeNatsTransportProtocol(
+                BackendConfig.INSTANCE.getNatsHost(),
+                BackendConfig.INSTANCE.getNatsPort(),
+                topicDefinition));
         }
 
         eventGrounding.setTransportFormats(Collections
@@ -134,6 +121,16 @@ public class GroundingService {
         fillTransportProtocol(transportProtocol, hostname, topicDefinition);
 
         return transportProtocol;
+    }
+
+    private static NatsTransportProtocol makeNatsTransportProtocol(String hostname,
+                                                                   int port,
+                                                                   TopicDefinition topicDefinition) {
+        var tp = new NatsTransportProtocol();
+        tp.setPort(port);
+        fillTransportProtocol(tp, hostname, topicDefinition);
+
+        return tp;
     }
 
     private static KafkaTransportProtocol makeKafkaTransportProtocol(String hostname, Integer port,
