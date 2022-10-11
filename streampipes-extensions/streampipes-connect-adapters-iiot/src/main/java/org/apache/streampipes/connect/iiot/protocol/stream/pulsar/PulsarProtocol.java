@@ -17,8 +17,10 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
+import java.io.IOException;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.Reader;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
@@ -68,18 +70,17 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
   @Override
   protected List<byte[]> getNByteElements(int n) throws ParseException {
     List<byte[]> elements = new ArrayList<>();
-    InternalEventProcessor<byte[]> eventProcessor = elements::add;
-    PulsarConsumer consumer = new PulsarConsumer(this.brokerUrl, this.topic, eventProcessor, n);
-
-    Thread thread = new Thread(consumer);
-    thread.start();
-
-    while (consumer.getMessageCount() < n) {
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+    try (PulsarClient pulsarClient = PulsarUtils.makePulsarClient(brokerUrl);
+         Reader<byte[]> reader = pulsarClient.newReader()
+                 .topic(topic)
+                 .create()) {
+      for (int i = 0; i < n; i++) {
+        if (reader.hasMessageAvailable()) {
+          elements.add(reader.readNext().getValue());
+        }
       }
+    } catch (IOException e) {
+      throw new ParseException("Failed to fetch messages.", e);
     }
     return elements;
   }
