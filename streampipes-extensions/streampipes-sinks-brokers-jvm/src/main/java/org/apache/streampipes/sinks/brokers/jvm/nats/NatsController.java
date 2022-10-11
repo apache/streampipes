@@ -22,10 +22,13 @@ import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.pe.shared.config.nats.NatsConfig;
+import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
@@ -75,24 +78,9 @@ public class NatsController extends StandaloneEventSinkDeclarer<NatsParameters> 
     public ConfiguredEventSink<NatsParameters> onInvocation(DataSinkInvocation graph,
                                                             DataSinkParameterExtractor extractor) {
 
-        String subject = extractor.singleValueParameter(SUBJECT_KEY, String.class);
-        String natsUrls = extractor.singleValueParameter(URLS_KEY, String.class);
-        String authentication = extractor.selectedAlternativeInternalId(ACCESS_MODE);
-        String connectionProperties = extractor.selectedAlternativeInternalId(CONNECTION_PROPERTIES);
-        String username = null;
-        String password = null;
-        String properties = null;
+        NatsConfig natsConfig = NatsConfigUtils.from(StaticPropertyExtractor.from(graph.getStaticProperties()));
 
-        if (authentication.equals(USERNAME_ACCESS)) {
-            username = extractor.singleValueParameter(USERNAME_KEY, String.class);
-            password = extractor.secretValue(PASSWORD_KEY);
-        }
-
-        if (connectionProperties.equals(CONNECTION_PROPERTIES)) {
-            properties = extractor.singleValueParameter(PROPERTIES_KEY, String.class);
-        }
-
-        NatsParameters params = new NatsParameters(graph, natsUrls, subject, username, password, properties);
+        NatsParameters params = new NatsParameters(graph, natsConfig);
 
         return new ConfiguredEventSink<>(params, NatsPublisher::new);
     }

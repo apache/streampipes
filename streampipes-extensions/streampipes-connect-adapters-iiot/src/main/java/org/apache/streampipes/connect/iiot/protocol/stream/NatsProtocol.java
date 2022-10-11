@@ -1,0 +1,172 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+package org.apache.streampipes.connect.iiot.protocol.stream;
+
+import org.apache.streampipes.connect.SendToPipeline;
+import org.apache.streampipes.connect.api.IAdapterPipeline;
+import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.messaging.InternalEventProcessor;
+import org.apache.streampipes.messaging.nats.NatsConsumer;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.pe.shared.config.nats.NatsConfig;
+import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
+import org.apache.streampipes.sdk.StaticProperties;
+import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
+import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
+import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.*;
+
+public class NatsProtocol extends BrokerProtocol {
+
+  public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.nats";
+  private NatsConfig natsConfig;
+  private NatsConsumer natsConsumer;
+
+  public NatsProtocol() {
+
+  }
+
+  public NatsProtocol(NatsConfig natsConfig,
+                      IParser parser,
+                      IFormat format) {
+    super(parser, format, natsConfig.getNatsUrls(), natsConfig.getSubject());
+    this.natsConfig = natsConfig;
+  }
+
+  @Override
+  public IProtocol getInstance(ProtocolDescription protocolDescription,
+                               IParser parser,
+                               IFormat format) {
+    StaticPropertyExtractor extractor =
+        StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
+
+    var natsConfig = NatsConfigUtils.from(extractor);
+
+    return new NatsProtocol(natsConfig, parser, format);
+  }
+
+  @Override
+  public ProtocolDescription declareModel() {
+    return ProtocolDescriptionBuilder.create(ID)
+        .category(AdapterType.Generic)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .sourceType(AdapterSourceType.STREAM)
+        .requiredTextParameter(Labels.withId(URLS_KEY), false, false)
+        .requiredTextParameter(Labels.withId(SUBJECT_KEY), false, false)
+        .requiredAlternatives(Labels.withId(ACCESS_MODE), getAccessModeAlternativesOne(),
+            getAccessModeAlternativesTwo())
+        .requiredAlternatives(Labels.withId(CONNECTION_PROPERTIES), getConnectionPropertiesAlternativesOne(),
+            getConnectionPropertiesAlternativesTwo())
+        .build();
+  }
+
+  public static StaticPropertyAlternative getAccessModeAlternativesOne() {
+    return Alternatives.from(Labels.withId(ANONYMOUS_ACCESS));
+
+  }
+
+  public static StaticPropertyAlternative getAccessModeAlternativesTwo() {
+    return Alternatives.from(Labels.withId(USERNAME_ACCESS),
+        StaticProperties.group(Labels.withId(USERNAME_GROUP),
+            StaticProperties.stringFreeTextProperty(Labels.withId(USERNAME_KEY)),
+            StaticProperties.secretValue(Labels.withId(PASSWORD_KEY))));
+
+  }
+
+  public static StaticPropertyAlternative getConnectionPropertiesAlternativesOne() {
+    return Alternatives.from(Labels.withId(NONE_PROPERTIES));
+
+  }
+
+  public static StaticPropertyAlternative getConnectionPropertiesAlternativesTwo() {
+    return Alternatives.from(Labels.withId(CUSTOM_PROPERTIES),
+        StaticProperties.group(Labels.withId(CONNECTION_PROPERTIES_GROUP),
+            StaticProperties.stringFreeTextProperty(Labels.withId(PROPERTIES_KEY))));
+
+  }
+
+  @Override
+  public void run(IAdapterPipeline adapterPipeline) {
+    SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
+    this.natsConsumer = new NatsConsumer();
+    this.natsConsumer.connect(toProtocol(), new BrokerEventProcessor(stk, parser));
+  }
+
+  @Override
+  public void stop() {
+    this.natsConsumer.disconnect();
+  }
+
+  @Override
+  public String getId() {
+    return ID;
+  }
+
+  @Override
+  protected List<byte[]> getNByteElements(int n) throws ParseException {
+    List<byte[]> elements = new ArrayList<>();
+    this.natsConsumer = new NatsConsumer();
+    final boolean[] completed = {false};
+    InternalEventProcessor<byte[]> processor = event -> {
+      elements.add(event);
+      if (elements.size() >= n) {
+        completed[0] = true;
+      }
+    };
+
+    this.natsConsumer.connect(toProtocol(), processor);
+
+    while(!completed[0]) {
+      try {
+        TimeUnit.MILLISECONDS.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+    return elements;
+  }
+
+  private NatsTransportProtocol toProtocol() {
+    var tp = new NatsTransportProtocol();
+    // TODO
+    String[] urlParts = this.brokerUrl.split(":");
+    tp.setBrokerHostname(urlParts[0]);
+    tp.setPort(Integer.parseInt(urlParts[1]));
+    tp.setTopicDefinition(new SimpleTopicDefinition(this.topic));
+
+    return tp;
+  }
+}

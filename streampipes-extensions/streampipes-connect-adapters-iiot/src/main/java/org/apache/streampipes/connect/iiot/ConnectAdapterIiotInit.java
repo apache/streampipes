@@ -56,6 +56,7 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
 				.registerAdapter(new FileStreamProtocol())
 				.registerAdapter(new KafkaProtocol())
 				.registerAdapter(new MqttProtocol())
+				.registerAdapter(new NatsProtocol())
 				.registerAdapter(new HttpStreamProtocol())
 				.registerAdapter(new PulsarProtocol())
 				.registerAdapter(new HttpServerProtocol())

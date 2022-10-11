@@ -94,6 +94,7 @@
 	<logback-classic.version>1.2.9</logback-classic.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
+	<nats.version>2.11.0</nats.version>
 	<objenesis.version>2.5.1</objenesis.version>
 	<okio.version>1.16.0</okio.version>
 	<okhttp.version>3.12.2</okhttp.version>
@@ -318,6 +319,11 @@ IoT data streams.
 					<groupId>io.jsonwebtoken</groupId>
 					<artifactId>jjwt-jackson</artifactId>
 					<version>${jjwt.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>io.nats</groupId>
+					<artifactId>jnats</artifactId>
+					<version>${nats.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>io.swagger.core.v3</groupId>

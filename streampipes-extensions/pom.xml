@@ -136,8 +136,6 @@
         <opencsv.version>5.5.2</opencsv.version>
         <plc4x.version>0.9.1</plc4x.version>
         <protobuf.version>3.16.1</protobuf.version>
-        <nats.version>2.11.0</nats.version>
-
     </properties>
 
     <dependencyManagement>
@@ -352,7 +350,6 @@
             <dependency>
                 <groupId>io.nats</groupId>
                 <artifactId>jnats</artifactId>
-                <version>${nats.version}</version>
             </dependency>
 
             <!-- External dependencies -->
