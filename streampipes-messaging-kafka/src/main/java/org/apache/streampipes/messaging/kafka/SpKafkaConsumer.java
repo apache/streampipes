@@ -18,18 +18,19 @@
 
 package org.apache.streampipes.messaging.kafka;
 
-import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
-import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.kafka.config.ConsumerConfigFactory;
+import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -139,7 +140,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   }
 
   @Override
-  public Boolean isConnected() {
+  public boolean isConnected() {
     return isRunning;
   }
 }

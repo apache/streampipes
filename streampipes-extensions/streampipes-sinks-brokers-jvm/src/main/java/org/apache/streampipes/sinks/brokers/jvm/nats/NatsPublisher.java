@@ -49,11 +49,12 @@ public class NatsPublisher implements EventSink<NatsParameters> {
             throws SpRuntimeException {
 
         LOG = parameters.getGraph().getLogger(NatsPublisher.class);
-        this.subject = parameters.getSubject();
-        String natsUrls = parameters.getNatsUrls();
-        String propertiesAsString = parameters.getProperties();
-        String username = parameters.getUsername();
-        String password = parameters.getPassword();
+        var natsConfig = parameters.getNatsConfig();
+        this.subject = natsConfig.getSubject();
+        String natsUrls = natsConfig.getNatsUrls();
+        String propertiesAsString = natsConfig.getProperties();
+        String username = natsConfig.getUsername();
+        String password = natsConfig.getPassword();
 
         Properties props = new Properties();
 

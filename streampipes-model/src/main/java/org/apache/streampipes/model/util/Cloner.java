@@ -136,6 +136,8 @@ public class Cloner {
       return new JmsTransportProtocol((JmsTransportProtocol) protocol);
     } else if (protocol instanceof MqttTransportProtocol) {
       return new MqttTransportProtocol((MqttTransportProtocol) protocol);
+    } else if (protocol instanceof NatsTransportProtocol) {
+      return new NatsTransportProtocol((NatsTransportProtocol) protocol);
     } else {
       LOG.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
       return protocol;

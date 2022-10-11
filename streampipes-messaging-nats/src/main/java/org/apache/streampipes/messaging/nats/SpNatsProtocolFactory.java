@@ -14,36 +14,28 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package org.apache.streampipes.model.grounding;
+package org.apache.streampipes.messaging.nats;
 
-public class MqttTransportProtocol extends TransportProtocol {
+import org.apache.streampipes.messaging.SpProtocolDefinition;
+import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
-  private int port;
+public class SpNatsProtocolFactory extends SpProtocolDefinitionFactory<NatsTransportProtocol> {
 
-  public MqttTransportProtocol(String hostname, int port, String topicName) {
-    super(hostname, new SimpleTopicDefinition(topicName));
-    this.port = port;
-  }
-
-  public MqttTransportProtocol(MqttTransportProtocol other) {
-    super(other);
-    this.port = other.getPort();
-  }
-
-  public MqttTransportProtocol() {
-    super();
-  }
-
-  public int getPort() {
-    return port;
-  }
-
-  public void setPort(int port) {
-    this.port = port;
+  @Override
+  public TransportProtocol getTransportProtocol() {
+    return new NatsTransportProtocol();
   }
 
   @Override
-  public String toString() {
-    return getBrokerHostname() + ":" + getPort();
+  public String getTransportProtocolClass() {
+    return NatsTransportProtocol.class.getCanonicalName();
+  }
+
+  @Override
+  public SpProtocolDefinition<NatsTransportProtocol> createInstance() {
+    return new SpNatsProtocol();
   }
 }
+

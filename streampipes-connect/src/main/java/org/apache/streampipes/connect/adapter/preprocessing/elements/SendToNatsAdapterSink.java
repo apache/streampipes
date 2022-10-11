@@ -16,17 +16,21 @@
  *
  */
 
-package org.apache.streampipes.messaging;
+package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.messaging.nats.NatsPublisher;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
-public interface EventConsumer<TP extends TransportProtocol> {
+public class SendToNatsAdapterSink extends SendToBrokerAdapterSink<NatsTransportProtocol> implements IAdapterPipelineElement {
 
-    void connect(TP protocolSettings, InternalEventProcessor<byte[]> eventProcessor) throws
-            SpRuntimeException;
+  public SendToNatsAdapterSink(AdapterDescription adapterDescription) {
+    super(adapterDescription, NatsPublisher::new, NatsTransportProtocol.class);
+  }
 
-    void disconnect() throws SpRuntimeException;
-
-    boolean isConnected();
+  @Override
+  public void modifyProtocolForDebugging() {
+    this.protocol.setBrokerHostname("localhost");
+  }
 }
