@@ -201,7 +201,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam(QP_TIME_INTERVAL) String timeInterval
             , @Parameter(in = ParameterIn.QUERY, description = "format specification (csv, json - default is csv) for data download") @QueryParam(QP_FORMAT) String format
             , @Parameter(in = ParameterIn.QUERY, description = "csv delimiter (comma or semicolon)") @QueryParam(QP_CSV_DELIMITER) String csvDelimiter
-            , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or emtpy)") @QueryParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
+            , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)") @QueryParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
             , @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions such as [field,operator,condition])") @QueryParam(QP_FILTER) String filter
             , @Context UriInfo uriInfo) {
 

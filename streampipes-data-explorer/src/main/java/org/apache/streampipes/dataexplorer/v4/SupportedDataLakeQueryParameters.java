@@ -56,6 +56,7 @@ public class SupportedDataLakeQueryParameters {
           QP_CSV_DELIMITER,
           QP_COUNT_ONLY,
           QP_AUTO_AGGREGATE,
+          QP_MISSING_VALUE_BEHAVIOUR,
           QP_FILTER,
           QP_MAXIMUM_AMOUNT_OF_EVENTS
   );

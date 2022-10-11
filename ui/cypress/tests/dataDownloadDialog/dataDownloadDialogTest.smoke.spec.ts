@@ -31,8 +31,8 @@ describe('Test live data download dialog', () => {
   });
 
   beforeEach('Setup Test', () => {
-    cy.login();
     cy.removeDownloadDirectory();
+    cy.login();
   });
 
   const dataViewName = 'TestView';
