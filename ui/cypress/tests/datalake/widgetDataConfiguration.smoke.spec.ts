@@ -25,6 +25,9 @@ describe('Test Table View in Data Explorer', () => {
   beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
     DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+    // cy.login();
+    // DataLakeUtils.goToDatalake();
+
   });
 
   it('Perform Test', () => {
@@ -82,6 +85,7 @@ describe('Test Table View in Data Explorer', () => {
     /**
      * Test groupBy configuration and if it is persisted correctly
      */
+    cy.wait(1000);
     DataLakeUtils.clickGroupBy('randomtext');
     cy.wait(1000);
     cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).first({ timeout: 10000 }).contains('a', { timeout: 10000 });

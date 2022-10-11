@@ -21,9 +21,10 @@
         <div fxFlex="100" fxLayout="column">
             <div style="border-bottom:1px solid #ccc;padding:10px;" fxLayout="row" class="sp-tab-bg">
                 <div fxFlex fxLayoutAlign="start center" *ngIf="availableTemplates && availableTemplates.length > 0">
-                    <mat-form-field class="form-field" floatLabel="never">
+                    <mat-form-field class="form-field" floatLabel="never" color="accent">
                         <mat-label>Use template</mat-label>
-                        <mat-select (selectionChange)="loadTemplate($event)" [(value)]="selectedTemplate">
+                        <mat-select (selectionChange)="loadTemplate($event)"
+                                    [(value)]="selectedTemplate">
                             <mat-option>--</mat-option>
                             <mat-option [value]="template" *ngFor="let template of availableTemplates">
                                 {{template.templateName}}
@@ -72,8 +73,8 @@
                         </div>
                     </div>
                     <div fxLayout="column" *ngIf="templateMode">
-                        <pipeline-element-template-config [cachedPipelineElement]="cachedPipelineElement"
-                        [template]="template" [templateConfigs]="templateConfigs">
+                        <pipeline-element-template-config [staticProperties]="cachedPipelineElement.staticProperties"
+                        [template]="template" [templateConfigs]="templateConfigs" [appId]="cachedPipelineElement.appId">
                         </pipeline-element-template-config>
                     </div>
                 </div>

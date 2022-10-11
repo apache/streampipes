@@ -29,10 +29,7 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.enricher.flink.config.ConfigKeys;
-import org.apache.streampipes.processors.enricher.flink.processor.math.mathop.MathOpController;
-import org.apache.streampipes.processors.enricher.flink.processor.math.staticmathop.StaticMathOpController;
 import org.apache.streampipes.processors.enricher.flink.processor.timestamp.TimestampController;
-import org.apache.streampipes.processors.enricher.flink.processor.trigonometry.TrigonometryController;
 import org.apache.streampipes.processors.enricher.flink.processor.urldereferencing.UrlDereferencingController;
 
 public class EnricherFlinkInit extends StandaloneModelSubmitter {
@@ -48,10 +45,7 @@ public class EnricherFlinkInit extends StandaloneModelSubmitter {
                     "",
                     8090)
             .registerPipelineElements(new TimestampController(),
-                    new MathOpController(),
-                    new StaticMathOpController(),
-                    new UrlDereferencingController(),
-                    new TrigonometryController())
+                    new UrlDereferencingController())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),

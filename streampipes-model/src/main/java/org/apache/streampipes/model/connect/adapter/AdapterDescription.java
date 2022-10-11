@@ -23,6 +23,7 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.*;
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -162,17 +163,18 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.adapterType = adapterType;
     }
 
-    public List getValueRules() {
-        List tmp = new ArrayList<>();
+    public List<TransformationRuleDescription> getValueRules() {
+        var tmp = new ArrayList<TransformationRuleDescription>();
         rules.forEach(rule -> {
-            if(rule instanceof ValueTransformationRuleDescription)
+            if(rule instanceof ValueTransformationRuleDescription && !(rule instanceof AddTimestampRuleDescription)) {
                 tmp.add(rule);
+            }
         });
         return tmp;
     }
 
-    public List getStreamRules() {
-        List tmp = new ArrayList<>();
+    public List<TransformationRuleDescription> getStreamRules() {
+        var tmp = new ArrayList<TransformationRuleDescription>();
         rules.forEach(rule -> {
             if(rule instanceof StreamTransformationRuleDescription)
                 tmp.add(rule);
@@ -180,8 +182,8 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         return tmp;
     }
 
-    public List getSchemaRules() {
-        List tmp = new ArrayList<>();
+    public List<TransformationRuleDescription> getSchemaRules() {
+        var tmp = new ArrayList<TransformationRuleDescription>();
         rules.forEach(rule -> {
             if(rule instanceof SchemaTransformationRuleDescription)
                 tmp.add(rule);
@@ -231,10 +233,19 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
         this.selectedEndpointUrl = selectedEndpointUrl;
     }
 
+    /**
+     * @deprecated check if the service group can be removed as a single pipeline element
+     * can correspond to different service groups
+     */
+    @Deprecated
     public String getCorrespondingServiceGroup() {
         return correspondingServiceGroup;
     }
 
+    /**
+     * @deprecated check if the service group can be removed as a single pipeline element
+     * can correspond to different service groups
+     */
     public void setCorrespondingServiceGroup(String correspondingServiceGroup) {
         this.correspondingServiceGroup = correspondingServiceGroup;
     }

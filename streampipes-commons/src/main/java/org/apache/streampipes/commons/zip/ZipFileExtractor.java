@@ -17,10 +17,9 @@
  */
 package org.apache.streampipes.commons.zip;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -30,6 +29,32 @@ public class ZipFileExtractor {
 
   public ZipFileExtractor(InputStream zipInputStream) {
     this.zipInputStream = zipInputStream;
+  }
+
+  // TODO used by export feature - extend this to support binaries
+  public Map<String, byte[]> extractZipToMap() throws IOException {
+    byte[] buffer = new byte[1024];
+    Map<String, byte[]> entries = new HashMap<>();
+    ZipInputStream zis = new ZipInputStream(zipInputStream);
+    ZipEntry zipEntry = zis.getNextEntry();
+    while (zipEntry != null) {
+      ByteArrayOutputStream fos = new ByteArrayOutputStream();
+      int len;
+      while ((len = zis.read(buffer)) > 0) {
+        fos.write(buffer, 0, len);
+      }
+      entries.put(sanitizeName(zipEntry.getName()), fos.toByteArray());
+      fos.close();
+      zipEntry = zis.getNextEntry();
+    }
+    zis.closeEntry();
+    zis.close();
+
+    return entries;
+  }
+
+  private String sanitizeName(String name) {
+    return name.split("\\.")[0];
   }
 
   public void extractZipToFile(String targetFolder) throws IOException {

@@ -44,6 +44,20 @@ public class DataExplorerQueryV4 {
 
     protected int maximumAmountOfEvents;
 
+    private boolean appendId = false;
+    private String forId;
+
+    public DataExplorerQueryV4() {
+
+    }
+
+    public DataExplorerQueryV4(Map<String, QueryParamsV4> params,
+                               String forId) {
+        this(params);
+        this.appendId = true;
+        this.forId = forId;
+    }
+
     public DataExplorerQueryV4(Map<String, QueryParamsV4> params) {
         this.params = params;
         this.maximumAmountOfEvents = -1;
@@ -61,7 +75,8 @@ public class DataExplorerQueryV4 {
         if (this.maximumAmountOfEvents != -1) {
             QueryBuilder countQueryBuilder = QueryBuilder.create(BackendConfig.INSTANCE.getInfluxDatabaseName());
             Query countQuery = countQueryBuilder.build(queryElements, true);
-            Double amountOfQueryResults = getAmountOfResults(influxDB.query(countQuery));
+            QueryResult countQueryResult = influxDB.query(countQuery);
+            Double amountOfQueryResults = getAmountOfResults(countQueryResult);
             if (amountOfQueryResults > this.maximumAmountOfEvents) {
                 SpQueryResult tooMuchData = new SpQueryResult();
                 tooMuchData.setSpQueryStatus(SpQueryStatus.TOO_MUCH_DATA);
@@ -81,6 +96,15 @@ public class DataExplorerQueryV4 {
         SpQueryResult dataResult = postQuery(result);
 
         influxDB.close();
+        return dataResult;
+    }
+
+    public SpQueryResult executeQuery(Query query) {
+        InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
+        QueryResult result = influxDB.query(query);
+        SpQueryResult dataResult = postQuery(result);
+        influxDB.close();
+
         return dataResult;
     }
 
@@ -120,6 +144,11 @@ public class DataExplorerQueryV4 {
                 result.addDataResult(series);
             });
         }
+
+        if (this.appendId) {
+            result.setForId(this.forId);
+        }
+
         return result;
     }
 

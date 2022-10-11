@@ -18,11 +18,11 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConnectService } from '../../../services/connect.service';
-import { DataMarketplaceService } from '../../../services/data-marketplace.service';
 import { AdapterExportDialog } from '../../../dialog/adapter-export/adapter-export-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
-import { AdapterDescription } from '@streampipes/platform-services';
+import { AdapterDescription, AdapterService } from '@streampipes/platform-services';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'sp-adapter-description',
@@ -49,9 +49,10 @@ export class AdapterDescriptionComponent implements OnInit {
   adapterLabel: string;
 
   constructor(private connectService: ConnectService,
-              private dataMarketplaceService: DataMarketplaceService,
+              private dataMarketplaceService: AdapterService,
               private dialogService: DialogService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private _snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -111,5 +112,13 @@ export class AdapterDescriptionComponent implements OnInit {
     } else {
       return `assets/img/connect/${this.adapter.iconUrl}`;
     }
+  }
+
+  removeAdapter(): void {
+    this.dataMarketplaceService.deleteAdapterDescription(this.adapter.elementId).subscribe(res => {
+      this.updateAdapterEmitter.emit();
+    }, error => {
+      this._snackBar.open('Cannot delete an adapter which has an active instance running.');
+    });
   }
 }

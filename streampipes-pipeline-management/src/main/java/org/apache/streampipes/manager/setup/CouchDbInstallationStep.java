@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
+import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.storage.couchdb.impl.ExtensionsServiceEndpointStorageImpl;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
@@ -44,6 +46,8 @@ public class CouchDbInstallationStep extends InstallationStep {
     createDatabases();
     createViews();
     addRdfEndpoints();
+    new CreateAssetLinkTypeTask().execute();
+    new CreateDefaultAssetTask().execute();
   }
 
   @Override

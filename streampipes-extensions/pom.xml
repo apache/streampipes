@@ -17,49 +17,54 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.apache.streampipes</groupId>
         <artifactId>streampipes-parent</artifactId>
-        <version>0.70.0-SNAPSHOT</version>
+        <version>0.71.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>streampipes-extensions</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>streampipes-sinks-databases-jvm</module>
-        <module>streampipes-sinks-internal-jvm</module>
-        <module>streampipes-sinks-brokers-jvm</module>
-        <module>streampipes-processors-filters-jvm</module>
-        <module>streampipes-sinks-databases-flink</module>
+        <module>streampipes-connect-adapters</module>
+        <module>streampipes-connect-adapters-iiot</module>
+
+        <module>streampipes-extensions-all-iiot</module>
+        <module>streampipes-extensions-all-jvm</module>
+
+        <module>streampipes-pipeline-elements-all-jvm</module>
+        <module>streampipes-pipeline-elements-all-flink</module>
+        <module>streampipes-pipeline-elements-data-simulator</module>
+        <module>streampipes-pipeline-elements-shared</module>
+
         <module>streampipes-processors-aggregation-flink</module>
-        <module>streampipes-processors-pattern-detection-flink</module>
+        <module>streampipes-processors-change-detection-jvm</module>
         <module>streampipes-processors-enricher-flink</module>
         <module>streampipes-processors-enricher-jvm</module>
-        <module>streampipes-sources-watertank-simulator</module>
-        <module>streampipes-sources-vehicle-simulator</module>
-        <module>streampipes-processors-transformation-flink</module>
-        <module>streampipes-processors-geo-jvm</module>
-        <module>streampipes-processors-statistics-flink</module>
+        <module>streampipes-processors-filters-jvm</module>
         <module>streampipes-processors-filters-siddhi</module>
+        <module>streampipes-processors-geo-flink</module>
+        <module>streampipes-processors-geo-jvm</module>
+        <module>streampipes-processors-image-processing-jvm</module>
+        <module>streampipes-processors-pattern-detection-flink</module>
+        <module>streampipes-processors-statistics-flink</module>
+        <module>streampipes-processors-transformation-flink</module>
         <module>streampipes-processors-text-mining-flink</module>
         <module>streampipes-processors-text-mining-jvm</module>
-        <module>streampipes-sinks-notifications-jvm</module>
-        <module>streampipes-pipeline-elements-shared</module>
-        <module>streampipes-processors-geo-flink</module>
-        <module>streampipes-processors-image-processing-jvm</module>
         <module>streampipes-processors-transformation-jvm</module>
-        <module>streampipes-pipeline-elements-all-jvm</module>
-        <module>streampipes-pipeline-elements-data-simulator</module>
-        <module>streampipes-connect-adapters</module>
-        <module>streampipes-pipeline-elements-all-flink</module>
-        <module>streampipes-processors-change-detection-jvm</module>
-        <module>streampipes-extensions-all-jvm</module>
-        <module>streampipes-connect-adapters-iiot</module>
+
+        <module>streampipes-sinks-brokers-jvm</module>
+        <module>streampipes-sinks-databases-jvm</module>
+        <module>streampipes-sinks-internal-jvm</module>
+        <module>streampipes-sinks-databases-flink</module>
+        <module>streampipes-sinks-notifications-jvm</module>
+
+        <module>streampipes-sources-watertank-simulator</module>
+        <module>streampipes-sources-vehicle-simulator</module>
     </modules>
 
     <properties>
@@ -84,7 +89,7 @@
         <google-maps-services.version>0.10.0</google-maps-services.version>
         <graalvm.js.version>21.3.0</graalvm.js.version>
         <iotdb.version>0.12.0</iotdb.version>
-        <java-websocket.version>1.4.0</java-websocket.version>
+        <java-websocket.version>1.5.0</java-websocket.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jsrosbridge.version>0.2.0</jsrosbridge.version>
         <jedis.version>3.3.0</jedis.version>
@@ -98,8 +103,8 @@
         <netty-resolver.version>4.1.72.Final</netty-resolver.version>
         <okhttp.version>3.13.1</okhttp.version>
         <opennlp.version>1.9.0</opennlp.version>
-        <postgresql.version>42.3.3</postgresql.version>
-        <pulsar.version>2.9.1</pulsar.version>
+        <postgresql.version>42.4.1</postgresql.version>
+        <pulsar.version>2.10.1</pulsar.version>
         <quartz.version>2.3.2</quartz.version>
         <scala-lang.version>2.11.12</scala-lang.version>
         <scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
@@ -125,12 +130,12 @@
         <influxdb.java.version>2.14</influxdb.java.version>
         <eclipse.milo.version>0.6.3</eclipse.milo.version>
         <mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
-        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.28</mysql-connector-java.version>
         <netty.version>4.1.72.Final</netty.version>
         <nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
         <opencsv.version>5.5.2</opencsv.version>
-        <plc4x.version>0.8.0</plc4x.version>
-        <protobuf.version>3.16.1</protobuf.version>
+        <plc4x.version>0.9.1</plc4x.version>
+        <protobuf.version>3.16.3</protobuf.version>
         <nats.version>2.11.0</nats.version>
 
     </properties>
@@ -616,7 +621,7 @@
             <plugin>
                 <groupId>org.apache.streampipes</groupId>
                 <artifactId>streampipes-maven-plugin</artifactId>
-                <version>0.70.0-SNAPSHOT</version>
+                <version>0.71.0-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>

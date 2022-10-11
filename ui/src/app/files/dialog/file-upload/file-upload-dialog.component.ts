@@ -29,9 +29,9 @@ import { FilesService } from '@streampipes/platform-services';
 export class FileUploadDialogComponent implements OnInit {
 
   inputValue: string;
-  fileName: string;
+  fileNames: string[] = [];
 
-  selectedUploadFile: File;
+  selectedUploadFiles: FileList;
 
   hasInput: boolean;
   errorMessage = 'Please enter a value';
@@ -46,27 +46,43 @@ export class FileUploadDialogComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  handleFileInput(files: any) {
-    this.selectedUploadFile = files[0];
-    this.fileName = this.selectedUploadFile.name;
+  handleFileInput(files: FileList) {
+    this.selectedUploadFiles = files;
+    for (let i = 0; i < files.length; i++) {
+      this.fileNames.push(files.item(i).name);
+    }
     this.uploadStatus = 0;
+  }
+
+  removeFilesFromUpload(): void {
+    this.selectedUploadFiles = undefined;
+    this.fileNames = [];
   }
 
   store() {
     this.uploadStatus = 0;
-    if (this.selectedUploadFile !== undefined) {
-      this.filesService.uploadFile(this.selectedUploadFile).subscribe(
-          event => {
-            if (event.type === HttpEventType.UploadProgress) {
-              this.uploadStatus = Math.round(100 * event.loaded / event.total);
-            } else if (event instanceof HttpResponse) {
-              this.dialogRef.close();
-            }
-          },
-          error => {
-          },
-      );
+    if (this.selectedUploadFiles.length > 0) {
+      this.uploadFile(0);
     }
+  }
+
+  uploadFile(index: number): void {
+    this.filesService.uploadFile(this.selectedUploadFiles.item(index)).subscribe(
+      event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.uploadStatus = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          index++;
+          if (index === (this.selectedUploadFiles.length)) {
+            this.dialogRef.close();
+          } else {
+            this.uploadFile(index);
+          }
+        }
+      },
+      error => {
+      },
+    );
   }
 
   cancel() {

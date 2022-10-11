@@ -20,20 +20,23 @@ import { Directive, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output 
 import { GridsterItem, GridsterItemComponent } from 'angular-gridster2';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';
 import {
+  DashboardItem,
   DataExplorerDataConfig,
   DataExplorerField,
-  DataViewQueryGeneratorService,
   DataExplorerWidgetModel,
-  SpQueryResult,
-  DashboardItem,
   DatalakeRestService,
-  TimeSettings } from '@streampipes/platform-services';
+  DataViewQueryGeneratorService,
+  SpQueryResult,
+  StreamPipesErrorMessage,
+  TimeSettings
+} from '@streampipes/platform-services';
 import { ResizeService } from '../../../services/resize.service';
 import { FieldProvider } from '../../../models/dataview-dashboard.model';
-import { Observable, Subscription, zip } from 'rxjs';
+import { Observable, Subject, Subscription, zip } from 'rxjs';
 import { DataExplorerFieldProviderService } from '../../../services/data-explorer-field-provider-service';
 import { BaseWidgetData } from './data-explorer-widget-data';
 import { TimeSelectionService } from '../../../services/time-selection.service';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Directive()
 export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidgetModel> implements BaseWidgetData<T>, OnInit, OnDestroy {
@@ -46,11 +49,20 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   @Output()
   timerCallback: EventEmitter<boolean> = new EventEmitter();
 
+  @Output()
+  errorCallback: EventEmitter<StreamPipesErrorMessage> = new EventEmitter<StreamPipesErrorMessage>();
+
   @Input() gridsterItem: GridsterItem;
   @Input() gridsterItemComponent: GridsterItemComponent;
   @Input() editMode: boolean;
 
   @Input() timeSettings: TimeSettings;
+
+  @Input()
+  previewMode = false;
+
+  @Input()
+  gridMode = true;
 
   @Input() dataViewDashboardItem: DashboardItem;
   @Input() dataExplorerWidget: T;
@@ -71,6 +83,8 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   resizeSub: Subscription;
   timeSelectionSub: Subscription;
 
+  requestQueue$: Subject<Observable<SpQueryResult>[]> = new Subject<Observable<SpQueryResult>[]>();
+
   constructor(protected dataLakeRestService: DatalakeRestService,
               protected widgetConfigurationService: WidgetConfigurationService,
               protected resizeService: ResizeService,
@@ -80,9 +94,28 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   ngOnInit(): void {
+    const heightOffset = this.gridMode ? 70 : 65;
+    const widthOffset = this.gridMode ? 10 : 10;
     this.showData = true;
     const sourceConfigs = this.dataExplorerWidget.dataConfig.sourceConfigs;
     this.fieldProvider = this.fieldService.generateFieldLists(sourceConfigs);
+
+    this.requestQueue$
+      .pipe(switchMap((observables) => {
+      this.errorCallback.emit(undefined);
+      return zip(...observables).pipe(catchError((err) => {
+        this.timerCallback.emit(false);
+        this.errorCallback.emit(err.error);
+        return [];
+      }));
+    }))
+      .subscribe(results => {
+      results.forEach((result, index) => result.sourceIndex = index);
+      this.validateReceivedData(results);
+      this.refreshView();
+      this.timerCallback.emit(false);
+    });
+
     this.widgetConfigurationSub = this.widgetConfigurationService.configurationChangedSubject.subscribe(refreshMessage => {
       if (refreshMessage.widgetId === this.dataExplorerWidget._id) {
         if (refreshMessage.refreshData) {
@@ -99,23 +132,28 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
         }
       }
     });
-    this.resizeSub = this.resizeService.resizeSubject.subscribe(info => {
-      if (info.gridsterItem.id === this.dataExplorerWidget._id) {
-        this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
-      }
-    });
+    if (!this.previewMode) {
+      this.resizeSub = this.resizeService.resizeSubject.subscribe(info => {
+        if (info.gridsterItem.id === this.dataExplorerWidget._id) {
+          this.onResize(this.gridsterItemComponent.width - widthOffset, this.gridsterItemComponent.height - heightOffset);
+        }
+      });
+    }
     this.timeSelectionSub = this.timeSelectionService.timeSelectionChangeSubject.subscribe(ts => {
       this.timeSettings = ts;
       this.updateData();
     });
     this.updateData();
-    this.onResize(this.gridsterItemComponent.width, this.gridsterItemComponent.height - 40);
+    this.onResize(this.gridsterItemComponent.width - widthOffset, this.gridsterItemComponent.height - heightOffset);
   }
 
   ngOnDestroy(): void {
     this.widgetConfigurationSub.unsubscribe();
-    this.resizeSub.unsubscribe();
+    if (this.resizeSub) {
+      this.resizeSub.unsubscribe();
+    }
     this.timeSelectionSub.unsubscribe();
+    this.requestQueue$.unsubscribe();
   }
 
   public removeWidget() {
@@ -140,35 +178,27 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   private loadData(includeTooMuchEventsParameter: boolean) {
-
     let observables: Observable<SpQueryResult>[];
-
     if (includeTooMuchEventsParameter && !this.dataExplorerWidget.dataConfig.ignoreTooMuchDataWarning) {
       observables = this
-          .dataViewQueryGeneratorService
-          .generateObservables(
-              this.timeSettings.startTime,
-              this.timeSettings.endTime,
-              this.dataExplorerWidget.dataConfig as DataExplorerDataConfig,
-              BaseDataExplorerWidgetDirective.TOO_MUCH_DATA_PARAMETER
-          );
+        .dataViewQueryGeneratorService
+        .generateObservables(
+          this.timeSettings.startTime,
+          this.timeSettings.endTime,
+          this.dataExplorerWidget.dataConfig as DataExplorerDataConfig,
+          BaseDataExplorerWidgetDirective.TOO_MUCH_DATA_PARAMETER
+        );
     } else {
       observables = this
-          .dataViewQueryGeneratorService
-          .generateObservables(
-              this.timeSettings.startTime,
-              this.timeSettings.endTime,
-              this.dataExplorerWidget.dataConfig as DataExplorerDataConfig);
+        .dataViewQueryGeneratorService
+        .generateObservables(
+          this.timeSettings.startTime,
+          this.timeSettings.endTime,
+          this.dataExplorerWidget.dataConfig as DataExplorerDataConfig);
     }
 
     this.timerCallback.emit(true);
-    zip(...observables).subscribe(results => {
-      results.forEach((result, index) => result.sourceIndex = index);
-      this.validateReceivedData(results);
-      // this.onDataReceived(results);
-      this.refreshView();
-      this.timerCallback.emit(false);
-    });
+    this.requestQueue$.next(observables);
   }
 
   validateReceivedData(spQueryResults: SpQueryResult[]) {

@@ -21,8 +21,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Outpu
 import Konva from 'konva';
 import { DashboardConfiguration } from '../../model/dashboard-configuration.model';
 import { RestService } from '../../services/rest.service';
-import { DashboardService } from '../../../dashboard/services/dashboard.service';
-import { DatalakeQueryParameterBuilder, DatalakeRestService, SpQueryResult } from '@streampipes/platform-services';
+import { DatalakeQueryParameterBuilder, DatalakeRestService, SpQueryResult, DashboardService } from '@streampipes/platform-services';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 

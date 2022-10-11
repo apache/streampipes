@@ -16,91 +16,98 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column">
-    <div fxFlex="100" fxLayout="column">
-        <div fxLayout="row" class="fixed-height options-bar sp-tab-bg">
-            <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
-                <button mat-button
-                        mat-raised-button
-                        color="accent"
-                        (click)="openNewDashboardDialog()"
-                        *ngIf="hasDashboardWritePrivileges"
-                        data-cy="new-dashboard-btn">
-                    <i class="material-icons">add</i>
-                    <span> New dashboard</span>
-                </button>
-            </div>
-        </div>
+<sp-basic-view [showBackLink]="false" [padding]="true">
+
+    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
+        <button mat-button mat-raised-button color="accent"
+                data-cy="new-dashboard-btn"
+                (click)="openNewDashboardDialog()"
+                *ngIf="hasDashboardWritePrivileges">
+            <i class="material-icons">add</i>
+            <span>New Dashboard</span>
+        </button>
     </div>
-    <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="start stretch" class="m-20">
-        <div fxFlex="100" class="assemblyOptions sp-blue-bg p-5">
-            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
-                <h4>My dashboards</h4>
-                <span fxFlex></span>
-            </div>
-        </div>
-        <div fxFlex="100" fxLayout="column" fxLayoutAlign="start start" class="sp-blue-border">
 
-            <table fxFlex="95" mat-table [dataSource]="dataSource" multiTemplateDataRows>
+    <div fxFlex="100" fxLayout="column">
+        <sp-basic-header-title-component title="My Dashboards"></sp-basic-header-title-component>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+            <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90" [hideToolbar]="true">
+                <div fxFlex="100" fxLayout="column" class="w-100" *ngIf="dashboards.length > 0">
 
-                <ng-container matColumnDef="name">
-                    <th fxFlex="60" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Dashboard</th>
-                    <td fxFlex="60" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        {{element.name}}<br/>
-                        {{element.description}}
-                    </td>
-                </ng-container>
+                    <table fxFlex="95" mat-table [dataSource]="dataSource" multiTemplateDataRows>
 
-                <ng-container matColumnDef="actions">
-                    <th fxFlex="40" fxLayoutAlign="center center" mat-header-cell *matHeaderCellDef> Actions</th>
-                    <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
-                        <div fxLayout="row" fxFlex="100">
+                        <ng-container matColumnDef="name">
+                            <th fxFlex="60" fxLayoutAlign="start center" mat-header-cell *matHeaderCellDef> Dashboard
+                            </th>
+                            <td fxFlex="60" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                                {{element.name}}<br/>
+                                {{element.description}}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                            <th fxFlex="40" fxLayoutAlign="center center" mat-header-cell *matHeaderCellDef> Actions
+                            </th>
+                            <td fxFlex="40" fxLayoutAlign="start center" mat-cell *matCellDef="let element">
+                                <div fxLayout="row" fxFlex="100">
                             <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                             <button mat-button mat-icon-button color="accent"
-                                    (click)="showDashboard(element, false)"
+                                    (click)="showDashboard(element)"
                                     [attr.data-cy]="'show-dashboard-' + element.name">
                                 <i class="material-icons">visibility</i>
                             </button>
                             </span>
-                            <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">
+                                    <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="openExternalDashboard(element)">
                                 <i class="material-icons">open_in_new</i>
                             </button>
                             </span>
-                            <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDashboardWritePrivileges">
+                                    <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center"
+                                          *ngIf="hasDashboardWritePrivileges">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="openEditDashboardDialog(element)">
                                 <i class="material-icons">settings</i>
                             </button>
                             </span>
-                            <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDashboardWritePrivileges">
+                                    <span fxFlex fxFlexOrder="4" fxLayout="row" fxLayoutAlign="center center"
+                                          *ngIf="hasDashboardWritePrivileges">
                             <button mat-button mat-icon-button color="accent"
-                                    (click)="showDashboard(element, true)"
+                                    (click)="editDashboard(element)"
                                     [attr.data-cy]="'edit-dashboard-' + element.name">
                                 <i class="material-icons">edit</i>
                             </button>
                             </span>
-                            <span fxFlex fxFlexOrder="5" fxLayout="row" fxLayoutAlign="center center" *ngIf="isAdmin">
+                                    <span fxFlex fxFlexOrder="5" fxLayout="row" fxLayoutAlign="center center"
+                                          *ngIf="isAdmin">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="showPermissionsDialog(element)">
                                 <i class="material-icons">share</i>
                             </button>
                             </span>
-                            <span fxFlex fxFlexOrder="6" fxLayout="row" fxLayoutAlign="center center" *ngIf="hasDashboardDeletePrivileges">
+                                    <span fxFlex fxFlexOrder="6" fxLayout="row" fxLayoutAlign="center center"
+                                          *ngIf="hasDashboardDeletePrivileges">
                             <button mat-button mat-icon-button color="accent"
                                     (click)="openDeleteDashboardDialog(element)">
                                 <i class="material-icons">delete</i>
                             </button>
                             </span>
-                        </div>
-                    </td>
-                </ng-container>
+                                </div>
+                            </td>
+                        </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let element; columns: displayedColumns;">
-                </tr>
-            </table>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let element; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                </div>
+                <div fxFlex="100"
+                     fxLayout="column"
+                     fxLayoutAlign="center center"
+                     *ngIf="dashboards.length == 0">
+                    <h5>(no dashboards available)</h5>
+                </div>
+            </sp-basic-inner-panel>
         </div>
     </div>
-</div>
+</sp-basic-view>

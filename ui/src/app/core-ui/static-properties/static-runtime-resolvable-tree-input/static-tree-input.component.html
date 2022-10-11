@@ -20,9 +20,17 @@
     <div>
         <button mat-button mat-raised-button color="accent" class="small-button"
                 (click)="loadOptionsFromRestApi()"
-                style="margin-right:10px;margin-left:10px;" [disabled]="!showOptions">
+                style="margin-right:10px;" [disabled]="!showOptions">
             <span>Reload</span>
         </button>
+    </div>
+    <div fxLayout="column" *ngIf="loading" class="mt-10">
+        <mat-spinner color="accent"
+                     [mode]="'indeterminate'"
+                     [diameter]="20"></mat-spinner>
+    </div>
+    <div fxLayout="column" *ngIf="error" class="mt-10">
+        <sp-exception-message [message]="errorMessage"></sp-exception-message>
     </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="sp-tree">
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>

@@ -20,6 +20,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
+  AdapterDescription,
+  AdapterDescriptionUnion,
   DataProcessorInvocation,
   DataSinkInvocation,
   PipelineElementTemplate
@@ -46,6 +48,10 @@ export class PipelineElementTemplateService {
         }));
   }
 
+  deletePipelineElementTemplate(templateId: string): Observable<any> {
+    return this.http.delete(`${this.platformServicesCommons.apiBasePath}/pipeline-element-templates/${templateId}`);
+  }
+
   getConfiguredDataProcessorForTemplate(templateId: string, invocation: DataProcessorInvocation): Observable<DataProcessorInvocation> {
     return this.http.post(this.platformServicesCommons.apiBasePath
         + '/pipeline-element-templates/' + templateId + '/processor', invocation)
@@ -60,6 +66,12 @@ export class PipelineElementTemplateService {
         .pipe(map(response => {
           return DataSinkInvocation.fromData(response as DataSinkInvocation);
         }));
+  }
+
+  getConfiguredAdapterForTemplate(templateId: string,
+                                  adapter: AdapterDescriptionUnion): Observable<any> {
+    return this.http.post(this.platformServicesCommons.apiBasePath
+      + '/pipeline-element-templates/' + templateId + '/adapter', adapter);
   }
 
   storePipelineElementTemplate(template: PipelineElementTemplate) {

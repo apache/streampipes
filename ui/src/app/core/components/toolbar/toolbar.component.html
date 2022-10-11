@@ -18,39 +18,33 @@
 
 <mat-toolbar class="md-primary md-hue-2 top-nav toolbar-bg">
     <div class="md-toolbar-tools sp-toolbar">
-        <div fxFlex="60" fxLayout fxLayoutAlign="start center">
+        <div fxFlex="100" fxLayout fxLayoutAlign="start center">
             <div class="md-toolbar-tools" style="height:40px;max-height:40px;" fxFlex fxLayout="row" fxLayoutAlign="start center">
                 <div style="padding:5px;border-radius:0px;margin-right:15px;position:relative;left:20px;">
-                    <img alt="icon" src="../../../../assets/img/sp/logo-navigation.png" style="height:30px;">
-                </div>
-                <div style="margin-left:30px;">
-                    <span class="active-page">{{activePageName}}</span>
+                    <img alt="icon" src="../../../../assets/img/sp/logo-navigation.png" style="max-height:30px;max-width: 250px;">
                 </div>
             </div>
-        </div>
-        <span fxFlex></span>
-        <div fxFlex="40" fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
-            <div fxLayoutAlign="start center" *ngIf="versionInfo && versionInfo.backendVersion">
-                <span class="version-info-text">v{{versionInfo.backendVersion}}</span>
-            </div>
+        <div fxFlex fxLayout fxLayoutAlign="end center" *ngIf="authenticated" style="height:100%;">
             <!-- uncomment this to quickly investigate layout issues between dark and light mode -->
 <!--            <div>-->
 <!--                <mat-slide-toggle color="accent" [formControl]="appearanceControl">Dark Mode</mat-slide-toggle>-->
 <!--            </div>-->
-            <div style="height:100%;">
-                <div [ngClass]="feedbackOpen.menuOpen ? 'sp-navbar-item-selected' : 'sp-navbar-item'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
-                    <button mat-button mat-icon-button
-                            [matMenuTriggerFor]="feedbackMenu"
-                            #feedbackOpen="matMenuTrigger"
-                            matTooltip="Feedback" matTooltipPosition="below"
-                            [ngClass]="feedbackOpen.menuOpen ? 'sp-icon-button-no-hover' : 'sp-icon-button'" style="min-width:0px;" fxLayout fxLayoutAlign="center center">
-                        <i [ngClass]="feedbackOpen.menuOpen ? 'sp-navbar-icon-selected' : 'sp-navbar-icon'" class="material-icons">feedback</i>
-                    </button>
-                </div>
+            <div [ngClass]="'notifications' === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'"
+                 *ngIf="notificationsVisible" class="h-100">
+                <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar iconbar-size"
+                        (click)="go('notifications')"
+                        fxLayout fxLayoutAlign="center center"
+                        matTooltip="Notifications" matTooltipPosition="below">
+                    <mat-icon [matBadge]="unreadNotificationCount"
+                              matBadgeColor="accent"
+                              matBadgePosition="below after"
+                              [matBadgeHidden]="unreadNotificationCount == 0"
+                              [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
+                              data-cy="navigation-icon">chat
+
+                    </mat-icon>
+                </button>
             </div>
-            <mat-menu #feedbackMenu="matMenu" style="max-width: none;" class="feedback-menu-content">
-                <feedback (closeFeedbackEmitter)="closeFeedbackWindow()"></feedback>
-            </mat-menu>
             <div style="height:100%;">
                 <div [ngClass]="accountMenuOpen.menuOpen ? 'sp-navbar-item-selected' : 'sp-navbar-item'" fxLayout fxLayoutAlign="center center" style="height: 100%;">
                     <button mat-button mat-icon-button
@@ -90,6 +84,7 @@
                     Logout
                 </button>
             </mat-menu>
+        </div>
         </div>
     </div>
 </mat-toolbar>

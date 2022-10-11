@@ -65,7 +65,7 @@ export class DataLakeUtils {
     DataLakeUtils.selectTimeRange(
         new Date(2020, 10, 20, 22, 44),
         new Date(2021, 10, 20, 22, 44));
-    DataLakeUtils.addNewWidget();
+    // DataLakeUtils.addNewWidget();
     DataLakeUtils.selectDataSet(dataSet);
     DataLakeUtils.dataConfigSelectAllFields();
     DataLakeUtils.selectVisualizationConfig();
@@ -100,7 +100,6 @@ export class DataLakeUtils {
         .click();
 
     this.editDataView(name);
-    // cy.get('div').contains(name).parent().click();
 
   }
 
@@ -131,10 +130,8 @@ export class DataLakeUtils {
   public static saveAndReEditWidget(dataViewName: string) {
     // Save configuration
     DataLakeUtils.saveDataExplorerWidgetConfiguration();
-    DataLakeUtils.clickStartTab();
+    DataLakeUtils.goBackToOverview();
     DataLakeUtils.editDataView(dataViewName);
-    // Edit widget again
-    DataLakeUtils.editWidget('datalake_configuration');
   }
 
   public static clickTab(tabName: string) {
@@ -142,9 +139,12 @@ export class DataLakeUtils {
     cy.get('div').contains(tabName).parent().click();
   }
 
-  public static clickStartTab() {
-    this.clickTab('Start');
+
+  public static goBackToOverview() {
+    cy.dataCy('save-data-explorer-go-back-to-overview')
+        .click();
   }
+
 
   public static addNewWidget() {
     cy.dataCy('add-new-widget')
@@ -168,7 +168,7 @@ export class DataLakeUtils {
     if (amountOfFilter === 0) {
       cy.dataCy('design-panel-data-settings-filter-field').should('not.exist');
     } else {
-      cy.dataCy('design-panel-data-settings-filter-field').should('be.visible');
+      cy.dataCy('design-panel-data-settings-filter-field', { timeout: 20000 }).should('be.visible');
     }
   }
 
@@ -245,8 +245,7 @@ export class DataLakeUtils {
   }
 
   public static goToDatalakeConfiguration() {
-    cy.visit('#/configuration');
-    cy.get('div').contains('DataLake').parent().click();
+    cy.visit('#/configuration/datalake');
   }
 
   public static checkResults(dataLakeIndex: string, fileRoute: string, ignoreTime?: boolean) {
@@ -254,7 +253,7 @@ export class DataLakeUtils {
     // Validate result in datalake
     cy.request({
       method: 'GET',
-      url: `/streampipes-backend/api/v4/datalake/measurements/${dataLakeIndex}/download?format=csv`,
+      url: `/streampipes-backend/api/v4/datalake/measurements/${dataLakeIndex}/download?format=csv&delimiter=semicolon`,
       headers: {
         'content-type': 'application/octet-stream'
       },

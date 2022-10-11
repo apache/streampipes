@@ -16,15 +16,12 @@
   ~
   -->
 
-<div class="assembly-options-preview sp-blue-bg">
-    <div fxLayout="row" fxLayoutAlign="start center">
-        <h4>Preview: {{pipeline.name}}</h4>
-    </div>
-</div>
-<div class="outer-assembly-preview">
-    <div class="canvas-preview-inner">
-        <div id="{{jspcanvas}}" class="canvas-preview">
-            <pipeline [canvasId]="jspcanvas" [rawPipelineModel]="rawPipelineModel" [preview]="true"></pipeline>
+<sp-basic-inner-panel [panelTitle]="'Preview: ' +pipeline.name" innerPadding="0">
+    <div class="outer-assembly-preview">
+        <div class="canvas-preview-inner">
+            <div id="{{jspcanvas}}" class="canvas-preview">
+                <pipeline [canvasId]="jspcanvas" [rawPipelineModel]="rawPipelineModel" [preview]="true"></pipeline>
+            </div>
         </div>
     </div>
-</div>
+</sp-basic-inner-panel>

@@ -49,7 +49,7 @@ public class WorkerAdministrationManagement {
             // only install once adapter description per service group
             boolean alreadyInstalled = alreadyRegisteredAdapters
                     .stream()
-                    .anyMatch(a -> a.getAppId().equals(adapterDescription.getAppId()) && a.getCorrespondingServiceGroup().equals(adapterDescription.getCorrespondingServiceGroup()));
+                    .anyMatch(a -> a.getAppId().equals(adapterDescription.getAppId()));
             if (!alreadyInstalled) {
                 this.adapterDescriptionStorage.storeAdapter(adapterDescription);
             }

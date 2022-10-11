@@ -103,6 +103,8 @@ public class WhereStatementParams extends QueryParamsV4 {
   private String returnCondition(String inputCondition) {
     if (NumberUtils.isCreatable(inputCondition) || Boolean.parseBoolean(inputCondition)) {
       return inputCondition;
+    } else if (inputCondition.equals("\"\"")) {
+      return inputCondition;
     } else {
       return "'" + inputCondition + "'";
     }

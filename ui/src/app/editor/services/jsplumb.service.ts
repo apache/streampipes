@@ -38,7 +38,7 @@ import { JsplumbEndpointService } from './jsplumb-endpoint.service';
 import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { EditorService } from './editor.service';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class JsplumbService {
 
   idCounter = 0;
@@ -98,7 +98,8 @@ export class JsplumbService {
           pipelineElementConfig.payload,
           true,
           false);
-      }, 100);
+        this.getBridge(false).repaintEverything();
+      }, 10);
     }
 
   }

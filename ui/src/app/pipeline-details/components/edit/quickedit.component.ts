@@ -16,135 +16,136 @@
  *
  */
 
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {
-    AfterViewInit,
-    ChangeDetectorRef,
-    Component,
-    EventEmitter,
-    Input,
-    OnInit,
-    Output
-} from '@angular/core';
-import {
-    PipelineService,
-    DataProcessorInvocation,
-    DataSinkInvocation,
-    EventSchema,
-    Pipeline
+  DataProcessorInvocation,
+  DataSinkInvocation,
+  EventSchema,
+  PipelineService
 } from '@streampipes/platform-services';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
+import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
-    selector: 'quick-edit',
-    templateUrl: './quickedit.component.html',
+  selector: 'quick-edit',
+  templateUrl: './quickedit.component.html',
 })
-export class QuickEditComponent implements OnInit, AfterViewInit {
+export class QuickEditComponent extends SpPipelineDetailsDirective implements OnInit, AfterViewInit {
 
-    @Input()
-    pipeline: Pipeline;
+  _selectedElement: PipelineElementUnion;
 
-    @Output()
-    reloadPipelineEmitter: EventEmitter<void> = new EventEmitter<void>();
+  eventSchemas: EventSchema[];
 
-    _selectedElement: PipelineElementUnion;
+  parentForm: FormGroup;
+  formValid: boolean;
+  viewInitialized = false;
 
-    eventSchemas: EventSchema[];
+  isInvocable = false;
+  isDataProcessor = false;
 
-    parentForm: FormGroup;
-    formValid: boolean;
-    viewInitialized = false;
+  pipelineUpdating = false;
 
-    isInvocable = false;
-    isDataProcessor = false;
+  constructor(activatedRoute: ActivatedRoute,
+              pipelineService: PipelineService,
+              authService: AuthService,
+              private fb: FormBuilder,
+              private changeDetectorRef: ChangeDetectorRef,
+              breadcrumbService: SpBreadcrumbService) {
+    super(activatedRoute, pipelineService, authService, breadcrumbService);
+  }
 
-    pipelineUpdating = false;
+  ngOnInit() {
+    super.onInit();
+    this.parentForm = this.fb.group({});
 
-    constructor(private pipelineService: PipelineService,
-                private fb: FormBuilder,
-                private changeDetectorRef: ChangeDetectorRef) {
+    this.parentForm.statusChanges.subscribe((status) => {
+      this.formValid = this.viewInitialized && this.parentForm.valid;
+    });
+  }
 
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
+    this.formValid = this.viewInitialized && this.parentForm.valid;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  updatePipeline() {
+    this.pipelineUpdating = true;
+    this.updatePipelineElement();
+    this.pipelineService.updatePipeline(this.pipeline).subscribe(data => {
+      this.loadPipeline();
+      this.pipelineUpdating = false;
+    });
+  }
+
+  updatePipelineElement() {
+    if (this._selectedElement instanceof DataProcessorInvocation) {
+      this.updateDataProcessor();
+    } else if (this._selectedElement instanceof DataSinkInvocation) {
+      this.updateDataSink();
     }
+  }
 
-    ngOnInit() {
-        this.parentForm = this.fb.group({
-        });
+  updateDataProcessor() {
+    const dataProcessors: DataProcessorInvocation[] = [];
+    this.pipeline.sepas.forEach(p => {
+      if (p.dom === this._selectedElement.dom) {
+        dataProcessors.push(this._selectedElement as DataProcessorInvocation);
+      } else {
+        dataProcessors.push(p);
+      }
+    });
+    this.pipeline.sepas = dataProcessors;
+  }
 
-        this.parentForm.statusChanges.subscribe((status) => {
-            this.formValid = this.viewInitialized && this.parentForm.valid;
-        });
+  updateDataSink() {
+    const dataSinks: DataSinkInvocation[] = [];
+    this.pipeline.actions.forEach(p => {
+      if (p.dom === this._selectedElement.dom) {
+        dataSinks.push(this._selectedElement as DataSinkInvocation);
+      } else {
+        dataSinks.push(p);
+      }
+    });
+    this.pipeline.actions = dataSinks;
+  }
+
+  get selectedElement() {
+    return this._selectedElement;
+  }
+
+  @Input()
+  set selectedElement(selectedElement: PipelineElementUnion) {
+    if (this._selectedElement) {
+      this.updatePipelineElement();
     }
-
-    ngAfterViewInit(): void {
-        this.viewInitialized = true;
-        this.formValid = this.viewInitialized && this.parentForm.valid;
-        this.changeDetectorRef.detectChanges();
+    this._selectedElement = selectedElement;
+    this.eventSchemas = [];
+    if (this._selectedElement instanceof DataProcessorInvocation || this._selectedElement instanceof DataSinkInvocation) {
+      (this._selectedElement as any).inputStreams.forEach(is => {
+        this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
+      });
     }
+    this.updateTypeInfo();
+  }
 
-    updatePipeline() {
-        this.pipelineUpdating = true;
-        this.updatePipelineElement();
-        this.pipelineService.updatePipeline(this.pipeline).subscribe(data => {
-            this.reloadPipelineEmitter.emit();
-            this.pipelineUpdating = false;
-        });
-    }
+  updateTypeInfo() {
+    this.isDataProcessor = this._selectedElement instanceof DataProcessorInvocation;
+    this.isInvocable = this._selectedElement instanceof DataProcessorInvocation ||
+      this._selectedElement instanceof DataSinkInvocation;
+  }
 
-    updatePipelineElement() {
-        if (this._selectedElement instanceof DataProcessorInvocation) {
-            this.updateDataProcessor();
-        } else if (this._selectedElement instanceof DataSinkInvocation) {
-            this.updateDataSink();
-        }
-    }
+  selectElement(element: PipelineElementUnion) {
+    this.selectedElement = element;
+  }
 
-    updateDataProcessor() {
-        const dataProcessors: DataProcessorInvocation[] = [];
-        this.pipeline.sepas.forEach(p => {
-           if (p.dom === this._selectedElement.dom) {
-               dataProcessors.push(this._selectedElement as DataProcessorInvocation);
-           } else {
-                dataProcessors.push(p);
-           }
-        });
-        this.pipeline.sepas = dataProcessors;
-    }
-
-    updateDataSink() {
-        const dataSinks: DataSinkInvocation[] = [];
-        this.pipeline.actions.forEach(p => {
-            if (p.dom === this._selectedElement.dom) {
-                dataSinks.push(this._selectedElement as DataSinkInvocation);
-            } else {
-                dataSinks.push(p);
-            }
-        });
-        this.pipeline.actions = dataSinks;
-    }
-
-    get selectedElement() {
-        return this._selectedElement;
-    }
-
-    @Input()
-    set selectedElement(selectedElement: PipelineElementUnion) {
-        if (this._selectedElement) {
-            this.updatePipelineElement();
-        }
-        this._selectedElement = selectedElement;
-        this.eventSchemas = [];
-        if (this._selectedElement instanceof DataProcessorInvocation || this._selectedElement instanceof DataSinkInvocation) {
-            (this._selectedElement as any).inputStreams.forEach(is => {
-                this.eventSchemas = this.eventSchemas.concat(is.eventSchema);
-            });
-        }
-        this.updateTypeInfo();
-    }
-
-    updateTypeInfo() {
-        this.isDataProcessor = this._selectedElement instanceof DataProcessorInvocation;
-        this.isInvocable = this._selectedElement instanceof DataProcessorInvocation ||
-            this._selectedElement instanceof DataSinkInvocation;
-    }
+  onPipelineAvailable(): void {
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Quick Edit'} ]);
+  }
 }
 

@@ -18,15 +18,23 @@
 
 package org.apache.streampipes.connect.adapter.guess;
 
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventSchema;
 
 public class SchemaGuesser {
 
-    public static GuessSchema guessSchma(EventSchema eventSchema) {
+    public static GuessSchema guessSchema(EventSchema eventSchema) {
         GuessSchema result = new GuessSchema();
 
         result.setEventSchema(eventSchema);
+
+        return result;
+    }
+
+    public static GuessSchema guessSchema(AdapterGuessInfo guessInfo) {
+        var result = guessSchema(guessInfo.getEventSchema());
+        result.setEventPreview(guessInfo.getEventPreview());
 
         return result;
     }

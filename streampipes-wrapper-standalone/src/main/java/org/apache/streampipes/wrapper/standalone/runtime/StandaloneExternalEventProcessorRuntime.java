@@ -42,7 +42,7 @@ public class StandaloneExternalEventProcessorRuntime<B extends EventProcessorBin
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException {
+  public void process(Map<String, Object> rawEvent, String sourceInfo) {
 
   }
 

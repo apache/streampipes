@@ -60,8 +60,7 @@ public class GuessManagement {
 
             throw new ParseException(errorClass + e.getMessage());
         } catch (Exception e) {
-            LOG.error("Unknown Error: " + e.toString());
-            throw new AdapterException(e.toString());
+            throw new AdapterException(e.getMessage(), e);
         }
 
         return guessSchema;

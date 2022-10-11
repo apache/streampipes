@@ -19,12 +19,22 @@
 export * from './lib/shared-ui.module';
 
 export * from './lib/dialog/base-dialog/base-dialog.model';
-// export * from './lib/dialog/base-dialog/base-dialog.component';
 export * from './lib/dialog/base-dialog/base-dialog.service';
 export * from './lib/dialog/base-dialog/dialog-ref';
 
 export * from './lib/dialog/confirm-dialog/confirm-dialog.component';
 export * from './lib/dialog/panel-dialog/panel-dialog.component';
 export * from './lib/dialog/standard-dialog/standard-dialog.component';
+
+export * from './lib/components/basic-header-title/header-title.component';
+export * from './lib/components/basic-inner-panel/basic-inner-panel.component';
+export * from './lib/components/basic-view/basic-view.component';
+export * from './lib/components/basic-nav-tabs/basic-nav-tabs.component';
+export * from './lib/components/sp-exception-message/sp-exception-message.component';
+export * from './lib/components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
+
+export * from './lib/models/sp-navigation.model';
+
+export * from './lib/services/breadcrumb.service';
 
 

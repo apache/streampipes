@@ -22,12 +22,12 @@
         <div fxFlex="100">
             <div fxFlex="100" style="margin:5px;width:100%">
                 <mat-form-field style="width: 95%" (click)="fileInput.click();" color="accent">
-                    <input matInput placeholder="File" disabled (value)="fileName">
+                    <input matInput placeholder="File" disabled (value)="fileNames">
                     <input #fileInput type="file" style="display:none;"
                            (change)="handleFileInput($event.target.files)"
-                           data-cy="sp-file-management-file-input">
+                           data-cy="sp-file-management-file-input" multiple>
                     <div>
-                        {{fileName}}
+                        <div fxLayout="column" *ngFor="let filename of fileNames">{{filename}}</div>
                         <mat-progress-bar mode="determinate" value="{{uploadStatus}}" *ngIf="uploadStatus > 0" color="accent"></mat-progress-bar>
                     </div>
                     <button color="accent" matSuffix
@@ -39,13 +39,20 @@
                         {{errorMessage}}
                     </mat-error>
                 </mat-form-field>
+                <button mat-button mat-raised-button class="mat-basic" (click)="removeFilesFromUpload()">Clear</button>
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button mat-raised-button color="accent" (click)="store()" data-cy="sp-file-management-store-file" style="margin-right:10px;">
-            Store file
+        <button mat-button
+                mat-raised-button
+                color="accent"
+                (click)="store()"
+                [disabled]="fileNames.length === 0"
+                data-cy="sp-file-management-store-file"
+                style="margin-right:10px;">
+            Import files
         </button>
         <button mat-button mat-raised-button class="mat-basic" (click)="cancel()" style="margin-right:10px;">
             Cancel

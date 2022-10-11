@@ -26,7 +26,7 @@
                         <mat-list-item *ngFor="let pipeline of visualizablePipelines"
                                        (click)="selectPipeline(pipeline)"
                                        class="list-item"
-                                        [attr.data-cy]="'dashboard-visualize-pipeline-' + pipeline.pipelineName">
+                                        [attr.data-cy]="'dashboard-visualize-pipeline-' + pipeline.pipelineName.replaceAll(' ', '_')">
                             <div mat-list-avatar
                                  class="pipeline-avatar sp-accent-bg">{{iconText(pipeline.measureName)}}
                             </div>

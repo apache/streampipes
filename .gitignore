@@ -83,7 +83,7 @@ npm-debug.log
 /test_data/
 
 ui/src/assets/lib/apps/*
-
+ui/.angular
 
 # compiled output
 ui/dist

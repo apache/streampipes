@@ -20,35 +20,22 @@ package org.apache.streampipes.manager.template;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPipesEntity> {
-
-  protected T pipelineElement;
-  protected PipelineElementTemplate template;
-
-  private boolean overwriteNameAndDescription;
+public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPipesEntity> extends AbstractTemplateHandler<T> {
 
   public PipelineElementTemplateHandler(PipelineElementTemplate template,
                                         T pipelineElement,
                                         boolean overwriteNameAndDescription) {
-    this.template = template;
-    this.pipelineElement = pipelineElement;
-    this.overwriteNameAndDescription = overwriteNameAndDescription;
+    super(template, pipelineElement, overwriteNameAndDescription);
   }
 
-  public T applyTemplateOnPipelineElement() {
-      Map<String, Object> configs = new HashMap<>();
-      template.getTemplateConfigs().forEach((key, value) -> configs.put(key, value.getValue()));
-      PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(configs);
-      pipelineElement.getStaticProperties().forEach(config -> config.accept(visitor));
-
-      if (overwriteNameAndDescription) {
-        pipelineElement.setName(template.getTemplateName());
-        pipelineElement.setDescription(template.getTemplateDescription());
-      }
-
-      return pipelineElement;
+  protected void visitStaticProperties(PipelineElementTemplateVisitor visitor) {
+    element.getStaticProperties().forEach(config -> config.accept(visitor));
   }
+
+  protected void applyNameAndDescription(String name, String description) {
+    element.setName(name);
+    element.setDescription(description);
+  }
+
+
 }

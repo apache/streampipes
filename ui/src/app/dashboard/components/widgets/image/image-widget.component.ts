@@ -74,4 +74,8 @@ export class ImageWidgetComponent extends BaseNgxChartsStreamPipesWidget impleme
         return 1;
     }
 
+    getFieldsToQuery(): string[] {
+        return [this.selectedProperty];
+    }
+
 }

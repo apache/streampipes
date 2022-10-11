@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.storage.api;
 
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
@@ -27,4 +28,8 @@ public interface IDataLakeStorage {
     boolean storeDataLakeMeasure(DataLakeMeasure measure);
 
     List<DataLakeMeasure> getAllDataLakeMeasures();
+
+    DataLakeMeasure findOne(String id);
+
+    void updateDataLakeMeasure(DataLakeMeasure measure);
 }

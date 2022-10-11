@@ -25,7 +25,7 @@ import { JsplumbFactoryService } from './jsplumb-factory.service';
 import { UserErrorMessage } from '../../core-model/base/UserErrorMessage';
 import { Connection } from '@jsplumb/core';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PipelineValidationService {
 
     errorMessages: any = [];

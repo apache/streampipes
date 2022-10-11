@@ -19,14 +19,15 @@
 import * as FileSaver from 'file-saver';
 import { Component, OnInit } from '@angular/core';
 import { Pipeline, PipelineCategory, PipelineService } from '@streampipes/platform-services';
-import { DialogService, PanelType, DialogRef } from '@streampipes/shared-ui';
+import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
 import { zip } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
+import { SpPipelineRoutes } from './pipelines.routes';
 
 @Component({
   selector: 'pipelines',
@@ -56,13 +57,16 @@ export class PipelinesComponent implements OnInit {
   constructor(private pipelineService: PipelineService,
               private dialogService: DialogService,
               private activatedRoute: ActivatedRoute,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private router: Router,
+              private breadcrumbService: SpBreadcrumbService) {
     this.pipelineCategories = [];
     this.starting = false;
     this.stopping = false;
   }
 
   ngOnInit() {
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpPipelineRoutes.BASE));
     this.authService.user$.subscribe(user => {
       this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
     });
@@ -191,5 +195,9 @@ export class PipelinesComponent implements OnInit {
 
   showPipeline(pipeline) {
     pipeline.display = !pipeline.display;
+  }
+
+  navigateToPipelineEditor() {
+    this.router.navigate(['pipelines', 'create']);
   }
 }

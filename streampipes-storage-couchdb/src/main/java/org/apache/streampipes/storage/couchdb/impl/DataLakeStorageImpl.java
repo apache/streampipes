@@ -41,4 +41,14 @@ public class DataLakeStorageImpl extends AbstractDao<DataLakeMeasure> implements
         List<DataLakeMeasure> dataLakeMeasures = findAll();
         return dataLakeMeasures;
     }
+
+    @Override
+    public DataLakeMeasure findOne(String id) {
+        return find(id).orElse(null);
+    }
+
+    @Override
+    public void updateDataLakeMeasure(DataLakeMeasure measure) {
+        update(measure);
+    }
 }

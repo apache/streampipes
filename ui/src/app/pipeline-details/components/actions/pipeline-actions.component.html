@@ -16,58 +16,41 @@
   ~
   -->
 
-<div>
-    <div class="assembly-options-preview sp-blue-bg">
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <h4>Actions</h4>
+<sp-basic-inner-panel panelTitle="Actions">
+    <div fxFlex="100" fxLayoutAlign="center center" fxLayout="row" style="padding:10px">
+        <div fxFlex="30">
+            <button mat-button mat-raised-button color="accent"
+                    matTooltip="Start Pipeline" matTooltipPosition="above"
+                    (click)="startPipeline()"
+                    [disabled]="starting" *ngIf="!pipeline.running">
+                <mat-icon>play_arrow</mat-icon>
+                <span>&nbsp;Start</span>
+            </button>
+            <button mat-button mat-raised-button color="accent"
+                    matTooltip="Stop Pipeline" matTooltipPosition="above"
+                    (click)="stopPipeline()"
+                    [disabled]="stopping" *ngIf="pipeline.running">
+                <mat-icon>stop</mat-icon>
+                <span>&nbsp;Stop</span>
+            </button>
+        </div>
+        <div fxFlex="30">
+            <button mat-button mat-raised-button color="accent"
+                    matTooltip="Modify Pipeline" matTooltipPosition="above"
+                    [disabled]="pipeline.running"
+                    (click)="pipelineOperationsService.modifyPipeline(pipeline._id)">
+                <mat-icon>mode_edit</mat-icon>
+                <span>&nbsp;Modify</span>
+            </button>
+        </div>
+        <div fxFlex="30">
+            <button mat-button mat-raised-button color="accent"
+                    matTooltip="Delete Pipeline" matTooltipPosition="above"
+                    *ngIf="hasPipelineDeletePrivileges"
+                    (click)="pipelineOperationsService.showDeleteDialog(pipeline, reloadPipelineEmitter, this.switchToPipelineView)">
+                <mat-icon>delete</mat-icon>
+                <span>&nbsp;Delete</span>
+            </button>
         </div>
     </div>
-    <div class="sp-blue-border">
-        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="row" style="padding:10px">
-            <div fxFlex="30">
-                <button mat-button mat-raised-button color="accent"
-                        matTooltip="Start Pipeline" matTooltipPosition="above"
-                        (click)="startPipeline()"
-                           [disabled]="starting" *ngIf="!pipeline.running">
-                    <mat-icon>play_arrow</mat-icon>
-                    <span>&nbsp;Start</span>
-                </button>
-                <button mat-button mat-raised-button color="accent"
-                        matTooltip="Stop Pipeline" matTooltipPosition="above"
-                        (click)="stopPipeline()"
-                           [disabled]="stopping" *ngIf="pipeline.running">
-                    <mat-icon>stop</mat-icon>
-                    <span>&nbsp;Stop</span>
-                </button>
-            </div>
-            <div fxFlex="30">
-                <button mat-button mat-raised-button color="accent"
-                        matTooltip="Modify Pipeline" matTooltipPosition="above"
-                        [disabled]="pipeline.running"
-                        (click)="pipelineOperationsService.modifyPipeline(pipeline._id)">
-                    <mat-icon>mode_edit</mat-icon>
-                    <span>&nbsp;Modify</span>
-                </button>
-            </div>
-            <div fxFlex="30">
-                <button mat-button mat-raised-button color="accent"
-                        matTooltip="Delete Pipeline" matTooltipPosition="above"
-                        *ngIf="hasPipelineDeletePrivileges"
-                        (click)="pipelineOperationsService.showDeleteDialog(pipeline, reloadPipelineEmitter, this.switchToPipelineView)">
-                    <mat-icon>delete</mat-icon>
-                    <span>&nbsp;Delete</span>
-                </button>
-            </div>
-<!--            <div flex="30">-->
-<!--            <md-button ng-click="ctrl.PipelineOperationsService.showLogs(ctrl.pipeline._id)" class="md-button">-->
-<!--                <md-icon-->
-<!--                        md-svg-icon="action:ic_info_24px"-->
-<!--                        aria-label="Logs" class="md-accent"></md-icon>-->
-<!--                &nbsp;Logs-->
-<!--                <md-tooltip md-direction="top">-->
-<!--                    Show Logs-->
-<!--                </md-tooltip>-->
-<!--            </md-button>-->
-        </div>
-    </div>
-</div>
+</sp-basic-inner-panel>

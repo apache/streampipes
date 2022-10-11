@@ -19,14 +19,16 @@
 <div fxLayout="column" fxFlex="100"
      [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
 
-    <sp-load-data-spinner *ngIf="showIsLoadingData" class="h-100"></sp-load-data-spinner>
-
-    <sp-no-data-in-date-range *ngIf="showNoDataInDateRange" [viewDateRange]="timeSettings"></sp-no-data-in-date-range>
+    <sp-no-data-in-date-range
+        *ngIf="showNoDataInDateRange"
+        [viewDateRange]="timeSettings"
+        class="h-100">
+    </sp-no-data-in-date-range>
 
     <sp-too-much-data
             [amountOfEvents]="amountOfTooMuchEvents"
             (loadDataWithTooManyEventsEmitter)="loadDataWithTooManyEvents()"
-            *ngIf="showTooMuchData"></sp-too-much-data>
+            *ngIf="showTooMuchData" class="h-100"></sp-too-much-data>
 
     <plotly-plot *ngIf="showData && !(dataExplorerWidget.visualizationConfig.displayType === 'heatmap')"
                  [divId]="dataExplorerWidget._id"

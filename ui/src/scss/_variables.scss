@@ -16,7 +16,7 @@
  *
  */
 
-$sp-color-primary:  rgb(57, 181, 74);
+$sp-color-primary: rgb(57, 181, 74);
 $sp-color-primary-light: rgb(59, 205, 76);
 $sp-color-accent: #1b1464;
 $sp-color-accent-light-blue: rgb(59, 92, 149);
@@ -29,3 +29,14 @@ $sp-color-processor: #009688;
 $sp-color-sink: #3F51B5;
 
 $sp-color-error: #B71C1C;
+
+body {
+  --color-data-view: rgb(122, 206, 227);
+  --color-dashboard: rgb(76, 115, 164);
+  --color-adapter: rgb(182, 140, 97);
+  --color-data-source: #ffa23b;
+  --color-pipeline: rgb(102, 185, 114);
+  --color-measurement: rgb(39, 164, 155);
+  --color-file: rgb(163, 98, 190);
+
+}

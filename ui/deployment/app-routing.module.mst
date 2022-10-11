@@ -22,7 +22,6 @@ import {HomeComponent} from "./home/home.component";
 import {LoginComponent} from "./login/components/login/login.component";
 import {SetupComponent} from "./login/components/setup/setup.component";
 import {StreampipesComponent} from "./core/components/streampipes/streampipes.component";
-import {PipelineDetailsComponent} from "./pipeline-details/pipeline-details.component";
 import {StandaloneDashboardComponent} from "./dashboard/components/standalone/standalone-dashboard.component";
 import {AuthCanActivateChildrenGuard} from "./_guards/auth.can-activate-children.guard";
 import {ConfiguredCanActivateGuard} from "./_guards/configured.can-activate.guard";
@@ -42,9 +41,9 @@ import { SetNewPasswordComponent } from './login/components/set-new-password/set
 import { ActivateAccountComponent } from './login/components/activate-account/activate-account.component';
 
 {{#modulesActive}}
-{{#ng5}}
+{{#componentImport}}
 import { {{{ng5_component}}} } from '{{{ng5_componentPath}}}';
-{{/ng5}}
+{{/componentImport}}
 {{/modulesActive}}
 
 const routes: Routes = [
@@ -60,13 +59,16 @@ const routes: Routes = [
   { path: '', component: StreampipesComponent, children: [
       { path: '', component: HomeComponent, canActivate: [ConfiguredCanActivateGuard] },
       {{#modulesActive}}
-      {{#ng5}}
+      {{#componentImport}}
       { path: '{{{link}}}', component: {{{ng5_component}}}, data: { authPageNames: [{{{pageNames}}}]}},
-      {{/ng5}}
+      {{/componentImport}}
+      {{^componentImport}}
+      { path: '', data: { authPageNames: [{{{pageNames}}}]}, loadChildren: () => import('{{{path}}}').then(m => m.{{{ng5_moduleName}}})},
+      {{/componentImport}}
       {{/modulesActive}}
+
       { path: 'notifications', component: NotificationsComponent },
       { path: 'info', component: InfoComponent },
-      { path: 'pipeline-details', component: PipelineDetailsComponent },
       { path: 'profile', component: ProfileComponent},
     ], canActivateChild: [AuthCanActivateChildrenGuard, PageAuthGuard] }
 ];

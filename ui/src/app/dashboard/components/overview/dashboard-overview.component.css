@@ -36,3 +36,10 @@ table {
     display: inline;
     margin-right: 10px;
 }
+
+.mat-row:nth-child(even) {
+    background-color: var(--color-bg-1);
+}
+.mat-row:nth-child(odd) {
+    background-color: var(--color-bg-2);
+}

@@ -16,64 +16,78 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataExplorerEditDataViewDialogComponent } from '../../dialogs/edit-dashboard/data-explorer-edit-data-view-dialog.component';
-import { DataViewDataExplorerService, Dashboard } from '@streampipes/platform-services';
-import { Tuple2 } from '../../../core-model/base/Tuple2';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { Dashboard, DataViewDataExplorerService } from '@streampipes/platform-services';
+import { DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ObjectPermissionDialogComponent } from '../../../core-ui/object-permission-dialog/object-permission-dialog.component';
 import { UserRole } from '../../../_enums/user-role.enum';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { Router } from '@angular/router';
+import { SpDataExplorerRoutes } from '../../data-explorer.routes';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-overview',
   templateUrl: './data-explorer-dashboard-overview.component.html',
   styleUrls: ['./data-explorer-dashboard-overview.component.scss']
 })
-export class DataExplorerDashboardOverviewComponent implements OnInit {
+export class DataExplorerDashboardOverviewComponent implements OnInit, OnDestroy {
 
-  @Input() dataViewDashboards: Dashboard[];
-  @Output() reloadDashboardsEmitter = new EventEmitter<void>();
-  @Output() selectDashboardEmitter = new EventEmitter<Tuple2<Dashboard, boolean>>();
 
   dataSource = new MatTableDataSource<Dashboard>();
   displayedColumns: string[] = [];
+  dashboards: Dashboard[] = [];
 
-  editLabels: boolean;
   isAdmin = false;
 
   hasDataExplorerWritePrivileges = false;
   hasDataExplorerDeletePrivileges = false;
 
-  constructor(private dashboardService: DataViewDataExplorerService,
+  authSubscription: Subscription;
+
+  constructor(private dataViewService: DataViewDataExplorerService,
+              private dashboardService: DataViewDataExplorerService,
               public dialogService: DialogService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private router: Router,
+              private breadcrumbService: SpBreadcrumbService) {
 
   }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
+    this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpDataExplorerRoutes.BASE));
+    this.authSubscription = this.authService.user$.subscribe(user => {
       this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
       this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
       this.isAdmin = user.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
       this.displayedColumns = ['name', 'actions'];
-
     });
-    this.dataSource.data = this.dataViewDashboards;
-    this.editLabels = false;
+
+    this.getDashboards();
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+  }
+
+  getDashboards() {
+    this.dataViewService.getDataViews().subscribe(data => {
+      this.dashboards = data.sort((a, b) => a.name.localeCompare(b.name));
+      this.dataSource.data = this.dashboards;
+    });
   }
 
   openNewDataViewDialog() {
     const dataViewDashboard: Dashboard = {};
+    dataViewDashboard.dashboardGeneralSettings = {};
     dataViewDashboard.widgets = [];
 
     this.openDataViewModificationDialog(true, dataViewDashboard);
-  }
-
-  openEditLabelView() {
-    this.editLabels = true;
   }
 
   openDataViewModificationDialog(createMode: boolean, dashboard: Dashboard) {
@@ -88,7 +102,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.reloadDashboardsEmitter.emit();
+      this.getDashboards();
     });
   }
 
@@ -106,7 +120,7 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(refresh => {
       if (refresh) {
-        this.reloadDashboardsEmitter.emit();
+        this.getDashboards();
       }
     });
   }
@@ -116,14 +130,17 @@ export class DataExplorerDashboardOverviewComponent implements OnInit {
   }
 
   openDeleteDashboardDialog(dashboard: Dashboard) {
-    // TODO add confirm dialog
-    this.dashboardService.deleteDashboard(dashboard).subscribe(result => {
-      this.reloadDashboardsEmitter.emit();
+    this.dashboardService.deleteDashboard(dashboard).subscribe(() => {
+      this.getDashboards();
     });
   }
 
-  showDashboard(dashboard: Dashboard, editMode: boolean) {
-    const dashboardSettings: Tuple2<Dashboard, boolean> = { a: dashboard, b: editMode };
-    this.selectDashboardEmitter.emit(dashboardSettings);
+  showDashboard(dashboard: Dashboard) {
+    this.router.navigate(['dataexplorer/', dashboard._id]);
   }
+
+  editDashboard(dashboard: Dashboard) {
+    this.router.navigate(['dataexplorer/', dashboard._id], {queryParams: {action: 'edit'}});
+  }
+
 }

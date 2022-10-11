@@ -26,6 +26,7 @@ import { NotificationCountService } from '../services/notification-count-service
 import { FreeTextStaticProperty, Pipeline, PipelineService } from '@streampipes/platform-services';
 import { AuthService } from '../services/auth.service';
 import { filter, switchMap } from 'rxjs/operators';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'notifications',
@@ -64,11 +65,13 @@ export class NotificationsComponent implements OnInit, OnDestroy {
               private pipelineService: PipelineService,
               public elementIconText: ElementIconText,
               private notificationService: NotificationsService,
-              private notificationCountService: NotificationCountService) {
+              private notificationCountService: NotificationCountService,
+              private breadcrumbService: SpBreadcrumbService) {
     this.unreadNotifications = [];
   }
 
   ngOnInit() {
+    this.breadcrumbService.updateBreadcrumb([{label: 'Notifications'}]);
     this.getPipelinesWithNotifications();
     this.subscription = timer(0, 5000).pipe(
       filter(() => (this.currentlySelectedNotification !== undefined && this.allNotifications.size > 0)),

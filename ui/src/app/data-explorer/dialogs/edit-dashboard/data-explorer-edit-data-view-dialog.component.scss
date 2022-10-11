@@ -30,3 +30,14 @@
 .mr-10 {
     margin-right: 10px;
 }
+
+.view-radio-group {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.view-radio-button {
+    margin: 5px;
+}

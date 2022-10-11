@@ -26,8 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { ConfigurationComponent } from './configuration.component';
 import { ConfigurationService } from './shared/configuration.service';
 import { ConsulServiceComponent } from './consul-service/consul-service.component';
 import { ConsulConfigsComponent } from './consul-configs/consul-configs.component';
@@ -53,9 +51,13 @@ import { SecurityUserGroupConfigComponent } from './security-configuration/user-
 import { EditGroupDialogComponent } from './security-configuration/edit-group-dialog/edit-group-dialog.component';
 import { EmailConfigurationComponent } from './email-configuration/email-configuration.component';
 import { GeneralConfigurationComponent } from './general-configuration/general-configuration.component';
-import {
-  SecurityAuthenticationConfigurationComponent
-} from './security-configuration/authentication-configuration/authentication-configuration.component';
+import { SecurityAuthenticationConfigurationComponent } from './security-configuration/authentication-configuration/authentication-configuration.component';
+import { RouterModule } from '@angular/router';
+import { SharedUiModule } from '@streampipes/shared-ui';
+import { SpDataExportImportComponent } from './export/data-export-import.component';
+import { SpDataExportDialogComponent } from './export/export-dialog/data-export-dialog.component';
+import { SpDataImportDialogComponent } from './export/import-dialog/data-import-dialog.component';
+import { SpDataExportItemComponent } from './export/export-dialog/data-export-item/data-export-item.component';
 
 @NgModule({
   imports: [
@@ -75,9 +77,49 @@ import {
     CoreUiModule,
     ReactiveFormsModule,
     PlatformServicesModule,
+    RouterModule.forChild([
+      {
+        path: 'configuration',
+        children: [
+          {
+            path: '',
+            redirectTo: 'general',
+            pathMatch: 'full'
+          },
+          {
+            path: 'general',
+            component: GeneralConfigurationComponent
+          },
+          {
+            path: 'datalake',
+            component: DatalakeConfigurationComponent
+          },
+          {
+            path: 'email',
+            component: EmailConfigurationComponent
+          },
+          {
+            path: 'export',
+            component: SpDataExportImportComponent
+          },
+          {
+            path: 'messaging',
+            component: MessagingConfigurationComponent
+          },
+          {
+            path: 'pipelineelement',
+            component: PipelineElementConfigurationComponent
+          },
+          {
+            path: 'security',
+            component: SecurityConfigurationComponent
+          }
+        ]
+      }
+    ]),
+    SharedUiModule,
   ],
   declarations: [
-    ConfigurationComponent,
     ConsulServiceComponent,
     ConsulConfigsComponent,
     ConsulConfigsTextComponent,
@@ -97,10 +139,11 @@ import {
     SecurityServiceConfigComponent,
     MessagingConfigurationComponent,
     DatalakeConfigurationComponent,
+    SpDataExportImportComponent,
+    SpDataExportDialogComponent,
+    SpDataExportItemComponent,
+    SpDataImportDialogComponent
   ],
-  providers: [
-    ConfigurationService,
-  ]
+  providers: [ConfigurationService],
 })
-export class ConfigurationModule {
-}
+export class ConfigurationModule {}

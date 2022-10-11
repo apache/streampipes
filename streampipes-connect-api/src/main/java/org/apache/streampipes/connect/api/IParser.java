@@ -19,6 +19,7 @@ package org.apache.streampipes.connect.api;
 
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.schema.EventSchema;
 
 import java.io.InputStream;
@@ -39,4 +40,12 @@ public interface IParser {
    * @return
    */
   EventSchema getEventSchema(List<byte[]> oneEvent);
+
+  default boolean supportsPreview() {
+    return false;
+  }
+
+  default AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
+    throw new RuntimeException("Not yet implemented!");
+  }
 }

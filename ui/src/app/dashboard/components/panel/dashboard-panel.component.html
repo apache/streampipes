@@ -15,9 +15,11 @@
   ~ limitations under the License.
   ~
   -->
-<div fxFlex="100" fxLayout="column">
-    <div fxLayout="row" class="fixed-height options-bar sp-tab-bg" *ngIf="editMode">
-        <div class="options-bar-item pl-10" fxLayoutAlign="start center" fxLayout="row">
+
+<sp-basic-view [showBackLink]="true" [padding]="false" [backLinkTarget]="['dashboard']">
+
+    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
+        <div fxLayout="row" fxFlex="100" *ngIf="editMode" fxLayoutAlign="start center">
             <button mat-button
                     mat-raised-button
                     color="accent"
@@ -43,9 +45,7 @@
                 <i class="material-icons">add</i>
                 <span> Add visualization</span>
             </button>
-        </div>
-        <span fxFlex></span>
-        <div class="options-bar-item" fxLayoutAlign="start center" fxLayout="row" >
+            <span fxFlex></span>
             <mat-slide-toggle
                     color="accent"
                     [(ngModel)]="headerVisible">
@@ -53,11 +53,13 @@
             </mat-slide-toggle>
         </div>
     </div>
-
-    <dashboard-grid [editMode]="editMode" [dashboard]="dashboard"
-                    [headerVisible]="headerVisible"
-                    (updateCallback)="updateAndQueueItemForDeletion($event)"
-                    (deleteCallback)="removeAndQueueItemForDeletion($event)"
-                    class="h-100 dashboard-grid"></dashboard-grid>
-</div>
-
+    <div fxFlex="100" fxLayout="column">
+        <dashboard-grid [editMode]="editMode" [dashboard]="dashboard"
+                        [headerVisible]="headerVisible"
+                        [allMeasurements]="allMeasurements"
+                        (updateCallback)="updateAndQueueItemForDeletion($event)"
+                        (deleteCallback)="removeAndQueueItemForDeletion($event)"
+                        *ngIf="dashboard && allMeasurements"
+                        class="h-100 dashboard-grid"></dashboard-grid>
+    </div>
+</sp-basic-view>

@@ -36,7 +36,9 @@ export class DataExplorerEditDataViewDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    if (!this.dashboard.dashboardGeneralSettings.defaultViewMode) {
+      this.dashboard.dashboardGeneralSettings.defaultViewMode = 'grid';
+    }
   }
 
   onCancel(): void {

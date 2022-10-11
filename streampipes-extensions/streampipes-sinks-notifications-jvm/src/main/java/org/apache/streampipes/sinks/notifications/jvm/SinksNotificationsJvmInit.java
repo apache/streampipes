@@ -36,10 +36,6 @@ import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramControlle
 
 public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
 
-  public static void main(String[] args) {
-        new SinksNotificationsJvmInit().init();
-  }
-
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.notifications.jvm",

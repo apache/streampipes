@@ -24,8 +24,8 @@
                 <mat-radio-button [value]="false">Upload new file</mat-radio-button>
             </mat-radio-group>
         </div>
-        <div *ngIf="chooseExistingFileControl.value && filesLoaded" >
-            <mat-form-field>
+        <div *ngIf="chooseExistingFileControl.value && filesLoaded" class="mt-10">
+            <mat-form-field color="accent" class="w-100">
                 <input type="text"
                        placeholder="Select file"
                        formControlName="{{fieldName}}"
@@ -34,7 +34,7 @@
                 <button mat-button *ngIf="selectedFile" matSuffix mat-icon-button aria-label="Clear" (click)="selectedFile={}">
                     <mat-icon>close</mat-icon>
                 </button>
-                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOption($event.option.value)" [displayWith]="displayFn">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOption($event.option.value)" [displayWith]="displayFn" style="width: 50%;">
                     <mat-option *ngFor="let fileMetadata of fileMetadata" [value]="fileMetadata">
                         {{fileMetadata.originalFilename}}
                     </mat-option>

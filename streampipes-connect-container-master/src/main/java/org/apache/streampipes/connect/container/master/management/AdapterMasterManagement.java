@@ -189,7 +189,7 @@ public class AdapterMasterManagement {
 
         LOG.info("Started adapter " + elementId + " on: " + baseUrl);
       } catch (NoServiceEndpointsAvailableException | URISyntaxException e) {
-        e.printStackTrace();
+        throw new AdapterException("Could not start adapter due to unavailable service endpoint", e);
       }
     }
   }

@@ -8,6 +8,11 @@
       "value": "text"
     },
     {
+      "type": "drop-down",
+      "selector": "timestamp-mapping",
+      "value": "timestamp"
+    },
+    {
       "type": "radio",
       "selector": "scale",
       "value": "Seconds"

@@ -211,11 +211,12 @@ public class FileStreamProtocol extends Protocol {
 
     List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 2);
 
-    EventSchema eventSchema = parser.getEventSchema(dataByte);
-
-    GuessSchema result = SchemaGuesser.guessSchma(eventSchema);
-
-    return result;
+    if (parser.supportsPreview()) {
+      return SchemaGuesser.guessSchema(parser.getSchemaAndSample(dataByte));
+    } else {
+      EventSchema eventSchema = parser.getEventSchema(dataByte);
+      return SchemaGuesser.guessSchema(eventSchema);
+    }
   }
 
   @Override

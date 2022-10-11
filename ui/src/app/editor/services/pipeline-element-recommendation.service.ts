@@ -24,7 +24,7 @@ import {
   SpDataStream
 } from '@streampipes/platform-services';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class PipelineElementRecommendationService {
 
     constructor() {

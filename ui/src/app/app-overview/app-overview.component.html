@@ -16,39 +16,27 @@
   ~
   -->
 
-<div fxLayout="column" class="page-container page-container-connect">
-    <div fxLayout="row" class="sp-tab-bg">
-        <div fxLayoutAlign="end center" fxLayout="fill" class="page-container-nav"
-             style="padding-right:10px; width:100%;min-height:50px;line-height:24px;margin-bottom:1px;">
-            <div *ngIf="appOpen">
-                <button mat-button mat-raised-button color="accent" (click)="appClosed()">
-                    Close App
-                </button>
-            </div>
-        </div>
-    </div>
+<sp-basic-view padding="true">
+    <ng-container nav>
 
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100" *ngIf="!appOpen">
-        <div fxFlex="100" fxLayout="column">
-            <h1>My apps</h1>
-            <mat-card class="example-card" *ngFor="let app of apps">
-                <div fxFlex="100" fxLayout="row">
-                    <div fxFlex="75" fxLayout="column" fxLayoutAlign="center start">
-                        <mat-card-header>
-                            <mat-card-title> {{app.appName}}</mat-card-title>
-                            <mat-card-subtitle>{{app.appDescription}}</mat-card-subtitle>
-                        </mat-card-header>
-                    </div>
-                    <div fxFlex="25" fxLayoutAlign="center end" fxLayout="column">
-                        <button mat-button mat-raised-button color="accent" (click)="selectApp(app.appId)">Open App
-                        </button>
-                    </div>
+    </ng-container>
+
+
+    <div fxFlex="100" fxLayout="column">
+        <sp-basic-header-title-component title="My apps"></sp-basic-header-title-component>
+        <mat-card class="example-card" *ngFor="let app of apps">
+            <div fxFlex="100" fxLayout="row">
+                <div fxFlex="75" fxLayout="column" fxLayoutAlign="center start">
+                    <mat-card-header>
+                        <mat-card-title> {{app.appName}}</mat-card-title>
+                        <mat-card-subtitle>{{app.appDescription}}</mat-card-subtitle>
+                    </mat-card-header>
                 </div>
-            </mat-card>
-        </div>
+                <div fxFlex="25" fxLayoutAlign="center end" fxLayout="column">
+                    <button mat-button mat-raised-button color="accent" (click)="selectApp(app.appLink)">Open App
+                    </button>
+                </div>
+            </div>
+        </mat-card>
     </div>
-    <div class="fixed-height" fxLayout="column" fxFlex="100">
-    <sp-app-asset-monitoring (appOpened)="appOpened($event)"
-                             *ngIf="currentlySelectedApp === apps[0].appId"></sp-app-asset-monitoring>
-    </div>
-</div>
+</sp-basic-view>

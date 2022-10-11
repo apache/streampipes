@@ -24,21 +24,52 @@ import { CommonModule } from '@angular/common';
 import { PortalModule } from '@angular/cdk/portal';
 import { MatButtonModule } from '@angular/material/button';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { SpBasicViewComponent } from './components/basic-view/basic-view.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SpBasicNavTabsComponent } from './components/basic-nav-tabs/basic-nav-tabs.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { SpBasicInnerPanelComponent } from './components/basic-inner-panel/basic-inner-panel.component';
+import { SpBasicHeaderTitleComponent } from './components/basic-header-title/header-title.component';
+import { SpExceptionMessageComponent } from './components/sp-exception-message/sp-exception-message.component';
+import { SpExceptionDetailsDialogComponent } from './components/sp-exception-message/exception-details-dialog/exception-details-dialog.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
     ConfirmDialogComponent,
     PanelDialogComponent,
-    StandardDialogComponent
+    StandardDialogComponent,
+    SpBasicInnerPanelComponent,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
+    SpBasicNavTabsComponent,
+    SpExceptionMessageComponent,
+    SpExceptionDetailsDialogComponent
   ],
   imports: [
     CommonModule,
-    PortalModule,
+    FlexLayoutModule,
     MatButtonModule,
-    OverlayModule
+    MatDividerModule,
+    MatIconModule,
+    MatTabsModule,
+    MatTooltipModule,
+    PortalModule,
+    OverlayModule,
   ],
   exports: [
-    ConfirmDialogComponent, PanelDialogComponent, StandardDialogComponent
+    ConfirmDialogComponent,
+    PanelDialogComponent,
+    StandardDialogComponent,
+    SpBasicInnerPanelComponent,
+    SpBasicHeaderTitleComponent,
+    SpBasicViewComponent,
+    SpBasicNavTabsComponent,
+    SpExceptionMessageComponent,
+    SpExceptionDetailsDialogComponent
   ]
 })
-export class SharedUiModule { }
+export class SharedUiModule {
+}

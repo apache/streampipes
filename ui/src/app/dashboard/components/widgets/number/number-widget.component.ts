@@ -21,8 +21,7 @@ import { BaseStreamPipesWidget } from '../base/base-widget';
 import { StaticPropertyExtractor } from '../../../sdk/extractor/static-property-extractor';
 import { NumberConfig } from './number-config';
 import { ResizeService } from '../../../services/resize.service';
-import { DashboardService } from '../../../services/dashboard.service';
-import { DatalakeRestService, EventPropertyPrimitive } from '@streampipes/platform-services';
+import { DashboardService, DatalakeRestService, EventPropertyPrimitive } from '@streampipes/platform-services';
 
 @Component({
   selector: 'number-widget',
@@ -66,7 +65,7 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
   protected onEvent(events: any[]) {
     let value = events[0][this.selectedProperty];
-    if (!isNaN(value)) {
+    if (typeof value === 'number') {
       value = value.toFixed(2);
     }
     this.item = value;
@@ -77,6 +76,10 @@ export class NumberWidgetComponent extends BaseStreamPipesWidget implements OnIn
 
   protected getQueryLimit(extractor: StaticPropertyExtractor): number {
     return 1;
+  }
+
+  getFieldsToQuery(): string[] {
+    return [this.selectedProperty];
   }
 
 }

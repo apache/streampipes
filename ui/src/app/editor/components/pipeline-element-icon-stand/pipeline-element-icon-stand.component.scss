@@ -25,7 +25,7 @@
 }
 
 .icon-stand {
-  max-height: calc(100vh - 118px);
+  max-height: calc(100vh - 148px);
   overflow-y: auto;
   background: var(--color-bg-1);
   margin-top: 5px;
@@ -110,6 +110,7 @@
   border-radius: 3px;
   font-size: small;
   background: var(--color-primary);
+  color: var(--color-accent);
 }
 
 .sort-option {

@@ -19,13 +19,17 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
 import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
 import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -33,6 +37,8 @@ import javax.ws.rs.core.Response;
 
 @Path("/v2/connect/master/resolvable")
 public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdministrationManagement> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RuntimeResolvableResource.class);
 
     private final WorkerUrlProvider workerUrlProvider;
 
@@ -56,11 +62,16 @@ public class RuntimeResolvableResource extends AbstractAdapterResource<WorkerAdm
             RuntimeOptionsResponse result = WorkerRestClient.getConfiguration(workerEndpoint, appId, runtimeOptionsRequest);
 
             return ok(result);
-        } catch (AdapterException | NoServiceEndpointsAvailableException e) {
-            e.printStackTrace();
-            return fail();
+        } catch (AdapterException e) {
+            LOG.error("Adapter exception occurred", e);
+            return serverError(StreamPipesErrorMessage.from(e));
+        } catch (NoServiceEndpointsAvailableException e) {
+            LOG.error("Could not find service endpoint for {} while fetching configuration", appId);
+            return serverError(StreamPipesErrorMessage.from(e));
+        } catch (SpConfigurationException e) {
+            LOG.error("Tried to fetch a runtime configuration with insufficient settings");
+            return badRequest(StreamPipesErrorMessage.from(e));
         }
-
     }
 
 }

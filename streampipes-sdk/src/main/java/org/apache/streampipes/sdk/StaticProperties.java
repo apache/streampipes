@@ -48,6 +48,12 @@ public class StaticProperties {
     return freeTextProperty(label, Datatypes.String);
   }
 
+  public static FreeTextStaticProperty stringFreeTextProperty(Label label, String defaultValue) {
+    var property = freeTextProperty(label, Datatypes.String);
+    property.setValue(defaultValue);
+    return property;
+  }
+
   public static FreeTextStaticProperty integerFreeTextProperty(Label label) {
     return freeTextProperty(label, Datatypes.Integer);
   }

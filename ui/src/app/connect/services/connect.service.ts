@@ -25,6 +25,7 @@ import {
   SpecificAdapterSetDescription,
   SpecificAdapterStreamDescription
 } from '@streampipes/platform-services';
+import { AdapterDescriptionUnion } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable()
 export class ConnectService {
@@ -65,6 +66,26 @@ export class ConnectService {
       eventSchema.eventProperties = [];
       return eventSchema;
     }
+  }
+
+  cloneAdapterDescription(toClone: AdapterDescriptionUnion): AdapterDescriptionUnion {
+    let result: AdapterDescriptionUnion;
+
+    if (this.isGenericDescription(toClone)) {
+      if (toClone instanceof GenericAdapterStreamDescription) {
+        result = GenericAdapterStreamDescription.fromData(toClone, new GenericAdapterStreamDescription());
+      } else if (toClone instanceof GenericAdapterSetDescription) {
+        result = GenericAdapterSetDescription.fromData(toClone, new GenericAdapterSetDescription());
+      }
+    } else {
+      if (toClone instanceof SpecificAdapterStreamDescription) {
+        result = SpecificAdapterStreamDescription.fromData(toClone, new SpecificAdapterStreamDescription());
+      } else if (toClone instanceof SpecificAdapterSetDescription) {
+        result = SpecificAdapterSetDescription.fromData(toClone, new SpecificAdapterSetDescription());
+      }
+    }
+
+    return result;
   }
 
 

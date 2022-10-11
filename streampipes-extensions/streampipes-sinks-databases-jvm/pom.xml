@@ -21,27 +21,23 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.70.0-SNAPSHOT</version>
+        <version>0.71.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>streampipes-sinks-databases-jvm</artifactId>
-
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
 
     <dependencies>
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sdk-bundle</artifactId>
-            <version>0.70.0-SNAPSHOT</version>
+            <version>0.71.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-wrapper-standalone</artifactId>
-            <version>0.70.0-SNAPSHOT</version>
+            <version>0.71.0-SNAPSHOT</version>
         </dependency>
 
         <!-- External dependencies -->
@@ -78,10 +74,6 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
         <!-- 3rd party dependencies to avoid convergence errors -->
@@ -120,39 +112,4 @@
             <artifactId>jcl-over-slf4j</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <phase>package</phase>
-                        <configuration>
-                            <classifier>embed</classifier>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <mainClass>org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-        <finalName>streampipes-sinks-databases-jvm</finalName>
-    </build>
 </project>

@@ -16,8 +16,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Dashboard } from '@streampipes/platform-services';
-import { DashboardService } from '../../services/dashboard.service';
+import { Dashboard, DashboardService } from '@streampipes/platform-services';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -37,7 +36,6 @@ export class StandaloneDashboardComponent implements OnInit {
         this.activatedRoute.params.subscribe(params => {
             if (params['dashboardId']) {
                 const dashboardId = params['dashboardId'];
-                console.log(dashboardId);
                 this.dashboardService.getDashboard(dashboardId).subscribe(dashboard => {
                     this.dashboard = dashboard;
                     this.dashboardReady = true;

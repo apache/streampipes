@@ -16,40 +16,25 @@
   ~
   -->
 
-<div fxLayout="column" class="page-container">
-    <div fxLayout="row" style="padding:0;" class="sp-tab-bg">
-        <div fxFlex="100" class="page-container-nav">
-            <div fxFlex="100" fxLayout="row">
-                <div fxFlex fxLayoutAlign="start center">
-                    <mat-tab-group color="accent">
-                        <mat-tab label="Files"></mat-tab>
-                    </mat-tab-group>
-                </div>
-            </div>
-        </div>
+<sp-basic-view [showBackLink]="false" [padding]="true">
+
+    <div nav fxFlex="100" fxLayoutAlign="start center" fxLayout="row" class="pl-10">
+        <button mat-button mat-raised-button color="accent"
+                (click)="openFileUploadDialog()"
+                data-cy="sp-open-file-upload-dialog"
+                class="mr-10">
+            <i class="material-icons">cloud_upload</i>
+            &nbsp;Upload new file
+        </button>
     </div>
-    <div fxLayout="row" class="fixed-height add-options sp-tab-bg">
-        <div class="add-options-item" fxLayoutAlign="start center" fxLayout="row" style="padding-left:5px;">
-            <div fxFlex="100" fxLayout="row">
-                <button mat-button mat-raised-button color="accent"
-                        (click)="openFileUploadDialog()"
-                        data-cy="sp-open-file-upload-dialog"
-                        class="mr-10">
-                    <i class="material-icons">cloud_upload</i>
-                    &nbsp;Upload new file
-                </button>
-            </div>
+
+    <div fxFlex="100" fxLayout="column">
+        <sp-basic-header-title-component title="My Files"></sp-basic-header-title-component>
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
+            <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90" [hideToolbar]="true">
+                <sp-file-overview #fileOverviewComponent></sp-file-overview>
+            </sp-basic-inner-panel>
         </div>
     </div>
 
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
-        <div class="assemblyOptions sp-blue-bg mt-20" style="padding:5px;">
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <h4>My files</h4>
-            </div>
-        </div>
-        <div class="sp-blue-border">
-            <sp-file-overview #fileOverviewComponent></sp-file-overview>
-        </div>
-    </div>
-</div>
+</sp-basic-view>

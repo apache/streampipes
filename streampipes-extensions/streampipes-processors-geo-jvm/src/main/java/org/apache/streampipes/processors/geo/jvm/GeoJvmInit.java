@@ -41,10 +41,6 @@ import org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder.Static
 
 public class GeoJvmInit extends StandaloneModelSubmitter {
 
-  public static void main(String[] args) {
-    new GeoJvmInit().init();
-  }
-
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.geo.jvm",

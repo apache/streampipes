@@ -18,8 +18,12 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -37,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -99,66 +104,75 @@ public class WorkerRestClient {
 
     public static void startAdapter(String url,
                                     AdapterDescription ad) throws AdapterException {
-        try {
-            logger.info("Trying to start adapter on endpoint: " + url);
-
-            String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
-
-            String responseString = Request.Post(url)
-                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
-
-            logger.info("Adapter started on endpoint: " + url);
-
-        } catch (IOException e) {
-            logger.error("Adapter did not start", e);
-            throw new AdapterException("Adapter with URL: " + url + " did not start");
-        }
+        logger.info("Trying to start adapter on endpoint {} ", url);
+        triggerAdapterStateChange(ad, url, "started");
     }
 
 
     public static void stopAdapter(AdapterDescription ad,
                                    String url) throws AdapterException {
 
-        // Stop execution of adapter
-        try {
-            logger.info("Trying to stop adapter on endpoint: " + url);
+        logger.info("Trying to stop adapter on endpoint {} ", url);
+        triggerAdapterStateChange(ad, url, "stopped");
+    }
 
+    private static void triggerAdapterStateChange(AdapterDescription ad,
+                                            String url,
+                                            String action) throws AdapterException {
+        try {
             String adapterDescription = JacksonSerializer.getObjectMapper().writeValueAsString(ad);
 
-            // TODO change this to a delete request
-            String responseString = Request.Post(url)
-                    .bodyString(adapterDescription, ContentType.APPLICATION_JSON)
-                    .connectTimeout(1000)
-                    .socketTimeout(100000)
-                    .execute().returnContent().asString();
+            var response = triggerPost(url, adapterDescription);
+            var responseString = getResponseBody(response);
 
-            logger.info("Adapter stopped on endpoint: " + url + " with Response: " + responseString);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                var exception = getSerializer().readValue(responseString, AdapterException.class);
+                throw new AdapterException(exception.getMessage(), exception.getCause());
+            }
+
+            logger.info("Adapter {} on endpoint: " + url + " with Response: " + responseString);
 
         } catch (IOException e) {
-            logger.error("Adapter was not stopped successfully", e);
-            throw new AdapterException("Adapter was not stopped successfully with url: " + url);
+            logger.error("Adapter was not {} successfully", action, e);
+            throw new AdapterException("Adapter was not " + action + " successfully with url " + url, e);
         }
+    }
 
+    private static String getResponseBody(HttpResponse response) throws IOException {
+        return IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
+    }
+
+    private static HttpResponse triggerPost(String url,
+                                            String payload) throws IOException {
+        return Request.Post(url)
+          .bodyString(payload, ContentType.APPLICATION_JSON)
+          .connectTimeout(1000)
+          .socketTimeout(100000)
+          .execute().returnResponse();
     }
 
     public static RuntimeOptionsResponse getConfiguration(String workerEndpoint,
                                                           String appId,
-                                                          RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException {
+                                                          RuntimeOptionsRequest runtimeOptionsRequest) throws AdapterException, SpConfigurationException {
         String url = workerEndpoint + WorkerPaths.getRuntimeResolvablePath(appId);
 
         try {
             String payload = JacksonSerializer.getObjectMapper().writeValueAsString(runtimeOptionsRequest);
-            String responseString = Request.Post(url)
+            var response = Request.Post(url)
                        .bodyString(payload, ContentType.APPLICATION_JSON)
                        .connectTimeout(1000)
                        .socketTimeout(100000)
-                       .execute().returnContent().asString();
+                       .execute()
+                        .returnResponse();
 
-            return JacksonSerializer.getObjectMapper().readValue(responseString, RuntimeOptionsResponse.class);
+            String responseString = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
 
+            if (response.getStatusLine().getStatusCode() == 200) {
+                return getSerializer().readValue(responseString, RuntimeOptionsResponse.class);
+            } else {
+                var exception = getSerializer().readValue(responseString, SpConfigurationException.class);
+                throw new SpConfigurationException(exception.getMessage(), exception.getCause());
+            }
         } catch (IOException e) {
             e.printStackTrace();
             throw new AdapterException("Could not resolve runtime configurations from " + url);
@@ -244,6 +258,10 @@ public class WorkerRestClient {
 
     private static IAdapterStorage getAdapterStorage() {
         return StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage();
+    }
+
+    private static ObjectMapper getSerializer() {
+        return JacksonSerializer.getObjectMapper();
     }
 }
 

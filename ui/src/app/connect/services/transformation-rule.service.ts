@@ -30,6 +30,7 @@ import {
   EventSchema,
   MoveRuleDescription,
   RenameRuleDescription,
+  ChangeDatatypeTransformationRuleDescription,
   TimestampTranfsformationRuleDescription,
   TransformationRuleDescriptionUnion,
   UnitTransformRuleDescription
@@ -82,33 +83,16 @@ export class TransformationRuleService {
       }
 
       // Scale
-      transformationRuleDescription = transformationRuleDescription.concat(this.getCorrectionValueRules(
-        this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
+      transformationRuleDescription = transformationRuleDescription
+        .concat(this.getCorrectionValueRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema))
+        .concat(this.getRenameRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema))
+        .concat(this.getCreateNestedRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema))
+        .concat(this.getMoveRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema))
+        .concat(this.getDeleteRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema))
+        .concat(this.getUnitTransformRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema))
+        .concat(this.getTimestampTransformRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema))
+        .concat(this.getDatatypeTransformRules(this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
-      // Rename
-      transformationRuleDescription = transformationRuleDescription.concat(this.getRenameRules(
-        this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
-
-
-      // Create Nested
-      transformationRuleDescription = transformationRuleDescription.concat(this.getCreateNestedRules(
-        this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
-
-      // Move
-      transformationRuleDescription = transformationRuleDescription.concat(this.getMoveRules(
-        this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
-
-      // Delete
-      transformationRuleDescription = transformationRuleDescription.concat(this.getDeleteRules(
-        this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
-
-      // Unit
-      transformationRuleDescription = transformationRuleDescription.concat(this.getUnitTransformRules(
-        this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
-
-      // Timestmap
-      transformationRuleDescription = transformationRuleDescription.concat(this.getTimestampTransformRules(
-        this.newEventSchema.eventProperties, this.oldEventSchema, this.newEventSchema));
 
       return transformationRuleDescription;
     }
@@ -452,6 +436,40 @@ export class TransformationRuleService {
 
   isTimestampProperty(property: EventPropertyPrimitive) {
     return property.domainProperties.some(dp => dp === 'http://schema.org/DateTime');
+  }
+
+  private getDatatypeTransformRules(eventProperties: EventPropertyUnion[],
+                                    oldEventSchema: EventSchema,
+                                    newEventSchema: EventSchema): ChangeDatatypeTransformationRuleDescription[] {
+
+    let result: ChangeDatatypeTransformationRuleDescription[] = [];
+
+    eventProperties.forEach(ep => {
+      if (ep instanceof EventPropertyPrimitive) {
+        const eventPropertyPrimitive = ep as EventPropertyPrimitive;
+        const newRuntimeType = ep.runtimeType;
+        const keyNew = this.getCompleteRuntimeNameKey(newEventSchema.eventProperties, eventPropertyPrimitive.elementId);
+        const oldProperty = this.getEventProperty(oldEventSchema.eventProperties, ep.elementId);
+        if (oldProperty) {
+          const oldRuntimeType = (oldProperty as EventPropertyPrimitive).runtimeType;
+          if (newRuntimeType !== oldRuntimeType) {
+            const rule: ChangeDatatypeTransformationRuleDescription = new ChangeDatatypeTransformationRuleDescription();
+            rule['@class'] = 'org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription';
+            rule.runtimeKey = keyNew;
+            rule.originalDatatypeXsd = oldRuntimeType;
+            rule.targetDatatypeXsd = newRuntimeType;
+
+            result.push(rule);
+          }
+        }
+
+      } else if (ep instanceof EventPropertyNested) {
+        const nestedResults = this.getDatatypeTransformRules((ep as EventPropertyNested).eventProperties, oldEventSchema, newEventSchema);
+        result = result.concat(nestedResults);
+      }
+    });
+
+    return result;
   }
 
   private getCorrectionValueRules(eventProperties: EventPropertyUnion[],

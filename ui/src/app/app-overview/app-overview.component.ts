@@ -17,6 +17,11 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { App } from './apps.model';
+import { AvailableAppsService } from './apps';
+import { Router } from '@angular/router';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpAppRoutes } from './apps.routes';
 
 @Component({
     templateUrl: './app-overview.component.html',
@@ -24,41 +29,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppOverviewComponent implements OnInit {
 
-    selectedIndex = 0;
-    appOpen = false;
-    currentlySelectedApp = '';
+    apps: App[] = [];
 
-    apps: any[] = [
-        {
-            appName: 'Asset Dashboards',
-            appDescription: 'Monitor measurements of your assets by placing visualizations on an image of your asset.',
-            appId: 'asset-monitoring',
-        }
-    ];
-
-    constructor() {
+    constructor(private router: Router,
+                private breadcrumbService: SpBreadcrumbService) {
 
     }
 
     ngOnInit() {
-
+        this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpAppRoutes.BASE));
+        this.apps = AvailableAppsService.apps;
     }
 
-    selectedIndexChange(index: number) {
-        this.selectedIndex = index;
-    }
-
-    appOpened(appOpen: boolean) {
-        this.appOpen = appOpen;
-    }
-
-    appClosed() {
-        this.appOpen = false;
-        this.currentlySelectedApp = '';
-    }
-
-    selectApp(appId: string) {
-        this.currentlySelectedApp = appId;
+    selectApp(appLink: string) {
+        this.router.navigate(['apps', appLink]);
     }
 
 

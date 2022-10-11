@@ -35,10 +35,6 @@ import org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader.
 
 public class ImageProcessingJvmInit extends StandaloneModelSubmitter {
 
-  public static void main(String[] args) {
-    new ImageProcessingJvmInit().init();
-  }
-
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.imageprocessing.jvm",

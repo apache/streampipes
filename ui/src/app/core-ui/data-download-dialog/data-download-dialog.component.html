@@ -1,0 +1,114 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="sp-dialog-container">
+    <div class="sp-dialog-content p-15">
+        <div fxFlex="100">
+            <mat-horizontal-stepper #stepper>
+                <mat-step>
+                    <ng-template matStepLabel>Select Data</ng-template>
+                    <div class="mt-10">
+                        <mat-radio-group class="sp-radio-group" [(ngModel)]="selectedData">
+                            <mat-radio-button value="visible" class="sp-radio-button" *ngIf="dataConfig">
+                                Currently configured query
+                            </mat-radio-button>
+                            <div fxLayout="column" fxLayoutAlign="start start" class="ml-35 mb-10" *ngIf="selectedData === 'visible' && dataConfig && dataConfig.sourceConfigs.length > 1">
+                                <h5>Select source (only one source can be exported in a single file)</h5>
+                                <mat-radio-group class="sp-radio-group" [(ngModel)]="selectedQueryIndex" fxLayout="column">
+                                    <mat-radio-button [value]="i" *ngFor="let sourceConfig of dataConfig.sourceConfigs; let i = index" class="p-5">
+                                        {{sourceConfig.measureName}}
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <mat-radio-button value="all" class="sp-radio-button">
+                                All data in database
+                            </mat-radio-button>
+                            <mat-radio-button value="customInterval" class="sp-radio-button">
+                                All data in custom time interval
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <div fxLayout="row" fxLayoutAlign="start center" class="ml-35">
+                            <mat-form-field class="form-field-date">
+                                <input matInput [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1"
+                                       [(ngModel)]="dateRange" [selectMode]="'range'"
+                                       [disabled]="selectedData !== 'customInterval'">
+                                <mat-icon matSuffix [owlDateTimeTrigger]="dt1"
+                                          *ngIf="selectedData === 'customInterval'">event
+                                </mat-icon>
+                                <mat-icon matSuffix class="event-color" *ngIf="selectedData !== 'customInterval'">
+                                    event
+                                </mat-icon>
+                                <owl-date-time #dt1></owl-date-time>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-step>
+
+
+                <mat-step>
+                    <ng-template matStepLabel>Select Format</ng-template>
+                    <div>
+                        <h5>Download Format</h5>
+                        <mat-radio-group class="sp-radio-group" [(ngModel)]="downloadFormat">
+                            <mat-radio-button value="json" class="sp-radio-button">
+                                JSON
+                            </mat-radio-button>
+                            <mat-radio-button value="csv" class="sp-radio-button">
+                                CSV
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div *ngIf="downloadFormat === 'csv'" class="mt-10">
+                        <h5>Delimiter</h5>
+                        <mat-radio-group [(ngModel)]="delimiter" class="sp-radio-group">
+                            <mat-radio-button value="comma" class="sp-radio-button">&nbsp;,</mat-radio-button>
+                            <mat-radio-button value="semicolon" class="sp-radio-button">&nbsp;;</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </mat-step>
+
+
+                <mat-step>
+                    <ng-template matStepLabel>Download</ng-template>
+                    <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!downloadFinish" class="mt-35">
+                        <mat-spinner [diameter]="30" color="accent"></mat-spinner>
+                        <label *ngIf="downloadedMBs !== undefined">{{downloadedMBs | number : '1.0-2' }} Mb</label>
+                        <button mat-button warn color="warn" (click)="cancelDownload()">Cancel</button>
+                    </div>
+                    <div fxLayout="column" fxLayoutAlign="space-around center" *ngIf="downloadFinish">
+                        <mat-icon class="icon-check">check</mat-icon>
+                        <h5>Download successful</h5>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+
+        </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <div class="sp-dialog-actions actions-align-right">
+        <button mat-button mat-raised-button class="mat-basic" style="margin-right: 10px;" (click)="exitDialog()">Close</button>
+        <button mat-button mat-raised-button class="mat-basic" style="margin-right: 10px;" *ngIf="stepper.selectedIndex == 1" (click)="previousStep()">Previous</button>
+        <button mat-button mat-raised-button *ngIf="stepper.selectedIndex < 1" color="accent" (click)="nextStep()">
+            Next
+        </button>
+        <button mat-button mat-raised-button *ngIf="stepper.selectedIndex == 1" color="accent" (click)="downloadData()">
+            Download
+        </button>
+    </div>
+</div>

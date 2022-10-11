@@ -20,18 +20,22 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataLakeConfigurationEntry } from './datalake-configuration-entry';
 import {
+  DataExplorerDataConfig,
   DatalakeQueryParameterBuilder,
   DatalakeQueryParameters,
   DatalakeRestService,
-  DataViewDataExplorerService,
+  DataViewDataExplorerService, DateRange,
   EventSchema,
   FieldConfig,
   SpQueryResult
 } from '@streampipes/platform-services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/delete-datalake-index-dialog.component';
+import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpConfigurationRoutes } from '../configuration.routes';
+import { DataDownloadDialogComponent } from '../../core-ui/data-download-dialog/data-download-dialog.component';
 
 @Component({
   selector: 'sp-datalake-configuration',
@@ -40,6 +44,8 @@ import { DeleteDatalakeIndexComponent } from '../dialog/delete-datalake-index/de
 })
 export class DatalakeConfigurationComponent implements OnInit {
 
+  tabs = SpConfigurationTabs.getTabs();
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   pageSize = 1;
   @ViewChild(MatSort) sort: MatSort;
@@ -47,16 +53,18 @@ export class DatalakeConfigurationComponent implements OnInit {
   dataSource: MatTableDataSource<DataLakeConfigurationEntry>;
   availableMeasurements: DataLakeConfigurationEntry[] = [];
 
-  displayedColumns: string[] = ['name', 'pipeline', 'events', 'truncate', 'remove'];
+  displayedColumns: string[] = ['name', 'pipeline', 'events', 'download', 'truncate', 'remove'];
 
   constructor(
     // protected dataLakeRestService: DatalakeRestService,
     private datalakeRestService: DatalakeRestService,
     private dataViewDataExplorerService: DataViewDataExplorerService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private breadcrumbService: SpBreadcrumbService) {
   }
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[1].itemTitle}]);
     this.loadAvailableMeasurements();
   }
 
@@ -143,6 +151,17 @@ export class DatalakeConfigurationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if (data) {
         this.loadAvailableMeasurements();
+      }
+    });
+  }
+
+  openDownloadDialog(measurementName: string) {
+    this.dialogService.open(DataDownloadDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Download data',
+      width: '50vw',
+      data: {
+        'measureName': measurementName,
       }
     });
   }

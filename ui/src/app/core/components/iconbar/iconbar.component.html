@@ -28,19 +28,7 @@
         </button>
         </div>
     </div>
-    <div [ngClass]="'notifications' === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'"
-         style="padding-top:5px;padding-bottom:5px;" *ngIf="notificationsVisible">
-        <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar iconbar-size"
-                (click)="go('notifications')"
-                matTooltip="Notifications" matTooltipPosition="right">
-            <mat-icon [matBadge]="unreadNotificationCount"
-                      [matBadgeHidden]="unreadNotificationCount == 0"
-                      [ngClass]="'notifications' === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
-                      data-cy="navigation-icon">chat
 
-            </mat-icon>
-        </button>
-    </div>
     <mat-divider style="border-top-color:var(--color-navigation-text);"></mat-divider>
     <div *ngFor="let item of admin" >
         <div  [ngClass]="item.link === activePage ? 'sp-navbar-item-selected' : 'sp-navbar-item'"
@@ -48,7 +36,7 @@
               *ngIf="item.visible">
             <button mat-button mat-icon-button class="md-icon-button button-margin-iconbar iconbar-size"
                     (click)="go(item.link)"
-                    matTooltip="{{item.title}}" >
+                    matTooltip="{{item.title}}" matTooltipPosition="right" >
                 <mat-icon
                         [ngClass]="item.link === activePage ?'sp-navbar-icon-selected' : 'sp-navbar-icon'"
                         data-cy="navigation-icon">{{item.icon}}</mat-icon>

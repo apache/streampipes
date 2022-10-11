@@ -19,15 +19,19 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua;
 
 
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfig;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaMonitoredItem;
 import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscription;
+import org.eclipse.milo.opcua.sdk.client.api.subscriptions.UaSubscriptionManager;
 import org.eclipse.milo.opcua.stack.core.AttributeId;
+import org.eclipse.milo.opcua.stack.core.UaException;
 import org.eclipse.milo.opcua.stack.core.types.builtin.DataValue;
 import org.eclipse.milo.opcua.stack.core.types.builtin.NodeId;
 import org.eclipse.milo.opcua.stack.core.types.builtin.QualifiedName;
+import org.eclipse.milo.opcua.stack.core.types.builtin.StatusCode;
 import org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.UInteger;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.MonitoringMode;
 import org.eclipse.milo.opcua.stack.core.types.enumerated.TimestampsToReturn;
@@ -37,9 +41,11 @@ import org.eclipse.milo.opcua.stack.core.types.structured.ReadValueId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.eclipse.milo.opcua.stack.core.types.builtin.unsigned.Unsigned.uint;
@@ -71,9 +77,9 @@ public class SpOpcUaClient {
     /***
      * Establishes appropriate connection to OPC UA endpoint depending on the {@link SpOpcUaClient} instance
      *
-     * @throws Exception An exception occurring during OPC connection
+     * @throws UaException An exception occurring during OPC connection
      */
-    public void connect() throws Exception {
+    public void connect() throws UaException, ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
         OpcUaClientConfig clientConfig = new MiloOpcUaConfigurationProvider().makeClientConfig(spOpcConfig);
         this.client = OpcUaClient.create(clientConfig);
         client.connect().get();
@@ -89,7 +95,25 @@ public class SpOpcUaClient {
      * @param opcUaAdapter current instance of {@link OpcUaAdapter}
      * @throws Exception
      */
-    public void createListSubscription(List<NodeId> nodes, OpcUaAdapter opcUaAdapter) throws Exception {
+    public void createListSubscription(List<NodeId> nodes,
+                                       OpcUaAdapter opcUaAdapter) throws Exception {
+        client.getSubscriptionManager().addSubscriptionListener(new UaSubscriptionManager.SubscriptionListener() {
+            @Override
+            public void onSubscriptionTransferFailed(UaSubscription subscription, StatusCode statusCode) {
+                LOG.warn("Transfer for subscriptionId={} failed: {}", subscription.getSubscriptionId(), statusCode);
+                try {
+                    initSubscription(nodes, opcUaAdapter);
+                } catch (Exception e) {
+                    LOG.error("Re-creating the subscription failed", e);
+                }
+            }
+        });
+
+        initSubscription(nodes, opcUaAdapter);
+    }
+
+
+    public void initSubscription(List<NodeId> nodes, OpcUaAdapter opcUaAdapter) throws Exception {
         /*
          * create a subscription @ 1000ms
          */

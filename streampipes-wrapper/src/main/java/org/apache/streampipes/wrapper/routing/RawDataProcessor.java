@@ -17,11 +17,9 @@
  */
 package org.apache.streampipes.wrapper.routing;
 
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-
 import java.util.Map;
 
 public interface RawDataProcessor {
 
-  void process(Map<String, Object> rawEvent, String sourceInfo) throws SpRuntimeException;
+  void process(Map<String, Object> rawEvent, String sourceInfo);
 }

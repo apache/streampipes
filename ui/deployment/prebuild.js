@@ -62,7 +62,7 @@ let modulesActive = {modulesActive: []};
 for (let module of config.modules) {
     modulesActive['modulesActive'].push({
         module: module,
-        ng5: modules[module]['ng5'],
+        componentImport: modules[module]['componentImport'],
         ng1_templateUrl: modules[module]['ng1_templateUrl'],
         ng5_moduleName: modules[module]['ng5_moduleName'],
         ng5_component: modules[module]['ng5_component'],
@@ -77,7 +77,7 @@ for (let module of config.modules) {
         description: modules[module]['description'],
         homeImage: modules[module]['homeImage']
     });
-    console.log('Active Angular ' + (modules[module]['ng5']===true?5:1) + ' Module: ' + module);
+    console.log('Active Angular Module: ' + module);
 }
 
 // Create necessary JavaScript-Files from Template and move to respective Directory
@@ -85,6 +85,7 @@ fs.writeFileSync('src/app/appng5.module.ts', mustache.render(fs.readFileSync('de
 fs.writeFileSync('src/app/home/home.service.ts', mustache.render(fs.readFileSync('deployment/home.service.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/app-routing.module.ts', mustache.render(fs.readFileSync('deployment/app-routing.module.mst', 'utf8').toString(), modulesActive));
 fs.writeFileSync('src/app/core/components/base-navigation.component.ts', mustache.render(fs.readFileSync('deployment/base-navigation.component.mst', 'utf8').toString(), modulesActive));
+fs.writeFileSync('src/app/app-overview/apps.ts', fs.readFileSync('deployment/apps.ts'));
 fs.writeFileSync('src/scss/sp/sp-theme.scss', fs.readFileSync('deployment/sp-theme.scss'));
 fs.writeFileSync('src/app/services/app.constants.ts', fs.readFileSync('deployment/app-constants.ts', 'utf8'));
 

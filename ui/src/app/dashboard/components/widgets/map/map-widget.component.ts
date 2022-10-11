@@ -83,6 +83,10 @@ export class MapWidgetComponent extends BaseStreamPipesWidget implements OnInit,
         this.centerMap = extractor.selectedSingleValue(MapConfig.CENTER_MAP_KEY) === 'Center';
     }
 
+    getFieldsToQuery(): string[] {
+        return [this.selectedLatitudeField, this.selectedLongitudeField, ...this.idsToDisplay];
+    }
+
     markerImage(selectedMarker: string): string {
         return selectedMarker === 'Default' ? 'assets/img/marker-icon.png' : 'assets/img/pe_icons/car.png';
     }

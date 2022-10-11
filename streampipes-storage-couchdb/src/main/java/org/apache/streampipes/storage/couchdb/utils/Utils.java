@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
@@ -180,12 +182,53 @@ public class Utils {
     return new CouchDbClient(props(dbname));
   }
 
-  public static CouchDbClient getCoucbDbClient(String table) {
-    return new CouchDbClient(props(table));
+  public static CouchDbClient getCouchDbClient(String database) {
+    return new CouchDbClient(props(database));
   }
 
   private static CouchDbProperties props(String dbname) {
-    return new CouchDbProperties(dbname, true, CouchDbConfig.INSTANCE.getProtocol(),
-            CouchDbConfig.INSTANCE.getHost(), CouchDbConfig.INSTANCE.getPort(), null, null);
+    return new CouchDbProperties(
+      dbname,
+      true,
+      CouchDbConfig.INSTANCE.getProtocol(),
+      CouchDbConfig.INSTANCE.getHost(),
+      CouchDbConfig.INSTANCE.getPort(),
+      null,
+      null);
+  }
+
+  public static String getDatabaseRoute(String databaseName) {
+    return toUrl() + "/" + databaseName;
+  }
+
+  private static String toUrl() {
+    return CouchDbConfig.INSTANCE.getProtocol()
+      + "://" + CouchDbConfig.INSTANCE.getHost()
+      + ":" + CouchDbConfig.INSTANCE.getPort();
+  }
+
+  public static Request getRequest(String route) {
+    return append(Request.Get(route));
+  }
+
+  public static Request postRequest(String route,
+                                    String payload) {
+    return append(Request.Post(route).bodyString(payload, ContentType.APPLICATION_JSON));
+  }
+
+  public static Request deleteRequest(String route) {
+    return append(Request.Delete(route));
+  }
+
+  public static Request putRequest(String route,
+                                   String payload) {
+    return append(Request.Put(route).bodyString(payload, ContentType.APPLICATION_JSON));
+  }
+
+  private static Request append(Request req) {
+    req.connectTimeout(1000)
+      .socketTimeout(100000);
+
+    return req;
   }
 }

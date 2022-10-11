@@ -49,7 +49,8 @@ export class PipelineUtils {
 
   private static goToPipelineEditor() {
     // Go to StreamPipes editor
-    cy.visit('#/editor');
+    cy.visit('#/pipelines');
+    cy.dataCy('pipelines-navigate-to-editor').click();
   }
 
   private static selectDataStream(pipelineInput: PipelineInput) {
@@ -91,22 +92,24 @@ export class PipelineUtils {
     cy.dataCy('sp-editor-pipeline-name').type(pipelineInput.pipelineName);
     cy.dataCy('sp-editor-checkbox-start-immediately').children().click();
     cy.dataCy('sp-editor-save').click();
-    cy.dataCy('sp-pipeline-started-dialog', { timeout: 10000 }).should('be.visible');
-    cy.dataCy('sp-pipeline-dialog-close', { timeout: 10000 }).click();
+    cy.dataCy('sp-pipeline-started-dialog', { timeout: 15000 }).should('be.visible');
+    cy.dataCy('sp-pipeline-dialog-close', { timeout: 15000 }).click();
   }
 
 
   public static checkAmountOfPipelinesPipeline(amount: number) {
     cy.visit('#/pipelines');
-    cy.dataCy('delete').should('have.length', amount);
+    cy.dataCy('delete-pipeline').should('have.length', amount);
   }
 
   public static deletePipeline() {
     // Delete pipeline
     cy.visit('#/pipelines');
-    cy.dataCy('delete').should('have.length', 1);
-    cy.dataCy('delete').click({ force: true });
+    cy.dataCy('delete-pipeline').should('have.length', 1);
+    cy.dataCy('delete-pipeline').click({ force: true });
+
     cy.dataCy('sp-pipeline-stop-and-delete').click();
-    cy.dataCy('delete', { timeout: 10000 }).should('have.length', 0);
+
+    cy.dataCy('delete-pipeline', { timeout: 10000 }).should('have.length', 0);
   }
 }

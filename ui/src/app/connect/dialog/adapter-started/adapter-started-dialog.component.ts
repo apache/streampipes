@@ -42,7 +42,7 @@ export class AdapterStartedDialog implements OnInit {
   adapterInstalled = false;
   public adapterStatus: Message;
   public streamDescription: SpDataStream;
-  private pollingActive = false;
+  pollingActive = false;
   public runtimeData: any;
   public isSetAdapter = false;
   public isTemplate = false;
@@ -92,14 +92,6 @@ export class AdapterStartedDialog implements OnInit {
               const pipelineName = 'Persist ' + this.adapter.name;
 
               let indexName = this.adapter.name
-                .toLowerCase()
-                .replace(/ /g, '')
-                .replace(/\./g, '');
-
-              // Ensure that index name is no number
-              if (this.isNumber(indexName)) {
-                indexName = 'sp' + indexName;
-              }
 
               const pipelineInvocation = PipelineInvocationBuilder
                 .create(res)
@@ -127,9 +119,4 @@ export class AdapterStartedDialog implements OnInit {
     this.shepherdService.trigger('confirm_adapter_started_button');
   }
 
-  private isNumber(value: string | number): boolean {
-    return ((value != null) &&
-      (value !== '') &&
-      !isNaN(Number(value.toString())));
-  }
 }

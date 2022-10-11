@@ -121,11 +121,12 @@ public class FileProtocol extends Protocol {
             InputStream targetStream = FileProtocolUtils.getFileInputStream(this.selectedFilename);
             List<byte[]> dataByte = parser.parseNEvents(targetStream, 20);
 
-            EventSchema eventSchema = parser.getEventSchema(dataByte);
-
-            GuessSchema result = SchemaGuesser.guessSchma(eventSchema);
-
-            return result;
+            if (parser.supportsPreview()) {
+                return SchemaGuesser.guessSchema(parser.getSchemaAndSample(dataByte));
+            } else {
+                EventSchema eventSchema = parser.getEventSchema(dataByte);
+                return SchemaGuesser.guessSchema(eventSchema);
+            }
         } catch (FileNotFoundException e) {
             throw new ParseException("Could not read local file");
         }

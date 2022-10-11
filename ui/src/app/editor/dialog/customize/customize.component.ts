@@ -205,9 +205,6 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
           this.cachedPipelineElement = pe as InvocablePipelineElementUnion;
         });
       }
-
     }
   }
-
-
 }

@@ -16,43 +16,55 @@
   ~
   -->
 
-<div>
-    <div class="assembly-options-preview sp-blue-bg">
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <h4>Edit configuration</h4>
-            <span fxFlex></span>
-            <button color="accent" mat-button mat-raised-button matTooltip="Save Pipeline" matTooltipPosition="above"
-                    style="display:flex;align-items:center;" class="settings-bar-icon-button"
-                    [disabled]="(!formValid || pipelineUpdating)"
-                    (click)="updatePipeline()">
-                <mat-icon>save</mat-icon>
-                <span>&nbsp;Update pipeline</span>
-            </button>
-        </div>
-    </div>
-    <div class="sp-blue-border">
-        <div *ngIf="selectedElement">
-            <div fxLayout="column" style="padding:5px;padding-left:10px;">
-                <pipeline-elements-row [pipeline]="pipeline"
-                                       [element]="selectedElement"></pipeline-elements-row>
+<sp-basic-nav-tabs [spNavigationItems]="tabs"
+                   [activeLink]="'quick-edit'"
+                   [showBackLink]="true"
+                   [backLinkTarget]="['pipelines']">
 
-                <div fxFlex="100" fxLayout="column"
-                     *ngIf="isInvocable">
-                        <form [formGroup]="parentForm" fxFlex="100">
-                            <app-static-property *ngFor="let config of _selectedElement.staticProperties"
-                                                 [staticProperty]="config"
-                                                 [displayRecommended]="true"
-                                                 [staticProperties]="_selectedElement.staticProperties"
-                                                 [eventSchemas]="eventSchemas"
-                                                 [parentForm]="parentForm"
-                                                 [fieldName]="config.internalName">
-                            </app-static-property>
-                        </form>
+    <div fxLayout="column" class="page-container-padding" *ngIf="pipeline">
+        <pipeline-preview [jspcanvas]="'assembly-preview'"
+                          [pipeline]="pipeline"
+                          (selectedElementEmitter)="selectElement($event)"
+                          style="margin-bottom:15px;"
+                          class="md-padding"
+                          *ngIf="pipelineAvailable"></pipeline-preview>
+
+        <sp-basic-inner-panel panelTitle="Edit Configuration">
+            <div header fxLayoutAlign="end center" fxFlex="100" fxLayout="row">
+                <button color="accent" mat-button mat-raised-button matTooltip="Save Pipeline"
+                        matTooltipPosition="above"
+                        style="display:flex;align-items:center;" class="settings-bar-icon-button"
+                        [disabled]="(!formValid || pipelineUpdating)"
+                        (click)="updatePipeline()">
+                    <mat-icon>save</mat-icon>
+                    <span>&nbsp;Update pipeline</span>
+                </button>
+            </div>
+            <div fxFlex="100" fxLayout="column">
+                <div *ngIf="selectedElement">
+                    <div fxLayout="column" style="padding:5px;padding-left:10px;">
+                        <pipeline-elements-row [pipeline]="pipeline"
+                                               [element]="selectedElement"></pipeline-elements-row>
+
+                        <div fxFlex="100" fxLayout="column"
+                             *ngIf="isInvocable">
+                            <form [formGroup]="parentForm" fxFlex="100">
+                                <app-static-property *ngFor="let config of _selectedElement.staticProperties"
+                                                     [staticProperty]="config"
+                                                     [displayRecommended]="true"
+                                                     [staticProperties]="_selectedElement.staticProperties"
+                                                     [eventSchemas]="eventSchemas"
+                                                     [parentForm]="parentForm"
+                                                     [fieldName]="config.internalName">
+                                </app-static-property>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!selectedElement">
+                    (select an element in the preview window to modify it)
                 </div>
             </div>
-        </div>
-        <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!selectedElement">
-            (select an element in the preview window to modify it)
-        </div>
+        </sp-basic-inner-panel>
     </div>
-</div>
+</sp-basic-nav-tabs>

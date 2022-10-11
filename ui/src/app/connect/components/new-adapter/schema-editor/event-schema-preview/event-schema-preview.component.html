@@ -1,0 +1,41 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="row" fxLayoutGap="15px">
+    <div fxFlex="50" fxLayout="column">
+        <sp-basic-inner-panel [showTitle]="true" panelTitle="Original (Parsed)">
+            <pre [innerHTML]="originalField | jsonpretty" class="preview-text"></pre>
+        </sp-basic-inner-panel>
+    </div>
+
+    <div fxFlex="50" fxLayout="column">
+        <sp-basic-inner-panel [showTitle]="true" panelTitle="Result" fxFlex="100">
+            <div header fxLayoutAlign="end center" fxFlex="100">
+                <button color="accent"
+                        mat-button
+                        data-cy="connect-schema-update-preview-btn"
+                        matTooltip="Update event preview"
+                        (click)="updateEventPreview()">
+                    <mat-icon>refresh</mat-icon>
+                    <span>&nbsp;Update result preview</span>
+                </button>
+            </div>
+            <pre [innerHTML]="desiredField | jsonpretty" class="preview-text"></pre>
+        </sp-basic-inner-panel>
+    </div>
+</div>

@@ -39,6 +39,14 @@ import { MatTableModule } from '@angular/material/table';
 import { PipelineNotificationsComponent } from './dialog/pipeline-notifications/pipeline-notifications.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
+import { SharedUiModule } from '../../../projects/streampipes/shared-ui/src/lib/shared-ui.module';
+import { EditorModule } from '../editor/editor.module';
+import { PipelineDetailsModule } from '../pipeline-details/pipeline-details.module';
+import { RouterModule } from '@angular/router';
+import { EditorComponent } from '../editor/editor.component';
+import { SpPipelineDetailsOverviewComponent } from '../pipeline-details/components/overview/pipeline-details-overview.component';
+import { PipelineMonitoringComponent } from '../pipeline-details/components/monitoring/pipeline-monitoring.component';
+import { QuickEditComponent } from '../pipeline-details/components/edit/quickedit.component';
 
 @NgModule({
   imports: [
@@ -53,6 +61,50 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
     MatTableModule,
     CoreUiModule,
     PlatformServicesModule,
+    EditorModule,
+    PipelineDetailsModule,
+    SharedUiModule,
+    RouterModule.forChild([
+      {
+        path: 'pipelines',
+        children: [
+          {
+            path: '',
+            component: PipelinesComponent
+          },
+          {
+            path: 'details/:pipelineId',
+            children: [
+              {
+                path: '',
+                redirectTo: 'overview',
+                pathMatch: 'full'
+              },
+              {
+                path: 'overview',
+                component: SpPipelineDetailsOverviewComponent,
+              },
+              {
+                path: 'monitoring',
+                component: PipelineMonitoringComponent,
+              },
+              {
+                path: 'quick-edit',
+                component: QuickEditComponent,
+              }
+            ]
+          },
+          {
+            path: 'create',
+            component: EditorComponent
+          },
+          {
+            path: 'modify/:pipelineId',
+            component: EditorComponent
+          }
+        ]
+      }
+    ]),
   ],
   declarations: [
     DeletePipelineDialogComponent,

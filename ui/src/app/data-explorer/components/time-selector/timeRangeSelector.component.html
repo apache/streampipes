@@ -22,7 +22,7 @@
                 *ngFor="let item of possibleTimeButtons"
                 [color]="selectedTimeButton.value === item.value ? 'accent' : ''"
                 [attr.data-cy]="item.value.replace(' ', '_')"
-                class="button-margin smaller-button-font-size"
+                [ngClass]="'button-margin smaller-button-font-size'"
                 (click)="this.setCurrentDateRange(item)">{{item.value}}</button>
     </div>
     <div class="time-wrapper" fxFlex fxLayoutAlign="center center">

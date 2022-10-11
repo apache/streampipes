@@ -27,6 +27,7 @@ import org.apache.streampipes.connect.adapter.preprocessing.transform.schema.*;
 import org.apache.streampipes.model.connect.rules.*;
 import org.apache.streampipes.model.connect.rules.schema.*;
 
+import javax.xml.crypto.dsig.Transform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class TransformSchemaAdapterPipelineElement implements IAdapterPipelineEl
     private SchemaEventTransformer eventTransformer;
     Logger logger = LoggerFactory.getLogger(TransformSchemaAdapterPipelineElement.class);
 
-    public TransformSchemaAdapterPipelineElement(List<SchemaTransformationRuleDescription> transformationRuleDescriptions) {
+    public TransformSchemaAdapterPipelineElement(List<? extends TransformationRuleDescription> transformationRuleDescriptions) {
         List<TransformationRule> rules = new ArrayList<>();
 
         // transforms description to actual rules

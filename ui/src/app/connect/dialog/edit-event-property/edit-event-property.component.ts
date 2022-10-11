@@ -16,20 +16,21 @@
  *
  */
 
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-    EventPropertyList,
-    EventPropertyNested,
-    EventPropertyPrimitive,
-    EventPropertyUnion,
-    SemanticTypesService
+  EventPropertyList,
+  EventPropertyNested,
+  EventPropertyPrimitive,
+  EventPropertyUnion,
+  SemanticTypesService
 } from '@streampipes/platform-services';
 import { SemanticTypeUtilsService } from '../../../core-services/semantic-type/semantic-type-utils.service';
 import { DataTypesService } from '../../services/data-type.service';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
+import { DialogRef } from '@streampipes/shared-ui';
+import { EditSchemaTransformationComponent } from './components/edit-schema-transformation/edit-schema-transformation.component';
+import { EditValueTransformationComponent } from './components/edit-value-transformation/edit-value-transformation.component';
+import { EditUnitTransformationComponent } from './components/edit-unit-transformation/edit-unit-transformation.component';
 
 @Component({
   selector: 'sp-edit-event-property',
@@ -38,13 +39,16 @@ import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs/o
 })
 export class EditEventPropertyComponent implements OnInit {
 
-  soTimestamp = 'http://schema.org/DateTime';
+  @Input() property: EventPropertyUnion;
+  @Input() isEditable: boolean;
 
   @Output() propertyChange = new EventEmitter<EventPropertyUnion>();
 
+  schemaTransformationComponent: EditSchemaTransformationComponent;
+  valueTransformationComponent: EditValueTransformationComponent;
+  unitTransformationComponent: EditUnitTransformationComponent;
+
   cachedProperty: any;
-  property: any;
-  isEditable: boolean;
 
   isTimestampProperty = false;
   isEventPropertyPrimitive: boolean;
@@ -53,15 +57,11 @@ export class EditEventPropertyComponent implements OnInit {
   isNumericProperty: boolean;
   isSaveBtnEnabled: boolean;
 
-  semanticTypes: Observable<string[]>;
-
   private propertyForm: FormGroup;
-  domainPropertyControl = new FormControl();
 
   private runtimeDataTypes;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-              private dialogRef: MatDialogRef<EditEventPropertyComponent>,
+  constructor(public dialogRef: DialogRef<EditEventPropertyComponent>,
               private formBuilder: FormBuilder,
               private dataTypeService: DataTypesService,
               private semanticTypeUtilsService: SemanticTypeUtilsService,
@@ -69,8 +69,6 @@ export class EditEventPropertyComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.property = this.data.property;
-    this.isEditable = this.data.isEditable;
     this.cachedProperty = this.copyEp(this.property);
     this.runtimeDataTypes = this.dataTypeService.getDataTypes();
     this.isTimestampProperty = this.semanticTypeUtilsService.isTimestamp(this.cachedProperty);
@@ -80,15 +78,7 @@ export class EditEventPropertyComponent implements OnInit {
     this.isNumericProperty = this.semanticTypeUtilsService.isNumeric(this.cachedProperty) ||
       this.dataTypeService.isNumeric(this.cachedProperty.runtimeType);
     this.createForm();
-    this.semanticTypes = this.domainPropertyControl.valueChanges
-      .pipe(
-        startWith(''),
-        debounceTime(400),
-        distinctUntilChanged(),
-        switchMap(val => {
-          return val ? this.semanticTypesService.getSemanticTypes(val) : [];
-        })
-      );
+
   }
 
   copyEp(ep: EventPropertyUnion) {
@@ -131,19 +121,6 @@ export class EditEventPropertyComponent implements OnInit {
     return (this.property.elementId.startsWith('http://eventProperty.de/staticValue/'));
   }
 
-  editTimestampDomainProperty(checked: boolean) {
-    if (checked) {
-      this.isTimestampProperty = true;
-      this.cachedProperty.domainProperties = [this.soTimestamp];
-      this.cachedProperty.propertyScope = 'HEADER_PROPERTY';
-      this.cachedProperty.runtimeType = 'http://www.w3.org/2001/XMLSchema#long';
-    } else {
-      this.cachedProperty.domainProperties = [];
-      this.cachedProperty.propertyScope = 'MEASUREMENT_PROPERTY';
-      this.isTimestampProperty = false;
-    }
-  }
-
   save(): void {
     this.property.label = this.cachedProperty.label;
     this.property.description = this.cachedProperty.description;
@@ -176,7 +153,7 @@ export class EditEventPropertyComponent implements OnInit {
       (this.property as any).correctionValue = (this.cachedProperty as any).correctionValue;
       (this.property as any).operator = (this.cachedProperty as any).operator;
     }
-    this.dialogRef.close({ data: this.property });
+    this.dialogRef.close({data: this.property});
   }
 
   enableSaveBtn($event: boolean) {
@@ -190,5 +167,25 @@ export class EditEventPropertyComponent implements OnInit {
       this.cachedProperty.correctionValue = undefined;
     }
     this.isNumericProperty = $event;
+  }
+
+  handleDataTypeChange(changed: boolean) {
+    this.isNumericProperty = this.dataTypeService.isNumeric(this.cachedProperty.runtimeType);
+  }
+
+  handleTimestampChange(isTimestamp: boolean) {
+    this.isTimestampProperty = isTimestamp;
+  }
+
+  @ViewChild('schemaTransformationComponent') set schemaTransformation(comp: EditSchemaTransformationComponent) {
+    this.schemaTransformationComponent = comp;
+  }
+
+  @ViewChild('unitTransformationComponent') set unitTransformation(comp: EditUnitTransformationComponent) {
+    this.unitTransformationComponent = comp;
+  }
+
+  @ViewChild('valueTransformationComponent') set valueTransformation(comp: EditValueTransformationComponent) {
+    this.valueTransformationComponent = comp;
   }
 }

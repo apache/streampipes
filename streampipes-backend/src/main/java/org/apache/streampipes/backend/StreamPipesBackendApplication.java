@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.backend;
 
+import org.apache.streampipes.backend.migrations.MigrationsHandler;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.operations.Operations;
@@ -27,6 +28,7 @@ import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
@@ -96,11 +98,14 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.healthCheckExecutorService = Executors.newSingleThreadScheduledExecutor();
 
+    new StreamPipesEnvChecker().updateEnvironmentVariables();
+    new CouchDbViewGenerator().createGenericDatabaseIfNotExists();
+
     if (!isConfigured()) {
       doInitialSetup();
     }
 
-    new StreamPipesEnvChecker().updateEnvironmentVariables();
+    new MigrationsHandler().performMigrations();
 
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);

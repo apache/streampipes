@@ -20,7 +20,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { GridsterModule } from 'angular-gridster2';
-import { DashboardComponent } from './dashboard.component';
 import { DashboardPanelComponent } from './components/panel/dashboard-panel.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DashboardWidgetComponent } from './components/widget/dashboard-widget.component';
@@ -29,7 +28,6 @@ import { FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { AddVisualizationDialogComponent } from './dialogs/add-widget/add-visualization-dialog.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { DashboardService } from './services/dashboard.service';
 import { NumberWidgetComponent } from './components/widgets/number/number-widget.component';
 import { DashboardOverviewComponent } from './components/overview/dashboard-overview.component';
 import { EditDashboardDialogComponent } from './dialogs/edit-dashboard/edit-dashboard-dialog.component';
@@ -60,69 +58,89 @@ import { EditModeService } from './services/edit-mode.service';
 import { ReloadPipelineService } from './services/reload-pipeline.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { CustomMaterialModule } from '../CustomMaterial/custom-material.module';
-import { ServicesModule } from "../services/services.module";
+import { ServicesModule } from '../services/services.module';
+import { RouterModule } from '@angular/router';
+import { SharedUiModule } from '@streampipes/shared-ui';
+import { DataExplorerPanelCanDeactivateGuard } from '../data-explorer/data-explorer-panel.can-deactivate.guard';
+import { DashboardPanelCanDeactivateGuard } from './dashboard.can-deactivate.guard';
 
 @NgModule({
-    imports: [
-        NgxEchartsModule.forRoot({
-            /**
-             * This will import all modules from echarts.
-             * If you only need custom modules,
-             * please refer to [Custom Build] section.
-             */
-            echarts: () => import('echarts'),
-        }),
-        CommonModule,
-        CoreUiModule,
-        MatTabsModule,
-        GridsterModule,
-        FlexLayoutModule,
-        CustomMaterialModule,
-        FormsModule,
-        ColorPickerModule,
-        MatGridListModule,
-        NgxChartsModule,
-        CdkTableModule,
-        LeafletModule,
-        PlatformServicesModule,
-        ServicesModule
-    ],
-    declarations: [
-        BarRaceWidgetComponent,
-        DashboardComponent,
-        DashboardGridComponent,
-        DashboardOverviewComponent,
-        DashboardPanelComponent,
-        DashboardWidgetComponent,
-        AddVisualizationDialogComponent,
-        EditDashboardDialogComponent,
-        AreaWidgetComponent,
-        LineWidgetComponent,
-        NumberWidgetComponent,
-        TableWidgetComponent,
-        GaugeWidgetComponent,
-        ImageWidgetComponent,
-        MapWidgetComponent,
-        RawWidgetComponent,
-        StackedLineChartWidgetComponent,
-        HtmlWidgetComponent,
-        StatusWidgetComponent,
-        TrafficLightWidgetComponent,
-        WordcloudWidgetComponent,
-        StandaloneDashboardComponent
-    ],
-    providers: [
-        DashboardService,
-        EditModeService,
-        ReloadPipelineService,
-        ResizeService,
-        RefreshDashboardService,
-        SemanticTypeUtilsService
-    ],
-    exports: [
-        DashboardComponent,
-        DashboardWidgetComponent
-    ]
+  imports: [
+    NgxEchartsModule.forRoot({
+      /**
+       * This will import all modules from echarts.
+       * If you only need custom modules,
+       * please refer to [Custom Build] section.
+       */
+      echarts: () => import('echarts'),
+    }),
+    CommonModule,
+    CoreUiModule,
+    MatTabsModule,
+    GridsterModule,
+    FlexLayoutModule,
+    CustomMaterialModule,
+    FormsModule,
+    ColorPickerModule,
+    MatGridListModule,
+    NgxChartsModule,
+    CdkTableModule,
+    LeafletModule,
+    PlatformServicesModule,
+    ServicesModule,
+    SharedUiModule,
+    RouterModule.forChild([
+      {
+        path: 'dashboard',
+        children: [
+          {
+            path: '',
+            component: DashboardOverviewComponent
+          },
+          {
+            path: ':id',
+            component: DashboardPanelComponent,
+            canDeactivate: [DashboardPanelCanDeactivateGuard]
+          }
+        ]
+      }
+    ]),
+    SharedUiModule,
+  ],
+  declarations: [
+    BarRaceWidgetComponent,
+    DashboardGridComponent,
+    DashboardOverviewComponent,
+    DashboardPanelComponent,
+    DashboardWidgetComponent,
+    AddVisualizationDialogComponent,
+    EditDashboardDialogComponent,
+    AreaWidgetComponent,
+    LineWidgetComponent,
+    NumberWidgetComponent,
+    TableWidgetComponent,
+    GaugeWidgetComponent,
+    ImageWidgetComponent,
+    MapWidgetComponent,
+    RawWidgetComponent,
+    StackedLineChartWidgetComponent,
+    HtmlWidgetComponent,
+    StatusWidgetComponent,
+    TrafficLightWidgetComponent,
+    WordcloudWidgetComponent,
+    StandaloneDashboardComponent
+  ],
+  providers: [
+    EditModeService,
+    ReloadPipelineService,
+    ResizeService,
+    RefreshDashboardService,
+    SemanticTypeUtilsService
+  ],
+  exports: [
+    DashboardWidgetComponent,
+    StandaloneDashboardComponent
+  ]
 })
 export class DashboardModule {
 

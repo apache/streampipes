@@ -21,15 +21,15 @@
 
 .log-message {
   background-color: black;
-  font: 1.3rem Inconsolata, monospace;
+  font: 11pt Inconsolata, monospace;
   text-shadow: 0 0 5px #C8C8C8;
   color: white;
   padding: 10px;
-  width: 100%;
+  max-width: 100%;
 }
 
 .info-message {
-  font-size: 1.5rem;
+  font-size: 12pt;
   margin-top: 10px;
   margin-bottom: 5px;
 }

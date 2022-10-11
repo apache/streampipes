@@ -16,13 +16,14 @@
  *
  */
 
-import { RestApi } from '../services/rest-api.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AddService } from './services/add.service';
-import { DialogRef, DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
+import { Router } from '@angular/router';
+import { SpAddRoutes } from './add.routes';
 
 @Component({
     selector: 'sp-add',
@@ -30,6 +31,8 @@ import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
     styleUrls: ['./add.component.scss']
 })
 export class AddComponent implements OnInit {
+
+    activeLink: string;
 
     results: any[];
     loading: boolean;
@@ -39,16 +42,18 @@ export class AddComponent implements OnInit {
     availableTypes: string[] = ['all', 'set', 'stream', 'sepa', 'action'];
 
     selectedCategoryIndex = 0;
+    selectedCategory = 'all';
 
     selectedEndpointItems: any[] = [];
 
     _filterTerm = '';
     _selectedInstallationStatus = 'all';
 
-    constructor(private restApi: RestApi,
-                private addService: AddService,
+    constructor(private addService: AddService,
                 private dialogService: DialogService,
-                private changeDetectorRef: ChangeDetectorRef) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private router: Router,
+                private breadcrumbService: SpBreadcrumbService) {
         this.results = [];
         this.loading = false;
         this.endpointItems = [];
@@ -56,6 +61,7 @@ export class AddComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpAddRoutes.BASE));
         this.getEndpointItems();
         this.selectedTab = 'all';
     }
@@ -81,6 +87,10 @@ export class AddComponent implements OnInit {
         return endpointItem.selected;
     }
 
+    filterByCatergory(category) {
+        this.selectedTab = category.value;
+    }
+
     selectAll(selected) {
         this.selectedEndpointItems = [];
         this.endpointItems.forEach(item => {
@@ -95,20 +105,7 @@ export class AddComponent implements OnInit {
         });
         this.changeDetectorRef.detectChanges();
     }
-
-    getTitle(selectedTab) {
-        if (selectedTab === 'source') {
-            return 'Data Sources';
-        } else if (selectedTab === 'sepa') {
-            return 'Processing Elements';
-        } else if (selectedTab === 'action') {
-            return 'Data Sinks';
-        } else if (selectedTab === 'all') {
-            return 'All Pipeline Elements';
-        } else {
-            return 'Marketplace';
-        }
-    }
+    
 
     showManageRdfEndpointsDialog() {
         const dialogRef: DialogRef<AddEndpointComponent> = this.dialogService.open(AddEndpointComponent, {
@@ -194,5 +191,10 @@ export class AddComponent implements OnInit {
 
     get selectedInstallationStatus(): string {
         return this._selectedInstallationStatus;
+    }
+
+    navigateTo(routeId: string): void {
+      this.router.navigate(['add', routeId]);
+      this.activeLink = routeId;
     }
 }

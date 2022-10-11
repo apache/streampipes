@@ -1,7 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="all-pipeline-elements-jvm" type="Application" factoryName="Application">
-    <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/jdk-17.0.1.jdk/Contents/Home" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
       <env name="SP_PORT" value="7023" />
       <env name="SP_DEBUG" value="true" />

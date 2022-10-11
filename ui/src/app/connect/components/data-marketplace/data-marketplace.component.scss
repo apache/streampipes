@@ -46,38 +46,15 @@
   background: #EEE;
 }
 
-#categoryFilter {
-  margin-top: 20px;
-}
-
-.fixed-height {
-  height: 50px;
-}
-
-.form-style {
-  margin: 0px 5px 0px 0px;
-}
-
 .icon-style {
   margin: 15px 4px 0px 0px;
   color: var(--color-accent);
 }
 
-.data-marketplace-options {
-  padding:0px;
-  background-color: var(--color-bg-1);
-  border-bottom: 1px solid var(--color-bg-3);
+.filter-bar-margin {
+  margin-left: 10px;
+  padding-left: 10px;
 }
 
-.data-marketplace-options-item {
-  display: inline;
-  margin-right: 10px;
-}
 
-::ng-deep .mat-select-panel {
-  background: #fff;
-}
 
-::ng-deep .mat-select-panel:not([class*=mat-elevation-z]) {
-  box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
-}

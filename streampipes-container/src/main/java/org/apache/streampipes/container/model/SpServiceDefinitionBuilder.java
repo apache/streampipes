@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SpServiceDefinitionBuilder {
 
@@ -77,6 +78,11 @@ public class SpServiceDefinitionBuilder {
 
   public SpServiceDefinitionBuilder addConfig(ConfigItem configItem) {
     this.serviceDefinition.addConfig(configItem);
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder addConfigs(List<ConfigItem> configItems) {
+    configItems.stream().forEach(configItem -> this.serviceDefinition.addConfig(configItem));
     return this;
   }
 

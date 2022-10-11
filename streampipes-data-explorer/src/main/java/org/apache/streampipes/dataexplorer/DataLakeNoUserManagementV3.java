@@ -28,8 +28,11 @@ import java.util.List;
 import java.util.Optional;
 
 
+@Deprecated
 public class DataLakeNoUserManagementV3 {
 
+
+  @Deprecated
   public boolean addDataLake(String measure, EventSchema eventSchema) {
     List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
     Optional<DataLakeMeasure> optional = dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure)).findFirst();
@@ -39,7 +42,9 @@ public class DataLakeNoUserManagementV3 {
         return false;
       }
     } else {
-      getDataLakeStorage().storeDataLakeMeasure(new DataLakeMeasure(measure, eventSchema));
+      DataLakeMeasure dataLakeMeasure = new DataLakeMeasure(measure, eventSchema);
+      dataLakeMeasure.setSchemaVersion(DataLakeMeasure.CURRENT_SCHEMA_VERSION);
+      getDataLakeStorage().storeDataLakeMeasure(dataLakeMeasure);
     }
     return true;
   }

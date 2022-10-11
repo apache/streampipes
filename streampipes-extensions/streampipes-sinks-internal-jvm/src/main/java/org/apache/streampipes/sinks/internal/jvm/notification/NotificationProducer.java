@@ -21,21 +21,38 @@ package org.apache.streampipes.sinks.internal.jvm.notification;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.Notification;
+import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
+import org.apache.streampipes.sdk.builder.DataSinkBuilder;
+import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.apache.streampipes.wrapper.standalone.SinkParams;
+import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-public class NotificationProducer implements EventSink<NotificationParameters> {
+public class NotificationProducer extends StreamPipesDataSink {
 
   private static final String HASHTAG = "#";
+  private static final String TITLE_KEY = "title";
+  private static final String CONTENT_KEY = "content";
+  private static final String SILENT_PERIOD = "silent-period";
 
   private String title;
   private String content;
+
+  private long silentPeriodInSeconds;
+  private long lastMessageEpochSecond = -1;
+
   private String correspondingPipelineId;
   private String correspondingUser;
 
@@ -43,10 +60,11 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
 
 
   @Override
-  public void onInvocation(NotificationParameters parameters, EventSinkRuntimeContext context) throws
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext context) throws
           SpRuntimeException {
-    this.title = parameters.getTitle();
-    this.content = parameters.getContent();
+    this.title = parameters.extractor().singleValueParameter(TITLE_KEY, String.class);
+    this.content = parameters.extractor().singleValueParameter(CONTENT_KEY, String.class);
+    this.silentPeriodInSeconds = parameters.extractor().singleValueParameter(SILENT_PERIOD, Integer.class) * 60;
     this.correspondingPipelineId = parameters.getGraph().getCorrespondingPipeline();
     this.correspondingUser = parameters.getGraph().getCorrespondingUser();
     this.client = context.getStreamPipesClient();
@@ -54,20 +72,23 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
 
   @Override
   public void onEvent(Event inputEvent) {
-    Date currentDate = new Date();
-    Notification notification = new Notification();
-    notification.setId(UUID.randomUUID().toString());
-    notification.setRead(false);
-    notification.setTitle(title);
-    notification.setMessage(PlaceholderExtractor.replacePlaceholders(inputEvent, content));
-    notification.setCreatedAt(currentDate);
-    notification.setCreatedAtTimestamp(currentDate.getTime());
-    notification.setCorrespondingPipelineId(correspondingPipelineId);
-    notification.setTargetedAt(correspondingUser);
+    if (shouldSendNotification()) {
+      Date currentDate = new Date();
+      Notification notification = new Notification();
+      notification.setId(UUID.randomUUID().toString());
+      notification.setRead(false);
+      notification.setTitle(title);
+      notification.setMessage(PlaceholderExtractor.replacePlaceholders(inputEvent, content));
+      notification.setCreatedAt(currentDate);
+      notification.setCreatedAtTimestamp(currentDate.getTime());
+      notification.setCorrespondingPipelineId(correspondingPipelineId);
+      notification.setTargetedAt(correspondingUser);
 
-    // TODO add targeted user to notification object
+      // TODO add targeted user to notification object
 
-    client.notificationsApi().add(notification);
+      client.notificationsApi().add(notification);
+      this.lastMessageEpochSecond = Instant.now().getEpochSecond();
+    }
   }
 
   @Override
@@ -75,4 +96,27 @@ public class NotificationProducer implements EventSink<NotificationParameters> {
 
   }
 
+  private boolean shouldSendNotification() {
+    if (this.lastMessageEpochSecond == -1) {
+      return true;
+    } else {
+      return Instant.now().getEpochSecond() >= (this.lastMessageEpochSecond + this.silentPeriodInSeconds);
+    }
+  }
+
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.notification")
+      .withLocales(Locales.EN)
+      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+      .category(DataSinkType.INTERNAL, DataSinkType.NOTIFICATION)
+      .requiredStream(StreamRequirementsBuilder
+        .create()
+        .requiredProperty(EpRequirements.anyProperty())
+        .build())
+      .requiredTextParameter(Labels.withId(TITLE_KEY))
+      .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
+      .requiredIntegerParameter(Labels.withId(SILENT_PERIOD), 10)
+      .build();
+  }
 }

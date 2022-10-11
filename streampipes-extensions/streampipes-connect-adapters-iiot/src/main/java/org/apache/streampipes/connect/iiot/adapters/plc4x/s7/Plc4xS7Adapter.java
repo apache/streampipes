@@ -27,11 +27,12 @@ import org.apache.plc4x.java.api.types.PlcResponseCode;
 import org.apache.plc4x.java.utils.connectionpool.PooledPlcDriverManager;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
-import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
@@ -54,10 +55,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-public class Plc4xS7Adapter extends PullAdapter {
+public class Plc4xS7Adapter extends PullAdapter implements PlcReadResponseHandler {
 
     /**
      * A unique id to identify the Plc4xS7Adapter
@@ -133,31 +134,45 @@ public class Plc4xS7Adapter extends PullAdapter {
     public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException {
 
         // Extract user input
-        getConfigurations(adapterDescription);
+        try {
+            getConfigurations(adapterDescription);
 
-        if (this.pollingInterval < 10) {
-            throw new AdapterException("Polling interval must be higher then 10. Current value: " + this.pollingInterval);
+            if (this.pollingInterval < 10) {
+                throw new AdapterException("Polling interval must be higher than 10. Current value: " + this.pollingInterval);
+            }
+
+            GuessSchema guessSchema = new GuessSchema();
+
+            EventSchema eventSchema = new EventSchema();
+            List<EventProperty> allProperties = new ArrayList<>();
+
+            for (Map<String, String> node : this.nodes) {
+                Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
+
+                allProperties.add(
+                  PrimitivePropertyBuilder
+                    .create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
+                    .label(node.get(PLC_NODE_RUNTIME_NAME))
+                    .description("")
+                    .build());
+            }
+
+            this.before();
+            var event = readPlcDataSynchronized();
+            var preview = event
+              .entrySet()
+              .stream()
+              .collect(Collectors.toMap(Map.Entry::getKey, e ->
+                new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
+
+            eventSchema.setEventProperties(allProperties);
+            guessSchema.setEventSchema(eventSchema);
+            guessSchema.setEventPreview(List.of(preview));
+
+            return guessSchema;
+        } catch (Exception e) {
+            throw new AdapterException(e.getMessage(), e);
         }
-
-        GuessSchema guessSchema = new GuessSchema();
-
-        EventSchema eventSchema = new EventSchema();
-        List<EventProperty> allProperties = new ArrayList<>();
-
-        for (Map<String, String> node : this.nodes) {
-            Datatypes datatype = getStreamPipesDataType(node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
-
-            allProperties.add(
-                    PrimitivePropertyBuilder
-                            .create(datatype, node.get(PLC_NODE_RUNTIME_NAME))
-                            .label(node.get(PLC_NODE_RUNTIME_NAME))
-                            .description("")
-                            .build());
-        }
-
-        eventSchema.setEventProperties(allProperties);
-        guessSchema.setEventSchema(eventSchema);
-        return guessSchema;
     }
 
     /**
@@ -171,7 +186,6 @@ public class Plc4xS7Adapter extends PullAdapter {
 
         this.driverManager = new PooledPlcDriverManager();
         try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
-
             if (!plcConnection.getMetadata().canRead()) {
                 this.LOG.error("The S7 on IP: " + this.ip + " does not support reading data");
             }
@@ -188,47 +202,36 @@ public class Plc4xS7Adapter extends PullAdapter {
      */
     @Override
     protected void pullData() {
-
         // Create PLC read request
-        try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
-            PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
-            for (Map<String, String> node : this.nodes) {
-                builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
-            }
-            PlcReadRequest readRequest = builder.build();
-
-            // Execute the request
-            CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
-
-            asyncResponse.whenComplete((response, throwable) -> {
-                // Create an event containing the value of the PLC
-                if (throwable != null) {
-                    throwable.printStackTrace();
-                    this.LOG.error(throwable.getMessage());
-                } else {
-                    Map<String, Object> event = new HashMap<>();
-                    for (Map<String, String> node : this.nodes) {
-                        if (response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
-                            event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
-                        } else {
-                            this.LOG.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
-                                    response.getResponseCode(node.get(PLC_NODE_NAME)).name());
-                        }
-                    }
-
-                    // publish the final event
-                    adapterPipeline.process(event);
-                }
-            });
-
-        } catch (InterruptedException | ExecutionException e) {
-            this.LOG.error(e.getMessage());
-            e.printStackTrace();
+        try(PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
+            readPlcData(plcConnection, this);
         } catch (Exception e) {
-            this.LOG.error("Could not establish connection to S7 with ip " + this.ip, e);
-            e.printStackTrace();
+            LOG.error("Error while reading from PLC with IP {} ", this.ip, e);
         }
+    }
 
+    private PlcReadRequest makeReadRequest(PlcConnection plcConnection) throws PlcConnectionException {
+        PlcReadRequest.Builder builder = plcConnection.readRequestBuilder();
+        for (Map<String, String> node : this.nodes) {
+            builder.addItem(node.get(PLC_NODE_NAME), node.get(PLC_NODE_NAME) + ":" + node.get(PLC_NODE_TYPE).toUpperCase().replaceAll(" ", "_"));
+        }
+        return builder.build();
+    }
+
+    private void readPlcData(PlcConnection plcConnection, PlcReadResponseHandler handler) throws PlcConnectionException {
+        var readRequest = makeReadRequest(plcConnection);
+        // Execute the request
+        CompletableFuture<? extends PlcReadResponse> asyncResponse = readRequest.execute();
+        asyncResponse.whenComplete(handler::onReadResult);
+    }
+
+    private Map<String, Object> readPlcDataSynchronized() throws Exception {
+        try (PlcConnection plcConnection = this.driverManager.getConnection("s7://" + this.ip)) {
+            var readRequest = makeReadRequest(plcConnection);
+            // Execute the request
+            var readResponse = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
+            return makeEvent(readResponse);
+        }
     }
 
     /**
@@ -315,4 +318,28 @@ public class Plc4xS7Adapter extends PullAdapter {
         }
     }
 
+    @Override
+    public void onReadResult(PlcReadResponse response, Throwable throwable) {
+        if (throwable != null) {
+            throwable.printStackTrace();
+            this.LOG.error(throwable.getMessage());
+        } else {
+            var event = makeEvent(response);
+            // publish the final event
+            adapterPipeline.process(event);
+        }
+    }
+
+    private Map<String, Object> makeEvent(PlcReadResponse response) {
+        Map<String, Object> event = new HashMap<>();
+        for (Map<String, String> node : this.nodes) {
+            if (response.getResponseCode(node.get(PLC_NODE_NAME)) == PlcResponseCode.OK) {
+                event.put(node.get(PLC_NODE_RUNTIME_NAME), response.getObject(node.get(PLC_NODE_NAME)));
+            } else {
+                this.LOG.error("Error[" + node.get(PLC_NODE_NAME) + "]: " +
+                  response.getResponseCode(node.get(PLC_NODE_NAME)).name());
+            }
+        }
+        return event;
+    }
 }

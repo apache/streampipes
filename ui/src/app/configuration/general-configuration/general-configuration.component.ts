@@ -18,12 +18,20 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { GeneralConfigService, GeneralConfigModel, MailConfigService, EmailConfig } from '@streampipes/platform-services';
+import {
+  EmailConfig,
+  GeneralConfigModel,
+  GeneralConfigService,
+  MailConfigService
+} from '@streampipes/platform-services';
 import { zip } from 'rxjs';
 import { AvailableRolesService } from '../../services/available-roles.service';
 import { RoleDescription } from '../../_models/auth.model';
 import { UserRole } from '../../_enums/user-role.enum';
 import { AppConstants } from '../../services/app.constants';
+import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
   selector: 'sp-general-configuration',
@@ -31,6 +39,8 @@ import { AppConstants } from '../../services/app.constants';
   styleUrls: ['./general-configuration.component.scss']
 })
 export class GeneralConfigurationComponent implements OnInit {
+
+  tabs = SpConfigurationTabs.getTabs();
 
   parentForm: FormGroup;
   formReady = false;
@@ -44,9 +54,11 @@ export class GeneralConfigurationComponent implements OnInit {
               private generalConfigService: GeneralConfigService,
               private mailConfigService: MailConfigService,
               private availableRolesService: AvailableRolesService,
-              private appConstants: AppConstants) {}
+              private appConstants: AppConstants,
+              private breadcrumbService: SpBreadcrumbService) {}
 
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[0].itemTitle}]);
     this.availableRoles = this.availableRolesService.availableRoles.filter(role => role.role !== UserRole.ROLE_ADMIN);
     zip(this.generalConfigService.getGeneralConfig(), this.mailConfigService.getMailConfig()).subscribe(configs => {
       if (configs[0].configured) {

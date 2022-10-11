@@ -54,8 +54,7 @@ export class DataViewQueryGeneratorService {
   generateQuery(startTime: number,
                 endTime: number,
                 sourceConfig: SourceConfig,
-                maximumResultingEvents: number = -1
-                ): DatalakeQueryParameters {
+                maximumResultingEvents: number = -1): DatalakeQueryParameters {
     const queryBuilder = DatalakeQueryParameterBuilder.create(startTime, endTime);
     const queryConfig = sourceConfig.queryConfig;
 
@@ -65,14 +64,18 @@ export class DataViewQueryGeneratorService {
     );
 
     if (sourceConfig.queryConfig.groupBy !== undefined) {
-      const selectedGroupByFields = sourceConfig.queryConfig.groupBy.filter(field => field.selected);
+      const selectedGroupByFields = sourceConfig.queryConfig.groupBy.filter(field => field.selected === true);
       if (selectedGroupByFields.length > 0) {
-        queryBuilder.withGrouping(sourceConfig.queryConfig.groupBy);
+        queryBuilder.withGrouping(selectedGroupByFields);
       }
     }
 
     if (queryConfig.selectedFilters.length > 0) {
       queryBuilder.withFilters(queryConfig.selectedFilters);
+    }
+
+    if (queryConfig.order) {
+      queryBuilder.withOrdering(queryConfig.order);
     }
 
     if (sourceConfig.queryType === 'single') {

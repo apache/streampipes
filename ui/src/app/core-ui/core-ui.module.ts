@@ -82,6 +82,10 @@ import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar-preview/image-bar-preview.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { PipelineElementTemplateConfigComponent } from './pipeline-element-template-config/pipeline-element-template-config.component';
+import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
+import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
 
 @NgModule({
   imports: [
@@ -104,6 +108,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     MatSlideToggleModule,
     MatChipsModule,
     MatTreeModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
     PlatformServicesModule,
     PortalModule,
     SharedUiModule,
@@ -113,6 +119,7 @@ import { SharedUiModule } from '@streampipes/shared-ui';
   ],
   declarations: [
     ConfigureLabelsComponent,
+    DataDownloadDialogComponent,
     DisplayRecommendedPipe,
     ImageBarPreviewComponent,
     ImageComponent,
@@ -123,6 +130,8 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     ImageAnnotationsComponent,
     ImageViewerComponent,
     ObjectPermissionDialogComponent,
+    PipelineElementTemplateConfigComponent,
+    PipelineElementTemplatePipe,
     SplitSectionComponent,
     StaticAnyInput,
     StaticPropertyComponent,
@@ -159,8 +168,10 @@ import { SharedUiModule } from '@streampipes/shared-ui';
   ],
   exports: [
     ConfigureLabelsComponent,
+    DataDownloadDialogComponent,
     ImageComponent,
     ImageLabelingComponent,
+    PipelineElementTemplateConfigComponent,
     SelectLabelComponent,
     StaticAnyInput,
     StaticPropertyComponent,

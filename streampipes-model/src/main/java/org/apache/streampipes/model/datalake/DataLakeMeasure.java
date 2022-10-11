@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.model.datalake;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.shared.annotation.TsModel;
@@ -25,11 +27,20 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 @TsModel
 public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
+    public final static String CURRENT_SCHEMA_VERSION = "1.1";
+
+    @JsonProperty("_rev")
+    private @SerializedName("_rev") String rev;
+
     private String measureName;
+
+    private String timestampField;
     private EventSchema eventSchema;
     private String pipelineId;
     private String pipelineName;
     private boolean pipelineIsRunning;
+
+    private String schemaVersion;
 
     public DataLakeMeasure() {
         super();
@@ -45,6 +56,12 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
     public DataLakeMeasure(String measureName, EventSchema eventSchema) {
         this.measureName = measureName;
         this.eventSchema = eventSchema;
+    }
+
+    public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema) {
+        this.measureName = measureName;
+        this.eventSchema = eventSchema;
+        this.timestampField = timestampField;
     }
 
     public String getMeasureName() {
@@ -85,5 +102,29 @@ public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
     public void setPipelineIsRunning(boolean pipelineIsRunning) {
         this.pipelineIsRunning = pipelineIsRunning;
+    }
+
+    public String getSchemaVersion() {
+        return schemaVersion;
+    }
+
+    public void setSchemaVersion(String schemaVersion) {
+        this.schemaVersion = schemaVersion;
+    }
+
+    public String getTimestampField() {
+        return timestampField;
+    }
+
+    public void setTimestampField(String timestampField) {
+        this.timestampField = timestampField;
+    }
+
+    public String getRev() {
+        return rev;
+    }
+
+    public void setRev(String rev) {
+        this.rev = rev;
     }
 }

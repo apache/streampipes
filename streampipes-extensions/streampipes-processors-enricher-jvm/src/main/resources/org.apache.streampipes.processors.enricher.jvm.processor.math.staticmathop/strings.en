@@ -1,0 +1,10 @@
+org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.title=Static Math
+org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.description=Performs calculation on an event property with a static value (+, -, *, /, %)
+
+leftOperand.title=Left operand
+leftOperand.description=Select left operand
+
+rightOperandValue.title=Right operand value
+rightOperandValue.description=Specify the value of the right operand.
+
+operation.title=Select operation

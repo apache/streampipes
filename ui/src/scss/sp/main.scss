@@ -367,8 +367,12 @@ md-content {
 .page-container {
   margin: 10px;
   border: 1px solid var(--color-bg-3);
-  min-height: calc(100% - 20px);
+  min-height: calc(100% - 60px);
   //height: 100%;
+}
+
+.sp-full-height {
+  min-height: calc(100% - 20px);
 }
 
 .page-container-padding-inner {
@@ -911,7 +915,7 @@ md-select.md-default-theme .md-select-value.md-select-placeholder, md-select .md
   padding: 5px;
   border: 1px solid var(--color-bg-2);
   height: 300px;
-  width: 100%;
+  max-width: 100%;
 
   background-color: var(--color-bg-1);
   background-image: var(--canvas-color);

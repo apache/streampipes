@@ -20,7 +20,7 @@
     <h1>Asset Dashboards</h1>
     <mat-grid-list
             [cols]="3" [rowHeight]="500"
-            [gutterSize]="10" fxFlex="100">
+            [gutterSize]="10" fxFlex="100" *ngIf="dashboardConfigs.length > 0">
 
         <mat-grid-tile class="gray" *ngFor="let dashboardConfig of dashboardConfigs">
 
@@ -41,7 +41,8 @@
             </mat-card>
         </mat-grid-tile>
     </mat-grid-list>
-    <div *ngIf="dashboardConfigs.length == 0">
-        <h4>(no dashboards available, navigate to <i>New Dashboard</i> to create a new asset dashboard)</h4>
+    <div *ngIf="dashboardConfigs.length == 0" fxLayoutAlign="center center" fxFlex="100" fxLayout="column">
+        <h4>No asset dashboards available</h4>
+        <button mat-button mat-raised-button color="accent" style="margin-top: 10px;" (click)="createDashboard.emit()">Create new</button>
     </div>
 </div>

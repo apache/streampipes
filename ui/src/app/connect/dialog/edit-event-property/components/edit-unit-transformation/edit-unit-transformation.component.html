@@ -16,57 +16,70 @@
   ~
   -->
 
-<div fxLayout="row" fxLayoutAlign="start" *ngIf="showUnitTransformation">
-    <div class="form-group" fxFlexAlign="center" style="width: 155px">
-        <mat-form-field *ngIf="!hadMeasurementUnit" class="example-full-width" style="width: 155px" color="accent">
-            <input matInput
-                   placeholder="Unit"
-                   [matAutocomplete]="auto"
-                   [formControl]="stateCtrl"
-                   [attr.disabled]="transformUnitEnable ? '' : null"
-                   data-cy="connect-schema-unit-from-dropdown">
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" [panelWidth]="'300px'">
-                <mat-option
-                        *ngFor="let unit of filteredUnits | async"
-                        [value]="unit.label"
-                        [attr.data-cy]="unit.resource">
-                    {{unit.label}}
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-        <mat-form-field *ngIf="hadMeasurementUnit"
-                        class="example-full-width"
-                        style="width: 155px"
-                        color="accent">
-            <input matInput
-                   placeholder="Unit"
-                   disabled
-                   [(ngModel)]="oldMeasurementUnitDipsplay"
-                   data-cy="connect-schema-unit-from-input">
-        </mat-form-field>
+<div class="general-options-panel" fxLayout="column">
+    <span class="general-options-header">Unit Transformation</span>
 
-    </div>
-    <button mat-button
-            (click)="transformUnit()"
-            color="accent"
-            class="form-group"
-            fxFlexAlign="center"
-            style="min-width: 60px; max-width: 60px"
-            data-cy="connect-schema-unit-transform-btn">
-        <mat-icon *ngIf="!transformUnitEnable">arrow_forward</mat-icon>
-        <mat-icon *ngIf="transformUnitEnable" style="transform: rotate(180deg)">arrow_forward</mat-icon>
-    </button>
-    <mat-form-field class="example-full-width" style="width: 155px" *ngIf="transformUnitEnable" color="accent">
-        <mat-select placeholder="New Unit"
-                    [(ngModel)]="selectUnit"
-                    [formControl]="newUnitStateCtrl"
-                    [compareWith]="compareFn"
-                    data-cy="connect-schema-unit-to-dropdown">
-            <mat-option *ngFor="let unit of possibleUnitTransformations" [value]="unit"
-                        (click)="changeTargetUnit(unit)">
-                {{unit.label}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+    <sp-ep-settings-section sectionTitle="Unit conversion"
+                            sectionDescription="Converts the field value from the given measurement unit to the provided target unit"
+                            fxFlex="100"
+                            *ngIf="isPrimitiveProperty && !isTimestampProperty && isNumericProperty">
+        <div fxLayout="row">
+            <div class="w-100" fxLayoutAlign="start center" fxFlex="45">
+                <mat-form-field *ngIf="!hadMeasurementUnit" class="w-100" color="accent" fxFlex="100">
+                    <input matInput
+                           placeholder="Unit"
+                           [matAutocomplete]="auto"
+                           [formControl]="stateCtrl"
+                           [attr.disabled]="transformUnitEnable ? '' : null"
+                           data-cy="connect-schema-unit-from-dropdown">
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" [panelWidth]="'300px'">
+                        <mat-option
+                                *ngFor="let unit of filteredUnits | async"
+                                [value]="unit.label"
+                                [attr.data-cy]="unit.resource">
+                            {{unit.label}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field *ngIf="hadMeasurementUnit"
+                                class="example-full-width"
+                                style="width: 155px"
+                                color="accent">
+                    <input matInput
+                           placeholder="Unit"
+                           disabled
+                           [(ngModel)]="oldMeasurementUnitDipsplay"
+                           data-cy="connect-schema-unit-from-input">
+                </mat-form-field>
+
+            </div>
+            <div fxFlex="10" fxLayoutAlign="center center">
+                <button mat-button
+                        (click)="transformUnit()"
+                        color="accent"
+                        class="form-group"
+                        fxFlexAlign="center"
+                        style="min-width: 60px; max-width: 60px"
+                        data-cy="connect-schema-unit-transform-btn">
+                    <mat-icon *ngIf="!transformUnitEnable">arrow_forward</mat-icon>
+                    <mat-icon *ngIf="transformUnitEnable" style="transform: rotate(180deg)">arrow_forward</mat-icon>
+                </button>
+            </div>
+            <div fxFlex="45" fxLayoutAlign="start center">
+                <mat-form-field class="w-100" *ngIf="transformUnitEnable" color="accent" fxFlex="100">
+                    <mat-select placeholder="New Unit"
+                                [(ngModel)]="selectUnit"
+                                [formControl]="newUnitStateCtrl"
+                                [compareWith]="compareFn"
+                                data-cy="connect-schema-unit-to-dropdown">
+                        <mat-option *ngFor="let unit of possibleUnitTransformations" [value]="unit"
+                                    (click)="changeTargetUnit(unit)">
+                            {{unit.label}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </sp-ep-settings-section>
 </div>
 

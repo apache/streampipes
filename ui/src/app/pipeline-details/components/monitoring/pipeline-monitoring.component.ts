@@ -16,29 +16,31 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import {
-  DataProcessorInvocation, DataSinkInvocation,
-  Pipeline, PipelineElementMonitoringInfo,
+  DataProcessorInvocation,
+  DataSinkInvocation,
+  PipelineElementMonitoringInfo,
   PipelineMonitoringInfo,
-  SpDataSet, SpDataStream
+  PipelineMonitoringService,
+  PipelineService,
+  SpDataSet,
+  SpDataStream
 } from '@streampipes/platform-services';
-import { PipelineMonitoringService } from '@streampipes/platform-services';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { AuthService } from '../../../services/auth.service';
-import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 
 @Component({
   selector: 'pipeline-monitoring',
   templateUrl: './pipeline-monitoring.component.html',
   styleUrls: ['./pipeline-monitoring.component.scss']
 })
-export class PipelineMonitoringComponent implements OnInit, OnDestroy {
-
-  _pipeline: Pipeline;
-
-  @Output()
-  reloadPipelineEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+export class PipelineMonitoringComponent extends SpPipelineDetailsDirective implements OnInit, OnDestroy {
 
   pipelineMonitoringInfo: PipelineMonitoringInfo;
   pipelineMonitoringInfoAvailable = false;
@@ -49,19 +51,21 @@ export class PipelineMonitoringComponent implements OnInit, OnDestroy {
 
   pipelineElementMonitoringInfo: Map<string, PipelineElementMonitoringInfo>;
 
-  hasPipelineWritePrivileges = false;
+  reloadPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
+  reloadSubscription: Subscription;
 
-  constructor(private pipelineMonitoringService: PipelineMonitoringService,
+  constructor(activatedRoute: ActivatedRoute,
+              pipelineService: PipelineService,
+              authService: AuthService,
+              private pipelineMonitoringService: PipelineMonitoringService,
               private pipelineOperationsService: PipelineOperationsService,
-              private authService: AuthService) {
+              breadcrumbService: SpBreadcrumbService) {
+    super(activatedRoute, pipelineService, authService, breadcrumbService);
   }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
-    });
-    this.collectAllElements();
-    this.checkMonitoringInfoCollection();
+    super.onInit();
+    this.reloadSubscription = this.reloadPipelinesEmitter.subscribe(reload => this.loadPipeline());
   }
 
   checkMonitoringInfoCollection() {
@@ -101,20 +105,17 @@ export class PipelineMonitoringComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.autoRefresh = false;
+    this.reloadSubscription.unsubscribe();
   }
 
   startPipeline() {
-    this.pipelineOperationsService.startPipeline(this.pipeline._id, this.reloadPipelineEmitter);
+    this.pipelineOperationsService.startPipeline(this.pipeline._id, this.reloadPipelinesEmitter);
   }
 
-  @Input()
-  set pipeline(pipeline: Pipeline) {
-    this._pipeline = pipeline;
+  onPipelineAvailable(): void {
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Monitoring'} ]);
+    this.collectAllElements();
     this.checkMonitoringInfoCollection();
-  }
-
-  get pipeline() {
-    return this._pipeline;
   }
 
 }

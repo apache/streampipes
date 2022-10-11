@@ -33,7 +33,18 @@
                 </mat-form-field>
                 <mat-checkbox [(ngModel)]="dashboard.displayHeader">Show name and description in dashboard
                 </mat-checkbox>
+                <div fxLayout="column" class="mt-10">
+                    <mat-checkbox [(ngModel)]="dashboard.dashboardGeneralSettings.globalRefresh">
+                        Use same update frequency for all widgets (will override widget-specific intervals)
+                    </mat-checkbox>
 
+                    <mat-form-field class="full-width mt-10"
+                                    color="accent"
+                                    *ngIf="dashboard.dashboardGeneralSettings.globalRefresh">
+                        <mat-label>Refresh interval (seconds)</mat-label>
+                        <input matInput [(ngModel)]="dashboard.dashboardGeneralSettings.refreshIntervalInSeconds">
+                    </mat-form-field>
+                </div>
             </div>
         </div>
     </div>

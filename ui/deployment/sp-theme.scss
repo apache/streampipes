@@ -163,7 +163,10 @@ $accent: map-get($custom-theme-light, accent);
 .small .mat-tab-label-content {
   text-transform: none;
   font-size: 11pt;
+}
 
+:root {
+  --color-loading-bar: #{mat-color($accent)};
 }
 
 .dark-mode {
@@ -172,6 +175,19 @@ $accent: map-get($custom-theme-light, accent);
   .base-style {
     color: rgba(255, 255, 255, 0.87);
     background: #121212;
+  }
+
+  .mat-button-toggle-checked {
+    background: var(--color-accent);
+    color: var(--color-bg-0);
+  }
+
+  .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+    color: var(--color-bg-0);
+  }
+
+  .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 30px;
   }
 
   .mat-toolbar.mat-primary {
@@ -217,6 +233,19 @@ $accent: map-get($custom-theme-light, accent);
   .base-style {
     color: #121212;
     background: #FFFFFF;
+  }
+
+  .mat-button-toggle-checked {
+    background: var(--color-accent);
+    color: var(--color-bg-0);
+  }
+
+  .mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+    color: var(--color-bg-0);
+  }
+
+  .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 30px;
   }
 
 

@@ -32,6 +32,13 @@ import { UnitProviderService } from '../../../../services/unit-provider.service'
 export class EditUnitTransformationComponent implements OnInit {
 
   @Input() cachedProperty: any;
+
+  @Input() isTimestampProperty: boolean;
+  @Input() isNestedProperty: boolean;
+  @Input() isListProperty: boolean;
+  @Input() isPrimitiveProperty: boolean;
+  @Input() isNumericProperty: boolean;
+
   @Input() showUnitTransformation: boolean;
 
   private transformUnitEnable = false;
@@ -133,5 +140,16 @@ export class EditUnitTransformationComponent implements OnInit {
     (this.cachedProperty as any).measurementUnitTmp = unit.resource;
     this.newUnitStateCtrl.setValue(unit);
   }
+
+  // setShowUnitTransformation() {
+  //   this.hideUnitTransformation = this.isTimestampProperty ||
+  //     !this.dataTypesService.isNumeric(this.cachedProperty.runtimeType);
+  //
+  //   if (this.dataTypesService.isNumeric(this.cachedProperty.runtimeType)) {
+  //     this.isNumericDataType.emit(true);
+  //   } else {
+  //     this.isNumericDataType.emit(false);
+  //   }
+  // }
 }
 

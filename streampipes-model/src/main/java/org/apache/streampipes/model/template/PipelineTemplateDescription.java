@@ -28,15 +28,6 @@ import java.util.List;
 @TsModel
 public class PipelineTemplateDescription extends NamedStreamPipesEntity {
 
-  //@RdfProperty(RDFS.LABEL)
-  //private String pipelineTemplateName;
-
-  //@RdfProperty(StreamPipes.INTERNAL_NAME)
-  //private String pipelineTemplateId;
-
-  //@RdfProperty(RDFS.DESCRIPTION)
-  //private String pipelineTemplateDescription;
-
   private List<BoundPipelineElement> boundTo;
 
   public PipelineTemplateDescription() {

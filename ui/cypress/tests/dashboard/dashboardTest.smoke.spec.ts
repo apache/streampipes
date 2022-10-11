@@ -17,31 +17,15 @@
  */
 
 import { ConnectUtils } from '../../support/utils/ConnectUtils';
-import { PipelineUtils } from '../../support/utils/PipelineUtils';
-import { PipelineElementBuilder } from '../../support/builder/PipelineElementBuilder';
-import { PipelineBuilder } from '../../support/builder/PipelineBuilder';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
-
-const adapterName = 'simulator';
-
 
 describe('Test live dashboard', () => {
   beforeEach('Setup Test', () => {
     cy.initStreamPipesTest();
-    ConnectUtils.addMachineDataSimulator(adapterName);
+    ConnectUtils.addMachineDataSimulator('simulator', true);
   });
 
   it('Perform Test', () => {
-    const pipelineName = 'DashboardPipeline';
-    const pipelineInput = PipelineBuilder.create(pipelineName)
-      .addSource(adapterName)
-      .addSink(
-        PipelineElementBuilder.create('data_lake')
-          .addInput('input', 'db_measurement', 'demo')
-          .build())
-      .build();
-
-    PipelineUtils.testPipeline(pipelineInput);
 
     DashboardUtils.goToDashboard();
 
@@ -49,7 +33,7 @@ describe('Test live dashboard', () => {
     const dashboardName = 'testDashboard';
     DashboardUtils.addAndEditDashboard(dashboardName);
 
-    DashboardUtils.addWidget(pipelineName, 'raw');
+    DashboardUtils.addWidget('Persist_simulator', 'raw');
 
     // Validate that data is coming (at least 3 events)
     DashboardUtils.validateRawWidgetEvents(3);

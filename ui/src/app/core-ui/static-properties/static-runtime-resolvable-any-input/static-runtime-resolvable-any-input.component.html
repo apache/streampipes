@@ -32,7 +32,7 @@
             {{option.name}}
         </mat-checkbox>
     </div>
-    <div fxLayout="column" *ngIf="!showOptions && !loading">
+    <div fxLayout="column" *ngIf="!showOptions && !loading" class="mt-10">
         <span>(waiting for input)</span>
     </div>
     <div fxLayout="column" *ngIf="loading">

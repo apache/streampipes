@@ -24,7 +24,7 @@ import { StackedLineChartConfig } from './stacked-line-chart-config';
 import { EChartsOption } from 'echarts';
 import { DatalakeRestService } from '@streampipes/platform-services';
 import { BaseNgxLineChartsStreamPipesWidget } from '../base/base-ngx-line-charts-widget';
-import { WidgetConfigBuilder } from "../../../registry/widget-config-builder";
+import { WidgetConfigBuilder } from '../../../registry/widget-config-builder';
 
 
 @Component({
@@ -39,6 +39,12 @@ export class StackedLineChartWidgetComponent extends BaseEchartsWidget implement
   timestampField: string;
 
   chartOption = {
+    grid: {
+      left: 50,
+      top: 10,
+      right: 50,
+      bottom: 100
+    },
     tooltip: {
       trigger: 'axis',
       formatter (params) {
@@ -71,11 +77,12 @@ export class StackedLineChartWidgetComponent extends BaseEchartsWidget implement
       }
     },
     series: [],
-    animationDuration: 500
+    animationDuration: 300
   };
 
   constructor(dataLakeService: DatalakeRestService, resizeService: ResizeService) {
     super(dataLakeService, resizeService);
+    this.configReady = true;
   }
 
   protected extractConfig(extractor: StaticPropertyExtractor) {
@@ -84,38 +91,38 @@ export class StackedLineChartWidgetComponent extends BaseEchartsWidget implement
     this.chartOption.yAxis.axisLabel.textStyle.color = this.selectedPrimaryTextColor;
   }
 
-  protected onEvent(event: any) {
+  getFieldsToQuery(): string[] {
+    return this.valueFields;
+  }
+
+  protected onEvent(events: any) {
     this.dynamicData = this.chartOption;
-    const timestamp = event[BaseNgxLineChartsStreamPipesWidget.TIMESTAMP_KEY];
+    this.dynamicData.series = [];
+
     this.valueFields.forEach(field => {
-      if (this.dynamicData.series.some(d => d.name === field)) {
-        const date = new Date(timestamp);
-        this.dynamicData.series.find(d => d.name === field).data.push(
-            {'name': date.toString(), value: [timestamp, event[field]]}
-        );
-        if (this.dynamicData.series.find(d => d.name === field).data.length > 5) {
-          this.dynamicData.series.find(d => d.name === field).data.shift();
-        }
-      } else {
-        this.dynamicData.series.push(this.makeNewSeries(field, timestamp, event[field]));
-      }
+      const series = this.makeNewSeries(field);
+      series.data = events.map(event => {
+        const timestamp = event[BaseNgxLineChartsStreamPipesWidget.TIMESTAMP_KEY];
+        return {
+          'name': timestamp.toString(),
+          value: [timestamp, event[field]]
+        };
+      });
+      this.dynamicData.series.push(series);
     });
 
     if (this.eChartsInstance) {
       this.eChartsInstance.setOption(this.dynamicData as EChartsOption);
     }
+
   }
 
-  makeNewSeries(seriesName, timestamp, value) {
-    const date = new Date(timestamp);
+  makeNewSeries(seriesName: string): any {
     return {
       type: 'line',
       smooth: true,
       name: seriesName,
-      data: [{
-        'name': date.toString(),
-        value: [timestamp, value]
-      }],
+      data: [],
     };
   }
 

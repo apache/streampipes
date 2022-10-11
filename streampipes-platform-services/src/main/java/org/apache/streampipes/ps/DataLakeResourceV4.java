@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
@@ -40,12 +41,9 @@ import javax.ws.rs.core.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
-
-class Placeholder {
-}
-
 
 @Path("v4/datalake")
 public class DataLakeResourceV4 extends AbstractRestResource {
@@ -156,17 +154,31 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
-        if (! (checkProvidedQueryParams(queryParams))) {
+        if (!(checkProvidedQueryParams(queryParams))) {
             return badRequest();
         } else {
             ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
             try {
                 SpQueryResult result = this.dataLakeManagement.getData(sanitizedParams);
                 return ok(result);
-            } catch (IllegalArgumentException e) {
-                return badRequest(e.getMessage());
+            } catch (RuntimeException e) {
+                return badRequest(StreamPipesErrorMessage.from(e));
             }
         }
+    }
+
+    @POST
+    @Path("/query")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getData(List<Map<String, String>> queryParams) {
+        var results = queryParams
+          .stream()
+          .map(qp -> new ProvidedQueryParams(qp.get("measureName"), qp))
+          .map(params -> this.dataLakeManagement.getData(params))
+          .collect(Collectors.toList());
+
+        return ok(results);
     }
 
     @GET
@@ -188,6 +200,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "name of aggregation function used for grouping operation") @QueryParam(QP_AGGREGATION_FUNCTION) String aggregationFunction
             , @Parameter(in = ParameterIn.QUERY, description = "time interval for aggregation (e.g. 1m - one minute) for grouping operation") @QueryParam(QP_TIME_INTERVAL) String timeInterval
             , @Parameter(in = ParameterIn.QUERY, description = "format specification (csv, json - default is csv) for data download") @QueryParam(QP_FORMAT) String format
+            , @Parameter(in = ParameterIn.QUERY, description = "csv delimiter (comma or semicolon)") @QueryParam(QP_CSV_DELIMITER) String csvDelimiter
             , @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions such as [field,operator,condition])") @QueryParam(QP_FILTER) String filter
             , @Context UriInfo uriInfo) {
 
@@ -217,23 +230,6 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     @ApiResponse(responseCode = "200", description = "configuration parameters", content = @Content(schema = @Schema(implementation = DataLakeConfiguration.class)))})
     public Response getMeasurementConfiguration(@Parameter(in = ParameterIn.QUERY, description = "the id of a specific configuration parameter") @QueryParam("parameterID") String parameterID) {
         return ok(this.dataLakeManagement.getDataLakeConfiguration());
-    }
-
-    @POST
-    @Path("/measurements/{measurementID}/labeling")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Label data points of the measurement series with given id", tags = {"Data Lake"},
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Labeling was successful")})
-    public Response labelData(@Parameter(in = ParameterIn.PATH, description = "the id of the measurement series", required = true) @PathParam("measurementID") String measurementID
-            , @Parameter(in = ParameterIn.DEFAULT, description = "the label details that should be written into database") Placeholder body
-
-            , @Parameter(in = ParameterIn.QUERY, description = "start date for slicing operation") @QueryParam("startDate") String startDate
-            , @Parameter(in = ParameterIn.QUERY, description = "end date for slicing operation") @QueryParam("endDate") String endDate) {
-        /**
-         * TODO: implementation of method stump
-         */
-        return null;
     }
 
     @DELETE

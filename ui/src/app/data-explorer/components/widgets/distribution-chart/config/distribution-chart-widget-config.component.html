@@ -31,7 +31,7 @@
   </mat-form-field>  
   
   <h5>Field</h5>
-    <sp-select-property [availableProperties]="fieldProvider.allFields"
+    <sp-select-property [availableProperties]="currentlyConfiguredWidget.visualizationConfig.displayType === 'heatmap' ? fieldProvider.numericFields : fieldProvider.allFields"
                         [selectedProperty]="currentlyConfiguredWidget.visualizationConfig.selectedProperty"
                         (changeSelectedProperty)="setSelectedProperty($event)">
     </sp-select-property>

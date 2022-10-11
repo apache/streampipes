@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { BaseWidgetConfig } from '../../base/base-widget-config';
 import { ImageWidgetModel, ImageWidgetVisConfig } from '../model/image-widget.model';
 import { WidgetType } from '../../../../registry/data-explorer-widgets';
-import { DataExplorerField } from "../../../../../../../dist/streampipes/platform-services";
+import { DataExplorerField } from '@streampipes/platform-services';
 
 @Component({
   selector: 'sp-data-explorer-image-widget-config',

@@ -32,6 +32,8 @@ export class ConnectUtils {
 
     ConnectUtils.goToConnect();
 
+    ConnectUtils.goToNewAdapterPage();
+
     ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
     ConnectUtils.configureAdapter(adapterConfiguration.adapterConfiguration);
@@ -72,6 +74,8 @@ export class ConnectUtils {
   private static addGenericAdapter(adapterConfiguration: GenericAdapterInput) {
     ConnectUtils.goToConnect();
 
+    ConnectUtils.goToNewAdapterPage();
+
     ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
 
     ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
@@ -90,15 +94,23 @@ export class ConnectUtils {
     ConnectEventSchemaUtils.finishEventSchemaConfiguration();
   }
 
-  public static addMachineDataSimulator(name: string) {
+  public static addMachineDataSimulator(name: string, persist: boolean = false) {
 
-    const configuration = SpecificAdapterBuilder
+    const builder = SpecificAdapterBuilder
       .create('Machine_Data_Simulator')
       .setName(name)
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
+      .addInput('input', 'wait-time-ms', '1000');
+
+    if (persist) {
+      builder.setTimestampProperty('timestamp').
+                setStoreInDataLake();
+    }
+
+    const configuration = builder.build();
 
     ConnectUtils.goToConnect();
+
+    ConnectUtils.goToNewAdapterPage();
 
     ConnectUtils.selectAdapter(configuration.adapterType);
 
@@ -114,13 +126,17 @@ export class ConnectUtils {
     cy.visit('#/connect');
   }
 
+  public static goToNewAdapterPage() {
+    cy.dataCy('connect-create-new-adapter-button').click();
+  }
+
   public static selectAdapter(name) {
     // Select adapter
     cy.get('#' + name).click();
   }
 
   public static configureAdapter(configs: UserInput[]) {
-
+    cy.wait(2000);
     StaticPropertyUtils.input(configs);
 
     // Next Button should not be disabled
@@ -185,13 +201,11 @@ export class ConnectUtils {
     // Delete adapter
     cy.visit('#/connect');
 
-    cy.get('div').contains('My Adapters').parent().click();
-    cy.dataCy('delete').should('have.length', 1);
-    cy.dataCy('delete').click();
+    cy.dataCy('delete-adapter').should('have.length', 1);
     cy.dataCy('delete-adapter').click();
+    cy.dataCy('delete-adapter-confirmation').click();
     cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should('be.visible');
-    cy.dataCy('delete', { timeout: 20000 }).should('have.length', 0);
-    // });
+    cy.dataCy('delete-adapter', { timeout: 20000 }).should('have.length', 0);
   }
 
   public static setUpPreprocessingRuleTest(): AdapterInput {
@@ -207,6 +221,7 @@ export class ConnectUtils {
 
 
     ConnectUtils.goToConnect();
+    ConnectUtils.goToNewAdapterPage();
     ConnectUtils.selectAdapter(adapterConfiguration.adapterType);
     ConnectUtils.configureAdapter(adapterConfiguration.protocolConfiguration);
     ConnectUtils.configureFormat(adapterConfiguration);
@@ -227,7 +242,7 @@ export class ConnectUtils {
     cy.wait(10000);
 
     DataLakeUtils.checkResults(
-        'adaptertotestrules',
+        'Adapter to test rules',
         expectedFile,
         ignoreTime);
   }

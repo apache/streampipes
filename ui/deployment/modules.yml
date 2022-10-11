@@ -13,8 +13,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+spAssets:
+  componentImport: False
+  ng5_moduleName: 'AssetsModule'
+  ng5_component: 'EditorComponent'
+  ng5_componentPath: './editor/editor.component'
+  path: './assets/assets.module'
+  link: 'assets'
+  url: '/editor/:pipeline'
+  title: 'Asset Management'
+  description: 'Manage assets which help assigning pipelines, dashboards and adapters to real-world objects such as machines and plants.'
+  icon: 'precision_manufacturing'
+  homeImage: ''
+  admin: true
+  pageNames: 'PageName.ASSETS'
 spEditor:
-  ng5: True
+  componentImport: True
   ng5_moduleName: 'EditorModule'
   ng5_component: 'EditorComponent'
   ng5_componentPath: './editor/editor.component'
@@ -28,7 +43,7 @@ spEditor:
   admin: false
   pageNames: 'PageName.PIPELINE_EDITOR'
 spConnect:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'ConnectModule'
   ng5_component: 'ConnectComponent'
   ng5_componentPath: './connect/connect.component'
@@ -42,7 +57,7 @@ spConnect:
   admin: False
   pageNames: 'PageName.CONNECT'
 spPipelines:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'PipelinesModule'
   ng5_component: 'PipelinesComponent'
   ng5_componentPath: './pipelines/pipelines.component'
@@ -56,7 +71,7 @@ spPipelines:
   admin: False
   pageNames: 'PageName.PIPELINE_OVERVIEW'
 spAdd:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'AddModule'
   ng5_component: 'AddComponent'
   ng5_componentPath: './add/add.component'
@@ -70,10 +85,10 @@ spAdd:
   admin: True
   pageNames: 'PageName.INSTALL_PIPELINE_ELEMENTS'
 spConfiguration:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'ConfigurationModule'
-  ng5_component: 'ConfigurationComponent'
-  ng5_componentPath: './configuration/configuration.component'
+  ng5_component: 'GeneralConfigurationComponent'
+  ng5_componentPath: './configuration/general-configuration/general-configuration.component'
   path: './configuration/configuration.module'
   link: 'configuration'
   url: '/configuration'
@@ -84,12 +99,12 @@ spConfiguration:
   pageNames: 'PageName.SETTINGS'
   admin: True
 spAppOverview:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'AppOverviewModule'
   ng5_component: 'AppOverviewComponent'
   ng5_componentPath: './app-overview/app-overview.component'
   path: './app-overview/app-overview.module'
-  link: 'app-overview'
+  link: 'apps'
   url: '/apps'
   title: 'Apps'
   description: 'The app overview allows you to view and open additional StreamPipes plugins.'
@@ -98,7 +113,7 @@ spAppOverview:
   admin: false
   pageNames: 'PageName.APPS'
 spDashboard:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'DashboardModule'
   ng5_component: 'DashboardComponent'
   ng5_componentPath: './dashboard/dashboard.component'
@@ -112,7 +127,7 @@ spDashboard:
   admin: false
   pageNames: 'PageName.DASHBOARD'
 spDataExplorer:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'DataExplorerModule'
   ng5_component: 'DataExplorerComponent'
   ng5_componentPath: './data-explorer/data-explorer.component'
@@ -126,7 +141,7 @@ spDataExplorer:
   admin: false
   pageNames: 'PageName.DATA_EXPLORER'
 spFiles:
-  ng5: True
+  componentImport: False
   ng5_moduleName: 'FilesModule'
   ng5_component: 'FilesComponent'
   ng5_componentPath: './files/files.component'

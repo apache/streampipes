@@ -42,22 +42,6 @@ import static org.junit.Assert.*;
 public class AdapterWorkerManagementTest {
 
     @Test
-    public void stopStreamAdapterFail() {
-        String expected = "Adapter with id http://test.de was not found in this container and cannot be stopped.";
-        AdapterStreamDescription asd = new GenericAdapterStreamDescription();
-        asd.setUri("http://test.de");
-
-        AdapterWorkerManagement adapterManagement = new AdapterWorkerManagement();
-
-        try {
-            adapterManagement.stopStreamAdapter(asd);
-            fail();
-        } catch (AdapterException e) {
-            assertEquals(expected, e.getMessage());
-        }
-    }
-
-    @Test
     public void stopStreamAdapterSuccess() throws AdapterException {
         TestAdapter testAdapter = getTestAdapterInstance();
         RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
@@ -66,22 +50,6 @@ public class AdapterWorkerManagementTest {
 
         assertTrue(testAdapter.calledStop);
 
-    }
-
-    @Test
-    public void stopSetAdapterFail() {
-        String expected = "Adapter with id http://test.de was not found in this container and cannot be stopped.";
-        AdapterSetDescription asd = new GenericAdapterSetDescription();
-        asd.setUri("http://test.de");
-
-        AdapterWorkerManagement adapterManagement = new AdapterWorkerManagement();
-
-        try {
-            adapterManagement.stopSetAdapter(asd);
-            fail();
-        } catch (AdapterException e) {
-            assertEquals(expected, e.getMessage());
-        }
     }
 
     @Test

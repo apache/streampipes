@@ -16,13 +16,9 @@
   ~
   -->
 
-<div>
-    <div class="assembly-options-preview sp-blue-bg">
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <h4>Element Details</h4>
-        </div>
-    </div>
-    <div class="sp-blue-border" style="max-height: 800px;overflow:auto;">
+<sp-basic-inner-panel panelTitle="Element Details">
+
+    <div style="max-height: 800px;overflow:auto;">
         <div *ngIf="selectedElement">
             <div fxLayout="column" style="padding:5px;padding-left:10px;">
                 <pipeline-elements-row [pipeline]="pipeline" [element]="selectedElement"></pipeline-elements-row>
@@ -36,4 +32,4 @@
             (select an element in the preview window to see details)
         </div>
     </div>
-</div>
+</sp-basic-inner-panel>

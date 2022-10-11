@@ -19,20 +19,23 @@
 package org.apache.streampipes.connect.adapter.format.csv;
 
 
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.adapter.util.DatatypeUtils;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
+import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.vocabulary.XSD;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -81,7 +84,13 @@ public class CsvParser extends Parser {
     }
 
     @Override
-    public EventSchema getEventSchema(List<byte[]> oneEvent) {
+    public boolean supportsPreview() {
+        return true;
+    }
+
+    @Override
+    public AdapterGuessInfo getSchemaAndSample(List<byte[]> oneEvent) {
+        var sample = new HashMap<String, GuessTypeInfo>();
         String[] keys;
         String[] data;
 
@@ -99,28 +108,20 @@ public class CsvParser extends Parser {
         EventSchema resultSchema = new EventSchema();
         for (int i = 0; i < keys.length; i++) {
             EventPropertyPrimitive p = new EventPropertyPrimitive();
+            var runtimeType = DatatypeUtils.getXsdDatatype(data[i], true);
+            var convertedValue = DatatypeUtils.convertValue(data[i], runtimeType);
             p.setRuntimeName(keys[i]);
-            p.setRuntimeType(getTypeString(data[i]));
+            p.setRuntimeType(runtimeType);
+            sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i], true), convertedValue));
             resultSchema.addEventProperty(p);
         }
 
-        return resultSchema;
+        return new AdapterGuessInfo(resultSchema, sample);
     }
 
-    private String getTypeString(String o) {
-
-        try {
-            Double.parseDouble(o);
-            return XSD._float.toString();
-        } catch (NumberFormatException e) {
-
-        }
-
-        if (o.equalsIgnoreCase("true") || o.equalsIgnoreCase("false")) {
-            return XSD._boolean.toString();
-        }
-
-        return XSD._string.toString();
+    @Override
+    public EventSchema getEventSchema(List<byte[]> oneEvent) {
+        return getSchemaAndSample(oneEvent).getEventSchema();
     }
 
 

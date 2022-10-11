@@ -16,80 +16,85 @@
   ~
   -->
 
-<div fxLayout="column" fxLayoutAlign="center stretch">
-    <div fxLayout="column" fxFlex="100" class="p-10">
-        <div fxLayout="row" fxLayoutAlign="start center">
-            <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
-            <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
-            </mat-icon>
-            <div fxLayoutAlign="start center">
-                <p *ngIf="isDataSetDescription">Data Set</p>
-                <p *ngIf="isDataStreamDescription">Data Stream</p>
-            </div>
-            <span fxFlex></span>
-            <div fxLayoutAlign="end start">
-                <button mat-icon-button (click)="removeSelection()">
-                    <i class="material-icons">close</i>
-                </button>
-            </div>
-        </div>
-        <h1 *ngIf="!fromTemplate" class="new-adapter-title">New Source: {{adapter.templateTitle}}</h1>
-        <h1 *ngIf="fromTemplate" class="new-adapter-title">From Template: {{adapter.templateTitle}}</h1>
+<sp-basic-view [padding]="true" [showBackLink]="false">
+
+    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+        <button mat-icon-button (click)="removeSelection()" matTooltip="Cancel">
+            <i class="material-icons">close</i>
+        </button>
     </div>
+    <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="adapter">
+        <div fxLayout="column" fxFlex="100">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
+                <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
+                </mat-icon>
+                <div fxLayoutAlign="start center">
+                    <p *ngIf="isDataSetDescription">Data Set</p>
+                    <p *ngIf="isDataStreamDescription">Data Stream</p>
+                </div>
+                <span fxFlex></span>
+            </div>
+            <h1 *ngIf="!fromTemplate" class="new-adapter-title">New Source: {{adapter.templateTitle}}</h1>
+            <h1 *ngIf="fromTemplate" class="new-adapter-title">From Template: {{adapter.templateTitle}}</h1>
+        </div>
 
-    <mat-horizontal-stepper [linear]="true" #stepper color="accent" class="stepper">
-        <mat-step *ngIf="!isGenericAdapter">
-            <ng-template matStepLabel>Settings</ng-template>
-            <sp-specific-adapter-configuration
-                    [adapterDescription]="adapter"
-                    (clickNextEmitter)="clickSpecificSettingsNextButton()"
-                    (removeSelectionEmitter)="removeSelection()">
-            </sp-specific-adapter-configuration>
-        </mat-step>
+        <mat-horizontal-stepper [linear]="true" #stepper color="accent" class="stepper">
+            <mat-step *ngIf="!isGenericAdapter">
+                <ng-template matStepLabel>Settings</ng-template>
+                <sp-specific-adapter-configuration
+                        [adapterDescription]="adapter"
+                        (updateAdapterDescriptionEmitter)="adapter = $event"
+                        (clickNextEmitter)="clickSpecificSettingsNextButton()"
+                        (removeSelectionEmitter)="removeSelection()">
+                </sp-specific-adapter-configuration>
+            </mat-step>
 
-        <mat-step *ngIf="isGenericAdapter">
-            <ng-template matStepLabel>Settings</ng-template>
-            <sp-generic-adapter-configuration
-                    [adapterDescription]="adapter"
-                    (clickNextEmitter)="clickProtocolSettingsNextButton()"
-                    (removeSelectionEmitter)="removeSelection()">
-            </sp-generic-adapter-configuration>
-        </mat-step>
+            <mat-step *ngIf="isGenericAdapter">
+                <ng-template matStepLabel>Settings</ng-template>
+                <sp-generic-adapter-configuration
+                        [adapterDescription]="adapter"
+                        (updateAdapterDescriptionEmitter)="adapter = $event"
+                        (clickNextEmitter)="clickProtocolSettingsNextButton()"
+                        (removeSelectionEmitter)="removeSelection()">
+                </sp-generic-adapter-configuration>
+            </mat-step>
 
-        <mat-step *ngIf="isGenericAdapter">
-            <ng-template matStepLabel>Select Format</ng-template>
-            <sp-format-configuration
-                    [adapterDescription]="adapter"
-                    (clickNextEmitter)="clickFormatSelectionNextButton()"
-                    (goBackEmitter)="goBack()"
-                    (removeSelectionEmitter)="removeSelection()">
-            </sp-format-configuration>
-        </mat-step>
+            <mat-step *ngIf="isGenericAdapter">
+                <ng-template matStepLabel>Select Format</ng-template>
+                <sp-format-configuration
+                        [adapterDescription]="adapter"
+                        (clickNextEmitter)="clickFormatSelectionNextButton()"
+                        (goBackEmitter)="goBack()"
+                        (removeSelectionEmitter)="removeSelection()">
+                </sp-format-configuration>
+            </mat-step>
 
-        <mat-step>
-            <ng-template matStepLabel>Define Event Schema</ng-template>
-            <sp-event-schema #eschema fxLayout="column" fxFlex="100"
-                             [(isEditable)]="isEditable"
-                             [adapterDescription]="adapter"
-                             [(eventSchema)]="eventSchema"
-                             [(oldEventSchema)]="oldEventSchema"
-                             (clickNextEmitter)="clickEventSchemaNextButtonButton()"
-                             (goBackEmitter)="goBack()"
-                             (removeSelectionEmitter)="removeSelection()">
-            </sp-event-schema>
-        </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Configure fields</ng-template>
+                <sp-event-schema #eschema fxLayout="column" fxFlex="100"
+                                 [(isEditable)]="isEditable"
+                                 [adapterDescription]="adapter"
+                                 [(eventSchema)]="eventSchema"
+                                 [(oldEventSchema)]="oldEventSchema"
+                                 (clickNextEmitter)="clickEventSchemaNextButtonButton()"
+                                 (goBackEmitter)="goBack()"
+                                 (removeSelectionEmitter)="removeSelection()">
+                </sp-event-schema>
+            </mat-step>
 
-        <mat-step>
-            <ng-template matStepLabel>Start Adapter</ng-template>
-            <sp-start-adapter-configuration
-                    [adapterDescription]="adapter"
-                    [eventSchema]="eventSchema"
-                    (removeSelectionEmitter)="removeSelection()"
-                    (goBackEmitter)="goBack()"
-                    (adapterStartedEmitter)="adapterWasStarted()">
-            </sp-start-adapter-configuration>
-        </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Start Adapter</ng-template>
+                <sp-start-adapter-configuration
+                        [adapterDescription]="adapter"
+                        [eventSchema]="eventSchema"
+                        (removeSelectionEmitter)="removeSelection()"
+                        (goBackEmitter)="goBack()"
+                        (adapterStartedEmitter)="adapterWasStarted()">
+                </sp-start-adapter-configuration>
+            </mat-step>
 
-    </mat-horizontal-stepper>
+        </mat-horizontal-stepper>
 
-</div>
+    </div>
+</sp-basic-view>

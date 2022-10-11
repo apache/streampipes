@@ -63,7 +63,7 @@ public class PipelineGenerator {
     pipeline.setStreams(Collections.singletonList(prepareStream(datasetId)));
     pipeline.setSepas(new ArrayList<>());
     pipeline.setActions(new ArrayList<>());
-    collectInvocations("domId" + count, pipelineTemplateDescription.getBoundTo());
+    collectInvocations("jsplumb_domId" + count, pipelineTemplateDescription.getBoundTo());
 
     return pipeline;
   }
@@ -145,6 +145,6 @@ public class PipelineGenerator {
 
   private String getDom() {
     count++;
-    return "domId" + count;
+    return "jsplumb_domId" + count;
   }
 }

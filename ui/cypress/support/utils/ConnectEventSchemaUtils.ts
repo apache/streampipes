@@ -19,7 +19,7 @@
 export class ConnectEventSchemaUtils {
 
   public static markPropertyAsDimension(propertyName: string) {
-    cy.dataCy('property-scope-' + propertyName)
+    cy.dataCy('property-scope-' + propertyName, { timeout: 10000 })
       .click()
       .get('.mat-option-text')
       .contains('Dimension')
@@ -119,6 +119,7 @@ export class ConnectEventSchemaUtils {
     // validate that static value is persisted
     cy.dataCy('edit-' + propertyName, { timeout: 10000 }).click({ force: true });
     cy.dataCy('connect-change-runtime-type', { timeout: 10000 }).contains(dataType);
+    cy.wait(1000);
     cy.dataCy('sp-save-edit-property').click();
   }
   public static eventSchemaNextBtnDisabled() {

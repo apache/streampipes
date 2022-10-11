@@ -56,8 +56,10 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
 
   public void delete(String elementId) {
     D description = find(elementId);
-    deleteAssetsAndPermissions(description);
-    db.deleteElement(description);
+    if (description != null) {
+      deleteAssetsAndPermissions(description);
+      db.deleteElement(description);
+    }
   }
 
   private void deleteAssetsAndPermissions(D description) {

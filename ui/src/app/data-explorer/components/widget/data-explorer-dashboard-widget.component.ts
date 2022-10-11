@@ -21,22 +21,22 @@ import {
   ComponentFactoryResolver,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { GridsterItemComponent } from 'angular-gridster2';
 import {
-  DateRange,
+  DashboardItem, DataExplorerDataConfig,
   DataExplorerWidgetModel,
   DataLakeMeasure,
   DataViewDataExplorerService,
-  DashboardItem,
+  DateRange,
   TimeSettings
 } from '@streampipes/platform-services';
-import { DataDownloadDialog } from '../datadownloadDialog/dataDownload.dialog';
-import { interval } from 'rxjs';
+import { DataDownloadDialogComponent } from '../../../core-ui/data-download-dialog/data-download-dialog.component';
+import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { DataExplorerWidgetRegistry } from '../../registry/data-explorer-widget-registry';
 import { WidgetDirective } from './widget.directive';
@@ -44,13 +44,15 @@ import { BaseWidgetData } from '../widgets/base/data-explorer-widget-data';
 import { WidgetTypeService } from '../../services/widget-type.service';
 import { AuthService } from '../../../services/auth.service';
 import { UserPrivilege } from '../../../_enums/user-privilege.enum';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-data-explorer-dashboard-widget',
   templateUrl: './data-explorer-dashboard-widget.component.html',
   styleUrls: ['./data-explorer-dashboard-widget.component.scss']
 })
-export class DataExplorerDashboardWidgetComponent implements OnInit {
+export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
 
   @Input()
   dashboardItem: DashboardItem;
@@ -69,6 +71,12 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   @Input()
   currentlyConfiguredWidgetId: string;
+
+  @Input()
+  previewMode = false;
+
+  @Input()
+  gridMode = true;
 
   /**
    * This is the date range (start, end) to view the data and is set in data-explorer.ts
@@ -92,28 +100,43 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   hasDataExplorerWritePrivileges = false;
   hasDataExplorerDeletePrivileges = false;
 
+  authSubscription: Subscription;
+  widgetTypeChangedSubscription: Subscription;
+  intervalSubscription: Subscription;
+
+  errorMessage: StreamPipesErrorMessage;
+
   @ViewChild(WidgetDirective, {static: true}) widgetHost!: WidgetDirective;
 
   constructor(private dataViewDataExplorerService: DataViewDataExplorerService,
-              private dialog: MatDialog,
+              private dialogService: DialogService,
               private componentFactoryResolver: ComponentFactoryResolver,
               private widgetTypeService: WidgetTypeService,
               private authService: AuthService) {
   }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
+    this.authSubscription = this.authService.user$.subscribe(user => {
       this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
       this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
     });
     this.widgetLoaded = true;
     this.title = this.dataLakeMeasure.measureName;
-    this.widgetTypeService.widgetTypeChangeSubject.subscribe(typeChange => {
+    this.widgetTypeChangedSubscription = this.widgetTypeService.widgetTypeChangeSubject.subscribe(typeChange => {
       if (typeChange.widgetId === this.configuredWidget._id) {
         this.chooseWidget(typeChange.newWidgetTypeId);
       }
     });
     this.chooseWidget(this.configuredWidget.widgetType);
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
+    if (this.widgetTypeChangedSubscription) {
+      this.widgetTypeChangedSubscription.unsubscribe();
+    }
   }
 
   chooseWidget(widgetTypeId: string) {
@@ -136,12 +159,16 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
     componentRef.instance.editMode = this.editMode;
     componentRef.instance.dataViewDashboardItem = this.dashboardItem;
     componentRef.instance.dataExplorerWidget = this.configuredWidget;
+    componentRef.instance.previewMode = this.previewMode;
+    componentRef.instance.gridMode = this.gridMode;
     const removeSub = componentRef.instance.removeWidgetCallback.subscribe(ev => this.removeWidget());
     const timerSub = componentRef.instance.timerCallback.subscribe(ev => this.handleTimer(ev));
+    const errorSub = componentRef.instance.errorCallback.subscribe(ev => this.errorMessage = ev);
 
     componentRef.onDestroy(destroy => {
       removeSub.unsubscribe();
       timerSub.unsubscribe();
+      errorSub.unsubscribe();
     });
   }
 
@@ -150,13 +177,14 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
   }
 
   downloadDataAsFile() {
-    this.dialog.open(DataDownloadDialog, {
-      width: '600px',
+    this.dialogService.open(DataDownloadDialogComponent, {
+      panelType: PanelType.SLIDE_IN_PANEL,
+      title: 'Download data',
+      width: '50vw',
       data: {
-        index: this.dataLakeMeasure.measureName,
-        date: DateRange.fromTimeSettings(this.timeSettings)
-      },
-      panelClass: 'custom-dialog-container'
+        'date': DateRange.fromTimeSettings(this.timeSettings),
+        'dataConfig': this.configuredWidget.dataConfig as DataExplorerDataConfig
+      }
     });
   }
 
@@ -174,7 +202,7 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   startLoadingTimer() {
     this.timerActive = true;
-    interval( 10 )
+    this.intervalSubscription = interval( 10 )
         .pipe(takeWhile(() => this.timerActive))
         .subscribe(value => {
       this.loadingTime = (value * 10 / 1000);
@@ -183,9 +211,11 @@ export class DataExplorerDashboardWidgetComponent implements OnInit {
 
   stopLoadingTimer() {
     this.timerActive = false;
+    this.intervalSubscription.unsubscribe();
   }
 
   handleTimer(start: boolean) {
     start ? this.startLoadingTimer() : this.stopLoadingTimer();
   }
+
 }

@@ -21,6 +21,8 @@ package org.apache.streampipes.sinks.internal.jvm;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
+import org.apache.streampipes.dataexplorer.commons.configs.CouchDbConfigurations;
+import org.apache.streampipes.dataexplorer.commons.configs.DataExplorerConfigurations;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -28,15 +30,10 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
-import org.apache.streampipes.sinks.internal.jvm.config.ConfigKeys;
-import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeController;
-import org.apache.streampipes.sinks.internal.jvm.notification.NotificationController;
+import org.apache.streampipes.sinks.internal.jvm.datalake.DataLakeSink;
+import org.apache.streampipes.sinks.internal.jvm.notification.NotificationProducer;
 
 public class SinksInternalJvmInit extends StandaloneModelSubmitter {
-
-  public static void main(String[] args) {
-    new SinksInternalJvmInit().init();
-  }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
@@ -45,8 +42,8 @@ public class SinksInternalJvmInit extends StandaloneModelSubmitter {
             "",
             8090)
             .registerPipelineElements(
-                    new DataLakeController(),
-                    new NotificationController())
+                    new DataLakeSink(),
+                    new NotificationProducer())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),
@@ -56,15 +53,8 @@ public class SinksInternalJvmInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.COUCHDB_HOST, "couchdb", "Hostname for CouchDB to store image blobs")
-            .addConfig(ConfigKeys.COUCHDB_PORT, 5984, "")
-            .addConfig(ConfigKeys.COUCHDB_PROTOCOL, "http", "")
-            .addConfig(ConfigKeys.DATA_LAKE_HOST, "influxdb", "Hostname for the StreamPipes data lake database")
-            .addConfig(ConfigKeys.DATA_LAKE_PROTOCOL, "http", "Protocol for the StreamPipes data lake database")
-            .addConfig(ConfigKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database")
-            .addConfig(ConfigKeys.DATA_LAKE_USERNAME, "default", "Username for the StreamPipes data lake database")
-            .addConfig(ConfigKeys.DATA_LAKE_PASSWORD, "default", "Password for the StreamPipes data lake database")
-            .addConfig(ConfigKeys.DATA_LAKE_DATABASE_NAME, "sp", "Database name for the StreamPipes data lake database")
+            .addConfigs(DataExplorerConfigurations.getDefaults())
+            .addConfigs(CouchDbConfigurations.getDefaults())
             .build();
 
 

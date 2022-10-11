@@ -19,6 +19,8 @@ package org.apache.streampipes.storage.api;
 
 public interface INoSqlStorage {
 
+  IGenericStorage getGenericStorage();
+
   IAdapterStorage getAdapterInstanceStorage();
 
   IAdapterStorage getAdapterDescriptionStorage();

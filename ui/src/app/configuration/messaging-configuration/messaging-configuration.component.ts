@@ -20,6 +20,9 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigurationService } from '../shared/configuration.service';
 import { MessagingSettings } from '../shared/messaging-settings.model';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { SpConfigurationTabs } from '../configuration-tabs';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConfigurationRoutes } from '../configuration.routes';
 
 @Component({
     selector: 'messaging-configuration',
@@ -28,14 +31,18 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class MessagingConfigurationComponent implements OnInit {
 
+    tabs = SpConfigurationTabs.getTabs();
+
     messagingSettings: MessagingSettings;
     loadingCompleted = false;
 
-    constructor(private configurationService: ConfigurationService) {
+    constructor(private configurationService: ConfigurationService,
+                private breadcrumbService: SpBreadcrumbService) {
 
     }
 
     ngOnInit() {
+        this.breadcrumbService.updateBreadcrumb([SpConfigurationRoutes.BASE, {label: SpConfigurationTabs.getTabs()[4].itemTitle}]);
         this.getMessagingSettings();
     }
 

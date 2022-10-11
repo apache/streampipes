@@ -59,7 +59,7 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
                     .build())
             .requiredSingleValueSelection(Labels.withId(OPERATION_ID), Options.from("MATCHES",
                     "CONTAINS"))
-            .requiredTextParameter(Labels.withId(KEYWORD_ID), "text")
+            .requiredTextParameterWithLink(Labels.withId(KEYWORD_ID), "text")
             .outputStrategy(OutputStrategies.keep())
             .build();
   }

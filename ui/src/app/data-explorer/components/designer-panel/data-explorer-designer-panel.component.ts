@@ -16,9 +16,10 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DataExplorerWidgetModel, DataLakeMeasure } from '@streampipes/platform-services';
 import { Tuple2 } from '../../../core-model/base/Tuple2';
+import { DataExplorerWidgetDataSettingsComponent } from './data-settings/data-explorer-widget-data-settings.component';
 
 @Component({
   selector: 'sp-data-explorer-designer-panel',
@@ -38,6 +39,8 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
 
   selectedIndex = 0;
 
+  dataSettingsPanel: DataExplorerWidgetDataSettingsComponent;
+
   ngOnInit(): void {
   }
 
@@ -51,15 +54,23 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
     // Set default name to the measure name
     if (this.currentlyConfiguredWidget.dataConfig.sourceConfigs.length > 0) {
       this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle =
-        this.currentlyConfiguredWidget.dataConfig.sourceConfigs[0].measureName;
+        this.currentlyConfiguredWidget.dataConfig.sourceConfigs[0].measureName
+        + ' - '
+        + this.currentlyConfiguredWidget.widgetType;
     }
 
     this.addWidgetEmitter.emit({ a: this.dataLakeMeasure, b: this.currentlyConfiguredWidget });
   }
 
-  modifyWidgetMode(widget: DataExplorerWidgetModel, newWidgetMode: boolean) {
+  modifyWidgetMode(widget: DataExplorerWidgetModel,
+                   newWidgetMode: boolean) {
     this.currentlyConfiguredWidget = widget;
     this.newWidgetMode = newWidgetMode;
+    if (this.dataSettingsPanel) {
+      setTimeout(() => {
+        this.dataSettingsPanel.checkSourceTypes();
+      });
+    }
   }
 
   closeDesignerPanel() {
@@ -69,5 +80,10 @@ export class DataExplorerDesignerPanelComponent implements OnInit {
   resetIndex() {
     this.selectedIndex = 0;
     this.newWidgetMode = true;
+  }
+
+  @ViewChild('dataSettingsPanel')
+  public set content(dataSettingsPanel: DataExplorerWidgetDataSettingsComponent) {
+    this.dataSettingsPanel = dataSettingsPanel;
   }
 }

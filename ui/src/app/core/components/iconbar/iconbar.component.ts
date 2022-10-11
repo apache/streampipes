@@ -21,41 +21,29 @@ import { BaseNavigationComponent } from '../base-navigation.component';
 import { Router } from '@angular/router';
 import { NotificationCountService } from '../../../services/notification-count-service';
 import { AuthService } from '../../../services/auth.service';
-import { Subscription, timer } from "rxjs";
-import { exhaustMap, mergeMap } from "rxjs/operators";
-import { RestApi } from "../../../services/rest-api.service";
+import { Subscription, timer } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
+import { RestApi } from '../../../services/rest-api.service';
+import { AppConstants } from '../../../services/app.constants';
 
 @Component({
   selector: 'iconbar',
   templateUrl: './iconbar.component.html',
   styleUrls: ['./iconbar.component.scss']
 })
-export class IconbarComponent extends BaseNavigationComponent implements OnInit, OnDestroy {
+export class IconbarComponent extends BaseNavigationComponent implements OnInit {
 
-  unreadNotificationCount = 0;
-  unreadNotificationsSubscription: Subscription;
 
   constructor(router: Router,
               authService: AuthService,
               public notificationCountService: NotificationCountService,
-              private restApi: RestApi) {
-    super(authService, router);
+              private restApi: RestApi,
+              appConstants: AppConstants) {
+    super(authService, router, appConstants);
   }
 
   ngOnInit(): void {
     super.onInit();
-    this.unreadNotificationsSubscription = timer(0, 10000).pipe(
-      exhaustMap(() => this.restApi.getUnreadNotificationsCount()))
-      .subscribe(response => {
-        this.notificationCountService.unreadNotificationCount$.next(response.count);
-      });
 
-    this.notificationCountService.unreadNotificationCount$.subscribe(count => {
-      this.unreadNotificationCount = count;
-    });
-  }
-
-  ngOnDestroy() {
-    this.unreadNotificationsSubscription.unsubscribe();
   }
 }

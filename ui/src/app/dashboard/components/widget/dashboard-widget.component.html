@@ -51,100 +51,128 @@
             </div>
             <div *ngIf="widgetLoaded && pipelineRunning" class="h-100">
                 <div *ngIf="configuredWidget.widgetType === 'number'" class="h-100 p-0">
-                    <number-widget [itemWidth]="itemWidth"
+                    <number-widget [itemWidth]="itemWidth" #activeWidget
                                    [itemHeight]="itemHeight"
                                    [editMode]="editMode"
+                                   [globalRefresh]="globalRefresh"
+                                   [gridsterItemComponent]="gridsterItemComponent"
                                    [widgetConfig]="configuredWidget" [widgetDataConfig]="widgetDataConfig"
                                    class="h-100"></number-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'line'" class="h-100 p-0">
-                    <line-widget [itemWidth]="itemWidth"
+                    <line-widget [itemWidth]="itemWidth" #activeWidget
                                  [itemHeight]="itemHeight"
                                  [editMode]="editMode"
+                                 [globalRefresh]="globalRefresh"
+                                 [gridsterItemComponent]="gridsterItemComponent"
                                  [widgetConfig]="configuredWidget"
                                  [widgetDataConfig]="widgetDataConfig" class="h-100"></line-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'area'" class="h-100 p-0">
-                    <area-widget [itemWidth]="itemWidth"
+                    <area-widget [itemWidth]="itemWidth" #activeWidget
                                  [itemHeight]="itemHeight"
                                  [editMode]="editMode"
+                                 [globalRefresh]="globalRefresh"
+                                 [gridsterItemComponent]="gridsterItemComponent"
                                  [widgetConfig]="configuredWidget"
                                  [widgetDataConfig]="widgetDataConfig" class="h-100"></area-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'table'" class="h-100 p-0">
-                    <table-widget [itemWidth]="itemWidth"
+                    <table-widget [itemWidth]="itemWidth" #activeWidget
                                   [itemHeight]="itemHeight"
                                   [editMode]="editMode"
+                                  [globalRefresh]="globalRefresh"
+                                  [gridsterItemComponent]="gridsterItemComponent"
                                   [widgetConfig]="configuredWidget"
                                   [widgetDataConfig]="widgetDataConfig" class="h-100"></table-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'gauge'" class="h-100 p-0">
-                    <gauge-widget [itemWidth]="itemWidth"
+                    <gauge-widget [itemWidth]="itemWidth" #activeWidget
                                   [itemHeight]="itemHeight"
                                   [editMode]="editMode"
+                                  [globalRefresh]="globalRefresh"
+                                  [gridsterItemComponent]="gridsterItemComponent"
                                   [widgetConfig]="configuredWidget"
                                   [widgetDataConfig]="widgetDataConfig" class="h-100"></gauge-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'image'" class="h-100 p-0">
-                    <image-widget [itemWidth]="itemWidth"
+                    <image-widget [itemWidth]="itemWidth" #activeWidget
                                   [itemHeight]="itemHeight"
                                   [editMode]="editMode"
+                                  [globalRefresh]="globalRefresh"
+                                  [gridsterItemComponent]="gridsterItemComponent"
                                   [widgetConfig]="configuredWidget"
                                   [widgetDataConfig]="widgetDataConfig" class="h-100"></image-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'map'" class="h-100 p-0">
-                    <map-widget [itemWidth]="itemWidth"
+                    <map-widget [itemWidth]="itemWidth" #activeWidget
                                 [itemHeight]="itemHeight"
                                 [editMode]="editMode"
+                                [globalRefresh]="globalRefresh"
+                                [gridsterItemComponent]="gridsterItemComponent"
                                 [widgetConfig]="configuredWidget"
                                 [widgetDataConfig]="widgetDataConfig" class="h-100"></map-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'raw'" class="h-100 p-0">
-                    <raw-widget [itemWidth]="itemWidth"
+                    <raw-widget [itemWidth]="itemWidth" #activeWidget
                                 [itemHeight]="itemHeight"
                                 [editMode]="editMode"
+                                [globalRefresh]="globalRefresh"
+                                [gridsterItemComponent]="gridsterItemComponent"
                                 [widgetConfig]="configuredWidget"
                                 [widgetDataConfig]="widgetDataConfig" class="h-100"></raw-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'html'" class="h-100 p-0">
-                    <html-widget [itemWidth]="itemWidth"
+                    <html-widget [itemWidth]="itemWidth" #activeWidget
                                  [itemHeight]="itemHeight"
                                  [editMode]="editMode"
+                                 [globalRefresh]="globalRefresh"
+                                 [gridsterItemComponent]="gridsterItemComponent"
                                  [widgetConfig]="configuredWidget"
                                  [widgetDataConfig]="widgetDataConfig" class="h-100"></html-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'trafficlight'" class="h-100 p-0">
-                    <traffic-light-widget [itemWidth]="itemWidth"
+                    <traffic-light-widget [itemWidth]="itemWidth" #activeWidget
                                           [itemHeight]="itemHeight"
                                           [editMode]="editMode"
+                                          [globalRefresh]="globalRefresh"
+                                          [gridsterItemComponent]="gridsterItemComponent"
                                           [widgetConfig]="configuredWidget"
                                           [widgetDataConfig]="widgetDataConfig" class="h-100"></traffic-light-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'wordcloud'" class="h-100 p-0">
-                    <wordcloud-widget [itemWidth]="itemWidth"
+                    <wordcloud-widget [itemWidth]="itemWidth" #activeWidget
                                       [itemHeight]="itemHeight"
                                       [editMode]="editMode"
+                                      [globalRefresh]="globalRefresh"
+                                      [gridsterItemComponent]="gridsterItemComponent"
                                       [widgetConfig]="configuredWidget"
                                       [widgetDataConfig]="widgetDataConfig" class="h-100"></wordcloud-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'status'" class="h-100 p-0">
-                    <status-widget [itemWidth]="itemWidth"
+                    <status-widget [itemWidth]="itemWidth" #activeWidget
                                    [itemHeight]="itemHeight"
                                    [editMode]="editMode"
+                                   [globalRefresh]="globalRefresh"
+                                   [gridsterItemComponent]="gridsterItemComponent"
                                    [widgetConfig]="configuredWidget"
                                    [widgetDataConfig]="widgetDataConfig" class="h-100"></status-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'bar-race'" class="h-100 p-0">
-                    <bar-race-widget [itemWidth]="itemWidth"
+                    <bar-race-widget [itemWidth]="itemWidth" #activeWidget
                                      [itemHeight]="itemHeight"
                                      [editMode]="editMode"
+                                     [globalRefresh]="globalRefresh"
+                                     [gridsterItemComponent]="gridsterItemComponent"
                                      [widgetConfig]="configuredWidget"
                                      [widgetDataConfig]="widgetDataConfig" class="h-100"></bar-race-widget>
                 </div>
                 <div *ngIf="configuredWidget.widgetType === 'stacked-line-chart'" class="h-100 p-0">
-                    <stacked-line-chart-widget [itemWidth]="itemWidth"
+                    <stacked-line-chart-widget [itemWidth]="itemWidth" #activeWidget
                                                [itemHeight]="itemHeight"
                                                [editMode]="editMode"
+                                               [globalRefresh]="globalRefresh"
+                                               [gridsterItemComponent]="gridsterItemComponent"
                                                [widgetConfig]="configuredWidget"
                                                [widgetDataConfig]="widgetDataConfig"
                                                class="h-100"></stacked-line-chart-widget>

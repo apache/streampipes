@@ -1,0 +1,96 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxLayout="row" fxFlex="100" fxLayoutGap="10px">
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <div>
+        <b style="white-space: nowrap">
+            {{ label }}
+        </b>
+        </div>
+        <div fxLayoutAlign="start center" *ngIf="originalRuntimeName" class="ml-5">
+            <span class="runtime-info">{{originalRuntimeName}}</span>
+            <span fxLayoutAlign="center center"
+                  *ngIf="originalRuntimeName !== node.data.runtimeName">
+                <i class="material-icons">arrow_right</i>
+            </span>
+            <span class="runtime-info"
+                  *ngIf="originalRuntimeName !== node.data.runtimeName">{{node.data.runtimeName}}
+            </span>
+        </div>
+        <p style="margin: 0px 10px 10px;" *ngIf="isList">[List]</p>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxFlex="100" fxLayoutGap="20px">
+        <div class="timestamp-property" *ngIf="timestampProperty" fxLayoutAlign="end center" fxLayout="row">
+            <mat-icon *ngIf="timestampProperty" class="timestamp-icon" fxLayout="row" fxLayoutAlign="start center">
+                access_time
+            </mat-icon>
+            <span style="margin-left: -5px;">marked as timestamp</span>
+        </div>
+        <div fxLayoutAlign="end center" class="runtime-type-info-outer">
+            <div fxLayout="row" fxLayoutAlign="start center" fxFlex="100" *ngIf="runtimeType" >
+            <span class="runtime-info runtime-type-info">{{originalRuntimeType}}</span>
+            <span fxLayoutAlign="center center" *ngIf="originalRuntimeType !== runtimeType"><i class="material-icons">arrow_right</i></span>
+            <span class="runtime-info runtime-type-info" *ngIf="originalRuntimeType !== runtimeType">{{runtimeType}}</span>
+            </div>
+        </div>
+        <div fxLayoutAlign="end center" class="status-outer">
+        <span *ngIf="showFieldStatus"
+              [ngClass]="'status status-' +fieldStatusInfo[originalRuntimeName].fieldStatus.toLowerCase()"
+              [matTooltip]="fieldStatusInfo[originalRuntimeName].additionalInfo">{{fieldStatusInfo[originalRuntimeName].fieldStatus}}</span>
+        </div>
+        <div *ngIf="isPrimitive" fxLayoutAlign="end center">
+            <mat-form-field class="small-select" color="accent">
+                <mat-select [(ngModel)]="node.data.propertyScope" panelClass="small-select"
+                            [attr.data-cy]="'property-scope-' + label">
+                    <mat-option value="MEASUREMENT_PROPERTY">Measurement</mat-option>
+                    <mat-option value="DIMENSION_PROPERTY">Dimension</mat-option>
+                    <mat-option value="HEADER_PROPERTY">Header</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div fxLayoutAlign="end center"
+             *ngIf="isNested">
+            <button [disabled]="!isEditable" color="accent" mat-button (click)=addNestedProperty(node.data)>
+                <mat-icon matTooltip="Add a Nested Property">queue</mat-icon>
+            </button>
+        </div>
+        <div
+                fxLayoutAlign="end center"
+                class="ml-5 mr-5"
+                *ngIf="isNested || isPrimitive || isList">
+            <button [disabled]="!isEditable" color="accent" mat-button
+                    (click)="openEditDialog(node.data)"
+                    [attr.data-cy]="'edit-' + label.toLowerCase()">
+                <mat-icon>edit</mat-icon>&nbsp;Edit field
+            </button>
+        </div>
+        <div fxLayoutAlign="end center">
+            <mat-checkbox
+                    *ngIf="isNested || isPrimitive || isList"
+                    (click)="selectProperty(node.data.id, undefined)"
+                    [disabled]="!isEditable"
+                    [class.checkbox-selected]="node.data.selected"
+                    [checked]="node.data.selected"
+                    [attr.data-cy]="'delete-property-' + label.toLowerCase()">
+            </mat-checkbox>
+        </div>
+    </div>
+</div>

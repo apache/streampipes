@@ -29,13 +29,8 @@ import { EditorService } from './services/editor.service';
 import { PipelineElementIconStandComponent } from './components/pipeline-element-icon-stand/pipeline-element-icon-stand.component';
 import { PipelineAssemblyComponent } from './components/pipeline-assembly/pipeline-assembly.component';
 import { PipelineElementComponent } from './components/pipeline-element/pipeline-element.component';
-import { PipelinePositioningService } from './services/pipeline-positioning.service';
-import { JsplumbService } from './services/jsplumb.service';
-import { JsplumbConfigService } from './services/jsplumb-config.service';
 import { PipelineEditorService } from './services/pipeline-editor.service';
-import { PipelineValidationService } from './services/pipeline-validation.service';
 import { PipelineComponent } from './components/pipeline/pipeline.component';
-import { ObjectProvider } from './services/object-provider.service';
 import { PipelineElementOptionsComponent } from './components/pipeline-element-options/pipeline-element-options.component';
 import { PipelineElementRecommendationService } from './services/pipeline-element-recommendation.service';
 import { CustomizeComponent } from './dialog/customize/customize.component';
@@ -57,20 +52,16 @@ import { CustomOutputStrategyComponent } from './components/output-strategy/cust
 import { PropertySelectionComponent } from './components/output-strategy/property-selection/property-selection.component';
 import { UserDefinedOutputStrategyComponent } from './components/output-strategy/user-defined-output/user-defined-output.component';
 import { ConnectModule } from '../connect/connect.module';
-import { PipelineElementTemplateConfigComponent } from './components/pipeline-element-template-config/pipeline-element-template-config.component';
 import { EnabledPipelineElementFilter } from './filter/enabled-pipeline-element.filter';
 import { PipelineElementDraggedService } from './services/pipeline-element-dragged.service';
 import { PipelineCanvasScrollingService } from './services/pipeline-canvas-scrolling.service';
-import { JsplumbEndpointService } from './services/jsplumb-endpoint.service';
-import { JsplumbFactoryService } from './services/jsplumb-factory.service';
 import { PipelineElementPreviewComponent } from './components/pipeline-element-preview/pipeline-element-preview.component';
 import { PipelineElementDiscoveryComponent } from './dialog/pipeline-element-discovery/pipeline-element-discovery.component';
-import { PipelineStyleService } from './services/pipeline-style.service';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { PipelineElementIconStandRowComponent } from './components/pipeline-element-icon-stand-row/pipeline-element-icon-stand-row.component';
 import { PipelineElementTypeFilterPipe } from './services/pipeline-element-type-filter.pipe';
-import { PipelineElementNameFilterPipe } from "./services/pipeline-element-name-filter.pipe";
-import { PipelineElementGroupFilterPipe } from "./services/pipeline-element-group-filter.pipe";
+import { PipelineElementNameFilterPipe } from './services/pipeline-element-name-filter.pipe';
+import { PipelineElementGroupFilterPipe } from './services/pipeline-element-group-filter.pipe';
 
 
 @NgModule({
@@ -113,7 +104,6 @@ import { PipelineElementGroupFilterPipe } from "./services/pipeline-element-grou
         PipelineElementOptionsComponent,
         PipelineElementPreviewComponent,
         PipelineElementRecommendationComponent,
-        PipelineElementTemplateConfigComponent,
         PipelineElementTypeFilterPipe,
         PipelineComponent,
         PropertySelectionComponent,
@@ -122,20 +112,7 @@ import { PipelineElementGroupFilterPipe } from "./services/pipeline-element-grou
         WelcomeTourComponent
     ],
     providers: [
-        EditorService,
         SemanticTypeUtilsService,
-        JsplumbFactoryService,
-        JsplumbEndpointService,
-        JsplumbService,
-        JsplumbConfigService,
-        ObjectProvider,
-        PipelineCanvasScrollingService,
-        PipelineElementDraggedService,
-        PipelineEditorService,
-        PipelinePositioningService,
-        PipelineStyleService,
-        PipelineValidationService,
-        PipelineElementRecommendationService,
         SafeCss,
     ],
     exports: [

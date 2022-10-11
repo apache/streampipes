@@ -46,6 +46,12 @@ export class DataViewDataExplorerService {
     return this.sharedDatalakeRestService.getDashboards(this.dashboardUrl);
   }
 
+  getDataView(dataViewId: string): Observable<Dashboard> {
+    return this.http.get(this.dashboardUrl + '/' + dataViewId).pipe(map(data => {
+      return data as Dashboard;
+    }));
+  }
+
   updateDashboard(dashboard: Dashboard): Observable<Dashboard> {
     return this.sharedDatalakeRestService.updateDashboard(this.dashboardUrl, dashboard);
   }

@@ -28,6 +28,7 @@ import { DashboardConfiguration } from '../../model/dashboard-configuration.mode
 export class AssetDashboardOverviewComponent implements OnInit {
 
     @Output() selectedDashboard = new EventEmitter<DashboardConfiguration>();
+    @Output() createDashboard = new EventEmitter<void>();
 
     dashboardConfigs: DashboardConfiguration[] = [];
 

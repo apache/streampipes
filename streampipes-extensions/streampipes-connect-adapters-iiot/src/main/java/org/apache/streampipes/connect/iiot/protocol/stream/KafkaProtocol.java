@@ -20,9 +20,11 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
@@ -30,7 +32,7 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.api.SupportsRuntimeConfig;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.kafka.SpKafkaConsumer;
 import org.apache.streampipes.model.AdapterType;
@@ -38,6 +40,8 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.pe.shared.config.kafka.KafkaConfig;
 import org.apache.streampipes.pe.shared.config.kafka.KafkaConnectUtils;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
@@ -45,7 +49,6 @@ import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +58,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerProvidedOptions {
+public class KafkaProtocol extends BrokerProtocol implements SupportsRuntimeConfig {
 
     Logger logger = LoggerFactory.getLogger(KafkaProtocol.class);
     KafkaConfig config;
@@ -154,7 +157,7 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
         return resultEventsByte;
     }
 
-    private Consumer<byte[], byte[]> createConsumer(KafkaConfig kafkaConfig) {
+    private Consumer<byte[], byte[]> createConsumer(KafkaConfig kafkaConfig) throws KafkaException {
         final Properties props = new Properties();
 
         kafkaConfig.getSecurityConfig().appendConfig(props);
@@ -164,6 +167,8 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
 
         props.put(ConsumerConfig.GROUP_ID_CONFIG,
                 "KafkaExampleConsumer" + System.currentTimeMillis());
+
+        props.put(ConsumerConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 6000);
 
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 ByteArrayDeserializer.class.getName());
@@ -214,22 +219,30 @@ public class KafkaProtocol extends BrokerProtocol implements ResolvesContainerPr
     }
 
     @Override
-    public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
+    public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor) throws SpConfigurationException {
+        RuntimeResolvableOneOfStaticProperty config = extractor
+          .getStaticPropertyByName(KafkaConnectUtils.TOPIC_KEY, RuntimeResolvableOneOfStaticProperty.class);
         KafkaConfig kafkaConfig = KafkaConnectUtils.getConfig(extractor, false);
         boolean hideInternalTopics = extractor.slideToggleValue(KafkaConnectUtils.getHideInternalTopicsKey());
 
-        Consumer<byte[], byte[]> consumer = createConsumer(kafkaConfig);
+        try {
+            Consumer<byte[], byte[]> consumer = createConsumer(kafkaConfig);
+            Set<String> topics = consumer.listTopics().keySet();
+            consumer.close();
 
-        Set<String> topics = consumer.listTopics().keySet();
-        consumer.close();
+            if (hideInternalTopics) {
+                topics = topics
+                  .stream()
+                  .filter(t -> !t.startsWith(GlobalStreamPipesConstants.INTERNAL_TOPIC_PREFIX))
+                  .collect(Collectors.toSet());
+            }
 
-        if (hideInternalTopics) {
-            topics = topics
-                    .stream()
-                    .filter(t -> !t.startsWith(GlobalStreamPipesConstants.INTERNAL_TOPIC_PREFIX))
-                    .collect(Collectors.toSet());
+            config.setOptions(topics.stream().map(Option::new).collect(Collectors.toList()));
+
+            return config;
+        } catch (KafkaException e) {
+            throw new SpConfigurationException(e.getMessage(), e);
         }
-        return topics.stream().map(Option::new).collect(Collectors.toList());
     }
 
 

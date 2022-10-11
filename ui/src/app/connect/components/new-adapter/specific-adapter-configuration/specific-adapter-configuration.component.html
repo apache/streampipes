@@ -1,0 +1,58 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div fxFlex="100" fxLayout="column">
+    <div fxFlex="100" fxLayout="column">
+        <sp-basic-inner-panel panelTitle="Basic Settings" outerMargin="20px 0px">
+            <div header fxFlex="100" fxLayout="row" fxLayoutAlign="end center" class="pr-5">
+                <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center" *ngIf="availableTemplates && availableTemplates.length > 0">
+                    <mat-form-field class="form-field" floatLabel="never" color="accent">
+                        <mat-label>Use template</mat-label>
+                        <mat-select (selectionChange)="loadTemplate($event)"
+                                    [(value)]="selectedTemplate">
+                            <mat-option>--</mat-option>
+                            <mat-option [value]="template" *ngFor="let template of availableTemplates">
+                                {{template.templateName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <sp-configuration-group
+                    [configurationGroup]="specificAdapterForm"
+                    [adapterId]="adapterDescription.appId"
+                    [configuration]="adapterDescription.config">
+            </sp-configuration-group>
+        </sp-basic-inner-panel>
+    </div>
+
+    <div fxLayoutAlign="end">
+        <button class="mat-basic"
+                mat-raised-button
+                style="margin-right: 10px;"
+                (click)="removeSelection()">Cancel</button>
+        <button mat-button mat-raised-button
+                class="mat-basic"
+                (click)="openTemplateDialog()">Store config as template</button>
+        <div id="specific-settings-next-button">
+            <button class="stepper-button" [disabled]="!specificAdapterSettingsFormValid"
+                    (click)="clickNext()" color="accent" mat-raised-button>Next
+            </button>
+        </div>
+    </div>
+</div>

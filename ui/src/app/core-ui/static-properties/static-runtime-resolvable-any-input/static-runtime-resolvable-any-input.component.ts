@@ -53,4 +53,7 @@ export class StaticRuntimeResolvableAnyInputComponent
         return staticProperty as RuntimeResolvableAnyStaticProperty;
     }
 
+    afterErrorReceived() {
+    }
+
 }

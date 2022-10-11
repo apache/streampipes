@@ -17,6 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
 
 @Component({
   selector: 'profile',
@@ -27,7 +28,11 @@ export class ProfileComponent implements OnInit {
 
   selectedIndex = 0;
 
+  constructor(private breadcrumbService: SpBreadcrumbService) {
+  }
+
   ngOnInit(): void {
+    this.breadcrumbService.updateBreadcrumb([{label: 'Profile'}]);
   }
 
   selectedIndexChange(index: number) {

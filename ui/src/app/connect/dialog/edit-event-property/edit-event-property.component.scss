@@ -16,11 +16,17 @@
  *
  */
 
+@import '../../../../scss/sp/sp-dialog.scss';
+
 .doubleWidth {
     width: 370px !important;
 }
 
 .mat-dialog-actions {
     justify-content: flex-end;
+}
+
+.full-width {
+    width: 100%;
 }
 

@@ -1,0 +1,104 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div [formGroup]="startAdapterForm" fxLayout="column" fxFlex="100">
+    <sp-basic-inner-panel panelTitle="Adapter settings" outerMargin="20px 0px 10px 0px">
+        <div fxFlex="100">
+            <div fxLayoutAlign="center" fxLayout="column" fxFlex="100">
+                <mat-form-field color="accent">
+                    <input formControlName="adapterName"
+                           matInput id="input-AdapterName" placeholder="Adapter Name"
+                           data-cy="sp-adapter-name" required>
+                </mat-form-field>
+                <mat-form-field color="accent">
+                    <input matInput id="input-AdapterDescription" [ngModelOptions]="{standalone: true}"
+                           placeholder="Adapter Description" [(ngModel)]="adapterDescription.description">
+                </mat-form-field>
+            </div>
+        </div>
+    </sp-basic-inner-panel>
+
+    <div fxFlex="100" fxLayout="column">
+        <sp-adapter-options-panel optionTitle="Remove Duplicates"
+                                  optionDescription="Avoid duplicated events within a certain time interval"
+                                  optionIcon="cleaning_services"
+                                  dataCy="connect-remove-duplicates-box"
+                                  (optionSelectedEmitter)="removeDuplicates = $event">
+            <mat-form-field *ngIf="removeDuplicates" color="accent">
+                <input matInput id="input-removeDuplicatesTime"
+                       [ngModelOptions]="{standalone: true}" placeholder="Remove Duplicates Time Window"
+                       [(ngModel)]="removeDuplicatesTime"
+                       data-cy="connect-remove-duplicates-input">
+            </mat-form-field>
+        </sp-adapter-options-panel>
+
+
+        <sp-adapter-options-panel optionTitle="Reduce event rate"
+                                  optionDescription="Send maximum one event in the specified time window"
+                                  optionIcon="speed"
+                                  dataCy="connect-reduce-event-rate-box"
+                                  (optionSelectedEmitter)="eventRateReduction = $event">
+            <mat-form-field *ngIf="eventRateReduction" color="accent">
+                <input type="number" matInput id="input-evenRateTime"
+                       [ngModelOptions]="{standalone: true}" [(ngModel)]="eventRateTime"
+                       placeholder="Time Window (Milliseconds)" matTooltipPosition="above"
+                       data-cy="connect-reduce-event-input">
+            </mat-form-field>
+            <mat-form-field *ngIf="eventRateReduction" color="accent">
+                <mat-label>Event Aggregation</mat-label>
+                <mat-select [(ngModel)]="eventRateMode" [ngModelOptions]="{standalone: true}">
+                    <mat-option class="md-elevation-z1" style="background: white;"
+                                matTooltip="Last Event in Time Window" value="none">
+                        None
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </sp-adapter-options-panel>
+
+        <!-- Start pipeline template to store raw events in data lake -->
+        <sp-adapter-options-panel optionTitle="Persist events"
+                                  optionDescription="Store all events of this source in the internal data store"
+                                  optionIcon="save"
+                                  dataCy="sp-store-in-datalake"
+                                  (optionSelectedEmitter)="handlePersistOption($event)">
+            <mat-form-field *ngIf="saveInDataLake" color="accent">
+                <mat-label>Select Time Field</mat-label>
+                <mat-select [(ngModel)]="dataLakeTimestampField"
+                            [ngModelOptions]="{standalone: true}"
+                            data-cy="sp-store-in-datalake-timestamp">
+                    <mat-option class="md-elevation-z1" style="background: white;"
+                                *ngFor="let timestampField of eventSchema.eventProperties | timestampFilter"
+                                [value]="timestampField.runtimeName">
+                        {{timestampField.runtimeName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </sp-adapter-options-panel>
+    </div>
+
+    <div fxLayoutAlign="end" style="margin-top: 10px;">
+        <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+        <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back
+        </button>
+        <button [disabled]="!(startAdapterSettingsFormValid)" mat-raised-button id="button-startAdapter"
+                color="accent" (click)="startAdapter()" mat-button style="margin-left:10px;">
+            Start Adapter
+        </button>
+    </div>
+</div>
+
