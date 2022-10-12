@@ -12,7 +12,7 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 })
 export class NewAdapterComponent implements OnInit {
 
-  show = false;
+  initialized = false;
   adapterTypeName = '';
   adapter: AdapterDescriptionUnion = undefined;
 
@@ -28,11 +28,12 @@ export class NewAdapterComponent implements OnInit {
       const adapter = adapters.find(a => a.appId === this.route.snapshot.params.appId);
       this.adapterTypeName = adapter.name;
       this.adapter = this.connectService.cloneAdapterDescription(adapter);
+
       this.breadcrumbService.updateBreadcrumb(this.breadcrumbService
-        .makeRoute([SpConnectRoutes.BASE, SpConnectRoutes.CREATE], this.adapter.name));
+        .makeRoute([SpConnectRoutes.BASE, SpConnectRoutes.CREATE], this.adapterTypeName));
       this.adapter.name = '';
       this.adapter.description = '';
-      this.show = true;
+      this.initialized = true;
     });
   }
 }

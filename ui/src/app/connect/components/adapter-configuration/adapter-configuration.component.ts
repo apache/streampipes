@@ -16,12 +16,11 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
   AdapterDescriptionUnion,
-  AdapterService,
   EventSchema,
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
@@ -31,26 +30,16 @@ import {
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
-import { RestService } from '../../services/rest.service';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
-import { IconService } from '../../services/icon.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'sp-adapter-configuration',
   templateUrl: './adapter-configuration.component.html',
   styleUrls: ['./adapter-configuration.component.scss']
 })
-export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
-
-  isDataStreamDescription = true;
-
-
-  selectedUploadFile: File;
-  fileName;
-
-  isGenericAdapter = false;
+export class AdapterConfigurationComponent implements OnInit {
 
   /**
    * Used to display the type of the configured adapter
@@ -58,37 +47,28 @@ export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
   @Input() adapterTypeName = '';
   @Input() adapter: AdapterDescriptionUnion;
 
-  myStepper: MatStepper;
+  /**
+   * Required to render the corresponding components
+   */
+  isDataStreamDescription = true;
+  isGenericAdapter = false;
 
-  protocolConfigurationValid: boolean;
-  formatConfigurationValid: boolean;
+
+  myStepper: MatStepper;
+  parentForm: FormGroup;
 
   eventSchema: EventSchema;
   oldEventSchema: EventSchema;
-
-  hasInput: boolean[];
-
-  // deactivates all edit functions when user starts a template
-  isEditable = true;
 
   private eventSchemaComponent: EventSchemaComponent;
 
   completedStaticProperty: ConfigurationInfo;
 
-  parentForm: FormGroup;
-  viewInitialized = false;
-
-
   constructor(
-    private restService: RestService,
     private transformationRuleService: TransformationRuleService,
     private shepherdService: ShepherdService,
     private connectService: ConnectService,
     private _formBuilder: FormBuilder,
-    private iconService: IconService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private dataMarketplaceService: AdapterService,
     private router: Router,
   ) {
   }
@@ -99,31 +79,9 @@ export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
     this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
     this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
 
-    this.formatConfigurationValid = false;
-
-    this.protocolConfigurationValid = false;
-
     this.eventSchema = this.connectService.getEventSchema(this.adapter);
 
   }
-
-  handleFileInput(files: any) {
-    this.selectedUploadFile = files[0];
-    this.fileName = this.selectedUploadFile.name;
-
-    this.iconService.toBase64(this.selectedUploadFile)
-      .then(
-        data => {
-          this.adapter.icon = (data as string);
-        }
-      );
-  }
-
-  ngAfterViewInit() {
-    this.viewInitialized = true;
-    this.changeDetectorRef.detectChanges();
-  }
-
 
   removeSelection() {
     this.router.navigate(['connect', 'create']);
@@ -141,10 +99,7 @@ export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
   }
 
   clickEventSchemaNextButtonButton() {
-    if (this.isEditable) {
-      this.setSchema();
-    }
-
+    this.setSchema();
 
     this.shepherdService.trigger('event-schema-next-button');
     this.goForward();

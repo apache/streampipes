@@ -90,6 +90,8 @@ export class ConnectEventSchemaUtils {
     // Click add a static value to event
     cy.dataCy('connect-add-static-property', { timeout: 10000 }).click();
 
+    cy.wait(100);
+
     // Edit new property
     cy.dataCy('edit-key_0', { timeout: 10000 }).click();
 

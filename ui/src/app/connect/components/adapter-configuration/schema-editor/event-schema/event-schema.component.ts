@@ -27,8 +27,7 @@ import {
   EventPropertyNested,
   EventPropertyPrimitive,
   EventSchema,
-  GuessSchema,
-  Notification
+  GuessSchema
 } from '@streampipes/platform-services';
 import { MatStepper } from '@angular/material/stepper';
 import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
@@ -51,7 +50,7 @@ export class EventSchemaComponent implements OnChanges {
   }
 
   @Input() adapterDescription: AdapterDescription;
-  @Input() isEditable = true;
+  isEditable = true;
   @Input() oldEventSchema: EventSchema;
   @Input() eventSchema: EventSchema = new EventSchema();
 
@@ -94,7 +93,7 @@ export class EventSchemaComponent implements OnChanges {
     allowDrag: () => {
       return this.isEditable;
     },
-    allowDrop: (node, { parent, index }) => {
+    allowDrop: (node, { parent }) => {
       return parent.data.eventProperties !== undefined && parent.parent !== null;
     },
     displayField: 'runTimeName'
@@ -142,7 +141,7 @@ export class EventSchemaComponent implements OnChanges {
 
   }
 
-  private refreshTree(refreshPreview = true): void {
+  public refreshTree(refreshPreview = true): void {
     this.nodes = new Array<EventProperty>();
     this.nodes.push(this.eventSchema as unknown as EventProperty);
     this.validEventSchema = this.checkIfValid(this.eventSchema);

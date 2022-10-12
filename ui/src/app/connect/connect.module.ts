@@ -41,7 +41,6 @@ import { AdapterDescriptionComponent } from './components/data-marketplace/adapt
 import { DataMarketplaceComponent } from './components/data-marketplace/data-marketplace.component';
 import { FormatItemComponent } from './components/adapter-configuration/format-configuration/format-item/format-item.component';
 import { FormatListComponent } from './components/adapter-configuration/format-configuration/format-list/format-list.component';
-import { IconService } from './services/icon.service';
 import { UnitProviderService } from './services/unit-provider.service';
 
 
@@ -212,7 +211,6 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
     DataTypesService,
     TransformationRuleService,
     StaticPropertyUtilService,
-    IconService,
     UnitProviderService,
     TimestampPipe,
     XsService
