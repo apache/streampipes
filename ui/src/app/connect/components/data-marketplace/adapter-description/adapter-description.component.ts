@@ -18,10 +18,9 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ConnectService } from '../../../services/connect.service';
-import { AdapterExportDialog } from '../../../dialog/adapter-export/adapter-export-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AdapterDescription, AdapterService } from '@streampipes/platform-services';
-import { DialogService, PanelType } from '@streampipes/shared-ui';
+import { DialogService } from '@streampipes/shared-ui';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -40,7 +39,6 @@ export class AdapterDescriptionComponent implements OnInit {
   @Output()
   createTemplateEmitter: EventEmitter<AdapterDescription> = new EventEmitter<AdapterDescription>();
 
-  adapterToDelete: string;
   deleting = false;
   className = '';
   isDataSetDescription = false;
@@ -70,25 +68,6 @@ export class AdapterDescriptionComponent implements OnInit {
     return this.connectService.isGenericDescription(this.adapter);
   }
 
-  isSpecificDescription(): boolean {
-    return this.connectService.isSpecificDescription(this.adapter);
-  }
-
-  shareAdapterTemplate(adapter: AdapterDescription): void {
-    this.dialogService.open(AdapterExportDialog, {
-      panelType: PanelType.STANDARD_PANEL,
-      title: 'Export adapter template',
-      width: '50vw',
-      data: {
-        'adapter': adapter
-      }
-    });
-  }
-
-  createTemplate(adapter: AdapterDescription): void {
-    this.createTemplateEmitter.emit(adapter);
-  }
-
   getClassName() {
     let className = this.isRunningAdapter ? 'adapter-box' : 'adapter-description-box';
 
@@ -101,10 +80,6 @@ export class AdapterDescriptionComponent implements OnInit {
     return className;
   }
 
-  deleteInProgress(adapterCouchDbId) {
-    return this.deleting && (adapterCouchDbId === this.adapterToDelete);
-  }
-
   getIconUrl() {
     // TODO Use "this.adapter.includesAssets" if boolean demoralizing is working
     if (this.adapter.includedAssets.length > 0) {
@@ -115,9 +90,9 @@ export class AdapterDescriptionComponent implements OnInit {
   }
 
   removeAdapter(): void {
-    this.dataMarketplaceService.deleteAdapterDescription(this.adapter.elementId).subscribe(res => {
+    this.dataMarketplaceService.deleteAdapterDescription(this.adapter.elementId).subscribe(_ => {
       this.updateAdapterEmitter.emit();
-    }, error => {
+    }, _ => {
       this._snackBar.open('Cannot delete an adapter which has an active instance running.');
     });
   }

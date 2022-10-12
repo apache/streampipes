@@ -29,7 +29,6 @@ import {
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
-import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.component';
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { Router } from '@angular/router';
@@ -53,7 +52,6 @@ export class AdapterConfigurationComponent implements OnInit {
   isDataStreamDescription = true;
   isGenericAdapter = false;
 
-
   myStepper: MatStepper;
   parentForm: FormGroup;
 
@@ -61,8 +59,6 @@ export class AdapterConfigurationComponent implements OnInit {
   oldEventSchema: EventSchema;
 
   private eventSchemaComponent: EventSchemaComponent;
-
-  completedStaticProperty: ConfigurationInfo;
 
   constructor(
     private transformationRuleService: TransformationRuleService,
@@ -84,7 +80,7 @@ export class AdapterConfigurationComponent implements OnInit {
   }
 
   removeSelection() {
-    this.router.navigate(['connect', 'create']);
+    this.router.navigate(['connect', 'create']).then();
   }
 
   clickProtocolSettingsNextButton() {
@@ -134,7 +130,6 @@ export class AdapterConfigurationComponent implements OnInit {
       console.log('Error: Adapter type is unknown');
     }
 
-
     this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
 
     this.transformationRuleService.setNewEventSchema(this.eventSchema);
@@ -150,7 +145,7 @@ export class AdapterConfigurationComponent implements OnInit {
   }
 
   public adapterWasStarted() {
-    this.router.navigate(['connect']);
+    this.router.navigate(['connect']).then();
   }
 
   @ViewChild(EventSchemaComponent) set schemaComponent(eventSchemaComponent: EventSchemaComponent) {

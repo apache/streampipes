@@ -49,7 +49,7 @@ export class RestService {
 
   addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
     adapter.userName = this.authService.getCurrentUser().username;
-    const promise = new Promise<Message>((resolve, reject) => {
+    const promise = new Promise<Message>((resolve) => {
       this.http
         .post(
           this.connectPath + url,

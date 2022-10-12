@@ -45,8 +45,6 @@ import { UnitProviderService } from './services/unit-provider.service';
 
 
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
-import { AdapterExportDialog } from './dialog/adapter-export/adapter-export-dialog.component';
-import { AdapterUploadDialog } from './dialog/adapter-upload/adapter-upload-dialog.component';
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
@@ -165,9 +163,7 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
   ],
   declarations: [
     AdapterDescriptionComponent,
-    AdapterExportDialog,
     AdapterStartedDialog,
-    AdapterUploadDialog,
     DataMarketplaceComponent,
     DeleteAdapterDialogComponent,
     EventSchemaComponent,
