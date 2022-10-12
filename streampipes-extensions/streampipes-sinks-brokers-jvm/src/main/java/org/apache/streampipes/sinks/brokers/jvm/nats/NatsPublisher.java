@@ -24,13 +24,13 @@ import io.nats.client.Options;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.messaging.nats.NatsUtils;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
 public class NatsPublisher implements EventSink<NatsParameters> {
@@ -51,34 +51,12 @@ public class NatsPublisher implements EventSink<NatsParameters> {
         LOG = parameters.getGraph().getLogger(NatsPublisher.class);
         var natsConfig = parameters.getNatsConfig();
         this.subject = natsConfig.getSubject();
-        String natsUrls = natsConfig.getNatsUrls();
-        String propertiesAsString = natsConfig.getProperties();
-        String username = natsConfig.getUsername();
-        String password = natsConfig.getPassword();
-
-        Properties props = new Properties();
-
-        if (username != null) {
-            props.setProperty(Options.PROP_USERNAME, username);
-            props.setProperty(Options.PROP_PASSWORD, password);
-        }
-
-        if (propertiesAsString != null && !propertiesAsString.isEmpty()) {
-            splitNatsProperties(propertiesAsString, props);
-        }
-
-        String[] natsServerUrls = natsUrls.split(",");
-        Options options;
-        if (natsServerUrls.length > 1) {
-            options = new Options.Builder(props).servers(natsServerUrls).build();
-        } else {
-            options = new Options.Builder(props).server(natsUrls).build();
-        }
+        Options options = NatsUtils.makeNatsOptions(natsConfig);
 
         try {
             this.natsConnection = Nats.connect(options);
         } catch (Exception e) {
-            LOG.error("Error when connecting to the Nats broker on " + natsUrls + " . " + e.toString());
+            LOG.error("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . " + e.toString());
         }
     }
 
@@ -101,20 +79,4 @@ public class NatsPublisher implements EventSink<NatsParameters> {
             LOG.error("Error when disconnecting with Nats broker. " + e.toString());
         }
     }
-
-    private void splitNatsProperties(String propertiesAsString, Properties properties) {
-
-        String[] optionalProperties = propertiesAsString.split(",");
-        if (optionalProperties.length > 0) {
-            for (String header : optionalProperties) {
-                try {
-                    String[] configPropertyWithValue = header.split(":", 2);
-                    properties.setProperty(configPropertyWithValue[0].trim(), configPropertyWithValue[1].trim());
-                } catch (Exception e) {
-                    LOG.warn("Optional property '" + header + "' is not defined in the correct format.");
-                }
-            }
-        }
-    }
-
 }

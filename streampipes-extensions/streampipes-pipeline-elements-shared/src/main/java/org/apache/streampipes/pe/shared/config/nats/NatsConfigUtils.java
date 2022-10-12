@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.pe.shared.config.nats;
 
+import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 public class NatsConfigUtils {

@@ -19,7 +19,7 @@
 package org.apache.streampipes.sinks.brokers.jvm.nats;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.pe.shared.config.nats.NatsConfig;
+import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class NatsParameters extends EventSinkBindingParams {

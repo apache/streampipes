@@ -1,4 +1,4 @@
-package org.apache.streampipes.pe.shared.config.nats;
+package org.apache.streampipes.model.nats;
 
 public class NatsConfig {
 
