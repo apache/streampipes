@@ -24,7 +24,7 @@ import {
   PipelineElementTemplateService
 } from '@streampipes/platform-services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AdapterConfigurationDirective } from '../adapter-configuration.directive';
+import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { DialogService } from '@streampipes/shared-ui';
 
@@ -33,7 +33,7 @@ import { DialogService } from '@streampipes/shared-ui';
   templateUrl: './generic-adapter-configuration.component.html',
   styleUrls: ['./generic-adapter-configuration.component.scss']
 })
-export class GenericAdapterConfigurationComponent extends AdapterConfigurationDirective implements OnInit {
+export class GenericAdapterConfigurationComponent extends AdapterTemplateConfigurationDirective implements OnInit {
 
   genericAdapterSettingsFormValid: boolean;
 
@@ -57,7 +57,7 @@ export class GenericAdapterConfigurationComponent extends AdapterConfigurationDi
 
     // initialize form for validation
     this.genericAdapterForm = this._formBuilder.group({});
-    this.genericAdapterForm.statusChanges.subscribe((status) => {
+    this.genericAdapterForm.statusChanges.subscribe((_) => {
       this.genericAdapterSettingsFormValid = this.genericAdapterForm.valid;
     });
   }
@@ -65,7 +65,7 @@ export class GenericAdapterConfigurationComponent extends AdapterConfigurationDi
   openTemplateDialog(): void {
     const dialogRef = this.adapterTemplateService.getDialog(this.protocolDescription.config, this.protocolDescription.appId);
 
-    dialogRef.afterClosed().subscribe(refresh => {
+    dialogRef.afterClosed().subscribe(_ => {
       this.loadPipelineElementTemplates();
     });
   }

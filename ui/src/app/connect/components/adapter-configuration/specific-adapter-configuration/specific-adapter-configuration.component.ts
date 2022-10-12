@@ -21,14 +21,14 @@ import { AdapterDescription, PipelineElementTemplateService } from '@streampipes
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DialogService } from '@streampipes/shared-ui';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
-import { AdapterConfigurationDirective } from '../adapter-configuration.directive';
+import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
 
 @Component({
   selector: 'sp-specific-adapter-configuration',
   templateUrl: './specific-adapter-configuration.component.html',
   styleUrls: ['./specific-adapter-configuration.component.scss']
 })
-export class SpecificAdapterConfigurationComponent extends AdapterConfigurationDirective implements OnInit {
+export class SpecificAdapterConfigurationComponent extends AdapterTemplateConfigurationDirective implements OnInit {
 
   specificAdapterSettingsFormValid: boolean;
 
@@ -47,7 +47,7 @@ export class SpecificAdapterConfigurationComponent extends AdapterConfigurationD
     this.cachedAdapterDescription = {...this.adapterDescription};
     // initialize form for validation
     this.specificAdapterForm = this._formBuilder.group({});
-    this.specificAdapterForm.statusChanges.subscribe((status) => {
+    this.specificAdapterForm.statusChanges.subscribe((_) => {
       this.specificAdapterSettingsFormValid = this.specificAdapterForm.valid;
     });
 
@@ -60,7 +60,7 @@ export class SpecificAdapterConfigurationComponent extends AdapterConfigurationD
   openTemplateDialog(): void {
     const dialogRef = this.adapterTemplateService.getDialog(this.adapterDescription.config, this.adapterDescription.appId);
 
-    dialogRef.afterClosed().subscribe(refresh => {
+    dialogRef.afterClosed().subscribe(_ => {
       this.loadPipelineElementTemplates();
     });
   }

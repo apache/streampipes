@@ -40,11 +40,11 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { SpConnectRoutes } from '../../connect.routes';
 
 @Component({
-  selector: 'sp-new-adapter',
-  templateUrl: './new-adapter.component.html',
-  styleUrls: ['./new-adapter.component.scss']
+  selector: 'sp-adapter-configuration',
+  templateUrl: './adapter-configuration.component.html',
+  styleUrls: ['./adapter-configuration.component.scss']
 })
-export class NewAdapterComponent implements OnInit, AfterViewInit {
+export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
 
 
   adapterTypeName = '';
