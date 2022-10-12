@@ -970,7 +970,8 @@ IoT data streams.
             <module>streampipes-data-explorer-commons</module>
             <module>streampipes-data-export</module>
             <module>streampipes-messaging-nats</module>
-        </modules>
+      <module>streampipes-integration-tests</module>
+    </modules>
 
 		<profiles>
 			<profile>
