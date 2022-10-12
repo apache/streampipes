@@ -16,7 +16,7 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
@@ -26,8 +26,7 @@ import {
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription,
   SpecificAdapterSetDescription,
-  SpecificAdapterStreamDescription,
-  TransformationRuleDescriptionUnion
+  SpecificAdapterStreamDescription
 } from '@streampipes/platform-services';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConnectService } from '../../services/connect.service';
@@ -47,16 +46,17 @@ import { SpConnectRoutes } from '../../connect.routes';
 })
 export class NewAdapterComponent implements OnInit, AfterViewInit {
 
+
+  adapterTypeName = '';
+  isDataStreamDescription = true;
+
+
   selectedUploadFile: File;
   fileName;
+
   isGenericAdapter = false;
-  isDataSetDescription = false;
-  isDataStreamDescription = false;
 
-  dataLakeTimestampField: string;
-
-  @Input()
-  adapter: AdapterDescriptionUnion;
+  adapter: AdapterDescriptionUnion = undefined;
 
   myStepper: MatStepper;
 
@@ -66,11 +66,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
   eventSchema: EventSchema;
   oldEventSchema: EventSchema;
 
-
   hasInput: boolean[];
-
-  // indicates whether user uses a template or not
-  fromTemplate = false;
 
   // deactivates all edit functions when user starts a template
   isEditable = true;
@@ -79,11 +75,9 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
   completedStaticProperty: ConfigurationInfo;
 
-  isPreviewEnabled = false;
-
   parentForm: FormGroup;
-  genericAdapterSettingsFormValid = false;
   viewInitialized = false;
+
 
   constructor(
     private restService: RestService,
@@ -113,30 +107,29 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
+    // TODO what is this code doing?
     this.dataMarketplaceService.getAdapterDescriptions().subscribe(adapters => {
       const adapter = adapters.find(a => a.appId === this.route.snapshot.params.appId);
       this.adapter = this.connectService.cloneAdapterDescription(adapter);
-      this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.makeRoute([SpConnectRoutes.BASE, SpConnectRoutes.CREATE], this.adapter.name));
-      (this.adapter as any).templateTitle = this.adapter.name;
+      this.breadcrumbService.updateBreadcrumb(this.breadcrumbService
+        .makeRoute([SpConnectRoutes.BASE, SpConnectRoutes.CREATE], this.adapter.name));
       this.adapter.name = '';
       this.adapter.description = '';
       this.parentForm = this._formBuilder.group({});
 
+      this.adapterTypeName = adapter.name;
+      this.isDataStreamDescription = this.connectService.isDataStreamDescription(adapter);
+
 
       this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
-      this.isDataSetDescription = this.connectService.isDataSetDescription(this.adapter);
-      this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
+
       this.formatConfigurationValid = false;
-
-
-      // this.startAdapterFormGroup = this._formBuilder.group({
-      //     startAdapterFormCtrl: ['', Validators.required]
-      // });
 
       this.protocolConfigurationValid = false;
 
       this.eventSchema = this.connectService.getEventSchema(this.adapter);
 
+      // TODO I think I can remove this with the new edit mode
       if (this.eventSchema.eventProperties.length > 0) {
 
         // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
@@ -146,21 +139,14 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
           this.goForward();
         }, 1);
 
-        this.fromTemplate = true;
         this.isEditable = false;
         this.oldEventSchema = this.eventSchema;
       }
     });
-
-
-    // this.parentForm.statusChanges.subscribe((status) => {
-    //     this.genericadapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
-    // });
   }
 
   ngAfterViewInit() {
     this.viewInitialized = true;
-    // this.genericAdapterSettingsFormValid  = this.viewInitialized && this.parentForm.valid;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -223,9 +209,7 @@ export class NewAdapterComponent implements OnInit, AfterViewInit {
     this.transformationRuleService.setOldEventSchema(this.oldEventSchema);
 
     this.transformationRuleService.setNewEventSchema(this.eventSchema);
-    const transformationRules: TransformationRuleDescriptionUnion[] =
-      this.transformationRuleService.getTransformationRuleDescriptions();
-    this.adapter.rules = transformationRules;
+    this.adapter.rules = this.transformationRuleService.getTransformationRuleDescriptions();
   }
 
   goBack() {

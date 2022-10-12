@@ -85,7 +85,7 @@ export class ExistingAdaptersComponent implements OnInit {
   }
 
   startAdapter(adapter: AdapterDescriptionUnion) {
-    this.dataMarketplaceService.startAdapter(adapter).subscribe(response => {
+    this.dataMarketplaceService.startAdapter(adapter).subscribe(_ => {
       this.getAdaptersRunning();
     }, error => {
       this.openAdapterStatusErrorDialog(error.error, 'Could not start adapter');
@@ -93,7 +93,7 @@ export class ExistingAdaptersComponent implements OnInit {
   }
 
   stopAdapter(adapter: AdapterDescriptionUnion) {
-    this.dataMarketplaceService.stopAdapter(adapter).subscribe(response => {
+    this.dataMarketplaceService.stopAdapter(adapter).subscribe(_ => {
       this.getAdaptersRunning();
     }, error => {
       this.openAdapterStatusErrorDialog(error.error, 'Could not stop adapter');
@@ -138,6 +138,10 @@ export class ExistingAdaptersComponent implements OnInit {
         this.getAdaptersRunning();
       }
     });
+  }
+
+  editAdapter(adapter: AdapterDescriptionUnion) {
+    this.router.navigate(['connect', 'edit', adapter.appId]);
   }
 
   deleteAdapter(adapter: AdapterDescriptionUnion): void {

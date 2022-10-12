@@ -53,39 +53,58 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { XsService } from '../NS/xs.service';
-import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
-import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
-import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
+import {
+  EditDataTypeComponent
+} from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
+import {
+  EditTimestampPropertyComponent
+} from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
+import {
+  EditUnitTransformationComponent
+} from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
 import { PipelineElementRuntimeInfoComponent } from './components/runtime-info/pipeline-element-runtime-info.component';
 import { EventPropertyRowComponent } from './components/new-adapter/schema-editor/event-property-row/event-property-row.component';
 import { EventSchemaPreviewComponent } from './components/new-adapter/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-// tslint:disable-next-line:max-line-length
-import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
+import {
+  EditCorrectionValueComponent
+} from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
-// tslint:disable-next-line:max-line-length
-import { SpecificAdapterConfigurationComponent } from './components/new-adapter/specific-adapter-configuration/specific-adapter-configuration.component';
+import {
+  SpecificAdapterConfigurationComponent
+} from './components/new-adapter/specific-adapter-configuration/specific-adapter-configuration.component';
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
 import { FormatConfigurationComponent } from './components/new-adapter/format-configuration/format-configuration.component';
-import { GenericAdapterConfigurationComponent } from './components/new-adapter/generic-adapter-configuration/generic-adapter-configuration.component';
+import {
+  GenericAdapterConfigurationComponent
+} from './components/new-adapter/generic-adapter-configuration/generic-adapter-configuration.component';
 import { ErrorMessageComponent } from './components/new-adapter/schema-editor/error-message/error-message.component';
 import { LoadingMessageComponent } from './components/new-adapter/schema-editor/loading-message/loading-message.component';
 import { SchemaEditorHeaderComponent } from './components/new-adapter/schema-editor/schema-editor-header/schema-editor-header.component';
-import { StartAdapterConfigurationComponent } from './components/new-adapter/start-adapter-configuration/start-adapter-configuration.component';
+import {
+  StartAdapterConfigurationComponent
+} from './components/new-adapter/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { FormatItemJsonComponent } from './components/new-adapter/format-configuration/format-item-json/format-item-json.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
-import { EditSchemaTransformationComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
-import { EditValueTransformationComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
+import {
+  EditSchemaTransformationComponent
+} from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
+import {
+  EditValueTransformationComponent
+} from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
 import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
-import { SpAdapterOptionsPanelComponent } from './components/new-adapter/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
+import {
+  SpAdapterOptionsPanelComponent
+} from './components/new-adapter/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AdapterConfigurationHeaderComponent } from './components/new-adapter/adapter-configuration-header/adapter-configuration-header.component';
 
 @NgModule({
   imports: [
@@ -120,6 +139,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
           },
           {
             path: 'create/:appId',
+            component: NewAdapterComponent,
+          },
+          {
+            path: 'edit/:appId',
             component: NewAdapterComponent,
           }]
       }]),
@@ -166,7 +189,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     StartAdapterConfigurationComponent,
     FormatItemJsonComponent,
     SpConnectFilterToolbarComponent,
-    SpAdapterOptionsPanelComponent
+    SpAdapterOptionsPanelComponent,
+    AdapterConfigurationHeaderComponent
   ],
   providers: [
     RestService,
@@ -179,7 +203,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     TimestampPipe,
     XsService
   ],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ConnectModule {
 }

@@ -24,20 +24,8 @@
         </button>
     </div>
     <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="adapter">
-        <div fxLayout="column" fxFlex="100">
-            <div fxLayout="row" fxLayoutAlign="start center">
-                <mat-icon *ngIf="isDataSetDescription" class="historic">lens</mat-icon>
-                <mat-icon *ngIf="isDataStreamDescription" class="real-time">lens
-                </mat-icon>
-                <div fxLayoutAlign="start center">
-                    <p *ngIf="isDataSetDescription">Data Set</p>
-                    <p *ngIf="isDataStreamDescription">Data Stream</p>
-                </div>
-                <span fxFlex></span>
-            </div>
-            <h1 *ngIf="!fromTemplate" class="new-adapter-title">New Source: {{adapter.templateTitle}}</h1>
-            <h1 *ngIf="fromTemplate" class="new-adapter-title">From Template: {{adapter.templateTitle}}</h1>
-        </div>
+
+        <sp-adapter-configuration-header [adapterTypeName]="adapterTypeName" [isDataStreamDescription]="isDataStreamDescription"></sp-adapter-configuration-header>
 
         <mat-horizontal-stepper [linear]="true" #stepper color="accent" class="stepper">
             <mat-step *ngIf="!isGenericAdapter">
