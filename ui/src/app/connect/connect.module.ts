@@ -64,8 +64,12 @@ import {
 } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
 import { PipelineElementRuntimeInfoComponent } from './components/runtime-info/pipeline-element-runtime-info.component';
-import { EventPropertyRowComponent } from './components/adapter-configuration/schema-editor/event-property-row/event-property-row.component';
-import { EventSchemaPreviewComponent } from './components/adapter-configuration/schema-editor/event-schema-preview/event-schema-preview.component';
+import {
+  EventPropertyRowComponent
+} from './components/adapter-configuration/schema-editor/event-property-row/event-property-row.component';
+import {
+  EventSchemaPreviewComponent
+} from './components/adapter-configuration/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import {
   EditCorrectionValueComponent
@@ -81,13 +85,17 @@ import {
 } from './components/adapter-configuration/generic-adapter-configuration/generic-adapter-configuration.component';
 import { ErrorMessageComponent } from './components/adapter-configuration/schema-editor/error-message/error-message.component';
 import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
-import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
+import {
+  SchemaEditorHeaderComponent
+} from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
 import {
   StartAdapterConfigurationComponent
 } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import { FormatItemJsonComponent } from './components/adapter-configuration/format-configuration/format-item-json/format-item-json.component';
+import {
+  FormatItemJsonComponent
+} from './components/adapter-configuration/format-configuration/format-item-json/format-item-json.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
@@ -104,7 +112,11 @@ import {
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AdapterConfigurationHeaderComponent } from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
+import {
+  AdapterConfigurationHeaderComponent
+} from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
+import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
+import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
 
 @NgModule({
   imports: [
@@ -139,11 +151,11 @@ import { AdapterConfigurationHeaderComponent } from './components/adapter-config
           },
           {
             path: 'create/:appId',
-            component: AdapterConfigurationComponent,
+            component: NewAdapterComponent,
           },
           {
             path: 'edit/:appId',
-            component: AdapterConfigurationComponent,
+            component: EditAdapterComponent,
           }]
       }]),
     SharedUiModule
@@ -190,7 +202,9 @@ import { AdapterConfigurationHeaderComponent } from './components/adapter-config
     FormatItemJsonComponent,
     SpConnectFilterToolbarComponent,
     SpAdapterOptionsPanelComponent,
-    AdapterConfigurationHeaderComponent
+    AdapterConfigurationHeaderComponent,
+    NewAdapterComponent,
+    EditAdapterComponent
   ],
   providers: [
     RestService,

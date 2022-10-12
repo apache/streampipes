@@ -16,7 +16,7 @@
  *
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
@@ -36,8 +36,6 @@ import { EventSchemaComponent } from './schema-editor/event-schema/event-schema.
 import { TransformationRuleService } from '../../services/transformation-rule.service';
 import { IconService } from '../../services/icon.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SpBreadcrumbService } from '@streampipes/shared-ui';
-import { SpConnectRoutes } from '../../connect.routes';
 
 @Component({
   selector: 'sp-adapter-configuration',
@@ -46,8 +44,6 @@ import { SpConnectRoutes } from '../../connect.routes';
 })
 export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
 
-
-  adapterTypeName = '';
   isDataStreamDescription = true;
 
 
@@ -56,7 +52,11 @@ export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
 
   isGenericAdapter = false;
 
-  adapter: AdapterDescriptionUnion = undefined;
+  /**
+   * Used to display the type of the configured adapter
+   */
+  @Input() adapterTypeName = '';
+  @Input() adapter: AdapterDescriptionUnion;
 
   myStepper: MatStepper;
 
@@ -90,7 +90,21 @@ export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private dataMarketplaceService: AdapterService,
     private router: Router,
-    private breadcrumbService: SpBreadcrumbService) {
+  ) {
+  }
+
+  ngOnInit() {
+    this.parentForm = this._formBuilder.group({});
+
+    this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
+    this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
+
+    this.formatConfigurationValid = false;
+
+    this.protocolConfigurationValid = false;
+
+    this.eventSchema = this.connectService.getEventSchema(this.adapter);
+
   }
 
   handleFileInput(files: any) {
@@ -103,46 +117,6 @@ export class AdapterConfigurationComponent implements OnInit, AfterViewInit {
           this.adapter.icon = (data as string);
         }
       );
-  }
-
-  ngOnInit() {
-
-    // TODO what is this code doing?
-    this.dataMarketplaceService.getAdapterDescriptions().subscribe(adapters => {
-      const adapter = adapters.find(a => a.appId === this.route.snapshot.params.appId);
-      this.adapter = this.connectService.cloneAdapterDescription(adapter);
-      this.breadcrumbService.updateBreadcrumb(this.breadcrumbService
-        .makeRoute([SpConnectRoutes.BASE, SpConnectRoutes.CREATE], this.adapter.name));
-      this.adapter.name = '';
-      this.adapter.description = '';
-      this.parentForm = this._formBuilder.group({});
-
-      this.adapterTypeName = adapter.name;
-      this.isDataStreamDescription = this.connectService.isDataStreamDescription(adapter);
-
-
-      this.isGenericAdapter = this.connectService.isGenericDescription(this.adapter);
-
-      this.formatConfigurationValid = false;
-
-      this.protocolConfigurationValid = false;
-
-      this.eventSchema = this.connectService.getEventSchema(this.adapter);
-
-      // TODO I think I can remove this with the new edit mode
-      if (this.eventSchema.eventProperties.length > 0) {
-
-        // Timeout is needed for stepper to work correctly. Without the stepper is frozen when initializing with
-        // step 2. Can be removed when a better solution is found.
-        setTimeout(() => {
-          this.goForward();
-          this.goForward();
-        }, 1);
-
-        this.isEditable = false;
-        this.oldEventSchema = this.eventSchema;
-      }
-    });
   }
 
   ngAfterViewInit() {

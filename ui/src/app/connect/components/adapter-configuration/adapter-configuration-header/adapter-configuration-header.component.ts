@@ -25,9 +25,6 @@ import { Component, Input } from '@angular/core';
 })
 export class AdapterConfigurationHeaderComponent {
 
-
-  // @Input() adapter: AdapterDescriptionUnion;
-
   /**
    * Used to display the type of the configured adapter
    */
@@ -40,10 +37,5 @@ export class AdapterConfigurationHeaderComponent {
 
   constructor() {
   }
-
-  // ngOnInit(): void {
-  //   this.adapterTypeName = this.adapter.name;
-  // this.isDataStreamDescription = this.connectService.isDataStreamDescription(this.adapter);
-  // }
 
 }
