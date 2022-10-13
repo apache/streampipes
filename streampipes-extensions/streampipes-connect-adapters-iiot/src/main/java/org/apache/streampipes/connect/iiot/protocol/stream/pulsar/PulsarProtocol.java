@@ -18,6 +18,9 @@
 package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.MessageId;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Reader;
@@ -73,11 +76,16 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
     try (PulsarClient pulsarClient = PulsarUtils.makePulsarClient(brokerUrl);
          Reader<byte[]> reader = pulsarClient.newReader()
                  .topic(topic)
+                 .startMessageId(MessageId.earliest)
                  .create()) {
-      for (int i = 0; i < n; i++) {
-        if (reader.hasMessageAvailable()) {
-          elements.add(reader.readNext().getValue());
+      int readCount = 0;
+      while (readCount < n) {
+        Message<byte[]> message = reader.readNext(1, TimeUnit.SECONDS);
+        if (message == null) {
+          continue;
         }
+        elements.add(message.getValue());
+        readCount++;
       }
     } catch (IOException e) {
       throw new ParseException("Failed to fetch messages.", e);
