@@ -28,8 +28,8 @@ import { AdapterDescription, AdapterDescriptionUnion, Message } from '../model/g
 export class AdapterService {
 
   constructor(
-      private http: HttpClient,
-      private platformServicesCommons: PlatformServicesCommons) {
+    private http: HttpClient,
+    private platformServicesCommons: PlatformServicesCommons) {
   }
 
   get connectPath() {
@@ -42,6 +42,15 @@ export class AdapterService {
 
   getAdapters(): Observable<AdapterDescriptionUnion[]> {
     return this.requestAdapterDescriptions('/master/adapters');
+  }
+
+  getAdapter(id: string): Observable<AdapterDescriptionUnion> {
+    return this.http
+      .get(
+        this.connectPath +
+        `/master/adapters/${id}`
+      )
+      .pipe(map(response => AdapterDescription.fromDataUnion(response as any)));
   }
 
   deleteAdapterDescription(adapterId: string): Observable<any> {
@@ -72,6 +81,15 @@ export class AdapterService {
       + '/start', {})
       .pipe(map(response => Message.fromData(response as any)));
   }
+
+  addAdapter(adapter: AdapterDescription): Observable<Message> {
+    return this.http
+      .post(`${this.connectPath}/master/adapters`,
+        adapter
+      )
+      .pipe(map(response => Message.fromData(response as any)));
+  }
+
 
   get adapterMasterUrl() {
     return `${this.connectPath}/master/adapters/`;

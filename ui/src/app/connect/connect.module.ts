@@ -151,7 +151,7 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
             component: NewAdapterComponent,
           },
           {
-            path: 'edit/:appId',
+            path: 'edit/:elementId',
             component: EditAdapterComponent,
           }]
       }]),

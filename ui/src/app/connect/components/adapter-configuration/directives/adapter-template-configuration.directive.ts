@@ -48,7 +48,7 @@ export abstract class AdapterTemplateConfigurationDirective {
   availableTemplates: PipelineElementTemplate[];
   selectedTemplate: any = false;
 
-  constructor(protected _formBuilder: FormBuilder,
+  protected constructor(protected _formBuilder: FormBuilder,
               protected dialogService: DialogService,
               protected pipelineElementTemplateService: PipelineElementTemplateService,
               protected adapterTemplateService: AdapterTemplateService) {

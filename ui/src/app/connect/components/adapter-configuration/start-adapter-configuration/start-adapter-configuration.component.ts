@@ -98,6 +98,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
     this.startAdapterForm.statusChanges.subscribe(() => {
       this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
     });
+    this.startAdapterSettingsFormValid = this.startAdapterForm.valid;
   }
 
   findDefaultTimestamp(selected: boolean) {

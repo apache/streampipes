@@ -28,12 +28,17 @@ export class AdapterConfigurationHeaderComponent {
   /**
    * Used to display the type of the configured adapter
    */
-  @Input() adapterTypeName = '';
+  @Input() displayName = '';
 
   /**
    * Indicates whether the adapter is a data set or data stream adapter
    */
   @Input() isDataStreamDescription = true;
+
+  /**
+   * Use different title when in edit mode
+   */
+  @Input() isEditMode;
 
   constructor() {
   }

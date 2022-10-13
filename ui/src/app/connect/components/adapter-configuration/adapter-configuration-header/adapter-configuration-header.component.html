@@ -27,5 +27,8 @@
     </div>
     <span fxFlex></span>
   </div>
-  <h1 class="new-adapter-title">New Source: {{adapterTypeName}}</h1>
+  <h1 *ngIf="!isEditMode"
+      class="new-adapter-title">New Adapter: {{displayName}}</h1>
+  <h1 *ngIf="isEditMode"
+      class="new-adapter-title">Edit Adapter: {{displayName}}</h1>
 </div>

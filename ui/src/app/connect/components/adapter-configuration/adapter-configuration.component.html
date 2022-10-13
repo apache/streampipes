@@ -18,15 +18,16 @@
 
 <sp-basic-view [padding]="true" [showBackLink]="false">
 
-    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+    <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
         <button mat-icon-button (click)="removeSelection()" matTooltip="Cancel">
             <i class="material-icons">close</i>
         </button>
     </div>
     <div fxLayout="column" fxLayoutAlign="center stretch" *ngIf="adapter">
 
-        <sp-adapter-configuration-header [adapterTypeName]="adapterTypeName"
-                                         [isDataStreamDescription]="isDataStreamDescription"></sp-adapter-configuration-header>
+        <sp-adapter-configuration-header [displayName]="displayName"
+                                         [isDataStreamDescription]="isDataStreamDescription"
+                                         [isEditMode]="isEditMode"></sp-adapter-configuration-header>
 
         <mat-horizontal-stepper [linear]="true" #stepper color="accent" class="stepper">
             <mat-step *ngIf="!isGenericAdapter">

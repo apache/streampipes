@@ -18,13 +18,12 @@ export class NewAdapterComponent implements OnInit {
 
   constructor(private breadcrumbService: SpBreadcrumbService,
               private connectService: ConnectService,
-              private dataMarketplaceService: AdapterService,
-              private route: ActivatedRoute) {
-  }
+              private adapterService: AdapterService,
+              private route: ActivatedRoute) { }
 
   ngOnInit(): void {
 
-    this.dataMarketplaceService.getAdapterDescriptions().subscribe(adapters => {
+    this.adapterService.getAdapterDescriptions().subscribe(adapters => {
       const adapter = adapters.find(a => a.appId === this.route.snapshot.params.appId);
       this.adapterTypeName = adapter.name;
       this.adapter = this.connectService.cloneAdapterDescription(adapter);

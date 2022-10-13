@@ -43,8 +43,9 @@ export class AdapterConfigurationComponent implements OnInit {
   /**
    * Used to display the type of the configured adapter
    */
-  @Input() adapterTypeName = '';
+  @Input() displayName = '';
   @Input() adapter: AdapterDescriptionUnion;
+  @Input() isEditMode;
 
   /**
    * Required to render the corresponding components

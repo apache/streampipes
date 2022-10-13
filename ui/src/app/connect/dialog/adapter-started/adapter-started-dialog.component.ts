@@ -30,6 +30,7 @@ import {
 } from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 import { PipelineInvocationBuilder } from '../../../core-services/template/PipelineInvocationBuilder';
+import { AdapterService } from '../../../../../projects/streampipes/platform-services/src/lib/apis/adapter.service';
 
 
 @Component({
@@ -59,6 +60,7 @@ export class AdapterStartedDialog implements OnInit {
 
   constructor(
     public dialogRef: DialogRef<AdapterStartedDialog>,
+    private adapterService: AdapterService,
     private restService: RestService,
     private shepherdService: ShepherdService,
     private pipelineTemplateService: PipelineTemplateService) {
@@ -70,7 +72,7 @@ export class AdapterStartedDialog implements OnInit {
 
   startAdapter() {
     const newAdapter = this.adapter;
-    this.restService.addAdapter(this.adapter).subscribe(x => {
+    this.adapterService.addAdapter(this.adapter).subscribe(x => {
       this.adapterStatus = x;
       if (x.success) {
 
@@ -91,7 +93,7 @@ export class AdapterStartedDialog implements OnInit {
 
               const pipelineName = 'Persist ' + this.adapter.name;
 
-              let indexName = this.adapter.name
+              const indexName = this.adapter.name;
 
               const pipelineInvocation = PipelineInvocationBuilder
                 .create(res)
