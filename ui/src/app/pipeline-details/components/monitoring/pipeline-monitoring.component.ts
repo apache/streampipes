@@ -20,12 +20,12 @@ import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import {
   DataProcessorInvocation,
   DataSinkInvocation,
-  PipelineElementMonitoringInfo,
   PipelineMonitoringInfo,
   PipelineMonitoringService,
   PipelineService,
   SpDataSet,
-  SpDataStream
+  SpDataStream,
+  SpMetricsEntry
 } from '@streampipes/platform-services';
 import { PipelineOperationsService } from '../../../pipelines/services/pipeline-operations.service';
 import { AuthService } from '../../../services/auth.service';
@@ -46,10 +46,11 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
   pipelineMonitoringInfoAvailable = false;
 
   allElements: (SpDataSet | SpDataStream | DataProcessorInvocation | DataSinkInvocation)[] = [];
+  monitoredElements: (DataProcessorInvocation | DataSinkInvocation)[] = [];
 
   autoRefresh = true;
 
-  pipelineElementMonitoringInfo: Map<string, PipelineElementMonitoringInfo>;
+  metricsInfo: Record<string, SpMetricsEntry>;
 
   reloadPipelinesEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   reloadSubscription: Subscription;
@@ -75,28 +76,26 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
   }
 
   collectAllElements() {
-    this.allElements = this.allElements
-        .concat(this.pipeline.streams)
+    this.monitoredElements = this.monitoredElements
         .concat(this.pipeline.sepas)
         .concat(this.pipeline.actions);
+
+    this.allElements = this.allElements
+      .concat(this.monitoredElements)
+      .concat(this.pipeline.streams);
   }
 
-  refreshMonitoringInfo() {
+  refreshMonitoringInfo(addTimeout = true) {
     this.pipelineMonitoringService
         .getMetricsInfoForPipeline(this.pipeline._id)
         .subscribe(monitoringInfo => {
-          console.log(monitoringInfo);
-          // this.pipelineElementMonitoringInfo = new Map<string, PipelineElementMonitoringInfo>();
-          // this.pipelineMonitoringInfo = monitoringInfo;
-          // monitoringInfo.pipelineElementMonitoringInfo.forEach(info => {
-          //   this.pipelineElementMonitoringInfo.set(info.pipelineElementId, info);
-          // });
-          // this.pipelineMonitoringInfoAvailable = true;
-          // if (this.autoRefresh) {
-          //   setTimeout(() => {
-          //     this.refreshMonitoringInfo();
-          //   }, 5000);
-          // }
+          this.metricsInfo = monitoringInfo;
+          this.pipelineMonitoringInfoAvailable = true;
+          if (this.autoRefresh && addTimeout) {
+            setTimeout(() => {
+              this.refreshMonitoringInfo();
+            }, 5000);
+          }
         });
   }
 
@@ -116,7 +115,12 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
   onPipelineAvailable(): void {
     this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Metrics'} ]);
     this.collectAllElements();
-    this.checkMonitoringInfoCollection();
+    this.refreshMonitoringInfo();
   }
 
+  triggerMetricsUpdate(): void {
+    this.pipelineMonitoringService.triggerMonitoringUpdate().subscribe(res => {
+      this.refreshMonitoringInfo(false);
+    });
+  }
 }

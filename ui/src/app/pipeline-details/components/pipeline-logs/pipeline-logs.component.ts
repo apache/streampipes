@@ -20,11 +20,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { SpPipelineRoutes } from '../../../pipelines/pipelines.routes';
 import { ActivatedRoute } from '@angular/router';
-import { PipelineMonitoringService, PipelineService } from '@streampipes/platform-services';
+import { PipelineMonitoringService, PipelineService, SpLogEntry } from '@streampipes/platform-services';
 import { AuthService } from '../../../services/auth.service';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
-import { SpLogEntry } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Component({
   selector: 'sp-pipeline-logs',
@@ -52,7 +51,11 @@ export class PipelineLogsComponent extends SpPipelineDetailsDirective implements
   }
 
   onPipelineAvailable(): void {
-    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Logs'} ]);
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Logs'}]);
+    this.receiveLogInfos();
+  }
+
+  receiveLogInfos(): void {
     this.pipelineMonitoringService.getLogInfoForPipeline(this.pipeline._id).subscribe(response => {
       this.logInfos = response;
     });
@@ -60,6 +63,12 @@ export class PipelineLogsComponent extends SpPipelineDetailsDirective implements
 
   selectElement(pipelineElement: PipelineElementUnion): void {
     this.selectedElementId = pipelineElement.elementId;
+  }
+
+  triggerLogUpdate(): void {
+    this.pipelineMonitoringService.triggerMonitoringUpdate().subscribe(res => {
+      this.receiveLogInfos();
+    });
   }
 
 }

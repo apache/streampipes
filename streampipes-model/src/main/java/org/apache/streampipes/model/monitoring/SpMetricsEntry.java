@@ -20,14 +20,19 @@ package org.apache.streampipes.model.monitoring;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @TsModel
 public class SpMetricsEntry {
 
   private long lastTimestamp;
-  private long messagesIn = 0;
-  private long messagesOut = 0;
+  private Map<String, MessageCounter> messagesIn;
+  private MessageCounter messagesOut;
 
   public SpMetricsEntry() {
+    this.messagesIn = new HashMap<>();
+    this.messagesOut = new MessageCounter();
   }
 
   public long getLastTimestamp() {
@@ -38,19 +43,35 @@ public class SpMetricsEntry {
     this.lastTimestamp = lastTimestamp;
   }
 
-  public long getMessagesIn() {
+  public Map<String, MessageCounter> getMessagesIn() {
     return messagesIn;
   }
 
-  public void setMessagesIn(long messagesIn) {
+  public void setMessagesIn(Map<String, MessageCounter> messagesIn) {
     this.messagesIn = messagesIn;
   }
 
-  public long getMessagesOut() {
+  public MessageCounter getMessagesOut() {
     return messagesOut;
   }
 
-  public void setMessagesOut(long messagesOut) {
+  public void setMessagesOut(MessageCounter messagesOut) {
     this.messagesOut = messagesOut;
+  }
+
+  public void addOutMetrics(long lastTimestamp) {
+    this.messagesOut.setLastTimestamp(lastTimestamp);
+    this.messagesOut.setCounter(this.messagesOut.getCounter() + 1);
+  }
+
+  public void addInMetrics(String sourceInfo,
+                           long lastTimestamp) {
+    if (!this.messagesIn.containsKey(sourceInfo)) {
+      this.messagesIn.put(sourceInfo, new MessageCounter());
+    }
+
+    var messagesIn = this.messagesIn.get(sourceInfo);
+    messagesIn.setCounter(messagesIn.getCounter() + 1);
+    messagesIn.setLastTimestamp(lastTimestamp);
   }
 }

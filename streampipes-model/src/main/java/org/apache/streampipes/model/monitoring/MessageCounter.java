@@ -16,12 +16,29 @@
  *
  */
 
-export interface HistoricalMonitoringData {
-  name: string;
-  value: number;
-}
+package org.apache.streampipes.model.monitoring;
 
-export interface ObservedMetricsStream {
-  pipelineElementName: string;
-  identifier: string;
+public class MessageCounter {
+
+  private long lastTimestamp;
+  private long counter = 0;
+
+  public MessageCounter() {
+  }
+
+  public void setLastTimestamp(long lastTimestamp) {
+    this.lastTimestamp = lastTimestamp;
+  }
+
+  public void setCounter(long counter) {
+    this.counter = counter;
+  }
+
+  public long getLastTimestamp() {
+    return lastTimestamp;
+  }
+
+  public long getCounter() {
+    return counter;
+  }
 }

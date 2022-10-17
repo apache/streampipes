@@ -18,6 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
+import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.rest.api.IPipelineMonitoring;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
@@ -47,5 +48,9 @@ public class PipelineMonitoring extends AbstractRestResource implements IPipelin
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }
 
-
+  @GET
+  public Response triggerMonitoringUpdate() {
+    new ExtensionsServiceLogExecutor().triggerUpdate();
+    return ok();
+  }
 }

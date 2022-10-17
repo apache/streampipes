@@ -56,7 +56,7 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
     Map<String, Object> outEvent = new EventConverter(event).toMap();
     try {
       producer.publish(dataFormatDefinition.fromMap(outEvent));
-      SpMonitoringManager.INSTANCE.increaseInCounter(resourceId, System.currentTimeMillis());
+      SpMonitoringManager.INSTANCE.increaseOutCounter(resourceId, System.currentTimeMillis());
     } catch (SpRuntimeException e) {
       var logEntry = SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e));
       SpMonitoringManager.INSTANCE.addErrorMessage(resourceId, logEntry);

@@ -34,6 +34,10 @@ public class ExtensionsServiceLogExecutor implements Runnable {
   private static final String LOG_PATH = "/monitoring";
 
   public void run() {
+    triggerUpdate();
+  }
+
+  public void triggerUpdate() {
     List<String> serviceEndpoints = getActiveExtensionsEndpoints();
 
     serviceEndpoints.forEach(serviceEndpoint -> {

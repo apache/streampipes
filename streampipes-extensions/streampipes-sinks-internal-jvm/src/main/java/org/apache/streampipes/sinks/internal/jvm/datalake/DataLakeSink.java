@@ -67,8 +67,6 @@ public class DataLakeSink extends StreamPipesDataSink {
 
     @Override
     public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-
-
         LOG = parameters.getGraph().getLogger(DataLakeSink.class);
 
         String timestampField = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);

@@ -24,4 +24,6 @@ public interface IPipelineMonitoring {
   Response getLogInfoForPipeline(String pipelineId);
 
   Response getMetricsInfoForPipeline(String pipelineId);
+
+  Response triggerMonitoringUpdate();
 }

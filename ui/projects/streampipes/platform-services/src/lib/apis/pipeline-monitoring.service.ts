@@ -32,12 +32,16 @@ export class PipelineMonitoringService {
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
+  triggerMonitoringUpdate(): Observable<any> {
+    return this.http.get(this.monitoringBasePath);
+  }
+
   getLogInfoForPipeline(pipelineId: string): Observable<Record<string, SpLogEntry[]>> {
     return this.http.get(this.logUrl(pipelineId))
         .pipe(map(response => response as Record<string, SpLogEntry[]>));
   }
 
-  getMetricsInfoForPipeline(pipelineId: string): Observable<any> {
+  getMetricsInfoForPipeline(pipelineId: string): Observable<Record<string, SpMetricsEntry>> {
     return this.http.get(this.metricsUrl(pipelineId))
       .pipe(map(response => response as Record<string, SpMetricsEntry>));
   }
@@ -51,7 +55,11 @@ export class PipelineMonitoringService {
   }
 
   private monitoringUrl(pipelineId): string {
-    return `${this.platformServicesCommons.apiBasePath}/pipeline-monitoring/pipeline/${pipelineId}`;
+    return `${this.monitoringBasePath}/pipeline/${pipelineId}`;
+  }
+
+  private get monitoringBasePath(): string {
+    return `${this.platformServicesCommons.apiBasePath}/pipeline-monitoring`;
   }
 
 }

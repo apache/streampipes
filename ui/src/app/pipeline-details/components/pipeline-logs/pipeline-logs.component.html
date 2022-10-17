@@ -22,7 +22,13 @@
                    [backLinkTarget]="['pipelines']">
 
   <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-
+    <button mat-button
+            mat-icon-button
+            color="accent"
+            class="mr-10"
+            matTooltip="Refresh"
+            (click)="triggerLogUpdate()">
+    </button>
   </div>
   <div fxLayout="column" class="page-container-padding" *ngIf="pipeline">
     <div fxFlex="100" fxLayout="column" class="page-container-padding-inner">
