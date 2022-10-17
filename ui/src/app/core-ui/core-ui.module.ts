@@ -59,8 +59,12 @@ import { StaticCollectionComponent } from './static-properties/static-collection
 import { StaticColorPickerComponent } from './static-properties/static-color-picker/static-color-picker.component';
 import { StaticCodeInputComponent } from './static-properties/static-code-input/static-code-input.component';
 import { StaticOneOfInputComponent } from './static-properties/static-one-of-input/static-one-of-input.component';
-import { StaticRuntimeResolvableAnyInputComponent } from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
-import { StaticRuntimeResolvableOneOfInputComponent } from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
+import {
+  StaticRuntimeResolvableAnyInputComponent
+} from './static-properties/static-runtime-resolvable-any-input/static-runtime-resolvable-any-input.component';
+import {
+  StaticRuntimeResolvableOneOfInputComponent
+} from './static-properties/static-runtime-resolvable-oneof-input/static-runtime-resolvable-oneof-input.component';
 import { RuntimeResolvableService } from './static-properties/static-runtime-resolvable-input/runtime-resolvable.service';
 import { DisplayRecommendedPipe } from './static-properties/filter/display-recommended.pipe';
 import { ColorPickerModule } from 'ngx-color-picker';
@@ -77,7 +81,9 @@ import { SplitSectionComponent } from './split-section/split-section.component';
 import { ObjectPermissionDialogComponent } from './object-permission-dialog/object-permission-dialog.component';
 import { StaticSlideToggleComponent } from './static-properties/static-slide-toggle/static-slide-toggle.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { StaticRuntimeResolvableTreeInputComponent } from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
+import {
+  StaticRuntimeResolvableTreeInputComponent
+} from './static-properties/static-runtime-resolvable-tree-input/static-tree-input.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ImageBarPreviewComponent } from './image/components/image-bar/image-bar-preview/image-bar-preview.component';
@@ -86,6 +92,11 @@ import { PipelineElementTemplateConfigComponent } from './pipeline-element-templ
 import { PipelineElementTemplatePipe } from './pipeline-element-template-config/pipeline-element-template.pipe';
 import { DataDownloadDialogComponent } from './data-download-dialog/data-download-dialog.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angular-datetime-picker';
+import { SelectDataComponent } from './data-download-dialog/components/select-data/select-data.component';
+import { SelectFormatComponent } from './data-download-dialog/components/select-format/select-format.component';
+import { DownloadComponent } from './data-download-dialog/components/download/download.component';
+import { SelectDataRangeComponent } from './data-download-dialog/components/select-data/select-data-range/select-data-range.component';
+import { SelectDataMissingValuesComponent } from './data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
 
 @NgModule({
   imports: [
@@ -154,6 +165,11 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     ErrorHintComponent,
     AddToCollectionComponent,
     PipelineStartedStatusComponent,
+    SelectDataComponent,
+    SelectFormatComponent,
+    DownloadComponent,
+    SelectDataRangeComponent,
+    SelectDataMissingValuesComponent,
   ],
   providers: [
     MatDatepickerModule,
@@ -164,7 +180,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     BrushLabelingService,
     CocoFormatService,
     LabelingModeService,
-    RuntimeResolvableService,
+    RuntimeResolvableService
   ],
   exports: [
     ConfigureLabelsComponent,
@@ -192,7 +208,7 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from '@danielmoncada/angul
     ImageViewerComponent,
     ErrorHintComponent,
     PipelineStartedStatusComponent,
-    SplitSectionComponent,
+    SplitSectionComponent
   ]
 })
 export class CoreUiModule {

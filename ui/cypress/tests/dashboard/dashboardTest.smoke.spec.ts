@@ -16,7 +16,7 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/ConnectUtils';
+import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
 
 describe('Test live dashboard', () => {

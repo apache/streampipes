@@ -64,7 +64,7 @@ public class AdapterMasterManagement {
 
   public String addAdapter(AdapterDescription ad,
                            String principalSid)
-          throws AdapterException {
+      throws AdapterException {
 
     // Create elementId for adapter
     // TODO centralized provisioning of element id
@@ -94,8 +94,15 @@ public class AdapterMasterManagement {
     return storedDescription.getElementId();
   }
 
+  public void updateAdapter(AdapterDescription ad,
+                              String principalSid)
+      throws AdapterException {
+    this.adapterResourceManager.encryptAndUpdate(ad);
+  }
 
-  public AdapterDescription getAdapter(String elementId) throws AdapterException {
+
+
+    public AdapterDescription getAdapter(String elementId) throws AdapterException {
     List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
 
     if (allAdapters != null && elementId != null) {
@@ -111,8 +118,8 @@ public class AdapterMasterManagement {
 
   /**
    * First the adapter is stopped removed, then the corresponding data source is deleted
-   * @param elementId: The elementId of the adapter instance
-   * @throws AdapterException
+   * @param elementId The elementId of the adapter instance
+   * @throws AdapterException when adapter can not be stopped
    */
   public void deleteAdapter(String elementId) throws AdapterException {
 

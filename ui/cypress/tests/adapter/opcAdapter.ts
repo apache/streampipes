@@ -16,7 +16,7 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/ConnectUtils';
+import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 import { ParameterUtils } from '../../support/utils/ParameterUtils';
 

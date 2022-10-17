@@ -19,7 +19,6 @@
 import { Injectable } from '@angular/core';
 import { SpAdapterTemplateDialogComponent } from '../dialog/adapter-template/adapter-template-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
-import { AdapterDescriptionUnion } from '@streampipes/platform-services';
 import { StaticPropertyUnion } from '../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Injectable({providedIn: 'root'})

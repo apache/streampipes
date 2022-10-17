@@ -29,6 +29,11 @@
 // the project's config changing)
 import * as fs from 'fs';
 import { ProcessorTest } from '../support/model/ProcessorTest';
+
+// tslint:disable-next-line:no-var-requires
+const { rmdir } = require('fs');
+
+// tslint:disable-next-line:no-var-requires no-implicit-dependencies
 const webpackPreprocessor = require('@cypress/webpack-batteries-included-preprocessor');
 
 function readProcessingElements(): ProcessorTest[] {
@@ -39,23 +44,23 @@ function readProcessingElements(): ProcessorTest[] {
   allPipelineTests.forEach(dir => {
     const subfolder = fs.readdirSync('cypress/fixtures/pipelineElement/' + dir);
     subfolder.forEach(test => {
-    const testDescription = fs.readFileSync('cypress/fixtures/pipelineElement/' + dir + '/' + test + '/description.json');
-    // @ts-ignore
-    const pt = new ProcessorTest();
-    pt.name = test;
-    pt.dir = dir + '/' + test;
+      const testDescription = fs.readFileSync('cypress/fixtures/pipelineElement/' + dir + '/' + test + '/description.json');
+      // @ts-ignore
+      const pt = new ProcessorTest();
+      pt.name = test;
+      pt.dir = dir + '/' + test;
 
-    const configDir = fs.readdirSync('cypress/fixtures/pipelineElement/' + pt.dir );
-    configDir.forEach(file => {
-      if (file.startsWith('input')) {
-        pt.inputFile = file;
-      }
-    });
+      const configDir = fs.readdirSync('cypress/fixtures/pipelineElement/' + pt.dir);
+      configDir.forEach(file => {
+        if (file.startsWith('input')) {
+          pt.inputFile = file;
+        }
+      });
 
-    // @ts-ignore
-    pt.processor = JSON.parse(testDescription);
+      // @ts-ignore
+      pt.processor = JSON.parse(testDescription);
 
-    result.push(pt);
+      result.push(pt);
     });
   });
 
@@ -66,7 +71,7 @@ module.exports = (on, config) => {
 
   const webpackOptions = webpackPreprocessor.defaultOptions.webpackOptions;
 
-  webpackOptions.resolve.fallback = { "stream": require.resolve("stream-browserify") };
+  webpackOptions.resolve.fallback = {'stream': require.resolve('stream-browserify')};
   webpackOptions.module.rules.unshift({
     test: /[/\\]@angular[/\\].+\.m?js$/,
     resolve: {
@@ -88,6 +93,26 @@ module.exports = (on, config) => {
   }));
 
   config.env.processingElements = readProcessingElements();
+
+  on('task', {
+    deleteFolder(folderName) {
+      console.log('deleting folder %s', folderName);
+      return new Promise((resolve, reject) => {
+        if (fs.existsSync(folderName)) {
+          rmdir(folderName, {maxRetries: 10, recursive: true}, (err) => {
+            if (err) {
+              console.error(err);
+              return reject(err);
+            }
+            resolve(null);
+          });
+        } else {
+          console.log('download folder %s does not exist', folderName);
+          resolve(null);
+        }
+      });
+    }
+  });
 
   return config;
 };
