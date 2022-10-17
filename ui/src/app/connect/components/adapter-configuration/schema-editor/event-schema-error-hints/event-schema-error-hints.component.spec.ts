@@ -15,29 +15,29 @@
  *  limitations under the License.
  *
  */
-export class ConnectBtns {
-  public static infoAdapter() {
-    return cy.dataCy('info-adapter');
-  }
 
-  public static editAdapter() {
-    return cy.dataCy('edit-adapter');
-  }
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-  public static stopAdapter() {
-    return cy.dataCy('stop-adapter');
-  }
+import { EventSchemaErrorHintsComponent } from './event-schema-error-hints.component';
 
-  public static startAdapter() {
-    return cy.dataCy('start-adapter');
-  }
+describe('EventSchemaErrorHintsComponent', () => {
+  let component: EventSchemaErrorHintsComponent;
+  let fixture: ComponentFixture<EventSchemaErrorHintsComponent>;
 
-  public static refreshSchema() {
-    return cy.dataCy('refresh-schema');
-  }
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ EventSchemaErrorHintsComponent ]
+    })
+    .compileComponents();
+  });
 
-  public static storeEditAdapter() {
-    return cy.dataCy('store-edit-adapter');
-  }
+  beforeEach(() => {
+    fixture = TestBed.createComponent(EventSchemaErrorHintsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

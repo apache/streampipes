@@ -23,15 +23,16 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Test Edit Adapter', () => {
   beforeEach('Setup Test', () => {
-    // To set up test add a stream adapter that can be configured
-    cy.initStreamPipesTest();
-    const adapterInput = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName('Machine Data Simulator Test')
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
-
-    ConnectUtils.testSpecificStreamAdapter(adapterInput);
+    // // To set up test add a stream adapter that can be configured
+    // cy.initStreamPipesTest();
+    // const adapterInput = SpecificAdapterBuilder
+    //   .create('Machine_Data_Simulator')
+    //   .setName('Machine Data Simulator Test')
+    //   .addInput('input', 'wait-time-ms', '1000')
+    //   .build();
+    //
+    // ConnectUtils.testSpecificStreamAdapter(adapterInput);
+    cy.login();
   });
 
   it('Perform Test', () => {
@@ -47,12 +48,21 @@ describe('Test Edit Adapter', () => {
     ConnectBtns.editAdapter().should('not.be.disabled');
     ConnectBtns.editAdapter().click();
 
-    // Change config 'wait-time-ms' to 2000 and save adapter
+    // Change adapter configurations
     const newUserConfiguration = UserInputBuilder
       .create()
       .add('input', 'wait-time-ms', '2000')
+      .add('radio', 'selected', 'simulator-option-pressure')
       .build();
     ConnectUtils.configureAdapter(newUserConfiguration);
+
+    // check warning that event schema might have changed
+    cy.dataCy('sp-connect-adapter-warning-event-schema-change', {timeout: 10000}).should('be.visible');
+
+    // Update event schema
+    ConnectBtns.refreshSchema().click();
+
+    cy.dataCy('sp-connect-adapter-warning-event-schema-change', {timeout: 10000}).should('not.be.visible');
 
     ConnectUtils.finishEventSchemaConfiguration();
 
@@ -70,7 +80,12 @@ describe('Test Edit Adapter', () => {
     ConnectBtns.infoAdapter().click();
     cy.get('div').contains('Values').parent().click();
 
+    // Validate resulting event
     cy.dataCy('sp-connect-adapter-live-preview', {timeout: 10000}).should('be.visible');
+
+    // validate that three event properties
+    cy.get('.preview-row', {timeout: 10000}).its('length').should('eq', 3);
+
   });
 
 });

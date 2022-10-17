@@ -15,29 +15,26 @@
  *  limitations under the License.
  *
  */
-export class ConnectBtns {
-  public static infoAdapter() {
-    return cy.dataCy('info-adapter');
-  }
 
-  public static editAdapter() {
-    return cy.dataCy('edit-adapter');
-  }
+import { Component, Input, OnInit } from '@angular/core';
+import { UserErrorMessage } from '../../../../../core-model/base/UserErrorMessage';
 
-  public static stopAdapter() {
-    return cy.dataCy('stop-adapter');
-  }
+@Component({
+  selector: 'sp-event-schema-error-hints',
+  templateUrl: './event-schema-error-hints.component.html',
+  styleUrls: ['./event-schema-error-hints.component.scss']
+})
+export class EventSchemaErrorHintsComponent implements OnInit {
 
-  public static startAdapter() {
-    return cy.dataCy('start-adapter');
-  }
+  @Input() schemaErrorHints: UserErrorMessage[];
 
-  public static refreshSchema() {
-    return cy.dataCy('refresh-schema');
-  }
+  @Input() isLoading: boolean;
 
-  public static storeEditAdapter() {
-    return cy.dataCy('store-edit-adapter');
+  @Input() isError: boolean;
+
+  constructor() { }
+
+  ngOnInit(): void {
   }
 
 }

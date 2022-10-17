@@ -114,6 +114,7 @@ import {
 } from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
+import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
 
 @NgModule({
   imports: [
@@ -199,7 +200,8 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
     SpAdapterOptionsPanelComponent,
     AdapterConfigurationHeaderComponent,
     NewAdapterComponent,
-    EditAdapterComponent
+    EditAdapterComponent,
+    EventSchemaErrorHintsComponent
   ],
   providers: [
     RestService,

@@ -1,4 +1,4 @@
-/*
+/*!
  *  Licensed to the Apache Software Foundation (ASF) under one or more
  *  contributor license agreements.  See the NOTICE file distributed with
  *  this work for additional information regarding copyright ownership.
@@ -15,29 +15,36 @@
  *  limitations under the License.
  *
  */
-export class ConnectBtns {
-  public static infoAdapter() {
-    return cy.dataCy('info-adapter');
-  }
 
-  public static editAdapter() {
-    return cy.dataCy('edit-adapter');
-  }
-
-  public static stopAdapter() {
-    return cy.dataCy('stop-adapter');
-  }
-
-  public static startAdapter() {
-    return cy.dataCy('start-adapter');
-  }
-
-  public static refreshSchema() {
-    return cy.dataCy('refresh-schema');
-  }
-
-  public static storeEditAdapter() {
-    return cy.dataCy('store-edit-adapter');
-  }
-
+.schema-validation {
+  margin-bottom: 10px;
+  border: 2px solid var(--color-bg-3);
+  padding: 10px;
+  min-height: 50px;
+  text-align: center;
 }
+
+.schema-validation-ok {
+  border: 2px solid #629f62;
+}
+
+.schema-validation-error {
+  border: 2px solid #963e3e;
+}
+
+.schema-validation-warning {
+  border: 2px solid #d09836;
+}
+
+.schema-validation-text-ok {
+  color: #629f62;
+}
+
+.schema-validation-text-error {
+  color: #963e3e;
+}
+
+.schema-validation-text-warning {
+  color: #d09836;
+}
+

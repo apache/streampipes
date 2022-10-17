@@ -19,34 +19,12 @@
 
 <div fxLayout="column" fxLayoutAlign="center" class="mt-20">
     <div fxFlex="90" fxLayout="column">
-        <div fxLayout="column"
-             fxFlex="100"
-             fxLayoutAlign="start center"
-             *ngIf="!isLoading && !isError && schemaErrorHints.length === 0"
-             class="schema-validation schema-validation-ok">
-            <div fxFlex="100"
-                 fxLayout="row"
-                 fxLayoutAlign="start center"
-                 class="schema-validation-text-ok">
-                <i class="material-icons">check_circle</i>&nbsp;<b>Schema ok</b>
-            </div>
-        </div>
 
-        <div fxLayout="column" fxFlex="100" *ngIf="!isLoading && !isError && schemaErrorHints.length > 0">
-            <div fxFlex="100"
-                 fxLayout="column"
-                 [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation schema-validation-error' : 'schema-validation schema-validation-warning'"
-                 fxLayoutAlign="start center" *ngFor="let schemaErrorHint of schemaErrorHints">
-                <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start"
-                     [ngClass]="schemaErrorHint.level === 'error' ? 'schema-validation-text-error' : 'schema-validation-text-warning'">
-                    <i class="material-icons">warning</i>&nbsp;
-                    <b>{{schemaErrorHint.title}}</b>
-                </div>
-                <div>
-                    <span>{{schemaErrorHint.content}}</span>
-                </div>
-            </div>
-        </div>
+        <sp-event-schema-error-hints [schemaErrorHints]="schemaErrorHints"
+                                     [isError]="isError"
+                                     [isLoading]="isLoading">
+        </sp-event-schema-error-hints>
+
         <sp-basic-inner-panel [showTitle]="false" outerMargin="0px 0px 20px 0px">
             <div header *ngIf="!isLoading && !isError" fxFlex="100">
                 <sp-schema-editor-header fxFlex="100"
