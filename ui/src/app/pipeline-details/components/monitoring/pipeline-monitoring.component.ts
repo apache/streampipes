@@ -83,19 +83,20 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
 
   refreshMonitoringInfo() {
     this.pipelineMonitoringService
-        .getPipelineMonitoringInfo(this.pipeline._id)
+        .getMetricsInfoForPipeline(this.pipeline._id)
         .subscribe(monitoringInfo => {
-          this.pipelineElementMonitoringInfo = new Map<string, PipelineElementMonitoringInfo>();
-          this.pipelineMonitoringInfo = monitoringInfo;
-          monitoringInfo.pipelineElementMonitoringInfo.forEach(info => {
-            this.pipelineElementMonitoringInfo.set(info.pipelineElementId, info);
-          });
-          this.pipelineMonitoringInfoAvailable = true;
-          if (this.autoRefresh) {
-            setTimeout(() => {
-              this.refreshMonitoringInfo();
-            }, 5000);
-          }
+          console.log(monitoringInfo);
+          // this.pipelineElementMonitoringInfo = new Map<string, PipelineElementMonitoringInfo>();
+          // this.pipelineMonitoringInfo = monitoringInfo;
+          // monitoringInfo.pipelineElementMonitoringInfo.forEach(info => {
+          //   this.pipelineElementMonitoringInfo.set(info.pipelineElementId, info);
+          // });
+          // this.pipelineMonitoringInfoAvailable = true;
+          // if (this.autoRefresh) {
+          //   setTimeout(() => {
+          //     this.refreshMonitoringInfo();
+          //   }, 5000);
+          // }
         });
   }
 
@@ -113,7 +114,7 @@ export class PipelineMonitoringComponent extends SpPipelineDetailsDirective impl
   }
 
   onPipelineAvailable(): void {
-    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Monitoring'} ]);
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: this.pipeline.name}, {label: 'Metrics'} ]);
     this.collectAllElements();
     this.checkMonitoringInfoCollection();
   }

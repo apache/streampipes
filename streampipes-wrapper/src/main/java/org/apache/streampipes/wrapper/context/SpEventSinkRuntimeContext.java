@@ -19,6 +19,7 @@ package org.apache.streampipes.wrapper.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 
@@ -32,7 +33,8 @@ public class SpEventSinkRuntimeContext extends SpRuntimeContext implements
                                    List<SchemaInfo> inputSchemaInfo,
                                    String correspondingUser,
                                    ConfigExtractor configExtractor,
-                                   StreamPipesClient streamPipesClient) {
-    super(sourceInfo, inputSchemaInfo, correspondingUser, configExtractor, streamPipesClient);
+                                   StreamPipesClient streamPipesClient,
+                                   SpMonitoringManager logManager) {
+    super(sourceInfo, inputSchemaInfo, correspondingUser, configExtractor, streamPipesClient, logManager);
   }
 }

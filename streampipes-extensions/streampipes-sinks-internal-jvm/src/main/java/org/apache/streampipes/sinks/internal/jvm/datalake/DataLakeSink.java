@@ -37,6 +37,8 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import java.util.Random;
+
 
 public class DataLakeSink extends StreamPipesDataSink {
     private static Logger LOG;
@@ -84,6 +86,11 @@ public class DataLakeSink extends StreamPipesDataSink {
 
     @Override
     public void onEvent(Event event) throws SpRuntimeException {
+        Random random = new Random();
+        int r = random.nextInt(10);
+        if (r > 7) {
+            throw new SpRuntimeException("Exception!");
+        }
         this.timeSeriesStore.onEvent(event);
     }
 

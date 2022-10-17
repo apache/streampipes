@@ -52,9 +52,11 @@ public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extend
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
+      monitoringManager.increaseInCounter(resourceId, System.currentTimeMillis());
       engine.onEvent(params.makeEvent(rawEvent, sourceInfo));
     } catch (RuntimeException e) {
       LOG.error("RuntimeException while processing event in {}", engine.getClass().getCanonicalName() , e);
+      addLogEntry(e);
     }
   }
 

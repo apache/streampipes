@@ -47,6 +47,7 @@ import { EditorComponent } from '../editor/editor.component';
 import { SpPipelineDetailsOverviewComponent } from '../pipeline-details/components/overview/pipeline-details-overview.component';
 import { PipelineMonitoringComponent } from '../pipeline-details/components/monitoring/pipeline-monitoring.component';
 import { QuickEditComponent } from '../pipeline-details/components/edit/quickedit.component';
+import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-logs/pipeline-logs.component';
 
 @NgModule({
   imports: [
@@ -85,8 +86,12 @@ import { QuickEditComponent } from '../pipeline-details/components/edit/quickedi
                 component: SpPipelineDetailsOverviewComponent,
               },
               {
-                path: 'monitoring',
+                path: 'metrics',
                 component: PipelineMonitoringComponent,
+              },
+              {
+                path: 'logs',
+                component: PipelineLogsComponent,
               },
               {
                 path: 'quick-edit',

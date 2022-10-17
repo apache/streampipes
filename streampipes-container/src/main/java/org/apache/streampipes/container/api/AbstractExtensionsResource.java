@@ -16,34 +16,43 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { StreamPipesErrorMessage } from '@streampipes/platform-services';
-import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
+package org.apache.streampipes.container.api;
 
-@Component({
-  selector: 'sp-exception-details-dialog',
-  templateUrl: './exception-details-dialog.component.html',
-  styleUrls: ['./exception-details-dialog.component.scss', '../../../../../../../../src/scss/sp/sp-dialog.scss']
-})
-export class SpExceptionDetailsDialogComponent implements OnInit {
+import javax.ws.rs.core.Response;
 
-  @Input()
-  message: StreamPipesErrorMessage;
+public class AbstractExtensionsResource {
 
-  @Input()
-  title: string;
-
-  showDetails = false;
-
-  constructor(private dialogRef: DialogRef<SpExceptionDetailsDialogComponent>) {
-
+  protected <T> Response ok(T entity) {
+    return Response
+        .ok()
+        .entity(entity)
+        .build();
   }
 
-  close() {
-    this.dialogRef.close();
+  protected Response clientError() {
+    return Response
+        .status(400)
+        .build();
   }
 
-  ngOnInit(): void {
+  protected Response serverError() {
+    return Response
+        .status(500)
+        .build();
+  }
+
+  protected <T> Response notModified(T entity) {
+    return Response
+        .notModified()
+        .entity(entity)
+        .build();
+  }
+
+  protected <T> Response noContent(T entity) {
+    return Response
+        .noContent()
+        .entity(entity)
+        .build();
   }
 
 }

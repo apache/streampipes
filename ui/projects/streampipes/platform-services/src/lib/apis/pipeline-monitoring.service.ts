@@ -19,7 +19,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PipelineMonitoringInfo } from '../model/gen/streampipes-model';
+import { PipelineMonitoringInfo, SpLogEntry, SpMetricsEntry } from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 
@@ -32,11 +32,26 @@ export class PipelineMonitoringService {
               private platformServicesCommons: PlatformServicesCommons) {
   }
 
-  getPipelineMonitoringInfo(pipelineId: string): Observable<PipelineMonitoringInfo> {
-    return this.http.get(this.platformServicesCommons.apiBasePath
-        + '/pipeline-monitoring/'
-        + pipelineId)
-        .pipe(map(response => PipelineMonitoringInfo.fromData(response as any)));
+  getLogInfoForPipeline(pipelineId: string): Observable<Record<string, SpLogEntry[]>> {
+    return this.http.get(this.logUrl(pipelineId))
+        .pipe(map(response => response as Record<string, SpLogEntry[]>));
+  }
+
+  getMetricsInfoForPipeline(pipelineId: string): Observable<any> {
+    return this.http.get(this.metricsUrl(pipelineId))
+      .pipe(map(response => response as Record<string, SpMetricsEntry>));
+  }
+
+  private logUrl(pipelineId: string): string {
+   return `${this.monitoringUrl(pipelineId)}/logs`;
+  }
+
+  private metricsUrl(pipelineId: string): string {
+    return`${this.monitoringUrl(pipelineId)}/metrics`;
+  }
+
+  private monitoringUrl(pipelineId): string {
+    return `${this.platformServicesCommons.apiBasePath}/pipeline-monitoring/pipeline/${pipelineId}`;
   }
 
 }

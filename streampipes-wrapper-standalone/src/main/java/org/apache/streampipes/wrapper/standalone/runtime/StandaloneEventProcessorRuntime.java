@@ -39,9 +39,12 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneEventProcessorRuntime.class);
 
+  protected SpOutputCollector outputCollector;
+
   public StandaloneEventProcessorRuntime(Supplier<EventProcessor<B>> supplier,
                                          EventProcessorRuntimeParams<B> params) {
     super(supplier, params);
+    this.outputCollector = getOutputCollector();
   }
 
 
@@ -58,7 +61,8 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
             .getOutputStream()
             .getEventGrounding()
             .getTransportFormats()
-            .get(0));
+            .get(0),
+        this.resourceId);
   }
 
   @Override
@@ -71,9 +75,11 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
-      engine.onEvent(params.makeEvent(rawEvent, sourceInfo), getOutputCollector());
+      monitoringManager.increaseInCounter(resourceId, System.currentTimeMillis());
+      engine.onEvent(params.makeEvent(rawEvent, sourceInfo), outputCollector);
     } catch (RuntimeException e) {
       LOG.error("RuntimeException while processing event in {}", engine.getClass().getCanonicalName(), e);
+      addLogEntry(e);
     }
   }
 
@@ -90,7 +96,7 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
       spInputCollector.connect();
     }
 
-    getOutputCollector().connect();
+    outputCollector.connect();
   }
 
   @Override
@@ -99,7 +105,7 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
       spInputCollector.disconnect();
     }
 
-    getOutputCollector().disconnect();
+    outputCollector.disconnect();
   }
 
   @Override

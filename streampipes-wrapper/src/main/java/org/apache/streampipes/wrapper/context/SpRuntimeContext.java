@@ -19,7 +19,7 @@ package org.apache.streampipes.wrapper.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 
@@ -32,17 +32,20 @@ public class SpRuntimeContext implements RuntimeContext {
   private String correspondingUser;
   private ConfigExtractor configExtractor;
   private StreamPipesClient streamPipesClient;
+  private SpMonitoringManager spLogManager;
 
   public SpRuntimeContext(List<SourceInfo> sourceInfo,
                           List<SchemaInfo> inputSchemaInfo,
                           String correspondingUser,
                           ConfigExtractor configExtractor,
-                          StreamPipesClient streamPipesClient) {
+                          StreamPipesClient streamPipesClient,
+                          SpMonitoringManager spLogManager) {
     this.inputSchemaInfo = inputSchemaInfo;
     this.sourceInfo = sourceInfo;
     this.correspondingUser = correspondingUser;
     this.configExtractor = configExtractor;
     this.streamPipesClient = streamPipesClient;
+    this.spLogManager = spLogManager;
   }
 
   public SpRuntimeContext() {
@@ -50,9 +53,8 @@ public class SpRuntimeContext implements RuntimeContext {
   }
 
   @Override
-  public Logger getLogger() {
-    // TODO add logger implementation
-    return null;
+  public SpMonitoringManager getLogger() {
+    return spLogManager;
   }
 
   @Override

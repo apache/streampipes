@@ -18,8 +18,11 @@
 package org.apache.streampipes.wrapper.standalone.runtime;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.wrapper.context.RuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.BindingParams;
 import org.apache.streampipes.wrapper.params.runtime.RuntimeParams;
@@ -42,11 +45,15 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
 
   protected RP params;
   protected final P engine;
+  protected SpMonitoringManager monitoringManager;
+  protected String resourceId;
 
   public StandalonePipelineElementRuntime(Supplier<P> supplier, RP runtimeParams) {
     super();
     this.engine = supplier.get();
     this.params = runtimeParams;
+    this.monitoringManager = params.getRuntimeContext().getLogger();
+    this.resourceId = params.getBindingParams().getGraph().getElementId();
   }
 
   public P getEngine() {
@@ -55,6 +62,7 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
 
   public void discardEngine() throws SpRuntimeException {
     engine.onDetach();
+    this.monitoringManager.resetCounter(resourceId);
   }
 
   public List<SpInputCollector> getInputCollectors() throws SpRuntimeException {
@@ -65,6 +73,12 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
               params.isSingletonEngine()));
     }
     return inputCollectors;
+  }
+
+  protected void addLogEntry(RuntimeException e) {
+    monitoringManager.addErrorMessage(
+        params.getBindingParams().getGraph().getElementId(),
+        SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
   }
 
   public abstract void bindEngine() throws SpRuntimeException;

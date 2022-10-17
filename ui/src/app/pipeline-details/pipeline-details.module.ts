@@ -40,6 +40,7 @@ import { StatusWidgetComponent } from './components/monitoring/widget/status/sta
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SpPipelineDetailsOverviewComponent } from './components/overview/pipeline-details-overview.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
+import { PipelineLogsComponent } from './components/pipeline-logs/pipeline-logs.component';
 
 @NgModule({
   imports: [
@@ -63,6 +64,7 @@ import { SharedUiModule } from '@streampipes/shared-ui';
     PipelineElementsComponent,
     PipelineElementsRowComponent,
     PipelineElementStatisticsComponent,
+    PipelineLogsComponent,
     PipelineMonitoringComponent,
     PipelineStatusComponent,
     PipelinePreviewComponent,

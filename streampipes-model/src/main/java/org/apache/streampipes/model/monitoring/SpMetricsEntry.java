@@ -16,34 +16,41 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
-import { StreamPipesErrorMessage } from '@streampipes/platform-services';
-import { DialogRef } from '../../../dialog/base-dialog/dialog-ref';
+package org.apache.streampipes.model.monitoring;
 
-@Component({
-  selector: 'sp-exception-details-dialog',
-  templateUrl: './exception-details-dialog.component.html',
-  styleUrls: ['./exception-details-dialog.component.scss', '../../../../../../../../src/scss/sp/sp-dialog.scss']
-})
-export class SpExceptionDetailsDialogComponent implements OnInit {
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
-  @Input()
-  message: StreamPipesErrorMessage;
+@TsModel
+public class SpMetricsEntry {
 
-  @Input()
-  title: string;
+  private long lastTimestamp;
+  private long messagesIn = 0;
+  private long messagesOut = 0;
 
-  showDetails = false;
-
-  constructor(private dialogRef: DialogRef<SpExceptionDetailsDialogComponent>) {
-
+  public SpMetricsEntry() {
   }
 
-  close() {
-    this.dialogRef.close();
+  public long getLastTimestamp() {
+    return lastTimestamp;
   }
 
-  ngOnInit(): void {
+  public void setLastTimestamp(long lastTimestamp) {
+    this.lastTimestamp = lastTimestamp;
   }
 
+  public long getMessagesIn() {
+    return messagesIn;
+  }
+
+  public void setMessagesIn(long messagesIn) {
+    this.messagesIn = messagesIn;
+  }
+
+  public long getMessagesOut() {
+    return messagesOut;
+  }
+
+  public void setMessagesOut(long messagesOut) {
+    this.messagesOut = messagesOut;
+  }
 }
