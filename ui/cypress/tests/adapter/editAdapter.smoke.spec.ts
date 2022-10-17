@@ -16,8 +16,10 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/ConnectUtils';
+import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
+import { UserInputBuilder } from '../../support/builder/UserInputBuilder';
+import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Test Edit Adapter', () => {
   beforeEach('Setup Test', () => {
@@ -33,27 +35,43 @@ describe('Test Edit Adapter', () => {
   });
 
   it('Perform Test', () => {
-    // TODO check that edit button is deactivated while adapter is running
+    ConnectUtils.goToConnect();
 
-    // TODO stop adapter
+    // check that edit button is deactivated while adapter is running
+    ConnectBtns.editAdapter().should('be.disabled');
 
-    // TODO Click edit adapter
+    // stop adapter
+    ConnectBtns.stopAdapter().click();
 
-    // TODO Change config 'wait-time-ms' to 2000
+    // click edit adapter
+    ConnectBtns.editAdapter().should('not.be.disabled');
+    ConnectBtns.editAdapter().click();
 
-    // TODO Save changes
+    // Change config 'wait-time-ms' to 2000 and save adapter
+    const newUserConfiguration = UserInputBuilder
+      .create()
+      .add('input', 'wait-time-ms', '2000')
+      .build();
+    ConnectUtils.configureAdapter(newUserConfiguration);
 
-    // TODO Start adapter
+    ConnectUtils.finishEventSchemaConfiguration();
 
-    // TODO Validate that events are coming
+    ConnectBtns.storeEditAdapter().click();
 
+    cy.dataCy('info-adapter-successfully-updated', {timeout: 60000}).should('be.visible');
+
+    ConnectUtils.closeAdapterPreview();
+
+    // Start Adapter
+    ConnectBtns.startAdapter().should('not.be.disabled');
+    ConnectBtns.startAdapter().click();
+
+    // View data
+    ConnectBtns.infoAdapter().click();
+    cy.get('div').contains('Values').parent().click();
+
+    cy.dataCy('sp-connect-adapter-live-preview', {timeout: 10000}).should('be.visible');
   });
-
-  // Different cases
-  // TODO Specific adapter
-  // TODO Generic adapter
-  // TODO Set adapter
-  // TODO Stream adapter
 
 });
 

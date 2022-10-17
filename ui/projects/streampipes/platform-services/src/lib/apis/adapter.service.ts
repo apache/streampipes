@@ -90,6 +90,13 @@ export class AdapterService {
       .pipe(map(response => Message.fromData(response as any)));
   }
 
+  updateAdapter(adapter: AdapterDescription): Observable<Message> {
+    return this.http
+      .put(`${this.connectPath}/master/adapters`,
+        adapter
+      )
+      .pipe(map(response => Message.fromData(response as any)));
+  }
 
   get adapterMasterUrl() {
     return `${this.connectPath}/master/adapters/`;

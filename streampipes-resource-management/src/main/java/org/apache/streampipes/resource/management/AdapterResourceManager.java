@@ -25,24 +25,44 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 public class AdapterResourceManager extends AbstractResourceManager<IAdapterStorage> {
 
+  public AdapterResourceManager(IAdapterStorage adapterStorage) {
+    super(adapterStorage);
+  }
+
   public AdapterResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage());
   }
 
-  public String encryptAndCreate(AdapterDescription ad) {
-    // Encrypt adapter description to store it in db
-
-    AdapterDescription encryptedAdapterDescription = new Cloner().adapterDescription(ad);
-    SecretProvider.getEncryptionService().apply(encryptedAdapterDescription);
-
-    // store in db
+  /**
+   * Takes an {@link AdapterDescription}, encrypts the password properties and stores it to the database
+   * @param adapterDescription input adapter description
+   * @return the id of the created adapter
+   */
+  public String encryptAndCreate(AdapterDescription adapterDescription) {
+    AdapterDescription encryptedAdapterDescription = cloneAndEncrypt(adapterDescription);
     encryptedAdapterDescription.setRev(null);
     return db.storeAdapter(encryptedAdapterDescription);
+  }
+
+  /**
+   * Takes an {@link AdapterDescription}, encrypts the password properties and updates the corresponding database entry
+   * @param adapterDescription input adapter description
+   */
+  public void encryptAndUpdate(AdapterDescription adapterDescription) {
+    db.updateAdapter(cloneAndEncrypt(adapterDescription));
   }
 
   public void delete(String elementId) {
     db.deleteAdapter(elementId);
   }
 
+  /**
+   * Takes an adapterDescription and returns an encrypted copy
+   */
+  private AdapterDescription cloneAndEncrypt(AdapterDescription adapterDescription) {
+    AdapterDescription encryptedAdapterDescription = new Cloner().adapterDescription(adapterDescription);
+    SecretProvider.getEncryptionService().apply(encryptedAdapterDescription);
+    return encryptedAdapterDescription;
+  }
 
 }

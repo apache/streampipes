@@ -87,6 +87,4 @@ export class RestService {
         return descriptions.filter(entry => entry.resource !== unitDescription.resource);
       }));
   }
-
-
 }

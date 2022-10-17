@@ -19,7 +19,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AdapterDescriptionUnion,
-  EventProperty,
   EventRateTransformationRuleDescription,
   EventSchema,
   RemoveDuplicatesTransformationRuleDescription,
@@ -27,7 +26,7 @@ import {
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-started-dialog.component';
-import { PanelType, DialogService } from '@streampipes/shared-ui';
+import { DialogService, PanelType } from '@streampipes/shared-ui';
 import { ShepherdService } from '../../../../services/tour/shepherd.service';
 import { TimestampPipe } from '../../../filter/timestamp.pipe';
 
@@ -44,6 +43,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
   @Input() adapterDescription: AdapterDescriptionUnion;
 
   @Input() eventSchema: EventSchema;
+
+  @Input() isEditMode;
 
   /**
    * Cancels the adapter configuration process
@@ -68,8 +69,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
   startAdapterForm: FormGroup;
 
   startAdapterSettingsFormValid = false;
-
-  timestampPropertiesInSchema: EventProperty[] = [];
 
   // preprocessing rule variables
   removeDuplicates = false;
@@ -112,7 +111,23 @@ export class StartAdapterConfigurationComponent implements OnInit {
     }
   }
 
-  public triggerDialog() {
+  public editAdapter() {
+    const dialogRef = this.dialogService.open(AdapterStartedDialog, {
+      panelType: PanelType.STANDARD_PANEL,
+      title: 'Adapter edit',
+      width: '70vw',
+      data: {
+        'adapter': this.adapterDescription,
+        'editMode': true
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.adapterStartedEmitter.emit();
+    });
+  }
+
+  public startAdapter() {
     if (this.removeDuplicates) {
       const removeDuplicates: RemoveDuplicatesTransformationRuleDescription = new RemoveDuplicatesTransformationRuleDescription();
       removeDuplicates['@class'] = 'org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription';
@@ -134,7 +149,8 @@ export class StartAdapterConfigurationComponent implements OnInit {
       data: {
         'adapter': this.adapterDescription,
         'saveInDataLake': this.saveInDataLake,
-        'dataLakeTimestampField': this.dataLakeTimestampField
+        'dataLakeTimestampField': this.dataLakeTimestampField,
+        'editMode': false
       }
     });
 
@@ -143,10 +159,6 @@ export class StartAdapterConfigurationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.adapterStartedEmitter.emit();
     });
-  }
-
-  public startAdapter() {
-    this.triggerDialog();
   }
 
   public removeSelection() {

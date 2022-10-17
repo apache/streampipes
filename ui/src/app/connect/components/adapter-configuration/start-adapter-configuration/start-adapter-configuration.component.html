@@ -76,7 +76,8 @@
                                   optionIcon="save"
                                   dataCy="sp-store-in-datalake"
                                   (optionSelectedEmitter)="handlePersistOption($event)">
-            <mat-form-field *ngIf="saveInDataLake" color="accent">
+            <mat-form-field *ngIf="saveInDataLake"
+                            color="accent">
                 <mat-label>Select Time Field</mat-label>
                 <mat-select [(ngModel)]="dataLakeTimestampField"
                             [ngModelOptions]="{standalone: true}"
@@ -95,9 +96,23 @@
         <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
         <button style="margin-left:10px;" class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back
         </button>
-        <button [disabled]="!(startAdapterSettingsFormValid)" mat-raised-button id="button-startAdapter"
-                color="accent" (click)="startAdapter()" mat-button style="margin-left:10px;">
+        <button *ngIf="!isEditMode"
+                [disabled]="!(startAdapterSettingsFormValid)"
+                mat-raised-button
+                id="button-startAdapter"
+                color="accent"
+                (click)="startAdapter()"
+                mat-button style="margin-left:10px;">
             Start Adapter
+        </button>
+                <button *ngIf="isEditMode"
+                [disabled]="!(startAdapterSettingsFormValid)"
+                mat-raised-button
+                data-cy="store-edit-adapter"
+                color="accent"
+                (click)="editAdapter()"
+                mat-button style="margin-left:10px;">
+            Edit Adapter
         </button>
     </div>
 </div>

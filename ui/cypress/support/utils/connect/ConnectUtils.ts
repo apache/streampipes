@@ -16,15 +16,15 @@
  *
  */
 
-import { UserInput } from '../model/UserInput';
-import { StaticPropertyUtils } from './StaticPropertyUtils';
-import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
-import { GenericAdapterInput } from '../model/GenericAdapterInput';
-import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
-import { AdapterInput } from '../model/AdapterInput';
-import { ConnectEventSchemaUtils } from './ConnectEventSchemaUtils';
-import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
-import { DataLakeUtils } from './DataLakeUtils';
+import { UserInput } from '../../model/UserInput';
+import { StaticPropertyUtils } from '../StaticPropertyUtils';
+import { SpecificAdapterInput } from '../../model/SpecificAdapterInput';
+import { GenericAdapterInput } from '../../model/GenericAdapterInput';
+import { SpecificAdapterBuilder } from '../../builder/SpecificAdapterBuilder';
+import { AdapterInput } from '../../model/AdapterInput';
+import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
+import { GenericAdapterBuilder } from '../../builder/GenericAdapterBuilder';
+import { DataLakeUtils } from '../DataLakeUtils';
 
 export class ConnectUtils {
 
@@ -101,8 +101,7 @@ export class ConnectUtils {
       .addInput('input', 'wait-time-ms', '1000');
 
     if (persist) {
-      builder.setTimestampProperty('timestamp').
-                setStoreInDataLake();
+      builder.setTimestampProperty('timestamp').setStoreInDataLake();
     }
 
     const configuration = builder.build();
@@ -167,7 +166,7 @@ export class ConnectUtils {
 
   public static finishEventSchemaConfiguration() {
     // Click next
-    cy.dataCy('sp-connect-schema-editor', { timeout: 10000 }).should('be.visible');
+    cy.dataCy('sp-connect-schema-editor', {timeout: 10000}).should('be.visible');
     cy.get('#event-schema-next-button').click();
   }
 
@@ -190,9 +189,13 @@ export class ConnectUtils {
 
     // Start adapter
     cy.get('#button-startAdapter').click();
-    cy.dataCy(successElement, { timeout: 60000 }).should('be.visible');
+    cy.dataCy(successElement, {timeout: 60000}).should('be.visible');
 
-    // Close adapter preview
+    this.closeAdapterPreview();
+  }
+
+  // Close adapter preview
+  public static closeAdapterPreview() {
     cy.get('button').contains('Close').parent().click();
   }
 
@@ -203,20 +206,20 @@ export class ConnectUtils {
     cy.dataCy('delete-adapter').should('have.length', 1);
     cy.dataCy('delete-adapter').click();
     cy.dataCy('delete-adapter-confirmation').click();
-    cy.dataCy('adapter-deletion-in-progress', { timeout: 10000 }).should('be.visible');
-    cy.dataCy('delete-adapter', { timeout: 20000 }).should('have.length', 0);
+    cy.dataCy('adapter-deletion-in-progress', {timeout: 10000}).should('be.visible');
+    cy.dataCy('delete-adapter', {timeout: 20000}).should('have.length', 0);
   }
 
   public static setUpPreprocessingRuleTest(): AdapterInput {
     const adapterConfiguration = GenericAdapterBuilder
-        .create('File_Set')
-        .setStoreInDataLake()
-        .setTimestampProperty('timestamp')
-        .setName('Adapter to test rules')
-        .setFormat('csv')
-        .addFormatInput('input', 'delimiter', ';')
-        .addFormatInput('checkbox', 'header', 'check')
-        .build();
+      .create('File_Set')
+      .setStoreInDataLake()
+      .setTimestampProperty('timestamp')
+      .setName('Adapter to test rules')
+      .setFormat('csv')
+      .addFormatInput('input', 'delimiter', ';')
+      .addFormatInput('checkbox', 'header', 'check')
+      .build();
 
 
     ConnectUtils.goToConnect();
@@ -226,7 +229,7 @@ export class ConnectUtils {
     ConnectUtils.configureFormat(adapterConfiguration);
 
     // wait till schema is shown
-    cy.dataCy('sp-connect-schema-editor', { timeout: 60000 }).should('be.visible');
+    cy.dataCy('sp-connect-schema-editor', {timeout: 60000}).should('be.visible');
 
     return adapterConfiguration;
   }
@@ -241,9 +244,8 @@ export class ConnectUtils {
     cy.wait(10000);
 
     DataLakeUtils.checkResults(
-        'Adapter to test rules',
-        expectedFile,
-        ignoreTime);
+      'Adapter to test rules',
+      expectedFile,
+      ignoreTime);
   }
-
 }
