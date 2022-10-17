@@ -20,7 +20,6 @@ package org.apache.streampipes.sinks.internal.jvm.datalake;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.TimeSeriesStore;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -37,11 +36,8 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
-import java.util.Random;
-
 
 public class DataLakeSink extends StreamPipesDataSink {
-    private static Logger LOG;
 
     private static final String DATABASE_MEASUREMENT_KEY = "db_measurement";
     private static final String TIMESTAMP_MAPPING_KEY = "timestamp_mapping";
@@ -67,8 +63,6 @@ public class DataLakeSink extends StreamPipesDataSink {
 
     @Override
     public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-        LOG = parameters.getGraph().getLogger(DataLakeSink.class);
-
         String timestampField = parameters.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
         String measureName = parameters.extractor().singleValueParameter(DATABASE_MEASUREMENT_KEY, String.class);
         EventSchema eventSchema = runtimeContext.getInputSchemaInfo().get(0).getEventSchema();
@@ -84,11 +78,6 @@ public class DataLakeSink extends StreamPipesDataSink {
 
     @Override
     public void onEvent(Event event) throws SpRuntimeException {
-        Random random = new Random();
-        int r = random.nextInt(10);
-        if (r > 7) {
-            throw new SpRuntimeException("Exception!");
-        }
         this.timeSeriesStore.onEvent(event);
     }
 
