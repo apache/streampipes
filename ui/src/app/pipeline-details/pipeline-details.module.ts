@@ -36,7 +36,6 @@ import { PipelineMonitoringComponent } from './components/monitoring/pipeline-mo
 import { PipelineElementStatisticsComponent } from './components/monitoring/statistics/pipeline-element-statistics.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BarchartWidgetComponent } from './components/monitoring/widget/barchart/barchart-widget.component';
-import { StatusWidgetComponent } from './components/monitoring/widget/status/status-widget.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { SpPipelineDetailsOverviewComponent } from './components/overview/pipeline-details-overview.component';
 import { SharedUiModule } from '@streampipes/shared-ui';
@@ -69,7 +68,6 @@ import { PipelineLogsComponent } from './components/pipeline-logs/pipeline-logs.
     PipelineStatusComponent,
     PipelinePreviewComponent,
     QuickEditComponent,
-    StatusWidgetComponent,
     BarchartWidgetComponent,
     SpPipelineDetailsOverviewComponent,
   ],

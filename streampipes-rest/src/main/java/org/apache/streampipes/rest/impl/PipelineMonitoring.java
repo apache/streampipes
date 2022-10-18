@@ -18,9 +18,7 @@
 package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
-import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
 import org.apache.streampipes.rest.api.IPipelineMonitoring;
-import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -30,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/pipeline-monitoring")
-public class PipelineMonitoring extends AbstractRestResource implements IPipelineMonitoring {
+public class PipelineMonitoring extends AbstractMonitoringResource implements IPipelineMonitoring {
 
   @Path("pipeline/{pipelineId}/logs")
   @GET
@@ -48,9 +46,4 @@ public class PipelineMonitoring extends AbstractRestResource implements IPipelin
     return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForPipeline(pipelineId));
   }
 
-  @GET
-  public Response triggerMonitoringUpdate() {
-    new ExtensionsServiceLogExecutor().triggerUpdate();
-    return ok();
-  }
 }

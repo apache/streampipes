@@ -114,6 +114,9 @@ import {
 } from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
+import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/adapter-details-overview/adapter-details-overview.component';
+import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
+import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 
 @NgModule({
   imports: [
@@ -153,7 +156,20 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
           {
             path: 'edit/:elementId',
             component: EditAdapterComponent,
-          }]
+          },
+          {
+            path: 'details/:elementId/overview',
+            component: SpAdapterDetailsOverviewComponent
+          },
+          {
+            path: 'details/:elementId/metrics',
+            component: SpAdapterDetailsMetricsComponent
+          },
+          {
+            path: 'details/:elementId/logs',
+            component: SpAdapterDetailsLogsComponent
+          }
+        ]
       }]),
     SharedUiModule
   ],
@@ -162,6 +178,7 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
     ErrorMessageComponent
   ],
   declarations: [
+    AdapterConfigurationHeaderComponent,
     AdapterDescriptionComponent,
     AdapterStartedDialog,
     DataMarketplaceComponent,
@@ -181,7 +198,6 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
     FormatListComponent,
     JsonPrettyPrintPipe,
     AdapterConfigurationComponent,
-    SpAdapterTemplateDialogComponent,
     PipelineElementRuntimeInfoComponent,
     TimestampPipe,
     EditCorrectionValueComponent,
@@ -195,9 +211,12 @@ import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.com
     SpEpSettingsSectionComponent,
     StartAdapterConfigurationComponent,
     FormatItemJsonComponent,
-    SpConnectFilterToolbarComponent,
+    SpAdapterDetailsOverviewComponent,
+    SpAdapterDetailsLogsComponent,
+    SpAdapterDetailsMetricsComponent,
     SpAdapterOptionsPanelComponent,
-    AdapterConfigurationHeaderComponent,
+    SpAdapterTemplateDialogComponent,
+    SpConnectFilterToolbarComponent,
     NewAdapterComponent,
     EditAdapterComponent
   ],

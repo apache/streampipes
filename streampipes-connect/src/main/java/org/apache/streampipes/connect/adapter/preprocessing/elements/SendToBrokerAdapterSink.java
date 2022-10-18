@@ -20,11 +20,14 @@ package org.apache.streampipes.connect.adapter.preprocessing.elements;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.util.TransportFormatSelector;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -68,18 +71,20 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
   public Map<String, Object> process(Map<String, Object> event) {
     try {
       if (event != null) {
-        if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
-          event.put("internal_t2", System.currentTimeMillis());
-        }
         sendToBroker(dataFormatDefinition.fromMap(event));
+        SpMonitoringManager.INSTANCE.increaseOutCounter(
+            adapterDescription.getElementId(),
+            System.currentTimeMillis());
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (RuntimeException e) {
+      SpMonitoringManager.INSTANCE.addErrorMessage(
+          adapterDescription.getElementId(),
+          SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
     }
     return null;
   }
 
-  protected void sendToBroker(byte[] event) throws Exception {
+  protected void sendToBroker(byte[] event) throws RuntimeException {
     producer.publish(event);
   }
 

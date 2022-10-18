@@ -27,29 +27,29 @@ import { AbstractMonitoringService } from './abstract-monitoring.service';
 @Injectable({
   providedIn: 'root'
 })
-export class PipelineMonitoringService extends AbstractMonitoringService {
+export class AdapterMonitoringService extends AbstractMonitoringService {
 
   constructor(http: HttpClient,
               platformServicesCommons: PlatformServicesCommons) {
     super(http, platformServicesCommons);
   }
 
-  getLogInfoForPipeline(pipelineId: string): Observable<Record<string, SpLogEntry[]>> {
-    return this.http.get(this.logUrl(pipelineId))
-        .pipe(map(response => response as Record<string, SpLogEntry[]>));
+  getLogInfoForAdapter(elementId: string): Observable<SpLogEntry[]> {
+    return this.http.get(this.logUrl(elementId))
+      .pipe(map(response => response as SpLogEntry[]));
   }
 
-  getMetricsInfoForPipeline(pipelineId: string): Observable<Record<string, SpMetricsEntry>> {
-    return this.http.get(this.metricsUrl(pipelineId))
-      .pipe(map(response => response as Record<string, SpMetricsEntry>));
+  getMetricsInfoForAdapter(elementId: string): Observable<SpMetricsEntry> {
+    return this.http.get(this.metricsUrl(elementId))
+      .pipe(map(response => response as SpMetricsEntry));
   }
 
   protected get monitoringBasePath(): string {
-    return `${this.platformServicesCommons.apiBasePath}/pipeline-monitoring`;
+    return `${this.platformServicesCommons.apiBasePath}/adapter-monitoring`;
   }
 
   protected get monitoringPathAppendix(): string {
-    return 'pipeline';
+    return 'adapter';
   }
 
 }

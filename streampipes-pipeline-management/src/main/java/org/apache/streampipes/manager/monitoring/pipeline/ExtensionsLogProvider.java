@@ -81,6 +81,10 @@ public enum ExtensionsLogProvider {
     return allLogInfos.get(resourceId);
   }
 
+  public SpMetricsEntry getMetricInfosForAdapter(String resourceId) {
+    return allMetricsInfos.get(resourceId);
+  }
+
   public Map<String, SpMetricsEntry> getMetricInfosForPipeline(String pipelineId) {
     var pipeline = PipelineManager.getPipeline(pipelineId);
 

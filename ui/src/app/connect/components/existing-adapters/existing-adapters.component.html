@@ -138,6 +138,19 @@
                           fxLayoutAlign="center center">
                       <button color="accent"
                               mat-button mat-icon-button
+                              matTooltip="Show details"
+                              matTooltipPosition="above"
+                              data-cy="details-adapter"
+                              (click)="navigateToDetailsOverviewPage(adapter)">
+                        <i class="material-icons">search</i>
+                      </button>
+                    </span>
+                    <span fxFlex
+                          fxFlexOrder="2"
+                          fxLayout="row"
+                          fxLayoutAlign="center center">
+                      <button color="accent"
+                              mat-button mat-icon-button
                               matTooltip="Show info"
                               matTooltipPosition="above"
                               data-cy="info-adapter"
@@ -146,7 +159,7 @@
                       </button>
                     </span>
                     <span fxFlex
-                          fxFlexOrder="2"
+                          fxFlexOrder="3"
                           fxLayout="row"
                           fxLayoutAlign="center center"
                           *ngIf="isAdmin">
@@ -160,7 +173,7 @@
                       </button>
                     </span>
                     <span fxFlex
-                          fxFlexOrder="3"
+                          fxFlexOrder="4"
                           fxLayout="row"
                           fxLayoutAlign="center center">
                       <button color="accent"
@@ -175,7 +188,7 @@
                       </button>
                     </span>
                     <span fxFlex
-                          fxFlexOrder="3"
+                          fxFlexOrder="5"
                           fxLayout="row"
                           fxLayoutAlign="center center">
                       <button color="accent"
