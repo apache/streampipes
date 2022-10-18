@@ -61,7 +61,8 @@
         <button mat-button
                 mat-icon-button
                 *ngIf="editMode"
-                (click)="downloadDataAsFile()">
+                (click)="downloadDataAsFile()"
+                [attr.data-cy]="'download-' + configuredWidget.baseAppearanceConfig.widgetTitle.replaceAll(' ', '')">
           <mat-icon>get_app</mat-icon>
         </button>
         <button mat-button

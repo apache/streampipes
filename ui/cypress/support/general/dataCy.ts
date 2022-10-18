@@ -19,15 +19,12 @@
 declare global {
     namespace Cypress {
         interface Chainable {
-            /**
-             * Select cypress id's ([data-cy=...])
-             */
-            dataCy(value: string, config?: any): Chainable<Element>;
+            dataCy: typeof dataCy;
         }
     }
 }
 
-export const dataCy = (value, config?) => {
+export const dataCy = (value: string, config?: any) => {
     if (config) {
         return cy.get(`[data-cy=${value}]`, config);
     } else {

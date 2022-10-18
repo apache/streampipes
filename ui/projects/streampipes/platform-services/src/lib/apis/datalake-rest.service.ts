@@ -101,11 +101,13 @@ export class DatalakeRestService {
   downloadRawData(index: string,
                   format: string,
                   delimiter: string,
+                  missingValueBehaviour: string,
                   startTime?: number,
                   endTime?: number) {
     const queryParams = (startTime && endTime) ? {format, delimiter, startDate: startTime, endDate: endTime} : {
       format,
-      delimiter
+      delimiter,
+      missingValueBehaviour
     };
     return this.buildDownloadRequest(index, queryParams);
   }
@@ -114,10 +116,13 @@ export class DatalakeRestService {
     index: string,
     format: string,
     delimiter: string,
+    missingValueBehaviour: string,
     queryParams: DatalakeQueryParameters) {
 
     (queryParams as any).format = format;
     (queryParams as any).delimiter = delimiter;
+    (queryParams as any).missingValueBehaviour = missingValueBehaviour;
+
     return this.buildDownloadRequest(index, queryParams);
 
   }

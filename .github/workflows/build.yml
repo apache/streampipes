@@ -16,6 +16,7 @@
 name: build-and-deploy-docker-dev
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev

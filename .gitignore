@@ -41,6 +41,7 @@
 
 # test dependencies
 ui/cypress/tests/experimental/testJvmArchetype/automated-test
+ui/cypress/downloads
 
 ## File-based project format:
 *.iws

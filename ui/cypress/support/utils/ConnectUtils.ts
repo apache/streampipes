@@ -58,7 +58,6 @@ export class ConnectUtils {
 
   }
 
-
   public static addGenericStreamAdapter(adapterConfiguration: GenericAdapterInput) {
     ConnectUtils.addGenericAdapter(adapterConfiguration);
 
