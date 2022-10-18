@@ -19,7 +19,9 @@ package org.apache.streampipes.messaging.nats;
 
 import io.nats.client.Connection;
 import io.nats.client.Nats;
+import io.nats.client.Options;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.nats.NatsConfig;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -29,6 +31,12 @@ public abstract class AbstractNatsConnector {
 
   protected Connection natsConnection;
   protected String subject;
+
+  protected void makeBrokerConnection(NatsConfig natsConfig) throws IOException, InterruptedException {
+    Options options = NatsUtils.makeNatsOptions(natsConfig);
+    this.natsConnection = Nats.connect(options);
+    this.subject = natsConfig.getSubject();
+  }
 
   protected void makeBrokerConnection(NatsTransportProtocol protocol) throws IOException, InterruptedException {
     this.natsConnection = Nats.connect(makeBrokerUrl(protocol));

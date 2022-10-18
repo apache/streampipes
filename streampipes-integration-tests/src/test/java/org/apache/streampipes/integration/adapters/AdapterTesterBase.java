@@ -15,24 +15,17 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.integration.adapters;
 
-package org.apache.streampipes.sinks.brokers.jvm.nats;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.nats.NatsConfig;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
+public abstract class AdapterTesterBase implements AutoCloseable {
+    public abstract void startAdapterService() throws Exception;
 
-public class NatsParameters extends EventSinkBindingParams {
+    public abstract void prepareAdapter() throws Exception;
 
-    private final NatsConfig natsConfig;
+    public abstract List<Map<String, Object>> generateData() throws Exception;
 
-    public NatsParameters(DataSinkInvocation graph,
-                          NatsConfig natsConfig) {
-        super(graph);
-       this.natsConfig = natsConfig;
-    }
-
-    public NatsConfig getNatsConfig() {
-        return natsConfig;
-    }
+    public abstract void validateData(List<Map<String, Object>> data) throws Exception;
 }

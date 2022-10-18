@@ -51,7 +51,7 @@ describe('Test Table View in Data Explorer', () => {
             .should('not.exist');
 
         // Delete Dashboard
-        DataLakeUtils.clickStartTab();
+        // DataLakeUtils.clickStartTab();
 
         // Check that dashboard is gone
 

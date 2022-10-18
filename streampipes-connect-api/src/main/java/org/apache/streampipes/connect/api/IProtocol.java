@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.connect.api;
 
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -37,7 +38,7 @@ public interface IProtocol extends Connector {
 
   List<Map<String, Object>> getNElements(int n) throws ParseException;
 
-  void run(IAdapterPipeline adapterPipeline);
+  void run(IAdapterPipeline adapterPipeline) throws AdapterException;
 
   /*
        Stops the running protocol. Mainly relevant for streaming protocols

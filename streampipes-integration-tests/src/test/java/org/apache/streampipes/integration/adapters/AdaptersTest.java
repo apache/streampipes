@@ -15,24 +15,24 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.integration.adapters;
 
-package org.apache.streampipes.sinks.brokers.jvm.nats;
+import java.util.List;
+import java.util.Map;
+import org.junit.Test;
 
-import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.nats.NatsConfig;
-import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
-
-public class NatsParameters extends EventSinkBindingParams {
-
-    private final NatsConfig natsConfig;
-
-    public NatsParameters(DataSinkInvocation graph,
-                          NatsConfig natsConfig) {
-        super(graph);
-       this.natsConfig = natsConfig;
+public class AdaptersTest {
+    public void testAdapter(AdapterTesterBase adapterTester) throws Exception {
+        adapterTester.startAdapterService();
+        adapterTester.prepareAdapter();
+        List<Map<String, Object>> data = adapterTester.generateData();
+        adapterTester.validateData(data);
     }
 
-    public NatsConfig getNatsConfig() {
-        return natsConfig;
+    @Test
+    public void testPulsarAdapter() throws Exception {
+        try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
+            testAdapter(pulsarAdapterTester);
+        }
     }
 }

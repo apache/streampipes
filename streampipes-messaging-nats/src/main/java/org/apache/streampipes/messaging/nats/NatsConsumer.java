@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.nats.NatsConfig;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -33,17 +34,18 @@ public class NatsConsumer extends AbstractNatsConnector implements EventConsumer
   private Dispatcher dispatcher;
   private Subscription subscription;
 
+  public void connect(NatsConfig natsConfig,
+                      InternalEventProcessor<byte[]> eventProcessor) throws IOException, InterruptedException {
+    makeBrokerConnection(natsConfig);
+    createSubscription(eventProcessor);
+  }
+
   @Override
   public void connect(NatsTransportProtocol protocolSettings,
                       InternalEventProcessor<byte[]> eventProcessor) throws SpRuntimeException {
     try {
       makeBrokerConnection(protocolSettings);
-
-      dispatcher = natsConnection.createDispatcher((message) -> {});
-
-      this.subscription = dispatcher.subscribe(subject, (message) -> {
-        eventProcessor.onEvent(message.getData());
-      });
+      createSubscription(eventProcessor);
     } catch (IOException | InterruptedException e) {
       e.printStackTrace();
     }
@@ -62,5 +64,13 @@ public class NatsConsumer extends AbstractNatsConnector implements EventConsumer
   @Override
   public boolean isConnected() {
     return natsConnection != null && natsConnection.getStatus() == Connection.Status.CONNECTED;
+  }
+
+  private void createSubscription(InternalEventProcessor<byte[]> eventProcessor) {
+    dispatcher = natsConnection.createDispatcher((message) -> {});
+
+    this.subscription = dispatcher.subscribe(subject, (message) -> {
+      eventProcessor.onEvent(message.getData());
+    });
   }
 }

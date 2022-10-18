@@ -23,15 +23,14 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.grounding.NatsTransportProtocol;
-import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
+import org.apache.streampipes.model.nats.NatsConfig;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.pe.shared.config.nats.NatsConfig;
 import org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
@@ -42,6 +41,7 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +53,9 @@ public class NatsProtocol extends BrokerProtocol {
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.nats";
   private NatsConfig natsConfig;
   private NatsConsumer natsConsumer;
+
+  private static final int MAX_TIMEOUT = 8000;
+  private static final int TIMEOUT = 100;
 
   public NatsProtocol() {
 
@@ -119,10 +122,14 @@ public class NatsProtocol extends BrokerProtocol {
   }
 
   @Override
-  public void run(IAdapterPipeline adapterPipeline) {
+  public void run(IAdapterPipeline adapterPipeline) throws AdapterException {
     SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
     this.natsConsumer = new NatsConsumer();
-    this.natsConsumer.connect(toProtocol(), new BrokerEventProcessor(stk, parser));
+    try {
+      this.natsConsumer.connect(natsConfig, new BrokerEventProcessor(stk, parser));
+    } catch (IOException | InterruptedException e) {
+      throw new AdapterException("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . ", e);
+    }
   }
 
   @Override
@@ -147,26 +154,25 @@ public class NatsProtocol extends BrokerProtocol {
       }
     };
 
-    this.natsConsumer.connect(toProtocol(), processor);
+    try {
+      this.natsConsumer.connect(natsConfig, processor);
+    } catch (IOException | InterruptedException e) {
+      throw new ParseException("Could not connect to Nats broker", e);
+    }
 
-    while(!completed[0]) {
+    int totalTimeout = 0;
+    while(!completed[0] && totalTimeout < MAX_TIMEOUT) {
       try {
-        TimeUnit.MILLISECONDS.sleep(100);
+        TimeUnit.MILLISECONDS.sleep(TIMEOUT);
+        totalTimeout += TIMEOUT;
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
-    return elements;
-  }
-
-  private NatsTransportProtocol toProtocol() {
-    var tp = new NatsTransportProtocol();
-    // TODO
-    String[] urlParts = this.brokerUrl.split(":");
-    tp.setBrokerHostname(urlParts[0]);
-    tp.setPort(Integer.parseInt(urlParts[1]));
-    tp.setTopicDefinition(new SimpleTopicDefinition(this.topic));
-
-    return tp;
+    if (elements.size() > 0) {
+      return elements;
+    } else {
+      throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000 + " seconds, is this subjects currently providing data?");
+    }
   }
 }
