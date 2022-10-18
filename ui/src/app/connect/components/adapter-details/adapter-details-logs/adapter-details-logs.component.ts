@@ -49,6 +49,7 @@ export class SpAdapterDetailsLogsComponent extends SpAbstractAdapterDetailsDirec
   }
 
   onAdapterLoaded(): void {
+    this.loadLogs();
   }
 
 }
