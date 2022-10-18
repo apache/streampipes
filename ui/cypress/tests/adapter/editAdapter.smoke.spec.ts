@@ -23,16 +23,15 @@ import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 
 describe('Test Edit Adapter', () => {
   beforeEach('Setup Test', () => {
-    // // To set up test add a stream adapter that can be configured
-    // cy.initStreamPipesTest();
-    // const adapterInput = SpecificAdapterBuilder
-    //   .create('Machine_Data_Simulator')
-    //   .setName('Machine Data Simulator Test')
-    //   .addInput('input', 'wait-time-ms', '1000')
-    //   .build();
-    //
-    // ConnectUtils.testSpecificStreamAdapter(adapterInput);
-    cy.login();
+    // To set up test add a stream adapter that can be configured
+    cy.initStreamPipesTest();
+    const adapterInput = SpecificAdapterBuilder
+      .create('Machine_Data_Simulator')
+      .setName('Machine Data Simulator Test')
+      .addInput('input', 'wait-time-ms', '1000')
+      .build();
+
+    ConnectUtils.testSpecificStreamAdapter(adapterInput);
   });
 
   it('Perform Test', () => {
