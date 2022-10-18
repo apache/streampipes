@@ -61,7 +61,7 @@
 	<influxdb.version>2.22</influxdb.version>
 	<j2html.version>1.4.0</j2html.version>
 	<jackson.version>2.13.2</jackson.version>
-        <jackson.databind.version>2.13.2.1</jackson.databind.version>
+        <jackson.databind.version>2.13.4.1</jackson.databind.version>
 	<jakarta-annotation.version>1.3.5</jakarta-annotation.version>
 	<jakarta-activation-api.version>1.2.2</jakarta-activation-api.version>
 	<jakarta-mail.version>1.6.7</jakarta-mail.version>
