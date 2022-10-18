@@ -65,7 +65,7 @@ export class GenericAdapterBuilder {
     return this;
   }
 
-  public setFormat(format: string) {
+  public setFormat(format: 'csv'| 'json_array') {
     this.genericAdapterInput.format = format;
     return this;
   }

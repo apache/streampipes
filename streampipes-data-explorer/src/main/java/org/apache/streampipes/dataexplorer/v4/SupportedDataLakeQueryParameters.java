@@ -34,6 +34,8 @@ public class SupportedDataLakeQueryParameters {
   public static final String QP_TIME_INTERVAL = "timeInterval";
   public static final String QP_FORMAT = "format";
   public static final String QP_CSV_DELIMITER = "delimiter";
+
+  public static final String QP_MISSING_VALUE_BEHAVIOUR = "missingValueBehaviour";
   public static final String QP_COUNT_ONLY = "countOnly";
   public static final String QP_AUTO_AGGREGATE = "autoAggregate";
   public static final String QP_FILTER = "filter";
@@ -54,6 +56,7 @@ public class SupportedDataLakeQueryParameters {
           QP_CSV_DELIMITER,
           QP_COUNT_ONLY,
           QP_AUTO_AGGREGATE,
+          QP_MISSING_VALUE_BEHAVIOUR,
           QP_FILTER,
           QP_MAXIMUM_AMOUNT_OF_EVENTS
   );

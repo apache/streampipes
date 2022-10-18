@@ -59,7 +59,12 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
@@ -82,7 +87,7 @@ public class DataLakeManagementV4 {
         return getDataLakeStorage().findOne(measureId);
     }
 
-    public SpQueryResult getData(ProvidedQueryParams queryParams) throws IllegalArgumentException {
+    public SpQueryResult getData(ProvidedQueryParams queryParams, boolean ignoreMissingData) throws IllegalArgumentException {
         if (queryParams.has(QP_AUTO_AGGREGATE)) {
             queryParams = new AutoAggregationHandler(queryParams).makeAutoAggregationQueryParams();
         }
@@ -90,18 +95,21 @@ public class DataLakeManagementV4 {
 
         if (queryParams.getProvidedParams().containsKey(QP_MAXIMUM_AMOUNT_OF_EVENTS)) {
             int maximumAmountOfEvents = Integer.parseInt(queryParams.getProvidedParams().get(QP_MAXIMUM_AMOUNT_OF_EVENTS));
-            return new DataExplorerQueryV4(queryParts, maximumAmountOfEvents).executeQuery();
+            return new DataExplorerQueryV4(queryParts, maximumAmountOfEvents).executeQuery(ignoreMissingData);
         }
 
         if (queryParams.getProvidedParams().containsKey(FOR_ID_KEY)) {
             String forWidgetId = queryParams.getProvidedParams().get(FOR_ID_KEY);
-            return new DataExplorerQueryV4(queryParts, forWidgetId).executeQuery();
+            return new DataExplorerQueryV4(queryParts, forWidgetId).executeQuery(ignoreMissingData);
         } else {
-            return new DataExplorerQueryV4(queryParts).executeQuery();
+            return new DataExplorerQueryV4(queryParts).executeQuery(ignoreMissingData);
         }
     }
 
-    public void getDataAsStream(ProvidedQueryParams params, String format, OutputStream outputStream) throws IOException {
+    public void getDataAsStream(ProvidedQueryParams params,
+                                String format,
+                                boolean ignoreMissingValues,
+                                OutputStream outputStream) throws IOException {
         if (!params.has(QP_LIMIT)) {
             params.update(QP_LIMIT, 500000);
         }
@@ -121,7 +129,7 @@ public class DataLakeManagementV4 {
             outputStream.write(toBytes("["));
             do {
                 params.update(SupportedDataLakeQueryParameters.QP_PAGE, String.valueOf(i));
-                dataResult = getData(params);
+                dataResult = getData(params, ignoreMissingValues);
 
                 if (dataResult.getTotal() > 0) {
                     for (List<Object> row : dataResult.getAllDataSeries().get(0).getRows()) {
@@ -170,7 +178,7 @@ public class DataLakeManagementV4 {
 
             do {
                 params.update(SupportedDataLakeQueryParameters.QP_PAGE, String.valueOf(i));
-                dataResult = getData(params);
+                dataResult = getData(params, ignoreMissingValues);
                 //Send first header
                 if (dataResult.getTotal() > 0) {
                     if (isFirstDataObject) {
@@ -243,7 +251,7 @@ public class DataLakeManagementV4 {
 
     public SpQueryResult deleteData(String measurementID, Long startDate, Long endDate) {
         Map<String, QueryParamsV4> queryParts = DataLakeManagementUtils.getDeleteQueryParams(measurementID, startDate, endDate);
-        return new DataExplorerQueryV4(queryParts).executeQuery();
+        return new DataExplorerQueryV4(queryParts).executeQuery(true);
     }
 
     public DataLakeConfiguration getDataLakeConfiguration() {

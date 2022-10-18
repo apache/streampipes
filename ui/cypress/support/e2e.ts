@@ -24,6 +24,7 @@ import { switchUser } from './general/switchUser';
 import 'cypress-file-upload';
 import { resetStreamPipes } from './general/resetStreamPipes';
 import { initStreamPipesTest } from './general/InitStreamPipesTest';
+import { removeDownloadDirectory } from './general/removeDownloadDirectory';
 
 // General commands
 Cypress.Commands.add('login', login);
@@ -32,4 +33,4 @@ Cypress.Commands.add('switchUser', switchUser);
 Cypress.Commands.add('dataCy', dataCy);
 Cypress.Commands.add('resetStreamPipes', resetStreamPipes);
 Cypress.Commands.add('initStreamPipesTest', initStreamPipesTest);
-// Cypress.Commands.add('readDir', readDir);
+Cypress.Commands.add('removeDownloadDirectory', removeDownloadDirectory);
