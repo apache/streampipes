@@ -21,6 +21,8 @@ import { DataLakeFilterConfig } from '../model/DataLakeFilterConfig';
 import { DataExplorerWidget } from '../model/DataExplorerWidget';
 import { DataSetUtils } from './DataSetUtils';
 import { PrepareTestDataUtils } from './PrepareTestDataUtils';
+import { FileManagementUtils } from './FileManagementUtils';
+import { ConnectUtils } from './ConnectUtils';
 
 export class DataLakeUtils {
 
@@ -53,19 +55,19 @@ export class DataLakeUtils {
     return adapterBuilder.build();
   }
 
-  //
-  // public static loadDataIntoDataLake(dataSet: string, wait = true, format: 'csv' | 'json_array' = 'csv') {
-  //   // Create adapter with dataset
-  //   FileManagementUtils.addFile(dataSet);
-  //
-  //   const adapter = this.getDataLakeTestSetAdapter('datalake_configuration', true, format);
-  //   ConnectUtils.addGenericSetAdapter(adapter);
-  //
-  //   // Wait till data is stored
-  //   if (wait) {
-  //     cy.wait(10000);
-  //   }
-  // }
+
+  public static loadDataIntoDataLake(dataSet: string, wait = true, format: 'csv' | 'json_array' = 'csv') {
+    // Create adapter with dataset
+    FileManagementUtils.addFile(dataSet);
+
+    const adapter = this.getDataLakeTestSetAdapter('datalake_configuration', true, format);
+    ConnectUtils.addGenericSetAdapter(adapter);
+
+    // Wait till data is stored
+    if (wait) {
+      cy.wait(10000);
+    }
+  }
 
   public static addDataViewAndWidget(dataViewName: string, dataSet: string, widgetType: string) {
     DataLakeUtils.goToDatalake();
