@@ -22,7 +22,7 @@ import { DataExplorerWidget } from '../model/DataExplorerWidget';
 import { DataSetUtils } from './DataSetUtils';
 import { PrepareTestDataUtils } from './PrepareTestDataUtils';
 import { FileManagementUtils } from './FileManagementUtils';
-import { ConnectUtils } from './ConnectUtils';
+import { ConnectUtils } from './connect/ConnectUtils';
 
 export class DataLakeUtils {
 
