@@ -45,7 +45,6 @@ export class SpAdapterDetailsMetricsComponent extends SpAbstractAdapterDetailsDi
   loadMetrics(): void {
     this.adapterMonitoringService.getMetricsInfoForAdapter(this.currentAdapterId).subscribe(res => {
       this.adapterMetrics = res;
-      console.log(res);
     });
   }
 

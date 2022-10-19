@@ -33,7 +33,7 @@ export class StatusWidgetComponent implements OnInit {
     @Input() widgetHeight = 150;
 
     _label: string;
-    _statusValue: string;
+    _statusValue: string | number;
 
     chartData: any;
 
@@ -46,7 +46,7 @@ export class StatusWidgetComponent implements OnInit {
     }
 
     @Input()
-    set statusValue(statusValue: string) {
+    set statusValue(statusValue: string | number) {
         this._statusValue = statusValue;
         this.updateChartData();
     }

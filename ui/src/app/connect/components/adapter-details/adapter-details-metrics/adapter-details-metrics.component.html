@@ -30,14 +30,14 @@
       <i class="material-icons">refresh</i>
     </button>
   </div>
-  <div fxFlex="100" fxLayout="column" *ngIf="adapter">
+  <div fxFlex="100" fxLayout="column" *ngIf="adapter && adapterMetrics">
     <sp-basic-header-title-component [title]="adapter.name + ' - Metrics'"></sp-basic-header-title-component>
     <div fxLayout="row" fxLayoutAlign="center center">
       <div fxFlex="50">
         <sp-status-widget fxFlex="100" label="Last published message"
                           [widgetHeight]="400"
                           [widgetWidth]="500"
-                          [statusValue]="adapterMetrics.lastTimestamp | date : 'medium'">
+                          [statusValue]="adapterMetrics.lastTimestamp === 0 ? 'n/a' : (adapterMetrics.lastTimestamp | date : 'medium')">
         </sp-status-widget>
       </div>
       <div fxFlex="50">

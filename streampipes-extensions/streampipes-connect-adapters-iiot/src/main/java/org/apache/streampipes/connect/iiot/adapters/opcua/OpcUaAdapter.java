@@ -145,12 +145,11 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
     }
 
     @Override
-    protected void pullData() {
+    protected void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException {
         var response =
           this.spOpcUaClient.getClient().readValues(0, TimestampsToReturn.Both, this.allNodeIds);
         boolean badStatusCodeReceived = false;
         boolean emptyValueReceived = false;
-        try {
             List<DataValue> returnValues = response.get(this.getPollingInterval().getValue(), this.getPollingInterval().getTimeUnit());
             if (returnValues.size() == 0) {
                 emptyValueReceived = true;
@@ -172,9 +171,6 @@ public class OpcUaAdapter extends PullAdapter implements SupportsRuntimeConfig {
             if (!badStatusCodeReceived && !emptyValueReceived) {
                 adapterPipeline.process(this.event);
             }
-        } catch (InterruptedException | ExecutionException | TimeoutException ie) {
-            LOG.error("Exception while reading data", ie);
-        }
     }
 
     public void onSubscriptionValue(UaMonitoredItem item, DataValue value) {

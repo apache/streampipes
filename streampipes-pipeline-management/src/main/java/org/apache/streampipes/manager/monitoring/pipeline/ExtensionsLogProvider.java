@@ -25,10 +25,7 @@ import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.monitoring.SpMetricsEntry;
 import org.apache.streampipes.model.pipeline.Pipeline;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,8 +35,8 @@ public enum ExtensionsLogProvider {
 
   private final int MAX_ITEMS = 50;
 
-  private Map<String, List<SpLogEntry>> allLogInfos = new HashMap<>();
-  private Map<String, SpMetricsEntry> allMetricsInfos = new HashMap<>();
+  private final Map<String, List<SpLogEntry>> allLogInfos = new HashMap<>();
+  private final Map<String, SpMetricsEntry> allMetricsInfos = new HashMap<>();
 
   public void addMonitoringInfos(SpEndpointMonitoringInfo monitoringInfo) {
     allMetricsInfos.putAll(monitoringInfo.getMetricsInfos());
@@ -78,11 +75,15 @@ public enum ExtensionsLogProvider {
   }
 
   public List<SpLogEntry> getLogInfosForAdapter(String resourceId) {
-    return allLogInfos.get(resourceId);
+    return allLogInfos.getOrDefault(resourceId, Collections.emptyList());
   }
 
   public SpMetricsEntry getMetricInfosForAdapter(String resourceId) {
-    return allMetricsInfos.get(resourceId);
+    if (allMetricsInfos.containsKey(resourceId)) {
+      return allMetricsInfos.get(resourceId);
+    } else {
+     return new SpMetricsEntry();
+    }
   }
 
   public Map<String, SpMetricsEntry> getMetricInfosForPipeline(String pipelineId) {

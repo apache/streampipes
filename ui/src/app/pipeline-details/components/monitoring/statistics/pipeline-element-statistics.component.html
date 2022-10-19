@@ -24,7 +24,7 @@
         <sp-status-widget fxFlex="100" [label]="'consumed from ' + observedInputStream.pipelineElementName"
                           [color]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedCardColor : cardColor"
                           [textColor]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedTextColor : textColor"
-                          [statusValue]="metricsInfo.messagesIn[observedInputStream.identifier].counter">
+                          [statusValue]="metricsInfo.messagesIn[observedInputStream.identifier] ? metricsInfo.messagesIn[observedInputStream.identifier].counter : '0'">
         </sp-status-widget>
       </div>
     </div>
