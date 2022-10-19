@@ -43,195 +43,162 @@ import { FormatItemComponent } from './components/adapter-configuration/format-c
 import { FormatListComponent } from './components/adapter-configuration/format-configuration/format-list/format-list.component';
 import { UnitProviderService } from './services/unit-provider.service';
 
-
 import { AdapterFilterPipe } from './filter/adapter-filter.pipe';
 import { TimestampPipe } from './filter/timestamp.pipe';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from '@circlon/angular-tree-component';
 import { XsService } from '../NS/xs.service';
-import {
-  EditDataTypeComponent
-} from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
-import {
-  EditTimestampPropertyComponent
-} from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
-import {
-  EditUnitTransformationComponent
-} from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
+import { EditDataTypeComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-data-type/edit-data-type.component';
+import { EditTimestampPropertyComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-timestamp-property/edit-timestamp-property.component';
+import { EditUnitTransformationComponent } from './dialog/edit-event-property/components/edit-unit-transformation/edit-unit-transformation.component';
 import { EditEventPropertyComponent } from './dialog/edit-event-property/edit-event-property.component';
 import { PipelineElementRuntimeInfoComponent } from './components/runtime-info/pipeline-element-runtime-info.component';
-import {
-  EventPropertyRowComponent
-} from './components/adapter-configuration/schema-editor/event-property-row/event-property-row.component';
-import {
-  EventSchemaPreviewComponent
-} from './components/adapter-configuration/schema-editor/event-schema-preview/event-schema-preview.component';
+import { EventPropertyRowComponent } from './components/adapter-configuration/schema-editor/event-property-row/event-property-row.component';
+import { EventSchemaPreviewComponent } from './components/adapter-configuration/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-import {
-  EditCorrectionValueComponent
-} from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
+
+import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
-import {
-  SpecificAdapterConfigurationComponent
-} from './components/adapter-configuration/specific-adapter-configuration/specific-adapter-configuration.component';
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
 import { FormatConfigurationComponent } from './components/adapter-configuration/format-configuration/format-configuration.component';
-import {
-  GenericAdapterConfigurationComponent
-} from './components/adapter-configuration/generic-adapter-configuration/generic-adapter-configuration.component';
+import { GenericAdapterConfigurationComponent } from './components/adapter-configuration/generic-adapter-configuration/generic-adapter-configuration.component';
 import { ErrorMessageComponent } from './components/adapter-configuration/schema-editor/error-message/error-message.component';
 import { LoadingMessageComponent } from './components/adapter-configuration/schema-editor/loading-message/loading-message.component';
-import {
-  SchemaEditorHeaderComponent
-} from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
-import {
-  StartAdapterConfigurationComponent
-} from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
+import { SchemaEditorHeaderComponent } from './components/adapter-configuration/schema-editor/schema-editor-header/schema-editor-header.component';
+import { StartAdapterConfigurationComponent } from './components/adapter-configuration/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { PlatformServicesModule } from '@streampipes/platform-services';
-import {
-  FormatItemJsonComponent
-} from './components/adapter-configuration/format-configuration/format-item-json/format-item-json.component';
+import { FormatItemJsonComponent } from './components/adapter-configuration/format-configuration/format-item-json/format-item-json.component';
 import { RouterModule } from '@angular/router';
 import { SharedUiModule } from '@streampipes/shared-ui';
 import { SpConnectFilterToolbarComponent } from './components/filter-toolbar/filter-toolbar.component';
-import {
-  EditSchemaTransformationComponent
-} from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
-import {
-  EditValueTransformationComponent
-} from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
+import { EditSchemaTransformationComponent } from './dialog/edit-event-property/components/edit-schema-transformation/edit-schema-transformation.component';
+import { EditValueTransformationComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-value-transformation.component';
 import { SpEpSettingsSectionComponent } from './dialog/edit-event-property/components/ep-settings-section/ep-settings-section.component';
-import {
-  SpAdapterOptionsPanelComponent
-} from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
+import { SpAdapterOptionsPanelComponent } from './components/adapter-configuration/start-adapter-configuration/adapter-options-panel/adapter-options-panel.component';
 import { SpAdapterTemplateDialogComponent } from './dialog/adapter-template/adapter-template-dialog.component';
 import { JsonPrettyPrintPipe } from './filter/json-pretty-print.pipe';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {
-  AdapterConfigurationHeaderComponent
-} from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
+import { AdapterConfigurationHeaderComponent } from './components/adapter-configuration/adapter-configuration-header/adapter-configuration-header.component';
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
 import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
 import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/adapter-details-overview/adapter-details-overview.component';
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
+import { SpecificAdapterConfigurationComponent } from './components/adapter-configuration/specific-adapter-configuration/specific-adapter-configuration.component';
 @NgModule({
-  imports: [
-    CoreUiModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    FlexLayoutModule,
-    MatGridListModule,
-    CustomMaterialModule,
-    MatProgressSpinnerModule,
-    MatChipsModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatSliderModule,
-    MatSnackBarModule,
-    PlatformServicesModule,
-    CoreUiModule,
-    TreeModule,
-    RouterModule.forChild([
-      {
-        path: 'connect',
-        children: [
-          {
-            path: '',
-            component: ExistingAdaptersComponent,
-            pathMatch: 'full'
-          },
-          {
-            path: 'create',
-            component: DataMarketplaceComponent,
-          },
-          {
-            path: 'create/:appId',
-            component: NewAdapterComponent,
-          },
-          {
-            path: 'edit/:elementId',
-            component: EditAdapterComponent,
-          },
-          // {
-          //   path: 'details/:elementId/overview',
-          //   component: SpAdapterDetailsOverviewComponent
-          // },
-          {
-            path: 'details/:elementId/metrics',
-            component: SpAdapterDetailsMetricsComponent
-          },
-          {
-            path: 'details/:elementId/logs',
-            component: SpAdapterDetailsLogsComponent
-          }
-        ]
-      }]),
-    SharedUiModule
-  ],
-  exports: [
-    PipelineElementRuntimeInfoComponent,
-    ErrorMessageComponent
-  ],
-  declarations: [
-    AdapterConfigurationHeaderComponent,
-    AdapterDescriptionComponent,
-    AdapterStartedDialog,
-    DataMarketplaceComponent,
-    DeleteAdapterDialogComponent,
-    EventSchemaComponent,
-    EditEventPropertyComponent,
-    EventPropertyRowComponent,
-    EditUnitTransformationComponent,
-    EditSchemaTransformationComponent,
-    EditValueTransformationComponent,
-    EditTimestampPropertyComponent,
-    EditDataTypeComponent,
-    EventSchemaPreviewComponent,
-    ExistingAdaptersComponent,
-    AdapterFilterPipe,
-    FormatItemComponent,
-    FormatListComponent,
-    JsonPrettyPrintPipe,
-    AdapterConfigurationComponent,
-    PipelineElementRuntimeInfoComponent,
-    TimestampPipe,
-    EditCorrectionValueComponent,
-    FormatConfigurationComponent,
-    GenericAdapterConfigurationComponent,
-    SpecificAdapterConfigurationComponent,
-    ConfigurationGroupComponent,
-    ErrorMessageComponent,
-    LoadingMessageComponent,
-    SchemaEditorHeaderComponent,
-    SpEpSettingsSectionComponent,
-    StartAdapterConfigurationComponent,
-    FormatItemJsonComponent,
-    SpAdapterDetailsOverviewComponent,
-    SpAdapterDetailsLogsComponent,
-    SpAdapterDetailsMetricsComponent,
-    SpAdapterOptionsPanelComponent,
-    SpAdapterTemplateDialogComponent,
-    SpConnectFilterToolbarComponent,
-    NewAdapterComponent,
-    EditAdapterComponent,
-    EventSchemaErrorHintsComponent
-  ],
-  providers: [
-    RestService,
-    ConnectService,
-    DataTypesService,
-    TransformationRuleService,
-    StaticPropertyUtilService,
-    UnitProviderService,
-    TimestampPipe,
-    XsService
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    imports: [
+        CoreUiModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        FlexLayoutModule,
+        MatGridListModule,
+        CustomMaterialModule,
+        MatProgressSpinnerModule,
+        MatChipsModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatSliderModule,
+        MatSnackBarModule,
+        PlatformServicesModule,
+        CoreUiModule,
+        TreeModule,
+        RouterModule.forChild([
+            {
+                path: 'connect',
+                children: [
+                    {
+                        path: '',
+                        component: ExistingAdaptersComponent,
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: 'create',
+                        component: DataMarketplaceComponent,
+                    },
+                    {
+                        path: 'create/:appId',
+                        component: NewAdapterComponent,
+                    },
+                    {
+                        path: 'edit/:elementId',
+                        component: EditAdapterComponent,
+                    },
+                    // {
+                    //   path: 'details/:elementId/overview',
+                    //   component: SpAdapterDetailsOverviewComponent
+                    // },
+                    {
+                        path: 'details/:elementId/metrics',
+                        component: SpAdapterDetailsMetricsComponent,
+                    },
+                    {
+                        path: 'details/:elementId/logs',
+                        component: SpAdapterDetailsLogsComponent,
+                    },
+                ],
+            },
+        ]),
+        SharedUiModule,
+    ],
+    exports: [PipelineElementRuntimeInfoComponent, ErrorMessageComponent],
+    declarations: [
+        AdapterConfigurationHeaderComponent,
+        AdapterDescriptionComponent,
+        AdapterStartedDialog,
+        DataMarketplaceComponent,
+        DeleteAdapterDialogComponent,
+        EventSchemaComponent,
+        EditEventPropertyComponent,
+        EventPropertyRowComponent,
+        EditUnitTransformationComponent,
+        EditSchemaTransformationComponent,
+        EditValueTransformationComponent,
+        EditTimestampPropertyComponent,
+        EditDataTypeComponent,
+        EventSchemaPreviewComponent,
+        ExistingAdaptersComponent,
+        AdapterFilterPipe,
+        FormatItemComponent,
+        FormatListComponent,
+        JsonPrettyPrintPipe,
+        AdapterConfigurationComponent,
+        PipelineElementRuntimeInfoComponent,
+        TimestampPipe,
+        EditCorrectionValueComponent,
+        FormatConfigurationComponent,
+        GenericAdapterConfigurationComponent,
+        SpecificAdapterConfigurationComponent,
+        ConfigurationGroupComponent,
+        ErrorMessageComponent,
+        LoadingMessageComponent,
+        SchemaEditorHeaderComponent,
+        SpEpSettingsSectionComponent,
+        StartAdapterConfigurationComponent,
+        FormatItemJsonComponent,
+        SpAdapterDetailsOverviewComponent,
+        SpAdapterDetailsLogsComponent,
+        SpAdapterDetailsMetricsComponent,
+        SpAdapterOptionsPanelComponent,
+        SpAdapterTemplateDialogComponent,
+        SpConnectFilterToolbarComponent,
+        NewAdapterComponent,
+        EditAdapterComponent,
+        EventSchemaErrorHintsComponent,
+    ],
+    providers: [
+        RestService,
+        ConnectService,
+        DataTypesService,
+        TransformationRuleService,
+        StaticPropertyUtilService,
+        UnitProviderService,
+        TimestampPipe,
+        XsService,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ConnectModule {
-}
+export class ConnectModule {}
