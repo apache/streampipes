@@ -41,6 +41,10 @@ public class StreamPipesErrorMessage {
       cause);
   }
 
+  public StreamPipesErrorMessage() {
+
+  }
+
   public StreamPipesErrorMessage(String level,
                                  String title,
                                  String detail) {

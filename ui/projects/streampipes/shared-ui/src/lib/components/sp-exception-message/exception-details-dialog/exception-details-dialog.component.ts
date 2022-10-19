@@ -44,7 +44,6 @@ export class SpExceptionDetailsDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.title);
   }
 
 }

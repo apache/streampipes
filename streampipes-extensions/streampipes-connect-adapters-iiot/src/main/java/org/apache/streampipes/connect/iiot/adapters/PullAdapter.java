@@ -21,7 +21,10 @@ package org.apache.streampipes.connect.iiot.adapters;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +33,8 @@ import java.util.concurrent.*;
 
 public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
-    protected static Logger logger = LoggerFactory.getLogger(PullAdapter.class);
+    protected static final Logger logger = LoggerFactory.getLogger(PullAdapter.class);
+
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService errorThreadscheduler;
 
@@ -43,7 +47,7 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
         super(adapterDescription);
     }
 
-    protected abstract void pullData();
+    protected abstract void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException;
 
     protected abstract PollingSettings getPollingInterval();
 
@@ -59,7 +63,17 @@ public abstract class PullAdapter extends SpecificDataStreamAdapter {
     }
 
     private void executeAdpaterLogic() {
-        final Runnable task = this::pullData;
+        final Runnable task = () -> {
+            try {
+                pullData();
+            } catch (ExecutionException | InterruptedException e) {
+                SpMonitoringManager.INSTANCE.addErrorMessage(
+                    adapterDescription.getElementId(),
+                    SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+            } catch (TimeoutException e) {
+                logger.warn("Timeout occurred", e);
+            }
+        };
 
         scheduler = Executors.newScheduledThreadPool(1);
         ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,

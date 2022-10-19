@@ -19,14 +19,19 @@
 package org.apache.streampipes.wrapper.standalone.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.messaging.EventProducer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
+import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -34,19 +39,28 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
         StandaloneSpCollector<T, InternalEventProcessor<Map<String,
                 Object>>> implements SpOutputCollector {
 
-  private final EventProducer<T> producer;
+  private static final Logger LOG = LoggerFactory.getLogger(StandaloneSpOutputCollector.class);
 
-  public StandaloneSpOutputCollector(T protocol, TransportFormat format) throws SpRuntimeException {
+  private final EventProducer<T> producer;
+  private final String resourceId;
+
+  public StandaloneSpOutputCollector(T protocol,
+                                     TransportFormat format,
+                                     String resourceId) throws SpRuntimeException {
    super(protocol, format);
    this.producer = protocolDefinition.getProducer();
+   this.resourceId = resourceId;
   }
 
   public void collect(Event event) {
     Map<String, Object> outEvent = new EventConverter(event).toMap();
     try {
       producer.publish(dataFormatDefinition.fromMap(outEvent));
+      SpMonitoringManager.INSTANCE.increaseOutCounter(resourceId, System.currentTimeMillis());
     } catch (SpRuntimeException e) {
-      e.printStackTrace();
+      var logEntry = SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e));
+      SpMonitoringManager.INSTANCE.addErrorMessage(resourceId, logEntry);
+      LOG.error("Could not publish event", e);
     }
   }
 

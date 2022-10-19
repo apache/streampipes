@@ -15,8 +15,9 @@ package org.apache.streampipes.connect.iiot.adapters.simulator.machine;/*
  * limitations under the License.
  *
  */
-import org.apache.streampipes.connect.api.exception.AdapterException;
+
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 
 import java.util.HashMap;
 import java.util.Map;

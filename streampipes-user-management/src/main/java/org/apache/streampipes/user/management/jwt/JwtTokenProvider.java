@@ -23,7 +23,6 @@ import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.JwtSigningMode;
 import org.apache.streampipes.config.backend.model.LocalAuthConfig;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.security.jwt.JwtTokenGenerator;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
@@ -95,7 +94,7 @@ public class JwtTokenProvider {
 	private Map<String, Object> makeClaims(Principal principal,
 																				 Set<String> roles) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put(CLAIM_USER, UserInfoUtil.toUserInfo((UserAccount) principal, roles));
+		claims.put(CLAIM_USER, UserInfoUtil.toUserInfoObj(principal, roles));
 
 		return claims;
 	}

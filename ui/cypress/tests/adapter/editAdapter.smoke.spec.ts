@@ -16,10 +16,10 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 import { UserInputBuilder } from '../../support/builder/UserInputBuilder';
 import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 
 describe('Test Edit Adapter', () => {
   beforeEach('Setup Test', () => {

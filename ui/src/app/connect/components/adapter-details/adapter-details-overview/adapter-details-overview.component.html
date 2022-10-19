@@ -16,14 +16,12 @@
   ~
   -->
 
-<div fxFlex="100" fxLayoutAlign="center center" fxLayout="column">
-    <ngx-charts-number-card style="width:300px;"
-            [view]="[300,150]"
-            [results]="chartData"
-            [scheme]="'cool'"
-            [cardColor]="color"
-            [animations]="false"
-            [bandColor]="bandColor"
-            [textColor]="textColor">
-    </ngx-charts-number-card>
-</div>
+<sp-basic-nav-tabs [spNavigationItems]="tabs"
+                   [activeLink]="'overview'"
+                   [showBackLink]="true"
+                   [backLinkTarget]="['connect']">
+
+  <h1>Overview</h1>
+
+
+</sp-basic-nav-tabs>

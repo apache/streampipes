@@ -18,20 +18,40 @@
 
 package org.apache.streampipes.user.management.util;
 
-import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.model.UserInfo;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.ServiceAccount;
+import org.apache.streampipes.model.client.user.UserAccount;
 
 import java.util.Set;
 
 public class UserInfoUtil {
 
-  public static UserInfo toUserInfo(UserAccount userAccount,
+  public static UserInfo toUserInfoObj(Principal principal,
+                                    Set<String> roles) {
+    return principal instanceof UserAccount ? toUserInfo((UserAccount) principal, roles) :
+        toServiceUserInfo((ServiceAccount) principal, roles);
+  }
+
+  private static UserInfo toUserInfo(UserAccount userAccount,
                               Set<String> roles) {
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUsername(userAccount.getUsername());
-    userInfo.setDisplayName(userAccount.getUsername());
+    UserInfo userInfo = prepareUserInfo(userAccount, roles);
     userInfo.setShowTutorial(!userAccount.isHideTutorial());
+    return userInfo;
+  }
+
+  private static UserInfo toServiceUserInfo(ServiceAccount serviceAccount,
+                                    Set<String> roles) {
+    return prepareUserInfo(serviceAccount, roles);
+  }
+
+  private static UserInfo prepareUserInfo(Principal principal,
+                                          Set<String> roles) {
+    UserInfo userInfo = new UserInfo();
+    userInfo.setUsername(principal.getUsername());
+    userInfo.setDisplayName(principal.getUsername());
     userInfo.setRoles(roles);
+
     return userInfo;
   }
 }

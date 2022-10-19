@@ -38,6 +38,9 @@ export class SpExceptionMessageComponent {
   @Input()
   message: StreamPipesErrorMessage;
 
+  @Input()
+  messageTimestamp: number;
+
   constructor(private dialogService: DialogService) {
 
   }

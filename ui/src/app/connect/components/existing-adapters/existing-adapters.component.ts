@@ -202,4 +202,8 @@ export class ExistingAdaptersComponent implements OnInit {
     }
   }
 
+  navigateToDetailsOverviewPage(adapter: AdapterDescriptionUnion): void {
+    this.router.navigate(['connect', 'details', adapter.elementId, 'metrics']);
+  }
+
 }

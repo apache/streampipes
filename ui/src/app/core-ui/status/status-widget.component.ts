@@ -29,8 +29,11 @@ export class StatusWidgetComponent implements OnInit {
     @Input() bandColor = 'rgb(27, 20, 100)';
     @Input() textColor = 'rgb(96,96,96)';
 
+    @Input() widgetWidth = 400;
+    @Input() widgetHeight = 150;
+
     _label: string;
-    _statusValue: string;
+    _statusValue: string | number;
 
     chartData: any;
 
@@ -43,7 +46,7 @@ export class StatusWidgetComponent implements OnInit {
     }
 
     @Input()
-    set statusValue(statusValue: string) {
+    set statusValue(statusValue: string | number) {
         this._statusValue = statusValue;
         this.updateChartData();
     }

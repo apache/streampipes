@@ -19,7 +19,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2022-10-13 22:13:28.
+// Generated using typescript-generator version 2.27.744 on 2022-10-19 14:23:28.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;

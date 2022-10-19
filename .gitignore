@@ -134,6 +134,8 @@ bundle.js.map
 
 .vscode/
 
+.java-version
+
 package-lock.json
 logs/
 

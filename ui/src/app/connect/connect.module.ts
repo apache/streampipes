@@ -115,7 +115,9 @@ import {
 import { NewAdapterComponent } from './components/new-adapter/new-adapter.component';
 import { EditAdapterComponent } from './components/edit-adapter/edit-adapter.component';
 import { EventSchemaErrorHintsComponent } from './components/adapter-configuration/schema-editor/event-schema-error-hints/event-schema-error-hints.component';
-
+import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/adapter-details-overview/adapter-details-overview.component';
+import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
+import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 @NgModule({
   imports: [
     CoreUiModule,
@@ -154,7 +156,20 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
           {
             path: 'edit/:elementId',
             component: EditAdapterComponent,
-          }]
+          },
+          // {
+          //   path: 'details/:elementId/overview',
+          //   component: SpAdapterDetailsOverviewComponent
+          // },
+          {
+            path: 'details/:elementId/metrics',
+            component: SpAdapterDetailsMetricsComponent
+          },
+          {
+            path: 'details/:elementId/logs',
+            component: SpAdapterDetailsLogsComponent
+          }
+        ]
       }]),
     SharedUiModule
   ],
@@ -163,6 +178,7 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
     ErrorMessageComponent
   ],
   declarations: [
+    AdapterConfigurationHeaderComponent,
     AdapterDescriptionComponent,
     AdapterStartedDialog,
     DataMarketplaceComponent,
@@ -182,7 +198,6 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
     FormatListComponent,
     JsonPrettyPrintPipe,
     AdapterConfigurationComponent,
-    SpAdapterTemplateDialogComponent,
     PipelineElementRuntimeInfoComponent,
     TimestampPipe,
     EditCorrectionValueComponent,
@@ -196,9 +211,12 @@ import { EventSchemaErrorHintsComponent } from './components/adapter-configurati
     SpEpSettingsSectionComponent,
     StartAdapterConfigurationComponent,
     FormatItemJsonComponent,
-    SpConnectFilterToolbarComponent,
+    SpAdapterDetailsOverviewComponent,
+    SpAdapterDetailsLogsComponent,
+    SpAdapterDetailsMetricsComponent,
     SpAdapterOptionsPanelComponent,
-    AdapterConfigurationHeaderComponent,
+    SpAdapterTemplateDialogComponent,
+    SpConnectFilterToolbarComponent,
     NewAdapterComponent,
     EditAdapterComponent,
     EventSchemaErrorHintsComponent

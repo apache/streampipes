@@ -65,7 +65,14 @@ public class DataSetGroundingSelector {
               topicDefinition,
               MqttTransportProtocol.class
       ));
-    }
+    } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
+    outputGrounding.setTransportProtocol(makeTransportProtocol(
+        BackendConfig.INSTANCE.getNatsHost(),
+        BackendConfig.INSTANCE.getNatsPort(),
+        topicDefinition,
+        NatsTransportProtocol.class
+    ));
+  }
 
     outputGrounding.setTransportFormats(Collections
             .singletonList(spDataSet.getSupportedGrounding().getTransportFormats().get(0)));
@@ -93,6 +100,11 @@ public class DataSetGroundingSelector {
       tpOut = (T) tp;
     } else if (protocolClass.equals(MqttTransportProtocol.class)) {
       MqttTransportProtocol tp = new MqttTransportProtocol();
+      tp.setPort(port);
+      fillTransportProtocol(tp, hostname, topicDefinition);
+      tpOut = (T) tp;
+    } else if (protocolClass.equals(NatsTransportProtocol.class)) {
+      NatsTransportProtocol tp = new NatsTransportProtocol();
       tp.setPort(port);
       fillTransportProtocol(tp, hostname, topicDefinition);
       tpOut = (T) tp;
