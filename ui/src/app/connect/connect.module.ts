@@ -157,10 +157,10 @@ import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/a
             path: 'edit/:elementId',
             component: EditAdapterComponent,
           },
-          {
-            path: 'details/:elementId/overview',
-            component: SpAdapterDetailsOverviewComponent
-          },
+          // {
+          //   path: 'details/:elementId/overview',
+          //   component: SpAdapterDetailsOverviewComponent
+          // },
           {
             path: 'details/:elementId/metrics',
             component: SpAdapterDetailsMetricsComponent
