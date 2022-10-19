@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.resource.management;
 
+import org.apache.streampipes.commons.constants.DefaultEnvValues;
+import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.UserNotFoundException;
 import org.apache.streampipes.commons.exceptions.UsernameAlreadyTakenException;
 import org.apache.streampipes.mail.MailSender;
@@ -55,6 +57,12 @@ public class UserResourceManager extends AbstractResourceManager<IUserStorage> {
 
   public Principal getPrincipalById(String principalId) {
     return db.getUserById(principalId);
+  }
+
+  public Principal getServiceAdmin() {
+    return db.getServiceAccount(
+        Envs.SP_INITIAL_SERVICE_USER.getValueOrDefault(DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT)
+    );
   }
 
   public boolean registerUser(RegistrationData data) throws UsernameAlreadyTakenException {

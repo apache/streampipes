@@ -20,7 +20,10 @@ package org.apache.streampipes.manager.monitoring.pipeline;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.http.client.fluent.Request;
+import org.apache.streampipes.manager.util.AuthTokenUtils;
+import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
+import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
@@ -42,13 +45,22 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
     serviceEndpoints.forEach(serviceEndpoint -> {
       try {
-        String response = Request.Get(makeLogUrl(serviceEndpoint)).execute().returnContent().asString();
+        String response = makeRequest(serviceEndpoint).execute().returnContent().asString();
         SpEndpointMonitoringInfo monitoringInfo = parseLogResponse(response);
         ExtensionsLogProvider.INSTANCE.addMonitoringInfos(monitoringInfo);
       } catch (IOException e) {
         e.printStackTrace();
       }
     });
+  }
+
+  private Request makeRequest(String serviceEndpointUrl) {
+    return Request.Get(makeLogUrl(serviceEndpointUrl))
+    .addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdmin()));
+  }
+
+  private Principal getServiceAdmin() {
+    return new SpResourceManager().manageUsers().getServiceAdmin();
   }
 
   private List<String> getActiveExtensionsEndpoints() {
