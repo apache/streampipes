@@ -21,6 +21,8 @@ import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.d
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AdapterService, AdapterMonitoringService } from '@streampipes/platform-services';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConnectRoutes } from '../../../connect.routes';
 
 @Component({
   selector: 'sp-adapter-details-overview',
@@ -32,8 +34,9 @@ export class SpAdapterDetailsOverviewComponent extends SpAbstractAdapterDetailsD
   constructor(authService: AuthService,
               activatedRoute: ActivatedRoute,
               adapterService: AdapterService,
-              adapterMonitoringService: AdapterMonitoringService) {
-    super(authService, activatedRoute, adapterService, adapterMonitoringService);
+              adapterMonitoringService: AdapterMonitoringService,
+              breadcrumbService: SpBreadcrumbService) {
+    super(authService, activatedRoute, adapterService, adapterMonitoringService, breadcrumbService);
   }
 
   ngOnInit(): void {
@@ -41,6 +44,7 @@ export class SpAdapterDetailsOverviewComponent extends SpAbstractAdapterDetailsD
   }
 
   onAdapterLoaded(): void {
+    this.breadcrumbService.updateBreadcrumb([SpConnectRoutes.BASE, {label: this.adapter.name}, {label: 'Overview'}]);
   }
 
 }

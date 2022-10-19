@@ -21,6 +21,9 @@ import { SpAbstractAdapterDetailsDirective } from '../abstract-adapter-details.d
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AdapterService, AdapterMonitoringService, SpLogEntry } from '@streampipes/platform-services';
+import { SpPipelineRoutes } from '../../../../pipelines/pipelines.routes';
+import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { SpConnectRoutes } from '../../../connect.routes';
 
 @Component({
   selector: 'sp-adapter-details-logs',
@@ -34,8 +37,9 @@ export class SpAdapterDetailsLogsComponent extends SpAbstractAdapterDetailsDirec
   constructor(authService: AuthService,
               activatedRoute: ActivatedRoute,
               adapterService: AdapterService,
-              adapterMonitoringService: AdapterMonitoringService) {
-    super(authService, activatedRoute, adapterService, adapterMonitoringService);
+              adapterMonitoringService: AdapterMonitoringService,
+              breadcrumbService: SpBreadcrumbService) {
+    super(authService, activatedRoute, adapterService, adapterMonitoringService, breadcrumbService);
   }
 
   ngOnInit(): void {
@@ -49,6 +53,7 @@ export class SpAdapterDetailsLogsComponent extends SpAbstractAdapterDetailsDirec
   }
 
   onAdapterLoaded(): void {
+    this.breadcrumbService.updateBreadcrumb([SpConnectRoutes.BASE, {label: this.adapter.name}, {label: 'Logs'}]);
     this.loadLogs();
   }
 

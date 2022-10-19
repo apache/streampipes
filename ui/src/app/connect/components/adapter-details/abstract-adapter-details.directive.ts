@@ -21,6 +21,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AdapterDescriptionUnion, AdapterService, AdapterMonitoringService } from '@streampipes/platform-services';
 import { SpNavigationItem } from '@streampipes/shared-ui';
 import { SpAdapterDetailsTabs } from './adapter-details-tabs';
+import { SpBreadcrumbService } from '../../../../../projects/streampipes/shared-ui/src/lib/services/breadcrumb.service';
 
 export abstract class SpAbstractAdapterDetailsDirective {
 
@@ -32,7 +33,8 @@ export abstract class SpAbstractAdapterDetailsDirective {
   constructor(protected authService: AuthService,
               protected activatedRoute: ActivatedRoute,
               protected adapterService: AdapterService,
-              protected adapterMonitoringService: AdapterMonitoringService) {
+              protected adapterMonitoringService: AdapterMonitoringService,
+              protected breadcrumbService: SpBreadcrumbService) {
   }
 
   onInit(): void {
