@@ -61,10 +61,10 @@ import { PipelineElementRuntimeInfoComponent } from './components/runtime-info/p
 import { EventPropertyRowComponent } from './components/new-adapter/schema-editor/event-property-row/event-property-row.component';
 import { EventSchemaPreviewComponent } from './components/new-adapter/schema-editor/event-schema-preview/event-schema-preview.component';
 import { CoreUiModule } from '../core-ui/core-ui.module';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import { EditCorrectionValueComponent } from './dialog/edit-event-property/components/edit-value-transformation/edit-correction-value/edit-correction-value.component';
 import { ExistingAdaptersComponent } from './components/existing-adapters/existing-adapters.component';
-// tslint:disable-next-line:max-line-length
+// eslint-disable-next-line max-len
 import { SpecificAdapterConfigurationComponent } from './components/new-adapter/specific-adapter-configuration/specific-adapter-configuration.component';
 import { ConfigurationGroupComponent } from './components/configuration-group/configuration-group.component';
 import { FormatConfigurationComponent } from './components/new-adapter/format-configuration/format-configuration.component';

@@ -77,11 +77,7 @@ export class ConfigureLabelsComponent implements OnInit {
   }
 
   setCategoryAvailable() {
-    if (this.categories.length > 0) {
-      this.noCategoriesAvailable = false;
-    } else {
-      this.noCategoriesAvailable = true;
-    }
+    this.noCategoriesAvailable = this.categories.length <= 0;
   }
 
   updateCategory(newCategoryName) {
@@ -104,7 +100,7 @@ export class ConfigureLabelsComponent implements OnInit {
   addLabel() {
     const label = new Label();
     label.name = '';
-    // tslint:disable-next-line:no-bitwise
+    // eslint-disable-next-line no-bitwise
     label.color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
     label.categoryId = this.selectedCategory._id;
 

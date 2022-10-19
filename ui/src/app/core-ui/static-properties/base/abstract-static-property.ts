@@ -23,7 +23,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { InvocablePipelineElementUnion } from '../../../editor/model/editor.model';
 
 @Directive()
-// tslint:disable-next-line:directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class AbstractStaticPropertyRenderer<T extends StaticProperty> {
 
   @Input()

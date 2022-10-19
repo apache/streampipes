@@ -24,7 +24,7 @@ import { Directive } from '@angular/core';
 import { BaseRuntimeResolvableInput } from './base-runtime-resolvable-input';
 
 @Directive()
-// tslint:disable-next-line:directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseRuntimeResolvableSelectionInput<T
     extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty>
   extends BaseRuntimeResolvableInput<T> {
