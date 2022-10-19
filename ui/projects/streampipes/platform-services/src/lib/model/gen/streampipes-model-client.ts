@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-// Generated using typescript-generator version 2.27.744 on 2022-10-19 08:32:13.
+// Generated using typescript-generator version 2.27.744 on 2022-10-19 15:02:27.
 
 export class ExtensionsServiceEndpointItem {
     appId: string;
