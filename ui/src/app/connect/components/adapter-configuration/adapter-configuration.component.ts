@@ -115,6 +115,8 @@ export class AdapterConfigurationComponent implements OnInit {
     } else {
       this.oldEventSchema = eventSchema;
     }
+
+
   }
 
   public setSchema() {

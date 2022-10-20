@@ -18,7 +18,7 @@
 
 <sp-basic-view [padding]="true" [showBackLink]="false">
 
-    <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
+    <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
         <button mat-icon-button (click)="removeSelection()" matTooltip="Cancel">
             <i class="material-icons">close</i>
         </button>
@@ -66,6 +66,7 @@
                                  [adapterDescription]="adapter"
                                  [(eventSchema)]="eventSchema"
                                  [(oldEventSchema)]="oldEventSchema"
+                                 [isEditMode]="isEditMode"
                                  (clickNextEmitter)="clickEventSchemaNextButtonButton()"
                                  (goBackEmitter)="goBack()"
                                  (removeSelectionEmitter)="removeSelection()">

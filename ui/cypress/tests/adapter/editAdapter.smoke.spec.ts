@@ -55,17 +55,12 @@ describe('Test Edit Adapter', () => {
             .build();
         ConnectUtils.configureAdapter(newUserConfiguration);
 
-        // check warning that event schema might have changed
-        // cy.dataCy('sp-connect-adapter-warning-event-schema-change', {
-        //     timeout: 10000,
-        // }).should('be.visible');
+        cy.get('.schema-validation-text-warning').contains('Edit mode');
 
         // Update event schema
         ConnectBtns.refreshSchema().click();
 
-        // cy.dataCy('sp-connect-adapter-warning-event-schema-change', {
-        //     timeout: 10000,
-        // }).should('not.be.visible');
+        cy.dataCy('schema-validation-ok').should('not.exist');
 
         ConnectUtils.finishEventSchemaConfiguration();
 
@@ -94,8 +89,8 @@ describe('Test Edit Adapter', () => {
         );
 
         // validate that three event properties
-        // cy.get('.preview-row', { timeout: 10000 })
-        //     .its('length')
-        //     .should('eq', 3);
+        cy.get('.preview-row', { timeout: 10000 })
+            .its('length')
+            .should('eq', 3);
     });
 });
