@@ -66,7 +66,7 @@ export class ExistingAdaptersComponent implements OnInit {
   isAdmin = false;
 
   constructor(public connectService: ConnectService,
-              private dataMarketplaceService: AdapterService,
+              private adapterService: AdapterService,
               private dialogService: DialogService,
               private authService: AuthService,
               private pipelineElementService: PipelineElementService,
@@ -85,7 +85,7 @@ export class ExistingAdaptersComponent implements OnInit {
   }
 
   startAdapter(adapter: AdapterDescriptionUnion) {
-    this.dataMarketplaceService.startAdapter(adapter).subscribe(response => {
+    this.adapterService.startAdapter(adapter).subscribe(_ => {
       this.getAdaptersRunning();
     }, error => {
       this.openAdapterStatusErrorDialog(error.error, 'Could not start adapter');
@@ -93,7 +93,7 @@ export class ExistingAdaptersComponent implements OnInit {
   }
 
   stopAdapter(adapter: AdapterDescriptionUnion) {
-    this.dataMarketplaceService.stopAdapter(adapter).subscribe(response => {
+    this.adapterService.stopAdapter(adapter).subscribe(_ => {
       this.getAdaptersRunning();
     }, error => {
       this.openAdapterStatusErrorDialog(error.error, 'Could not stop adapter');
@@ -115,7 +115,7 @@ export class ExistingAdaptersComponent implements OnInit {
 
   getIconUrl(adapter: AdapterDescriptionUnion) {
     if (adapter.includedAssets.length > 0) {
-      return this.dataMarketplaceService.getAssetUrl(adapter.appId) + '/icon';
+      return this.adapterService.getAssetUrl(adapter.appId) + '/icon';
     } else {
       return 'assets/img/connect/' + adapter.iconUrl;
     }
@@ -138,6 +138,10 @@ export class ExistingAdaptersComponent implements OnInit {
         this.getAdaptersRunning();
       }
     });
+  }
+
+  editAdapter(adapter: AdapterDescriptionUnion) {
+    this.router.navigate(['connect', 'edit', adapter.elementId]);
   }
 
   deleteAdapter(adapter: AdapterDescriptionUnion): void {
@@ -175,7 +179,7 @@ export class ExistingAdaptersComponent implements OnInit {
   }
 
   getAdaptersRunning(): void {
-    this.dataMarketplaceService.getAdapters().subscribe(adapters => {
+    this.adapterService.getAdapters().subscribe(adapters => {
       this.existingAdapters = adapters;
       this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
       this.filteredAdapters = this.adapterFilter.transform(this.existingAdapters, this.currentFilter);
@@ -196,6 +200,10 @@ export class ExistingAdaptersComponent implements OnInit {
     if (this.dataSource) {
       this.dataSource.data = this.adapterFilter.transform(this.filteredAdapters, this.currentFilter);
     }
+  }
+
+  navigateToDetailsOverviewPage(adapter: AdapterDescriptionUnion): void {
+    this.router.navigate(['connect', 'details', adapter.elementId, 'metrics']);
   }
 
 }

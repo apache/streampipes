@@ -33,7 +33,7 @@ import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { StreamPipesErrorMessage } from '../../../../../projects/streampipes/platform-services/src/lib/model/gen/streampipes-model';
 
 @Directive()
-// tslint:disable-next-line:directive-class-suffix
+// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseRuntimeResolvableInput<T
     extends RuntimeResolvableAnyStaticProperty | RuntimeResolvableOneOfStaticProperty | RuntimeResolvableTreeInputStaticProperty>
   extends AbstractStaticPropertyRenderer<T>

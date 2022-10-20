@@ -18,47 +18,23 @@
 
 
 <div fxFlex="100" fxLayout="row" fxLayoutAlign="start start">
-        <div fxFlex="33">
-            <div fxLayout="column" class="mb-10">
-                <sp-status-widget fxFlex="100" [label]="'Consumed / Queued'"
-                                  [color]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedCardColor : cardColor"
-                                  [textColor]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedTextColor : textColor"
-                                  [bandColor]="consumedMessagesFirstStreamBandColor"
-                                  [statusValue]="consumedMessagesFirstInputStream">
-                </sp-status-widget>
-                <sp-barchart-widget *ngIf="(consumedMessagesFirstInputStream != notAvailable)"
-                                    [data]="historicFirstConsumedInputValues"
-                                    [textColor]="chartTextColor"
-                                    [backgroundColor]="chartBackgroundColor" class="mt--10">
-                </sp-barchart-widget>
-            </div>
-        </div>
-        <div fxFlex="33">
-            <div fxLayout="column" class="mb-10">
-                <sp-status-widget fxFlex="100" [label]="'Consumed / Queued'"
-                                  [color]="consumedMessagesSecondInputStream === notAvailable ? deactivatedCardColor : cardColor"
-                                  [textColor]="consumedMessagesSecondInputStream === notAvailable ? deactivatedTextColor : textColor"
-                                  [bandColor]="consumedMessagesSecondStreamBandColor"
-                                  [statusValue]="consumedMessagesSecondInputStream"></sp-status-widget>
-                <sp-barchart-widget *ngIf="consumedMessagesSecondInputStream !== notAvailable"
-                                    [data]="historicSecondConsumedInputValues"
-                                    [textColor]="chartTextColor"
-                                    [backgroundColor]="chartBackgroundColor" class="mt--10">
-                </sp-barchart-widget>
-            </div>
-        </div>
-        <div fxFlex="33">
-            <div fxLayout="column" class="mb-10">
-                <sp-status-widget fxFlex="100" [label]="'Produced Messages'"
-                                  [color]="producedMessages === notAvailable ? deactivatedCardColor : cardColor"
-                                  [textColor]="producedMessages === notAvailable ? deactivatedTextColor : textColor"
-                                  [bandColor]="producedMessages === notAvailable ? deactivatedBandColor : bandColor"
-                                  [statusValue]="producedMessages"></sp-status-widget>
-                <sp-barchart-widget *ngIf="producedMessages !== notAvailable"
-                                    [data]="historicProducedOutputValues"
-                                    [textColor]="chartTextColor"
-                                    [backgroundColor]="chartBackgroundColor" class="mt--10">
-                </sp-barchart-widget>
-            </div>
-        </div>
+  <div *ngIf="observedInputStreams.length > 0">
+    <div [fxFlex]="70 / observedInputStreams.length" *ngFor="let observedInputStream of observedInputStreams">
+      <div fxLayout="column" class="mb-10">
+        <sp-status-widget fxFlex="100" [label]="'consumed from ' + observedInputStream.pipelineElementName"
+                          [color]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedCardColor : cardColor"
+                          [textColor]="(consumedMessagesFirstInputStream == notAvailable) ? deactivatedTextColor : textColor"
+                          [statusValue]="metricsInfo.messagesIn[observedInputStream.identifier] ? metricsInfo.messagesIn[observedInputStream.identifier].counter : '0'">
+        </sp-status-widget>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="30">
+    <div fxLayout="column" class="mb-10" *ngIf="!dataSink">
+      <sp-status-widget fxFlex="100" [label]="'produced messages'"
+                        [color]="producedMessages === notAvailable ? deactivatedCardColor : cardColor"
+                        [textColor]="producedMessages === notAvailable ? deactivatedTextColor : textColor"
+                        [statusValue]="metricsInfo.messagesOut.counter"></sp-status-widget>
+    </div>
+  </div>
 </div>

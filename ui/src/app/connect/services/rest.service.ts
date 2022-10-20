@@ -20,48 +20,29 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 
-import { from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UnitDescription } from '../model/UnitDescription';
 import {
-  AdapterDescription, FormatDescription, GuessSchema, Message, SpDataStream, PlatformServicesCommons,
+  AdapterDescription,
   AdapterEventPreview,
-  GuessTypeInfo
+  FormatDescription,
+  GuessSchema,
+  GuessTypeInfo,
+  PlatformServicesCommons,
+  SpDataStream
 } from '@streampipes/platform-services';
-import { AuthService } from '../../services/auth.service';
 
 @Injectable()
 export class RestService {
 
   constructor(
     private http: HttpClient,
-    private platformServicesCommons: PlatformServicesCommons,
-    private authService: AuthService) {
+    private platformServicesCommons: PlatformServicesCommons) {
   }
 
   get connectPath() {
     return this.platformServicesCommons.apiBasePath + '/connect';
-  }
-
-  addAdapter(adapter: AdapterDescription): Observable<Message> {
-    return this.addAdapterDescription(adapter, '/master/adapters');
-  }
-
-  addAdapterDescription(adapter: AdapterDescription, url: string): Observable<Message> {
-    adapter.userName = this.authService.getCurrentUser().username;
-    const promise = new Promise<Message>((resolve, reject) => {
-      this.http
-        .post(
-          this.connectPath + url,
-          adapter
-        )
-        .pipe(map(response => {
-          const statusMessage = response as Message;
-          resolve(statusMessage);
-        }))
-        .subscribe();
-    });
-    return from(promise);
   }
 
   getGuessSchema(adapter: AdapterDescription): Observable<GuessSchema> {
@@ -106,6 +87,4 @@ export class RestService {
         return descriptions.filter(entry => entry.resource !== unitDescription.resource);
       }));
   }
-
-
 }

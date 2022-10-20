@@ -48,7 +48,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
+public abstract class AbstractPipelineElementResource<D extends Declarer<?>> extends AbstractExtensionsResource {
 
   private static final String SLASH = "/";
 
@@ -167,39 +167,6 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> {
 
   private String makePath(String appId, String assetAppendix) {
     return appId + SLASH + assetAppendix;
-  }
-
-  protected <T> Response ok(T entity) {
-    return Response
-            .ok()
-            .entity(entity)
-            .build();
-  }
-
-  protected Response clientError() {
-    return Response
-            .status(400)
-            .build();
-  }
-
-  protected Response serverError() {
-    return Response
-            .status(500)
-            .build();
-  }
-
-  protected <T> Response notModified(T entity) {
-    return Response
-            .notModified()
-            .entity(entity)
-            .build();
-  }
-
-  protected <T> Response noContent(T entity) {
-    return Response
-            .noContent()
-            .entity(entity)
-            .build();
   }
 
   protected abstract Map<String, D> getElementDeclarers();

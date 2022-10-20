@@ -1,0 +1,107 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+
+<div fxLayout="column" fxLayoutAlign="center" class="mt-20">
+    <div fxFlex="90" fxLayout="column">
+
+        <sp-event-schema-error-hints [schemaErrorHints]="schemaErrorHints"
+                                     [isError]="isError"
+                                     [isLoading]="isLoading">
+        </sp-event-schema-error-hints>
+
+        <sp-basic-inner-panel [showTitle]="false" outerMargin="0px 0px 20px 0px">
+            <div header *ngIf="!isLoading && !isError" fxFlex="100">
+                <sp-schema-editor-header fxFlex="100"
+                                         [countSelected]="countSelected"
+                                         (addNestedPropertyEmitter)="addNestedProperty()"
+                                         (addStaticValuePropertyEmitter)="addStaticValueProperty()"
+                                         (addTimestampPropertyEmitter)="addTimestampProperty()"
+                                         (guessSchemaEmitter)="guessSchema()"
+                                         (updatePreviewEmitter)="updatePreview()"
+                                         (removeSelectedPropertiesEmitter)="removeSelectedProperties()">
+                </sp-schema-editor-header>
+            </div>
+            <div header *ngIf="!isLoading && isError" fxFlex="100">
+                <div fxLayout="row" fxLayoutAlign="end center">
+                    <button color="accent"
+                            mat-button
+                            mat-icon-button
+                            matTooltip="Refresh Schema"
+                            (click)="guessSchema()">
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div fxFlex="100">
+
+                <sp-loading-message *ngIf="isLoading"></sp-loading-message>
+
+                <sp-error-message
+                        [errorMessage]="errorMessage"
+                        *ngIf="isError && !isLoading">
+                </sp-error-message>
+
+                <div *ngIf="!isError && !isLoading && eventSchema && oldEventSchema && nodes"
+                     fxLayout="column"
+                     fxLayoutAlign="space-evenly stretched"
+                     class="drag-drop-tree"
+                     data-cy="sp-connect-schema-editor">
+                    <tree-root #tree
+                               [nodes]="nodes"
+                               [options]="options"
+                               (updateData)="onUpdateData(tree)">
+                        <ng-template #treeNodeTemplate let-node let-index="index">
+                            <event-property-row
+                                    [node]="node"
+                                    [(isEditable)]="isEditable"
+                                    [(eventSchema)]="eventSchema"
+                                    [(originalEventSchema)]="oldEventSchema"
+                                    [eventPreview]="eventPreview"
+                                    [fieldStatusInfo]="fieldStatusInfo"
+                                    (refreshTreeEmitter)="refreshTree($event)"
+                                    [(countSelected)]="countSelected"></event-property-row>
+                        </ng-template>
+                    </tree-root>
+                </div>
+            </div>
+        </sp-basic-inner-panel>
+    </div>
+    <div fxFlex="100" *ngIf="desiredPreview && isPreviewEnabled && !isLoading && !isError">
+        <sp-event-schema-preview [originalEventSchema]="oldEventSchema"
+                                 [desiredEventSchema]="eventSchema"
+                                 [originalPreview]="eventPreview[0]"
+                                 [desiredPreview]="desiredPreview"
+                                 (updatePreviewEmitter)="updatePreview()"></sp-event-schema-preview>
+    </div>
+</div>
+
+
+<div fxLayoutAlign="end" class="mt-10">
+    <button class="mat-basic" mat-raised-button (click)="removeSelection()">Cancel</button>
+    <button class="mat-basic stepper-button" mat-raised-button (click)="goBack()">Back</button>
+    <button class="stepper-button"
+            id="event-schema-next-button"
+            data-cy="sp-event-schema-next-button"
+            color="accent" mat-raised-button
+            (click)="clickNext()"
+            [disabled]="!validEventSchema">
+        Next
+    </button>
+</div>

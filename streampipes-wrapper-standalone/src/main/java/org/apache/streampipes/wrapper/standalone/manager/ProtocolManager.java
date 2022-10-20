@@ -55,12 +55,13 @@ public class ProtocolManager {
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector(T protocol,
-                                                                                              TransportFormat format) throws SpRuntimeException {
+                                                                                              TransportFormat format,
+                                                                                              String resourceId) throws SpRuntimeException {
 
     if (producers.containsKey(topicName(protocol))) {
       return producers.get(topicName(protocol));
     } else {
-      producers.put(topicName(protocol), makeOutputCollector(protocol, format));
+      producers.put(topicName(protocol), makeOutputCollector(protocol, format, resourceId));
       LOG.info("Adding new producer to producer map (size=" + producers.size() + "): " + topicName
               (protocol));
       return producers.get(topicName(protocol));
@@ -75,8 +76,9 @@ public class ProtocolManager {
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector<T> makeOutputCollector(T protocol,
-                                                                                                 TransportFormat format) throws SpRuntimeException {
-    return new StandaloneSpOutputCollector<>(protocol, format);
+                                                                                                 TransportFormat format,
+                                                                                                 String resourceId) throws SpRuntimeException {
+    return new StandaloneSpOutputCollector<>(protocol, format, resourceId);
   }
 
   private static String topicName(TransportProtocol protocol) {

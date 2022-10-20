@@ -17,7 +17,7 @@
  */
 
 import { FileManagementUtils } from './FileManagementUtils';
-import { ConnectUtils } from './ConnectUtils';
+import { ConnectUtils } from './connect/ConnectUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 
 export class PrepareTestDataUtils {

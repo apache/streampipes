@@ -114,7 +114,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     this.getDashboard(params.id, startTime, endTime);
 
 
-    this.authSubscription = this.authService.user$.subscribe(user => {
+    this.authSubscription = this.authService.user$.subscribe(_ => {
       this.hasDataExplorerWritePrivileges = this.authService.hasRole(
         UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW
       );
@@ -149,7 +149,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
   }
 
   addWidgetToDashboard(widget: DataExplorerWidgetModel) {
-    // tslint:disable-next-line:no-object-literal-type-assertion
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const dashboardItem = {} as ClientDashboardItem;
     dashboardItem.id = widget._id;
     dashboardItem.cols = 3;
@@ -209,7 +209,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
   prepareWidgetUpdates(): Observable<any>[] {
     const promises: Observable<any>[] = [];
-    this.widgetsToUpdate.forEach((widget, key) => {
+    this.widgetsToUpdate.forEach((widget, _) => {
       promises.push(this.dataViewDataExplorerService.updateWidget(widget));
     });
 
@@ -237,7 +237,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  toggleGrid(gridVisible: boolean) {
+  toggleGrid() {
     this.dashboardGrid.toggleGrid();
   }
 
@@ -298,7 +298,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
   }
 
   deleteDashboard(dashboard: Dashboard) {
-    this.dashboardService.deleteDashboard(dashboard).subscribe((result) => {
+    this.dashboardService.deleteDashboard(dashboard).subscribe((_) => {
       this.goBackToOverview();
     });
   }

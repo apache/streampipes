@@ -152,8 +152,8 @@ export class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
         instance.applicationLinks = __getCopyArrayFn(ApplicationLink.fromData)(data.applicationLinks);
         instance.internallyManaged = data.internallyManaged;
         instance.connectedTo = __getCopyArrayFn(__identity<string>())(data.connectedTo);
-        instance.uri = data.uri;
         instance.dom = data.dom;
+        instance.uri = data.uri;
         instance._rev = data._rev;
         return instance;
     }
@@ -193,9 +193,10 @@ export class AdapterDescription extends NamedStreamPipesEntity {
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
         instance.correspondingServiceGroup = data.correspondingServiceGroup;
         instance.correspondingDataStreamElementId = data.correspondingDataStreamElementId;
-        instance.valueRules = __getCopyArrayFn(TransformationRuleDescription.fromDataUnion)(data.valueRules);
-        instance.streamRules = __getCopyArrayFn(TransformationRuleDescription.fromDataUnion)(data.streamRules);
         instance.schemaRules = __getCopyArrayFn(TransformationRuleDescription.fromDataUnion)(data.schemaRules);
+        instance.streamRules = __getCopyArrayFn(TransformationRuleDescription.fromDataUnion)(data.streamRules);
+        instance.valueRules = __getCopyArrayFn(TransformationRuleDescription.fromDataUnion)(data.valueRules);
+
         return instance;
     }
 
@@ -1791,6 +1792,7 @@ export class GenericAdapterSetDescription extends AdapterSetDescription implemen
         }
         const instance = target || new GenericAdapterSetDescription();
         super.fromData(data, instance);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.formatDescription = FormatDescription.fromData(data.formatDescription);
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.protocolDescription = ProtocolDescription.fromData(data.protocolDescription);
@@ -1810,6 +1812,7 @@ export class GenericAdapterStreamDescription extends AdapterStreamDescription im
         }
         const instance = target || new GenericAdapterStreamDescription();
         super.fromData(data, instance);
+        instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.formatDescription = FormatDescription.fromData(data.formatDescription);
         instance.eventSchema = EventSchema.fromData(data.eventSchema);
         instance.protocolDescription = ProtocolDescription.fromData(data.protocolDescription);
@@ -2123,6 +2126,21 @@ export class MeasurementRange extends EventPropertyQualityDefinition {
         super.fromData(data, instance);
         instance.minValue = data.minValue;
         instance.maxValue = data.maxValue;
+        return instance;
+    }
+}
+
+export class MessageCounter {
+    counter: number;
+    lastTimestamp: number;
+
+    static fromData(data: MessageCounter, target?: MessageCounter): MessageCounter {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new MessageCounter();
+        instance.lastTimestamp = data.lastTimestamp;
+        instance.counter = data.counter;
         return instance;
     }
 }
@@ -2659,8 +2677,9 @@ export class PipelineTemplateDescription extends NamedStreamPipesEntity {
         const instance = target || new PipelineTemplateDescription();
         super.fromData(data, instance);
         instance.boundTo = __getCopyArrayFn(BoundPipelineElement.fromData)(data.boundTo);
-        instance.pipelineTemplateName = data.pipelineTemplateName;
         instance.pipelineTemplateId = data.pipelineTemplateId;
+        instance.pipelineTemplateName = data.pipelineTemplateName;
+
         instance.pipelineTemplateDescription = data.pipelineTemplateDescription;
         return instance;
     }
@@ -3064,6 +3083,38 @@ export class SpDataSet extends SpDataStream {
         instance.selectedEndpointUrl = data.selectedEndpointUrl;
         instance.actualTopicName = data.actualTopicName;
         instance.brokerHostname = data.brokerHostname;
+        return instance;
+    }
+}
+
+export class SpLogEntry {
+    errorMessage: StreamPipesErrorMessage;
+    timestamp: number;
+
+    static fromData(data: SpLogEntry, target?: SpLogEntry): SpLogEntry {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpLogEntry();
+        instance.timestamp = data.timestamp;
+        instance.errorMessage = StreamPipesErrorMessage.fromData(data.errorMessage);
+        return instance;
+    }
+}
+
+export class SpMetricsEntry {
+    lastTimestamp: number;
+    messagesIn: { [index: string]: MessageCounter };
+    messagesOut: MessageCounter;
+
+    static fromData(data: SpMetricsEntry, target?: SpMetricsEntry): SpMetricsEntry {
+        if (!data) {
+            return data;
+        }
+        const instance = target || new SpMetricsEntry();
+        instance.lastTimestamp = data.lastTimestamp;
+        instance.messagesIn = __getCopyObjectFn(MessageCounter.fromData)(data.messagesIn);
+        instance.messagesOut = MessageCounter.fromData(data.messagesOut);
         return instance;
     }
 }

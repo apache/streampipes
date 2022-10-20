@@ -97,6 +97,7 @@ import { SelectFormatComponent } from './data-download-dialog/components/select-
 import { DownloadComponent } from './data-download-dialog/components/download/download.component';
 import { SelectDataRangeComponent } from './data-download-dialog/components/select-data/select-data-range/select-data-range.component';
 import { SelectDataMissingValuesComponent } from './data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
+import { StatusWidgetComponent } from './status/status-widget.component';
 
 @NgModule({
   imports: [
@@ -170,6 +171,7 @@ import { SelectDataMissingValuesComponent } from './data-download-dialog/compone
     DownloadComponent,
     SelectDataRangeComponent,
     SelectDataMissingValuesComponent,
+    StatusWidgetComponent
   ],
   providers: [
     MatDatepickerModule,
@@ -208,7 +210,8 @@ import { SelectDataMissingValuesComponent } from './data-download-dialog/compone
     ImageViewerComponent,
     ErrorHintComponent,
     PipelineStartedStatusComponent,
-    SplitSectionComponent
+    SplitSectionComponent,
+    StatusWidgetComponent
   ]
 })
 export class CoreUiModule {

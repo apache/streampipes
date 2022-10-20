@@ -28,7 +28,13 @@
                     <h3>Please wait while your new adapter is being generated...</h3>
                 </div>
             </div>
-            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" *ngIf="adapterInstalled" class="w-100">
+            <div fxLayout="column" *ngIf="adapterInstalled && editMode">
+                <div data-cy="info-adapter-successfully-updated"
+                     fxLayoutAlign="center">
+                    <h3>Adapter successfully updated</h3>
+                </div>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" *ngIf="adapterInstalled && !editMode" class="w-100">
                 <div fxLayout="column" fxLayoutAlign="center center" fxFlex="100" *ngIf="pipelineOperationStatus">
                     <sp-pipeline-started-status
                             [pipelineOperationStatus]="pipelineOperationStatus">
@@ -36,7 +42,7 @@
                     <mat-divider fxFlex="100"></mat-divider>
                 </div>
                 <div *ngIf="adapterStatus.success" fxFlex="100" fxLayout="column" class="w-100">
-                    <div *ngIf="!isSetAdapter && !isTemplate">
+                    <div *ngIf="!isSetAdapter">
                         <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
                             <i class="material-icons">done</i>
                             <span>&nbsp;Your new data stream is now available in the pipeline editor.</span>
@@ -49,14 +55,8 @@
                             <span>&nbsp;Your new data set is now available in the pipeline editor.</span>
                         </div>
                     </div>
-                    <div *ngIf="isTemplate">
-                        <div class="success-message" fxFlex="100" fxLayoutAlign="center center" fxLayout="row">
-                            <i class="material-icons">done</i>
-                            <span>Template created. You or other users can now create adapters based on this template.</span>
-                        </div>
-                    </div>
 
-                    <div *ngIf="!isSetAdapter && !isTemplate" fxFlex="100">
+                    <div *ngIf="!isSetAdapter" fxFlex="100">
                         <pipeline-element-runtime-info [streamDescription]="streamDescription"
                                                        [pollingActive]="pollingActive"></pipeline-element-runtime-info>
                     </div>

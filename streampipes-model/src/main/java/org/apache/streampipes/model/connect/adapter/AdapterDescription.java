@@ -25,7 +25,12 @@ import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRul
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
-import org.apache.streampipes.model.grounding.*;
+import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
@@ -35,226 +40,218 @@ import java.util.Arrays;
 import java.util.List;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(GenericAdapterSetDescription.class),
-        @JsonSubTypes.Type(GenericAdapterStreamDescription.class),
-        @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
-        @JsonSubTypes.Type(SpecificAdapterSetDescription.class)
+    @JsonSubTypes.Type(GenericAdapterSetDescription.class),
+    @JsonSubTypes.Type(GenericAdapterStreamDescription.class),
+    @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
+    @JsonSubTypes.Type(SpecificAdapterSetDescription.class)
 })
 @TsModel
 public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
-    private String userName;
+  private EventGrounding eventGrounding;
 
-    private EventGrounding eventGrounding;
+  private String adapterType;
 
-    private String adapterType;
+  private String icon;
 
-    private String icon;
+  private List<StaticProperty> config;
 
-    private List<StaticProperty> config;
+  private List<TransformationRuleDescription> rules;
 
-    private List<TransformationRuleDescription> rules;
+  private List<String> category;
 
-    private List<String> category;
+  private long createdAt;
 
-    private long createdAt;
+  //  Is used to store where the adapter is running to stop it
+  private String selectedEndpointUrl;
 
-    //  Is used to store where the adapter is running to stop it
-    private String selectedEndpointUrl;
+  /**
+   * This is used to identify all the service within the service group the adapter can be invoked in
+   */
+  private String correspondingServiceGroup;
 
-    /**
-     * This is used to identify all the service within the service group the adapter can be invoked in
-     */
-    private String correspondingServiceGroup;
+  /**
+   * This is the identifier of the data stream that is associated with the adapter
+   */
+  private String correspondingDataStreamElementId;
 
-    /**
-     * This is the identifier of the data stream that is associated with the adapter
-     */
-    private String correspondingDataStreamElementId;
+  public AdapterDescription() {
+    super();
+    this.rules = new ArrayList<>();
+    this.eventGrounding = new EventGrounding();
+    this.config = new ArrayList<>();
+    this.category = new ArrayList<>();
 
-    public AdapterDescription() {
-        super();
-        this.rules = new ArrayList<>();
-        this.eventGrounding = new EventGrounding();
-        this.config = new ArrayList<>();
-        this.category = new ArrayList<>();
+    // TODO move to another place
+    TransportProtocol tpKafka = new KafkaTransportProtocol();
+    TransportProtocol tpJms = new JmsTransportProtocol();
+    TransportProtocol tpMqtt = new MqttTransportProtocol();
+    tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
+    tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
+    tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
+    this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka, tpJms, tpMqtt));
+  }
 
-        // TODO move to another place
-        TransportProtocol tpKafka = new KafkaTransportProtocol();
-        TransportProtocol tpJms = new JmsTransportProtocol();
-        TransportProtocol tpMqtt = new MqttTransportProtocol();
-        tpKafka.setTopicDefinition(new SimpleTopicDefinition("bb"));
-        tpJms.setTopicDefinition(new SimpleTopicDefinition("cc"));
-        tpMqtt.setTopicDefinition(new SimpleTopicDefinition("dd"));
-        this.eventGrounding.setTransportProtocols(Arrays.asList(tpKafka,tpJms,tpMqtt));
+  public AdapterDescription(String elementId, String name, String description) {
+    super(elementId, name, description);
+    this.rules = new ArrayList<>();
+    this.category = new ArrayList<>();
+  }
+
+
+  public AdapterDescription(AdapterDescription other) {
+    super(other);
+    this.config = new Cloner().staticProperties(other.getConfig());
+    this.rules = other.getRules();
+    this.adapterType = other.getAdapterType();
+    this.icon = other.getIcon();
+    this.category = new Cloner().epaTypes(other.getCategory());
+    this.createdAt = other.getCreatedAt();
+    this.selectedEndpointUrl = other.getSelectedEndpointUrl();
+    this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
+    this.correspondingDataStreamElementId = other.getCorrespondingDataStreamElementId();
+    if (other.getEventGrounding() != null) {
+      this.eventGrounding = new EventGrounding(other.getEventGrounding());
     }
+  }
 
-    public AdapterDescription(String elementId, String name, String description) {
-        super(elementId, name, description);
-        this.rules = new ArrayList<>();
-        this.category = new ArrayList<>();
-    }
+  public String getRev() {
+    return this.rev;
+  }
 
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
 
-    public AdapterDescription(AdapterDescription other) {
-        super(other);
-        this.config = new Cloner().staticProperties(other.getConfig());
-        this.userName = other.getUserName();
-        this.rules = other.getRules();
-        this.adapterType = other.getAdapterType();
-        this.icon = other.getIcon();
-        this.category = new Cloner().epaTypes(other.getCategory());
-        this.createdAt = other.getCreatedAt();
-        this.selectedEndpointUrl = other.getSelectedEndpointUrl();
-        this.correspondingServiceGroup = other.getCorrespondingServiceGroup();
-        this.correspondingDataStreamElementId = other.getCorrespondingDataStreamElementId();
-        if (other.getEventGrounding() != null) this.eventGrounding = new EventGrounding(other.getEventGrounding());
-    }
+  public List<TransformationRuleDescription> getRules() {
+    return rules;
+  }
 
-    public String getRev() {
-        return this.rev;
-    }
+  public void setRules(List<TransformationRuleDescription> rules) {
+    this.rules = rules;
+  }
 
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
+  public EventGrounding getEventGrounding() {
+    return eventGrounding;
+  }
 
-    public String getUserName() {
-        return userName;
-    }
+  public void setEventGrounding(EventGrounding eventGrounding) {
+    this.eventGrounding = eventGrounding;
+  }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+  public List<StaticProperty> getConfig() {
+    return config;
+  }
 
-    public List<TransformationRuleDescription> getRules() {
-        return rules;
-    }
+  public void addConfig(StaticProperty sp) {
+    this.config.add(sp);
+  }
 
-    public void setRules(List<TransformationRuleDescription> rules) {
-        this.rules = rules;
-    }
+  public void setConfig(List<StaticProperty> config) {
+    this.config = config;
+  }
 
-    public EventGrounding getEventGrounding() {
-        return eventGrounding;
-    }
+  public String getAdapterType() {
+    return adapterType;
+  }
 
-    public void setEventGrounding(EventGrounding eventGrounding) {
-        this.eventGrounding = eventGrounding;
-    }
+  public void setAdapterType(String adapterType) {
+    this.adapterType = adapterType;
+  }
 
-    public List<StaticProperty> getConfig() {
-        return config;
-    }
+  public List<TransformationRuleDescription> getValueRules() {
+    var tmp = new ArrayList<TransformationRuleDescription>();
+    rules.forEach(rule -> {
+      if (rule instanceof ValueTransformationRuleDescription && !(rule instanceof AddTimestampRuleDescription)) {
+        tmp.add(rule);
+      }
+    });
+    return tmp;
+  }
 
-    public void addConfig(StaticProperty sp) {
-        this.config.add(sp);
-    }
+  public List<TransformationRuleDescription> getStreamRules() {
+    var tmp = new ArrayList<TransformationRuleDescription>();
+    rules.forEach(rule -> {
+      if (rule instanceof StreamTransformationRuleDescription) {
+        tmp.add(rule);
+      }
+    });
+    return tmp;
+  }
 
-    public void setConfig(List<StaticProperty> config) {
-        this.config = config;
-    }
+  public List<TransformationRuleDescription> getSchemaRules() {
+    var tmp = new ArrayList<TransformationRuleDescription>();
+    rules.forEach(rule -> {
+      if (rule instanceof SchemaTransformationRuleDescription) {
+        tmp.add(rule);
+      }
+    });
+    return tmp;
+  }
 
-    public String getAdapterType() {
-        return adapterType;
-    }
+  public String getIcon() {
+    return icon;
+  }
 
-    public void setAdapterType(String adapterType) {
-        this.adapterType = adapterType;
-    }
+  public void setIcon(String icon) {
+    this.icon = icon;
+  }
 
-    public List<TransformationRuleDescription> getValueRules() {
-        var tmp = new ArrayList<TransformationRuleDescription>();
-        rules.forEach(rule -> {
-            if(rule instanceof ValueTransformationRuleDescription && !(rule instanceof AddTimestampRuleDescription)) {
-                tmp.add(rule);
-            }
-        });
-        return tmp;
-    }
+  public List<String> getCategory() {
+    return category;
+  }
 
-    public List<TransformationRuleDescription> getStreamRules() {
-        var tmp = new ArrayList<TransformationRuleDescription>();
-        rules.forEach(rule -> {
-            if(rule instanceof StreamTransformationRuleDescription)
-                tmp.add(rule);
-        });
-        return tmp;
-    }
+  public void setCategory(List<String> category) {
+    this.category = category;
+  }
 
-    public List<TransformationRuleDescription> getSchemaRules() {
-        var tmp = new ArrayList<TransformationRuleDescription>();
-        rules.forEach(rule -> {
-            if(rule instanceof SchemaTransformationRuleDescription)
-                tmp.add(rule);
-        });
-        return tmp;
-    }
+  @Override
+  public String toString() {
+    return "AdapterDescription{"
+        + ", elementId='" + elementId + '\''
+        + ", DOM='" + DOM + '\''
+        + '}';
+  }
 
-    public String getIcon() {
-        return icon;
-    }
+  public long getCreatedAt() {
+    return createdAt;
+  }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
+  public void setCreatedAt(long createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public List<String> getCategory() {
-        return category;
-    }
+  public String getSelectedEndpointUrl() {
+    return selectedEndpointUrl;
+  }
 
-    public void setCategory(List<String> category) {
-        this.category = category;
-    }
+  public void setSelectedEndpointUrl(String selectedEndpointUrl) {
+    this.selectedEndpointUrl = selectedEndpointUrl;
+  }
 
-    @Override
-    public String toString() {
-        return "AdapterDescription{" +
-                //"id='" + id + '\'' +
-                //", rev='" + rev + '\'' +
-                ", elementId='" + elementId + '\'' +
-                ", DOM='" + DOM + '\'' +
-                '}';
-    }
+  /**
+   * @deprecated check if the service group can be removed as a single pipeline element
+   * can correspond to different service groups
+   */
+  @Deprecated
+  public String getCorrespondingServiceGroup() {
+    return correspondingServiceGroup;
+  }
 
-    public long getCreatedAt() {
-        return createdAt;
-    }
+  /**
+   * @deprecated check if the service group can be removed as a single pipeline element
+   * can correspond to different service groups
+   */
+  @Deprecated
+  public void setCorrespondingServiceGroup(String correspondingServiceGroup) {
+    this.correspondingServiceGroup = correspondingServiceGroup;
+  }
 
-    public void setCreatedAt(long createdAt) {
-        this.createdAt = createdAt;
-    }
+  public String getCorrespondingDataStreamElementId() {
+    return correspondingDataStreamElementId;
+  }
 
-    public String getSelectedEndpointUrl() {
-        return selectedEndpointUrl;
-    }
-
-    public void setSelectedEndpointUrl(String selectedEndpointUrl) {
-        this.selectedEndpointUrl = selectedEndpointUrl;
-    }
-
-    /**
-     * @deprecated check if the service group can be removed as a single pipeline element
-     * can correspond to different service groups
-     */
-    @Deprecated
-    public String getCorrespondingServiceGroup() {
-        return correspondingServiceGroup;
-    }
-
-    /**
-     * @deprecated check if the service group can be removed as a single pipeline element
-     * can correspond to different service groups
-     */
-    public void setCorrespondingServiceGroup(String correspondingServiceGroup) {
-        this.correspondingServiceGroup = correspondingServiceGroup;
-    }
-
-    public String getCorrespondingDataStreamElementId() {
-        return correspondingDataStreamElementId;
-    }
-
-    public void setCorrespondingDataStreamElementId(String correspondingDataStreamElementId) {
-        this.correspondingDataStreamElementId = correspondingDataStreamElementId;
-    }
+  public void setCorrespondingDataStreamElementId(String correspondingDataStreamElementId) {
+    this.correspondingDataStreamElementId = correspondingDataStreamElementId;
+  }
 }

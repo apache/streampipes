@@ -18,6 +18,7 @@
 
 import { UserInput } from '../model/UserInput';
 import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
+import { UserInputType } from '../model/UserInputType';
 
 export class SpecificAdapterBuilder {
 
@@ -54,7 +55,7 @@ export class SpecificAdapterBuilder {
     return this;
   }
 
-  public addInput(type: string, selector: string, value?: string) {
+  public addInput(type: UserInputType, selector: string, value?: string) {
     const userInput = new UserInput();
     userInput.type = type;
     userInput.selector = selector;

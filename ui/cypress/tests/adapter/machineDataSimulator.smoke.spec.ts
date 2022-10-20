@@ -16,7 +16,7 @@
  *
  */
 
-import { ConnectUtils } from '../../support/utils/ConnectUtils';
+import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
 
 describe('Test Random Data Simulator Stream Adapter', () => {

@@ -23,8 +23,11 @@
             {{pipelineElement.description}}
         </p>
 
-        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndex=$event" color="accent">
-            <mat-tab *ngFor="let tab of tabs" label="{{tab.title}}">
+        <mat-tab-group color="accent"
+                       [selectedIndex]="selectedIndex"
+                       (selectedIndexChange)="selectedIndex=$event">
+            <mat-tab *ngFor="let tab of tabs"
+                     label="{{tab.title}}">
             </mat-tab>
         </mat-tab-group>
         <div style="margin-top:15px;">

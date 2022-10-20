@@ -17,15 +17,18 @@
  */
 package org.apache.streampipes.container.init;
 
+import org.apache.streampipes.container.api.MonitoringResource;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class BaseExtensionsServiceResourceProvider implements ExtensionsResourceProvider {
 
   @Override
   public List<Class<?>> getResourceClasses() {
-    return Collections.singletonList(JacksonSerializationProvider.class);
+    return Arrays.asList(
+        JacksonSerializationProvider.class,
+        MonitoringResource.class);
   }
 }

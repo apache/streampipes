@@ -36,7 +36,7 @@ import java.util.List;
 
 public class StreamPipesClientRuntimeConnectionResolver implements ClientConnectionUrlResolver {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesClientRuntimeConnectionResolver.class.getCanonicalName());
+  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesClientRuntimeConnectionResolver.class);
 
   public StreamPipesClientRuntimeConnectionResolver() {
 

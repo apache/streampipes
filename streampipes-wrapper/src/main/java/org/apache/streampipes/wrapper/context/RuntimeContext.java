@@ -19,7 +19,7 @@ package org.apache.streampipes.wrapper.context;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.runtime.SchemaInfo;
 import org.apache.streampipes.model.runtime.SourceInfo;
 
@@ -27,7 +27,7 @@ import java.util.List;
 
 public interface RuntimeContext {
 
-  Logger getLogger();
+  SpMonitoringManager getLogger();
 
   List<SchemaInfo> getInputSchemaInfo();
 

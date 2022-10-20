@@ -21,5 +21,9 @@ import javax.ws.rs.core.Response;
 
 public interface IPipelineMonitoring {
   
-  Response getPipelineMonitoringInfo(String pipelineId);
+  Response getLogInfoForPipeline(String pipelineId);
+
+  Response getMetricsInfoForPipeline(String pipelineId);
+
+  Response triggerMonitoringUpdate();
 }

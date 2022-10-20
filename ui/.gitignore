@@ -91,3 +91,7 @@ package-lock.json
 cypress/screenshots/
 cypress/videos/
 
+
+# Prettier
+.prettierignore
+
