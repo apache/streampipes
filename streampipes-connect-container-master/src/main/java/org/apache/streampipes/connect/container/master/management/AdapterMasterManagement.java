@@ -51,15 +51,20 @@ public class AdapterMasterManagement {
   private final IAdapterStorage adapterInstanceStorage;
   private final AdapterResourceManager adapterResourceManager;
 
+  private final DataStreamResourceManager dataStreamResourceManager;
+
   public AdapterMasterManagement() {
     this.adapterInstanceStorage = getAdapterInstanceStorage();
     this.adapterResourceManager = new SpResourceManager().manageAdapters();
+    this.dataStreamResourceManager = new SpResourceManager().manageDataStreams();
   }
 
   public AdapterMasterManagement(IAdapterStorage adapterStorage,
-                                 AdapterResourceManager adapterResourceManager) {
+                                 AdapterResourceManager adapterResourceManager,
+                                 DataStreamResourceManager dataStreamResourceManager) {
     this.adapterInstanceStorage = adapterStorage;
     this.adapterResourceManager = adapterResourceManager;
+    this.dataStreamResourceManager = dataStreamResourceManager;
   }
 
   public String addAdapter(AdapterDescription ad,
@@ -95,14 +100,16 @@ public class AdapterMasterManagement {
   }
 
   public void updateAdapter(AdapterDescription ad,
-                              String principalSid)
+                            String principalSid)
       throws AdapterException {
+    // update adapter in database
     this.adapterResourceManager.encryptAndUpdate(ad);
+
+    // update data source in database
+    this.updateDataSource(ad);
   }
 
-
-
-    public AdapterDescription getAdapter(String elementId) throws AdapterException {
+  public AdapterDescription getAdapter(String elementId) throws AdapterException {
     List<AdapterDescription> allAdapters = adapterInstanceStorage.getAllAdapters();
 
     if (allAdapters != null && elementId != null) {
@@ -118,6 +125,7 @@ public class AdapterMasterManagement {
 
   /**
    * First the adapter is stopped removed, then the corresponding data source is deleted
+   *
    * @param elementId The elementId of the adapter instance
    * @throws AdapterException when adapter can not be stopped
    */
@@ -138,8 +146,7 @@ public class AdapterMasterManagement {
     LOG.info("Successfully deleted adapter: " + elementId);
 
     // Delete data stream
-    DataStreamResourceManager resourceManager = new SpResourceManager().manageDataStreams();
-    resourceManager.delete(adapter.getCorrespondingDataStreamElementId());
+    this.dataStreamResourceManager.delete(adapter.getCorrespondingDataStreamElementId());
     LOG.info("Successfully deleted data stream: " + adapter.getCorrespondingDataStreamElementId());
   }
 
@@ -199,6 +206,16 @@ public class AdapterMasterManagement {
         throw new AdapterException("Could not start adapter due to unavailable service endpoint", e);
       }
     }
+  }
+
+  private void updateDataSource(AdapterDescription ad) throws AdapterException {
+    // get data source
+    SpDataStream dataStream = this.dataStreamResourceManager.find(ad.getCorrespondingDataStreamElementId());
+
+    dataStream = SourcesManagement.updateDataStream(ad, dataStream);
+
+    // Update data source in database
+    this.dataStreamResourceManager.update(dataStream);
   }
 
   private void installDataSource(SpDataStream stream,
