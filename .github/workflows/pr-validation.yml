@@ -31,8 +31,8 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
 
-      - name: Validate code with RAT plugin
-        run: mvn apache-rat:check
+      - name: Validate java code
+        run: mvn clean verify -Dmaven.test.skip=true
 
   run-cypress-e2e-tests:
     runs-on: ubuntu-latest
