@@ -57,6 +57,7 @@ public class DeclarersSingleton {
   private Map<String, SemanticEventConsumerDeclarer> consumerDeclarers;
   private Map<String, PipelineTemplateDeclarer> pipelineTemplateDeclarers;
   private Map<String, DataStreamDeclarer> streamDeclarers;
+  private Map<String, IStreamPipesFunctionDeclarer> functions;
 
   private Map<String, TransportProtocol> supportedProtocols;
   private Map<String, TransportFormat> supportedFormats;
@@ -80,6 +81,7 @@ public class DeclarersSingleton {
     this.supportedFormats = new HashMap<>();
     this.allProtocols = new HashMap<>();
     this.allAdapters = new HashMap<>();
+    this.functions = new HashMap<>();
     this.route = "/";
   }
 
@@ -102,6 +104,7 @@ public class DeclarersSingleton {
     this.registerDataFormats(serviceDef.getDataFormatFactories());
     this.allAdapters = serviceDef.getSpecificAdapters();
     this.allProtocols = serviceDef.getAdapterProtocols();
+    serviceDef.getFunctions().forEach(f -> this.functions.put(f.getFunctionId().getId(), f));
 
   }
 
@@ -310,6 +313,10 @@ public class DeclarersSingleton {
 
   public String getServiceId() {
     return serviceId;
+  }
+
+  public Map<String, IStreamPipesFunctionDeclarer> getFunctions() {
+    return functions;
   }
 
   private void checkAndStartExecutableStreams(DataStreamDeclarer declarer) {

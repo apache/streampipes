@@ -19,14 +19,12 @@
 package org.apache.streampipes.container.api;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
-import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.util.GroundingDebugUtils;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.grounding.EventGrounding;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
+import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
 import javax.ws.rs.Path;
 import java.util.Map;
@@ -58,18 +56,10 @@ public class DataProcessorPipelineElementResource extends InvocablePipelineEleme
     @Override
     protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
         graph.getInputStreams().forEach(is -> {
-           modifyGrounding(is.getEventGrounding());
+           GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
         });
 
-        modifyGrounding(graph.getOutputStream().getEventGrounding());
+        GroundingDebugUtils.modifyGrounding(graph.getOutputStream().getEventGrounding());
         return graph;
-    }
-
-    private void modifyGrounding(EventGrounding grounding) {
-        TransportProtocol protocol = grounding.getTransportProtocol();
-        protocol.setBrokerHostname("localhost");
-        if (protocol instanceof KafkaTransportProtocol) {
-            ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
-        }
     }
 }

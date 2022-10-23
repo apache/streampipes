@@ -15,16 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.commons.constants;
 
-public class DefaultEnvValues {
+package org.apache.streampipes.container.util;
 
-  public static final String INITIAL_ADMIN_EMAIL_DEFAULT = "admin@streampipes.apache.org";
-  public static final String INITIAL_ADMIN_PW_DEFAULT = "admin";
-  public static final String INITIAL_CLIENT_USER_DEFAULT = "sp-service-client";
-  public static final String INITIAL_CLIENT_SECRET_DEFAULT = "my-apache-streampipes-secret-key-change-me";
-  public static final int MAX_WAIT_TIME_AT_SHUTDOWN_DEFAULT = 10000;
-  public static final boolean INSTALL_PIPELINE_ELEMENTS = true;
+import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
-  public static final String DEFAULT_ENCRYPTION_PASSCODE = "eGgemyGBoILAu3xckoIp";
+public class GroundingDebugUtils {
+
+  public static void modifyGrounding(EventGrounding grounding) {
+    TransportProtocol protocol = grounding.getTransportProtocol();
+    protocol.setBrokerHostname("localhost");
+    if (protocol instanceof KafkaTransportProtocol) {
+      ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
+    }
+  }
 }

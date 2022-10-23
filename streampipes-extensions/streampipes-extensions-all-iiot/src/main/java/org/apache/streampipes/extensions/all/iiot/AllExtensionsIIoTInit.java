@@ -29,6 +29,7 @@ import org.apache.streampipes.dataformat.smile.SmileDataFormatFactory;
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.processors.changedetection.jvm.ChangeDetectionJvmInit;
 import org.apache.streampipes.processors.enricher.jvm.EnricherJvmInit;
 import org.apache.streampipes.processors.filters.jvm.FiltersJvmInit;
@@ -41,34 +42,35 @@ import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
 
 public class AllExtensionsIIoTInit extends ExtensionsModelSubmitter {
 
-  public static void main (String[] args) {
+  public static void main(String[] args) {
     new AllExtensionsIIoTInit().init();
   }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.extensions.all.iiot",
-        "StreamPipes Extensions (IIoT only)",
-        "", 8090)
-      .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
-      .merge(new SinksInternalJvmInit().provideServiceDefinition())
-      .merge(new FiltersJvmInit().provideServiceDefinition())
-      .merge(new ChangeDetectionJvmInit().provideServiceDefinition())
-      .merge(new EnricherJvmInit().provideServiceDefinition())
-      .merge(new FiltersSiddhiInit().provideServiceDefinition())
-      .merge(new TransformationJvmInit().provideServiceDefinition())
-      .merge(new BrokersJvmInit().provideServiceDefinition())
-      .merge(new DatabasesJvmInit().provideServiceDefinition())
-      .merge(new SinksNotificationsJvmInit().provideServiceDefinition())
-      .registerMessagingFormats(
-        new JsonDataFormatFactory(),
-        new CborDataFormatFactory(),
-        new SmileDataFormatFactory(),
-        new FstDataFormatFactory())
-      .registerMessagingProtocols(
-        new SpKafkaProtocolFactory(),
-        new SpJmsProtocolFactory(),
-        new SpMqttProtocolFactory())
-      .build();
+            "StreamPipes Extensions (IIoT only)",
+            "", 8090)
+        .merge(new ConnectAdapterIiotInit().provideServiceDefinition())
+        .merge(new SinksInternalJvmInit().provideServiceDefinition())
+        .merge(new FiltersJvmInit().provideServiceDefinition())
+        .merge(new ChangeDetectionJvmInit().provideServiceDefinition())
+        .merge(new EnricherJvmInit().provideServiceDefinition())
+        .merge(new FiltersSiddhiInit().provideServiceDefinition())
+        .merge(new TransformationJvmInit().provideServiceDefinition())
+        .merge(new BrokersJvmInit().provideServiceDefinition())
+        .merge(new DatabasesJvmInit().provideServiceDefinition())
+        .merge(new SinksNotificationsJvmInit().provideServiceDefinition())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory(),
+            new SpNatsProtocolFactory())
+        .build();
   }
 }

@@ -25,6 +25,7 @@ public class PipelineElementServiceShutdownHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineElementServiceShutdownHandler.class);
 
+
   public void onShutdown() {
     LOG.info("Shutting down StreamPipes pipeline element container...");
     int runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();

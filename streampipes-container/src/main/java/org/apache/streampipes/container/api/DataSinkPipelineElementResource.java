@@ -19,13 +19,12 @@
 package org.apache.streampipes.container.api;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
-import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.container.util.GroundingDebugUtils;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
-import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
+import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
 import javax.ws.rs.Path;
 import java.util.Map;
@@ -57,12 +56,7 @@ public class DataSinkPipelineElementResource extends InvocablePipelineElementRes
     @Override
     protected DataSinkInvocation createGroundingDebugInformation(DataSinkInvocation graph) {
         graph.getInputStreams().forEach(is -> {
-            TransportProtocol protocol = is.getEventGrounding().getTransportProtocol();
-            protocol.setBrokerHostname("localhost");
-            if (protocol instanceof KafkaTransportProtocol) {
-                ((KafkaTransportProtocol) protocol).setKafkaPort(9094);
-            }
-
+            GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
         });
 
         return graph;

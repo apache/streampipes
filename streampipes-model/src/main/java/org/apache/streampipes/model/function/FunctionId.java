@@ -15,16 +15,30 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.commons.constants;
 
-public class DefaultEnvValues {
+package org.apache.streampipes.model.function;
 
-  public static final String INITIAL_ADMIN_EMAIL_DEFAULT = "admin@streampipes.apache.org";
-  public static final String INITIAL_ADMIN_PW_DEFAULT = "admin";
-  public static final String INITIAL_CLIENT_USER_DEFAULT = "sp-service-client";
-  public static final String INITIAL_CLIENT_SECRET_DEFAULT = "my-apache-streampipes-secret-key-change-me";
-  public static final int MAX_WAIT_TIME_AT_SHUTDOWN_DEFAULT = 10000;
-  public static final boolean INSTALL_PIPELINE_ELEMENTS = true;
+public class FunctionId {
 
-  public static final String DEFAULT_ENCRYPTION_PASSCODE = "eGgemyGBoILAu3xckoIp";
+  private String id;
+  private int version;
+
+  public static FunctionId from(String id,
+                                int version) {
+    return new FunctionId(id, version);
+  }
+
+  private FunctionId(String id,
+                     int version) {
+    this.id = id;
+    this.version = version;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public int getVersion() {
+    return version;
+  }
 }

@@ -19,6 +19,7 @@ package org.apache.streampipes.container.extensions;
 
 import org.apache.streampipes.connect.container.worker.init.ConnectWorkerRegistrationService;
 import org.apache.streampipes.connect.container.worker.init.ConnectWorkerTagProvider;
+import org.apache.streampipes.container.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.standalone.init.PipelineElementServiceShutdownHandler;
@@ -46,12 +47,14 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
     @PreDestroy
     public void onExit() {
         new PipelineElementServiceShutdownHandler().onShutdown();
+        StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
         deregisterService(DeclarersSingleton.getInstance().getServiceId());
     }
 
     @Override
     public void afterServiceRegistered(SpServiceDefinition serviceDef) {
         new ConnectWorkerRegistrationService().registerWorker(serviceDef);
+        StreamPipesFunctionHandler.INSTANCE.initializeFunctions();
     }
 
     @Override
