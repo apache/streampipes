@@ -15,38 +15,35 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.credentials;
 
-import org.apache.http.Header;
-import org.apache.streampipes.client.http.header.Headers;
+package org.apache.streampipes.manager.function;
 
-import java.util.Arrays;
-import java.util.List;
+import org.apache.streampipes.model.function.FunctionDefinition;
 
-public class StreamPipesApiKeyCredentials implements CredentialsProvider {
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-  private final String username;
-  private final String apiKey;
+public enum FunctionRegistrationService {
 
-  public StreamPipesApiKeyCredentials(String username,
-                                       String apiKey) {
-    this.username = username;
-    this.apiKey = apiKey;
+  INSTANCE;
+
+  Map<String, FunctionDefinition> registeredFunctions;
+
+  FunctionRegistrationService() {
+    this.registeredFunctions = new HashMap<>();
   }
 
-  public String getUsername() {
-    return username;
+  public Collection<FunctionDefinition> getAllFunctions() {
+    return registeredFunctions.values();
   }
 
-  public String getApiKey() {
-    return apiKey;
+  public void registerFunction(FunctionDefinition function) {
+    this.registeredFunctions.put(function.getFunctionId().getId(), function);
   }
 
-  @Override
-  public List<Header> makeHeaders() {
-    return Arrays.asList(
-            Headers.xApiUser(username),
-            Headers.xApiKey(apiKey)
-    );
+  public void deregisterFunction(FunctionDefinition function) {
+
+    this.registeredFunctions.remove(function.getFunctionId().getId());
   }
 }

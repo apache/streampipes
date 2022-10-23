@@ -15,38 +15,31 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.credentials;
 
-import org.apache.http.Header;
-import org.apache.streampipes.client.http.header.Headers;
+package org.apache.streampipes.container.extensions.function;
 
-import java.util.Arrays;
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.model.function.FunctionDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
-public class StreamPipesApiKeyCredentials implements CredentialsProvider {
+public class FunctionDeregistrationHandler extends RegistrationHandler {
 
-  private final String username;
-  private final String apiKey;
+  private static final Logger LOG = LoggerFactory.getLogger(FunctionDeregistrationHandler.class);
 
-  public StreamPipesApiKeyCredentials(String username,
-                                       String apiKey) {
-    this.username = username;
-    this.apiKey = apiKey;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getApiKey() {
-    return apiKey;
+  public FunctionDeregistrationHandler(List<FunctionDefinition> functions) {
+    super(functions);
   }
 
   @Override
-  public List<Header> makeHeaders() {
-    return Arrays.asList(
-            Headers.xApiUser(username),
-            Headers.xApiKey(apiKey)
-    );
+  protected void performRequest(StreamPipesClient client) {
+    client.adminApi().deregisterFunctions(functions);
+  }
+
+  @Override
+  protected void logSuccess() {
+    LOG.info("Successfully deregistered functions {}", functions.toString());
   }
 }

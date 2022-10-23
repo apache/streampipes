@@ -68,8 +68,9 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   @Override
   public void process(Map<String, Object> rawEvent, String sourceInfo) {
     try {
-      this.onEvent(EventFactory.fromMap(rawEvent), sourceInfoMapper.get(sourceInfo));
-      increaseCounter(sourceInfo);
+      var elementId = sourceInfoMapper.get(sourceInfo);
+      this.onEvent(EventFactory.fromMap(rawEvent), elementId);
+      increaseCounter(elementId);
     } catch (RuntimeException e) {
       addError(e);
     }

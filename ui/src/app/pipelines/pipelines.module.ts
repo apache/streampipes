@@ -48,6 +48,9 @@ import { SpPipelineDetailsOverviewComponent } from '../pipeline-details/componen
 import { PipelineMonitoringComponent } from '../pipeline-details/components/monitoring/pipeline-monitoring.component';
 import { QuickEditComponent } from '../pipeline-details/components/edit/quickedit.component';
 import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-logs/pipeline-logs.component';
+import { FunctionsOverviewComponent } from './components/functions-overview/functions-overview.component';
+import { SpFunctionsMetricsComponent } from './components/functions-overview/functions-metrics/functions-metrics.component';
+import { SpFunctionsLogsComponent } from './components/functions-overview/functions-logs/functions-logs.component';
 
 @NgModule({
   imports: [
@@ -72,6 +75,14 @@ import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-l
           {
             path: '',
             component: PipelinesComponent
+          },
+          {
+            path: 'functions/:functionId/metrics',
+            component: SpFunctionsMetricsComponent
+          },
+          {
+            path: 'functions/:functionId/logs',
+            component: SpFunctionsLogsComponent
           },
           {
             path: 'details/:pipelineId',
@@ -113,6 +124,7 @@ import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-l
   ],
   declarations: [
     DeletePipelineDialogComponent,
+    FunctionsOverviewComponent,
     ImportPipelineDialogComponent,
     PipelinesComponent,
     PipelineCategoriesDialogComponent,
@@ -121,7 +133,9 @@ import { PipelineLogsComponent } from '../pipeline-details/components/pipeline-l
     PipelineStatusDialogComponent,
     StartAllPipelinesDialogComponent,
     PipelineInCategoryPipe,
-    CategoryAlreadyInPipelinePipe
+    CategoryAlreadyInPipelinePipe,
+    SpFunctionsMetricsComponent,
+    SpFunctionsLogsComponent
   ],
   providers: [
     PipelineOperationsService,

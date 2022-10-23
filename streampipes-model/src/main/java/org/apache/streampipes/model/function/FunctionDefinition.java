@@ -16,51 +16,48 @@
  *
  */
 
+
 package org.apache.streampipes.model.function;
 
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import java.util.List;
+
 @TsModel
-public class FunctionId {
+public class FunctionDefinition {
 
-  private String id;
-  private int version;
+  private FunctionId functionId;
+  private List<String> consumedStreams;
 
-  public static FunctionId from(String id,
-                                int version) {
-    return new FunctionId(id, version);
+  public FunctionDefinition() {
   }
 
-  public FunctionId() {
+  public FunctionDefinition(FunctionId functionId, List<String> consumedStreams) {
+    this.functionId = functionId;
+    this.consumedStreams = consumedStreams;
   }
 
-  private FunctionId(String id,
-                     int version) {
-    this.id = id;
-    this.version = version;
+  public FunctionId getFunctionId() {
+    return functionId;
   }
 
-  public String getId() {
-    return id;
+  public void setFunctionId(FunctionId functionId) {
+    this.functionId = functionId;
   }
 
-  public int getVersion() {
-    return version;
+  public List<String> getConsumedStreams() {
+    return consumedStreams;
   }
 
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public void setVersion(int version) {
-    this.version = version;
+  public void setConsumedStreams(List<String> consumedStreams) {
+    this.consumedStreams = consumedStreams;
   }
 
   @Override
   public String toString() {
-    return "FunctionId{" +
-        "id='" + id + '\'' +
-        ", version=" + version +
+    return "FunctionDefinition{" +
+        "functionId=" + functionId.toString() +
+        ", consumedStreams=" + consumedStreams.toString() +
         '}';
   }
 }

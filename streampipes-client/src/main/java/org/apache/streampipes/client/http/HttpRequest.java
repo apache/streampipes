@@ -102,7 +102,7 @@ public abstract class HttpRequest<SO, DSO, DT> {
         }
       }
     } catch (IOException | SpRuntimeException e) {
-      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available");
+      throw new SpRuntimeException("Could not connect to the StreamPipes API - please check that StreamPipes is available", e);
     }
   }
 

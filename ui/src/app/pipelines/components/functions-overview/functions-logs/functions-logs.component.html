@@ -19,8 +19,7 @@
 <sp-basic-nav-tabs [spNavigationItems]="tabs"
                    [activeLink]="'logs'"
                    [showBackLink]="true"
-                   [backLinkTarget]="['connect']">
-
+                   [backLinkTarget]="['pipelines']">
   <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
     <button mat-button
             mat-icon-button
@@ -31,11 +30,11 @@
       <i class="material-icons">refresh</i>
     </button>
   </div>
-  <div fxFlex="100" fxLayout="column" *ngIf="adapter">
-    <sp-simple-logs [elementName]="adapter.name"
-                    [logs]="adapterLogs"
+  <div fxFlex="100" fxLayout="column" *ngIf="activeFunction && contentReady">
+    <sp-simple-logs [elementName]="activeFunction.functionId.id" [logs]="logs"
                     fxFlex="100"
-                    fxLayout="column"></sp-simple-logs>
+                    fxLayout="column">
+    </sp-simple-logs>
   </div>
 
 

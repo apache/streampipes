@@ -15,38 +15,28 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.credentials;
 
-import org.apache.http.Header;
-import org.apache.streampipes.client.http.header.Headers;
+import { Component, Input } from '@angular/core';
 
-import java.util.Arrays;
-import java.util.List;
+@Component({
+  selector: 'sp-simple-metrics',
+  templateUrl: './simple-metrics.component.html',
+  styleUrls: []
+})
+export class SpSimpleMetricsComponent {
 
-public class StreamPipesApiKeyCredentials implements CredentialsProvider {
+  @Input()
+  elementName: string;
 
-  private final String username;
-  private final String apiKey;
+  @Input()
+  lastTimestamp: number;
 
-  public StreamPipesApiKeyCredentials(String username,
-                                       String apiKey) {
-    this.username = username;
-    this.apiKey = apiKey;
-  }
+  @Input()
+  statusValue: string | number;
 
-  public String getUsername() {
-    return username;
-  }
+  @Input()
+  lastPublishedLabel: string;
 
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  @Override
-  public List<Header> makeHeaders() {
-    return Arrays.asList(
-            Headers.xApiUser(username),
-            Headers.xApiKey(apiKey)
-    );
-  }
+  @Input()
+  statusValueLabel: string;
 }

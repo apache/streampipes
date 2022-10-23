@@ -20,9 +20,13 @@ package org.apache.streampipes.container.extensions.function;
 
 import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.model.function.FunctionId;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum StreamPipesFunctionHandler {
 
@@ -40,11 +44,22 @@ public enum StreamPipesFunctionHandler {
       new Thread(r).start();
       runningInstances.put(key, value);
     });
+    new Thread(new FunctionRegistrationHandler(getFunctionDefinitions())).start();
   }
 
   public void cleanupFunctions() {
-      this.runningInstances.forEach((key, value) -> {
-        value.discardRuntime();
-      });
+    this.runningInstances.forEach((key, value) -> {
+      value.discardRuntime();
+    });
+    new Thread(new FunctionDeregistrationHandler(getFunctionDefinitions())).start();
   }
+
+  private List<FunctionDefinition> getFunctionDefinitions() {
+    return this.runningInstances
+        .values()
+        .stream()
+        .map(function -> new FunctionDefinition(function.getFunctionId(), function.requiredStreamIds()))
+        .collect(Collectors.toList());
+  }
+
 }

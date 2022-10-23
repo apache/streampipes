@@ -16,27 +16,18 @@
   ~
   -->
 
-<sp-basic-nav-tabs [spNavigationItems]="tabs"
-                   [activeLink]="'logs'"
-                   [showBackLink]="true"
-                   [backLinkTarget]="['connect']">
-
-  <div nav fxFlex="100" fxLayout="row" fxLayoutAlign="end center">
-    <button mat-button
-            mat-icon-button
-            color="accent"
-            class="mr-10"
-            matTooltip="Refresh"
-            (click)="triggerUpdate()">
-      <i class="material-icons">refresh</i>
-    </button>
+<div fxFlex="100" fxLayout="column">
+  <sp-basic-header-title-component [title]="elementName + ' - Logs'"></sp-basic-header-title-component>
+  <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!logs || logs.length === 0">
+    <h5 class="text-center">(no log messages available)</h5>
   </div>
-  <div fxFlex="100" fxLayout="column" *ngIf="adapter">
-    <sp-simple-logs [elementName]="adapter.name"
-                    [logs]="adapterLogs"
-                    fxFlex="100"
-                    fxLayout="column"></sp-simple-logs>
+  <div fxFlex="100" fxLayout="column" *ngIf="logs && logs.length > 0">
+    <div *ngFor="let logEntry of logs">
+      <sp-exception-message [message]="logEntry.errorMessage"
+                            [messageTimestamp]="logEntry.timestamp"
+                            *ngIf="logEntry.errorMessage"
+                            class="mt-10">
+      </sp-exception-message>
+    </div>
   </div>
-
-
-</sp-basic-nav-tabs>
+</div>

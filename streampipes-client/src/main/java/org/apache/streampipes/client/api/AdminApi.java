@@ -20,6 +20,8 @@ package org.apache.streampipes.client.api;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.model.message.Message;
 
 import java.util.List;
 
@@ -33,11 +35,25 @@ public class AdminApi extends AbstractClientApi {
     post(getConnectPath(), adapters);
   }
 
+  public void registerFunctions(List<FunctionDefinition> functions) {
+    post(getFunctionsPath(), functions);
+  }
+
+  public void deregisterFunctions(List<FunctionDefinition> functions) {
+    delete(getFunctionsPath(), functions, Message.class);
+  }
+
   private StreamPipesApiPath getConnectPath() {
     return StreamPipesApiPath
             .fromBaseApiPath()
             .addToPath("connect")
             .addToPath("master")
             .addToPath("administration");
+  }
+
+  private StreamPipesApiPath getFunctionsPath() {
+    return StreamPipesApiPath
+        .fromBaseApiPath()
+        .addToPath("functions");
   }
 }

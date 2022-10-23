@@ -18,16 +18,22 @@
 
 import * as FileSaver from 'file-saver';
 import { Component, OnInit } from '@angular/core';
-import { Pipeline, PipelineCategory, PipelineService } from '@streampipes/platform-services';
+import {
+  FunctionId,
+  FunctionsService,
+  Pipeline,
+  PipelineCategory,
+  PipelineService
+} from '@streampipes/platform-services';
 import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
 import { ImportPipelineDialogComponent } from './dialog/import-pipeline/import-pipeline-dialog.component';
 import { StartAllPipelinesDialogComponent } from './dialog/start-all-pipelines/start-all-pipelines-dialog.component';
 import { PipelineCategoriesDialogComponent } from './dialog/pipeline-categories/pipeline-categories-dialog.component';
-import { zip } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserPrivilege } from '../_enums/user-privilege.enum';
 import { SpPipelineRoutes } from './pipelines.routes';
+import { UserRole } from '../_enums/user-role.enum';
 
 @Component({
   selector: 'pipelines',
@@ -54,11 +60,16 @@ export class PipelinesComponent implements OnInit {
   selectedCategoryIndex = 0;
   hasPipelineWritePrivileges = false;
 
+  functions: FunctionId[] = [];
+  functionsReady = false;
+  isAdminRole = false;
+
   constructor(private pipelineService: PipelineService,
               private dialogService: DialogService,
               private activatedRoute: ActivatedRoute,
               private authService: AuthService,
               private router: Router,
+              private functionsService: FunctionsService,
               private breadcrumbService: SpBreadcrumbService) {
     this.pipelineCategories = [];
     this.starting = false;
@@ -69,6 +80,7 @@ export class PipelinesComponent implements OnInit {
     this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpPipelineRoutes.BASE));
     this.authService.user$.subscribe(user => {
       this.hasPipelineWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_PIPELINE);
+      this.isAdminRole = this.authService.hasRole(UserRole.ROLE_ADMIN);
     });
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['pipeline']) {
@@ -76,11 +88,12 @@ export class PipelinesComponent implements OnInit {
       }
       this.getPipelineCategories();
       this.getPipelines();
+      this.getFunctions()
     });
   }
 
   setSelectedTab(index) {
-    this.activeCategoryId =  index === 0 ? undefined : this.pipelineCategories[index - 1]._id;
+    this.activeCategoryId = index === 0 ? undefined : this.pipelineCategories[index - 1]._id;
   }
 
   exportPipelines() {
@@ -88,37 +101,38 @@ export class PipelinesComponent implements OnInit {
     FileSaver.saveAs(blob, 'pipelines.json');
   }
 
+  getFunctions() {
+    this.functionsService.getActiveFunctions().subscribe(functions => {
+      this.functions = functions.map(f => f.functionId);
+      console.log(this.functions);
+      this.functionsReady = true;
+    })
+  }
+
   getPipelines() {
     this.pipelines = [];
-    zip(this.pipelineService.getOwnPipelines(), this.pipelineService.getSystemPipelines()).subscribe(allPipelines => {
-      this.pipelines = allPipelines[0];
-      this.systemPipelines = allPipelines[1];
-      this.checkForImmediateStart(allPipelines);
+    this.pipelineService.getOwnPipelines().subscribe(pipelines => {
+      this.pipelines = pipelines;
+      this.checkForImmediateStart(pipelines);
       this.pipelinesReady = true;
     });
   }
 
-  checkForImmediateStart(allPipelines: Pipeline[][]) {
+  checkForImmediateStart(pipelines: Pipeline[]) {
     this.pipelineToStart = undefined;
-    allPipelines.forEach((pipelines, index) => {
-      pipelines.forEach(pipeline => {
-        if (pipeline._id === this.pipelineIdToStart) {
-          if (index === 0) {
-            this.pipelineToStart = pipeline;
-          } else {
-            this.systemPipelineToStart = pipeline;
-          }
-        }
-      });
+    pipelines.forEach(pipeline => {
+      if (pipeline._id === this.pipelineIdToStart) {
+        this.pipelineToStart = pipeline;
+      }
     });
     this.pipelineIdToStart = undefined;
   }
 
   getPipelineCategories() {
     this.pipelineService.getPipelineCategories()
-        .subscribe(pipelineCategories => {
-          this.pipelineCategories = pipelineCategories;
-        });
+      .subscribe(pipelineCategories => {
+        this.pipelineCategories = pipelineCategories;
+      });
   }
 
   activeClass(pipeline) {

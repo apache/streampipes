@@ -15,38 +15,33 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.credentials;
 
-import org.apache.http.Header;
-import org.apache.streampipes.client.http.header.Headers;
+import { Component, OnInit } from '@angular/core';
+import { AbstractFunctionDetailsDirective } from '../abstract-function-details.directive';
+import { SpLogEntry } from '@streampipes/platform-services';
 
-import java.util.Arrays;
-import java.util.List;
+@Component({
+  selector: 'sp-functions-logs',
+  templateUrl: './functions-logs.component.html',
+  styleUrls: []
+})
+export class SpFunctionsLogsComponent extends AbstractFunctionDetailsDirective implements OnInit {
 
-public class StreamPipesApiKeyCredentials implements CredentialsProvider {
+  logs: SpLogEntry[] = [];
 
-  private final String username;
-  private final String apiKey;
-
-  public StreamPipesApiKeyCredentials(String username,
-                                       String apiKey) {
-    this.username = username;
-    this.apiKey = apiKey;
+  ngOnInit(): void {
+    super.onInit();
   }
 
-  public String getUsername() {
-    return username;
+  afterFunctionLoaded(): void {
+    this.loadLogs();
   }
 
-  public String getApiKey() {
-    return apiKey;
+  loadLogs(): void {
+    this.functionsService.getFunctionLogs(this.activeFunction.functionId.id).subscribe(logs => {
+      this.logs = logs;
+      this.contentReady = true;
+    });
   }
 
-  @Override
-  public List<Header> makeHeaders() {
-    return Arrays.asList(
-            Headers.xApiUser(username),
-            Headers.xApiKey(apiKey)
-    );
-  }
 }

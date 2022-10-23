@@ -15,38 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.client.credentials;
 
-import org.apache.http.Header;
-import org.apache.streampipes.client.http.header.Headers;
+import { Component, Input } from '@angular/core';
+import { SpLogEntry } from '@streampipes/platform-services';
 
-import java.util.Arrays;
-import java.util.List;
+@Component({
+  selector: 'sp-simple-logs',
+  templateUrl: './simple-logs.component.html',
+  styleUrls: []
+})
+export class SpSimpleLogsComponent {
 
-public class StreamPipesApiKeyCredentials implements CredentialsProvider {
+  @Input()
+  logs: SpLogEntry[] = [];
 
-  private final String username;
-  private final String apiKey;
-
-  public StreamPipesApiKeyCredentials(String username,
-                                       String apiKey) {
-    this.username = username;
-    this.apiKey = apiKey;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  @Override
-  public List<Header> makeHeaders() {
-    return Arrays.asList(
-            Headers.xApiUser(username),
-            Headers.xApiKey(apiKey)
-    );
-  }
+  @Input()
+  elementName: string;
 }
