@@ -44,4 +44,8 @@ export class SpFunctionsLogsComponent extends AbstractFunctionDetailsDirective i
     });
   }
 
+  getBreadcrumbLabel(): string {
+    return 'Logs';
+  }
+
 }

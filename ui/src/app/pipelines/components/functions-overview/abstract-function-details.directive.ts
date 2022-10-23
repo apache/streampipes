@@ -26,6 +26,8 @@ import {
 } from '@streampipes/platform-services';
 import { Directive } from '@angular/core';
 import { Observable, zip } from 'rxjs';
+import { SpBreadcrumbService } from '../../../../../dist/streampipes/shared-ui';
+import { SpPipelineRoutes } from '../../pipelines.routes';
 
 @Directive()
 export abstract class AbstractFunctionDetailsDirective {
@@ -39,11 +41,13 @@ export abstract class AbstractFunctionDetailsDirective {
   constructor(private route: ActivatedRoute,
               protected functionsService: FunctionsService,
               private pipelineElementService: PipelineElementService,
-              private adapterMonitoringService: AdapterMonitoringService) {
+              private adapterMonitoringService: AdapterMonitoringService,
+              private breadcrumbService: SpBreadcrumbService) {
   }
 
   onInit() {
     const functionId = this.route.snapshot.params.functionId;
+    this.breadcrumbService.updateBreadcrumb([SpPipelineRoutes.BASE, {label: functionId}, {label: this.getBreadcrumbLabel()}]);
     this.tabs = [
       {itemId: 'metrics', itemTitle: 'Metrics', itemLink: ['pipelines', 'functions', functionId, 'metrics']},
       {itemId: 'logs', itemTitle: 'Logs', itemLink: ['pipelines', 'functions', functionId, 'logs']}
@@ -78,4 +82,6 @@ export abstract class AbstractFunctionDetailsDirective {
   }
 
   abstract afterFunctionLoaded(): void;
+
+  abstract getBreadcrumbLabel(): string;
 }
