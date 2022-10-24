@@ -32,19 +32,10 @@
     </button>
   </div>
   <div fxFlex="100" fxLayout="column" *ngIf="adapter">
-    <sp-basic-header-title-component [title]="adapter.name + ' - Logs'"></sp-basic-header-title-component>
-    <div fxFlex="100" fxLayout="column" fxLayoutAlign="center center" *ngIf="!adapterLogs || adapterLogs.length === 0">
-      <h5 class="text-center">(no log messages available)</h5>
-    </div>
-    <div fxFlex="100" fxLayout="column" *ngIf="adapterLogs && adapterLogs.length > 0">
-      <div *ngFor="let logEntry of adapterLogs">
-        <sp-exception-message [message]="logEntry.errorMessage"
-                              [messageTimestamp]="logEntry.timestamp"
-                              *ngIf="logEntry.errorMessage"
-                              class="mt-10">
-        </sp-exception-message>
-      </div>
-    </div>
+    <sp-simple-logs [elementName]="adapter.name"
+                    [logs]="adapterLogs"
+                    fxFlex="100"
+                    fxLayout="column"></sp-simple-logs>
   </div>
 
 

@@ -21,6 +21,7 @@ import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
+import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
@@ -140,6 +141,11 @@ public class SpServiceDefinitionBuilder {
       }
       this.serviceDefinition.addConfig(value);
     });
+    return this;
+  }
+
+  public SpServiceDefinitionBuilder registerFunction(IStreamPipesFunctionDeclarer function) {
+    this.serviceDefinition.addStreamPipesFunction(function);
     return this;
   }
 

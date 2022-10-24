@@ -37,7 +37,8 @@ public class DataStreamApi extends AbstractTypedClientApi<SpDataStream> implemen
 
   @Override
   public SpDataStream get(String streamId) {
-    return getSingle(getBaseResourcePath().addToPath(streamId));
+    return getSingle(StreamPipesApiPath.fromBaseApiPath()
+        .addToPath("streams").addToPath(streamId));
   }
 
   /**

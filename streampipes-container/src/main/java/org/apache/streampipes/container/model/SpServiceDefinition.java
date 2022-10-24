@@ -20,6 +20,7 @@ package org.apache.streampipes.container.model;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
+import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
@@ -37,6 +38,7 @@ public class SpServiceDefinition {
   private List<Declarer<?>> declarers;
   private List<SpDataFormatFactory> dataFormatFactories;
   private List<SpProtocolDefinitionFactory<?>> protocolDefinitionFactories;
+  private List<IStreamPipesFunctionDeclarer> functions;
 
   private Map<String, IProtocol> adapterProtocols;
   private Map<String, IAdapter> specificAdapters;
@@ -50,6 +52,7 @@ public class SpServiceDefinition {
     this.adapterProtocols = new HashMap<>();
     this.specificAdapters = new HashMap<>();
     this.kvConfigs = new HashMap<>();
+    this.functions = new ArrayList<>();
   }
 
   public String getServiceGroup() {
@@ -170,5 +173,13 @@ public class SpServiceDefinition {
 
   public Map<String, ConfigItem> getKvConfigs() {
     return kvConfigs;
+  }
+
+  public void addStreamPipesFunction(IStreamPipesFunctionDeclarer function) {
+    this.functions.add(function);
+  }
+
+  public List<IStreamPipesFunctionDeclarer> getFunctions() {
+    return functions;
   }
 }

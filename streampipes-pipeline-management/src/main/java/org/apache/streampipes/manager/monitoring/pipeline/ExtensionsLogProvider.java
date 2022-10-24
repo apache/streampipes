@@ -74,11 +74,11 @@ public enum ExtensionsLogProvider {
     return getLogInfosForPipeline(pipeline);
   }
 
-  public List<SpLogEntry> getLogInfosForAdapter(String resourceId) {
+  public List<SpLogEntry> getLogInfosForResource(String resourceId) {
     return allLogInfos.getOrDefault(resourceId, Collections.emptyList());
   }
 
-  public SpMetricsEntry getMetricInfosForAdapter(String resourceId) {
+  public SpMetricsEntry getMetricInfosForResource(String resourceId) {
     if (allMetricsInfos.containsKey(resourceId)) {
       return allMetricsInfos.get(resourceId);
     } else {

@@ -35,13 +35,13 @@ public class AdapterMonitoringResource extends AbstractMonitoringResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getLogInfoForAdapter(@PathParam("elementId") String elementId) {
-    return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForAdapter(elementId));
+    return ok(ExtensionsLogProvider.INSTANCE.getLogInfosForResource(elementId));
   }
 
   @Path("adapter/{elementId}/metrics")
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   public Response getMetricsInfoForAdapter(@PathParam("elementId") String elementId) {
-    return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForAdapter(elementId));
+    return ok(ExtensionsLogProvider.INSTANCE.getMetricInfosForResource(elementId));
   }
 }

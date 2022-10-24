@@ -52,7 +52,7 @@
     </div>
     <div fxFlex="100" fxLayout="column">
         <div fxLayout="column">
-            <sp-basic-header-title-component title="My pipelines"></sp-basic-header-title-component>
+            <sp-basic-header-title-component title="Pipelines"></sp-basic-header-title-component>
             <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
                 <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90"
                                       [hideToolbar]="true">
@@ -65,15 +65,14 @@
                 </sp-basic-inner-panel>
             </div>
             <div fxFlex="100" fxLayout="column" style="margin-top: 20px;">
-                <sp-basic-header-title-component title="System-generated pipelines"></sp-basic-header-title-component>
+                <sp-basic-header-title-component title="Functions"></sp-basic-header-title-component>
                 <div fxFlex="100" fxLayout="row" fxLayoutAlign="center start">
                     <sp-basic-inner-panel [showTitle]="false" innerPadding="0" outerMargin="0" fxFlex="90"
                                           [hideToolbar]="true">
                         <div fxFlex="100">
-                            <pipeline-overview [activeCategoryId]="activeCategoryId" [pipelines]="systemPipelines"
-                                               [pipelineToStart]="systemPipelineToStart"
-                                               (refreshPipelinesEmitter)="refreshPipelines()"
-                                               *ngIf="pipelinesReady"></pipeline-overview>
+                            <sp-functions-overview [functions]="functions"
+                                               *ngIf="functionsReady">
+                            </sp-functions-overview>
                         </div>
                     </sp-basic-inner-panel>
                 </div>

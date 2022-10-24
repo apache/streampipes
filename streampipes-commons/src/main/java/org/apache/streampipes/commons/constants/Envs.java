@@ -36,7 +36,8 @@ public enum Envs {
   SP_CLIENT_USER("SP_CLIENT_USER"),
   SP_CLIENT_SECRET("SP_CLIENT_SECRET"),
   SP_ENCRYPTION_PASSCODE("SP_ENCRYPTION_PASSCODE"),
-  SP_DEBUG("SP_DEBUG");
+  SP_DEBUG("SP_DEBUG"),
+  SP_MAX_WAIT_TIME_AT_SHUTDOWN("SP_MAX_WAIT_TIME_AT_SHUTDOWN");
 
   private final String envVariableName;
 
@@ -54,6 +55,10 @@ public enum Envs {
 
   public Integer getValueAsInt() {
     return CustomEnvs.getEnvAsInt(this.envVariableName);
+  }
+
+  public Integer getValueAsIntOrDefault(int defaultValue) {
+    return exists() ? getValueAsInt() : defaultValue;
   }
 
   public Boolean getValueAsBoolean() {

@@ -31,23 +31,12 @@
     </button>
   </div>
   <div fxFlex="100" fxLayout="column" *ngIf="adapter && adapterMetrics">
-    <sp-basic-header-title-component [title]="adapter.name + ' - Metrics'"></sp-basic-header-title-component>
-    <div fxLayout="row" fxLayoutAlign="center center">
-      <div fxFlex="50">
-        <sp-status-widget fxFlex="100" label="Last published message"
-                          [widgetHeight]="400"
-                          [widgetWidth]="500"
-                          [statusValue]="adapterMetrics.lastTimestamp === 0 ? 'n/a' : (adapterMetrics.lastTimestamp | date : 'medium')">
-        </sp-status-widget>
-      </div>
-      <div fxFlex="50">
-        <sp-status-widget fxFlex="100" label="Published messages"
-                          [widgetHeight]="400"
-                          [widgetWidth]="500"
-                          [statusValue]="adapterMetrics.messagesOut.counter">
-        </sp-status-widget>
-      </div>
-    </div>
+    <sp-simple-metrics [elementName]="adapter.name"
+                       lastPublishedLabel="Last published message"
+                       statusValueLabel="Published messages"
+                       [lastTimestamp]="adapterMetrics.lastTimestamp"
+                       [statusValue]="adapterMetrics.messagesOut.counter">
+    </sp-simple-metrics>
   </div>
 
 

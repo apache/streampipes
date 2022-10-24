@@ -25,8 +25,8 @@ import java.util.List;
 
 public class StreamPipesApiKeyCredentials implements CredentialsProvider {
 
-  private String username;
-  private String apiKey;
+  private final String username;
+  private final String apiKey;
 
   public StreamPipesApiKeyCredentials(String username,
                                        String apiKey) {

@@ -69,6 +69,7 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(EmailConfigurationResource.class);
         register(EmailResource.class);
         register(ExtensionsServiceEndpointResource.class);
+        register(FunctionsResource.class);
         register(GeneralConfigurationResource.class);
         register(GenericStorageResource.class);
         register(LabelResource.class);

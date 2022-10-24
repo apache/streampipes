@@ -98,6 +98,8 @@ import { DownloadComponent } from './data-download-dialog/components/download/do
 import { SelectDataRangeComponent } from './data-download-dialog/components/select-data/select-data-range/select-data-range.component';
 import { SelectDataMissingValuesComponent } from './data-download-dialog/components/select-data/select-data-missing-values/select-data-missing-values.component';
 import { StatusWidgetComponent } from './status/status-widget.component';
+import { SpSimpleMetricsComponent } from './monitoring/simple-metrics/simple-metrics.component';
+import { SpSimpleLogsComponent } from './monitoring/simple-logs/simple-logs.component';
 
 @NgModule({
   imports: [
@@ -171,6 +173,8 @@ import { StatusWidgetComponent } from './status/status-widget.component';
     DownloadComponent,
     SelectDataRangeComponent,
     SelectDataMissingValuesComponent,
+    SpSimpleLogsComponent,
+    SpSimpleMetricsComponent,
     StatusWidgetComponent
   ],
   providers: [
@@ -211,6 +215,8 @@ import { StatusWidgetComponent } from './status/status-widget.component';
     ErrorHintComponent,
     PipelineStartedStatusComponent,
     SplitSectionComponent,
+    SpSimpleLogsComponent,
+    SpSimpleMetricsComponent,
     StatusWidgetComponent
   ]
 })

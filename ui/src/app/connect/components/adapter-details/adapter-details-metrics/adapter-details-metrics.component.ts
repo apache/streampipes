@@ -27,7 +27,7 @@ import { SpConnectRoutes } from '../../../connect.routes';
 @Component({
   selector: 'sp-adapter-details-metrics',
   templateUrl: './adapter-details-metrics.component.html',
-  styleUrls: ['./adapter-details-metrics.component.scss']
+  styleUrls: []
 })
 export class SpAdapterDetailsMetricsComponent extends SpAbstractAdapterDetailsDirective implements OnInit {
 
