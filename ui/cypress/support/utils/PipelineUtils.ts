@@ -22,12 +22,6 @@ import { OutputStrategyUtils } from './OutputStrategyUtils';
 
 export class PipelineUtils {
 
-  public static testPipeline(pipelineInput: PipelineInput) {
-
-    PipelineUtils.addPipeline(pipelineInput);
-
-  }
-
   public static addPipeline(pipelineInput: PipelineInput) {
 
     PipelineUtils.goToPipelineEditor();

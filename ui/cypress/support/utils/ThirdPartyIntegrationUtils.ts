@@ -44,7 +44,7 @@ export class ThirdPartyIntegrationUtils {
       .addSink(sink)
       .build();
 
-    PipelineUtils.testPipeline(pipelineInput);
+    PipelineUtils.addPipeline(pipelineInput);
 
     if (adapter instanceof SpecificAdapterInput) {
       ConnectUtils.testSpecificStreamAdapter(adapter);

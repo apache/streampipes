@@ -141,6 +141,7 @@ export class ExistingAdaptersComponent implements OnInit {
   }
 
   editAdapter(adapter: AdapterDescriptionUnion) {
+    // TODO validate that adapter is not used in a pipeline
     this.router.navigate(['connect', 'edit', adapter.elementId]);
   }
 

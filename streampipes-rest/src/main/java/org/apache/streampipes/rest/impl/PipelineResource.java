@@ -261,4 +261,24 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
     message.addNotification(new Notification("id", pipelineId));
     return ok(message);
   }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @Path("/contains/{elementId}")
+  @JacksonSerialized
+  @Operation(summary = "TODO",
+      tags = {"Pipeline"},
+      responses = {
+          @ApiResponse(content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
+          })})
+  @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
+  public List<Pipeline> getPipelinesContainingElements(@PathParam("elementId") String pipelineId) {
+    // TODO What happens when user does not have privileges
+//    return PipelineManager.getAllPipelines();
+    return null;
+  }
+
 }
