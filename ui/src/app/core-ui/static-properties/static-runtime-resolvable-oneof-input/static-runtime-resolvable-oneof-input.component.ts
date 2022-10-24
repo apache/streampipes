@@ -20,7 +20,7 @@ import { Component, OnChanges, OnInit } from '@angular/core';
 import { RuntimeResolvableOneOfStaticProperty, StaticPropertyUnion } from '@streampipes/platform-services';
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { BaseRuntimeResolvableSelectionInput } from '../static-runtime-resolvable-input/base-runtime-resolvable-selection-input';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-static-runtime-resolvable-oneof-input',
@@ -36,7 +36,7 @@ export class StaticRuntimeResolvableOneOfInputComponent
 
     ngOnInit() {
         super.onInit();
-        this.parentForm.addControl(this.staticProperty.internalName, new FormControl(this.staticProperty.options, []));
+        this.parentForm.addControl(this.staticProperty.internalName, new UntypedFormControl(this.staticProperty.options, []));
         this.performValidation();
     }
 

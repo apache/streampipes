@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 
 @Component({
@@ -27,19 +27,19 @@ import { LoginService } from '../../services/login.service';
 })
 export class RestorePasswordComponent implements OnInit {
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
   restoreSuccess = false;
   restoreCompleted = false;
 
   username: string;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private loginService: LoginService) {
   }
 
   ngOnInit(): void {
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('username', new FormControl('', Validators.required));
+    this.parentForm.addControl('username', new UntypedFormControl('', Validators.required));
 
     this.parentForm.valueChanges.subscribe(result => {
       this.username = result.username;

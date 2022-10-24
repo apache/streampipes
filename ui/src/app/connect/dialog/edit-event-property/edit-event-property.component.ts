@@ -17,7 +17,7 @@
  */
 
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   EventPropertyList,
   EventPropertyNested,
@@ -57,12 +57,12 @@ export class EditEventPropertyComponent implements OnInit {
   isNumericProperty: boolean;
   isSaveBtnEnabled: boolean;
 
-  private propertyForm: FormGroup;
+  private propertyForm: UntypedFormGroup;
 
   private runtimeDataTypes;
 
   constructor(public dialogRef: DialogRef<EditEventPropertyComponent>,
-              private formBuilder: FormBuilder,
+              private formBuilder: UntypedFormBuilder,
               private dataTypeService: DataTypesService,
               private semanticTypeUtilsService: SemanticTypeUtilsService,
               private semanticTypesService: SemanticTypesService) {

@@ -19,7 +19,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { EventPropertyUnion, SemanticTypesService } from '@streampipes/platform-services';
 import { debounceTime, distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -42,7 +42,7 @@ export class EditSchemaTransformationComponent implements OnInit {
   @Output() dataTypeChanged = new EventEmitter<boolean>();
   @Output() timestampSemanticsChanged = new EventEmitter<boolean>();
 
-  domainPropertyControl = new FormControl();
+  domainPropertyControl = new UntypedFormControl();
   semanticTypes: Observable<string[]>;
 
   constructor(private semanticTypesService: SemanticTypesService) {

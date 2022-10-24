@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { Group, Role, UserGroupService } from '@streampipes/platform-services';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@streampipes/shared-ui';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { RoleDescription } from '../../../_models/auth.model';
@@ -38,11 +38,11 @@ export class EditGroupDialogComponent implements OnInit {
   @Input()
   editMode: boolean;
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
   availableRoles: RoleDescription[];
   clonedGroup: Group;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private availableRolesService: AvailableRolesService,
               private dialogRef: DialogRef<EditGroupDialogComponent>,
               private userGroupService: UserGroupService) {}
@@ -51,7 +51,7 @@ export class EditGroupDialogComponent implements OnInit {
     this.availableRoles = this.availableRolesService.getAvailableRoles();
     this.clonedGroup = Group.fromData(this.group, new Group());
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('groupName', new FormControl(this.clonedGroup.groupName, Validators.required));
+    this.parentForm.addControl('groupName', new UntypedFormControl(this.clonedGroup.groupName, Validators.required));
 
     this.parentForm.valueChanges.subscribe(v => this.clonedGroup.groupName = v.groupName);
   }

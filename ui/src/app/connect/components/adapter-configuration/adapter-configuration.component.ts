@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import {
   AdapterDescriptionUnion,
@@ -54,7 +54,7 @@ export class AdapterConfigurationComponent implements OnInit {
   isGenericAdapter = false;
 
   myStepper: MatStepper;
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   eventSchema: EventSchema;
   oldEventSchema: EventSchema;
@@ -65,7 +65,7 @@ export class AdapterConfigurationComponent implements OnInit {
     private transformationRuleService: TransformationRuleService,
     private shepherdService: ShepherdService,
     private connectService: ConnectService,
-    private _formBuilder: FormBuilder,
+    private _formBuilder: UntypedFormBuilder,
     private router: Router,
   ) {
   }

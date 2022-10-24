@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   EmailConfig,
   GeneralConfigModel,
@@ -42,7 +42,7 @@ export class GeneralConfigurationComponent implements OnInit {
 
   tabs = SpConfigurationTabs.getTabs();
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
   formReady = false;
 
   generalConfig: GeneralConfigModel;
@@ -50,7 +50,7 @@ export class GeneralConfigurationComponent implements OnInit {
 
   availableRoles: RoleDescription[];
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private generalConfigService: GeneralConfigService,
               private mailConfigService: MailConfigService,
               private availableRolesService: AvailableRolesService,
@@ -77,13 +77,13 @@ export class GeneralConfigurationComponent implements OnInit {
       }
       this.mailConfig = configs[1];
       this.parentForm = this.fb.group({});
-      this.parentForm.addControl('appName', new FormControl(this.generalConfig.appName, Validators.required));
-      this.parentForm.addControl('protocol', new FormControl(this.generalConfig.protocol, Validators.required));
-      this.parentForm.addControl('port', new FormControl(this.generalConfig.port, Validators.required));
-      this.parentForm.addControl('hostname', new FormControl(this.generalConfig.hostname, Validators.required));
-      this.parentForm.addControl('allowSelfRegistration', new FormControl(this.generalConfig.allowSelfRegistration));
-      this.parentForm.addControl('allowPasswordRecovery', new FormControl(this.generalConfig.allowPasswordRecovery));
-      this.parentForm.addControl('defaultUserRoles', new FormControl([UserRole.ROLE_PIPELINE_USER], Validators.required));
+      this.parentForm.addControl('appName', new UntypedFormControl(this.generalConfig.appName, Validators.required));
+      this.parentForm.addControl('protocol', new UntypedFormControl(this.generalConfig.protocol, Validators.required));
+      this.parentForm.addControl('port', new UntypedFormControl(this.generalConfig.port, Validators.required));
+      this.parentForm.addControl('hostname', new UntypedFormControl(this.generalConfig.hostname, Validators.required));
+      this.parentForm.addControl('allowSelfRegistration', new UntypedFormControl(this.generalConfig.allowSelfRegistration));
+      this.parentForm.addControl('allowPasswordRecovery', new UntypedFormControl(this.generalConfig.allowPasswordRecovery));
+      this.parentForm.addControl('defaultUserRoles', new UntypedFormControl([UserRole.ROLE_PIPELINE_USER], Validators.required));
       this.parentForm.valueChanges.subscribe(v => {
         this.generalConfig.appName = v.appName;
         this.generalConfig.protocol = v.protocol;

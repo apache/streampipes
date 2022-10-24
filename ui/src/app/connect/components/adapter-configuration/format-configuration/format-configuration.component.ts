@@ -23,7 +23,7 @@ import {
   GenericAdapterSetDescription,
   GenericAdapterStreamDescription
 } from '@streampipes/platform-services';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { RestService } from '../../../services/rest.service';
 import { MatStepper } from '@angular/material/stepper';
 
@@ -61,11 +61,11 @@ export class FormatConfigurationComponent implements OnInit {
   /**
    * The form group to validate the configuration for the format
    */
-  formatForm: FormGroup;
+  formatForm: UntypedFormGroup;
 
   constructor(
     private restService: RestService,
-    private _formBuilder: FormBuilder) {
+    private _formBuilder: UntypedFormBuilder) {
   }
 
   ngOnInit(): void {

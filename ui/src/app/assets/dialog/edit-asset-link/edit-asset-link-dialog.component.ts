@@ -33,7 +33,7 @@ import {
   PipelineService,
   PipelineElementService, FileMetadata, FilesService
 } from '@streampipes/platform-services';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { zip } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { BaseAssetLinksDirective } from '../base-asset-links.directive';
@@ -54,7 +54,7 @@ export class EditAssetLinkDialogComponent extends BaseAssetLinksDirective implem
   @Input()
   createMode: boolean;
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   clonedAssetLink: AssetLink;
 

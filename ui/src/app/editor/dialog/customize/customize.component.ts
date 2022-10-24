@@ -31,7 +31,7 @@ import {
   PipelineElementTemplateConfig,
   PipelineElementTemplateService
 } from '@streampipes/platform-services';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { PipelineStyleService } from '../../services/pipeline-style.service';
@@ -63,7 +63,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   sourceEndpoint: any;
   sepa: any;
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
   formValid: boolean;
   viewInitialized = false;
 
@@ -80,7 +80,7 @@ export class CustomizeComponent implements OnInit, AfterViewInit {
   constructor(private dialogRef: DialogRef<CustomizeComponent>,
               private jsPlumbService: JsplumbService,
               private shepherdService: ShepherdService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
               private pipelineElementTemplateService: PipelineElementTemplateService,
               private pipelineStyleService: PipelineStyleService) {

@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { AdapterDescription, PipelineElementTemplateService } from '@streampipes/platform-services';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DialogService } from '@streampipes/shared-ui';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
@@ -32,10 +32,10 @@ export class SpecificAdapterConfigurationComponent extends AdapterTemplateConfig
 
   specificAdapterSettingsFormValid: boolean;
 
-  specificAdapterForm: FormGroup;
+  specificAdapterForm: UntypedFormGroup;
 
 
-  constructor(_formBuilder: FormBuilder,
+  constructor(_formBuilder: UntypedFormBuilder,
               dialogService: DialogService,
               pipelineElementTemplateService: PipelineElementTemplateService,
               adapterTemplateService: AdapterTemplateService) {
