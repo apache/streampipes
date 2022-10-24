@@ -22,6 +22,8 @@ services:
     depends_on:
       - couchdb
       - consul
+    volumes:
+      - nginx:/etc/nginx/
     logging:
       driver: "json-file"
       options:
@@ -29,6 +31,9 @@ services:
         max-file: "1"
     networks:
       spnet:
+      
+volumes:
+  nginx:
 
 networks:
   spnet:
