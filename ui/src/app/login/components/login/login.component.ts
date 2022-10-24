@@ -22,7 +22,7 @@ import { LoginService } from '../../services/login.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { LoginModel } from './login.model';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'login',
@@ -31,7 +31,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 })
 export class LoginComponent implements OnInit {
 
-    parentForm: FormGroup;
+    parentForm: UntypedFormGroup;
     configReady = false;
     loading: boolean;
     authenticationFailed: boolean;
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
                 private router: Router,
                 private shepherdService: ShepherdService,
                 private authService: AuthService,
-                private fb: FormBuilder) {
+                private fb: UntypedFormBuilder) {
         this.loading = false;
         this.authenticationFailed = false;
         this.credentials = {};
@@ -54,8 +54,8 @@ export class LoginComponent implements OnInit {
         this.loginSettings = result;
         this.configReady = true;
         this.parentForm = this.fb.group({});
-        this.parentForm.addControl('username', new FormControl('', Validators.required));
-        this.parentForm.addControl('password', new FormControl('', Validators.required));
+        this.parentForm.addControl('username', new UntypedFormControl('', Validators.required));
+        this.parentForm.addControl('password', new UntypedFormControl('', Validators.required));
 
         this.parentForm.valueChanges.subscribe(v => {
           this.credentials.username = v.username;

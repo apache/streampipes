@@ -19,7 +19,7 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   PermissionsService,
   Group,
@@ -50,7 +50,7 @@ export class ObjectPermissionDialogComponent implements OnInit {
   @Input()
   headerTitle: string;
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   permission: Permission;
 
@@ -68,12 +68,12 @@ export class ObjectPermissionDialogComponent implements OnInit {
 
   @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
   @ViewChild('groupInput') groupInput: ElementRef<HTMLInputElement>;
-  userCtrl = new FormControl();
-  groupCtrl = new FormControl();
+  userCtrl = new UntypedFormControl();
+  groupCtrl = new UntypedFormControl();
 
 
   constructor(
-      private fb: FormBuilder,
+      private fb: UntypedFormBuilder,
       private dialogRef: DialogRef<ObjectPermissionDialogComponent>,
       private permissionsService: PermissionsService,
       private userService: UserService,
@@ -116,8 +116,8 @@ export class ObjectPermissionDialogComponent implements OnInit {
   processPermissions(permissions: Permission[]) {
     if (permissions.length > 0) {
       this.permission = permissions[0];
-      this.parentForm.addControl('publicElement', new FormControl(this.permission.publicElement, Validators.required));
-      this.parentForm.addControl('owner', new FormControl(this.permission.ownerSid, Validators.required));
+      this.parentForm.addControl('publicElement', new UntypedFormControl(this.permission.publicElement, Validators.required));
+      this.parentForm.addControl('owner', new UntypedFormControl(this.permission.ownerSid, Validators.required));
       this.filteredUsers = this.userCtrl.valueChanges.pipe(
           startWith(null),
           map((username: string | null) => {

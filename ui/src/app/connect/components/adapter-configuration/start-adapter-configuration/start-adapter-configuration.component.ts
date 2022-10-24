@@ -23,7 +23,7 @@ import {
   EventSchema,
   RemoveDuplicatesTransformationRuleDescription,
 } from '@streampipes/platform-services';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterStartedDialog } from '../../../dialog/adapter-started/adapter-started-dialog.component';
 import { DialogService, PanelType } from '@streampipes/shared-ui';
@@ -66,7 +66,7 @@ export class StartAdapterConfigurationComponent implements OnInit {
   /**
    * The form group to validate the configuration for the format
    */
-  startAdapterForm: FormGroup;
+  startAdapterForm: UntypedFormGroup;
 
   startAdapterSettingsFormValid = false;
 
@@ -85,14 +85,14 @@ export class StartAdapterConfigurationComponent implements OnInit {
   constructor(
     private dialogService: DialogService,
     private shepherdService: ShepherdService,
-    private _formBuilder: FormBuilder,
+    private _formBuilder: UntypedFormBuilder,
     private timestampPipe: TimestampPipe) {
   }
 
   ngOnInit(): void {
     // initialize form for validation
     this.startAdapterForm = this._formBuilder.group({});
-    this.startAdapterForm.addControl('adapterName', new FormControl(this.adapterDescription.name, Validators.required));
+    this.startAdapterForm.addControl('adapterName', new UntypedFormControl(this.adapterDescription.name, Validators.required));
     this.startAdapterForm.valueChanges.subscribe(v => this.adapterDescription.name = v.adapterName);
     this.startAdapterForm.statusChanges.subscribe(() => {
       this.startAdapterSettingsFormValid = this.startAdapterForm.valid;

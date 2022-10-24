@@ -19,7 +19,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { StaticPropertyUtilService } from '../static-property-util.service';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { ColorPickerStaticProperty } from '@streampipes/platform-services';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
 
@@ -37,7 +37,7 @@ export class StaticColorPickerComponent
 
     inputValue: String;
     hasInput: Boolean;
-    colorPickerForm: FormGroup;
+    colorPickerForm: UntypedFormGroup;
 
     presetColors: any[] = ['#39B54A', '#1B1464', '#f44336', '#4CAF50', '#FFEB3B', '#FFFFFF', '#000000'];
 

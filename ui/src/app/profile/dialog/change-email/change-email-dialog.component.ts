@@ -20,9 +20,9 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
   AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -37,7 +37,7 @@ import { UserAccount, UserService } from '@streampipes/platform-services';
 })
 export class ChangeEmailDialogComponent implements OnInit {
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   @Input()
   user: UserAccount;
@@ -53,7 +53,7 @@ export class ChangeEmailDialogComponent implements OnInit {
   errorMessage = '';
 
   constructor(private dialogRef: DialogRef<ChangeEmailDialogComponent>,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private userService: UserService) {
 
   }
@@ -62,9 +62,9 @@ export class ChangeEmailDialogComponent implements OnInit {
     this.clonedUser = UserAccount.fromData(this.user);
     this.email = this.clonedUser.username;
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('email', new FormControl(this.email, [Validators.required, Validators.email]));
-    this.parentForm.addControl('emailConfirm', new FormControl(this.confirmMail, [Validators.required, Validators.email]));
-    this.parentForm.addControl('passwordConfirm', new FormControl(this.confirmPw, [Validators.required]));
+    this.parentForm.addControl('email', new UntypedFormControl(this.email, [Validators.required, Validators.email]));
+    this.parentForm.addControl('emailConfirm', new UntypedFormControl(this.confirmMail, [Validators.required, Validators.email]));
+    this.parentForm.addControl('passwordConfirm', new UntypedFormControl(this.confirmPw, [Validators.required]));
     this.parentForm.setValidators(this.checkEmail);
 
     this.parentForm.valueChanges.subscribe(v => {

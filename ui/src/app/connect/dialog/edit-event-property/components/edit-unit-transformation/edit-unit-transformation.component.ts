@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { UnitDescription } from '../../../../model/UnitDescription';
@@ -45,14 +45,14 @@ export class EditUnitTransformationComponent implements OnInit {
   private possibleUnitTransformations: UnitDescription[] = [];
   private selectUnit: UnitDescription;
   private allUnits: UnitDescription[];
-  private stateCtrl = new FormControl();
+  private stateCtrl = new UntypedFormControl();
 
-  private newUnitStateCtrl = new FormControl();
+  private newUnitStateCtrl = new UntypedFormControl();
   private filteredUnits: Observable<UnitDescription[]>;
   public hadMeasurementUnit = false;
   private oldMeasurementUnitDipsplay;
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(private formBuilder: UntypedFormBuilder,
               private restService: RestService,
               private unitProviderService: UnitProviderService) {
 

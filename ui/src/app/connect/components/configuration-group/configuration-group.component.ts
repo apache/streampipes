@@ -17,7 +17,7 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { StaticPropertyUnion } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 
@@ -28,7 +28,7 @@ import { ConfigurationInfo } from '../../model/ConfigurationInfo';
 })
 export class ConfigurationGroupComponent implements OnInit {
 
-  @Input() configurationGroup: FormGroup;
+  @Input() configurationGroup: UntypedFormGroup;
 
   @Input() adapterId: string;
 

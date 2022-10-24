@@ -18,7 +18,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { DataProcessorInvocation, OutputStrategy } from '@streampipes/platform-services';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'output-strategy',
@@ -28,7 +28,7 @@ import { FormGroup } from '@angular/forms';
 export class OutputStrategyComponent implements OnInit {
 
   @Input()
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   @Input()
   outputStrategy: OutputStrategy;

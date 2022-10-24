@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { EmailConfig, MailConfigService } from '@streampipes/platform-services';
 import { SpConfigurationTabs } from '../configuration-tabs';
 import { SpConfigurationRoutes } from '../configuration.routes';
@@ -32,7 +32,7 @@ export class EmailConfigurationComponent implements OnInit {
 
   tabs = SpConfigurationTabs.getTabs();
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   mailConfig: EmailConfig;
   formReady = false;
@@ -43,7 +43,7 @@ export class EmailConfigurationComponent implements OnInit {
   sendingTestMailSuccess = false;
   sendingEmailErrorMessage = '';
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private mailConfigService: MailConfigService,
               private breadcrumbService: SpBreadcrumbService) {}
 
@@ -64,21 +64,21 @@ export class EmailConfigurationComponent implements OnInit {
   initForm() {
     this.formReady = true;
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('smtpServerHost', new FormControl(this.mailConfig.smtpServerHost, Validators.required));
-    this.parentForm.addControl('smtpServerPort', new FormControl(this.mailConfig.smtpServerPort, Validators.required));
-    this.parentForm.addControl('usesAuthentication', new FormControl(this.mailConfig.usesAuthentication));
-    this.parentForm.addControl('smtpUsername', new FormControl(this.mailConfig.smtpUsername));
-    this.parentForm.addControl('smtpPassword', new FormControl(this.mailConfig.smtpPassword));
-    this.parentForm.addControl('usesProxy', new FormControl(this.mailConfig.usesProxy));
-    this.parentForm.addControl('proxyHost', new FormControl(this.mailConfig.proxyHost));
-    this.parentForm.addControl('proxyPort', new FormControl(this.mailConfig.proxyPort));
-    this.parentForm.addControl('usesProxyAuthentication', new FormControl(this.mailConfig.usesProxyAuthentication));
-    this.parentForm.addControl('proxyUsername', new FormControl(this.mailConfig.proxyUser));
-    this.parentForm.addControl('proxyPassword', new FormControl(this.mailConfig.proxyPassword));
-    this.parentForm.addControl('senderAddress', new FormControl(this.mailConfig.senderAddress, [Validators.required, Validators.email]));
-    this.parentForm.addControl('senderName', new FormControl(this.mailConfig.senderName));
-    this.parentForm.addControl('transport', new FormControl(this.mailConfig.transportStrategy, Validators.required));
-    this.parentForm.addControl('defaultRecipient', new FormControl(this.defaultRecipient, Validators.email));
+    this.parentForm.addControl('smtpServerHost', new UntypedFormControl(this.mailConfig.smtpServerHost, Validators.required));
+    this.parentForm.addControl('smtpServerPort', new UntypedFormControl(this.mailConfig.smtpServerPort, Validators.required));
+    this.parentForm.addControl('usesAuthentication', new UntypedFormControl(this.mailConfig.usesAuthentication));
+    this.parentForm.addControl('smtpUsername', new UntypedFormControl(this.mailConfig.smtpUsername));
+    this.parentForm.addControl('smtpPassword', new UntypedFormControl(this.mailConfig.smtpPassword));
+    this.parentForm.addControl('usesProxy', new UntypedFormControl(this.mailConfig.usesProxy));
+    this.parentForm.addControl('proxyHost', new UntypedFormControl(this.mailConfig.proxyHost));
+    this.parentForm.addControl('proxyPort', new UntypedFormControl(this.mailConfig.proxyPort));
+    this.parentForm.addControl('usesProxyAuthentication', new UntypedFormControl(this.mailConfig.usesProxyAuthentication));
+    this.parentForm.addControl('proxyUsername', new UntypedFormControl(this.mailConfig.proxyUser));
+    this.parentForm.addControl('proxyPassword', new UntypedFormControl(this.mailConfig.proxyPassword));
+    this.parentForm.addControl('senderAddress', new UntypedFormControl(this.mailConfig.senderAddress, [Validators.required, Validators.email]));
+    this.parentForm.addControl('senderName', new UntypedFormControl(this.mailConfig.senderName));
+    this.parentForm.addControl('transport', new UntypedFormControl(this.mailConfig.transportStrategy, Validators.required));
+    this.parentForm.addControl('defaultRecipient', new UntypedFormControl(this.defaultRecipient, Validators.email));
 
     this.parentForm.valueChanges.subscribe(v => {
       this.mailConfig.smtpServerHost = v.smtpServerHost;

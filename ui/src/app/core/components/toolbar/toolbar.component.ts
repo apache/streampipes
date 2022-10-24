@@ -21,7 +21,7 @@ import { BaseNavigationComponent } from '../base-navigation.component';
 import { Router } from '@angular/router';
 import { RestApi } from '../../../services/rest-api.service';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ProfileService } from '../../../profile/profile.service';
 import { AuthService } from '../../../services/auth.service';
@@ -43,7 +43,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit,
   userEmail;
   darkMode: boolean;
 
-  appearanceControl: FormControl;
+  appearanceControl: UntypedFormControl;
 
   unreadNotificationCount = 0;
   unreadNotificationsSubscription: Subscription;
@@ -76,7 +76,7 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit,
       });
     });
 
-    this.appearanceControl = new FormControl(this.authService.darkMode$.getValue());
+    this.appearanceControl = new UntypedFormControl(this.authService.darkMode$.getValue());
     this.appearanceControl.valueChanges.subscribe(darkMode => {
       this.authService.darkMode$.next(darkMode);
       this.modifyAppearance(darkMode);

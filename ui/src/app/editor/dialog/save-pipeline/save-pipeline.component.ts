@@ -22,7 +22,7 @@ import { Message, Pipeline, PipelineCanvasMetadata, PipelineService, PipelineCan
 import { ObjectProvider } from '../../services/object-provider.service';
 import { EditorService } from '../../services/editor.service';
 import { ShepherdService } from '../../../services/tour/shepherd.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InvocablePipelineElementUnion } from "../../model/editor.model";
 import { JsplumbService } from "../../services/jsplumb.service";
@@ -38,7 +38,7 @@ export class SavePipelineComponent implements OnInit {
   startPipelineAfterStorage: any;
   updateMode: any;
 
-  submitPipelineForm: FormGroup = new FormGroup({});
+  submitPipelineForm: UntypedFormGroup = new UntypedFormGroup({});
 
   @Input()
   pipeline: Pipeline;
@@ -78,10 +78,10 @@ export class SavePipelineComponent implements OnInit {
       this.currentPipelineName = this.pipeline.name;
     }
 
-    this.submitPipelineForm.addControl('pipelineName', new FormControl(this.pipeline.name,
+    this.submitPipelineForm.addControl('pipelineName', new UntypedFormControl(this.pipeline.name,
         [Validators.required,
           Validators.maxLength(40)]));
-    this.submitPipelineForm.addControl('pipelineDescription', new FormControl(this.pipeline.description,
+    this.submitPipelineForm.addControl('pipelineDescription', new UntypedFormControl(this.pipeline.description,
         [Validators.maxLength(80)]));
 
     this.submitPipelineForm.controls['pipelineName'].valueChanges.subscribe(value => {

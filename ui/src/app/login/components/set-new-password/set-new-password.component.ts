@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RestorePasswordService } from '../../services/restore-password.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { checkPasswords } from '../../utils/check-password';
 import { RegistrationModel } from '../register/registration.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,7 +30,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class SetNewPasswordComponent implements OnInit {
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
   registrationModel: RegistrationModel;
   recoveryCode: string;
 
@@ -38,7 +38,7 @@ export class SetNewPasswordComponent implements OnInit {
   resetInProgress = false;
   resetSuccess = false;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private restorePasswordService: RestorePasswordService,
               private route: ActivatedRoute,
               private router: Router) {
@@ -58,8 +58,8 @@ export class SetNewPasswordComponent implements OnInit {
       }
     });
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('password', new FormControl('', Validators.required));
-    this.parentForm.addControl('repeatPassword', new FormControl('', Validators.required));
+    this.parentForm.addControl('password', new UntypedFormControl('', Validators.required));
+    this.parentForm.addControl('repeatPassword', new UntypedFormControl('', Validators.required));
     this.parentForm.setValidators(checkPasswords);
 
     this.parentForm.valueChanges.subscribe(v => {

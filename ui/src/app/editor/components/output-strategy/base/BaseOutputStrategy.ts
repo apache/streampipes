@@ -17,7 +17,7 @@
  */
 
 import { Input, Directive } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import {
   DataProcessorInvocation,
   OutputStrategy
@@ -28,7 +28,7 @@ import {
 export abstract class BaseOutputStrategy<T extends OutputStrategy> {
 
   @Input()
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   @Input()
   outputStrategy: T;

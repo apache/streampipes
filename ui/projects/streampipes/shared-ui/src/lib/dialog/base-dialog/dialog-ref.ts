@@ -20,8 +20,7 @@ import { ComponentRef } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Observable, Subject } from 'rxjs';
 import { BaseDialogComponentUnion } from './base-dialog.model';
-import { OverlaySizeConfig } from '@angular/cdk/overlay/overlay-ref';
-import { OverlayConfig } from '@angular/cdk/overlay/overlay-config';
+import { OverlayConfig, OverlaySizeConfig } from '@angular/cdk/overlay';
 
 export class DialogRef<T> {
   private _componentInstance: ComponentRef<T>;

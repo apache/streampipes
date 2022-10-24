@@ -29,9 +29,9 @@ import {
 } from '@streampipes/platform-services';
 import {
   AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -58,7 +58,7 @@ export class EditUserDialogComponent implements OnInit {
   editMode: boolean;
 
   isUserAccount: boolean;
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
   clonedUser: UserAccount | ServiceAccount;
 
   availableRoles: RoleDescription[];
@@ -72,7 +72,7 @@ export class EditUserDialogComponent implements OnInit {
 
       constructor(private dialogRef: DialogRef<EditUserDialogComponent>,
               private availableRolesService: AvailableRolesService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private userService: UserService,
               private userGroupService: UserGroupService,
               private authService: AuthService,
@@ -90,22 +90,22 @@ export class EditUserDialogComponent implements OnInit {
     this.clonedUser = this.user instanceof UserAccount ? UserAccount.fromData(this.user, new UserAccount()) : ServiceAccount.fromData(this.user, new ServiceAccount());
     this.isUserAccount = this.user instanceof UserAccount;
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('username', new FormControl(this.clonedUser.username, Validators.required));
+    this.parentForm.addControl('username', new UntypedFormControl(this.clonedUser.username, Validators.required));
     if (this.isUserAccount) {
       this.parentForm.controls['username'].setValidators([Validators.required, Validators.email]);
     }
-    this.parentForm.addControl('accountEnabled', new FormControl(this.clonedUser.accountEnabled));
-    this.parentForm.addControl('accountLocked', new FormControl(this.clonedUser.accountLocked));
+    this.parentForm.addControl('accountEnabled', new UntypedFormControl(this.clonedUser.accountEnabled));
+    this.parentForm.addControl('accountLocked', new UntypedFormControl(this.clonedUser.accountLocked));
     if (this.clonedUser instanceof UserAccount) {
-      this.parentForm.addControl('fullName', new FormControl(this.clonedUser.fullName));
+      this.parentForm.addControl('fullName', new UntypedFormControl(this.clonedUser.fullName));
     } else {
-      this.parentForm.addControl('clientSecret', new FormControl(this.clonedUser.clientSecret, [Validators.required, Validators.minLength(35)]));
+      this.parentForm.addControl('clientSecret', new UntypedFormControl(this.clonedUser.clientSecret, [Validators.required, Validators.minLength(35)]));
     }
 
     if (!this.editMode && this.clonedUser instanceof UserAccount) {
-      this.parentForm.addControl('password', new FormControl(this.clonedUser.password, Validators.required));
-      this.parentForm.addControl('repeatPassword', new FormControl());
-      this.parentForm.addControl('sendPasswordToUser', new FormControl(this.sendPasswordToUser));
+      this.parentForm.addControl('password', new UntypedFormControl(this.clonedUser.password, Validators.required));
+      this.parentForm.addControl('repeatPassword', new UntypedFormControl());
+      this.parentForm.addControl('sendPasswordToUser', new UntypedFormControl(this.sendPasswordToUser));
       this.parentForm.setValidators(this.checkPasswords);
     }
 
@@ -127,8 +127,8 @@ export class EditUserDialogComponent implements OnInit {
             }
           } else {
             if (!this.parentForm.controls['password']) {
-              this.parentForm.addControl('password', new FormControl(this.clonedUser.password, Validators.required));
-              this.parentForm.addControl('repeatPassword', new FormControl());
+              this.parentForm.addControl('password', new UntypedFormControl(this.clonedUser.password, Validators.required));
+              this.parentForm.addControl('repeatPassword', new UntypedFormControl());
               this.parentForm.setValidators(this.checkPasswords);
             }
             this.clonedUser.password = v.password;
