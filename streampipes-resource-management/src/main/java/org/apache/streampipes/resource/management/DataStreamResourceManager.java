@@ -22,7 +22,12 @@ import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.storage.api.IDataStreamStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
-public class DataStreamResourceManager extends AbstractPipelineElementResourceManager<IDataStreamStorage, SpDataStream, SpDataStream> {
+public class DataStreamResourceManager
+    extends AbstractPipelineElementResourceManager<IDataStreamStorage, SpDataStream, SpDataStream> {
+
+  public DataStreamResourceManager(IDataStreamStorage db) {
+    super(db);
+  }
 
   public DataStreamResourceManager() {
     super(StorageDispatcher.INSTANCE.getNoSqlStore().getDataStreamStorage());
@@ -31,5 +36,12 @@ public class DataStreamResourceManager extends AbstractPipelineElementResourceMa
   @Override
   protected SpDataStream toInvocation(SpDataStream description) {
     return description instanceof SpDataSet ? new SpDataSet((SpDataSet) description) : new SpDataStream(description);
+  }
+
+  /**
+   * Takes a data stream {@link SpDataStream} as an input updates it in the database
+   */
+  public void update(SpDataStream dataStream) {
+    db.updateElement(dataStream);
   }
 }

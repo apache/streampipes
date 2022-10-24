@@ -28,6 +28,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
@@ -39,79 +40,99 @@ import java.util.Arrays;
 
 public class SourcesManagement {
 
-    private Logger logger = LoggerFactory.getLogger(SourcesManagement.class);
+  private final Logger logger = LoggerFactory.getLogger(SourcesManagement.class);
 
-    private AdapterInstanceStorageImpl adapterInstanceStorage;
+  private final AdapterInstanceStorageImpl adapterInstanceStorage;
 
-    public SourcesManagement(AdapterInstanceStorageImpl adapterStorage) {
-      this.adapterInstanceStorage = adapterStorage;
+
+  public SourcesManagement(AdapterInstanceStorageImpl adapterStorage) {
+    this.adapterInstanceStorage = adapterStorage;
+  }
+
+  public SourcesManagement() {
+    this(new AdapterInstanceStorageImpl());
+  }
+
+  public void addSetAdapter(SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
+
+    AdapterSetDescription ad = (AdapterSetDescription) getAndDecryptAdapter(dataSet.getCorrespondingAdapterId());
+    ad.setDataSet(dataSet);
+    ad.setElementId(ad.getElementId() + "/streams/" + dataSet.getDatasetInvocationId());
+
+    try {
+      String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
+      WorkerRestClient.invokeSetAdapter(baseUrl, ad);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * @param elementId
+   * @param runningInstanceId
+   * @throws AdapterException
+   * @throws NoServiceEndpointsAvailableException
+   */
+  public void detachAdapter(String elementId, String runningInstanceId)
+      throws AdapterException, NoServiceEndpointsAvailableException {
+    AdapterSetDescription ad = (AdapterSetDescription) getAndDecryptAdapter(elementId);
+    try {
+      String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
+      ad.setElementId(ad.getElementId() + "/streams/" + runningInstanceId);
+      WorkerRestClient.stopSetAdapter(baseUrl, ad);
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription,
+                                              String dataStreamElementId) {
+
+    SpDataStream ds;
+    if (adapterDescription instanceof AdapterSetDescription) {
+      ds = ((AdapterSetDescription) adapterDescription).getDataSet();
+      EventGrounding eg = new EventGrounding();
+      eg.setTransportProtocols(
+          Arrays.asList(SupportedProtocols.kafka(),
+              SupportedProtocols.jms(),
+              SupportedProtocols.mqtt()));
+      eg.setTransportFormats(Arrays.asList(TransportFormatGenerator.getTransportFormat()));
+      ((SpDataSet) ds).setSupportedGrounding(eg);
+    } else {
+      ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
+      ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
     }
 
-    public SourcesManagement() {
-       this(new AdapterInstanceStorageImpl());
+    ds.setElementId(dataStreamElementId);
+    ds.setName(adapterDescription.getName());
+    ds.setDescription(adapterDescription.getDescription());
+    ds.setCorrespondingAdapterId(adapterDescription.getElementId());
+    ds.setInternallyManaged(true);
+
+    return ds;
+  }
+
+  public static SpDataStream updateDataStream(AdapterDescription adapterDescription,
+                                       SpDataStream oldDataStream) {
+
+    oldDataStream.setName(adapterDescription.getName());
+//
+//    // Update event schema
+    EventSchema newEventSchema;
+    if (adapterDescription instanceof AdapterStreamDescription) {
+      newEventSchema = ((AdapterStreamDescription) adapterDescription).getDataStream().getEventSchema();
+    } else {
+      newEventSchema = ((AdapterSetDescription) adapterDescription).getDataSet().getEventSchema();
     }
+    oldDataStream.setEventSchema(newEventSchema);
 
-    public void addSetAdapter(SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
+    return oldDataStream;
+  }
 
-        AdapterSetDescription ad = (AdapterSetDescription) getAndDecryptAdapter(dataSet.getCorrespondingAdapterId());
-        ad.setDataSet(dataSet);
-        ad.setElementId(ad.getElementId() + "/streams/" + dataSet.getDatasetInvocationId());
-
-        try {
-            String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
-            WorkerRestClient.invokeSetAdapter(baseUrl, ad);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @param runningInstanceId
-     * @throws AdapterException
-     * @throws NoServiceEndpointsAvailableException
-     */
-    public void detachAdapter(String elementId, String runningInstanceId) throws AdapterException, NoServiceEndpointsAvailableException {
-        AdapterSetDescription ad = (AdapterSetDescription) getAndDecryptAdapter(elementId);
-        try {
-            String baseUrl = WorkerPaths.findEndpointUrl(ad.getAppId());
-            ad.setElementId(ad.getElementId() + "/streams/" + runningInstanceId);
-            WorkerRestClient.stopSetAdapter(baseUrl, ad);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public SpDataStream createAdapterDataStream(AdapterDescription adapterDescription,
-                                                String dataStreamElementId) {
-
-        SpDataStream ds;
-        if (adapterDescription instanceof AdapterSetDescription) {
-            ds = ((AdapterSetDescription) adapterDescription).getDataSet();
-            EventGrounding eg = new EventGrounding();
-            eg.setTransportProtocols(
-                    Arrays.asList(SupportedProtocols.kafka(),
-                            SupportedProtocols.jms(),
-                            SupportedProtocols.mqtt()));
-            eg.setTransportFormats(Arrays.asList(TransportFormatGenerator.getTransportFormat()));
-            ((SpDataSet) ds).setSupportedGrounding(eg);
-        } else {
-            ds = ((AdapterStreamDescription) adapterDescription).getDataStream();
-            ds.setEventGrounding(new EventGrounding(adapterDescription.getEventGrounding()));
-        }
-
-        ds.setElementId(dataStreamElementId);
-        ds.setName(adapterDescription.getName());
-        ds.setDescription(adapterDescription.getDescription());
-        ds.setCorrespondingAdapterId(adapterDescription.getElementId());
-        ds.setInternallyManaged(true);
-
-        return ds;
-    }
-
-    private AdapterDescription getAndDecryptAdapter(String adapterId) {
-        AdapterDescription adapter = this.adapterInstanceStorage.getAdapter(adapterId);
-        SecretProvider.getDecryptionService().apply(adapter);
-        return adapter;
-    }
+  private AdapterDescription getAndDecryptAdapter(String adapterId) {
+    AdapterDescription adapter = this.adapterInstanceStorage.getAdapter(adapterId);
+    SecretProvider.getDecryptionService().apply(adapter);
+    return adapter;
+  }
 
 }

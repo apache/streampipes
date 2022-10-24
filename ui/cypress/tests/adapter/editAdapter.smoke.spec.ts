@@ -36,6 +36,8 @@ describe('Test Edit Adapter', () => {
     });
 
     it('Perform Test', () => {
+        const newAdapterName = 'Edited Adapter';
+
         ConnectUtils.goToConnect();
 
         // check that edit button is deactivated while adapter is running
@@ -55,19 +57,17 @@ describe('Test Edit Adapter', () => {
             .build();
         ConnectUtils.configureAdapter(newUserConfiguration);
 
-        // check warning that event schema might have changed
-        // cy.dataCy('sp-connect-adapter-warning-event-schema-change', {
-        //     timeout: 10000,
-        // }).should('be.visible');
+        cy.get('.schema-validation-text-warning').contains('Edit mode');
 
         // Update event schema
         ConnectBtns.refreshSchema().click();
 
-        // cy.dataCy('sp-connect-adapter-warning-event-schema-change', {
-        //     timeout: 10000,
-        // }).should('not.be.visible');
+        cy.dataCy('schema-validation-ok').should('not.exist');
 
         ConnectUtils.finishEventSchemaConfiguration();
+
+        cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
+
 
         ConnectBtns.storeEditAdapter().click();
 
@@ -77,7 +77,8 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.closeAdapterPreview();
 
-        // Start Adapter
+
+       // Start Adapter
         ConnectBtns.startAdapter().should('not.be.disabled');
         ConnectBtns.startAdapter().click();
 
@@ -88,14 +89,20 @@ describe('Test Edit Adapter', () => {
             .parent()
             .click();
 
+
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-live-preview', { timeout: 10000 }).should(
             'be.visible',
         );
 
         // validate that three event properties
-        // cy.get('.preview-row', { timeout: 10000 })
-        //     .its('length')
-        //     .should('eq', 3);
+        cy.get('.preview-row', { timeout: 10000 })
+            .its('length')
+            .should('eq', 3);
+
+        // TODO Validate that name of adapter and data source
+        cy.dataCy('adapter-name').contains(newAdapterName);
+        cy.get('.sp-dialog-content').contains(newAdapterName);
+
     });
 });

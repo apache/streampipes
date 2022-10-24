@@ -40,7 +40,7 @@ public class AdapterMasterManagementTest {
         AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null);
 
         adapterMasterManagement.getAdapter("id2");
     }
@@ -52,7 +52,7 @@ public class AdapterMasterManagementTest {
         AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null);
 
         adapterMasterManagement.getAdapter("id2");
     }
@@ -64,7 +64,7 @@ public class AdapterMasterManagementTest {
         AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(adapterDescriptions);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null);
 
         List<AdapterDescription> result = adapterMasterManagement.getAllAdapterInstances();
 
@@ -77,7 +77,7 @@ public class AdapterMasterManagementTest {
         AdapterResourceManager resourceManager = mock(AdapterResourceManager.class);
         when(adapterStorage.getAllAdapters()).thenReturn(null);
 
-        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager);
+        AdapterMasterManagement adapterMasterManagement = new AdapterMasterManagement(adapterStorage, resourceManager, null);
 
         adapterMasterManagement.getAllAdapterInstances();
 

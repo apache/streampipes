@@ -82,7 +82,8 @@
                     mat-sort-header
                     *matHeaderCellDef> Name</th>
                 <td mat-cell *matCellDef="let adapter">
-                  <h4 style="margin-bottom:0;">{{adapter.name}}</h4>
+                  <h4 style="margin-bottom:0;"
+                      data-cy="adapter-name">{{adapter.name}}</h4>
                   <h5>{{adapter.description != '' ? adapter.description : '-'}}</h5>
                 </td>
               </ng-container>
