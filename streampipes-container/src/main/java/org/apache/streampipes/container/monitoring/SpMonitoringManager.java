@@ -67,6 +67,17 @@ public enum SpMonitoringManager {
     this.metricsInfos.put(resourceId, new SpMetricsEntry());
   }
 
+  public void resetLogs(String resourceId) {
+    if (this.logInfos.containsKey(resourceId)) {
+      this.logInfos.get(resourceId).clear();
+    }
+  }
+
+  public void reset(String resourceId) {
+    this.resetCounter(resourceId);
+    this.resetLogs(resourceId);
+  }
+
   public SpMetricsEntry getMetricsEntry(String resourceId,
                                         long timestamp) {
     checkAndPrepareMetrics(resourceId);

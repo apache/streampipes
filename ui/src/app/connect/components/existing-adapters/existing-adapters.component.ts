@@ -18,9 +18,9 @@
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  AdapterDescriptionUnion,
+  AdapterDescriptionUnion, AdapterMonitoringService,
   AdapterService,
-  PipelineElementService,
+  PipelineElementService, SpMetricsEntry,
   StreamPipesErrorMessage
 } from '@streampipes/platform-services';
 import { MatTableDataSource } from '@angular/material/table';
@@ -43,6 +43,7 @@ import { Router } from '@angular/router';
 import { AdapterFilterSettingsModel } from '../../model/adapter-filter-settings.model';
 import { AdapterFilterPipe } from '../../filter/adapter-filter.pipe';
 import { SpConnectRoutes } from '../../connect.routes';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'sp-existing-adapters',
@@ -60,10 +61,12 @@ export class ExistingAdaptersComponent implements OnInit {
   pageSize = 1;
   @ViewChild(MatSort) sort: MatSort;
 
-  displayedColumns: string[] = ['start', 'name', 'adapterBase', 'adapterType', 'lastModified', 'action'];
+  displayedColumns: string[] = ['start', 'name', 'adapterBase', 'adapterType', 'lastModified', 'messagesSent', 'lastMessage', 'action'];
 
   dataSource: MatTableDataSource<AdapterDescriptionUnion>;
   isAdmin = false;
+
+  adapterMetrics: Record<string, SpMetricsEntry> = {};
 
   constructor(public connectService: ConnectService,
               private adapterService: AdapterService,
@@ -72,7 +75,8 @@ export class ExistingAdaptersComponent implements OnInit {
               private pipelineElementService: PipelineElementService,
               private router: Router,
               private adapterFilter: AdapterFilterPipe,
-              private breadcrumbService: SpBreadcrumbService) {
+              private breadcrumbService: SpBreadcrumbService,
+              private adapterMonitoringService: AdapterMonitoringService) {
 
   }
 
@@ -110,6 +114,20 @@ export class ExistingAdaptersComponent implements OnInit {
         'message': message,
         'title': title
       }
+    });
+  }
+
+  getMonitoringInfos(adapters: AdapterDescriptionUnion[]) {
+    const observables = adapters
+      .map(adapter => adapter.elementId)
+      .map(elementId => this.adapterMonitoringService.getMetricsInfoForAdapter(elementId));
+
+    this.adapterMonitoringService.triggerMonitoringUpdate().subscribe(() => {
+      zip(...observables).subscribe(metrics => {
+        adapters.forEach((adapter, index) => {
+          this.adapterMetrics[adapter.elementId] = metrics[index];
+        })
+      });
     });
   }
 
@@ -184,6 +202,7 @@ export class ExistingAdaptersComponent implements OnInit {
       this.existingAdapters.sort((a, b) => a.name.localeCompare(b.name));
       this.filteredAdapters = this.adapterFilter.transform(this.existingAdapters, this.currentFilter);
       this.dataSource = new MatTableDataSource(this.filteredAdapters);
+      this.getMonitoringInfos(adapters);
       setTimeout(() => {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
