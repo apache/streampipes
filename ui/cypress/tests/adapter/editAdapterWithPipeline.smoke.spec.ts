@@ -38,7 +38,11 @@ describe('Test Edit Adapter', () => {
         ConnectBtns.startAdapter().should('be.visible');
 
         // ensure edit mode is still disabled
-        ConnectBtns.editAdapter().should('be.disabled');
+        ConnectBtns.editAdapter().should('not.be.disabled');
+        ConnectBtns.editAdapter().click();
+
+        cy.dataCy('can-not-edit-adapter-dialog-warning').should('be.visible');
+        cy.dataCy('can-not-edit-adapter-dialog-close').click();
 
         // Delete pipeline
         PipelineUtils.deletePipeline();

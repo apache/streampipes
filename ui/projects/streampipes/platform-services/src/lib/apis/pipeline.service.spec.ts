@@ -42,15 +42,17 @@ describe('PipelineService', () => {
 
     it('Get pipelines containing element', () => {
         const elementId = 'elementId';
-        const pipeline = new Pipeline();
-        pipeline.name = 'Test Pipeline';
-        const pipelines = [pipeline];
+        const expectedPipeline = new Pipeline();
+        expectedPipeline.name = 'Test Pipeline';
+        const expectedPipelines = [expectedPipeline];
 
         pipelineService
             .getPipelinesContainingElementId(elementId)
             .subscribe(pipelines => {
                 expect(pipelines.length).toBe(1);
-                expect(pipelines).toEqual(pipelines);
+                expect(pipelines[0]).toEqual(
+                    jasmine.objectContaining(expectedPipeline),
+                );
             });
 
         const req = httpMock.expectOne({
@@ -58,6 +60,6 @@ describe('PipelineService', () => {
             url: `${mockPath}/pipelines/contains/${elementId}`,
         });
 
-        req.flush(pipelines);
+        req.flush(expectedPipelines);
     });
 });
