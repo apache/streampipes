@@ -39,8 +39,8 @@ public class AdminApi extends AbstractClientApi {
     post(getFunctionsPath(), functions);
   }
 
-  public void deregisterFunctions(List<FunctionDefinition> functions) {
-    delete(getFunctionsPath(), functions, Message.class);
+  public void deregisterFunction(String functionId) {
+    delete(getDeleteFunctionPath(functionId), Message.class);
   }
 
   private StreamPipesApiPath getConnectPath() {
@@ -55,5 +55,9 @@ public class AdminApi extends AbstractClientApi {
     return StreamPipesApiPath
         .fromBaseApiPath()
         .addToPath("functions");
+  }
+
+  private StreamPipesApiPath getDeleteFunctionPath(String functionId) {
+    return getFunctionsPath().addToPath(functionId);
   }
 }
