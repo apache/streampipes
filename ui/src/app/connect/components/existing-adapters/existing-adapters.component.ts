@@ -185,7 +185,7 @@ export class ExistingAdaptersComponent implements OnInit {
                         CanNotEditAdapterDialog,
                         {
                             panelType: PanelType.STANDARD_PANEL,
-                            title: 'Edit error',
+                            title: 'No edit possible',
                             width: '50vw',
                             data: {
                                 pipelines: effectedPipelines

@@ -25,7 +25,12 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.apache.streampipes.commons.exceptions.*;
+import org.apache.streampipes.commons.exceptions.NoMatchingFormatException;
+import org.apache.streampipes.commons.exceptions.NoMatchingJsonSchemaException;
+import org.apache.streampipes.commons.exceptions.NoMatchingProtocolException;
+import org.apache.streampipes.commons.exceptions.NoMatchingSchemaException;
+import org.apache.streampipes.commons.exceptions.NoSuitableSepasAvailableException;
+import org.apache.streampipes.commons.exceptions.RemoteServerNotAccessibleException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.pipeline.PipelineManager;
@@ -280,7 +285,7 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/contains/{elementId}")
   @JacksonSerialized
-  @Operation(summary = "TODO",
+  @Operation(summary = "Returns all pipelines that contain the element with the elementId",
       tags = {"Pipeline"},
       responses = {
           @ApiResponse(content = {
@@ -289,11 +294,9 @@ public class PipelineResource extends AbstractAuthGuardedRestResource {
                   array = @ArraySchema(schema = @Schema(implementation = Pipeline.class)))
           })})
   @PreAuthorize(AuthConstants.HAS_READ_PIPELINE_PRIVILEGE)
-  public List<Pipeline> getPipelinesContainingElements(@PathParam("elementId") String pipelineId) {
-
-    return PipelineManager.getAllPipelines();
-    // TODO What happens when user does not have privileges
-//    return PipelineManager.getAllPipelines();
+  @PostFilter("hasPermission(filterObject.pipelineId, 'READ')")
+  public List<Pipeline> getPipelinesContainingElement(@PathParam("elementId") String elementId) {
+    return PipelineManager.getPipelinesContainingElements(elementId);
   }
 
 }
