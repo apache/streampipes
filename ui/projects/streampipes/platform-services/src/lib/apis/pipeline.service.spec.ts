@@ -16,44 +16,48 @@
  *
  */
 
-import { PipelineService } from './pipeline.service';
-import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { PlatformServicesCommons } from './commons.service';
-import { PlatformServicesModule } from '../platform-services.module';
+import { PipelineService } from './pipeline.service';
+import {
+    HttpClientTestingModule,
+    HttpTestingController,
+} from '@angular/common/http/testing';
+import { Pipeline } from '../model/gen/streampipes-model';
 
 describe('PipelineService', () => {
+    const mockPath = 'mock';
     let pipelineService: PipelineService;
-    let httpController: HttpTestingController;
-    let platformServicesCommons: PlatformServicesCommons;
-    const mockedPlatformServicesCommons = jasmine.createSpyObj('PlatformServicesCommons', ['apiBasePath']);
-    mockedPlatformServicesCommons.apiBasePath.and.returnValue('base/')
+    let httpMock: HttpTestingController;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpTestingController],
-            // providers: [{
-                // platformServicesCommons: mockedPlatformServicesCommons
-            // }]
+            imports: [HttpClientTestingModule],
         });
+        httpMock = TestBed.inject(HttpTestingController);
         pipelineService = TestBed.inject(PipelineService);
-        httpController = TestBed.inject(HttpTestingController);
-        platformServicesCommons = TestBed.inject(PlatformServicesCommons);
-
-
+        spyOnProperty(pipelineService, 'apiBasePath', 'get').and.returnValue(
+            mockPath,
+        );
     });
 
     it('Get pipelines containing element', () => {
         const elementId = 'elementId';
+        const pipeline = new Pipeline();
+        pipeline.name = 'Test Pipeline';
+        const pipelines = [pipeline];
 
-        pipelineService.getPipelinesContainingElementId('id').subscribe(pipelines => {
-            // TODO think about how to check this
-            expect(pipelines).toBe([]);
-        });
+        pipelineService
+            .getPipelinesContainingElementId(elementId)
+            .subscribe(pipelines => {
+                expect(pipelines.length).toBe(1);
+                expect(pipelines).toEqual(pipelines);
+            });
 
-        const req = httpController.expectOne({
+        const req = httpMock.expectOne({
             method: 'GET',
-            url: `localhost:80/api/v2/pipelines/contains/${elementId}`
+            url: `${mockPath}/pipelines/contains/${elementId}`,
         });
+
+        req.flush(pipelines);
     });
 });

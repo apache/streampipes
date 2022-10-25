@@ -150,7 +150,6 @@ export class PipelineService {
             );
     }
 
-    // TODO test it
     getPipelinesContainingElementId(elementId: string): Observable<Pipeline[]> {
         return this.http
             .get(`${this.apiBasePath}/pipelines/contains/${elementId}`)
