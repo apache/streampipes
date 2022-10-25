@@ -30,6 +30,11 @@
                         "style": "camelCase",
                         "type": "attribute"
                     }
+                ],
+                "@angular-eslint/component-class-suffix": [
+                    "error", {
+                        "suffixes": ["Component", "Dialog"]
+                    }
                 ]
             }
         },
