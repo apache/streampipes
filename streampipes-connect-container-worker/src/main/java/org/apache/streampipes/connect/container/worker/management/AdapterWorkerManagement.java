@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.RunningAdapterInstances;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
@@ -83,6 +84,11 @@ public class AdapterWorkerManagement {
         if (adapter != null) {
             adapter.stopAdapter();
         }
+        resetMonitoring(elementId);
+    }
+
+    private void resetMonitoring(String elementId) {
+        SpMonitoringManager.INSTANCE.reset(elementId);
     }
 
 }

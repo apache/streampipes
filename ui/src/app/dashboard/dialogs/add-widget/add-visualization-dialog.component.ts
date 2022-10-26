@@ -35,7 +35,7 @@ import {
   MappingPropertyUnary,
   PipelineService
 } from '@streampipes/platform-services';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { DialogRef } from '@streampipes/shared-ui';
 import { zip } from 'rxjs';
 
@@ -72,7 +72,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
   page: any = 'select-pipeline';
   dialogTitle: string;
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   formValid = false;
   viewInitialized = false;
@@ -97,7 +97,7 @@ export class AddVisualizationDialogComponent implements OnInit, AfterViewInit {
     private dataExplorerService: DataViewDataExplorerService,
     private pipelineService: PipelineService,
     public elementIconText: ElementIconText,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private changeDetectorRef: ChangeDetectorRef) {
   }
 

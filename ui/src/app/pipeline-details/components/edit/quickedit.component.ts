@@ -24,7 +24,7 @@ import {
   PipelineService
 } from '@streampipes/platform-services';
 import { PipelineElementUnion } from '../../../editor/model/editor.model';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { SpPipelineDetailsDirective } from '../sp-pipeline-details.directive';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -41,7 +41,7 @@ export class QuickEditComponent extends SpPipelineDetailsDirective implements On
 
   eventSchemas: EventSchema[];
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
   formValid: boolean;
   viewInitialized = false;
 
@@ -53,7 +53,7 @@ export class QuickEditComponent extends SpPipelineDetailsDirective implements On
   constructor(activatedRoute: ActivatedRoute,
               pipelineService: PipelineService,
               authService: AuthService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
               breadcrumbService: SpBreadcrumbService) {
     super(activatedRoute, pipelineService, authService, breadcrumbService);

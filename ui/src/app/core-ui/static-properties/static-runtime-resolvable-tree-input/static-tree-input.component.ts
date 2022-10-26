@@ -26,7 +26,7 @@ import {
 import { RuntimeResolvableService } from '../static-runtime-resolvable-input/runtime-resolvable.service';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { AbstractControl, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'sp-runtime-resolvable-tree-input',
@@ -56,7 +56,7 @@ export class StaticRuntimeResolvableTreeInputComponent
       this.showOptions = true;
     }
     super.onInit();
-    this.parentForm.addControl(this.staticProperty.internalName, new FormControl(this.staticProperty.nodes, []));
+    this.parentForm.addControl(this.staticProperty.internalName, new UntypedFormControl(this.staticProperty.nodes, []));
   }
 
   parse(staticProperty: StaticPropertyUnion): RuntimeResolvableTreeInputStaticProperty {

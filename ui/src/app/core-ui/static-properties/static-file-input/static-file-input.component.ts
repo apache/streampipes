@@ -21,7 +21,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { FilesService, FileStaticProperty, FileMetadata } from '@streampipes/platform-services';
 import { ConfigurationInfo } from '../../../connect/model/ConfigurationInfo';
 import { AbstractValidatedStaticPropertyRenderer } from '../base/abstract-validated-static-property';
-import { FormControl, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormControl, ValidatorFn, Validators } from '@angular/forms';
 
 
 @Component({
@@ -33,7 +33,7 @@ export class StaticFileInputComponent extends AbstractValidatedStaticPropertyRen
 
     @Output() inputEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    public chooseExistingFileControl = new FormControl();
+    public chooseExistingFileControl = new UntypedFormControl();
 
     // inputValue: string;
     fileName: string;

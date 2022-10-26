@@ -35,7 +35,9 @@ public class FunctionDeregistrationHandler extends RegistrationHandler {
 
   @Override
   protected void performRequest(StreamPipesClient client) {
-    client.adminApi().deregisterFunctions(functions);
+    functions.forEach(fn ->
+        client.adminApi().deregisterFunction(fn.getFunctionId().getId())
+    );
   }
 
   @Override

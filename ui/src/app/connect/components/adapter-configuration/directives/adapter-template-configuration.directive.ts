@@ -19,7 +19,7 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { AdapterDescriptionUnion, PipelineElementTemplate, PipelineElementTemplateService } from '@streampipes/platform-services';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { DialogService } from '@streampipes/shared-ui';
 
@@ -48,7 +48,7 @@ export abstract class AdapterTemplateConfigurationDirective {
   availableTemplates: PipelineElementTemplate[];
   selectedTemplate: any = false;
 
-  protected constructor(protected _formBuilder: FormBuilder,
+  protected constructor(protected _formBuilder: UntypedFormBuilder,
               protected dialogService: DialogService,
               protected pipelineElementTemplateService: PipelineElementTemplateService,
               protected adapterTemplateService: AdapterTemplateService) {

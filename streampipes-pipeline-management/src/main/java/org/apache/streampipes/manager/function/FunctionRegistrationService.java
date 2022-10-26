@@ -42,8 +42,8 @@ public enum FunctionRegistrationService {
     this.registeredFunctions.put(function.getFunctionId().getId(), function);
   }
 
-  public void deregisterFunction(FunctionDefinition function) {
+  public void deregisterFunction(String functionId) {
 
-    this.registeredFunctions.remove(function.getFunctionId().getId());
+    this.registeredFunctions.remove(functionId);
   }
 }

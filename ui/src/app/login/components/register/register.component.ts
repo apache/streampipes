@@ -18,9 +18,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { RegistrationModel } from './registration.model';
@@ -34,7 +34,7 @@ import { checkPasswords } from '../../utils/check-password';
 })
 export class RegisterComponent implements OnInit {
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   registrationData: RegistrationModel;
 
@@ -42,15 +42,15 @@ export class RegisterComponent implements OnInit {
   registrationSuccess = false;
   registrationError: string;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private loginService: LoginService) {
   }
 
   ngOnInit(): void {
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('username', new FormControl('', [Validators.required, Validators.email]));
-    this.parentForm.addControl('password', new FormControl('', Validators.required));
-    this.parentForm.addControl('repeatPassword', new FormControl('', Validators.required));
+    this.parentForm.addControl('username', new UntypedFormControl('', [Validators.required, Validators.email]));
+    this.parentForm.addControl('password', new UntypedFormControl('', Validators.required));
+    this.parentForm.addControl('repeatPassword', new UntypedFormControl('', Validators.required));
     this.parentForm.setValidators(checkPasswords);
 
     this.parentForm.valueChanges.subscribe(v => {

@@ -21,7 +21,6 @@ package org.apache.streampipes.rest.impl;
 import org.apache.streampipes.manager.function.FunctionRegistrationService;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.model.function.FunctionDefinition;
-import org.apache.streampipes.model.function.FunctionId;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
@@ -48,9 +47,10 @@ public class FunctionsResource extends AbstractAuthGuardedRestResource {
   }
 
   @DELETE
+  @Path("{functionId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public Response deregisterFunction(List<FunctionDefinition> functions) {
-    functions.forEach(FunctionRegistrationService.INSTANCE::deregisterFunction);
+  public Response deregisterFunction(@PathParam("functionId") String functionId) {
+    FunctionRegistrationService.INSTANCE.deregisterFunction(functionId);
     return ok(Notifications.success("Function successfully deregistered"));
   }
 

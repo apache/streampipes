@@ -74,4 +74,11 @@ public class SpMetricsEntry {
     messagesIn.setCounter(messagesIn.getCounter() + 1);
     messagesIn.setLastTimestamp(lastTimestamp);
   }
+
+  public void reset() {
+    this.lastTimestamp = 0;
+    this.messagesIn.clear();
+    this.messagesOut.setCounter(0);
+    this.messagesOut.setLastTimestamp(0);
+  }
 }

@@ -18,7 +18,7 @@
 
 import { StaticProperty } from '@streampipes/platform-services';
 import { AbstractStaticPropertyRenderer } from './abstract-static-property';
-import { FormControl, ValidatorFn } from '@angular/forms';
+import { UntypedFormControl, ValidatorFn } from '@angular/forms';
 import { Directive, OnDestroy } from '@angular/core';
 
 @Directive()
@@ -43,7 +43,7 @@ export abstract class AbstractValidatedStaticPropertyRenderer<T extends StaticPr
   }
 
   addValidator(defaultValue: any, validators: ValidatorFn | ValidatorFn[]) {
-    this.parentForm.addControl(this.fieldName, new FormControl(defaultValue, validators));
+    this.parentForm.addControl(this.fieldName, new UntypedFormControl(defaultValue, validators));
     this.parentForm.updateValueAndValidity();
   }
 

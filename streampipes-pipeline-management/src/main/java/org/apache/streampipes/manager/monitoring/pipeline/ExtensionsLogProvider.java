@@ -92,6 +92,20 @@ public enum ExtensionsLogProvider {
     return getInfosForPipeline(allMetricsInfos, pipeline);
   }
 
+  public void reset(String resourceId) {
+    if (allMetricsInfos.containsKey(resourceId)) {
+      allMetricsInfos.get(resourceId).reset();
+    }
+    if (allLogInfos.containsKey(resourceId)) {
+      allLogInfos.get(resourceId).clear();
+    }
+  }
+
+  public void remove(String resourceId) {
+    this.allMetricsInfos.remove(resourceId);
+    this.allLogInfos.remove(resourceId);
+  }
+
   private List<String> collectPipelineElementIds(Pipeline pipeline) {
     return Stream.concat(
         pipeline.getSepas().stream().map(AbstractStreamPipesEntity::getElementId),

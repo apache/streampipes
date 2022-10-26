@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { CustomOutputStrategy } from '@streampipes/platform-services';
 import { BaseOutputStrategy } from '../base/BaseOutputStrategy';
 import { PropertySelectorService } from '../../../../services/property-selector.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'custom-output-strategy',
@@ -37,7 +37,7 @@ export class CustomOutputStrategyComponent extends BaseOutputStrategy<CustomOutp
   }
 
   ngOnInit() {
-    this.parentForm.addControl('output-strategy', new FormControl());
+    this.parentForm.addControl('output-strategy', new UntypedFormControl());
     this.collectedPropertiesFirstStream = this.propertySelectorService
         .makeProperties(this.getProperties(0), this.outputStrategy.availablePropertyKeys, this.propertySelectorService.firstStreamPrefix);
     this.collectedPropertiesSecondStream = this.propertySelectorService

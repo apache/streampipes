@@ -30,4 +30,8 @@ public class CustomRequestApi extends AbstractClientApi {
     post(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), payload);
   }
 
+  public <T> T sendGet(String apiPath, Class<T> responseClass) {
+    return getSingle(StreamPipesApiPath.fromStreamPipesBasePath(apiPath), responseClass);
+  }
+
 }

@@ -20,9 +20,9 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DialogRef } from '@streampipes/shared-ui';
 import {
   AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators
@@ -40,7 +40,7 @@ export class ChangePasswordDialogComponent implements OnInit {
   @Input()
   user: UserAccount;
 
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   existingPw = '';
   newPw = '';
@@ -51,16 +51,16 @@ export class ChangePasswordDialogComponent implements OnInit {
   errorMessage = '';
 
   constructor(private dialogRef: DialogRef<ChangePasswordDialogComponent>,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private userService: UserService) {
 
   }
 
   ngOnInit(): void {
     this.parentForm = this.fb.group({});
-    this.parentForm.addControl('currentPassword', new FormControl(this.existingPw, [Validators.required]));
-    this.parentForm.addControl('newPassword', new FormControl(this.newPw, [Validators.required]));
-    this.parentForm.addControl('newPasswordConfirm', new FormControl(this.newPw, [Validators.required]));
+    this.parentForm.addControl('currentPassword', new UntypedFormControl(this.existingPw, [Validators.required]));
+    this.parentForm.addControl('newPassword', new UntypedFormControl(this.newPw, [Validators.required]));
+    this.parentForm.addControl('newPasswordConfirm', new UntypedFormControl(this.newPw, [Validators.required]));
     this.parentForm.setValidators(this.checkPasswords);
 
     this.parentForm.valueChanges.subscribe(v => {

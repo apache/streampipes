@@ -24,6 +24,7 @@ import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
+import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -143,6 +144,7 @@ public class AdapterMasterManagement {
     AdapterDescription adapter = adapterInstanceStorage.getAdapter(elementId);
     // Delete adapter
     adapterResourceManager.delete(elementId);
+    ExtensionsLogProvider.INSTANCE.remove(elementId);
     LOG.info("Successfully deleted adapter: " + elementId);
 
     // Delete data stream
@@ -179,6 +181,7 @@ public class AdapterMasterManagement {
       throw new AdapterException("Adapter " + elementId + "is not a stream adapter.");
     } else {
       WorkerRestClient.stopStreamAdapter(ad.getSelectedEndpointUrl(), (AdapterStreamDescription) ad);
+      ExtensionsLogProvider.INSTANCE.reset(elementId);
     }
   }
 

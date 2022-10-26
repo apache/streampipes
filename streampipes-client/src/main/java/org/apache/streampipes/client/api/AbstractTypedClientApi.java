@@ -45,10 +45,5 @@ public abstract class AbstractTypedClientApi<T> extends AbstractClientApi {
     return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
   }
 
-  protected <O> O getSingle(StreamPipesApiPath apiPath, Class<O> targetClass) throws SpRuntimeException {
-    ObjectSerializer<Void, O> serializer = new ObjectSerializer<>();
-    return new GetRequest<>(clientConfig, apiPath, targetClass, serializer).executeRequest();
-  }
-
   protected abstract StreamPipesApiPath getBaseResourcePath();
 }

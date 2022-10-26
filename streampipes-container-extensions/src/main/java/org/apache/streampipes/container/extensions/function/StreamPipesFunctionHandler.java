@@ -21,8 +21,8 @@ package org.apache.streampipes.container.extensions.function;
 import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.function.FunctionDefinition;
-import org.apache.streampipes.model.function.FunctionId;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +39,18 @@ public enum StreamPipesFunctionHandler {
   }
 
   public void initializeFunctions() {
-    DeclarersSingleton.getInstance().getFunctions().forEach((key, value) -> {
-      Runnable r = value::invokeRuntime;
+    initializeFunctions(DeclarersSingleton.getInstance().getFunctions().values());
+  }
+
+  public void initializeFunctions(Collection<IStreamPipesFunctionDeclarer> functions) {
+    functions.forEach(function -> {
+      Runnable r = function::invokeRuntime;
       new Thread(r).start();
-      runningInstances.put(key, value);
+      runningInstances.put(function.getFunctionId().getId(), function);
     });
-    new Thread(new FunctionRegistrationHandler(getFunctionDefinitions())).start();
+    if (!(runningInstances.isEmpty())) {
+      new Thread(new FunctionRegistrationHandler(getFunctionDefinitions())).start();
+    }
   }
 
   public void cleanupFunctions() {

@@ -22,7 +22,7 @@ import {
   EventPropertyPrimitive,
   UserDefinedOutputStrategy
 } from '@streampipes/platform-services';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'user-defined-output-strategy',
@@ -49,7 +49,7 @@ export class UserDefinedOutputStrategyComponent extends BaseOutputStrategy<UserD
   }
 
   ngOnInit() {
-    this.parentForm.addControl('output-strategy', new FormControl());
+    this.parentForm.addControl('output-strategy', new UntypedFormControl());
     if (!this.outputStrategy.eventProperties) {
       this.outputStrategy.eventProperties = [];
     }

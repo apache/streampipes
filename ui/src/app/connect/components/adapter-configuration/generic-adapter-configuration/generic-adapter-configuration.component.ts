@@ -23,7 +23,7 @@ import {
   ProtocolDescription,
   PipelineElementTemplateService
 } from '@streampipes/platform-services';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AdapterTemplateConfigurationDirective } from '../directives/adapter-template-configuration.directive';
 import { AdapterTemplateService } from '../../../services/adapter-template.service';
 import { DialogService } from '@streampipes/shared-ui';
@@ -37,11 +37,11 @@ export class GenericAdapterConfigurationComponent extends AdapterTemplateConfigu
 
   genericAdapterSettingsFormValid: boolean;
 
-  genericAdapterForm: FormGroup;
+  genericAdapterForm: UntypedFormGroup;
 
   protocolDescription: ProtocolDescription;
 
-  constructor(_formBuilder: FormBuilder,
+  constructor(_formBuilder: UntypedFormBuilder,
               dialogService: DialogService,
               pipelineElementTemplateService: PipelineElementTemplateService,
               adapterTemplateService: AdapterTemplateService) {

@@ -38,7 +38,7 @@ import {
   StaticPropertyAlternatives,
   StaticPropertyGroup
 } from '@streampipes/platform-services';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { InvocablePipelineElementUnion } from '../../editor/model/editor.model';
 
 @Component({
@@ -71,7 +71,7 @@ export class StaticPropertyComponent implements OnInit {
   completedStaticProperty: ConfigurationInfo;
 
   @Input()
-  parentForm: FormGroup;
+  parentForm: UntypedFormGroup;
 
   @Input()
   fieldName: string;

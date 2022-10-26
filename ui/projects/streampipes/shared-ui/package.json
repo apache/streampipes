@@ -2,15 +2,15 @@
   "name": "@streampipes/shared-ui",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/animations": "^13.3.0",
-    "@angular/cdk": "^13.3.0",
-    "@angular/common": "^13.3.0",
-    "@angular/core": "^13.3.0",
-    "@angular/flex-layout": "^13.0.0-beta.38",
-    "@angular/material": "^13.3.0",
-    "@angular/router": "^13.3.0",
+    "@angular/animations": "^14.2.7",
+    "@angular/cdk": "^14.2.5",
+    "@angular/common": "^14.2.7",
+    "@angular/core": "^14.2.7",
+    "@angular/flex-layout": "^14.0.0-beta.41",
+    "@angular/material": "^14.2.5",
+    "@angular/router": "^14.2.7",
     "@streampipes/platform-services": "0.0.1",
-    "rxjs": "^6.6.2"
+    "rxjs": "^7.5.7"
   },
   "dependencies": {
     "tslib": "^2.3.0"
