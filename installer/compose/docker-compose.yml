@@ -46,6 +46,8 @@ services:
       - couchdb
       - consul
       - backend
+    volumes:
+      - nginx:/etc/nginx/
     logging: *default-logging
     restart: unless-stopped
     networks:
@@ -162,6 +164,7 @@ volumes:
   zookeeper:
   influxdb:
   files:
+  nginx:
 
 
 networks:
@@ -170,3 +173,4 @@ networks:
     ipam:
      config:
        - subnet: ${SP_SUBNET}
+
