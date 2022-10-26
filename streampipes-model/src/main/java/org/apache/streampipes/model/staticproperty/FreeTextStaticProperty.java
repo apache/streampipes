@@ -157,4 +157,10 @@ public class FreeTextStaticProperty extends StaticProperty {
   public void accept(StaticPropertyVisitor visitor) {
     visitor.visit(this);
   }
+
+  public static FreeTextStaticProperty of(String internalName, String value) {
+    FreeTextStaticProperty result = new FreeTextStaticProperty(internalName, "","");
+    result.setValue(value);
+    return result;
+  }
 }
