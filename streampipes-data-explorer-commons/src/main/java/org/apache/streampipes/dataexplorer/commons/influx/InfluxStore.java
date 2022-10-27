@@ -51,11 +51,8 @@ public class InfluxStore {
   Map<String, String> sanitizedRuntimeNames = new HashMap<>();
 
   public InfluxStore(DataLakeMeasure measure,
-                     SpConfig configStore) throws SpRuntimeException {
-
+                     InfluxConnectionSettings settings) {
     this.measure = measure;
-    InfluxConnectionSettings settings = InfluxConnectionSettings.from(configStore);
-
     // store sanitized target property runtime names in local variable
     measure.getEventSchema()
         .getEventProperties()
@@ -63,6 +60,11 @@ public class InfluxStore {
             InfluxNameSanitizer.renameReservedKeywords(ep.getRuntimeName())));
 
     connect(settings);
+  }
+
+  public InfluxStore(DataLakeMeasure measure,
+                     SpConfig configStore) throws SpRuntimeException {
+    this(measure, InfluxConnectionSettings.from(configStore));
   }
 
   /**
