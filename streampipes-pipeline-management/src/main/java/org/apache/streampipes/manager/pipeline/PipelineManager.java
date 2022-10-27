@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.manager.pipeline;
 
+import com.google.common.collect.Streams;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.permission.PermissionManager;
-import org.apache.streampipes.manager.storage.UserService;
+import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
@@ -31,105 +32,123 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PipelineManager {
 
-    /**
-     * Returns all the pipelines of the user
-     * @param username
-     * @return all pipelines
-     */
-    public static List<Pipeline> getOwnPipelines(String username) {
-        return new UserService(StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI()).getOwnPipelines(username);
-    }
+  /**
+   * Returns all pipelines
+   *
+   * @return all pipelines
+   */
+  public static List<Pipeline> getAllPipelines() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+  }
 
-    /**
-     * Returns all pipelines
-     * @return all pipelines
-     */
-    public static List<Pipeline> getAllPipelines() {
-        return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
-    }
+  /**
+   * Returns the stored pipeline with the given pipeline id
+   *
+   * @param pipelineId id of pipeline
+   * @return pipeline resulting pipeline with given id
+   */
+  public static Pipeline getPipeline(String pipelineId) {
+    return getPipelineStorage().getPipeline(pipelineId);
+  }
 
-    /**
-     * Returns the stored pipeline with the given pipeline Id
-     * @param pipelineId
-     * @return pipeline
-     */
-    public static Pipeline getPipeline(String pipelineId) {
-        return getPipelineStorage().getPipeline(pipelineId);
-    }
+  /**
+   * Adds a new pipeline for the user with the username to the storage
+   *
+   * @param principalSid the ID of the owner principal
+   * @param pipeline to be added
+   * @return pipelineId of the stored pipeline
+   */
+  public static String addPipeline(String principalSid,
+                                   Pipeline pipeline) {
 
-    /**
-     * Adds a new pipeline for the user with the username to the storage
-     * @param principalSid the ID of the owner principal
-     * @param pipeline
-     * @return the pipelineId
-     */
-    public static String addPipeline(String principalSid,
-                                     Pipeline pipeline) {
+    // call by reference bad smell
+    String pipelineId = UUIDGenerator.generateUuid();
+    preparePipelineBasics(principalSid, pipeline, pipelineId);
+    Operations.storePipeline(pipeline);
 
-        // call by reference bad smell
-        String pipelineId = UUIDGenerator.generateUuid();
-        preparePipelineBasics(principalSid, pipeline, pipelineId);
-        Operations.storePipeline(pipeline);
+    Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
+    getPermissionStorage().addPermission(permission);
 
-        Permission permission = new PermissionManager().makePermission(pipeline, principalSid);
-        getPermissionStorage().addPermission(permission);
-
-        return pipelineId;
-    }
+    return pipelineId;
+  }
 
 
-    /**
-     * Starts all processing elements of the pipeline with the pipelineId
-     * @param pipelineId
-     * @return pipeline status of the start operation
-     */
-    public static PipelineOperationStatus startPipeline(String pipelineId) {
-        Pipeline pipeline = getPipeline(pipelineId);
-        PipelineOperationStatus status = Operations.startPipeline(pipeline);
-        return status;
-    }
+  /**
+   * Starts all processing elements of the pipeline with the pipelineId
+   *
+   * @param pipelineId of pipeline to be started
+   * @return pipeline status of the start operation
+   */
+  public static PipelineOperationStatus startPipeline(String pipelineId) {
+    Pipeline pipeline = getPipeline(pipelineId);
+    return Operations.startPipeline(pipeline);
+  }
 
-    /**
-     * Stops all  processing elements of the pipeline
-     * @param pipelineId
-     * @param forceStop when it is true, the pipeline is stopped, even if not all processing element containers could be reached
-     * @return pipeline status of the start operation
-     */
-    public static PipelineOperationStatus stopPipeline(String pipelineId,
-                                                       boolean forceStop) {
-        Pipeline pipeline = getPipeline(pipelineId);
-        PipelineOperationStatus status = Operations.stopPipeline(pipeline, forceStop);
+  /**
+   * Stops all  processing elements of the pipeline
+   *
+   * @param pipelineId of pipeline to be stopped
+   * @param forceStop when it is true, the pipeline is stopped, even if not all processing element
+   *                  containers could be reached
+   * @return pipeline status of the start operation
+   */
+  public static PipelineOperationStatus stopPipeline(String pipelineId,
+                                                     boolean forceStop) {
+    Pipeline pipeline = getPipeline(pipelineId);
 
-        return status;
-    }
+    return Operations.stopPipeline(pipeline, forceStop);
+  }
 
-    /**
-     * Deletes the pipeline with the pipeline Id
-     * @param pipelineId
-     */
-    public static void deletePipeline(String pipelineId) {
-        getPipelineStorage().deletePipeline(pipelineId);
-    }
+  /**
+   * Deletes the pipeline with the pipeline Id
+   *
+   * @param pipelineId of pipeline to be deleted
+   */
+  public static void deletePipeline(String pipelineId) {
+    getPipelineStorage().deletePipeline(pipelineId);
+  }
 
-    private static void preparePipelineBasics(String username,
-                                              Pipeline pipeline,
-                                              String pipelineId)  {
-        pipeline.setPipelineId(pipelineId);
-        pipeline.setRunning(false);
-        pipeline.setCreatedByUser(username);
-        pipeline.setCreatedAt(new Date().getTime());
-        pipeline.getSepas().forEach(processor -> processor.setCorrespondingUser(username));
-        pipeline.getActions().forEach(action -> action.setCorrespondingUser(username));
-    }
 
-    private static IPipelineStorage getPipelineStorage() {
-        return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
-    }
+  /**
+   * Checks for the pipelines that contain the processing element
+   * @param elementId the id of the processing Element
+   * @return all pipelines containing the element
+   */
+  public static List<Pipeline> getPipelinesContainingElements(String elementId) {
+    return PipelineManager.getAllPipelines().stream()
+        .filter(pipeline ->
+            mergePipelineElement(pipeline)
+                .anyMatch(el -> el.getElementId().equals(elementId)))
+        .collect(Collectors.toList());
+  }
 
-    private static IPermissionStorage getPermissionStorage() {
-        return StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
-    }
+  private static Stream<NamedStreamPipesEntity> mergePipelineElement(Pipeline pipeline) {
+    return Streams.concat(pipeline.getStreams().stream(),
+        pipeline.getActions().stream(),
+        pipeline.getSepas().stream());
+  }
+
+  private static void preparePipelineBasics(String username,
+                                            Pipeline pipeline,
+                                            String pipelineId) {
+    pipeline.setPipelineId(pipelineId);
+    pipeline.setRunning(false);
+    pipeline.setCreatedByUser(username);
+    pipeline.setCreatedAt(new Date().getTime());
+    pipeline.getSepas().forEach(processor -> processor.setCorrespondingUser(username));
+    pipeline.getActions().forEach(action -> action.setCorrespondingUser(username));
+  }
+
+  private static IPipelineStorage getPipelineStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI();
+  }
+
+  private static IPermissionStorage getPermissionStorage() {
+    return StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage();
+  }
 }

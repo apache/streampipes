@@ -41,7 +41,7 @@ describe('Prepare StreamPipes for restart test', () => {
                 .build())
         .build();
 
-    PipelineUtils.testPipeline(pipelineInput);
+    PipelineUtils.addPipeline(pipelineInput);
 
     DashboardUtils.goToDashboard();
 

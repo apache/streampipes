@@ -44,7 +44,7 @@ describe('Test Random Data Simulator Stream Adapter', () => {
           .build())
       .build();
 
-    PipelineUtils.testPipeline(pipelineInput);
+    PipelineUtils.addPipeline(pipelineInput);
     PipelineUtils.deletePipeline();
   });
 });

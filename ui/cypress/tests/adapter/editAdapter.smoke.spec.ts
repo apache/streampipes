@@ -16,26 +16,18 @@
  *
  */
 
-import { SpecificAdapterBuilder } from '../../support/builder/SpecificAdapterBuilder';
-import { UserInputBuilder } from '../../support/builder/UserInputBuilder';
-import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
 import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
+import { ConnectBtns } from '../../support/utils/connect/ConnectBtns';
+import { UserInputBuilder } from '../../support/builder/UserInputBuilder';
 
 describe('Test Edit Adapter', () => {
     beforeEach('Setup Test', () => {
         // To set up test add a stream adapter that can be configured
         cy.initStreamPipesTest();
-        const adapterInput = SpecificAdapterBuilder.create(
-            'Machine_Data_Simulator',
-        )
-            .setName('Machine Data Simulator Test')
-            .addInput('input', 'wait-time-ms', '1000')
-            .build();
-
-        ConnectUtils.testSpecificStreamAdapter(adapterInput);
+        ConnectUtils.addMachineDataSimulator('simulator');
     });
 
-    it('Perform Test', () => {
+    it('Successfully edit adapter', () => {
         const newAdapterName = 'Edited Adapter';
 
         ConnectUtils.goToConnect();
@@ -66,8 +58,9 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.finishEventSchemaConfiguration();
 
-        cy.dataCy('sp-adapter-name').clear().type(newAdapterName);
-
+        cy.dataCy('sp-adapter-name')
+            .clear()
+            .type(newAdapterName);
 
         ConnectBtns.storeEditAdapter().click();
 
@@ -77,8 +70,7 @@ describe('Test Edit Adapter', () => {
 
         ConnectUtils.closeAdapterPreview();
 
-
-       // Start Adapter
+        // Start Adapter
         ConnectBtns.startAdapter().should('not.be.disabled');
         ConnectBtns.startAdapter().click();
 
@@ -88,7 +80,6 @@ describe('Test Edit Adapter', () => {
             .contains('Values')
             .parent()
             .click();
-
 
         // Validate resulting event
         cy.dataCy('sp-connect-adapter-live-preview', { timeout: 10000 }).should(
@@ -100,9 +91,8 @@ describe('Test Edit Adapter', () => {
             .its('length')
             .should('eq', 3);
 
-        // TODO Validate that name of adapter and data source
+        // Validate that name of adapter and data source
         cy.dataCy('adapter-name').contains(newAdapterName);
         cy.get('.sp-dialog-content').contains(newAdapterName);
-
     });
 });

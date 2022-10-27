@@ -88,6 +88,8 @@ import { SpAdapterDetailsOverviewComponent } from './components/adapter-details/
 import { SpAdapterDetailsLogsComponent } from './components/adapter-details/adapter-details-logs/adapter-details-logs.component';
 import { SpAdapterDetailsMetricsComponent } from './components/adapter-details/adapter-details-metrics/adapter-details-metrics.component';
 import { SpecificAdapterConfigurationComponent } from './components/adapter-configuration/specific-adapter-configuration/specific-adapter-configuration.component';
+import { CanNotEditAdapterDialog } from './dialog/can-not-edit-adapter-dialog/can-not-edit-adapter-dialog.component';
+
 @NgModule({
     imports: [
         CoreUiModule,
@@ -188,6 +190,7 @@ import { SpecificAdapterConfigurationComponent } from './components/adapter-conf
         NewAdapterComponent,
         EditAdapterComponent,
         EventSchemaErrorHintsComponent,
+        CanNotEditAdapterDialog,
     ],
     providers: [
         RestService,

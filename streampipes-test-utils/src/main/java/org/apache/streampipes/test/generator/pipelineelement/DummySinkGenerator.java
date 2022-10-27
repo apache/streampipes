@@ -19,11 +19,13 @@
 package org.apache.streampipes.test.generator.pipelineelement;
 
 import org.apache.streampipes.model.graph.DataSinkInvocation;
+import org.apache.streampipes.model.util.ElementIdGenerator;
 
 public class DummySinkGenerator {
     public static DataSinkInvocation makeDummySink() {
 
         DataSinkInvocation dataSinkInvocation = new DataSinkInvocation();
+        dataSinkInvocation.setElementId(ElementIdGenerator.makeElementId(DataSinkInvocation.class));
 
         return dataSinkInvocation;
     }

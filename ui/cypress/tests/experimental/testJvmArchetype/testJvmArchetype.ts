@@ -46,7 +46,7 @@ describe('Prepare StreamPipes for archetype test', () => {
                 .build())
         .build();
 
-    PipelineUtils.testPipeline(pipelineInput);
+    PipelineUtils.addPipeline(pipelineInput);
 
     DashboardUtils.goToDashboard();
 

@@ -16,26 +16,22 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { DialogRef } from '@streampipes/shared-ui';
+import { Pipeline } from '@streampipes/platform-services';
 
-@Injectable({
-  providedIn: 'root'
+@Component({
+    selector: 'sp-can-not-edit-adapter-dialog',
+    templateUrl: './can-not-edit-adapter-dialog.component.html',
+    styleUrls: ['./can-not-edit-adapter-dialog.component.scss'],
 })
-export class PipelineService {
+export class CanNotEditAdapterDialog {
+    @Input()
+    pipelines: Pipeline[];
 
-  constructor(private http: HttpClient) { }
+    constructor(public dialogRef: DialogRef<CanNotEditAdapterDialog>) {}
 
-  getPipelineCategories(): Observable<any[]> {
-    return this.http.get(`/streampipes-backend/api/v2/pipelinecategories`)
-        .pipe(map(response => {
-          console.log(response);
-          return (response as any[]);
-        }));
-  }
-
-
-
+    close() {
+        this.dialogRef.close();
+    }
 }
