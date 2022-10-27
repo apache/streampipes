@@ -21,7 +21,7 @@ import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.function.FunctionDefinition;
-import org.apache.streampipes.model.message.Message;
+import org.apache.streampipes.model.message.SuccessMessage;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class AdminApi extends AbstractClientApi {
   }
 
   public void deregisterFunction(String functionId) {
-    delete(getDeleteFunctionPath(functionId), Message.class);
+    delete(getDeleteFunctionPath(functionId), SuccessMessage.class);
   }
 
   private StreamPipesApiPath getConnectPath() {
