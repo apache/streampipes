@@ -29,10 +29,13 @@ public class FunctionContextGenerator {
 
   private final List<String> streamIds;
   private final String functionId;
+  private final String serviceGroup;
 
   public FunctionContextGenerator(String functionId,
+                                  String serviceGroup,
                                   List<String> streamIds) {
     this.streamIds = streamIds;
+    this.serviceGroup = serviceGroup;
     this.functionId = functionId;
   }
 
@@ -40,7 +43,7 @@ public class FunctionContextGenerator {
     var client = makeClient();
     var streams = receiveStreams(client);
 
-    return new FunctionContext(functionId, streams, client);
+    return new FunctionContext(functionId, serviceGroup, streams, client);
   }
 
   private StreamPipesClient makeClient() {

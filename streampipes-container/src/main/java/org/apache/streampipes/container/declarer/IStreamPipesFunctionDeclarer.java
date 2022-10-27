@@ -28,7 +28,7 @@ public interface IStreamPipesFunctionDeclarer {
 
   List<String> requiredStreamIds();
 
-  void invokeRuntime();
+  void invokeRuntime(String serviceGroup);
 
   void discardRuntime();
 

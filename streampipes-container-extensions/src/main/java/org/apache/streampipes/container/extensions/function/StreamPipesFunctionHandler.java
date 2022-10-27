@@ -38,13 +38,14 @@ public enum StreamPipesFunctionHandler {
     this.runningInstances = new HashMap<>();
   }
 
-  public void initializeFunctions() {
-    initializeFunctions(DeclarersSingleton.getInstance().getFunctions().values());
+  public void initializeFunctions(String serviceId) {
+    initializeFunctions(DeclarersSingleton.getInstance().getFunctions().values(), serviceId);
   }
 
-  public void initializeFunctions(Collection<IStreamPipesFunctionDeclarer> functions) {
+  public void initializeFunctions(Collection<IStreamPipesFunctionDeclarer> functions,
+                                  String serviceGroup) {
     functions.forEach(function -> {
-      Runnable r = function::invokeRuntime;
+      Runnable r = () -> function.invokeRuntime(serviceGroup);
       new Thread(r).start();
       runningInstances.put(function.getFunctionId().getId(), function);
     });

@@ -19,6 +19,7 @@
 package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
@@ -31,19 +32,22 @@ import java.util.Map;
 
 public class FunctionContext {
 
-  Map<String, SpDataStream> streams;
-  StreamPipesClient client;
+  private final Map<String, SpDataStream> streams;
+  private StreamPipesClient client;
   private String functionId;
+  private ConfigExtractor config;
 
   public FunctionContext() {
     this.streams = new HashMap<>();
   }
 
   public FunctionContext(String functionId,
+                         String serviceGroup,
                          List<SpDataStream> streams,
                          StreamPipesClient client) {
     this();
     streams.forEach(stream -> this.streams.put(stream.getElementId(), stream));
+    this.config = ConfigExtractor.from(serviceGroup);
     this.functionId = functionId;
     this.client = client;
   }
@@ -58,6 +62,14 @@ public class FunctionContext {
 
   public StreamPipesClient getClient() {
     return client;
+  }
+
+  public ConfigExtractor getConfig() {
+    return config;
+  }
+
+  public String getFunctionId() {
+    return functionId;
   }
 
   public void log(SpLogEntry logEntry) {

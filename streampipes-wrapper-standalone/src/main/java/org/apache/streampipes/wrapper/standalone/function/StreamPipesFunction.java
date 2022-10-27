@@ -48,9 +48,10 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     this.sourceInfoMapper = new HashMap<>();
   }
 
-  public void invokeRuntime() {
+  @Override
+  public void invokeRuntime(String serviceGroup) {
     FunctionContext context = new FunctionContextGenerator(
-        this.getFunctionId().getId(), this.requiredStreamIds()
+        this.getFunctionId().getId(), serviceGroup, this.requiredStreamIds()
     ).generate();
     context.getStreams().forEach(stream -> sourceInfoMapper.put(getTopic(stream), stream.getElementId()));
     this.inputCollectors = getInputCollectors(context.getStreams());
