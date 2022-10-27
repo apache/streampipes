@@ -17,7 +17,7 @@
   -->
 
 <div fxLayout="column" fxFlex="100"
-     [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor}">
+     [ngStyle]="{background: dataExplorerWidget.baseAppearanceConfig.backgroundColor, color: dataExplorerWidget.baseAppearanceConfig.textColor, overflowX: 'auto'}">
 
     <sp-no-data-in-date-range
         *ngIf="showNoDataInDateRange"
