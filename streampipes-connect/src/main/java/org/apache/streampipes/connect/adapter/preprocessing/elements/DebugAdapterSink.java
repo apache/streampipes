@@ -37,7 +37,7 @@ public class DebugAdapterSink implements IAdapterPipelineElement {
     }
 
     public Map<String, Object> takeEvent() throws InterruptedException {
-        return events.poll(5, TimeUnit.SECONDS);
+        return takeEvent(5, TimeUnit.SECONDS);
     }
 
     public Map<String, Object> takeEvent(long timeout, TimeUnit unit) throws InterruptedException {

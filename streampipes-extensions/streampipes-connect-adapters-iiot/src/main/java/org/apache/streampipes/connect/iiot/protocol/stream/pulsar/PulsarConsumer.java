@@ -59,6 +59,7 @@ public class PulsarConsumer implements Runnable {
               .topic(this.topic)
               .subscriptionName(RandomStringUtils.randomAlphanumeric(10))
               .subscriptionType(SubscriptionType.Shared)
+              .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest)
               .subscribe();
 
       while (running && ((maxElementsToReceive == -1) || (this.messageCount <= maxElementsToReceive))) {
