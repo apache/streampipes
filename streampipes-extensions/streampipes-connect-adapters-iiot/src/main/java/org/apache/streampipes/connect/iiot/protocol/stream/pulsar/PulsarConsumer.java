@@ -18,11 +18,7 @@
 package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.pulsar.client.api.Consumer;
-import org.apache.pulsar.client.api.Message;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.api.SubscriptionType;
+import org.apache.pulsar.client.api.*;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 
 public class PulsarConsumer implements Runnable {
