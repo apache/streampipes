@@ -15,26 +15,13 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.integration.adapters;
+package org.apache.streampipes.model.connect.rules;
 
-import java.util.List;
-import java.util.Map;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.junit.Test;
+import org.apache.streampipes.model.shared.annotation.TsModel;
 
-public class AdaptersTest {
-    public void testAdapter(AdapterTesterBase adapterTester) throws Exception {
-        adapterTester.startAdapterService();
-        AdapterDescription adapterDescription = adapterTester.prepareAdapter();
-        adapterTester.startAdapter(adapterDescription);
-        List<Map<String, Object>> data = adapterTester.generateData();
-        adapterTester.validateData(data);
-    }
-
-    @Test
-    public void testPulsarAdapter() throws Exception {
-        try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-            testAdapter(pulsarAdapterTester);
-        }
+@TsModel
+public class DebugSinkRuleDescription extends TransformationRuleDescription {
+    public DebugSinkRuleDescription() {
+        super();
     }
 }

@@ -44,8 +44,12 @@ public class PulsarContainer extends GenericContainer<PulsarContainer> {
     super.start();
   }
 
-  public String getBrokerUrl() {
-    return getHost() + ":" + getMappedPort(BROKER_SERVICE_PORT);
+  public String getBrokerHost() {
+    return getHost();
+  }
+
+  public Integer getBrokerPort() {
+    return getMappedPort(BROKER_SERVICE_PORT);
   }
 
   public String getHttpUrl() {

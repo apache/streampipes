@@ -24,6 +24,7 @@ import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
@@ -60,6 +61,11 @@ public class AdapterPipelineGenerator {
     if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
       && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
       return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
+    }
+
+    DebugSinkRuleDescription debugSinkRuleDescription = getDebugRule(adapterDescription.getRules());
+    if (debugSinkRuleDescription != null) {
+      return new AdapterPipeline(pipelineElements, new DebugAdapterSink());
     }
 
     return new AdapterPipeline(pipelineElements);
@@ -121,6 +127,10 @@ public class AdapterPipelineGenerator {
 
   private AddValueTransformationRuleDescription getAddValueRule(List<TransformationRuleDescription> rules) {
     return getRule(rules, AddValueTransformationRuleDescription.class);
+  }
+
+  private DebugSinkRuleDescription getDebugRule(List<TransformationRuleDescription> rules) {
+    return getRule(rules, DebugSinkRuleDescription.class);
   }
 
   private <G extends TransformationRuleDescription> G getRule(List<TransformationRuleDescription> rules,
