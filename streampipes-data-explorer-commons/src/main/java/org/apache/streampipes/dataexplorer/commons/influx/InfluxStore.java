@@ -36,6 +36,7 @@ import org.influxdb.dto.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +130,7 @@ public class InfluxStore {
    * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed
    */
   public void onEvent(Event event) throws SpRuntimeException {
+    var missingFields = new ArrayList<String>();
     if (event == null) {
       throw new SpRuntimeException("event is null");
     }
@@ -146,29 +148,38 @@ public class InfluxStore {
           String sanitizedRuntimeName = sanitizedRuntimeNames.get(runtimeName);
 
           try {
-            PrimitiveField eventPropertyPrimitiveField = event.getFieldByRuntimeName(runtimeName).getAsPrimitive();
-            if (eventPropertyPrimitiveField.getRawValue() == null) {
-              LOG.warn("Field value for {} is null, ignoring value.", sanitizedRuntimeName);
-            } else {
-
-              // store property as tag when the field is a dimension property
-              if (PropertyScope.DIMENSION_PROPERTY.name().equals(ep.getPropertyScope())) {
-                point.tag(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsString());
+            var field = event.getOptionalFieldByRuntimeName(runtimeName);
+            if (field.isPresent()) {
+              PrimitiveField eventPropertyPrimitiveField = field.get().getAsPrimitive();
+              if (eventPropertyPrimitiveField.getRawValue() == null) {
+                LOG.warn("Field value for {} is null, ignoring value.", sanitizedRuntimeName);
               } else {
-                handleMeasurementProperty(
-                    point,
-                    (EventPropertyPrimitive) ep,
-                    sanitizedRuntimeName,
-                    eventPropertyPrimitiveField);
+
+                // store property as tag when the field is a dimension property
+                if (PropertyScope.DIMENSION_PROPERTY.name().equals(ep.getPropertyScope())) {
+                  point.tag(sanitizedRuntimeName, eventPropertyPrimitiveField.getAsString());
+                } else {
+                  handleMeasurementProperty(
+                      point,
+                      (EventPropertyPrimitive) ep,
+                      sanitizedRuntimeName,
+                      eventPropertyPrimitiveField);
+                }
               }
+            } else {
+              missingFields.add(runtimeName);
             }
           } catch (SpRuntimeException iae) {
-            LOG.warn("Field {} was missing in event and will be ignored", runtimeName, iae);
+            LOG.warn("Runtime exception while extracting field value of field {} - this field will be ignored", runtimeName, iae);
           }
-
         }
-
       }
+    }
+
+    if (missingFields.size() > 0) {
+      LOG.warn("Ignored {} fields which were present in the schema, but not in the provided event: {}",
+          missingFields.size(),
+          String.join(", ", missingFields));
     }
 
     influxDb.write(point.build());
