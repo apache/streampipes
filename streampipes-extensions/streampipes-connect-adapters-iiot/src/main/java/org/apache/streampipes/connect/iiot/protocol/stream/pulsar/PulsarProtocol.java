@@ -55,9 +55,9 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
 
   public static final String ID = "org.apache.streampipes.connect.iiot.protocol.stream.pulsar";
 
-  private static final String PULSAR_BROKER_HOST = "pulsar-broker-host";
-  private static final String PULSAR_BROKER_PORT = "pulsar-broker-port";
-  private static final String PULSAR_TOPIC = "pulsar-topic";
+  public static final String PULSAR_BROKER_HOST = "pulsar-broker-host";
+  public static final String PULSAR_BROKER_PORT = "pulsar-broker-port";
+  public static final String PULSAR_TOPIC = "pulsar-topic";
 
   private Thread thread;
   private PulsarConsumer pulsarConsumer;

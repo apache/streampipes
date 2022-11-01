@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
 import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
@@ -95,6 +96,11 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
     @Override
     public boolean isDebug() {
         return debug;
+    }
+
+    @VisibleForTesting
+    public AdapterPipeline getAdapterPipeline() {
+        return adapterPipeline;
     }
 
 }

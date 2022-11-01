@@ -37,6 +37,7 @@ public class ProtocolDescription extends NamedStreamPipesEntity {
     private List<String> category;
 
     public ProtocolDescription() {
+        this.config = new ArrayList<>();
     }
 
     public ProtocolDescription(String uri, String name, String description) {
