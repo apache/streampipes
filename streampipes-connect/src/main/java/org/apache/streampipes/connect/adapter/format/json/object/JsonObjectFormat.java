@@ -18,14 +18,15 @@
 
 package org.apache.streampipes.connect.adapter.format.json.object;
 
-import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.adapter.format.json.AbstractJsonFormat;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
 
 public class JsonObjectFormat extends AbstractJsonFormat {
 
   public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/object";
+  public static final String LABEL = "Single Object";
 
   @Override
   public IFormat getInstance(FormatDescription formatDescription) {
@@ -34,9 +35,9 @@ public class JsonObjectFormat extends AbstractJsonFormat {
 
   @Override
   public FormatDescription declareModel() {
-    return FormatDescriptionBuilder.create(ID, "Single Object", "Each event is a single json object (e.g. {'value': 1})")
-            .addFormatType(JSON_FORMAT_TYPE)
-            .build();
+    return FormatDescriptionBuilder.create(ID, LABEL, "Each event is a single json object (e.g. {'value': 1})")
+        .addFormatType(JSON_FORMAT_TYPE)
+        .build();
   }
 
   @Override
