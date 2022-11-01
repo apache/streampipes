@@ -51,4 +51,9 @@ public class DataLakeStorageImpl extends AbstractDao<DataLakeMeasure> implements
     public void updateDataLakeMeasure(DataLakeMeasure measure) {
         update(measure);
     }
+
+    @Override
+    public void deleteDataLakeMeasure(String id) {
+        delete(id);
+    }
 }

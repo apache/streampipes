@@ -355,8 +355,24 @@ public class DataLakeManagementV4 {
         return tags;
     }
 
+    public void updateDataLake(DataLakeMeasure measure) throws IllegalArgumentException {
+        var existingMeasure = getDataLakeStorage().findOne(measure.getElementId());
+        if (existingMeasure != null) {
+            measure.setRev(existingMeasure.getRev());
+            getDataLakeStorage().updateDataLakeMeasure(measure);
+        } else {
+            getDataLakeStorage().storeDataLakeMeasure(measure);
+        }
+    }
 
-    // TODO validate method
+    public void deleteDataLakeMeasure(String elementId) throws IllegalArgumentException {
+        if (getDataLakeStorage().findOne(elementId) != null) {
+            getDataLakeStorage().deleteDataLakeMeasure(elementId);
+        } else {
+            throw new IllegalArgumentException("Could not find measure with this ID");
+        }
+    }
+
     public DataLakeMeasure addDataLake(DataLakeMeasure measure) {
         List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
         Optional<DataLakeMeasure> optional = dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure.getMeasureName())).findFirst();

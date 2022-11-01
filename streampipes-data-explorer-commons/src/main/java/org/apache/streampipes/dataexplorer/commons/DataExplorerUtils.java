@@ -41,11 +41,21 @@ public class DataExplorerUtils {
         return measure;
     }
 
+    public static DataLakeMeasure sanitizeAndUpdateAtDataLake(StreamPipesClient client,
+                                                              DataLakeMeasure measure) throws SpRuntimeException {
+        sanitizeDataLakeMeasure(measure);
+        updateAtDataLake(client, measure);
+        return measure;
+    }
+
     private static void registerAtDataLake(StreamPipesClient client,
                                                      DataLakeMeasure measure) throws SpRuntimeException {
-        client
-          .customRequest()
-          .sendPost("api/v4/datalake/measure/", measure);
+        client.dataLakeMeasureApi().create(measure);
+    }
+
+    public static void updateAtDataLake(StreamPipesClient client,
+                                        DataLakeMeasure measure) throws SpRuntimeException {
+        client.dataLakeMeasureApi().update(measure);
     }
 
 

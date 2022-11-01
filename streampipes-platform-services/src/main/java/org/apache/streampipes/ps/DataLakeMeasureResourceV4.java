@@ -53,4 +53,34 @@ public class DataLakeMeasureResourceV4 extends AbstractAuthGuardedRestResource {
     public Response getDataLakeMeasure(@PathParam("id") String measureId) {
         return ok(this.dataLakeManagement.getById(measureId));
     }
+
+    @PUT
+    @JacksonSerialized
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("{id}")
+    public Response updateDataLakeMeasure(@PathParam("id") String measureId,
+                                          DataLakeMeasure measure) {
+        if (measureId.equals(measure.getElementId())) {
+            try {
+                this.dataLakeManagement.updateDataLake(measure);
+                return ok();
+            } catch (IllegalArgumentException e) {
+                return badRequest(e.getMessage());
+            }
+        }
+        return badRequest();
+    }
+
+    @DELETE
+    @JacksonSerialized
+    @Path("{id}")
+    public Response deleteDataLakeMeasure(@PathParam("id") String measureId) {
+        try {
+            this.dataLakeManagement.deleteDataLakeMeasure(measureId);
+            return ok();
+        } catch (IllegalArgumentException e) {
+            return badRequest(e.getMessage());
+        }
+    }
 }

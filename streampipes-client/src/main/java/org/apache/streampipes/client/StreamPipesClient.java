@@ -189,6 +189,10 @@ public class StreamPipesClient implements SupportsPipelineApi,
     return new NotificationsApi(config);
   }
 
+  public DataLakeMeasureApi dataLakeMeasureApi() {
+    return new DataLakeMeasureApi(config);
+  }
+
   public void deliverEmail(SpEmail email) {
     CustomRequestApi api = customRequest();
     api.sendPost(ApiPath.EMAIL_RESOURCE, email);
