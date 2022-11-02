@@ -17,26 +17,30 @@
  */
 package org.apache.streampipes.connect.container.master.health;
 
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.management.AdapterMasterManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 public class AdapterHealthCheckTest {
 
-    private String testElementId = "testElementId";
-    private String selectedEndpointUrl = "http://test.de";
+    private final String testElementId = "testElementId";
 
     @Test
     public void getAllRunningInstancesAdapterDescriptions() {
@@ -61,10 +65,39 @@ public class AdapterHealthCheckTest {
 
         assertNotNull(result);
         assertEquals(1, result.keySet().size());
+        String selectedEndpointUrl = "http://test.de";
         assertEquals(1, result.get(selectedEndpointUrl).size());
         assertEquals(getAdapterDescriptionList().get(0), result.get(selectedEndpointUrl).get(0));
     }
 
+    @Test
+    public void recoverRunningAdaptersTest() throws AdapterException {
+        AdapterMasterManagement adapterMasterManagementMock = mock(AdapterMasterManagement.class);
+        AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, adapterMasterManagementMock);
+
+        adapterHealthCheck.recoverAdapters(getAdaptersToRecoverData(true));
+
+        verify(adapterMasterManagementMock, times(1)).startStreamAdapter(any());
+    }
+
+
+    @Test
+    public void recoverStoppedAdaptersTest() throws AdapterException {
+        AdapterMasterManagement adapterMasterManagementMock = mock(AdapterMasterManagement.class);
+        AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, adapterMasterManagementMock);
+
+        adapterHealthCheck.recoverAdapters(getAdaptersToRecoverData(false));
+
+        verify(adapterMasterManagementMock, times(0)).startStreamAdapter(any());
+    }
+
+    private Map<String, AdapterDescription> getAdaptersToRecoverData(boolean isRunning) {
+        Map<String, AdapterDescription> adaptersToRecover = new HashMap<>();
+        AdapterStreamDescription ad = SpecificDataStreamAdapterBuilder.create("").build();
+        ad.setRunning(isRunning);
+        adaptersToRecover.put("", ad);
+        return adaptersToRecover;
+    }
 
     private List<AdapterDescription> getAdapterDescriptionList() {
 
@@ -74,7 +107,7 @@ public class AdapterHealthCheckTest {
                 .build();
         adapterStreamDescription.setSelectedEndpointUrl("http://test.de");
 
-        return Arrays.asList(adapterStreamDescription);
+        return List.of(adapterStreamDescription);
     }
 
     private Map<String, AdapterDescription> getAdapterDescriptionMap() {

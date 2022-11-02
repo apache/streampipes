@@ -31,7 +31,8 @@ public class ConnectWorkerRegistrationService {
 
     while (!connected) {
 
-      connected = MasterRestClient.register(new ConnectWorkerDescriptionProvider().getContainerDescription(serviceDef.getServiceGroup()));
+      connected = MasterRestClient.register(
+          new ConnectWorkerDescriptionProvider().getContainerDescription(serviceDef.getServiceGroup()));
 
       if (connected) {
         LOG.info("Successfully connected to master. Worker is now running.");
