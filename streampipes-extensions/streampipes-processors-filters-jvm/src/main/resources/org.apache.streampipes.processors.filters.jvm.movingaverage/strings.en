@@ -1,0 +1,11 @@
+org.apache.streampipes.processors.filters.jvm.movingaverage.title = Moving Average
+org.apache.streampipes.processors.filters.jvm.movingaverage.description = Smooths the data stream by the mean/median of the last n values
+
+number.title = Numerical Field
+number.description = Select the field to be smoothed
+
+n.title = N Value
+n.description = Number of previous data points which are used to smooth the data
+
+method.title = Select Method
+method.description = Method used to smooth the data
