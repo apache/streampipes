@@ -33,6 +33,7 @@ import org.apache.streampipes.processors.filters.jvm.processor.compose.ComposePr
 import org.apache.streampipes.processors.filters.jvm.processor.enrich.MergeByEnrichProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.RateLimitProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.merge.MergeByTimeProcessor;
+import org.apache.streampipes.processors.filters.jvm.processor.movingaverage.MovingAverageProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericalfilter.NumericalFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter.NumericalTextFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.throughputmon.ThroughputMonitorProcessor;
@@ -65,7 +66,8 @@ public class FiltersJvmInit extends StandaloneModelSubmitter {
                     new MergeBySchemaProcessor(),
                     new ComposeProcessor(),
                     new NumericalTextFilterProcessor(),
-                    new RateLimitProcessor())
+                    new RateLimitProcessor(),
+                    new MovingAverageProcessor())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),
