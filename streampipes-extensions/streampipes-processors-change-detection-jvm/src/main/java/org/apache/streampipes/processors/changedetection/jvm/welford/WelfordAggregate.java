@@ -16,9 +16,8 @@
  *
  */
 
-package org.apache.streampipes.processors.changedetection.jvm.cusum;
+package org.apache.streampipes.processors.changedetection.jvm.welford;
 
-@Deprecated(since = "0.70.0", forRemoval = true)
 public class WelfordAggregate {
     private Integer count;
     private Double mean;
@@ -52,9 +51,5 @@ public class WelfordAggregate {
 
     public Double getSampleStd() {
         return Math.sqrt(getSampleVariance());
-    }
-
-    public Double getPopulationStd() {
-        return Math.sqrt(getPopulationVariance());
     }
 }

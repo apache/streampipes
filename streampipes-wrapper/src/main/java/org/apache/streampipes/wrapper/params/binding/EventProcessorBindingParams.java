@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Deprecated(since = "0.70.0", forRemoval = true)
 public abstract class EventProcessorBindingParams extends
         BindingParams<DataProcessorInvocation> implements
         Serializable {

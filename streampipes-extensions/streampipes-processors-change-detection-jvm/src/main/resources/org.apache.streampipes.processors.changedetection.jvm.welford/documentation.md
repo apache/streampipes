@@ -16,7 +16,7 @@
   ~
   -->
 
-## Cusum (Cumulative Sum) - Deprecated
+## Welford Change Detection
 
 <!--
 <p align="center"> 
@@ -28,15 +28,13 @@
 
 ## Description
 
-**This processing element is deprecated please use the `WelfordChangeDetection` processing element instead.**
-
-Performs change detection on a single dimension of the incoming data stream. A change is detected if the cumulative deviation from the mean exceeds a certain threshold. This implementation tracks the mean and the standard deviation using Welford's algorithm, which is well suited for data streams.
+Performs change detection on a single dimension of the incoming data stream. This implementation tracks the mean and the standard deviation using Welford's algorithm, which is well suited for data streams. A change is detected if the cumulative deviation from the mean exceeds a certain threshold.
 
 ***
 
 ## Required input
 
-The cusum processor requires a data stream that has at least one field containing a numerical value.
+The welford change dectection processor requires a data stream that has at least one field containing a numerical value.
 
 ***
 
@@ -55,7 +53,7 @@ The alarm theshold in standard deviations. An alarm occurs if `S_n > h`
 
 This processor outputs the original data stream plus 
 
-- `cusumLow`: The cusum value for negative changes
-- `cusumHigh`: The cusum value for positive changes
+- `cumSumLow`: The cumulative sum value for negative changes
+- `cumSumHigh`: The cumulative sum value for positive changes
 - `changeDetectedLow`: Boolean indicating if a negative change was detected
 - `changeDetectedHigh`: Boolean indicating if a positive change was detected

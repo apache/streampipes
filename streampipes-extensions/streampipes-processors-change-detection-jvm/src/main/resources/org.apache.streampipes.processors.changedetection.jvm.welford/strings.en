@@ -1,5 +1,5 @@
-org.apache.streampipes.processors.changedetection.jvm.cusum.title=Cusum (Deprecated)
-org.apache.streampipes.processors.changedetection.jvm.cusum.description=This processor is deprecated please, use the processing element `WelfordChangeDetection` instead.
+org.apache.streampipes.processors.changedetection.jvm.welford.title=Welford Change Detection
+org.apache.streampipes.processors.changedetection.jvm.welford.description=Change detection for a time series based on Welford's algorithm.
 
 number-mapping.title=Value to observe
 number-mapping.description=Specifies the monitored dimension.

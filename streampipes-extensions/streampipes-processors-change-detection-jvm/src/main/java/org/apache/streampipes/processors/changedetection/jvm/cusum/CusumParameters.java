@@ -21,6 +21,7 @@ package org.apache.streampipes.processors.changedetection.jvm.cusum;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+@Deprecated(since = "0.70.0", forRemoval = true)
 public class CusumParameters  extends EventProcessorBindingParams {
 
     private String selectedNumberMapping;
