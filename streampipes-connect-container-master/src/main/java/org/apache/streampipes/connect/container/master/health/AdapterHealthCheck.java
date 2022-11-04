@@ -27,103 +27,111 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AdapterHealthCheck {
 
-    private IAdapterStorage adapterStorage;
-    private AdapterMasterManagement adapterMasterManagement;
+  private final IAdapterStorage adapterStorage;
+  private final AdapterMasterManagement adapterMasterManagement;
 
-    public AdapterHealthCheck() {
-        this.adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterInstanceStorage();
-        this.adapterMasterManagement = new AdapterMasterManagement();
-    }
+  public AdapterHealthCheck() {
+    this.adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterInstanceStorage();
+    this.adapterMasterManagement = new AdapterMasterManagement();
+  }
 
-    public AdapterHealthCheck(IAdapterStorage adapterStorage,
-                              AdapterMasterManagement adapterMasterManagement) {
-        this.adapterStorage = adapterStorage;
-        this.adapterMasterManagement = adapterMasterManagement;
-    }
+  public AdapterHealthCheck(IAdapterStorage adapterStorage,
+                            AdapterMasterManagement adapterMasterManagement) {
+    this.adapterStorage = adapterStorage;
+    this.adapterMasterManagement = adapterMasterManagement;
+  }
 
-    /**
-     * In this method it is checked which adapters are currently running. Then it calls all workers to validate if the adapter instance is
-     * still running as expected. If the adapter is not running anymore a new worker instance is invoked.
-     */
-    public void checkAndRestoreAdapters() {
-        // Get all adapters
-        Map<String, AdapterDescription> allRunningInstancesAdapterDescriptions = this.getAllRunningInstancesAdapterDescriptions();
+  /**
+   * In this method it is checked which adapters are currently running.
+   * Then it calls all workers to validate if the adapter instance is
+   * still running as expected. If the adapter is not running anymore a new worker instance is invoked.
+   */
+  public void checkAndRestoreAdapters() {
+    // Get all adapters
+    Map<String, AdapterDescription> allRunningInstancesAdapterDescriptions =
+        this.getAllRunningInstancesAdapterDescriptions();
 
-        // Get all worker containers that run adapters
-        Map<String, List<AdapterDescription>> groupByWorker = this.getAllWorkersWithAdapters(allRunningInstancesAdapterDescriptions);
+    // Get all worker containers that run adapters
+    Map<String, List<AdapterDescription>> groupByWorker =
+        this.getAllWorkersWithAdapters(allRunningInstancesAdapterDescriptions);
 
-        // Get adapters that are not running anymore
-        Map<String, AdapterDescription> allAdaptersToRecover = this.getAdaptersToRecover(groupByWorker, allRunningInstancesAdapterDescriptions);
+    // Get adapters that are not running anymore
+    Map<String, AdapterDescription> allAdaptersToRecover =
+        this.getAdaptersToRecover(groupByWorker, allRunningInstancesAdapterDescriptions);
 
-        // Recover Adapters
-        this.recoverAdapters(allAdaptersToRecover);
-    }
+    // Recover Adapters
+    this.recoverAdapters(allAdaptersToRecover);
+  }
 
-    public Map<String, AdapterDescription> getAllRunningInstancesAdapterDescriptions() {
-        Map<String, AdapterDescription> result = new HashMap<>();
-        List<AdapterDescription> allRunningInstancesAdapterDescription = this.adapterStorage.getAllAdapters();
-        allRunningInstancesAdapterDescription.forEach(adapterDescription -> {
-            result.put(adapterDescription.getElementId(), adapterDescription);
-        });
+  public Map<String, AdapterDescription> getAllRunningInstancesAdapterDescriptions() {
+    Map<String, AdapterDescription> result = new HashMap<>();
+    List<AdapterDescription> allRunningInstancesAdapterDescription = this.adapterStorage.getAllAdapters();
+    allRunningInstancesAdapterDescription.forEach(adapterDescription ->
+        result.put(adapterDescription.getElementId(), adapterDescription));
 
-        return result;
-    }
+    return result;
+  }
 
-    public Map<String, List<AdapterDescription>> getAllWorkersWithAdapters(
-            Map<String, AdapterDescription> allRunningInstancesAdapterDescription) {
+  public Map<String, List<AdapterDescription>> getAllWorkersWithAdapters(
+      Map<String, AdapterDescription> allRunningInstancesAdapterDescription) {
 
-        Map<String, List<AdapterDescription>> groupByWorker = new HashMap<>();
-        allRunningInstancesAdapterDescription.values().forEach(ad -> {
-            String selectedEndpointUrl = ad.getSelectedEndpointUrl();
-            if (selectedEndpointUrl != null) {
-                if (groupByWorker.containsKey(selectedEndpointUrl)) {
-                    groupByWorker.get(selectedEndpointUrl).add(ad);
-                } else {
-                    List<AdapterDescription> tmp = new ArrayList<>();
-                    tmp.add(ad);
-                    groupByWorker.put(selectedEndpointUrl, tmp);
-                }
-            }
-        });
-
-        return groupByWorker;
-    }
-
-    public Map<String, AdapterDescription> getAdaptersToRecover(
-            Map<String, List<AdapterDescription>> groupByWorker,
-            Map<String, AdapterDescription> allRunningInstancesAdapterDescription) {
-        groupByWorker.keySet().forEach(adapterEndpointUrl -> {
-            try {
-                List<AdapterDescription> allRunningInstancesOfOneWorker = WorkerRestClient.getAllRunningAdapterInstanceDescriptions(adapterEndpointUrl + WorkerPaths.getRunningAdaptersPath());
-                allRunningInstancesOfOneWorker.forEach(adapterDescription -> {
-                    allRunningInstancesAdapterDescription.remove(adapterDescription.getElementId());
-                });
-            } catch (AdapterException e) {
-                e.printStackTrace();
-            }
-        });
-
-        return allRunningInstancesAdapterDescription;
-    }
-
-
-    public boolean recoverAdapters(Map<String, AdapterDescription> adaptersToRecover) {
-        for (AdapterDescription adapterDescription : adaptersToRecover.values()) {
-            // Invoke the adapters
-            try {
-                if (adapterDescription instanceof AdapterStreamDescription) {
-                    this.adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
-                }
-            } catch (AdapterException e) {
-                e.printStackTrace();
-            }
+    Map<String, List<AdapterDescription>> groupByWorker = new HashMap<>();
+    allRunningInstancesAdapterDescription.values().forEach(ad -> {
+      String selectedEndpointUrl = ad.getSelectedEndpointUrl();
+      if (selectedEndpointUrl != null) {
+        if (groupByWorker.containsKey(selectedEndpointUrl)) {
+          groupByWorker.get(selectedEndpointUrl).add(ad);
+        } else {
+          List<AdapterDescription> tmp = new ArrayList<>();
+          tmp.add(ad);
+          groupByWorker.put(selectedEndpointUrl, tmp);
         }
+      }
+    });
 
-        return true;
+    return groupByWorker;
+  }
+
+  public Map<String, AdapterDescription> getAdaptersToRecover(
+      Map<String, List<AdapterDescription>> groupByWorker,
+      Map<String, AdapterDescription> allRunningInstancesAdapterDescription) {
+    groupByWorker.keySet().forEach(adapterEndpointUrl -> {
+      try {
+        List<AdapterDescription> allRunningInstancesOfOneWorker =
+            WorkerRestClient.getAllRunningAdapterInstanceDescriptions(
+                adapterEndpointUrl + WorkerPaths.getRunningAdaptersPath());
+        allRunningInstancesOfOneWorker.forEach(adapterDescription ->
+            allRunningInstancesAdapterDescription.remove(adapterDescription.getElementId()));
+      } catch (AdapterException e) {
+        e.printStackTrace();
+      }
+    });
+
+    return allRunningInstancesAdapterDescription;
+  }
+
+
+  public void recoverAdapters(Map<String, AdapterDescription> adaptersToRecover) {
+    for (AdapterDescription adapterDescription : adaptersToRecover.values()) {
+      // Invoke all adapters that were running when the adapter container was stopped
+      try {
+        if (adapterDescription instanceof AdapterStreamDescription) {
+          if (((AdapterStreamDescription) adapterDescription).isRunning()) {
+            this.adapterMasterManagement.startStreamAdapter(adapterDescription.getElementId());
+          }
+        }
+      } catch (AdapterException e) {
+        e.printStackTrace();
+      }
     }
+
+  }
 
 }
