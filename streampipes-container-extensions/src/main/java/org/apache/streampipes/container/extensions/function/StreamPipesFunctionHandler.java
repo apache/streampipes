@@ -45,8 +45,7 @@ public enum StreamPipesFunctionHandler {
   public void initializeFunctions(Collection<IStreamPipesFunctionDeclarer> functions,
                                   String serviceGroup) {
     functions.forEach(function -> {
-      Runnable r = () -> function.invokeRuntime(serviceGroup);
-      new Thread(r).start();
+      function.invokeRuntime(serviceGroup);
       runningInstances.put(function.getFunctionId().getId(), function);
     });
     if (!(runningInstances.isEmpty())) {
