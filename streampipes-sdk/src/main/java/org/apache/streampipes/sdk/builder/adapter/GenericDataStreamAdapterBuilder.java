@@ -17,5 +17,70 @@
  */
 package org.apache.streampipes.sdk.builder.adapter;
 
-public class GenericDataStreamAdapterBuilder {
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+
+import java.util.List;
+
+public class GenericDataStreamAdapterBuilder extends
+    AdapterDescriptionBuilder<GenericDataStreamAdapterBuilder, GenericAdapterStreamDescription> {
+
+  protected GenericDataStreamAdapterBuilder(String id, GenericAdapterStreamDescription element) {
+    super(id, element);
+  }
+
+  /**
+   * Create a new generic stream adapter description using the builder pattern.
+   *
+   * @param appId that is set for the GenericAdapterStreamDescription
+   * @return the builder object
+   */
+  public static GenericDataStreamAdapterBuilder create(String appId) {
+    return new GenericDataStreamAdapterBuilder(appId, new GenericAdapterStreamDescription());
+  }
+
+  @Override
+  protected GenericDataStreamAdapterBuilder me() {
+    return this;
+  }
+
+  @Override
+  protected void prepareBuild() {
+
+  }
+
+  /**
+   * Add a FormatDescription to the GenericDataStreamAdapterDescription
+   *
+   * @param formatDescription that should be added to the adapter
+   * @return the builder object
+   */
+  public GenericDataStreamAdapterBuilder format(FormatDescription formatDescription) {
+    this.elementDescription.setFormatDescription(formatDescription);
+    return this;
+  }
+
+  /**
+   * Add a ProtocolDescription to the GenericDataStreamAdapterDescription
+   *
+   * @param protocolDescription that should be added to the adapter
+   * @return the builder object
+   */
+  public GenericDataStreamAdapterBuilder protocol(ProtocolDescription protocolDescription) {
+    this.elementDescription.setProtocolDescription(protocolDescription);
+    return this;
+  }
+
+  /**
+   * Add a list of TransformationRules to the GenericDataStreamAdapterDescription
+   *
+   * @param rules that should be added to the adapter
+   * @return the builder object
+   */
+  public GenericDataStreamAdapterBuilder addRules(List<TransformationRuleDescription> rules) {
+    this.elementDescription.setRules(rules);
+    return this;
+  }
 }
