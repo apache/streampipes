@@ -49,12 +49,19 @@ export class DataExportService {
         exportConfig.dataExportConfig.missingValueBehaviour,
         this.generateQueryRequest(exportConfig, dataDownloadDialogModel));
     } else {
-      // case for 'all' & 'customInterval'
+      // case for 'all' and 'customInverval'
+      let startTime, endTime = undefined;
+      if (exportConfig.dataExportConfig.dataRangeConfiguration  === 'customInterval') {
+        startTime = exportConfig.dataExportConfig.dateRange.startDate.getTime();
+        endTime = exportConfig.dataExportConfig.dateRange.endDate.getTime();
+      }
       downloadRequest = this.dataLakeRestService.downloadRawData(
         exportConfig.dataExportConfig.measurement,
         exportConfig.formatExportConfig.exportFormat,
         exportConfig.formatExportConfig['delimiter'],
-        exportConfig.dataExportConfig.missingValueBehaviour);
+        exportConfig.dataExportConfig.missingValueBehaviour,
+        startTime,
+        endTime);
     }
 
     downloadRequest.subscribe(event => {
