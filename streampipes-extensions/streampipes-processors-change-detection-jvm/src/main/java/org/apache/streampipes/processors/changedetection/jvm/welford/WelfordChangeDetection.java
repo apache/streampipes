@@ -97,7 +97,6 @@ public class WelfordChangeDetection extends StreamPipesDataProcessor {
         Double normalized = getZScoreNormalizedValue(number);
         updateStatistics(normalized);
 
-
         Boolean isChangeHigh = getTestResult(this.cuSumHigh, h);
         Boolean isChangeLow = getTestResult(this.cuSumLow, h);
 
