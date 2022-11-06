@@ -28,7 +28,7 @@
 
 ## Description
 
-**This processing element is deprecated please use the `WelfordChangeDetection` processing element instead.**
+**This processing element is deprecated. Please use the `WelfordChangeDetection` processing element instead.**
 
 Performs change detection on a single dimension of the incoming data stream. A change is detected if the cumulative deviation from the mean exceeds a certain threshold. This implementation tracks the mean and the standard deviation using Welford's algorithm, which is well suited for data streams.
 
