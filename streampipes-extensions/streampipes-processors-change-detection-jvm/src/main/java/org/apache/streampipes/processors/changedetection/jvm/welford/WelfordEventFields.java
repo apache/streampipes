@@ -16,14 +16,22 @@
  *
  */
 
-package org.apache.streampipes.processors.changedetection.jvm.cusum;
+package org.apache.streampipes.processors.changedetection.jvm.welford;
 
+public enum WelfordEventFields {
+    VAL_LOW("cumSumLow"),
+    VAL_HIGH("cumSumHigh"),
+    DECISION_LOW("changeDetectedLow"),
+    DECISION_HIGH("changeDetectedHigh");
 
-@Deprecated(since = "0.70.0", forRemoval = true)
-public class CusumEventFields {
+    public final String label;
 
-    public static final String VAL_LOW = "cusumLow";
-    public static final String VAL_HIGH = "cusumHigh";
-    public static final String DECISION_LOW = "changeDetectedLow";
-    public static final String DECISION_HIGH = "changeDetectedHigh";
+    WelfordEventFields(String label) {
+        this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return this.label;
+    }
 }
