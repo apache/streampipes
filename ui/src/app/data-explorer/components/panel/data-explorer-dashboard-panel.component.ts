@@ -58,9 +58,6 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
   editMode = false;
   timeRangeVisible = true;
 
-  @Output()
-  editModeChange: EventEmitter<boolean> = new EventEmitter();
-
   @ViewChild('dashboardGrid')
   dashboardGrid: DataExplorerDashboardGridComponent;
 
@@ -196,13 +193,11 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     } else {
       this.dashboardSlide.updateAllWidgets();
     }
-    this.editModeChange.emit(false);
     this.closeDesignerPanel();
   }
 
   startEditMode(widgetModel: DataExplorerWidgetModel) {
     this.editMode = true;
-    this.editModeChange.emit(true);
     this.updateCurrentlyConfiguredWidget(widgetModel);
     this.showEditingHelpInfo = false;
   }
@@ -265,9 +260,14 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
 
   triggerEditMode() {
     this.showEditingHelpInfo = false;
-    this.editMode = true;
-    this.editModeChange.emit(true);
-    this.createWidget();
+    if (this.dashboard.widgets.length > 0) {
+      this.currentlyConfiguredWidgetId = this.dashboard.widgets[0].id;
+      const currentView = this.dashboardGrid ? this.dashboardGrid : this.dashboardSlide;
+      currentView.selectFirstWidgetForEditing(this.currentlyConfiguredWidgetId);
+    } else {
+      this.editMode = true;
+      this.createWidget();
+    }
   }
 
   createWidget() {
@@ -282,6 +282,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
       '#FFFFFF';
     this.currentlyConfiguredWidget.baseAppearanceConfig.textColor = '#3e3e3e';
+    this.currentlyConfiguredWidget = {...this.currentlyConfiguredWidget};
     this.newWidgetMode = true;
     this.showDesignerPanel = true;
     this.newWidgetMode = true;
