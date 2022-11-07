@@ -33,6 +33,7 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 
 import java.util.Arrays;
 
+@Deprecated(since = "0.70.0", forRemoval = true)
 public class CusumController extends StandaloneEventProcessingDeclarer<CusumParameters> {
 
     private static final String NUMBER_MAPPING = "number-mapping";
@@ -44,6 +45,7 @@ public class CusumController extends StandaloneEventProcessingDeclarer<CusumPara
         return ProcessingElementBuilder.create("org.apache.streampipes.processors.changedetection.jvm.cusum")
                 .category(DataProcessorType.VALUE_OBSERVER)
                 .withAssets(Assets.DOCUMENTATION)
+                .withAssets(Assets.ICON)
                 .withLocales(Locales.EN)
                 .requiredStream(StreamRequirementsBuilder
                         .create()

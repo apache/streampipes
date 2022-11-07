@@ -24,6 +24,7 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+@Deprecated(since="0.70.0", forRemoval = true)
 public class Cusum implements EventProcessor<CusumParameters> {
 
     private String selectedNumberMapping;

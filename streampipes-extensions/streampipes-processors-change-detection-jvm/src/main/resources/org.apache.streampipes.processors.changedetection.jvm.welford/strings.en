@@ -1,0 +1,11 @@
+org.apache.streampipes.processors.changedetection.jvm.welford.title=Welford Change Detection
+org.apache.streampipes.processors.changedetection.jvm.welford.description=Change detection for a time series based on Welford's algorithm.
+
+number-mapping.title=Value to observe
+number-mapping.description=Specifies the monitored dimension.
+
+param-k.title=Parameter k
+param-k.description=The sensitivity parameter. High value indicates low sensitivity. Unit: Standard deviations
+
+param-h.title=Parameter h
+param-h.description=The threshold above which a change is detected. Unit: Standard deviations
