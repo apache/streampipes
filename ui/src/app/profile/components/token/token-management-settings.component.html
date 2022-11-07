@@ -50,7 +50,7 @@
             <mat-divider class="divider"></mat-divider>
             <div fxLayout="column" class="subsection mt-10">
                 <div class="subsection-title">Existing API keys</div>
-                <div *ngIf="userData.userApiTokens.length == 0">(no keys available)</div>
+                <div *ngIf="userData.userApiTokens.length === 0">(no keys available)</div>
                 <table mat-table [dataSource]="apiKeyDataSource" class="mat-elevation-z0" *ngIf="userData.userApiTokens.length > 0">
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef> Name</th>
@@ -76,5 +76,13 @@
             </div>
         </sp-split-section>
         <mat-divider></mat-divider>
+        <sp-split-section title="API Docs" subtitle="View the documentation of the StreamPipes API. Here you can see all provided endpoints and how to query them.">
+            <div fxLayout="column" class="subsection">
+                <div fxLayout="column" class="subsection mt-8"></div>
+                <div>
+                    <button mat-button mat-raised-button color="accent" routerLink="/apidocs">View API Docs</button>
+                </div>
+            </div>
+        </sp-split-section>
     </div>
 </div>
