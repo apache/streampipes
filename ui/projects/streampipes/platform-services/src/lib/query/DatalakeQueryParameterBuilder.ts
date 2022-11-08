@@ -16,7 +16,7 @@
  *
  */
 
-import { FieldConfig, SelectedFilter } from '../model/datalake/data-lake-query-config.model';
+import { FieldConfig, MissingValueBehaviour, SelectedFilter } from '../model/datalake/data-lake-query-config.model';
 import { DatalakeQueryParameters } from '../model/datalake/DatalakeQueryParameters';
 
 export class DatalakeQueryParameterBuilder {
@@ -145,6 +145,12 @@ export class DatalakeQueryParameterBuilder {
     if (filters.length > 0) {
       this.queryParams.filter = filters.toString();
     }
+
+    return this;
+  }
+
+  public withMissingValueBehaviour(missingValueBehaviour: MissingValueBehaviour): DatalakeQueryParameterBuilder {
+    this.queryParams.missingValueBehaviour = missingValueBehaviour;
 
     return this;
   }

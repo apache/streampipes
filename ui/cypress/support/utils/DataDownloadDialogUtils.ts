@@ -17,7 +17,7 @@
  */
 
 import { ExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/export-config.model';
-import { DataLakeUtils } from './DataLakeUtils';
+import { DataLakeUtils } from './datalake/DataLakeUtils';
 import { FileNameService } from '../../../src/app/core-ui/data-download-dialog/services/file-name.service';
 import { CsvFormatExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/format-export-config.model';
 
