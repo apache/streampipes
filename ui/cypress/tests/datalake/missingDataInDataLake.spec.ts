@@ -33,11 +33,11 @@ describe('Test missing properties in data lake', () => {
   it('Test table with missing properties', () => {
     DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
 
-    DataLakeWidgetTableUtils.checkRows(3);
+    DataLakeWidgetTableUtils.checkRows(5);
 
     DataLakeUtils.selectDataConfig();
     cy.dataCy('data-explorer-ignore-missing-values-checkbox').children().click();
 
-    DataLakeWidgetTableUtils.checkRows(5);
+    DataLakeWidgetTableUtils.checkRows(3);
   });
 });

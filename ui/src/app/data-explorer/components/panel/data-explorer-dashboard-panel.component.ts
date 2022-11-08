@@ -279,7 +279,7 @@ export class DataExplorerDashboardPanelComponent implements OnInit, OnDestroy {
     this.currentlyConfiguredWidget.baseAppearanceConfig.widgetTitle =
       'New Widget';
     this.currentlyConfiguredWidget.dataConfig = {};
-    this.currentlyConfiguredWidget.dataConfig.ignoreMissingValues = true;
+    this.currentlyConfiguredWidget.dataConfig.ignoreMissingValues = false;
     this.currentlyConfiguredWidget.baseAppearanceConfig.backgroundColor =
       '#FFFFFF';
     this.currentlyConfiguredWidget.baseAppearanceConfig.textColor = '#3e3e3e';
