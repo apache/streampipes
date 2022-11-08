@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, } from '@angular/core';
 import { Observable, of, Subscription, zip } from 'rxjs';
 import { DataExplorerDashboardGridComponent } from '../widget-view/grid-view/data-explorer-dashboard-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';

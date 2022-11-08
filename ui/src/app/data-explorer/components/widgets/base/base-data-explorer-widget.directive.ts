@@ -148,6 +148,9 @@ export abstract class BaseDataExplorerWidgetDirective<T extends DataExplorerWidg
   }
 
   ngOnDestroy(): void {
+  }
+
+  public cleanupSubscriptions(): void {
     this.widgetConfigurationSub.unsubscribe();
     if (this.resizeSub) {
       this.resizeSub.unsubscribe();
