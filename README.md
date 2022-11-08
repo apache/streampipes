@@ -23,6 +23,8 @@
 [![Last commit](https://img.shields.io/github/last-commit/apache/incubator-streampipes.svg)]()
 [![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
 [![Apache StreamPipes](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/q1jdu2&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/q1jdu2/runs)
+[![Contributors](https://img.shields.io/github/contributors/apache/incubator-streampipes)](https://github.com/apache/incubator-streampipes/graphs/contributors)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/apache/incubator-streampipes)
 
 <h1 align="center">
   <br>
@@ -33,9 +35,6 @@
 <h3 align="center">Self-Service Data Analytics for the (Industrial) IoT</h3>
 <h4 align="center">StreamPipes is a self-service (Industrial) IoT toolbox to enable non-technical users to connect
 , analyze and explore IoT data streams. </h4>
-<p align="center">  
-    <img src="https://streampipes.apache.org/img/screenshots/streampipes-overview.png" alt="StreamPipes Pipeline
-     Editor"/>
 </p>
 
 ***
@@ -43,8 +42,9 @@
 ## Table of contents
 
   * [About Apache StreamPipes](#about-apache-streampipes)
-  * [Use Cases](#use-cases)
+  * [User interface](#userinterface)
   * [Installation](#installation)
+  * [Documentation](#documentation)
   * [Building StreamPipes](#building-streampipes)
   * [Pipeline Elements](#pipeline-elements)  
   * [Extending StreamPipes](#extending-streampipes)
@@ -58,30 +58,42 @@
 
 ## About Apache StreamPipes
 
-Apache StreamPipes (incubating) enables flexible modeling of stream processing pipelines by providing a graphical 
-modeling editor on top of existing stream processing frameworks.
+Apache StreamPipes (incubating) makes industrial data analytics easy!
 
-It empowers non-technical users to quickly define and execute processing pipelines based on an easily extensible 
-toolbox of data sources, data processors and data sinks. StreamPipes has an exchangeable runtime execution layer and 
-executes pipelines using one of the provided wrappers, e.g., standalone or distributed in Apache Flink.
+StreamPipes is an end-to-end toolbox for the industrial IoT. 
+It comes with a rich graphical user interface targeted at non-technical users and provides the following features:
 
-Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK allows to easily implement new 
-pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - 
-centrally on your server, in a large-scale cluster or close at the edge.
+* Quickly connect >20 industrial data sources and protocols such as OPC-UA, PLCs, MQTT, REST, Kafka and others
+* Create data harmonization and analytics pipelines using > 100 algorithms and many data sinks to forward data to third-party systems
+* Use the data explorer to visually explore historical data with many widgets tailored for time-series data.
+* A live dashboard to display real-time data from data sources and pipelines, e.g., for shopfloor monitoring.
 
-## Use Cases
+StreamPipes is highly extensible and includes a Java and Python (currently in development phase) SDK to create new 
+pipeline elements and adapters.  
+Pipeline elements are standalone microservices that can run anywhere -
+centrally on your server or close at the edge.
+You want to employ your own machine learning model on live data?
+Just write your own data processor and make it reusable as a pipeline element.
 
-StreamPipes allows you to connect IoT data sources using the SDK or the built-in graphical tool **StreamPipes 
-Connect**.
+Besides that, StreamPipes includes features for production deployments:
+* Assign resources such as pipelines, data streams and dashboards to assets for better organization
+* Built-in user and access rights management
+* User self-registration and email support
+* Export and import resources
 
-The extensible toolbox of data processors and sinks supports use cases such as
-* Continuously **store** IoT data streams to third party systems (e.g., databases)
-* **Filter** measurements on streams (e.g., based on thresholds or value ranges)
-* **Harmonize** data by using data processors for transformations (e.g., by converting measurement units and data types
- or by aggregating measurements)
-* **Detect situations** that should be avoided (e.g., patterns based on time windows)
-* Wrap **Machine Learning models** into data processors to perform classifications or predictions on sensor and image data
-* **Visualize** real-time data from sensors and machines using the built-in Live Dashboard
+## User interface
+
+* Connect data from an OPC-UA server:
+
+![StreamPipes Connect](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-connect.gif)
+
+* Create a pipeline to detect a trend:
+
+![StreamPipes Pipeline Editor](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-pipelines.gif)
+
+* Visually analyze data using the data explorer:
+
+![StreamPipes Data Explorer](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-data-explorer.gif)
 
 
 ## Installation
@@ -97,6 +109,12 @@ The quickest way to run StreamPipes including the latest extensions (adapters, p
 Please follow the instructions provided in the corresponding `README.md` to get started.
 
 For a more in-depth manual, read the [installation guide](https://streampipes.apache.org/docs/docs/try-installation.html).
+
+> TL;DR: Download the latest release, switch to the ``installer/compose`` directory and run ``docker-compose up -d``.
+
+## Documentation
+
+The full documentation, including an overview of pipeline elements, a developer guide and several tutorials is available at [https://streampipes.apache.org/docs/docs/user-guide-introduction.html](https://streampipes.apache.org/docs/docs/user-guide-introduction.html)
 
 ## Building StreamPipes
 
