@@ -149,6 +149,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
             , @Parameter(in = ParameterIn.QUERY, description = "only return the number of results") @QueryParam(QP_COUNT_ONLY) String countOnly
             , @Parameter(in = ParameterIn.QUERY, description = "auto-aggregate the number of results to avoid browser overload") @QueryParam(QP_AUTO_AGGREGATE) boolean autoAggregate
             , @Parameter(in = ParameterIn.QUERY, description = "filter conditions (a comma-separated list of filter conditions such as [field,operator,condition])") @QueryParam(QP_FILTER) String filter
+            , @Parameter(in = ParameterIn.QUERY, description = "missingValueBehaviour (ignore or empty)") @QueryParam(QP_MISSING_VALUE_BEHAVIOUR) String missingValueBehaviour
             , @Parameter(in = ParameterIn.QUERY, description = "the maximum amount of resulting events, when too high the query status is set to TOO_MUCH_DATA") @QueryParam(QP_MAXIMUM_AMOUNT_OF_EVENTS) Integer maximumAmountOfResults
             , @Context UriInfo uriInfo) {
 
@@ -159,7 +160,8 @@ public class DataLakeResourceV4 extends AbstractRestResource {
         } else {
             ProvidedQueryParams sanitizedParams = populate(measurementID, queryParams);
             try {
-                SpQueryResult result = this.dataLakeManagement.getData(sanitizedParams, true);
+                SpQueryResult result =
+                    this.dataLakeManagement.getData(sanitizedParams, isIgnoreMissingValues(missingValueBehaviour));
                 return ok(result);
             } catch (RuntimeException e) {
                 return badRequest(StreamPipesErrorMessage.from(e));
@@ -215,18 +217,11 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                 format = "csv";
             }
 
-            boolean ignoreMissingValues;
-            if ("ignore".equals(missingValueBehaviour)) {
-                ignoreMissingValues = true;
-            } else {
-                ignoreMissingValues = false;
-            }
-
             String outputFormat = format;
             StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
-                ignoreMissingValues,
+                isIgnoreMissingValues(missingValueBehaviour),
                 output);
 
             return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
@@ -234,6 +229,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                     .build();
         }
     }
+
 
     @GET
     @Path("/configuration")
@@ -265,4 +261,16 @@ public class DataLakeResourceV4 extends AbstractRestResource {
 
         return new ProvidedQueryParams(measurementId, queryParamMap);
     }
+
+    // Checks if the parameter for missing value behaviour is set
+    private boolean isIgnoreMissingValues(String missingValueBehaviour) {
+        boolean ignoreMissingValues;
+        if ("ignore".equals(missingValueBehaviour)) {
+            ignoreMissingValues = true;
+        } else {
+            ignoreMissingValues = false;
+        }
+        return ignoreMissingValues;
+    }
+
 }

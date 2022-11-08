@@ -18,7 +18,7 @@
 
 import { ExportConfig } from '../../../src/app/core-ui/data-download-dialog/model/export-config.model';
 import { DataDownloadDialogUtils } from '../../support/utils/DataDownloadDialogUtils';
-import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 
 

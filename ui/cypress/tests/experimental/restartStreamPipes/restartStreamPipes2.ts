@@ -17,7 +17,7 @@
  */
 
 import { DashboardUtils } from '../../../support/utils/DashboardUtils';
-import { DataLakeUtils } from '../../../support/utils/DataLakeUtils';
+import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 describe('Validate StreamPipes after restart', () => {
   beforeEach('Setup Test', () => {

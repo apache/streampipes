@@ -44,6 +44,7 @@ export class DataViewQueryGeneratorService {
           const dataLakeConfiguration = this.generateQuery(startTime,
               endTime,
               sourceConfig,
+              dataConfig.ignoreMissingValues,
               maximumResultingEvents);
 
           return this.dataLakeRestService
@@ -54,6 +55,7 @@ export class DataViewQueryGeneratorService {
   generateQuery(startTime: number,
                 endTime: number,
                 sourceConfig: SourceConfig,
+                ignoreEventsWithMissingValues: boolean,
                 maximumResultingEvents: number = -1): DatalakeQueryParameters {
     const queryBuilder = DatalakeQueryParameterBuilder.create(startTime, endTime);
     const queryConfig = sourceConfig.queryConfig;
@@ -90,6 +92,12 @@ export class DataViewQueryGeneratorService {
       } else {
         queryBuilder.withAggregation(queryConfig.aggregationTimeUnit, queryConfig.aggregationValue);
       }
+    }
+
+    if (ignoreEventsWithMissingValues) {
+      queryBuilder.withMissingValueBehaviour('ignore');
+    } else {
+      queryBuilder.withMissingValueBehaviour('empty');
     }
 
     const dataLakeQueryParameter = queryBuilder.build();

@@ -31,7 +31,6 @@ import { DataExplorerFieldProviderService } from '../../../services/data-explore
 import { WidgetType } from '../../../registry/data-explorer-widgets';
 
 @Directive()
-// eslint-disable-next-line @angular-eslint/directive-class-suffix
 export abstract class BaseWidgetConfig<T extends DataExplorerWidgetModel, V extends DataExplorerVisConfig> implements OnChanges {
 
   @Input() currentlyConfiguredWidget: T;

@@ -16,6 +16,8 @@
  *
  */
 
+import { MissingValueBehaviour } from './data-lake-query-config.model';
+
 export class DatalakeQueryParameters {
   public columns: string;
   public startDate: number;
@@ -30,6 +32,7 @@ export class DatalakeQueryParameters {
   public countOnly: boolean;
   public autoAggregate: boolean;
   public filter: string;
+  public missingValueBehaviour: MissingValueBehaviour;
   public maximumAmountOfEvents: number;
 
   // should be only used for multi-query requests

@@ -25,7 +25,6 @@ import {
   DataViewDataExplorerService,
   SourceConfig
 } from '@streampipes/platform-services';
-import { MatSelectChange } from '@angular/material/select';
 import { Tuple2 } from '../../../../core-model/base/Tuple2';
 import { zip } from 'rxjs';
 import { WidgetConfigurationService } from '../../../services/widget-configuration.service';

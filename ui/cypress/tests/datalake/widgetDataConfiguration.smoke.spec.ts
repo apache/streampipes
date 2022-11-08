@@ -17,7 +17,8 @@
  */
 
 import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
-import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
+import { DataLakeWidgetTableUtils } from '../../support/utils/datalake/DataLakeWidgetTableUtils';
 
 
 describe('Test Table View in Data Explorer', () => {
@@ -38,7 +39,7 @@ describe('Test Table View in Data Explorer', () => {
     DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
 
     // Validate that X lines are available
-    checkTableRows(10);
+    DataLakeWidgetTableUtils.checkRows(10);
 
     // Go back to data configuration
     DataLakeUtils.selectDataConfig();
@@ -49,26 +50,26 @@ describe('Test Table View in Data Explorer', () => {
         // Test number
     let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    checkTableRows(2);
+    DataLakeWidgetTableUtils.checkRows(2);
     DataLakeUtils.dataConfigRemoveFilter();
-    checkTableRows(10);
+    DataLakeWidgetTableUtils.checkRows(10);
 
     // Test number greater then
     filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    checkTableRows(5);
+    DataLakeWidgetTableUtils.checkRows(5);
     DataLakeUtils.dataConfigRemoveFilter();
 
     // Test number smaller then
     filterConfig = new DataLakeFilterConfig('randomnumber', '50', '<');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    checkTableRows(5);
+    DataLakeWidgetTableUtils.checkRows(5);
     DataLakeUtils.dataConfigRemoveFilter();
 
     // Test boolean
     filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
     DataLakeUtils.dataConfigAddFilter(filterConfig);
-    checkTableRows(6);
+    DataLakeWidgetTableUtils.checkRows(6);
     DataLakeUtils.dataConfigRemoveFilter();
 
     // Test string & if filter is persisted correctly
@@ -76,10 +77,10 @@ describe('Test Table View in Data Explorer', () => {
     DataLakeUtils.checkIfFilterIsSet(0);
     DataLakeUtils.dataConfigAddFilter(filterConfig);
     DataLakeUtils.checkIfFilterIsSet(1);
-    checkTableRows(4);
+    DataLakeWidgetTableUtils.checkRows(4);
     DataLakeUtils.saveAndReEditWidget('TestView');
     DataLakeUtils.checkIfFilterIsSet(1);
-    checkTableRows(4);
+    DataLakeWidgetTableUtils.checkRows(4);
     DataLakeUtils.dataConfigRemoveFilter();
 
     /**
@@ -90,15 +91,11 @@ describe('Test Table View in Data Explorer', () => {
     cy.wait(1000);
     cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).first({ timeout: 10000 }).contains('a', { timeout: 10000 });
     cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).last({ timeout: 10000 }).contains('c', { timeout: 10000 });
-    checkTableRows(10);
+    DataLakeWidgetTableUtils.checkRows(10);
     DataLakeUtils.saveAndReEditWidget('TestView');
     cy.dataCy('data-explorer-group-by-randomtext').find('input').should('be.checked');
     DataLakeUtils.clickGroupBy('randomtext');
 
   });
-
-  const checkTableRows = (numberOfRows: number) => {
-    cy.dataCy('data-explorer-table-row-timestamp', { timeout: 10000 }).should('have.length', numberOfRows);
-  };
 
 });

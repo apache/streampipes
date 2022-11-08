@@ -47,7 +47,8 @@ export class DataExportService {
         exportConfig.formatExportConfig.exportFormat,
         exportConfig.formatExportConfig['delimiter'],
         exportConfig.dataExportConfig.missingValueBehaviour,
-        this.generateQueryRequest(exportConfig, dataDownloadDialogModel));
+        this.generateQueryRequest(exportConfig, dataDownloadDialogModel)
+      );
     } else {
       // case for 'all' and 'customInverval'
       let startTime, endTime = undefined;
@@ -95,7 +96,9 @@ export class DataExportService {
       .generateQuery(
         exportConfig.dataExportConfig.dateRange.startDate.getTime(),
         exportConfig.dataExportConfig.dateRange.startDate.getTime(),
-        dataDownloadDialogModel.dataExplorerDataConfig.sourceConfigs[selectedQueryIndex]);
+        dataDownloadDialogModel.dataExplorerDataConfig.sourceConfigs[selectedQueryIndex],
+        false
+      );
   }
 
   /**

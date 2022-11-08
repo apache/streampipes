@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { DataLakeUtils } from '../../support/utils/DataLakeUtils';
+import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 
 describe('Test Table View in Data Explorer', () => {
 
