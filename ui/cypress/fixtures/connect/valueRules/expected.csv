@@ -1,2 +1,2 @@
-time;temperature;value
+timestamp;temperature;value
 1640350512123;50.003334045410156;100.0

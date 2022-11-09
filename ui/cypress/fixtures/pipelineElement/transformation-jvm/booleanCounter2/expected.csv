@@ -1,4 +1,4 @@
-time;counter;randomboolean
+timestamp;counter;randomboolean
 1623871501064;1;true
 1623871502070;2;false
 1623871503078;3;true

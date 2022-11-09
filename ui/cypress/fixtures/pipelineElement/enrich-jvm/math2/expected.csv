@@ -1,3 +1,3 @@
-time;calculationResult;temperature1;temperature2
+timestamp;calculationResult;temperature1;temperature2
 1623871499055;1.0;4.0;4.0
 1623871500059;20.0;100.0;5.0
