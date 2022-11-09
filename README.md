@@ -167,10 +167,10 @@ The source code of all included pipeline elements and adapters can be found [her
 
 ## Extending StreamPipes
 
-You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/dev-guide-tutorial-processors) can be used to integrate your existing processing logic into StreamPipes. 
+You can easily add your own data streams, processors or sinks. A [Java-based SDK](https://streampipes.apache.org/docs/docs/extend-tutorial-data-processors.html) can be used to integrate your existing processing logic into StreamPipes. 
 Pipeline elements are packaged as Docker images and can be installed at runtime, whenever your requirements change.
 
-👉 Check our developer guide at [https://streampipes.apache.org/docs/docs/dev-guide-introduction](https://streampipes.apache.org/docs/docs/dev-guide-introduction).
+👉 Check our developer guide at [https://streampipes.apache.org/docs/docs/extend-setup.html](https://streampipes.apache.org/docs/docs/extend-setup.html).
 
 ## Bugs and Feature Requests
 
