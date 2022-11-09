@@ -18,113 +18,131 @@
 
 package org.apache.streampipes.model.datalake;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.shared.annotation.TsIgnore;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public class DataLakeMeasure extends UnnamedStreamPipesEntity {
 
-    public final static String CURRENT_SCHEMA_VERSION = "1.1";
+  public static final String CURRENT_SCHEMA_VERSION = "1.1";
 
-    @JsonProperty("_rev")
-    private @SerializedName("_rev") String rev;
+  private static final String STREAM_PREFIX_DELIMITER = "::";
 
-    private String measureName;
+  public static final String ASSERTION_ERROR_MESSAGE = "timestamp field requires a stream prefix (e.g. s0::timestamp)";
 
-    private String timestampField;
-    private EventSchema eventSchema;
-    private String pipelineId;
-    private String pipelineName;
-    private boolean pipelineIsRunning;
+  @JsonProperty("_rev")
+  private @SerializedName("_rev") String rev;
 
-    private String schemaVersion;
+  private String measureName;
 
-    public DataLakeMeasure() {
-        super();
-    }
+  private String timestampField;
+  private EventSchema eventSchema;
+  private String pipelineId;
+  private String pipelineName;
+  private boolean pipelineIsRunning;
 
-    public DataLakeMeasure(DataLakeMeasure other) {
-        super(other);
-        this.measureName = other.getMeasureName();
-        this.eventSchema = new EventSchema(other.getEventSchema());
+  private String schemaVersion;
 
-    }
+  public DataLakeMeasure() {
+    super();
+  }
 
-    public DataLakeMeasure(String measureName, EventSchema eventSchema) {
-        this.measureName = measureName;
-        this.eventSchema = eventSchema;
-    }
+  public DataLakeMeasure(DataLakeMeasure other) {
+    super(other);
+    this.measureName = other.getMeasureName();
+    this.eventSchema = new EventSchema(other.getEventSchema());
 
-    public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema) {
-        this.measureName = measureName;
-        this.eventSchema = eventSchema;
-        this.timestampField = timestampField;
-    }
+  }
 
-    public String getMeasureName() {
-        return measureName;
-    }
+  public DataLakeMeasure(String measureName, EventSchema eventSchema) {
+    this.measureName = measureName;
+    this.eventSchema = eventSchema;
+  }
 
-    public void setMeasureName(String measureName) {
-        this.measureName = measureName;
-    }
+  public DataLakeMeasure(String measureName, String timestampField, EventSchema eventSchema) {
+    this.measureName = measureName;
+    this.eventSchema = eventSchema;
+    this.timestampField = timestampField;
+  }
 
-    public EventSchema getEventSchema() {
-        return eventSchema;
-    }
+  public String getMeasureName() {
+    return measureName;
+  }
 
-    public void setEventSchema(EventSchema eventSchema) {
-        this.eventSchema = eventSchema;
-    }
+  public void setMeasureName(String measureName) {
+    this.measureName = measureName;
+  }
 
-    public String getPipelineId() {
-        return pipelineId;
-    }
+  public EventSchema getEventSchema() {
+    return eventSchema;
+  }
 
-    public void setPipelineId(String pipelineId) {
-        this.pipelineId = pipelineId;
-    }
+  public void setEventSchema(EventSchema eventSchema) {
+    this.eventSchema = eventSchema;
+  }
 
-    public String getPipelineName() {
-        return pipelineName;
-    }
+  public String getPipelineId() {
+    return pipelineId;
+  }
 
-    public void setPipelineName(String pipelineName) {
-        this.pipelineName = pipelineName;
-    }
+  public void setPipelineId(String pipelineId) {
+    this.pipelineId = pipelineId;
+  }
 
-    public boolean isPipelineIsRunning() {
-        return pipelineIsRunning;
-    }
+  public String getPipelineName() {
+    return pipelineName;
+  }
 
-    public void setPipelineIsRunning(boolean pipelineIsRunning) {
-        this.pipelineIsRunning = pipelineIsRunning;
-    }
+  public void setPipelineName(String pipelineName) {
+    this.pipelineName = pipelineName;
+  }
 
-    public String getSchemaVersion() {
-        return schemaVersion;
-    }
+  public boolean isPipelineIsRunning() {
+    return pipelineIsRunning;
+  }
 
-    public void setSchemaVersion(String schemaVersion) {
-        this.schemaVersion = schemaVersion;
-    }
+  public void setPipelineIsRunning(boolean pipelineIsRunning) {
+    this.pipelineIsRunning = pipelineIsRunning;
+  }
 
-    public String getTimestampField() {
-        return timestampField;
-    }
+  public String getSchemaVersion() {
+    return schemaVersion;
+  }
 
-    public void setTimestampField(String timestampField) {
-        this.timestampField = timestampField;
-    }
+  public void setSchemaVersion(String schemaVersion) {
+    this.schemaVersion = schemaVersion;
+  }
 
-    public String getRev() {
-        return rev;
-    }
+  public String getTimestampField() {
+    return timestampField;
+  }
 
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
+
+  /**
+   * This can be used to get the name of the timestamp property without the stream prefix
+   * @return the name of the timestamp property
+   */
+  @TsIgnore
+  @JsonIgnore
+  public String getTimestampFieldName() {
+    return timestampField.split(STREAM_PREFIX_DELIMITER)[1];
+  }
+
+  public void setTimestampField(String timestampField) {
+    assert timestampField.split(STREAM_PREFIX_DELIMITER).length == 2 : ASSERTION_ERROR_MESSAGE;
+    this.timestampField = timestampField;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
 }

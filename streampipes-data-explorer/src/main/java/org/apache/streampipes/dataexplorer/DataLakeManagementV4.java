@@ -67,7 +67,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_AUTO_AGGREGATE;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_CSV_DELIMITER;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_LIMIT;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_MAXIMUM_AMOUNT_OF_EVENTS;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_PAGE;
 
 public class DataLakeManagementV4 {
 
@@ -85,6 +89,13 @@ public class DataLakeManagementV4 {
 
     public DataLakeMeasure getById(String measureId) {
         return getDataLakeStorage().findOne(measureId);
+    }
+
+    private Optional<DataLakeMeasure> findByMeasurementName(String measurementName) {
+        return getAllMeasurements()
+            .stream()
+            .filter(measurement -> measurement.getMeasureName().equals(measurementName))
+            .findFirst();
     }
 
     public SpQueryResult getData(ProvidedQueryParams queryParams, boolean ignoreMissingData) throws IllegalArgumentException {
@@ -114,6 +125,8 @@ public class DataLakeManagementV4 {
             params.update(QP_LIMIT, 500000);
         }
 
+        var measurement = findByMeasurementName(params.getMeasurementId()).get();
+
         SpQueryResult dataResult;
         //JSON
         if (format.equals("json")) {
@@ -131,7 +144,10 @@ public class DataLakeManagementV4 {
                 params.update(SupportedDataLakeQueryParameters.QP_PAGE, String.valueOf(i));
                 dataResult = getData(params, ignoreMissingValues);
 
+
                 if (dataResult.getTotal() > 0) {
+                    changeTimestampHeader(measurement, dataResult);
+
                     for (List<Object> row : dataResult.getAllDataSeries().get(0).getRows()) {
                         if (!isFirstDataObject) {
                             outputStream.write(toBytes(","));
@@ -179,8 +195,12 @@ public class DataLakeManagementV4 {
             do {
                 params.update(SupportedDataLakeQueryParameters.QP_PAGE, String.valueOf(i));
                 dataResult = getData(params, ignoreMissingValues);
+
+
                 //Send first header
                 if (dataResult.getTotal() > 0) {
+                    changeTimestampHeader(measurement, dataResult);
+
                     if (isFirstDataObject) {
                         boolean isFirst = true;
                         for (int i1 = 0; i1 < dataResult.getHeaders().size(); i1++) {
@@ -219,6 +239,15 @@ public class DataLakeManagementV4 {
                 i++;
             } while (dataResult.getTotal() > 0);
         }
+    }
+
+    /**
+     * Replaces the field 'time' of the data result with the actual timestamp field name of the measurement
+     * @param measurement contains the actual timestamp name value
+     * @param dataResult the query result of the database with 'time' as timestamp field name
+     */
+    private void changeTimestampHeader(DataLakeMeasure measurement, SpQueryResult dataResult) {
+        dataResult.getHeaders().set(0, measurement.getTimestampFieldName());
     }
 
     public boolean removeAllMeasurements() {
