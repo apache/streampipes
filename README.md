@@ -79,17 +79,17 @@ Just write your own data processor and make it reusable as a pipeline element.
 Besides that, StreamPipes includes features for production deployments:
 
 * Assign resources such as pipelines, data streams and dashboards to assets for better organization
+* Monitoring & metrics of pipelines and adapters
 * Built-in user and access rights management
-* User self-registration and email support
 * Export and import resources
 
 ## User interface
 
-* Connect data from an OPC-UA server:
+* Connect data from an OPC-UA server following a three-step configuration process:
 
 ![StreamPipes Connect](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-connect.gif)
 
-* Create a pipeline to detect a trend:
+* Create a pipeline to detect a continuous decrease using a trend detection data processor and a ``Notification``sink:
 
 ![StreamPipes Pipeline Editor](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-pipelines.gif)
 
@@ -116,7 +116,7 @@ For a more in-depth manual, read the [installation guide](https://streampipes.ap
 
 ## Documentation
 
-The full documentationis available [here](https://streampipes.apache.org/docs/index.html).
+The full documentation is available [here](https://streampipes.apache.org/docs/index.html).
 
 Quick Links:
 
