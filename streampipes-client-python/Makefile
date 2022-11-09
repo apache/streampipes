@@ -27,4 +27,4 @@ livedoc: doc
 	mkdocs serve --dirtyreload
 
 rebase:
-	git fetch && git rebase origin/master
+	git fetch && git rebase origin/dev
