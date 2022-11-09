@@ -63,14 +63,14 @@ StreamPipes is an end-to-end toolbox for the industrial IoT.
 It comes with a rich graphical user interface targeted at non-technical users and provides the following features:
 
 
-* Quickly connect >20 industrial data sources and protocols such as OPC-UA, PLCs, MQTT, REST, Pulsar, Kafka and others
-* Create data harmonization and analytics pipelines using > 100 algorithms and many data sinks to forward data to third-party systems
+* Quickly connect >20 industrial protocols such as OPC-UA, PLCs, MQTT, REST, Pulsar, Kafka and others.
+* Create data harmonization and analytics pipelines using > 100 algorithms and data sinks to forward data to third-party systems.
 * Use the data explorer to visually explore historical data with many widgets tailored for time-series data.
 * A live dashboard to display real-time data from data sources and pipelines, e.g., for shopfloor monitoring.
 
 
-StreamPipes is highly extensible and includes a Java and Python (currently in development phase) SDK to create new 
-pipeline elements and adapters.  
+StreamPipes is highly extensible and includes a Java SDK to create new 
+pipeline elements and adapters. Python support is available in an early development stage - stay tuned!  
 Pipeline elements are standalone microservices that can run anywhere -
 centrally on your server or close at the edge.
 You want to employ your own machine learning model on live data?
