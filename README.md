@@ -35,6 +35,10 @@
 <h3 align="center">Self-Service Data Analytics for the (Industrial) IoT</h3>
 <h4 align="center">StreamPipes is a self-service (Industrial) IoT toolbox to enable non-technical users to connect
 , analyze and explore IoT data streams. </h4>
+<p align="center">  
+    <img src="https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-overview.png" alt="StreamPipes Overview"/>
+</p>
+
 
 ***
 
