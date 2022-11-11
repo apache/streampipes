@@ -36,7 +36,7 @@
 <h4 align="center">StreamPipes is a self-service (Industrial) IoT toolbox to enable non-technical users to connect
 , analyze and explore IoT data streams. </h4>
 <p align="center">  
-    <img src="https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-overview.png" alt="StreamPipes Overview"/>
+    <img src="https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-overview.png" alt="StreamPipes Overview"/>
 </p>
 
 
@@ -91,15 +91,15 @@ Besides that, StreamPipes includes features for production deployments:
 
 * Connect data from an OPC-UA server following a three-step configuration process:
 
-![StreamPipes Connect](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-connect.gif)
+![StreamPipes Connect](https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-connect.gif)
 
 * Create a pipeline to detect a continuous decrease using a trend detection data processor and a ``Notification``sink:
 
-![StreamPipes Pipeline Editor](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-pipelines.gif)
+![StreamPipes Pipeline Editor](https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-pipelines.gif)
 
 * Visually analyze data using the data explorer:
 
-![StreamPipes Data Explorer](https://raw.githubusercontent.com/apache/incubator-streampipes/STREAMPIPES-622/images/streampipes-data-explorer.gif)
+![StreamPipes Data Explorer](https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-data-explorer.gif)
 
 
 ## Installation
