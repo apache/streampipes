@@ -45,6 +45,11 @@ public class Event {
     this.fieldMap = new HashMap<>();
   }
 
+  public Event(SourceInfo sourceInfo) {
+    this();
+    this.sourceInfo = sourceInfo;
+  }
+
   public Map<String, AbstractField> getFields() {
     return fieldMap;
   }
