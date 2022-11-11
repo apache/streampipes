@@ -25,27 +25,35 @@ import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.container.util.GroundingDebugUtils;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
+import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventFactory;
+import org.apache.streampipes.model.runtime.SchemaInfo;
+import org.apache.streampipes.model.runtime.SourceInfo;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.wrapper.routing.RawDataProcessor;
 import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclarer, RawDataProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(StreamPipesFunction.class);
   private Map<String, SpInputCollector> inputCollectors;
-  private final Map<String, String> sourceInfoMapper;
+  private final Map<String, SourceInfo> sourceInfoMapper;
+  private final Map<String, SchemaInfo> schemaInfoMapper;
 
   public StreamPipesFunction() {
     this.sourceInfoMapper = new HashMap<>();
+    this.schemaInfoMapper = new HashMap<>();
   }
 
   @Override
@@ -53,7 +61,19 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
     FunctionContext context = new FunctionContextGenerator(
         this.getFunctionId().getId(), serviceGroup, this.requiredStreamIds()
     ).generate();
-    context.getStreams().forEach(stream -> sourceInfoMapper.put(getTopic(stream), stream.getElementId()));
+
+    // Creates a source info for each incoming SpDataStream
+    // The index is used to create the selector prefix for the SourceInfo
+    AtomicInteger index = new AtomicInteger();
+    context
+        .getStreams()
+        .forEach(stream -> {
+          var topic = getTopic(stream);
+          sourceInfoMapper.put(topic, createSourceInfo(stream, index.get()));
+          schemaInfoMapper.put(topic, createSchemaInfo(stream.getEventSchema()));
+          index.getAndIncrement();
+        });
+
     this.inputCollectors = getInputCollectors(context.getStreams());
     LOG.info("Invoking function {}:{}", this.getFunctionId().getId(), this.getFunctionId().getVersion());
     onServiceStarted(context);
@@ -67,11 +87,15 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
   }
 
   @Override
-  public void process(Map<String, Object> rawEvent, String sourceInfo) {
+  public void process(Map<String, Object> rawEvent, String topicName) {
     try {
-      var elementId = sourceInfoMapper.get(sourceInfo);
-      this.onEvent(EventFactory.fromMap(rawEvent), elementId);
-      increaseCounter(elementId);
+      var sourceInfo = sourceInfoMapper.get(topicName);
+
+      var event = EventFactory
+          .fromMap(rawEvent, sourceInfo, schemaInfoMapper.get(topicName));
+
+      this.onEvent(event, sourceInfo.getSourceId());
+      increaseCounter(sourceInfo.getSourceId());
     } catch (RuntimeException e) {
       addError(e);
     }
@@ -127,5 +151,16 @@ public abstract class StreamPipesFunction implements IStreamPipesFunctionDeclare
                                String streamId);
 
   public abstract void onServiceStopped();
+
+  private SourceInfo createSourceInfo(SpDataStream stream, int streamIndex) {
+    return new SourceInfo(
+        stream.getElementId(),
+        PropertySelectorConstants.STREAM_ID_PREFIX
+            + streamIndex);
+  }
+
+  private SchemaInfo createSchemaInfo(EventSchema eventSchema) {
+    return new SchemaInfo(eventSchema, new ArrayList<>());
+  }
 
 }
