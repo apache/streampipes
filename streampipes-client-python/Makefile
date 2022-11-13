@@ -17,14 +17,36 @@
 
 COMMIT_HASH := $(shell eval git rev-parse HEAD)
 
-format:
-	pre-commit run --all-files
+.PHONY: check
+check: mypy lint unit-tests
 
+.PHONY: doc
 doc:
 	mkdocs build
 
+.PHONY: lint
+lint:
+	flake8 streampipes_client --max-line-length 120
+
+.PHONY: doc
 livedoc: doc
 	mkdocs serve --dirtyreload
 
+.PHONY: mypy
+mypy:
+	mypy streampipes_client --warn-unused-ignores --warn-redundant-casts --pretty
+
+.PHONY: rebase
 rebase:
 	git fetch && git rebase origin/dev
+
+.PHONY: reformat-all
+reformat-all:
+	pyupgrade --py38 --keep-runtime-typing
+	autoflake -r --remove-all-unused-imports --expand-star-imports --in-place streampipes_client tests
+	isort --profile black streampipes_client tests
+	black --line-length=120 streampipes_client tests
+
+.PHONY: unit-tests
+unit-tests:
+	pytest --cov=streampipes_client tests/ --cov-fail-under=90 --cov-report term-missing --no-cov-on-fail

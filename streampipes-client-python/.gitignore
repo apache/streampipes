@@ -186,7 +186,6 @@ cover/
 .pybuilder/
 target/
 
-# Jupyter Notebook
 
 # IPython
 
@@ -216,6 +215,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+build/
+Scripts/
 
 # Spyder project settings
 .spyderproject
