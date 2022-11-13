@@ -32,12 +32,14 @@ repos:
         language: python
         types: [ python ]
         entry: pyupgrade --py38 --keep-runtime-typing
+        verbose: true
 
       - id: autoflake
         name: autoflake
         language: python
         types: [ python ]
-        entry: autoflake --remove-all-unused-imports --expand-star-imports --in-place
+        entry: autoflake --remove-all-unused-imports --expand-star-imports --in-place --remove-unused-variables --remove-duplicate-keys
+        verbose: true
 
       - id: isort
         name: isort
@@ -49,14 +51,20 @@ repos:
       - id: black
         name: black
         language: python
-        types: [python]
+        types: [ python ]
         entry: black --line-length=120
-        require_serial: true
+        verbose: true
 
-      - id: isort
-        name: isort
+      - id: mypy
+        name: mypy
         language: python
-        types: [python]
-        entry: isort --profile black
-        require_serial: true
+        types: [ python ]
+        entry: mypy --warn-unused-ignores --warn-redundant-casts --pretty
+        verbose: true
+
+      - id: flake8
+        name: flake8
+        language: python
+        types: [ python ]
+        entry: flake8 --max-line-length 120
         verbose: true
