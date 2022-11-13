@@ -40,6 +40,7 @@ dev_packages = base_packages + [
     "autoflake>=1.7.7",
     "black>=22.10.0",
     "flake8>=5.0.4",
+    "interrogate>=1.5.0",
     "isort>=5.10.1",
     "mypy>=0.990",
     "pandas-stubs>=1.5.1.221024",

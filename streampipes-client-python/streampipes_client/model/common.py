@@ -38,9 +38,15 @@ def _snake_to_camel_case(snake_case_string: str) -> str:
 
 
 class BasicModel(BaseModel):
+    """Basic model class used for the whole Python StreamPipes data model."""
+
     element_id: Optional[StrictStr]
 
     class Config:
+        """Configuration class for Pydantic.
+        Defines alias generator to convert field names from camelCase (API) to snake_case (Python codebase).
+        """
+
         alias_generator = _snake_to_camel_case
 
 
