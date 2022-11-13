@@ -31,19 +31,26 @@ REQUIRES_PYTHON = ">=3.8.0"
 
 # Package requirements.
 base_packages = [
+    "pandas>=1.5.1",
+    "pydantic>=1.10.2",
+    "requests>=2.28.1",
 ]
 
 dev_packages = base_packages + [
-    "mypy>=0.990",
-    "pre-commit>=2.20.0",
-    "pytest>=7.2.0",
-    "pytest-cov>=4.0.0",
+    "autoflake>=1.7.7",
     "black>=22.10.0",
     "flake8>=5.0.4",
     "isort>=5.10.1",
+    "mypy>=0.990",
+    "pandas-stubs>=1.5.1.221024",
+    "pre-commit>=2.20.0",
+    "pytest>=7.2.0",
+    "pytest-cov>=4.0.0",
+    "pyupgrade>=3.2.2",
+    "types-requests>=2.28.11.4",
 ]
 
-docs_packages = [ #todo Cedric check versions
+docs_packages = [
     "mkdocs>=1.2.3",
     "mkdocs-material>=8.1.11",
     "mkdocstrings[python]>=0.19.0",
@@ -79,7 +86,6 @@ setuptools.setup(
         "test": dev_packages,
         "docs": docs_packages,
         "all": dev_packages + docs_packages,
-        ":python_version == '3.8'": ["dataclasses"], # todo check if required
     },
     include_package_data=True,
     license="Apache License 2.0",

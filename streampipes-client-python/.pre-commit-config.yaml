@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-files: streampipes_client, tests
+files: streampipes_client/|tests/
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
@@ -28,32 +27,36 @@ repos:
 
   - repo: local
     hooks:
+      - id: pyupgrade
+        name: pyupgrade
+        language: python
+        types: [ python ]
+        entry: pyupgrade --py38 --keep-runtime-typing
+
+      - id: autoflake
+        name: autoflake
+        language: python
+        types: [ python ]
+        entry: autoflake --remove-all-unused-imports --expand-star-imports --in-place
+
+      - id: isort
+        name: isort
+        language: python
+        types: [ python ]
+        entry: isort --profile black
+        verbose: true
+
       - id: black
         name: black
         language: python
         types: [python]
-        entry: black
+        entry: black --line-length=120
+        require_serial: true
 
       - id: isort
         name: isort
         language: python
         types: [python]
-        entry: isort
-
-      - id: flake8
-        name: flake8
-        language: python
-        types: [python]
-        entry: flake8
-
-      - id: mypy
-        name: mypy
-        language: python
-        types: [python]
-        entry: mypy
-
-      - id: pyupgrade
-        name: pyupgrade
-        language: python
-        types: [python]
-        entry: pyupgrade --py38-plus
+        entry: isort --profile black
+        require_serial: true
+        verbose: true

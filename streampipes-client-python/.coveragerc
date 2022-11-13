@@ -1,0 +1,7 @@
+[run]
+omit = test/* \
+       *\__*__.py
+
+[report]
+skip_empty = true
+skip_covered = true
