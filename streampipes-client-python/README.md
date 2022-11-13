@@ -15,3 +15,32 @@
   ~ limitations under the License.
   ~
 -->
+
+# StreamPipes client for Python
+
+Apache StreamPipes meets Python! We are working highly motivated on a Python-based client to interact with StreamPipes.
+In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
+and the amazing universe of data analytics libraries in Python.
+
+<h1 align="center">
+  <br>
+   <img src="https://github.com/bossenti/incubator-streampipes/blob/feature/STREAMPIPES-607/streampipes-client-python/docs/img/streampipes-python.png"
+   alt="StreamPipes Logo with Python" title="Apache StreamPipes Logo with Python" width="75%"/>
+  <br>
+</h1>
+
+<br>
+
+**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
+<br>
+<br>
+**The current version of this Python client is still in alpha phase at best.**
+<br>
+**This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
+<br>
+**Please consider it only as a sneak preview.**
+<br>
+<br>
+**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
+
+<br>
