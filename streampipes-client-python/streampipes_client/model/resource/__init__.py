@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-from .client import StreamPipesClient
+from .data_lake_measure import DataLakeMeasure
 
 __all__ = [
-    "StreamPipesClient",
+    "DataLakeMeasure",
 ]
