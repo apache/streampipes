@@ -16,11 +16,6 @@
   ~
 -->
 
-# StreamPipes client for Python
-
-Apache StreamPipes meets Python! We are working highly motivated on a Python-based client to interact with StreamPipes.
-In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
-and the amazing universe of data analytics libraries in Python.
 
 <h1 align="center">
   <br>
@@ -28,6 +23,16 @@ and the amazing universe of data analytics libraries in Python.
    alt="StreamPipes Logo with Python" title="Apache StreamPipes Logo with Python" width="75%"/>
   <br>
 </h1>
+<h4 align="center"><a href="[StreamPipes](https://github.com/apache/incubator-streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
+
+<br>
+<h3 align="center">Apache StreamPipes client for Python</h3>
+
+<p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python-based client to interact with StreamPipes.
+In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
+and the amazing universe of data analytics libraries in Python. </p>
+
+---
 
 <br>
 
