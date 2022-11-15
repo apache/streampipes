@@ -21,27 +21,28 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class ProjTransformationParameter extends EventProcessorBindingParams {
 
-    private final String wkt_string;
-    private final String source_epsg;
-    private final Integer target_epsg;
+    private final String wktString;
+    private final String sourceEpsg;
+    private final Integer targetEpsg;
 
 
-    public ProjTransformationParameter(DataProcessorInvocation graph, String wkt_String, String source_epsg, Integer target_epsg) {
+    public ProjTransformationParameter(DataProcessorInvocation graph, String wktString, String sourceEpsg,
+                                       Integer targetEpsg) {
         super(graph);
-        this.wkt_string = wkt_String;
-        this.source_epsg = source_epsg;
-        this.target_epsg = target_epsg;
+        this.wktString = wktString;
+        this.sourceEpsg = sourceEpsg;
+        this.targetEpsg = targetEpsg;
     }
 
-    public String getWkt_string() {
-        return wkt_string;
+    public String getWktString() {
+        return wktString;
     }
 
     public String getEpsgCode() {
-        return source_epsg;
+        return sourceEpsg;
     }
 
-    public Integer getTarget_epsg() {
-        return target_epsg;
+    public Integer getTargetEpsg() {
+        return targetEpsg;
     }
 }

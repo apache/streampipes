@@ -16,36 +16,44 @@
  */
 package org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection;
 
-import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
+import org.apache.streampipes.logging.api.Logger;
+import org.locationtech.jts.geom.Geometry;
+
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpReprojectionBuilder;
+import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoParameter;
-import org.locationtech.jts.geom.Geometry;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.model.runtime.Event;
 
+import org.postgresql.ds.PGSimpleDataSource;
+import org.apache.sis.setup.Configuration;
+
+import javax.sql.DataSource;
 
 public class ProjTransformation implements EventProcessor<ProjTransformationParameter> {
 
-    private static Logger LOG;
+    private static Logger logger;
     private ProjTransformationParameter params;
     private Integer targetEPSG;
 
-
     @Override
-    public void onInvocation(ProjTransformationParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-        LOG = params.getGraph().getLogger(LatLngToGeoParameter.class);
+    public void onInvocation(ProjTransformationParameter params, SpOutputCollector spOutputCollector,
+                             EventProcessorRuntimeContext runtimeContext) {
+        logger = params.getGraph().getLogger(LatLngToGeoParameter.class);
         this.params = params;
-        targetEPSG = params.getTarget_epsg();
+        targetEPSG = params.getTargetEpsg();
+
+        //TODO: this has to move to a central place in the streampipes backend
+        Configuration.current().setDatabase(ProjTransformation::createDataSource);
     }
 
     @Override
     public void onEvent(Event in, SpOutputCollector out) {
 
-        String wkt = in.getFieldBySelector(params.getWkt_string()).getAsPrimitive().getAsString();
+        String wkt = in.getFieldBySelector(params.getWktString()).getAsPrimitive().getAsString();
         Integer epsgCode = in.getFieldBySelector(params.getEpsgCode()).getAsPrimitive().getAsInt();
         Geometry geometry = SpGeometryBuilder.createSPGeom(wkt, epsgCode);
 
@@ -57,18 +65,35 @@ public class ProjTransformation implements EventProcessor<ProjTransformationPara
         }
 
         if (!transformed.isEmpty()) {
-            in.updateFieldBySelector("s0::" + ProjTransformationController.EPSG_RUNTIME, params.getTarget_epsg());
+            in.updateFieldBySelector("s0::" + ProjTransformationController.EPSG_RUNTIME, params.getTargetEpsg());
             in.updateFieldBySelector("s0::" + ProjTransformationController.WKT_RUNTIME, transformed.toText());
 
             out.collect(in);
         } else {
-            LOG.warn("An empty point geometry is created in " + ProjTransformationController.EPA_NAME + " " +
-                    "due invalid input values. Check used epsg Code:" + epsgCode);
+            logger.warn("An empty point geometry is created in " + ProjTransformationController.EPA_NAME + " "
+                    + "due invalid input values. Check used epsg Code:" + epsgCode);
         }
     }
 
     @Override
     public void onDetach() {
+    }
 
+    // https://sis.apache.org/apidocs/org/apache/sis/setup/Configuration.html#setDatabase(java.util.function.Supplier)
+    // TODO: Best would be ConfigKeys VARIABLE. ATM hardcoded and adjustments for development required like IP of client
+    // TODO: has to move together with the Configuration.current() method
+    protected static DataSource createDataSource() {
+        PGSimpleDataSource ds = new PGSimpleDataSource();
+        // HAS TO BE ADJUSTED OR INCLUDED IN THE AUTO_DISCOVERY
+        String[] serverAddresses = {"192.168.1.100"};
+        ds.setServerNames(serverAddresses);
+        int[] serverPortNumbers = {54320};
+        ds.setPortNumbers(serverPortNumbers);
+        ds.setDatabaseName("EPSG");
+        ds.setUser("streampipes");
+        ds.setPassword("streampipes");
+        ds.setReadOnly(true);
+
+        return ds;
     }
 }

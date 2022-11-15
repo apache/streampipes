@@ -23,7 +23,13 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+//import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.SupportedFormats;
+import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 import org.apache.streampipes.sdk.utils.Assets;
@@ -42,42 +48,27 @@ public class ProjTransformationController extends StandaloneEventProcessingDecla
 
     @Override
     public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder
-                .create("org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection")
-                .category(DataProcessorType.GEO)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .withLocales(Locales.EN)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredPropertyWithUnaryMapping(
-                                EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
-                                Labels.withId(WKT_KEY), PropertyScope.MEASUREMENT_PROPERTY
-                        )
-                        .requiredPropertyWithUnaryMapping(
-                                EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
-                                Labels.withId(SOURCE_EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY
-                        )
-                        .build()
-                )
-                .requiredIntegerParameter(
-                        Labels.withId(TARGET_EPSG_KEY),
-                        32632
-                )
-                .outputStrategy(OutputStrategies.keep())
-                .supportedFormats(SupportedFormats.jsonFormat())
-                .supportedProtocols(SupportedProtocols.kafka())
-                .build();
+        return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection")
+                .category(DataProcessorType.GEO).withAssets(Assets.DOCUMENTATION, Assets.ICON).withLocales(Locales.EN)
+                .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+                        EpRequirements.domainPropertyReq("http://www.opengis.net/ont/geosparql#Geometry"),
+                        Labels.withId(WKT_KEY), PropertyScope.MEASUREMENT_PROPERTY).requiredPropertyWithUnaryMapping(
+                        EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),
+                        Labels.withId(SOURCE_EPSG_KEY), PropertyScope.MEASUREMENT_PROPERTY).build())
+                .requiredIntegerParameter(Labels.withId(TARGET_EPSG_KEY), 32632).outputStrategy(OutputStrategies.keep())
+                .supportedFormats(SupportedFormats.jsonFormat()).supportedProtocols(SupportedProtocols.kafka()).build();
     }
 
 
     @Override
-    public ConfiguredEventProcessor<ProjTransformationParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+    public ConfiguredEventProcessor<ProjTransformationParameter> onInvocation(DataProcessorInvocation graph,
+                                                                              ProcessingElementParameterExtractor extractor) {
 
-        String wkt_String = extractor.mappingPropertyValue(WKT_KEY);
-        String source_epsg = extractor.mappingPropertyValue(SOURCE_EPSG_KEY);
-        Integer target_epsg = extractor.singleValueParameter(TARGET_EPSG_KEY, Integer.class);
+        String wktString = extractor.mappingPropertyValue(WKT_KEY);
+        String sourceEpsg = extractor.mappingPropertyValue(SOURCE_EPSG_KEY);
+        Integer targetEpsg = extractor.singleValueParameter(TARGET_EPSG_KEY, Integer.class);
 
-        ProjTransformationParameter params = new ProjTransformationParameter(graph, wkt_String, source_epsg, target_epsg);
+        ProjTransformationParameter params = new ProjTransformationParameter(graph, wktString, sourceEpsg, targetEpsg);
 
         return new ConfiguredEventProcessor<>(params, ProjTransformation::new);
     }
