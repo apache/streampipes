@@ -1,0 +1,11 @@
+org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.title=Apache RocketMQ
+org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.description=Consumes messages from an Apache RocketMQ broker
+
+rocketmq-endpoint.title=RocketMQ Endpoint
+rocketmq-endpoint.description=The endpoint to connect to the broker
+
+rocketmq-consumer-group.title=RocketMQ Endpoint
+rocketmq-consumer-group.description=The consumer group of the RocketMQ Consumer
+
+rocketmq-topic.title=RocketMQ Topic
+rocketmq-topic.description=Select a RocketMQ topic
