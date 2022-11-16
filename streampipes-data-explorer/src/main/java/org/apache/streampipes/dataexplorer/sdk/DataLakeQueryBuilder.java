@@ -56,6 +56,12 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  public DataLakeQueryBuilder withSimpleColumns(List<String> columnNames) {
+    columnNames.forEach(this.selectionQuery::column);
+
+    return this;
+  }
+
   public DataLakeQueryBuilder withAggregatedColumn(String columnName,
                                                    ColumnFunction columnFunction,
                                                    String targetName) {
