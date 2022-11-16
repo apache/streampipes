@@ -22,6 +22,7 @@ import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
 import org.apache.rocketmq.client.apis.consumer.PushConsumer;
 import org.apache.streampipes.connect.SendToPipeline;
+import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
@@ -33,7 +34,6 @@ import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
-import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
@@ -73,10 +73,10 @@ public class RocketMQProtocol extends BrokerProtocol {
 
     @Override
     public IProtocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-        StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig());
-        String endpoint = extractor.selectedSingleValue(ENDPOINT_KEY, String.class);
-        String topic = extractor.selectedSingleValue(TOPIC_KEY, String.class);
-        String consumerGroup = extractor.selectedSingleValue(CONSUMER_GROUP_KEY, String.class);
+        ParameterExtractor extractor = new ParameterExtractor(protocolDescription.getConfig());
+        String endpoint = extractor.singleValue(ENDPOINT_KEY, String.class);
+        String topic = extractor.singleValue(TOPIC_KEY, String.class);
+        String consumerGroup = extractor.singleValue(CONSUMER_GROUP_KEY, String.class);
 
         return new RocketMQProtocol(parser, format, endpoint, topic, consumerGroup);
     }

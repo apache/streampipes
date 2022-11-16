@@ -4,7 +4,7 @@ org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.description=Consume
 rocketmq-endpoint.title=RocketMQ Endpoint
 rocketmq-endpoint.description=The endpoint to connect to the broker
 
-rocketmq-consumer-group.title=RocketMQ Endpoint
+rocketmq-consumer-group.title=RocketMQ Consumer Group
 rocketmq-consumer-group.description=The consumer group of the RocketMQ Consumer
 
 rocketmq-topic.title=RocketMQ Topic
