@@ -23,16 +23,16 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-//import org.apache.streampipes.sdk.helpers.*;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.helpers.SupportedFormats;
 import org.apache.streampipes.sdk.helpers.SupportedProtocols;
+import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
-import org.apache.streampipes.sdk.utils.Assets;
+
 
 public class ProjTransformationController extends StandaloneEventProcessingDeclarer<ProjTransformationParameter> {
 
@@ -61,8 +61,8 @@ public class ProjTransformationController extends StandaloneEventProcessingDecla
 
 
     @Override
-    public ConfiguredEventProcessor<ProjTransformationParameter> onInvocation(DataProcessorInvocation graph,
-                                                                              ProcessingElementParameterExtractor extractor) {
+    public ConfiguredEventProcessor<ProjTransformationParameter> onInvocation(
+            DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
         String wktString = extractor.mappingPropertyValue(WKT_KEY);
         String sourceEpsg = extractor.mappingPropertyValue(SOURCE_EPSG_KEY);

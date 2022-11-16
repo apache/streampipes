@@ -17,19 +17,18 @@
 package org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection;
 
 import org.apache.streampipes.logging.api.Logger;
-import org.locationtech.jts.geom.Geometry;
-
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
 import org.apache.streampipes.processors.geo.jvm.jts.helper.SpReprojectionBuilder;
-import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoParameter;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.wrapper.runtime.EventProcessor;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import org.postgresql.ds.PGSimpleDataSource;
 import org.apache.sis.setup.Configuration;
+import org.locationtech.jts.geom.Geometry;
+import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 
