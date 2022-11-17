@@ -43,7 +43,7 @@ class TestStreamPipesClient(TestCase):
             dictionary=result_headers,
         )
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
-        self.assertEqual(result.base_api_path, "https://localhost:80/streampipes-backend/")
+        self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
 
     def test_client_create(self):
         result = StreamPipesClient.create(
