@@ -1,0 +1,8 @@
+org.apache.streampipes.sinks.brokers.jvm.rocketmq.title=RocketMQ Publisher
+org.apache.streampipes.sinks.brokers.jvm.rocketmq.description=Publish events to Apache RocketMQ
+
+rocketmq-endpoint.title=RocketMQ Endpoint
+rocketmq-endpoint.description=The endpoint to connect to the broker
+
+rocketmq-topic.title=RocketMQ Topic
+rocketmq-topic.description=Select a RocketMQ topic

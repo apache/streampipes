@@ -36,6 +36,7 @@ import org.apache.streampipes.sinks.brokers.jvm.nats.NatsController;
 import org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
+import org.apache.streampipes.sinks.brokers.jvm.rocketmq.RocketMQPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
 
 public class BrokersJvmInit extends StandaloneModelSubmitter {
@@ -59,6 +60,7 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
                     new MqttPublisherSink(),
                     new WebsocketServerSink(),
                     new PulsarPublisherSink(),
+                    new RocketMQPublisherSink(),
                     new NatsController())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
