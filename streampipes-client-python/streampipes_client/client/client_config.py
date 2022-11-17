@@ -55,4 +55,4 @@ class StreamPipesClientConfig:
     credential_provider: CredentialProvider
     host_address: str
     https_disabled: Optional[bool] = False
-    port: Optional[int] = 80
+    port: Optional[int] = 80 if https_disabled else 443
