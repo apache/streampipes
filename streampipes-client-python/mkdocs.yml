@@ -15,12 +15,14 @@
 # limitations under the License.
 #
 
-site_name: Streampipes Client Python
+site_name: Python Client
 
 copyright: "Apache License 2.0"
 
 theme:
   name: material
+  logo: https://streampipes.apache.org/img/sp-logo-white-right.png
+  favicon: https://streampipes.apache.org/img/sp-logo-white-right.png
   custom_dir: docs/overrides
   features:
     - navigation.tabs
@@ -70,3 +72,10 @@ extra_javascript:
   - javascripts/config.js
 extra_css:
   - stylesheets/extra.css
+
+nav:
+    - Home: index.md
+    - Getting Started:
+        - Installation: getting-started/installation.md
+        - Quickstart: getting-started/quickstart.md
+    - Reference: reference/*

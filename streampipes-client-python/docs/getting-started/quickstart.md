@@ -16,41 +16,7 @@
   ~
 -->
 
-
-<h1 align="center">
-  <br>
-   <img src="https://raw.githubusercontent.com/apache/incubator-streampipes/dev/streampipes-client-python/docs/img/streampipes-python.png"
-   alt="StreamPipes Logo with Python" title="Apache StreamPipes Logo with Python" width="75%"/>
-  <br>
-</h1>
-<h4 align="center"><a href="[StreamPipes](https://github.com/apache/incubator-streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
-
-<br>
-<h3 align="center">Apache StreamPipes client for Python</h3>
-
-<p align="center"> Apache StreamPipes meets Python! We are working highly motivated on a Python-based client to interact with StreamPipes.
-In this way, we would like to unite the power of StreamPipes to easily connect to and read different data sources, especially in the IoT domain,
-and the amazing universe of data analytics libraries in Python. </p>
-
----
-
-<br>
-
-**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
-<br>
-<br>
-**The current version of this Python client is still in alpha phase at best.**
-<br>
-**This means that it is still heavily under development, which may result in frequent and extensive API changes, unstable behavior, etc.**
-<br>
-**Please consider it only as a sneak preview.**
-<br>
-<br>
-**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
-
-<br>
-
-## ⚡️ Quickstart
+# ⚡️ Quickstart
 
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.
 In addition, we will get the available data lake measures out of StreamPipes.
