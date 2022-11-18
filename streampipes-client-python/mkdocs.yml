@@ -16,6 +16,8 @@
 #
 
 site_name: Python Client
+repo_url: https://github.com/apache/streampipes
+edit_uri: "https://github.com/apache/streampipes"
 
 copyright: "Apache License 2.0"
 
