@@ -69,6 +69,8 @@ public class PulsarAdapterTester extends AdapterTesterBase {
                 pulsarContainer.getBrokerPort())
             .requiredTextParameter(
                 Labels.withId(PulsarProtocol.PULSAR_TOPIC), TOPIC)
+            .requiredTextParameter(
+                Labels.withId(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME), "test-sub")
             .build())
         .addRules(List.of(new DebugSinkRuleDescription()))
         .build();
