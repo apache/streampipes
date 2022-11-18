@@ -16,7 +16,7 @@
   ~
   -->
 
-# Apache StreamPipes (incubating) installer
+# Apache StreamPipes installer
 This project contains a variety of StreamPipes installation and operation options, namely:
 
 * **[StreamPipes Compose](./compose)** - The User's Choice

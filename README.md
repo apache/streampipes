@@ -61,7 +61,7 @@
 
 ## About Apache StreamPipes
 
-Apache StreamPipes (incubating) makes industrial data analytics easy!
+Apache StreamPipes makes industrial data analytics easy!
 
 StreamPipes is an end-to-end toolbox for the industrial IoT. 
 It comes with a rich graphical user interface targeted at non-technical users and provides the following features:

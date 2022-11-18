@@ -18,9 +18,9 @@
 
 ## Release Validation
 
-An Apache StreamPipes (incubating) release consists of a single source release starting from version 0.69.0:
+An Apache StreamPipes release consists of a single source release starting from version 0.69.0:
 
-* incubator-streampipes
+* streampipes
 
 To validate and test a release candidate, please visit our validation guide: 
 [https://cwiki.apache.org/confluence/display/STREAMPIPES/Validating+a+release](https://cwiki.apache.org/confluence/display/STREAMPIPES/Validating+a+release)
