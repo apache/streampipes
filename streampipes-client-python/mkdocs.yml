@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-site_name: Python Client
+site_name: Apache StreamPipes Python Client
 repo_url: https://github.com/apache/streampipes
 edit_uri: "https://github.com/apache/streampipes"
 
@@ -24,7 +24,7 @@ copyright: "Apache License 2.0"
 theme:
   name: material
   logo: https://streampipes.apache.org/img/sp-logo-white-right.png
-  favicon: https://streampipes.apache.org/img/sp-logo-white-right.png
+  favicon: https://streampipes.apache.org/img/favicon/favicon.png
   custom_dir: docs/overrides
   features:
     - navigation.tabs
@@ -35,7 +35,7 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github-alt
-      link: https://github.com/apache/incubator-streampipes
+      link: https://github.com/apache/streampipes
 
 # Extensions
 markdown_extensions:

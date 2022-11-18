@@ -36,4 +36,6 @@ state this explicitly, by submitting any copyrighted material via pull request, 
 other means you agree to license the material under the project's open source license and
 warrant that you have the legal authority to do so.
 
+For more information on how to start with the Python client, click [here](https://github.com/apache/streampipes/blob/dev/streampipes-client-python/DEVELOPMENT.md).
+
 ---
