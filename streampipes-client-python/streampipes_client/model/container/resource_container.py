@@ -56,6 +56,13 @@ class StreamPipesDataModelError(Exception):
         super().__init__(self._generate_error_message())
 
     def _generate_error_message(self) -> str:
+        """Generate a specific error message for this exception.
+        Error message contains information derived from the specific `ValidationError`.
+
+        Returns
+        -------
+        The error description (`str`)
+        """
         return (
             f"\nOops, there seems to be a problem with our internal StreamPipes data model.\n"
             f"This should not occur, but unfortunately did.\n"
@@ -89,6 +96,13 @@ class StreamPipesResourceContainerJSONError(Exception):
         super().__init__(self._generate_error_message())
 
     def _generate_error_message(self) -> str:
+        """Generate a specific error message for this exception.
+        Error message contains information about the related container model and the causing JSON string.
+
+        Returns
+        -------
+        The error description (`str`)
+        """
         return (
             f"\nOops, there seems to be a problem when parsing the response of the StreamPipes API."
             f"This should not occur, but unfortunately did.\n"
