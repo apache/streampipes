@@ -68,8 +68,6 @@ plugins:
             show_source: False
             merge_init_into_class: True
 
-extra_javascript:
-  - javascripts/config.js
 extra_css:
   - stylesheets/extra.css
 
