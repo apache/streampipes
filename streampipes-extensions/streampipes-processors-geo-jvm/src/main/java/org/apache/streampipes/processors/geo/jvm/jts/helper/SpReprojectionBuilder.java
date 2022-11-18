@@ -1,22 +1,37 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package org.apache.streampipes.processors.geo.jvm.jts.helper;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.CoordinateList;
-import org.locationtech.jts.geom.CoordinateSequence;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.impl.CoordinateArraySequence;
-
-import org.apache.streampipes.processors.geo.jvm.jts.exceptions.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
 
 import org.apache.sis.geometry.DirectPosition2D;
 import org.apache.sis.referencing.CRS;
 import org.apache.sis.referencing.crs.AbstractCRS;
 import org.apache.sis.referencing.cs.AxesConvention;
-import org.locationtech.jts.geom.*;
-
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.CoordinateList;
+import org.locationtech.jts.geom.CoordinateSequence;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
+import org.locationtech.jts.geom.impl.CoordinateArraySequence;
 import org.opengis.metadata.citation.Citation;
 import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -25,10 +40,14 @@ import org.opengis.referencing.operation.CoordinateOperation;
 import org.opengis.referencing.operation.TransformException;
 import org.opengis.util.FactoryException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class SpReprojectionBuilder {
 
-    public static Geometry reprojectSpGeometry(Geometry geom, Integer targetEPSG) throws SpNotSupportedGeometryException {
+    public static Geometry reprojectSpGeometry(Geometry geom, Integer targetEPSG)
+            throws SpNotSupportedGeometryException {
 
         Geometry output = null;
 
@@ -37,7 +56,9 @@ public class SpReprojectionBuilder {
         CoordinateOperation operator = getOperator(sourcerCRS, targetrCRS);
 
         CoordinateList geomCoordList = new CoordinateList(geom.getCoordinates());
-        List<Coordinate> projectedList = geomCoordList.stream().map(coordinate -> transformCoordinate(coordinate, operator)).collect(Collectors.toList());
+        List<Coordinate> projectedList =
+                geomCoordList.stream().map(coordinate -> transformCoordinate(coordinate, operator))
+                        .collect(Collectors.toList());
 
         CoordinateSequence cs = new CoordinateArraySequence(projectedList.toArray(new Coordinate[]{}));
 
@@ -46,7 +67,8 @@ public class SpReprojectionBuilder {
         return output;
     }
 
-    public static Geometry createSimpleSPGeom(CoordinateSequence cs, String geometryType, Integer targetEPSG) throws SpNotSupportedGeometryException {
+    public static Geometry createSimpleSPGeom(CoordinateSequence cs, String geometryType, Integer targetEPSG)
+            throws SpNotSupportedGeometryException {
         Geometry output = null;
         PrecisionModel prec = SpGeometryBuilder.getPrecisionModel(targetEPSG);
         GeometryFactory geomFactory = new GeometryFactory(prec, targetEPSG);
@@ -114,7 +136,8 @@ public class SpReprojectionBuilder {
         return output;
     }
 
-    protected static CoordinateOperation getOperator(CoordinateReferenceSystem source, CoordinateReferenceSystem target) {
+    protected static CoordinateOperation getOperator(CoordinateReferenceSystem source,
+                                                     CoordinateReferenceSystem target) {
 
         CoordinateOperation op = null;
 
@@ -141,7 +164,8 @@ public class SpReprojectionBuilder {
         return unit;
     }
 
-    public static Geometry unifyEPSG(Geometry geomA, Geometry geomB, boolean useFirstGeomAsBase) throws SpNotSupportedGeometryException {
+    public static Geometry unifyEPSG(Geometry geomA, Geometry geomB, boolean useFirstGeomAsBase)
+            throws SpNotSupportedGeometryException {
 
         Geometry tempGeomA = geomA;
         Geometry tempGeomB = geomB;
@@ -229,7 +253,7 @@ public class SpReprojectionBuilder {
         }
     }
 
-    public static boolean isSisEpsgValid(Integer targetEPSG){
+    public static boolean isSisEpsgValid(Integer targetEPSG) {
         boolean check = true;
 
         try {
@@ -241,13 +265,12 @@ public class SpReprojectionBuilder {
     }
 
 
-
     private static CRSAuthorityFactory getFactory() throws FactoryException {
         CRSAuthorityFactory factory;
         try {
             factory = CRS.getAuthorityFactory("EPSG");
         } catch (FactoryException e) {
-            throw new FactoryException (e);
+            throw new FactoryException(e);
         }
         return factory;
     }
@@ -266,7 +289,7 @@ public class SpReprojectionBuilder {
         boolean check = true;
         CRSAuthorityFactory factory = SpReprojectionBuilder.getFactory();
         Citation authority = factory.getAuthority();
-        if (!authority.getEdition().toString().equals("9.9.1")){
+        if (!authority.getEdition().toString().equals("9.9.1")) {
             check = false;
         }
         return check;
