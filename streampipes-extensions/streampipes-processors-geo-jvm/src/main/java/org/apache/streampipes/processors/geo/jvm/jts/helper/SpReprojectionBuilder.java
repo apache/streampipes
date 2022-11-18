@@ -5,6 +5,7 @@ import org.locationtech.jts.geom.CoordinateList;
 import org.locationtech.jts.geom.CoordinateSequence;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.impl.CoordinateArraySequence;
+
 import org.apache.streampipes.processors.geo.jvm.jts.exceptions.*;
 
 import java.util.List;
@@ -15,11 +16,15 @@ import org.apache.sis.referencing.CRS;
 import org.apache.sis.referencing.crs.AbstractCRS;
 import org.apache.sis.referencing.cs.AxesConvention;
 import org.locationtech.jts.geom.*;
+
+import org.opengis.metadata.citation.Citation;
+import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.cs.CoordinateSystemAxis;
 import org.opengis.referencing.operation.CoordinateOperation;
 import org.opengis.referencing.operation.TransformException;
 import org.opengis.util.FactoryException;
+
 
 public class SpReprojectionBuilder {
 
@@ -222,5 +227,55 @@ public class SpReprojectionBuilder {
         public String getSpCRSUnit() {
             return unit;
         }
+    }
+
+    public static boolean isSisEpsgValid(Integer targetEPSG){
+        boolean check = true;
+
+        try {
+            CRS.forCode("EPSG::" + targetEPSG);
+        } catch (FactoryException ex) {
+            check = false;
+        }
+        return check;
+    }
+
+
+
+    private static CRSAuthorityFactory getFactory() throws FactoryException {
+        CRSAuthorityFactory factory;
+        try {
+            factory = CRS.getAuthorityFactory("EPSG");
+        } catch (FactoryException e) {
+            throw new FactoryException (e);
+        }
+        return factory;
+    }
+
+    public static boolean isSisConfigurationValid() throws FactoryException {
+        boolean check = true;
+        CRSAuthorityFactory factory = SpReprojectionBuilder.getFactory();
+        Citation authority = factory.getAuthority();
+        if (authority == null) {
+            check = false;
+        }
+        return check;
+    }
+
+    public static boolean isSisDbCorrectVersion() throws FactoryException {
+        boolean check = true;
+        CRSAuthorityFactory factory = SpReprojectionBuilder.getFactory();
+        Citation authority = factory.getAuthority();
+        if (!authority.getEdition().toString().equals("9.9.1")){
+            check = false;
+        }
+        return check;
+    }
+
+    public static String getSisDbVersion() throws FactoryException {
+        CRSAuthorityFactory factory = SpReprojectionBuilder.getFactory();
+        Citation authority = factory.getAuthority();
+        String version = authority.getEdition().toString();
+        return version;
     }
 }

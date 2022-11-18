@@ -27,7 +27,6 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import org.apache.sis.referencing.CRS;
 import org.apache.sis.setup.Configuration;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.util.FactoryException;
@@ -50,13 +49,42 @@ public class ProjTransformation implements EventProcessor<ProjTransformationPara
 
         //TODO: this has to move to a central place in the streampipes backend
         // otherwise Connection to SpatialMetadata database is already initialized occur
-        Configuration.current().setDatabase(ProjTransformation::createDataSource);
 
-        // checks invalid input field. SIS got a cache system but if it is in the cache already it is also vallid
         try {
-            System.out.println(CRS.forCode("EPSG::" + targetEPSG));
+            Configuration.current().setDatabase(ProjTransformation::createDataSource);
+        } catch (IllegalStateException e) {
+            logger.info("Setup was already established");
+            // catch the exceptions due connection is already initialized.
+        }
+
+
+        // check if SIS DB is set up with imported data or is null
+        try {
+            if (SpReprojectionBuilder.isSisConfigurationValid()){
+                logger.info("SIS DB Settings successful checked ");
+            } else {
+                logger.warn("The required EPSG database is not imported");
+                //TODO implement fallback option with proj4j
+                throw new SpRuntimeException("Database not set and ready for fallback ");
+            }
         } catch (FactoryException e) {
-            throw new SpRuntimeException("Your chosen EPSG Code " + targetEPSG + " is not valid. "
+            throw new SpRuntimeException("Something unexpected happened " + e);
+        }
+
+        // check if SIS DB has the supported 9.9.1 Version.
+        try {
+            if (!SpReprojectionBuilder.isSisDbCorrectVersion()) {
+                logger.warn("Not supported EPSG DB used.");
+                throw new SpRuntimeException("Your current EPSG DB version " + SpReprojectionBuilder.getSisDbVersion()
+                        + " is not the supported 9.9.1 version. ");
+            }
+        } catch (FactoryException e) {
+            throw new SpRuntimeException("Something unexpected happened " + e);
+        }
+
+        // checks if Input EPSG in valid and exists in EPSG DB
+        if (!SpReprojectionBuilder.isSisEpsgValid(targetEPSG)) {
+            throw new SpRuntimeException("Your chosen EPSG Code " + targetEPSG + " is not valid or supported. "
                     + "Check EPSG on https://spatialreference.org");
         }
     }
@@ -81,8 +109,8 @@ public class ProjTransformation implements EventProcessor<ProjTransformationPara
 
             out.collect(in);
         } else {
-            logger.warn("An empty point geometry is created in " + ProjTransformationController.EPA_NAME + " "
-                    + "due invalid input values. Check used epsg Code:" + epsgCode);
+            logger.warn("An empty point geometry is created in " + ProjTransformationController.EPA_NAME + " " +
+                    "due invalid input values. Check used epsg Code:" + epsgCode);
         }
     }
 
