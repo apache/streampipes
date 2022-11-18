@@ -101,11 +101,18 @@ public class DataExplorerQueryV4 {
 
     public SpQueryResult executeQuery(Query query, boolean ignoreMissingValues) {
         InfluxDB influxDB = DataExplorerUtils.getInfluxDBClient();
-        QueryResult result = influxDB.query(query);
-        SpQueryResult dataResult = postQuery(result, ignoreMissingValues);
+        var dataResult = executeQuery(influxDB, query, ignoreMissingValues);
         influxDB.close();
 
         return dataResult;
+    }
+
+    public SpQueryResult executeQuery(InfluxDB influxDB,
+                                      Query query,
+                                      boolean ignoreMissingValues) {
+        QueryResult result = influxDB.query(query);
+
+        return postQuery(result, ignoreMissingValues);
     }
 
     private double getAmountOfResults(QueryResult countQueryResult) {

@@ -37,7 +37,7 @@ public abstract class AdapterDescriptionBuilder<BU extends
     super(id, label, description, adapterTypeInstance);
   }
 
-  public AdapterDescriptionBuilder<BU, T> category(AdapterType... categories) {
+  public BU category(AdapterType... categories) {
     this.elementDescription
             .setCategory(Arrays
                     .stream(categories)

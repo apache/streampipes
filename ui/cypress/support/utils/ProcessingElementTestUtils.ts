@@ -19,7 +19,7 @@
 import { FileManagementUtils } from './FileManagementUtils';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { PipelineUtils } from './PipelineUtils';
-import { DataLakeUtils } from './DataLakeUtils';
+import { DataLakeUtils } from './datalake/DataLakeUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';

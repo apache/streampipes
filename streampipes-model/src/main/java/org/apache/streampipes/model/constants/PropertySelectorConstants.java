@@ -20,6 +20,7 @@ package org.apache.streampipes.model.constants;
 public class PropertySelectorConstants {
 
   public static final String PROPERTY_DELIMITER = "::";
+  public static final String STREAM_ID_PREFIX = "s";
   public static final String FIRST_STREAM_ID_PREFIX = "s0";
   public static final String SECOND_STREAM_ID_PREFIX = "s1";
 

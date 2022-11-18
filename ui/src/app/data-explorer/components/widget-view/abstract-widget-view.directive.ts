@@ -140,6 +140,10 @@ export abstract class AbstractWidgetViewDirective {
     this.onOptionsChanged();
   }
 
+  selectFirstWidgetForEditing(widgetId: string): void {
+    this.startEditModeEmitter.emit(this.configuredWidgets.get(widgetId));
+  }
+
   abstract onOptionsChanged(): void;
 
   abstract onWidgetsAvailable(): void;

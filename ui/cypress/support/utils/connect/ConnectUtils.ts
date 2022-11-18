@@ -24,7 +24,7 @@ import { SpecificAdapterBuilder } from '../../builder/SpecificAdapterBuilder';
 import { AdapterInput } from '../../model/AdapterInput';
 import { ConnectEventSchemaUtils } from '../ConnectEventSchemaUtils';
 import { GenericAdapterBuilder } from '../../builder/GenericAdapterBuilder';
-import { DataLakeUtils } from '../DataLakeUtils';
+import { DataLakeUtils } from '../datalake/DataLakeUtils';
 
 export class ConnectUtils {
 

@@ -131,6 +131,7 @@ public class InfluxStore {
    */
   public void onEvent(Event event) throws SpRuntimeException {
     var missingFields = new ArrayList<String>();
+    var nullFields = new ArrayList<String>();
     if (event == null) {
       throw new SpRuntimeException("event is null");
     }
@@ -152,7 +153,7 @@ public class InfluxStore {
             if (field.isPresent()) {
               PrimitiveField eventPropertyPrimitiveField = field.get().getAsPrimitive();
               if (eventPropertyPrimitiveField.getRawValue() == null) {
-                LOG.warn("Field value for {} is null, ignoring value.", sanitizedRuntimeName);
+                nullFields.add(sanitizedRuntimeName);
               } else {
 
                 // store property as tag when the field is a dimension property
@@ -180,6 +181,10 @@ public class InfluxStore {
       LOG.warn("Ignored {} fields which were present in the schema, but not in the provided event: {}",
           missingFields.size(),
           String.join(", ", missingFields));
+    }
+
+    if (nullFields.size() > 0) {
+      LOG.warn("Ignored {} fields which had a value 'null': {}", nullFields.size(), String.join(", ", nullFields));
     }
 
     influxDb.write(point.build());

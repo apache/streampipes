@@ -1,0 +1,70 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+files: streampipes_client/|tests/
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.2.0
+    hooks:
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+
+  - repo: local
+    hooks:
+      - id: pyupgrade
+        name: pyupgrade
+        language: python
+        types: [ python ]
+        entry: pyupgrade --py38 --keep-runtime-typing
+        verbose: true
+
+      - id: autoflake
+        name: autoflake
+        language: python
+        types: [ python ]
+        entry: autoflake --remove-all-unused-imports --expand-star-imports --in-place --remove-unused-variables --remove-duplicate-keys
+        verbose: true
+
+      - id: isort
+        name: isort
+        language: python
+        types: [ python ]
+        entry: isort --profile black
+        verbose: true
+
+      - id: black
+        name: black
+        language: python
+        types: [ python ]
+        entry: black --line-length=120
+        verbose: true
+
+      - id: mypy
+        name: mypy
+        language: python
+        types: [ python ]
+        entry: mypy --warn-unused-ignores --warn-redundant-casts --pretty
+        verbose: true
+
+      - id: flake8
+        name: flake8
+        language: python
+        types: [ python ]
+        entry: flake8 --max-line-length 120
+        verbose: true

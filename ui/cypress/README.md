@@ -37,7 +37,7 @@ This folder contains a WIP framework for automated E2E tests of StreamPipes.
   
 **User**: admin@streampipes.apache.org **Password**: admin
 
->**Note:** The base URL can be configured in **cypress.json**
+>**Note:** To configure the base URL set the environment variable CYPRESS_BASE_URL (e.g. CYPRESS_BASE_URL=http://localhost:8082)
 
 ## Design guidlines
 * Before each test the whole system is cleaned to have a fresh environment

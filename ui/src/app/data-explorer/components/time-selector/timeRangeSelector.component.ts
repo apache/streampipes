@@ -110,7 +110,11 @@ export class TimeRangeSelectorComponent implements OnInit {
     const difference = this.endDate.getTime() - this.startDate.getTime();
 
     const current = new Date().getTime();
-    this.dateRange = {startTime: current - difference, endTime: current, dynamicSelection: -1};
+    this.dateRange = {
+      startTime: current - difference,
+      endTime: current,
+      dynamicSelection: this.dateRange.dynamicSelection
+    };
 
     this.reloadData();
   }

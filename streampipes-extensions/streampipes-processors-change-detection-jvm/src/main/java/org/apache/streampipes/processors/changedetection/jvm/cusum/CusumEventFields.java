@@ -18,6 +18,8 @@
 
 package org.apache.streampipes.processors.changedetection.jvm.cusum;
 
+
+@Deprecated(since = "0.70.0", forRemoval = true)
 public class CusumEventFields {
 
     public static final String VAL_LOW = "cusumLow";

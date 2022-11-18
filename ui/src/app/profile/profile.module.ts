@@ -33,6 +33,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { PlatformServicesModule } from '@streampipes/platform-services';
 import { ChangePasswordDialogComponent } from './dialog/change-password/change-password-dialog.component';
 import { ChangeEmailDialogComponent } from './dialog/change-email/change-email-dialog.component';
+import {RouterLink} from '@angular/router';
 
 @NgModule({
     imports: [
@@ -46,7 +47,8 @@ import { ChangeEmailDialogComponent } from './dialog/change-email/change-email-d
         CommonModule,
         ClipboardModule,
         CoreUiModule,
-        PlatformServicesModule
+        PlatformServicesModule,
+        RouterLink
     ],
     declarations: [
         ChangeEmailDialogComponent,

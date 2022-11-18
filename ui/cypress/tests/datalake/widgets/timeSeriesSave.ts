@@ -16,7 +16,7 @@
  *
  */
 
-import { DataLakeUtils } from '../../../support/utils/DataLakeUtils';
+import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
 const testView1 = 'TestView1';
 const testView2 = 'TestView2';
@@ -31,7 +31,7 @@ describe('Test if widget configuration is updated correctly', () => {
     // Create first test data view with one time series widget
     DataLakeUtils.addDataViewAndTimeSeriesWidget(testView1, dataSet);
     DataLakeUtils.saveDataExplorerWidgetConfiguration();
-    DataLakeUtils.clickStartTab();
+    // DataLakeUtils.clickStartTab();
 
     // Create second test data view with one time series widget
     DataLakeUtils.addDataViewAndTimeSeriesWidget(testView2, dataSet);

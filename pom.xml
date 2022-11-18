@@ -111,7 +111,7 @@
 	<snappy-java.version>1.1.7.7</snappy-java.version>
 	<spring.version>5.3.20</spring.version>
 	<spring-boot.version>2.6.7</spring-boot.version>
-	<spring-security.version>5.6.4</spring-security.version>
+	<spring-security.version>5.6.9</spring-security.version>
 	<swagger.version>2.1.12</swagger.version>
 	<type-parser.version>0.6.0</type-parser.version>
 	<underscore.version>1.47</underscore.version>
@@ -175,6 +175,7 @@
 	<opennlp.version>1.9.0</opennlp.version>
 	<postgresql.version>42.4.1</postgresql.version>
 	<pulsar.version>2.10.1</pulsar.version>
+	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
 	<scala-lang.version>2.11.12</scala-lang.version>
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
@@ -1269,6 +1270,11 @@ IoT data streams.
 					<groupId>org.apache.pulsar</groupId>
 					<artifactId>pulsar-client</artifactId>
 					<version>${pulsar.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.rocketmq</groupId>
+					<artifactId>rocketmq-client-java</artifactId>
+					<version>${rocketmq.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.atteo.classindex</groupId>

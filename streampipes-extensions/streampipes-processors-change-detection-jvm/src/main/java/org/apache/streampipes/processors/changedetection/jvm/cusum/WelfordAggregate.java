@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.processors.changedetection.jvm.cusum;
 
+@Deprecated(since = "0.70.0", forRemoval = true)
 public class WelfordAggregate {
     private Integer count;
     private Double mean;
