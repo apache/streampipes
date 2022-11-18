@@ -73,6 +73,7 @@ public class PulsarAdapterTester extends AdapterTesterBase {
         protocolDescription.addConfig(FreeTextStaticProperty.of(PulsarProtocol.PULSAR_BROKER_PORT,
                 pulsarContainer.getBrokerPort().toString()));
         protocolDescription.addConfig(FreeTextStaticProperty.of(PulsarProtocol.PULSAR_TOPIC, TOPIC));
+        protocolDescription.addConfig(FreeTextStaticProperty.of(PulsarProtocol.PULSAR_SUBSCRIPTION_NAME, "my-sub"));
         protocolDescription.setAppId(PulsarProtocol.ID);
         description.setProtocolDescription(protocolDescription);
 
