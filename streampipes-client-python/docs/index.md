@@ -36,7 +36,7 @@ and the amazing universe of data analytics libraries in Python. </p>
 
 <br>
 
-**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
+** ❗❗❗IMPORTANT ❗❗❗**
 <br>
 <br>
 **The current version of this Python client is still in alpha phase at best.**
@@ -46,7 +46,7 @@ and the amazing universe of data analytics libraries in Python. </p>
 **Please consider it only as a sneak preview.**
 <br>
 <br>
-**:exclamation::exclamation::exclamation:IMPORTANT:exclamation::exclamation::exclamation:**
+**❗❗❗ IMPORTANT ❗❗❗**
 
 <br>
 
