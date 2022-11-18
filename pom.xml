@@ -209,7 +209,7 @@
 	<protobuf.version>3.16.3</protobuf.version>
 </properties>
 
-<name>Apache StreamPipes (incubating)</name>
+<name>Apache StreamPipes</name>
 <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore
 IoT data streams.
 		</description>
@@ -1453,7 +1453,7 @@ IoT data streams.
 									<fileSet>
 										<directory>${project.build.directory}</directory>
 										<includes>
-											<include>apache-streampipes-${project.version}-incubating-source-release.zip
+											<include>apache-streampipes-${project.version}-source-release.zip
 										</include>
 									</includes>
 								</fileSet>
@@ -1549,7 +1549,7 @@ IoT data streams.
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>${maven-assembly-plugin.version}</version>
 					<configuration>
-						<finalName>apache-streampipes-${project.version}-incubating</finalName>
+						<finalName>apache-streampipes-${project.version}</finalName>
 						<descriptors>
 							<descriptor>tools/maven/assembly.xml</descriptor>
 						</descriptors>
@@ -1848,10 +1848,10 @@ IoT data streams.
 	</build>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
-		<connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
-		<url>https://github.com/apache/incubator-streampipes</url>
-		<tag>rel/0.70.0</tag>
+		<developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
+		<connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
+		<url>https://github.com/apache/streampipes</url>
+		<tag>dev</tag>
 	</scm>
 
 	<issueManagement>

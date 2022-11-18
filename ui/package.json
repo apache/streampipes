@@ -1,7 +1,7 @@
 {
   "name": "apache-streampipes",
   "version": "0.71.0-SNAPSHOT",
-  "description": "Apache StreamPipes (incubating) user interface",
+  "description": "Apache StreamPipes user interface",
   "homepage": "http://streampipes.apache.org",
   "repository": {
     "type": "git",
