@@ -16,6 +16,7 @@
  */
 package org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.geo.jvm.jts.exceptions.SpNotSupportedGeometryException;
@@ -26,8 +27,10 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import org.apache.sis.referencing.CRS;
 import org.apache.sis.setup.Configuration;
 import org.locationtech.jts.geom.Geometry;
+import org.opengis.util.FactoryException;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
@@ -46,7 +49,16 @@ public class ProjTransformation implements EventProcessor<ProjTransformationPara
         targetEPSG = params.getTargetEpsg();
 
         //TODO: this has to move to a central place in the streampipes backend
+        // otherwise Connection to SpatialMetadata database is already initialized occur
         Configuration.current().setDatabase(ProjTransformation::createDataSource);
+
+        // checks invalid input field. SIS got a cache system but if it is in the cache already it is also vallid
+        try {
+            System.out.println(CRS.forCode("EPSG::" + targetEPSG));
+        } catch (FactoryException e) {
+            throw new SpRuntimeException("Your chosen EPSG Code " + targetEPSG + " is not valid. "
+                    + "Check EPSG on https://spatialreference.org");
+        }
     }
 
     @Override
@@ -84,7 +96,7 @@ public class ProjTransformation implements EventProcessor<ProjTransformationPara
     protected static DataSource createDataSource() {
         PGSimpleDataSource ds = new PGSimpleDataSource();
         // HAS TO BE ADJUSTED OR INCLUDED IN THE AUTO_DISCOVERY
-        String[] serverAddresses = {"192.168.1.100"};
+        String[] serverAddresses = {"192.168.178.100"};
         ds.setServerNames(serverAddresses);
         int[] serverPortNumbers = {54320};
         ds.setPortNumbers(serverPortNumbers);
