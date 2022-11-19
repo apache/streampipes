@@ -13,8 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "3.4"
+version: '3.5'
+
+# command: `docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d `
+
 services:
-  rocketmq:
+  rmqnamesrv:
     ports:
-      - "5672:5672"
+      - 9876:9876
+  rmqbroker:
+    ports:
+      - 10911:10911
+    depends_on:
+      - rmqnamesrv
+  rmqproxy:
+    ports:
+      - 8081:8081
+    depends_on:
+      - rmqnamesrv

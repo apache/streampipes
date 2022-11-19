@@ -13,19 +13,70 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: "3.4"
-services:
-  rocketmq:
-    image: apache/rocketmq
+version: '3.5'
 
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-        max-file: "1"
+# command: `docker-compose up -d `
+
+services:
+  rmqnamesrv:
+    image: apache_rocketmq:latest
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    volumes:
+      - ./rmqs/logs:/home/rocketmq/logs
+      - ./rmqs/store:/home/rocketmq/store
+    environment:
+      JAVA_OPT_EXT: "-Duser.home=/home/rocketmq -Xms512M -Xmx512M -Xmn128m"
+    command: ["sh","mqnamesrv"]
     networks:
-      spnet:
+      rmq:
+        aliases:
+          - rmqnamesrv
+  rmqbroker:
+    image: apache_rocketmq:latest
+    container_name: rmqbroker
+    links:
+      - rmqnamesrv
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    volumes:
+      - ./rmqs/logs:/home/rocketmq/logs
+      - ./rmqs/store:/home/rocketmq/store
+    environment:
+      JAVA_OPT_EXT: "-Duser.home=/home/rocketmq -Xms512M -Xmx512M -Xmn128m"
+      NAMESRV_ADDR: "rmqnamesrv:9876"
+    command: ["sh","mqbroker"]
+    depends_on:
+      - rmqnamesrv
+    networks:
+      rmq:
+        aliases:
+          - rmqbroker
+  rmqproxy:
+    image: apache_rocketmq:latest
+    container_name: rmqproxy
+    links:
+      - rmqnamesrv
+    ports:
+      - 8081:8081
+    volumes:
+      - ./rmqs/logs:/home/rocketmq/logs
+      - ./rmqs/store:/home/rocketmq/store
+    environment:
+      JAVA_OPT_EXT: "-Duser.home=/home/rocketmq -Xms512M -Xmx512M -Xmn128m"
+      NAMESRV_ADDR: "rmqnamesrv:9876"
+    command: ["sh","mqproxy"]
+    depends_on:
+      - rmqbroker
+    networks:
+      rmq:
+        aliases:
+          - rmqproxy
 
 networks:
-  spnet:
-    external: true
+  rmq:
+    name: rmq
+    driver: bridge
