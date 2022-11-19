@@ -56,7 +56,7 @@ Target EPSG code
 
 ## Output
 
-Update of event with new EPSG udn WKT-Literal in the dependingtarget epsg.
+Update of event with new EPSG udn WKT-Literal in the dependent target epsg.
 
 ### Example
 
