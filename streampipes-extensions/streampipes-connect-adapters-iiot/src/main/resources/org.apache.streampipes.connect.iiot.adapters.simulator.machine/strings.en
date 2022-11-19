@@ -17,7 +17,7 @@
   -->
 
 
-org.apache.streampipes.connect.iiot.adapters.simulator.machine.title=Machine Data Simulator111
+org.apache.streampipes.connect.iiot.adapters.simulator.machine.title=Machine Data Simulator
 org.apache.streampipes.connect.iiot.adapters.simulator.machine.description=Publishes various simulated machine sensor data
 
 wait-time-ms.title=Wait Time (MS)
