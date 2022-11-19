@@ -189,7 +189,7 @@ class APIEndpoint(ABC):
 
         Returns
         -------
-        The specified resource as an instance of the corresponding model class (`model.Element`).
+        The specified resource as an instance of the corresponding model class (`model.Resource`).
         """
         raise NotImplementedError(
             "We're sorry! This functionality is not yet part of the StreamPipes Python client."
