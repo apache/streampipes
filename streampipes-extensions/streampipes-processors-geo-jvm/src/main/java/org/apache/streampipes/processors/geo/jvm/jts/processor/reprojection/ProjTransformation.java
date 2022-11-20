@@ -27,12 +27,9 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import org.apache.sis.setup.Configuration;
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.util.FactoryException;
-import org.postgresql.ds.PGSimpleDataSource;
 
-import javax.sql.DataSource;
 
 public class ProjTransformation implements EventProcessor<ProjTransformationParameter> {
 
@@ -49,14 +46,6 @@ public class ProjTransformation implements EventProcessor<ProjTransformationPara
 
         //TODO: this has to move to a central place in the streampipes backend
         // otherwise Connection to SpatialMetadata database is already initialized occur
-
-        try {
-            Configuration.current().setDatabase(ProjTransformation::createDataSource);
-        } catch (IllegalStateException e) {
-            logger.info("Setup was already established");
-            // catch the exceptions due connection is already initialized.
-        }
-
 
         // check if SIS DB is set up with imported data or is null
         try {
@@ -118,21 +107,4 @@ public class ProjTransformation implements EventProcessor<ProjTransformationPara
     public void onDetach() {
     }
 
-    // https://sis.apache.org/apidocs/org/apache/sis/setup/Configuration.html#setDatabase(java.util.function.Supplier)
-    // TODO: Best would be ConfigKeys VARIABLE. ATM hardcoded and adjustments for development required like IP of client
-    // TODO: has to move together with the Configuration.current() method
-    protected static DataSource createDataSource() {
-        PGSimpleDataSource ds = new PGSimpleDataSource();
-        // HAS TO BE ADJUSTED OR INCLUDED IN THE AUTO_DISCOVERY
-        String[] serverAddresses = {"192.168.178.100"};
-        ds.setServerNames(serverAddresses);
-        int[] serverPortNumbers = {54320};
-        ds.setPortNumbers(serverPortNumbers);
-        ds.setDatabaseName("EPSG");
-        ds.setUser("streampipes");
-        ds.setPassword("streampipes");
-        ds.setReadOnly(true);
-
-        return ds;
-    }
 }

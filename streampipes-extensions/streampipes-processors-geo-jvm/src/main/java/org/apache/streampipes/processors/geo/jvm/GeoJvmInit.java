@@ -40,14 +40,26 @@ import org.apache.streampipes.processors.geo.jvm.processor.speed.SpeedCalculator
 import org.apache.streampipes.processors.geo.jvm.processor.staticdistancecalculator.StaticDistanceCalculatorController;
 import org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder.StaticGoogleMapsGeocodingController;
 
+import org.apache.sis.setup.Configuration;
+import org.postgresql.ds.PGSimpleDataSource;
+
+import javax.sql.DataSource;
+
 public class GeoJvmInit extends StandaloneModelSubmitter {
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
+
+    try {
+      Configuration.current().setDatabase(GeoJvmInit::createDataSource);
+    } catch (IllegalStateException e) {
+      // catch the exceptions due connection is already initialized.
+    }
+
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.geo.jvm",
-            "Processors Geo JVM",
-            "",
-            8090)
+                    "Processors Geo JVM",
+                    "",
+                    8090)
             .registerPipelineElements(
                     new DistanceCalculatorController(),
                     new GoogleMapsGeocodingController(),
@@ -68,7 +80,21 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.GOOGLE_API_KEY, "","Google Maps API key")
+            .addConfig(ConfigKeys.GOOGLE_API_KEY, "", "Google Maps API key")
             .build();
   }
+
+  // https://sis.apache.org/apidocs/org/apache/sis/setup/Configuration.html#setDatabase(java.util.function.Supplier)
+  protected static DataSource createDataSource() {
+    PGSimpleDataSource ds = new PGSimpleDataSource();
+    String[] serverAddresses = {"epsg"};
+    ds.setServerNames(serverAddresses);
+    ds.setDatabaseName("EPSG");
+    ds.setUser("streampipes");
+    ds.setPassword("streampipes");
+    ds.setReadOnly(true);
+
+    return ds;
+  }
+
 }
