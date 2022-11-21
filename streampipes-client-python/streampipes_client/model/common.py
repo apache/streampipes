@@ -74,8 +74,8 @@ class EventProperty(BasicModel):
     Data model of an `EventProperty` in compliance to the StreamPipes Backend.
     """
 
-    label: StrictStr
-    description: StrictStr
+    label: Optional[StrictStr]
+    description: Optional[StrictStr]
     runtime_name: StrictStr
     required: StrictBool
     domain_properties: List[StrictStr]
@@ -95,3 +95,47 @@ class EventSchema(BasicModel):
     """
 
     event_properties: List[EventProperty]
+
+
+class ApplicationLink(BasicModel):
+    application_name: Optional[StrictStr]
+    application_description: Optional[StrictStr]
+    application_url: Optional[StrictStr]
+    application_icon_url: Optional[StrictStr]
+    application_link_type: Optional[StrictStr]
+
+
+class EventStreamQualityDefinition(BasicModel):
+    pass
+
+
+class EventStreamQualityRequirement(BasicModel):
+    minimum_stream_quality: Optional[EventStreamQualityDefinition]
+    maximum_stream_quality: Optional[EventStreamQualityDefinition]
+
+
+class TopicDefinition(BasicModel):
+    actual_topic_name: Optional[StrictStr]
+
+
+class TransportProtocol(BasicModel):
+    broker_hostname: Optional[StrictStr]
+    topic_definition: Optional[TopicDefinition]
+    port: Optional[StrictInt]
+
+
+class TransportFormat(BasicModel):
+    rdf_type: Optional[List[Optional[StrictStr]]]
+
+
+class EventGrounding(BasicModel):
+    transport_protocols: Optional[List[Optional[TransportProtocol]]]
+    transport_formats: Optional[List[Optional[TransportFormat]]]
+
+
+class MeasurementCapability(BasicModel):
+    capability: Optional[StrictStr]
+
+
+class MeasurementObject(BasicModel):
+    measures_object: Optional[StrictStr]

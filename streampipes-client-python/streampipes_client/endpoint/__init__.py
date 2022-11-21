@@ -15,7 +15,9 @@
 # limitations under the License.
 #
 from .data_lake_measure import DataLakeMeasureEndpoint
+from .sp_data_stream import SpDataStreamEndpoint
 
 __all__ = [
     "DataLakeMeasureEndpoint",
+    "SpDataStreamEndpoint",
 ]
