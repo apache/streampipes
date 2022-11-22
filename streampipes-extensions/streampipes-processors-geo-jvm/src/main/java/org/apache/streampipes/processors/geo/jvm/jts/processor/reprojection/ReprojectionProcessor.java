@@ -1,21 +1,18 @@
 /*
+ *   Licensed to the Apache Software Foundation (ASF) under one or more
+ *   contributor license agreements.  See the NOTICE file distributed with
+ *   this work for additional information regarding copyright ownership.
+ *   The ASF licenses this file to You under the Apache License, Version 2.0
+ *   (the "License"); you may not use this file except in compliance with
+ *   the License.  You may obtain a copy of the License at
  *
- *  * Licensed to the Apache Software Foundation (ASF) under one or more
- *  * contributor license agreements.  See the NOTICE file distributed with
- *  * this work for additional information regarding copyright ownership.
- *  * The ASF licenses this file to You under the Apache License, Version 2.0
- *  * (the "License"); you may not use this file except in compliance with
- *  * the License.  You may obtain a copy of the License at
- *  *
- *  *    http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
- *  *
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
  */
 
 package org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection;
@@ -44,18 +41,17 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 import org.locationtech.jts.geom.Geometry;
 import org.opengis.util.FactoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReprojectionProcessor extends StreamPipesDataProcessor {
-
-
     public static final String GEOM_KEY = "geom-key";
     public static final String SOURCE_EPSG_KEY = "source-epsg-key";
     public static final String TARGET_EPSG_KEY = "target-epsg-key";
-    public static final String GEOM_RUNTIME = "geometry";
+    public static final String GEOM_RUNTIME = "geomWKT";
     public static final String EPSG_RUNTIME = "epsg";
-
-    private String geometry;
-    private Integer sourceEpsg;
+    private String geometryMapper;
+    private String sourceEpsgMapper;
     private Integer targetEpsg;
 
     @Override
@@ -85,8 +81,9 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
     @Override
     public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
                              EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-        this.geometry = parameters.extractor().singleValueParameter(GEOM_KEY, String.class);
-        this.sourceEpsg = parameters.extractor().singleValueParameter(SOURCE_EPSG_KEY, Integer.class);
+
+        this.geometryMapper = parameters.extractor().mappingPropertyValue(GEOM_KEY);
+        this.sourceEpsgMapper = parameters.extractor().mappingPropertyValue(SOURCE_EPSG_KEY);
         this.targetEpsg = parameters.extractor().singleValueParameter(TARGET_EPSG_KEY, Integer.class);
 
         // check if SIS DB is set up with imported data or is null
@@ -122,8 +119,8 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
 
     @Override
     public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
-        String geom = event.getFieldBySelector(geometry).getAsPrimitive().getAsString();
-        Integer sourceEpsg = event.getFieldBySelector(sourceEpsg).getAsPrimitive().getAsInt();
+        String geom = event.getFieldBySelector(geometryMapper).getAsPrimitive().getAsString();
+        Integer sourceEpsg = event.getFieldBySelector(sourceEpsgMapper).getAsPrimitive().getAsInt();
 
         Geometry geometry = SpGeometryBuilder.createSPGeom(geom, sourceEpsg);
 
