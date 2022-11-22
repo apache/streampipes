@@ -53,6 +53,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
     private String geometryMapper;
     private String sourceEpsgMapper;
     private Integer targetEpsg;
+    private static final Logger LOG = LoggerFactory.getLogger(ReprojectionProcessor.class);
 
     @Override
     public DataProcessorDescription declareModel() {
@@ -89,9 +90,9 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
         // check if SIS DB is set up with imported data or is null
         try {
             if (SpReprojectionBuilder.isSisConfigurationValid()){
-                logger.info("SIS DB Settings successful checked ");
+                LOG.info("SIS DB Settings successful checked ");
             } else {
-                logger.warn("The required EPSG database is not imported");
+                LOG.warn("The required EPSG database is not imported");
                 //TODO implement fallback option with proj4j
                 throw new SpRuntimeException("Database not set and ready for fallback ");
             }
@@ -102,7 +103,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
         // check if SIS DB has the supported 9.9.1 Version.
         try {
             if (!SpReprojectionBuilder.isSisDbCorrectVersion()) {
-                logger.warn("Not supported EPSG DB is used.");
+                LOG.warn("Not supported EPSG DB is used.");
                 throw new SpRuntimeException("Your current EPSG DB version " + SpReprojectionBuilder.getSisDbVersion()
                         + " is not the supported 9.9.1 version. ");
             }
@@ -137,7 +138,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
 
             collector.collect(event);
         } else {
-            logger.warn("An empty point geometry is created"
+            LOG.warn("An empty point geometry is created"
                     + " due invalid input values. Check used epsg Code:" + targetEpsg);
         }
     }
