@@ -52,7 +52,7 @@
         <consul-client.version>1.5.2</consul-client.version>
         <elasticsearch.version>6.8.17</elasticsearch.version>
         <file-management.version>3.1.0</file-management.version>
-        <flink.version>1.13.5</flink.version>
+        <flink.version>1.16.0</flink.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <fst.version>2.57</fst.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
@@ -587,7 +587,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
-                <artifactId>flink-connector-kafka_2.11</artifactId>
+                <artifactId>flink-connector-kafka</artifactId>
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
@@ -597,7 +597,7 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
-                <artifactId>flink-streaming-java_2.11</artifactId>
+                <artifactId>flink-streaming-java</artifactId>
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
@@ -1295,17 +1295,12 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
-                <artifactId>flink-cep_2.11</artifactId>
+                <artifactId>flink-cep</artifactId>
                 <version>${flink.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
-                <artifactId>flink-cep-scala_2.11</artifactId>
-                <version>${flink.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.flink</groupId>
-                <artifactId>flink-runtime_2.11</artifactId>
+                <artifactId>flink-runtime</artifactId>
                 <version>${flink.version}</version>
             </dependency>
             <dependency>

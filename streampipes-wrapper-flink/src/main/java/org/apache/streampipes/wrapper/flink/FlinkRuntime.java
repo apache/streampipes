@@ -88,7 +88,7 @@ public abstract class FlinkRuntime<T extends RuntimeParams<V, W, X>, V extends B
         FlinkSpMiniCluster
             .INSTANCE
             .getClusterClient()
-            .submitJob(env.getStreamGraph(bindingParams.getGraph().getElementId()).getJobGraph());
+            .submitJob(env.getStreamGraph().getJobGraph());
       }
     } catch (Exception e) {
       e.printStackTrace();
