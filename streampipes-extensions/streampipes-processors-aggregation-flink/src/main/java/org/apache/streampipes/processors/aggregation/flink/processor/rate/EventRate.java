@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.rate;
 
-import org.apache.flink.shaded.guava18.com.google.common.collect.Iterables;
+import org.apache.flink.shaded.guava30.com.google.common.collect.Iterables;
 import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import org.apache.streampipes.model.runtime.Event;
 
-public class EventRate implements AllWindowFunction<Event, Float, TimeWindow>{
+public class EventRate implements AllWindowFunction<Event, Float, TimeWindow> {
 
   private Integer timeWindowSize;
 
