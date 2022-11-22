@@ -30,7 +30,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoController;
-import org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.ProjTransformationController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.reprojection.ReprojectionProcessor;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.SetEpsgController;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.CreateTrajectoryFromPointsController;
 import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
@@ -70,7 +70,7 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
                     new CreateTrajectoryFromPointsController(),
                     new SpeedCalculatorController(),
                     new StaticDistanceCalculatorController(),
-                    new ProjTransformationController())
+                    new ReprojectionProcessor())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
                     new CborDataFormatFactory(),
