@@ -1715,9 +1715,6 @@ IoT data streams.
 						<exclude>streampipes-code-generation/src/test/resources/expected_pom_xml</exclude>
 						<exclude>streampipes-code-generation/src/test/resources/expected_web_xml</exclude>
 
-						<!-- Language Files -->
-						<exclude>**/*.en</exclude>
-
 						<!-- Archetype resources should not have ASF license header -->
 						<exclude>archetypes/streampipes-archetype-pe-processors-flink/src/main/resources/**</exclude>
 						<exclude>archetypes/streampipes-archetype-pe-processors-jvm/src/main/resources/**</exclude>
