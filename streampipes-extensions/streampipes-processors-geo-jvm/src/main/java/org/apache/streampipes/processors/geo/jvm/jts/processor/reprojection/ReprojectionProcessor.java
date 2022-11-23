@@ -93,8 +93,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
                 LOG.info("SIS DB Settings successful checked ");
             } else {
                 LOG.warn("The required EPSG database is not imported");
-                //TODO implement fallback option with proj4j
-                throw new SpRuntimeException("Database not set and ready for fallback ");
+                throw new SpRuntimeException("The required EPSG database is not imported");
             }
         } catch (FactoryException e) {
             throw new SpRuntimeException("Something unexpected happened " + e);
@@ -113,7 +112,7 @@ public class ReprojectionProcessor extends StreamPipesDataProcessor {
 
         // checks if Input EPSG in valid and exists in EPSG DB
         if (!SpReprojectionBuilder.isSisEpsgValid(this.targetEpsg)) {
-            throw new SpRuntimeException("Your chosen EPSG Code " + this.targetEpsg + " is not valid or supported. "
+            throw new SpRuntimeException("Your chosen EPSG Code " + this.targetEpsg + " is not valid. "
                     + "Check EPSG on https://spatialreference.org");
         }
     }
