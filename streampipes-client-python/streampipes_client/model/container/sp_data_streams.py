@@ -16,7 +16,7 @@
 #
 
 """
-Implementation of a resource container for the data stream measures endpoint.
+Implementation of a resource container for the data streams endpoint.
 """
 from typing import Type
 
@@ -31,7 +31,7 @@ __all__ = [
 
 class SpDataStreams(ResourceContainer):
     """Implementation of the resource container for the data stream endpoint.
-    This resource container is a collection of data stream measures returned by the StreamPipes API.
+    This resource container is a collection of data streams returned by the StreamPipes API.
     It is capable of parsing the response content directly into a list of queried `SpDataStream`.
     Furthermore, the resource container makes them accessible in a pythonic manner.
 

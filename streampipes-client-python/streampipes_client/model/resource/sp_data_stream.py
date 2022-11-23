@@ -21,17 +21,28 @@ from streampipes_client.model.common import (
     ApplicationLink,
     EventGrounding,
     EventSchema,
-    EventStreamQualityDefinition,
-    EventStreamQualityRequirement,
     MeasurementCapability,
     MeasurementObject,
 )
 from streampipes_client.model.resource.resource import Resource
 
-__all__ = ["SpDataStream"]
+"""
+Implementation of a resource for a data stream.
+"""
+
+__all__ = [
+    "SpDataStream",
+]
 
 
 class SpDataStream(Resource):
+    """Implementation of a resource for data streams.
+    This resource defines the data model used by resource container (`model.container.SpDataStreams`).
+    It inherits from Pydantic's BaseModel to get all its superpowers,
+    which are used to parse, validate the API response and to easily switch between
+    the Python representation (both serialized and deserialized) and Java representation (serialized only).
+    """
+
     def convert_to_pandas_representation(self):
         return self.dict()
 
@@ -46,8 +57,6 @@ class SpDataStream(Resource):
     application_links: Optional[List[Optional[ApplicationLink]]]
     internally_managed: Optional[StrictBool]
     connected_to: Optional[List[Optional[StrictStr]]]
-    has_event_stream_qualities: Optional[List[Optional[EventStreamQualityDefinition]]]
-    requires_event_stream_qualities: Optional[List[Optional[EventStreamQualityRequirement]]]
     event_grounding: Optional[EventGrounding]
     event_schema: Optional[EventSchema]
     measurement_capability: Optional[List[Optional[MeasurementCapability]]]
@@ -57,4 +66,3 @@ class SpDataStream(Resource):
     category: Optional[List[Optional[StrictStr]]]
     uri: Optional[StrictStr]
     dom: Optional[StrictStr]
-    _rev: Optional[StrictStr]
