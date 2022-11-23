@@ -37,6 +37,7 @@ import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParam
 public class StreamedQueryResultProvider extends QueryResultProvider {
 
   private static final int MAX_RESULTS_PER_QUERY = 500000;
+  private static final String TIME_FIELD = "time";
 
   private final OutputFormat format;
 
@@ -107,7 +108,11 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
    * @param measurement contains the actual timestamp name value
    * @param dataResult the query result of the database with 'time' as timestamp field name
    */
-  private void changeTimestampHeader(DataLakeMeasure measurement, SpQueryResult dataResult) {
-    dataResult.getHeaders().set(0, measurement.getTimestampFieldName());
+  private void changeTimestampHeader(DataLakeMeasure measurement,
+                                     SpQueryResult dataResult) {
+    var timeFieldIndex = dataResult.getHeaders().indexOf(TIME_FIELD);
+    if (timeFieldIndex > -1) {
+      dataResult.getHeaders().set(timeFieldIndex, measurement.getTimestampFieldName());
+    }
   }
 }
