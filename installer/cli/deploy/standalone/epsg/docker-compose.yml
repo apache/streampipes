@@ -18,10 +18,10 @@ services:
   epsg:
     image: postgres:14.4-alpine
     volumes:
-      # - ./scripts/PostgreSQL_Table_Script.sql:/docker-entrypoint-initdb.d/01_PostgreSQL_Table_Script.sql
-      # - ./scripts/PostgreSQL_Data_Script.sql:/docker-entrypoint-initdb.d/02_PostgreSQL_Data_Scr  ipt.sql
-      # - ./scripts/PostgreSQL_FKey_Script.sql:/docker-entrypoint-initdb.d/03_PostgreSQL_FKey_Script.sql
-      # - ./scripts/EPSG_FINISH.sql:/docker-entrypoint-initdb.d/04_EPSG_FINISH.sql
+      - ./../../../../source_external/epsg/PostgreSQL_Table_Script.sql:/docker-entrypoint-initdb.d/01_PostgreSQL_Table_Script.sql
+      - ./../../../../source_external/epsg/PostgreSQL_Data_Script.sql:/docker-entrypoint-initdb.d/02_PostgreSQL_Data_Scr  ipt.sql
+      - ./../../../../source_external/epsg/PostgreSQL_FKey_Script.sql:/docker-entrypoint-initdb.d/03_PostgreSQL_FKey_Script.sql
+      - ./../../../../source_external/epsg/EPSG_FINISH.sql:/docker-entrypoint-initdb.d/04_EPSG_FINISH.sql
       - epsg:/var/lib/postgresql/data
     environment:
        POSTGRES_DB: EPSG
