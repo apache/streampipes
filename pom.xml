@@ -175,6 +175,7 @@
 	<opennlp.version>1.9.0</opennlp.version>
 	<postgresql.version>42.4.1</postgresql.version>
 	<pulsar.version>2.10.1</pulsar.version>
+	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
 	<scala-lang.version>2.11.12</scala-lang.version>
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
@@ -208,7 +209,7 @@
 	<protobuf.version>3.16.3</protobuf.version>
 </properties>
 
-<name>Apache StreamPipes (incubating)</name>
+<name>Apache StreamPipes</name>
 <description>A self-service (Industrial) IoT toolbox to enable non-technical users to connect, analyze and explore
 IoT data streams.
 		</description>
@@ -1271,6 +1272,11 @@ IoT data streams.
 					<version>${pulsar.version}</version>
 				</dependency>
 				<dependency>
+					<groupId>org.apache.rocketmq</groupId>
+					<artifactId>rocketmq-client-java</artifactId>
+					<version>${rocketmq.version}</version>
+				</dependency>
+				<dependency>
 					<groupId>org.atteo.classindex</groupId>
 					<artifactId>classindex</artifactId>
 					<version>${classindex.version}</version>
@@ -1447,7 +1453,7 @@ IoT data streams.
 									<fileSet>
 										<directory>${project.build.directory}</directory>
 										<includes>
-											<include>apache-streampipes-${project.version}-incubating-source-release.zip
+											<include>apache-streampipes-${project.version}-source-release.zip
 										</include>
 									</includes>
 								</fileSet>
@@ -1543,7 +1549,7 @@ IoT data streams.
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>${maven-assembly-plugin.version}</version>
 					<configuration>
-						<finalName>apache-streampipes-${project.version}-incubating</finalName>
+						<finalName>apache-streampipes-${project.version}</finalName>
 						<descriptors>
 							<descriptor>tools/maven/assembly.xml</descriptor>
 						</descriptors>
@@ -1838,14 +1844,25 @@ IoT data streams.
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>
+						--add-opens java.base/java.lang=ALL-UNNAMED
+						--add-opens java.base/java.util=ALL-UNNAMED
+						--add-opens java.base/java.base=ALL-UNNAMED
+						--add-opens java.base/java.util.stream=ALL-UNNAMED
+					</argLine>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
 	<scm>
-		<developerConnection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</developerConnection>
-		<connection>scm:git:ssh://git@github.com/apache/incubator-streampipes.git</connection>
-		<url>https://github.com/apache/incubator-streampipes</url>
-		<tag>rel/0.70.0</tag>
+		<developerConnection>scm:git:ssh://git@github.com/apache/streampipes.git</developerConnection>
+		<connection>scm:git:ssh://git@github.com/apache/streampipes.git</connection>
+		<url>https://github.com/apache/streampipes</url>
+		<tag>dev</tag>
 	</scm>
 
 	<issueManagement>

@@ -24,9 +24,17 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: mixed-line-ending
+      - id: check-docstring-first
+      - id: check-merge-conflict
 
   - repo: local
     hooks:
+      - id: interrogate
+        name: interrogate
+        language: python
+        types: [ python ]
+        entry:  interrogate -vv --fail-under 95 --omit-covered-files --ignore-init-method --ignore-module --ignore-magic --ignore-regex test_* --ignore-regex Test*
+
       - id: pyupgrade
         name: pyupgrade
         language: python

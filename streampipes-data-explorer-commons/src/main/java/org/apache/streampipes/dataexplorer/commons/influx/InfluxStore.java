@@ -33,6 +33,7 @@ import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -178,7 +179,7 @@ public class InfluxStore {
     }
 
     if (missingFields.size() > 0) {
-      LOG.warn("Ignored {} fields which were present in the schema, but not in the provided event: {}",
+      LOG.debug("Ignored {} fields which were present in the schema, but not in the provided event: {}",
           missingFields.size(),
           String.join(", ", missingFields));
     }
@@ -191,7 +192,7 @@ public class InfluxStore {
   }
 
   private void handleMeasurementProperty(Point.Builder p,
-                                         EventPropertyPrimitive ep,
+                                         @NotNull EventPropertyPrimitive ep,
                                          String preparedRuntimeName,
                                          PrimitiveField eventPropertyPrimitiveField) {
     try {

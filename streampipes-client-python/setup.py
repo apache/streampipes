@@ -40,9 +40,10 @@ dev_packages = base_packages + [
     "autoflake>=1.7.7",
     "black>=22.10.0",
     "flake8>=5.0.4",
+    "interrogate>=1.5.0",
     "isort>=5.10.1",
     "mypy>=0.990",
-    "pandas-stubs>=1.5.1.221024",
+    "pandas-stubs>=1.2.0.62",
     "pre-commit>=2.20.0",
     "pytest>=7.2.0",
     "pytest-cov>=4.0.0",
@@ -52,8 +53,12 @@ dev_packages = base_packages + [
 
 docs_packages = [
     "mkdocs>=1.2.3",
+    "mkdocs-awesome-pages-plugin>=2.7.0",
     "mkdocs-material>=8.1.11",
     "mkdocstrings[python]>=0.19.0",
+    "pytkdocs[numpy-style]>=0.5.0",
+    "mkdocs-gen-files>=0.3.5",
+    "mkdocs-literate-nav>=0.4.1",
     "numpydoc>=1.2",
 ]
 

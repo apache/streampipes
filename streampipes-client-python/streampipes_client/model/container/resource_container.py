@@ -56,6 +56,13 @@ class StreamPipesDataModelError(Exception):
         super().__init__(self._generate_error_message())
 
     def _generate_error_message(self) -> str:
+        """Generate a specific error message for this exception.
+        Error message contains information derived from the specific `ValidationError`.
+
+        Returns
+        -------
+        The error description (`str`)
+        """
         return (
             f"\nOops, there seems to be a problem with our internal StreamPipes data model.\n"
             f"This should not occur, but unfortunately did.\n"
@@ -89,6 +96,13 @@ class StreamPipesResourceContainerJSONError(Exception):
         super().__init__(self._generate_error_message())
 
     def _generate_error_message(self) -> str:
+        """Generate a specific error message for this exception.
+        Error message contains information about the related container model and the causing JSON string.
+
+        Returns
+        -------
+        The error description (`str`)
+        """
         return (
             f"\nOops, there seems to be a problem when parsing the response of the StreamPipes API."
             f"This should not occur, but unfortunately did.\n"
@@ -165,8 +179,8 @@ class ResourceContainer(ABC):
         # raise an exception if the response does not be a list
         if not type(parsed_json) == list:
             raise StreamPipesResourceContainerJSONError(container_name=str(cls), json_string=json_string)
-        try:
 
+        try:
             resource_container = cls(resources=[cls._resource_cls().parse_obj(item) for item in parsed_json])
         except ValidationError as ve:
             raise StreamPipesDataModelError(validation_error=ve)

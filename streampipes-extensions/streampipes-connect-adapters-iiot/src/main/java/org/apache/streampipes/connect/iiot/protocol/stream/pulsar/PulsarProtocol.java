@@ -19,11 +19,16 @@ package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.MessageId;
+import org.apache.pulsar.client.api.MessageListener;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Reader;
+
+import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
@@ -32,24 +37,24 @@ import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.protocol.stream.BrokerProtocol;
-import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.messaging.InternalEventProcessor;
+import org.apache.streampipes.container.api.SupportsRuntimeConfig;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
-import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerProvidedOptions {
+public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeConfig {
 
   private static final Logger LOG = LoggerFactory.getLogger(PulsarProtocol.class);
 
@@ -58,16 +63,18 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
   public static final String PULSAR_BROKER_HOST = "pulsar-broker-host";
   public static final String PULSAR_BROKER_PORT = "pulsar-broker-port";
   public static final String PULSAR_TOPIC = "pulsar-topic";
+  public static final String PULSAR_SUBSCRIPTION_NAME = "pulsar-subscription-name";
 
-  private Thread thread;
-  private PulsarConsumer pulsarConsumer;
+  private String subscriptionName;
+  private Consumer<byte[]> consumer;
 
   public PulsarProtocol() {
 
   }
 
-  public PulsarProtocol(IParser parser, IFormat format, String brokerUrl, String topic) {
+  public PulsarProtocol(IParser parser, IFormat format, String brokerUrl, String topic, String subscriptionName) {
     super(parser, format, brokerUrl, topic);
+    this.subscriptionName = subscriptionName;
   }
 
   @Override
@@ -100,8 +107,9 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
     Integer brokerPort = extractor.singleValue(PULSAR_BROKER_PORT, Integer.class);
     String brokerUrl = brokerHost + ":" + brokerPort;
     String topic = extractor.singleValue(PULSAR_TOPIC, String.class);
+    String subscriptionName = extractor.singleValue(PULSAR_SUBSCRIPTION_NAME, String.class);
 
-    return new PulsarProtocol(parser, format, brokerUrl, topic);
+    return new PulsarProtocol(parser, format, brokerUrl, topic, subscriptionName);
   }
 
   @Override
@@ -114,28 +122,44 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
             .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))
             .requiredIntegerParameter(Labels.withId(PULSAR_BROKER_PORT), 6650)
             .requiredTextParameter(Labels.withId(PULSAR_TOPIC))
-//            .requiredSingleValueSelectionFromContainer(Labels.from(PULSAR_TOPIC, "Topic",
-//                    "Example: topic"), Arrays.asList(PULSAR_BROKER_HOST, PULSAR_BROKER_PORT))
+            .requiredTextParameter(Labels.withId(PULSAR_SUBSCRIPTION_NAME))
             .build();
   }
 
   @Override
   public void run(IAdapterPipeline adapterPipeline) {
     SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-    this.pulsarConsumer = new PulsarConsumer(this.brokerUrl,
-            this.topic, stk::emit);
 
-    thread = new Thread(this.pulsarConsumer);
-    thread.start();
+    try {
+      if (consumer != null) {
+        consumer.close();
+      }
+      PulsarClient client = PulsarUtils.makePulsarClient(brokerUrl);
+      consumer = client.newConsumer()
+              .topic(topic)
+              .subscriptionName(subscriptionName)
+              .messageListener((MessageListener<byte[]>) (consumer, msg) -> {
+                try {
+                  stk.emit(msg.getValue());
+                } catch (ParseException e) {
+                  LOG.error("Failed to parse message.", e);
+                }
+              }).subscribe();
+    } catch (PulsarClientException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
   public void stop() {
-    try {
-      this.pulsarConsumer.stop();
-    } catch (PulsarClientException e) {
-      e.printStackTrace();
+    if(consumer != null) {
+      try {
+        consumer.close();
+      } catch (PulsarClientException e) {
+        throw new RuntimeException(e);
+      }
     }
+    consumer = null;
   }
 
   @Override
@@ -144,15 +168,16 @@ public class PulsarProtocol extends BrokerProtocol implements ResolvesContainerP
   }
 
   @Override
-  public List<Option> resolveOptions(String requestId, StaticPropertyExtractor extractor) {
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor) throws
+          SpConfigurationException {
     String brokerHost = extractor.singleValueParameter(PULSAR_BROKER_HOST, String.class);
     Integer brokerPort = extractor.singleValueParameter(PULSAR_BROKER_PORT, Integer.class);
 
     try {
       PulsarClient client = PulsarUtils.makePulsarClient(brokerHost + ":" + brokerPort);
-      return new ArrayList<>();
+      return null;
     } catch (PulsarClientException e) {
-      return new ArrayList<>();
+      throw new SpConfigurationException(e);
     }
   }
 }

@@ -263,8 +263,14 @@ All files in streampipes-extensions/streampipes-processors-transformation-flink/
 
 This project includes some sources that are licensed under the MIT License:
 
-All files in streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor
-/revgeocoder/geocode (https://github.com/AReallyGoodName/OfflineReverseGeocode)
+The following files in streampipes-extensions/streampipes-processors-geo-jvm/src/main/java/org/apache/streampipes/processors/geo/jvm/processor
+/revgeocoder/geocode (https://github.com/AReallyGoodName/OfflineReverseGeocode):
+
+- GeoName.java
+- ReverseGeoCode.java
+- kdtree/KDNode.java
+- kdtree/KDNodeComparator.java
+- kdtree/KDTree.java
 
 The MIT License (MIT)
 [OSI Approved License]
