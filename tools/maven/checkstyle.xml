@@ -27,6 +27,11 @@ page at http://checkstyle.sourceforge.net/config.html -->
 <module name="Checker">
     <property name="severity" value="error"/>
 
+    <module name="Header">
+        <property name="headerFile" value="tools/maven/checkstyle-header.txt"/>
+        <property name="fileExtensions" value="java"/>
+    </module>
+
     <module name="FileTabCharacter">
         <!-- Checks that there are no tab characters in the file. -->
     </module>
