@@ -19,6 +19,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es2020",
+    "allowSyntheticDefaultImports": true,
     "typeRoots": [
       "node_modules/@types"
     ],
