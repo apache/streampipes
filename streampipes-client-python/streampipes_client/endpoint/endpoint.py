@@ -191,7 +191,9 @@ class APIEndpoint(ABC):
         -------
         The specified resource as an instance of the corresponding model class (`model.Resource`).
         """
-        raise NotImplementedError(
-            "We're sorry! This functionality is not yet part of the StreamPipes Python client."
-            "Stay tuned, we will add this shortly."
-        )  # pragma: no cover
+
+        response = self._make_request(
+            request_method=self._parent_client.request_session.get, url=f"{self.build_url()}/{identifier}"
+        )
+
+        return self._container_cls._resource_cls()(**response.json())
