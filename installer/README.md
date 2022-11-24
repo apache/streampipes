@@ -27,14 +27,14 @@ This project contains a variety of StreamPipes installation and operation option
 
 This is useful in order to easily spin up StreamPipes' microservice environment consisting of:
 
-* **backend**, **connect master** and **ui** container (see [incubator-streampipes](https://github.com/apache/incubator-streampipes))
-* **extensions**, i.e. connect adapter, custom sources and pipeline elements (see [incubator-streampipes-extensions](https://github.com/apache/incubator-streampipes-extensions)), as well as
+* **backend**, **connect master** and **ui** container (see [streampipes](https://github.com/apache/streampipes))
+* **extensions**, i.e. connect adapter, custom sources and pipeline elements (see [streampipes-extensions](https://github.com/apache/streampipes-extensions)), as well as
 * mandatory **third-party services** such as databases, message broker etc.
 
 ## How to get started?
 Clone this project
 ```bash
-git clone https://github.com/apache/incubator-streampipes-installer
+git clone https://github.com/apache/streampipes-installer
 ```
 or download the ZIP of the installer. Click on the green button `Code` on the top right. Then click on `Download ZIP`.
 

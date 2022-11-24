@@ -109,7 +109,7 @@ Now you're good to go to write your new pipeline element :tada: :tada: :tada:
 
 > **HINT for extensions**: Use our [Maven archetypes](https://streampipes.apache.org/docs/docs/dev-guide-archetype/) to setup a project skeleton and use your IDE of choice for development. However, we do recommend using IntelliJ.
 
-> **HINT for core**: To work on `backend` or `ui` features you need to set the template to `backend` and clone the core repository [incubator-streampipes](https://github.com/apache/incubator-streampipes) - check the prerequisites there for more information.
+> **HINT for core**: To work on `backend` or `ui` features you need to set the template to `backend` and clone the core repository [streampipes](https://github.com/apache/streampipes) - check the prerequisites there for more information.
 
 **Stop** environment and remove docker container
 ```bash
@@ -246,7 +246,7 @@ Simply add the path to this cli directory to your `$PATH` (on macOS, Linux) vari
 For **macOS**, or **Linux**:
 
 ```bash
-export PATH="/path/to/incubator-streampipes-installer/cli:$PATH"
+export PATH="/path/to/streampipes-installer/cli:$PATH"
 ```
 
 For **Windows 10**, e.g. check this [documentation](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/).
