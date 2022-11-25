@@ -16,9 +16,9 @@
 #
 
 from .data_lake_measures import DataLakeMeasures
-from .sp_data_streams import SpDataStreams
+from .data_streams import DataStreams
 
 __all__ = [
     "DataLakeMeasures",
-    "SpDataStreams",
+    "DataStreams",
 ]

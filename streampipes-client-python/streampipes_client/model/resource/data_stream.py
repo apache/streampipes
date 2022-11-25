@@ -31,13 +31,13 @@ Implementation of a resource for a data stream.
 """
 
 __all__ = [
-    "SpDataStream",
+    "DataStream",
 ]
 
 
-class SpDataStream(Resource):
+class DataStream(Resource):
     """Implementation of a resource for data streams.
-    This resource defines the data model used by resource container (`model.container.SpDataStreams`).
+    This resource defines the data model used by resource container (`model.container.DataStreams`).
     It inherits from Pydantic's BaseModel to get all its superpowers,
     which are used to parse, validate the API response and to easily switch between
     the Python representation (both serialized and deserialized) and Java representation (serialized only).

@@ -21,20 +21,20 @@ Specific implementation of the StreamPipes API's data stream endpoints.
 from typing import Tuple, Type
 
 from streampipes_client.endpoint.endpoint import APIEndpoint
-from streampipes_client.model.container import SpDataStreams
+from streampipes_client.model.container import DataStreams
 
 __all__ = [
-    "SpDataStreamEndpoint",
+    "DataStreamEndpoint",
 ]
 
 from streampipes_client.model.container.resource_container import ResourceContainer
 
 
-class SpDataStreamEndpoint(APIEndpoint):
-    """Implementation of the SpDataStream endpoint.
+class DataStreamEndpoint(APIEndpoint):
+    """Implementation of the DataStream endpoint.
 
     Consequently, it allows querying metadata about available data streams (see `all()` method).
-    The metadata is returned as an instance of `model.container.SpDataStreams`.
+    The metadata is returned as an instance of `model.container.DataStreams`.
 
     Parameters
     ----------
@@ -57,7 +57,7 @@ class SpDataStreamEndpoint(APIEndpoint):
 
     >>> client = StreamPipesClient.create(client_config=client_config)
 
-    >>> data_streams = client.SpDataStreamEndpoint.all()
+    >>> data_streams = client.DataStreamEndpoint.all()
 
     >>> len(data_streams)
     2
@@ -70,13 +70,13 @@ class SpDataStreamEndpoint(APIEndpoint):
 
         Returns
         -------
-        `model.container.SpDataStreams`
+        `model.container.DataStreams`
         """
-        return SpDataStreams
+        return DataStreams
 
     @property
     def _relative_api_path(self) -> Tuple[str, ...]:
-        """Defines the relative api path to the SpDataStream endpoint.
+        """Defines the relative api path to the DataStream endpoint.
         Each path within the URL is defined as an own string.
 
         Returns

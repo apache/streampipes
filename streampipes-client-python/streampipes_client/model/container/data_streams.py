@@ -22,23 +22,23 @@ from typing import Type
 
 from streampipes_client.model.container.resource_container import ResourceContainer
 from streampipes_client.model.resource.resource import Resource
-from streampipes_client.model.resource.sp_data_stream import SpDataStream
+from streampipes_client.model.resource.data_stream import DataStream
 
 __all__ = [
-    "SpDataStreams",
+    "DataStreams",
 ]
 
 
-class SpDataStreams(ResourceContainer):
+class DataStreams(ResourceContainer):
     """Implementation of the resource container for the data stream endpoint.
     This resource container is a collection of data streams returned by the StreamPipes API.
-    It is capable of parsing the response content directly into a list of queried `SpDataStream`.
+    It is capable of parsing the response content directly into a list of queried `DataStream`.
     Furthermore, the resource container makes them accessible in a pythonic manner.
 
     Parameters
     ----------
-    resources: List[SpDataStream]
-        A list of resources (`model.resource.SpDataStream`) to be contained in the `ResourceContainer`.
+    resources: List[DataStream]
+        A list of resources (`model.resource.DataStream`) to be contained in the `ResourceContainer`.
 
     """
 
@@ -48,6 +48,6 @@ class SpDataStreams(ResourceContainer):
 
         Returns
         -------
-        SpDataStream
+        DataStream
         """
-        return SpDataStream
+        return DataStream
