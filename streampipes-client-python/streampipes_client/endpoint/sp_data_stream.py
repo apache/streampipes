@@ -84,4 +84,4 @@ class SpDataStreamEndpoint(APIEndpoint):
         A tuple of strings of which every represents a path value of the endpoint's API URL.
         """
 
-        return "api", "v2", "streams", "own"
+        return "api", "v2", "streams"
