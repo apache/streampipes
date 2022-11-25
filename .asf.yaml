@@ -25,6 +25,8 @@ github:
     - self-service
   notifications:
     jobs: issues@streampipes.apache.org
+    commits: commits@streampipes.apache.org
+    issues: issues@streampipes.apache.org
   features:
     wiki: false
     issues: true
