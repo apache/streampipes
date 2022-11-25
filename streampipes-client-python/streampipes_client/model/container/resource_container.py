@@ -179,8 +179,8 @@ class ResourceContainer(ABC):
         # raise an exception if the response does not be a list
         if not type(parsed_json) == list:
             raise StreamPipesResourceContainerJSONError(container_name=str(cls), json_string=json_string)
-        try:
 
+        try:
             resource_container = cls(resources=[cls._resource_cls().parse_obj(item) for item in parsed_json])
         except ValidationError as ve:
             raise StreamPipesDataModelError(validation_error=ve)

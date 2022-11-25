@@ -29,6 +29,30 @@ class TestStreamPipesClient(TestCase):
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
                 host_address="localhost",
+                https_disabled=True,
+            )
+        )
+
+        expected_headers = {
+            "X-API-User": "user",
+            "X-API-Key": "key",
+            "Application": "application/json",
+        }
+        result_headers = dict(result.request_session.headers)
+        self.assertDictContainsSubset(
+            subset=expected_headers,
+            dictionary=result_headers,
+        )
+        self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
+        self.assertEqual(result.base_api_path, "http://localhost:80/streampipes-backend/")
+
+    def test_client_create(self):
+        result = StreamPipesClient.create(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+                https_disabled=False,
+                port=443,
             )
         )
 
@@ -44,26 +68,3 @@ class TestStreamPipesClient(TestCase):
         )
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
-
-    def test_client_create(self):
-        result = StreamPipesClient.create(
-            client_config=StreamPipesClientConfig(
-                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
-                host_address="localhost",
-                https_disabled=True,
-                port=500,
-            )
-        )
-
-        expected_headers = {
-            "X-API-User": "user",
-            "X-API-Key": "key",
-            "Application": "application/json",
-        }
-        result_headers = dict(result.request_session.headers)
-        self.assertDictContainsSubset(
-            subset=expected_headers,
-            dictionary=result_headers,
-        )
-        self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
-        self.assertEqual(result.base_api_path, "http://localhost:500/streampipes-backend/")

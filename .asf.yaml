@@ -27,5 +27,5 @@ github:
     jobs: issues@streampipes.apache.org
   features:
     wiki: false
-    issues: false
+    issues: true
     projects: false
