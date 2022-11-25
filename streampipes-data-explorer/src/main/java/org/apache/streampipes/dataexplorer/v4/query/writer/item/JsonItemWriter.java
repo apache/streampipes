@@ -15,7 +15,36 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.query;
 
-public class GetEventsAutoAggregationQuery {
+
+package org.apache.streampipes.dataexplorer.v4.query.writer.item;
+
+import com.google.gson.Gson;
+
+public class JsonItemWriter extends ItemGenerator {
+
+  private static final String BEGIN_OBJECT = "{";
+  private static final String END_OBJECT = "}";
+
+  private final Gson gson;
+
+  public JsonItemWriter(Gson gson) {
+    super(COMMA_SEPARATOR);
+    this.gson = gson;
+  }
+
+  @Override
+  protected String makeItemString(String key,
+                                  Object value) {
+    var stringValue = value != null ? gson.toJson(value) : null;
+    return "\""
+        + key
+        + "\": "
+        + stringValue;
+  }
+
+  @Override
+  protected String finalizeItem(String item) {
+    return BEGIN_OBJECT + item + END_OBJECT;
+  }
 }

@@ -15,30 +15,28 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.param;
 
-public class TimeBoundQueryParams extends QueryParams {
+package org.apache.streampipesdataexplorer.v4.query.writer;
 
-  private final long startDate;
-  private final long endDate;
+import org.junit.Before;
 
-  public static TimeBoundQueryParams from(String index, long startDate, long endDate) {
-    return new TimeBoundQueryParams(index, startDate, endDate);
+import java.util.Arrays;
+import java.util.List;
+
+public abstract class TestConfiguredOutputWriter {
+
+  protected List<List<Object>> rows;
+  protected List<String> columns;
+
+  @Before
+  public void before() {
+    this.rows = Arrays.asList(
+        Arrays.asList("2022-11-16T05:54:37.051Z", "test", 1),
+        Arrays.asList("2022-11-16T05:55:27.05Z", "test2", 2)
+    );
+
+    this.columns = Arrays.asList("time", "string", "number");
   }
 
-  protected TimeBoundQueryParams(String index,
-                        long startDate,
-                        long endDate) {
-    super(index);
-    this.startDate = startDate;
-    this.endDate = endDate;
-  }
 
-  public long getStartDate() {
-    return startDate;
-  }
-
-  public long getEndDate() {
-    return endDate;
-  }
 }

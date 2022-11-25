@@ -15,28 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.param;
 
-public class GroupedQueryParams extends TimeBoundQueryParams {
+package org.apache.streampipesdataexplorer.v4.query.writer.item;
 
-  private final String groupingTag;
+import org.junit.Before;
 
-  public static GroupedQueryParams from(String index,
-                                        long startDate,
-                                        long endDate,
-                                        String groupingTag) {
-    return new GroupedQueryParams(index, startDate, endDate, groupingTag);
-  }
+import java.util.Arrays;
+import java.util.List;
 
-  protected GroupedQueryParams(String index,
-                               long startDate,
-                               long endDate,
-                               String groupingTag) {
-    super(index, startDate, endDate);
-    this.groupingTag = groupingTag;
-  }
+public abstract class TestItemWriter {
 
-  public String getGroupingTag() {
-    return groupingTag;
+  protected List<Object> row;
+  protected List<String> columns;
+
+  @Before
+  public void before() {
+    this.row = Arrays.asList("2022-11-16T05:54:37.051Z", "test", 1);
+    this.columns = Arrays.asList("time", "string", "number");
   }
 }

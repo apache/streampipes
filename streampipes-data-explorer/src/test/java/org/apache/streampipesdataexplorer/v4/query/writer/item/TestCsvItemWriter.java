@@ -15,28 +15,34 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.param;
 
-public class TimeUnitQueryParams extends QueryParams {
+package org.apache.streampipesdataexplorer.v4.query.writer.item;
 
-  private final String timeUnit;
-  private final Integer timeValue;
+import org.apache.streampipes.dataexplorer.v4.query.writer.item.CsvItemWriter;
+import org.junit.Test;
 
-  public static TimeUnitQueryParams from(String index, String timeUnit, Integer timeValue) {
-    return new TimeUnitQueryParams(index, timeUnit, timeValue);
+import static org.junit.Assert.assertEquals;
+
+public class TestCsvItemWriter extends TestItemWriter {
+
+  private static final String ExpectedComma = "1668578077051,test,1";
+  private static final String ExpectedSemicolon = "1668578077051;test;1";
+
+  @Test
+  public void testCsvItemWriterCommaSeparated() {
+    var writer = new CsvItemWriter(",");
+
+    String result = writer.createItem(row, columns);
+
+    assertEquals(ExpectedComma, result);
   }
 
-  protected TimeUnitQueryParams(String index, String timeUnit, Integer timeValue) {
-    super(index);
-    this.timeUnit = timeUnit;
-    this.timeValue = timeValue;
-  }
+  @Test
+  public void testCsvItemWriterSemicolonSeparated() {
+    var writer = new CsvItemWriter(";");
 
-  public String getTimeUnit() {
-    return timeUnit;
-  }
+    String result = writer.createItem(row, columns);
 
-  public Integer getTimeValue() {
-    return timeValue;
+    assertEquals(ExpectedSemicolon, result);
   }
 }

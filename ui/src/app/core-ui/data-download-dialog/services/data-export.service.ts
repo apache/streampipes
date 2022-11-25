@@ -95,7 +95,7 @@ export class DataExportService {
     return this.dataViewQueryGeneratorService
       .generateQuery(
         exportConfig.dataExportConfig.dateRange.startDate.getTime(),
-        exportConfig.dataExportConfig.dateRange.startDate.getTime(),
+        exportConfig.dataExportConfig.dateRange.endDate.getTime(),
         dataDownloadDialogModel.dataExplorerDataConfig.sourceConfigs[selectedQueryIndex],
         false
       );

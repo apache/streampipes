@@ -15,27 +15,22 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.dataexplorer.param.PagingQueryParams;
-import org.apache.streampipes.dataexplorer.template.QueryTemplates;
-import org.influxdb.dto.QueryResult;
+package org.apache.streampipes.dataexplorer.v4.query.writer;
 
-public class GetMaxPagesQuery extends ParameterizedDataExplorerQuery<PagingQueryParams, Integer> {
+import java.util.function.Supplier;
 
-  public GetMaxPagesQuery(PagingQueryParams queryParams) {
-    super(queryParams);
+public enum OutputFormat {
+  JSON(ConfiguredJsonOutputWriter::new),
+  CSV(ConfiguredCsvOutputWriter::new);
+
+  private final Supplier<ConfiguredOutputWriter> writerSupplier;
+
+  OutputFormat(Supplier<ConfiguredOutputWriter> writerSupplier) {
+    this.writerSupplier = writerSupplier;
   }
 
-  @Override
-  protected void getQuery(DataExplorerQueryBuilder queryBuilder) {
-    queryBuilder.add(QueryTemplates.selectCountFrom(params.getIndex()));
-  }
-
-  @Override
-  protected Integer postQuery(QueryResult result) {
-    int size = ((Double) result.getResults().get(0).getSeries().get(0).getValues().get(0).get(1)).intValue();
-
-    return (size / params.getItemsPerPage());
+  public ConfiguredOutputWriter getWriter() {
+    return writerSupplier.get();
   }
 }

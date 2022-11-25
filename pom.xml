@@ -173,7 +173,7 @@
 	<netty-resolver.version>4.1.72.Final</netty-resolver.version>
 	<okhttp.version>3.13.1</okhttp.version>
 	<opennlp.version>1.9.0</opennlp.version>
-	<postgresql.version>42.4.1</postgresql.version>
+	<postgresql.version>42.4.3</postgresql.version>
 	<pulsar.version>2.10.1</pulsar.version>
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>

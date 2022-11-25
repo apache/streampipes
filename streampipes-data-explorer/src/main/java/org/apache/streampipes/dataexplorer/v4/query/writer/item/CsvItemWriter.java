@@ -15,28 +15,23 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.dataexplorer.query;
 
-import org.apache.streampipes.dataexplorer.param.TimeBoundQueryParams;
-import org.apache.streampipes.dataexplorer.template.QueryTemplates;
-import org.apache.streampipes.model.datalake.SpQueryResult;
-import org.influxdb.dto.QueryResult;
 
-public class GetEventsQuery extends ParameterizedDataExplorerQuery<TimeBoundQueryParams, SpQueryResult> {
+package org.apache.streampipes.dataexplorer.v4.query.writer.item;
 
-  public GetEventsQuery(TimeBoundQueryParams params) {
-    super(params);
+public class CsvItemWriter extends ItemGenerator {
+
+  public CsvItemWriter(String delimiter) {
+    super(delimiter);
   }
 
   @Override
-  protected void getQuery(DataExplorerQueryBuilder queryBuilder) {
-    queryBuilder.add(QueryTemplates.selectWildcardFrom(params.getIndex()));
-    queryBuilder.add(QueryTemplates.whereTimeWithin(params.getStartDate(), params.getEndDate()));
-    queryBuilder.add("ORDER BY time");
+  protected String makeItemString(String key, Object value) {
+    return value != null ? value.toString() : "";
   }
 
   @Override
-  protected SpQueryResult postQuery(QueryResult result) {
-    return convertResult(result);
+  protected String finalizeItem(String item) {
+    return item;
   }
 }
