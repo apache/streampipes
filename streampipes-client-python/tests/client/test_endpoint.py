@@ -89,11 +89,162 @@ class TestStreamPipesEndpoints(TestCase):
             }
         ]
 
+        self.data_stream_all = [
+            {
+                "elementId": "urn:streampipes.apache.org:eventstream:uPDKLI",
+                "name": "Test",
+                "description": "",
+                "iconUrl": None,
+                "appId": None,
+                "includesAssets": False,
+                "includesLocales": False,
+                "includedAssets": [],
+                "includedLocales": [],
+                "applicationLinks": [],
+                "internallyManaged": True,
+                "connectedTo": None,
+                "eventGrounding": {
+                    "elementId": "urn:streampipes.apache.org:spi:eventgrounding:TwGIQA",
+                    "transportProtocols": [
+                        {
+                            "elementId": "urn:streampipes.apache.org:spi:natstransportprotocol:VJkHmZ",
+                            "brokerHostname": "nats",
+                            "topicDefinition": {
+                                "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
+                                "actualTopicName": "org.apache.streampipes.connect.fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                            },
+                            "port": 4222,
+                        }
+                    ],
+                    "transportFormats": [
+                        {
+                            "elementId": "urn:streampipes.apache.org:spi:transportformat:CMGsLP",
+                            "rdfType": ["http://sepa.event-processing.org/sepa#json"],
+                        }
+                    ],
+                },
+                "eventSchema": {
+                    "elementId": "urn:streampipes.apache.org:spi:eventschema:rARlLX",
+                    "eventProperties": [
+                        {
+                            "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:yogPNV",
+                            "label": "Density",
+                            "description": "Denotes the current density of the fluid",
+                            "runtimeName": "density",
+                            "required": False,
+                            "domainProperties": ["http://schema.org/Number"],
+                            "eventPropertyQualities": [],
+                            "requiresEventPropertyQualities": [],
+                            "propertyScope": "MEASUREMENT_PROPERTY",
+                            "index": 5,
+                            "runtimeId": None,
+                            "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+                            "measurementUnit": None,
+                            "valueSpecification": None,
+                        },
+                        {
+                            "elementId": "urn:streampipes.apache.org:spi:eventpropertyprimitive:GjZgFg",
+                            "label": "Temperature",
+                            "description": "Denotes the current temperature in degrees celsius",
+                            "runtimeName": "temperature",
+                            "required": False,
+                            "domainProperties": ["http://schema.org/Number"],
+                            "eventPropertyQualities": [],
+                            "requiresEventPropertyQualities": [],
+                            "propertyScope": "MEASUREMENT_PROPERTY",
+                            "index": 4,
+                            "runtimeId": None,
+                            "runtimeType": "http://www.w3.org/2001/XMLSchema#float",
+                            "measurementUnit": "http://codes.wmo.int/common/unit/degC",
+                            "valueSpecification": {
+                                "elementId": "urn:streampipes.apache.org:spi:quantitativevalue:ZQSJfk",
+                                "minValue": 0,
+                                "maxValue": 100,
+                                "step": 0.1,
+                            },
+                        },
+                    ],
+                },
+                "measurementCapability": None,
+                "measurementObject": None,
+                "index": 0,
+                "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect.iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
+                "category": None,
+                "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
+                "dom": None,
+            }
+        ]
+
+        self.data_stream_all_json = json.dumps(self.data_stream_all)
+
         self.data_lake_measure_all_json = json.dumps(self.data_lake_measure_all)
         self.data_lake_measure_all_json_error = json.dumps(self.data_lake_measure_all[0])
         self.dlm_all_manipulated = deepcopy(self.data_lake_measure_all)
         self.dlm_all_manipulated[0]["measureName"] = False
         self.data_lake_measure_all_json_validation = json.dumps(self.dlm_all_manipulated)
+
+    @patch("streampipes_client.client.client.Session", autospec=True)
+    def test_endpoint_data_stream_happy_path(self, http_session: MagicMock):
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.text = self.data_stream_all_json
+        http_session.return_value = http_session_mock
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        result = client.dataStreamApi.all()
+        result_pd = result.to_pandas()
+
+        self.assertEqual(
+            1,
+            len(result),
+        )
+        self.assertEqual(
+            "Test",
+            result[0].name,
+        )
+        self.assertEqual(
+            self.data_stream_all_json,
+            result.to_json(),
+        )
+        self.assertEqual(
+            self.data_stream_all,
+            result.to_dicts(use_source_names=True),
+        )
+        self.assertEqual(
+            1,
+            len(result_pd),
+        )
+        self.assertListEqual(
+            [
+                "element_id",
+                "name",
+                "description",
+                "icon_url",
+                "app_id",
+                "includes_assets",
+                "includes_locales",
+                "included_assets",
+                "included_locales",
+                "application_links",
+                "internally_managed",
+                "connected_to",
+                "event_grounding",
+                "event_schema",
+                "measurement_capability",
+                "measurement_object",
+                "index",
+                "corresponding_adapter_id",
+                "category",
+                "uri",
+                "dom",
+            ],
+            list(result_pd.columns),
+        )
 
     @patch("streampipes_client.client.client.Session", autospec=True)
     def test_endpoint_data_lake_measure_happy_path(self, http_session: MagicMock):
@@ -166,7 +317,7 @@ class TestStreamPipesEndpoints(TestCase):
         with self.assertRaises(HTTPError) as http_error:
             client.dataLakeMeasureApi.all()
         self.assertMultiLineEqual(
-            _error_code_to_message[405] + f"url: localhost\nstatus code: 405",
+            _error_code_to_message[405] + "url: localhost\nstatus code: 405",
             http_error.exception.args[0],
         )
 

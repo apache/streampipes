@@ -74,8 +74,8 @@ class EventProperty(BasicModel):
     Data model of an `EventProperty` in compliance to the StreamPipes Backend.
     """
 
-    label: StrictStr
-    description: StrictStr
+    label: Optional[StrictStr]
+    description: Optional[StrictStr]
     runtime_name: StrictStr
     required: StrictBool
     domain_properties: List[StrictStr]
@@ -95,3 +95,59 @@ class EventSchema(BasicModel):
     """
 
     event_properties: List[EventProperty]
+
+
+class ApplicationLink(BasicModel):
+    """
+    Data model of an `ApplicationLink` in compliance to the StreamPipes Backend.
+    """
+    application_name: Optional[StrictStr]
+    application_description: Optional[StrictStr]
+    application_url: Optional[StrictStr]
+    application_icon_url: Optional[StrictStr]
+    application_link_type: Optional[StrictStr]
+
+
+class TopicDefinition(BasicModel):
+    """
+    Data model of a `TopicDefinition` in compliance to the StreamPipes Backend.
+    """
+    actual_topic_name: Optional[StrictStr]
+
+
+class TransportProtocol(BasicModel):
+    """
+    Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
+    """
+    broker_hostname: Optional[StrictStr]
+    topic_definition: Optional[TopicDefinition]
+    port: Optional[StrictInt]
+
+
+class TransportFormat(BasicModel):
+    """
+    Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
+    """
+    rdf_type: Optional[List[Optional[StrictStr]]]
+
+
+class EventGrounding(BasicModel):
+    """
+    Data model of an `EventGrounding` in compliance to the StreamPipes Backend.
+    """
+    transport_protocols: Optional[List[Optional[TransportProtocol]]]
+    transport_formats: Optional[List[Optional[TransportFormat]]]
+
+
+class MeasurementCapability(BasicModel):
+    """
+    Data model of a `MeasurementCapability` in compliance to the StreamPipes Backend.
+    """
+    capability: Optional[StrictStr]
+
+
+class MeasurementObject(BasicModel):
+    """
+    Data model of a `MeasurementObject` in compliance to the StreamPipes Backend.
+    """
+    measures_object: Optional[StrictStr]
