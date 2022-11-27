@@ -1,0 +1,115 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+---
+name: StreamPipes Bug report
+description: Problems and issues with Apache StreamPipes
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "
+        <p align='center'>
+        
+        <img src='https://streampipes.apache.org/img/sp-logo-color.png' alt='StreamPipes Logo' title='Apache StreamPipes Logo' width='50%' align='center'/>
+        </p>
+        
+        <br>
+        
+        Thank you for taking the time to report the issue!
+
+        We greatly appreciate the community's efforts to improve StreamPipes.
+
+        Please note that you do not need to create an issue if you want to submit a change!
+
+        You can open a <a href='https://github.com/apache/streampipes/pulls'>pull request</a> immediately instead.
+        "
+
+  - type: dropdown
+    attributes:
+      label: Apache StreamPipes version
+      description: What Apache StreamPipes version are you using?
+      multiple: false
+      options:
+        - "0.70.0"
+        - "dev (current development state)"
+        - "Other StreamPipes version (please specify below)"
+
+  - type: dropdown
+    attributes:
+      label: Affected StreamPipes components
+      description: >
+        Which StreamPipes components are affected by this bug?
+        Where did the bug occur?
+      multiple: true
+      options:
+        - Backend
+        - Connect
+        - Processing Elements
+        - UI
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Describe what happened.
+      placeholder: >
+        Please provide the context in which the problem occurred and explain what happened
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: How to reproduce?
+      description: >
+        What should we do to reproduce the problem? If you are not able to provide a reproducible case,
+        please open a [discussion](https://github.com/apache/streampipes/discussions) instead.
+      placeholder: >
+        Please make sure you provide a reproducible step-by-step explanation of how you reproduce the problem
+        as minimally and accurately as possible.
+        To be more specific, you can describe the click path you took in StreamPipes.
+        Ideally, you can provide additional screenshots or even GIF files. You can include files by
+        dragging and dropping them here.
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: What do you think went wrong?
+      placeholder: >
+        Please explain why you think the behavior is incorrect.
+        How do you think StreamPipes should have behaved?
+        If available, it is very helpful if you copy and paste the fragment of the logs with the exact error messages. 
+
+  - type: textarea
+    attributes:
+      label: Additional technical information
+      description: Please provide some additional information about your technical setup
+      placeholder: Here you can provide additional information about the technical environment you are using (OS, browser, docker version, StreamPipes version, etc.)
+
+  - type: checkboxes
+    attributes:
+      label: Are you willing to submit a PR?
+      description: >
+        This is absolutely not required, but we will be happy to help you write the post especially if
+        you already have a good understanding of how to implement the fix.
+        StreamPipes is a community-driven project and we welcome new contributors.
+        Find us [here](https://github.com/apache/streampipes/discussions/categories/q-a) or contact us on our mailing list (dev@streampipes.apache.org).
+      options:
+        - label: Yes I am willing to submit a PR!
+
+  - type: markdown
+    attributes:
+      value: ":pray: Thanks a lot for completing our form!"
