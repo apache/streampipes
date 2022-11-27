@@ -14,8 +14,8 @@
 # limitations under the License.
 
 ---
-name: Fast Track (Comitters only)
-description: (Comitters only) Quick and informal way to create issues/tasks
+name: Fast Track (Committers only)
+description: (Committers only) Quick and informal way to create issues/tasks
 labels: []
 body:
   - type: textarea
