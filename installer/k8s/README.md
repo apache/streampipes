@@ -87,8 +87,7 @@ rm -rf ${HOME}/streampipes-k8s
 
 ## Bugs and Feature Requests
 
-If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
-[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue on [GitHub](https://github.com/apache/streampipes/issues).
 
 ## Get help
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
@@ -105,8 +104,8 @@ We welcome contributions to StreamPipes. If you are interested in contributing t
 Here are some first steps in case you want to contribute:
 * Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
 * Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
-* Ask for a mentor who helps you understanding the code base and guides you through the first setup steps
-* Find an issue in our [Jira](https://issues.apache.org/jira/projects/STREAMPIPES) which is tagged with a _newbie_ tag
+* Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
+* Find an issue  on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
 * Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
 
 Have fun!
