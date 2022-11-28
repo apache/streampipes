@@ -1863,8 +1863,8 @@ IoT data streams.
 	</scm>
 
 	<issueManagement>
-		<system>Jira</system>
-		<url>https://issues.apache.org/jira/browse/STREAMPIPES</url>
+		<system>GitHub</system>
+		<url>https://github.com/apache/streampipes/issues</url>
 	</issueManagement>
 
 	<mailingLists>
@@ -1890,7 +1890,7 @@ IoT data streams.
 			<archive>http://mail-archives.apache.org/mod_mbox/streampipes-commits/</archive>
 		</mailingList>
 		<mailingList>
-			<name>Apache StreamPipes Jira Notifications List</name>
+			<name>Apache StreamPipes Issue Notifications List</name>
 			<subscribe>mailto:issues-subscribe@streampipes.apache.org</subscribe>
 			<unsubscribe>mailto:issues-unsubscribe@streampipes.apache.org</unsubscribe>
 			<post>mailto:issues@streampipes.apache.org</post>
