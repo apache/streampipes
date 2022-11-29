@@ -79,7 +79,7 @@
                 mat-icon-button
                 (click)="removeWidget()"
                 matTooltip="Delete widget"
-                *ngIf="editMode && hasDataExplorerDeletePrivileges"
+                *ngIf="editMode && hasDataExplorerWritePrivileges"
                 [attr.data-cy]="'remove-' + configuredWidget.baseAppearanceConfig.widgetTitle">
           <mat-icon>clear</mat-icon>
         </button>

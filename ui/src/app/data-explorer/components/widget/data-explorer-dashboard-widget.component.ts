@@ -98,7 +98,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
   loadingTime = 0;
 
   hasDataExplorerWritePrivileges = false;
-  hasDataExplorerDeletePrivileges = false;
 
   authSubscription: Subscription;
   widgetTypeChangedSubscription: Subscription;
@@ -120,7 +119,6 @@ export class DataExplorerDashboardWidgetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authSubscription = this.authService.user$.subscribe(user => {
       this.hasDataExplorerWritePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW);
-      this.hasDataExplorerDeletePrivileges = this.authService.hasRole(UserPrivilege.PRIVILEGE_DELETE_DATA_EXPLORER_VIEW);
     });
     this.widgetLoaded = true;
     this.title = this.dataLakeMeasure.measureName;
