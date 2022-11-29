@@ -25,7 +25,7 @@
                 </div>
                 <div fxLayout="column" fxFlex="100" class="home-margin">
                     <div fxFlex="100" fxLayoutAlign="start center">
-                        <status fxFlex="100"></status>
+                        <status fxFlex="100" *ngIf="showStatus"></status>
                     </div>
                     <div fxFlex="100">
                         <div class="assemblyOptions sp-blue-bg mt-0 round-border" style="padding:5px;">

@@ -22,6 +22,8 @@ import { HomeService } from './home.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../services/app.constants';
 import { SpBreadcrumbService } from '@streampipes/shared-ui';
+import { AuthService } from '../services/auth.service';
+import { UserRole } from '../_enums/user-role.enum';
 
 @Component({
     templateUrl: './home.component.html',
@@ -30,8 +32,10 @@ import { SpBreadcrumbService } from '@streampipes/shared-ui';
 export class HomeComponent implements OnInit {
 
     serviceLinks = [];
+    showStatus = false;
 
     constructor(private homeService: HomeService,
+                private authService: AuthService,
                 private sanitizer: DomSanitizer,
                 private router: Router,
                 public appConstants: AppConstants,
@@ -40,6 +44,10 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.authService.user$.subscribe(userInfo => {
+            const isAdmin = userInfo.roles.indexOf(UserRole.ROLE_ADMIN) > -1;
+            this.showStatus = isAdmin || userInfo.roles.indexOf(UserRole.ROLE_PIPELINE_ADMIN) > -1;
+        });
         this.breadcrumbService.updateBreadcrumb([]);
     }
 

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.rest.impl.admin;
+package org.apache.streampipes.rest.impl;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
@@ -37,7 +37,6 @@ import java.util.Map;
 
 @Path("/v2/assets")
 @Component
-@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(AssetManagementResource.class);
@@ -46,19 +45,15 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public Response getAll() {
-    try {
-      List<Map<String, Object>> assets = getGenericStorage().findAll(APP_DOC_TYPE);
-      return ok(assets);
-    } catch (IOException e) {
-      LOG.error("Could not connect to storage", e);
-      return fail();
-    }
+  @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
+  public List<Map<String, Object>> getAll() throws IOException {
+      return getGenericStorage().findAll(APP_DOC_TYPE);
   }
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public Response create(String asset) {
     try {
       Map<String, Object> obj = getGenericStorage().create(asset);
@@ -72,6 +67,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @GET
   @Path("/{id}")
   @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.HAS_READ_ASSETS_PRIVILEGE)
   public Response getCategory(@PathParam("id") String assetId) {
     try {
       Map<String, Object> obj = getGenericStorage().findOne(assetId);
@@ -86,6 +82,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @Path("/{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public Response update(@PathParam("id") String assetId, String asset) {
     try {
       Map<String, Object> obj = getGenericStorage().update(assetId, asset);
@@ -99,6 +96,7 @@ public class AssetManagementResource extends AbstractAuthGuardedRestResource {
   @DELETE
   @Path("/{id}/{rev}")
   @Produces(MediaType.APPLICATION_JSON)
+  @PreAuthorize(AuthConstants.HAS_WRITE_ASSETS_PRIVILEGE)
   public Response delete(@PathParam("id") String assetId, @PathParam("rev") String rev) {
     try {
       getGenericStorage().delete(assetId, rev);

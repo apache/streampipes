@@ -79,7 +79,16 @@ public enum Role {
           Privilege.PRIVILEGE_READ_PIPELINE_ELEMENT
   ),
 
-  ROLE_APP_USER(Constants.ROLE_APP_USER_VALUE);
+  ROLE_APP_USER(Constants.ROLE_APP_USER_VALUE,
+          Privilege.PRIVILEGE_READ_PIPELINE,
+          Privilege.PRIVILEGE_READ_PIPELINE_ELEMENT),
+
+  ROLE_ASSET_USER(Constants.ROLE_ASSET_USER_VALUE,
+          Privilege.PRIVILEGE_READ_ASSETS),
+
+  ROLE_ASSET_ADMIN(Constants.ROLE_ASSET_ADMIN_VALUE,
+          Privilege.PRIVILEGE_READ_ASSETS,
+          Privilege.PRIVILEGE_WRITE_ASSETS);
 
   private List<Privilege> privileges;
   private String roleString;
@@ -109,5 +118,7 @@ public enum Role {
     public static final String ROLE_DATA_EXPLORER_USER_VALUE = "ROLE_DATA_EXPLORER_USER";
     public static final String ROLE_PIPELINE_USER_VALUE = "ROLE_PIPELINE_USER";
     public static final String ROLE_APP_USER_VALUE = "ROLE_APP_USER";
+    public static final String ROLE_ASSET_USER_VALUE = "ROLE_ASSET_USER";
+    public static final String ROLE_ASSET_ADMIN_VALUE = "ROLE_ASSET_ADMIN";
   }
 }

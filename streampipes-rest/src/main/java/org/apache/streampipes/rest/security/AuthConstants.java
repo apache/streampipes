@@ -57,6 +57,9 @@ public class AuthConstants {
 
   public static final String HAS_READ_FILE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_FILES_VALUE + Q + BE2;
 
+  public static final String HAS_READ_ASSETS_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_ASSETS_VALUE + Q + BE2;
+  public static final String HAS_WRITE_ASSETS_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_ASSETS_VALUE + Q + BE2;
+
   public static final String IS_AUTHENTICATED = "isAuthenticated()";
 
 }
