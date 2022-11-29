@@ -28,11 +28,15 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 
 public class ExtensionsServiceLogExecutor implements Runnable {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceLogExecutor.class);
 
   private static final String LOG_PATH = "/monitoring";
 
@@ -49,7 +53,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
         SpEndpointMonitoringInfo monitoringInfo = parseLogResponse(response);
         ExtensionsLogProvider.INSTANCE.addMonitoringInfos(monitoringInfo);
       } catch (IOException e) {
-        e.printStackTrace();
+        LOG.info("Could not fetch log info from endpoint {}", serviceEndpoint);
       }
     });
   }
