@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.connect.container.master.health.AdapterHealthCheck;
+import org.apache.streampipes.connect.container.master.health.AdapterOperationLock;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.CouchDbStorageManager;
@@ -26,14 +27,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class WorkerAdministrationManagement {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdapterMasterManagement.class);
+    private static final int MAX_RETRIES = 3;
 
-    private IAdapterStorage adapterDescriptionStorage;
+    private final IAdapterStorage adapterDescriptionStorage;
 
-    private AdapterHealthCheck adapterHealthCheck;
+    private final AdapterHealthCheck adapterHealthCheck;
 
     public WorkerAdministrationManagement() {
         this.adapterHealthCheck = new AdapterHealthCheck();
@@ -41,7 +44,6 @@ public class WorkerAdministrationManagement {
     }
 
     public void register(List<AdapterDescription> availableAdapterDescription) {
-
         List<AdapterDescription> alreadyRegisteredAdapters = this.adapterDescriptionStorage.getAllAdapters();
 
         availableAdapterDescription.forEach(adapterDescription -> {
@@ -55,6 +57,30 @@ public class WorkerAdministrationManagement {
             }
         });
 
-        this.adapterHealthCheck.checkAndRestoreAdapters();
+        int retryCount = 0;
+        checkAndRestore(retryCount);
+    }
+
+    private void checkAndRestore(int retryCount) {
+        if (AdapterOperationLock.INSTANCE.isLocked()) {
+            LOG.info("Adapter operation already in progress, {}/{}", (retryCount + 1), MAX_RETRIES);
+            if (retryCount < MAX_RETRIES) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(1000);
+                    retryCount++;
+                    checkAndRestore(retryCount);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                LOG.info("Max retries for running adapter operations reached, will do unlock which might cause conflicts...");
+                AdapterOperationLock.INSTANCE.unlock();
+                this.adapterHealthCheck.checkAndRestoreAdapters();
+            }
+        } else {
+            AdapterOperationLock.INSTANCE.lock();
+            this.adapterHealthCheck.checkAndRestoreAdapters();
+            AdapterOperationLock.INSTANCE.unlock();
+        }
     }
 }
