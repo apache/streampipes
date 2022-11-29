@@ -36,7 +36,6 @@ import java.util.Map;
 
 @Path("/v2/storage-generic")
 @Component
-@PreAuthorize(AuthConstants.IS_ADMIN_ROLE)
 public class GenericStorageResource extends AbstractAuthGuardedRestResource {
 
     public static final String APP_DOC_NAME = "appDocName";
@@ -46,6 +45,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     @GET
     @Path("{appDocName}")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
     public Response getAll(@PathParam(APP_DOC_NAME) String appDocName) {
       try {
         List<Map<String, Object>> assets = getGenericStorage().findAll(appDocName);
@@ -60,6 +60,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     @Path("{appDocName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
     public Response create(@PathParam(APP_DOC_NAME) String appDocName,
                            String document) {
       try {
@@ -74,6 +75,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     @GET
     @Path("{appDocName}/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_READ_GENERIC_STORAGE_PRIVILEGE)
     public Response getCategory(@PathParam(APP_DOC_NAME) String appDocName,
                                 @PathParam("id") String documentId) {
       try {
@@ -89,6 +91,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     @Path("{appDocName}/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
     public Response update(@PathParam(APP_DOC_NAME) String appDocName,
                            @PathParam("id") String documentId,
                            String document) {
@@ -104,6 +107,7 @@ public class GenericStorageResource extends AbstractAuthGuardedRestResource {
     @DELETE
     @Path("{appDocName}/{id}/{rev}")
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize(AuthConstants.HAS_WRITE_GENERIC_STORAGE_PRIVILEGE)
     public Response delete(@PathParam(APP_DOC_NAME) String appDocName,
                            @PathParam("id") String documentId,
                            @PathParam("rev") String rev) {

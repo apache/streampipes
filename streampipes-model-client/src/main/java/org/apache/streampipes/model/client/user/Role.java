@@ -84,10 +84,13 @@ public enum Role {
           Privilege.PRIVILEGE_READ_PIPELINE_ELEMENT),
 
   ROLE_ASSET_USER(Constants.ROLE_ASSET_USER_VALUE,
+          Privilege.PRIVILEGE_READ_GENERIC_STORAGE,
           Privilege.PRIVILEGE_READ_ASSETS),
 
   ROLE_ASSET_ADMIN(Constants.ROLE_ASSET_ADMIN_VALUE,
           Privilege.PRIVILEGE_READ_ASSETS,
+          Privilege.PRIVILEGE_READ_GENERIC_STORAGE,
+          Privilege.PRIVILEGE_WRITE_GENERIC_STORAGE,
           Privilege.PRIVILEGE_WRITE_ASSETS);
 
   private List<Privilege> privileges;
