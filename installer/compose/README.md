@@ -43,10 +43,14 @@ Tested on: **macOS, Linux, Windows 10** (CMD, PowerShell, GitBash)
 > **NOTE**: On purpose, we disabled all port mappings except of http port **80** to access the StreamPipes UI to provide minimal surface for conflicting ports.
 
 ## Usage
-We provide two options to get you going:
+We provide three options to get you going:
 
-- **default**: a light-weight option with few pipeline elements, needs less memory
-- **full**:  contains more pipeline elements, requires **>16 GB RAM** (recommended)
+- **default**: the standard installation, uses Kafka as internal message broker (recommended)
+- **nats**: the standard installation which uses Nats as message broker (recommended for new installations)
+- **full**:  contains experimental Flink wrappers
+
+The ``nats`` version will become the default version in a later release. You can already try it for new installations, 
+but there's not yet an automatic migration from current Kafka-based installations to Nats.
 
 **Starting** the **default** option is as easy as simply running:
 > **NOTE**: Starting might take a while since `docker-compose up` also initially pulls all Docker images from Dockerhub.
@@ -64,6 +68,17 @@ docker-compose down
 # docker-compose down -v
 ```
 
+Starting the **nats** option works as follows:
+```bash
+docker-compose -f docker-compose.nats.yml up -d
+# go to after all services are started http://localhost
+```
+Stopping the **nats** option:
+```bash
+docker-compose -f docker-compose.nats.yml down
+#docker-compose -f docker-compose.nats.yml down
+```
+
 Starting the **full** option is almost the same, just specify the `docker-compose.full.yml` file:
 ```bash
 docker-compose -f docker-compose.full.yml up -d
@@ -72,7 +87,7 @@ docker-compose -f docker-compose.full.yml up -d
 Stopping the **full** option:
 ```bash
 docker-compose -f docker-compose.full.yml down
-#docker-compose -f docker-compose.full.yml down -v
+#docker-compose -f docker-compose.full.yml down
 ```
 
 ## Update services
