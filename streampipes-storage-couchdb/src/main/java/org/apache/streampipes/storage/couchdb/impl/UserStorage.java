@@ -68,7 +68,7 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
 
   @Override
   public Principal getUser(String username) {
-    List<Principal> users = findByKey(viewName, username, Principal.class);
+    List<Principal> users = findByKey(viewName, username.toLowerCase(), Principal.class);
     if (users.size() != 1) {
       LOG.error("None or to many users with matching username");
     }
@@ -101,7 +101,7 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
    */
   @Override
   public boolean checkUser(String username) {
-    List<Principal> users = findByKey(viewName, username, Principal.class);
+    List<Principal> users = findByKey(viewName, username.toLowerCase(), Principal.class);
 
     return users.size() == 1;
   }

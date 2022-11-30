@@ -208,7 +208,10 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       try {
         if (PasswordUtil.validatePassword(user.getPassword(), existingUser.getPassword())) {
           existingUser.setUsername(user.getUsername());
-          if (getUserStorage().getAllUserAccounts().stream().noneMatch(u -> u.getUsername().equals(user.getUsername()))) {
+          if (getUserStorage()
+              .getAllUserAccounts()
+              .stream()
+              .noneMatch(u -> u.getUsername().equalsIgnoreCase(user.getUsername()))) {
             updateUser(existingUser, user, isAdmin(), existingUser.getPassword());
             getUserStorage().updateUser(existingUser);
             return ok();
