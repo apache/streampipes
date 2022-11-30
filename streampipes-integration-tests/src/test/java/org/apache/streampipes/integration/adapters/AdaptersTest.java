@@ -17,24 +17,26 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import java.util.List;
-import java.util.Map;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+
 import org.junit.Test;
 
-public class AdaptersTest {
-    public void testAdapter(AdapterTesterBase adapterTester) throws Exception {
-        adapterTester.startAdapterService();
-        AdapterDescription adapterDescription = adapterTester.prepareAdapter();
-        adapterTester.startAdapter(adapterDescription);
-        List<Map<String, Object>> data = adapterTester.generateData();
-        adapterTester.validateData(data);
-    }
+import java.util.List;
+import java.util.Map;
 
-    @Test
-    public void testPulsarAdapter() throws Exception {
-        try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
-            testAdapter(pulsarAdapterTester);
-        }
+public class AdaptersTest {
+  public void testAdapter(AdapterTesterBase adapterTester) throws Exception {
+    adapterTester.startAdapterService();
+    AdapterDescription adapterDescription = adapterTester.prepareAdapter();
+    adapterTester.startAdapter(adapterDescription);
+    List<Map<String, Object>> data = adapterTester.generateData();
+    adapterTester.validateData(data);
+  }
+
+  @Test
+  public void testPulsarAdapter() throws Exception {
+    try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {
+      testAdapter(pulsarAdapterTester);
     }
+  }
 }

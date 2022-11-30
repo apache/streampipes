@@ -28,8 +28,9 @@ github:
     wiki: false
     issues: true
     projects: false
-    
+
 notifications:
   jobs: issues@streampipes.apache.org
   commits: commits@streampipes.apache.org
   issues: issues@streampipes.apache.org
+  discussions: dev@streampipes.apache.org
