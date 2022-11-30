@@ -69,7 +69,8 @@ export class ToolbarComponent extends BaseNavigationComponent implements OnInit,
       this.unreadNotificationCount = count;
     });
     this.authService.user$.subscribe(user => {
-      this.userEmail = user.displayName;
+      const displayName = user.displayName;
+      this.userEmail = (displayName.length > 33) ? displayName.slice(0, 32) + '...' : displayName;
       this.profileService.getUserProfile(user.username).subscribe(userInfo => {
         this.darkMode = this.authService.darkMode$.getValue();
         this.modifyAppearance(userInfo.darkMode);
