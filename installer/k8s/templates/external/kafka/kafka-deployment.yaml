@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if eq .Values.preferredBroker "kafka" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -65,3 +66,4 @@ spec:
               value: "5000012"
             - name: KAFKA_REPLICA_FETCH_MAX_BYTES
               value: "10000000"
+{{- end }}

@@ -13,34 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.preferredBroker "kafka" }}
+{{- if eq .Values.preferredBroker "nats" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zookeeper
+  name: nats
 spec:
   selector:
     matchLabels:
-      app: zookeeper
+      app: nats
   replicas: 1
   template:
     metadata:
       labels:
-        app: zookeeper
+        app: nats
     spec:
+      initContainers:
+        - name: init-wait-consul
+          image: alpine
+          command: ["sh", "-c", "for i in $(seq 1 300); do nc -zvw1 consul 8500 && exit 0 || sleep 3; done; exit 1"]
       volumes:
-        - name: zookeeper-pv
+        - name: kafka-pv
           persistentVolumeClaim:
-            claimName: zookeeper-pvc
+            claimName: kafka-pvc
       containers:
-        #TODO: wurstmeister/zookeeper:latest is running ZK 3.4.13. Once this
-        #      changes, the mount path needs to be adapted
-        - name: zookeeper
-          image: fogsyio/zookeeper:{{ .Values.external.zookeeperVersion }}
+        - name: nats
+          image: nats
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
-            - containerPort: 2181
-          volumeMounts:
-            - mountPath: "/opt/zookeeper-{{ .Values.external.zookeeperVersion }}/data"
-              name: zookeeper-pv
+            - containerPort: 4222
 {{- end }}
