@@ -13,17 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-{{- if eq .Values.preferredBroker "kafka" }}
+{{- if eq .Values.preferredBroker "nats" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: zookeeper
+  name: nats
+  labels:
+    name: nats
 spec:
   selector:
-    app: zookeeper
+    app: nats
   ports:
     - name: main
       protocol: TCP
-      port: 2181
-      targetPort: 2181
+      port: 4222
 {{- end }}

@@ -44,8 +44,8 @@ spec:
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: SP_PRIORITIZED_PROTOCOL
-              {{ if (eq .Values.preferredBroker "mqtt") }}
-              value: "mqtt"
+              {{ if (eq .Values.preferredBroker "nats") }}
+              value: "nats"
               {{ else }}
               value: "kafka"
               {{ end }}
