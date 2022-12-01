@@ -27,6 +27,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 
 
@@ -54,19 +56,19 @@ public class GuessResource extends AbstractAdapterResource<GuessManagement> {
   @Produces(MediaType.APPLICATION_JSON)
   public Response guessSchema(AdapterDescription adapterDescription) {
 
-      try {
-          GuessSchema result = managementService.guessSchema(adapterDescription);
+    try {
+      GuessSchema result = managementService.guessSchema(adapterDescription);
 
-          return ok(result);
-      } catch (ParseException e) {
-          LOG.error("Error while parsing events: ", e);
-          return badRequest(StreamPipesErrorMessage.from(e));
-      } catch (WorkerAdapterException e) {
-          return serverError(StreamPipesErrorMessage.from(e));
-      } catch (NoServiceEndpointsAvailableException | IOException e) {
-        LOG.error(e.getMessage());
-        return serverError(StreamPipesErrorMessage.from(e));
-      }
+      return ok(result);
+    } catch (ParseException e) {
+      LOG.error("Error while parsing events: ", e);
+      return badRequest(StreamPipesErrorMessage.from(e));
+    } catch (WorkerAdapterException e) {
+      return serverError(StreamPipesErrorMessage.from(e));
+    } catch (NoServiceEndpointsAvailableException | IOException e) {
+      LOG.error(e.getMessage());
+      return serverError(StreamPipesErrorMessage.from(e));
+    }
   }
 
   @POST

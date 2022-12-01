@@ -31,11 +31,11 @@ import javax.ws.rs.core.Response;
 @Path("/v2/autocomplete")
 public class AutoComplete extends AbstractRestResource {
 
-    @GET
-    @Path("semantic-type")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getSemanticTypes(@QueryParam("text") String text) {
-        return ok(SemanticTypeRegistry.INSTANCE.matches(text));
-    }
+  @GET
+  @Path("semantic-type")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getSemanticTypes(@QueryParam("text") String text) {
+    return ok(SemanticTypeRegistry.INSTANCE.matches(text));
+  }
 
 }

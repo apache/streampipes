@@ -25,10 +25,15 @@ import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -74,7 +79,8 @@ public class PipelineElementImportNoUser extends AbstractRestResource {
       userService.deleteOwnSource(username, uri);
       requestor.refreshDataSourceCache();
     } else {
-      return constructErrorMessage(new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
+      return constructErrorMessage(
+          new Notification(NotificationType.STORAGE_ERROR.title(), NotificationType.STORAGE_ERROR.description()));
     }
     return constructSuccessMessage(NotificationType.STORAGE_SUCCESS.uiNotification());
   }
