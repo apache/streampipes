@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.messaging.kafka.config;
 
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.util.Properties;
 
@@ -37,11 +38,8 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
   private static final String VALUE_SERIALIZER_DEFAULT = ByteArraySerializer.class.getName();
 
 
-
   public ProducerConfigFactory(KafkaTransportProtocol protocol) {
     super(protocol);
-
-
   }
 
   @Override
@@ -49,14 +47,14 @@ public class ProducerConfigFactory extends AbstractConfigFactory {
     Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, getBrokerUrl());
     props.put(ProducerConfig.ACKS_CONFIG, getConfigOrDefault(protocol::getAcks,
-            ACKS_CONFIG_DEFAULT));
+        ACKS_CONFIG_DEFAULT));
     props.put(ProducerConfig.RETRIES_CONFIG, RETRIES_CONFIG_DEFAULT);
     props.put(ProducerConfig.BATCH_SIZE_CONFIG,
-            getConfigOrDefault(protocol::getBatchSize, BATCH_SIZE_CONFIG_DEFAULT));
+        getConfigOrDefault(protocol::getBatchSize, BATCH_SIZE_CONFIG_DEFAULT));
     props.put(ProducerConfig.LINGER_MS_CONFIG,
-            getConfigOrDefault(protocol::getLingerMs, LINGER_MS_DEFAULT));
+        getConfigOrDefault(protocol::getLingerMs, LINGER_MS_DEFAULT));
     props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, getConfigOrDefault(protocol::getMaxRequestSize,
-            MAX_REQUEST_SIZE_CONFIG_DEFAULT));
+        MAX_REQUEST_SIZE_CONFIG_DEFAULT));
     props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, BUFFER_MEMORY_CONFIG_DEFAULT);
 
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KEY_SERIALIZER_DEFAULT);

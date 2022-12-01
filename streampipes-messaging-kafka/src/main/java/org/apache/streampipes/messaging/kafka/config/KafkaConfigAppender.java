@@ -22,5 +22,5 @@ import java.util.Properties;
 
 public interface KafkaConfigAppender {
 
-    void appendConfig(Properties props);
+  void appendConfig(Properties props);
 }

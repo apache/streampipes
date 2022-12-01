@@ -18,22 +18,31 @@
 
 package org.apache.streampipes.messaging.kafka;
 
-import org.apache.kafka.clients.admin.*;
+import org.apache.streampipes.commons.constants.Envs;
+import org.apache.streampipes.messaging.EventProducer;
+import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
+import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.KafkaAdminClient;
+import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.config.TopicConfig;
-import org.apache.streampipes.commons.constants.Envs;
-import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.messaging.EventProducer;
-import org.apache.streampipes.messaging.kafka.config.ProducerConfigFactory;
-import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, Serializable {
@@ -50,7 +59,8 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
   private static final Logger LOG = LoggerFactory.getLogger(SpKafkaProducer.class);
 
-  public SpKafkaProducer() { }
+  public SpKafkaProducer() {
+  }
 
   // TODO backwards compatibility, remove later
   public SpKafkaProducer(String url,
@@ -58,7 +68,7 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
                          List<KafkaConfigAppender> appenders) {
     String[] urlParts = url.split(COLON);
     KafkaTransportProtocol protocol = new KafkaTransportProtocol(urlParts[0],
-            Integer.parseInt(urlParts[1]), topic);
+        Integer.parseInt(urlParts[1]), topic);
     this.brokerUrl = url;
     this.topic = topic;
     this.producer = new KafkaProducer<>(makeProperties(protocol, appenders));
@@ -115,7 +125,8 @@ public class SpKafkaProducer implements EventProducer<KafkaTransportProtocol>, S
 
     if (!topicExists(topics)) {
       Map<String, String> topicConfig = new HashMap<>();
-      String retentionTime = Envs.SP_KAFKA_RETENTION_MS.exists() ? Envs.SP_KAFKA_RETENTION_MS.getValue() : SP_KAFKA_RETENTION_MS_DEFAULT;
+      String retentionTime = Envs.SP_KAFKA_RETENTION_MS.exists()
+          ? Envs.SP_KAFKA_RETENTION_MS.getValue() : SP_KAFKA_RETENTION_MS_DEFAULT;
       topicConfig.put(TopicConfig.RETENTION_MS_CONFIG, retentionTime);
 
       final NewTopic newTopic = new NewTopic(topic, 1, (short) 1);
