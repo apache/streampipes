@@ -21,12 +21,12 @@ package org.apache.streampipes.messaging;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
-public interface EventConsumer<TP extends TransportProtocol> {
+public interface EventConsumer<T extends TransportProtocol> {
 
-    void connect(TP protocolSettings, InternalEventProcessor<byte[]> eventProcessor) throws
-            SpRuntimeException;
+  void connect(T protocolSettings, InternalEventProcessor<byte[]> eventProcessor) throws
+      SpRuntimeException;
 
-    void disconnect() throws SpRuntimeException;
+  void disconnect() throws SpRuntimeException;
 
-    boolean isConnected();
+  boolean isConnected();
 }
