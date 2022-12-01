@@ -13,28 +13,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
+package org.apache.streampipes.manager.setup.design;
 
-package org.apache.streampipes.backend.migrations;
+import org.lightcouch.DesignDocument;
 
-import org.apache.streampipes.backend.migrations.v070.CreateAssetLinkTypeMigration;
-import org.apache.streampipes.backend.migrations.v070.CreateDefaultAssetMigration;
-import org.apache.streampipes.backend.migrations.v070.CreateFileAssetTypeMigration;
-import org.apache.streampipes.backend.migrations.v090.UpdateUsernameViewMigration;
+public class DesignDocumentUtils {
 
-import java.util.Arrays;
-import java.util.List;
-
-public class AvailableMigrations {
-
-  public List<Migration> getAvailableMigrations() {
-    return Arrays.asList(
-      new CreateAssetLinkTypeMigration(),
-      new CreateDefaultAssetMigration(),
-      new CreateFileAssetTypeMigration(),
-      new UpdateUsernameViewMigration()
-    );
+  public static DesignDocument prepareDocument(String id) {
+    DesignDocument doc = new DesignDocument();
+    doc.setLanguage("javascript");
+    doc.setId(id);
+    return doc;
   }
 }
