@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+
 package org.apache.streampipes.dataexplorer.v4.params;
 
 import org.junit.Test;
@@ -22,36 +23,37 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class WhereStatementParamsTest {
-    @Test
-    public void filterNumber() {
-        WhereStatementParams result = WhereStatementParams.from("", "[fieldName;=;6]");
-        WhereCondition expected = new WhereCondition("fieldName", "=", "6");
+  @Test
+  public void filterNumber() {
+    WhereStatementParams result = WhereStatementParams.from("", "[fieldName;=;6]");
+    WhereCondition expected = new WhereCondition("fieldName", "=", "6");
 
-        assertWhereCondition(result, expected);
-    }
+    assertWhereCondition(result, expected);
+  }
 
-    @Test
-    public void filterBoolean() {
-        WhereStatementParams result = WhereStatementParams.from("", "[fieldName;=;true]");
-        WhereCondition expected = new WhereCondition("fieldName", "=", "true");
+  @Test
+  public void filterBoolean() {
+    WhereStatementParams result = WhereStatementParams.from("", "[fieldName;=;true]");
+    WhereCondition expected = new WhereCondition("fieldName", "=", "true");
 
-        assertWhereCondition(result, expected);
-    }
+    assertWhereCondition(result, expected);
+  }
 
-    @Test
-    public void filterString() {
-        WhereStatementParams result = WhereStatementParams.from("", "[fieldName;=;a]");
-        WhereCondition expected = new WhereCondition("fieldName", "=", "'a'");
+  @Test
+  public void filterString() {
+    WhereStatementParams result = WhereStatementParams.from("", "[fieldName;=;a]");
+    WhereCondition expected = new WhereCondition("fieldName", "=", "'a'");
 
-        assertWhereCondition(result, expected);
-    }
-    private void assertWhereCondition(WhereStatementParams result, WhereCondition expected) {
-        assertEquals(1, result.getWhereConditions().size());
-        WhereCondition resultingWhereCondition = result.getWhereConditions().get(0);
-        assertEquals(expected.getField(), resultingWhereCondition.getField());
-        assertEquals(expected.getOperator(), resultingWhereCondition.getOperator());
-        assertEquals(expected.getCondition(), resultingWhereCondition.getCondition());
-    }
+    assertWhereCondition(result, expected);
+  }
+
+  private void assertWhereCondition(WhereStatementParams result, WhereCondition expected) {
+    assertEquals(1, result.getWhereConditions().size());
+    WhereCondition resultingWhereCondition = result.getWhereConditions().get(0);
+    assertEquals(expected.getField(), resultingWhereCondition.getField());
+    assertEquals(expected.getOperator(), resultingWhereCondition.getOperator());
+    assertEquals(expected.getCondition(), resultingWhereCondition.getCondition());
+  }
 
 
 }

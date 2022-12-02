@@ -23,6 +23,7 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.impl.dashboard.AbstractPipelineExtractionResource;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +59,8 @@ public class PersistedDataStreamResource extends AbstractPipelineExtractionResou
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{pipelineId}/{measureName}")
   public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
-                                                                          @PathParam("measureName") String measureName) {
+                                                                          @PathParam("measureName")
+                                                                          String measureName) {
     return getPipelineByIdAndFieldValue(DataLakeAppId, pipelineId, measureName);
   }
 

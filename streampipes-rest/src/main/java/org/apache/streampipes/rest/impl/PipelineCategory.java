@@ -23,44 +23,56 @@ import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IPipelineCategoryStorage;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/v2/pipelinecategories")
 public class PipelineCategory extends AbstractRestResource {
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@JacksonSerialized
-	public Response getCategories() {
-		return ok(getPipelineCategoryStorage()
-				.getPipelineCategories());
-	}
-	
-	@POST
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
-	@JacksonSerialized
-	public Response addCategory(org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
-		boolean success = getPipelineCategoryStorage()
-				.addPipelineCategory(pipelineCategory);
-		if (success) return ok(Notifications.success("Category successfully stored. "));
-		else return ok(Notifications.error("Could not create category."));
-	}
-	
-	@DELETE
-	@Path("/{categoryId}")
-	@Produces(MediaType.APPLICATION_JSON)
-	@JacksonSerialized
-	public Response removeCategory(@PathParam("categoryId") String categoryId) {
-		boolean success = getPipelineCategoryStorage()
-				.deletePipelineCategory(categoryId);
-		if (success) return ok(Notifications.success("Category successfully deleted. "));
-		else return ok(Notifications.error("Could not delete category."));
-	}
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response getCategories() {
+    return ok(getPipelineCategoryStorage()
+        .getPipelineCategories());
+  }
 
-	private IPipelineCategoryStorage getPipelineCategoryStorage() {
-		return getNoSqlStorage().getPipelineCategoryStorageApi();
-	}
+  @POST
+  @Produces(MediaType.APPLICATION_JSON)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response addCategory(org.apache.streampipes.model.pipeline.PipelineCategory pipelineCategory) {
+    boolean success = getPipelineCategoryStorage()
+        .addPipelineCategory(pipelineCategory);
+    if (success) {
+      return ok(Notifications.success("Category successfully stored. "));
+    } else {
+      return ok(Notifications.error("Could not create category."));
+    }
+  }
+
+  @DELETE
+  @Path("/{categoryId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  @JacksonSerialized
+  public Response removeCategory(@PathParam("categoryId") String categoryId) {
+    boolean success = getPipelineCategoryStorage()
+        .deletePipelineCategory(categoryId);
+    if (success) {
+      return ok(Notifications.success("Category successfully deleted. "));
+    } else {
+      return ok(Notifications.error("Could not delete category."));
+    }
+  }
+
+  private IPipelineCategoryStorage getPipelineCategoryStorage() {
+    return getNoSqlStorage().getPipelineCategoryStorageApi();
+  }
 }

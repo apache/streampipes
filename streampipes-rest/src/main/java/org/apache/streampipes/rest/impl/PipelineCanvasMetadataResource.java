@@ -22,7 +22,13 @@ import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.storage.api.IPipelineCanvasMetadataStorage;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -36,7 +42,7 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
   public Response getPipelineCanvasMetadataForPipeline(@PathParam("pipelineId") String pipelineId) {
     try {
       return ok(getPipelineCanvasMetadataStorage()
-              .getPipelineCanvasMetadataForPipeline(pipelineId));
+          .getPipelineCanvasMetadataForPipeline(pipelineId));
     } catch (IllegalArgumentException e) {
       return badRequest();
     }
@@ -49,7 +55,7 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
   public Response getPipelineCanvasMetadata(@PathParam("canvasId") String pipelineCanvasId) {
     try {
       return ok(getPipelineCanvasMetadataStorage()
-              .getElementById(pipelineCanvasId));
+          .getElementById(pipelineCanvasId));
     } catch (IllegalArgumentException e) {
       return badRequest();
     }
@@ -78,7 +84,8 @@ public class PipelineCanvasMetadataResource extends AbstractRestResource {
   @Path("/pipeline/{pipelineId}")
   @JacksonSerialized
   public Response deletePipelineCanvasMetadataForPipeline(@PathParam("pipelineId") String pipelineId) {
-    PipelineCanvasMetadata metadata = getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId);
+    PipelineCanvasMetadata metadata =
+        getPipelineCanvasMetadataStorage().getPipelineCanvasMetadataForPipeline(pipelineId);
     getPipelineCanvasMetadataStorage().deleteElement(metadata);
     return ok();
   }

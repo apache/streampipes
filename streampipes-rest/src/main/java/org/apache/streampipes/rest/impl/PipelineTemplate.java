@@ -26,9 +26,14 @@ import org.apache.streampipes.model.template.PipelineTemplateDescription;
 import org.apache.streampipes.model.template.PipelineTemplateInvocation;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +48,9 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     List<SpDataStream> datasets = new ArrayList<>();
 
     sources.stream()
-            .filter(stream -> !(stream instanceof SpDataSet))
-            .map(SpDataStream::new)
-            .forEach(datasets::add);
+        .filter(stream -> !(stream instanceof SpDataSet))
+        .map(SpDataStream::new)
+        .forEach(datasets::add);
 
     return ok((new SpDataStreamContainer(datasets)));
   }
@@ -59,10 +64,10 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     List<SpDataStream> datasets = new ArrayList<>();
 
     sources
-            .stream()
-            .filter(stream -> stream instanceof SpDataSet)
-            .map(stream -> new SpDataSet((SpDataSet) stream))
-            .forEach(datasets::add);
+        .stream()
+        .filter(stream -> stream instanceof SpDataSet)
+        .map(stream -> new SpDataSet((SpDataSet) stream))
+        .forEach(datasets::add);
 
     return ok(new SpDataStreamContainer(datasets));
   }
@@ -75,7 +80,8 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
     if (pipelineTemplateId != null) {
       SpDataStream dataStream = getDataStream(streamId);
       PipelineTemplateDescription pipelineTemplateDescription = getPipelineTemplateDescription(pipelineTemplateId);
-      PipelineTemplateInvocation invocation = Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescription);
+      PipelineTemplateInvocation invocation =
+          Operations.getPipelineInvocationTemplate(dataStream, pipelineTemplateDescription);
       PipelineTemplateInvocation clonedInvocation = new PipelineTemplateInvocation(invocation);
       return ok(new PipelineTemplateInvocation(clonedInvocation));
     } else {
@@ -88,7 +94,7 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
   public Response generatePipeline(PipelineTemplateInvocation pipelineTemplateInvocation) {
 
     PipelineOperationStatus status = Operations
-            .handlePipelineTemplateInvocation(getAuthenticatedUserSid(), pipelineTemplateInvocation);
+        .handlePipelineTemplateInvocation(getAuthenticatedUserSid(), pipelineTemplateInvocation);
 
     return ok(status);
 
@@ -97,11 +103,11 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
 
   private PipelineTemplateDescription getPipelineTemplateDescription(String pipelineTemplateId) {
     return Operations
-            .getAllPipelineTemplates()
-            .stream()
-            .filter(pt -> pt.getAppId().equals(pipelineTemplateId))
-            .findFirst()
-            .get();
+        .getAllPipelineTemplates()
+        .stream()
+        .filter(pt -> pt.getAppId().equals(pipelineTemplateId))
+        .findFirst()
+        .get();
   }
 
   private List<SpDataStream> getAllDataStreams() {
@@ -110,9 +116,9 @@ public class PipelineTemplate extends AbstractAuthGuardedRestResource {
 
   private SpDataStream getDataStream(String streamId) {
     return getAllDataStreams()
-            .stream()
-            .filter(sp -> sp.getElementId().equals(streamId))
-            .findFirst()
-            .get();
+        .stream()
+        .filter(sp -> sp.getElementId().equals(streamId))
+        .findFirst()
+        .get();
   }
 }

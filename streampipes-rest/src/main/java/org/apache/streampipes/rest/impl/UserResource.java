@@ -224,6 +224,7 @@ public class UserResource extends AbstractAuthGuardedRestResource {
       try {
         if (PasswordUtil.validatePassword(user.getPassword(), existingUser.getPassword())) {
           existingUser.setUsername(user.getUsername());
+
           if (getUserStorage()
               .getAllUserAccounts()
               .stream()
