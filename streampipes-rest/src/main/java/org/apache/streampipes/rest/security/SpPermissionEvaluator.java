@@ -23,6 +23,7 @@ import org.apache.streampipes.model.pipeline.PipelineElementRecommendation;
 import org.apache.streampipes.model.pipeline.PipelineElementRecommendationMessage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
@@ -66,7 +67,8 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
   }
 
   private boolean hasPermission(Authentication auth, String objectInstanceId) {
-    return isPublicElement(objectInstanceId) || getUserDetails(auth).getAllObjectPermissions().contains(objectInstanceId);
+    return isPublicElement(objectInstanceId)
+        || getUserDetails(auth).getAllObjectPermissions().contains(objectInstanceId);
   }
 
   private PrincipalUserDetails<?> getUserDetails(Authentication authentication) {
@@ -74,14 +76,15 @@ public class SpPermissionEvaluator implements PermissionEvaluator {
   }
 
   private boolean isPublicElement(String objectInstanceId) {
-    List<Permission> permissions = StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().getUserPermissionsForObject(objectInstanceId);
+    List<Permission> permissions =
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().getUserPermissionsForObject(objectInstanceId);
     return permissions.size() > 0 && permissions.get(0).isPublicElement();
   }
 
   private boolean isAdmin(PrincipalUserDetails<?> userDetails) {
     return userDetails
-            .getAuthorities()
-            .stream()
-            .anyMatch(a -> a.getAuthority().equals(Role.Constants.ROLE_ADMIN_VALUE));
+        .getAuthorities()
+        .stream()
+        .anyMatch(a -> a.getAuthority().equals(Role.Constants.ROLE_ADMIN_VALUE));
   }
 }

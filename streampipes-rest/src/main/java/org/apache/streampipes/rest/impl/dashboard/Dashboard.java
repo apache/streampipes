@@ -19,34 +19,33 @@
 package org.apache.streampipes.rest.impl.dashboard;
 
 import org.apache.streampipes.model.client.user.Privilege;
-import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.resource.management.AbstractDashboardResourceManager;
+
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
-import java.util.Arrays;
 
 @Path("/v2/dashboard/dashboards")
 @Component
 public class Dashboard extends AbstractDashboardResource {
 
-    @Override
-    protected AbstractDashboardResourceManager getResourceManager() {
-        return getSpResourceManager().manageDashboards();
-    }
+  @Override
+  protected AbstractDashboardResourceManager getResourceManager() {
+    return getSpResourceManager().manageDashboards();
+  }
 
-    @Override
-    public boolean hasReadAuthority() {
-        return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
-    }
+  @Override
+  public boolean hasReadAuthority() {
+    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE);
+  }
 
-    @Override
-    public boolean hasWriteAuthority() {
-        return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
-    }
+  @Override
+  public boolean hasWriteAuthority() {
+    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE);
+  }
 
-    @Override
-    public boolean hasDeleteAuthority() {
-        return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_DELETE_DASHBOARD_VALUE);
-    }
+  @Override
+  public boolean hasDeleteAuthority() {
+    return isAdminOrHasAnyAuthority(Privilege.Constants.PRIVILEGE_DELETE_DASHBOARD_VALUE);
+  }
 }

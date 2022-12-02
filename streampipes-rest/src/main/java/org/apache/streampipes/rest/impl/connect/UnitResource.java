@@ -21,6 +21,7 @@ package org.apache.streampipes.rest.impl.connect;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.management.UnitMasterManagement;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,23 +35,23 @@ import javax.ws.rs.core.Response;
 @Path("/v2/connect/master/unit")
 public class UnitResource extends AbstractAdapterResource<UnitMasterManagement> {
 
-    private static final Logger logger = LoggerFactory.getLogger(UnitResource.class);
+  private static final Logger logger = LoggerFactory.getLogger(UnitResource.class);
 
-    public UnitResource() {
-        super(UnitMasterManagement::new);
-    }
+  public UnitResource() {
+    super(UnitMasterManagement::new);
+  }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getFittingUnits(UnitDescription unitDescription) {
-        try {
-            String resultingJson = managementService.getFittingUnits(unitDescription);
-            return ok(resultingJson);
-        } catch (AdapterException e) {
-            logger.error("Error while getting all adapter descriptions", e);
-            return fail();
-        }
+  @POST
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getFittingUnits(UnitDescription unitDescription) {
+    try {
+      String resultingJson = managementService.getFittingUnits(unitDescription);
+      return ok(resultingJson);
+    } catch (AdapterException e) {
+      logger.error("Error while getting all adapter descriptions", e);
+      return fail();
     }
+  }
 
 }

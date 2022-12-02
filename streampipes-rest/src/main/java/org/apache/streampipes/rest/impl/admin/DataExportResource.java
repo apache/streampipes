@@ -22,6 +22,7 @@ import org.apache.streampipes.export.ExportManager;
 import org.apache.streampipes.model.export.ExportConfiguration;
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.rest.security.AuthConstants;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -53,8 +55,8 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   public Response getExportPreview(ExportConfiguration exportConfiguration) throws IOException {
-      var applicationPackage = ExportManager.getExportPackage(exportConfiguration);
-      return ok(applicationPackage);
+    var applicationPackage = ExportManager.getExportPackage(exportConfiguration);
+    return ok(applicationPackage);
   }
 
 }

@@ -30,6 +30,7 @@ import org.apache.streampipes.user.management.model.ServiceAccountDetails;
 import org.apache.streampipes.user.management.model.UserAccountDetails;
 import org.apache.streampipes.user.management.service.TokenService;
 import org.apache.streampipes.user.management.util.TokenUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,72 +43,75 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-	private final JwtTokenProvider tokenProvider;
-	private final IUserStorage userStorage;
+  private final JwtTokenProvider tokenProvider;
+  private final IUserStorage userStorage;
 
-	private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
+  private static final Logger logger = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
-	public TokenAuthenticationFilter() {
-		this.tokenProvider = new JwtTokenProvider();
-		this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
-	}
+  public TokenAuthenticationFilter() {
+    this.tokenProvider = new JwtTokenProvider();
+    this.userStorage = StorageDispatcher.INSTANCE.getNoSqlStore().getUserStorageAPI();
+  }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request,
-																	HttpServletResponse response,
-																	FilterChain filterChain) throws ServletException, IOException {
-		try {
-			String jwt = getJwtFromRequest(request);
+  @Override
+  protected void doFilterInternal(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  FilterChain filterChain) throws ServletException, IOException {
+    try {
+      String jwt = getJwtFromRequest(request);
 
-			if (StringUtils.hasText(jwt) && tokenProvider.validateJwtToken(jwt)) {
-					String username = tokenProvider.getUserIdFromToken(jwt);
-					applySuccessfulAuth(request, username);
-			} else {
-				String apiKey = getApiKeyFromRequest(request);
-				String apiUser = getApiUserFromRequest(request);
-				if (StringUtils.hasText(apiKey) && StringUtils.hasText(apiUser)) {
-					String hashedToken = TokenUtil.hashToken(apiKey);
-					boolean hasValidToken = new TokenService().hasValidToken(apiUser, hashedToken);
-					if (hasValidToken) {
-						applySuccessfulAuth(request, apiUser);
-					}
-				}
-			}
-		} catch (Exception ex) {
-			logger.error("Could not set user authentication in security context", ex);
-		}
+      if (StringUtils.hasText(jwt) && tokenProvider.validateJwtToken(jwt)) {
+        String username = tokenProvider.getUserIdFromToken(jwt);
+        applySuccessfulAuth(request, username);
+      } else {
+        String apiKey = getApiKeyFromRequest(request);
+        String apiUser = getApiUserFromRequest(request);
+        if (StringUtils.hasText(apiKey) && StringUtils.hasText(apiUser)) {
+          String hashedToken = TokenUtil.hashToken(apiKey);
+          boolean hasValidToken = new TokenService().hasValidToken(apiUser, hashedToken);
+          if (hasValidToken) {
+            applySuccessfulAuth(request, apiUser);
+          }
+        }
+      }
+    } catch (Exception ex) {
+      logger.error("Could not set user authentication in security context", ex);
+    }
 
-		filterChain.doFilter(request, response);
-	}
+    filterChain.doFilter(request, response);
+  }
 
-	private void applySuccessfulAuth(HttpServletRequest request,
-																	 String username) {
-		Principal user = userStorage.getUser(username);
-		PrincipalUserDetails<?> userDetails = user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) : new ServiceAccountDetails((ServiceAccount) user);
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-		authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+  private void applySuccessfulAuth(HttpServletRequest request,
+                                   String username) {
+    Principal user = userStorage.getUser(username);
+    PrincipalUserDetails<?> userDetails = user instanceof UserAccount ? new UserAccountDetails((UserAccount) user) :
+        new ServiceAccountDetails((ServiceAccount) user);
+    UsernamePasswordAuthenticationToken authentication =
+        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-	}
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+  }
 
 
-	private String getJwtFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getHeader(HttpConstants.AUTHORIZATION);
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(HttpConstants.BEARER)) {
-			return bearerToken.substring(7);
-		}
-		return null;
-	}
+  private String getJwtFromRequest(HttpServletRequest request) {
+    String bearerToken = request.getHeader(HttpConstants.AUTHORIZATION);
+    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(HttpConstants.BEARER)) {
+      return bearerToken.substring(7);
+    }
+    return null;
+  }
 
-	private String getApiKeyFromRequest(HttpServletRequest request) {
-		return request.getHeader(HttpConstants.X_API_KEY);
-	}
+  private String getApiKeyFromRequest(HttpServletRequest request) {
+    return request.getHeader(HttpConstants.X_API_KEY);
+  }
 
-	private String getApiUserFromRequest(HttpServletRequest request) {
-		return request.getHeader(HttpConstants.X_API_USER);
-	}
+  private String getApiUserFromRequest(HttpServletRequest request) {
+    return request.getHeader(HttpConstants.X_API_USER);
+  }
 }

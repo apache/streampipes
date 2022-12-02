@@ -29,7 +29,6 @@ import org.apache.streampipes.rest.impl.dashboard.VisualizablePipelineResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeDashboardResource;
 import org.apache.streampipes.rest.impl.datalake.DataLakeWidgetResource;
 import org.apache.streampipes.rest.impl.datalake.PersistedDataStreamResource;
-import org.apache.streampipes.rest.impl.nouser.PipelineElementImportNoUser;
 import org.apache.streampipes.rest.impl.pe.DataProcessorResource;
 import org.apache.streampipes.rest.impl.pe.DataSinkResource;
 import org.apache.streampipes.rest.impl.pe.DataStreamResource;
@@ -85,7 +84,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
         register(PipelineElementAsset.class);
         register(PipelineElementCategory.class);
         register(PipelineElementFile.class);
-        register(PipelineElementImportNoUser.class);
         register(PipelineElementImport.class);
         register(PipelineElementPreview.class);
         register(PipelineElementRuntimeInfo.class);

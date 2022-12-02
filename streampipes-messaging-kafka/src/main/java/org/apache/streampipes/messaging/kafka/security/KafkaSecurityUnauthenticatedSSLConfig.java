@@ -25,8 +25,8 @@ import java.util.Properties;
 
 public class KafkaSecurityUnauthenticatedSSLConfig extends KafkaSecurityConfig {
 
-    @Override
-    public void appendConfig(Properties props) {
-        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SSL.toString());
-    }
+  @Override
+  public void appendConfig(Properties props) {
+    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SecurityProtocol.SSL.toString());
+  }
 }

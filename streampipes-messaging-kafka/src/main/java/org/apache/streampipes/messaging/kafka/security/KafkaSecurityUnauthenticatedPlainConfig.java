@@ -22,9 +22,8 @@ import java.util.Properties;
 
 public class KafkaSecurityUnauthenticatedPlainConfig extends KafkaSecurityConfig {
 
+  @Override
+  public void appendConfig(Properties props) {
 
-    @Override
-    public void appendConfig(Properties props) {
-
-    }
+  }
 }

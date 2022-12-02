@@ -23,13 +23,13 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.io.Serializable;
 
-public interface EventProducer<TP extends TransportProtocol> extends Serializable {
+public interface EventProducer<T extends TransportProtocol> extends Serializable {
 
-    void connect(TP protocolSettings) throws SpRuntimeException;
+  void connect(T protocolSettings) throws SpRuntimeException;
 
-    void publish(byte[] event);
+  void publish(byte[] event);
 
-    void disconnect() throws SpRuntimeException;
+  void disconnect() throws SpRuntimeException;
 
-    boolean isConnected();
+  boolean isConnected();
 }
