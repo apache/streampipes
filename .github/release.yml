@@ -1,0 +1,21 @@
+changelog:
+  exclude:
+    labels:
+      - dependencies
+  categories:
+    - title: New Features 🚀
+      labels:
+        - enhancement
+    - title: Bug fixes 🧰
+      labels:
+        - bug
+    - title: Breaking changes 💣
+      labels:
+        - breaking change
+    - title: Deprecation ⚠
+      labels:
+        - deprecation
+    - title: Documentation & Website 📚
+      labels:
+        - documentation
+        - website
