@@ -20,28 +20,28 @@ package org.apache.streampipes.commons.exceptions;
 
 public class RemoteServerNotAccessibleException extends Exception {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
-    private String serverUrl;
+  private String serverUrl;
 
-    public RemoteServerNotAccessibleException(String message, String serverUrl) {
-        super(message);
-        this.serverUrl = serverUrl;
-    }
+  public RemoteServerNotAccessibleException(String message, String serverUrl) {
+    super(message);
+    this.serverUrl = serverUrl;
+  }
 
-    public RemoteServerNotAccessibleException(RemoteServerNotAccessibleException e) {
-        super(e.getMessage());
-        this.serverUrl = e.getServerUrl();
-    }
+  public RemoteServerNotAccessibleException(RemoteServerNotAccessibleException e) {
+    super(e.getMessage());
+    this.serverUrl = e.getServerUrl();
+  }
 
-    public String getServerUrl() {
-        return serverUrl;
-    }
+  public String getServerUrl() {
+    return serverUrl;
+  }
 
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
-    }
+  public void setServerUrl(String serverUrl) {
+    this.serverUrl = serverUrl;
+  }
 }
