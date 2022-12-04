@@ -1776,6 +1776,13 @@ IoT data streams.
 						<exclude>licenses/EPL_1.0</exclude>
 						<exclude>licenses/BSD_2-Clause</exclude>
 
+						<!-- Exclude Python env -->
+						<exclude>**/venv/**</exclude>
+						<exclude>**/.pytest_cache/**</exclude>
+						<exclude>.ruff_cache/**</exclude>
+						<exclude>.mypy_cache/**</exclude>
+
+
 					</excludes>
 				</configuration>
 			</plugin>
