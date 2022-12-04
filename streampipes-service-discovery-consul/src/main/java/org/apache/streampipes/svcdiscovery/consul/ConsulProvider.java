@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
-import com.orbitz.consul.Consul;
 import org.apache.streampipes.commons.constants.Envs;
+
+import com.orbitz.consul.Consul;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,7 @@ public class ConsulProvider {
           e.printStackTrace();
         }
       }
-    } while(!connected);
+    } while (!connected);
 
     LOG.info("Successfully connected to Consul");
     return Consul.builder().withUrl(consulURL()).build();

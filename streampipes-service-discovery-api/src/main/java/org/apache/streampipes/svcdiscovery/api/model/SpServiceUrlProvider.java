@@ -25,8 +25,8 @@ public enum SpServiceUrlProvider {
   DATA_SET(SpServicePathPrefix.DATA_SET, SpServiceTagPrefix.DATA_SET),
   ADAPTER(SpServicePathPrefix.ADAPTER, SpServiceTagPrefix.ADAPTER);
 
-  private final String HTTP = "http://";
-  private final String SLASH = "/";
+  private final String http = "http://";
+  private final String slash = "/";
 
   private final String prefix;
   private final SpServiceTagPrefix serviceTagPrefix;
@@ -44,21 +44,21 @@ public enum SpServiceUrlProvider {
   public String getInvocationUrl(String host,
                                  Integer port,
                                  String appId) {
-    return HTTP
-            + host
-            + ":"
-            + port
-            + SLASH
-            + this.prefix
-            + SLASH + appId;
+    return http
+        + host
+        + ":"
+        + port
+        + slash
+        + this.prefix
+        + slash + appId;
   }
 
   public String getInvocationUrl(String baseUrl, String appId) {
     return baseUrl
-            + SLASH
-            + this.prefix
-            + SLASH
-            + appId;
+        + slash
+        + this.prefix
+        + slash
+        + appId;
   }
 
   public String getDetachUrl(String host,
@@ -66,14 +66,14 @@ public enum SpServiceUrlProvider {
                              String appId,
                              String invocationId) {
     return getInvocationUrl(host, port, appId)
-            + SLASH
-            + invocationId;
+        + slash
+        + invocationId;
   }
 
   public String getDetachUrl(String baseUrl, String appId, String invocationId) {
     return getInvocationUrl(baseUrl, appId)
-            + SLASH
-            + invocationId;
+        + slash
+        + invocationId;
   }
 
   public SpServiceTagPrefix getServiceTagPrefix() {

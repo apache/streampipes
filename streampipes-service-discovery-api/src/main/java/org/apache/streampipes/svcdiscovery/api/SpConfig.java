@@ -23,42 +23,42 @@ import org.apache.streampipes.svcdiscovery.api.model.ConfigurationScope;
 
 public interface SpConfig {
 
-    <T> void register(String key, T defaultValue, String description, ConfigurationScope configurationScope);
+  <T> void register(String key, T defaultValue, String description, ConfigurationScope configurationScope);
 
-    void register(String key, boolean defaultValue, String description);
+  void register(String key, boolean defaultValue, String description);
 
-    void register(String key, int defaultValue, String description);
+  void register(String key, int defaultValue, String description);
 
-    void register(String key, double defaultValue, String description);
+  void register(String key, double defaultValue, String description);
 
-    void register(String key, String defaultValue, String description);
+  void register(String key, String defaultValue, String description);
 
-    void register(ConfigItem configItem);
+  void register(ConfigItem configItem);
 
-    void registerObject(String key, Object defaultValue, String description);
+  void registerObject(String key, Object defaultValue, String description);
 
-    void registerPassword(String key, String defaultValue, String description);
+  void registerPassword(String key, String defaultValue, String description);
 
-    boolean getBoolean(String key);
+  boolean getBoolean(String key);
 
-    int getInteger(String key);
+  int getInteger(String key);
 
-    double getDouble(String key);
+  double getDouble(String key);
 
-    String getString(String key);
+  String getString(String key);
 
-    <T> T getObject(String key, Class<T> clazz, T defaultValue);
+  <T> T getObject(String key, Class<T> clazz, T defaultValue);
 
-    ConfigItem getConfigItem(String key);
+  ConfigItem getConfigItem(String key);
 
-    void setBoolean(String key, Boolean value);
+  void setBoolean(String key, Boolean value);
 
-    void setInteger(String key, int value);
+  void setInteger(String key, int value);
 
-    void setDouble(String key, double value);
+  void setDouble(String key, double value);
 
-    void setString(String key, String value);
+  void setString(String key, String value);
 
-    void setObject(String key, Object value);
+  void setObject(String key, Object value);
 
 }

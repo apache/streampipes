@@ -27,7 +27,7 @@ public interface ISpServiceDiscovery {
   /**
    * Register service.
    *
-   * @param serviceRegistrationRequest  the service registration request
+   * @param serviceRegistrationRequest the service registration request
    */
   void registerService(SpServiceRegistrationRequest serviceRegistrationRequest);
 
@@ -48,10 +48,10 @@ public interface ISpServiceDiscovery {
   /**
    * Get service endpoints
    *
-   * @param svcGroup            service group for registered service
-   * @param restrictToHealthy   retrieve healthy or all registered services for a service group
-   * @param filterByTags        filter param to filter list of registered services
-   * @return                    list of services
+   * @param svcGroup          service group for registered service
+   * @param restrictToHealthy retrieve healthy or all registered services for a service group
+   * @param filterByTags      filter param to filter list of registered services
+   * @return list of services
    */
   List<String> getServiceEndpoints(String svcGroup,
                                    boolean restrictToHealthy,
@@ -67,7 +67,7 @@ public interface ISpServiceDiscovery {
   /**
    * Deregister registered service endpoint in Consul
    *
-   * @param svcId     service id of endpoint to be deregistered
+   * @param svcId service id of endpoint to be deregistered
    */
   void deregisterService(String svcId);
 
