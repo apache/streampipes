@@ -17,6 +17,13 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
+import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceTagPrefix;
+
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.model.agent.ImmutableRegCheck;
@@ -24,8 +31,6 @@ import com.orbitz.consul.model.agent.ImmutableRegistration;
 import com.orbitz.consul.model.agent.Registration;
 import com.orbitz.consul.model.health.HealthCheck;
 import com.orbitz.consul.model.health.Service;
-import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
-import org.apache.streampipes.svcdiscovery.api.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,14 +63,14 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   public List<String> getActivePipelineElementEndpoints() {
     LOG.info("Discovering active pipeline element service endpoints");
     return getServiceEndpoints(DefaultSpServiceGroups.EXT, true,
-            Collections.singletonList(DefaultSpServiceTags.PE.asString()));
+        Collections.singletonList(DefaultSpServiceTags.PE.asString()));
   }
 
   @Override
   public List<String> getActiveConnectWorkerEndpoints() {
     LOG.info("Discovering active StreamPipes Connect worker service endpoints");
     return getServiceEndpoints(DefaultSpServiceGroups.EXT, true,
-            Collections.singletonList(DefaultSpServiceTags.CONNECT_WORKER.asString()));
+        Collections.singletonList(DefaultSpServiceTags.CONNECT_WORKER.asString()));
   }
 
   @Override
@@ -100,11 +105,13 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
   }
 
   private boolean hasExtensionsTag(List<String> tags) {
-    return tags.stream().anyMatch(tag -> tag.equals(DefaultSpServiceTags.PE.asString()) || tag.equals(DefaultSpServiceTags.CONNECT_WORKER.asString()));
+    return tags.stream().anyMatch(tag -> tag.equals(DefaultSpServiceTags.PE.asString())
+        || tag.equals(DefaultSpServiceTags.CONNECT_WORKER.asString()));
   }
 
   private String extractServiceGroup(List<String> tags) {
-    String groupTag = tags.stream().filter(tag -> tag.startsWith(SpServiceTagPrefix.SP_GROUP.asString())).findFirst().orElse("unknown service group");
+    String groupTag = tags.stream().filter(tag -> tag.startsWith(SpServiceTagPrefix.SP_GROUP.asString())).findFirst()
+        .orElse("unknown service group");
     return groupTag.replaceAll(SpServiceTagPrefix.SP_GROUP.asString() + ":", "");
   }
 
@@ -117,18 +124,18 @@ public class SpConsulServiceDiscovery extends AbstractConsulService implements I
 
   private Registration createRegistrationBody(SpServiceRegistrationRequest req) {
     return ImmutableRegistration.builder()
-            .id(req.getSvcId())
-            .name(req.getSvcGroup())
-            .port(req.getPort())
-            .address(HTTP_PROTOCOL + req.getHost())
-            .check(ImmutableRegCheck.builder()
-                    .http(HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath())
-                    .interval(HEALTH_CHECK_INTERVAL)
-                    .deregisterCriticalServiceAfter("120s")
-                    .status("passing")
-                    .build())
-            .tags(asString(req.getTags()))
-            .enableTagOverride(true)
-            .build();
+        .id(req.getSvcId())
+        .name(req.getSvcGroup())
+        .port(req.getPort())
+        .address(HTTP_PROTOCOL + req.getHost())
+        .check(ImmutableRegCheck.builder()
+            .http(HTTP_PROTOCOL + req.getHost() + COLON + req.getPort() + req.getHealthCheckPath())
+            .interval(HEALTH_CHECK_INTERVAL)
+            .deregisterCriticalServiceAfter("120s")
+            .status("passing")
+            .build())
+        .tags(asString(req.getTags()))
+        .enableTagOverride(true)
+        .build();
   }
 }

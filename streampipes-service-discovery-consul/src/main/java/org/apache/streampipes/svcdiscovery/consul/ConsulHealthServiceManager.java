@@ -17,12 +17,13 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
+import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
+
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.HealthClient;
 import com.orbitz.consul.cache.ServiceHealthCache;
 import com.orbitz.consul.model.health.ServiceHealth;
 import com.orbitz.consul.option.QueryOptions;
-import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,10 +39,9 @@ public enum ConsulHealthServiceManager {
   INSTANCE;
 
   private static final Logger LOG = LoggerFactory.getLogger(ConsulHealthServiceManager.class);
-
+  private static final int MAX_RETRIES = 3;
   private final Consul client;
   private final Map<String, ServiceHealthCache> serviceHealthCaches;
-  private final int MAX_RETRIES = 3;
 
   ConsulHealthServiceManager() {
     serviceHealthCaches = new HashMap<>();
@@ -72,11 +72,12 @@ public enum ConsulHealthServiceManager {
     List<ServiceHealth> activeServices = findService(serviceGroup, 0);
 
     return activeServices
-            .stream()
-            .filter(service -> allFiltersSupported(service, filterByTags))
-            .filter(service -> !restrictToHealthy || service.getChecks().stream().allMatch(check -> check.getStatus().equals("passing")))
-            .map(this::makeServiceUrl)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(service -> allFiltersSupported(service, filterByTags))
+        .filter(service -> !restrictToHealthy
+            || service.getChecks().stream().allMatch(check -> check.getStatus().equals("passing")))
+        .map(this::makeServiceUrl)
+        .collect(Collectors.toList());
   }
 
   private String makeServiceUrl(ServiceHealth service) {
@@ -91,14 +92,14 @@ public enum ConsulHealthServiceManager {
   private List<ServiceHealth> findService(String serviceGroup, int retryCount) {
 
     if (serviceHealthCaches.containsKey(serviceGroup)
-            && serviceHealthCaches.get(serviceGroup).getMap() != null) {
+        && serviceHealthCaches.get(serviceGroup).getMap() != null) {
       ServiceHealthCache cache = serviceHealthCaches.get(serviceGroup);
       return cache
-              .getMap()
-              .values()
-              .stream()
-              .filter((value) -> value.getService().getService().equals(serviceGroup))
-              .collect(Collectors.toList());
+          .getMap()
+          .values()
+          .stream()
+          .filter((value) -> value.getService().getService().equals(serviceGroup))
+          .collect(Collectors.toList());
     } else {
       if (retryCount < MAX_RETRIES) {
         try {

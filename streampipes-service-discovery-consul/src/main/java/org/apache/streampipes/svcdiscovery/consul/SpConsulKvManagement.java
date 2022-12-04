@@ -17,14 +17,15 @@
  */
 package org.apache.streampipes.svcdiscovery.consul;
 
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
+import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.KeyValueClient;
 import com.orbitz.consul.model.ConsulResponse;
 import com.orbitz.consul.model.kv.Value;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
-import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
-import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,10 +42,10 @@ public class SpConsulKvManagement extends ConsulProvider implements ISpKvManagem
   public <T> T getValueForRoute(String route, Class<T> type) {
     try {
       String entry = getKeyValue(route)
-              .values()
-              .stream()
-              .findFirst()
-              .orElse(null);
+          .values()
+          .stream()
+          .findFirst()
+          .orElse(null);
 
       if (type.equals(Integer.class)) {
         return (T) Integer.valueOf(JacksonSerializer.getObjectMapper().readValue(entry, ConfigItem.class).getValue());
