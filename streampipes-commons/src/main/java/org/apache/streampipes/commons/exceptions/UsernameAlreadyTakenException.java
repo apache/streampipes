@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.commons.exceptions;
 
-public class UsernameAlreadyTakenException extends SpException{
+public class UsernameAlreadyTakenException extends SpException {
   public UsernameAlreadyTakenException(String message) {
     super(message);
   }

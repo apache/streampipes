@@ -18,6 +18,6 @@
 
 package org.apache.streampipes.commons.exceptions;
 
-public class TooManyEdgesException extends Exception{
+public class TooManyEdgesException extends Exception {
 
 }
