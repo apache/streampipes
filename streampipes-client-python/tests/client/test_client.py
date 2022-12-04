@@ -14,8 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+import json
+from collections import namedtuple
 from unittest import TestCase
+from unittest.mock import MagicMock, call, patch
 
 from streampipes_client.client import StreamPipesClient
 from streampipes_client.client.client_config import StreamPipesClientConfig
@@ -68,3 +70,45 @@ class TestStreamPipesClient(TestCase):
         )
         self.assertTrue(isinstance(result.dataLakeMeasureApi, DataLakeMeasureEndpoint))
         self.assertEqual(result.base_api_path, "https://localhost:443/streampipes-backend/")
+
+    @patch("builtins.print")
+    @patch("streampipes_client.endpoint.endpoint.APIEndpoint._make_request", autospec=True)
+    def test_client_describe(self, make_request: MagicMock, mocked_print: MagicMock):
+        def simulate_response(*args, **kwargs):
+            Response = namedtuple("Response", ["text"])
+            if "measurements" in kwargs["url"]:
+                return Response(
+                    json.dumps(
+                        [
+                            {
+                                "measureName": "test",
+                                "timestampField": "time",
+                                "pipelineIsRunning": False,
+                                "schemaVersion": "0",
+                            }
+                        ]
+                    )
+                )
+            if "streams" in kwargs["url"]:
+                return Response(json.dumps([{"name": "test"}]))
+
+        make_request.side_effect = simulate_response
+        StreamPipesClient.create(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+                https_disabled=False,
+                port=443,
+            )
+        ).describe()
+
+        mocked_print.assert_has_calls(
+            calls=[
+                call(
+                    "\nHi there!\nYou are connected to a StreamPipes instance running at https://localhost:443.\n"
+                    "The following StreamPipes resources are available with this client:\n"
+                    "1x DataLakeMeasures\n1x DataStreams"
+                ),
+            ],
+            any_order=True,
+        )

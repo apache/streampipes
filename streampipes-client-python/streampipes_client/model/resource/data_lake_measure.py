@@ -20,10 +20,6 @@ from pydantic import StrictBool, StrictStr
 from streampipes_client.model.common import EventSchema
 from streampipes_client.model.resource.resource import Resource
 
-"""
-Implementation of a resource for a data lake measure.
-"""
-
 __all__ = [
     "DataLakeMeasure",
 ]
@@ -51,7 +47,7 @@ class DataLakeMeasure(Resource):
 
     measure_name: StrictStr
     timestamp_field: StrictStr
-    event_schema: EventSchema
+    event_schema: Optional[EventSchema]
     pipeline_id: Optional[StrictStr]
     pipeline_name: Optional[StrictStr]
     pipeline_is_running: StrictBool
