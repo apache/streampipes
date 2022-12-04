@@ -29,7 +29,7 @@ public class SpServiceDiscovery {
   public static ISpServiceDiscovery getServiceDiscovery() {
     return new SpConsulServiceDiscovery();
   }
-  
+
   public static ISpKvManagement getKeyValueStore() {
     return new SpConsulKvManagement();
   }
