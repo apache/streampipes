@@ -26,17 +26,17 @@ public class BaseNetworkingConfig {
   private final String host;
   private final Integer port;
 
+  public BaseNetworkingConfig(String host,
+                              Integer port) {
+    this.host = host;
+    this.port = port;
+  }
+
   public static BaseNetworkingConfig defaultResolution(Integer defaultPort) throws UnknownHostException {
     String host = Networking.getHostname();
     Integer port = Networking.getPort(defaultPort);
 
     return new BaseNetworkingConfig(host, port);
-  }
-
-  public BaseNetworkingConfig(String host,
-                              Integer port) {
-    this.host = host;
-    this.port = port;
   }
 
   public String getHost() {
