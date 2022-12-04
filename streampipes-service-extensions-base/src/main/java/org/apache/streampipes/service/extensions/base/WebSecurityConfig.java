@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
 import org.apache.streampipes.service.extensions.base.security.TokenAuthenticationFilter;
 import org.apache.streampipes.service.extensions.base.security.UnauthenticatedInterfaces;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,23 +57,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     if (isAnonymousAccess()) {
       http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .csrf().disable()
-        .formLogin().disable()
-        .httpBasic().disable().authorizeRequests().antMatchers("/**").permitAll();
+          .and()
+          .csrf().disable()
+          .formLogin().disable()
+          .httpBasic().disable().authorizeRequests().antMatchers("/**").permitAll();
     } else {
       http
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .csrf().disable()
-        .formLogin().disable()
-        .httpBasic().disable()
-        .exceptionHandling()
-        .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
-        .and()
-        .authorizeRequests()
-        .antMatchers(UnauthenticatedInterfaces.get().toArray(new String[0])).permitAll()
-        .anyRequest().authenticated().and().addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          .and()
+          .csrf().disable()
+          .formLogin().disable()
+          .httpBasic().disable()
+          .exceptionHandling()
+          .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
+          .and()
+          .authorizeRequests()
+          .antMatchers(UnauthenticatedInterfaces.get().toArray(new String[0])).permitAll()
+          .anyRequest().authenticated().and()
+          .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
   }
 
@@ -82,8 +84,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         LOG.info("Configured service for authenticated access mode");
         return false;
       } else {
-        LOG.warn("No env variable {} provided, which is required for authenticated access. Defaulting to anonymous access.",
-                Envs.SP_JWT_PUBLIC_KEY_LOC.getEnvVariableName());
+        LOG.warn(
+            "No env variable {} provided, which is required for authenticated access. Defaulting to anonymous access.",
+            Envs.SP_JWT_PUBLIC_KEY_LOC.getEnvVariableName());
         return true;
       }
     } else {
