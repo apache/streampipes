@@ -27,6 +27,7 @@ import org.apache.streampipes.container.standalone.init.PipelineElementServiceTa
 import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.service.extensions.base.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -34,34 +35,34 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import javax.annotation.PreDestroy;
+
 import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration
-@Import({ ExtensionsResourceConfig.class, WebSecurityConfig.class})
+@Import({ExtensionsResourceConfig.class, WebSecurityConfig.class})
 public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServiceBase {
+  private static final Logger LOG =
+      LoggerFactory.getLogger(ExtensionsModelSubmitter.class.getCanonicalName());
 
-    private static final Logger LOG =
-            LoggerFactory.getLogger(ExtensionsModelSubmitter.class.getCanonicalName());
+  @PreDestroy
+  public void onExit() {
+    new PipelineElementServiceShutdownHandler().onShutdown();
+    StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
+    deregisterService(DeclarersSingleton.getInstance().getServiceId());
+  }
 
-    @PreDestroy
-    public void onExit() {
-        new PipelineElementServiceShutdownHandler().onShutdown();
-        StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
-        deregisterService(DeclarersSingleton.getInstance().getServiceId());
-    }
+  @Override
+  public void afterServiceRegistered(SpServiceDefinition serviceDef) {
+    new ConnectWorkerRegistrationService().registerWorker(serviceDef);
+    StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
+  }
 
-    @Override
-    public void afterServiceRegistered(SpServiceDefinition serviceDef) {
-        new ConnectWorkerRegistrationService().registerWorker(serviceDef);
-        StreamPipesFunctionHandler.INSTANCE.initializeFunctions(serviceDef.getServiceGroup());
-    }
+  @Override
+  protected List<SpServiceTag> getExtensionsServiceTags() {
+    List<SpServiceTag> serviceTags = new PipelineElementServiceTagProvider().extractServiceTags();
+    serviceTags.addAll(new ConnectWorkerTagProvider().extractServiceTags());
 
-    @Override
-    protected List<SpServiceTag> getExtensionsServiceTags() {
-        List<SpServiceTag> serviceTags = new PipelineElementServiceTagProvider().extractServiceTags();
-        serviceTags.addAll(new ConnectWorkerTagProvider().extractServiceTags());
-
-        return serviceTags;
-    }
+    return serviceTags;
+  }
 }
