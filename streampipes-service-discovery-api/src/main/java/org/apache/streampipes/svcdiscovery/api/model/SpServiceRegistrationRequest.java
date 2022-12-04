@@ -28,6 +28,20 @@ public class SpServiceRegistrationRequest {
   private List<SpServiceTag> tags;
   private String healthCheckPath;
 
+  public SpServiceRegistrationRequest(String svcGroup,
+                                      String svcId,
+                                      String host,
+                                      int port,
+                                      List<SpServiceTag> tags,
+                                      String healthCheckPath) {
+    this.svcGroup = svcGroup;
+    this.svcId = svcId;
+    this.host = host;
+    this.port = port;
+    this.tags = tags;
+    this.healthCheckPath = healthCheckPath;
+  }
+
   public static SpServiceRegistrationRequest from(String svcGroup,
                                                   String svcId,
                                                   String host,
@@ -43,20 +57,6 @@ public class SpServiceRegistrationRequest {
                                                   List<SpServiceTag> tags,
                                                   String healthCheckPath) {
     return new SpServiceRegistrationRequest(svcGroup, svcId, host, port, tags, healthCheckPath);
-  }
-
-  public SpServiceRegistrationRequest(String svcGroup,
-                                      String svcId,
-                                      String host,
-                                      int port,
-                                      List<SpServiceTag> tags,
-                                      String healthCheckPath) {
-    this.svcGroup = svcGroup;
-    this.svcId = svcId;
-    this.host = host;
-    this.port = port;
-    this.tags = tags;
-    this.healthCheckPath = healthCheckPath;
   }
 
   public String getSvcGroup() {
