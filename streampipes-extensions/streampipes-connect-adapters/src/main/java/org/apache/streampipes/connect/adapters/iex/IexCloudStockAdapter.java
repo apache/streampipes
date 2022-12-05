@@ -19,10 +19,10 @@
 package org.apache.streampipes.connect.adapters.iex;
 
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.iex.model.IexStockData;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -59,12 +59,12 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
   @Override
   public SpecificAdapterStreamDescription declareModel() {
     return SpecificDataStreamAdapterBuilder.create(ID)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(AdapterType.Finance)
-            .requiredSecret(Labels.withId(TOKEN_KEY))
-            .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(AdapterType.Finance)
+        .requiredSecret(Labels.withId(TOKEN_KEY))
+        .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
+        .build();
 
   }
 
@@ -79,8 +79,7 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
       outMap.put(LatestPrice, rawModel.getLatestPrice());
 
       adapterPipeline.process(outMap);
-    } catch (
-            IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -96,14 +95,15 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
   }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+      throws AdapterException, ParseException {
     return GuessSchemaBuilder.create()
-            .property(EpProperties.timestampProperty(LatestUpdate))
-            .property(EpProperties.stringEp(Labels.from("symbol", "Symbol",
-                    "The stock symbol"), Symbol, SO.Text))
-            .property(EpProperties.doubleEp(Labels.from("latest-price", "Latest price",
-                    "The latest stock price"), LatestPrice, SO.Number))
-            .build();
+        .property(EpProperties.timestampProperty(LatestUpdate))
+        .property(EpProperties.stringEp(Labels.from("symbol", "Symbol",
+            "The stock symbol"), Symbol, SO.Text))
+        .property(EpProperties.doubleEp(Labels.from("latest-price", "Latest price",
+            "The latest stock price"), LatestPrice, SO.Number))
+        .build();
   }
 
   @Override

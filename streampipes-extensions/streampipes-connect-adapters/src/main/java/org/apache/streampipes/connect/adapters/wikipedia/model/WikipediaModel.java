@@ -26,185 +26,185 @@ import javax.annotation.Generated;
 @SuppressWarnings("unused")
 public class WikipediaModel {
 
-    @SerializedName("bot")
-    private Boolean mBot;
-    @SerializedName("comment")
-    private String mComment;
-    @SerializedName("id")
-    private Long mId;
-    @SerializedName("length")
-    private Length mLength;
-    @SerializedName("meta")
-    private Meta mMeta;
-    @SerializedName("minor")
-    private Boolean mMinor;
-    @SerializedName("namespace")
-    private Long mNamespace;
-    @SerializedName("parsedcomment")
-    private String mParsedcomment;
-    @SerializedName("patrolled")
-    private Boolean mPatrolled;
-    @SerializedName("revision")
-    private Revision mRevision;
-    @SerializedName("server_name")
-    private String mServerName;
-    @SerializedName("server_script_path")
-    private String mServerScriptPath;
-    @SerializedName("server_url")
-    private String mServerUrl;
-    @SerializedName("timestamp")
-    private Long mTimestamp;
-    @SerializedName("title")
-    private String mTitle;
-    @SerializedName("type")
-    private String mType;
-    @SerializedName("user")
-    private String mUser;
-    @SerializedName("wiki")
-    private String mWiki;
+  @SerializedName("bot")
+  private Boolean mBot;
+  @SerializedName("comment")
+  private String mComment;
+  @SerializedName("id")
+  private Long mId;
+  @SerializedName("length")
+  private Length mLength;
+  @SerializedName("meta")
+  private Meta mMeta;
+  @SerializedName("minor")
+  private Boolean mMinor;
+  @SerializedName("namespace")
+  private Long mNamespace;
+  @SerializedName("parsedcomment")
+  private String mParsedcomment;
+  @SerializedName("patrolled")
+  private Boolean mPatrolled;
+  @SerializedName("revision")
+  private Revision mRevision;
+  @SerializedName("server_name")
+  private String mServerName;
+  @SerializedName("server_script_path")
+  private String mServerScriptPath;
+  @SerializedName("server_url")
+  private String mServerUrl;
+  @SerializedName("timestamp")
+  private Long mTimestamp;
+  @SerializedName("title")
+  private String mTitle;
+  @SerializedName("type")
+  private String mType;
+  @SerializedName("user")
+  private String mUser;
+  @SerializedName("wiki")
+  private String mWiki;
 
-    public Boolean getBot() {
-        return mBot;
-    }
+  public Boolean getBot() {
+    return mBot;
+  }
 
-    public void setBot(Boolean bot) {
-        mBot = bot;
-    }
+  public void setBot(Boolean bot) {
+    mBot = bot;
+  }
 
-    public String getComment() {
-        return mComment;
-    }
+  public String getComment() {
+    return mComment;
+  }
 
-    public void setComment(String comment) {
-        mComment = comment;
-    }
+  public void setComment(String comment) {
+    mComment = comment;
+  }
 
-    public Long getId() {
-        return mId;
-    }
+  public Long getId() {
+    return mId;
+  }
 
-    public void setId(Long id) {
-        mId = id;
-    }
+  public void setId(Long id) {
+    mId = id;
+  }
 
-    public Length getLength() {
-        return mLength;
-    }
+  public Length getLength() {
+    return mLength;
+  }
 
-    public void setLength(Length length) {
-        mLength = length;
-    }
+  public void setLength(Length length) {
+    mLength = length;
+  }
 
-    public Meta getMeta() {
-        return mMeta;
-    }
+  public Meta getMeta() {
+    return mMeta;
+  }
 
-    public void setMeta(Meta meta) {
-        mMeta = meta;
-    }
+  public void setMeta(Meta meta) {
+    mMeta = meta;
+  }
 
-    public Boolean getMinor() {
-        return mMinor;
-    }
+  public Boolean getMinor() {
+    return mMinor;
+  }
 
-    public void setMinor(Boolean minor) {
-        mMinor = minor;
-    }
+  public void setMinor(Boolean minor) {
+    mMinor = minor;
+  }
 
-    public Long getNamespace() {
-        return mNamespace;
-    }
+  public Long getNamespace() {
+    return mNamespace;
+  }
 
-    public void setNamespace(Long namespace) {
-        mNamespace = namespace;
-    }
+  public void setNamespace(Long namespace) {
+    mNamespace = namespace;
+  }
 
-    public String getParsedcomment() {
-        return mParsedcomment;
-    }
+  public String getParsedcomment() {
+    return mParsedcomment;
+  }
 
-    public void setParsedcomment(String parsedcomment) {
-        mParsedcomment = parsedcomment;
-    }
+  public void setParsedcomment(String parsedcomment) {
+    mParsedcomment = parsedcomment;
+  }
 
-    public Boolean getPatrolled() {
-        return mPatrolled;
-    }
+  public Boolean getPatrolled() {
+    return mPatrolled;
+  }
 
-    public void setPatrolled(Boolean patrolled) {
-        mPatrolled = patrolled;
-    }
+  public void setPatrolled(Boolean patrolled) {
+    mPatrolled = patrolled;
+  }
 
-    public Revision getRevision() {
-        return mRevision;
-    }
+  public Revision getRevision() {
+    return mRevision;
+  }
 
-    public void setRevision(Revision revision) {
-        mRevision = revision;
-    }
+  public void setRevision(Revision revision) {
+    mRevision = revision;
+  }
 
-    public String getServerName() {
-        return mServerName;
-    }
+  public String getServerName() {
+    return mServerName;
+  }
 
-    public void setServerName(String serverName) {
-        mServerName = serverName;
-    }
+  public void setServerName(String serverName) {
+    mServerName = serverName;
+  }
 
-    public String getServerScriptPath() {
-        return mServerScriptPath;
-    }
+  public String getServerScriptPath() {
+    return mServerScriptPath;
+  }
 
-    public void setServerScriptPath(String serverScriptPath) {
-        mServerScriptPath = serverScriptPath;
-    }
+  public void setServerScriptPath(String serverScriptPath) {
+    mServerScriptPath = serverScriptPath;
+  }
 
-    public String getServerUrl() {
-        return mServerUrl;
-    }
+  public String getServerUrl() {
+    return mServerUrl;
+  }
 
-    public void setServerUrl(String serverUrl) {
-        mServerUrl = serverUrl;
-    }
+  public void setServerUrl(String serverUrl) {
+    mServerUrl = serverUrl;
+  }
 
-    public Long getTimestamp() {
-        return mTimestamp;
-    }
+  public Long getTimestamp() {
+    return mTimestamp;
+  }
 
-    public void setTimestamp(Long timestamp) {
-        mTimestamp = timestamp;
-    }
+  public void setTimestamp(Long timestamp) {
+    mTimestamp = timestamp;
+  }
 
-    public String getTitle() {
-        return mTitle;
-    }
+  public String getTitle() {
+    return mTitle;
+  }
 
-    public void setTitle(String title) {
-        mTitle = title;
-    }
+  public void setTitle(String title) {
+    mTitle = title;
+  }
 
-    public String getType() {
-        return mType;
-    }
+  public String getType() {
+    return mType;
+  }
 
-    public void setType(String type) {
-        mType = type;
-    }
+  public void setType(String type) {
+    mType = type;
+  }
 
-    public String getUser() {
-        return mUser;
-    }
+  public String getUser() {
+    return mUser;
+  }
 
-    public void setUser(String user) {
-        mUser = user;
-    }
+  public void setUser(String user) {
+    mUser = user;
+  }
 
-    public String getWiki() {
-        return mWiki;
-    }
+  public String getWiki() {
+    return mWiki;
+  }
 
-    public void setWiki(String wiki) {
-        mWiki = wiki;
-    }
+  public void setWiki(String wiki) {
+    mWiki = wiki;
+  }
 
 }

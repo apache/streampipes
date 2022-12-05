@@ -44,11 +44,13 @@ public enum ConnectWorkerConfig {
   }
 
   public String getConnectContainerWorkerUrl() {
-    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" + config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
+    return "http://" + config.getString(ConfigKeys.CONNECT_CONTAINER_WORKER_HOST) + ":" +
+        config.getInteger(ConfigKeys.CONNECT_CONTAINER_WORKER_PORT) + "/";
   }
 
   public String getBackendUrl() {
-    return "http://" + config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) + "/streampipes-backend";
+    return "http://" + config.getString(ConfigKeys.BACKEND_HOST) + ":" + config.getInteger(ConfigKeys.BACKEND_PORT) +
+        "/streampipes-backend";
   }
 
   public String getKafkaHost() {

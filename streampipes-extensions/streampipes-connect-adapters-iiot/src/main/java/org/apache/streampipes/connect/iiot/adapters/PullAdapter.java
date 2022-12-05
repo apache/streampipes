@@ -25,84 +25,90 @@ import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.monitoring.SpLogEntry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
-
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
-    protected static final Logger logger = LoggerFactory.getLogger(PullAdapter.class);
+  protected static final Logger LOGGER = LoggerFactory.getLogger(PullAdapter.class);
 
-    private ScheduledExecutorService scheduler;
-    private ScheduledExecutorService errorThreadscheduler;
+  private ScheduledExecutorService scheduler;
+  private ScheduledExecutorService errorThreadscheduler;
 
 
-    public PullAdapter() {
-        super();
+  public PullAdapter() {
+    super();
+  }
+
+  public PullAdapter(SpecificAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+  }
+
+  protected abstract void pullData()
+      throws ExecutionException, RuntimeException, InterruptedException, TimeoutException;
+
+  protected abstract PollingSettings getPollingInterval();
+
+  @Override
+  public void startAdapter() throws AdapterException {
+    before();
+
+    final Runnable errorThread = this::executeAdpaterLogic;
+
+    scheduler = Executors.newScheduledThreadPool(1);
+    scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
+
+  }
+
+  private void executeAdpaterLogic() {
+    final Runnable task = () -> {
+      try {
+        pullData();
+      } catch (ExecutionException | InterruptedException e) {
+        SpMonitoringManager.INSTANCE.addErrorMessage(
+            adapterDescription.getElementId(),
+            SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
+      } catch (TimeoutException e) {
+        LOGGER.warn("Timeout occurred", e);
+      }
+    };
+
+    scheduler = Executors.newScheduledThreadPool(1);
+    ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
+        getPollingInterval().getValue(), getPollingInterval().getTimeUnit());
+
+    try {
+      handle.get();
+    } catch (ExecutionException | InterruptedException e) {
+      LOGGER.error("Error", e);
     }
+  }
 
-    public PullAdapter(SpecificAdapterStreamDescription adapterDescription) {
-        super(adapterDescription);
-    }
+  @Override
+  public void stopAdapter() throws AdapterException {
+    after();
+    scheduler.shutdownNow();
+  }
 
-    protected abstract void pullData() throws ExecutionException, RuntimeException, InterruptedException, TimeoutException;
+  /**
+   * Called before adapter is started (e.g. initialize connections)
+   */
+  protected void before() throws AdapterException {
 
-    protected abstract PollingSettings getPollingInterval();
+  }
 
-    @Override
-    public void startAdapter() throws AdapterException {
-        before();
+  /**
+   * Called before adapter is stopped (e.g. shutdown connections)
+   */
+  protected void after() throws AdapterException {
 
-        final Runnable errorThread = this::executeAdpaterLogic;
-
-        scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
-
-    }
-
-    private void executeAdpaterLogic() {
-        final Runnable task = () -> {
-            try {
-                pullData();
-            } catch (ExecutionException | InterruptedException e) {
-                SpMonitoringManager.INSTANCE.addErrorMessage(
-                    adapterDescription.getElementId(),
-                    SpLogEntry.from(System.currentTimeMillis(), StreamPipesErrorMessage.from(e)));
-            } catch (TimeoutException e) {
-                logger.warn("Timeout occurred", e);
-            }
-        };
-
-        scheduler = Executors.newScheduledThreadPool(1);
-        ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
-                getPollingInterval().getValue(), getPollingInterval().getTimeUnit());
-
-        try {
-            handle.get();
-        } catch (ExecutionException | InterruptedException e) {
-            logger.error("Error", e);
-        }
-    }
-
-    @Override
-    public void stopAdapter() throws AdapterException {
-        after();
-        scheduler.shutdownNow();
-    }
-
-    /**
-     * Called before adapter is started (e.g. initialize connections)
-     */
-    protected void before() throws AdapterException {
-
-    }
-
-    /**
-     * Called before adapter is stopped (e.g. shutdown connections)
-     */
-    protected void after() throws AdapterException {
-
-    }
+  }
 }

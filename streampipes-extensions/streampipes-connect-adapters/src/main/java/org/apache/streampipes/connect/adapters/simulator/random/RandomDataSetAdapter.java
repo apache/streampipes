@@ -18,10 +18,10 @@
 package org.apache.streampipes.connect.adapters.simulator.random;
 
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -54,12 +54,12 @@ public class RandomDataSetAdapter extends SpecificDataSetAdapter {
   @Override
   public SpecificAdapterSetDescription declareModel() {
     return SpecificDataSetAdapterBuilder.create(ID)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .category(AdapterType.Debugging)
-            .requiredIntegerParameter(Labels.withId(WaitTimeMs))
-            .requiredIntegerParameter(Labels.withId(NumberOfEvents))
-            .build();
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .category(AdapterType.Debugging)
+        .requiredIntegerParameter(Labels.withId(WaitTimeMs))
+        .requiredIntegerParameter(Labels.withId(NumberOfEvents))
+        .build();
   }
 
   @Override
@@ -79,7 +79,8 @@ public class RandomDataSetAdapter extends SpecificDataSetAdapter {
   }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) throws AdapterException, ParseException {
+  public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription)
+      throws AdapterException, ParseException {
     return RandomDataSimulatorUtils.randomSchema();
   }
 

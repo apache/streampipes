@@ -17,18 +17,20 @@
  */
 package org.apache.streampipes.connect.adapters.iex;
 
-import com.google.gson.Gson;
-import org.apache.http.client.fluent.Request;
+
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapters.PullAdapter;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+
+import com.google.gson.Gson;
+import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
 
 public abstract class IexCloudAdapter extends PullAdapter {
 
-  protected static final String IexCloudBaseUrl = "https://cloud.iexapis.com/stable/stock/";
-  protected static final String Token = "?token=";
+  protected static final String IEX_CLOUD_BASE_URL = "https://cloud.iexapis.com/stable/stock/";
+  protected static final String TOKEN = "?token=";
 
   protected static final String TOKEN_KEY = "token";
   protected static final String STOCK_SYMBOL_KEY = "stock-symbol";
@@ -43,7 +45,7 @@ public abstract class IexCloudAdapter extends PullAdapter {
     ParameterExtractor extractor = new ParameterExtractor(adapterDescription.getConfig());
     this.apiToken = extractor.secretValue(TOKEN_KEY);
     this.stockQuote = extractor.singleValue(STOCK_SYMBOL_KEY);
-    this.iexCloudInstanceUrl = IexCloudBaseUrl + stockQuote + restPath + Token + apiToken;
+    this.iexCloudInstanceUrl = IEX_CLOUD_BASE_URL + stockQuote + restPath + TOKEN + apiToken;
 
   }
 

@@ -19,10 +19,10 @@
 package org.apache.streampipes.connect.adapters.iex;
 
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.iex.model.IexNewsData;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -82,8 +82,7 @@ public class IexCloudNewsAdapter extends IexCloudAdapter {
 
         adapterPipeline.process(outMap);
       }
-    } catch (
-            IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -96,12 +95,12 @@ public class IexCloudNewsAdapter extends IexCloudAdapter {
   @Override
   public SpecificAdapterStreamDescription declareModel() {
     return SpecificDataStreamAdapterBuilder.create(ID)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(AdapterType.Finance, AdapterType.News)
-            .requiredSecret(Labels.withId(TOKEN_KEY))
-            .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(AdapterType.Finance, AdapterType.News)
+        .requiredSecret(Labels.withId(TOKEN_KEY))
+        .requiredTextParameter(Labels.withId(STOCK_SYMBOL_KEY))
+        .build();
   }
 
   @Override
@@ -110,27 +109,28 @@ public class IexCloudNewsAdapter extends IexCloudAdapter {
   }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+      throws AdapterException, ParseException {
     return GuessSchemaBuilder.create()
-            .property(EpProperties.timestampProperty(Timestamp))
-            .property(EpProperties.stringEp(Labels.from("headline", "Headline",
-                    "The headline of the article"), Headline, SO.Text))
-            .property(EpProperties.stringEp(Labels.from("source", "Source",
-                    "The source of the article"), Source, SO.Text))
-            .property(EpProperties.stringEp(Labels.from("url", "URL",
-                    "The URL of the article"), Url, SO.ContentUrl))
-            .property(EpProperties.stringEp(Labels.from("summary", "Summary",
-                    "A short summary of the article"), Summary, SO.Text))
-            .property(EpProperties.stringEp(Labels.from("related", "Related",
-                    "A comma-separated list of related stock symbols"), Related, SO.Text))
-            .property(EpProperties.stringEp(Labels.from("image", "Image",
-                    "Link to an image related to the news article"), Image, SO.Image))
-            .property(EpProperties.stringEp(Labels.from("lang", "Language",
-                    "The language the article is writte in"), Lang, SO.InLanguage))
-            .property(EpProperties.stringEp(Labels.from("paywall", "Has Paywall",
-                    "Indicates whether the article is behind a paywall"), HasPaywall,
-                    SO.Text))
-            .build();
+        .property(EpProperties.timestampProperty(Timestamp))
+        .property(EpProperties.stringEp(Labels.from("headline", "Headline",
+            "The headline of the article"), Headline, SO.Text))
+        .property(EpProperties.stringEp(Labels.from("source", "Source",
+            "The source of the article"), Source, SO.Text))
+        .property(EpProperties.stringEp(Labels.from("url", "URL",
+            "The URL of the article"), Url, SO.ContentUrl))
+        .property(EpProperties.stringEp(Labels.from("summary", "Summary",
+            "A short summary of the article"), Summary, SO.Text))
+        .property(EpProperties.stringEp(Labels.from("related", "Related",
+            "A comma-separated list of related stock symbols"), Related, SO.Text))
+        .property(EpProperties.stringEp(Labels.from("image", "Image",
+            "Link to an image related to the news article"), Image, SO.Image))
+        .property(EpProperties.stringEp(Labels.from("lang", "Language",
+            "The language the article is writte in"), Lang, SO.InLanguage))
+        .property(EpProperties.stringEp(Labels.from("paywall", "Has Paywall",
+                "Indicates whether the article is behind a paywall"), HasPaywall,
+            SO.Text))
+        .build();
   }
 
   @Override

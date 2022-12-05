@@ -26,55 +26,55 @@ import javax.annotation.Generated;
 @SuppressWarnings("unused")
 public class GBP {
 
-    @SerializedName("code")
-    private String mCode;
-    @SerializedName("description")
-    private String mDescription;
-    @SerializedName("rate")
-    private String mRate;
-    @SerializedName("rate_float")
-    private Double mRateFloat;
-    @SerializedName("symbol")
-    private String mSymbol;
+  @SerializedName("code")
+  private String mCode;
+  @SerializedName("description")
+  private String mDescription;
+  @SerializedName("rate")
+  private String mRate;
+  @SerializedName("rate_float")
+  private Double mRateFloat;
+  @SerializedName("symbol")
+  private String mSymbol;
 
-    public String getCode() {
-        return mCode;
-    }
+  public String getCode() {
+    return mCode;
+  }
 
-    public void setCode(String code) {
-        mCode = code;
-    }
+  public void setCode(String code) {
+    mCode = code;
+  }
 
-    public String getDescription() {
-        return mDescription;
-    }
+  public String getDescription() {
+    return mDescription;
+  }
 
-    public void setDescription(String description) {
-        mDescription = description;
-    }
+  public void setDescription(String description) {
+    mDescription = description;
+  }
 
-    public String getRate() {
-        return mRate;
-    }
+  public String getRate() {
+    return mRate;
+  }
 
-    public void setRate(String rate) {
-        mRate = rate;
-    }
+  public void setRate(String rate) {
+    mRate = rate;
+  }
 
-    public Double getRateFloat() {
-        return mRateFloat;
-    }
+  public Double getRateFloat() {
+    return mRateFloat;
+  }
 
-    public void setRateFloat(Double rateFloat) {
-        mRateFloat = rateFloat;
-    }
+  public void setRateFloat(Double rateFloat) {
+    mRateFloat = rateFloat;
+  }
 
-    public String getSymbol() {
-        return mSymbol;
-    }
+  public String getSymbol() {
+    return mSymbol;
+  }
 
-    public void setSymbol(String symbol) {
-        mSymbol = symbol;
-    }
+  public void setSymbol(String symbol) {
+    mSymbol = symbol;
+  }
 
 }

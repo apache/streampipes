@@ -58,7 +58,7 @@ public class MqttProtocol extends BrokerProtocol {
   public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
     MqttConfig mqttConfig;
     StaticPropertyExtractor extractor =
-            StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
+        StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
     mqttConfig = MqttConnectUtils.getMqttConfig(extractor);
 
@@ -68,14 +68,15 @@ public class MqttProtocol extends BrokerProtocol {
   @Override
   public ProtocolDescription declareModel() {
     return ProtocolDescriptionBuilder.create(ID)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(AdapterType.Generic, AdapterType.Manufacturing)
-            .sourceType(AdapterSourceType.STREAM)
-            .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
-            .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(), MqttConnectUtils.getAlternativesTwo())
-            .requiredTextParameter(MqttConnectUtils.getTopicLabel())
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(AdapterType.Generic, AdapterType.Manufacturing)
+        .sourceType(AdapterSourceType.STREAM)
+        .requiredTextParameter(MqttConnectUtils.getBrokerUrlLabel())
+        .requiredAlternatives(MqttConnectUtils.getAccessModeLabel(), MqttConnectUtils.getAlternativesOne(),
+            MqttConnectUtils.getAlternativesTwo())
+        .requiredTextParameter(MqttConnectUtils.getTopicLabel())
+        .build();
   }
 
   @Override

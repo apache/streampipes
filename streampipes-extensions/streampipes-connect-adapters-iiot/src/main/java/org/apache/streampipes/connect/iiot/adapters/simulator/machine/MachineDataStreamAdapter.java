@@ -1,4 +1,4 @@
-package org.apache.streampipes.connect.iiot.adapters.simulator.machine;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,11 +15,12 @@ package org.apache.streampipes.connect.iiot.adapters.simulator.machine;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -34,60 +35,62 @@ import java.util.ArrayList;
 
 public class MachineDataStreamAdapter extends SpecificDataStreamAdapter {
 
-    public static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
-    private static final String WAIT_TIME_MS = "wait-time-ms";
-    private static final String SELECTED_SIMULATOR_OPTION = "selected-simulator-option";
+  public static final String ID = "org.apache.streampipes.connect.iiot.adapters.simulator.machine";
+  private static final String WAIT_TIME_MS = "wait-time-ms";
+  private static final String SELECTED_SIMULATOR_OPTION = "selected-simulator-option";
 
-    private String selectedSimulatorOption = "";
+  private String selectedSimulatorOption = "";
 
-    private MachineDataSimulator machineDataSimulator;
+  private MachineDataSimulator machineDataSimulator;
 
-    public MachineDataStreamAdapter() {
-    }
+  public MachineDataStreamAdapter() {
+  }
 
-    public MachineDataStreamAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
-        super(adapterStreamDescription);
-        StaticPropertyExtractor extractor = StaticPropertyExtractor.from(adapterStreamDescription.getConfig(), new ArrayList<>());
-        Integer waitTimeMs = extractor.singleValueParameter(WAIT_TIME_MS, Integer.class);
-        this.selectedSimulatorOption = extractor.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
-        this.machineDataSimulator = new MachineDataSimulator(adapterPipeline, waitTimeMs, selectedSimulatorOption);
-    }
+  public MachineDataStreamAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
+    super(adapterStreamDescription);
+    StaticPropertyExtractor extractor =
+        StaticPropertyExtractor.from(adapterStreamDescription.getConfig(), new ArrayList<>());
+    Integer waitTimeMs = extractor.singleValueParameter(WAIT_TIME_MS, Integer.class);
+    this.selectedSimulatorOption = extractor.selectedSingleValue(SELECTED_SIMULATOR_OPTION, String.class);
+    this.machineDataSimulator = new MachineDataSimulator(adapterPipeline, waitTimeMs, selectedSimulatorOption);
+  }
 
-    @Override
-    public SpecificAdapterStreamDescription declareModel() {
-        return SpecificDataStreamAdapterBuilder.create(ID)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .withLocales(Locales.EN)
-                .category(AdapterType.Debugging)
-                .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
-                .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
-                        "flowrate", "pressure", "waterlevel"))
-                .build();
-    }
+  @Override
+  public SpecificAdapterStreamDescription declareModel() {
+    return SpecificDataStreamAdapterBuilder.create(ID)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(AdapterType.Debugging)
+        .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS), 1000)
+        .requiredSingleValueSelection(Labels.withId(SELECTED_SIMULATOR_OPTION), Options.from(
+            "flowrate", "pressure", "waterlevel"))
+        .build();
+  }
 
-    @Override
-    public void startAdapter() throws AdapterException {
-        Thread thread = new Thread(this.machineDataSimulator);
-        thread.start();
-    }
+  @Override
+  public void startAdapter() throws AdapterException {
+    Thread thread = new Thread(this.machineDataSimulator);
+    thread.start();
+  }
 
-    @Override
-    public void stopAdapter() throws AdapterException {
-        this.machineDataSimulator.setRunning(false);
-    }
+  @Override
+  public void stopAdapter() throws AdapterException {
+    this.machineDataSimulator.setRunning(false);
+  }
 
-    @Override
-    public Adapter getInstance(SpecificAdapterStreamDescription adapterStreamDescription) {
-        return new MachineDataStreamAdapter(adapterStreamDescription);
-    }
+  @Override
+  public Adapter getInstance(SpecificAdapterStreamDescription adapterStreamDescription) {
+    return new MachineDataStreamAdapter(adapterStreamDescription);
+  }
 
-    @Override
-    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterStreamDescription) throws AdapterException, ParseException {
-        return MachineDataSimulatorUtils.getSchema(this.selectedSimulatorOption);
-    }
+  @Override
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterStreamDescription)
+      throws AdapterException, ParseException {
+    return MachineDataSimulatorUtils.getSchema(this.selectedSimulatorOption);
+  }
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+  @Override
+  public String getId() {
+    return ID;
+  }
 }
