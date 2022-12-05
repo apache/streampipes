@@ -32,7 +32,8 @@ public class DistanceCalculatorParameters extends EventProcessorBindingParams {
     super(graph);
   }
 
-  public DistanceCalculatorParameters(DataProcessorInvocation graph, String lat1PropertyName, String long1PropertyName, String lat2PropertyName, String long2PropertyName) {
+  public DistanceCalculatorParameters(DataProcessorInvocation graph, String lat1PropertyName, String long1PropertyName,
+                                      String lat2PropertyName, String long2PropertyName) {
     super(graph);
     this.lat1PropertyName = lat1PropertyName;
     this.long1PropertyName = long1PropertyName;

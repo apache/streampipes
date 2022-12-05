@@ -15,33 +15,34 @@
  * limitations under the License.
  *
  */
+package org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo;
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo;
-
-import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
-import org.locationtech.jts.geom.Point;
 import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.geo.jvm.jts.helper.SpGeometryBuilder;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
-import org.apache.streampipes.model.runtime.Event;
+
+import org.locationtech.jts.geom.Point;
 
 
 public class LatLngToGeo implements EventProcessor<LatLngToGeoParameter> {
 
-  private static Logger LOG;
+  private static Logger log;
   private String latitude;
   private String longitude;
-  private String epsg_code;
+  private String epsgCode;
 
 
   @Override
-  public void onInvocation(LatLngToGeoParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(LatLngToGeoParameter params, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
 
-    LOG = params.getGraph().getLogger(LatLngToGeoParameter.class);
+    log = params.getGraph().getLogger(LatLngToGeoParameter.class);
     this.latitude = params.getLat();
     this.longitude = params.getLng();
-    this.epsg_code = params.getEpsg();
+    this.epsgCode = params.getEpsg();
 
   }
 
@@ -50,7 +51,7 @@ public class LatLngToGeo implements EventProcessor<LatLngToGeoParameter> {
 
     Double lat = in.getFieldBySelector(latitude).getAsPrimitive().getAsDouble();
     Double lng = in.getFieldBySelector(longitude).getAsPrimitive().getAsDouble();
-    Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
+    Integer epsg = in.getFieldBySelector(epsgCode).getAsPrimitive().getAsInt();
 
     Point geom = SpGeometryBuilder.createSPGeom(lng, lat, epsg);
 
@@ -58,9 +59,9 @@ public class LatLngToGeo implements EventProcessor<LatLngToGeoParameter> {
       in.addField(LatLngToGeoController.WKT_RUNTIME, geom.toString());
       out.collect(in);
     } else {
-      LOG.warn("An empty point geometry in " + LatLngToGeoController.EPA_NAME + " is created due" +
-          "invalid input field. Latitude: " + lat + "Longitude: " + lng);
-      LOG.error("Event is filtered out due invalid geometry");
+      log.warn("An empty point geometry in " + LatLngToGeoController.EPA_NAME + " is created due"
+          + "invalid input field. Latitude: " + lat + "Longitude: " + lng);
+      log.error("Event is filtered out due invalid geometry");
 
     }
   }

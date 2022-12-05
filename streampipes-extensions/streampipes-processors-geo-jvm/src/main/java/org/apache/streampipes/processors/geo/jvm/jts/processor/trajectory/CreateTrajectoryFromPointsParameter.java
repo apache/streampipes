@@ -29,7 +29,8 @@ public class CreateTrajectoryFromPointsParameter extends EventProcessorBindingPa
   private Integer subpoints;
   private String m;
 
-  public CreateTrajectoryFromPointsParameter(DataProcessorInvocation graph, String wkt, String epsg, String description, Integer subpoints, String m) {
+  public CreateTrajectoryFromPointsParameter(DataProcessorInvocation graph, String wkt, String epsg, String description,
+                                             Integer subpoints, String m) {
     super(graph);
     this.wkt = wkt;
     this.epsg = epsg;

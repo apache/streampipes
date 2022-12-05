@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG;
+package org.apache.streampipes.processors.geo.jvm.jts.processor.setepsg;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;

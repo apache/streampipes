@@ -25,7 +25,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.vocabulary.SO;
@@ -44,37 +48,41 @@ public class DistanceCalculatorController extends StandaloneEventProcessingDecla
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.processor.distancecalculator")
-            .category(DataProcessorType.GEO)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
-                            , Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
-                            , Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
-                            , Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
-                            , Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .outputStrategy(
-                    OutputStrategies.append(EpProperties.numberEp(Labels.withId(CALCULATED_DISTANCE_KEY), "distance", SO.Number))
-            )
-            .build();
+        .category(DataProcessorType.GEO)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+                , Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+                , Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+                , Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+                , Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .outputStrategy(
+            OutputStrategies.append(
+                EpProperties.numberEp(Labels.withId(CALCULATED_DISTANCE_KEY), "distance", SO.Number))
+        )
+        .build();
 
   }
 
   @Override
-  public ConfiguredEventProcessor<DistanceCalculatorParameters> onInvocation
-          (DataProcessorInvocation sepa, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<DistanceCalculatorParameters> onInvocation(
+      DataProcessorInvocation sepa,
+      ProcessingElementParameterExtractor extractor) {
 
     String lat1PropertyName = extractor.mappingPropertyValue(LAT_1_KEY);
     String long11PropertyName = extractor.mappingPropertyValue(LONG_1_KEY);
     String lat2PropertyName = extractor.mappingPropertyValue(LAT_2_KEY);
     String long2PropertyName = extractor.mappingPropertyValue(LONG_2_KEY);
 
-    DistanceCalculatorParameters staticParam = new DistanceCalculatorParameters(sepa, lat1PropertyName, long11PropertyName, lat2PropertyName, long2PropertyName);
+    DistanceCalculatorParameters staticParam =
+        new DistanceCalculatorParameters(sepa, lat1PropertyName, long11PropertyName, lat2PropertyName,
+            long2PropertyName);
 
     return new ConfiguredEventProcessor<>(staticParam, DistanceCalculator::new);
   }

@@ -19,5 +19,5 @@
 package org.apache.streampipes.processors.geo.jvm.config;
 
 public class ConfigKeys {
-    public final static String GOOGLE_API_KEY = "SP_GOOGLE_API_KEY";
+  public static final String GOOGLE_API_KEY = "SP_GOOGLE_API_KEY";
 }

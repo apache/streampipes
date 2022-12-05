@@ -41,25 +41,26 @@ public class GoogleMapsGeocodingController extends StandaloneEventProcessingDecl
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.geo.jvm.geocoding")
-            .category(DataProcessorType.GEO)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.withId(PLACE_MAPPING),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.doubleEp(Labels.empty(), "latitude", Geo.lat),
-                    EpProperties.stringEp(Labels.empty(), "longitude", Geo.lng)
-            ))
-            .build();
+        .category(DataProcessorType.GEO)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
+                Labels.withId(PLACE_MAPPING),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.doubleEp(Labels.empty(), "latitude", Geo.lat),
+            EpProperties.stringEp(Labels.empty(), "longitude", Geo.lng)
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<GoogleMapsGeocodingParameters> onInvocation(DataProcessorInvocation graph,
-                                                                              ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<GoogleMapsGeocodingParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
     String placeField = extractor.mappingPropertyValue(PLACE_MAPPING);
 
     GoogleMapsGeocodingParameters params = new GoogleMapsGeocodingParameters(graph, placeField);

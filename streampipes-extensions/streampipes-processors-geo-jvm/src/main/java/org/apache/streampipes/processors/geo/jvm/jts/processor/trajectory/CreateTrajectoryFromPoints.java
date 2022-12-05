@@ -25,27 +25,29 @@ import org.apache.streampipes.processors.geo.jvm.jts.helper.SpTrajectoryBuilder;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+
 import org.locationtech.jts.geom.LineString;
 import org.locationtech.jts.geom.Point;
 
 
 public class CreateTrajectoryFromPoints implements EventProcessor<CreateTrajectoryFromPointsParameter> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private SpTrajectoryBuilder trajectory;
 
-  private String geom_wkt;
-  private String epsg_code;
-  private String m_value;
+  private String geomWkt;
+  private String epsgCode;
+  private String mValue;
 
   @Override
-  public void onInvocation(CreateTrajectoryFromPointsParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(CreateTrajectoryFromPointsParameter params, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
 
-    LOG = params.getGraph().getLogger(CreateTrajectoryFromPointsParameter.class);
-    this.geom_wkt = params.getWkt();
-    this.epsg_code = params.getEpsg();
-    this.m_value = params.getM();
+    log = params.getGraph().getLogger(CreateTrajectoryFromPointsParameter.class);
+    this.geomWkt = params.getWkt();
+    this.epsgCode = params.getEpsg();
+    this.mValue = params.getM();
 
     trajectory = new SpTrajectoryBuilder(params.getSubpoints(), params.getDescription());
   }
@@ -54,9 +56,9 @@ public class CreateTrajectoryFromPoints implements EventProcessor<CreateTrajecto
   public void onEvent(Event in, SpOutputCollector out) {
 
     // extract values
-    String wkt = in.getFieldBySelector(geom_wkt).getAsPrimitive().getAsString();
-    Integer epsg = in.getFieldBySelector(epsg_code).getAsPrimitive().getAsInt();
-    Integer m = in.getFieldBySelector(m_value).getAsPrimitive().getAsInt();
+    String wkt = in.getFieldBySelector(geomWkt).getAsPrimitive().getAsString();
+    Integer epsg = in.getFieldBySelector(epsgCode).getAsPrimitive().getAsInt();
+    Integer m = in.getFieldBySelector(mValue).getAsPrimitive().getAsInt();
 
     //create JTS geometry
     Point eventGeom = (Point) SpGeometryBuilder.createSPGeom(wkt, epsg);

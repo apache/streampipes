@@ -23,36 +23,43 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Geo;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class StaticGoogleMapsGeocodingController extends StandaloneEventProcessingDeclarer<StaticGoogleMapsGeocodingParameters> {
+public class StaticGoogleMapsGeocodingController
+    extends StandaloneEventProcessingDeclarer<StaticGoogleMapsGeocodingParameters> {
 
   private static final String PLACE = "place";
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.geo.jvm.staticgeocoding")
-            .category(DataProcessorType.GEO)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredTextParameter(Labels.withId("place"))
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.doubleEp(Labels.empty(), "latitude", Geo.lat),
-                    EpProperties.stringEp(Labels.empty(), "longitude", Geo.lng)
-            ))
-            .build();
+        .category(DataProcessorType.GEO)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId("place"))
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.doubleEp(Labels.empty(), "latitude", Geo.lat),
+            EpProperties.stringEp(Labels.empty(), "longitude", Geo.lng)
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<StaticGoogleMapsGeocodingParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<StaticGoogleMapsGeocodingParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
     String place = extractor.singleValueParameter(PLACE, String.class);
 
     StaticGoogleMapsGeocodingParameters params = new StaticGoogleMapsGeocodingParameters(graph, place);
