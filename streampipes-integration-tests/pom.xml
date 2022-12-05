@@ -29,7 +29,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>integration</artifactId>
+    <artifactId>streampipes-integration-tests</artifactId>
     <name>StreamPipes Integration Tests</name>
 
     <properties>
