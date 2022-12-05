@@ -25,26 +25,26 @@ import javax.annotation.Generated;
 @Generated("net.hexar.json2pojo")
 public class NetioAllPowerOutputs {
 
-    @SerializedName("GlobalMeasure")
-    private NetioGlobalMeasure gobalMeasure;
+  @SerializedName("GlobalMeasure")
+  private NetioGlobalMeasure gobalMeasure;
 
-    @SerializedName("Outputs")
-    private NetioPowerOutput[] powerOutputs;
+  @SerializedName("Outputs")
+  private NetioPowerOutput[] powerOutputs;
 
 
-    public NetioGlobalMeasure getGobalMeasure() {
-        return gobalMeasure;
-    }
+  public NetioGlobalMeasure getGobalMeasure() {
+    return gobalMeasure;
+  }
 
-    public void setGobalMeasure(NetioGlobalMeasure gobalMeasure) {
-        this.gobalMeasure = gobalMeasure;
-    }
+  public void setGobalMeasure(NetioGlobalMeasure gobalMeasure) {
+    this.gobalMeasure = gobalMeasure;
+  }
 
-    public NetioPowerOutput[] getPowerOutputs() {
-        return powerOutputs;
-    }
+  public NetioPowerOutput[] getPowerOutputs() {
+    return powerOutputs;
+  }
 
-    public void setPowerOutputs(NetioPowerOutput[] powerOutputs) {
-        this.powerOutputs = powerOutputs;
-    }
+  public void setPowerOutputs(NetioPowerOutput[] powerOutputs) {
+    this.powerOutputs = powerOutputs;
+  }
 }

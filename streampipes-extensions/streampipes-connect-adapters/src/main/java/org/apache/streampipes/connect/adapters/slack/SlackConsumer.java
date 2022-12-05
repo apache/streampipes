@@ -17,11 +17,12 @@
  */
 package org.apache.streampipes.connect.adapters.slack;
 
+import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
+
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.SlackUser;
 import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
-import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 
 import java.io.IOException;
 import java.util.HashMap;

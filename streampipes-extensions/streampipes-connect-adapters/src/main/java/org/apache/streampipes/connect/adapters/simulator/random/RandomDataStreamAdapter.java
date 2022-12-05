@@ -18,10 +18,10 @@
 package org.apache.streampipes.connect.adapters.simulator.random;
 
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -34,7 +34,7 @@ public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
 
   public static final String ID = "org.apache.streampipes.connect.adapters.simulator.randomdatastream";
 
-  private final static String WaitTimeMs = "wait-time-ms";
+  private static final String WAIT_TIME_MS = "wait-time-ms";
 
   private RandomDataSimulator randomDataSimulator;
 
@@ -45,18 +45,18 @@ public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
   public RandomDataStreamAdapter(SpecificAdapterStreamDescription adapterStreamDescription) {
     super(adapterStreamDescription);
     ParameterExtractor extractor = new ParameterExtractor(adapterStreamDescription.getConfig());
-    Integer waitTimeMs = extractor.singleValue(WaitTimeMs, Integer.class);
+    Integer waitTimeMs = extractor.singleValue(WAIT_TIME_MS, Integer.class);
     this.randomDataSimulator = new RandomDataSimulator(adapterPipeline, waitTimeMs);
   }
 
   @Override
   public SpecificAdapterStreamDescription declareModel() {
     return SpecificDataStreamAdapterBuilder.create(ID)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(AdapterType.Debugging)
-            .requiredIntegerParameter(Labels.withId(WaitTimeMs))
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(AdapterType.Debugging)
+        .requiredIntegerParameter(Labels.withId(WAIT_TIME_MS))
+        .build();
   }
 
   @Override
@@ -76,7 +76,8 @@ public class RandomDataStreamAdapter extends SpecificDataStreamAdapter {
   }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+      throws AdapterException, ParseException {
     return RandomDataSimulatorUtils.randomSchema();
   }
 

@@ -26,25 +26,25 @@ import javax.annotation.Generated;
 @SuppressWarnings("unused")
 public class IssPosition {
 
-    @SerializedName("latitude")
-    private Double mLatitude;
-    @SerializedName("longitude")
-    private Double mLongitude;
+  @SerializedName("latitude")
+  private Double mLatitude;
+  @SerializedName("longitude")
+  private Double mLongitude;
 
-    public Double getLatitude() {
-        return mLatitude;
-    }
+  public Double getLatitude() {
+    return mLatitude;
+  }
 
-    public void setLatitude(Double latitude) {
-        mLatitude = latitude;
-    }
+  public void setLatitude(Double latitude) {
+    mLatitude = latitude;
+  }
 
-    public Double getLongitude() {
-        return mLongitude;
-    }
+  public Double getLongitude() {
+    return mLongitude;
+  }
 
-    public void setLongitude(Double longitude) {
-        mLongitude = longitude;
-    }
+  public void setLongitude(Double longitude) {
+    mLongitude = longitude;
+  }
 
 }

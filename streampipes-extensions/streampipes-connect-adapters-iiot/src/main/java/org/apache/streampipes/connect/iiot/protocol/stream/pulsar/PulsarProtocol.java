@@ -17,17 +17,6 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream.pulsar;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.pulsar.client.api.Consumer;
-import org.apache.pulsar.client.api.Message;
-import org.apache.pulsar.client.api.MessageId;
-import org.apache.pulsar.client.api.MessageListener;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.api.Reader;
-
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.SendToPipeline;
 import org.apache.streampipes.connect.adapter.model.generic.Protocol;
@@ -48,11 +37,20 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 
+import org.apache.pulsar.client.api.Consumer;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.MessageId;
+import org.apache.pulsar.client.api.MessageListener;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.Reader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeConfig {
 
@@ -82,9 +80,9 @@ public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeCon
     List<byte[]> elements = new ArrayList<>();
     try (PulsarClient pulsarClient = PulsarUtils.makePulsarClient(brokerUrl);
          Reader<byte[]> reader = pulsarClient.newReader()
-                 .topic(topic)
-                 .startMessageId(MessageId.earliest)
-                 .create()) {
+             .topic(topic)
+             .startMessageId(MessageId.earliest)
+             .create()) {
       int readCount = 0;
       while (readCount < n) {
         Message<byte[]> message = reader.readNext(1, TimeUnit.SECONDS);
@@ -115,15 +113,15 @@ public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeCon
   @Override
   public ProtocolDescription declareModel() {
     return ProtocolDescriptionBuilder.create(ID)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(AdapterType.Generic)
-            .sourceType(AdapterSourceType.STREAM)
-            .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))
-            .requiredIntegerParameter(Labels.withId(PULSAR_BROKER_PORT), 6650)
-            .requiredTextParameter(Labels.withId(PULSAR_TOPIC))
-            .requiredTextParameter(Labels.withId(PULSAR_SUBSCRIPTION_NAME))
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(AdapterType.Generic)
+        .sourceType(AdapterSourceType.STREAM)
+        .requiredTextParameter(Labels.withId(PULSAR_BROKER_HOST))
+        .requiredIntegerParameter(Labels.withId(PULSAR_BROKER_PORT), 6650)
+        .requiredTextParameter(Labels.withId(PULSAR_TOPIC))
+        .requiredTextParameter(Labels.withId(PULSAR_SUBSCRIPTION_NAME))
+        .build();
   }
 
   @Override
@@ -136,15 +134,15 @@ public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeCon
       }
       PulsarClient client = PulsarUtils.makePulsarClient(brokerUrl);
       consumer = client.newConsumer()
-              .topic(topic)
-              .subscriptionName(subscriptionName)
-              .messageListener((MessageListener<byte[]>) (consumer, msg) -> {
-                try {
-                  stk.emit(msg.getValue());
-                } catch (ParseException e) {
-                  LOG.error("Failed to parse message.", e);
-                }
-              }).subscribe();
+          .topic(topic)
+          .subscriptionName(subscriptionName)
+          .messageListener((MessageListener<byte[]>) (consumer, msg) -> {
+            try {
+              stk.emit(msg.getValue());
+            } catch (ParseException e) {
+              LOG.error("Failed to parse message.", e);
+            }
+          }).subscribe();
     } catch (PulsarClientException e) {
       throw new RuntimeException(e);
     }
@@ -152,7 +150,7 @@ public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeCon
 
   @Override
   public void stop() {
-    if(consumer != null) {
+    if (consumer != null) {
       try {
         consumer.close();
       } catch (PulsarClientException e) {
@@ -168,8 +166,9 @@ public class PulsarProtocol extends BrokerProtocol implements SupportsRuntimeCon
   }
 
   @Override
-  public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor) throws
-          SpConfigurationException {
+  public StaticProperty resolveConfiguration(String staticPropertyInternalName, StaticPropertyExtractor extractor)
+      throws
+      SpConfigurationException {
     String brokerHost = extractor.singleValueParameter(PULSAR_BROKER_HOST, String.class);
     Integer brokerPort = extractor.singleValueParameter(PULSAR_BROKER_PORT, Integer.class);
 
