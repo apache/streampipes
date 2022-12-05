@@ -17,20 +17,20 @@
  */
 package org.apache.streampipes.pe.jvm.config;
 
+import org.apache.streampipes.container.model.PeConfig;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
-import org.apache.streampipes.container.model.PeConfig;
 
 public enum AllPipelineElementsConfig implements PeConfig {
   INSTANCE;
 
   private SpConfig config;
 
-  public final static String serverUrl;
+  public static String serverUrl;
 
-  private final static String service_id = "pe/org.apache.streampipes.processors.all.jvm";
-  private final static String service_name = "Processors JVM (Bundle)";
-  private final static String service_container_name = "pipeline-elements-all-jvm";
+  private static final String service_id = "pe/org.apache.streampipes.processors.all.jvm";
+  private static final String service_name = "Processors JVM (Bundle)";
+  private static final String service_container_name = "pipeline-elements-all-jvm";
 
   AllPipelineElementsConfig() {
     config = SpServiceDiscovery.getSpConfig(service_id);
@@ -43,7 +43,7 @@ public enum AllPipelineElementsConfig implements PeConfig {
 
   static {
     serverUrl =
-            AllPipelineElementsConfig.INSTANCE.getHost() + ":" + AllPipelineElementsConfig.INSTANCE.getPort();
+        AllPipelineElementsConfig.INSTANCE.getHost() + ":" + AllPipelineElementsConfig.INSTANCE.getPort();
   }
 
   @Override

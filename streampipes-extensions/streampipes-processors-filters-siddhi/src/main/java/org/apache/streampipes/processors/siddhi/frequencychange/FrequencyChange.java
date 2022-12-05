@@ -29,10 +29,10 @@ public class FrequencyChange extends SiddhiEventEngine<FrequencyChangeParameters
 
   private String fromStatement(SiddhiProcessorParams<FrequencyChangeParameters> siddhiParams) {
     return "from every not "
-            + siddhiParams.getInputStreamNames().get(0)
-            + " for "
-            + siddhiParams.getParams().getDuration()
-            + " sec";
+        + siddhiParams.getInputStreamNames().get(0)
+        + " for "
+        + siddhiParams.getParams().getDuration()
+        + " sec";
   }
 
   private String selectStatement(SiddhiProcessorParams<FrequencyChangeParameters> siddhiParams) {
@@ -45,10 +45,10 @@ public class FrequencyChange extends SiddhiEventEngine<FrequencyChangeParameters
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
     return SiddhiAppConfigBuilder
-            .create()
-            .addQuery(SiddhiQueryBuilder.create(fromStatement(siddhiParams), insertIntoClause)
-                    .withSelectClause(selectStatement(siddhiParams))
-                    .build())
-            .build();
+        .create()
+        .addQuery(SiddhiQueryBuilder.create(fromStatement(siddhiParams), insertIntoClause)
+            .withSelectClause(selectStatement(siddhiParams))
+            .build())
+        .build();
   }
 }

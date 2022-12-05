@@ -20,8 +20,8 @@ package org.apache.streampipes.processors.enricher.jvm.processor.math.operation;
 
 public class OperationModulo implements Operation {
 
-    @Override
-    public Double operate(Double valLeft, Double valRight) {
-        return valLeft % valRight;
-    }
+  @Override
+  public Double operate(Double valLeft, Double valRight) {
+    return valLeft % valRight;
+  }
 }

@@ -18,24 +18,25 @@
 
 package org.apache.streampipes.processors.enricher.flink.processor.urldereferencing;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.enricher.flink.AbstractEnricherProgram;
 
+import org.apache.flink.streaming.api.datastream.DataStream;
+
 public class UrlDereferencingProgram extends AbstractEnricherProgram<UrlDereferencingParameter> {
 
-    public UrlDereferencingProgram(UrlDereferencingParameter params,
-                                   ConfigExtractor configExtractor,
-                                   StreamPipesClient streamPipesClient) {
-        super(params, configExtractor, streamPipesClient);
-    }
+  public UrlDereferencingProgram(UrlDereferencingParameter params,
+                                 ConfigExtractor configExtractor,
+                                 StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
+  }
 
-    @Override
-    protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
-        return dataStreams[0]
-                .flatMap(new UrlDereferencing(params.getUrl(), params.getAppendHtml(), params.getGraph()));
-    }
+  @Override
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
+    return dataStreams[0]
+        .flatMap(new UrlDereferencing(params.getUrl(), params.getAppendHtml(), params.getGraph()));
+  }
 
 }

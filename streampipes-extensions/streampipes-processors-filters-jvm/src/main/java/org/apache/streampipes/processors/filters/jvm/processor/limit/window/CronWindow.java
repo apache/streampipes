@@ -20,27 +20,28 @@ package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.SchedulerUtil;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
 public class CronWindow extends ScheduleWindow {
-    private String cronExpression;
+  private String cronExpression;
 
-    public CronWindow(String cronExpression,
-                      EventSelection eventSelection,
-                      SpOutputCollector outputCollector) {
-        super(eventSelection, outputCollector);
-        this.cronExpression = cronExpression;
-    }
+  public CronWindow(String cronExpression,
+                    EventSelection eventSelection,
+                    SpOutputCollector outputCollector) {
+    super(eventSelection, outputCollector);
+    this.cronExpression = cronExpression;
+  }
 
-    @Override
-    JobDetail getJob() {
-        return SchedulerUtil.createJob(this);
-    }
+  @Override
+  JobDetail getJob() {
+    return SchedulerUtil.createJob(this);
+  }
 
-    @Override
-    Trigger getTrigger() {
-        return SchedulerUtil.getCronTrigger(cronExpression);
-    }
+  @Override
+  Trigger getTrigger() {
+    return SchedulerUtil.getCronTrigger(cronExpression);
+  }
 
 }

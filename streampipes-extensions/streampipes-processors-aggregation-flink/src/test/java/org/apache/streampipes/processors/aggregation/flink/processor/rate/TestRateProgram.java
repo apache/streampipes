@@ -17,15 +17,16 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.rate;
 
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,13 +45,13 @@ public class TestRateProgram extends DataStreamTestBase {
   @Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-            {1, 1000, TimeUnit.MILLISECONDS, 1.0f, 1},
-            {10, 1000, TimeUnit.MILLISECONDS, 1.0f, 1},
-            {100, 1000, TimeUnit.MILLISECONDS, 1.0f, 1},
-            {10, 100, TimeUnit.MILLISECONDS, 1.0f, 10},
-            {2, 500, TimeUnit.MILLISECONDS, 2.0f, 1},
-            {4, 250, TimeUnit.MILLISECONDS, 4.0f, 1},
-            {8, 250, TimeUnit.MILLISECONDS, 4.0f, 2},
+        {1, 1000, TimeUnit.MILLISECONDS, 1.0f, 1},
+        {10, 1000, TimeUnit.MILLISECONDS, 1.0f, 1},
+        {100, 1000, TimeUnit.MILLISECONDS, 1.0f, 1},
+        {10, 100, TimeUnit.MILLISECONDS, 1.0f, 10},
+        {2, 500, TimeUnit.MILLISECONDS, 2.0f, 1},
+        {4, 250, TimeUnit.MILLISECONDS, 4.0f, 1},
+        {8, 250, TimeUnit.MILLISECONDS, 4.0f, 2},
     });
   }
 
@@ -71,23 +72,25 @@ public class TestRateProgram extends DataStreamTestBase {
 
   @Test
   public void testRateProgram() {
-    EventRateParameter params = new EventRateParameter(InvocationGraphGenerator.makeEmptyInvocation(new EventRateController().declareModel()), timeWindowSize);
-    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.ServiceGroup);
+    EventRateParameter params =
+        new EventRateParameter(InvocationGraphGenerator.makeEmptyInvocation(new EventRateController().declareModel()),
+            timeWindowSize);
+    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.SERVICE_GROUP);
 
     EventRateProgram program = new EventRateProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData
-            (numEvents, waitTime, timeUnit)));
+        (numEvents, waitTime, timeUnit)));
 
     ExpectedRecords<Event> expected =
-            new ExpectedRecords<Event>().expectAll(getOutput(timeWindowSize, expectedFrequency,
-                    numEvents));
+        new ExpectedRecords<Event>().expectAll(getOutput(timeWindowSize, expectedFrequency,
+            numEvents));
 
     assertStream(stream, expected);
   }
 
   private Collection<Event> getOutput(Integer timeWindowSize, Float eventsPerSecond, Integer
-          numEvents) {
+      numEvents) {
     List<Event> allEvents = new ArrayList<>();
     Event outMap = new Event();
     outMap.addField("rate", eventsPerSecond);

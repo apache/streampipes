@@ -19,5 +19,5 @@
 package org.apache.streampipes.processors.filters.jvm.processor.numericaltextfilter;
 
 public enum StringOperator {
-	CONTAINS, MATCHES
+  CONTAINS, MATCHES
 }

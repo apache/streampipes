@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.List;
 public class Aggregation implements Serializable {
 
   private AggregationType aggregationType;
-//  private String fieldToAggregate;
+  //  private String fieldToAggregate;
   private List<String> fieldsToAggregate;
   private List<String> keyIdentifiers;
 
@@ -70,7 +71,7 @@ public class Aggregation implements Serializable {
     // Dumps thereby all previous events and only emits the most recent event in the window with the
     // aggregated value added
     for (Event anInput : input) {
-      for(String aggregate : fieldsToAggregate) {
+      for (String aggregate : fieldsToAggregate) {
         values.add(anInput.getFieldBySelector(aggregate).getAsPrimitive().getAsDouble());
         lastEvent = anInput;
 

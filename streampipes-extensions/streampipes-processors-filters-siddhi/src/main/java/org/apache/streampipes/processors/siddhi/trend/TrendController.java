@@ -24,7 +24,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -33,54 +37,55 @@ import java.util.List;
 
 public class TrendController extends StandaloneEventProcessingDeclarer<TrendParameters> {
 
-    private static final String Mapping = "mapping";
-    private static final String Increase = "increase";
-    private static final String Operation = "operation";
-    private static final String Duration = "duration";
+  private static final String Mapping = "mapping";
+  private static final String Increase = "increase";
+  private static final String Operation = "operation";
+  private static final String Duration = "duration";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.increase")
-                .withLocales(Locales.EN)
-                .category(DataProcessorType.PATTERN_DETECT)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredStream(StreamRequirementsBuilder.create()
-                        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId
-                                (Mapping), PropertyScope.MEASUREMENT_PROPERTY)
-                        .build())
-                .requiredSingleValueSelection(Labels.withId(Operation), Options
-                        .from("Increase", "Decrease"))
-                .requiredIntegerParameter(Labels.withId(Increase), 0, 500, 1)
-                .requiredIntegerParameter(Labels.withId(Duration))
-                .outputStrategy(OutputStrategies.custom())
-                .build();
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.increase")
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.PATTERN_DETECT)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(), Labels.withId
+                (Mapping), PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(Operation), Options
+            .from("Increase", "Decrease"))
+        .requiredIntegerParameter(Labels.withId(Increase), 0, 500, 1)
+        .requiredIntegerParameter(Labels.withId(Duration))
+        .outputStrategy(OutputStrategies.custom())
+        .build();
+  }
+
+  @Override
+  public ConfiguredEventProcessor<TrendParameters> onInvocation(DataProcessorInvocation
+                                                                    invocationGraph,
+                                                                ProcessingElementParameterExtractor extractor) {
+    String operation = extractor.selectedSingleValue(Operation, String.class);
+    int increase = extractor.singleValueParameter(Increase, Integer.class);
+    int duration = extractor.singleValueParameter(Duration, Integer.class);
+    String mapping = extractor.mappingPropertyValue(Mapping);
+    List<String> outputFieldSelectors = extractor.outputKeySelectors();
+    TrendParameters params = new TrendParameters(invocationGraph,
+        getOperation(operation),
+        increase,
+        duration,
+        mapping,
+        outputFieldSelectors);
+
+    return new ConfiguredEventProcessor<>(params, Trend::new);
+  }
+
+  private TrendOperator getOperation(String operation) {
+    if (operation.equals("Increase")) {
+      return TrendOperator.INCREASE;
+    } else {
+      return TrendOperator.DECREASE;
     }
-
-    @Override
-    public ConfiguredEventProcessor<TrendParameters> onInvocation(DataProcessorInvocation
-                                                                             invocationGraph, ProcessingElementParameterExtractor extractor) {
-        String operation = extractor.selectedSingleValue(Operation, String.class);
-        int increase = extractor.singleValueParameter(Increase, Integer.class);
-        int duration = extractor.singleValueParameter(Duration, Integer.class);
-        String mapping = extractor.mappingPropertyValue(Mapping);
-        List<String> outputFieldSelectors = extractor.outputKeySelectors();
-        TrendParameters params = new TrendParameters(invocationGraph,
-                getOperation(operation),
-                increase,
-                duration,
-                mapping,
-                outputFieldSelectors);
-
-        return new ConfiguredEventProcessor<>(params, Trend::new);
-    }
-
-    private TrendOperator getOperation(String operation) {
-        if (operation.equals("Increase")) {
-            return TrendOperator.INCREASE;
-        } else {
-            return TrendOperator.DECREASE;
-        }
-    }
+  }
 
 
 }

@@ -47,23 +47,23 @@ public class FiltersSiddhiInit extends StandaloneModelSubmitter {
             "Processors Filters Siddhi",
             "",
             8090)
-            .registerPipelineElements(
-                    new TrendController(),
-                    new NumericalFilterController(),
-                    new ListFilter(),
-                    new ListCollector(),
-                    new CountAggregation(),
-                    new TopK())
-            // Currently not working: StreamStopController, FrequencyChangeController, FrequencyController
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(
+            new TrendController(),
+            new NumericalFilterController(),
+            new ListFilter(),
+            new ListCollector(),
+            new CountAggregation(),
+            new TopK())
+        // Currently not working: StreamStopController, FrequencyChangeController, FrequencyController
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

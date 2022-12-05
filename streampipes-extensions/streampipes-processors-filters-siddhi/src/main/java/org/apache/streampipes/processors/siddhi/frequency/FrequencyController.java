@@ -23,7 +23,11 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -37,21 +41,22 @@ public class FrequencyController extends StandaloneEventProcessingDeclarer<Frequ
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.frequency")
-            .category(DataProcessorType.FILTER)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("sec", "min", "hrs"))
-            .outputStrategy(OutputStrategies.custom(true))
-            .requiredIntegerParameter(Labels.withId(DURATION))
-            .build();
+        .category(DataProcessorType.FILTER)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("sec", "min", "hrs"))
+        .outputStrategy(OutputStrategies.custom(true))
+        .requiredIntegerParameter(Labels.withId(DURATION))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<FrequencyParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<FrequencyParameters> onInvocation(DataProcessorInvocation graph,
+                                                                    ProcessingElementParameterExtractor extractor) {
 
     int duration = extractor.singleValueParameter(DURATION, Integer.class);
     String timeUnit = extractor.selectedSingleValue(TIME_UNIT, String.class);

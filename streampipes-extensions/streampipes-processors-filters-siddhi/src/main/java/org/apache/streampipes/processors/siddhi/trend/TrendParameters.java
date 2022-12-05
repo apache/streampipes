@@ -25,42 +25,42 @@ import java.util.List;
 
 public class TrendParameters extends EventProcessorBindingParams {
 
-    private TrendOperator operation;
-    private int increase;
-    private int duration;
+  private TrendOperator operation;
+  private int increase;
+  private int duration;
 
-    private String mapping;
-    private List<String> outputFieldSelectors;
+  private String mapping;
+  private List<String> outputFieldSelectors;
 
 
-    public TrendParameters(DataProcessorInvocation invocationGraph,
-                              TrendOperator operation, int increase, int duration,
-                              String mapping, List<String> outputFieldSelectors) {
-        super(invocationGraph);
-        this.operation = operation;
-        this.increase = increase;
-        this.duration = duration;
-        this.mapping = mapping;
-        this.outputFieldSelectors = outputFieldSelectors;
-    }
+  public TrendParameters(DataProcessorInvocation invocationGraph,
+                         TrendOperator operation, int increase, int duration,
+                         String mapping, List<String> outputFieldSelectors) {
+    super(invocationGraph);
+    this.operation = operation;
+    this.increase = increase;
+    this.duration = duration;
+    this.mapping = mapping;
+    this.outputFieldSelectors = outputFieldSelectors;
+  }
 
-    public TrendOperator getOperation() {
-        return operation;
-    }
+  public TrendOperator getOperation() {
+    return operation;
+  }
 
-    public int getIncrease() {
-        return increase;
-    }
+  public int getIncrease() {
+    return increase;
+  }
 
-    public int getDuration() {
-        return duration;
-    }
+  public int getDuration() {
+    return duration;
+  }
 
-    public String getMapping() {
-        return mapping;
-    }
+  public String getMapping() {
+    return mapping;
+  }
 
-    public List<String> getOutputFieldSelectors() {
-        return outputFieldSelectors;
-    }
+  public List<String> getOutputFieldSelectors() {
+    return outputFieldSelectors;
+  }
 }

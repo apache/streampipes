@@ -42,20 +42,21 @@ public class ProjectionProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.project")
-            .category(DataProcessorType.TRANSFORM)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .outputStrategy(OutputStrategies.custom())
-            .build();
+        .category(DataProcessorType.TRANSFORM)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .outputStrategy(OutputStrategies.custom())
+        .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-   this.outputKeys = processorParams.extractor().outputKeySelectors();
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.outputKeys = processorParams.extractor().outputKeySelectors();
   }
 
   @Override

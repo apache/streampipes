@@ -34,29 +34,29 @@ import org.apache.streampipes.processors.changedetection.jvm.welford.WelfordChan
 
 public class ChangeDetectionJvmInit extends StandaloneModelSubmitter {
 
-    public static void main(String[] args) {
-        new ChangeDetectionJvmInit().init();
-    }
+  public static void main(String[] args) {
+    new ChangeDetectionJvmInit().init();
+  }
 
-    @Override
-    public SpServiceDefinition provideServiceDefinition() {
-        return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.changedetection.jvm",
-                "Processors Change Detection JVM",
-                "",
-                8090)
-                .registerPipelineElements(
-                        new CusumController(),
-                        new WelfordChangeDetection()
-                )
-                .registerMessagingFormats(
-                        new JsonDataFormatFactory(),
-                        new CborDataFormatFactory(),
-                        new SmileDataFormatFactory(),
-                        new FstDataFormatFactory())
-                .registerMessagingProtocols(
-                        new SpKafkaProtocolFactory(),
-                        new SpJmsProtocolFactory(),
-                        new SpMqttProtocolFactory())
-                .build();
-    }
+  @Override
+  public SpServiceDefinition provideServiceDefinition() {
+    return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.changedetection.jvm",
+            "Processors Change Detection JVM",
+            "",
+            8090)
+        .registerPipelineElements(
+            new CusumController(),
+            new WelfordChangeDetection()
+        )
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
+  }
 }

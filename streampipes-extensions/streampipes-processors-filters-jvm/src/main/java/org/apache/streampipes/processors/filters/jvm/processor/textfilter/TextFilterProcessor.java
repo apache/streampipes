@@ -49,25 +49,27 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.textfilter")
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements
-                    .stringReq(), Labels.withId(MAPPING_PROPERTY_ID), PropertyScope.NONE)
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(OPERATION_ID), Options.from("MATCHES",
-                    "CONTAINS"))
-            .requiredTextParameterWithLink(Labels.withId(KEYWORD_ID), "text")
-            .outputStrategy(OutputStrategies.keep())
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.FILTER, DataProcessorType.STRING_OPERATOR)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements
+                .stringReq(), Labels.withId(MAPPING_PROPERTY_ID), PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(OPERATION_ID), Options.from("MATCHES",
+            "CONTAINS"))
+        .requiredTextParameterWithLink(Labels.withId(KEYWORD_ID), "text")
+        .outputStrategy(OutputStrategies.keep())
+        .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-    this.keyword = processorParams.extractor().singleValueParameter(KEYWORD_ID,String.class);
-    this.stringOperator = StringOperator.valueOf(processorParams.extractor().selectedSingleValue(OPERATION_ID,String.class));
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.keyword = processorParams.extractor().singleValueParameter(KEYWORD_ID, String.class);
+    this.stringOperator =
+        StringOperator.valueOf(processorParams.extractor().selectedSingleValue(OPERATION_ID, String.class));
     this.filterProperty = processorParams.extractor().mappingPropertyValue(MAPPING_PROPERTY_ID);
 
     logger.info("Text Property: " + filterProperty);
@@ -77,8 +79,8 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
   public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
     Boolean satisfiesFilter = false;
     String value = event.getFieldBySelector(this.filterProperty)
-            .getAsPrimitive()
-            .getAsString();
+        .getAsPrimitive()
+        .getAsString();
 
     if (this.stringOperator == StringOperator.MATCHES) {
       satisfiesFilter = (value.equals(this.keyword));
@@ -86,7 +88,7 @@ public class TextFilterProcessor extends StreamPipesDataProcessor {
       satisfiesFilter = (value.contains(this.keyword));
     }
 
-    if(satisfiesFilter) {
+    if (satisfiesFilter) {
       spOutputCollector.collect(event);
     }
   }

@@ -22,11 +22,19 @@ import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrat
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyList;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
@@ -45,7 +53,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ListCollector extends StreamPipesSiddhiProcessor
-        implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String LIST_KEY = "list-key";
   private static final String WINDOW_SIZE = "window-size";
@@ -53,26 +61,27 @@ public class ListCollector extends StreamPipesSiddhiProcessor
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listcollector")
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.TRANSFORM)
-            .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
-                            (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .requiredIntegerParameter(Labels.withId(WINDOW_SIZE))
-            .outputStrategy(OutputStrategies.customTransformation())
-            .build();
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.TRANSFORM)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
+                (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .requiredIntegerParameter(Labels.withId(WINDOW_SIZE))
+        .outputStrategy(OutputStrategies.customTransformation())
+        .build();
 
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+                                           ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
     String propertySelector = extractor.mappingPropertyValue(LIST_KEY);
     EventSchema inputSchema = processingElement.getInputStreams().get(0).getEventSchema();
 
     List<EventProperty> selectedProperty = extractor
-            .getInputStreamEventPropertySubset(Collections.singletonList(propertySelector));
+        .getInputStreamEventPropertySubset(Collections.singletonList(propertySelector));
 
     if (selectedProperty.size() > 0) {
       EventPropertyPrimitive prop = (EventPropertyPrimitive) selectedProperty.get(0);
@@ -81,9 +90,9 @@ public class ListCollector extends StreamPipesSiddhiProcessor
       String newDomainProperty = prop.getDomainProperties().get(0).toString();
 
       EventPropertyList ep = EpProperties.listEp(Labels.from("list", "", ""),
-              newPropertyName,
-              Datatypes.fromDatatypeString(newDatatype),
-              newDomainProperty);
+          newPropertyName,
+          Datatypes.fromDatatypeString(newDatatype),
+          newDomainProperty);
 
       inputSchema.addEventProperty(ep);
     }
@@ -98,23 +107,26 @@ public class ListCollector extends StreamPipesSiddhiProcessor
     String propertySelector = siddhiParams.getParams().extractor().mappingPropertyValue(LIST_KEY);
 
     FromClause fromClause = FromClause.create();
-    fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.batchWindow(batchWindowSize)));
+    fromClause.add(
+        Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.batchWindow(batchWindowSize)));
 
     SelectClause selectClause = SelectClause.create();
     siddhiParams
-            .getEventTypeInfo()
-            .forEach((key, value) -> value
-                    .forEach(field -> selectClause.addProperty(Expressions.property(SiddhiStreamSelector.FIRST_INPUT_STREAM, field.getFieldName()))));
+        .getEventTypeInfo()
+        .forEach((key, value) -> value
+            .forEach(field -> selectClause.addProperty(
+                Expressions.property(SiddhiStreamSelector.FIRST_INPUT_STREAM, field.getFieldName()))));
 
-    selectClause.addProperty(Expressions.as(Expressions.collectList(Expressions.property(propertySelector)), propertySelector + "_list"));
+    selectClause.addProperty(
+        Expressions.as(Expressions.collectList(Expressions.property(propertySelector)), propertySelector + "_list"));
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
     return SiddhiAppConfigBuilder
-            .create()
-            .addQuery(SiddhiQueryBuilder
-                    .create(fromClause, insertIntoClause)
-                    .withSelectClause(selectClause)
-                    .build())
-            .build();
+        .create()
+        .addQuery(SiddhiQueryBuilder
+            .create(fromClause, insertIntoClause)
+            .withSelectClause(selectClause)
+            .build())
+        .build();
   }
 }

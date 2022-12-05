@@ -18,16 +18,17 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
+
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,22 +53,25 @@ public class AggregationProgram extends AbstractAggregationProgram<AggregationPa
       KeyedStream<Event, Map<String, String>> keyedStream = dataStream.keyBy(getKeySelector());
       if (bindingParams.getTimeWindow()) {
         return keyedStream
-                .window(SlidingEventTimeWindows.of(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery())))
-                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(), bindingParams.getGroupBy()));
+            .window(SlidingEventTimeWindows.of(Time.seconds(bindingParams.getWindowSize()),
+                Time.seconds(bindingParams.getOutputEvery())))
+            .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(),
+                bindingParams.getGroupBy()));
       } else {
         return keyedStream
-                .countWindow(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
-                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(), bindingParams.getGroupBy()));
+            .countWindow(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
+            .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList(),
+                bindingParams.getGroupBy()));
       }
     } else {
       if (bindingParams.getTimeWindow()) {
         return dataStream
-                .timeWindowAll(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery()))
-                .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
+            .timeWindowAll(Time.seconds(bindingParams.getWindowSize()), Time.seconds(bindingParams.getOutputEvery()))
+            .apply(new TimeAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
       } else {
         return dataStream
-                .countWindowAll(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
-                .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
+            .countWindowAll(bindingParams.getWindowSize(), bindingParams.getOutputEvery())
+            .apply(new CountAggregation(bindingParams.getAggregationType(), bindingParams.getAggregateKeyList()));
       }
     }
   }

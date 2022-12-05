@@ -24,19 +24,19 @@ import java.util.List;
 
 public class MovingMedianFilter extends MovingFilter {
 
-    public MovingMedianFilter(int n) {
-        super(n);
-    }
+  public MovingMedianFilter(int n) {
+    super(n);
+  }
 
-    @Override
-    protected double filterMeasurement(List<Double> measurements) {
-        List<Double> sorted = new ArrayList<Double>();
-        sorted.addAll(measurements);
-        Collections.sort(sorted);
-        if (sorted.size()%2 == 0){
-            return (sorted.get(sorted.size()/2) + sorted.get(sorted.size()/2 -1))/2;
-        }
-        return sorted.get(sorted.size() / 2);
+  @Override
+  protected double filterMeasurement(List<Double> measurements) {
+    List<Double> sorted = new ArrayList<Double>();
+    sorted.addAll(measurements);
+    Collections.sort(sorted);
+    if (sorted.size() % 2 == 0) {
+      return (sorted.get(sorted.size() / 2) + sorted.get(sorted.size() / 2 - 1)) / 2;
     }
+    return sorted.get(sorted.size() / 2);
+  }
 
 }

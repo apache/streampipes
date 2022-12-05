@@ -21,6 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -32,83 +33,83 @@ import java.util.List;
 import java.util.Properties;
 
 public abstract class ScheduleWindow implements Window {
-    private EventSelection eventSelection;
-    private SpOutputCollector outputCollector;
-    private List<Event> events;
-    private Scheduler scheduler;
-    private static int schedulerCount = 0;
+  private EventSelection eventSelection;
+  private SpOutputCollector outputCollector;
+  private List<Event> events;
+  private Scheduler scheduler;
+  private static int schedulerCount = 0;
 
-    ScheduleWindow(EventSelection eventSelection,
-                   SpOutputCollector outputCollector) {
-        this.eventSelection = eventSelection;
-        this.outputCollector = outputCollector;
-        this.events = new ArrayList<>();
+  ScheduleWindow(EventSelection eventSelection,
+                 SpOutputCollector outputCollector) {
+    this.eventSelection = eventSelection;
+    this.outputCollector = outputCollector;
+    this.events = new ArrayList<>();
+  }
+
+  abstract JobDetail getJob();
+
+  abstract Trigger getTrigger();
+
+  @Override
+  public void init() throws SpRuntimeException {
+    try {
+      scheduler = new StdSchedulerFactory(getSchedulerProps()).getScheduler();
+      scheduler.start();
+      scheduler.scheduleJob(getJob(), getTrigger());
+    } catch (SchedulerException e) {
+      throw new SpRuntimeException("Unable to initialize time window scheduler.", e);
     }
+  }
 
-    abstract JobDetail getJob();
+  @Override
+  public void onEvent(Event event) {
+    events.add(event);
+  }
 
-    abstract Trigger getTrigger();
-
-    @Override
-    public void init() throws SpRuntimeException {
-        try {
-            scheduler = new StdSchedulerFactory(getSchedulerProps()).getScheduler();
-            scheduler.start();
-            scheduler.scheduleJob(getJob(), getTrigger());
-        } catch (SchedulerException e) {
-            throw new SpRuntimeException("Unable to initialize time window scheduler.", e);
-        }
+  @Override
+  public void onTrigger() {
+    if (!events.isEmpty()) {
+      switch (eventSelection) {
+        case FIRST:
+          emit(events.get(0));
+          break;
+        case LAST:
+          emit(events.get(events.size() - 1));
+          break;
+        case ALL:
+          events.forEach(this::emit);
+          break;
+      }
+      events.clear();
     }
+  }
 
-    @Override
-    public void onEvent(Event event) {
-        events.add(event);
+  @Override
+  public void destroy() throws SpRuntimeException {
+    events.clear();
+    if (scheduler != null) {
+      try {
+        scheduler.clear();
+        scheduler.shutdown();
+        scheduler = null;
+      } catch (SchedulerException e) {
+        throw new SpRuntimeException("Unable to shutdown time window scheduler.", e);
+      }
     }
+  }
 
-    @Override
-    public void onTrigger() {
-        if (!events.isEmpty()) {
-            switch (eventSelection) {
-                case FIRST:
-                    emit(events.get(0));
-                    break;
-                case LAST:
-                    emit(events.get(events.size() - 1));
-                    break;
-                case ALL:
-                    events.forEach(this::emit);
-                    break;
-            }
-            events.clear();
-        }
-    }
+  private void emit(Event e) {
+    outputCollector.collect(e);
+  }
 
-    @Override
-    public void destroy() throws SpRuntimeException {
-        events.clear();
-        if (scheduler != null) {
-            try {
-                scheduler.clear();
-                scheduler.shutdown();
-                scheduler = null;
-            } catch (SchedulerException e) {
-                throw new SpRuntimeException("Unable to shutdown time window scheduler.", e);
-            }
-        }
-    }
-
-    private void emit(Event e) {
-        outputCollector.collect(e);
-    }
-
-    private Properties getSchedulerProps() {
-        Properties properties = new Properties();
-        properties.setProperty("org.quartz.scheduler.instanceName", "WindowSchedulerName:" + (++schedulerCount));
-        properties.setProperty("org.quartz.scheduler.instanceId", "WindowSchedulerID:" + schedulerCount);
-        properties.setProperty("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
-        properties.setProperty("org.quartz.threadPool.threadCount", "3");
-        properties.setProperty("org.quartz.threadPool.threadPriority", "5");
-        return properties;
-    }
+  private Properties getSchedulerProps() {
+    Properties properties = new Properties();
+    properties.setProperty("org.quartz.scheduler.instanceName", "WindowSchedulerName:" + (++schedulerCount));
+    properties.setProperty("org.quartz.scheduler.instanceId", "WindowSchedulerID:" + schedulerCount);
+    properties.setProperty("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
+    properties.setProperty("org.quartz.threadPool.threadCount", "3");
+    properties.setProperty("org.quartz.threadPool.threadPriority", "5");
+    return properties;
+  }
 
 }

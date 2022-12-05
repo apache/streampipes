@@ -19,19 +19,19 @@
 package org.apache.streampipes.processors.changedetection.jvm.welford;
 
 public enum WelfordEventFields {
-    VAL_LOW("cumSumLow"),
-    VAL_HIGH("cumSumHigh"),
-    DECISION_LOW("changeDetectedLow"),
-    DECISION_HIGH("changeDetectedHigh");
+  VAL_LOW("cumSumLow"),
+  VAL_HIGH("cumSumHigh"),
+  DECISION_LOW("changeDetectedLow"),
+  DECISION_HIGH("changeDetectedHigh");
 
-    public final String label;
+  public final String label;
 
-    WelfordEventFields(String label) {
-        this.label = label;
-    }
+  WelfordEventFields(String label) {
+    this.label = label;
+  }
 
-    @Override
-    public String toString() {
-        return this.label;
-    }
+  @Override
+  public String toString() {
+    return this.label;
+  }
 }
