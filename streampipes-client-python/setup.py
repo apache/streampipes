@@ -34,6 +34,7 @@ base_packages = [
     "pandas>=1.5.1",
     "pydantic>=1.10.2",
     "requests>=2.28.1",
+    "nats-py>=2.2.0",
 ]
 
 dev_packages = base_packages + [
