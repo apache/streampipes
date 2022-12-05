@@ -22,6 +22,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyObject;
@@ -30,40 +31,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JSEval implements EventProcessor<JSEvalParameters> {
-    private Context polyglot;
-    private Value function;
+  private Context polyglot;
+  private Value function;
 
-    @Override
-    public void onInvocation(JSEvalParameters parameters, SpOutputCollector spOutputCollector,
-                             EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-        polyglot = Context.create();
-        String code = parameters.getCode();
-        function = polyglot.eval("js", "(" + code + ")");
+  @Override
+  public void onInvocation(JSEvalParameters parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+    polyglot = Context.create();
+    String code = parameters.getCode();
+    function = polyglot.eval("js", "(" + code + ")");
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector outputCollector) throws SpRuntimeException {
+    // create new event with input event's source info and schema info.
+    Event outEvent = new Event(new HashMap<>(), event.getSourceInfo(), event.getSchemaInfo());
+    try {
+
+      final Map<String, Object> eventData = event.getRaw();
+
+      Object result = function.execute(ProxyObject.fromMap(eventData));
+      Map<String, Object> resultEvent = ((Value) result).as(java.util.Map.class);
+      if (resultEvent != null) {
+        resultEvent.forEach(outEvent::addField);
+        outputCollector.collect(outEvent);
+      }
+
+    } catch (ClassCastException e) {
+      throw new SpRuntimeException("`process` method must return a map with new event data.");
     }
+  }
 
-    @Override
-    public void onEvent(Event event, SpOutputCollector outputCollector) throws SpRuntimeException {
-        // create new event with input event's source info and schema info.
-        Event outEvent = new Event(new HashMap<>(), event.getSourceInfo(), event.getSchemaInfo());
-        try {
-
-            final Map<String, Object> eventData = event.getRaw();
-
-            Object result = function.execute(ProxyObject.fromMap(eventData));
-            Map<String, Object> resultEvent =  ((Value) result).as(java.util.Map.class);
-            if (resultEvent != null) {
-                resultEvent.forEach(outEvent::addField);
-                outputCollector.collect(outEvent);
-            }
-
-        } catch (ClassCastException e) {
-            throw new SpRuntimeException("`process` method must return a map with new event data.");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        // do nothing.
-    }
+  @Override
+  public void onDetach() {
+    // do nothing.
+  }
 
 }

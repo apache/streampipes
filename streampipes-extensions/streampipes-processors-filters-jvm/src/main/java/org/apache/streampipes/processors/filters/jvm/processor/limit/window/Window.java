@@ -22,12 +22,12 @@ import org.apache.streampipes.model.runtime.Event;
 
 public interface Window {
 
-    void init() throws SpRuntimeException;
+  void init() throws SpRuntimeException;
 
-    void onEvent(Event event) throws SpRuntimeException;
+  void onEvent(Event event) throws SpRuntimeException;
 
-    void onTrigger();
+  void onTrigger();
 
-    void destroy() throws SpRuntimeException;
+  void destroy() throws SpRuntimeException;
 
 }

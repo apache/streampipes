@@ -29,7 +29,7 @@ public class NumericalFilterParameters extends EventProcessorBindingParams {
   private String filterProperty;
 
   public NumericalFilterParameters(DataProcessorInvocation graph, Double threshold, RelationalOperator
-          filterOperator, String filterProperty) {
+      filterOperator, String filterProperty) {
     super(graph);
     this.threshold = threshold;
     this.filterOperator = filterOperator;

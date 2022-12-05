@@ -18,14 +18,17 @@
 
 package org.apache.streampipes.processors.filters.jvm.processor.throughputmon;
 
-import org.apache.commons.lang3.time.StopWatch;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
@@ -33,16 +36,18 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
+import org.apache.commons.lang3.time.StopWatch;
+
 public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
 
-  private final static String BATCH_WINDOW_KEY = "batch-window-key";
+  private static final String BATCH_WINDOW_KEY = "batch-window-key";
 
-  private final static String TIMESTAMP_FIELD = "timestamp";
-  private final static String START_TIME_FIELD = "starttime";
-  private final static String END_TIME_FIELD = "endtime";
-  private final static String DURATION_FIELD = "duration";
-  private final static String EVENT_COUNT_FIELD = "eventcount";
-  private final static String THROUGHPUT_FIELD = "throughput";
+  private static final String TIMESTAMP_FIELD = "timestamp";
+  private static final String START_TIME_FIELD = "starttime";
+  private static final String END_TIME_FIELD = "endtime";
+  private static final String DURATION_FIELD = "duration";
+  private static final String EVENT_COUNT_FIELD = "eventcount";
+  private static final String THROUGHPUT_FIELD = "throughput";
 
   private int batchSize;
 
@@ -52,21 +57,21 @@ public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.throughputmon")
-            .category(DataProcessorType.STRUCTURE_ANALYTICS)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty()).build())
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.timestampProperty(TIMESTAMP_FIELD),
-                    EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DateTime),
-                    EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DateTime),
-                    EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.Number),
-                    EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.Number),
-                    EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.Number)))
-            .requiredIntegerParameter(Labels.withId(BATCH_WINDOW_KEY))
-            .build();
+        .category(DataProcessorType.STRUCTURE_ANALYTICS)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty()).build())
+        .outputStrategy(OutputStrategies.fixed(
+            EpProperties.timestampProperty(TIMESTAMP_FIELD),
+            EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DateTime),
+            EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DateTime),
+            EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.Number),
+            EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.Number),
+            EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.Number)))
+        .requiredIntegerParameter(Labels.withId(BATCH_WINDOW_KEY))
+        .build();
   }
 
   @Override

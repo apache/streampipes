@@ -60,24 +60,25 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
     //return "from " + siddhiParams.getInputStreamNames().get(0) +"[" + filterProperty + filterOperator + filterParameters.getThreshold() +"]";
 
     FromClause fromClause = FromClause.create();
-    Expression filter = new RelationalOperatorExpression(operator, Expressions.property(filterProperty), Expressions.staticValue(threshold));
+    Expression filter = new RelationalOperatorExpression(operator, Expressions.property(filterProperty),
+        Expressions.staticValue(threshold));
     Expression stream = Expressions.filter(Expressions.stream(siddhiParams.getInputStreamNames().get(0)), filter);
 
     fromClause.add(stream);
 
     SelectClause selectClause = SelectClause.create();
     siddhiParams
-            .getOutputEventKeys()
-            .forEach(fieldName -> selectClause.addProperty(makeProperty(fieldName)));
+        .getOutputEventKeys()
+        .forEach(fieldName -> selectClause.addProperty(makeProperty(fieldName)));
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
     return SiddhiAppConfigBuilder
-            .create()
-            .addQuery(SiddhiQueryBuilder
-                    .create(fromClause, insertIntoClause)
-                    .withSelectClause(selectClause)
-                    .build())
-            .build();
+        .create()
+        .addQuery(SiddhiQueryBuilder
+            .create(fromClause, insertIntoClause)
+            .withSelectClause(selectClause)
+            .build())
+        .build();
   }
 }

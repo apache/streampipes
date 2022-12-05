@@ -36,7 +36,7 @@ import org.apache.streampipes.processors.aggregation.flink.processor.rate.EventR
 
 public class AggregationFlinkInit extends StandaloneModelSubmitter {
 
-  public static final String ServiceGroup = "org.apache.streampipes.processors.aggregation.flink";
+  public static final String SERVICE_GROUP = "org.apache.streampipes.processors.aggregation.flink";
 
   public static void main(String[] args) {
     new AggregationFlinkInit().init();
@@ -44,27 +44,27 @@ public class AggregationFlinkInit extends StandaloneModelSubmitter {
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create(ServiceGroup,
-                    "Processors Aggregation Flink",
-                    "",
-                    8090)
-            .registerPipelineElements(new AggregationController(),
-                    new CountController(),
-                    new EventRateController(),
-                    new EventCountController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
-            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
-            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
-            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
-            .build();
+    return SpServiceDefinitionBuilder.create(SERVICE_GROUP,
+            "Processors Aggregation Flink",
+            "",
+            8090)
+        .registerPipelineElements(new AggregationController(),
+            new CountController(),
+            new EventRateController(),
+            new EventCountController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+        .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+        .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+        .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+        .build();
   }
 }

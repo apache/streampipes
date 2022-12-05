@@ -19,5 +19,5 @@
 package org.apache.streampipes.processors.siddhi.trend;
 
 public enum TrendOperator {
-    INCREASE, DECREASE
+  INCREASE, DECREASE
 }

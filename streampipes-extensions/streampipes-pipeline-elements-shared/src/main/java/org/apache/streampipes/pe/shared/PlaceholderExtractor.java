@@ -25,7 +25,7 @@ public class PlaceholderExtractor {
   private static final String HASHTAG = "#";
 
   public static String replacePlaceholders(Event event, String content) {
-    for(String key: event.getRaw().keySet()) {
+    for (String key : event.getRaw().keySet()) {
       content = content.replaceAll(HASHTAG + key + HASHTAG, event.getRaw().get(key).toString());
     }
     return content;

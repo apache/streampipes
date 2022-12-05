@@ -25,7 +25,12 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
@@ -35,9 +40,9 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class TrigonometryProcessor extends StreamPipesDataProcessor {
 
-  private final String OPERAND = "operand";
-  private final String OPERATION = "operation";
-  private final String RESULT_FIELD = "trigonometryResult";
+  private static final String OPERAND = "operand";
+  private static final String OPERATION = "operation";
+  private static final String RESULT_FIELD = "trigonometryResult";
 
   private Operation operation;
   private String operand;
@@ -46,21 +51,21 @@ public class TrigonometryProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.processor.trigonometry")
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-      .withLocales(Locales.EN)
-      .category(DataProcessorType.ALGORITHM)
-      .requiredStream(StreamRequirementsBuilder
-        .create()
-        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-          Labels.withId(OPERAND),
-          PropertyScope.NONE)
-        .build())
-      .outputStrategy(
-        OutputStrategies.append(
-          EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-      .requiredSingleValueSelection(Labels.withId(OPERATION),
-        Options.from("sin", "cos", "tan" ))
-      .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.ALGORITHM)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(OPERAND),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(
+            OutputStrategies.append(
+                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
+        .requiredSingleValueSelection(Labels.withId(OPERATION),
+            Options.from("sin", "cos", "tan"))
+        .build();
   }
 
   @Override
@@ -72,11 +77,14 @@ public class TrigonometryProcessor extends StreamPipesDataProcessor {
     String stringOperation = parameters.extractor().selectedSingleValue(OPERATION, String.class);
 
     switch (stringOperation) {
-      case "sin": operation = Operation.SIN;
+      case "sin":
+        operation = Operation.SIN;
         break;
-      case "cos": operation = Operation.COS;
+      case "cos":
+        operation = Operation.COS;
         break;
-      case "tan": operation = Operation.TAN;
+      case "tan":
+        operation = Operation.TAN;
 
     }
   }

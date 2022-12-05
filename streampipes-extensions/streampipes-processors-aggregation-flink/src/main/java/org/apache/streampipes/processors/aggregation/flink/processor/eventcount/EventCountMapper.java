@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.eventcount;
 
-import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.streampipes.model.runtime.Event;
+
+import org.apache.flink.api.common.functions.MapFunction;
 
 public class EventCountMapper implements MapFunction<Event, Integer> {
   @Override

@@ -18,6 +18,7 @@
 package org.apache.streampipes.processors.filters.jvm.processor.limit.util;
 
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Window;
+
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
@@ -27,32 +28,32 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 
 public class SchedulerUtil {
-    static final String WINDOW_KEY = "window";
+  static final String WINDOW_KEY = "window";
 
-    public static JobDetail createJob(Window window) {
-        JobDataMap dataMap = new JobDataMap();
-        dataMap.put(WINDOW_KEY, window);
-        return JobBuilder.newJob(ProcessJob.class)
-                .setJobData(dataMap)
-                .build();
-    }
+  public static JobDetail createJob(Window window) {
+    JobDataMap dataMap = new JobDataMap();
+    dataMap.put(WINDOW_KEY, window);
+    return JobBuilder.newJob(ProcessJob.class)
+        .setJobData(dataMap)
+        .build();
+  }
 
-    public static Trigger getFixedRateTrigger(int intervalInMilliseconds) {
-        final SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
-                .simpleSchedule()
-                .withIntervalInMilliseconds(intervalInMilliseconds)
-                .repeatForever();
-        return TriggerBuilder
-                .newTrigger()
-                .withSchedule(scheduleBuilder)
-                .startNow()
-                .build();
-    }
+  public static Trigger getFixedRateTrigger(int intervalInMilliseconds) {
+    final SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder
+        .simpleSchedule()
+        .withIntervalInMilliseconds(intervalInMilliseconds)
+        .repeatForever();
+    return TriggerBuilder
+        .newTrigger()
+        .withSchedule(scheduleBuilder)
+        .startNow()
+        .build();
+  }
 
-    public static Trigger getCronTrigger(String cronExpression) {
-        return TriggerBuilder.newTrigger()
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
-    }
+  public static Trigger getCronTrigger(String cronExpression) {
+    return TriggerBuilder.newTrigger()
+        .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+        .build();
+  }
 
 }

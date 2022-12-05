@@ -24,31 +24,31 @@ import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Wind
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 
 public class WindowFactory {
-    private final WindowType windowType;
-    private final Object windowExpression;
-    private final EventSelection eventSelection;
-    private final SpOutputCollector outputCollector;
+  private final WindowType windowType;
+  private final Object windowExpression;
+  private final EventSelection eventSelection;
+  private final SpOutputCollector outputCollector;
 
-    public WindowFactory(WindowType windowType,
-                         Object windowExpression,
-                         EventSelection eventSelection,
-                         SpOutputCollector outputCollector) {
-        this.windowType = windowType;
-        this.windowExpression = windowExpression;
-        this.eventSelection = eventSelection;
-        this.outputCollector = outputCollector;
-    }
+  public WindowFactory(WindowType windowType,
+                       Object windowExpression,
+                       EventSelection eventSelection,
+                       SpOutputCollector outputCollector) {
+    this.windowType = windowType;
+    this.windowExpression = windowExpression;
+    this.eventSelection = eventSelection;
+    this.outputCollector = outputCollector;
+  }
 
-    public Window create() {
-        if (WindowType.TIME == windowType) {
-            return new TimeWindow((Integer) windowExpression, eventSelection, outputCollector);
-        } else if (WindowType.LENGTH == windowType) {
-            return new LengthWindow((Integer) windowExpression, eventSelection, outputCollector);
-        } else if (WindowType.CRON == windowType) {
-            return new CronWindow((String) windowExpression, eventSelection, outputCollector);
-        } else {
-            return null;
-        }
+  public Window create() {
+    if (WindowType.TIME == windowType) {
+      return new TimeWindow((Integer) windowExpression, eventSelection, outputCollector);
+    } else if (WindowType.LENGTH == windowType) {
+      return new LengthWindow((Integer) windowExpression, eventSelection, outputCollector);
+    } else if (WindowType.CRON == windowType) {
+      return new CronWindow((String) windowExpression, eventSelection, outputCollector);
+    } else {
+      return null;
     }
+  }
 
 }

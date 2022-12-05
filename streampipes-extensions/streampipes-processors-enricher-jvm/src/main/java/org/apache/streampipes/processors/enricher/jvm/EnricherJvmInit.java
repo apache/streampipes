@@ -47,21 +47,21 @@ public class EnricherJvmInit extends StandaloneModelSubmitter {
             "Processors Enricher JVM",
             "",
             8090)
-            .registerPipelineElements(new SizeMeasureController(),
-                    new JSEvalController(),
-                    new MathOpProcessor(),
-                    new StaticMathOpProcessor(),
-                    new TrigonometryProcessor(),
-                    new ValueChangeProcessor())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(new SizeMeasureController(),
+            new JSEvalController(),
+            new MathOpProcessor(),
+            new StaticMathOpProcessor(),
+            new TrigonometryProcessor(),
+            new ValueChangeProcessor())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

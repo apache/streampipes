@@ -23,15 +23,15 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class EventRateParameter extends EventProcessorBindingParams {
 
-	private Integer avgRate;
-	
-	public EventRateParameter(DataProcessorInvocation graph, int avgRate) {
-		super(graph);
-		this.avgRate = avgRate;
-	}
+  private Integer avgRate;
 
-	public int getAvgRate() {
-		return avgRate;
-	}
+  public EventRateParameter(DataProcessorInvocation graph, int avgRate) {
+    super(graph);
+    this.avgRate = avgRate;
+  }
+
+  public int getAvgRate() {
+    return avgRate;
+  }
 
 }

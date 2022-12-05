@@ -48,23 +48,24 @@ public class ComposeProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.compose")
-            .category(DataProcessorType.TRANSFORM)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .outputStrategy(OutputStrategies.custom(true))
-            .build();
+        .category(DataProcessorType.TRANSFORM)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .outputStrategy(OutputStrategies.custom(true))
+        .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
     this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
     this.lastEvents = new HashMap<>();
@@ -86,13 +87,13 @@ public class ComposeProcessor extends StreamPipesDataProcessor {
 
   private Event buildOutEvent(String currentSelectorPrefix) {
     return EventFactory.fromEvents(lastEvents.get(currentSelectorPrefix), lastEvents.get
-            (getOtherSelectorPrefix(currentSelectorPrefix)), outputSchema).getSubset(outputKeySelectors);
+        (getOtherSelectorPrefix(currentSelectorPrefix)), outputSchema).getSubset(outputKeySelectors);
   }
 
   private String getOtherSelectorPrefix(String currentSelectorPrefix) {
     return currentSelectorPrefix.equals(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX) ?
-            PropertySelectorConstants.SECOND_STREAM_ID_PREFIX : PropertySelectorConstants
-            .FIRST_STREAM_ID_PREFIX;
+        PropertySelectorConstants.SECOND_STREAM_ID_PREFIX : PropertySelectorConstants
+        .FIRST_STREAM_ID_PREFIX;
   }
 
 }

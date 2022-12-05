@@ -25,7 +25,11 @@ import org.apache.streampipes.model.runtime.EventFactory;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
@@ -46,25 +50,26 @@ public class MergeByEnrichProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.enrich")
-            .category(DataProcessorType.TRANSFORM)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(SELECT_STREAM),
-                    Options.from("Stream 1", "Stream 2"))
-            .outputStrategy(OutputStrategies.custom(true))
-            .build();
+        .category(DataProcessorType.TRANSFORM)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredSingleValueSelection(Labels.withId(SELECT_STREAM),
+            Options.from("Stream 1", "Stream 2"))
+        .outputStrategy(OutputStrategies.custom(true))
+        .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
 
     this.selectedStream = processorParams.extractor().selectedSingleValue(SELECT_STREAM, String.class);

@@ -17,20 +17,21 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.rate;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.streaming.api.TimeCharacteristic;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.flink.util.Collector;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.aggregation.flink.AbstractAggregationProgram;
 
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.streaming.api.TimeCharacteristic;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.util.Collector;
+
+
 public class EventRateProgram extends AbstractAggregationProgram<EventRateParameter> {
 
-  public EventRateProgram(EventRateParameter params,
-                          ConfigExtractor configExtractor,
+  public EventRateProgram(EventRateParameter params, ConfigExtractor configExtractor,
                           StreamPipesClient streamPipesClient) {
     super(params, configExtractor, streamPipesClient);
     setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
@@ -38,17 +39,15 @@ public class EventRateProgram extends AbstractAggregationProgram<EventRateParame
 
   @Override
   protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
-    return dataStreams[0]
-            .timeWindowAll(Time.seconds(params.getAvgRate()))
-            .apply(new EventRate(params.getAvgRate()))
-            .flatMap(new FlatMapFunction<Float, Event>() {
-              @Override
-              public void flatMap(Float rate, Collector<Event> out) throws Exception {
-                Event event = new Event();
-                event.addField("rate", rate);
-                out.collect(event);
-              }
-            });
+    return dataStreams[0].timeWindowAll(Time.seconds(params.getAvgRate())).apply(new EventRate(params.getAvgRate()))
+        .flatMap(new FlatMapFunction<Float, Event>() {
+          @Override
+          public void flatMap(Float rate, Collector<Event> out) throws Exception {
+            Event event = new Event();
+            event.addField("rate", rate);
+            out.collect(event);
+          }
+        });
   }
 
 }

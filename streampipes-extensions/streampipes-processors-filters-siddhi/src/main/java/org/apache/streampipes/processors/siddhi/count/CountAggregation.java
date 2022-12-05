@@ -22,7 +22,13 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfig;
 import org.apache.streampipes.wrapper.siddhi.SiddhiAppConfigBuilder;
@@ -51,30 +57,30 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.count")
-            .category(DataProcessorType.COUNT_OPERATOR)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(
-                      EpRequirements.timestampReq(),
-                      Labels.withId(TIMESTAMP_MAPPING_KEY),
-                      PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(
-                      EpRequirements.anyProperty(),
-                      Labels.withId(COUNT_MAPPING),
-                      PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp(Labels.empty(), "value","http://schema.org/Text"),
-                    EpProperties.integerEp(Labels.empty(), "count","http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
-            .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
-                    Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
-                            new Tuple2<>("Minutes", MINUTES_INTERNAL_NAME),
-                            new Tuple2<>("Seconds", SECONDS_INTERNAL_NAME)))
-            .build();
+        .category(DataProcessorType.COUNT_OPERATOR)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_MAPPING_KEY),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.anyProperty(),
+                Labels.withId(COUNT_MAPPING),
+                PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .outputStrategy(OutputStrategies.fixed(
+            EpProperties.timestampProperty("timestamp"),
+            EpProperties.stringEp(Labels.empty(), "value", "http://schema.org/Text"),
+            EpProperties.integerEp(Labels.empty(), "count", "http://schema.org/Number")))
+        .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
+        .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
+            Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
+                new Tuple2<>("Minutes", MINUTES_INTERNAL_NAME),
+                new Tuple2<>("Seconds", SECONDS_INTERNAL_NAME)))
+        .build();
   }
 
   @Override
@@ -87,23 +93,24 @@ public class CountAggregation extends StreamPipesSiddhiProcessor {
 
 
     FromClause fromClause = FromClause.create();
-    fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0), Expressions.timeWindow(timeWindowSize, toTimeUnit(scale))));
+    fromClause.add(Expressions.stream(siddhiParams.getInputStreamNames().get(0),
+        Expressions.timeWindow(timeWindowSize, toTimeUnit(scale))));
 
     SelectClause selectClause = SelectClause.create(
-            Expressions.as(Expressions.property(timestampField), "timestamp"),
-            Expressions.as(Expressions.property(fieldToCount), "value"),
-            Expressions.as(Expressions.count(Expressions.property(fieldToCount)), "count"));
+        Expressions.as(Expressions.property(timestampField), "timestamp"),
+        Expressions.as(Expressions.property(fieldToCount), "value"),
+        Expressions.as(Expressions.count(Expressions.property(fieldToCount)), "count"));
 
     GroupByClause groupByClause = GroupByClause.create(Expressions.property(fieldToCount));
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
     return SiddhiAppConfigBuilder.create()
-            .addQuery(SiddhiQueryBuilder
-                    .create(fromClause, insertIntoClause)
-                    .withSelectClause(selectClause)
-                    .withGroupByClause(groupByClause)
-                    .build())
-            .build();
+        .addQuery(SiddhiQueryBuilder
+            .create(fromClause, insertIntoClause)
+            .withSelectClause(selectClause)
+            .withGroupByClause(groupByClause)
+            .build())
+        .build();
 
   }
 

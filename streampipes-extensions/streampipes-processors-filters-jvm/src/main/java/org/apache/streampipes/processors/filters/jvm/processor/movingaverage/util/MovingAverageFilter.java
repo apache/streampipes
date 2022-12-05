@@ -22,17 +22,17 @@ import java.util.List;
 
 public class MovingAverageFilter extends MovingFilter {
 
-    public MovingAverageFilter(int n) {
-        super(n);
-    }
+  public MovingAverageFilter(int n) {
+    super(n);
+  }
 
-    @Override
-    protected double filterMeasurement(List<Double> measurements) {
-        double sum = 0;
-        for (double m : measurements) {
-            sum += m;
-        }
-        return sum / measurements.size();
+  @Override
+  protected double filterMeasurement(List<Double> measurements) {
+    double sum = 0;
+    for (double m : measurements) {
+      sum += m;
     }
+    return sum / measurements.size();
+  }
 
 }

@@ -24,7 +24,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.siddhi.query.expression.RelationalOperator;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
@@ -39,23 +43,24 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.numericalfilter")
-            .category(DataProcessorType.FILTER)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.withId(NUMBER_MAPPING), PropertyScope.NONE).build())
-            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
-                    ">=", "==", "!="))
-            .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
-            //.outputStrategy(OutputStrategies.keep())
-            .outputStrategy(OutputStrategies.custom())
-            .build();
+        .category(DataProcessorType.FILTER)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(NUMBER_MAPPING), PropertyScope.NONE).build())
+        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+            ">=", "==", "!="))
+        .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
+        //.outputStrategy(OutputStrategies.keep())
+        .outputStrategy(OutputStrategies.custom())
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph,
+                                                                          ProcessingElementParameterExtractor extractor) {
 
     Double threshold = extractor.singleValueParameter(VALUE, Double.class);
     String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);
@@ -77,9 +82,9 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
     String filterProperty = extractor.mappingPropertyValue(NUMBER_MAPPING);
 
     NumericalFilterParameters staticParam = new NumericalFilterParameters(graph,
-            threshold,
-            operator,
-            filterProperty);
+        threshold,
+        operator,
+        filterProperty);
 
     return new ConfiguredEventProcessor<>(staticParam, NumericalFilter::new);
   }
