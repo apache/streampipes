@@ -29,18 +29,16 @@ from streampipes_client.model.resource.data_stream import DataStream
 
 
 def create_data_stream(element_id: str, hostname: str, port: int, topic_name: str) -> DataStream:
-    topic_definition = TopicDefinition()
-    topic_definition.actual_topic_name = topic_name
-    transport_protocol = TransportProtocol()
-    transport_protocol.port = port
-    transport_protocol.broker_hostname = hostname
-    transport_protocol.topic_definition = topic_definition
-    event_grounding = EventGrounding()
-    event_grounding.transport_protocols = [transport_protocol]
-    data_stream = DataStream()
-    data_stream.element_id = element_id
-    data_stream.event_grounding = event_grounding
-    return data_stream
+    return DataStream(
+        elementId=element_id,
+        eventGrounding=EventGrounding(
+            transportProtocols=[
+                TransportProtocol(
+                    port=port, brokerHostname=hostname, topicDefinition=TopicDefinition(actualTopicName=topic_name)
+                )
+            ]
+        ),
+    )
 
 
 class TestStreamPipesFunctions(TestCase):
