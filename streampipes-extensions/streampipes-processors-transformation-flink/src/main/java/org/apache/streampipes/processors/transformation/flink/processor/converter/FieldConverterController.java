@@ -96,13 +96,13 @@ public class FieldConverterController extends
       EventProperty property = parameterExtractor.getEventPropertyBySelector(fieldSelector);
       if (property instanceof EventPropertyPrimitive) {
         String runtimeType = ((EventPropertyPrimitive) property).getRuntimeType();
-        if (runtimeType.equals(XSD._string.toString())) {
+        if (runtimeType.equals(XSD.STRING.toString())) {
           return Options.from(floatValue(), integerValue(), booleanValue());
-        } else if (runtimeType.equals(XSD._integer.toString())) {
+        } else if (runtimeType.equals(XSD.INTEGER.toString())) {
           return Options.from(floatValue(), stringValue(), booleanValue());
-        } else if (runtimeType.equals(XSD._float.toString()) || runtimeType.equals(XSD._double.toString())) {
+        } else if (runtimeType.equals(XSD.FLOAT.toString()) || runtimeType.equals(XSD.DOUBLE.toString())) {
           return Options.from(integerValue(), stringValue());
-        } else if (runtimeType.equals(XSD._boolean.toString())) {
+        } else if (runtimeType.equals(XSD.BOOLEAN.toString())) {
           return Options.from(integerValue(), stringValue());
         } else {
           return Options.from(stringValue());
@@ -142,18 +142,18 @@ public class FieldConverterController extends
   }
 
   private Tuple2<String, String> floatValue() {
-    return new Tuple2<>("Float", XSD._float.toString());
+    return new Tuple2<>("Float", XSD.FLOAT.toString());
   }
 
   private Tuple2<String, String> integerValue() {
-    return new Tuple2<>("Integer", XSD._integer.toString());
+    return new Tuple2<>("Integer", XSD.INTEGER.toString());
   }
 
   private Tuple2<String, String> booleanValue() {
-    return new Tuple2<>("Boolean", XSD._boolean.toString());
+    return new Tuple2<>("Boolean", XSD.BOOLEAN.toString());
   }
 
   private Tuple2<String, String> stringValue() {
-    return new Tuple2<>("String", XSD._string.toString());
+    return new Tuple2<>("String", XSD.STRING.toString());
   }
 }

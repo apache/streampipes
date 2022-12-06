@@ -53,18 +53,18 @@ public class DistanceCalculatorController extends StandaloneEventProcessingDecla
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT)
                 , Labels.withId(LAT_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG)
                 , Labels.withId(LONG_1_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT)
                 , Labels.withId(LAT_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG)
                 , Labels.withId(LONG_2_KEY), PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .outputStrategy(
             OutputStrategies.append(
-                EpProperties.numberEp(Labels.withId(CALCULATED_DISTANCE_KEY), "distance", SO.Number))
+                EpProperties.numberEp(Labels.withId(CALCULATED_DISTANCE_KEY), "distance", SO.NUMBER))
         )
         .build();
 

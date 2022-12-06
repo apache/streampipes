@@ -37,12 +37,12 @@ public class RandomDataSimulatorUtils {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(TIMESTAMP))
         .property(integerEp(Labels.from(RANDOM_NUMBER, "Random Number", "A random number"),
-            RANDOM_NUMBER, SO.Number))
+            RANDOM_NUMBER, SO.NUMBER))
         .property(stringEp(Labels.from(RANDOM_TEXT, "Random Text", "A random text value"),
             RANDOM_TEXT,
-            SO.Text))
+            SO.TEXT))
         .property(integerEp(Labels.from(COUNT, "count", "Count value"),
-            COUNT, SO.Number))
+            COUNT, SO.NUMBER))
         .build();
   }
 }

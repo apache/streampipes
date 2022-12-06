@@ -47,11 +47,11 @@ public class TestUtils {
 	}
 
 	public static TransportFormat jsonFormat() {
-		return new TransportFormat(MessageFormat.Json);
+		return new TransportFormat(MessageFormat.JSON);
 	}
 	
 	public static TransportFormat thriftFormat() {
-		return new TransportFormat(MessageFormat.Thrift);
+		return new TransportFormat(MessageFormat.THRIFT);
 	}
 	
 	public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, EventStreamDeclarer stream, SemanticEventProcessingAgentDeclarer agent) {

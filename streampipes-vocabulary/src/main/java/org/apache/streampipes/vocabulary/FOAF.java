@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,35 +18,35 @@
 
 package org.apache.streampipes.vocabulary;
 
-
+@Deprecated(since = "0.90.0", forRemoval = true)
 public class FOAF {
 
-    public static String Mbox_sha1sum = "http://xmlns.com/foaf/0.1/mbox_sha1sum";
-    public static String Gender = "http://xmlns.com/foaf/0.1/gender";
-    public static String Geekcode = "http://xmlns.com/foaf/0.1/geekcode";
-    public static String DnaChecksum = "http://xmlns.com/foaf/0.1/dnaChecksum";
-    public static String Sha1 = "http://xmlns.com/foaf/0.1/sha1";
-    public static String Title = "http://xmlns.com/foaf/0.1/title";
-    public static String Nick = "http://xmlns.com/foaf/0.1/nick";
-    public static String JabberID = "http://xmlns.com/foaf/0.1/jabberID";
-    public static String AimChatID = "http://xmlns.com/foaf/0.1/aimChatID";
-    public static String SkypeID = "http://xmlns.com/foaf/0.1/skypeID";
-    public static String IcqChatID = "http://xmlns.com/foaf/0.1/icqChatID";
-    public static String YahooChatID = "http://xmlns.com/foaf/0.1/yahooChatID";
-    public static String MsnChatID = "http://xmlns.com/foaf/0.1/msnChatID";
-    public static String Name = "http://xmlns.com/foaf/0.1/name";
-    public static String FirstName = "http://xmlns.com/foaf/0.1/firstName";
-    public static String LastName = "http://xmlns.com/foaf/0.1/lastName";
-    public static String GivenName = "http://xmlns.com/foaf/0.1/givenName";
-    public static String Givenname = "http://xmlns.com/foaf/0.1/givenname";
-    public static String Surname = "http://xmlns.com/foaf/0.1/surname";
-    public static String Family_name = "http://xmlns.com/foaf/0.1/family_name";
-    public static String FamilyName = "http://xmlns.com/foaf/0.1/familyName";
-    public static String Plan = "http://xmlns.com/foaf/0.1/plan";
-    public static String MyersBriggs = "http://xmlns.com/foaf/0.1/myersBriggs";
-    public static String AccountName = "http://xmlns.com/foaf/0.1/accountName";
-    public static String Birthday = "http://xmlns.com/foaf/0.1/birthday";
-    public static String Age = "http://xmlns.com/foaf/0.1/age";
-    public static String Status = "http://xmlns.com/foaf/0.1/status";
+  public static String mboxSha1Sum = "http://xmlns.com/foaf/0.1/mbox_sha1sum";
+  public static String gender = "http://xmlns.com/foaf/0.1/gender";
+  public static String geekcode = "http://xmlns.com/foaf/0.1/geekcode";
+  public static String dnaChecksum = "http://xmlns.com/foaf/0.1/dnaChecksum";
+  public static String sha1 = "http://xmlns.com/foaf/0.1/sha1";
+  public static String title = "http://xmlns.com/foaf/0.1/title";
+  public static String nick = "http://xmlns.com/foaf/0.1/nick";
+  public static String jabberID = "http://xmlns.com/foaf/0.1/jabberID";
+  public static String aimChatID = "http://xmlns.com/foaf/0.1/aimChatID";
+  public static String skypeID = "http://xmlns.com/foaf/0.1/skypeID";
+  public static String icqChatID = "http://xmlns.com/foaf/0.1/icqChatID";
+  public static String yahooChatID = "http://xmlns.com/foaf/0.1/yahooChatID";
+  public static String msnChatID = "http://xmlns.com/foaf/0.1/msnChatID";
+  public static String name = "http://xmlns.com/foaf/0.1/name";
+  public static String firstName = "http://xmlns.com/foaf/0.1/firstName";
+  public static String lastName = "http://xmlns.com/foaf/0.1/lastName";
+  public static String givenName = "http://xmlns.com/foaf/0.1/givenName";
+  public static String givenname = "http://xmlns.com/foaf/0.1/givenname";
+  public static String surname = "http://xmlns.com/foaf/0.1/surname";
+  public static String familyname = "http://xmlns.com/foaf/0.1/family_name";
+  public static String familyName = "http://xmlns.com/foaf/0.1/familyName";
+  public static String plan = "http://xmlns.com/foaf/0.1/plan";
+  public static String myersBriggs = "http://xmlns.com/foaf/0.1/myersBriggs";
+  public static String accountName = "http://xmlns.com/foaf/0.1/accountName";
+  public static String birthday = "http://xmlns.com/foaf/0.1/birthday";
+  public static String age = "http://xmlns.com/foaf/0.1/age";
+  public static String status = "http://xmlns.com/foaf/0.1/status";
 
 }

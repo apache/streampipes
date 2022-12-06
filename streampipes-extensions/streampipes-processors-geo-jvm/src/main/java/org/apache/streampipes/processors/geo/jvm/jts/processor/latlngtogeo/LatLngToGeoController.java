@@ -56,10 +56,10 @@ public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<Lat
         .requiredStream(
             StreamRequirementsBuilder
                 .create()
-                .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat),
+                .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
                     Labels.withId(LAT_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                 .requiredPropertyWithUnaryMapping(
-                    EpRequirements.domainPropertyReq(Geo.lng),
+                    EpRequirements.domainPropertyReq(Geo.LNG),
                     Labels.withId(LNG_KEY), PropertyScope.MEASUREMENT_PROPERTY)
                 .requiredPropertyWithUnaryMapping(
                     EpRequirements.domainPropertyReq("http://data.ign.fr/def/ignf#CartesianCS"),

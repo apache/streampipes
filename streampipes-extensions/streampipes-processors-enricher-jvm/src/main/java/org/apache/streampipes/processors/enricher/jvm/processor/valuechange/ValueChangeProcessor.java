@@ -64,7 +64,7 @@ public class ValueChangeProcessor extends StreamPipesDataProcessor {
                 PropertyScope.NONE)
             .build())
         .outputStrategy(OutputStrategies.append(
-            EpProperties.booleanEp(Labels.withId(IS_CHANGED_ID), IS_CHANGED, SO.Boolean)))
+            EpProperties.booleanEp(Labels.withId(IS_CHANGED_ID), IS_CHANGED, SO.BOOLEAN)))
         .build();
   }
 

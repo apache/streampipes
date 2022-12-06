@@ -35,7 +35,7 @@ public class TestPrimitivePropertyMatch extends TestCase {
 	@Test
 	public void testPositivePrimitivePropertyMatch() {
 
-		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
+		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
 		EventPropertyPrimitive requirement = EpRequirements.integerReq();
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
@@ -47,7 +47,7 @@ public class TestPrimitivePropertyMatch extends TestCase {
 	@Test
 	public void testNegativePrimitivePropertyMatch() {
 
-		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
+		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
 		EventPropertyPrimitive requirement = EpRequirements.stringReq();
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
@@ -59,8 +59,8 @@ public class TestPrimitivePropertyMatch extends TestCase {
 	@Test
 	public void testNegativePrimitivePropertyMatchDomain() {
 
-		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
-		EventPropertyPrimitive requirement = EpRequirements.domainPropertyReq(Geo.lng); 
+		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+		EventPropertyPrimitive requirement = EpRequirements.domainPropertyReq(Geo.LNG);
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
 		

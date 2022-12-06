@@ -37,8 +37,8 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testPositiveSchemaMatch() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
 		
 		EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
 		EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
@@ -55,8 +55,8 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testNegativeSchemaMatch() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
 		
 		EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
 		EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
@@ -73,10 +73,10 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testNegativeSchemaMatchDomain() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
 		
-		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.lat);
+		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
 		EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
 		
 		EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
@@ -91,10 +91,10 @@ public class TestSchemaMatch extends TestCase {
 	@Test
 	public void testPositiveSchemaMatchDomain() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lat);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.lng);
+		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
 		
-		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.lat);
+		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
 		EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
 		
 		EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));

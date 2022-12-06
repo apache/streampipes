@@ -68,10 +68,10 @@ public class WelfordChangeDetection extends StreamPipesDataProcessor {
         .outputStrategy(
             OutputStrategies.append(
                 Arrays.asList(
-                    EpProperties.numberEp(Labels.empty(), WelfordEventFields.VAL_LOW.label, SO.Number),
-                    EpProperties.numberEp(Labels.empty(), WelfordEventFields.VAL_HIGH.label, SO.Number),
-                    EpProperties.booleanEp(Labels.empty(), WelfordEventFields.DECISION_LOW.label, SO.Boolean),
-                    EpProperties.booleanEp(Labels.empty(), WelfordEventFields.DECISION_HIGH.label, SO.Boolean)
+                    EpProperties.numberEp(Labels.empty(), WelfordEventFields.VAL_LOW.label, SO.NUMBER),
+                    EpProperties.numberEp(Labels.empty(), WelfordEventFields.VAL_HIGH.label, SO.NUMBER),
+                    EpProperties.booleanEp(Labels.empty(), WelfordEventFields.DECISION_LOW.label, SO.BOOLEAN),
+                    EpProperties.booleanEp(Labels.empty(), WelfordEventFields.DECISION_HIGH.label, SO.BOOLEAN)
                 )
             ))
         .build();

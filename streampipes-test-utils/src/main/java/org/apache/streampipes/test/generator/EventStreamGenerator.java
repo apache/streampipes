@@ -43,7 +43,7 @@ public class EventStreamGenerator {
         .getEventSchema()
         .setEventProperties(runtimeNames
             .stream()
-            .map(r -> new EventPropertyPrimitive(XSD._integer.toString(), r, "", new ArrayList<>()))
+            .map(r -> new EventPropertyPrimitive(XSD.INTEGER.toString(), r, "", new ArrayList<>()))
             .collect(Collectors.toList()));
 
     return stream;

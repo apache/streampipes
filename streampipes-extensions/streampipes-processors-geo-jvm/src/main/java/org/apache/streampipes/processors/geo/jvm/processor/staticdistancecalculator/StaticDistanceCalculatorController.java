@@ -56,9 +56,9 @@ public class StaticDistanceCalculatorController
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT)
                 , Labels.withId(LATITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG)
                 , Labels.withId(LONGITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .requiredFloatParameter(Labels.withId(SELECTED_LATITUDE_KEY))
@@ -66,7 +66,7 @@ public class StaticDistanceCalculatorController
         .outputStrategy(
             OutputStrategies.append(PrimitivePropertyBuilder
                 .create(Datatypes.Float, "distance")
-                .domainProperty(SO.Number)
+                .domainProperty(SO.NUMBER)
                 .measurementUnit(URI.create("http://qudt.org/vocab/unit#Kilometer"))
                 .build())
         )

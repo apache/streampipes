@@ -99,7 +99,7 @@ public class GeoJsonParser extends Parser {
             eventProperties.add(getEventPropertyGeoJson("longitude", point.getCoordinates().getLongitude(), "http://www.w3.org/2003/01/geo/wgs84_pos#long"));
             eventProperties.add(getEventPropertyGeoJson("latitude", point.getCoordinates().getLatitude(), "http://www.w3.org/2003/01/geo/wgs84_pos#lat"));
             if (point.getCoordinates().hasAltitude()) {
-                eventProperties.add(getEventPropertyGeoJson("altitude", point.getCoordinates().getAltitude(), SO.Altitude));
+                eventProperties.add(getEventPropertyGeoJson("altitude", point.getCoordinates().getAltitude(), SO.ALTITUDE));
             }
 
         } else if (geoFeature.getGeometry() instanceof LineString) {

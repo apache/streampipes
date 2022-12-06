@@ -41,9 +41,9 @@ public class VehicleStream extends AbstractAdapterIncludedStream {
             + "plate number of the vehicle"), "plateNumber", "http://my.company/plateNumber"))
         .property(EpProperties.doubleEp(Labels.from("latitude", "Latitude", "Denotes the latitude "
             + "value of the vehicle's position"), "latitude", Geo
-            .lat))
+            .LAT))
         .property(EpProperties.doubleEp(Labels.from("longitude", "Longitude", "Denotes the longitude "
-            + "value of the vehicle's position"), "longitude", Geo.lng))
+            + "value of the vehicle's position"), "longitude", Geo.LNG))
         .format(Formats.jsonFormat())
         .protocol(Protocols.kafka(
             configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),

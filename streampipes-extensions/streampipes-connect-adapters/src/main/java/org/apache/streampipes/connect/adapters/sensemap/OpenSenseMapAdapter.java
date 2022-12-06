@@ -108,7 +108,7 @@ public class OpenSenseMapAdapter extends PullRestAdapter {
 
     EventSchema eventSchema = new EventSchema();
     EventPropertyPrimitive eventPropertyPrimitive = new EventPropertyPrimitive();
-    eventPropertyPrimitive.setRuntimeType(XSD._double.toString());
+    eventPropertyPrimitive.setRuntimeType(XSD.DOUBLE.toString());
 
     List<EventProperty> allProperties = new ArrayList<>();
 
