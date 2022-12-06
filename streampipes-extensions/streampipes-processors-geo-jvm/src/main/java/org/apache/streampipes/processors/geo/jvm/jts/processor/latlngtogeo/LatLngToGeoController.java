@@ -49,7 +49,7 @@ public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<Lat
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("latlngtogeo")
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo")
         .category(DataProcessorType.GEO)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)

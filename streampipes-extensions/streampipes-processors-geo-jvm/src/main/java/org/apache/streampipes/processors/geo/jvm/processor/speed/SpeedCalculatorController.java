@@ -44,12 +44,11 @@ public class SpeedCalculatorController extends StandaloneEventProcessingDeclarer
   private static final String TIMESTAMP_KEY = "timestamp-key";
   private static final String LATITUDE_KEY = "latitude-key";
   private static final String LONGITUDE_KEY = "longitude-key";
-  private static final String SPEED_KEY = "speed-key";
   private static final String COUNT_WINDOW_KEY = "count-window-key";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.processo.speed")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.geo.jvm.processor.speed")
         .category(DataProcessorType.GEO)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)

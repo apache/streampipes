@@ -55,7 +55,9 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
                     new SetEpsgController(),
                     new LatLngToGeoController(),
                     new CreateTrajectoryFromPointsController(),
+
                     new SpeedCalculatorController(),
+
                     new StaticDistanceCalculatorController())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),

@@ -43,7 +43,7 @@ public class SetEpsgController extends StandaloneEventProcessingDeclarer<SetEpsg
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("setepsg")
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.setepsg")
         .category(DataProcessorType.GEO)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
