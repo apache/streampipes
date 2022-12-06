@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,14 +17,14 @@
  */
 package com.kohlschutter.boilerpipe.filters.simple;
 
-import java.util.Iterator;
-import java.util.List;
-
 import com.kohlschutter.boilerpipe.BoilerpipeFilter;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.conditions.TextBlockCondition;
 import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Marks blocks as "content" if their preceding and following blocks are both already marked
@@ -57,7 +57,7 @@ public class SurroundingToContentFilter implements BoilerpipeFilter {
     TextBlock b = tbs.get(1);
     TextBlock c;
     boolean hasChanges = false;
-    for (Iterator<TextBlock> it = tbs.listIterator(2); it.hasNext();) {
+    for (Iterator<TextBlock> it = tbs.listIterator(2); it.hasNext(); ) {
       c = it.next();
       if (!b.isContent() && a.isContent() && c.isContent() && cond.meetsCondition(b)) {
         b.setIsContent(true);

@@ -22,21 +22,21 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class NameFinderParameters extends EventProcessorBindingParams {
-    private String tokens;
-    private byte[] model;
+  private String tokens;
+  private byte[] model;
 
-    public NameFinderParameters(DataProcessorInvocation graph, String tokens, byte[] model)
-    {
-        super(graph);
-        this.tokens = tokens;
-        this.model = model;
-    }
+  public NameFinderParameters(DataProcessorInvocation graph, String tokens, byte[] model) {
+    super(graph);
+    this.tokens = tokens;
+    this.model = model;
+  }
 
-    public String getTokens() {
-        return tokens;
-    }
-    public byte[] getModel() {
-        return model;
-    }
+  public String getTokens() {
+    return tokens;
+  }
+
+  public byte[] getModel() {
+    return model;
+  }
 
 }

@@ -22,26 +22,27 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class BooleanTimekeepingParameters extends EventProcessorBindingParams {
-    private String leftFieldName;
-    private String rightFieldName;
-    private double outputDivisor;
+  private String leftFieldName;
+  private String rightFieldName;
+  private double outputDivisor;
 
-    public BooleanTimekeepingParameters(DataProcessorInvocation graph, String leftFieldName, String rightFieldName, double outputDivisor) {
-        super(graph);
-        this.leftFieldName = leftFieldName;
-        this.rightFieldName = rightFieldName;
-        this.outputDivisor = outputDivisor;
-    }
+  public BooleanTimekeepingParameters(DataProcessorInvocation graph, String leftFieldName, String rightFieldName,
+                                      double outputDivisor) {
+    super(graph);
+    this.leftFieldName = leftFieldName;
+    this.rightFieldName = rightFieldName;
+    this.outputDivisor = outputDivisor;
+  }
 
-    public String getLeftFieldName() {
-        return leftFieldName;
-    }
+  public String getLeftFieldName() {
+    return leftFieldName;
+  }
 
-    public String getRightFieldName() {
-        return rightFieldName;
-    }
+  public String getRightFieldName() {
+    return rightFieldName;
+  }
 
-    public double getOutputDivisor() {
-        return outputDivisor;
-    }
+  public double getOutputDivisor() {
+    return outputDivisor;
+  }
 }

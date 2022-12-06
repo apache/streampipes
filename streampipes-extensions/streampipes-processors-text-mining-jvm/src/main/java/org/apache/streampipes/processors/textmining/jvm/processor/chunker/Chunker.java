@@ -18,10 +18,6 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.chunker;
 
-import opennlp.tools.chunker.ChunkerME;
-import opennlp.tools.chunker.ChunkerModel;
-import opennlp.tools.sentdetect.SentenceModel;
-import opennlp.tools.util.Span;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
@@ -31,6 +27,10 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import opennlp.tools.chunker.ChunkerME;
+import opennlp.tools.chunker.ChunkerModel;
+import opennlp.tools.util.Span;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +39,7 @@ import java.util.List;
 
 public class Chunker implements EventProcessor<ChunkerParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String tags;
   private String tokens;
@@ -58,7 +58,7 @@ public class Chunker implements EventProcessor<ChunkerParameters> {
   public void onInvocation(ChunkerParameters chunkerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = chunkerParameters.getGraph().getLogger(Chunker.class);
+    log = chunkerParameters.getGraph().getLogger(Chunker.class);
     this.tags = chunkerParameters.getTags();
     this.tokens = chunkerParameters.getTokens();
 

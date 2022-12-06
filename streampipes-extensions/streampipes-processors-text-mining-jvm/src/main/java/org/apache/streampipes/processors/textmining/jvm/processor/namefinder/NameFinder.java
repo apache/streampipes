@@ -18,11 +18,7 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.namefinder;
 
-import opennlp.tools.namefind.NameFinderME;
-import opennlp.tools.namefind.TokenNameFinderModel;
-import opennlp.tools.util.Span;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.ListField;
 import org.apache.streampipes.processors.textmining.jvm.processor.TextMiningUtil;
@@ -30,14 +26,16 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import opennlp.tools.namefind.NameFinderME;
+import opennlp.tools.namefind.TokenNameFinderModel;
+import opennlp.tools.util.Span;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 public class NameFinder implements EventProcessor<NameFinderParameters> {
-
-  private static Logger LOG;
 
   private String tokens;
   private NameFinderME nameFinder;
@@ -50,7 +48,6 @@ public class NameFinder implements EventProcessor<NameFinderParameters> {
   public void onInvocation(NameFinderParameters nameFinderParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = nameFinderParameters.getGraph().getLogger(NameFinder.class);
 
     loadModel(nameFinderParameters.getModel());
 

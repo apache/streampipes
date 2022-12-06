@@ -18,10 +18,6 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.partofspeech;
 
-import opennlp.tools.langdetect.LanguageDetectorME;
-import opennlp.tools.langdetect.LanguageDetectorModel;
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
@@ -30,13 +26,16 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class PartOfSpeech implements EventProcessor<PartOfSpeechParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String detection;
   private POSTaggerME posTagger;
@@ -48,7 +47,7 @@ public class PartOfSpeech implements EventProcessor<PartOfSpeechParameters> {
   public void onInvocation(PartOfSpeechParameters partOfSpeechParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = partOfSpeechParameters.getGraph().getLogger(PartOfSpeech.class);
+    log = partOfSpeechParameters.getGraph().getLogger(PartOfSpeech.class);
     this.detection = partOfSpeechParameters.getDetectionName();
 
     InputStream modelIn = new ByteArrayInputStream(partOfSpeechParameters.getFileContent());

@@ -38,43 +38,43 @@ public class WaterLevel1Stream extends AbstractAlreadyExistingStream {
   @Override
   public SpDataStream declareModel() {
     return DataStreamBuilder.create("org.apache.streampipes.sources.simulator.waterlevel1")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .property(EpProperties.timestampProperty("timestamp"))
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.String, "sensorId")
-                    .label("Sensor ID")
-                    .description("The ID of the sensor")
-                    .domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
-                    .scope(PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Float, "level")
-                    .label("Water Level")
-                    .description("Denotes the current water level in the container")
-                    .domainProperty(WaterTankVocabulary.HAS_WATER_LEVEL)
-                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Boolean, "overflow")
-                    .label("Overflow")
-                    .description("Indicates whether the tank overflows")
-                    .domainProperty(WaterTankVocabulary.IS_OVERFLOW)
-                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Boolean, "underflow")
-                    .label("Underflow")
-                    .description("Indicates whether the tank underflows")
-                    .domainProperty(WaterTankVocabulary.IS_UNDERFLOW)
-                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(
-                    configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
-                    configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
-                    "org.apache.streampipes.examples.waterlevel"))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .property(EpProperties.timestampProperty("timestamp"))
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.String, "sensorId")
+            .label("Sensor ID")
+            .description("The ID of the sensor")
+            .domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
+            .scope(PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Float, "level")
+            .label("Water Level")
+            .description("Denotes the current water level in the container")
+            .domainProperty(WaterTankVocabulary.HAS_WATER_LEVEL)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Boolean, "overflow")
+            .label("Overflow")
+            .description("Indicates whether the tank overflows")
+            .domainProperty(WaterTankVocabulary.IS_OVERFLOW)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Boolean, "underflow")
+            .label("Underflow")
+            .description("Indicates whether the tank underflows")
+            .domainProperty(WaterTankVocabulary.IS_UNDERFLOW)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .format(Formats.jsonFormat())
+        .protocol(Protocols.kafka(
+            configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
+            configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
+            "org.apache.streampipes.examples.waterlevel"))
+        .build();
   }
 
   @Override

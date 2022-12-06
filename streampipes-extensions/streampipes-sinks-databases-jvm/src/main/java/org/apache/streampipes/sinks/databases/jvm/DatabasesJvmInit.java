@@ -48,23 +48,23 @@ public class DatabasesJvmInit extends StandaloneModelSubmitter {
             "Sinks Databases JVM",
             "",
             8090)
-            .registerPipelineElements(
-                    new CouchDbController(),
-                    new InfluxDbController(),
-                    new UpcUaController(),
-                    new PostgreSqlController(),
-                    new IotDbController(),
-                    new DittoController(),
-                    new RedisController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(
+            new CouchDbController(),
+            new InfluxDbController(),
+            new UpcUaController(),
+            new PostgreSqlController(),
+            new IotDbController(),
+            new DittoController(),
+            new RedisController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

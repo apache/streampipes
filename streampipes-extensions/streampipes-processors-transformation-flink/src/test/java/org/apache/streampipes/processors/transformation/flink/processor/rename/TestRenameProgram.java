@@ -56,7 +56,7 @@ public class TestRenameProgram extends DataStreamTestBase {
   public void testConverterProgram() {
     FieldRenamerParameters params = new FieldRenamerParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldRenamerController().declareModel()), oldPropertyName, newPropertyName);
 
-    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.SERVICE_GROUP);
     FieldRenamerProgram program = new FieldRenamerProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData()));

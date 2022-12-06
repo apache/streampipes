@@ -22,21 +22,20 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class SentenceDetectionParameters extends EventProcessorBindingParams {
-    private byte[] fileContent;
-    private String detectionName;
+  private byte[] fileContent;
+  private String detectionName;
 
-    public SentenceDetectionParameters(DataProcessorInvocation graph, String fieldName, byte[] fileContent)
-    {
-        super(graph);
-        this.detectionName = fieldName;
-        this.fileContent = fileContent;
-    }
+  public SentenceDetectionParameters(DataProcessorInvocation graph, String fieldName, byte[] fileContent) {
+    super(graph);
+    this.detectionName = fieldName;
+    this.fileContent = fileContent;
+  }
 
-    public String getDetectionName() {
-        return detectionName;
-    }
+  public String getDetectionName() {
+    return detectionName;
+  }
 
-    public byte[] getFileContent() {
-        return fileContent;
-    }
+  public byte[] getFileContent() {
+    return fileContent;
+  }
 }

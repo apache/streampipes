@@ -40,25 +40,25 @@ public class DatabasesFlinkInit extends StandaloneModelSubmitter {
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.sinks.databases.flink",
-                    "Sinks Databases Flink",
-                    "",
-                    8090)
-            .registerPipelineElements(new ElasticSearchController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
-            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
-            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
-            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
-            .addConfig(ConfigKeys.ELASTIC_HOST, "elasticsearch", "Elastic search host address")
-            .addConfig(ConfigKeys.ELASTIC_PORT_REST, 9200, "Elasitc search rest port")
-            .build();
+            "Sinks Databases Flink",
+            "",
+            8090)
+        .registerPipelineElements(new ElasticSearchController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+        .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+        .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+        .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+        .addConfig(ConfigKeys.ELASTIC_HOST, "elasticsearch", "Elastic search host address")
+        .addConfig(ConfigKeys.ELASTIC_PORT_REST, 9200, "Elasitc search rest port")
+        .build();
   }
 }

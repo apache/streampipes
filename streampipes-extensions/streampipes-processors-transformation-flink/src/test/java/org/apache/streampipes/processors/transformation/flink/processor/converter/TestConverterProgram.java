@@ -61,7 +61,7 @@ public class TestConverterProgram extends DataStreamTestBase {
   public void testConverterProgram() {
     FieldConverterParameters params = new FieldConverterParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldConverterController().declareModel()), "field", targetDatatype);
 
-    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.SERVICE_GROUP);
     FieldConverterProgram program = new FieldConverterProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(inputValue)));

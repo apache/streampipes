@@ -45,7 +45,8 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   private final SupportedDbEngines dbEngine = SupportedDbEngines.IOT_DB;
 
   @Override
-  public void onInvocation(IotDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(IotDbParameters parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
 
     this.params = parameters;
     LOG = parameters.getGraph().getLogger(IotDb.class);
@@ -55,10 +56,10 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
     // time series are written
     //TODO: Add better regular expression
     initializeJdbc(
-            parameters.getGraph().getInputStreams().get(0).getEventSchema(),
-            parameters,
-            dbEngine,
-            LOG);
+        parameters.getGraph().getInputStreams().get(0).getEventSchema(),
+        parameters,
+        dbEngine,
+        LOG);
 
   }
 
@@ -134,7 +135,8 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
   @Override
   protected void ensureTableExists(String url, String databaseName) throws SpRuntimeException {
     int index = 1;
-    this.statementHandler.putEventParameterMap("timestamp", new ParameterInformation(index++, DbDataTypeFactory.getLong(dbEngine)));
+    this.statementHandler.putEventParameterMap("timestamp",
+        new ParameterInformation(index++, DbDataTypeFactory.getLong(dbEngine)));
     for (EventProperty eventProperty : this.tableDescription.getEventSchema().getEventProperties()) {
       try {
         if (eventProperty.getRuntimeName().equals(timestampField.substring(4))) {
@@ -151,12 +153,12 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
         DbDataTypes datatype = extractAndAddEventPropertyRuntimeType(eventProperty, index++);
 
         statement.execute("CREATE TIMESERIES "
-                + params.getDbTable()
-                + "."
-                + runtimeName
-                + " WITH DATATYPE="
-                + datatype.toString()
-                + ", ENCODING=PLAIN");
+            + params.getDbTable()
+            + "."
+            + runtimeName
+            + " WITH DATATYPE="
+            + datatype.toString()
+            + ", ENCODING=PLAIN");
       } catch (SQLException e) {
         // Probably because it already exists
         //TODO: Add better exception handling
@@ -170,8 +172,10 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
     // Supported datatypes can be found here: https://iotdb.apache.org/#/Documents/0.8.0/chap2/sec2
     DbDataTypes dataType = DbDataTypes.TEXT;
     if (eventProperty instanceof EventPropertyPrimitive) {
-       dataType = DbDataTypeFactory.getFromUri(((EventPropertyPrimitive)eventProperty).getRuntimeType(), SupportedDbEngines.IOT_DB);
-      this.statementHandler.putEventParameterMap(eventProperty.getRuntimeName(), new ParameterInformation(index, dataType));
+      dataType = DbDataTypeFactory.getFromUri(((EventPropertyPrimitive) eventProperty).getRuntimeType(),
+          SupportedDbEngines.IOT_DB);
+      this.statementHandler.putEventParameterMap(eventProperty.getRuntimeName(),
+          new ParameterInformation(index, dataType));
     }
 
     return dataType;

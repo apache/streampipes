@@ -27,8 +27,6 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
@@ -45,9 +43,9 @@ public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
     LOG = numberLabelerParameters.getGraph().getLogger(NumberLabeler.class);
 
     this.statements = StatementUtils.getStatements(
-            numberLabelerParameters.getNumberValues(),
-            numberLabelerParameters.getLabelStrings(),
-            numberLabelerParameters.getComparators());
+        numberLabelerParameters.getNumberValues(),
+        numberLabelerParameters.getLabelStrings(),
+        numberLabelerParameters.getComparators());
 
     this.sensorListValueProperty = numberLabelerParameters.getSensorListValueProperty();
 

@@ -22,5 +22,5 @@ import java.io.Serializable;
 
 public interface HashAlgorithm extends Serializable {
 
-	String toHashValue(Object value);
+  String toHashValue(Object value);
 }

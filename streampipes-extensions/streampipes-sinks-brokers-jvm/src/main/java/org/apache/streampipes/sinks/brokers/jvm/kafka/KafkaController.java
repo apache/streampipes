@@ -21,53 +21,40 @@ package org.apache.streampipes.sinks.brokers.jvm.kafka;
 import org.apache.streampipes.model.DataSinkType;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.model.graph.DataSinkInvocation;
-import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
 import org.apache.streampipes.pe.shared.config.kafka.KafkaConnectUtils;
-import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
-import org.apache.streampipes.sdk.helpers.Alternatives;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters> {
 
-//  private static final String ACCESS_MODE = "access-mode";
-//  private static final String UNAUTHENTICATED_PLAIN = "unauthenticated-plain";
-//  private static final String UNAUTHENTICATED_SSL = "unauthenticated-ssl";
-//  private static final String SASL_PLAIN = "sasl-plain";
-//  private static final String SASL_SSL = "sasl-ssl";
-//
-//  private static final String USERNAME_GROUP = "username-group";
-//  private static final String USERNAME_KEY = "username";
-//  private static final String PASSWORD_KEY = "password";
-
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.kafka")
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
+        .category(DataSinkType.MESSAGING)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
 
-            .requiredTextParameter(Labels.withId(KafkaConnectUtils.TOPIC_KEY), false, false)
-            .requiredTextParameter(Labels.withId(KafkaConnectUtils.HOST_KEY), false, false)
-            .requiredIntegerParameter(Labels.withId(KafkaConnectUtils.PORT_KEY), 9092)
+        .requiredTextParameter(Labels.withId(KafkaConnectUtils.TOPIC_KEY), false, false)
+        .requiredTextParameter(Labels.withId(KafkaConnectUtils.HOST_KEY), false, false)
+        .requiredIntegerParameter(Labels.withId(KafkaConnectUtils.PORT_KEY), 9092)
 
-            .requiredAlternatives(Labels.withId(KafkaConnectUtils.ACCESS_MODE),
-                    KafkaConnectUtils.getAlternativeUnauthenticatedPlain(),
-                    KafkaConnectUtils.getAlternativeUnauthenticatedSSL(),
-                    KafkaConnectUtils.getAlternativesSaslPlain(),
-                    KafkaConnectUtils.getAlternativesSaslSSL())
-            .build();
+        .requiredAlternatives(Labels.withId(KafkaConnectUtils.ACCESS_MODE),
+            KafkaConnectUtils.getAlternativeUnauthenticatedPlain(),
+            KafkaConnectUtils.getAlternativeUnauthenticatedSSL(),
+            KafkaConnectUtils.getAlternativesSaslPlain(),
+            KafkaConnectUtils.getAlternativesSaslSSL())
+        .build();
   }
 
   @Override
@@ -98,7 +85,7 @@ public class KafkaController extends StandaloneEventSinkDeclarer<KafkaParameters
   }
 
 
-  public static  String getSaslAccessKey() {
+  public static String getSaslAccessKey() {
     return KafkaConnectUtils.SASL_PLAIN;
   }
 }

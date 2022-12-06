@@ -23,36 +23,36 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class EmailParameters extends EventSinkBindingParams {
 
-    private String toEmailAddress;
-    private String subject;
-    private String content;
-    private Integer silentPeriod;
+  private String toEmailAddress;
+  private String subject;
+  private String content;
+  private Integer silentPeriod;
 
-    public EmailParameters(DataSinkInvocation graph,
-                           String toEmailAddress,
-                           String subject,
-                           String content,
-                           Integer silentPeriod) {
-        super(graph);
-        this.toEmailAddress = toEmailAddress;
-        this.subject = subject;
-        this.content = content;
-        this.silentPeriod = silentPeriod;
-    }
+  public EmailParameters(DataSinkInvocation graph,
+                         String toEmailAddress,
+                         String subject,
+                         String content,
+                         Integer silentPeriod) {
+    super(graph);
+    this.toEmailAddress = toEmailAddress;
+    this.subject = subject;
+    this.content = content;
+    this.silentPeriod = silentPeriod;
+  }
 
-    public String getToEmailAddress() {
-        return toEmailAddress;
-    }
+  public String getToEmailAddress() {
+    return toEmailAddress;
+  }
 
-    public String getSubject() {
-        return subject;
-    }
+  public String getSubject() {
+    return subject;
+  }
 
-    public String getContent() {
-        return content;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public Integer getSilentPeriod() {
-        return silentPeriod;
-    }
+  public Integer getSilentPeriod() {
+    return silentPeriod;
+  }
 }

@@ -57,7 +57,7 @@ public class TestFieldHasherProgram extends DataStreamTestBase {
   public void testFieldHasherProgram() {
 
     FieldHasherParameters params = makeParams();
-    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.SERVICE_GROUP);
     FieldHasherProgram program = new FieldHasherProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeTestData(true, hashAlgorithm)));

@@ -25,10 +25,10 @@ import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public abstract class AbstractTextMiningProgram<B extends EventProcessorBindingParams>
-    extends FlinkDataProcessorRuntime<B> {
+public abstract class AbstractTextMiningProgram<T extends EventProcessorBindingParams>
+    extends FlinkDataProcessorRuntime<T> {
 
-  public AbstractTextMiningProgram(B params,
+  public AbstractTextMiningProgram(T params,
                                    ConfigExtractor configExtractor,
                                    StreamPipesClient streamPipesClient) {
     super(params, configExtractor, streamPipesClient);

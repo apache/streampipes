@@ -24,15 +24,15 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class NatsParameters extends EventSinkBindingParams {
 
-    private final NatsConfig natsConfig;
+  private final NatsConfig natsConfig;
 
-    public NatsParameters(DataSinkInvocation graph,
-                          NatsConfig natsConfig) {
-        super(graph);
-       this.natsConfig = natsConfig;
-    }
+  public NatsParameters(DataSinkInvocation graph,
+                        NatsConfig natsConfig) {
+    super(graph);
+    this.natsConfig = natsConfig;
+  }
 
-    public NatsConfig getNatsConfig() {
-        return natsConfig;
-    }
+  public NatsConfig getNatsConfig() {
+    return natsConfig;
+  }
 }

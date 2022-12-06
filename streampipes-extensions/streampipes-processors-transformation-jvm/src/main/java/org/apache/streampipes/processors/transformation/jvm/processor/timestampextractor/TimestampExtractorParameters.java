@@ -25,21 +25,21 @@ import java.util.List;
 
 public class TimestampExtractorParameters extends EventProcessorBindingParams {
 
-    private String timestampField;
-    private List<String> outputFields;
+  private String timestampField;
+  private List<String> outputFields;
 
 
-    public TimestampExtractorParameters(DataProcessorInvocation graph, String timestampField, List<String> outputFields) {
-        super(graph);
-        this.timestampField = timestampField;
-        this.outputFields = outputFields;
-    }
+  public TimestampExtractorParameters(DataProcessorInvocation graph, String timestampField, List<String> outputFields) {
+    super(graph);
+    this.timestampField = timestampField;
+    this.outputFields = outputFields;
+  }
 
-    public String getTimestampField() {
-        return timestampField;
-    }
+  public String getTimestampField() {
+    return timestampField;
+  }
 
-    public List<String> getOutputFields() {
-        return outputFields;
-    }
+  public List<String> getOutputFields() {
+    return outputFields;
+  }
 }

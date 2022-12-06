@@ -34,7 +34,8 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class ChangedValueDetectionController extends StandaloneEventProcessingDeclarer<ChangedValueDetectionParameters> {
+public class ChangedValueDetectionController
+    extends StandaloneEventProcessingDeclarer<ChangedValueDetectionParameters> {
 
   public static final String COMPARE_FIELD_ID = "compare";
   public static final String CHANGE_FIELD_NAME = "change_detected";
@@ -43,20 +44,22 @@ public class ChangedValueDetectionController extends StandaloneEventProcessingDe
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.changed-value")
-            .category(DataProcessorType.VALUE_OBSERVER)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(COMPARE_FIELD_ID),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))
-            .build();
+        .category(DataProcessorType.VALUE_OBSERVER)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                Labels.withId(COMPARE_FIELD_ID),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(EpProperties.timestampProperty(CHANGE_FIELD_NAME)))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ChangedValueDetectionParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ChangedValueDetectionParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String compare = extractor.mappingPropertyValue(COMPARE_FIELD_ID);
 

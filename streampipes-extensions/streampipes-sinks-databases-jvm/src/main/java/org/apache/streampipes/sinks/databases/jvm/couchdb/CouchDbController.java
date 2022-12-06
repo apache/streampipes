@@ -31,7 +31,7 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
-public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParameters> {
+public class CouchDbController extends StandaloneEventSinkDeclarer<CouchDbParameters> {
 
   private static final String DATABASE_HOST_KEY = "db_host";
   private static final String DATABASE_PORT_KEY = "db_port";
@@ -42,17 +42,17 @@ public class CouchDbController  extends StandaloneEventSinkDeclarer<CouchDbParam
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.couchdb")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.DATABASE)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.DATABASE)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY))
+        .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
+        .build();
   }
 
 

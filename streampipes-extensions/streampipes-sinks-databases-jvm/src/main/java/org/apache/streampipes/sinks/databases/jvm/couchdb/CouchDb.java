@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.sinks.databases.jvm.couchdb;
 
-import org.lightcouch.CouchDbClient;
-import org.lightcouch.CouchDbProperties;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
+
+import org.lightcouch.CouchDbClient;
+import org.lightcouch.CouchDbProperties;
 
 public class CouchDb implements EventSink<CouchDbParameters> {
 
@@ -32,15 +33,15 @@ public class CouchDb implements EventSink<CouchDbParameters> {
 
   @Override
   public void onInvocation(CouchDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws
-          SpRuntimeException {
+      SpRuntimeException {
     this.couchDbClient = new CouchDbClient(new CouchDbProperties(
-            parameters.getDatabaseName(),
-            true,
-            "http",
-            parameters.getCouchDbHost(),
-            parameters.getCouchDbPort(),
-            parameters.getUser(),
-            parameters.getPassword()
+        parameters.getDatabaseName(),
+        true,
+        "http",
+        parameters.getCouchDbHost(),
+        parameters.getCouchDbPort(),
+        parameters.getUser(),
+        parameters.getPassword()
     ));
   }
 

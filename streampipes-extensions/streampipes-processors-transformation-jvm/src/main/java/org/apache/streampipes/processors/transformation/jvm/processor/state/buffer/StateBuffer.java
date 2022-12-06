@@ -20,20 +20,19 @@ package org.apache.streampipes.processors.transformation.jvm.processor.state.buf
 
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.runtime.field.AbstractField;
-import org.apache.streampipes.sdk.helpers.EpProperties;
-import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.vocabulary.SO;
-import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class StateBuffer implements EventProcessor<StateBufferParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
   private String timeProperty;
   private String stateProperty;
   private String sensorValueProperty;
@@ -44,7 +43,7 @@ public class StateBuffer implements EventProcessor<StateBufferParameters> {
   public void onInvocation(StateBufferParameters stateBufferParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = stateBufferParameters.getGraph().getLogger(StateBuffer.class);
+    log = stateBufferParameters.getGraph().getLogger(StateBuffer.class);
 
     this.timeProperty = stateBufferParameters.getTimeProperty();
     this.stateProperty = stateBufferParameters.getStateProperty();
@@ -74,12 +73,12 @@ public class StateBuffer implements EventProcessor<StateBufferParameters> {
     List<String> keysToRemove = new ArrayList<>();
     for (String key : stateBuffer.keySet()) {
       if (!states.contains(key)) {
-          Event resultEvent  = new Event();
-          resultEvent.addField(StateBufferController.VALUES, stateBuffer.get(key));
-          resultEvent.addField(StateBufferController.STATE, Arrays.asList(key));
-          resultEvent.addField(StateBufferController.TIMESTAMP, timestamp);
+        Event resultEvent = new Event();
+        resultEvent.addField(StateBufferController.VALUES, stateBuffer.get(key));
+        resultEvent.addField(StateBufferController.STATE, Arrays.asList(key));
+        resultEvent.addField(StateBufferController.TIMESTAMP, timestamp);
         out.collect(resultEvent);
-          keysToRemove.add(key);
+        keysToRemove.add(key);
       }
     }
 

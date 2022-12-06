@@ -16,31 +16,43 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.flink.processor.hasher;
+package org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter;
 
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
+import org.apache.streampipes.units.UnitProvider;
 
+import com.github.jqudt.Quantity;
+import com.github.jqudt.Unit;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
-import java.io.Serializable;
+public class MeasurementUnitConverter implements FlatMapFunction<Event, Event> {
 
-public class FieldHasher implements Serializable, FlatMapFunction<Event, Event> {
+  private String convertProperty;
+  private String inputUnitUri;
+  private String outputUnitUri;
 
-  private HashAlgorithm hashAlgorithm;
-  private String propertyName;
+  public MeasurementUnitConverter(String inputUnitUri, String
+      outputUnitUri, String convertProperty) {
+    this.convertProperty = convertProperty;
 
-  public FieldHasher(String propertyName, HashAlgorithm hashAlgorithm) {
-    this.propertyName = propertyName;
-    this.hashAlgorithm = hashAlgorithm;
+    this.inputUnitUri = inputUnitUri;
+    this.outputUnitUri = outputUnitUri;
   }
 
   @Override
   public void flatMap(Event in, Collector<Event> out) throws Exception {
-    in.updateFieldBySelector(propertyName,
-        hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
+    Unit inputUnit = UnitProvider.INSTANCE.getUnit(inputUnitUri);
+    Unit outputUnit = UnitProvider.INSTANCE.getUnit(outputUnitUri);
+    Double value = (double) in.getFieldBySelector(convertProperty).getAsPrimitive()
+        .getAsDouble();
+
+    // transform old value to new unit
+    Quantity obs = new Quantity(value, inputUnit);
+    Double newValue = obs.convertTo(outputUnit).getValue();
+
+    in.updateFieldBySelector(convertProperty, newValue);
+
     out.collect(in);
   }
-
 }

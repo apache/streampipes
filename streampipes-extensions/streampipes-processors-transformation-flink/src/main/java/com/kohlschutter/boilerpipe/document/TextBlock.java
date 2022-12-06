@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,15 +17,15 @@
  */
 package com.kohlschutter.boilerpipe.document;
 
+import com.kohlschutter.boilerpipe.labels.DefaultLabels;
+
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.kohlschutter.boilerpipe.labels.DefaultLabels;
-
 /**
  * Describes a block of text.
- * 
+ *
  * A block can be an "atomic" text element (i.e., a sequence of text that is not interrupted by any
  * HTML markup) or a compound of such atomic elements.
  */
@@ -59,8 +59,8 @@ public class TextBlock implements Cloneable {
   }
 
   public TextBlock(final String text, final BitSet containedTextElements, final int numWords,
-      final int numWordsInAnchorText, final int numWordsInWrappedLines, final int numWrappedLines,
-      final int offsetBlocks) {
+                   final int numWordsInAnchorText, final int numWordsInWrappedLines, final int numWrappedLines,
+                   final int offsetBlocks) {
     this.text = text;
     this.containedTextElements = containedTextElements;
     this.numWords = numWords;
@@ -170,7 +170,7 @@ public class TextBlock implements Cloneable {
 
   /**
    * Adds an arbitrary String label to this {@link TextBlock}.
-   * 
+   *
    * @param label The label
    * @see DefaultLabels
    */
@@ -183,7 +183,7 @@ public class TextBlock implements Cloneable {
 
   /**
    * Checks whether this TextBlock has the given label.
-   * 
+   *
    * @param label The label
    * @return <code>true</code> if this block is marked by the given label.
    */
@@ -197,11 +197,11 @@ public class TextBlock implements Cloneable {
 
   /**
    * Returns the labels associated to this TextBlock, or <code>null</code> if no such labels exist.
-   * 
+   *
    * NOTE: The returned instance is the one used directly in TextBlock. You have full access to the
    * data structure. However it is recommended to use the label-specific methods in
    * {@link TextBlock} whenever possible.
-   * 
+   *
    * @return Returns the set of labels, or <code>null</code> if no labels was added yet.
    */
   public Set<String> getLabels() {
@@ -211,7 +211,7 @@ public class TextBlock implements Cloneable {
   /**
    * Adds a set of labels to this {@link TextBlock}. <code>null</code>-references are silently
    * ignored.
-   * 
+   *
    * @param l The labels to be added.
    */
   public void addLabels(final Set<String> l) {
@@ -228,7 +228,7 @@ public class TextBlock implements Cloneable {
   /**
    * Adds a set of labels to this {@link TextBlock}. <code>null</code>-references are silently
    * ignored.
-   * 
+   *
    * @param l The labels to be added.
    */
   public void addLabels(final String... l) {
@@ -245,7 +245,7 @@ public class TextBlock implements Cloneable {
 
   /**
    * Returns the containedTextElements BitSet, or <code>null</code>.
-   * 
+   *
    * @return
    */
   public BitSet getContainedTextElements() {

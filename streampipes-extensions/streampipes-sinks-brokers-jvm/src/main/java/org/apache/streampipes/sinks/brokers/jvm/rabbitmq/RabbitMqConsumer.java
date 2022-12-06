@@ -40,13 +40,14 @@ public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
   }
 
   @Override
-  public void onInvocation(RabbitMqParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(RabbitMqParameters parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
     this.publisher = new RabbitMqPublisher(parameters);
     this.topic = parameters.getRabbitMqTopic();
 
     if (!this.publisher.isConnected()) {
       throw new SpRuntimeException("Could not establish conntection to RabbitMQ broker. Host: " +
-              parameters.getRabbitMqHost() + " Port: " + parameters.getRabbitMqPort());
+          parameters.getRabbitMqHost() + " Port: " + parameters.getRabbitMqPort());
     }
   }
 
@@ -54,7 +55,7 @@ public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
   public void onEvent(Event inputEvent) {
     try {
       publisher.fire(dataFormatDefinition.fromMap(inputEvent.getRaw()),
-              PlaceholderExtractor.replacePlaceholders(inputEvent, topic));
+          PlaceholderExtractor.replacePlaceholders(inputEvent, topic));
     } catch (SpRuntimeException e) {
       LOG.error("Could not serialiaze event");
     }

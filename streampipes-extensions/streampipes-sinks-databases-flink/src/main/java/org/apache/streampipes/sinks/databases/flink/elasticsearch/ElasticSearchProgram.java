@@ -18,10 +18,7 @@
 
 package org.apache.streampipes.sinks.databases.flink.elasticsearch;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.util.Collector;
-import org.apache.http.HttpHost;
+
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
@@ -31,63 +28,72 @@ import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.wrapper.flink.FlinkDataSinkRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.util.Collector;
+import org.apache.http.HttpHost;
+
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ElasticSearchProgram extends FlinkDataSinkRuntime<ElasticSearchParameters> implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    private static final String INDEX_NAME_PREFIX = "sp_";
+  private static final long serialVersionUID = 1L;
+  private static final String INDEX_NAME_PREFIX = "sp_";
 
-    public ElasticSearchProgram(ElasticSearchParameters params,
-                                ConfigExtractor configExtractor,
-                                StreamPipesClient streamPipesClient) {
-        super(params, configExtractor, streamPipesClient);
-    }
+  public ElasticSearchProgram(ElasticSearchParameters params,
+                              ConfigExtractor configExtractor,
+                              StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
+  }
 
-    @Override
-    protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
-        SpConfig config = configExtractor.getConfig();
-        return new FlinkDeploymentConfig(config.getString(
-                ConfigKeys.FLINK_JAR_FILE_LOC),
-                config.getString(ConfigKeys.FLINK_HOST),
-                config.getInteger(ConfigKeys.FLINK_PORT),
-                config.getBoolean(ConfigKeys.DEBUG)
-        );
-    }
+  @Override
+  protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
+    SpConfig config = configExtractor.getConfig();
+    return new FlinkDeploymentConfig(config.getString(
+        ConfigKeys.FLINK_JAR_FILE_LOC),
+        config.getString(ConfigKeys.FLINK_HOST),
+        config.getInteger(ConfigKeys.FLINK_PORT),
+        config.getBoolean(ConfigKeys.DEBUG)
+    );
+  }
 
-    @Override
-    public void getSink(
-            DataStream<Event>... convertedStream) {
+  @Override
+  public void getSink(
+      DataStream<Event>... convertedStream) {
 
-        String indexName = bindingParams.getIndexName();
-        String timeName = bindingParams.getTimestampField();
-        String elasticsearchHost = bindingParams.getElasticsearchHost();
-        Integer elasticsearchPort = bindingParams.getElasticsearchPort();
+    String indexName = bindingParams.getIndexName();
+    String timeName = bindingParams.getTimestampField();
+    String elasticsearchHost = bindingParams.getElasticsearchHost();
+    Integer elasticsearchPort = bindingParams.getElasticsearchPort();
 
-        List<HttpHost> httpHosts = Arrays.asList(new HttpHost(
-                elasticsearchHost,
-                elasticsearchPort,
-                "http"));
+    List<HttpHost> httpHosts = Arrays.asList(new HttpHost(
+        elasticsearchHost,
+        elasticsearchPort,
+        "http"));
 
-        Map<String, String> userConfig = new HashMap<>();
-        // This instructs the sink to emit after every element, otherwise they would be buffered
+    Map<String, String> userConfig = new HashMap<>();
+    // This instructs the sink to emit after every element, otherwise they would be buffered
 //        userConfig.put(ElasticsearchSink.CONFIG_KEY_BULK_FLUSH_MAX_ACTIONS, "1");
-        userConfig.put(ElasticsearchSink.CONFIG_KEY_BULK_FLUSH_INTERVAL_MS, "5000");
+    userConfig.put(ElasticsearchSink.CONFIG_KEY_BULK_FLUSH_INTERVAL_MS, "5000");
 
-        convertedStream[0].flatMap(new FlatMapFunction<Event, Map<String, Object>>() {
+    convertedStream[0].flatMap(new FlatMapFunction<Event, Map<String, Object>>() {
 
-            @Override
-            public void flatMap(Event in, Collector<Map<String, Object>> out) throws Exception {
-                Map<String, Object> rawEvent = in.getRaw();
-                rawEvent.put("date", new Date(in.getFieldBySelector(timeName)
-                        .getAsPrimitive().getAsLong()));
-                out.collect(rawEvent);
-            }
-        }).addSink(new ElasticsearchSink<>(userConfig, httpHosts, new
-                ElasticsearchIndexRequestBuilder(INDEX_NAME_PREFIX +indexName, INDEX_NAME_PREFIX +
-                indexName)));
+      @Override
+      public void flatMap(Event in, Collector<Map<String, Object>> out) throws Exception {
+        Map<String, Object> rawEvent = in.getRaw();
+        rawEvent.put("date", new Date(in.getFieldBySelector(timeName)
+            .getAsPrimitive().getAsLong()));
+        out.collect(rawEvent);
+      }
+    }).addSink(new ElasticsearchSink<>(userConfig, httpHosts, new
+        ElasticsearchIndexRequestBuilder(INDEX_NAME_PREFIX + indexName, INDEX_NAME_PREFIX
+        + indexName)));
 
-    }
+  }
 
 }

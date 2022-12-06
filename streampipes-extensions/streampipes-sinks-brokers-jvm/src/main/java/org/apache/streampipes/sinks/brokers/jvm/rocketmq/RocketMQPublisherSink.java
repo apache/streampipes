@@ -17,13 +17,7 @@
  */
 package org.apache.streampipes.sinks.brokers.jvm.rocketmq;
 
-import com.google.common.annotations.VisibleForTesting;
-import org.apache.rocketmq.client.apis.ClientConfiguration;
-import org.apache.rocketmq.client.apis.ClientConfigurationBuilder;
-import org.apache.rocketmq.client.apis.ClientException;
-import org.apache.rocketmq.client.apis.ClientServiceProvider;
-import org.apache.rocketmq.client.apis.message.Message;
-import org.apache.rocketmq.client.apis.producer.Producer;
+
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
@@ -40,84 +34,92 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import com.google.common.annotations.VisibleForTesting;
+import org.apache.rocketmq.client.apis.ClientConfiguration;
+import org.apache.rocketmq.client.apis.ClientConfigurationBuilder;
+import org.apache.rocketmq.client.apis.ClientException;
+import org.apache.rocketmq.client.apis.ClientServiceProvider;
+import org.apache.rocketmq.client.apis.message.Message;
+import org.apache.rocketmq.client.apis.producer.Producer;
+
 import java.io.IOException;
 import java.util.Map;
 
 public class RocketMQPublisherSink extends StreamPipesDataSink {
 
-    public static final String TOPIC_KEY = "rocketmq-topic";
-    public static final String ENDPOINT_KEY = "rocketmq-endpoint";
+  public static final String TOPIC_KEY = "rocketmq-topic";
+  public static final String ENDPOINT_KEY = "rocketmq-endpoint";
 
-    private ClientServiceProvider provider;
-    private Producer producer;
+  private ClientServiceProvider provider;
+  private Producer producer;
 
-    private SpDataFormatDefinition spDataFormatDefinition;
-    private RocketMQParameters params;
+  private SpDataFormatDefinition spDataFormatDefinition;
+  private RocketMQParameters params;
 
-    public RocketMQPublisherSink() {
-        this.provider = ClientServiceProvider.loadService();
+  public RocketMQPublisherSink() {
+    this.provider = ClientServiceProvider.loadService();
+  }
+
+  @VisibleForTesting
+  public RocketMQPublisherSink(ClientServiceProvider provider) {
+    this.provider = provider;
+  }
+
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rocketmq")
+        .category(DataSinkType.MESSAGING)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(ENDPOINT_KEY))
+        .requiredTextParameter(Labels.withId(TOPIC_KEY))
+        .build();
+  }
+
+  @Override
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
+    this.params = new RocketMQParameters(parameters);
+    this.spDataFormatDefinition = new JsonDataFormatDefinition();
+
+    ClientConfigurationBuilder builder = ClientConfiguration.newBuilder().setEndpoints(params.getEndpoint());
+    ClientConfiguration configuration = builder.build();
+    try {
+      this.producer = provider.newProducerBuilder()
+          .setTopics(params.getTopic())
+          .setClientConfiguration(configuration)
+          .build();
+    } catch (ClientException e) {
+      throw new SpRuntimeException(e);
     }
+  }
 
-    @VisibleForTesting
-    public RocketMQPublisherSink(ClientServiceProvider provider) {
-       this.provider = provider;
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    Map<String, Object> rawMap = event.getRaw();
+    byte[] jsonMessage = spDataFormatDefinition.fromMap(rawMap);
+
+    Message message = provider.newMessageBuilder()
+        .setTopic(params.getTopic())
+        .setBody(jsonMessage)
+        .build();
+    try {
+      producer.send(message);
+    } catch (ClientException e) {
+      throw new SpRuntimeException(e);
     }
+  }
 
-    @Override
-    public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rocketmq")
-                .category(DataSinkType.MESSAGING)
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
-                .requiredTextParameter(Labels.withId(ENDPOINT_KEY))
-                .requiredTextParameter(Labels.withId(TOPIC_KEY))
-                .build();
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    try {
+      producer.close();
+    } catch (IOException e) {
+      throw new SpRuntimeException(e);
     }
-
-    @Override
-    public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext)
-            throws SpRuntimeException {
-        this.params = new RocketMQParameters(parameters);
-        this.spDataFormatDefinition = new JsonDataFormatDefinition();
-
-        ClientConfigurationBuilder builder = ClientConfiguration.newBuilder().setEndpoints(params.getEndpoint());
-        ClientConfiguration configuration = builder.build();
-        try {
-            this.producer = provider.newProducerBuilder()
-                    .setTopics(params.getTopic())
-                    .setClientConfiguration(configuration)
-                    .build();
-        } catch (ClientException e) {
-            throw new SpRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void onEvent(Event event) throws SpRuntimeException {
-        Map<String, Object> rawMap = event.getRaw();
-        byte[] jsonMessage = spDataFormatDefinition.fromMap(rawMap);
-
-        Message message = provider.newMessageBuilder()
-                .setTopic(params.getTopic())
-                .setBody(jsonMessage)
-                .build();
-        try {
-            producer.send(message);
-        } catch (ClientException e) {
-            throw new SpRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void onDetach() throws SpRuntimeException {
-        try {
-            producer.close();
-        } catch (IOException e) {
-            throw new SpRuntimeException(e);
-        }
-    }
+  }
 }

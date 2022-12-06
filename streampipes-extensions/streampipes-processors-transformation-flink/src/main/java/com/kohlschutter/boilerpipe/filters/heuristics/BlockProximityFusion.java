@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,13 +17,13 @@
  */
 package com.kohlschutter.boilerpipe.filters.heuristics;
 
-import java.util.Iterator;
-import java.util.List;
-
 import com.kohlschutter.boilerpipe.BoilerpipeFilter;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Fuses adjacent blocks if their distance (in blocks) does not exceed a certain limit. This
@@ -48,12 +48,12 @@ public final class BlockProximityFusion implements BoilerpipeFilter {
 
   /**
    * Creates a new {@link BlockProximityFusion} instance.
-   * 
+   *
    * @param maxBlocksDistance The maximum distance in blocks.
    * @param contentOnly
    */
   public BlockProximityFusion(final int maxBlocksDistance, final boolean contentOnly,
-      final boolean sameTagLevelOnly) {
+                              final boolean sameTagLevelOnly) {
     this.maxBlocksDistance = maxBlocksDistance;
     this.contentOnly = contentOnly;
     this.sameTagLevelOnly = sameTagLevelOnly;
@@ -87,7 +87,7 @@ public final class BlockProximityFusion implements BoilerpipeFilter {
       offset = 1;
     }
 
-    for (Iterator<TextBlock> it = textBlocks.listIterator(offset); it.hasNext();) {
+    for (Iterator<TextBlock> it = textBlocks.listIterator(offset); it.hasNext(); ) {
       TextBlock block = it.next();
       if (!block.isContent()) {
         prevBlock = block;

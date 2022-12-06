@@ -25,7 +25,12 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -46,44 +51,52 @@ public class BooleanTimekeepingController extends StandaloneEventProcessingDecla
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.timekeeping")
-            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON, "time_measure_example.png")
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.booleanReq(),
-                            Labels.withId(LEFT_FIELD_ID),
-                            PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.booleanReq(),
-                            Labels.withId(RIGHT_FIELD_ID),
-                            PropertyScope.NONE)
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.numberEp(Labels.withId(TIME_FIELD_ID), "measured_time", "http://schema.org/Number"),
-                    EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID), "counter", "http://schema.org/Number")
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.transformation.jvm.booloperator.timekeeping")
+        .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON, "time_measure_example.png")
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.booleanReq(),
+                Labels.withId(LEFT_FIELD_ID),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.booleanReq(),
+                Labels.withId(RIGHT_FIELD_ID),
+                PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.numberEp(Labels.withId(TIME_FIELD_ID),
+                "measured_time",
+                "http://schema.org/Number"),
+            EpProperties.numberEp(Labels.withId(COUNT_FIELD_ID),
+                "counter",
+                "http://schema.org/Number")
 
-            ))
-            .build();
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanTimekeepingParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<BooleanTimekeepingParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String leftFieldName = extractor.mappingPropertyValue(LEFT_FIELD_ID);
     String rightFieldName = extractor.mappingPropertyValue(LEFT_FIELD_ID);
     String outputUnit = extractor.selectedSingleValue(OUTPUT_UNIT_ID, String.class);
 
-    double outputDivisor= 1.0;
+    double outputDivisor = 1.0;
     if (outputUnit.equals(SECONDS)) {
       outputDivisor = 1000.0;
     } else if (outputUnit.equals(MINUTES)) {
       outputDivisor = 60000.0;
     }
 
-    BooleanTimekeepingParameters params = new BooleanTimekeepingParameters(graph, leftFieldName, rightFieldName, outputDivisor);
+    BooleanTimekeepingParameters params =
+        new BooleanTimekeepingParameters(graph, leftFieldName, rightFieldName, outputDivisor);
 
 
     return new ConfiguredEventProcessor<>(params, BooleanTimekeeping::new);

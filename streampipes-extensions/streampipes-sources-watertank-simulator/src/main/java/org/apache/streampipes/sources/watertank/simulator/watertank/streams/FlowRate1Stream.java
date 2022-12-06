@@ -40,39 +40,39 @@ public class FlowRate1Stream extends AbstractAdapterIncludedStream {
   @Override
   public SpDataStream declareModel() {
     return DataStreamBuilder.create("org.apache.streampipes.sources.simulator.flowrate1")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .property(EpProperties.timestampProperty("timestamp"))
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.String, "sensorId")
-                    .label("Sensor ID")
-                    .description("The ID of the sensor")
-                    .domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
-                    .scope(PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Float, "mass_flow")
-                    .label("Mass Flow")
-                    .description("Denotes the current mass flow in the sensor")
-                    .domainProperty(WaterTankVocabulary.HAS_MASS_FLOW)
-                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Float, "temperature")
-                    .label("Temperature")
-                    .description("Denotes the current temperature in degrees celsius")
-                    .domainProperty(WaterTankVocabulary.HAS_TEMPERATURE)
-                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                    .measurementUnit(URI.create("http://codes.wmo.int/common/unit/degC"))
-                    .valueSpecification(0.0f, 100.0f, 0.1f)
-                    .build())
-            .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(
-                    configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
-                    configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
-                    "org.apache.streampipes.examples.flowrate-1")
-            )
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .property(EpProperties.timestampProperty("timestamp"))
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.String, "sensorId")
+            .label("Sensor ID")
+            .description("The ID of the sensor")
+            .domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
+            .scope(PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Float, "mass_flow")
+            .label("Mass Flow")
+            .description("Denotes the current mass flow in the sensor")
+            .domainProperty(WaterTankVocabulary.HAS_MASS_FLOW)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Float, "temperature")
+            .label("Temperature")
+            .description("Denotes the current temperature in degrees celsius")
+            .domainProperty(WaterTankVocabulary.HAS_TEMPERATURE)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .measurementUnit(URI.create("http://codes.wmo.int/common/unit/degC"))
+            .valueSpecification(0.0f, 100.0f, 0.1f)
+            .build())
+        .format(Formats.jsonFormat())
+        .protocol(Protocols.kafka(
+            configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
+            configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
+            "org.apache.streampipes.examples.flowrate-1")
+        )
+        .build();
   }
 
   @Override

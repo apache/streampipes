@@ -22,20 +22,21 @@ import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.client.Client;
 
+import javax.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.annotation.Nullable;
-
 /**
- * An {@link ElasticsearchApiCallBridge} is used to bridge incompatible Elasticsearch Java API calls across different versions.
- * This includes calls to create Elasticsearch clients, handle failed item responses, etc. Any incompatible Elasticsearch
- * Java APIs should be bridged using this interface.
+ * An {@link ElasticsearchApiCallBridge} is used to bridge incompatible Elasticsearch Java API calls across
+ * different versions. This includes calls to create Elasticsearch clients, handle failed item responses, etc.
+ * Any incompatible Elasticsearch Java APIs should be bridged using this interface.
  *
- * <p>Implementations are allowed to be stateful. For example, for Elasticsearch 1.x, since connecting via an embedded node
- * is allowed, the call bridge will hold reference to the created embedded node. Each instance of the sink will hold
- * exactly one instance of the call bridge, and state cleanup is performed when the sink is closed.
+ * <p>Implementations are allowed to be stateful. For example, for Elasticsearch 1.x, since connecting via an
+ * embedded node is allowed, the call bridge will hold reference to the created embedded node.
+ * Each instance of the sink will hold exactly one instance of the call bridge, and state cleanup
+ * is performed when the sink is closed.
  */
 @Internal
 public abstract class ElasticsearchApiCallBridge implements Serializable {
@@ -48,7 +49,8 @@ public abstract class ElasticsearchApiCallBridge implements Serializable {
    */
   public abstract AutoCloseable createClient(Map<String, String> clientConfig);
 
-  public abstract BulkProcessor.Builder createBulkProcessorBuilder(AutoCloseable client, BulkProcessor.Listener listener);
+  public abstract BulkProcessor.Builder createBulkProcessorBuilder(AutoCloseable client,
+                                                                   BulkProcessor.Listener listener);
 
   /**
    * Extracts the cause of failure of a bulk item action.
@@ -62,25 +64,26 @@ public abstract class ElasticsearchApiCallBridge implements Serializable {
    * Set backoff-related configurations on the provided {@link BulkProcessor.Builder}.
    * The builder will be later on used to instantiate the actual {@link BulkProcessor}.
    *
-   * @param builder the {@link BulkProcessor.Builder} to configure.
+   * @param builder            the {@link BulkProcessor.Builder} to configure.
    * @param flushBackoffPolicy user-provided backoff retry settings ({@code null} if the user disabled backoff retries).
    */
   public abstract void configureBulkProcessorBackoff(
-          BulkProcessor.Builder builder,
-          @Nullable ElasticsearchSinkBase.BulkFlushBackoffPolicy flushBackoffPolicy);
+      BulkProcessor.Builder builder,
+      @Nullable ElasticsearchSinkBase.BulkFlushBackoffPolicy flushBackoffPolicy);
 
   /**
    * Creates an RequestIndexer instance.
    *
-   * @param bulkProcessor The instance of BulkProcessor
-   * @param flushOnCheckpoint If true, the producer will wait until all outstanding action requests have been sent to Elasticsearch.
+   * @param bulkProcessor      The instance of BulkProcessor
+   * @param flushOnCheckpoint  If true, the producer will wait until all outstanding action requests have been
+   *                           sent to Elasticsearch.
    * @param numPendingRequests Number of pending action requests not yet acknowledged by Elasticsearch.
    * @return The created RequestIndexer.
    */
   public RequestIndexer createRequestIndex(
-          BulkProcessor bulkProcessor,
-          boolean flushOnCheckpoint,
-          AtomicLong numPendingRequests) {
+      BulkProcessor bulkProcessor,
+      boolean flushOnCheckpoint,
+      AtomicLong numPendingRequests) {
     return new BulkProcessorIndexer(bulkProcessor, flushOnCheckpoint, numPendingRequests);
   }
 

@@ -22,7 +22,6 @@ package org.apache.streampipes.sinks.brokers.jvm.bufferrest;
 import org.apache.commons.io.Charsets;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.StringEntity;
-import org.slf4j.Logger;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
@@ -31,6 +30,7 @@ import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.BufferListener
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.MessageBuffer;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.List;

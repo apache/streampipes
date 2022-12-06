@@ -22,36 +22,36 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class CalculateDurationParameters extends EventProcessorBindingParams {
-    private String startTs;
-    private String endTs;
-    private String unit;
-    private String durationName;
+  private String startTs;
+  private String endTs;
+  private String unit;
+  private String durationName;
 
-    public CalculateDurationParameters(DataProcessorInvocation graph,
-        String startTs,
-        String endTs,
-        String unit,
-        String durationName) {
-        super(graph);
-        this.startTs = startTs;
-        this.endTs = endTs;
-        this.unit = unit;
-        this.durationName = durationName;
-    }
+  public CalculateDurationParameters(DataProcessorInvocation graph,
+                                     String startTs,
+                                     String endTs,
+                                     String unit,
+                                     String durationName) {
+    super(graph);
+    this.startTs = startTs;
+    this.endTs = endTs;
+    this.unit = unit;
+    this.durationName = durationName;
+  }
 
-    public String getStartTs() {
-        return startTs;
-    }
+  public String getStartTs() {
+    return startTs;
+  }
 
-    public String getEndTs() {
-        return endTs;
-    }
+  public String getEndTs() {
+    return endTs;
+  }
 
-    public String getUnit() {
-        return unit;
-    }
+  public String getUnit() {
+    return unit;
+  }
 
-    public String getDurationName() {
-        return durationName;
-    }
+  public String getDurationName() {
+    return durationName;
+  }
 }

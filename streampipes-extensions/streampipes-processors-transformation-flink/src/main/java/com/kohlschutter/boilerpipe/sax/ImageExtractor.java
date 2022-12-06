@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,19 @@
  * limitations under the License.
  */
 package com.kohlschutter.boilerpipe.sax;
+
+import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
+import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
+import com.kohlschutter.boilerpipe.document.Image;
+import com.kohlschutter.boilerpipe.document.TextBlock;
+import com.kohlschutter.boilerpipe.document.TextDocument;
+import org.apache.xerces.parsers.AbstractSAXParser;
+import org.cyberneko.html.HTMLConfiguration;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,20 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.cyberneko.html.HTMLConfiguration;
-
-import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
-import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
-import com.kohlschutter.boilerpipe.document.Image;
-import com.kohlschutter.boilerpipe.document.TextBlock;
-import com.kohlschutter.boilerpipe.document.TextDocument;
-
 /**
  * Extracts the images that are enclosed by extracted content.
  */
@@ -48,7 +47,7 @@ public final class ImageExtractor {
 
   /**
    * Returns the singleton instance of {@link ImageExtractor}.
-   * 
+   *
    * @return
    */
   public static ImageExtractor getInstance() {
@@ -60,7 +59,7 @@ public final class ImageExtractor {
 
   /**
    * Processes the given {@link TextDocument} and the original HTML text (as a String).
-   * 
+   *
    * @param doc The processed {@link TextDocument}.
    * @param origHTML The original HTML document.
    * @return A List of enclosed {@link Image}s
@@ -74,7 +73,7 @@ public final class ImageExtractor {
   /**
    * Processes the given {@link TextDocument} and the original HTML text (as an {@link InputSource}
    * ).
-   * 
+   *
    * @param doc The processed {@link TextDocument}.
    * @param origHTML The original HTML document.
    * @return A List of enclosed {@link Image}s
@@ -91,7 +90,7 @@ public final class ImageExtractor {
   /**
    * Fetches the given {@link URL} using {@link HTMLFetcher} and processes the retrieved HTML using
    * the specified {@link BoilerpipeExtractor}.
-   * 
+   *
    * @param doc The processed {@link TextDocument}.
    * @param is The original HTML document.
    * @return A List of enclosed {@link Image}s
@@ -250,6 +249,7 @@ public final class ImageExtractor {
   };
 
   private static Map<String, TagAction> TAG_ACTIONS = new HashMap<String, TagAction>();
+
   static {
     TAG_ACTIONS.put("STYLE", TA_IGNORABLE_ELEMENT);
     TAG_ACTIONS.put("SCRIPT", TA_IGNORABLE_ELEMENT);

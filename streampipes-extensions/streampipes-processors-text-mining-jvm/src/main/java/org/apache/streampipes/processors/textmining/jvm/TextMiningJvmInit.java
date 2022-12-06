@@ -47,21 +47,21 @@ public class TextMiningJvmInit extends StandaloneModelSubmitter {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.textmining.jvm",
             "Processors Text Mining JVM", "",
             8090)
-            .registerPipelineElements(new LanguageDetectionController(),
-                    new TokenizerController(),
-                    new PartOfSpeechController(),
-                    new ChunkerController(),
-                    new NameFinderController(),
-                    new SentenceDetectionController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(new LanguageDetectionController(),
+            new TokenizerController(),
+            new PartOfSpeechController(),
+            new ChunkerController(),
+            new NameFinderController(),
+            new SentenceDetectionController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

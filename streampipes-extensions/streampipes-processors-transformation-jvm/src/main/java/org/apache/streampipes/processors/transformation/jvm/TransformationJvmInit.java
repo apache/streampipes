@@ -64,39 +64,39 @@ public class TransformationJvmInit extends StandaloneModelSubmitter {
             "Processors Transformation JVM",
             "",
             8090)
-            .registerPipelineElements(
-                    new CountArrayController(),
-                    new SplitArrayController(),
-                    new CalculateDurationController(),
-                    new ChangedValueDetectionController(),
-                    new TimestampExtractorController(),
-                    new BooleanCounterController(),
-                    new BooleanInverterController(),
-                    new BooleanTimekeepingController(),
-                    new BooleanTimerController(),
-                    new CsvMetadataEnrichmentController(),
-                    new FieldHasherProcessor(),
-                    new FieldMapperProcessor(),
-                    new MeasurementUnitConverterProcessor(),
-                    new TaskDurationController(),
-                    new TransformToBooleanController(),
-                    new StringTimerController(),
-                    new SignalEdgeFilterController(),
-                    new BooleanToStateController(),
-                    new NumberLabelerController(),
-                    new StringToStateController(),
-                    new StringCounterController(),
-                    new BooleanOperatorProcessor(),
-                    new FiledRenameProcessor())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(
+            new CountArrayController(),
+            new SplitArrayController(),
+            new CalculateDurationController(),
+            new ChangedValueDetectionController(),
+            new TimestampExtractorController(),
+            new BooleanCounterController(),
+            new BooleanInverterController(),
+            new BooleanTimekeepingController(),
+            new BooleanTimerController(),
+            new CsvMetadataEnrichmentController(),
+            new FieldHasherProcessor(),
+            new FieldMapperProcessor(),
+            new MeasurementUnitConverterProcessor(),
+            new TaskDurationController(),
+            new TransformToBooleanController(),
+            new StringTimerController(),
+            new SignalEdgeFilterController(),
+            new BooleanToStateController(),
+            new NumberLabelerController(),
+            new StringToStateController(),
+            new StringCounterController(),
+            new BooleanOperatorProcessor(),
+            new FiledRenameProcessor())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

@@ -47,19 +47,19 @@ public class DittoController extends StandaloneEventSinkDeclarer<DittoParameters
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.ditto")
-            .category(DataSinkType.FORWARD)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithNaryMapping(
-                    EpRequirements.anyProperty(),
-                    Labels.withId(SELECTED_FIELDS_KEY),
-                    PropertyScope.NONE).build())
-            .requiredTextParameter(Labels.withId(DITTO_API_ENDPOINT_KEY))
-            .requiredTextParameter(Labels.withId(DITTO_USER_KEY))
-            .requiredSecret(Labels.withId(DITTO_PASSWORD_KEY))
-            .requiredTextParameter(Labels.withId(DITTO_THING_ID_KEY))
-            .requiredTextParameter(Labels.withId(DITTO_FEATURE_ID_KEY))
-            .build();
+        .category(DataSinkType.FORWARD)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithNaryMapping(
+            EpRequirements.anyProperty(),
+            Labels.withId(SELECTED_FIELDS_KEY),
+            PropertyScope.NONE).build())
+        .requiredTextParameter(Labels.withId(DITTO_API_ENDPOINT_KEY))
+        .requiredTextParameter(Labels.withId(DITTO_USER_KEY))
+        .requiredSecret(Labels.withId(DITTO_PASSWORD_KEY))
+        .requiredTextParameter(Labels.withId(DITTO_THING_ID_KEY))
+        .requiredTextParameter(Labels.withId(DITTO_FEATURE_ID_KEY))
+        .build();
   }
 
   @Override
@@ -73,7 +73,7 @@ public class DittoController extends StandaloneEventSinkDeclarer<DittoParameters
 
     List<String> selectedFieldSelectors = extractor.mappingPropertyValues(SELECTED_FIELDS_KEY);
     DittoParameters params = new DittoParameters(graph, dittoApiEndpoint, dittoUser,
-            dittoPassword, dittoThingId, dittoFeatureId, selectedFieldSelectors);
+        dittoPassword, dittoThingId, dittoFeatureId, selectedFieldSelectors);
 
     return new ConfiguredEventSink<>(params, Ditto::new);
   }

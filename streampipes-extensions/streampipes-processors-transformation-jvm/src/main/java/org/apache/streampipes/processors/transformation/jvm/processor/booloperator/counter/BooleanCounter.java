@@ -28,7 +28,7 @@ public class BooleanCounter implements EventProcessor<BooleanCounterParameters> 
 
   // From true to false or from false to true
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String fieldName;
   private int flankUp;
@@ -37,19 +37,18 @@ public class BooleanCounter implements EventProcessor<BooleanCounterParameters> 
   private int counter;
 
 
-
   @Override
   public void onInvocation(BooleanCounterParameters booleanCounterParametersParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanCounterParametersParameters.getGraph().getLogger(BooleanCounter.class);
+    log = booleanCounterParametersParameters.getGraph().getLogger(BooleanCounter.class);
     this.fieldName = booleanCounterParametersParameters.getInvertFieldName();
     this.flankUp = booleanCounterParametersParameters.getFlankUp();
 
     if (flankUp == 1) {
-        this.fieldValueOfLastEvent = true;
+      this.fieldValueOfLastEvent = true;
     } else {
-        this.fieldValueOfLastEvent = false;
+      this.fieldValueOfLastEvent = false;
     }
 
     this.counter = 0;
@@ -58,32 +57,32 @@ public class BooleanCounter implements EventProcessor<BooleanCounterParameters> 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
 
-      boolean value = inputEvent.getFieldBySelector(fieldName).getAsPrimitive().getAsBoolean();
-      boolean updateCounter = false;
+    boolean value = inputEvent.getFieldBySelector(fieldName).getAsPrimitive().getAsBoolean();
+    boolean updateCounter = false;
 
-      if (this.flankUp == 2) {
-        // detect up flanks
-        if (this.fieldValueOfLastEvent == false && value == true) {
-            updateCounter = true;
-        }
-      } else if (this.flankUp == 1){
-        // detect up flanks
-        if (this.fieldValueOfLastEvent == true && value == false) {
-            updateCounter = true;
-        }
-      } else {
-          if (this.fieldValueOfLastEvent != value) {
-              updateCounter = true;
-          }
+    if (this.flankUp == 2) {
+      // detect up flanks
+      if (!this.fieldValueOfLastEvent && value) {
+        updateCounter = true;
       }
-
-      if (updateCounter) {
-          this.counter++;
-          inputEvent.addField(BooleanCounterController.COUNT_FIELD_RUNTIME_NAME, this.counter);
-          out.collect(inputEvent);
+    } else if (this.flankUp == 1) {
+      // detect up flanks
+      if (this.fieldValueOfLastEvent && !value) {
+        updateCounter = true;
       }
+    } else {
+      if (this.fieldValueOfLastEvent != value) {
+        updateCounter = true;
+      }
+    }
 
-      this.fieldValueOfLastEvent = value;
+    if (updateCounter) {
+      this.counter++;
+      inputEvent.addField(BooleanCounterController.COUNT_FIELD_RUNTIME_NAME, this.counter);
+      out.collect(inputEvent);
+    }
+
+    this.fieldValueOfLastEvent = value;
   }
 
   @Override

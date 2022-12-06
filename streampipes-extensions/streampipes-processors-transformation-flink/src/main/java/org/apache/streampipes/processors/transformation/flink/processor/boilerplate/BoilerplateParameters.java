@@ -23,26 +23,27 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class BoilerplateParameters extends EventProcessorBindingParams {
 
-    private String htmlProperty;
-    private ExtractorMode extractorMode;
-    private OutputMode outputMode;
+  private String htmlProperty;
+  private ExtractorMode extractorMode;
+  private OutputMode outputMode;
 
-    public BoilerplateParameters(DataProcessorInvocation graph, String htmlProperty, ExtractorMode extractorMode, OutputMode outputMode) {
-        super(graph);
-        this.htmlProperty = htmlProperty;
-        this.extractorMode = extractorMode;
-        this.outputMode = outputMode;
-    }
+  public BoilerplateParameters(DataProcessorInvocation graph, String htmlProperty, ExtractorMode extractorMode,
+                               OutputMode outputMode) {
+    super(graph);
+    this.htmlProperty = htmlProperty;
+    this.extractorMode = extractorMode;
+    this.outputMode = outputMode;
+  }
 
-    public String getHtmlProperty() {
-        return htmlProperty;
-    }
+  public String getHtmlProperty() {
+    return htmlProperty;
+  }
 
-    public ExtractorMode getExtractorMode() {
-        return extractorMode;
-    }
+  public ExtractorMode getExtractorMode() {
+    return extractorMode;
+  }
 
-    public OutputMode getOutputMode() {
-        return outputMode;
-    }
+  public OutputMode getOutputMode() {
+    return outputMode;
+  }
 }

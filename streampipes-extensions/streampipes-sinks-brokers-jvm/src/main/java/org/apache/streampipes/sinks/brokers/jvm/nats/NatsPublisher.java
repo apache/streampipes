@@ -35,48 +35,48 @@ import java.util.concurrent.TimeoutException;
 
 public class NatsPublisher implements EventSink<NatsParameters> {
 
-    private String subject;
-    private Connection natsConnection;
-    private JsonDataFormatDefinition dataFormatDefinition;
-    private static Logger LOG;
+  private String subject;
+  private Connection natsConnection;
+  private JsonDataFormatDefinition dataFormatDefinition;
+  private static Logger LOG;
 
-    public NatsPublisher() {
-        this.dataFormatDefinition = new JsonDataFormatDefinition();
+  public NatsPublisher() {
+    this.dataFormatDefinition = new JsonDataFormatDefinition();
+  }
+
+  @Override
+  public void onInvocation(NatsParameters parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
+
+    LOG = parameters.getGraph().getLogger(NatsPublisher.class);
+    var natsConfig = parameters.getNatsConfig();
+    this.subject = natsConfig.getSubject();
+    Options options = NatsUtils.makeNatsOptions(natsConfig);
+
+    try {
+      this.natsConnection = Nats.connect(options);
+    } catch (Exception e) {
+      LOG.error("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . " + e.toString());
     }
+  }
 
-    @Override
-    public void onInvocation(NatsParameters parameters, EventSinkRuntimeContext runtimeContext)
-            throws SpRuntimeException {
-
-        LOG = parameters.getGraph().getLogger(NatsPublisher.class);
-        var natsConfig = parameters.getNatsConfig();
-        this.subject = natsConfig.getSubject();
-        Options options = NatsUtils.makeNatsOptions(natsConfig);
-
-        try {
-            this.natsConnection = Nats.connect(options);
-        } catch (Exception e) {
-            LOG.error("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . " + e.toString());
-        }
+  @Override
+  public void onEvent(Event inputEvent) {
+    try {
+      Map<String, Object> event = inputEvent.getRaw();
+      natsConnection.publish(subject, dataFormatDefinition.fromMap(event));
+    } catch (SpRuntimeException e) {
+      LOG.error("Could not publish events to Nats broker. " + e.toString());
     }
+  }
 
-    @Override
-    public void onEvent(Event inputEvent) {
-        try {
-            Map<String, Object> event = inputEvent.getRaw();
-            natsConnection.publish(subject, dataFormatDefinition.fromMap(event));
-        } catch (SpRuntimeException e) {
-            LOG.error("Could not publish events to Nats broker. " + e.toString());
-        }
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    try {
+      natsConnection.flush(Duration.ofMillis(50));
+      natsConnection.close();
+    } catch (TimeoutException | InterruptedException e) {
+      LOG.error("Error when disconnecting with Nats broker. " + e.toString());
     }
-
-    @Override
-    public void onDetach() throws SpRuntimeException {
-        try {
-            natsConnection.flush(Duration.ofMillis(50));
-            natsConnection.close();
-        } catch (TimeoutException | InterruptedException e) {
-            LOG.error("Error when disconnecting with Nats broker. " + e.toString());
-        }
-    }
+  }
 }

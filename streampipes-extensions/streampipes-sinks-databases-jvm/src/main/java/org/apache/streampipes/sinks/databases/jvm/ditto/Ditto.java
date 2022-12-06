@@ -49,22 +49,23 @@ public class Ditto implements EventSink<DittoParameters> {
   private List<String> selectedFields;
 
   @Override
-  public void onInvocation(DittoParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(DittoParameters parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
 
     this.thingId = parameters.getThingId();
     this.featureId = parameters.getFeatureId();
     this.selectedFields = parameters.getSelectedFields();
 
     MessagingConfiguration configuration = WebSocketMessagingConfiguration.newBuilder()
-            .endpoint(parameters.getDittoApiEndpoint())
-            .build();
+        .endpoint(parameters.getDittoApiEndpoint())
+        .build();
     WebSocketMessagingProvider provider = WebSocketMessagingProvider.newInstance(configuration,
-            AuthenticationProviders
-                    .basic(BasicAuthenticationConfiguration.newBuilder()
-                            .username(parameters.getDittoUser())
-                            .password(parameters.getDittoPassword())
-                            .build()),
-            Executors.newFixedThreadPool(4));
+        AuthenticationProviders
+            .basic(BasicAuthenticationConfiguration.newBuilder()
+                .username(parameters.getDittoUser())
+                .password(parameters.getDittoPassword())
+                .build()),
+        Executors.newFixedThreadPool(4));
     this.client = DittoClients.newInstance(provider);
 
     TwinThingHandle twinHandle = client.twin().forId(ThingId.of(thingId));
@@ -86,7 +87,7 @@ public class Ditto implements EventSink<DittoParameters> {
     boolean present;
     try {
       present = twinHandle.retrieve().get().getFeatures().map(features -> features.getFeature(
-              featureId)).isPresent();
+          featureId)).isPresent();
     } catch (InterruptedException | ExecutionException e) {
       throw new SpRuntimeException(e);
     }
@@ -101,10 +102,10 @@ public class Ditto implements EventSink<DittoParameters> {
     Event reducedEvent = event.getSubset(selectedFields);
 
     Map<String, Object> raw = reducedEvent.getRaw();
-    for (String key: raw.keySet()) {
+    for (String key : raw.keySet()) {
       try {
         client.twin().forId(ThingId.of(this.thingId)).forFeature(this.featureId).putProperty(key,
-                String.valueOf(raw.get(key))).get();
+            String.valueOf(raw.get(key))).get();
       } catch (InterruptedException | ExecutionException e) {
         throw new SpRuntimeException(e);
       }

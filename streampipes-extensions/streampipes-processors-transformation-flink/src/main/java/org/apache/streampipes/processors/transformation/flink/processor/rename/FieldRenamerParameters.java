@@ -23,30 +23,30 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class FieldRenamerParameters extends EventProcessorBindingParams {
 
-	private String oldPropertyName;
-	private String newPropertyName;
-	
-	public FieldRenamerParameters(DataProcessorInvocation graph, String oldPropertyName, String newPropertyName) {
-		super(graph);
-		this.oldPropertyName = oldPropertyName;
-		this.newPropertyName = newPropertyName;
-	}
+  private String oldPropertyName;
+  private String newPropertyName;
 
-	public String getOldPropertyName() {
-		return oldPropertyName;
-	}
+  public FieldRenamerParameters(DataProcessorInvocation graph, String oldPropertyName, String newPropertyName) {
+    super(graph);
+    this.oldPropertyName = oldPropertyName;
+    this.newPropertyName = newPropertyName;
+  }
 
-	public void setOldPropertyName(String oldPropertyName) {
-		this.oldPropertyName = oldPropertyName;
-	}
+  public String getOldPropertyName() {
+    return oldPropertyName;
+  }
 
-	public String getNewPropertyName() {
-		return newPropertyName;
-	}
+  public void setOldPropertyName(String oldPropertyName) {
+    this.oldPropertyName = oldPropertyName;
+  }
 
-	public void setNewPropertyName(String newPropertyName) {
-		this.newPropertyName = newPropertyName;
-	}
+  public String getNewPropertyName() {
+    return newPropertyName;
+  }
 
-	
+  public void setNewPropertyName(String newPropertyName) {
+    this.newPropertyName = newPropertyName;
+  }
+
+
 }

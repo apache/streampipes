@@ -22,48 +22,49 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class SignalEdgeFilterParameters extends EventProcessorBindingParams {
-    private String booleanSignalField;
-    private String flank;
-    private Integer delay;
-    private String eventSelection;
+  private String booleanSignalField;
+  private String flank;
+  private Integer delay;
+  private String eventSelection;
 
-    public SignalEdgeFilterParameters(DataProcessorInvocation graph, String booleanSignalField, String flank, Integer delay, String eventSelection) {
-        super(graph);
-        this.booleanSignalField = booleanSignalField;
-        this.flank = flank;
-        this.delay = delay;
-        this.eventSelection = eventSelection;
-    }
+  public SignalEdgeFilterParameters(DataProcessorInvocation graph, String booleanSignalField, String flank,
+                                    Integer delay, String eventSelection) {
+    super(graph);
+    this.booleanSignalField = booleanSignalField;
+    this.flank = flank;
+    this.delay = delay;
+    this.eventSelection = eventSelection;
+  }
 
-    public String getBooleanSignalField() {
-        return booleanSignalField;
-    }
+  public String getBooleanSignalField() {
+    return booleanSignalField;
+  }
 
-    public void setBooleanSignalField(String booleanSignalField) {
-        this.booleanSignalField = booleanSignalField;
-    }
+  public void setBooleanSignalField(String booleanSignalField) {
+    this.booleanSignalField = booleanSignalField;
+  }
 
-    public String getFlank() {
-        return flank;
-    }
+  public String getFlank() {
+    return flank;
+  }
 
-    public void setFlank(String flank) {
-        this.flank = flank;
-    }
+  public void setFlank(String flank) {
+    this.flank = flank;
+  }
 
-    public Integer getDelay() {
-        return delay;
-    }
+  public Integer getDelay() {
+    return delay;
+  }
 
-    public void setDelay(Integer delay) {
-        this.delay = delay;
-    }
+  public void setDelay(Integer delay) {
+    this.delay = delay;
+  }
 
-    public String getEventSelection() {
-        return eventSelection;
-    }
+  public String getEventSelection() {
+    return eventSelection;
+  }
 
-    public void setEventSelection(String eventSelection) {
-        this.eventSelection = eventSelection;
-    }
+  public void setEventSelection(String eventSelection) {
+    this.eventSelection = eventSelection;
+  }
 }

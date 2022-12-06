@@ -18,14 +18,15 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.rest;
 
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
+
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 
@@ -49,16 +50,16 @@ public class RestPublisher implements EventSink<RestParameters> {
     try {
       json = jsonDataFormatDefinition.fromMap(inputEvent.getRaw());
     } catch (SpRuntimeException e) {
-      logger.error("Error while serializing event: " + inputEvent.getSourceInfo().getSourceId() + " Exception:" +
-              " " + e);
+      logger.error("Error while serializing event: " + inputEvent.getSourceInfo().getSourceId() + " Exception: "
+          + e);
     }
 
     try {
       Request.Post(url)
-              .bodyByteArray(json, ContentType.APPLICATION_JSON)
-              .connectTimeout(1000)
-              .socketTimeout(100000)
-              .execute().returnContent().asString();
+          .bodyByteArray(json, ContentType.APPLICATION_JSON)
+          .connectTimeout(1000)
+          .socketTimeout(100000)
+          .execute().returnContent().asString();
     } catch (IOException e) {
       logger.error("Error while sending data to endpoint: " + url + " Exception: " + e);
     }

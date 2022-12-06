@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,18 @@
  * limitations under the License.
  */
 package com.kohlschutter.boilerpipe.sax;
+
+import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
+import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
+import com.kohlschutter.boilerpipe.document.TextBlock;
+import com.kohlschutter.boilerpipe.document.TextDocument;
+import org.apache.xerces.parsers.AbstractSAXParser;
+import org.cyberneko.html.HTMLConfiguration;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,19 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.cyberneko.html.HTMLConfiguration;
-
-import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
-import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
-import com.kohlschutter.boilerpipe.document.TextBlock;
-import com.kohlschutter.boilerpipe.document.TextDocument;
 
 /**
  * Highlights text blocks in an HTML document that have been marked as "content" in the
@@ -80,7 +79,7 @@ public final class HTMLHighlighter implements Serializable {
 
   /**
    * Processes the given {@link TextDocument} and the original HTML text (as a String).
-   * 
+   *
    * @param doc The processed {@link TextDocument}.
    * @param origHTML The original HTML document.
    * @return The highlighted HTML.
@@ -94,7 +93,7 @@ public final class HTMLHighlighter implements Serializable {
   /**
    * Processes the given {@link TextDocument} and the original HTML text (as an {@link InputSource}
    * ).
-   * 
+   *
    * @param doc The processed {@link TextDocument}.
    * @param is The original HTML document.
    * @return The highlighted HTML.
@@ -135,7 +134,7 @@ public final class HTMLHighlighter implements Serializable {
   /**
    * Fetches the given {@link URL} using {@link HTMLFetcher} and processes the retrieved HTML using
    * the specified {@link BoilerpipeExtractor}.
-   * 
+   *
    * @param doc The processed {@link TextDocument}.
    * @param is The original HTML document.
    * @return The highlighted HTML.
@@ -179,7 +178,7 @@ public final class HTMLHighlighter implements Serializable {
 
   /**
    * Returns the extra stylesheet definition that will be inserted in the HEAD element.
-   * 
+   *
    * By default, this corresponds to a simple definition that marks text in class
    * "x-boilerpipe-mark1" as inline text with yellow background.
    */
@@ -189,9 +188,9 @@ public final class HTMLHighlighter implements Serializable {
 
   /**
    * Sets the extra stylesheet definition that will be inserted in the HEAD element.
-   * 
+   *
    * To disable, set it to the empty string: ""
-   * 
+   *
    * @param extraStyleSheet Plain HTML
    */
   public void setExtraStyleSheet(String extraStyleSheet) {
@@ -200,7 +199,7 @@ public final class HTMLHighlighter implements Serializable {
 
   /**
    * Returns the string that will be inserted before any highlighted HTML block.
-   * 
+   *
    * By default, this corresponds to <code>&lt;span class=&qupt;x-boilerpipe-mark1&quot;&gt;</code>
    */
   public String getPreHighlight() {
@@ -209,7 +208,7 @@ public final class HTMLHighlighter implements Serializable {
 
   /**
    * Sets the string that will be inserted prior to any highlighted HTML block.
-   * 
+   *
    * To disable, set it to the empty string: ""
    */
   public void setPreHighlight(String preHighlight) {
@@ -218,7 +217,7 @@ public final class HTMLHighlighter implements Serializable {
 
   /**
    * Returns the string that will be inserted after any highlighted HTML block.
-   * 
+   *
    * By default, this corresponds to <code>&lt;/span&gt;</code>
    */
   public String getPostHighlight() {
@@ -227,7 +226,7 @@ public final class HTMLHighlighter implements Serializable {
 
   /**
    * Sets the string that will be inserted after any highlighted HTML block.
-   * 
+   *
    * To disable, set it to the empty string: ""
    */
   public void setPostHighlight(String postHighlight) {
@@ -272,6 +271,7 @@ public final class HTMLHighlighter implements Serializable {
     }
   };
   private static Map<String, TagAction> TAG_ACTIONS = new HashMap<String, TagAction>();
+
   static {
     TAG_ACTIONS.put("STYLE", TA_IGNORABLE_ELEMENT);
     TAG_ACTIONS.put("SCRIPT", TA_IGNORABLE_ELEMENT);

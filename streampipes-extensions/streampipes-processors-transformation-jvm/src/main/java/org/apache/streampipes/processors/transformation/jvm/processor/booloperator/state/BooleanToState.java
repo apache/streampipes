@@ -24,24 +24,22 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BooleanToState implements EventProcessor<BooleanToStateParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private List<String> stateFields;
-  private String  defaultState;
+  private String defaultState;
   private Map<String, String> jsonConfiguration;
 
   @Override
   public void onInvocation(BooleanToStateParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanInverterParameters.getGraph().getLogger(BooleanToState.class);
+    log = booleanInverterParameters.getGraph().getLogger(BooleanToState.class);
     this.stateFields = booleanInverterParameters.getStateFields();
     this.defaultState = booleanInverterParameters.getDefaultState();
     this.jsonConfiguration = booleanInverterParameters.getJsonConfiguration();

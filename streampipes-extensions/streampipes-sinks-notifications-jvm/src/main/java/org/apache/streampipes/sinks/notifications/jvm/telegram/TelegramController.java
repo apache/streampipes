@@ -32,34 +32,34 @@ import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
 
 public class TelegramController extends StandaloneEventSinkDeclarer<TelegramParameters> {
-    private static final String CHANNEL_NAME_OR_CHAT_ID = "channel-chat-name";
-    private static final String MESSAGE_TEXT = "message-text";
-    private static final String BOT_API_KEY = "api-key";
+  private static final String CHANNEL_NAME_OR_CHAT_ID = "channel-chat-name";
+  private static final String MESSAGE_TEXT = "message-text";
+  private static final String BOT_API_KEY = "api-key";
 
-    @Override
-    public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.telegram")
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .category(DataSinkType.NOTIFICATION)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
-                .requiredSecret(Labels.withId(BOT_API_KEY))
-                .requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
-                .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true)
-                .build();
-    }
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.telegram")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.NOTIFICATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredSecret(Labels.withId(BOT_API_KEY))
+        .requiredTextParameter(Labels.withId(CHANNEL_NAME_OR_CHAT_ID))
+        .requiredTextParameter(Labels.withId(MESSAGE_TEXT), true, true, true)
+        .build();
+  }
 
 
-    @Override
-    public ConfiguredEventSink<TelegramParameters> onInvocation(DataSinkInvocation graph,
-                                                                DataSinkParameterExtractor extractor) {
-        String apiKey = extractor.secretValue(BOT_API_KEY);
-        String channelOrChatId = extractor.singleValueParameter(CHANNEL_NAME_OR_CHAT_ID, String.class);
-        String message = extractor.singleValueParameter(MESSAGE_TEXT, String.class);
-        TelegramParameters params = new TelegramParameters(graph, apiKey, channelOrChatId, message);
-        return new ConfiguredEventSink<>(params, TelegramPublisher::new);
-    }
+  @Override
+  public ConfiguredEventSink<TelegramParameters> onInvocation(DataSinkInvocation graph,
+                                                              DataSinkParameterExtractor extractor) {
+    String apiKey = extractor.secretValue(BOT_API_KEY);
+    String channelOrChatId = extractor.singleValueParameter(CHANNEL_NAME_OR_CHAT_ID, String.class);
+    String message = extractor.singleValueParameter(MESSAGE_TEXT, String.class);
+    TelegramParameters params = new TelegramParameters(graph, apiKey, channelOrChatId, message);
+    return new ConfiguredEventSink<>(params, TelegramPublisher::new);
+  }
 }

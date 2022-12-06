@@ -16,27 +16,29 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.flink.processor.measurementUnitConverter;
+package org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
-public class MeasurementUnitConverterProgram extends AbstractFlinkTransformationProgram<MeasurementUnitConverterParameters> {
+import org.apache.flink.streaming.api.datastream.DataStream;
 
-    public MeasurementUnitConverterProgram(MeasurementUnitConverterParameters params,
-                                           ConfigExtractor configExtractor,
-                                           StreamPipesClient streamPipesClient) {
-        super(params, configExtractor, streamPipesClient);
-    }
+public class MeasurementUnitConverterProgram
+    extends AbstractFlinkTransformationProgram<MeasurementUnitConverterParameters> {
 
-    @Override
-    protected DataStream<Event> getApplicationLogic(DataStream<Event>...
-                                                                              dataStreams) {
-        return dataStreams[0].flatMap(new MeasurementUnitConverter(params.getInputUnit()
-                .getResource().toString(), params.getOutputUnit().getResource().toString(),
-                params.getConvertProperty()));
-    }
+  public MeasurementUnitConverterProgram(MeasurementUnitConverterParameters params,
+                                         ConfigExtractor configExtractor,
+                                         StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
+  }
+
+  @Override
+  protected DataStream<Event> getApplicationLogic(DataStream<Event>...
+                                                      dataStreams) {
+    return dataStreams[0].flatMap(new MeasurementUnitConverter(params.getInputUnit()
+        .getResource().toString(), params.getOutputUnit().getResource().toString(),
+        params.getConvertProperty()));
+  }
 }

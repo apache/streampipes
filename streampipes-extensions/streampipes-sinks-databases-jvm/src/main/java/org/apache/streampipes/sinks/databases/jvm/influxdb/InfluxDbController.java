@@ -48,22 +48,22 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.influxdb")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.DATABASE)
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-                    EpRequirements.timestampReq(),
-                    Labels.withId(TIMESTAMP_MAPPING_KEY),
-                    PropertyScope.NONE).build())
-            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 8086)
-            .requiredIntegerParameter(Labels.withId(BATCH_INTERVAL_ACTIONS_KEY))
-            .requiredIntegerParameter(Labels.withId(MAX_FLUSH_DURATION_KEY), 2000)
-            .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.DATABASE)
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+            EpRequirements.timestampReq(),
+            Labels.withId(TIMESTAMP_MAPPING_KEY),
+            PropertyScope.NONE).build())
+        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 8086)
+        .requiredIntegerParameter(Labels.withId(BATCH_INTERVAL_ACTIONS_KEY))
+        .requiredIntegerParameter(Labels.withId(MAX_FLUSH_DURATION_KEY), 2000)
+        .requiredTextParameter(Labels.withId(DATABASE_NAME_KEY))
+        .requiredTextParameter(Labels.withId(DATABASE_MEASUREMENT_KEY))
+        .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
+        .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
+        .build();
   }
 
   @Override
@@ -82,15 +82,15 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     Integer flush_duration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);
 
     InfluxDbParameters params = new InfluxDbParameters(graph,
-            hostname,
-            port,
-            dbName,
-            measureName,
-            user,
-            password,
-            timestampField,
-            batch_size,
-            flush_duration);
+        hostname,
+        port,
+        dbName,
+        measureName,
+        user,
+        password,
+        timestampField,
+        batch_size,
+        flush_duration);
 
     return new ConfiguredEventSink<>(params, InfluxDb::new);
   }

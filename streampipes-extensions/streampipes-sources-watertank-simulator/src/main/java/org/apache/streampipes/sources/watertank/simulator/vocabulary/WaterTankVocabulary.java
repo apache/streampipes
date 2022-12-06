@@ -32,7 +32,7 @@ public class WaterTankVocabulary {
   public static final String HAS_TEMPERATURE = SO.Number;
   public static final String HAS_PRESSURE = SO.Number;
 
-  public static final String HAS_VOLUME_FLOW= SO.Number;
+  public static final String HAS_VOLUME_FLOW = SO.Number;
   public static final String HAS_SENSOR_FAULT_FLAGS = SO.Number;
   public static final String HAS_DENSITY = SO.Number;
 }

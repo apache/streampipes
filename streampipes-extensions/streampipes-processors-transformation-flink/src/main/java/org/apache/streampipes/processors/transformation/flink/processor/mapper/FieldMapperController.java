@@ -42,8 +42,8 @@ import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import java.util.List;
 
 public class FieldMapperController extends
-        FlinkDataProcessorDeclarer<FieldMapperParameters> implements
-        ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+    FlinkDataProcessorDeclarer<FieldMapperParameters> implements
+    ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String REPLACE_PROPERTIES = "replaceProperties";
   private static final String FIELD_NAME = "fieldName";
@@ -51,16 +51,16 @@ public class FieldMapperController extends
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.flink.field-mapper")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId
-                            (REPLACE_PROPERTIES), PropertyScope.NONE)
-                    .build())
-            .requiredTextParameter(Labels.withId(FIELD_NAME))
-            .outputStrategy(OutputStrategies.customTransformation())
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(), Labels.withId
+                (REPLACE_PROPERTIES), PropertyScope.NONE)
+            .build())
+        .requiredTextParameter(Labels.withId(FIELD_NAME))
+        .outputStrategy(OutputStrategies.customTransformation())
+        .build();
   }
 
   @Override
@@ -79,7 +79,7 @@ public class FieldMapperController extends
 
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
-                                           ProcessingElementParameterExtractor extractor)  {
+                                           ProcessingElementParameterExtractor extractor) {
 
     List<String> replacePropertyNames = extractor.mappingPropertyValues(REPLACE_PROPERTIES);
     String newFieldName = extractor.singleValueParameter(FIELD_NAME, String.class);

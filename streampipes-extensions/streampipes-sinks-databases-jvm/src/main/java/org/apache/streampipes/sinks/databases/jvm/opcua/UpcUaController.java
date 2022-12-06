@@ -26,7 +26,9 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.DataSinkBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDeclarer;
@@ -43,19 +45,19 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.opcua")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.FORWARD)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(MAPPING_PROPERTY_KEY),
-                            PropertyScope.NONE).build())
-            .requiredTextParameter(Labels.withId(OPC_SERVER_KEY))
-            .requiredIntegerParameter(Labels.withId(OPC_PORT_KEY))
-            .requiredIntegerParameter(Labels.withId(OPC_NAMESPACE_INDEX_KEY))
-            .requiredTextParameter(Labels.withId(OPC_NODE_ID_KEY))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.FORWARD)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(),
+                Labels.withId(MAPPING_PROPERTY_KEY),
+                PropertyScope.NONE).build())
+        .requiredTextParameter(Labels.withId(OPC_SERVER_KEY))
+        .requiredIntegerParameter(Labels.withId(OPC_PORT_KEY))
+        .requiredIntegerParameter(Labels.withId(OPC_NAMESPACE_INDEX_KEY))
+        .requiredTextParameter(Labels.withId(OPC_NODE_ID_KEY))
+        .build();
   }
 
 
@@ -73,14 +75,14 @@ public class UpcUaController extends StandaloneEventSinkDeclarer<OpcUaParameters
 
     String mappingPropertyType = "";
     try {
-      mappingPropertyType = extractor.getEventPropertyTypeBySelector(mappingPropertySelector);;
+      mappingPropertyType = extractor.getEventPropertyTypeBySelector(mappingPropertySelector);
     } catch (SpRuntimeException e) {
       e.printStackTrace();
     }
 
 
     OpcUaParameters params = new OpcUaParameters(graph, hostname, port, nodeId, nameSpaceIndex,
-            mappingPropertySelector, mappingPropertyType);
+        mappingPropertySelector, mappingPropertyType);
 
     return new ConfiguredEventSink<>(params, OpcUa::new);
   }

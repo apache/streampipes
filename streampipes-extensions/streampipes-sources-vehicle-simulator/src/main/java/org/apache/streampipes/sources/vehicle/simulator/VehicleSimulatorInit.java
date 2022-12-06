@@ -36,9 +36,9 @@ public class VehicleSimulatorInit extends StandaloneModelSubmitter {
             "Vehicle Simulator",
             "",
             8090)
-            .registerPipelineElement(new VehicleStream())
-            .addConfig(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the vehicle simulator")
-            .addConfig(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the vehicle simulator")
-            .build();
+        .registerPipelineElement(new VehicleStream())
+        .addConfig(ConfigKeys.KAFKA_HOST, "kafka", "Host for kafka of the vehicle simulator")
+        .addConfig(ConfigKeys.KAFKA_PORT, 9092, "Port for kafka of the vehicle simulator")
+        .build();
   }
 }

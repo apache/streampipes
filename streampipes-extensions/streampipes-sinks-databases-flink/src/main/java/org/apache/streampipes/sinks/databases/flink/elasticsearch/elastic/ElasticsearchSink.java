@@ -32,10 +32,12 @@ import java.util.Map;
  * against a cluster for each incoming element.
  *
  * <p>The sink internally uses a {@link RestHighLevelClient} to communicate with an Elasticsearch cluster.
- * The sink will fail if no cluster can be connected to using the provided transport addresses passed to the constructor.
+ * The sink will fail if no cluster can be connected to using the provided transport addresses passed to the
+ * constructor.
  *
- * <p>The {@link Map} passed to the constructor is used to create the {@code TransportClient}. The config keys can be found
- * in the <a href="https://www.elastic.io">Elasticsearch documentation</a>. An important setting is {@code cluster.name},
+ * <p>The {@link Map} passed to the constructor is used to create the {@code TransportClient}.
+ * The config keys can be found in the <a href="https://www.elastic.io">Elasticsearch documentation</a>.
+ * An important setting is {@code cluster.name},
  * which should be set to the name of the cluster that the sink should emit to.
  *
  * <p>Internally, the sink will use a {@link BulkProcessor} to send {@link ActionRequest ActionRequests}.
@@ -59,32 +61,33 @@ import java.util.Map;
  */
 public class ElasticsearchSink<T> extends ElasticsearchSinkBase<T> {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * Creates a new {@code ElasticsearchSink} that connects to the cluster using a {@link RestHighLevelClient}.
-	 *
-	 * @param elasticsearchSinkFunction This is used to generate multiple {@link ActionRequest} from the incoming element
-	 * @param httpHosts The list of {@HttpHost} to which the {@link RestHighLevelClient} connects to.
-	 */
-	public ElasticsearchSink(Map<String, String> userConfig, List<HttpHost> httpHosts, ElasticsearchSinkFunction<T> elasticsearchSinkFunction) {
+  /**
+   * Creates a new {@code ElasticsearchSink} that connects to the cluster using a {@link RestHighLevelClient}.
+   *
+   * @param elasticsearchSinkFunction This is used to generate multiple {@link ActionRequest} from the incoming element
+   * @param httpHosts                 The list of {@HttpHost} to which the {@link RestHighLevelClient} connects to.
+   */
+  public ElasticsearchSink(Map<String, String> userConfig, List<HttpHost> httpHosts,
+                           ElasticsearchSinkFunction<T> elasticsearchSinkFunction) {
 
-		this(userConfig, httpHosts, elasticsearchSinkFunction, new NoOpFailureHandler());
-	}
+    this(userConfig, httpHosts, elasticsearchSinkFunction, new NoOpFailureHandler());
+  }
 
-	/**
-	 * Creates a new {@code ElasticsearchSink} that connects to the cluster using a {@link RestHighLevelClient}.
-	 *
-	 * @param elasticsearchSinkFunction This is used to generate multiple {@link ActionRequest} from the incoming element
-	 * @param failureHandler This is used to handle failed {@link ActionRequest}
-	 * @param httpHosts The list of {@HttpHost} to which the {@link RestHighLevelClient} connects to.
-	 */
-	public ElasticsearchSink(
-		Map<String, String> userConfig,
-		List<HttpHost> httpHosts,
-		ElasticsearchSinkFunction<T> elasticsearchSinkFunction,
-		ActionRequestFailureHandler failureHandler) {
+  /**
+   * Creates a new {@code ElasticsearchSink} that connects to the cluster using a {@link RestHighLevelClient}.
+   *
+   * @param elasticsearchSinkFunction This is used to generate multiple {@link ActionRequest} from the incoming element
+   * @param failureHandler            This is used to handle failed {@link ActionRequest}
+   * @param httpHosts                 The list of {@HttpHost} to which the {@link RestHighLevelClient} connects to.
+   */
+  public ElasticsearchSink(
+      Map<String, String> userConfig,
+      List<HttpHost> httpHosts,
+      ElasticsearchSinkFunction<T> elasticsearchSinkFunction,
+      ActionRequestFailureHandler failureHandler) {
 
-		super(new Elasticsearch6ApiCallBridge(httpHosts),  userConfig, elasticsearchSinkFunction, failureHandler);
-	}
+    super(new Elasticsearch6ApiCallBridge(httpHosts), userConfig, elasticsearchSinkFunction, failureHandler);
+  }
 }

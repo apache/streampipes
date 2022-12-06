@@ -31,25 +31,25 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class BulkProcessorIndexer implements RequestIndexer {
 
-	private final BulkProcessor bulkProcessor;
-	private final boolean flushOnCheckpoint;
-	private final AtomicLong numPendingRequestsRef;
+  private final BulkProcessor bulkProcessor;
+  private final boolean flushOnCheckpoint;
+  private final AtomicLong numPendingRequestsRef;
 
-	public BulkProcessorIndexer(BulkProcessor bulkProcessor,
-								boolean flushOnCheckpoint,
-								AtomicLong numPendingRequests) {
-		this.bulkProcessor = bulkProcessor;
-		this.flushOnCheckpoint = flushOnCheckpoint;
-		this.numPendingRequestsRef = numPendingRequests;
-	}
+  public BulkProcessorIndexer(BulkProcessor bulkProcessor,
+                              boolean flushOnCheckpoint,
+                              AtomicLong numPendingRequests) {
+    this.bulkProcessor = bulkProcessor;
+    this.flushOnCheckpoint = flushOnCheckpoint;
+    this.numPendingRequestsRef = numPendingRequests;
+  }
 
-	@Override
-	public void add(ActionRequest... actionRequests) {
-		for (ActionRequest actionRequest : actionRequests) {
-			if (flushOnCheckpoint) {
-				numPendingRequestsRef.getAndIncrement();
-			}
-			this.bulkProcessor.add((DocWriteRequest) actionRequest);
-		}
-	}
+  @Override
+  public void add(ActionRequest... actionRequests) {
+    for (ActionRequest actionRequest : actionRequests) {
+      if (flushOnCheckpoint) {
+        numPendingRequestsRef.getAndIncrement();
+      }
+      this.bulkProcessor.add((DocWriteRequest) actionRequest);
+    }
+  }
 }

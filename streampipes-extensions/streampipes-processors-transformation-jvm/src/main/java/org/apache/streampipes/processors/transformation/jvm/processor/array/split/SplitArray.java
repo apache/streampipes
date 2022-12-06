@@ -33,14 +33,15 @@ import java.util.Map;
 
 public class SplitArray implements EventProcessor<SplitArrayParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private SplitArrayParameters splitArrayParameters;
 
 
   @Override
-  public void onInvocation(SplitArrayParameters splitArrayParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-    LOG = splitArrayParameters.getGraph().getLogger(SplitArray.class);
+  public void onInvocation(SplitArrayParameters splitArrayParameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    log = splitArrayParameters.getGraph().getLogger(SplitArray.class);
     this.splitArrayParameters = splitArrayParameters;
   }
 
@@ -50,15 +51,15 @@ public class SplitArray implements EventProcessor<SplitArrayParameters> {
     List<String> keepProperties = splitArrayParameters.getKeepProperties();
 
     List<AbstractField> allEvents = inputEvent.getFieldBySelector(arrayField).getAsList()
-            .parseAsCustomType(o -> {
-              if (o instanceof NestedField){
-                return (NestedField) o;
-              } else if (o instanceof ListField) {
-                return (ListField) o;
-              } else {
-                return (PrimitiveField) o;
-              }
-            });
+        .parseAsCustomType(o -> {
+          if (o instanceof NestedField) {
+            return (NestedField) o;
+          } else if (o instanceof ListField) {
+            return (ListField) o;
+          } else {
+            return (PrimitiveField) o;
+          }
+        });
 
     for (AbstractField field : allEvents) {
       Event outEvent = new Event();

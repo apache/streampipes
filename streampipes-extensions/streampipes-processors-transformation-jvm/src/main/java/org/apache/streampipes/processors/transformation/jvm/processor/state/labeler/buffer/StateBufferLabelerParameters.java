@@ -25,92 +25,92 @@ import java.util.List;
 
 public class StateBufferLabelerParameters extends EventProcessorBindingParams {
 
-    private String sensorListValueProperty;
-    private String stateProperty;
-    private String stateFilter;
-    private String selectedOperation;
-    private String labelName;
-    private List<Double> numberValues;
-    private List<String> labelStrings;
-    private List<String> comparators;
+  private String sensorListValueProperty;
+  private String stateProperty;
+  private String stateFilter;
+  private String selectedOperation;
+  private String labelName;
+  private List<Double> numberValues;
+  private List<String> labelStrings;
+  private List<String> comparators;
 
-    public StateBufferLabelerParameters(DataProcessorInvocation graph,
-                                        String sensorListValueProperty,
-                                        String stateProperty,
-                                        String stateFilter,
-                                        String selectedOperation,
-                                        String labelName,
-                                        List<Double> numberValues,
-                                        List<String> labelStrings,
-                                        List<String> comparators) {
-        super(graph);
-        this.sensorListValueProperty = sensorListValueProperty;
-        this.stateProperty = stateProperty;
-        this.stateFilter = stateFilter;
-        this.selectedOperation = selectedOperation;
-        this.labelName = labelName;
-        this.numberValues = numberValues;
-        this.labelStrings = labelStrings;
-        this.comparators = comparators;
-    }
+  public StateBufferLabelerParameters(DataProcessorInvocation graph,
+                                      String sensorListValueProperty,
+                                      String stateProperty,
+                                      String stateFilter,
+                                      String selectedOperation,
+                                      String labelName,
+                                      List<Double> numberValues,
+                                      List<String> labelStrings,
+                                      List<String> comparators) {
+    super(graph);
+    this.sensorListValueProperty = sensorListValueProperty;
+    this.stateProperty = stateProperty;
+    this.stateFilter = stateFilter;
+    this.selectedOperation = selectedOperation;
+    this.labelName = labelName;
+    this.numberValues = numberValues;
+    this.labelStrings = labelStrings;
+    this.comparators = comparators;
+  }
 
-    public String getSensorListValueProperty() {
-        return sensorListValueProperty;
-    }
+  public String getSensorListValueProperty() {
+    return sensorListValueProperty;
+  }
 
-    public void setSensorListValueProperty(String sensorListValueProperty) {
-        this.sensorListValueProperty = sensorListValueProperty;
-    }
+  public void setSensorListValueProperty(String sensorListValueProperty) {
+    this.sensorListValueProperty = sensorListValueProperty;
+  }
 
-    public String getStateFilter() {
-        return stateFilter;
-    }
+  public String getStateFilter() {
+    return stateFilter;
+  }
 
-    public void setStateFilter(String stateFilter) {
-        this.stateFilter = stateFilter;
-    }
+  public void setStateFilter(String stateFilter) {
+    this.stateFilter = stateFilter;
+  }
 
-    public String getSelectedOperation() {
-        return selectedOperation;
-    }
+  public String getSelectedOperation() {
+    return selectedOperation;
+  }
 
-    public void setSelectedOperation(String selectedOperation) {
-        this.selectedOperation = selectedOperation;
-    }
+  public void setSelectedOperation(String selectedOperation) {
+    this.selectedOperation = selectedOperation;
+  }
 
-    public String getStateProperty() {
-        return stateProperty;
-    }
+  public String getStateProperty() {
+    return stateProperty;
+  }
 
-    public void setStateProperty(String stateProperty) {
-        this.stateProperty = stateProperty;
-    }
+  public void setStateProperty(String stateProperty) {
+    this.stateProperty = stateProperty;
+  }
 
-    public List<Double> getNumberValues() {
-        return numberValues;
-    }
+  public List<Double> getNumberValues() {
+    return numberValues;
+  }
 
-    public void setNumberValues(List<Double> numberValues) {
-        this.numberValues = numberValues;
-    }
+  public void setNumberValues(List<Double> numberValues) {
+    this.numberValues = numberValues;
+  }
 
-    public List<String> getLabelStrings() {
-        return labelStrings;
-    }
+  public List<String> getLabelStrings() {
+    return labelStrings;
+  }
 
-    public void setLabelStrings(List<String> labelStrings) {
-        this.labelStrings = labelStrings;
-    }
+  public void setLabelStrings(List<String> labelStrings) {
+    this.labelStrings = labelStrings;
+  }
 
-    public List<String> getComparators() {
-        return comparators;
-    }
+  public List<String> getComparators() {
+    return comparators;
+  }
 
-    public void setComparators(List<String> comparators) {
-        this.comparators = comparators;
-    }
+  public void setComparators(List<String> comparators) {
+    this.comparators = comparators;
+  }
 
-    public String getLabelName() {
-        return labelName;
-    }
+  public String getLabelName() {
+    return labelName;
+  }
 }

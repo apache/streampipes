@@ -29,7 +29,8 @@ public class BufferRestParameters extends EventSinkBindingParams {
   private List<String> fieldsToSend;
   private int bufferSize;
 
-  public BufferRestParameters(DataSinkInvocation graph, List<String> fieldsToSend, String restEndpointURI, int bufferSize) {
+  public BufferRestParameters(DataSinkInvocation graph, List<String> fieldsToSend, String restEndpointURI,
+                              int bufferSize) {
     super(graph);
     this.fieldsToSend = fieldsToSend;
     this.restEndpointURI = restEndpointURI;

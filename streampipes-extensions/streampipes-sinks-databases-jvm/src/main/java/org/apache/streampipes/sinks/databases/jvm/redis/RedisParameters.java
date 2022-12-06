@@ -23,92 +23,92 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class RedisParameters extends EventSinkBindingParams {
 
-    private String primaryKey;
-    private Boolean autoIncrement;
-    private Integer ttl;
-    private String redisHost;
-    private Integer redisPort;
-    private String redisPassword;
-    private String redisClient;
-    private Integer redisIndex;
-    private Integer redisPoolMaxActive;
-    private Integer redisPoolMaxIdle;
-    private Integer redisPoolMaxWait;
-    private Integer redisPoolTimeout;
+  private String primaryKey;
+  private Boolean autoIncrement;
+  private Integer ttl;
+  private String redisHost;
+  private Integer redisPort;
+  private String redisPassword;
+  private String redisClient;
+  private Integer redisIndex;
+  private Integer redisPoolMaxActive;
+  private Integer redisPoolMaxIdle;
+  private Integer redisPoolMaxWait;
+  private Integer redisPoolTimeout;
 
-    public RedisParameters(DataSinkInvocation graph,
-                           String primaryKey,
-                           Boolean autoIncrement,
-                           Integer ttl,
-                           String redisHost,
-                           Integer redisPort,
-                           String redisPassword,
-                           String redisClient,
-                           Integer redisIndex,
-                           Integer redisPoolMaxActive,
-                           Integer redisPoolMaxIdle,
-                           Integer redisPoolMaxWait,
-                           Integer redisPoolTimeout) {
-        super(graph);
-        this.primaryKey = primaryKey;
-        this.autoIncrement = autoIncrement;
-        this.ttl = ttl;
-        this.redisHost = redisHost;
-        this.redisPort = redisPort;
-        this.redisPassword = redisPassword;
-        this.redisClient = redisClient;
-        this.redisIndex = redisIndex;
-        this.redisPoolMaxActive = redisPoolMaxActive;
-        this.redisPoolMaxIdle = redisPoolMaxIdle;
-        this.redisPoolMaxWait = redisPoolMaxWait;
-        this.redisPoolTimeout = redisPoolTimeout;
-    }
+  public RedisParameters(DataSinkInvocation graph,
+                         String primaryKey,
+                         Boolean autoIncrement,
+                         Integer ttl,
+                         String redisHost,
+                         Integer redisPort,
+                         String redisPassword,
+                         String redisClient,
+                         Integer redisIndex,
+                         Integer redisPoolMaxActive,
+                         Integer redisPoolMaxIdle,
+                         Integer redisPoolMaxWait,
+                         Integer redisPoolTimeout) {
+    super(graph);
+    this.primaryKey = primaryKey;
+    this.autoIncrement = autoIncrement;
+    this.ttl = ttl;
+    this.redisHost = redisHost;
+    this.redisPort = redisPort;
+    this.redisPassword = redisPassword;
+    this.redisClient = redisClient;
+    this.redisIndex = redisIndex;
+    this.redisPoolMaxActive = redisPoolMaxActive;
+    this.redisPoolMaxIdle = redisPoolMaxIdle;
+    this.redisPoolMaxWait = redisPoolMaxWait;
+    this.redisPoolTimeout = redisPoolTimeout;
+  }
 
-    public String getPrimaryKey() {
-        return primaryKey;
-    }
+  public String getPrimaryKey() {
+    return primaryKey;
+  }
 
-    public Boolean isAutoIncrement() {
-        return autoIncrement;
-    }
+  public Boolean isAutoIncrement() {
+    return autoIncrement;
+  }
 
-    public Integer getTTL() {
-        return ttl;
-    }
+  public Integer getTTL() {
+    return ttl;
+  }
 
-    public String getRedisHost() {
-        return redisHost;
-    }
+  public String getRedisHost() {
+    return redisHost;
+  }
 
-    public Integer getRedisPort() {
-        return redisPort;
-    }
+  public Integer getRedisPort() {
+    return redisPort;
+  }
 
-    public String getRedisPassword() {
-        return redisPassword;
-    }
+  public String getRedisPassword() {
+    return redisPassword;
+  }
 
-    public String getRedisClient() {
-        return redisClient;
-    }
+  public String getRedisClient() {
+    return redisClient;
+  }
 
-    public Integer getRedisIndex() {
-        return redisIndex;
-    }
+  public Integer getRedisIndex() {
+    return redisIndex;
+  }
 
-    public Integer getRedisPoolMaxActive() {
-        return redisPoolMaxActive;
-    }
+  public Integer getRedisPoolMaxActive() {
+    return redisPoolMaxActive;
+  }
 
-    public Integer getRedisPoolMaxIdle() {
-        return redisPoolMaxIdle;
-    }
+  public Integer getRedisPoolMaxIdle() {
+    return redisPoolMaxIdle;
+  }
 
-    public Integer getRedisPoolMaxWait() {
-        return redisPoolMaxWait;
-    }
+  public Integer getRedisPoolMaxWait() {
+    return redisPoolMaxWait;
+  }
 
-    public Integer getRedisPoolTimeout() {
-        return redisPoolTimeout;
-    }
+  public Integer getRedisPoolTimeout() {
+    return redisPoolTimeout;
+  }
 }

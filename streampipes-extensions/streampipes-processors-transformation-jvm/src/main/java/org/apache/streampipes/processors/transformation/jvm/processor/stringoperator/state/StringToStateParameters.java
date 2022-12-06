@@ -24,19 +24,19 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 import java.util.List;
 
 public class StringToStateParameters extends EventProcessorBindingParams {
-    private List<String> stateFields;
+  private List<String> stateFields;
 
-    public StringToStateParameters(DataProcessorInvocation graph, List<String> stateFields) {
-        super(graph);
-        this.stateFields = stateFields;
-    }
+  public StringToStateParameters(DataProcessorInvocation graph, List<String> stateFields) {
+    super(graph);
+    this.stateFields = stateFields;
+  }
 
-    public List<String> getStateFields() {
-        return stateFields;
-    }
+  public List<String> getStateFields() {
+    return stateFields;
+  }
 
-    public void setStateFields(List<String> stateFields) {
-        this.stateFields = stateFields;
-    }
+  public void setStateFields(List<String> stateFields) {
+    this.stateFields = stateFields;
+  }
 
 }

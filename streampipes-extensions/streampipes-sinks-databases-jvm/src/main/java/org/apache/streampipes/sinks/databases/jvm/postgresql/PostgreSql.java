@@ -30,31 +30,34 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
 
   private PostgreSqlParameters params;
 
-  private Logger LOG;
+  private Logger log;
 
   @Override
-  public void onInvocation(PostgreSqlParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(PostgreSqlParameters parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
 
     this.params = parameters;
-    this.LOG = parameters.getGraph().getLogger(PostgreSql.class);
+    this.log = parameters.getGraph().getLogger(PostgreSql.class);
 
     // get(0) because it is the only input stream of the sink (and not two)
     // See (https://www.postgresql.org/docs/current/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS)
     // for allowed postgres identifiers (for the regex)
     initializeJdbc(
-            parameters.getGraph().getInputStreams().get(0).getEventSchema(),
-            parameters,
-            SupportedDbEngines.POSTGRESQL,
-            this.LOG);
+        parameters.getGraph().getInputStreams().get(0).getEventSchema(),
+        parameters,
+        SupportedDbEngines.POSTGRESQL,
+        this.log);
   }
+
   @Override
   protected void extractTableInformation() {
 
     String query = "SELECT * FROM information_schema.columns WHERE table_name = ? ;";
 
-    String [] queryParameter= new String[] {params.getDbTable()};
+    String[] queryParameter = new String[]{params.getDbTable()};
 
-    this.tableDescription.extractTableInformation(this.statementHandler.preparedStatement, this.connection, query, queryParameter);
+    this.tableDescription.extractTableInformation(this.statementHandler.preparedStatement, this.connection, query,
+        queryParameter);
   }
 
   @Override
@@ -63,7 +66,7 @@ public class PostgreSql extends JdbcClient implements EventSink<PostgreSqlParame
       save(event);
     } catch (SpRuntimeException e) {
       //TODO: error or warn?
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
       //e.printStackTrace();
     }
   }

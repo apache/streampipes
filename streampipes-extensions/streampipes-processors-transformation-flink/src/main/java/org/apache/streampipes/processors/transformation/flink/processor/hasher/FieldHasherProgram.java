@@ -18,28 +18,29 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.AbstractFlinkTransformationProgram;
 
+import org.apache.flink.streaming.api.datastream.DataStream;
+
 import java.io.Serializable;
 
 public class FieldHasherProgram extends AbstractFlinkTransformationProgram<FieldHasherParameters>
-	implements Serializable{
+    implements Serializable {
 
-	public FieldHasherProgram(FieldHasherParameters params,
-							  ConfigExtractor configExtractor,
-							  StreamPipesClient streamPipesClient) {
-		super(params, configExtractor, streamPipesClient);
-	}
+  public FieldHasherProgram(FieldHasherParameters params,
+                            ConfigExtractor configExtractor,
+                            StreamPipesClient streamPipesClient) {
+    super(params, configExtractor, streamPipesClient);
+  }
 
-	@Override
-	protected DataStream<Event> getApplicationLogic(
-			DataStream<Event>... messageStream) {
-		return messageStream[0].flatMap(new FieldHasher(bindingParams.getPropertyName(),
-				bindingParams.getHashAlgorithmType().hashAlgorithm()));
-	}
+  @Override
+  protected DataStream<Event> getApplicationLogic(
+      DataStream<Event>... messageStream) {
+    return messageStream[0].flatMap(new FieldHasher(bindingParams.getPropertyName(),
+        bindingParams.getHashAlgorithmType().hashAlgorithm()));
+  }
 
 }

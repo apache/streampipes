@@ -19,5 +19,5 @@
 package org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer;
 
 public interface BufferListener {
-    void bufferFull(String messagesJsonArray);
+  void bufferFull(String messagesJsonArray);
 }

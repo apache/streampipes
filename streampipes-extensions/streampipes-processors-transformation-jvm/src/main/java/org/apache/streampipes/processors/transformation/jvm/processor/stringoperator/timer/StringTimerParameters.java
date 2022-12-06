@@ -22,26 +22,27 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class StringTimerParameters extends EventProcessorBindingParams {
-    private String fieldName;
-    private double outputDivisor;
-    private boolean useInputFrequencyForOutputFrequency;
+  private String fieldName;
+  private double outputDivisor;
+  private boolean useInputFrequencyForOutputFrequency;
 
-    public StringTimerParameters(DataProcessorInvocation graph, String fieldName, double outputDivisor, boolean useInputFrequencyForOutputFrequency) {
-        super(graph);
-        this.fieldName = fieldName;
-        this.outputDivisor = outputDivisor;
-        this.useInputFrequencyForOutputFrequency = useInputFrequencyForOutputFrequency;
-    }
+  public StringTimerParameters(DataProcessorInvocation graph, String fieldName, double outputDivisor,
+                               boolean useInputFrequencyForOutputFrequency) {
+    super(graph);
+    this.fieldName = fieldName;
+    this.outputDivisor = outputDivisor;
+    this.useInputFrequencyForOutputFrequency = useInputFrequencyForOutputFrequency;
+  }
 
-    public String getSelectedFieldName() {
-        return fieldName;
-    }
+  public String getSelectedFieldName() {
+    return fieldName;
+  }
 
-    public double getOutputDivisor() {
-        return outputDivisor;
-    }
+  public double getOutputDivisor() {
+    return outputDivisor;
+  }
 
-    public boolean isUseInputFrequencyForOutputFrequency() {
-        return useInputFrequencyForOutputFrequency;
-    }
+  public boolean isUseInputFrequencyForOutputFrequency() {
+    return useInputFrequencyForOutputFrequency;
+  }
 }

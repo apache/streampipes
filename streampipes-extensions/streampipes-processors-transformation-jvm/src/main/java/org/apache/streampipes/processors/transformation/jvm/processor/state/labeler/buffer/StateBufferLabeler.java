@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.buffer;
 
-import com.google.common.math.Stats;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
@@ -28,13 +27,13 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import com.google.common.math.Stats;
+
 import java.util.List;
 
 public class StateBufferLabeler implements EventProcessor<StateBufferLabelerParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
   private String sensorListValueProperty;
   private String stateProperty;
   private String stateFilter;
@@ -46,7 +45,7 @@ public class StateBufferLabeler implements EventProcessor<StateBufferLabelerPara
   public void onInvocation(StateBufferLabelerParameters stateBufferLabelerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = stateBufferLabelerParameters.getGraph().getLogger(StateBufferLabeler.class);
+    log = stateBufferLabelerParameters.getGraph().getLogger(StateBufferLabeler.class);
 
     this.sensorListValueProperty = stateBufferLabelerParameters.getSensorListValueProperty();
     this.stateProperty = stateBufferLabelerParameters.getStateProperty();
@@ -55,18 +54,19 @@ public class StateBufferLabeler implements EventProcessor<StateBufferLabelerPara
     this.labelName = stateBufferLabelerParameters.getLabelName();
 
     this.statements = StatementUtils.getStatements(
-            stateBufferLabelerParameters.getNumberValues(),
-            stateBufferLabelerParameters.getLabelStrings(),
-            stateBufferLabelerParameters.getComparators());
+        stateBufferLabelerParameters.getNumberValues(),
+        stateBufferLabelerParameters.getLabelStrings(),
+        stateBufferLabelerParameters.getComparators());
   }
 
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
 
-    List<Double> values = inputEvent.getFieldBySelector(this.sensorListValueProperty).getAsList().parseAsSimpleType(Double.class);
+    List<Double> values =
+        inputEvent.getFieldBySelector(this.sensorListValueProperty).getAsList().parseAsSimpleType(Double.class);
     List<String> states = inputEvent.getFieldBySelector(this.stateProperty).getAsList().parseAsSimpleType(String.class);
 
-    if (states.contains(this.stateFilter) || this.stateFilter.equals("*"))  {
+    if (states.contains(this.stateFilter) || this.stateFilter.equals("*")) {
       double calculatedValue;
 
       if (StateBufferLabelerController.MAXIMUM.equals(this.selectedOperation)) {
@@ -77,7 +77,7 @@ public class StateBufferLabeler implements EventProcessor<StateBufferLabelerPara
         calculatedValue = Stats.of(values).mean();
       }
 
-      Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, calculatedValue, this.statements, LOG);
+      Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, calculatedValue, this.statements, log);
       out.collect(resultEvent);
     }
   }

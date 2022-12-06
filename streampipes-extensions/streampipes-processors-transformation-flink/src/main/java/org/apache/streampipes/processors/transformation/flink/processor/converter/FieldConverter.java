@@ -17,16 +17,17 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.converter;
 
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.vocabulary.XSD;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.vocabulary.XSD;
 
 public class FieldConverter implements FlatMapFunction<Event, Event> {
 
-  private static Logger LOG = LoggerFactory.getLogger(FieldConverter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FieldConverter.class);
 
   private String convertProperty;
   private String targetDatatype;
@@ -39,23 +40,23 @@ public class FieldConverter implements FlatMapFunction<Event, Event> {
 
   @Override
   public void flatMap(Event in, Collector<Event> out) {
-      String value = in.getFieldBySelector(convertProperty).getAsPrimitive().getAsString();
-      try {
-          if (targetDatatype.equals(XSD._float.toString())) {
-            in.updateFieldBySelector(convertProperty, Float.parseFloat(value.trim()));
-          } else if (targetDatatype.equals(XSD._integer.toString())){
-            in.updateFieldBySelector(convertProperty, Integer.parseInt(value.trim()));
-          } else if (targetDatatype.equals(XSD._boolean.toString())) {
-            in.updateFieldBySelector(convertProperty, Boolean.parseBoolean(value.trim()));
-          } else if (targetDatatype.equals(XSD._string.toString())) {
-            in.updateFieldBySelector(convertProperty, value.trim());
-          }
-          
-          out.collect(in);
-
-      } catch (NumberFormatException e) {
-          LOG.error("Field Converter could not convert value: " + value + " of event: " + in);
+    String value = in.getFieldBySelector(convertProperty).getAsPrimitive().getAsString();
+    try {
+      if (targetDatatype.equals(XSD._float.toString())) {
+        in.updateFieldBySelector(convertProperty, Float.parseFloat(value.trim()));
+      } else if (targetDatatype.equals(XSD._integer.toString())) {
+        in.updateFieldBySelector(convertProperty, Integer.parseInt(value.trim()));
+      } else if (targetDatatype.equals(XSD._boolean.toString())) {
+        in.updateFieldBySelector(convertProperty, Boolean.parseBoolean(value.trim()));
+      } else if (targetDatatype.equals(XSD._string.toString())) {
+        in.updateFieldBySelector(convertProperty, value.trim());
       }
+
+      out.collect(in);
+
+    } catch (NumberFormatException e) {
+      LOG.error("Field Converter could not convert value: " + value + " of event: " + in);
+    }
 
   }
 }

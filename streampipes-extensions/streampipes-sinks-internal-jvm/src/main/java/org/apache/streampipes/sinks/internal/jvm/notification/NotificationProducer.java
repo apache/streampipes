@@ -61,7 +61,7 @@ public class NotificationProducer extends StreamPipesDataSink {
 
   @Override
   public void onInvocation(SinkParams parameters, EventSinkRuntimeContext context) throws
-          SpRuntimeException {
+      SpRuntimeException {
     this.title = parameters.extractor().singleValueParameter(TITLE_KEY, String.class);
     this.content = parameters.extractor().singleValueParameter(CONTENT_KEY, String.class);
     this.silentPeriodInSeconds = parameters.extractor().singleValueParameter(SILENT_PERIOD, Integer.class) * 60;
@@ -107,16 +107,16 @@ public class NotificationProducer extends StreamPipesDataSink {
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.internal.jvm.notification")
-      .withLocales(Locales.EN)
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-      .category(DataSinkType.INTERNAL, DataSinkType.NOTIFICATION)
-      .requiredStream(StreamRequirementsBuilder
-        .create()
-        .requiredProperty(EpRequirements.anyProperty())
-        .build())
-      .requiredTextParameter(Labels.withId(TITLE_KEY))
-      .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
-      .requiredIntegerParameter(Labels.withId(SILENT_PERIOD), 10)
-      .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.INTERNAL, DataSinkType.NOTIFICATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(TITLE_KEY))
+        .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
+        .requiredIntegerParameter(Labels.withId(SILENT_PERIOD), 10)
+        .build();
   }
 }

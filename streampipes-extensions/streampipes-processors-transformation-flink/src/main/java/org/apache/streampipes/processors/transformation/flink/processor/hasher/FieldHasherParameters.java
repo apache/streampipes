@@ -23,22 +23,23 @@ import org.apache.streampipes.processors.transformation.flink.processor.hasher.a
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class FieldHasherParameters extends EventProcessorBindingParams {
-	
-	private String propertyName;
-	private HashAlgorithmType hashAlgorithmType;
-	
-	public FieldHasherParameters(DataProcessorInvocation graph, String propertyName, HashAlgorithmType hashAlgorithmType) {
-		super(graph);
-		this.propertyName = propertyName;
-		this.hashAlgorithmType = hashAlgorithmType;
-	}
 
-	public String getPropertyName() {
-		return propertyName;
-	}
+  private String propertyName;
+  private HashAlgorithmType hashAlgorithmType;
 
-	public HashAlgorithmType getHashAlgorithmType() {
-		return hashAlgorithmType;
-	}
-	
+  public FieldHasherParameters(DataProcessorInvocation graph, String propertyName,
+                               HashAlgorithmType hashAlgorithmType) {
+    super(graph);
+    this.propertyName = propertyName;
+    this.hashAlgorithmType = hashAlgorithmType;
+  }
+
+  public String getPropertyName() {
+    return propertyName;
+  }
+
+  public HashAlgorithmType getHashAlgorithmType() {
+    return hashAlgorithmType;
+  }
+
 }

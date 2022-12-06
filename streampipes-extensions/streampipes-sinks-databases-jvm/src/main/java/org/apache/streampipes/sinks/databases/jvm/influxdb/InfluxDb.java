@@ -28,11 +28,12 @@ public class InfluxDb implements EventSink<InfluxDbParameters> {
 
   private InfluxDbClient influxDbClient;
 
-  private static Logger LOG;
+  private static Logger log;
 
   @Override
-  public void onInvocation(InfluxDbParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = parameters.getGraph().getLogger(InfluxDb.class);
+  public void onInvocation(InfluxDbParameters parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
+    log = parameters.getGraph().getLogger(InfluxDb.class);
 
     this.influxDbClient = new InfluxDbClient(
         parameters.getInfluxDbHost(),
@@ -44,7 +45,7 @@ public class InfluxDb implements EventSink<InfluxDbParameters> {
         parameters.getTimestampField(),
         parameters.getBatchSize(),
         parameters.getFlushDuration(),
-        LOG
+        log
     );
   }
 
@@ -53,7 +54,7 @@ public class InfluxDb implements EventSink<InfluxDbParameters> {
     try {
       influxDbClient.save(event);
     } catch (SpRuntimeException e) {
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
     }
   }
 

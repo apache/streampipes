@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,16 +17,16 @@
  */
 package com.kohlschutter.boilerpipe.filters.heuristics;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import com.kohlschutter.boilerpipe.BoilerpipeFilter;
 import com.kohlschutter.boilerpipe.BoilerpipeProcessingException;
 import com.kohlschutter.boilerpipe.document.TextBlock;
 import com.kohlschutter.boilerpipe.document.TextDocument;
 import com.kohlschutter.boilerpipe.labels.DefaultLabels;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Fuses adjacent blocks if their labels are equal.
@@ -51,7 +51,7 @@ public final class LabelFusion implements BoilerpipeFilter {
     TextBlock prevBlock = textBlocks.get(0);
     int offset = 1;
 
-    for (Iterator<TextBlock> it = textBlocks.listIterator(offset); it.hasNext();) {
+    for (Iterator<TextBlock> it = textBlocks.listIterator(offset); it.hasNext(); ) {
       TextBlock block = it.next();
 
       if (equalLabels(prevBlock.getLabels(), block.getLabels())) {
@@ -75,7 +75,7 @@ public final class LabelFusion implements BoilerpipeFilter {
 
   private Set<String> markupLabelsOnly(final Set<String> set1) {
     Set<String> set = new HashSet<String>(set1);
-    for (Iterator<String> it = set.iterator(); it.hasNext();) {
+    for (Iterator<String> it = set.iterator(); it.hasNext(); ) {
       final String label = it.next();
       if (!label.startsWith(DefaultLabels.MARKUP_PREFIX)) {
         it.remove();

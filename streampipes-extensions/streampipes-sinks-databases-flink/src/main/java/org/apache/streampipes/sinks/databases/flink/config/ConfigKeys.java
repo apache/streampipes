@@ -19,10 +19,10 @@
 package org.apache.streampipes.sinks.databases.flink.config;
 
 public class ConfigKeys {
-    public final static String FLINK_HOST = "SP_FLINK_HOST";
-    public final static String FLINK_PORT = "SP_FLINK_PORT";
-    public final static String ELASTIC_HOST = "SP_ELASTICSEARCH_HOST";
-    public final static String ELASTIC_PORT_REST = "SP_ELASTICSEARCH_PORT_REST";
-    public final static String DEBUG = "SP_FLINK_DEBUG";
-    public final static String FLINK_JAR_FILE_LOC = "SP_FLINK_JAR_FILE_LOC";
+  public static final String FLINK_HOST = "SP_FLINK_HOST";
+  public static final String FLINK_PORT = "SP_FLINK_PORT";
+  public static final String ELASTIC_HOST = "SP_ELASTICSEARCH_HOST";
+  public static final String ELASTIC_PORT_REST = "SP_ELASTICSEARCH_PORT_REST";
+  public static final String DEBUG = "SP_FLINK_DEBUG";
+  public static final String FLINK_JAR_FILE_LOC = "SP_FLINK_JAR_FILE_LOC";
 }

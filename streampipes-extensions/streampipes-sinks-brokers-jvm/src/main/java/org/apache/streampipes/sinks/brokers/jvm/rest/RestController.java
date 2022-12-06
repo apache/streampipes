@@ -39,20 +39,21 @@ public class RestController extends StandaloneEventSinkDeclarer<RestParameters> 
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.rest")
-            .category(DataSinkType.FORWARD)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredTextParameter(Labels.withId(URL_KEY),
-                    false, false)
-            .build();
+        .category(DataSinkType.FORWARD)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(URL_KEY),
+            false, false)
+        .build();
   }
 
   @Override
-  public ConfiguredEventSink<RestParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  public ConfiguredEventSink<RestParameters> onInvocation(DataSinkInvocation graph,
+                                                          DataSinkParameterExtractor extractor) {
 
     String url = extractor.singleValueParameter(URL_KEY, String.class);
 

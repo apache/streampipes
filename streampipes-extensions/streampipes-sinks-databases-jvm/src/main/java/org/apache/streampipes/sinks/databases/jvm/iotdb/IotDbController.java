@@ -44,21 +44,21 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.jvm.iotdb")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.DATABASE)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.timestampReq(),
-                            Labels.withId(TIMESTAMPE_MAPPING_KEY),
-                            PropertyScope.NONE)
-                    .build())
-            .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
-            .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 6667)
-            .requiredTextParameter(Labels.withId(STORAGE_GROUP_KEY))
-            .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
-            .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.DATABASE)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMPE_MAPPING_KEY),
+                PropertyScope.NONE)
+            .build())
+        .requiredTextParameter(Labels.withId(DATABASE_HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(DATABASE_PORT_KEY), 6667)
+        .requiredTextParameter(Labels.withId(STORAGE_GROUP_KEY))
+        .requiredTextParameter(Labels.withId(DATABASE_USER_KEY))
+        .requiredSecret(Labels.withId(DATABASE_PASSWORD_KEY))
+        .build();
   }
 
   @Override
@@ -73,13 +73,13 @@ public class IotDbController extends StandaloneEventSinkDeclarer<IotDbParameters
     String timestampField = extractor.mappingPropertyValue(TIMESTAMPE_MAPPING_KEY);
 
     IotDbParameters params = new IotDbParameters(graph,
-            hostname,
-            port,
-            dbStorageGroup,
-            user,
-            password,
-            false, // SSL connection not yet implemented for IoT DB
-            timestampField);
+        hostname,
+        port,
+        dbStorageGroup,
+        user,
+        password,
+        false, // SSL connection not yet implemented for IoT DB
+        timestampField);
 
     return new ConfiguredEventSink<>(params, IotDb::new);
   }

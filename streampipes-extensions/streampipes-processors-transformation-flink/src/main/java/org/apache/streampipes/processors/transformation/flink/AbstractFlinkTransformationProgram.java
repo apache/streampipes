@@ -25,7 +25,8 @@ import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public abstract class AbstractFlinkTransformationProgram<B extends EventProcessorBindingParams> extends FlinkDataProcessorRuntime<B> {
+public abstract class AbstractFlinkTransformationProgram<B extends EventProcessorBindingParams>
+    extends FlinkDataProcessorRuntime<B> {
 
   public AbstractFlinkTransformationProgram(B params,
                                             ConfigExtractor configExtractor,
@@ -37,10 +38,10 @@ public abstract class AbstractFlinkTransformationProgram<B extends EventProcesso
   protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
     SpConfig config = configExtractor.getConfig();
     return new FlinkDeploymentConfig(config.getString(
-            ConfigKeys.FLINK_JAR_FILE_LOC),
-            config.getString(ConfigKeys.FLINK_HOST),
-            config.getInteger(ConfigKeys.FLINK_PORT),
-            config.getBoolean(ConfigKeys.DEBUG)
+        ConfigKeys.FLINK_JAR_FILE_LOC),
+        config.getString(ConfigKeys.FLINK_HOST),
+        config.getInteger(ConfigKeys.FLINK_PORT),
+        config.getBoolean(ConfigKeys.DEBUG)
     );
   }
 
