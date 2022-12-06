@@ -18,10 +18,6 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.window;
 
-import org.apache.flink.api.common.typeinfo.TypeHint;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.streaming.api.TimeCharacteristic;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
@@ -30,10 +26,15 @@ import org.apache.streampipes.processors.statistics.flink.extensions.MapKeySelec
 import org.apache.streampipes.processors.statistics.flink.extensions.SlidingEventTimeWindow;
 import org.apache.streampipes.processors.statistics.flink.extensions.TimestampMappingFunction;
 
+import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.streaming.api.TimeCharacteristic;
+import org.apache.flink.streaming.api.datastream.DataStream;
+
 import java.util.List;
 
 public class StatisticsSummaryProgramWindow extends
-        AbstractStatisticsProgram<StatisticsSummaryParametersWindow> {
+    AbstractStatisticsProgram<StatisticsSummaryParametersWindow> {
 
   private StatisticsSummaryParamsSerializable serializableParams;
 
@@ -50,24 +51,22 @@ public class StatisticsSummaryProgramWindow extends
   protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
 
     StatisticsSummaryParamsSerializable sp = new
-            StatisticsSummaryParamsSerializable(serializableParams.getValueToObserve(),
-            serializableParams.getTimestampMapping(), serializableParams.getGroupBy(),
-            serializableParams.getTimeWindowSize(), serializableParams.getTimeUnit());
+        StatisticsSummaryParamsSerializable(serializableParams.getValueToObserve(),
+        serializableParams.getTimestampMapping(), serializableParams.getGroupBy(),
+        serializableParams.getTimeWindowSize(), serializableParams.getTimeUnit());
     DataStream<Event> output = messageStream[0]
-            .keyBy(new MapKeySelector(sp.getGroupBy()).getKeySelector())
-            .transform
-                    ("sliding-window-event-shift",
-                            TypeInformation.of(new TypeHint<List<Event>>() {
-                            }), new SlidingEventTimeWindow<>(sp.getTimeWindowSize(), sp.getTimeUnit(),
-                                    (TimestampMappingFunction<Event>) in ->
-                                            in.getFieldBySelector(sp.getTimestampMapping())
-                                                    .getAsPrimitive().getAsLong()))
-            .flatMap(new StatisticsSummaryCalculatorWindow(sp.getGroupBy(), sp.getValueToObserve()));
+        .keyBy(new MapKeySelector(sp.getGroupBy()).getKeySelector())
+        .transform
+            ("sliding-window-event-shift",
+                TypeInformation.of(new TypeHint<List<Event>>() {
+                }), new SlidingEventTimeWindow<>(sp.getTimeWindowSize(), sp.getTimeUnit(),
+                    (TimestampMappingFunction<Event>) in ->
+                        in.getFieldBySelector(sp.getTimestampMapping())
+                            .getAsPrimitive().getAsLong()))
+        .flatMap(new StatisticsSummaryCalculatorWindow(sp.getGroupBy(), sp.getValueToObserve()));
 
     return output;
   }
-
-
 
 
 }

@@ -26,7 +26,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -39,30 +43,32 @@ public class LanguageDetectionController extends FlinkDataProcessorDeclarer<Lang
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.flink.languagedetection")
-            .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.stringReq(),
-                            Labels.withId(DETECTION_FIELD_KEY),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.stringEp(
-                    Labels.withId(LANGUAGE_KEY),
-                    "language",
-                    "http://schema.org/language")))
-            .build();
+        .category(DataProcessorType.ENRICH_TEXT)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.stringReq(),
+                Labels.withId(DETECTION_FIELD_KEY),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(EpProperties.stringEp(
+            Labels.withId(LANGUAGE_KEY),
+            "language",
+            "http://schema.org/language")))
+        .build();
   }
 
   @Override
-  public FlinkDataProcessorRuntime<LanguageDetectionParameters> getRuntime(DataProcessorInvocation graph,
-                                                                           ProcessingElementParameterExtractor extractor,
-                                                                           ConfigExtractor configExtractor,
-                                                                           StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorRuntime<LanguageDetectionParameters> getRuntime(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor,
+      ConfigExtractor configExtractor,
+      StreamPipesClient streamPipesClient) {
     String fieldName = extractor.mappingPropertyValue(DETECTION_FIELD_KEY);
 
-    return new LanguageDetectionProgram(new LanguageDetectionParameters(graph, fieldName), configExtractor, streamPipesClient);
+    return new LanguageDetectionProgram(new LanguageDetectionParameters(graph, fieldName), configExtractor,
+        streamPipesClient);
   }
 }

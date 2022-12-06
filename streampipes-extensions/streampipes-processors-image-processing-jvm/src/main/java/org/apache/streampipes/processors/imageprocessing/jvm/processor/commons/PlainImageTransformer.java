@@ -20,14 +20,14 @@ package org.apache.streampipes.processors.imageprocessing.jvm.processor.commons;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.Optional;
-
-import javax.imageio.ImageIO;
 
 public class PlainImageTransformer<T extends EventProcessorBindingParams> {
 

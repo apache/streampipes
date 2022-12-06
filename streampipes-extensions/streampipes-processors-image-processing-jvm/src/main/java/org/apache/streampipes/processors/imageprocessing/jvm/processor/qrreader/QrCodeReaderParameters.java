@@ -27,7 +27,7 @@ public class QrCodeReaderParameters extends EventProcessorBindingParams {
   private Boolean sendIfNoResult;
 
   public QrCodeReaderParameters(DataProcessorInvocation graph, String imagePropertyName, String
-          placeholderValue, Boolean sendIfNoResult) {
+      placeholderValue, Boolean sendIfNoResult) {
     super(graph);
     this.imagePropertyName = imagePropertyName;
     this.placeholderValue = placeholderValue;

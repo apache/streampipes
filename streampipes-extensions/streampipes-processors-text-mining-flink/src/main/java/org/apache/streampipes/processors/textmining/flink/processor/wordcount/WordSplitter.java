@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.processors.textmining.flink.processor.wordcount;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 public class WordSplitter implements FlatMapFunction<Event, Word> {
 

@@ -32,7 +32,8 @@ public class AndParameters extends EventProcessorBindingParams {
   private List<String> rightMappings;
 
 
-  public AndParameters(DataProcessorInvocation invocationGraph, TimeUnit timeUnit, Integer timeWindow, List<String> leftMappings, List<String> rightMappings) {
+  public AndParameters(DataProcessorInvocation invocationGraph, TimeUnit timeUnit, Integer timeWindow,
+                       List<String> leftMappings, List<String> rightMappings) {
     super(invocationGraph);
     this.timeUnit = timeUnit;
     this.timeWindow = timeWindow;

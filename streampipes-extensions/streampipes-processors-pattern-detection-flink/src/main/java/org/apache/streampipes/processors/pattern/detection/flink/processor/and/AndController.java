@@ -27,7 +27,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -44,26 +48,26 @@ public class AndController extends FlinkDataProcessorDeclarer<AndParameters> {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.pattern-detection.flink.and")
-            .category(DataProcessorType.PATTERN_DETECT)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(LEFT_MAPPING)
-                            , PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(RIGHT_MAPPING)
-                            , PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("Seconds",
-                    "Minutes", "Hours"))
-            .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
-            .outputStrategy(OutputStrategies.custom(true))
-            .build();
+        .category(DataProcessorType.PATTERN_DETECT)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                Labels.withId(LEFT_MAPPING)
+                , PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                Labels.withId(RIGHT_MAPPING)
+                , PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("Seconds",
+            "Minutes", "Hours"))
+        .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
+        .outputStrategy(OutputStrategies.custom(true))
+        .build();
   }
 
 

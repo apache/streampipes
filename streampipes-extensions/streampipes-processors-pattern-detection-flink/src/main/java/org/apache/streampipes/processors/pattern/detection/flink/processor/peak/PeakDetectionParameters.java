@@ -41,9 +41,9 @@ public class PeakDetectionParameters extends EventProcessorBindingParams impleme
   }
 
   public PeakDetectionParameters(DataProcessorInvocation graph, String valueToObserve, String
-          timestampMapping, String groupBy, Integer countWindowSize, Integer lag, Double
-          threshold, Double
-          influence) {
+      timestampMapping, String groupBy, Integer countWindowSize, Integer lag, Double
+                                     threshold, Double
+                                     influence) {
     super(graph);
     this.valueToObserve = valueToObserve;
     this.timestampMapping = timestampMapping;

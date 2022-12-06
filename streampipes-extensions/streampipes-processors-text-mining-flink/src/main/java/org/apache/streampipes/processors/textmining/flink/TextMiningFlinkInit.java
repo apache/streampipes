@@ -41,22 +41,22 @@ public class TextMiningFlinkInit extends StandaloneModelSubmitter {
   public SpServiceDefinition provideServiceDefinition() {
 
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.textmining.flink",
-                    "Processors Text Mining Flink", "",
-                    8090)
-            .registerPipelineElements(new WordCountController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
-            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
-            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
-            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
-            .build();
+            "Processors Text Mining Flink", "",
+            8090)
+        .registerPipelineElements(new WordCountController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+        .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+        .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+        .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+        .build();
   }
 }

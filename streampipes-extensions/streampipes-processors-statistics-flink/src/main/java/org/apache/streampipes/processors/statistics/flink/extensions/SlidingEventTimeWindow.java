@@ -28,16 +28,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class SlidingEventTimeWindow<IN> extends AbstractUdfStreamOperator<List<IN>,
-        TimestampMappingFunction<IN>>
-        implements
-        OneInputStreamOperator<IN, List<IN>>, Serializable {
+public class SlidingEventTimeWindow<T> extends AbstractUdfStreamOperator<List<T>,
+    TimestampMappingFunction<T>>
+    implements
+    OneInputStreamOperator<T, List<T>>, Serializable {
 
   private Long timeWindowSizeInMillis;
-  private List<IN> currentEvents;
+  private List<T> currentEvents;
 
-  public SlidingEventTimeWindow(Long time, TimeUnit timeUnit, TimestampMappingFunction<IN>
-          timestampMappingFunction) {
+  public SlidingEventTimeWindow(Long time, TimeUnit timeUnit, TimestampMappingFunction<T>
+      timestampMappingFunction) {
     super(timestampMappingFunction);
     this.timeWindowSizeInMillis = toMilliseconds(time, timeUnit);
     this.currentEvents = new ArrayList<>();
@@ -49,7 +49,7 @@ public class SlidingEventTimeWindow<IN> extends AbstractUdfStreamOperator<List<I
   }
 
   @Override
-  public void processElement(StreamRecord<IN> in) throws Exception {
+  public void processElement(StreamRecord<T> in) throws Exception {
     Long currentTimestamp = userFunction.getTimestamp(in.getValue());
 
     checkForRemoval(currentTimestamp);
@@ -60,10 +60,10 @@ public class SlidingEventTimeWindow<IN> extends AbstractUdfStreamOperator<List<I
   }
 
   private void checkForRemoval(Long currentTimestamp) {
-    Iterator<IN> it = currentEvents.iterator();
+    Iterator<T> it = currentEvents.iterator();
 
-    while(it.hasNext()) {
-      IN next = it.next();
+    while (it.hasNext()) {
+      T next = it.next();
       if (removalRequired(userFunction.getTimestamp(next), currentTimestamp)) {
         it.remove();
       } else {

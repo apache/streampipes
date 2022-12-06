@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.sequence;
 
-import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
+
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class SequenceProgram extends AbstractPatternDetectionProgram<SequenceParameters> {
 
@@ -35,11 +36,12 @@ public class SequenceProgram extends AbstractPatternDetectionProgram<SequencePar
 
   @Override
   protected DataStream<Event> getApplicationLogic(DataStream<Event>... dataStreams) {
-    return dataStreams[0].keyBy(getKeySelector()).connect(dataStreams[1].keyBy(getKeySelector())).process(new Sequence(params
+    return dataStreams[0].keyBy(getKeySelector()).connect(dataStreams[1].keyBy(getKeySelector()))
+        .process(new Sequence(params
             .getTimeUnit(),
             params
-            .getTimeWindow
-            ()));
+                .getTimeWindow
+                    ()));
   }
 
   private KeySelector<Event, String> getKeySelector() {

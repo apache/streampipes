@@ -22,13 +22,13 @@ import boofcv.alg.fiducial.qrcode.QrCode;
 import boofcv.factory.fiducial.FactoryFiducial;
 import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayU8;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -42,7 +42,8 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
   private static final Logger LOG = LoggerFactory.getLogger(QrCodeReader.class);
 
   @Override
-  public void onInvocation(QrCodeReaderParameters qrCodeReaderParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(QrCodeReaderParameters qrCodeReaderParameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
     this.params = qrCodeReaderParameters;
     this.sendIfNoResult = qrCodeReaderParameters.getSendIfNoResult();
     this.placeholderValue = qrCodeReaderParameters.getPlaceholderValue();
@@ -51,7 +52,7 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
     PlainImageTransformer<QrCodeReaderParameters> imageTransformer = new PlainImageTransformer<>
-            (in, params);
+        (in, params);
     Optional<BufferedImage> imageOpt = imageTransformer.getImage(params.getImagePropertyName());
 
     if (imageOpt.isPresent()) {

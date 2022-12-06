@@ -17,6 +17,12 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.genericclassification;
 
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
+import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
+import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+import org.apache.streampipes.wrapper.runtime.EventProcessor;
+
 import boofcv.abst.scene.ImageClassifier;
 import boofcv.factory.scene.ClassifierAndSource;
 import boofcv.factory.scene.FactoryImageClassifier;
@@ -24,11 +30,6 @@ import boofcv.io.image.ConvertBufferedImage;
 import boofcv.struct.image.GrayF32;
 import boofcv.struct.image.Planar;
 import deepboof.io.DeepBoofDataBaseOps;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
-import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
-import org.apache.streampipes.wrapper.routing.SpOutputCollector;
-import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,10 +47,11 @@ public class GenericImageClassification implements EventProcessor<GenericImageCl
   private List<String> categories;
 
   @Override
-  public void onInvocation(GenericImageClassificationParameters genericImageClassificationParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(GenericImageClassificationParameters genericImageClassificationParameters,
+                           SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     this.params = genericImageClassificationParameters;
     //this.cs = FactoryImageClassifier.vgg_cifar10();  // Test set 89.9% for 10 categories
-		ClassifierAndSource cs = FactoryImageClassifier.nin_imagenet(); // Test set 62.6% for 1000 categories
+    ClassifierAndSource cs = FactoryImageClassifier.nin_imagenet(); // Test set 62.6% for 1000 categories
 
     File path = DeepBoofDataBaseOps.downloadModel(cs.getSource(), new File("download_data"));
 
@@ -65,8 +67,8 @@ public class GenericImageClassification implements EventProcessor<GenericImageCl
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
     PlainImageTransformer<GenericImageClassificationParameters> imageTransformer = new
-            PlainImageTransformer<>(in,
-            params);
+        PlainImageTransformer<>(in,
+        params);
 
 
     Optional<BufferedImage> imageOpt = imageTransformer.getImage(params.getImagePropertyName());
@@ -86,7 +88,7 @@ public class GenericImageClassification implements EventProcessor<GenericImageCl
       //Collections.reverse(scores);
 
       if (scores.size() > 0) {
-        System.out.println(scores.get(0).score +":" +categories.get(scores.get(0).category));
+        System.out.println(scores.get(0).score + ":" + categories.get(scores.get(0).category));
         //scores.forEach(score -> System.out.println(score.category +":" +categories.get(score.category) +":" +score));
         in.addField("score", scores.get(0).score);
         in.addField("category", categories.get(scores.get(0).category));

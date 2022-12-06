@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.peak;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +40,7 @@ public class PeakDetectionCalculator implements FlatMapFunction<List<Event>, Eve
   private Double influence;
 
   public PeakDetectionCalculator(String groupBy, String valueToObserve, Integer lag, Double
-          threshold, Double influence) {
+      threshold, Double influence) {
     this.groupBy = groupBy;
     this.valueToObserve = valueToObserve;
     this.lag = lag;
@@ -50,16 +51,16 @@ public class PeakDetectionCalculator implements FlatMapFunction<List<Event>, Eve
 
   @Override
   public void flatMap(List<Event> in, Collector<Event> out)
-          throws Exception {
+      throws Exception {
     List<Double> y = in
-            .stream()
-            .map(m -> m.getFieldBySelector(valueToObserve).getAsPrimitive().getAsDouble())
-            .collect(Collectors.toList());
+        .stream()
+        .map(m -> m.getFieldBySelector(valueToObserve).getAsPrimitive().getAsDouble())
+        .collect(Collectors.toList());
 
     Integer[] signals = makeIntegerArray(y.size());
     Double[] filteredY = makeDoubleArray(y.size());
 
-    if (in.size() >= (lag+1)) {
+    if (in.size() >= (lag + 1)) {
       for (int i = 0; i < lag; i++) {
         filteredY[i] = y.get(i);
       }

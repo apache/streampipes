@@ -17,10 +17,6 @@
  */
 package org.apache.streampipes.processors.pattern.detection.processor.absence;
 
-import io.flinkspector.datastream.DataStreamTestBase;
-import io.flinkspector.datastream.input.EventTimeInput;
-import io.flinkspector.datastream.input.EventTimeInputBuilder;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.PatternDetectionFlinkInit;
@@ -29,6 +25,11 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.absen
 import org.apache.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+
+import io.flinkspector.datastream.DataStreamTestBase;
+import io.flinkspector.datastream.input.EventTimeInput;
+import io.flinkspector.datastream.input.EventTimeInputBuilder;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,9 +49,9 @@ public class TestAbsence extends DataStreamTestBase {
   @Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-            {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 12},
-            {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), false, 5},
-            {5, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 6},
+        {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 12},
+        {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), false, 5},
+        {5, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 6},
     });
   }
 
@@ -75,12 +76,15 @@ public class TestAbsence extends DataStreamTestBase {
 
   @Test
   public void testAbsenceProgram() {
-    AbsenceParameters params = new AbsenceParameters(InvocationGraphGenerator.makeEmptyInvocation(new AbsenceController().declareModel()),  Arrays.asList("id", "timestamp", "value"), timeWindow, timeUnit);
+    AbsenceParameters params =
+        new AbsenceParameters(InvocationGraphGenerator.makeEmptyInvocation(new AbsenceController().declareModel()),
+            Arrays.asList("id", "timestamp", "value"), timeWindow, timeUnit);
 
-    ConfigExtractor configExtractor = ConfigExtractor.from(PatternDetectionFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(PatternDetectionFlinkInit.SERVICE_GROUP);
     AbsenceProgram program = new AbsenceProgram(params, configExtractor, null);
 
-    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(1, makeMap(), 0)), createTestStream(makeInputData(waitForMs, makeMap(), 1)));
+    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(1, makeMap(), 0)),
+        createTestStream(makeInputData(waitForMs, makeMap(), 1)));
 
     assertStream(stream, equalTo(getOutput(shouldMatch)));
   }

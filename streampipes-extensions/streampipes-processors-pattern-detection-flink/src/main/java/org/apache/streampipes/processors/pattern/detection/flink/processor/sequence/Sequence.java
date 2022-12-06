@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.sequence;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.streaming.api.functions.co.CoProcessFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 public class Sequence extends CoProcessFunction<Event, Event, Event> {
 
@@ -37,9 +38,9 @@ public class Sequence extends CoProcessFunction<Event, Event, Event> {
 
   //@Override
   //public void open(Configuration parameters) throws Exception {
-    // TODO: add RuntimeContext
-    //state = getRuntimeContext().getState(new ValueStateDescriptor<>("sequence-event-storage",
-    //        EventStorage.class));
+  // TODO: add RuntimeContext
+  //state = getRuntimeContext().getState(new ValueStateDescriptor<>("sequence-event-storage",
+  //        EventStorage.class));
   //}
 
 

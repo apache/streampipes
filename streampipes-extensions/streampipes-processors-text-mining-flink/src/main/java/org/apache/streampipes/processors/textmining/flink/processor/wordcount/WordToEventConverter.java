@@ -17,17 +17,18 @@
  */
 package org.apache.streampipes.processors.textmining.flink.processor.wordcount;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 public class WordToEventConverter implements FlatMapFunction<Word, Event> {
 
   @Override
   public void flatMap(Word word, Collector<Event> collector) throws Exception {
-      Event event = new Event();
-      event.addField("word", word.getWord());
-      event.addField("count", word.getCount());
-      collector.collect(event);
+    Event event = new Event();
+    event.addField("word", word.getWord());
+    event.addField("count", word.getCount());
+    collector.collect(event);
   }
 }

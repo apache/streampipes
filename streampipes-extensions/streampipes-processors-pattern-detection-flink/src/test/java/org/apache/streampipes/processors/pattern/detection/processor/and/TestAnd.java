@@ -16,11 +16,6 @@
  *
  */
 package org.apache.streampipes.processors.pattern.detection.processor.and;
-
-import io.flinkspector.datastream.DataStreamTestBase;
-import io.flinkspector.datastream.input.EventTimeInput;
-import io.flinkspector.datastream.input.EventTimeInputBuilder;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
@@ -31,6 +26,11 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.and.A
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnit;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
+
+import io.flinkspector.datastream.DataStreamTestBase;
+import io.flinkspector.datastream.input.EventTimeInput;
+import io.flinkspector.datastream.input.EventTimeInputBuilder;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,12 +51,12 @@ public class TestAnd extends DataStreamTestBase {
   @Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-            {2, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 1, 1},
-            {1, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 1, 1},
-            {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), false, 1, 12},
-            {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 3, 4},
-            {1, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), false, 1, 2},
-            {3600, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 10, 3500},
+        {2, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 1, 1},
+        {1, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 1, 1},
+        {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), false, 1, 12},
+        {10, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 3, 4},
+        {1, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), false, 1, 2},
+        {3600, TimeUnit.Seconds, Arrays.asList("id"), Arrays.asList("id"), true, 10, 3500},
 
     });
   }
@@ -87,13 +87,15 @@ public class TestAnd extends DataStreamTestBase {
     DataProcessorDescription description = new AndController().declareModel();
     description.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
     AndParameters params =
-            new AndParameters(InvocationGraphGenerator.makeEmptyInvocation(description), timeUnit,
-                    timeWindow, leftMapping, rightMapping);
+        new AndParameters(InvocationGraphGenerator.makeEmptyInvocation(description), timeUnit,
+            timeWindow, leftMapping, rightMapping);
 
-    ConfigExtractor configExtractor = ConfigExtractor.from(PatternDetectionFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(PatternDetectionFlinkInit.SERVICE_GROUP);
     AndProgram program = new AndProgram(params, configExtractor, null);
 
-    DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(delayFirstEvent, makeMap("field1"))), createTestStream(makeInputData(delaySecondEvent, makeMap("field2"))));
+    DataStream<Event> stream =
+        program.getApplicationLogic(createTestStream(makeInputData(delayFirstEvent, makeMap("field1"))),
+            createTestStream(makeInputData(delaySecondEvent, makeMap("field2"))));
 
     assertStream(stream, equalTo(getOutput(shouldMatch)));
   }

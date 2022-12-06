@@ -41,20 +41,20 @@ public class ImageProcessingJvmInit extends StandaloneModelSubmitter {
             "Processors Image Processing JVM",
             "",
             8090)
-            .registerPipelineElements(
-                    new ImageEnrichmentController(),
-                    new ImageCropperController(),
-                    new QrCodeReaderController(),
-                    new GenericImageClassificationController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(
+            new ImageEnrichmentController(),
+            new ImageCropperController(),
+            new QrCodeReaderController(),
+            new GenericImageClassificationController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

@@ -29,7 +29,7 @@ import java.util.List;
  * Created by riemer on 21.04.2017.
  */
 public class SlidingBatchWindow<IN> extends AbstractStreamOperator<List<IN>> implements
-        OneInputStreamOperator<IN, List<IN>> {
+    OneInputStreamOperator<IN, List<IN>> {
 
   private Integer windowSize;
   private List<IN> currentEvents;

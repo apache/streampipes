@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.summary;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 import java.util.List;
 
@@ -36,11 +37,11 @@ public class StatisticsSummaryCalculator implements FlatMapFunction<Event, Event
 
   @Override
   public void flatMap(Event in, Collector<Event> out) throws
-          Exception {
+      Exception {
 
-    for (String property: listPropertyMappings) {
+    for (String property : listPropertyMappings) {
       List<Double> listValues = (in.getFieldBySelector(property).getAsList().castItems
-              (Double.class));
+          (Double.class));
 
       SummaryStatistics stats = new SummaryStatistics();
 

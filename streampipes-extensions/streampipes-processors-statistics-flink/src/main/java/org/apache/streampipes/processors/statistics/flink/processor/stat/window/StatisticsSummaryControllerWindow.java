@@ -27,7 +27,12 @@ import org.apache.streampipes.processors.statistics.flink.processor.stat.summary
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.Statistics;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -36,7 +41,7 @@ import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import java.util.concurrent.TimeUnit;
 
 public class StatisticsSummaryControllerWindow extends
-        FlinkDataProcessorDeclarer<StatisticsSummaryParametersWindow> {
+    FlinkDataProcessorDeclarer<StatisticsSummaryParametersWindow> {
 
   private static final String VALUE_TO_OBSERVE = "value-to-observe";
   private static final String PARTITION_BY = "partition-by";
@@ -46,40 +51,42 @@ public class StatisticsSummaryControllerWindow extends
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.statistics.flink.statistics-summary-window")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.withId(TIMESTAMP_MAPPING),
-                            PropertyScope.HEADER_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.withId(PARTITION_BY), PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
-            .requiredSingleValueSelection(Labels.withId(TIME_SCALE),
-                    Options.from("Hours", "Minutes", "Seconds"))
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),
-                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MEAN, Statistics.MEAN),
-                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MIN, Statistics.MIN),
-                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MAX, Statistics.MAX),
-                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.SUM, Statistics.SUM),
-                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.STDDEV, Statistics.STDDEV),
-                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.VARIANCE, Statistics.VARIANCE),
-                    EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.N, Statistics.N)))
-            .build();
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.statistics.flink.statistics-summary-window")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)
+            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_MAPPING),
+                PropertyScope.HEADER_PROPERTY)
+            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
+                Labels.withId(PARTITION_BY), PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
+        .requiredSingleValueSelection(Labels.withId(TIME_SCALE),
+            Options.from("Hours", "Minutes", "Seconds"))
+        .outputStrategy(OutputStrategies.fixed(
+            EpProperties.timestampProperty("timestamp"),
+            EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),
+            EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MEAN, Statistics.MEAN),
+            EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MIN, Statistics.MIN),
+            EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.MAX, Statistics.MAX),
+            EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.SUM, Statistics.SUM),
+            EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.STDDEV, Statistics.STDDEV),
+            EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.VARIANCE, Statistics.VARIANCE),
+            EpProperties.doubleEp(Labels.empty(), StatisticsSummaryController.N, Statistics.N)))
+        .build();
   }
 
   @Override
-  public FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(DataProcessorInvocation sepa,
-                                                                                 ProcessingElementParameterExtractor extractor,
-                                                                                 ConfigExtractor configExtractor,
-                                                                                 StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorRuntime<StatisticsSummaryParametersWindow> getRuntime(
+      DataProcessorInvocation sepa,
+      ProcessingElementParameterExtractor extractor,
+      ConfigExtractor configExtractor,
+      StreamPipesClient streamPipesClient) {
 
     String valueToObserve = extractor.mappingPropertyValue(VALUE_TO_OBSERVE);
     String timestampMapping = extractor.mappingPropertyValue(TIMESTAMP_MAPPING);
@@ -93,19 +100,21 @@ public class StatisticsSummaryControllerWindow extends
 
     if (scale.equals("Hours")) {
       timeUnit = TimeUnit.HOURS;
-    }
-    else if (scale.equals("Minutes")) {
+    } else if (scale.equals("Minutes")) {
       timeUnit = TimeUnit.MINUTES;
-    }
-    else {
+    } else {
       timeUnit = TimeUnit.SECONDS;
     }
 
     StatisticsSummaryParametersWindow params = new StatisticsSummaryParametersWindow(sepa,
-            valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
+        valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
 
-    StatisticsSummaryParamsSerializable serializableParams = new StatisticsSummaryParamsSerializable
-            (valueToObserve, timestampMapping, groupBy, (long) timeWindowSize, timeUnit);
+    StatisticsSummaryParamsSerializable serializableParams = new StatisticsSummaryParamsSerializable(
+        valueToObserve,
+        timestampMapping,
+        groupBy,
+        (long) timeWindowSize,
+        timeUnit);
 
     return new StatisticsSummaryProgramWindow(params, serializableParams, configExtractor, streamPipesClient);
 

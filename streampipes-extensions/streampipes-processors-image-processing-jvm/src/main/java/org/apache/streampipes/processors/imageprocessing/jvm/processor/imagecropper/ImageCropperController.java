@@ -40,25 +40,26 @@ public class ImageCropperController extends StandaloneEventProcessingDeclarer<Im
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-cropper")
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.IMAGE_PROCESSING)
-            .requiredStream(RequiredBoxStream.getBoxStream())
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.integerEp(Labels.empty(), "classname", "https://streampipes.org/classname"),
-                    EpProperties.doubleEp(Labels.empty(), "score", "https://streampipes.org/Label")
-            ))
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.IMAGE_PROCESSING)
+        .requiredStream(RequiredBoxStream.getBoxStream())
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.integerEp(Labels.empty(), "classname", "https://streampipes.org/classname"),
+            EpProperties.doubleEp(Labels.empty(), "score", "https://streampipes.org/Label")
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ImageCropperParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ImageCropperParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation,
+                                                                       ProcessingElementParameterExtractor extractor) {
 
     String imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
     String boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
 
     ImageCropperParameters params = new ImageCropperParameters(dataProcessorInvocation, imageProperty,
-            boxArray, "box_width", "box_height", "box_x", "box_y");
+        boxArray, "box_width", "box_height", "box_x", "box_y");
 
     return new ConfiguredEventProcessor<>(params, ImageCropper::new);
   }

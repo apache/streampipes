@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.processors.statistics.flink.extensions;
 
-import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.streampipes.model.runtime.Event;
+
+import org.apache.flink.api.java.functions.KeySelector;
 
 import java.io.Serializable;
 

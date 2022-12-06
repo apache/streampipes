@@ -18,18 +18,19 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.window;
 
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
+
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class StatisticsSummaryCalculatorWindow implements FlatMapFunction<List<Event>, Event>,
-        Serializable {
+    Serializable {
 
   private String partitionMapping;
   private String valueToObserveMapping;
@@ -41,10 +42,10 @@ public class StatisticsSummaryCalculatorWindow implements FlatMapFunction<List<E
 
   @Override
   public void flatMap(List<Event> in, Collector<Event> out)
-          throws Exception {
+      throws Exception {
     List<Double> listValues = (in.stream().map(m -> m.getFieldBySelector(valueToObserveMapping)
             .getAsPrimitive().getAsDouble())
-            .collect(Collectors.toList()));
+        .collect(Collectors.toList()));
 
     SummaryStatistics stats = new SummaryStatistics();
 

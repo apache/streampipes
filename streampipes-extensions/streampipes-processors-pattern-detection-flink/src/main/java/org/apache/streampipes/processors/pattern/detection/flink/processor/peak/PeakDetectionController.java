@@ -27,7 +27,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -45,26 +49,26 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.pattern-detection.flink.peak-detection")
-            .category(DataProcessorType.ALGORITHM)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
-                            .numberReq(),
-                    Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.withId(TIMESTAMP_MAPPING), PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.withId(PARTITION_BY), PropertyScope
-                                    .DIMENSION_PROPERTY).build())
-            .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_SIZE), 60)
-            .requiredIntegerParameter(Labels.withId(LAG_KEY), 5)
-            .requiredFloatParameter(Labels.withId(THRESHOLD_KEY), 2.0f)
-            .requiredFloatParameter(Labels.withId(INFLUENCE_KEY), 0.5f)
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),
-                    EpProperties.integerEp(Labels.empty(), "signal", "http://schema.org/Number")))
-            .build();
+        .category(DataProcessorType.ALGORITHM)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
+                    .numberReq(),
+                Labels.withId(VALUE_TO_OBSERVE), PropertyScope.MEASUREMENT_PROPERTY)
+            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_MAPPING), PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
+                Labels.withId(PARTITION_BY), PropertyScope
+                    .DIMENSION_PROPERTY).build())
+        .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_SIZE), 60)
+        .requiredIntegerParameter(Labels.withId(LAG_KEY), 5)
+        .requiredFloatParameter(Labels.withId(THRESHOLD_KEY), 2.0f)
+        .requiredFloatParameter(Labels.withId(INFLUENCE_KEY), 0.5f)
+        .outputStrategy(OutputStrategies.fixed(
+            EpProperties.timestampProperty("timestamp"),
+            EpProperties.stringEp(Labels.empty(), "id", "http://schema.org/id"),
+            EpProperties.integerEp(Labels.empty(), "signal", "http://schema.org/Number")))
+        .build();
   }
 
   @Override
@@ -84,7 +88,7 @@ public class PeakDetectionController extends FlinkDataProcessorDeclarer<PeakDete
 
 
     PeakDetectionParameters params = new PeakDetectionParameters(sepa,
-            valueToObserve, timestampMapping, groupBy, countWindowSize, lag, threshold, influence);
+        valueToObserve, timestampMapping, groupBy, countWindowSize, lag, threshold, influence);
 
     return new PeakDetectionProgram(params, configExtractor, streamPipesClient);
   }

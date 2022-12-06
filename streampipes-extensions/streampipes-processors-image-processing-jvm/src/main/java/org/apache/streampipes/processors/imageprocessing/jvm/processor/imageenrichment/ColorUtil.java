@@ -17,30 +17,30 @@
 
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment;
 
-import java.awt.*;
+import java.awt.Color;
 
-public enum  ColorUtil {
+public enum ColorUtil {
 
-    DARK_GREY(Color.DARK_GRAY),
-    BLACK(Color.BLACK),
-    RED(Color.RED),
-    PINK(Color.PINK),
-    ORANGE(Color.ORANGE),
-    YELLO(Color.YELLOW),
-    GREEN(Color.GREEN),
-    MAGENTA(Color.MAGENTA),
-    CYAN(Color.CYAN),
-    BLUE(Color.BLUE);
+  DARK_GREY(Color.DARK_GRAY),
+  BLACK(Color.BLACK),
+  RED(Color.RED),
+  PINK(Color.PINK),
+  ORANGE(Color.ORANGE),
+  YELLO(Color.YELLOW),
+  GREEN(Color.GREEN),
+  MAGENTA(Color.MAGENTA),
+  CYAN(Color.CYAN),
+  BLUE(Color.BLUE);
 
 
-    Color color;
+  Color color;
 
-    ColorUtil(Color color) {
-        this.color = color;
-    }
+  ColorUtil(Color color) {
+    this.color = color;
+  }
 
-    static public Color getColor(int num) {
-        int index = num % ColorUtil.values().length;
-        return ColorUtil.values()[index].color;
-    }
+  static public Color getColor(int num) {
+    int index = num % ColorUtil.values().length;
+    return ColorUtil.values()[index].color;
+  }
 }

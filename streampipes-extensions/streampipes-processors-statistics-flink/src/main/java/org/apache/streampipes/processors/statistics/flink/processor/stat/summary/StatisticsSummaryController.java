@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.summary;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
@@ -30,18 +29,24 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Statistics;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 
 
 public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<StatisticsSummaryParameters> implements
-        ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+    ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   private static final String listPropertyMappingName = "list-property";
 
@@ -56,22 +61,23 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.statistics.flink.statistics-summary")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.listRequirement(Datatypes
-                            .Number), Labels.withId(listPropertyMappingName), PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .outputStrategy(OutputStrategies.customTransformation())
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithNaryMapping(EpRequirements.listRequirement(Datatypes
+                .Number), Labels.withId(listPropertyMappingName), PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .outputStrategy(OutputStrategies.customTransformation())
+        .build();
   }
 
   @Override
-  public FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(DataProcessorInvocation graph,
-                                                                           ProcessingElementParameterExtractor extractor,
-                                                                           ConfigExtractor configExtractor,
-                                                                           StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorRuntime<StatisticsSummaryParameters> getRuntime(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor,
+      ConfigExtractor configExtractor,
+      StreamPipesClient streamPipesClient) {
     List<String> listPropertyMappings = extractor.mappingPropertyValues(listPropertyMappingName);
 
     StatisticsSummaryParameters params = new StatisticsSummaryParameters(graph, listPropertyMappings);
@@ -81,19 +87,22 @@ public class StatisticsSummaryController extends FlinkDataProcessorDeclarer<Stat
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+                                           ProcessingElementParameterExtractor extractor) throws SpRuntimeException {
 
     EventSchema eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
     List<String> listPropertyMappings = extractor.mappingPropertyValues(listPropertyMappingName);
 
-    for (String property: listPropertyMappings) {
+    for (String property : listPropertyMappings) {
       String propertyPrefix = StringUtils.substringAfterLast(property, ":");
 
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + MIN, Statistics.MIN));
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + MAX, Statistics.MAX));
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + SUM, Statistics.SUM));
-      eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + STDDEV, Statistics.STDDEV));
-      eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + VARIANCE, Statistics.VARIANCE));
+      eventSchema.addEventProperty(
+          EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + STDDEV, Statistics.STDDEV));
+      eventSchema.addEventProperty(
+          EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + VARIANCE, Statistics.VARIANCE));
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + MEAN, Statistics.MEAN));
       eventSchema.addEventProperty(EpProperties.doubleEp(Labels.empty(), propertyPrefix + "_" + N, Statistics.N));
     }

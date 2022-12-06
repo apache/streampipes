@@ -41,25 +41,25 @@ public class StatisticsFlinkInit extends StandaloneModelSubmitter {
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("org.apache.streampipes.processors.statistics.flink",
-                    "Processors Statistics Flink",
-                    "",
-                    8090)
-            .registerPipelineElements(new StatisticsSummaryController(),
-                    new StatisticsSummaryControllerWindow())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
-            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
-            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
-            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
-            .build();
+            "Processors Statistics Flink",
+            "",
+            8090)
+        .registerPipelineElements(new StatisticsSummaryController(),
+            new StatisticsSummaryControllerWindow())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+        .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+        .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+        .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+        .build();
   }
 
 }

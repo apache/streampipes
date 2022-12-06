@@ -32,14 +32,13 @@ public class StatisticsSummaryParametersWindow extends EventProcessorBindingPara
   private TimeUnit timeUnit;
 
 
-
   public StatisticsSummaryParametersWindow(DataProcessorInvocation graph) {
     super(graph);
   }
 
   public StatisticsSummaryParametersWindow(DataProcessorInvocation graph, String valueToObserve,
                                            String timestampMapping, String groupBy, Long
-                                                   timeWindowSize, TimeUnit timeUnit) {
+                                               timeWindowSize, TimeUnit timeUnit) {
     super(graph);
     this.valueToObserve = valueToObserve;
     this.timestampMapping = timestampMapping;

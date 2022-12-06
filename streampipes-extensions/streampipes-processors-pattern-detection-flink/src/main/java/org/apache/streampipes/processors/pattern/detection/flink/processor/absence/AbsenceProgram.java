@@ -17,6 +17,12 @@
  */
 package org.apache.streampipes.processors.pattern.detection.flink.processor.absence;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
+import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnitConverter;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.cep.CEP;
@@ -30,11 +36,6 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
-import org.apache.streampipes.processors.pattern.detection.flink.processor.and.TimeUnitConverter;
 
 import java.util.List;
 import java.util.Map;
@@ -52,66 +53,67 @@ public class AbsenceProgram extends AbstractPatternDetectionProgram<AbsenceParam
 
     Time time = TimeUnitConverter.toTime(params.getTimeUnit(), params.getTimeWindowSize());
 
-    DataStream<Tuple2<Boolean, Event>> stream1 = messageStream[0].flatMap(new FlatMapFunction<Event, Tuple2<Boolean, Event>>() {
-      @Override
-      public void flatMap(Event in, Collector<Tuple2<Boolean, Event>> out) throws
+    DataStream<Tuple2<Boolean, Event>> stream1 =
+        messageStream[0].flatMap(new FlatMapFunction<Event, Tuple2<Boolean, Event>>() {
+          @Override
+          public void flatMap(Event in, Collector<Tuple2<Boolean, Event>> out) throws
               Exception {
-        out.collect(new Tuple2<>(true, in));
-      }
-    });
+            out.collect(new Tuple2<>(true, in));
+          }
+        });
 
-    DataStream<Tuple2<Boolean, Event>> stream2 = messageStream[1].flatMap(new FlatMapFunction<Event, Tuple2<Boolean, Event>>() {
-      @Override
-      public void flatMap(Event in, Collector<Tuple2<Boolean, Event>> out) throws
+    DataStream<Tuple2<Boolean, Event>> stream2 =
+        messageStream[1].flatMap(new FlatMapFunction<Event, Tuple2<Boolean, Event>>() {
+          @Override
+          public void flatMap(Event in, Collector<Tuple2<Boolean, Event>> out) throws
               Exception {
-        out.collect(new Tuple2<>(false, in));
-      }
-    });
+            out.collect(new Tuple2<>(false, in));
+          }
+        });
 
     DataStream<Tuple2<Boolean, Event>> joinedStreams = stream2.union(stream1);
 
 
     Pattern<Tuple2<Boolean, Event>, Tuple2<Boolean, Event>> matchedEvents =
-            Pattern.<Tuple2<Boolean, Event>>begin("start")
-                    .where(new SimpleCondition<Tuple2<Boolean, Event>>() {
-                      @Override
-                      public boolean filter(Tuple2<Boolean, Event> ride) throws Exception {
-                        return ride.f0;
-                      }
-                    })
-                    .next("end")
-                    .where(new SimpleCondition<Tuple2<Boolean, Event>>() {
-                      @Override
-                      public boolean filter(Tuple2<Boolean, Event> ride) throws Exception {
-                        return !ride.f0;
-                      }
-                    });
+        Pattern.<Tuple2<Boolean, Event>>begin("start")
+            .where(new SimpleCondition<Tuple2<Boolean, Event>>() {
+              @Override
+              public boolean filter(Tuple2<Boolean, Event> ride) throws Exception {
+                return ride.f0;
+              }
+            })
+            .next("end")
+            .where(new SimpleCondition<Tuple2<Boolean, Event>>() {
+              @Override
+              public boolean filter(Tuple2<Boolean, Event> ride) throws Exception {
+                return !ride.f0;
+              }
+            });
 
     PatternStream<Tuple2<Boolean, Event>> patternStream = CEP.pattern(joinedStreams, matchedEvents
-            .within(time));
+        .within(time));
 
-    OutputTag<Tuple2<Boolean, Event>> timedout = new OutputTag<Tuple2<Boolean, Event>>
-            ("timedout") {
+    OutputTag<Tuple2<Boolean, Event>> timedout = new OutputTag<Tuple2<Boolean, Event>>("timedout") {
     };
 
     SingleOutputStreamOperator<Tuple2<Boolean, Event>> matched = patternStream.flatSelect(
-            timedout,
-            new TimedOut(),
-            new FlatSelectNothing<>()
+        timedout,
+        new TimedOut(),
+        new FlatSelectNothing<>()
     );
 
     return matched.getSideOutput(timedout).flatMap(new FlatMapFunction<Tuple2<Boolean, Event>,
-            Event>() {
+        Event>() {
       @Override
       public void flatMap(Tuple2<Boolean, Event> in, Collector<Event> out) throws
-              Exception {
+          Exception {
         out.collect(in.f1);
       }
     });
   }
 
   public static class TimedOut implements PatternFlatTimeoutFunction<Tuple2<Boolean, Event>,
-          Tuple2<Boolean, Event>> {
+      Tuple2<Boolean, Event>> {
     @Override
     public void timeout(Map<String, List<Tuple2<Boolean, Event>>> map, long l,
                         Collector<Tuple2<Boolean, Event>> collector) throws Exception {

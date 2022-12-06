@@ -22,7 +22,6 @@ import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.helpers.CollectedStreamRequirements;
 import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
-import org.apache.streampipes.sdk.utils.Datatypes;
 
 public class RequiredBoxStream {
 
@@ -30,14 +29,14 @@ public class RequiredBoxStream {
   public static final String BOX_ARRAY_PROPERTY = "box-array-property";
 
   public static CollectedStreamRequirements getBoxStream() {
-        return StreamRequirementsBuilder
-            .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"), Labels
-                            .withId(IMAGE_PROPERTY),
-                    PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReqList("https://streampipes.org/boundingboxes"),
-                    Labels.withId(BOX_ARRAY_PROPERTY),
-                    PropertyScope.NONE)
-            .build();
+    return StreamRequirementsBuilder
+        .create()
+        .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq("https://image.com"), Labels
+                .withId(IMAGE_PROPERTY),
+            PropertyScope.NONE)
+        .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReqList("https://streampipes.org/boundingboxes"),
+            Labels.withId(BOX_ARRAY_PROPERTY),
+            PropertyScope.NONE)
+        .build();
   }
 }

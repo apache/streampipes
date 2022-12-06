@@ -28,7 +28,11 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.and.T
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -44,22 +48,22 @@ public class AbsenceController extends FlinkDataProcessorDeclarer<AbsenceParamet
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.pattern-detection.flink.absence")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION)
-            .category(DataProcessorType.PATTERN_DETECT)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("Seconds",
-                    "Minutes", "Hours"))
-            .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
-            .outputStrategy(OutputStrategies.custom(false))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION)
+        .category(DataProcessorType.PATTERN_DETECT)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredSingleValueSelection(Labels.withId(TIME_UNIT), Options.from("Seconds",
+            "Minutes", "Hours"))
+        .requiredIntegerParameter(Labels.withId(TIME_WINDOW))
+        .outputStrategy(OutputStrategies.custom(false))
+        .build();
   }
 
   @Override
