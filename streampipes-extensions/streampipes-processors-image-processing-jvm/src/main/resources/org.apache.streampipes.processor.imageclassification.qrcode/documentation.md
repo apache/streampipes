@@ -18,7 +18,7 @@
 
 ## QR Code Reader
 
-<p align="center"> 
+<p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
@@ -57,6 +57,6 @@ Outputs a similar event like below.
 ```
 {
   'qrvalue': 'http://githhub.com/',
-  'timestamp': 1621244783151  
+  'timestamp': 1621244783151
 }
 ```

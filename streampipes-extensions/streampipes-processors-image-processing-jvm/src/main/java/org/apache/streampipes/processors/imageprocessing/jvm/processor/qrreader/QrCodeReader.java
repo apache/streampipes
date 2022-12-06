@@ -17,16 +17,17 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader;
 
-import boofcv.abst.fiducial.QrCodeDetector;
-import boofcv.alg.fiducial.qrcode.QrCode;
-import boofcv.factory.fiducial.FactoryFiducial;
-import boofcv.io.image.ConvertBufferedImage;
-import boofcv.struct.image.GrayU8;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.PlainImageTransformer;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+
+import boofcv.abst.fiducial.QrCodeDetector;
+import boofcv.alg.fiducial.qrcode.QrCode;
+import boofcv.factory.fiducial.FactoryFiducial;
+import boofcv.io.image.ConvertBufferedImage;
+import boofcv.struct.image.GrayU8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,8 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
   private static final Logger LOG = LoggerFactory.getLogger(QrCodeReader.class);
 
   @Override
-  public void onInvocation(QrCodeReaderParameters qrCodeReaderParameters, SpOutputCollector spOutputCollector,
+  public void onInvocation(QrCodeReaderParameters qrCodeReaderParameters,
+                           SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
     this.params = qrCodeReaderParameters;
     this.sendIfNoResult = qrCodeReaderParameters.getSendIfNoResult();
@@ -51,8 +53,7 @@ public class QrCodeReader implements EventProcessor<QrCodeReaderParameters> {
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) {
-    PlainImageTransformer<QrCodeReaderParameters> imageTransformer = new PlainImageTransformer<>
-        (in, params);
+    PlainImageTransformer<QrCodeReaderParameters> imageTransformer = new PlainImageTransformer<>(in, params);
     Optional<BufferedImage> imageOpt = imageTransformer.getImage(params.getImagePropertyName());
 
     if (imageOpt.isPresent()) {
