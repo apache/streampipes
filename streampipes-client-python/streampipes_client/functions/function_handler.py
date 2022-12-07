@@ -78,11 +78,12 @@ class FunctionHandler:
                 logger.info(f"Using {broker.__class__.__name__} for {streampipes_function}")
 
         # Start the function loop or add it as tasks if a loop is already running
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            loop.create_task(self._function_loop())
-        else:
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
             asyncio.run(self._function_loop())
+        else:
+            loop.create_task(self._function_loop())
 
     def _get_broker(self, broker_name: str) -> Broker:  # TODO implementation for more transport_protocols
         """Get a broker by a name.

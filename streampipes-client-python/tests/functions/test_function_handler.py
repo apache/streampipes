@@ -46,6 +46,28 @@ class TestFunction(StreamPipesFunction):
         self.stopped = True
 
 
+class TestFunctionTwoStreams(StreamPipesFunction):
+    def getFunctionId(self) -> Tuple[str, int]:
+        return ("org.test.TestFunction2", 1)
+
+    def requiredStreamIds(self) -> List[str]:
+        return ["urn:streampipes.apache.org:eventstream:uPDKLI", "urn:streampipes.apache.org:eventstream:HHoidJ"]
+
+    def onServiceStarted(self, context: FunctionContext):
+        self.context = context
+        self.data1 = []
+        self.data2 = []
+
+    def onEvent(self, event: Dict[str, Any], streamId: str):
+        if streamId == self.requiredStreamIds()[0]:
+            self.data1.append(event)
+        else:
+            self.data2.append(event)
+
+    def onServiceStopped(self):
+        self.stopped = True
+
+
 class TestMessage:
     def __init__(self, data) -> None:
         self.data = JSONEncoder().encode(data).encode()
@@ -91,7 +113,7 @@ class TestFunctionHandler(TestCase):
                         "brokerHostname": "nats",
                         "topicDefinition": {
                             "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
-                            "actualTopicName": "org.apache.streampipes.connect.fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                            "actualTopicName": "test1",
                         },
                         "port": 4222,
                     }
@@ -171,7 +193,7 @@ class TestFunctionHandler(TestCase):
             "dom": None,
         }
 
-        self.test_stream_data = [
+        self.test_stream_data1 = [
             {"density": 10.3, "temperature": 20.5, "timestamp": 1670000001000},
             {"density": 13.4, "temperature": 20.4, "timestamp": 1670000002000},
             {"density": 12.6, "temperature": 20.7, "timestamp": 1670000003000},
@@ -179,6 +201,15 @@ class TestFunctionHandler(TestCase):
             {"density": 10.6, "temperature": 20.4, "timestamp": 1670000005000},
             {"density": 11.3, "temperature": 19.5, "timestamp": 1670000006000},
             {"density": 15.7, "temperature": 19.3, "timestamp": 1670000007000},
+        ]
+        self.test_stream_data2 = [
+            {"density": 5.3, "temperature": 30.5, "timestamp": 1670000001000},
+            {"density": 2.6, "temperature": 31.7, "timestamp": 1670000002000},
+            {"density": 3.6, "temperature": 30.4, "timestamp": 1670000003000},
+            {"density": 5.7, "temperature": 29.3, "timestamp": 1670000004000},
+            {"density": 5.3, "temperature": 30.5, "timestamp": 1670000005000},
+            {"density": 2.6, "temperature": 31.7, "timestamp": 1670000006000},
+            {"density": 3.6, "temperature": 30.4, "timestamp": 1670000007000},
         ]
 
     @patch("streampipes_client.functions.function_handler.NatsBroker.get_message", autospec=True)
@@ -188,12 +219,12 @@ class TestFunctionHandler(TestCase):
         http_session_mock.get.return_value.json.return_value = self.data_stream
         http_session.return_value = http_session_mock
 
-        nats_broker.return_value = TestMessageIterator(self.test_stream_data)
+        nats_broker.return_value = TestMessageIterator(self.test_stream_data1)
 
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
-                host_address="localhost",
+                host_address="demo.nats.io",
             )
         )
 
@@ -210,5 +241,57 @@ class TestFunctionHandler(TestCase):
         self.assertListEqual(test_function.context.streams, test_function.requiredStreamIds())
         self.assertEqual(test_function.context.function_id, test_function.getFunctionId()[0])
 
-        self.assertListEqual(self.test_stream_data, test_function.data)
+        self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)
+
+    @patch("streampipes_client.functions.function_handler.NatsBroker.get_message", autospec=True)
+    @patch("streampipes_client.endpoint.endpoint.APIEndpoint.get", autospec=True)
+    def test_function_handler_two_streams(self, endpoint: MagicMock, nats_broker: MagicMock):
+        def get_stream(endpoint, stream_id):
+            if stream_id == "urn:streampipes.apache.org:eventstream:uPDKLI":
+                return DataStream(**self.data_stream)
+            elif stream_id == "urn:streampipes.apache.org:eventstream:HHoidJ":
+                data_stream = DataStream(**self.data_stream)
+                data_stream.element_id = stream_id
+                data_stream.event_grounding.transport_protocols[0].topic_definition.actual_topic_name = "test2"
+                return data_stream
+
+        endpoint.side_effect = get_stream
+
+        def get_messages(broker):
+            if broker.topic_name == "test1":
+                return TestMessageIterator(self.test_stream_data1)
+            elif broker.topic_name == "test2":
+                return TestMessageIterator(self.test_stream_data2)
+
+        nats_broker.side_effect = get_messages
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="demo.nats.io",
+            )
+        )
+
+        registration = Registration()
+        test_function1 = TestFunction()
+        test_function2 = TestFunctionTwoStreams()
+        registration.register(test_function1).register(test_function2)
+        function_handler = FunctionHandler(registration, client)
+        function_handler.initializeFunctions()
+
+        self.assertListEqual(test_function1.data, self.test_stream_data1)
+        self.assertTrue(test_function1.stopped)
+
+        stream_ids = test_function2.requiredStreamIds()
+        self.assertDictEqual(
+            test_function2.context.schema,
+            {
+                stream_ids[0]: get_stream(None, stream_ids[0]),
+                stream_ids[1]: get_stream(None, stream_ids[1]),
+            },
+        )
+        self.assertListEqual(test_function2.context.streams, test_function2.requiredStreamIds())
+        self.assertListEqual(test_function2.data1, self.test_stream_data1)
+        self.assertListEqual(test_function2.data2, self.test_stream_data2)
+        self.assertTrue(test_function2.stopped)
