@@ -91,8 +91,8 @@ public class ComposeProcessor extends StreamPipesDataProcessor {
   }
 
   private String getOtherSelectorPrefix(String currentSelectorPrefix) {
-    return currentSelectorPrefix.equals(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX) ?
-        PropertySelectorConstants.SECOND_STREAM_ID_PREFIX : PropertySelectorConstants
+    return currentSelectorPrefix.equals(PropertySelectorConstants.FIRST_STREAM_ID_PREFIX)
+        ? PropertySelectorConstants.SECOND_STREAM_ID_PREFIX : PropertySelectorConstants
         .FIRST_STREAM_ID_PREFIX;
   }
 

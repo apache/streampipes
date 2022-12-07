@@ -46,8 +46,8 @@ public class JmsPublisher implements EventSink<JmsParameters> {
     this.publisher.connect(jmsTransportProtocol);
     if (!this.publisher.isConnected()) {
       throw new SpRuntimeException(
-          "Could not connect to JMS server " + params.getJmsHost() + " on Port: " + params.getJmsPort() +
-              " to topic: " + params.getTopic());
+          "Could not connect to JMS server " + params.getJmsHost() + " on Port: " + params.getJmsPort()
+              + " to topic: " + params.getTopic());
     }
 
 

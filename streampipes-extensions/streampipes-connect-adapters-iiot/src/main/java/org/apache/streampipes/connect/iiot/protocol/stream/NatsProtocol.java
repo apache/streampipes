@@ -184,8 +184,8 @@ public class NatsProtocol extends BrokerProtocol {
     if (elements.size() > 0) {
       return elements;
     } else {
-      throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000 +
-          " seconds, is this subjects currently providing data?");
+      throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000
+          + " seconds, is this subjects currently providing data?");
     }
   }
 }

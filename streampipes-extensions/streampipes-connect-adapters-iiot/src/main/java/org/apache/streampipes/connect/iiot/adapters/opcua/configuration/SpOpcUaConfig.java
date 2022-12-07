@@ -48,8 +48,11 @@ public class SpOpcUaConfig {
    * @param opcServerURL             complete OPC UA server url
    * @param namespaceIndex           namespace index of the given node
    * @param nodeId                   node identifier
-   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-   * @param selectedNodeNames        list of node names provided from {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)} (String, StaticPropertyExtractor)}
+   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription
+   *                                 mode
+   * @param selectedNodeNames        list of node names provided from
+   *                                 {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)}
+   *                                 (String, StaticPropertyExtractor)}
    */
   public SpOpcUaConfig(String opcServerURL,
                        int namespaceIndex,
@@ -78,8 +81,10 @@ public class SpOpcUaConfig {
    * @param opcServerPort            OPC UA port number
    * @param namespaceIndex           namespace index of the given node
    * @param nodeId                   node identifier
-   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-   * @param selectedNodeNames        list of node names provided from {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)}
+   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in
+   *                                 subscription mode
+   * @param selectedNodeNames        list of node names provided from
+   *                                 {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)}
    */
   public SpOpcUaConfig(String opcServer,
                        int opcServerPort,
@@ -98,8 +103,10 @@ public class SpOpcUaConfig {
    * @param nodeId                   node identifier
    * @param username                 username to authenticate at the OPC UA server
    * @param password                 corresponding password to given user name
-   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-   * @param selectedNodeNames        list of node names provided from {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)}
+   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds,
+   *                                 {@code null} if in subscription mode
+   * @param selectedNodeNames        list of node names provided from
+   *                                 {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)}
    */
   public SpOpcUaConfig(String opcServerURL,
                        int namespaceIndex,
@@ -123,8 +130,10 @@ public class SpOpcUaConfig {
    * @param nodeId                   node identifier
    * @param username                 username to authenticate at the OPC UA server
    * @param password                 corresponding password to given user name
-   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds, {@code null} if in subscription mode
-   * @param selectedNodeNames        list of node names provided from {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)}
+   * @param pullIntervalMilliSeconds duration of pull interval in milliseconds,
+   *                                 {@code null} if in subscription mode
+   * @param selectedNodeNames        list of node names provided from
+   *                                 {@link OpcUaUtil#resolveConfiguration(String, StaticPropertyExtractor)}
    */
   public SpOpcUaConfig(String opcServer,
                        int opcServerPort,

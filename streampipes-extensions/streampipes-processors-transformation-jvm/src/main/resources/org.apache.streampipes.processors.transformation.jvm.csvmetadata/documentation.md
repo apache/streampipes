@@ -29,7 +29,8 @@ The file can contain different information for different keys in the stream.
 
 ### Structure of CSV file
 The first row containes the runtime names for the properties to insert.
-Once the file is uploaded the user can select which column to use for the matching property and which values should be appended.
+Once the file is uploaded the user can select which column to use for the matching property
+and which values should be appended.
 Delimiter: ';'
 
 
@@ -41,7 +42,7 @@ Add the location of a production line to the event
 ### Input  event
 ```
 {
-  'line_id': 'line1', 
+  'line_id': 'line1',
   'timestamp': 1586378041
 }
 ```
@@ -60,11 +61,11 @@ line3;usa
 * Field to match (Example: production_line)
 * Fields to append (Example: location)
 
-### Output event 
+### Output event
 ```
 {
-  'line_id': 'line1', 
-  'timestamp': 1586378041, 
+  'line_id': 'line1',
+  'timestamp': 1586378041,
   'location': 'germany'
 }
 ```

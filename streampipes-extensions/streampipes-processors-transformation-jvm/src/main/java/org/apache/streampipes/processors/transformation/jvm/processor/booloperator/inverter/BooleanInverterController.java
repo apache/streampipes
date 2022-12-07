@@ -54,8 +54,9 @@ public class BooleanInverterController extends StandaloneEventProcessingDeclarer
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanInverterParameters> onInvocation(DataProcessorInvocation graph,
-                                                                          ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<BooleanInverterParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String invertFieldName = extractor.mappingPropertyValue(INVERT_FIELD_ID);
     BooleanInverterParameters params = new BooleanInverterParameters(graph, invertFieldName);

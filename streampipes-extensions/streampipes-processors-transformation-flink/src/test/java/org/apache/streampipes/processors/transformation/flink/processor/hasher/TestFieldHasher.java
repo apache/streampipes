@@ -17,13 +17,15 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
-import io.flinkspector.datastream.DataStreamTestBase;
+
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Md5HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha1HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha2HashAlgorithm;
 import org.apache.streampipes.processors.transformation.flink.utils.DummyCollector;
+
+import io.flinkspector.datastream.DataStreamTestBase;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -43,9 +45,9 @@ public class TestFieldHasher extends DataStreamTestBase {
   @Parameterized.Parameters
   public static Iterable<Object[]> algorithm() {
     return Arrays.asList(new Object[][]{
-            {"field1", "field2", "1"},
-            {"field1", "field2", "1"},
-            {"field1", "field2", 3},
+        {"field1", "field2", "1"},
+        {"field1", "field2", "1"},
+        {"field1", "field2", 3},
     });
   }
 

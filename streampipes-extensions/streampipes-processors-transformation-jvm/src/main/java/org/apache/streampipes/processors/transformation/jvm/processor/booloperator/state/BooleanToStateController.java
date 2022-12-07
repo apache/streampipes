@@ -55,31 +55,35 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
 
   public static final String CURRENT_STATE = "current_state";
 
-  private static final String defaultSkeleton = "// Add the configuration for the string mappings here:\n" +
-          "{\n" +
-          "     \"exampleRuntimeName1\": \"newValue1\",\n" +
-          "     \"exampleRuntimeName2\": \"newValue2\"\n" +
-          "}";
+  private static final String defaultSkeleton = "// Add the configuration for the string mappings here:\n"
+      + "{\n"
+      + "     \"exampleRuntimeName1\": \"newValue1\",\n"
+      + "     \"exampleRuntimeName2\": \"newValue2\"\n"
+      + "}";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state")
-            .category(DataProcessorType.BOOLEAN_OPERATOR)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_STATE_FIELD), PropertyScope.NONE)
-                    .build())
-            .requiredTextParameter(Labels.withId(DEFAULT_STATE_ID))
-            .requiredCodeblock(Labels.withId(JSON_CONFIGURATION), CodeLanguage.Javascript, defaultSkeleton)
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.stringEp(Labels.withId(CURRENT_STATE), CURRENT_STATE, SPSensor.STATE)
-            ))
-            .build();
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.transformation.jvm.processor.booloperator.state")
+        .category(DataProcessorType.BOOLEAN_OPERATOR)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_STATE_FIELD),
+                PropertyScope.NONE)
+            .build())
+        .requiredTextParameter(Labels.withId(DEFAULT_STATE_ID))
+        .requiredCodeblock(Labels.withId(JSON_CONFIGURATION), CodeLanguage.Javascript, defaultSkeleton)
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.stringEp(Labels.withId(CURRENT_STATE), CURRENT_STATE, SPSensor.STATE)
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanToStateParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<BooleanToStateParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     List<String> stateFields = extractor.mappingPropertyValues(BOOLEAN_STATE_FIELD);
     String defaultState = extractor.singleValueParameter(DEFAULT_STATE_ID, String.class);
@@ -87,8 +91,10 @@ public class BooleanToStateController extends StandaloneEventProcessingDeclarer<
 
     try {
       jsonConfigurationString = jsonConfigurationString.replaceAll("(?m)^//.*", "");
-      Map<String, String> jsonConfiguration = JacksonSerializer.getObjectMapper().readValue(jsonConfigurationString, Map.class);
-      BooleanToStateParameters params = new BooleanToStateParameters(graph, stateFields, defaultState, jsonConfiguration);
+      Map<String, String> jsonConfiguration =
+          JacksonSerializer.getObjectMapper().readValue(jsonConfigurationString, Map.class);
+      BooleanToStateParameters params =
+          new BooleanToStateParameters(graph, stateFields, defaultState, jsonConfiguration);
 
       return new ConfiguredEventProcessor<>(params, BooleanToState::new);
     } catch (JsonProcessingException e) {

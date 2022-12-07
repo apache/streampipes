@@ -78,8 +78,8 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
     String user = extractor.singleValueParameter(DATABASE_USER_KEY, String.class);
     String password = extractor.secretValue(DATABASE_PASSWORD_KEY);
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_MAPPING_KEY);
-    Integer batch_size = extractor.singleValueParameter(BATCH_INTERVAL_ACTIONS_KEY, Integer.class);
-    Integer flush_duration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);
+    Integer batchSize = extractor.singleValueParameter(BATCH_INTERVAL_ACTIONS_KEY, Integer.class);
+    Integer flushDuration = extractor.singleValueParameter(MAX_FLUSH_DURATION_KEY, Integer.class);
 
     InfluxDbParameters params = new InfluxDbParameters(graph,
         hostname,
@@ -89,8 +89,8 @@ public class InfluxDbController extends StandaloneEventSinkDeclarer<InfluxDbPara
         user,
         password,
         timestampField,
-        batch_size,
-        flush_duration);
+        batchSize,
+        flushDuration);
 
     return new ConfiguredEventSink<>(params, InfluxDb::new);
   }

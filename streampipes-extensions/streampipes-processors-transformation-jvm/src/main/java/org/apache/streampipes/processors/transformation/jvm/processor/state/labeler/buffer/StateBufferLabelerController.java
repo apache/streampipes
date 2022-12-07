@@ -104,8 +104,9 @@ public class StateBufferLabelerController extends StandaloneEventProcessingDecla
   }
 
   @Override
-  public ConfiguredEventProcessor<StateBufferLabelerParameters> onInvocation(DataProcessorInvocation graph,
-                                                                             ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<StateBufferLabelerParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String sensorListValueProperty = extractor.mappingPropertyValue(SENSOR_VALUE_ID);
     String stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);

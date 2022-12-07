@@ -66,8 +66,9 @@ public class TransformToBooleanController
   }
 
   @Override
-  public ConfiguredEventProcessor<TransformToBooleanParameters> onInvocation(DataProcessorInvocation graph,
-                                                                             ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<TransformToBooleanParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     List<String> transformFields = extractor.mappingPropertyValues(TRANSFORM_FIELDS_ID);
 

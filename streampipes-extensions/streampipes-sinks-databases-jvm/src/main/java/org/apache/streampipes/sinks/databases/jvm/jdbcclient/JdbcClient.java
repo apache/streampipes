@@ -114,10 +114,10 @@ public class JdbcClient {
    */
   private void connectWithSSL(String host, int port, String databaseName) throws SpRuntimeException {
     String url =
-        "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/" + databaseName +
-            "?user=" +
-            this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword() +
-            "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
+        "jdbc:" + this.dbDescription.getEngine().getUrlName() + "://" + host + ":" + port + "/" + databaseName
+            + "?user="
+            + this.dbDescription.getUsername() + "&password=" + this.dbDescription.getPassword()
+            + "&ssl=true&sslfactory=" + this.dbDescription.getSslFactory() + "&sslmode=require";
     try {
       connection = DriverManager.getConnection(url);
       ensureDatabaseExists(databaseName);
@@ -159,7 +159,8 @@ public class JdbcClient {
   }
 
   /**
-   * If this method returns successfully a table with the name in {@link JdbcConnectionParameters#getDbTable()} exists in the database
+   * If this method returns successfully a table with the name in
+   * {@link JdbcConnectionParameters#getDbTable()} exists in the database
    * with the given database name exists on the server, specified by the url.
    *
    * @param url          The JDBC url containing the needed information (e.g. "jdbc:iotdb://127.0.0.1:6667/")

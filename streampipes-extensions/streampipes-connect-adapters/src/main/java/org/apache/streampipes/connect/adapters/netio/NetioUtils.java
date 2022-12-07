@@ -49,19 +49,19 @@ public class NetioUtils {
   public static final String LOAD_KEY = "load";
   public static final String ENERGY_KEY = "energy";
 
-  public static URI VOLT = null;
-  public static URI WATT = null;
-  public static URI AMPERE = null;
-  public static URI WATTHOUR = null;
-  public static URI HERTZ = null;
+  public static URI volt = null;
+  public static URI watt = null;
+  public static URI ampere = null;
+  public static URI watthour = null;
+  public static URI hertz = null;
 
   static {
     try {
-      VOLT = new URI("http://qudt.org/vocab/unit#Volt");
-      WATT = new URI("http://qudt.org/vocab/unit#Watt");
-      AMPERE = new URI("http://qudt.org/vocab/unit#Ampere");
-      WATTHOUR = new URI("http://qudt.org/vocab/unit#Watthour");
-      HERTZ = new URI("http://qudt.org/vocab/unit#Hertz");
+      volt = new URI("http://qudt.org/vocab/unit#Volt");
+      watt = new URI("http://qudt.org/vocab/unit#Watt");
+      ampere = new URI("http://qudt.org/vocab/unit#Ampere");
+      watthour = new URI("http://qudt.org/vocab/unit#Watthour");
+      hertz = new URI("http://qudt.org/vocab/unit#Hertz");
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
@@ -87,14 +87,14 @@ public class NetioUtils {
             .create(Datatypes.Float, VOLTAGE_KEY)
             .label("Voltage")
             .description("Instantaneous voltage")
-            .measurementUnit(VOLT)
+            .measurementUnit(volt)
             .build());
     allProperties.add(
         PrimitivePropertyBuilder
             .create(Datatypes.Float, FREQUENCY_KEY)
             .label("Frequency")
             .description("Instantaneous frequency")
-            .measurementUnit(HERTZ)
+            .measurementUnit(hertz)
             .build());
     allProperties.add(
         PrimitivePropertyBuilder
@@ -131,7 +131,7 @@ public class NetioUtils {
             .create(Datatypes.Float, CURRENT_KEY)
             .label("Current")
             .description("Instantaneous current for the specific power output")
-            .measurementUnit(AMPERE)
+            .measurementUnit(ampere)
             .build());
     allProperties.add(
         PrimitivePropertyBuilder
@@ -150,7 +150,7 @@ public class NetioUtils {
             .create(Datatypes.Float, ENERGY_KEY)
             .label("Energy")
             .description("Instantaneous energy counter for the value for the specific power output")
-            .measurementUnit(WATTHOUR)
+            .measurementUnit(watthour)
             .build());
 
     eventSchema.setEventProperties(allProperties);

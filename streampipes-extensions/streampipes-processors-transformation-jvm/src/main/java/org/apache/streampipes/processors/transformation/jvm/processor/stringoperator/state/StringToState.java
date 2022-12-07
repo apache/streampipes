@@ -29,7 +29,7 @@ import java.util.List;
 
 public class StringToState implements EventProcessor<StringToStateParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private List<String> stateFields;
 
@@ -37,7 +37,7 @@ public class StringToState implements EventProcessor<StringToStateParameters> {
   public void onInvocation(StringToStateParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanInverterParameters.getGraph().getLogger(StringToState.class);
+    log = booleanInverterParameters.getGraph().getLogger(StringToState.class);
     this.stateFields = booleanInverterParameters.getStateFields();
   }
 

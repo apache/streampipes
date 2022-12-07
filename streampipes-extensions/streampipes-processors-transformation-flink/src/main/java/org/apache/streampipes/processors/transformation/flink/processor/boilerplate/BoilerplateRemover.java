@@ -92,11 +92,11 @@ public class BoilerplateRemover implements FlatMapFunction<Event, Event> {
 
   private HTMLHighlighter getHTMLHighligther(boolean extractHTML) {
     if (htmlHighlighter == null) {
-        if (extractHTML) {
-            htmlHighlighter = HTMLHighlighter.newExtractingInstance();
-        } else {
-            htmlHighlighter = HTMLHighlighter.newHighlightingInstance();
-        }
+      if (extractHTML) {
+        htmlHighlighter = HTMLHighlighter.newExtractingInstance();
+      } else {
+        htmlHighlighter = HTMLHighlighter.newHighlightingInstance();
+      }
     }
     return htmlHighlighter;
   }

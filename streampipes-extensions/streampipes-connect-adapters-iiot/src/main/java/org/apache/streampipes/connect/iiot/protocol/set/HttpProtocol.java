@@ -133,8 +133,8 @@ public class HttpProtocol extends Protocol {
 
     // Check that result size is n. Currently just an error is logged. Maybe change to an exception
     if (dataByteArray.size() < n) {
-      logger.error("Error in HttpProtocol! User required: " + n + " elements but the resource just had: " +
-          dataByteArray.size());
+      logger.error("Error in HttpProtocol! User required: " + n + " elements but the resource just had: "
+          + dataByteArray.size());
     }
 
     for (byte[] b : dataByteArray) {
@@ -163,9 +163,9 @@ public class HttpProtocol extends Protocol {
       throw new ParseException("Could not receive Data from: " + url);
     }
 
-      if (result == null) {
-          throw new ParseException("Could not receive Data from: " + url);
-      }
+    if (result == null) {
+      throw new ParseException("Could not receive Data from: " + url);
+    }
 
     return result;
   }

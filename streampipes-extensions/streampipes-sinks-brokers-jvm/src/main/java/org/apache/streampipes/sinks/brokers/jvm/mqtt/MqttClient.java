@@ -23,6 +23,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sinks.brokers.jvm.mqtt.common.MqttOptions;
 import org.apache.streampipes.sinks.brokers.jvm.mqtt.common.MqttUtils;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
+
 import org.fusesource.mqtt.client.BlockingConnection;
 import org.fusesource.mqtt.client.MQTT;
 

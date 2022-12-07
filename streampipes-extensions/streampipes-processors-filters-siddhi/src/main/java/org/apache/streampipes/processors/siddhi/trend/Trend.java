@@ -60,12 +60,12 @@ public class Trend extends SiddhiEventEngine<TrendParameters> {
         Expressions.stream("e1", siddhiParams.getInputStreamNames().get(0)));
     StreamExpression exp2 = Expressions.stream("e2", siddhiParams.getInputStreamNames().get(0));
 
-    PropertyExpressionBase mathExp = trendParameters.getOperation() == TrendOperator.INCREASE ?
-        Expressions.divide(Expressions.property(mappingProperty), Expressions.staticValue(increase)) :
+    PropertyExpressionBase mathExp = trendParameters.getOperation() == TrendOperator.INCREASE
+        ? Expressions.divide(Expressions.property(mappingProperty), Expressions.staticValue(increase)) :
         Expressions.multiply(Expressions.property(mappingProperty), Expressions.staticValue(increase));
 
-    RelationalOperatorExpression opExp = trendParameters.getOperation() == TrendOperator.INCREASE ?
-        Expressions.le(Expressions.property("e1", mappingProperty), mathExp) :
+    RelationalOperatorExpression opExp = trendParameters.getOperation() == TrendOperator.INCREASE
+        ? Expressions.le(Expressions.property("e1", mappingProperty), mathExp) :
         Expressions.ge(Expressions.property("e1", mappingProperty), mathExp);
 
     StreamFilterExpression filterExp = Expressions

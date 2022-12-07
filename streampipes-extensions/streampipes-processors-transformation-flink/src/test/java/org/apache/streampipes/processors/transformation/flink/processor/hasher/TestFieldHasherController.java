@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
-import org.junit.Test;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
+
+import org.junit.Test;
 
 public class TestFieldHasherController {
 

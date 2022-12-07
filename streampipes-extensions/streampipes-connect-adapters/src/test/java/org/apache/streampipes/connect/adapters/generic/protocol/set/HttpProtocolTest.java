@@ -18,14 +18,15 @@
 
 package org.apache.streampipes.connect.adapters.generic.protocol.set;
 
+import org.apache.streampipes.connect.adapters.generic.Mock;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Rule;
-import org.apache.streampipes.connect.adapters.generic.Mock;
 
 public class HttpProtocolTest {
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule(Mock.PORT);
+  @Rule
+  public WireMockRule wireMockRule = new WireMockRule(Mock.PORT);
 
 
 //    @Test

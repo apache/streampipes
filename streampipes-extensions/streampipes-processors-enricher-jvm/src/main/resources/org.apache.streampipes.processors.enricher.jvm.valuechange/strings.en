@@ -16,8 +16,8 @@
 #
 
 
-org.apache.streampipes.processors.enricher.jvm.valueChange.title=Value Change
-org.apache.streampipes.processors.enricher.jvm.valueChange.description=The processing element should be able to detect when a numeric property change from one configured value to another
+org.apache.streampipes.processors.enricher.jvm.valuechange.title=Value Change
+org.apache.streampipes.processors.enricher.jvm.valuechange.description=The processing element should be able to detect when a numeric property change from one configured value to another
 
 change-value-mapping.title=Property to monitor
 change-value-mapping.description=The property where the values are monitored

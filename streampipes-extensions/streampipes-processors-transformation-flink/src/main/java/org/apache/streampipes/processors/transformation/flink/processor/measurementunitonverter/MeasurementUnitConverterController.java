@@ -79,10 +79,11 @@ public class MeasurementUnitConverterController extends
 
 
   @Override
-  public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa,
-                                                                                  ProcessingElementParameterExtractor extractor,
-                                                                                  ConfigExtractor configExtractor,
-                                                                                  StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(
+      DataProcessorInvocation sepa,
+      ProcessingElementParameterExtractor extractor,
+      ConfigExtractor configExtractor,
+      StreamPipesClient streamPipesClient) {
 
     String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String inputUnitId = extractor.measurementUnit(convertProperty, 0);

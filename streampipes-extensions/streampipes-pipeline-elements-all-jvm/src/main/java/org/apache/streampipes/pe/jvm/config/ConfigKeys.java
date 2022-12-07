@@ -18,7 +18,7 @@
 package org.apache.streampipes.pe.jvm.config;
 
 public class ConfigKeys {
-  final static String HOST = "SP_HOST";
-  final static String PORT = "SP_PORT";
-  final static String SERVICE_NAME_KEY = "SP_SERVICE_NAME";
+  static final String HOST = "SP_HOST";
+  static final String PORT = "SP_PORT";
+  static final String SERVICE_NAME_KEY = "SP_SERVICE_NAME";
 }

@@ -100,8 +100,9 @@ public class CreateTrajectoryFromPointsController
 
 
   @Override
-  public ConfiguredEventProcessor<CreateTrajectoryFromPointsParameter> onInvocation(DataProcessorInvocation graph,
-                                                                                    ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<CreateTrajectoryFromPointsParameter> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
 
     String wkt = extractor.mappingPropertyValue(POINT_KEY);

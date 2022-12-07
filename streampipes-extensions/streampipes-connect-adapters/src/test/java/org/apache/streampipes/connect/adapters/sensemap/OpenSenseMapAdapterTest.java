@@ -35,7 +35,8 @@ package org.apache.streampipes.connect.adapters.sensemap;
 //
 //    OpenSenseMapAdapter adapter = new OpenSenseMapAdapter();
 //    adapter.setUrl("http://localhost:" + senseMapMockPort);
-//    adapter.setSelectedSensors(Arrays.asList(SensorNames.KEY_TEMPERATURE, SensorNames.KEY_HUMIDITY, SensorNames.KEY_PRESSURE));
+//    adapter.setSelectedSensors(Arrays.asList(SensorNames.KEY_TEMPERATURE,
+//    SensorNames.KEY_HUMIDITY, SensorNames.KEY_PRESSURE));
 //
 //    List<Map<String, Object>> result = adapter.getEvents();
 //

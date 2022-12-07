@@ -19,8 +19,6 @@
 
 package org.apache.streampipes.processors.transformation.jvm.processor.measurementconverter;
 
-import com.github.jqudt.Quantity;
-import com.github.jqudt.Unit;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -44,6 +42,9 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.ProcessorParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
+
+import com.github.jqudt.Quantity;
+import com.github.jqudt.Unit;
 
 import java.net.URI;
 import java.util.ArrayList;

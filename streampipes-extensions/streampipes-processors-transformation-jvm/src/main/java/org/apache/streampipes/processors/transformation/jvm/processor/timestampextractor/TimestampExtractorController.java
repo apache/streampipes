@@ -44,8 +44,8 @@ import java.util.List;
 public class TimestampExtractorController extends StandaloneEventProcessingDeclarer<TimestampExtractorParameters>
     implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
-  public final static String TIMESTAMP_FIELD = "timestampField";
-  public final static String SELECTED_OUTPUT_FIELDS = "selectedOutputFields";
+  public static final String TIMESTAMP_FIELD = "timestampField";
+  public static final String SELECTED_OUTPUT_FIELDS = "selectedOutputFields";
 
 
   @Override
@@ -69,8 +69,9 @@ public class TimestampExtractorController extends StandaloneEventProcessingDecla
   }
 
   @Override
-  public ConfiguredEventProcessor<TimestampExtractorParameters> onInvocation(DataProcessorInvocation graph,
-                                                                             ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<TimestampExtractorParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
     String timestampField = extractor.mappingPropertyValue(TIMESTAMP_FIELD);
     List<String> selectedMultiValue = extractor.selectedMultiValues(SELECTED_OUTPUT_FIELDS, String.class);
 

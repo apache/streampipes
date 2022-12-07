@@ -52,13 +52,13 @@ public class KafkaPublisher implements EventSink<KafkaParameters> {
 
     // check if a user for the authentication is defined
     if (useAuthentication) {
-      securityConfig = parameters.isUseSSL() ?
-          new KafkaSecuritySaslSSLConfig(parameters.getUsername(), parameters.getPassword()) :
+      securityConfig = parameters.isUseSSL()
+          ? new KafkaSecuritySaslSSLConfig(parameters.getUsername(), parameters.getPassword()) :
           new KafkaSecuritySaslPlainConfig(parameters.getUsername(), parameters.getPassword());
     } else {
       // set security config for none authenticated access
-      securityConfig = parameters.isUseSSL() ?
-          new KafkaSecurityUnauthenticatedSSLConfig() :
+      securityConfig = parameters.isUseSSL()
+          ? new KafkaSecurityUnauthenticatedSSLConfig() :
           new KafkaSecurityUnauthenticatedPlainConfig();
     }
 

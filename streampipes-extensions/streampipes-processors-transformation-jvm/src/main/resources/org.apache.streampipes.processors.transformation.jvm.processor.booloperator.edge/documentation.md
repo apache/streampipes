@@ -18,7 +18,7 @@
 
 ##  Signal Edge Filter
 
-<p align="center"> 
+<p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
@@ -39,13 +39,14 @@ Boolean field that is observed
 
 ## Configuration
 ### Kind of edge
-* Detect rising edges 
-* Detect falling edges 
+* Detect rising edges
+* Detect falling edges
 * Detect both
-    
+
 ### Delay
 Defines for how many events the signal must be stable before result is emitted.
-(E.g. if set to 2, the result is not emitted if value toggles between true and false, it fires when two consecutive events are detected after the flank)
+(E.g. if set to 2, the result is not emitted if value toggles between true and false,
+it fires when two consecutive events are detected after the flank)
 
 ## Output
 Emits input event, when the signal edge is detected

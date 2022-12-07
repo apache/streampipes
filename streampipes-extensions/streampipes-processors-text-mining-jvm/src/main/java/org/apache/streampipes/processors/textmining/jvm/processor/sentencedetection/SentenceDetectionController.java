@@ -59,8 +59,9 @@ public class SentenceDetectionController extends StandaloneEventProcessingDeclar
   }
 
   @Override
-  public ConfiguredEventProcessor<SentenceDetectionParameters> onInvocation(DataProcessorInvocation graph,
-                                                                            ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<SentenceDetectionParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     String filename = extractor.selectedFilename(BINARY_FILE_KEY);

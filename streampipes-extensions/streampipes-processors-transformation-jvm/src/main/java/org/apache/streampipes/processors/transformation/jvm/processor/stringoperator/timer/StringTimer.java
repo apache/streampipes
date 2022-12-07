@@ -26,7 +26,7 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 public class StringTimer implements EventProcessor<StringTimerParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String selectedFieldName;
   private Long timestamp;
@@ -38,7 +38,7 @@ public class StringTimer implements EventProcessor<StringTimerParameters> {
   public void onInvocation(StringTimerParameters stringTimerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = stringTimerParameters.getGraph().getLogger(StringTimer.class);
+    log = stringTimerParameters.getGraph().getLogger(StringTimer.class);
     this.selectedFieldName = stringTimerParameters.getSelectedFieldName();
     this.outputDivisor = stringTimerParameters.getOutputDivisor();
     this.useInputFrequencyForOutputFrequency = stringTimerParameters.isUseInputFrequencyForOutputFrequency();

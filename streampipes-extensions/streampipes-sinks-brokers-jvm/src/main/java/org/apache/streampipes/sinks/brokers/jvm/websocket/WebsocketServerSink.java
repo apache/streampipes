@@ -37,7 +37,7 @@ import java.io.IOException;
 
 public class WebsocketServerSink extends StreamPipesDataSink {
 
-  private String PORT_KEY = "port";
+  private static final String PORT_KEY = "port";
   private Integer port;
 
   private SocketServer server;

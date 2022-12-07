@@ -37,7 +37,7 @@ public class Sensor {
   @SerializedName("unit")
   private String mUnit;
   @SerializedName("_id")
-  private String m_id;
+  private String mId;
 
   public String getIcon() {
     return mIcon;
@@ -80,11 +80,11 @@ public class Sensor {
   }
 
   public String get_id() {
-    return m_id;
+    return mId;
   }
 
-  public void set_id(String _id) {
-    m_id = _id;
+  public void set_id(String id) {
+    mId = id;
   }
 
 }

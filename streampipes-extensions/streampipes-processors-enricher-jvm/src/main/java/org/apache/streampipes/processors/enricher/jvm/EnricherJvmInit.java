@@ -33,7 +33,7 @@ import org.apache.streampipes.processors.enricher.jvm.processor.math.MathOpProce
 import org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.StaticMathOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
 import org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.TrigonometryProcessor;
-import org.apache.streampipes.processors.enricher.jvm.processor.valueChange.ValueChangeProcessor;
+import org.apache.streampipes.processors.enricher.jvm.processor.valuechange.ValueChangeProcessor;
 
 public class EnricherJvmInit extends StandaloneModelSubmitter {
 

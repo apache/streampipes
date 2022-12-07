@@ -30,7 +30,7 @@ import java.util.List;
 
 public class TimestampExtractor implements EventProcessor<TimestampExtractorParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String timestampField;
   private List<String> outputFields;
@@ -38,7 +38,7 @@ public class TimestampExtractor implements EventProcessor<TimestampExtractorPara
   @Override
   public void onInvocation(TimestampExtractorParameters params, SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = params.getGraph().getLogger(TimestampExtractor.class);
+    log = params.getGraph().getLogger(TimestampExtractor.class);
 
     this.timestampField = params.getTimestampField();
     this.outputFields = params.getOutputFields();

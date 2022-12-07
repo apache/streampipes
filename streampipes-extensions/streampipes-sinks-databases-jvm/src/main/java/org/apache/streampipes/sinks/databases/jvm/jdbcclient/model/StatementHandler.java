@@ -79,10 +79,14 @@ public class StatementHandler {
    * @param preProperty
    * @param prefix
    * @return
-   * @throws SpRuntimeException
    */
-  public int extendPreparedStatement(DbDescription dbDescription, final Map<String, Object> event,
-                                     StringBuilder s1, StringBuilder s2, int index, String preProperty, String prefix)
+  public int extendPreparedStatement(DbDescription dbDescription,
+                                     final Map<String, Object> event,
+                                     StringBuilder s1,
+                                     StringBuilder s2,
+                                     int index,
+                                     String preProperty,
+                                     String prefix)
       throws SpRuntimeException {
 
     for (Map.Entry<String, Object> pair : event.entrySet()) {
@@ -109,7 +113,9 @@ public class StatementHandler {
   /**
    * Fills a prepared statement with the actual values base on {@link StatementHandler#eventParameterMap}. If
    * {@link StatementHandler#eventParameterMap} is empty or not complete (which should only happen once in the
-   * beginning), it calls {@link StatementHandler#generatePreparedStatement(DbDescription, TableDescription, Connection, Map)} to generate a new one.
+   * beginning), it calls
+   * {@link StatementHandler#generatePreparedStatement
+   * (DbDescription, TableDescription, Connection, Map)} to generate a new one.
    *
    * @param event
    * @param pre
@@ -140,12 +146,14 @@ public class StatementHandler {
 
   /**
    * Clears, fills and executes the saved prepared statement {@code ps} with the data found in
-   * event. To fill in the values it calls {@link StatementHandler#fillPreparedStatement(DbDescription, TableDescription, Connection, Map, String)}.
+   * event. To fill in the values it calls
+   * {@link StatementHandler#fillPreparedStatement(DbDescription, TableDescription, Connection, Map, String)}.
    *
    * @param event Data to be saved in the SQL table
    * @throws SQLException       When the statement cannot be executed
    * @throws SpRuntimeException When the table name is not allowed or it is thrown
-   *                            by {@link org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.StatementUtils#setValue(ParameterInformation, Object, PreparedStatement)}
+   *                            by {@link org.apache.streampipes.sinks.databases.jvm.jdbcclient.utils.StatementUtils
+   *                            #setValue(ParameterInformation, Object, PreparedStatement)}
    */
   public void executePreparedStatement(DbDescription dbDescription, TableDescription tableDescription,
                                        Connection connection, final Map<String, Object> event)

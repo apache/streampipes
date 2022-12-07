@@ -38,7 +38,7 @@ import java.sql.Statement;
 public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
 
   private IotDbParameters params;
-  private static Logger LOG;
+  private static Logger log;
 
   private String timestampField;
 
@@ -49,7 +49,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
       throws SpRuntimeException {
 
     this.params = parameters;
-    LOG = parameters.getGraph().getLogger(IotDb.class);
+    log = parameters.getGraph().getLogger(IotDb.class);
     timestampField = parameters.getTimestampField();
 
     // tablename is the identifier for the storage group in the IoTDB Adapter (e.g. root.data.table1) in which all
@@ -59,7 +59,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
         parameters.getGraph().getInputStreams().get(0).getEventSchema(),
         parameters,
         dbEngine,
-        LOG);
+        log);
 
   }
 
@@ -73,7 +73,7 @@ public class IotDb extends JdbcClient implements EventSink<IotDbParameters> {
       }
       save(event);
     } catch (SpRuntimeException e) {
-      LOG.error(e.getMessage());
+      log.error(e.getMessage());
     }
   }
 

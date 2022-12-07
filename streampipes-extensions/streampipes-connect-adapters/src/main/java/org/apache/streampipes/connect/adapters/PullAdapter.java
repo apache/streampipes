@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamA
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

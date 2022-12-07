@@ -46,7 +46,7 @@ import java.util.concurrent.ExecutionException;
 
 public class OpcUa implements EventSink<OpcUaParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private OpcUaClient opcUaClient;
   private OpcUaParameters params;
@@ -56,7 +56,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
   private Class sourceDataType;
 
   // define a mapping of StreamPipes data types to Java classes
-  private static HashMap<String, Class> XSDMatchings = new HashMap<>();
+  private static final HashMap<String, Class> XSDMatchings = new HashMap<>();
 
   static {
     XSDMatchings.put(XSD._double.toString(), Double.class);
@@ -81,7 +81,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
   @Override
   public void onInvocation(OpcUaParameters parameters, EventSinkRuntimeContext runtimeContext) throws
       SpRuntimeException {
-    LOG = parameters.getGraph().getLogger(OpcUa.class);
+    log = parameters.getGraph().getLogger(OpcUa.class);
 
     if (!parameters.getHostName().startsWith("opc.tcp://")) {
       serverUrl = "opc.tcp://" + parameters.getHostName() + ":" + parameters.getPort();
@@ -144,7 +144,7 @@ public class OpcUa implements EventSink<OpcUaParameters> {
     Variant v = getValue(inputEvent);
 
     if (v == null) {
-      LOG.error("Mapping property type: " + this.params.getMappingPropertyType() + " is not supported");
+      log.error("Mapping property type: " + this.params.getMappingPropertyType() + " is not supported");
     } else {
 
       DataValue value = new DataValue(v);
@@ -154,20 +154,18 @@ public class OpcUa implements EventSink<OpcUaParameters> {
         StatusCode status = f.get();
         if (status.isBad()) {
           if (status.getValue() == 0x80740000L) {
-            LOG.error("Type missmatch! Tried to write value of type: " + this.params.getMappingPropertyType() +
-                " but server did not accept this");
+            log.error("Type missmatch! Tried to write value of type: " + this.params.getMappingPropertyType()
+                + " but server did not accept this");
           } else if (status.getValue() == 0x803B0000L) {
-            LOG.error("Wrong access level. Not allowed to write to nodes");
+            log.error("Wrong access level. Not allowed to write to nodes");
           }
-          LOG.error(
-              "Value: " + value.getValue().toString() + " could not be written to node Id: " + this.params.getNodeId() +
-                  " on " +
-                  "OPC-UA server: " + this.serverUrl);
+          log.error(
+              "Value: " + value.getValue().toString() + " could not be written to node Id: "
+                  + this.params.getNodeId() + " on " + "OPC-UA server: " + this.serverUrl);
         }
       } catch (InterruptedException | ExecutionException e) {
-        LOG.error("Exception: Value: " + value.getValue().toString() + " could not be written to node Id: " +
-            this.params.getNodeId() + " on " +
-            "OPC-UA server: " + this.serverUrl);
+        log.error("Exception: Value: " + value.getValue().toString() + " could not be written to node Id: "
+            + this.params.getNodeId() + " on " + "OPC-UA server: " + this.serverUrl);
       }
     }
   }

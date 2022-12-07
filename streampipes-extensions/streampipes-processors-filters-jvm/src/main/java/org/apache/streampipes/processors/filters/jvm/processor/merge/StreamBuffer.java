@@ -53,9 +53,9 @@ public class StreamBuffer {
     Iterator itr = this.buffer.iterator();
     while (itr.hasNext()) {
       Event e = (Event) itr.next();
-        if (e.getFieldBySelector(timestampProperty).getAsPrimitive().getAsLong() <= timestamp) {
-            itr.remove();
-        }
+      if (e.getFieldBySelector(timestampProperty).getAsPrimitive().getAsLong() <= timestamp) {
+        itr.remove();
+      }
     }
   }
 

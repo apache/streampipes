@@ -24,6 +24,7 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.pe.shared.PlaceholderExtractor;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +47,8 @@ public class RabbitMqConsumer implements EventSink<RabbitMqParameters> {
     this.topic = parameters.getRabbitMqTopic();
 
     if (!this.publisher.isConnected()) {
-      throw new SpRuntimeException("Could not establish conntection to RabbitMQ broker. Host: " +
-          parameters.getRabbitMqHost() + " Port: " + parameters.getRabbitMqPort());
+      throw new SpRuntimeException("Could not establish conntection to RabbitMQ broker. Host: "
+          + parameters.getRabbitMqHost() + " Port: " + parameters.getRabbitMqPort());
     }
   }
 

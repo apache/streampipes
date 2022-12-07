@@ -17,8 +17,7 @@
  */
 package org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata;
 
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.parser.BooleanParser;
 import org.apache.streampipes.commons.parser.FloatParser;
@@ -31,6 +30,9 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -18,7 +18,7 @@
 
 ## Field Mapper
 
-<p align="center"> 
+<p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
@@ -38,8 +38,11 @@ Replaces one or more fields with a new field and computes a hash value of these 
 ***
 
 ## Example
+
 Merge two fields into a hash value
+
 ### Input  event
+
 ```
 {
   "timestamp":1586380104915,
@@ -50,10 +53,12 @@ Merge two fields into a hash value
 ```
 
 ### Configuration
+
 * Fields: mass_flow, temperature
 * Name of new field: demo
 
-### Output event 
+### Output event
+
 ```
 {
   "timestamp":1586380104915,

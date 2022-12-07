@@ -59,8 +59,9 @@ public class NumericalFilterController extends StandaloneEventProcessingDeclarer
   }
 
   @Override
-  public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(DataProcessorInvocation graph,
-                                                                          ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<NumericalFilterParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     Double threshold = extractor.singleValueParameter(VALUE, Double.class);
     String stringOperation = extractor.selectedSingleValue(OPERATION, String.class);

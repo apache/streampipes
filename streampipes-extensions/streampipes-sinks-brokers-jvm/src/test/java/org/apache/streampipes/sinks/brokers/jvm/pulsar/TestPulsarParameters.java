@@ -19,6 +19,7 @@ package org.apache.streampipes.sinks.brokers.jvm.pulsar;
 
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

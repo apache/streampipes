@@ -62,9 +62,9 @@ public class SlackNotification implements EventSink<SlackNotificationParameters>
     } else {
       SlackChannel channel = session.findChannelByName(params.getUserChannel());
       if (channel == null || channel.getId() == null) {
-        throw new SpRuntimeException("The channel: '" + params.getUserChannel() + "' does not " +
-            "exists or " +
-            "the bot has no rights to access it");
+        throw new SpRuntimeException("The channel: '" + params.getUserChannel() + "' does not "
+            + "exists or "
+            + "the bot has no rights to access it");
       }
     }
   }

@@ -28,10 +28,10 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-public abstract class AbstractPatternDetectionProgram<B extends EventProcessorBindingParams>
-    extends FlinkDataProcessorRuntime<B> {
+public abstract class AbstractPatternDetectionProgram<T extends EventProcessorBindingParams>
+    extends FlinkDataProcessorRuntime<T> {
 
-  public AbstractPatternDetectionProgram(B params,
+  public AbstractPatternDetectionProgram(T params,
                                          ConfigExtractor configExtractor,
                                          StreamPipesClient streamPipesClient) {
     super(params, configExtractor, streamPipesClient);

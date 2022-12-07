@@ -21,6 +21,7 @@ import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
+
 import org.eclipse.ditto.client.DittoClient;
 import org.eclipse.ditto.client.DittoClients;
 import org.eclipse.ditto.client.configuration.BasicAuthenticationConfiguration;

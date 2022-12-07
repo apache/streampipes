@@ -17,11 +17,6 @@
  */
 package org.apache.streampipes.sinks.brokers.jvm.pulsar;
 
-import com.google.common.annotations.VisibleForTesting;
-import org.apache.pulsar.client.api.ClientBuilder;
-import org.apache.pulsar.client.api.Producer;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
@@ -37,6 +32,12 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
+
+import com.google.common.annotations.VisibleForTesting;
+import org.apache.pulsar.client.api.ClientBuilder;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
 
 import java.util.Map;
 

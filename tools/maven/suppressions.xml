@@ -22,4 +22,6 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
     <suppress checks="." files="[\\/]org.apache.streampipes.vocabulary[\\/].*\.java$"/>
+    <suppress checks="." files="org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.geocode"/>
+    <suppress checks="." files="com.kohlschutter.boilerpipe"/>
 </suppressions>

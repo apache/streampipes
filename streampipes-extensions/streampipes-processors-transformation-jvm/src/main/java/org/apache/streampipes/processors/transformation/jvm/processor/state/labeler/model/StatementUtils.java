@@ -35,7 +35,6 @@ public class StatementUtils {
    * @param statements
    * @param log
    * @return
-   * @throws SpRuntimeException
    */
   public static Event addLabel(Event inputEvent, String labelName, double value, List<Statement> statements,
                                Logger log) {

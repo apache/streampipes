@@ -74,8 +74,8 @@ public class TableDescription {
         throw new SpRuntimeException("Database or Table does nit exist.");
       }
     } catch (SQLException e) {
-      throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode() +
-          ", SqlState: " + e.getSQLState());
+      throw new SpRuntimeException("SqlException: " + e.getMessage() + ", Error code: " + e.getErrorCode()
+          + ", SqlState: " + e.getSQLState());
     } finally {
       try {
         resultSet.close();
@@ -92,7 +92,8 @@ public class TableDescription {
    * {@link TableDescription#getEventSchema()} to extract all possible columns.
    *
    * @throws SpRuntimeException If the {@link JdbcConnectionParameters#getDbTable()}  is not allowed, if
-   *                            executeUpdate throws an SQLException or if {@link SQLStatementUtils#extractEventProperties(List, String, DbDescription)}
+   *                            executeUpdate throws an SQLException or if
+   *                            {@link SQLStatementUtils#extractEventProperties(List, String, DbDescription)}
    *                            throws an exception
    */
   public void createTable(String createStatement, StatementHandler statementHandler, DbDescription dbDescription,

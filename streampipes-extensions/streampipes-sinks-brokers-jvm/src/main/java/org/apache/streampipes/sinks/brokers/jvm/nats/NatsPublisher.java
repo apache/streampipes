@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.nats;
 
-import io.nats.client.Connection;
-import io.nats.client.Nats;
-import io.nats.client.Options;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.logging.api.Logger;
@@ -28,6 +25,10 @@ import org.apache.streampipes.messaging.nats.NatsUtils;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
+
+import io.nats.client.Connection;
+import io.nats.client.Nats;
+import io.nats.client.Options;
 
 import java.time.Duration;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class NatsPublisher implements EventSink<NatsParameters> {
   private String subject;
   private Connection natsConnection;
   private JsonDataFormatDefinition dataFormatDefinition;
-  private static Logger LOG;
+  private static Logger log;
 
   public NatsPublisher() {
     this.dataFormatDefinition = new JsonDataFormatDefinition();
@@ -48,7 +49,7 @@ public class NatsPublisher implements EventSink<NatsParameters> {
   public void onInvocation(NatsParameters parameters, EventSinkRuntimeContext runtimeContext)
       throws SpRuntimeException {
 
-    LOG = parameters.getGraph().getLogger(NatsPublisher.class);
+    log = parameters.getGraph().getLogger(NatsPublisher.class);
     var natsConfig = parameters.getNatsConfig();
     this.subject = natsConfig.getSubject();
     Options options = NatsUtils.makeNatsOptions(natsConfig);
@@ -56,7 +57,7 @@ public class NatsPublisher implements EventSink<NatsParameters> {
     try {
       this.natsConnection = Nats.connect(options);
     } catch (Exception e) {
-      LOG.error("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . " + e.toString());
+      log.error("Error when connecting to the Nats broker on " + natsConfig.getNatsUrls() + " . " + e.toString());
     }
   }
 
@@ -66,7 +67,7 @@ public class NatsPublisher implements EventSink<NatsParameters> {
       Map<String, Object> event = inputEvent.getRaw();
       natsConnection.publish(subject, dataFormatDefinition.fromMap(event));
     } catch (SpRuntimeException e) {
-      LOG.error("Could not publish events to Nats broker. " + e.toString());
+      log.error("Could not publish events to Nats broker. " + e.toString());
     }
   }
 
@@ -76,7 +77,7 @@ public class NatsPublisher implements EventSink<NatsParameters> {
       natsConnection.flush(Duration.ofMillis(50));
       natsConnection.close();
     } catch (TimeoutException | InterruptedException e) {
-      LOG.error("Error when disconnecting with Nats broker. " + e.toString());
+      log.error("Error when disconnecting with Nats broker. " + e.toString());
     }
   }
 }

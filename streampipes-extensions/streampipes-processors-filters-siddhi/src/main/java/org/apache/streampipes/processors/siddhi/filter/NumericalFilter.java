@@ -57,7 +57,8 @@ public class NumericalFilter extends SiddhiEventEngine<NumericalFilterParameters
     // e.g. Filter for numberField value less than 10 and output all fields
     //
     // Siddhi query: from inputstreamname[numberField<10]
-    //return "from " + siddhiParams.getInputStreamNames().get(0) +"[" + filterProperty + filterOperator + filterParameters.getThreshold() +"]";
+    //return "from " + siddhiParams.getInputStreamNames().get(0) +
+    // "[" + filterProperty + filterOperator + filterParameters.getThreshold() +"]";
 
     FromClause fromClause = FromClause.create();
     Expression filter = new RelationalOperatorExpression(operator, Expressions.property(filterProperty),

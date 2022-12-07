@@ -61,7 +61,7 @@ public class BooleanTimekeeping implements EventProcessor<BooleanTimekeepingPara
     boolean rightField = inputEvent.getFieldBySelector(rightFieldName).getAsPrimitive().getAsBoolean();
 
 
-    if (rightFieldLast == false && rightField == true) {
+    if (!rightFieldLast && rightField) {
       if (this.allPending.size() > 0) {
         Long startTime = this.allPending.removeLast();
 
@@ -83,7 +83,7 @@ public class BooleanTimekeeping implements EventProcessor<BooleanTimekeepingPara
     }
 
 
-    if (leftFieldLast == false && leftField == true) {
+    if (!leftFieldLast && leftField) {
       this.allPending.push(System.currentTimeMillis());
     }
   }

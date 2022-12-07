@@ -61,8 +61,9 @@ public class ReverseGeocodingController extends StandaloneEventProcessingDeclare
   }
 
   @Override
-  public ConfiguredEventProcessor<ReverseGeocodingParameters> onInvocation(DataProcessorInvocation graph,
-                                                                           ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ReverseGeocodingParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
     String latitudeField = extractor.mappingPropertyValue(LATITUDE_MAPPING);
     String longitudeField = extractor.mappingPropertyValue(LONGITUDE_MAPPING);
 

@@ -78,8 +78,8 @@ public class StreamPipesSimulationRunner {
         eventLoggers.add(kafkaLogger);
         final EventGenerator gen = new EventGenerator(w, workflowConfig,
             Collections.singletonList(kafkaLogger));
-        log.info("Adding EventGenerator for [ " + workflowConfig.getWorkflowName() + "," +
-            workflowConfig.getWorkflowFilename() + " ]");
+        log.info("Adding EventGenerator for [ " + workflowConfig.getWorkflowName() + ","
+            + workflowConfig.getWorkflowFilename() + " ]");
         eventGenerators.add(gen);
         eventGenThreads.add(new Thread(gen));
       }

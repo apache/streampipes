@@ -61,13 +61,13 @@ public class WatertankDataSimulator implements Runnable {
   }
 
   private String getKafkaHost(ConfigExtractor configExtractor) {
-    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean() ?
-        "localhost" : configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
+    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()
+        ? "localhost" : configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
   }
 
   private Integer getKafkaPort(ConfigExtractor configExtractor) {
-    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean() ?
-        9094 : configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
+    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()
+        ? 9094 : configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
   }
 
   private Map<String, TopicAwareWorkflow> buildSimWorkflows(SimulationConfig config) throws IOException {

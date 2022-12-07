@@ -44,8 +44,8 @@ public class StaticGoogleMapsGeocoder implements EventProcessor<StaticGoogleMaps
     String googleMapsApiKey = runtimeContext.getConfigStore().getConfig().getString(ConfigKeys.GOOGLE_API_KEY);
 
     if (googleMapsApiKey == null || googleMapsApiKey.equals("")) {
-      throw new SpRuntimeException("Could not start Geocoder. Did you forget to add a Google Maps" +
-          " API key?");
+      throw new SpRuntimeException("Could not start Geocoder. Did you forget to add a Google Maps"
+          + " API key?");
     }
 
     GeoApiContext context = new GeoApiContext.Builder()

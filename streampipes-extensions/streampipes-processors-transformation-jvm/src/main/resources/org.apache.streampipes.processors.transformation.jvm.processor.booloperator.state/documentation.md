@@ -18,7 +18,7 @@
 
 ## Boolean To State
 
-<p align="center"> 
+<p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
@@ -34,19 +34,24 @@ For the selected value which is true, the runtime name is added as the state fie
 ## Required input
 
 ### Boolean Fields
+
 Boolean fields that are converted to the state when true
 
 ### Default State
-When all boolean values are false, a default  state can be defined
+
+When all boolean values are false, a default state can be defined
 
 ### Mapping Configuration
+
 Configuration to provide a string mapping for each possible value.
 On the left ist the value of the runtime name and on the right the new value (e.g. {"runtimeName": "newValue"}).
 
 ***
 
 ## Configuration
+
 No further configuration required
 
 ## Output
+
 The output contains a new value with the string values of the state
