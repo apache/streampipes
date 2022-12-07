@@ -1584,8 +1584,8 @@ IoT data streams.
 						<includeTestSourceDirectory>true</includeTestSourceDirectory>
 						<configLocation>tools/maven/checkstyle.xml</configLocation>
 						<encoding>UTF-8</encoding>
-						<logViolationsToConsole>false</logViolationsToConsole>
-						<failOnViolation>false</failOnViolation>
+						<logViolationsToConsole>true</logViolationsToConsole>
+						<failOnViolation>true</failOnViolation>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -1810,15 +1810,12 @@ IoT data streams.
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>${maven-checkstyle-plugin.version}</version>
-				<configuration>
-					<logViolationsToConsole>false</logViolationsToConsole>
-					<failOnViolation>false</failOnViolation>
-				</configuration>
-			</plugin>
+			<!-- TODO: Add the maven-checkstyle-plugin back when https://github.com/apache/streampipes/issues/820 is completed-->
+			<!--			<plugin>-->
+			<!--				<groupId>org.apache.maven.plugins</groupId>-->
+			<!--				<artifactId>maven-checkstyle-plugin</artifactId>-->
+			<!--				<version>${maven-checkstyle-plugin.version}</version>-->
+			<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
