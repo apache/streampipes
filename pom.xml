@@ -1584,8 +1584,8 @@ IoT data streams.
 						<includeTestSourceDirectory>true</includeTestSourceDirectory>
 						<configLocation>tools/maven/checkstyle.xml</configLocation>
 						<encoding>UTF-8</encoding>
-						<logViolationsToConsole>false</logViolationsToConsole>
-						<failOnViolation>false</failOnViolation>
+						<logViolationsToConsole>true</logViolationsToConsole>
+						<failOnViolation>true</failOnViolation>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -1818,6 +1818,7 @@ IoT data streams.
 					<logViolationsToConsole>false</logViolationsToConsole>
 					<failOnViolation>false</failOnViolation>
 				</configuration>
+				<inherited>false</inherited>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
