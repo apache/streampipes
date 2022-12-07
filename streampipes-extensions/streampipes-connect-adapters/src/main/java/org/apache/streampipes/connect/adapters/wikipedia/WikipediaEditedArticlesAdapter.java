@@ -41,10 +41,10 @@ public class WikipediaEditedArticlesAdapter extends WikipediaAdapter {
   @Override
   public SpecificAdapterStreamDescription declareModel() {
     return SpecificDataStreamAdapterBuilder.create(ID)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(AdapterType.SocialMedia, AdapterType.OpenData)
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(AdapterType.SocialMedia, AdapterType.OpenData)
+        .build();
   }
 
   @Override

@@ -37,7 +37,12 @@ import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.helpers.Alternatives;
+import org.apache.streampipes.sdk.helpers.Filetypes;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 
@@ -74,7 +79,7 @@ public class HttpServerProtocol extends Protocol {
   public HttpServerProtocol(ProtocolDescription adapterDescription, IParser parser, IFormat format) {
     super(parser, format);
     StaticPropertyExtractor extractor =
-            StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
     this.adapterDescription = adapterDescription;
     this.endpointId = extractor.singleValueParameter(ENDPOINT_NAME, String.class);
   }
@@ -87,27 +92,27 @@ public class HttpServerProtocol extends Protocol {
   @Override
   public ProtocolDescription declareModel() {
     return ProtocolDescriptionBuilder.create(ID)
-            .withLocales(Locales.EN)
-            .sourceType(AdapterSourceType.STREAM)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(AdapterType.Generic)
-            .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
-            .requiredAlternatives(Labels.withId(CONFIGURE),
-                    Alternatives.from(Labels.withId(MANUALLY),
-                            StaticProperties.collection(Labels.withId(EP_CONFIG),
-                                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_RUNTIME_NAME)),
-                                    StaticProperties.singleValueSelection(Labels.withId(EP_RUNTIME_TYPE),
-                                            Options.from("String", "Integer", "Double", "Boolean")),
-                                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_DOMAIN_PROPERTY)))),
-                    Alternatives.from(Labels.withId(FILE_IMPORT),
-                            StaticProperties.fileProperty(Labels.withId(FILE), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)))
-            .build();
+        .withLocales(Locales.EN)
+        .sourceType(AdapterSourceType.STREAM)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(AdapterType.Generic)
+        .requiredTextParameter(Labels.withId(ENDPOINT_NAME))
+        .requiredAlternatives(Labels.withId(CONFIGURE),
+            Alternatives.from(Labels.withId(MANUALLY),
+                StaticProperties.collection(Labels.withId(EP_CONFIG),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_RUNTIME_NAME)),
+                    StaticProperties.singleValueSelection(Labels.withId(EP_RUNTIME_TYPE),
+                        Options.from("String", "Integer", "Double", "Boolean")),
+                    StaticProperties.stringFreeTextProperty(Labels.withId(EP_DOMAIN_PROPERTY)))),
+            Alternatives.from(Labels.withId(FILE_IMPORT),
+                StaticProperties.fileProperty(Labels.withId(FILE), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)))
+        .build();
   }
 
   @Override
   public GuessSchema getGuessSchema() throws ParseException {
     StaticPropertyExtractor extractor =
-            StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
     GuessSchemaBuilder schemaBuilder = GuessSchemaBuilder.create();
 
     String selectedImportMode = extractor.selectedAlternativeInternalId(CONFIGURE);
@@ -117,7 +122,7 @@ public class HttpServerProtocol extends Protocol {
 
       for (StaticProperty member : sp.getMembers()) {
         StaticPropertyExtractor memberExtractor =
-                StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
+            StaticPropertyExtractor.from(((StaticPropertyGroup) member).getStaticProperties(), new ArrayList<>());
         schemaBuilder.property(makeProperty(memberExtractor));
       }
     }
@@ -130,8 +135,8 @@ public class HttpServerProtocol extends Protocol {
     primitive.setRuntimeName(memberExtractor.singleValueParameter(EP_RUNTIME_NAME, String.class));
     primitive.setRuntimeType(extractRuntimeType(memberExtractor.selectedSingleValue(EP_RUNTIME_TYPE, String.class)));
     primitive
-            .setDomainProperties(Collections
-                    .singletonList(URI.create(memberExtractor.singleValueParameter(EP_DOMAIN_PROPERTY, String.class))));
+        .setDomainProperties(Collections
+            .singletonList(URI.create(memberExtractor.singleValueParameter(EP_DOMAIN_PROPERTY, String.class))));
     return primitive;
   }
 

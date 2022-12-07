@@ -26,69 +26,69 @@ import javax.annotation.Generated;
 @Generated("net.hexar.json2pojo")
 public class NetioGlobalMeasure {
 
-    @SerializedName("Voltage")
-    private float voltage;
+  @SerializedName("Voltage")
+  private float voltage;
 
-    @SerializedName("Frequency")
-    private float frequency;
+  @SerializedName("Frequency")
+  private float frequency;
 
-    @SerializedName("TotalCurrent")
-    private float totalCurrent;
+  @SerializedName("TotalCurrent")
+  private float totalCurrent;
 
-    @SerializedName("OverallPowerFactor")
-    private float overallPowerFactor;
+  @SerializedName("OverallPowerFactor")
+  private float overallPowerFactor;
 
-    @SerializedName("TotalLoad")
-    private float totalLoad;
+  @SerializedName("TotalLoad")
+  private float totalLoad;
 
-    @SerializedName("TotalEnergy")
-    private float totalEnergy;
+  @SerializedName("TotalEnergy")
+  private float totalEnergy;
 
-    public float getVoltage() {
-        return voltage;
-    }
+  public float getVoltage() {
+    return voltage;
+  }
 
-    public void setVoltage(float voltage) {
-        this.voltage = voltage;
-    }
+  public void setVoltage(float voltage) {
+    this.voltage = voltage;
+  }
 
-    public float getFrequency() {
-        return frequency;
-    }
+  public float getFrequency() {
+    return frequency;
+  }
 
-    public void setFrequency(float frequency) {
-        this.frequency = frequency;
-    }
+  public void setFrequency(float frequency) {
+    this.frequency = frequency;
+  }
 
-    public float getTotalCurrent() {
-        return totalCurrent;
-    }
+  public float getTotalCurrent() {
+    return totalCurrent;
+  }
 
-    public void setTotalCurrent(float totalCurrent) {
-        this.totalCurrent = totalCurrent;
-    }
+  public void setTotalCurrent(float totalCurrent) {
+    this.totalCurrent = totalCurrent;
+  }
 
-    public float getOverallPowerFactor() {
-        return overallPowerFactor;
-    }
+  public float getOverallPowerFactor() {
+    return overallPowerFactor;
+  }
 
-    public void setOverallPowerFactor(float overallPowerFactor) {
-        this.overallPowerFactor = overallPowerFactor;
-    }
+  public void setOverallPowerFactor(float overallPowerFactor) {
+    this.overallPowerFactor = overallPowerFactor;
+  }
 
-    public float getTotalLoad() {
-        return totalLoad;
-    }
+  public float getTotalLoad() {
+    return totalLoad;
+  }
 
-    public void setTotalLoad(float totalLoad) {
-        this.totalLoad = totalLoad;
-    }
+  public void setTotalLoad(float totalLoad) {
+    this.totalLoad = totalLoad;
+  }
 
-    public float getTotalEnergy() {
-        return totalEnergy;
-    }
+  public float getTotalEnergy() {
+    return totalEnergy;
+  }
 
-    public void setTotalEnergy(float totalEnergy) {
-        this.totalEnergy = totalEnergy;
-    }
+  public void setTotalEnergy(float totalEnergy) {
+    this.totalEnergy = totalEnergy;
+  }
 }

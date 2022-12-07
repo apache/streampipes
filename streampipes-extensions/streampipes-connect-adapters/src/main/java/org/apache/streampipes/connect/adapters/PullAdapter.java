@@ -18,83 +18,87 @@
 
 package org.apache.streampipes.connect.adapters;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
+import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 
 public abstract class PullAdapter extends SpecificDataStreamAdapter {
 
-    protected static Logger logger = LoggerFactory.getLogger(PullAdapter.class);
-    private ScheduledExecutorService scheduler;
-    private ScheduledExecutorService errorThreadscheduler;
+  protected static Logger logger = LoggerFactory.getLogger(PullAdapter.class);
+  private ScheduledExecutorService scheduler;
+  private ScheduledExecutorService errorThreadscheduler;
 
 
-    public PullAdapter() {
-        super();
+  public PullAdapter() {
+    super();
+  }
+
+  public PullAdapter(SpecificAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+  }
+
+  protected abstract void pullData();
+
+  protected abstract PollingSettings getPollingInterval();
+
+  @Override
+  public void startAdapter() throws AdapterException {
+    before();
+
+    final Runnable errorThread = () -> {
+      executeAdpaterLogic();
+    };
+
+    scheduler = Executors.newScheduledThreadPool(1);
+    scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
+
+  }
+
+  private void executeAdpaterLogic() {
+    final Runnable task = () -> {
+
+      pullData();
+
+    };
+
+    scheduler = Executors.newScheduledThreadPool(1);
+    ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
+        getPollingInterval().getValue(), getPollingInterval().getTimeUnit());
+
+    try {
+      handle.get();
+    } catch (ExecutionException | InterruptedException e) {
+      logger.error("Error", e);
     }
+  }
 
-    public PullAdapter(SpecificAdapterStreamDescription adapterDescription) {
-        super(adapterDescription);
-    }
+  @Override
+  public void stopAdapter() throws AdapterException {
+    after();
+    scheduler.shutdownNow();
+  }
 
-    protected abstract void pullData();
+  /**
+   * Called before adapter is started (e.g. initialize connections)
+   */
+  protected void before() throws AdapterException {
 
-    protected abstract PollingSettings getPollingInterval();
+  }
 
-    @Override
-    public void startAdapter() throws AdapterException {
-        before();
+  /**
+   * Called before adapter is stopped (e.g. shutdown connections)
+   */
+  protected void after() throws AdapterException {
 
-        final Runnable errorThread = () -> {
-            executeAdpaterLogic();
-        };
-
-        scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
-
-    }
-
-    private void executeAdpaterLogic() {
-        final Runnable task = () -> {
-
-            pullData();
-
-        };
-
-        scheduler = Executors.newScheduledThreadPool(1);
-        ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1,
-                getPollingInterval().getValue(), getPollingInterval().getTimeUnit());
-
-        try {
-            handle.get();
-        } catch (ExecutionException | InterruptedException e) {
-            logger.error("Error", e);
-        }
-    }
-
-    @Override
-    public void stopAdapter() throws AdapterException {
-        after();
-        scheduler.shutdownNow();
-    }
-
-    /**
-     * Called before adapter is started (e.g. initialize connections)
-     */
-    protected void before() throws AdapterException {
-
-    }
-
-    /**
-     * Called before adapter is stopped (e.g. shutdown connections)
-     */
-    protected void after() throws AdapterException {
-
-    }
+  }
 }

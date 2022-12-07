@@ -33,11 +33,20 @@ import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
-import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyList;
+import org.apache.streampipes.model.schema.EventPropertyNested;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+import org.apache.streampipes.sdk.helpers.Filetypes;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +65,7 @@ public class FileStreamProtocol extends Protocol {
 
   //private String filePath;
   private String selectedFileName;
- // private String timestampKey;
+  // private String timestampKey;
   private boolean replaceTimestamp;
   private float speedUp;
   private int timeBetweenReplay;
@@ -83,53 +92,53 @@ public class FileStreamProtocol extends Protocol {
 
     // exchange adapter pipeline sink with special purpose replay sink for file replay
     if (adapterPipeline.getPipelineSink() instanceof SendToKafkaAdapterSink) {
-        adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-                (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink(),
-                timestampKey,
-                replaceTimestamp,
-                speedUp));
+      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
+          (SendToKafkaAdapterSink) adapterPipeline.getPipelineSink(),
+          timestampKey,
+          replaceTimestamp,
+          speedUp));
 
     } else if (adapterPipeline.getPipelineSink() instanceof SendToMqttAdapterSink) {
-        adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-                (SendToMqttAdapterSink) adapterPipeline.getPipelineSink(),
-                timestampKey,
-                replaceTimestamp,
-                speedUp));
+      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
+          (SendToMqttAdapterSink) adapterPipeline.getPipelineSink(),
+          timestampKey,
+          replaceTimestamp,
+          speedUp));
 
     } else if (adapterPipeline.getPipelineSink() instanceof SendToJmsAdapterSink) {
-        adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
-                (SendToJmsAdapterSink) adapterPipeline.getPipelineSink(),
-                timestampKey,
-                replaceTimestamp,
-                speedUp));
+      adapterPipeline.changePipelineSink(new SendToBrokerReplayAdapterSink(
+          (SendToJmsAdapterSink) adapterPipeline.getPipelineSink(),
+          timestampKey,
+          replaceTimestamp,
+          speedUp));
     }
 
     running = true;
     task = new Thread() {
-        @Override
-        public void run() {
-          while (running) {
+      @Override
+      public void run() {
+        while (running) {
 
-            format.reset();
-            SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-            InputStream dataInputStream = getDataFromEndpoint();
-            try {
-              if(dataInputStream != null) {
-                parser.parse(dataInputStream, stk);
-              } else {
-                logger.warn("Could not read data from file.");
-              }
-            } catch (ParseException e) {
-              logger.error("Error while parsing: " + e.getMessage());
+          format.reset();
+          SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
+          InputStream dataInputStream = getDataFromEndpoint();
+          try {
+            if (dataInputStream != null) {
+              parser.parse(dataInputStream, stk);
+            } else {
+              logger.warn("Could not read data from file.");
             }
+          } catch (ParseException e) {
+            logger.error("Error while parsing: " + e.getMessage());
+          }
 
-              try {
-                  Thread.sleep(timeBetweenReplay * 1000);
-              } catch (InterruptedException e) {
-                  logger.error("Error while waiting for next replay round" + e.getMessage());
-              }
+          try {
+            Thread.sleep(timeBetweenReplay * 1000);
+          } catch (InterruptedException e) {
+            logger.error("Error while waiting for next replay round" + e.getMessage());
           }
         }
+      }
     };
     task.start();
   }
@@ -143,8 +152,8 @@ public class FileStreamProtocol extends Protocol {
   private InputStream getDataFromEndpoint() throws ParseException {
 
 
-      try {
-          return FileProtocolUtils.getFileInputStream(this.selectedFileName);
+    try {
+      return FileProtocolUtils.getFileInputStream(this.selectedFileName);
     } catch (IOException e) {
       throw new ParseException("Could not find file: " + selectedFileName);
     }
@@ -152,11 +161,12 @@ public class FileStreamProtocol extends Protocol {
 
   @Override
   public Protocol getInstance(ProtocolDescription protocolDescription, IParser parser, IFormat format) {
-    StaticPropertyExtractor extractor = StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
+    StaticPropertyExtractor extractor =
+        StaticPropertyExtractor.from(protocolDescription.getConfig(), new ArrayList<>());
 
     List<String> replaceTimestampStringList = extractor.selectedMultiValues("replaceTimestamp", String.class);
 //    String replaceTimestampString = extractor.selectedSingleValueOption("replaceTimestamp");
-    boolean replaceTimestamp = replaceTimestampStringList.size() == 0 ? false : true;
+    boolean replaceTimestamp = replaceTimestampStringList.size() != 0;
 
     float speedUp = extractor.singleValueParameter("speed", Float.class);
 
@@ -175,12 +185,14 @@ public class FileStreamProtocol extends Protocol {
             result = prefixKey + eventProperty.getRuntimeName();
           }
         }
-      } else if (eventProperty instanceof EventPropertyNested && ((EventPropertyNested) eventProperty).getEventProperties() != null) {
+      } else if (eventProperty instanceof EventPropertyNested
+          && ((EventPropertyNested) eventProperty).getEventProperties() != null) {
         result = getTimestampKey(((EventPropertyNested) eventProperty).getEventProperties(),
-                prefixKey + eventProperty.getRuntimeName() + ".");
-      } else if (eventProperty instanceof EventPropertyList && ((EventPropertyList) eventProperty).getEventProperty() != null) {
+            prefixKey + eventProperty.getRuntimeName() + ".");
+      } else if (eventProperty instanceof EventPropertyList
+          && ((EventPropertyList) eventProperty).getEventProperty() != null) {
         result = getTimestampKey(Arrays.asList(((EventPropertyList) eventProperty).getEventProperty()),
-                prefixKey + eventProperty.getRuntimeName() + ".");
+            prefixKey + eventProperty.getRuntimeName() + ".");
       }
       if (result != null) {
         return result;
@@ -192,22 +204,22 @@ public class FileStreamProtocol extends Protocol {
   @Override
   public ProtocolDescription declareModel() {
     return ProtocolDescriptionBuilder.create(ID)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .sourceType(AdapterSourceType.STREAM)
-            .category(AdapterType.Generic)
-            .requiredFile(Labels.withId("filePath"), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .sourceType(AdapterSourceType.STREAM)
+        .category(AdapterType.Generic)
+        .requiredFile(Labels.withId("filePath"), Filetypes.CSV, Filetypes.JSON, Filetypes.XML)
 //            .requiredSingleValueSelection(Labels.withId("replaceTimestamp"),
 //                Options.from("True", "False"))
-            .requiredMultiValueSelection(Labels.withId("replaceTimestamp"),
-                    Options.from(""))
-            .requiredFloatParameter(Labels.withId("speed"))
-            .build();
+        .requiredMultiValueSelection(Labels.withId("replaceTimestamp"),
+            Options.from(""))
+        .requiredFloatParameter(Labels.withId("speed"))
+        .build();
   }
 
   @Override
   public GuessSchema getGuessSchema() throws ParseException {
-     InputStream dataInputStream = getDataFromEndpoint();
+    InputStream dataInputStream = getDataFromEndpoint();
 
     List<byte[]> dataByte = parser.parseNEvents(dataInputStream, 2);
 
@@ -227,10 +239,10 @@ public class FileStreamProtocol extends Protocol {
 
     List<byte[]> dataByteArray = parser.parseNEvents(dataInputStream, n);
 
-    // Check that result size is n. Currently just an error is logged. Maybe change to an exception
+    // Check that result size is n. Currently, just an error is logged. Maybe change to an exception
     if (dataByteArray.size() < n) {
-      logger.error("Error in File Protocol! User required: " + n + " elements but the resource just had: " +
-              dataByteArray.size());
+      logger.error("Error in File Protocol! User required: " + n + " elements but the resource just had: "
+          + dataByteArray.size());
     }
 
     for (byte[] b : dataByteArray) {
