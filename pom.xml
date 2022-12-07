@@ -1810,12 +1810,16 @@ IoT data streams.
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<!-- TODO: Add the maven-checkstyle-plugin back when https://github.com/apache/streampipes/issues/820 is completed-->
-			<!--			<plugin>-->
-			<!--				<groupId>org.apache.maven.plugins</groupId>-->
-			<!--				<artifactId>maven-checkstyle-plugin</artifactId>-->
-			<!--				<version>${maven-checkstyle-plugin.version}</version>-->
-			<!--			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven-checkstyle-plugin.version}</version>
+				<configuration>
+					<logViolationsToConsole>false</logViolationsToConsole>
+					<failOnViolation>false</failOnViolation>
+				</configuration>
+				<inherited>false</inherited>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
