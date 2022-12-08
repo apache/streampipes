@@ -23,7 +23,7 @@ class Registration:
     """Manages the existing StreamPipesFunctions and registers them."""
 
     def __init__(self) -> None:
-        self.functions = []
+        self.functions: List[StreamPipesFunction] = []
 
     def register(self, streampipes_function: StreamPipesFunction):
         """Registers a new function.

@@ -26,10 +26,6 @@ from streampipes_client.model.common import (
 )
 from streampipes_client.model.resource.resource import Resource
 
-"""
-Implementation of a resource for a data stream.
-"""
-
 __all__ = [
     "DataStream",
 ]
@@ -57,7 +53,7 @@ class DataStream(Resource):
     application_links: Optional[List[Optional[ApplicationLink]]]
     internally_managed: Optional[StrictBool]
     connected_to: Optional[List[Optional[StrictStr]]]
-    event_grounding: Optional[EventGrounding]
+    event_grounding: EventGrounding
     event_schema: Optional[EventSchema]
     measurement_capability: Optional[List[Optional[MeasurementCapability]]]
     measurement_object: Optional[List[Optional[MeasurementObject]]]

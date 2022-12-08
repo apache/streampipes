@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 import asyncio
-from typing import Any, AsyncIterator, Dict, AsyncGenerator, Tuple
+from typing import Any, AsyncGenerator, AsyncIterator, Dict, Tuple
 
 
 class AsyncIterHandler:
@@ -59,7 +59,7 @@ class AsyncIterHandler:
         """
         pending = {AsyncIterHandler.anext(stream_id, message) for stream_id, message in messages.items()}
         while pending:
-            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
+            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)  # type: ignore
             for i in done:
                 stream_id, msg = i.result()
                 if stream_id != "stop":

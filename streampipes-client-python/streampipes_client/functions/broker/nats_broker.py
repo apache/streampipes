@@ -48,7 +48,8 @@ class NatsBroker(Broker):
         None
         """
         self.nats_client = await connect(f"nats://{host_address}:{port}")
-        logger.info(f"Connected to NATS at {self.nats_client.connected_url.netloc}")
+        if self.nats_client.connected_url is not None:
+            logger.info(f"Connected to NATS at {self.nats_client.connected_url.netloc}")
 
     async def _createSubscription(self) -> None:
         """Helper function to create a subscription for a data stream.

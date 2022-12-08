@@ -25,9 +25,6 @@ class Broker(ABC):
     A broker is used to subscribe to a data stream and to consume the published events.
     """
 
-    stream_id: str
-    topic_name: str
-
     async def connect(self, data_stream: DataStream, host_address: str) -> None:
         """Connects the broker to a server and subscribes to a data stream.
 

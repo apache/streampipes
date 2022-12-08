@@ -26,11 +26,15 @@ from streampipes_client.functions.registration import Registration
 from streampipes_client.functions.utils.async_iter_handler import AsyncIterHandler
 from streampipes_client.functions.utils.data_stream_context import DataStreamContext
 from streampipes_client.functions.utils.function_context import FunctionContext
+from streampipes_client.model.resource.data_stream import DataStream
 
 logger = logging.getLogger(__name__)
 
+
 # TODO Exception should be removed once all brokers are implemented.
 class UnsupportedBroker(Exception):
+    """Exception if a broker isn't implemented yet."""
+
     def __init__(self, message):
         super().__init__(message)
 
@@ -65,7 +69,7 @@ class FunctionHandler:
         for streampipes_function in self.registration.getFunctions():
             for stream_id in streampipes_function.requiredStreamIds():
                 # Get the data stream schema from the API
-                data_stream = self.client.dataStreamApi.get(stream_id)
+                data_stream: DataStream = self.client.dataStreamApi.get(stream_id)  # type: ignore
                 # Get the broker
                 broker = self._get_broker(data_stream.event_grounding.transport_protocols[0].broker_hostname)
                 # Assign the functions, broker and schema to every stream

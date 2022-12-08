@@ -17,7 +17,7 @@
 from json.encoder import JSONEncoder
 from typing import Any, Dict, List, Tuple
 from unittest import TestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from streampipes_client.client.client import StreamPipesClient, StreamPipesClientConfig
 from streampipes_client.client.credential_provider import StreamPipesApiKeyCredentials
@@ -37,7 +37,7 @@ class TestFunction(StreamPipesFunction):
 
     def onServiceStarted(self, context: FunctionContext):
         self.context = context
-        self.data = []
+        self.data: List[Dict[str, Any]] = []
 
     def onEvent(self, event: Dict[str, Any], streamId: str):
         self.data.append(event)
@@ -55,8 +55,8 @@ class TestFunctionTwoStreams(StreamPipesFunction):
 
     def onServiceStarted(self, context: FunctionContext):
         self.context = context
-        self.data1 = []
-        self.data2 = []
+        self.data1: List[Dict[str, Any]] = []
+        self.data2: List[Dict[str, Any]] = []
 
     def onEvent(self, event: Dict[str, Any], streamId: str):
         if streamId == self.requiredStreamIds()[0]:
@@ -92,7 +92,7 @@ class TestMessageIterator:
 class TestFunctionHandler(TestCase):
     def setUp(self) -> None:
         # set example responses from endpoints
-        self.data_stream = {
+        self.data_stream: Dict[str, Any] = {
             "elementId": "urn:streampipes.apache.org:eventstream:uPDKLI",
             "name": "Test",
             "description": "",
@@ -187,7 +187,7 @@ class TestFunctionHandler(TestCase):
             "measurementCapability": None,
             "measurementObject": None,
             "index": 0,
-            "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect.iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
+            "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect.iiot...",
             "category": None,
             "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
             "dom": None,
@@ -212,9 +212,12 @@ class TestFunctionHandler(TestCase):
             {"density": 3.6, "temperature": 30.4, "timestamp": 1670000007000},
         ]
 
+    @patch("streampipes_client.functions.function_handler.NatsBroker.disconnect", autospec=True)
+    @patch("streampipes_client.functions.function_handler.NatsBroker._createSubscription", autospec=True)
+    @patch("streampipes_client.functions.function_handler.NatsBroker._makeConnection", autospec=True)
     @patch("streampipes_client.functions.function_handler.NatsBroker.get_message", autospec=True)
     @patch("streampipes_client.client.client.Session", autospec=True)
-    def test_function_handler(self, http_session: MagicMock, nats_broker: MagicMock):
+    def test_function_handler(self, http_session: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         http_session_mock = MagicMock()
         http_session_mock.get.return_value.json.return_value = self.data_stream
         http_session.return_value = http_session_mock
@@ -224,7 +227,7 @@ class TestFunctionHandler(TestCase):
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
-                host_address="demo.nats.io",
+                host_address="localhost",
             )
         )
 
@@ -244,9 +247,12 @@ class TestFunctionHandler(TestCase):
         self.assertListEqual(test_function.data, self.test_stream_data1)
         self.assertTrue(test_function.stopped)
 
+    @patch("streampipes_client.functions.function_handler.NatsBroker.disconnect", autospec=True)
+    @patch("streampipes_client.functions.function_handler.NatsBroker._createSubscription", autospec=True)
+    @patch("streampipes_client.functions.function_handler.NatsBroker._makeConnection", autospec=True)
     @patch("streampipes_client.functions.function_handler.NatsBroker.get_message", autospec=True)
     @patch("streampipes_client.endpoint.endpoint.APIEndpoint.get", autospec=True)
-    def test_function_handler_two_streams(self, endpoint: MagicMock, nats_broker: MagicMock):
+    def test_function_handler_two_streams(self, endpoint: MagicMock, nats_broker: MagicMock, *args: Tuple[AsyncMock]):
         def get_stream(endpoint, stream_id):
             if stream_id == "urn:streampipes.apache.org:eventstream:uPDKLI":
                 return DataStream(**self.data_stream)
@@ -258,18 +264,18 @@ class TestFunctionHandler(TestCase):
 
         endpoint.side_effect = get_stream
 
-        def get_messages(broker):
+        def get_message(broker):
             if broker.topic_name == "test1":
                 return TestMessageIterator(self.test_stream_data1)
             elif broker.topic_name == "test2":
                 return TestMessageIterator(self.test_stream_data2)
 
-        nats_broker.side_effect = get_messages
+        nats_broker.side_effect = get_message
 
         client = StreamPipesClient(
             client_config=StreamPipesClientConfig(
                 credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
-                host_address="demo.nats.io",
+                host_address="localhost",
             )
         )
 
