@@ -24,7 +24,7 @@ import setuptools
 NAME = "streampipes_client"
 DESCRIPTION = "Python client for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
-URL = "https://github.com/apache/incubator-streampipes/"
+URL = "https://github.com/apache/streampipes/"
 EMAIL = "dev@streampipes.apache.org"
 AUTHOR = "Apache Software Foundation"
 REQUIRES_PYTHON = ">=3.8.0"
