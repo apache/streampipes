@@ -20,7 +20,7 @@
     <parent>
         <artifactId>streampipes-extensions</artifactId>
         <groupId>org.apache.streampipes</groupId>
-        <version>0.90.0-SNAPSHOT</version>
+        <version>0.91.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-container-extensions</artifactId>
-            <version>0.90.0-SNAPSHOT</version>
+            <version>0.91.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.graalvm.nativeimage</groupId>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-pipeline-elements-all-jvm</artifactId>
-            <version>0.90.0-SNAPSHOT</version>
+            <version>0.91.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
 
@@ -54,20 +54,20 @@
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters</artifactId>
-            <version>0.90.0-SNAPSHOT</version>
+            <version>0.91.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-connect-adapters-iiot</artifactId>
-            <version>0.90.0-SNAPSHOT</version>
+            <version>0.91.0-SNAPSHOT</version>
             <classifier>embed</classifier>
         </dependency>
 
         <dependency>
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-messaging-nats</artifactId>
-            <version>0.90.0-SNAPSHOT</version>
+            <version>0.91.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Dependency convergence -->
@@ -113,8 +113,4 @@
         </plugins>
         <finalName>streampipes-extensions-all-jvm</finalName>
     </build>
-
-  <scm>
-    <tag>rel/0.90.0</tag>
-  </scm>
 </project>
