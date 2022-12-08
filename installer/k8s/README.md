@@ -19,7 +19,7 @@
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.90.0-SNAPSHOT
+**Current version:** 0.91.0-SNAPSHOT
 <!-- END do not edit -->
 
 We provide two helm chart templates to get you going:
