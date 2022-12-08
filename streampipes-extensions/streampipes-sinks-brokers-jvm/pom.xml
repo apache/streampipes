@@ -116,4 +116,8 @@
         </dependency>
     </dependencies>
 
+
+  <scm>
+    <tag>rel/0.90.0</tag>
+  </scm>
 </project>

@@ -65,4 +65,8 @@
             <version>1.16.1</version>
         </dependency>
     </dependencies>
+
+  <scm>
+    <tag>rel/0.90.0</tag>
+  </scm>
 </project>
