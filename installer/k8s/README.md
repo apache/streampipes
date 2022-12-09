@@ -19,7 +19,7 @@
 StreamPipes k8s is a helm chart to deploy StreamPipes on Kubernetes.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.71.0-SNAPSHOT
+**Current version:** 0.91.0-SNAPSHOT
 <!-- END do not edit -->
 
 We provide two helm chart templates to get you going:
@@ -59,13 +59,11 @@ After a while, all containers should successfully started, indicated by the `Run
 ```bash
 kubectl get pods
 NAME                                           READY   STATUS    RESTARTS   AGE
-activemq-66d58f47cf-2r2nb                      1/1     Running   0          3m27s
 backend-76ddc486c8-nswpc                       1/1     Running   0          3m27s
-connect-worker-78d89c989c-9v8zs                1/1     Running   0          3m27s
 consul-55965f966b-gwb7l                        1/1     Running   0          3m27s
 couchdb-77db98cf7b-xnnvb                       1/1     Running   0          3m27s
 influxdb-b95b6479-r8wh8                        1/1     Running   0          3m27s
-pipeline-elements-all-jvm-79c445dbd9-m8xcs     1/1     Running   0          3m27s
+extensions-all-jvm-79c445dbd9-m8xcs     1/1     Running   0          3m27s
 ui-b94bd9766-rm6zb                             2/2     Running   0          3m27s
 ```
 

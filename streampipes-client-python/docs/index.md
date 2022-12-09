@@ -19,11 +19,11 @@
 
 <h1 align="center">
   <br>
-   <img src="https://raw.githubusercontent.com/apache/incubator-streampipes/dev/streampipes-client-python/docs/img/streampipes-python.png"
+   <img src="https://raw.githubusercontent.com/apache/streampipes/dev/streampipes-client-python/docs/img/streampipes-python.png"
    alt="StreamPipes Logo with Python" title="Apache StreamPipes Logo with Python" width="75%"/>
   <br>
 </h1>
-<h4 align="center"><a href="[StreamPipes](https://github.com/apache/incubator-streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
+<h4 align="center"><a href="[StreamPipes](https://github.com/apache/streampipes)">StreamPipes</a> is a self-service (Industrial) IoT toolbox to enable non-technical users to connect , analyze and explore IoT data streams.</h4>
 
 <br>
 <h3 align="center">Apache StreamPipes client for Python</h3>
@@ -99,4 +99,4 @@ StreamPipesApiKeyCredentials.from_env(username_env="USER", api_key_env="API-KEY"
 `username` is always the username that is used to log in into StreamPipes. <br>
 The `api_key` can be generated within the UI as demonstrated below:
 
-![Howto API Key](https://raw.githubusercontent.com/apache/incubator-streampipes/dev/streampipes-client-python/docs/img/how-to-get-api-key.gif)
+![Howto API Key](https://raw.githubusercontent.com/apache/streampipes/dev/streampipes-client-python/docs/img/how-to-get-api-key.gif)
