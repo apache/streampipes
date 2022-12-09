@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.sinks.databases.jvm.influxdb;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.model.runtime.Event;
+
 import org.influxdb.BatchOptions;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -25,60 +29,57 @@ import org.influxdb.dto.Point;
 import org.influxdb.dto.Pong;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.logging.api.Logger;
-import org.apache.streampipes.model.runtime.Event;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class InfluxDbClient {
-	private Integer influxDbPort;
-	private String influxDbHost;
-	private String databaseName;
-	private String measureName;
-	private String user;
-	private String password;
-	private String timestampField;
+  private Integer influxDbPort;
+  private String influxDbHost;
+  private String databaseName;
+  private String measureName;
+  private String user;
+  private String password;
+  private String timestampField;
   private Integer batchSize;
   private Integer flushDuration;
 
-	private Logger logger;
+  private Logger logger;
 
-	private InfluxDB influxDb = null;
+  private InfluxDB influxDb = null;
 
-	InfluxDbClient(String influxDbHost,
-			Integer influxDbPort,
-			String databaseName,
-			String measureName,
-			String user,
-			String password,
-			String timestampField,
-      Integer batchSize,
-      Integer flushDuration,
-			Logger logger) throws SpRuntimeException {
-		this.influxDbHost = influxDbHost;
-		this.influxDbPort = influxDbPort;
-		this.databaseName = databaseName;
-		this.measureName = measureName;
-		this.user = user;
-		this.password = password;
-		this.timestampField = timestampField;
-		this.batchSize = batchSize;
-		this.flushDuration = flushDuration;
-		this.logger = logger;
+  InfluxDbClient(String influxDbHost,
+                 Integer influxDbPort,
+                 String databaseName,
+                 String measureName,
+                 String user,
+                 String password,
+                 String timestampField,
+                 Integer batchSize,
+                 Integer flushDuration,
+                 Logger logger) throws SpRuntimeException {
+    this.influxDbHost = influxDbHost;
+    this.influxDbPort = influxDbPort;
+    this.databaseName = databaseName;
+    this.measureName = measureName;
+    this.user = user;
+    this.password = password;
+    this.timestampField = timestampField;
+    this.batchSize = batchSize;
+    this.flushDuration = flushDuration;
+    this.logger = logger;
 
-		validate();
-		connect();
-	}
+    validate();
+    connect();
+  }
 
   /**
    * Checks whether the {@link InfluxDbClient#influxDbHost} is valid
    *
    * @throws SpRuntimeException If the hostname is not valid
    */
-	private void validate() throws SpRuntimeException {
+  private void validate() throws SpRuntimeException {
     //TODO: replace regex with validation method (import org.apache.commons.validator.routines.InetAddressValidator;)
     // Validates the database name and the attributes
     // See following link for regular expressions:
@@ -98,10 +99,10 @@ public class InfluxDbClient {
    * Connects to the InfluxDB Server, sets the database and initializes the batch-behaviour
    *
    * @throws SpRuntimeException If not connection can be established or if the database could not
-   * be found
+   *                            be found
    */
-	private void connect() throws SpRuntimeException {
-	  // Connecting to the server
+  private void connect() throws SpRuntimeException {
+    // Connecting to the server
     // "http://" must be in front
     String urlAndPort = influxDbHost + ":" + influxDbPort;
     influxDb = InfluxDBFactory.connect(urlAndPort, user, password);
@@ -114,7 +115,7 @@ public class InfluxDbClient {
 
     // Checking whether the database exists
     System.out.println(databaseExists(databaseName));
-    if(!databaseExists(databaseName)) {
+    if (!databaseExists(databaseName)) {
       logger.info("Database '" + databaseName + "' not found. Gets created ...");
       createDatabase(databaseName);
     }
@@ -122,7 +123,7 @@ public class InfluxDbClient {
     // setting up the database
     influxDb.setDatabase(databaseName);
     influxDb.enableBatch(BatchOptions.DEFAULTS.actions(batchSize).flushDuration(flushDuration));
-	}
+  }
 
   /**
    * Checks whether the given database exists. Needs a working connection to an InfluxDB Server
@@ -131,10 +132,10 @@ public class InfluxDbClient {
    * @param dbName The name of the database, the method should look for
    * @return True if the database exists, false otherwise
    */
-	private boolean databaseExists(String dbName) {
+  private boolean databaseExists(String dbName) {
     QueryResult queryResult = influxDb.query(new Query("SHOW DATABASES", ""));
-    for(List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
-      if(a.get(0).equals(dbName)) {
+    for (List<Object> a : queryResult.getResults().get(0).getSeries().get(0).getValues()) {
+      if (a.get(0).equals(dbName)) {
         return true;
       }
     }
@@ -147,8 +148,9 @@ public class InfluxDbClient {
    * @param dbName The name of the database which should be created
    */
   private void createDatabase(String dbName) throws SpRuntimeException {
-    if(!dbName.matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
-      throw new SpRuntimeException("Databasename '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
+    if (!dbName.matches("^[a-zA-Z_][a-zA-Z0-9_]*$")) {
+      throw new SpRuntimeException(
+          "Databasename '" + dbName + "' not allowed. Allowed names: ^[a-zA-Z_][a-zA-Z0-9_]*$");
     }
     influxDb.query(new Query("CREATE DATABASE \"" + dbName + "\"", ""));
   }
@@ -159,33 +161,33 @@ public class InfluxDbClient {
    * @param event The event which should be saved
    * @throws SpRuntimeException If the column name (key-value of the event map) is not allowed
    */
-	void save(Event event) throws SpRuntimeException {
-		if (event == null) {
-			throw new SpRuntimeException("event is null");
-		}
-		Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
+  void save(Event event) throws SpRuntimeException {
+    if (event == null) {
+      throw new SpRuntimeException("event is null");
+    }
+    Long timestampValue = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
     Point.Builder p = Point.measurement(measureName).time(timestampValue, TimeUnit.MILLISECONDS);
-		for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
+    for (Map.Entry<String, Object> pair : event.getRaw().entrySet()) {
       if (pair.getValue() instanceof Integer) {
-        p.addField(InfluxDb.prepareString(pair.getKey()), (Integer)pair.getValue());
+        p.addField(InfluxDb.prepareString(pair.getKey()), (Integer) pair.getValue());
       } else if (pair.getValue() instanceof Long) {
-        p.addField(InfluxDb.prepareString(pair.getKey()), (Long)pair.getValue());
+        p.addField(InfluxDb.prepareString(pair.getKey()), (Long) pair.getValue());
       } else if (pair.getValue() instanceof Double) {
-        p.addField(InfluxDb.prepareString(pair.getKey()), (Double)pair.getValue());
+        p.addField(InfluxDb.prepareString(pair.getKey()), (Double) pair.getValue());
       } else if (pair.getValue() instanceof Boolean) {
-        p.addField(InfluxDb.prepareString(pair.getKey()), (Boolean)pair.getValue());
+        p.addField(InfluxDb.prepareString(pair.getKey()), (Boolean) pair.getValue());
       } else {
         p.addField(InfluxDb.prepareString(pair.getKey()), pair.getValue().toString());
       }
     }
 
     influxDb.write(p.build());
-	}
+  }
 
   /**
    * Shuts down the connection to the InfluxDB server
    */
-	void stop() {
+  void stop() {
     influxDb.close();
-	}
+  }
 }

@@ -25,38 +25,39 @@ import java.util.List;
 import java.util.Map;
 
 public class BooleanToStateParameters extends EventProcessorBindingParams {
-    private List<String> stateFields;
-    private String defaultState;
-    private Map<String, String> jsonConfiguration;
+  private List<String> stateFields;
+  private String defaultState;
+  private Map<String, String> jsonConfiguration;
 
-    public BooleanToStateParameters(DataProcessorInvocation graph, List<String> stateFields, String defaultState, Map<String, String> jsonConfiguration) {
-        super(graph);
-        this.stateFields = stateFields;
-        this.defaultState = defaultState;
-        this.jsonConfiguration = jsonConfiguration;
-    }
+  public BooleanToStateParameters(DataProcessorInvocation graph, List<String> stateFields, String defaultState,
+                                  Map<String, String> jsonConfiguration) {
+    super(graph);
+    this.stateFields = stateFields;
+    this.defaultState = defaultState;
+    this.jsonConfiguration = jsonConfiguration;
+  }
 
-    public List<String> getStateFields() {
-        return stateFields;
-    }
+  public List<String> getStateFields() {
+    return stateFields;
+  }
 
-    public void setStateFields(List<String> stateFields) {
-        this.stateFields = stateFields;
-    }
+  public void setStateFields(List<String> stateFields) {
+    this.stateFields = stateFields;
+  }
 
-    public String getDefaultState() {
-        return defaultState;
-    }
+  public String getDefaultState() {
+    return defaultState;
+  }
 
-    public void setDefaultState(String defaultState) {
-        this.defaultState = defaultState;
-    }
+  public void setDefaultState(String defaultState) {
+    this.defaultState = defaultState;
+  }
 
-    public Map<String, String> getJsonConfiguration() {
-        return jsonConfiguration;
-    }
+  public Map<String, String> getJsonConfiguration() {
+    return jsonConfiguration;
+  }
 
-    public void setJsonConfiguration(Map<String, String> jsonConfiguration) {
-        this.jsonConfiguration = jsonConfiguration;
-    }
+  public void setJsonConfiguration(Map<String, String> jsonConfiguration) {
+    this.jsonConfiguration = jsonConfiguration;
+  }
 }

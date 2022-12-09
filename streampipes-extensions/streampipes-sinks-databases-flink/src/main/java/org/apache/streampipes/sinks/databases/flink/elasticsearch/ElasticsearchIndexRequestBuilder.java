@@ -17,15 +17,16 @@
  */
 package org.apache.streampipes.sinks.databases.flink.elasticsearch;
 
-import org.apache.flink.api.common.functions.RuntimeContext;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.Requests;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.elastic.ElasticsearchSinkFunction;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.elastic.RequestIndexer;
 
+import org.apache.flink.api.common.functions.RuntimeContext;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.Requests;
+
 import java.util.Map;
 
-public class ElasticsearchIndexRequestBuilder  implements ElasticsearchSinkFunction<Map<String, Object>> {
+public class ElasticsearchIndexRequestBuilder implements ElasticsearchSinkFunction<Map<String, Object>> {
 
   private String indexName;
   private String typeName;
@@ -40,13 +41,14 @@ public class ElasticsearchIndexRequestBuilder  implements ElasticsearchSinkFunct
   private IndexRequest createIndexRequest(Map<String, Object> element) {
 
     return Requests.indexRequest()
-            .index(indexName)
-            .type(typeName)
-            .source(element);
+        .index(indexName)
+        .type(typeName)
+        .source(element);
   }
 
   @Override
-  public void process(Map<String, Object> stringObjectMap, RuntimeContext runtimeContext, RequestIndexer requestIndexer) {
+  public void process(Map<String, Object> stringObjectMap, RuntimeContext runtimeContext,
+                      RequestIndexer requestIndexer) {
     requestIndexer.add(createIndexRequest(stringObjectMap));
   }
 }

@@ -43,33 +43,34 @@ public class SlackNotificationController extends StandaloneEventSinkDeclarer<Sla
   public DataSinkDescription declareModel() {
 
     return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.slack")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.NOTIFICATION)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredTextParameter(Labels.withId(RECEIVER))
-            .requiredTextParameter(Labels.withId(CONTENT), false, true)
-            .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
-                    Options.from("User", "Channel"))
-            .requiredSecret(Labels.withId(AUTH_TOKEN))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.NOTIFICATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(RECEIVER))
+        .requiredTextParameter(Labels.withId(CONTENT), false, true)
+        .requiredSingleValueSelection(Labels.withId(CHANNEL_TYPE),
+            Options.from("User", "Channel"))
+        .requiredSecret(Labels.withId(AUTH_TOKEN))
+        .build();
   }
 
 
   @Override
-  public ConfiguredEventSink<SlackNotificationParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  public ConfiguredEventSink<SlackNotificationParameters> onInvocation(DataSinkInvocation graph,
+                                                                       DataSinkParameterExtractor extractor) {
 
-      String userChannel = extractor.singleValueParameter(RECEIVER, String.class);
-      String channelType = extractor.selectedSingleValue(CHANNEL_TYPE, String.class);
-      String message = extractor.singleValueParameter(CONTENT, String.class);
-      String authToken = extractor.secretValue(AUTH_TOKEN);
+    String userChannel = extractor.singleValueParameter(RECEIVER, String.class);
+    String channelType = extractor.selectedSingleValue(CHANNEL_TYPE, String.class);
+    String message = extractor.singleValueParameter(CONTENT, String.class);
+    String authToken = extractor.secretValue(AUTH_TOKEN);
 
-      SlackNotificationParameters params = new SlackNotificationParameters(graph, authToken,
-              channelType, userChannel, message);
+    SlackNotificationParameters params = new SlackNotificationParameters(graph, authToken,
+        channelType, userChannel, message);
 
-      return new ConfiguredEventSink<>(params, SlackNotification::new);
+    return new ConfiguredEventSink<>(params, SlackNotification::new);
   }
 }

@@ -21,7 +21,6 @@ package org.apache.streampipes.sinks.brokers.jvm.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

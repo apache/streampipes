@@ -25,7 +25,10 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -37,21 +40,23 @@ public class BooleanInverterController extends StandaloneEventProcessingDeclarer
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.inverter")
-            .category(DataProcessorType.BOOLEAN_OPERATOR)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.booleanReq(),
-                            Labels.withId(INVERT_FIELD_ID),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.keep())
-            .build();
+        .category(DataProcessorType.BOOLEAN_OPERATOR)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.booleanReq(),
+                Labels.withId(INVERT_FIELD_ID),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.keep())
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanInverterParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<BooleanInverterParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String invertFieldName = extractor.mappingPropertyValue(INVERT_FIELD_ID);
     BooleanInverterParameters params = new BooleanInverterParameters(graph, invertFieldName);

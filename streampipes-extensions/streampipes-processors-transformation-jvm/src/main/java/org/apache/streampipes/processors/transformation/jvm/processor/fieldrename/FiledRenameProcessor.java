@@ -26,7 +26,11 @@ import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.TransformOperations;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
@@ -35,45 +39,47 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class FiledRenameProcessor extends StreamPipesDataProcessor {
 
-    private static final String CONVERT_PROPERTY = "convert-property";
-    private static final String FIELD_NAME = "field-name";
-    private String oldPropertyName;
-    private String newPropertyName;
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldrename")
-                .category(DataProcessorType.TRANSFORM)
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
-                                (CONVERT_PROPERTY), PropertyScope.NONE)
-                        .build())
-                .requiredTextParameter(Labels.withId(FIELD_NAME))
-                .outputStrategy(OutputStrategies.transform(TransformOperations
-                        .dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
-                .build();
-    }
+  private static final String CONVERT_PROPERTY = "convert-property";
+  private static final String FIELD_NAME = "field-name";
+  private String oldPropertyName;
+  private String newPropertyName;
 
-    @Override
-    public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldrename")
+        .category(DataProcessorType.TRANSFORM)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
+                (CONVERT_PROPERTY), PropertyScope.NONE)
+            .build())
+        .requiredTextParameter(Labels.withId(FIELD_NAME))
+        .outputStrategy(OutputStrategies.transform(TransformOperations
+            .dynamicRuntimeNameTransformation(CONVERT_PROPERTY, FIELD_NAME)))
+        .build();
+  }
 
-        this.oldPropertyName = processorParams.extractor().mappingPropertyValue(CONVERT_PROPERTY);
-        this.newPropertyName = processorParams.extractor().singleValueParameter(FIELD_NAME, String.class);
-    }
+  @Override
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
 
-    @Override
-    public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    this.oldPropertyName = processorParams.extractor().mappingPropertyValue(CONVERT_PROPERTY);
+    this.newPropertyName = processorParams.extractor().singleValueParameter(FIELD_NAME, String.class);
+  }
 
-        AbstractField<?> propertyValue = event.getFieldBySelector(oldPropertyName);
-        event.removeFieldBySelector(oldPropertyName);
-        event.addField(newPropertyName, propertyValue);
-        spOutputCollector.collect(event);
-    }
+  @Override
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
 
-    @Override
-    public void onDetach() throws SpRuntimeException {
+    AbstractField<?> propertyValue = event.getFieldBySelector(oldPropertyName);
+    event.removeFieldBySelector(oldPropertyName);
+    event.addField(newPropertyName, propertyValue);
+    spOutputCollector.collect(event);
+  }
 
-    }
+  @Override
+  public void onDetach() throws SpRuntimeException {
+
+  }
 }

@@ -41,12 +41,14 @@ public class JmsPublisher implements EventSink<JmsParameters> {
   public void onInvocation(JmsParameters params, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
 //    this.publisher = new ActiveMQPublisher(params.getJmsHost() + ":" + params.getJmsPort(), params.getTopic());
     this.publisher = new ActiveMQPublisher();
-    JmsTransportProtocol jmsTransportProtocol = new JmsTransportProtocol(params.getJmsHost(),  params.getJmsPort(), params.getTopic());
+    JmsTransportProtocol jmsTransportProtocol =
+        new JmsTransportProtocol(params.getJmsHost(), params.getJmsPort(), params.getTopic());
     this.publisher.connect(jmsTransportProtocol);
     if (!this.publisher.isConnected()) {
-      throw new SpRuntimeException("Could not connect to JMS server " + params.getJmsHost() + " on Port: " + params.getJmsPort() + " to topic: " + params.getTopic());
+      throw new SpRuntimeException(
+          "Could not connect to JMS server " + params.getJmsHost() + " on Port: " + params.getJmsPort()
+              + " to topic: " + params.getTopic());
     }
-
 
 
   }

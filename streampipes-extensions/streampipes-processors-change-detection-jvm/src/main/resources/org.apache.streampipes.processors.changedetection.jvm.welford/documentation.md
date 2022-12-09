@@ -28,7 +28,9 @@
 
 ## Description
 
-Performs change detection on a single dimension of the incoming data stream. This implementation tracks the mean and the standard deviation using Welford's algorithm, which is well suited for data streams. A change is detected if the cumulative deviation from the mean exceeds a certain threshold.
+Performs change detection on a single dimension of the incoming data stream. This implementation tracks the mean and the
+standard deviation using Welford's algorithm, which is well suited for data streams. A change is detected if the
+cumulative deviation from the mean exceeds a certain threshold.
 
 ***
 
@@ -41,17 +43,22 @@ The welford change dectection processor requires a data stream that has at least
 ## Configuration
 
 ### Value to observe
-Specify the dimension of the data stream (e.g. the temperature) on which to perform change detection. 
+
+Specify the dimension of the data stream (e.g. the temperature) on which to perform change detection.
 
 ### Parameter `k`
-`k` controls the sensitivity of the change detector. Its unit are standard deviations. For an observation `x_n`, the Cusum value is `S_n = max(0, S_{n-1} - z-score(x_n) - k)`. Thus, the cusum-score `S` icnreases if `S_{n-1} - z-score(x_n) > k`. 
+
+`k` controls the sensitivity of the change detector. Its unit are standard deviations. For an observation `x_n`, the
+Cusum value is `S_n = max(0, S_{n-1} - z-score(x_n) - k)`. Thus, the cusum-score `S` icnreases
+if `S_{n-1} - z-score(x_n) > k`.
 
 ### Parameter `h`
-The alarm theshold in standard deviations. An alarm occurs if `S_n > h` 
+
+The alarm theshold in standard deviations. An alarm occurs if `S_n > h`
 
 ## Output
 
-This processor outputs the original data stream plus 
+This processor outputs the original data stream plus
 
 - `cumSumLow`: The cumulative sum value for negative changes
 - `cumSumHigh`: The cumulative sum value for positive changes

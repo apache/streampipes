@@ -18,9 +18,6 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.sentencedetection;
 
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
-import org.apache.streampipes.commons.exceptions.SpException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
@@ -28,17 +25,20 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import opennlp.tools.sentdetect.SentenceDetectorME;
+import opennlp.tools.sentdetect.SentenceModel;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class SentenceDetection implements EventProcessor<SentenceDetectionParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   // Field with the text
   private String detection;
-  private SentenceDetectorME sentenceDetector ;
+  private SentenceDetectorME sentenceDetector;
 
   public SentenceDetection() {
   }
@@ -47,7 +47,7 @@ public class SentenceDetection implements EventProcessor<SentenceDetectionParame
   public void onInvocation(SentenceDetectionParameters sentenceDetectionParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = sentenceDetectionParameters.getGraph().getLogger(SentenceDetection.class);
+    log = sentenceDetectionParameters.getGraph().getLogger(SentenceDetection.class);
     this.detection = sentenceDetectionParameters.getDetectionName();
 
     InputStream modelIn = new ByteArrayInputStream(sentenceDetectionParameters.getFileContent());

@@ -22,6 +22,8 @@ import org.apache.streampipes.model.runtime.field.AbstractField;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.BoxCoordinates;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentParameters;
 
+import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,8 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import javax.imageio.ImageIO;
 
 public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParameters> {
 
@@ -46,8 +46,8 @@ public class ImageTransformer extends PlainImageTransformer<ImageEnrichmentParam
 
   public List<Map<String, Object>> getAllBoxCoordinates() {
     List<Map<String, AbstractField>> allBoxes = in.getFieldBySelector(params.getBoxArray())
-            .getAsList()
-            .parseAsCustomType(value -> value.getAsComposite().getRawValue());
+        .getAsList()
+        .parseAsCustomType(value -> value.getAsComposite().getRawValue());
 
     List<Map<String, Object>> allBoxesMap = new ArrayList<>();
     allBoxes.forEach(box -> {

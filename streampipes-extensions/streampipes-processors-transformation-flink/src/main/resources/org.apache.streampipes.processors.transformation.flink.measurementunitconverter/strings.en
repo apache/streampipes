@@ -15,10 +15,11 @@
 # limitations under the License.
 #
 
+org.apache.streampipes.processors.transformation.flink.measurementunitconverter.title=Measurement Unit Converter
+org.apache.streampipes.processors.transformation.flink.measurementunitconverter.description=Converts a unit of measurement to another one
 
-org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.title=Creates JTS Point
-org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.description=Creates a JTS Point from Latitude and Longitude values
+convert-property.title=Field
+convert-property.description=The field to convert
 
-latitude-key=Latitude value
-longitude-key=Longitude value
-epsg-key= EPSG Code
+output-unit.title=Output Unit
+output-unit.description=The output type unit of measurement

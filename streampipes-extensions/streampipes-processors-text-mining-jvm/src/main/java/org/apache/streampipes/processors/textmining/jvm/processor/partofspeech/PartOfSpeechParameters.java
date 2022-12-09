@@ -23,21 +23,20 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class PartOfSpeechParameters extends EventProcessorBindingParams {
 
-    private byte[] fileContent;
-    private String detectionName;
+  private byte[] fileContent;
+  private String detectionName;
 
-    public PartOfSpeechParameters(DataProcessorInvocation graph, String fieldName, byte[] fileContent)
-    {
-        super(graph);
-        this.detectionName = fieldName;
-        this.fileContent = fileContent;
-    }
+  public PartOfSpeechParameters(DataProcessorInvocation graph, String fieldName, byte[] fileContent) {
+    super(graph);
+    this.detectionName = fieldName;
+    this.fileContent = fileContent;
+  }
 
-    public String getDetectionName() {
-        return detectionName;
-    }
+  public String getDetectionName() {
+    return detectionName;
+  }
 
-    public byte[] getFileContent() {
-        return fileContent;
-    }
+  public byte[] getFileContent() {
+    return fileContent;
+  }
 }

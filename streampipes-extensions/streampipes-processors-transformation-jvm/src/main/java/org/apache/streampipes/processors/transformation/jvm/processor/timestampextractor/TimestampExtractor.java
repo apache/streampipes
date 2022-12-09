@@ -30,73 +30,81 @@ import java.util.List;
 
 public class TimestampExtractor implements EventProcessor<TimestampExtractorParameters> {
 
-    private static Logger LOG;
+  private static Logger log;
 
-    private String timestampField;
-    private List<String> outputFields;
+  private String timestampField;
+  private List<String> outputFields;
 
-    @Override
-    public void onInvocation(TimestampExtractorParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-        LOG = params.getGraph().getLogger(TimestampExtractor.class);
+  @Override
+  public void onInvocation(TimestampExtractorParameters params, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    log = params.getGraph().getLogger(TimestampExtractor.class);
 
-        this.timestampField = params.getTimestampField();
-        this.outputFields = params.getOutputFields();
-    }
+    this.timestampField = params.getTimestampField();
+    this.outputFields = params.getOutputFields();
+  }
 
-    @Override
-    public void onEvent(Event event, SpOutputCollector out) {
-        Long timestamp = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
+  @Override
+  public void onEvent(Event event, SpOutputCollector out) {
+    Long timestamp = event.getFieldBySelector(timestampField).getAsPrimitive().getAsLong();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date(timestamp));
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(new Date(timestamp));
 
-        for (String field : outputFields) {
-            if(field.equals(OutputFields.YEAR.toString())) {
-                event.addField("timestampYear", calendar.get(Calendar.YEAR));
-            }
-            if(field.equals(OutputFields.MONTH.toString())) {
-                event.addField("timestampMonth", calendar.get(Calendar.MONTH) + 1);
-            }
-            if(field.equals(OutputFields.DAY.toString())) {
-                event.addField("timestampDay", calendar.get(Calendar.DAY_OF_MONTH));
-            }
-            if(field.equals(OutputFields.HOUR.toString())) {
-                event.addField("timestampHour", calendar.get(Calendar.HOUR_OF_DAY));
-            }
-            if(field.equals(OutputFields.MINUTE.toString())) {
-                event.addField("timestampMinute", calendar.get(Calendar.MINUTE));
-            }
-            if(field.equals(OutputFields.SECOND.toString())) {
-                event.addField("timestampSecond", calendar.get(Calendar.SECOND));
-            }
-            if(field.equals(OutputFields.WEEKDAY.toString())) {
-                int day =  calendar.get(Calendar.DAY_OF_WEEK);
-                String dayString = "";
-                switch (day) {
-                    case Calendar.MONDAY: dayString = "Monday";
-                        break;
-                    case Calendar.TUESDAY: dayString = "Tuesday";
-                        break;
-                    case Calendar.WEDNESDAY: dayString = "Wednesday";
-                        break;
-                    case Calendar.THURSDAY: dayString = "Thursday";
-                        break;
-                    case Calendar.FRIDAY: dayString = "Friday";
-                        break;
-                    case Calendar.SATURDAY: dayString = "Saturday";
-                        break;
-                    case Calendar.SUNDAY: dayString = "Sunday";
-                        break;
-                }
-                event.addField("timestampWeekday", dayString);
-            }
+    for (String field : outputFields) {
+      if (field.equals(OutputFields.YEAR.toString())) {
+        event.addField("timestampYear", calendar.get(Calendar.YEAR));
+      }
+      if (field.equals(OutputFields.MONTH.toString())) {
+        event.addField("timestampMonth", calendar.get(Calendar.MONTH) + 1);
+      }
+      if (field.equals(OutputFields.DAY.toString())) {
+        event.addField("timestampDay", calendar.get(Calendar.DAY_OF_MONTH));
+      }
+      if (field.equals(OutputFields.HOUR.toString())) {
+        event.addField("timestampHour", calendar.get(Calendar.HOUR_OF_DAY));
+      }
+      if (field.equals(OutputFields.MINUTE.toString())) {
+        event.addField("timestampMinute", calendar.get(Calendar.MINUTE));
+      }
+      if (field.equals(OutputFields.SECOND.toString())) {
+        event.addField("timestampSecond", calendar.get(Calendar.SECOND));
+      }
+      if (field.equals(OutputFields.WEEKDAY.toString())) {
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        String dayString = "";
+        switch (day) {
+          case Calendar.MONDAY:
+            dayString = "Monday";
+            break;
+          case Calendar.TUESDAY:
+            dayString = "Tuesday";
+            break;
+          case Calendar.WEDNESDAY:
+            dayString = "Wednesday";
+            break;
+          case Calendar.THURSDAY:
+            dayString = "Thursday";
+            break;
+          case Calendar.FRIDAY:
+            dayString = "Friday";
+            break;
+          case Calendar.SATURDAY:
+            dayString = "Saturday";
+            break;
+          case Calendar.SUNDAY:
+            dayString = "Sunday";
+            break;
         }
-
-        out.collect(event);
+        event.addField("timestampWeekday", dayString);
+      }
     }
 
+    out.collect(event);
+  }
 
-    @Override
-    public void onDetach() {
-    }
+
+  @Override
+  public void onDetach() {
+  }
 }

@@ -17,12 +17,6 @@
  */
 package org.apache.streampipes.sinks.brokers.jvm.pulsar;
 
-import com.google.common.annotations.VisibleForTesting;
-import java.util.Map;
-import org.apache.pulsar.client.api.ClientBuilder;
-import org.apache.pulsar.client.api.Producer;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
@@ -39,83 +33,91 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
 import org.apache.streampipes.wrapper.standalone.StreamPipesDataSink;
 
+import com.google.common.annotations.VisibleForTesting;
+import org.apache.pulsar.client.api.ClientBuilder;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+
+import java.util.Map;
+
 public class PulsarPublisherSink extends StreamPipesDataSink {
 
-    public static final String TOPIC_KEY = "topic";
-    public static final String PULSAR_HOST_KEY = "pulsar-host";
-    public static final String PULSAR_PORT_KEY = "pulsar-port";
-    private static final String PulsarScheme = "pulsar://";
-    private static final String Colon = ":";
-    private final ClientBuilder clientBuilder;
-    private Producer<byte[]> producer;
-    private PulsarClient pulsarClient;
-    private SpDataFormatDefinition spDataFormatDefinition;
-    private PulsarParameters params;
+  public static final String TOPIC_KEY = "topic";
+  public static final String PULSAR_HOST_KEY = "pulsar-host";
+  public static final String PULSAR_PORT_KEY = "pulsar-port";
+  private static final String PulsarScheme = "pulsar://";
+  private static final String Colon = ":";
+  private final ClientBuilder clientBuilder;
+  private Producer<byte[]> producer;
+  private PulsarClient pulsarClient;
+  private SpDataFormatDefinition spDataFormatDefinition;
+  private PulsarParameters params;
 
-    public PulsarPublisherSink() {
-        this.clientBuilder = PulsarClient.builder();
+  public PulsarPublisherSink() {
+    this.clientBuilder = PulsarClient.builder();
+  }
+
+  @VisibleForTesting
+  public PulsarPublisherSink(ClientBuilder pulsarClientBuilder) {
+    this.clientBuilder = pulsarClientBuilder;
+  }
+
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.pulsar")
+        .category(DataSinkType.MESSAGING)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(PULSAR_HOST_KEY))
+        .requiredIntegerParameter(Labels.withId(PULSAR_PORT_KEY), 6650)
+        .requiredTextParameter(Labels.withId(TOPIC_KEY))
+        .build();
+  }
+
+  @Override
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    params = new PulsarParameters(parameters);
+
+    this.spDataFormatDefinition = new JsonDataFormatDefinition();
+    try {
+      this.pulsarClient = clientBuilder.serviceUrl(makePulsarUrl(params.getPulsarHost(), params.getPulsarPort()))
+          .build();
+
+      this.producer = this.pulsarClient.newProducer()
+          .topic(params.getTopic())
+          .create();
+    } catch (PulsarClientException e) {
+      throw new SpRuntimeException(e);
     }
+  }
 
-    @VisibleForTesting
-    public PulsarPublisherSink(ClientBuilder pulsarClientBuilder) {
-        this.clientBuilder = pulsarClientBuilder;
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    Map<String, Object> rawMap = event.getRaw();
+    byte[] jsonMessage = this.spDataFormatDefinition.fromMap(rawMap);
+
+    try {
+      this.producer.send(jsonMessage);
+    } catch (PulsarClientException e) {
+      throw new SpRuntimeException(e);
     }
+  }
 
-    @Override
-    public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.pulsar")
-                .category(DataSinkType.MESSAGING)
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
-                .requiredTextParameter(Labels.withId(PULSAR_HOST_KEY))
-                .requiredIntegerParameter(Labels.withId(PULSAR_PORT_KEY), 6650)
-                .requiredTextParameter(Labels.withId(TOPIC_KEY))
-                .build();
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    try {
+      this.pulsarClient.close();
+    } catch (PulsarClientException e) {
+      throw new SpRuntimeException(e);
     }
+  }
 
-    @Override
-    public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-        params = new PulsarParameters(parameters);
-
-        this.spDataFormatDefinition = new JsonDataFormatDefinition();
-        try {
-            this.pulsarClient = clientBuilder.serviceUrl(makePulsarUrl(params.getPulsarHost(), params.getPulsarPort()))
-                    .build();
-
-            this.producer = this.pulsarClient.newProducer()
-                    .topic(params.getTopic())
-                    .create();
-        } catch (PulsarClientException e) {
-            throw new SpRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void onEvent(Event event) throws SpRuntimeException {
-        Map<String, Object> rawMap = event.getRaw();
-        byte[] jsonMessage = this.spDataFormatDefinition.fromMap(rawMap);
-
-        try {
-            this.producer.send(jsonMessage);
-        } catch (PulsarClientException e) {
-            throw new SpRuntimeException(e);
-        }
-    }
-
-    @Override
-    public void onDetach() throws SpRuntimeException {
-        try {
-            this.pulsarClient.close();
-        } catch (PulsarClientException e) {
-            throw new SpRuntimeException(e);
-        }
-    }
-
-    private String makePulsarUrl(String hostname, Integer port) {
-        return PulsarScheme + hostname + Colon + port;
-    }
+  private String makePulsarUrl(String hostname, Integer port) {
+    return PulsarScheme + hostname + Colon + port;
+  }
 }

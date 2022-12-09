@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo;
+package org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo;
 
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
@@ -26,7 +26,10 @@ import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.vocabulary.Geo;
@@ -36,17 +39,17 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<LatLngToGeoParameter> {
 
 
-  public final static String LAT_KEY = "latitude-key";
-  public final static String LNG_KEY = "longitude-key";
-  public final static String EPSG_KEY = "epsg-key";
+  public static final String LAT_KEY = "latitude-key";
+  public static final String LNG_KEY = "longitude-key";
+  public static final String EPSG_KEY = "epsg-key";
 
-  public final static String WKT_RUNTIME = "geomWKT";
-  public final static String EPA_NAME = "Create Point from Latitude and Longitude";
+  public static final String WKT_RUNTIME = "geomWKT";
+  public static final String EPA_NAME = "Create Point from Latitude and Longitude";
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder
-        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo")
+        .create("org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo")
         .category(DataProcessorType.GEO)
         .withAssets(Assets.DOCUMENTATION, Assets.ICON)
         .withLocales(Locales.EN)
@@ -74,7 +77,8 @@ public class LatLngToGeoController extends StandaloneEventProcessingDeclarer<Lat
   }
 
   @Override
-  public ConfiguredEventProcessor<LatLngToGeoParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<LatLngToGeoParameter> onInvocation(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor) {
 
     String lat = extractor.mappingPropertyValue(LAT_KEY);
     String lng = extractor.mappingPropertyValue(LNG_KEY);

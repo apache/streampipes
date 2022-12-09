@@ -100,13 +100,13 @@ public class KafkaConnectUtils {
       String username = extractor.singleValueParameter(USERNAME_KEY, String.class);
       String password = extractor.secretValue(PASSWORD_KEY);
 
-      securityConfig = isUseSSL ?
-          new KafkaSecuritySaslSSLConfig(username, password) :
+      securityConfig = isUseSSL
+          ? new KafkaSecuritySaslSSLConfig(username, password) :
           new KafkaSecuritySaslPlainConfig(username, password);
     } else {
       // set security config for none authenticated access
-      securityConfig = isUseSSL ?
-          new KafkaSecurityUnauthenticatedSSLConfig() :
+      securityConfig = isUseSSL
+          ? new KafkaSecurityUnauthenticatedSSLConfig() :
           new KafkaSecurityUnauthenticatedPlainConfig();
     }
 
@@ -114,8 +114,8 @@ public class KafkaConnectUtils {
   }
 
   private static boolean isUseSSL(String authentication) {
-    if (authentication.equals(KafkaConnectUtils.UNAUTHENTICATED_PLAIN) ||
-        authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
+    if (authentication.equals(KafkaConnectUtils.UNAUTHENTICATED_PLAIN)
+        || authentication.equals(KafkaConnectUtils.SASL_PLAIN)) {
       return false;
     } else {
       return true;

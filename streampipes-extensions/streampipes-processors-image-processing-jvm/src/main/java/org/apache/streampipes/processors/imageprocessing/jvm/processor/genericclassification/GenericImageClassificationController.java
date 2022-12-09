@@ -24,37 +24,45 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class GenericImageClassificationController extends StandaloneEventProcessingDeclarer<GenericImageClassificationParameters> {
+public class GenericImageClassificationController
+    extends StandaloneEventProcessingDeclarer<GenericImageClassificationParameters> {
 
   private static final String IMAGE = "image-mapping";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.generic-image-classification")
-            .category(DataProcessorType.IMAGE_PROCESSING)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements
-                                    .domainPropertyReq("https://image.com"), Labels.withId(IMAGE),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.doubleEp(Labels.empty(), "score", "https://schema.org/score"),
-                    EpProperties.stringEp(Labels.empty(), "category", "https://schema.org/category")
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processor.imageclassification.jvm.generic-image-classification")
+        .category(DataProcessorType.IMAGE_PROCESSING)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements
+                    .domainPropertyReq("https://image.com"), Labels.withId(IMAGE),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.doubleEp(Labels.empty(), "score", "https://schema.org/score"),
+            EpProperties.stringEp(Labels.empty(), "category", "https://schema.org/category")
 
-            ))
-            .build();
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<GenericImageClassificationParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<GenericImageClassificationParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String imageProperty = extractor.mappingPropertyValue(IMAGE);
 

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.processors.geo.jvm.processor.revgeocoder;
 
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.geocode.GeoName;
@@ -26,6 +25,8 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import org.apache.http.client.fluent.Request;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,8 +34,8 @@ import java.util.zip.ZipInputStream;
 
 public class ReverseGeocoding implements EventProcessor<ReverseGeocodingParameters> {
 
-  private static final String CITIES_DATASET_URL = "http://download.geonames" +
-          ".org/export/dump/cities1000.zip";
+  private static final String CITIES_DATASET_URL = "http://download.geonames"
+      + ".org/export/dump/cities1000.zip";
 
   private String latitudeField;
   private String longitudeField;
@@ -42,7 +43,8 @@ public class ReverseGeocoding implements EventProcessor<ReverseGeocodingParamete
   private ReverseGeoCode reverseGeoCode;
 
   @Override
-  public void onInvocation(ReverseGeocodingParameters parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ReverseGeocodingParameters parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.latitudeField = parameters.getLatitudeField();
     this.longitudeField = parameters.getLongitudeField();
 
@@ -51,7 +53,7 @@ public class ReverseGeocoding implements EventProcessor<ReverseGeocodingParamete
       if (stream != null) {
         ZipInputStream zipInputStream = null;
         zipInputStream = new ZipInputStream(stream);
-          this.reverseGeoCode = new ReverseGeoCode(zipInputStream, false);
+        this.reverseGeoCode = new ReverseGeoCode(zipInputStream, false);
       }
     } catch (IOException e) {
       throw new SpRuntimeException("Could not download cities file...");

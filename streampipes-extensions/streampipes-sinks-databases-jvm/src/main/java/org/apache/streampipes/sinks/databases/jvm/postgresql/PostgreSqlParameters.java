@@ -26,17 +26,18 @@ public class PostgreSqlParameters extends JdbcConnectionParameters {
 
   private boolean sslEnabled;
 
-  public PostgreSqlParameters(DataSinkInvocation graph, String PostgreSqlHost, Integer PostgreSqlPort, String databaseName, String tableName, String user, String password, Boolean sslEnabled) {
+  public PostgreSqlParameters(DataSinkInvocation graph, String postgreSqlHost, Integer postgreSqlPort,
+                              String databaseName, String tableName, String user, String password, Boolean sslEnabled) {
     super(
-            graph,
-            PostgreSqlHost,
-            PostgreSqlPort,
-            databaseName,
-            user,
-            password,
-            tableName,
-            sslEnabled,
-            "org.postgresql.ssl.NonValidatingFactory",
-            true);
+        graph,
+        postgreSqlHost,
+        postgreSqlPort,
+        databaseName,
+        user,
+        password,
+        tableName,
+        sslEnabled,
+        "org.postgresql.ssl.NonValidatingFactory",
+        true);
   }
 }

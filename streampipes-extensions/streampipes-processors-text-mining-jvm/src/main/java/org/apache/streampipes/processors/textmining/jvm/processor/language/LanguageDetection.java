@@ -18,12 +18,6 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.language;
 
-import opennlp.tools.langdetect.Language;
-import opennlp.tools.langdetect.LanguageDetector;
-import opennlp.tools.langdetect.LanguageDetectorME;
-import opennlp.tools.langdetect.LanguageDetectorModel;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
@@ -31,13 +25,18 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import opennlp.tools.langdetect.Language;
+import opennlp.tools.langdetect.LanguageDetector;
+import opennlp.tools.langdetect.LanguageDetectorME;
+import opennlp.tools.langdetect.LanguageDetectorModel;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class LanguageDetection implements EventProcessor<LanguageDetectionParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String detection;
   private LanguageDetector languageDetector;
@@ -49,7 +48,7 @@ public class LanguageDetection implements EventProcessor<LanguageDetectionParame
   public void onInvocation(LanguageDetectionParameters languageDetectionParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = languageDetectionParameters.getGraph().getLogger(LanguageDetection.class);
+    log = languageDetectionParameters.getGraph().getLogger(LanguageDetection.class);
     this.detection = languageDetectionParameters.getDetectionName();
 
     InputStream modelIn = new ByteArrayInputStream(languageDetectionParameters.getFileContent());

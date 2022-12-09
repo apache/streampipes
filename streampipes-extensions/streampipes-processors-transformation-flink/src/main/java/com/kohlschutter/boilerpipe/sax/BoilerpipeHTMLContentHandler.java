@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,22 +17,21 @@
  */
 package com.kohlschutter.boilerpipe.sax;
 
+import com.kohlschutter.boilerpipe.document.TextBlock;
+import com.kohlschutter.boilerpipe.document.TextDocument;
+import com.kohlschutter.boilerpipe.labels.LabelAction;
+import com.kohlschutter.boilerpipe.util.UnicodeTokenizer;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-
-import com.kohlschutter.boilerpipe.document.TextBlock;
-import com.kohlschutter.boilerpipe.document.TextDocument;
-import com.kohlschutter.boilerpipe.labels.LabelAction;
-import com.kohlschutter.boilerpipe.util.UnicodeTokenizer;
 
 /**
  * A simple SAX {@link ContentHandler}, used by {@link BoilerpipeSAXInput}. Can be used by different
@@ -111,7 +110,7 @@ public class BoilerpipeHTMLContentHandler implements ContentHandler {
 
   /**
    * Constructs a {@link BoilerpipeHTMLContentHandler} using the given {@link TagActionMap}.
-   * 
+   *
    * @param tagActions The {@link TagActionMap} to use, e.g. {@link DefaultTagActionMap}.
    */
   public BoilerpipeHTMLContentHandler(final TagActionMap tagActions) {
@@ -411,7 +410,7 @@ public class BoilerpipeHTMLContentHandler implements ContentHandler {
   /**
    * Returns a {@link TextDocument} containing the extracted {@link TextBlock} s. NOTE: Only call
    * this after parsing.
-   * 
+   *
    * @return The {@link TextDocument}
    */
   public TextDocument toTextDocument() {

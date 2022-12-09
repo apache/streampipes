@@ -18,15 +18,17 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink.processor.peak;
 
-import org.apache.flink.api.common.typeinfo.TypeHint;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.utils.SlidingBatchWindow;
+
+import org.apache.flink.api.common.typeinfo.TypeHint;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.streaming.api.datastream.DataStream;
+
 
 import java.util.List;
 
@@ -52,16 +54,16 @@ public class PeakDetectionProgram extends AbstractPatternDetectionProgram<PeakDe
     Integer countWindowSize = params.getCountWindowSize();
 
     return messageStream[0]
-            .keyBy(getKeySelector())
-            .transform
-                    ("sliding-batch-window-shift",
-                            TypeInformation.of(new TypeHint<List<Event>>() {
-                            }), new SlidingBatchWindow<>(countWindowSize))
-            .flatMap(new PeakDetectionCalculator(groupBy,
-                    valueToObserve,
-                    lag,
-                    threshold,
-                    influence));
+        .keyBy(getKeySelector())
+        .transform
+            ("sliding-batch-window-shift",
+                TypeInformation.of(new TypeHint<List<Event>>() {
+                }), new SlidingBatchWindow<>(countWindowSize))
+        .flatMap(new PeakDetectionCalculator(groupBy,
+            valueToObserve,
+            lag,
+            threshold,
+            influence));
   }
 
   private KeySelector<Event, String> getKeySelector() {

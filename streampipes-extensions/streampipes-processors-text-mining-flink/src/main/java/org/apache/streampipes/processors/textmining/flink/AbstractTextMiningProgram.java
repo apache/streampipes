@@ -25,9 +25,10 @@ import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 import org.apache.streampipes.wrapper.flink.FlinkDeploymentConfig;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public abstract class AbstractTextMiningProgram<B extends EventProcessorBindingParams> extends FlinkDataProcessorRuntime<B> {
+public abstract class AbstractTextMiningProgram<T extends EventProcessorBindingParams>
+    extends FlinkDataProcessorRuntime<T> {
 
-  public AbstractTextMiningProgram(B params,
+  public AbstractTextMiningProgram(T params,
                                    ConfigExtractor configExtractor,
                                    StreamPipesClient streamPipesClient) {
     super(params, configExtractor, streamPipesClient);
@@ -37,10 +38,10 @@ public abstract class AbstractTextMiningProgram<B extends EventProcessorBindingP
   protected FlinkDeploymentConfig getDeploymentConfig(ConfigExtractor configExtractor) {
     SpConfig config = configExtractor.getConfig();
     return new FlinkDeploymentConfig(config.getString(
-            ConfigKeys.FLINK_JAR_FILE_LOC),
-            config.getString(ConfigKeys.FLINK_HOST),
-            config.getInteger(ConfigKeys.FLINK_PORT),
-            config.getBoolean(ConfigKeys.DEBUG)
+        ConfigKeys.FLINK_JAR_FILE_LOC),
+        config.getString(ConfigKeys.FLINK_HOST),
+        config.getInteger(ConfigKeys.FLINK_PORT),
+        config.getBoolean(ConfigKeys.DEBUG)
     );
   }
 

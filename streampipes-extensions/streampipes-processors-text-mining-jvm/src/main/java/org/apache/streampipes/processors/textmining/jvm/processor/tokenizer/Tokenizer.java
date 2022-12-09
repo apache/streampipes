@@ -18,10 +18,6 @@
 
 package org.apache.streampipes.processors.textmining.jvm.processor.tokenizer;
 
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.tokenize.TokenizerME;
-import opennlp.tools.tokenize.TokenizerModel;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
@@ -29,13 +25,16 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
+import opennlp.tools.tokenize.TokenizerME;
+import opennlp.tools.tokenize.TokenizerModel;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class Tokenizer implements EventProcessor<TokenizerParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   // Field with the text
   private String detection;
@@ -48,7 +47,7 @@ public class Tokenizer implements EventProcessor<TokenizerParameters> {
   public void onInvocation(TokenizerParameters tokenizerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = tokenizerParameters.getGraph().getLogger(Tokenizer.class);
+    log = tokenizerParameters.getGraph().getLogger(Tokenizer.class);
     this.detection = tokenizerParameters.getDetectionName();
 
     InputStream modelIn = new ByteArrayInputStream(tokenizerParameters.getFileContent());

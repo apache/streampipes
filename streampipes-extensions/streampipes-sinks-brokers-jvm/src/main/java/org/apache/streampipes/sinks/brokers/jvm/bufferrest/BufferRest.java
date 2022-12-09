@@ -1,4 +1,3 @@
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,10 +18,6 @@
 
 package org.apache.streampipes.sinks.brokers.jvm.bufferrest;
 
-import org.apache.commons.io.Charsets;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.StringEntity;
-import org.slf4j.Logger;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
@@ -32,6 +27,11 @@ import org.apache.streampipes.sinks.brokers.jvm.bufferrest.buffer.MessageBuffer;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
 
+import org.apache.commons.io.Charsets;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class BufferRest implements EventSink<BufferRestParameters>, BufferListener {
 
-  private static Logger LOG;
+  private static Logger log;
   private List<String> fieldsToSend;
   private SpDataFormatDefinition dataFormatDefinition;
   private String restEndpointURI;
@@ -64,7 +64,7 @@ public class BufferRest implements EventSink<BufferRestParameters>, BufferListen
       String json = new String(dataFormatDefinition.fromMap(outEventMap));
       this.buffer.addMessage(json);
     } catch (SpRuntimeException e) {
-      LOG.error("Could not parse incoming event");
+      log.error("Could not parse incoming event");
     }
   }
 
@@ -78,7 +78,7 @@ public class BufferRest implements EventSink<BufferRestParameters>, BufferListen
     try {
       Request.Post(restEndpointURI).body(new StringEntity(messagesJsonArray, Charsets.UTF_8)).execute();
     } catch (IOException e) {
-      LOG.error("Could not reach endpoint at {}", restEndpointURI);
+      log.error("Could not reach endpoint at {}", restEndpointURI);
     }
   }
 }

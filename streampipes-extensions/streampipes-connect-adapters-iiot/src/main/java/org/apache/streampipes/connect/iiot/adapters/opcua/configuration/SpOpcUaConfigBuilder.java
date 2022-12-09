@@ -28,7 +28,8 @@ import java.util.List;
 public class SpOpcUaConfigBuilder {
 
   /**
-   * Creates {@link SpOpcUaConfig}  instance in accordance with the given {@link org.apache.streampipes.sdk.extractor.StaticPropertyExtractor}.
+   * Creates {@link SpOpcUaConfig}  instance in accordance with the given
+   * {@link org.apache.streampipes.sdk.extractor.StaticPropertyExtractor}.
    *
    * @param extractor extractor for user inputs
    * @return {@link SpOpcUaConfig}  instance based on information from {@code extractor}
@@ -95,14 +96,15 @@ public class SpOpcUaConfigBuilder {
   }
 
   /***
-   * Creates {@link SpOpcUaConfig}  instance in accordance with the given {@link org.apache.streampipes.model.connect.adapter.AdapterDescription}
+   * Creates {@link SpOpcUaConfig}  instance in accordance with the given
+   * {@link org.apache.streampipes.model.connect.adapter.AdapterDescription}
    * @param adapterDescription description of current adapter
    * @return {@link SpOpcUaConfig}  instance based on information from {@code adapterDescription}
    */
   public static SpOpcUaConfig from(AdapterDescription adapterDescription) {
 
-    StaticPropertyExtractor extractor =
-        StaticPropertyExtractor.from(adapterDescription.getConfig(), new ArrayList<>());
+    StaticPropertyExtractor extractor = StaticPropertyExtractor.from(adapterDescription.getConfig(),
+        new ArrayList<>());
 
     return from(extractor);
   }

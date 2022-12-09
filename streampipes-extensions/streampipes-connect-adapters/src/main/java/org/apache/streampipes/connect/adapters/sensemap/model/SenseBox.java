@@ -45,7 +45,7 @@ public class SenseBox {
   @SerializedName("updatedAt")
   private String mUpdatedAt;
   @SerializedName("_id")
-  private String m_id;
+  private String mId;
 
   public String getCreatedAt() {
     return mCreatedAt;
@@ -112,11 +112,11 @@ public class SenseBox {
   }
 
   public String get_id() {
-    return m_id;
+    return mId;
   }
 
-  public void set_id(String _id) {
-    m_id = _id;
+  public void set_id(String id) {
+    mId = id;
   }
 
 }

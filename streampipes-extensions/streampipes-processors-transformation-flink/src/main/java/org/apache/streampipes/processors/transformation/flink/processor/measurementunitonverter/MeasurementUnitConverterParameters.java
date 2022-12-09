@@ -16,36 +16,37 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.flink.processor.measurementUnitConverter;
+package org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter;
 
-import com.github.jqudt.Unit;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
+import com.github.jqudt.Unit;
+
 public class MeasurementUnitConverterParameters extends EventProcessorBindingParams {
 
-    private String convertProperty;
-    private Unit inputUnit;
-    private Unit outputUnit;
+  private String convertProperty;
+  private Unit inputUnit;
+  private Unit outputUnit;
 
-    public MeasurementUnitConverterParameters(DataProcessorInvocation graph, String convertProperty, Unit inputUnit,
-                                              Unit outputUnit) {
-        super(graph);
-        this.convertProperty = convertProperty;
-        this.inputUnit = inputUnit;
-        this.outputUnit = outputUnit;
-    }
+  public MeasurementUnitConverterParameters(DataProcessorInvocation graph, String convertProperty, Unit inputUnit,
+                                            Unit outputUnit) {
+    super(graph);
+    this.convertProperty = convertProperty;
+    this.inputUnit = inputUnit;
+    this.outputUnit = outputUnit;
+  }
 
-    public String getConvertProperty() {
-        return convertProperty;
-    }
+  public String getConvertProperty() {
+    return convertProperty;
+  }
 
-    public Unit getInputUnit() {
-        return inputUnit;
-    }
+  public Unit getInputUnit() {
+    return inputUnit;
+  }
 
-    public Unit getOutputUnit() {
-        return outputUnit;
-    }
+  public Unit getOutputUnit() {
+    return outputUnit;
+  }
 
 }

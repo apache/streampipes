@@ -17,15 +17,16 @@
  */
 package org.apache.streampipes.processors.pattern.detection.flink.processor.and;
 
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
+
 import org.apache.flink.api.common.functions.JoinFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 
 import java.util.List;
 
@@ -46,33 +47,33 @@ public class AndProgram extends AbstractPatternDetectionProgram<AndParameters> {
     Time time = TimeUnitConverter.toTime(params.getTimeUnit(), params.getTimeWindow());
 
     return messageStream[0].join(messageStream[1])
-            .where(new KeySelector<Event, String>() {
-              @Override
-              public String getKey(Event stringObjectMap) throws Exception {
-                StringBuilder builder = new StringBuilder();
-                for (String key : leftMappings) {
-                  builder.append(key);
-                }
-                return builder.toString();
-              }
-            }).equalTo(new KeySelector<Event, String>() {
-              @Override
-              public String getKey(Event stringObjectMap) throws Exception {
-                StringBuilder builder = new StringBuilder();
-                for (String key : rightMappings) {
-                  builder.append(key);
-                }
-                return builder.toString();
-              }
-            }).window(TumblingEventTimeWindows.of(time))
-            .apply(new JoinFunction<Event, Event, Event>() {
-              @Override
-              public Event join(Event e1, Event e2) throws Exception {
-                Event map = new Event();
-                e1.getFields().forEach((key, value) -> map.addField(value));
-                e2.getFields().forEach((key, value) -> map.addField(value));
-                return map;
-              }
-            });
+        .where(new KeySelector<Event, String>() {
+          @Override
+          public String getKey(Event stringObjectMap) throws Exception {
+            StringBuilder builder = new StringBuilder();
+            for (String key : leftMappings) {
+              builder.append(key);
+            }
+            return builder.toString();
+          }
+        }).equalTo(new KeySelector<Event, String>() {
+          @Override
+          public String getKey(Event stringObjectMap) throws Exception {
+            StringBuilder builder = new StringBuilder();
+            for (String key : rightMappings) {
+              builder.append(key);
+            }
+            return builder.toString();
+          }
+        }).window(TumblingEventTimeWindows.of(time))
+        .apply(new JoinFunction<Event, Event, Event>() {
+          @Override
+          public Event join(Event e1, Event e2) throws Exception {
+            Event map = new Event();
+            e1.getFields().forEach((key, value) -> map.addField(value));
+            e2.getFields().forEach((key, value) -> map.addField(value));
+            return map;
+          }
+        });
   }
 }

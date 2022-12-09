@@ -26,70 +26,84 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class BoilerplateController extends FlinkDataProcessorDeclarer<BoilerplateParameters> {
 
-    public static final String HTML_PROPERTY = "stringProperty";
-    public static final String EXTRACTOR = "extractor";
-    public static final String OUTPUT_MODE = "outputMode";
+  public static final String HTML_PROPERTY = "stringProperty";
+  public static final String EXTRACTOR = "extractor";
+  public static final String OUTPUT_MODE = "outputMode";
 
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.flink.processor.boilerplate")
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                            Labels.withId(HTML_PROPERTY),
-                            PropertyScope.NONE)
-                    .build())
-                .requiredSingleValueSelection(Labels.withId(EXTRACTOR),
-                        Options.from("Article Extractor", "Default Extractor", "Largest Content Extractor", "Canola Extractor", "Keep Everything Extractor"))
-                .requiredSingleValueSelection(Labels.withId(OUTPUT_MODE),
-                        Options.from("Plain Text", "Highlighted Html", "Html"))
-                .outputStrategy(OutputStrategies.keep())
-                .build();
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.transformation.flink.processor.boilerplate")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
+                Labels.withId(HTML_PROPERTY),
+                PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(EXTRACTOR),
+            Options.from("Article Extractor", "Default Extractor", "Largest Content Extractor", "Canola Extractor",
+                "Keep Everything Extractor"))
+        .requiredSingleValueSelection(Labels.withId(OUTPUT_MODE),
+            Options.from("Plain Text", "Highlighted Html", "Html"))
+        .outputStrategy(OutputStrategies.keep())
+        .build();
+  }
+
+  @Override
+  public FlinkDataProcessorRuntime<BoilerplateParameters> getRuntime(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor,
+                                                                     ConfigExtractor configExtractor,
+                                                                     StreamPipesClient streamPipesClient) {
+    String htmlProperty = extractor.mappingPropertyValue(HTML_PROPERTY);
+    String htmlExtractor = extractor.selectedSingleValue(EXTRACTOR, String.class);
+    String htmlOutputMode = extractor.selectedSingleValue(OUTPUT_MODE, String.class);
+
+    ExtractorMode extractorMode = null;
+    switch (htmlExtractor) {
+      case "Article Extractor":
+        extractorMode = ExtractorMode.ARTICLE;
+        break;
+      case "Default Extractor":
+        extractorMode = ExtractorMode.DEFAULT;
+        break;
+      case "Largest Content Extractor":
+        extractorMode = ExtractorMode.LARGEST_CONTENT;
+        break;
+      case "Canola Extractor":
+        extractorMode = ExtractorMode.CANOLA;
+        break;
+      case "Keep Everything Extractor":
+        extractorMode = ExtractorMode.KEEP_EVERYTHING;
     }
 
-    @Override
-    public FlinkDataProcessorRuntime<BoilerplateParameters> getRuntime(DataProcessorInvocation graph,
-                                                                       ProcessingElementParameterExtractor extractor,
-                                                                       ConfigExtractor configExtractor,
-                                                                       StreamPipesClient streamPipesClient) {
-        String htmlProperty = extractor.mappingPropertyValue(HTML_PROPERTY);
-        String htmlExtractor = extractor.selectedSingleValue(EXTRACTOR, String.class);
-        String htmlOutputMode = extractor.selectedSingleValue(OUTPUT_MODE, String.class);
-
-        ExtractorMode extractorMode = null;
-        switch (htmlExtractor) {
-            case "Article Extractor": extractorMode = ExtractorMode.ARTICLE;
-                break;
-            case "Default Extractor": extractorMode = ExtractorMode.DEFAULT;
-                break;
-            case "Largest Content Extractor": extractorMode = ExtractorMode.LARGEST_CONTENT;
-                break;
-            case "Canola Extractor": extractorMode = ExtractorMode.CANOLA;
-                break;
-            case "Keep Everything Extractor": extractorMode = ExtractorMode.KEEP_EVERYTHING;
-        }
-
-        OutputMode outputMode = null;
-        switch (htmlOutputMode) {
-            case "Plain Text": outputMode = OutputMode.PLAIN_TEXT;
-                break;
-            case "Highlighted Html": outputMode = OutputMode.HIGHLIGHTED_HTML;
-                break;
-            case "Html": outputMode = OutputMode.HTML;
-        }
-
-        BoilerplateParameters staticParams = new BoilerplateParameters(graph, htmlProperty, extractorMode, outputMode);
-
-        return new BoilerplateProgram(staticParams, configExtractor, streamPipesClient);
+    OutputMode outputMode = null;
+    switch (htmlOutputMode) {
+      case "Plain Text":
+        outputMode = OutputMode.PLAIN_TEXT;
+        break;
+      case "Highlighted Html":
+        outputMode = OutputMode.HIGHLIGHTED_HTML;
+        break;
+      case "Html":
+        outputMode = OutputMode.HTML;
     }
+
+    BoilerplateParameters staticParams = new BoilerplateParameters(graph, htmlProperty, extractorMode, outputMode);
+
+    return new BoilerplateProgram(staticParams, configExtractor, streamPipesClient);
+  }
 }

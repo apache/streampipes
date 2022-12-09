@@ -19,5 +19,5 @@
 package org.apache.streampipes.sinks.notifications.jvm.config;
 
 public class ConfigKeys {
-    public final static String WEBSOCKET_PROTOCOL = "SP_WEBSOCKET_PROTOCOL";
+  public static final String WEBSOCKET_PROTOCOL = "SP_WEBSOCKET_PROTOCOL";
 }

@@ -20,136 +20,127 @@ package org.apache.streampipes.processors.transformation.jvm.processor.state.lab
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.logging.api.Logger;
-import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.number.NumberLabelerController;
-import org.apache.streampipes.sdk.builder.PrimitivePropertyBuilder;
-import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.utils.Datatypes;
-import org.apache.streampipes.vocabulary.SPSensor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class StatementUtils {
 
-    /**
-     * Add a label to the input event according to the provided statements
-     * @param inputEvent
-     * @param value
-     * @param statements
-     * @param log
-     * @return
-     * @throws SpRuntimeException
-     */
-    public static Event addLabel(Event inputEvent, String labelName, double value, List<Statement> statements, Logger log) {
-        String label = getLabel(value, statements);
-        if (label != null) {
-            inputEvent.addField(labelName, label);
-        } else {
-            log.info("No condition of statements was fulfilled, add a default case (*) to the statements");
-        }
-
-        return inputEvent;
+  /**
+   * Add a label to the input event according to the provided statements
+   *
+   * @param inputEvent
+   * @param value
+   * @param statements
+   * @param log
+   * @return
+   */
+  public static Event addLabel(Event inputEvent, String labelName, double value, List<Statement> statements,
+                               Logger log) {
+    String label = getLabel(value, statements);
+    if (label != null) {
+      inputEvent.addField(labelName, label);
+    } else {
+      log.info("No condition of statements was fulfilled, add a default case (*) to the statements");
     }
 
+    return inputEvent;
+  }
 
 
-    public static List<Statement> getStatements(List<Double> numberValues, List<String> labelStrings,
-                                                List<String> comparators) throws SpRuntimeException {
+  public static List<Statement> getStatements(List<Double> numberValues, List<String> labelStrings,
+                                              List<String> comparators) throws SpRuntimeException {
 
-        List<Statement> result = new ArrayList<>();
+    List<Statement> result = new ArrayList<>();
 
-        for (int i = 0; i < numberValues.size(); i++) {
-            Statement statement = new Statement();
-            statement.setLabel(labelStrings.get(i));
-            statement.setOperator(comparators.get(i));
-            statement.setValue(numberValues.get(i));
+    for (int i = 0; i < numberValues.size(); i++) {
+      Statement statement = new Statement();
+      statement.setLabel(labelStrings.get(i));
+      statement.setOperator(comparators.get(i));
+      statement.setValue(numberValues.get(i));
 
-            result.add(statement);
-        }
+      result.add(statement);
+    }
 
+    return result;
+  }
+
+  /**
+   * This method checks if the user input is correct. When not null is returned
+   *
+   * @param s
+   * @return
+   */
+  public static Statement getStatement(String s) {
+    Statement result = new Statement();
+
+    String[] parts = s.split(";");
+    // default case
+    if (parts.length == 2) {
+      if (parts[0].equals("*")) {
+        result.setOperator(parts[0]);
+        result.setLabel(parts[1]);
         return result;
-    }
-
-    /**
-     * This method checks if the user input is correct. When not null is returned
-     * @param s
-     * @return
-     */
-    public static Statement getStatement(String s) {
-        Statement result = new Statement();
-
-        String[] parts  = s.split(";");
-        // default case
-        if (parts.length == 2) {
-            if (parts[0].equals("*")) {
-                result.setOperator(parts[0]);
-                result.setLabel(parts[1]);
-                return result;
-            } else {
-                return null;
-            }
-        }
-
-        // all other valid cases
-        if (parts.length ==  3) {
-
-            if (parts[0].equals(">") || parts[0].equals("<") || parts[0].equals("=")) {
-                result.setOperator(parts[0]);
-            } else {
-                return null;
-            }
-
-            if (isNumeric(parts[1].replaceAll("-", ""))) {
-                result.setValue(Double.parseDouble(parts[1]));
-            } else {
-                return null;
-            }
-
-            result.setLabel(parts[2]);
-
-            return result;
-        } else {
-            return null;
-        }
-    }
-
-    private static String getLabel(double calculatedValue, List<Statement> statements) {
-        for (Statement statement : statements) {
-            if (condition(statement, calculatedValue)) {
-                return statement.getLabel();
-            }
-        }
+      } else {
         return null;
+      }
     }
 
-    private static boolean condition(Statement statement, double calculatedValue) {
-        if (">".equals(statement.getOperator())) {
-            return calculatedValue > statement.getValue();
-        } else if (">=".equals(statement.getOperator())) {
-            return calculatedValue >= statement.getValue();
-        } else if ("<=".equals(statement.getOperator())) {
-            return calculatedValue <= statement.getValue();
-        } else if ("<".equals(statement.getOperator())) {
-            return calculatedValue < statement.getValue();
-        } else if ("==".equals(statement.getOperator())) {
-            return calculatedValue == statement.getValue();
-        } else {
-            return false;
-        }
-    }
+    // all other valid cases
+    if (parts.length == 3) {
 
-    private static boolean isNumeric(final String str) {
+      if (parts[0].equals(">") || parts[0].equals("<") || parts[0].equals("=")) {
+        result.setOperator(parts[0]);
+      } else {
+        return null;
+      }
 
-        // null or empty
-        if (str == null || str.length() == 0) {
-            return false;
-        }
-        return str.chars().allMatch(Character::isDigit);
+      if (isNumeric(parts[1].replaceAll("-", ""))) {
+        result.setValue(Double.parseDouble(parts[1]));
+      } else {
+        return null;
+      }
+
+      result.setLabel(parts[2]);
+
+      return result;
+    } else {
+      return null;
     }
+  }
+
+  private static String getLabel(double calculatedValue, List<Statement> statements) {
+    for (Statement statement : statements) {
+      if (condition(statement, calculatedValue)) {
+        return statement.getLabel();
+      }
+    }
+    return null;
+  }
+
+  private static boolean condition(Statement statement, double calculatedValue) {
+    if (">".equals(statement.getOperator())) {
+      return calculatedValue > statement.getValue();
+    } else if (">=".equals(statement.getOperator())) {
+      return calculatedValue >= statement.getValue();
+    } else if ("<=".equals(statement.getOperator())) {
+      return calculatedValue <= statement.getValue();
+    } else if ("<".equals(statement.getOperator())) {
+      return calculatedValue < statement.getValue();
+    } else if ("==".equals(statement.getOperator())) {
+      return calculatedValue == statement.getValue();
+    } else {
+      return false;
+    }
+  }
+
+  private static boolean isNumeric(final String str) {
+
+    // null or empty
+    if (str == null || str.length() == 0) {
+      return false;
+    }
+    return str.chars().allMatch(Character::isDigit);
+  }
 }

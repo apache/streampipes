@@ -20,27 +20,27 @@ package org.apache.streampipes.processors.transformation.jvm.processor.timestamp
 
 public enum OutputFields {
 
-    YEAR("Year"),
-    MONTH("Month"),
-    DAY("Day"),
-    HOUR("Hour"),
-    MINUTE("Minute"),
-    SECOND("Second"),
-    WEEKDAY("Weekday (e.g 'Monday')"),
-    ;
+  YEAR("Year"),
+  MONTH("Month"),
+  DAY("Day"),
+  HOUR("Hour"),
+  MINUTE("Minute"),
+  SECOND("Second"),
+  WEEKDAY("Weekday (e.g 'Monday')"),
+  ;
 
-    private final String value;
+  private final String value;
 
-    private OutputFields(String value) {
-        this.value = value;
-    }
+  private OutputFields(String value) {
+    this.value = value;
+  }
 
-    public String getField() {
-        return value;
-    }
+  public String getField() {
+    return value;
+  }
 
-    @Override
-    public String toString() {
-        return value;
-    }
+  @Override
+  public String toString() {
+    return value;
+  }
 }

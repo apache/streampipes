@@ -42,31 +42,33 @@ public class ReverseGeocodingController extends StandaloneEventProcessingDeclare
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.geo.jvm.reversegeocoding")
-            .category(DataProcessorType.GEO)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat),
-                            Labels.withId(LATITUDE_MAPPING),
-                            PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng),
-                            Labels.withId(LONGITUDE_MAPPING),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.stringEp(Labels.empty(), "place", "http://schema.org/city")
-            ))
-            .build();
+        .category(DataProcessorType.GEO)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat),
+                Labels.withId(LATITUDE_MAPPING),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng),
+                Labels.withId(LONGITUDE_MAPPING),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.stringEp(Labels.empty(), "place", "http://schema.org/city")
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ReverseGeocodingParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ReverseGeocodingParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
     String latitudeField = extractor.mappingPropertyValue(LATITUDE_MAPPING);
     String longitudeField = extractor.mappingPropertyValue(LONGITUDE_MAPPING);
 
     ReverseGeocodingParameters params = new ReverseGeocodingParameters(graph, latitudeField,
-            longitudeField);
+        longitudeField);
 
     return new ConfiguredEventProcessor<>(params, ReverseGeocoding::new);
   }

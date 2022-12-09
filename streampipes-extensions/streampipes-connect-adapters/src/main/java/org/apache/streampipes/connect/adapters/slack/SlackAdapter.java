@@ -92,8 +92,8 @@ public class SlackAdapter extends SpecificDataStreamAdapter {
       throws AdapterException, ParseException {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(Timestamp))
-        .property(stringEp(Labels.from(Author, "Author", "The username of the sender of the " +
-                "Slack message"),
+        .property(stringEp(Labels.from(Author, "Author", "The username of the sender of the "
+                + "Slack message"),
             Author, SO.Text))
         .property(stringEp(Labels.from(Channel, "Channel", "The Slack channel"), Channel,
             SO.Text))

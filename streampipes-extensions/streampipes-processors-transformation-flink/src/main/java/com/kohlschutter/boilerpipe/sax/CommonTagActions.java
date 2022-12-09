@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,14 +17,13 @@
  */
 package com.kohlschutter.boilerpipe.sax;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.kohlschutter.boilerpipe.document.TextBlock;
+import com.kohlschutter.boilerpipe.labels.LabelAction;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.kohlschutter.boilerpipe.document.TextBlock;
-import com.kohlschutter.boilerpipe.labels.LabelAction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Defines an action that is to be performed whenever a particular tag occurs during HTML parsing.
@@ -45,7 +44,7 @@ public abstract class CommonTagActions {
     }
 
     public boolean start(BoilerpipeHTMLContentHandler instance, String localName, String qName,
-        Attributes atts) throws SAXException {
+                         Attributes atts) throws SAXException {
       return t1.start(instance, localName, qName, atts)
           | t2.start(instance, localName, qName, atts);
     }
@@ -66,13 +65,13 @@ public abstract class CommonTagActions {
   public static final TagAction TA_IGNORABLE_ELEMENT = new TagAction() {
 
     public boolean start(final BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
       instance.inIgnorableElement++;
       return true;
     }
 
     public boolean end(final BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       instance.inIgnorableElement--;
       return true;
     }
@@ -85,20 +84,21 @@ public abstract class CommonTagActions {
   /**
    * Marks this tag as "anchor" (this should usually only be set for the <code>&lt;A&gt;</code>
    * tag). Anchor tags may not be nested.
-   * 
+   *
    * There is a bug in certain versions of NekoHTML which still allows nested tags. If boilerpipe
    * encounters such nestings, a SAXException is thrown.
    */
   public static final TagAction TA_ANCHOR_TEXT = new TagAction() {
 
     public boolean start(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) throws SAXException {
+                         final String qName, final Attributes atts) throws SAXException {
       if (instance.inAnchor++ > 0) {
         // as nested A elements are not allowed per specification, we
         // are probably reaching this branch due to a bug in the XML
         // parser
         System.err
-            .println("Warning: SAX input contains nested A elements -- You have probably hit a bug in your HTML parser (e.g., NekoHTML bug #2909310). Please clean the HTML externally and feed it to boilerpipe again. Trying to recover somehow...");
+            .println(
+                "Warning: SAX input contains nested A elements -- You have probably hit a bug in your HTML parser (e.g., NekoHTML bug #2909310). Please clean the HTML externally and feed it to boilerpipe again. Trying to recover somehow...");
 
         end(instance, localName, qName);
       }
@@ -112,7 +112,7 @@ public abstract class CommonTagActions {
     }
 
     public boolean end(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       if (--instance.inAnchor == 0) {
         if (instance.inIgnorableElement == 0) {
           instance.addWhitespaceIfNecessary();
@@ -135,14 +135,14 @@ public abstract class CommonTagActions {
    */
   public static final TagAction TA_BODY = new TagAction() {
     public boolean start(final BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
       instance.flushBlock();
       instance.inBody++;
       return false;
     }
 
     public boolean end(final BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       instance.flushBlock();
       instance.inBody--;
       return false;
@@ -159,13 +159,13 @@ public abstract class CommonTagActions {
   public static final TagAction TA_INLINE_WHITESPACE = new TagAction() {
 
     public boolean start(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
       instance.addWhitespaceIfNecessary();
       return false;
     }
 
     public boolean end(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       instance.addWhitespaceIfNecessary();
       return false;
     }
@@ -187,12 +187,12 @@ public abstract class CommonTagActions {
   public static final TagAction TA_INLINE_NO_WHITESPACE = new TagAction() {
 
     public boolean start(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
       return false;
     }
 
     public boolean end(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       return false;
     }
 
@@ -208,12 +208,12 @@ public abstract class CommonTagActions {
   public static final TagAction TA_BLOCK_LEVEL = new TagAction() {
 
     public boolean start(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
       return true;
     }
 
     public boolean end(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       return true;
     }
 
@@ -229,7 +229,7 @@ public abstract class CommonTagActions {
   public static final TagAction TA_FONT = new TagAction() {
 
     public boolean start(final BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
 
       String sizeAttr = atts.getValue("size");
       if (sizeAttr != null) {
@@ -273,7 +273,7 @@ public abstract class CommonTagActions {
     }
 
     public boolean end(final BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       instance.fontSizeStack.removeFirst();
       return false;
     }
@@ -296,14 +296,14 @@ public abstract class CommonTagActions {
     }
 
     public boolean start(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
       instance.addWhitespaceIfNecessary();
       instance.addLabelAction(action);
       return false;
     }
 
     public boolean end(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       instance.addWhitespaceIfNecessary();
       return false;
     }
@@ -326,13 +326,13 @@ public abstract class CommonTagActions {
     }
 
     public boolean start(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName, final Attributes atts) {
+                         final String qName, final Attributes atts) {
       instance.addLabelAction(action);
       return true;
     }
 
     public boolean end(BoilerpipeHTMLContentHandler instance, final String localName,
-        final String qName) {
+                       final String qName) {
       return true;
     }
 

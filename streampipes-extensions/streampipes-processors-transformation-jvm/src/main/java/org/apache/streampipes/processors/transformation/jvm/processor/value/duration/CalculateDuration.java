@@ -26,7 +26,7 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 public class CalculateDuration implements EventProcessor<CalculateDurationParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String startTs;
   private String endTs;
@@ -35,13 +35,13 @@ public class CalculateDuration implements EventProcessor<CalculateDurationParame
 
   @Override
   public void onInvocation(CalculateDurationParameters calculateDurationParameters,
-                            SpOutputCollector spOutputCollector,
-                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = calculateDurationParameters.getGraph().getLogger(
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    log = calculateDurationParameters.getGraph().getLogger(
         CalculateDuration.class);
 
     this.startTs = calculateDurationParameters.getStartTs();
-    this.endTs= calculateDurationParameters.getEndTs();
+    this.endTs = calculateDurationParameters.getEndTs();
     this.unit = calculateDurationParameters.getUnit();
     this.durationName = calculateDurationParameters.getDurationName();
   }

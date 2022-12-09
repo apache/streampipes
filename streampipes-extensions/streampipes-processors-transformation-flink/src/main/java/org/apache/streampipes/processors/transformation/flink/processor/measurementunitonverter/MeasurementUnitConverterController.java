@@ -16,9 +16,8 @@
  *
  */
 
-package org.apache.streampipes.processors.transformation.flink.processor.measurementUnitConverter;
+package org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter;
 
-import com.github.jqudt.Unit;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
@@ -44,60 +43,64 @@ import org.apache.streampipes.units.UnitProvider;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
+import com.github.jqudt.Unit;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class MeasurementUnitConverterController extends
-        FlinkDataProcessorDeclarer<MeasurementUnitConverterParameters> implements ResolvesContainerProvidedOptions {
+    FlinkDataProcessorDeclarer<MeasurementUnitConverterParameters> implements ResolvesContainerProvidedOptions {
 
   private static final String CONVERT_PROPERTY = "convert-property";
   private static final String OUTPUT_UNIT = "output-unit";
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.flink.measurement-unit-converter")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.transformation.flink.measurementunitconverter")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
                     .create()
-                    .requiredPropertyWithUnaryMapping(PropertyRequirementsBuilder
-                                    .create()
-                                    .measurementUnitPresence()
-                                    .build(),
-                            Labels.withId(CONVERT_PROPERTY),
-                            PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT))
-            .outputStrategy(OutputStrategies.transform(TransformOperations
-                    .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
-            .build();
+                    .measurementUnitPresence()
+                    .build(),
+                Labels.withId(CONVERT_PROPERTY),
+                PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .requiredSingleValueSelectionFromContainer(Labels.withId(OUTPUT_UNIT))
+        .outputStrategy(OutputStrategies.transform(TransformOperations
+            .dynamicMeasurementUnitTransformation(CONVERT_PROPERTY, OUTPUT_UNIT)))
+        .build();
   }
 
 
   @Override
-  public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(DataProcessorInvocation sepa,
-                                                                                  ProcessingElementParameterExtractor extractor,
-                                                                                  ConfigExtractor configExtractor,
-                                                                                  StreamPipesClient streamPipesClient) {
+  public FlinkDataProcessorRuntime<MeasurementUnitConverterParameters> getRuntime(
+      DataProcessorInvocation sepa,
+      ProcessingElementParameterExtractor extractor,
+      ConfigExtractor configExtractor,
+      StreamPipesClient streamPipesClient) {
 
     String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
     String inputUnitId = extractor.measurementUnit(convertProperty, 0);
     String outputUnitId = sepa.getStaticProperties().stream().filter(sp -> sp
-            .getInternalName().equals(OUTPUT_UNIT)).map(sp ->
-            (RuntimeResolvableOneOfStaticProperty) sp).findFirst().get().getOptions().stream
-            ().filter(o -> o.isSelected()).map(o -> o.getInternalName()).findFirst().get();
+        .getInternalName().equals(OUTPUT_UNIT)).map(sp ->
+        (RuntimeResolvableOneOfStaticProperty) sp).findFirst().get().getOptions().stream
+        ().filter(o -> o.isSelected()).map(o -> o.getInternalName()).findFirst().get();
     extractor.selectedSingleValueFromRemote(OUTPUT_UNIT, String.class);
 
     Unit inputUnit = UnitProvider.INSTANCE.getUnit(inputUnitId);
     Unit outputUnit = UnitProvider.INSTANCE.getUnit(outputUnitId);
 
     MeasurementUnitConverterParameters staticParams = new MeasurementUnitConverterParameters(
-            sepa,
-            convertProperty,
-            inputUnit,
-            outputUnit
+        sepa,
+        convertProperty,
+        inputUnit,
+        outputUnit
     );
 
     return new MeasurementUnitConverterProgram(staticParams, configExtractor, streamPipesClient);
@@ -108,16 +111,16 @@ public class MeasurementUnitConverterController extends
     try {
       EventProperty linkedEventProperty = parameterExtractor.getEventPropertyBySelector(CONVERT_PROPERTY);
       if (linkedEventProperty instanceof EventPropertyPrimitive && ((EventPropertyPrimitive) linkedEventProperty)
-              .getMeasurementUnit() != null) {
+          .getMeasurementUnit() != null) {
         Unit measurementUnit = UnitProvider.INSTANCE.getUnit(((EventPropertyPrimitive) linkedEventProperty)
-                .getMeasurementUnit().toString());
+            .getMeasurementUnit().toString());
         URI type = measurementUnit.getType();
         List<Unit> availableUnits = UnitProvider.INSTANCE.getUnitsByType(type);
         return availableUnits
-                .stream()
-                .filter(unit -> !(unit.getResource().toString().equals(measurementUnit.getResource().toString())))
-                .map(unit -> new Option(unit.getLabel(), unit.getResource().toString()))
-                .collect(Collectors.toList());
+            .stream()
+            .filter(unit -> !(unit.getResource().toString().equals(measurementUnit.getResource().toString())))
+            .map(unit -> new Option(unit.getLabel(), unit.getResource().toString()))
+            .collect(Collectors.toList());
       } else {
         return new ArrayList<>();
       }

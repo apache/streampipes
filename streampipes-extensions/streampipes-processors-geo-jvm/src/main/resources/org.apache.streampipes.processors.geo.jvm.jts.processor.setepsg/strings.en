@@ -16,17 +16,8 @@
 #
 
 
-org.apache.streampipes.processors.enricher.jvm.valueChange.title=Value Change
-org.apache.streampipes.processors.enricher.jvm.valueChange.description=The processing element should be able to detect when a numeric property change from one configured value to another
+org.apache.streampipes.processors.geo.jvm.jts.processor.setepsg.title=EPSG Code
+org.apache.streampipes.processors.geo.jvm.jts.processor.setepsg.description=Adds a corresponding EPSG Code to the Geo-Event
 
-change-value-mapping.title=Property to monitor
-change-value-mapping.description=The property where the values are monitored
-
-from-property-value.title=From Value
-from-property-value.description=Result is true, when the property value switches from this value to the To Value
-
-to-property-value.title=To Value
-to-property-value.description=Result is true, wWhen the property value switches from the from value to this
-
-is-changed.title=isChanged
-is-changed.description=
+epsg-key.title=EPSG Code field
+epsg-key.description=EPSG Code

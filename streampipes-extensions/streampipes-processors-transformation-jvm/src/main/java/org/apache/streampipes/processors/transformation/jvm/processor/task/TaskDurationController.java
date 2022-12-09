@@ -24,7 +24,12 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -47,32 +52,33 @@ public class TaskDurationController extends StandaloneEventProcessingDeclarer<Ta
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm"
             + ".taskduration")
-            .category(DataProcessorType.TIME)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.anyProperty(),
-                            Labels.withId(TASK_FIELD_KEY),
-                            PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.withId(TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
-            .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.withId(TASK_ID),
-                    "processId", "http://schema.org/taskId"),
-                    EpProperties.integerEp(Labels.withId(DURATION_ID), "duration",
-                            "http://schema.org/duration")))
-            .build();
+        .category(DataProcessorType.TIME)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.anyProperty(),
+                Labels.withId(TASK_FIELD_KEY),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_FIELD_KEY), PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+        .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(Labels.withId(TASK_ID),
+                "processId", "http://schema.org/taskId"),
+            EpProperties.integerEp(Labels.withId(DURATION_ID), "duration",
+                "http://schema.org/duration")))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<TaskDurationParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<TaskDurationParameters> onInvocation(DataProcessorInvocation graph,
+                                                                       ProcessingElementParameterExtractor extractor) {
     String taskFieldSelector = extractor.mappingPropertyValue(TASK_FIELD_KEY);
     String timestampFieldSelector = extractor.mappingPropertyValue(TIMESTAMP_FIELD_KEY);
     String outputUnit = extractor.selectedSingleValue(OUTPUT_UNIT_ID, String.class);
 
-    double outputDivisor= 1.0;
+    double outputDivisor = 1.0;
     if (outputUnit.equals(SECONDS)) {
       outputDivisor = 1000.0;
     } else if (outputUnit.equals(MINUTES)) {
@@ -80,7 +86,8 @@ public class TaskDurationController extends StandaloneEventProcessingDeclarer<Ta
     }
 
 
-    TaskDurationParameters params = new TaskDurationParameters(graph, taskFieldSelector, timestampFieldSelector, outputDivisor);
+    TaskDurationParameters params =
+        new TaskDurationParameters(graph, taskFieldSelector, timestampFieldSelector, outputDivisor);
 
     return new ConfiguredEventProcessor<>(params, TaskDuration::new);
   }

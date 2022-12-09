@@ -28,68 +28,68 @@ import java.util.LinkedList;
 
 public class BooleanTimekeeping implements EventProcessor<BooleanTimekeepingParameters> {
 
-    private static Logger LOG;
+  private static Logger log;
 
-    private String leftFieldName;
-    private String rightFieldName;
+  private String leftFieldName;
+  private String rightFieldName;
 
-    private boolean leftFieldLast;
-    private boolean rightFieldLast;
+  private boolean leftFieldLast;
+  private boolean rightFieldLast;
 
-    private LinkedList<Long> allPending;
-    private Long counter;
+  private LinkedList<Long> allPending;
+  private Long counter;
 
-    private double outputDivisor;
+  private double outputDivisor;
 
-    @Override
-    public void onInvocation(BooleanTimekeepingParameters booleanInverterParameters,
-                             SpOutputCollector spOutputCollector,
-                             EventProcessorRuntimeContext runtimeContext) {
-        LOG = booleanInverterParameters.getGraph().getLogger(BooleanTimekeeping.class);
-        this.leftFieldName = booleanInverterParameters.getLeftFieldName();
-        this.rightFieldName = booleanInverterParameters.getRightFieldName();
-        this.outputDivisor = booleanInverterParameters.getOutputDivisor();
-        this.leftFieldLast = false;
-        this.rightFieldLast = false;
-        this.allPending = new LinkedList<>();
-        this.counter = 0L;
-    }
+  @Override
+  public void onInvocation(BooleanTimekeepingParameters booleanInverterParameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    log = booleanInverterParameters.getGraph().getLogger(BooleanTimekeeping.class);
+    this.leftFieldName = booleanInverterParameters.getLeftFieldName();
+    this.rightFieldName = booleanInverterParameters.getRightFieldName();
+    this.outputDivisor = booleanInverterParameters.getOutputDivisor();
+    this.leftFieldLast = false;
+    this.rightFieldLast = false;
+    this.allPending = new LinkedList<>();
+    this.counter = 0L;
+  }
 
-    @Override
-    public void onEvent(Event inputEvent, SpOutputCollector out) {
-        boolean leftField = inputEvent.getFieldBySelector(leftFieldName).getAsPrimitive().getAsBoolean();
-        boolean rightField = inputEvent.getFieldBySelector(rightFieldName).getAsPrimitive().getAsBoolean();
+  @Override
+  public void onEvent(Event inputEvent, SpOutputCollector out) {
+    boolean leftField = inputEvent.getFieldBySelector(leftFieldName).getAsPrimitive().getAsBoolean();
+    boolean rightField = inputEvent.getFieldBySelector(rightFieldName).getAsPrimitive().getAsBoolean();
 
 
-        if (rightFieldLast == false && rightField == true) {
-            if (this.allPending.size() > 0) {
-                Long startTime = this.allPending.removeLast();
+    if (!rightFieldLast && rightField) {
+      if (this.allPending.size() > 0) {
+        Long startTime = this.allPending.removeLast();
 
-                Long timeDifference  = System.currentTimeMillis() - startTime;
+        Long timeDifference = System.currentTimeMillis() - startTime;
 
-                double result = timeDifference  / this.outputDivisor;
+        double result = timeDifference / this.outputDivisor;
 
-                this.counter++;
+        this.counter++;
 
-                if (this.counter == Long.MAX_VALUE) {
-                    this.counter = 0L;
-                }
-
-                inputEvent.addField("measured_time", result);
-                inputEvent.addField("counter", this.counter);
-
-                out.collect(inputEvent);
-            }
+        if (this.counter == Long.MAX_VALUE) {
+          this.counter = 0L;
         }
 
+        inputEvent.addField("measured_time", result);
+        inputEvent.addField("counter", this.counter);
 
-        if (leftFieldLast == false && leftField == true) {
-            this.allPending.push(System.currentTimeMillis());
-        }
+        out.collect(inputEvent);
+      }
     }
 
-    @Override
-    public void onDetach() {
+
+    if (!leftFieldLast && leftField) {
+      this.allPending.push(System.currentTimeMillis());
     }
+  }
+
+  @Override
+  public void onDetach() {
+  }
 
 }

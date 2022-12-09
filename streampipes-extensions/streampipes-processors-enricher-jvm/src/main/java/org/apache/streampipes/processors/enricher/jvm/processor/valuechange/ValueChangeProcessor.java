@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.enricher.jvm.processor.valueChange;
+package org.apache.streampipes.processors.enricher.jvm.processor.valuechange;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.DataProcessorType;
@@ -51,7 +51,7 @@ public class ValueChangeProcessor extends StreamPipesDataProcessor {
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valueChange")
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.valuechange")
         .category(DataProcessorType.VALUE_OBSERVER)
         .withAssets(Assets.DOCUMENTATION)
         .withLocales(Locales.EN)

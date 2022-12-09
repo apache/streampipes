@@ -18,7 +18,7 @@
 
 ## Measure Time Between Two Sensors
 
-<p align="center"> 
+<p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
@@ -28,13 +28,13 @@
 
 This processor can be used to measure the time between two boolean sensors.
 For example on a conveyor, where one sensor is placed on the left and one senor placed on the right.
-Parts are transported on the conveyor and the sensors are boolean sensors detecting those parts. 
-The time is measured between the two sensors as well as the amount of complete transportation's is counted.  
+Parts are transported on the conveyor and the sensors are boolean sensors detecting those parts.
+The time is measured between the two sensors as well as the amount of complete transportation's is counted.
 The measurement is initialized once the left sensor is true and stopped once the right sensor is true.
 There can also be multiple parts on the conveyor as long as the individual parts do not change.
 
 
-<p align="center"> 
+<p align="center">
     <img src="time_measure_example.png" width="300px;" class="pe-image-documentation"/>
 </p>
 

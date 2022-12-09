@@ -17,15 +17,18 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.converter;
 
+
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+
+
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,8 +45,8 @@ public class TestConverterProgram extends DataStreamTestBase {
   @Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-            {"1", 1, "http://www.w3.org/2001/XMLSchema#integer"},
-            {"1.0", 1.0f, "http://www.w3.org/2001/XMLSchema#float"},
+        {"1", 1, "http://www.w3.org/2001/XMLSchema#integer"},
+        {"1.0", 1.0f, "http://www.w3.org/2001/XMLSchema#float"},
 
     });
   }
@@ -59,15 +62,17 @@ public class TestConverterProgram extends DataStreamTestBase {
 
   @Test
   public void testConverterProgram() {
-    FieldConverterParameters params = new FieldConverterParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldConverterController().declareModel()), "field", targetDatatype);
+    FieldConverterParameters params = new FieldConverterParameters(
+        InvocationGraphGenerator.makeEmptyInvocation(new FieldConverterController().declareModel()), "field",
+        targetDatatype);
 
-    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.SERVICE_GROUP);
     FieldConverterProgram program = new FieldConverterProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData(inputValue)));
 
     ExpectedRecords<Event> expected =
-            new ExpectedRecords<Event>().expect(makeTestData(expectedValue).get(0));
+        new ExpectedRecords<Event>().expect(makeTestData(expectedValue).get(0));
 
     assertStream(stream, expected);
   }

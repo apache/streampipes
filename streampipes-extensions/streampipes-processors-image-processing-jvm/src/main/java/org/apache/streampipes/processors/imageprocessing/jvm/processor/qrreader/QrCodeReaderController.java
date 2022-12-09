@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader;
 
-import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
-
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -36,6 +34,8 @@ import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
+import static org.apache.streampipes.processors.imageprocessing.jvm.processor.commons.RequiredBoxStream.IMAGE_PROPERTY;
+
 public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<QrCodeReaderParameters> {
 
   private static final String PLACEHOLDER_VALUE = "placeholder-value";
@@ -45,30 +45,31 @@ public class QrCodeReaderController extends StandaloneEventProcessingDeclarer<Qr
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.qrcode")
-            .category(DataProcessorType.IMAGE_PROCESSING)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
-                            .domainPropertyReq("https://image.com"), Labels
-                            .withId(IMAGE_PROPERTY),
-                    PropertyScope.NONE).build())
-            .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
-            .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
-            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
-                    EpProperties.stringEp(Labels.withId(QR_VALUE),
-                            "qrvalue", "http://schema.org/text")))
-            .build();
+        .category(DataProcessorType.IMAGE_PROCESSING)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(EpRequirements
+                .domainPropertyReq("https://image.com"), Labels
+                .withId(IMAGE_PROPERTY),
+            PropertyScope.NONE).build())
+        .requiredSingleValueSelection(Labels.withId(SEND_IF_NO_RESULT), Options.from("Yes", "No"))
+        .requiredTextParameter(Labels.withId(PLACEHOLDER_VALUE))
+        .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
+            EpProperties.stringEp(Labels.withId(QR_VALUE),
+                "qrvalue", "http://schema.org/text")))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<QrCodeReaderParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation,
+                                                                       ProcessingElementParameterExtractor extractor) {
     String imagePropertyName = extractor.mappingPropertyValue(IMAGE_PROPERTY);
     String placeholderValue = extractor.singleValueParameter(PLACEHOLDER_VALUE, String.class);
     Boolean sendIfNoResult = extractor.selectedSingleValue(SEND_IF_NO_RESULT, String.class)
-            .equals("Yes");
+        .equals("Yes");
 
     QrCodeReaderParameters params = new QrCodeReaderParameters(dataProcessorInvocation,
-            imagePropertyName, placeholderValue, sendIfNoResult);
+        imagePropertyName, placeholderValue, sendIfNoResult);
 
     return new ConfiguredEventProcessor<>(params, QrCodeReader::new);
   }

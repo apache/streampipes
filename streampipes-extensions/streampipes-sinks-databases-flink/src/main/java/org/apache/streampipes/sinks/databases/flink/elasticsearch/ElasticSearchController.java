@@ -43,16 +43,16 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.databases.flink.elasticsearch")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.STORAGE)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.withId(TIMESTAMP_MAPPING), PropertyScope.HEADER_PROPERTY)
-                    .build())
-            .requiredTextParameter(Labels.withId(INDEX_NAME))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.STORAGE)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_MAPPING), PropertyScope.HEADER_PROPERTY)
+            .build())
+        .requiredTextParameter(Labels.withId(INDEX_NAME))
+        .build();
   }
 
   @Override
@@ -66,7 +66,8 @@ public class ElasticSearchController extends FlinkDataSinkDeclarer<ElasticSearch
     String elasticsearchHost = configExtractor.getConfig().getString(ConfigKeys.ELASTIC_HOST);
     Integer elasticsearchPort = configExtractor.getConfig().getInteger(ConfigKeys.ELASTIC_PORT_REST);
 
-    ElasticSearchParameters params = new ElasticSearchParameters(graph, timestampField, indexName, elasticsearchHost, elasticsearchPort);
+    ElasticSearchParameters params =
+        new ElasticSearchParameters(graph, timestampField, indexName, elasticsearchHost, elasticsearchPort);
 
     return new ElasticSearchProgram(params, configExtractor, streamPipesClient);
 

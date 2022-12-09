@@ -17,11 +17,12 @@
  */
 package org.apache.streampipes.processors.textmining.flink.processor.language;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.textmining.flink.AbstractTextMiningProgram;
+
+import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class LanguageDetectionProgram extends AbstractTextMiningProgram<LanguageDetectionParameters> {
 
@@ -34,6 +35,6 @@ public class LanguageDetectionProgram extends AbstractTextMiningProgram<Language
   @Override
   protected DataStream<Event> getApplicationLogic(DataStream<Event>... messageStream) {
     return messageStream[0]
-            .flatMap(new LanguageDetection(params.getFieldName()));
+        .flatMap(new LanguageDetection(params.getFieldName()));
   }
 }

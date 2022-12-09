@@ -24,20 +24,20 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 import java.util.List;
 
 public class SplitArrayParameters extends EventProcessorBindingParams {
-    private String arrayField;
-    private List<String> keepProperties;
+  private String arrayField;
+  private List<String> keepProperties;
 
-    public SplitArrayParameters(DataProcessorInvocation graph, String arrayField, List<String> keepProperties) {
-        super(graph);
-        this.arrayField = arrayField;
-        this.keepProperties = keepProperties;
-    }
+  public SplitArrayParameters(DataProcessorInvocation graph, String arrayField, List<String> keepProperties) {
+    super(graph);
+    this.arrayField = arrayField;
+    this.keepProperties = keepProperties;
+  }
 
-    public String getArrayField() {
-        return arrayField;
-    }
+  public String getArrayField() {
+    return arrayField;
+  }
 
-    public List<String> getKeepProperties() {
-        return keepProperties;
-    }
+  public List<String> getKeepProperties() {
+    return keepProperties;
+  }
 }

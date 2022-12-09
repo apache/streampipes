@@ -22,16 +22,16 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class CountArrayParameters extends EventProcessorBindingParams {
-    private String arrayField;
+  private String arrayField;
 
 
-    public CountArrayParameters(DataProcessorInvocation graph, String arrayField) {
-        super(graph);
-        this.arrayField = arrayField;
-    }
+  public CountArrayParameters(DataProcessorInvocation graph, String arrayField) {
+    super(graph);
+    this.arrayField = arrayField;
+  }
 
-    public String getArrayField() {
-        return arrayField;
-    }
+  public String getArrayField() {
+    return arrayField;
+  }
 
 }

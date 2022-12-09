@@ -58,8 +58,9 @@ public class FrequencyChangeController extends StandaloneEventProcessingDeclarer
   }
 
   @Override
-  public ConfiguredEventProcessor<FrequencyChangeParameters> onInvocation(DataProcessorInvocation graph,
-                                                                          ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<FrequencyChangeParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     int duration = extractor.singleValueParameter(DURATION, Integer.class);
     String timeUnit = extractor.selectedSingleValue(TIME_UNIT, String.class);

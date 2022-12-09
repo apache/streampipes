@@ -27,13 +27,11 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
   private String sensorListValueProperty;
   private String labelName;
   private List<Statement> statements;
@@ -42,12 +40,12 @@ public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
   public void onInvocation(NumberLabelerParameters numberLabelerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
-    LOG = numberLabelerParameters.getGraph().getLogger(NumberLabeler.class);
+    log = numberLabelerParameters.getGraph().getLogger(NumberLabeler.class);
 
     this.statements = StatementUtils.getStatements(
-            numberLabelerParameters.getNumberValues(),
-            numberLabelerParameters.getLabelStrings(),
-            numberLabelerParameters.getComparators());
+        numberLabelerParameters.getNumberValues(),
+        numberLabelerParameters.getLabelStrings(),
+        numberLabelerParameters.getComparators());
 
     this.sensorListValueProperty = numberLabelerParameters.getSensorListValueProperty();
 
@@ -59,7 +57,7 @@ public class NumberLabeler implements EventProcessor<NumberLabelerParameters> {
 
     Double value = inputEvent.getFieldBySelector(this.sensorListValueProperty).getAsPrimitive().getAsDouble();
 
-    Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, value, this.statements, LOG);
+    Event resultEvent = StatementUtils.addLabel(inputEvent, labelName, value, this.statements, log);
 
     out.collect(resultEvent);
   }

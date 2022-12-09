@@ -29,30 +29,31 @@ import java.util.List;
 
 public class CountArray implements EventProcessor<CountArrayParameters> {
 
-    private static Logger LOG;
+  private static Logger log;
 
-    private CountArrayParameters splitArrayParameters;
+  private CountArrayParameters splitArrayParameters;
 
-    @Override
-    public void onInvocation(CountArrayParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
-        LOG = params.getGraph().getLogger(CountArray.class);
+  @Override
+  public void onInvocation(CountArrayParameters params, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    log = params.getGraph().getLogger(CountArray.class);
 
-        this.splitArrayParameters = params;
-    }
+    this.splitArrayParameters = params;
+  }
 
-    @Override
-    public void onEvent(Event event, SpOutputCollector out) {
-        String arrayField = splitArrayParameters.getArrayField();
+  @Override
+  public void onEvent(Event event, SpOutputCollector out) {
+    String arrayField = splitArrayParameters.getArrayField();
 
-        List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList().getRawValue();
+    List<AbstractField> allEvents = event.getFieldBySelector(arrayField).getAsList().getRawValue();
 
-        event.addField(CountArrayController.COUNT_NAME, allEvents.size());
+    event.addField(CountArrayController.COUNT_NAME, allEvents.size());
 
-        out.collect(event);
-    }
+    out.collect(event);
+  }
 
 
-    @Override
-    public void onDetach() {
-    }
+  @Override
+  public void onDetach() {
+  }
 }

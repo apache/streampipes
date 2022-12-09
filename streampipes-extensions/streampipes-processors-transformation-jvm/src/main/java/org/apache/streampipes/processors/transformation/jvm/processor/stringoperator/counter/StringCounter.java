@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 public class StringCounter implements EventProcessor<StringCounterParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String selectedFieldName;
   private String fieldValueOfLastEvent;
@@ -39,7 +39,7 @@ public class StringCounter implements EventProcessor<StringCounterParameters> {
   public void onInvocation(StringCounterParameters stringCounterParametersParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = stringCounterParametersParameters.getGraph().getLogger(StringCounter.class);
+    log = stringCounterParametersParameters.getGraph().getLogger(StringCounter.class);
     this.selectedFieldName = stringCounterParametersParameters.getSelectedFieldName();
     this.fieldValueOfLastEvent = "";
     this.changeCounter = new HashMap<>();
@@ -48,28 +48,28 @@ public class StringCounter implements EventProcessor<StringCounterParameters> {
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
 
-      String value = inputEvent.getFieldBySelector(selectedFieldName).getAsPrimitive().getAsString();
-      String key = this.fieldValueOfLastEvent + ">" + value;
-      boolean updateCounter = false;
+    String value = inputEvent.getFieldBySelector(selectedFieldName).getAsPrimitive().getAsString();
+    String key = this.fieldValueOfLastEvent + ">" + value;
+    boolean updateCounter = false;
 
-      if (!this.fieldValueOfLastEvent.equals(value) && !this.fieldValueOfLastEvent.isEmpty()) {
-          updateCounter = true;
+    if (!this.fieldValueOfLastEvent.equals(value) && !this.fieldValueOfLastEvent.isEmpty()) {
+      updateCounter = true;
 
-          if (changeCounter.containsKey(key)) {
-              changeCounter.put(key, changeCounter.get(key) + 1);
-          } else {
-              changeCounter.put(key, 1);
-          }
+      if (changeCounter.containsKey(key)) {
+        changeCounter.put(key, changeCounter.get(key) + 1);
+      } else {
+        changeCounter.put(key, 1);
       }
+    }
 
-      if (updateCounter) {
-          inputEvent.addField(StringCounterController.CHANGE_FROM_FIELD_RUNTIME_NAME, this.fieldValueOfLastEvent);
-          inputEvent.addField(StringCounterController.CHANGE_TO_FIELD_RUNTIME_NAME, value);
-          inputEvent.addField(StringCounterController.COUNT_FIELD_RUNTIME_NAME, changeCounter.get(key));
-          out.collect(inputEvent);
-      }
+    if (updateCounter) {
+      inputEvent.addField(StringCounterController.CHANGE_FROM_FIELD_RUNTIME_NAME, this.fieldValueOfLastEvent);
+      inputEvent.addField(StringCounterController.CHANGE_TO_FIELD_RUNTIME_NAME, value);
+      inputEvent.addField(StringCounterController.COUNT_FIELD_RUNTIME_NAME, changeCounter.get(key));
+      out.collect(inputEvent);
+    }
 
-      this.fieldValueOfLastEvent = value;
+    this.fieldValueOfLastEvent = value;
   }
 
   @Override

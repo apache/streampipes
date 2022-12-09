@@ -51,26 +51,26 @@ public class BrokersJvmInit extends StandaloneModelSubmitter {
             "Sinks Notifications JVM",
             "",
             8096)
-            .registerPipelineElements(
-                    new KafkaController(),
-                    new JmsController(),
-                    new RestController(),
-                    new BufferRestController(),
-                    new RabbitMqController(),
-                    new MqttPublisherSink(),
-                    new WebsocketServerSink(),
-                    new PulsarPublisherSink(),
-                    new RocketMQPublisherSink(),
-                    new NatsController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(
+            new KafkaController(),
+            new JmsController(),
+            new RestController(),
+            new BufferRestController(),
+            new RabbitMqController(),
+            new MqttPublisherSink(),
+            new WebsocketServerSink(),
+            new PulsarPublisherSink(),
+            new RocketMQPublisherSink(),
+            new NatsController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }
