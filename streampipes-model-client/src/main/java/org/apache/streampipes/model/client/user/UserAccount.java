@@ -27,138 +27,133 @@ import java.util.Set;
 @TsModel
 public class UserAccount extends Principal {
 
-	protected String fullName;
-	protected String password;
+  protected String fullName;
+  protected String password;
 
-	protected List<String> preferredDataStreams;
-	protected List<String> preferredDataProcessors;
-	protected List<String> preferredDataSinks;
+  protected List<String> preferredDataStreams;
+  protected List<String> preferredDataProcessors;
+  protected List<String> preferredDataSinks;
 
-	protected List<UserApiToken> userApiTokens;
+  protected List<UserApiToken> userApiTokens;
 
-	protected boolean hideTutorial;
-	protected boolean darkMode = false;
+  protected boolean hideTutorial;
+  protected boolean darkMode = false;
 
-	public static UserAccount from(String username,
-																 String encryptedPassword,
-																 Set<Role> roles) {
-		UserAccount account = new UserAccount();
-		account.setUsername(username);
-		account.setPassword(encryptedPassword);
-		account.setRoles(roles);
-		account.setAccountEnabled(true);
-		account.setAccountLocked(false);
+  public UserAccount() {
+    super(PrincipalType.USER_ACCOUNT);
+    this.hideTutorial = false;
+    this.userApiTokens = new ArrayList<>();
+    this.preferredDataProcessors = new ArrayList<>();
+    this.preferredDataSinks = new ArrayList<>();
+    this.preferredDataStreams = new ArrayList<>();
+  }
 
-		return account;
-	}
+  public static UserAccount from(String username,
+                                 String encryptedPassword,
+                                 Set<Role> roles) {
+    UserAccount account = new UserAccount();
+    account.setUsername(username);
+    account.setPassword(encryptedPassword);
+    account.setRoles(roles);
+    account.setAccountEnabled(true);
+    account.setAccountLocked(false);
 
-	public UserAccount() {
-		super(PrincipalType.USER_ACCOUNT);
-		this.hideTutorial = false;
-		this.userApiTokens = new ArrayList<>();
-		this.preferredDataProcessors = new ArrayList<>();
-		this.preferredDataSinks = new ArrayList<>();
-		this.preferredDataStreams = new ArrayList<>();
-	}
+    return account;
+  }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  public Set<Role> getRoles() {
+    return roles;
+  }
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
+  public List<String> getPreferredDataStreams() {
+    return preferredDataStreams;
+  }
 
-	public List<String> getPreferredDataStreams() {
-		return preferredDataStreams;
-	}
+  public void setPreferredDataStreams(List<String> preferredDataStreams) {
+    this.preferredDataStreams = preferredDataStreams;
+  }
 
-	public void setPreferredDataStreams(List<String> preferredDataStreams) {
-		this.preferredDataStreams = preferredDataStreams;
-	}
+  public List<String> getPreferredDataProcessors() {
+    return preferredDataProcessors;
+  }
 
-	public List<String> getPreferredDataProcessors() {
-		return preferredDataProcessors;
-	}
+  public void setPreferredDataProcessors(List<String> preferredDataProcessors) {
+    this.preferredDataProcessors = preferredDataProcessors;
+  }
 
-	public void setPreferredDataProcessors(List<String> preferredDataProcessors) {
-		this.preferredDataProcessors = preferredDataProcessors;
-	}
+  public List<String> getPreferredDataSinks() {
+    return preferredDataSinks;
+  }
 
-	public List<String> getPreferredDataSinks() {
-		return preferredDataSinks;
-	}
+  public void setPreferredDataSinks(List<String> preferredDataSinks) {
+    this.preferredDataSinks = preferredDataSinks;
+  }
 
-	public void setPreferredDataSinks(List<String> preferredDataSinks) {
-		this.preferredDataSinks = preferredDataSinks;
-	}
-	
-	public void addPreferredDataStream(String elementId)
-	{
-		this.preferredDataStreams.add(elementId);
-	}
-	
-	public void addPreferredDataProcessor(String elementId)
-	{
-		this.preferredDataProcessors.add(elementId);
-	}
-	
-	public void addPreferredDataSink(String elementId)
-	{
-		this.preferredDataSinks.add(elementId);
-	}
-	
-	public void removePreferredDataStream(String elementId) {
-		this.preferredDataStreams.remove(elementId);
-	}
-	
-	public void removePreferredDataProcessor(String elementId)
-	{
-		this.preferredDataProcessors.remove(elementId);
-	}
-	
-	public void removePreferredDataSink(String elementId)
-	{
-		this.preferredDataSinks.remove(elementId);
-	}
+  public void addPreferredDataStream(String elementId) {
+    this.preferredDataStreams.add(elementId);
+  }
 
-	public String getFullName() {
-		return fullName;
-	}
+  public void addPreferredDataProcessor(String elementId) {
+    this.preferredDataProcessors.add(elementId);
+  }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+  public void addPreferredDataSink(String elementId) {
+    this.preferredDataSinks.add(elementId);
+  }
 
-	public List<UserApiToken> getUserApiTokens() {
-		return userApiTokens;
-	}
+  public void removePreferredDataStream(String elementId) {
+    this.preferredDataStreams.remove(elementId);
+  }
 
-	public void setUserApiTokens(List<UserApiToken> userApiTokens) {
-		this.userApiTokens = userApiTokens;
-	}
+  public void removePreferredDataProcessor(String elementId) {
+    this.preferredDataProcessors.remove(elementId);
+  }
 
-	public boolean isHideTutorial() {
-		return hideTutorial;
-	}
+  public void removePreferredDataSink(String elementId) {
+    this.preferredDataSinks.remove(elementId);
+  }
 
-	public void setHideTutorial(boolean hideTutorial) {
-		this.hideTutorial = hideTutorial;
-	}
+  public String getFullName() {
+    return fullName;
+  }
 
-	public boolean isDarkMode() {
-		return darkMode;
-	}
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-	public void setDarkMode(boolean darkMode) {
-		this.darkMode = darkMode;
-	}
+  public List<UserApiToken> getUserApiTokens() {
+    return userApiTokens;
+  }
 
-	public String getPassword() {
-		return password;
-	}
+  public void setUserApiTokens(List<UserApiToken> userApiTokens) {
+    this.userApiTokens = userApiTokens;
+  }
+
+  public boolean isHideTutorial() {
+    return hideTutorial;
+  }
+
+  public void setHideTutorial(boolean hideTutorial) {
+    this.hideTutorial = hideTutorial;
+  }
+
+  public boolean isDarkMode() {
+    return darkMode;
+  }
+
+  public void setDarkMode(boolean darkMode) {
+    this.darkMode = darkMode;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
 }

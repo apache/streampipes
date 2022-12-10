@@ -20,21 +20,21 @@ package org.apache.streampipes.model.client.monitoring.pipeline;
 
 public class BurrowTopicInfo extends AbstractBurrowInfo {
 
-    private Long[] offsets;
+  private Long[] offsets;
 
-    public BurrowTopicInfo(String error, String message, Long[] offsets) {
-        super(error, message);
-        this.offsets = offsets;
-    }
+  public BurrowTopicInfo(String error, String message, Long[] offsets) {
+    super(error, message);
+    this.offsets = offsets;
+  }
 
-    public BurrowTopicInfo() {
-    }
+  public BurrowTopicInfo() {
+  }
 
-    public Long[] getOffsets() {
-        return offsets;
-    }
+  public Long[] getOffsets() {
+    return offsets;
+  }
 
-    public void setOffsets(Long[] offsets) {
-        this.offsets = offsets;
-    }
+  public void setOffsets(Long[] offsets) {
+    this.offsets = offsets;
+  }
 }

@@ -31,15 +31,15 @@ public class ChangePasswordRequest {
     return newPassword;
   }
 
+  public void setNewPassword(String newPassword) {
+    this.newPassword = newPassword;
+  }
+
   public String getExistingPassword() {
     return existingPassword;
   }
 
   public void setExistingPassword(String existingPassword) {
     this.existingPassword = existingPassword;
-  }
-
-  public void setNewPassword(String newPassword) {
-    this.newPassword = newPassword;
   }
 }

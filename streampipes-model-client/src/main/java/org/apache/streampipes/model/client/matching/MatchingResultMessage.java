@@ -25,84 +25,90 @@ import java.util.Objects;
 @TsModel
 public class MatchingResultMessage {
 
-	private boolean matchingSuccessful;
-	
-	private String title;
-	private String description;
-	
-	private String offerSubject;
-	private String requirementSubject;
-	
-	private String reasonText;
-	
+  private boolean matchingSuccessful;
 
-	public MatchingResultMessage() {
-		
-	}
-	
-	public String getTitle() {
-		return title;
-	}
+  private String title;
+  private String description;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  private String offerSubject;
+  private String requirementSubject;
 
-	public boolean isMatchingSuccessful() {
-		return matchingSuccessful;
-	}
+  private String reasonText;
 
-	public void setMatchingSuccessful(boolean matchingSuccessful) {
-		this.matchingSuccessful = matchingSuccessful;
-	}
 
-	public String getOfferSubject() {
-		return offerSubject;
-	}
+  public MatchingResultMessage() {
 
-	public void setOfferSubject(String offerSubject) {
-		this.offerSubject = offerSubject;
-	}
+  }
 
-	public String getRequirementSubject() {
-		return requirementSubject;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setRequirementSubject(String requirementSubject) {
-		this.requirementSubject = requirementSubject;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public String getReasonText() {
-		return reasonText;
-	}
+  public boolean isMatchingSuccessful() {
+    return matchingSuccessful;
+  }
 
-	public void setReasonText(String reasonText) {
-		this.reasonText = reasonText;
-	}
+  public void setMatchingSuccessful(boolean matchingSuccessful) {
+    this.matchingSuccessful = matchingSuccessful;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public String getOfferSubject() {
+    return offerSubject;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setOfferSubject(String offerSubject) {
+    this.offerSubject = offerSubject;
+  }
 
-	@Override
-	public String toString() {
-		return title + " - " + description + "\n" + "(required: " +requirementSubject + ")";
-	}
+  public String getRequirementSubject() {
+    return requirementSubject;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		MatchingResultMessage that = (MatchingResultMessage) o;
-		return matchingSuccessful == that.matchingSuccessful && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(offerSubject, that.offerSubject) && Objects.equals(requirementSubject, that.requirementSubject) && Objects.equals(reasonText, that.reasonText);
-	}
+  public void setRequirementSubject(String requirementSubject) {
+    this.requirementSubject = requirementSubject;
+  }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(matchingSuccessful, title, description, offerSubject, requirementSubject, reasonText);
-	}
+  public String getReasonText() {
+    return reasonText;
+  }
+
+  public void setReasonText(String reasonText) {
+    this.reasonText = reasonText;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  @Override
+  public String toString() {
+    return title + " - " + description + "\n" + "(required: " + requirementSubject + ")";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MatchingResultMessage that = (MatchingResultMessage) o;
+    return matchingSuccessful == that.matchingSuccessful && Objects.equals(title, that.title)
+        && Objects.equals(description, that.description) && Objects.equals(offerSubject, that.offerSubject)
+        && Objects.equals(requirementSubject, that.requirementSubject) && Objects.equals(reasonText, that.reasonText);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(matchingSuccessful, title, description, offerSubject, requirementSubject, reasonText);
+  }
 }

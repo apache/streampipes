@@ -27,122 +27,117 @@ import java.util.Set;
 
 public abstract class Principal {
 
-	protected @SerializedName("_id") String principalId;
-	protected @SerializedName("_rev") String rev;
+  protected @SerializedName("_id") String principalId;
+  protected @SerializedName("_rev") String rev;
+  protected String username;
+  protected Set<String> objectPermissions;
+  protected Set<Role> roles;
+  protected Set<String> groups;
+  @JsonIgnore
+  private String type = "principal";
+  private boolean accountEnabled;
+  private boolean accountLocked;
+  private boolean accountExpired;
+  private PrincipalType principalType;
 
-	@JsonIgnore
-	private String $type = "principal";
-
-	private boolean accountEnabled;
-	private boolean accountLocked;
-	private boolean accountExpired;
-
-	protected String username;
-
-	protected Set<String> objectPermissions;
-
-	protected Set<Role> roles;
-	protected Set<String> groups;
-
-	private PrincipalType principalType;
-
-	public Principal(PrincipalType principalType) {
-		this.principalType = principalType;
-		this.roles = new HashSet<>();
-		this.groups = new HashSet<>();
-		this.objectPermissions = new HashSet<>();
-	}
+  public Principal(PrincipalType principalType) {
+    this.principalType = principalType;
+    this.roles = new HashSet<>();
+    this.groups = new HashSet<>();
+    this.objectPermissions = new HashSet<>();
+  }
 
 
-	public String getRev() {
-		return rev;
-	}
+  public String getRev() {
+    return rev;
+  }
 
-	public void setRev(String rev) {
-		this.rev = rev;
-	}
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
 
-	public String getPrincipalId() {
-		return principalId;
-	}
+  public String getPrincipalId() {
+    return principalId;
+  }
 
-	public void setPrincipalId(String principalId) {
-		this.principalId = principalId;
-	}
+  public void setPrincipalId(String principalId) {
+    this.principalId = principalId;
+  }
 
-	private Element find(String elementId, List<Element> source) {
-		return source.stream().filter(f -> f.getElementId().equals(elementId)).findFirst().orElseThrow(IllegalArgumentException::new);
-	}
+  private Element find(String elementId, List<Element> source) {
+    return source.stream().filter(f -> f.getElementId().equals(elementId)).findFirst()
+        .orElseThrow(IllegalArgumentException::new);
+  }
 
-	public boolean isAccountEnabled() {
-		return accountEnabled;
-	}
+  public boolean isAccountEnabled() {
+    return accountEnabled;
+  }
 
-	public void setAccountEnabled(boolean accountEnabled) {
-		this.accountEnabled = accountEnabled;
-	}
+  public void setAccountEnabled(boolean accountEnabled) {
+    this.accountEnabled = accountEnabled;
+  }
 
-	public boolean isAccountLocked() {
-		return accountLocked;
-	}
+  public boolean isAccountLocked() {
+    return accountLocked;
+  }
 
-	public void setAccountLocked(boolean accountLocked) {
-		this.accountLocked = accountLocked;
-	}
+  public void setAccountLocked(boolean accountLocked) {
+    this.accountLocked = accountLocked;
+  }
 
-	public boolean isAccountExpired() {
-		return accountExpired;
-	}
+  public boolean isAccountExpired() {
+    return accountExpired;
+  }
 
-	public void setAccountExpired(boolean accountExpired) {
-		this.accountExpired = accountExpired;
-	}
+  public void setAccountExpired(boolean accountExpired) {
+    this.accountExpired = accountExpired;
+  }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+  public Set<Role> getRoles() {
+    return roles;
+  }
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
+  public PrincipalType getPrincipalType() {
+    return principalType;
+  }
 
-	public PrincipalType getPrincipalType() {
-		return principalType;
-	}
+  public void setPrincipalType(PrincipalType principalType) {
+    this.principalType = principalType;
+  }
 
-	public void setPrincipalType(PrincipalType principalType) {
-		this.principalType = principalType;
-	}
+  public Set<String> getGroups() {
+    return groups;
+  }
 
-	public Set<String> getGroups() {
-		return groups;
-	}
+  public void setGroups(Set<String> groups) {
+    this.groups = groups;
+  }
 
-	public void setGroups(Set<String> groups) {
-		this.groups = groups;
-	}
+  public String getUsername() {
+    return username;
+  }
 
-	public String getUsername() {
-		return username;
-	}
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-	public Set<String> getObjectPermissions() {
-		return objectPermissions;
-	}
+  public Set<String> getObjectPermissions() {
+    return objectPermissions;
+  }
 
-	public void setObjectPermissions(Set<String> objectPermissions) {
-		this.objectPermissions = objectPermissions;
-	}
+  public void setObjectPermissions(Set<String> objectPermissions) {
+    this.objectPermissions = objectPermissions;
+  }
 
-	public String get$type() {
-		return $type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void set$type(String $type) {
-		this.$type = $type;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 }
