@@ -1730,7 +1730,7 @@ IoT data streams.
 						<exclude>**/*.csv</exclude>
 
 						<!-- Jupyter Notebooks as well -->
-						<exclude>**/*.jpynb</exclude>
+						<exclude>**/*.ipynb</exclude>
 
                         <exclude>**/system</exclude>
 
