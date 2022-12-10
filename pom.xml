@@ -26,10 +26,10 @@
 	<version>25</version>
 </parent>
 
-<groupId>org.apache.streampipes</groupId>
-<artifactId>streampipes-parent</artifactId>
-<version>0.91.0-SNAPSHOT</version>
-<packaging>pom</packaging>
+    <groupId>org.apache.streampipes</groupId>
+    <artifactId>streampipes-parent</artifactId>
+    <version>0.91.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
 <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1729,7 +1729,10 @@ IoT data streams.
 						<!-- CSV also doesn't like comments -->
 						<exclude>**/*.csv</exclude>
 
-						<exclude>**/system</exclude>
+						<!-- Jupyter Notebooks as well -->
+						<exclude>**/*.jpynb</exclude>
+
+                        <exclude>**/system</exclude>
 
 						<!-- Test files -->
 						<exclude>streampipes-code-generation/src/main/resources/pom</exclude>
