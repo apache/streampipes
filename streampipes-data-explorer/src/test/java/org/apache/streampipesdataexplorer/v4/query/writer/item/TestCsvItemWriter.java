@@ -19,6 +19,7 @@
 package org.apache.streampipesdataexplorer.v4.query.writer.item;
 
 import org.apache.streampipes.dataexplorer.v4.query.writer.item.CsvItemWriter;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

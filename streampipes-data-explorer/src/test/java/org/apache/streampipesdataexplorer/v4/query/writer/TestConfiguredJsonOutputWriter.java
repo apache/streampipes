@@ -18,9 +18,10 @@
 
 package org.apache.streampipesdataexplorer.v4.query.writer;
 
-import com.google.common.base.Charsets;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.query.writer.ConfiguredJsonOutputWriter;
+
+import com.google.common.base.Charsets;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -32,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 public class TestConfiguredJsonOutputWriter extends TestConfiguredOutputWriter {
 
   private static final String Expected = "[{\"time\": 1668578077051,\"string\": \"test\",\"number\": 1}"
-      +",{\"time\": 1668578127050,\"string\": \"test2\",\"number\": 2}]";
+      + ",{\"time\": 1668578127050,\"string\": \"test2\",\"number\": 2}]";
 
   @Test
   public void testJsonOutputWriter() throws IOException {

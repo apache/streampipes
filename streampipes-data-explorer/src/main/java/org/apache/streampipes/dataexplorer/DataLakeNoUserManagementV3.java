@@ -19,7 +19,11 @@
 package org.apache.streampipes.dataexplorer;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
-import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyList;
+import org.apache.streampipes.model.schema.EventPropertyNested;
+import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.storage.api.IDataLakeStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
@@ -35,10 +39,12 @@ public class DataLakeNoUserManagementV3 {
   @Deprecated
   public boolean addDataLake(String measure, EventSchema eventSchema) {
     List<DataLakeMeasure> dataLakeMeasureList = getDataLakeStorage().getAllDataLakeMeasures();
-    Optional<DataLakeMeasure> optional = dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure)).findFirst();
+    Optional<DataLakeMeasure> optional =
+        dataLakeMeasureList.stream().filter(entry -> entry.getMeasureName().equals(measure)).findFirst();
 
     if (optional.isPresent()) {
-      if (!compareEventProperties(optional.get().getEventSchema().getEventProperties(), eventSchema.getEventProperties())) {
+      if (!compareEventProperties(optional.get().getEventSchema().getEventProperties(),
+          eventSchema.getEventProperties())) {
         return false;
       }
     } else {
@@ -62,20 +68,20 @@ public class DataLakeNoUserManagementV3 {
           //primitive
           if (prop instanceof EventPropertyPrimitive && property instanceof EventPropertyPrimitive) {
             if (((EventPropertyPrimitive) prop)
-                    .getRuntimeType()
-                    .equals(((EventPropertyPrimitive) property).getRuntimeType())) {
+                .getRuntimeType()
+                .equals(((EventPropertyPrimitive) property).getRuntimeType())) {
               return true;
             }
 
             //list
           } else if (prop instanceof EventPropertyList && property instanceof EventPropertyList) {
             return compareEventProperties(Collections.singletonList(((EventPropertyList) prop).getEventProperty()),
-                    Collections.singletonList(((EventPropertyList) property).getEventProperty()));
+                Collections.singletonList(((EventPropertyList) property).getEventProperty()));
 
             //nested
           } else if (prop instanceof EventPropertyNested && property instanceof EventPropertyNested) {
             return compareEventProperties(((EventPropertyNested) prop).getEventProperties(),
-                    ((EventPropertyNested) property).getEventProperties());
+                ((EventPropertyNested) property).getEventProperties());
           }
         }
       }

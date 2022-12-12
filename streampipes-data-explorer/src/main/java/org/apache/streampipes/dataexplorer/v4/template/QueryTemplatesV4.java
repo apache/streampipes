@@ -21,69 +21,69 @@ import java.util.StringJoiner;
 
 public class QueryTemplatesV4 {
 
-    public static String selectFrom(String index, String columns) {
-        return "SELECT " + columns + " FROM " + index;
+  public static String selectFrom(String index, String columns) {
+    return "SELECT " + columns + " FROM " + index;
+  }
+
+  public static String selectCountFrom(String index, String selectedColumns) {
+    return selectAggregationFrom(index, selectedColumns, "COUNT");
+  }
+
+  public static String selectAggregationFrom(String index, String columns, String aggregationFunction) {
+    String[] cols = columns.split(",");
+    StringJoiner joiner = new StringJoiner(", ");
+    //StringBuilder statement = new StringBuilder(aggregationFunction + "(" + cols[0] + ")");
+
+    for (int i = 0; i < cols.length; i++) {
+      String builder = aggregationFunction
+          + "("
+          + cols[i]
+          + ")" + " AS " + cols[i];
+      joiner.add(builder);
     }
 
-    public static String selectCountFrom(String index, String selectedColumns) {
-        return selectAggregationFrom(index, selectedColumns, "COUNT");
-    }
+    return "SELECT " + joiner + " FROM \"" + index + "\"";
+  }
 
-    public static String selectAggregationFrom(String index, String columns, String aggregationFunction) {
-        String[] cols = columns.split(",");
-        StringJoiner joiner = new StringJoiner(", ");
-        //StringBuilder statement = new StringBuilder(aggregationFunction + "(" + cols[0] + ")");
+  public static String deleteFrom(String index) {
+    return "DELETE FROM \"" + index + "\"";
+  }
 
-        for (int i = 0; i < cols.length; i++) {
-            String builder = aggregationFunction +
-                    "(" +
-                    cols[i] +
-                    ")" + " AS " + cols[i];
-            joiner.add(builder);
-        }
+  public static String whereTimeWithin(long startDate, long endDate) {
+    return "WHERE time > "
+        + startDate * 1000000
+        + " AND time < "
+        + endDate * 1000000;
+  }
 
-        return "SELECT " + joiner + " FROM \"" + index + "\"";
-    }
+  public static String whereTimeLeftBound(long startDate) {
+    return "WHERE time > "
+        + startDate * 1000000;
+  }
 
-    public static String deleteFrom(String index) {
-        return "DELETE FROM \"" + index + "\"";
-    }
+  public static String whereTimeRightBound(long endDate) {
+    return "WHERE time < "
+        + endDate * 1000000;
+  }
 
-    public static String whereTimeWithin(long startDate, long endDate) {
-        return "WHERE time > "
-                + startDate * 1000000
-                + " AND time < "
-                + endDate * 1000000;
-    }
+  public static String groupByTags(String tags) {
+    return "GROUP BY " + tags;
+  }
 
-    public static String whereTimeLeftBound(long startDate) {
-        return "WHERE time > "
-                + startDate * 1000000;
-    }
+  public static String groupByTime(String timeInterval) {
+    return "GROUP BY time(" + timeInterval + ")";
+  }
 
-    public static String whereTimeRightBound(long endDate) {
-        return "WHERE time < "
-                + endDate * 1000000;
-    }
+  public static String orderByTime(String ordering) {
+    return "ORDER BY time " + ordering.toUpperCase();
+  }
 
-    public static String groupByTags(String tags) {
-        return "GROUP BY " + tags;
-    }
+  public static String limitItems(int limit) {
+    return "LIMIT " + limit;
+  }
 
-    public static String groupByTime(String timeInterval) {
-        return "GROUP BY time(" + timeInterval + ")";
-    }
-
-    public static String orderByTime(String ordering) {
-        return "ORDER BY time " + ordering.toUpperCase();
-    }
-
-    public static String limitItems(int limit) {
-        return "LIMIT " + limit;
-    }
-
-    public static String offset(int offset) {
-        return "OFFSET " + offset;
-    }
+  public static String offset(int offset) {
+    return "OFFSET " + offset;
+  }
 
 }

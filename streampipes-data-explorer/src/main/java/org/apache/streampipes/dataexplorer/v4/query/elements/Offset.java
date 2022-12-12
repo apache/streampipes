@@ -23,12 +23,12 @@ import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
 public class Offset extends QueryElement<OffsetParams> {
 
-    public Offset(OffsetParams offsetParams) {
-        super(offsetParams);
-    }
+  public Offset(OffsetParams offsetParams) {
+    super(offsetParams);
+  }
 
-    @Override
-    protected String buildStatement(OffsetParams offsetParams) {
-        return QueryTemplatesV4.offset(offsetParams.getOffset());
-    }
+  @Override
+  protected String buildStatement(OffsetParams offsetParams) {
+    return QueryTemplatesV4.offset(offsetParams.getOffset());
+  }
 }

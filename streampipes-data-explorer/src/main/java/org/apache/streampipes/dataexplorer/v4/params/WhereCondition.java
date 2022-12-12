@@ -36,10 +36,10 @@ public class WhereCondition {
     StringJoiner joiner = new StringJoiner(" ");
 
     return joiner
-            .add(field)
-            .add(operator)
-            .add(condition)
-            .toString();
+        .add(field)
+        .add(operator)
+        .add(condition)
+        .toString();
   }
 
   public String getField() {

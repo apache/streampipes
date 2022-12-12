@@ -31,7 +31,9 @@ import java.time.temporal.TemporalAccessor;
 public class TimeParser {
 
   private static final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-      .appendPattern("uuuu[-MM[-dd]]['T'HH[:mm[:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS][.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]]]][XXX]")
+      .appendPattern(
+          "uuuu[-MM[-dd]]['T'HH[:mm[:ss[.SSSSSSSSS][.SSSSSSSS][.SSSSSSS]"
+              + "[.SSSSSS][.SSSSS][.SSSS][.SSS][.SS][.S]]]][XXX]")
       .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
       .parseDefaulting(ChronoField.OFFSET_SECONDS, 0)
       .toFormatter();

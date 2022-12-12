@@ -20,16 +20,16 @@ package org.apache.streampipes.dataexplorer.v4.query.elements;
 
 import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
 
-public abstract class QueryElement<QP extends QueryParamsV4> {
-    protected String queryStatement;
+public abstract class QueryElement<T extends QueryParamsV4> {
+  protected String queryStatement;
 
-    public QueryElement(QP params) {
-        this.queryStatement = buildStatement(params);
-    }
+  public QueryElement(T params) {
+    this.queryStatement = buildStatement(params);
+  }
 
-    protected abstract String buildStatement(QP params);
+  protected abstract String buildStatement(T params);
 
-    public String getStatement() {
-        return queryStatement;
-    }
+  public String getStatement() {
+    return queryStatement;
+  }
 }

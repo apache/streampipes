@@ -18,9 +18,10 @@
 
 package org.apache.streampipesdataexplorer.v4.query.writer;
 
-import com.google.common.base.Charsets;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.query.writer.ConfiguredCsvOutputWriter;
+
+import com.google.common.base.Charsets;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

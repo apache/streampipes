@@ -18,6 +18,7 @@
 package org.apache.streampipes.dataexplorer.query;
 
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
+
 import org.influxdb.dto.QueryResult;
 
 public class DeleteDataQuery extends DataExplorerQuery<QueryResult> {

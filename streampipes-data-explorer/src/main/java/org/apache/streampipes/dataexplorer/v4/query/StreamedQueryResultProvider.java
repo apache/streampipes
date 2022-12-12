@@ -105,8 +105,9 @@ public class StreamedQueryResultProvider extends QueryResultProvider {
 
   /**
    * Replaces the field 'time' of the data result with the actual timestamp field name of the measurement
+   *
    * @param measurement contains the actual timestamp name value
-   * @param dataResult the query result of the database with 'time' as timestamp field name
+   * @param dataResult  the query result of the database with 'time' as timestamp field name
    */
   private void changeTimestampHeader(DataLakeMeasure measurement,
                                      SpQueryResult dataResult) {

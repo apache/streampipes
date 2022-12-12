@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.dataexplorer.v4.query.writer;
 
-import com.google.gson.Gson;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.query.writer.item.ItemGenerator;
 import org.apache.streampipes.dataexplorer.v4.query.writer.item.JsonItemWriter;
+
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.OutputStream;

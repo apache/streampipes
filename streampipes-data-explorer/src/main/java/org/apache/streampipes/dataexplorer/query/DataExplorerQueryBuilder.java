@@ -28,13 +28,13 @@ public class DataExplorerQueryBuilder {
   private String databaseName;
   private TimeUnit timeUnit;
 
-  public static DataExplorerQueryBuilder create(String databaseName) {
-    return new DataExplorerQueryBuilder(databaseName);
-  }
-
   private DataExplorerQueryBuilder(String databaseName) {
     this.queryParts = new StringJoiner(" ");
     this.databaseName = databaseName;
+  }
+
+  public static DataExplorerQueryBuilder create(String databaseName) {
+    return new DataExplorerQueryBuilder(databaseName);
   }
 
   public DataExplorerQueryBuilder add(String queryPart) {

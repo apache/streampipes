@@ -35,7 +35,7 @@ public class SelectFromStatement extends QueryElement<SelectFromStatementParams>
     } else {
       StringJoiner joiner = new StringJoiner(",");
       String queryPrefix = "SELECT ";
-      String queryAppendix = " FROM " +escapeIndex(params.getIndex());
+      String queryAppendix = " FROM " + escapeIndex(params.getIndex());
 
       params.getSelectedColumns().forEach(column -> {
         joiner.add(column.toQueryString());

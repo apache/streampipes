@@ -50,7 +50,7 @@ public abstract class ItemGenerator {
   }
 
   protected abstract String makeItemString(String key,
-                                  Object value);
+                                           Object value);
 
   protected abstract String finalizeItem(String item);
 
