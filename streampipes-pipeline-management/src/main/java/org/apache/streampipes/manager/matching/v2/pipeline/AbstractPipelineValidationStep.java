@@ -23,7 +23,12 @@ import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 public abstract class AbstractPipelineValidationStep {
 
@@ -39,7 +44,7 @@ public abstract class AbstractPipelineValidationStep {
   }
 
   protected int getIndex(InvocableStreamPipesEntity target) {
-    return this.visitorHistory.containsKey(target.getDOM()) ? 1 : 0;
+    return this.visitorHistory.containsKey(target.getDom()) ? 1 : 0;
   }
 
 }

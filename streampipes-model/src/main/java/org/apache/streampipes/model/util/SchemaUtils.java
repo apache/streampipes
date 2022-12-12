@@ -27,28 +27,23 @@ import java.util.Map;
 
 public class SchemaUtils {
 
-  public static Map<String, Object> toRuntimeMap(List<EventProperty> eps)
-  {
+  public static Map<String, Object> toRuntimeMap(List<EventProperty> eps) {
     return toUntypedRuntimeMap(eps);
   }
 
-  public static Map<String, Object> toUntypedRuntimeMap(List<EventProperty> eps)
-  {
+  public static Map<String, Object> toUntypedRuntimeMap(List<EventProperty> eps) {
     Map<String, Object> propertyMap = new HashMap<>();
 
-    for(EventProperty p : eps)
-    {
+    for (EventProperty p : eps) {
       propertyMap.putAll(PropertyUtils.getUntypedRuntimeFormat(p));
     }
     return propertyMap;
   }
 
-  public static List<String> toPropertyList(List<EventProperty> eps)
-  {
+  public static List<String> toPropertyList(List<EventProperty> eps) {
     List<String> properties = new ArrayList<>();
 
-    for(EventProperty p : eps)
-    {
+    for (EventProperty p : eps) {
       properties.addAll(PropertyUtils.getFullPropertyName(p, ""));
     }
     return properties;

@@ -38,13 +38,15 @@ public class CollectionStaticProperty extends StaticProperty {
     this.members = new ArrayList<>();
   }
 
-  public CollectionStaticProperty(String internalName, String label, String description, List<StaticProperty> members, String memberType) {
+  public CollectionStaticProperty(String internalName, String label, String description, List<StaticProperty> members,
+                                  String memberType) {
     super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
     this.members = members;
     this.memberType = memberType;
   }
 
-  public CollectionStaticProperty(String internalName, String label, String description, StaticProperty propertyTemplate) {
+  public CollectionStaticProperty(String internalName, String label, String description,
+                                  StaticProperty propertyTemplate) {
     super(StaticPropertyType.CollectionStaticProperty, internalName, label, description);
     this.staticPropertyTemplate = propertyTemplate;
   }
@@ -54,7 +56,7 @@ public class CollectionStaticProperty extends StaticProperty {
     this.members = new Cloner().staticProperties(other.getMembers());
     if (other.getStaticPropertyTemplate() != null) {
       this.staticPropertyTemplate = new Cloner()
-              .staticProperty(other.getStaticPropertyTemplate());
+          .staticProperty(other.getStaticPropertyTemplate());
     }
     this.memberType = other.getMemberType();
   }

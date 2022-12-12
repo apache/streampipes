@@ -53,11 +53,11 @@ public class PipelineTemplateInvocationGenerator {
     List<StaticProperty> staticProperties = new ArrayList<>();
 
     pipeline.getSepas().forEach(pe -> {
-      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDOM() + sp.getInternalName()));
+      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDom() + sp.getInternalName()));
       staticProperties.addAll(pe.getStaticProperties());
     });
     pipeline.getActions().forEach(pe -> {
-      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDOM() + sp.getInternalName()));
+      pe.getStaticProperties().forEach(sp -> sp.setInternalName(pe.getDom() + sp.getInternalName()));
       staticProperties.addAll(pe.getStaticProperties());
     });
 

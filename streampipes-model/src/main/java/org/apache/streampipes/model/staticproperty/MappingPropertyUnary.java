@@ -34,7 +34,7 @@ public class MappingPropertyUnary extends MappingProperty {
   }
 
   public MappingPropertyUnary(String requirementSelector, String internalName, String
-          label, String description) {
+      label, String description) {
     super(StaticPropertyType.MappingPropertyUnary, requirementSelector, internalName, label, description);
   }
 

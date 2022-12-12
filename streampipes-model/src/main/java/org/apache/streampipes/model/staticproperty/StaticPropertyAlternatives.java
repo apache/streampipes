@@ -32,10 +32,10 @@ public class StaticPropertyAlternatives extends StaticProperty {
     super(other);
 //    this.alternatives = new Cloner().staticProperties()
     this.alternatives = other
-            .getAlternatives()
-            .stream()
-            .map(StaticPropertyAlternative::new)
-            .collect(Collectors.toList());
+        .getAlternatives()
+        .stream()
+        .map(StaticPropertyAlternative::new)
+        .collect(Collectors.toList());
   }
 
   public StaticPropertyAlternatives(String internalName, String label, String description) {

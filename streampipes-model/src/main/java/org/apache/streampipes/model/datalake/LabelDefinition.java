@@ -20,27 +20,27 @@ package org.apache.streampipes.model.datalake;
 
 public class LabelDefinition {
 
-    private String classLabel;
-    private String labelColumn;
+  private String classLabel;
+  private String labelColumn;
 
-    public LabelDefinition(String classLabel, String labelColumn) {
-        this.classLabel = classLabel;
-        this.labelColumn = labelColumn;
-    }
+  public LabelDefinition(String classLabel, String labelColumn) {
+    this.classLabel = classLabel;
+    this.labelColumn = labelColumn;
+  }
 
-    public String getClassLabel() {
-        return classLabel;
-    }
+  public String getClassLabel() {
+    return classLabel;
+  }
 
-    public void setClassLabel(String classLabel) {
-        this.classLabel = classLabel;
-    }
+  public void setClassLabel(String classLabel) {
+    this.classLabel = classLabel;
+  }
 
-    public String getLabelColumn() {
-        return labelColumn;
-    }
+  public String getLabelColumn() {
+    return labelColumn;
+  }
 
-    public void setLabelColumn(String labelColumn) {
-        this.labelColumn = labelColumn;
-    }
+  public void setLabelColumn(String labelColumn) {
+    this.labelColumn = labelColumn;
+  }
 }

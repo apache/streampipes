@@ -73,7 +73,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
     if (other.getStaticProperties() != null) {
       this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
     }
-    this.DOM = other.getDOM();
+    this.dom = other.getDom();
     if (other.getSupportedGrounding() != null) {
       this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
     }
@@ -178,7 +178,7 @@ public abstract class InvocableStreamPipesEntity extends NamedStreamPipesEntity 
 
   //public Logger getLogger(Class clazz, PeConfig peConfig) {
   public Logger getLogger(Class clazz) {
-    //	return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
+    //return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri(), peConfig);
     return LoggerFactory.getPeLogger(clazz, getCorrespondingPipeline(), getUri());
   }
 }

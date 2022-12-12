@@ -63,7 +63,7 @@ public class MonitoringDataStorageImpl extends AbstractDao<JobReport> implements
 
   @Override
   public boolean storeJobReport(JobReport jobReport) {
-    return persist(jobReport).a;
+    return persist(jobReport).k;
   }
 
 }

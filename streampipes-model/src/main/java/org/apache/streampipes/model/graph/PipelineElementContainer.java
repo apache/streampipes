@@ -34,8 +34,7 @@ public class PipelineElementContainer extends NamedStreamPipesEntity {
     }
   }
 
-  public PipelineElementContainer(String containerId, String name, String description)
-  {
+  public PipelineElementContainer(String containerId, String name, String description) {
     super(containerId, name, description);
     this.pipelineElementDescriptions = new ArrayList<>();
   }

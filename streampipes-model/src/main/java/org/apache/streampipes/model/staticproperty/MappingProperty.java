@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(MappingPropertyNary.class),
-        @JsonSubTypes.Type(MappingPropertyUnary.class)
+    @JsonSubTypes.Type(MappingPropertyNary.class),
+    @JsonSubTypes.Type(MappingPropertyUnary.class)
 })
 public abstract class MappingProperty extends StaticProperty {
 
@@ -35,12 +35,11 @@ public abstract class MappingProperty extends StaticProperty {
    * The assigned requirementSelector links to the runtime name of a property requirement. The
    * internal id of the mapping property is assigned to the runtime name of the property
    * requirement as follows: r(streamIndex)::runtimeName
-   *
+   * <p>
    * Example: The mapping property internal Id is number-mapping, and a property requirement
    * exists that declares the requirement for a number datatype. The processor has one input node.
-   *
+   * <p>
    * The value of the requirementSelector will be r0::number-mapping.
-   *
    */
   private String requirementSelector;
 
@@ -68,7 +67,7 @@ public abstract class MappingProperty extends StaticProperty {
   }
 
   protected MappingProperty(StaticPropertyType type, String requirementSelector, String
-          internalName, String label, String description) {
+      internalName, String label, String description) {
     this(type, internalName, label, description);
     this.requirementSelector = requirementSelector;
   }

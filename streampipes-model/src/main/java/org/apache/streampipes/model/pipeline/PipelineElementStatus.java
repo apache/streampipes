@@ -20,52 +20,51 @@ package org.apache.streampipes.model.pipeline;
 
 public class PipelineElementStatus {
 
-	private String elementId;
-	private String elementName;
-	private String optionalMessage;
-	
-	private boolean success;
+  private String elementId;
+  private String elementName;
+  private String optionalMessage;
 
-	public PipelineElementStatus() {
-	}
+  private boolean success;
 
-	public PipelineElementStatus(String elementId, String elementName, boolean success, String optionalMessage)
-	{
-		this.elementId = elementId;
-		this.elementName = elementName;
-		this.optionalMessage = optionalMessage;
-		this.success = success;
-	}
+  public PipelineElementStatus() {
+  }
 
-	public String getElementId() {
-		return elementId;
-	}
+  public PipelineElementStatus(String elementId, String elementName, boolean success, String optionalMessage) {
+    this.elementId = elementId;
+    this.elementName = elementName;
+    this.optionalMessage = optionalMessage;
+    this.success = success;
+  }
 
-	public String getOptionalMessage() {
-		return optionalMessage;
-	}
+  public String getElementId() {
+    return elementId;
+  }
 
-	public boolean isSuccess() {
-		return success;
-	}
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 
-	public String getElementName() {
-		return elementName;
-	}
+  public String getOptionalMessage() {
+    return optionalMessage;
+  }
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
+  public void setOptionalMessage(String optionalMessage) {
+    this.optionalMessage = optionalMessage;
+  }
 
-	public void setElementName(String elementName) {
-		this.elementName = elementName;
-	}
+  public boolean isSuccess() {
+    return success;
+  }
 
-	public void setOptionalMessage(String optionalMessage) {
-		this.optionalMessage = optionalMessage;
-	}
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
+  public String getElementName() {
+    return elementName;
+  }
+
+  public void setElementName(String elementName) {
+    this.elementName = elementName;
+  }
 }

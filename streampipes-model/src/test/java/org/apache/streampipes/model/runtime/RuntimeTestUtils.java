@@ -68,7 +68,7 @@ public class RuntimeTestUtils {
 
   public static SourceInfo getSourceInfo() {
     return new SourceInfo(UUID.randomUUID().toString(), PropertySelectorConstants
-            .FIRST_STREAM_ID_PREFIX);
+        .FIRST_STREAM_ID_PREFIX);
   }
 
   public static Event makeSimpleEvent(Map<String, Object> runtimeMap, SourceInfo sourceInfo) {
@@ -76,16 +76,16 @@ public class RuntimeTestUtils {
   }
 
   public static Event makeSimpleEventWithRenameRule(Map<String, Object> runtimeMap, SourceInfo
-          sourceInfo) {
+      sourceInfo) {
     PropertyRenameRule rule = new PropertyRenameRule("s0::timestamp", "ts");
     return EventFactory.fromMap(runtimeMap, sourceInfo, new SchemaInfo(null, Collections.singletonList(rule)));
   }
 
   public static Event makeNestedEventWithRenameRule(Map<String, Object> runtimeMap, SourceInfo
-          sourceInfo) {
+      sourceInfo) {
     PropertyRenameRule rule = new PropertyRenameRule("s0::nested", "ns");
     PropertyRenameRule rule2 = new PropertyRenameRule("s0::nested::timestamp2", "ts2");
     return EventFactory.fromMap(runtimeMap, sourceInfo, new SchemaInfo(null, Arrays.asList(rule,
-            rule2)));
+        rule2)));
   }
 }

@@ -18,37 +18,40 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.SpDataSet;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-        @JsonSubTypes.Type(GenericAdapterSetDescription.class),
-        @JsonSubTypes.Type(SpecificAdapterSetDescription.class)
+    @JsonSubTypes.Type(GenericAdapterSetDescription.class),
+    @JsonSubTypes.Type(SpecificAdapterSetDescription.class)
 })
 public abstract class AdapterSetDescription extends AdapterDescription {
 
-    public AdapterSetDescription() {
-        this.dataSet = new SpDataSet();
-    }
+  private SpDataSet dataSet;
 
-    public AdapterSetDescription(String uri, String name, String description) {
-        super(uri, name, description);
-        this.dataSet = new SpDataSet();
-    }
+  public AdapterSetDescription() {
+    this.dataSet = new SpDataSet();
+  }
 
-    public AdapterSetDescription(AdapterSetDescription other) {
-        super(other);
-        if (other.getDataSet() != null) this.setDataSet(new SpDataSet(other.getDataSet()));
-    }
+  public AdapterSetDescription(String uri, String name, String description) {
+    super(uri, name, description);
+    this.dataSet = new SpDataSet();
+  }
 
-    private SpDataSet dataSet;
-
-    public SpDataSet getDataSet() {
-        return dataSet;
+  public AdapterSetDescription(AdapterSetDescription other) {
+    super(other);
+    if (other.getDataSet() != null) {
+      this.setDataSet(new SpDataSet(other.getDataSet()));
     }
+  }
 
-    public void setDataSet(SpDataSet dataSet) {
-        this.dataSet = dataSet;
-    }
+  public SpDataSet getDataSet() {
+    return dataSet;
+  }
+
+  public void setDataSet(SpDataSet dataSet) {
+    this.dataSet = dataSet;
+  }
 
 }

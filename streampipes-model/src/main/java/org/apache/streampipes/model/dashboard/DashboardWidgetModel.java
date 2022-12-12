@@ -25,7 +25,7 @@ public class DashboardWidgetModel extends DashboardEntity {
 
   private String widgetId;
 
-  private String  widgetType;
+  private String widgetType;
 
   private DashboardWidgetSettings dashboardWidgetSettings;
 

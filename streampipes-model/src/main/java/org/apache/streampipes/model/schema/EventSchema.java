@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.model.schema;
 
-import org.apache.commons.collections.ListUtils;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
+
+import org.apache.commons.collections.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,13 @@ public class EventSchema extends UnnamedStreamPipesEntity {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     EventSchema that = (EventSchema) o;
-    return ListUtils.isEqualList(this.eventProperties,that.eventProperties);
+    return ListUtils.isEqualList(this.eventProperties, that.eventProperties);
   }
 }

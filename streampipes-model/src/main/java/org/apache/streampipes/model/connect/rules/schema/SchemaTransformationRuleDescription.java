@@ -22,12 +22,12 @@ import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
 public abstract class SchemaTransformationRuleDescription extends TransformationRuleDescription {
 
-    public SchemaTransformationRuleDescription() {
-        super();
-    }
+  public SchemaTransformationRuleDescription() {
+    super();
+  }
 
-    public SchemaTransformationRuleDescription(TransformationRuleDescription other) {
-        super();
-    }
+  public SchemaTransformationRuleDescription(TransformationRuleDescription other) {
+    super();
+  }
 
 }

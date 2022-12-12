@@ -29,6 +29,7 @@ public class DataLakeMeasureTest {
   private static final String TIMESTAMP_FIELD_NAME = STREAM_PREFIX + TIMESTAMP_FIELD;
 
   private DataLakeMeasure dataLakeMeasure = new DataLakeMeasure();
+
   @Test
   public void setTimestampFieldSuccess() {
     dataLakeMeasure.setTimestampField(TIMESTAMP_FIELD_NAME);

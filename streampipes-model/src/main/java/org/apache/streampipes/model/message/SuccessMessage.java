@@ -25,19 +25,19 @@ import java.util.List;
 @TsModel
 public class SuccessMessage extends Message {
 
-	public SuccessMessage() {
-		super(true);
-	}
+  public SuccessMessage() {
+    super(true);
+  }
 
-	public SuccessMessage(Notification... notifications) {
-		super(true, notifications);
-	}
+  public SuccessMessage(Notification... notifications) {
+    super(true, notifications);
+  }
 
-	public SuccessMessage(List<Notification> notifications) {
-		super(true, notifications.toArray(new Notification[0]));
-	}
-	
-	public SuccessMessage(String elementName, List<Notification> notifications) {
-		super(true, notifications, elementName);
-	}
+  public SuccessMessage(List<Notification> notifications) {
+    super(true, notifications.toArray(new Notification[0]));
+  }
+
+  public SuccessMessage(String elementName, List<Notification> notifications) {
+    super(true, notifications, elementName);
+  }
 }

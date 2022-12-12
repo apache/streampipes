@@ -33,14 +33,13 @@ public class SpDataSet extends SpDataStream {
   private String selectedEndpointUrl;
 
   public SpDataSet(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition>
-          hasEventStreamQualities,
+      hasEventStreamQualities,
                    EventGrounding eventGrounding,
                    EventSchema eventSchema) {
     super(uri, name, description, iconUrl, hasEventStreamQualities, eventGrounding, eventSchema);
   }
 
-  public SpDataSet(String uri, String name, String description, EventSchema eventSchema)
-  {
+  public SpDataSet(String uri, String name, String description, EventSchema eventSchema) {
     super(uri, name, description, eventSchema);
   }
 
@@ -52,12 +51,14 @@ public class SpDataSet extends SpDataStream {
   public SpDataSet(SpDataSet other) {
     super(other);
     this.datasetInvocationId = other.getDatasetInvocationId();
-    if (other.getSupportedGrounding() != null) this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
+    if (other.getSupportedGrounding() != null) {
+      this.supportedGrounding = new EventGrounding(other.getSupportedGrounding());
+    }
   }
 
   public String getBrokerHostname() {
-    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null ||
-            getEventGrounding().getTransportProtocol().getBrokerHostname() == null) {
+    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null
+        || getEventGrounding().getTransportProtocol().getBrokerHostname() == null) {
       return "";
     } else {
       return getEventGrounding().getTransportProtocol().getBrokerHostname();
@@ -65,12 +66,11 @@ public class SpDataSet extends SpDataStream {
   }
 
   public String getActualTopicName() {
-    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null ||
-            getEventGrounding().getTransportProtocol().getTopicDefinition() == null) {
+    if (getEventGrounding() == null || getEventGrounding().getTransportProtocol() == null
+        || getEventGrounding().getTransportProtocol().getTopicDefinition() == null) {
       return "";
     } else {
-      return getEventGrounding().getTransportProtocol().getTopicDefinition()
-              .getActualTopicName();
+      return getEventGrounding().getTransportProtocol().getTopicDefinition().getActualTopicName();
     }
   }
 

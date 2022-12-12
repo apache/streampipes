@@ -25,44 +25,41 @@ import java.util.List;
 
 public class EventPropertyNested extends EventProperty {
 
-	private static final long serialVersionUID = 6565569954878135195L;
+  private static final long serialVersionUID = 6565569954878135195L;
 
-	private List<EventProperty> eventProperties;
-	
-	public EventPropertyNested()
-	{
-		super();
-		this.eventProperties = new ArrayList<>();
-	}
+  private List<EventProperty> eventProperties;
 
-	public EventPropertyNested(EventPropertyNested other)
-	{
-		super(other);
-		if (other.eventProperties != null) {
-			this.eventProperties = new Cloner().properties(other.getEventProperties());
-		} else {
-			this.eventProperties = new ArrayList<>();
-		}
-	}
-	
-	public EventPropertyNested(String propertyName, List<EventProperty> eventProperties)
-	{
-		super(propertyName);
-		this.eventProperties = eventProperties;
-	}
-	
-	public EventPropertyNested(String propertyName) {
-		super(propertyName);
-		this.eventProperties = new ArrayList<>();
-	
-	}
+  public EventPropertyNested() {
+    super();
+    this.eventProperties = new ArrayList<>();
+  }
 
-	public List<EventProperty> getEventProperties() {
-		return eventProperties;
-	}
+  public EventPropertyNested(EventPropertyNested other) {
+    super(other);
+    if (other.eventProperties != null) {
+      this.eventProperties = new Cloner().properties(other.getEventProperties());
+    } else {
+      this.eventProperties = new ArrayList<>();
+    }
+  }
 
-	public void setEventProperties(List<EventProperty> eventProperties) {
-		this.eventProperties = eventProperties;
-	}
+  public EventPropertyNested(String propertyName, List<EventProperty> eventProperties) {
+    super(propertyName);
+    this.eventProperties = eventProperties;
+  }
+
+  public EventPropertyNested(String propertyName) {
+    super(propertyName);
+    this.eventProperties = new ArrayList<>();
+
+  }
+
+  public List<EventProperty> getEventProperties() {
+    return eventProperties;
+  }
+
+  public void setEventProperties(List<EventProperty> eventProperties) {
+    this.eventProperties = eventProperties;
+  }
 
 }

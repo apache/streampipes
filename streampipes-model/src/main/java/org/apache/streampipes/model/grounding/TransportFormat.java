@@ -25,36 +25,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransportFormat extends UnnamedStreamPipesEntity {
-	
-	private static final long serialVersionUID = -525073244975968386L;
 
-	private List<URI> rdfType;
+  private static final long serialVersionUID = -525073244975968386L;
 
-	public TransportFormat()
-	{
-		super();
-		this.rdfType = new ArrayList<>();
-	}
+  private List<URI> rdfType;
 
-	public TransportFormat(String transportFormatType)
-	{
-		super();
-		this.rdfType = new ArrayList<>();
-		this.rdfType.add(URI.create(transportFormatType));
-	}
-	
-	public TransportFormat(TransportFormat other)
-	{
-		super(other);
-		this.rdfType = other.getRdfType();
-	}
+  public TransportFormat() {
+    super();
+    this.rdfType = new ArrayList<>();
+  }
 
-	public List<URI> getRdfType() {
-		return rdfType;
-	}
+  public TransportFormat(String transportFormatType) {
+    super();
+    this.rdfType = new ArrayList<>();
+    this.rdfType.add(URI.create(transportFormatType));
+  }
 
-	public void setRdfType(List<URI> rdfType) {
-		this.rdfType = rdfType;
-	}
+  public TransportFormat(TransportFormat other) {
+    super(other);
+    this.rdfType = other.getRdfType();
+  }
+
+  public List<URI> getRdfType() {
+    return rdfType;
+  }
+
+  public void setRdfType(List<URI> rdfType) {
+    this.rdfType = rdfType;
+  }
 
 }

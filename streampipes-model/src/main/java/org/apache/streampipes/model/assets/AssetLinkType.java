@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.model.assets;
 
+import org.apache.streampipes.commons.constants.GenericDocTypes;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.commons.constants.GenericDocTypes;
 
 import java.util.ArrayList;
 import java.util.List;

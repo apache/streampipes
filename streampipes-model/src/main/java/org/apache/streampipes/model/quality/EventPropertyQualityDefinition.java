@@ -21,20 +21,21 @@ package org.apache.streampipes.model.quality;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 @JsonSubTypes({
-				@JsonSubTypes.Type(Accuracy.class),
-				@JsonSubTypes.Type(MeasurementRange.class),
-				@JsonSubTypes.Type(Precision.class),
-				@JsonSubTypes.Type(Resolution.class),
+    @JsonSubTypes.Type(Accuracy.class),
+    @JsonSubTypes.Type(MeasurementRange.class),
+    @JsonSubTypes.Type(Precision.class),
+    @JsonSubTypes.Type(Resolution.class),
 })
-public abstract class EventPropertyQualityDefinition extends MeasurementProperty /*implements Comparable<EventPropertyQualityDefinition>*/{
+public abstract class EventPropertyQualityDefinition
+    extends MeasurementProperty /*implements Comparable<EventPropertyQualityDefinition>*/ {
 
-	private static final long serialVersionUID = -3849772043514528797L;
-	
-	public EventPropertyQualityDefinition() {
-		super();
-	}
-	
-	public EventPropertyQualityDefinition(EventPropertyQualityDefinition other) {
-		super(other);
-	}
+  private static final long serialVersionUID = -3849772043514528797L;
+
+  public EventPropertyQualityDefinition() {
+    super();
+  }
+
+  public EventPropertyQualityDefinition(EventPropertyQualityDefinition other) {
+    super(other);
+  }
 }

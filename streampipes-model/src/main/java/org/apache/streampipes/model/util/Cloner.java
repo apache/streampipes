@@ -18,11 +18,6 @@
 
 package org.apache.streampipes.model.util;
 
-import org.apache.streampipes.model.grounding.*;
-import org.apache.streampipes.model.output.*;
-import org.apache.streampipes.model.staticproperty.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
@@ -36,6 +31,27 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
+import org.apache.streampipes.model.grounding.TopicDefinition;
+import org.apache.streampipes.model.grounding.TransportFormat;
+import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
+import org.apache.streampipes.model.grounding.WildcardTopicMapping;
+import org.apache.streampipes.model.output.AppendOutputStrategy;
+import org.apache.streampipes.model.output.CustomOutputStrategy;
+import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
+import org.apache.streampipes.model.output.FixedOutputStrategy;
+import org.apache.streampipes.model.output.KeepOutputStrategy;
+import org.apache.streampipes.model.output.ListOutputStrategy;
+import org.apache.streampipes.model.output.OutputStrategy;
+import org.apache.streampipes.model.output.PropertyRenameRule;
+import org.apache.streampipes.model.output.TransformOperation;
+import org.apache.streampipes.model.output.TransformOutputStrategy;
+import org.apache.streampipes.model.output.UserDefinedOutputStrategy;
 import org.apache.streampipes.model.quality.Accuracy;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
@@ -50,7 +66,33 @@ import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.QuantitativeValue;
 import org.apache.streampipes.model.schema.ValueSpecification;
+import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
+import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
+import org.apache.streampipes.model.staticproperty.FileStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
+import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableAnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
+import org.apache.streampipes.model.staticproperty.SupportedProperty;
 import org.apache.streampipes.model.template.BoundPipelineElement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +100,7 @@ import java.util.stream.Collectors;
 
 public class Cloner {
 
-  private final Logger LOG = LoggerFactory.getLogger(Cloner.class);
+  private final Logger logger = LoggerFactory.getLogger(Cloner.class);
 
   public OutputStrategy outputStrategy(OutputStrategy other) {
     if (other instanceof KeepOutputStrategy) {
@@ -132,14 +174,14 @@ public class Cloner {
   public TransportProtocol protocol(TransportProtocol protocol) {
     if (protocol instanceof KafkaTransportProtocol) {
       return new KafkaTransportProtocol((KafkaTransportProtocol) protocol);
-    } else if (protocol instanceof JmsTransportProtocol){
+    } else if (protocol instanceof JmsTransportProtocol) {
       return new JmsTransportProtocol((JmsTransportProtocol) protocol);
     } else if (protocol instanceof MqttTransportProtocol) {
       return new MqttTransportProtocol((MqttTransportProtocol) protocol);
     } else if (protocol instanceof NatsTransportProtocol) {
       return new NatsTransportProtocol((NatsTransportProtocol) protocol);
     } else {
-      LOG.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
+      logger.error("Could not clone protocol of type {}", protocol.getClass().getCanonicalName());
       return protocol;
     }
   }
@@ -214,7 +256,7 @@ public class Cloner {
   }
 
   public List<StaticProperty> staticProperties(
-          List<StaticProperty> staticProperties) {
+      List<StaticProperty> staticProperties) {
     if (staticProperties != null) {
       return staticProperties.stream().map(o -> staticProperty(o)).collect(Collectors.toList());
     } else {
@@ -223,7 +265,7 @@ public class Cloner {
   }
 
   public List<TransportFormat> transportFormats(
-          List<TransportFormat> transportFormats) {
+      List<TransportFormat> transportFormats) {
     return transportFormats.stream().map(t -> new TransportFormat(t)).collect(Collectors.toList());
   }
 
@@ -236,12 +278,12 @@ public class Cloner {
   }
 
   public List<EventPropertyQualityRequirement> reqEpQualitities(
-          List<EventPropertyQualityRequirement> requiresEventPropertyQualities) {
+      List<EventPropertyQualityRequirement> requiresEventPropertyQualities) {
     return requiresEventPropertyQualities.stream().map(o -> new Cloner().qualityreq(o)).collect(Collectors.toList());
   }
 
   public List<EventPropertyQualityDefinition> provEpQualities(
-          List<EventPropertyQualityDefinition> eventPropertyQualities) {
+      List<EventPropertyQualityDefinition> eventPropertyQualities) {
     return eventPropertyQualities.stream().map(o -> new Cloner().qualitydef(o)).collect(Collectors.toList());
   }
 
@@ -250,7 +292,7 @@ public class Cloner {
   }
 
   public List<SupportedProperty> supportedProperties(
-          List<SupportedProperty> supportedProperties) {
+      List<SupportedProperty> supportedProperties) {
     return supportedProperties.stream().map(s -> new SupportedProperty(s)).collect(Collectors.toList());
   }
 
@@ -263,7 +305,7 @@ public class Cloner {
   }
 
   public List<MeasurementCapability> mc(
-          List<MeasurementCapability> measurementCapability) {
+      List<MeasurementCapability> measurementCapability) {
     return measurementCapability.stream().map(m -> new MeasurementCapability(m)).collect(Collectors.toList());
   }
 
@@ -285,16 +327,16 @@ public class Cloner {
 
   public List<BoundPipelineElement> boundPipelineElements(List<BoundPipelineElement> boundPipelineElements) {
     return boundPipelineElements
-            .stream()
-            .map(BoundPipelineElement::new)
-            .collect(Collectors.toList());
+        .stream()
+        .map(BoundPipelineElement::new)
+        .collect(Collectors.toList());
   }
 
   public List<NamedStreamPipesEntity> cloneDescriptions(List<NamedStreamPipesEntity> pipelineElementDescriptions) {
     return pipelineElementDescriptions
-            .stream()
-            .map(pe -> cloneDescription(pe))
-            .collect(Collectors.toList());
+        .stream()
+        .map(pe -> cloneDescription(pe))
+        .collect(Collectors.toList());
   }
 
   private NamedStreamPipesEntity cloneDescription(NamedStreamPipesEntity pe) {
@@ -307,16 +349,16 @@ public class Cloner {
     } else if (pe instanceof DataSinkDescription) {
       return new DataSinkDescription((DataSinkDescription) pe);
     } else {
-      LOG.error("Description is of unknown type: " + pe.getClass().getCanonicalName());
+      logger.error("Description is of unknown type: " + pe.getClass().getCanonicalName());
       return pe;
     }
   }
 
   public List<PropertyRenameRule> renameRules(List<PropertyRenameRule> renameRules) {
     return renameRules
-            .stream()
-            .map(PropertyRenameRule::new)
-            .collect(Collectors.toList());
+        .stream()
+        .map(PropertyRenameRule::new)
+        .collect(Collectors.toList());
   }
 
   public AdapterDescription adapterDescription(AdapterDescription ad) {
@@ -329,7 +371,7 @@ public class Cloner {
     } else if (ad instanceof SpecificAdapterStreamDescription) {
       return new SpecificAdapterStreamDescription((AdapterStreamDescription) ad);
     } else {
-      LOG.error("Could not clone adapter description of type: " +ad.getClass().getCanonicalName());
+      logger.error("Could not clone adapter description of type: " + ad.getClass().getCanonicalName());
       return ad;
     }
   }

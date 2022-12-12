@@ -27,8 +27,7 @@ public class CustomTransformOutputStrategy extends OutputStrategy {
 
   private List<EventProperty> eventProperties;
 
-  public CustomTransformOutputStrategy()
-  {
+  public CustomTransformOutputStrategy() {
     super();
     this.eventProperties = new ArrayList<>();
   }

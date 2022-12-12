@@ -56,7 +56,8 @@ public class PipelineTemplateDescription extends NamedStreamPipesEntity {
     //this.pipelineTemplateId = other.getPipelineTemplateId();
   }
 
-  public PipelineTemplateDescription(String elementName, SpDataStream requiredStream, List<BoundPipelineElement> connectedTo) {
+  public PipelineTemplateDescription(String elementName, SpDataStream requiredStream,
+                                     List<BoundPipelineElement> connectedTo) {
     super(elementName);
     this.boundTo = connectedTo;
   }

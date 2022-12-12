@@ -20,42 +20,42 @@ package org.apache.streampipes.model.quality;
 
 public class MeasurementRange extends EventPropertyQualityDefinition {
 
-	private static final long serialVersionUID = 4853190183770515968L;
+  private static final long serialVersionUID = 4853190183770515968L;
 
-	private float minValue;
+  private float minValue;
 
-	private float maxValue;
-	
-	public MeasurementRange() {
-		super();
-	}
+  private float maxValue;
 
-	public MeasurementRange(float minValue, float maxValue) {
-		super();
-		this.minValue = minValue;
-		this.maxValue = maxValue;
-	}
-	
-	public MeasurementRange(MeasurementRange other) {
-		super(other);
-		this.minValue = other.getMinValue();
-		this.maxValue = other.getMaxValue();
-	}
+  public MeasurementRange() {
+    super();
+  }
 
-	public float getMinValue() {
-		return minValue;
-	}
+  public MeasurementRange(float minValue, float maxValue) {
+    super();
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+  }
 
-	public void setMinValue(float minValue) {
-		this.minValue = minValue;
-	}
+  public MeasurementRange(MeasurementRange other) {
+    super(other);
+    this.minValue = other.getMinValue();
+    this.maxValue = other.getMaxValue();
+  }
 
-	public float getMaxValue() {
-		return maxValue;
-	}
+  public float getMinValue() {
+    return minValue;
+  }
 
-	public void setMaxValue(float maxValue) {
-		this.maxValue = maxValue;
-	}
+  public void setMinValue(float minValue) {
+    this.minValue = minValue;
+  }
+
+  public float getMaxValue() {
+    return maxValue;
+  }
+
+  public void setMaxValue(float maxValue) {
+    this.maxValue = maxValue;
+  }
 
 }

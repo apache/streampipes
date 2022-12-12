@@ -20,28 +20,28 @@ package org.apache.streampipes.model.connect.rules.schema;
 
 public class DeleteRuleDescription extends SchemaTransformationRuleDescription {
 
-    private String runtimeKey;
+  private String runtimeKey;
 
 
-    public DeleteRuleDescription() {
-        super();
-    }
+  public DeleteRuleDescription() {
+    super();
+  }
 
-    public DeleteRuleDescription(String runtimeKey) {
-        super();
-        this.runtimeKey = runtimeKey;
-    }
+  public DeleteRuleDescription(String runtimeKey) {
+    super();
+    this.runtimeKey = runtimeKey;
+  }
 
-    public DeleteRuleDescription(DeleteRuleDescription other) {
-        super(other);
-        this.runtimeKey = other.getRuntimeKey();
-    }
+  public DeleteRuleDescription(DeleteRuleDescription other) {
+    super(other);
+    this.runtimeKey = other.getRuntimeKey();
+  }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
-    }
+  public String getRuntimeKey() {
+    return runtimeKey;
+  }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
-    }
+  public void setRuntimeKey(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 }

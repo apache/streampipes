@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.model.grounding;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,55 +30,53 @@ import java.util.List;
 
 public class EventGrounding extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 3149070517282698799L;
+  private static final long serialVersionUID = 3149070517282698799L;
 
-	private List<TransportProtocol> transportProtocols;
+  private List<TransportProtocol> transportProtocols;
 
-	private List<TransportFormat> transportFormats;
-	
-	public EventGrounding()
-	{
-		super();
-		this.transportFormats = new ArrayList<>();
-	}
-	
-	public EventGrounding(TransportProtocol transportProtocol, TransportFormat transportFormat)
-	{
-		this();
-		this.transportFormats = new ArrayList<>();
-		this.transportFormats.add(transportFormat);
-		this.transportProtocols = Arrays.asList(transportProtocol);
-	}
+  private List<TransportFormat> transportFormats;
 
-	public EventGrounding(EventGrounding other) {
-		super(other);
-		this.transportProtocols = new Cloner().protocols(other.getTransportProtocols());
-		this.transportFormats = new Cloner().transportFormats(other.getTransportFormats());
-	}
+  public EventGrounding() {
+    super();
+    this.transportFormats = new ArrayList<>();
+  }
 
-	public List<TransportProtocol> getTransportProtocols() {
-		return transportProtocols;
-	}
+  public EventGrounding(TransportProtocol transportProtocol, TransportFormat transportFormat) {
+    this();
+    this.transportFormats = new ArrayList<>();
+    this.transportFormats.add(transportFormat);
+    this.transportProtocols = Arrays.asList(transportProtocol);
+  }
 
-	public void setTransportProtocols(List<TransportProtocol> transportProtocols) {
-		this.transportProtocols = transportProtocols;
-	}
+  public EventGrounding(EventGrounding other) {
+    super(other);
+    this.transportProtocols = new Cloner().protocols(other.getTransportProtocols());
+    this.transportFormats = new Cloner().transportFormats(other.getTransportFormats());
+  }
 
-	public void setTransportProtocol(TransportProtocol transportProtocol) {
-		this.transportProtocols = Collections.singletonList(transportProtocol);
-	}
+  public List<TransportProtocol> getTransportProtocols() {
+    return transportProtocols;
+  }
 
-	@JsonIgnore
-	public TransportProtocol getTransportProtocol() {
-		return transportProtocols.get(0);
-	}
-	
-	public List<TransportFormat> getTransportFormats() {
-		return transportFormats;
-	}
+  public void setTransportProtocols(List<TransportProtocol> transportProtocols) {
+    this.transportProtocols = transportProtocols;
+  }
 
-	public void setTransportFormats(List<TransportFormat> transportFormats) {
-		this.transportFormats = transportFormats;
-	}
-	
+  @JsonIgnore
+  public TransportProtocol getTransportProtocol() {
+    return transportProtocols.get(0);
+  }
+
+  public void setTransportProtocol(TransportProtocol transportProtocol) {
+    this.transportProtocols = Collections.singletonList(transportProtocol);
+  }
+
+  public List<TransportFormat> getTransportFormats() {
+    return transportFormats;
+  }
+
+  public void setTransportFormats(List<TransportFormat> transportFormats) {
+    this.transportFormats = transportFormats;
+  }
+
 }

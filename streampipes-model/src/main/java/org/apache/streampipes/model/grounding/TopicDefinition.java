@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.model.grounding;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-        @JsonSubTypes.Type(SimpleTopicDefinition.class),
-        @JsonSubTypes.Type(WildcardTopicDefinition.class)
+    @JsonSubTypes.Type(SimpleTopicDefinition.class),
+    @JsonSubTypes.Type(WildcardTopicDefinition.class)
 })
 public abstract class TopicDefinition extends UnnamedStreamPipesEntity {
 

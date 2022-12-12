@@ -25,43 +25,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataSinkDescription extends ConsumableStreamPipesEntity {
-	
-	private static final long serialVersionUID = -6553066396392585731L;
 
-	private List<String> category;
-	
-	public DataSinkDescription(String uri, String name, String description, String iconUrl)
-	{
-		super(uri, name, description, iconUrl);
-		this.spDataStreams = new ArrayList<>();
-		this.category = new ArrayList<>();
-	}
-	
-	public DataSinkDescription(DataSinkDescription other)
-	{
-		super(other);
-		this.category = new Cloner().ecTypes(other.getCategory());
-	}
-	
-	public DataSinkDescription(String uri, String name, String description)
-	{
-		this(uri, name, description, "");
-		this.category = new ArrayList<>();
-	}
-	
-	public DataSinkDescription()
-	{
-		super();
-		this.category = new ArrayList<>();
-	}
+  private static final long serialVersionUID = -6553066396392585731L;
 
-	public List<String> getCategory() {
-		return category;
-	}
+  private List<String> category;
 
-	public void setCategory(List<String> category) {
-		this.category = category;
-	}
+  public DataSinkDescription(String uri, String name, String description, String iconUrl) {
+    super(uri, name, description, iconUrl);
+    this.spDataStreams = new ArrayList<>();
+    this.category = new ArrayList<>();
+  }
 
-	
+  public DataSinkDescription(DataSinkDescription other) {
+    super(other);
+    this.category = new Cloner().ecTypes(other.getCategory());
+  }
+
+  public DataSinkDescription(String uri, String name, String description) {
+    this(uri, name, description, "");
+    this.category = new ArrayList<>();
+  }
+
+  public DataSinkDescription() {
+    super();
+    this.category = new ArrayList<>();
+  }
+
+  public List<String> getCategory() {
+    return category;
+  }
+
+  public void setCategory(List<String> category) {
+    this.category = category;
+  }
+
+
 }

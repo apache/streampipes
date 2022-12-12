@@ -57,7 +57,7 @@ public class ConnectionValidator {
           verified = false;
         }
       } else {
-        DataProcessorInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDOM());
+        DataProcessorInvocation ancestor = findInvocationGraph(invocationGraphs, element.getDom());
         if (!(verifier.verify(ancestor, rightElement))) {
           verified = false;
         }

@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.model.template;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.Map;
 import java.util.UUID;
@@ -27,17 +28,14 @@ import java.util.UUID;
 @TsModel
 public class PipelineElementTemplate {
 
+  Map<String, PipelineElementTemplateConfig> templateConfigs;
   @JsonProperty("_id")
   private @SerializedName("_id") String couchDbId;
-
   @JsonProperty("_rev")
   private @SerializedName("_rev") String couchDbRev;
-
   private String templateName;
   private String templateDescription;
   private String basePipelineElementAppId;
-
-  Map<String, PipelineElementTemplateConfig> templateConfigs;
 
   public PipelineElementTemplate(String templateName,
                                  String templateDescription,

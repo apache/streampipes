@@ -27,8 +27,8 @@ public class SpDataStreamContainer extends UnnamedStreamPipesEntity {
   private List<SpDataStream> list;
 
   public SpDataStreamContainer() {
-      super();
-      this.list = new ArrayList<>();
+    super();
+    this.list = new ArrayList<>();
   }
 
   public SpDataStreamContainer(List<SpDataStream> dataStreams) {

@@ -40,10 +40,6 @@ public class StaticPropertyGroup extends StaticProperty {
     this.horizontalRendering = other.horizontalRendering;
   }
 
-  public void setShowLabel(Boolean showLabel) {
-    this.showLabel = showLabel;
-  }
-
   public StaticPropertyGroup(String internalName, String label, String description) {
     super(StaticPropertyType.StaticPropertyGroup, internalName, label, description);
   }
@@ -53,7 +49,8 @@ public class StaticPropertyGroup extends StaticProperty {
     this.horizontalRendering = horizontalRendering;
   }
 
-  public StaticPropertyGroup(String internalName, String label, String description, List<StaticProperty> staticProperties) {
+  public StaticPropertyGroup(String internalName, String label, String description,
+                             List<StaticProperty> staticProperties) {
     this(internalName, label, description);
     this.staticProperties = staticProperties;
   }
@@ -66,16 +63,20 @@ public class StaticPropertyGroup extends StaticProperty {
     this.staticProperties = staticProperties;
   }
 
-  public void setHorizontalRendering(boolean horizontalRendering) {
-    this.horizontalRendering = horizontalRendering;
-  }
-
   public Boolean getShowLabel() {
     return showLabel;
   }
 
+  public void setShowLabel(Boolean showLabel) {
+    this.showLabel = showLabel;
+  }
+
   public boolean isHorizontalRendering() {
     return horizontalRendering;
+  }
+
+  public void setHorizontalRendering(boolean horizontalRendering) {
+    this.horizontalRendering = horizontalRendering;
   }
 
   @Override

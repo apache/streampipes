@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.rules;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
@@ -26,33 +25,40 @@ import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.*;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 @TsModel
 @JsonSubTypes({
-        @JsonSubTypes.Type(AddTimestampRuleDescription.class),
-        @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
-        @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
-        @JsonSubTypes.Type(UnitTransformRuleDescription.class),
-        @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
-        @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
-        @JsonSubTypes.Type(CreateNestedRuleDescription.class),
-        @JsonSubTypes.Type(DeleteRuleDescription.class),
-        @JsonSubTypes.Type(RenameRuleDescription.class),
-        @JsonSubTypes.Type(MoveRuleDescription.class),
-        @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
-        @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
-        @JsonSubTypes.Type(DebugSinkRuleDescription.class)
+    @JsonSubTypes.Type(AddTimestampRuleDescription.class),
+    @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
+    @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
+    @JsonSubTypes.Type(UnitTransformRuleDescription.class),
+    @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
+    @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
+    @JsonSubTypes.Type(CreateNestedRuleDescription.class),
+    @JsonSubTypes.Type(DeleteRuleDescription.class),
+    @JsonSubTypes.Type(RenameRuleDescription.class),
+    @JsonSubTypes.Type(MoveRuleDescription.class),
+    @JsonSubTypes.Type(ChangeDatatypeTransformationRuleDescription.class),
+    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
+    @JsonSubTypes.Type(DebugSinkRuleDescription.class)
 })
 public abstract class TransformationRuleDescription extends UnnamedStreamPipesEntity {
 
 
-    public TransformationRuleDescription() {
-        super();
-    }
+  public TransformationRuleDescription() {
+    super();
+  }
 
-    public TransformationRuleDescription(TransformationRuleDescription other) {
-        super();
-    }
+  public TransformationRuleDescription(TransformationRuleDescription other) {
+    super();
+  }
 }

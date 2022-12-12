@@ -24,18 +24,18 @@ import java.util.List;
 
 public class ProtocolSetDescription extends ProtocolDescription {
 
-    public ProtocolSetDescription() {
-    }
+  public ProtocolSetDescription() {
+  }
 
-    public ProtocolSetDescription(String uri, String name, String description) {
-        super(uri, name, description);
-    }
+  public ProtocolSetDescription(String uri, String name, String description) {
+    super(uri, name, description);
+  }
 
-    public ProtocolSetDescription(String uri, String name, String description, List<StaticProperty> config) {
-        super(uri, name, description, config);
-    }
+  public ProtocolSetDescription(String uri, String name, String description, List<StaticProperty> config) {
+    super(uri, name, description, config);
+  }
 
-    public ProtocolSetDescription(ProtocolDescription other) {
-        super(other);
-    }
+  public ProtocolSetDescription(ProtocolDescription other) {
+    super(other);
+  }
 }

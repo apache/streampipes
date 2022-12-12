@@ -20,44 +20,44 @@ package org.apache.streampipes.model.quality;
 
 public class Latency extends EventStreamQualityDefinition {
 
-	private static final long serialVersionUID = -9211064635743833555L;
+  private static final long serialVersionUID = -9211064635743833555L;
 
-	private float quantityValue;
+  private float quantityValue;
 
-	public Latency() {
-		super();
-	}
-	
-	public Latency(Latency other) {
-		super(other);
-		this.quantityValue = other.getQuantityValue();
-	}
-	
-	public Latency(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
-	
-	public float getQuantityValue() {
-		return quantityValue;
-	}
+  public Latency() {
+    super();
+  }
 
-	public void setQuantityValue(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
-	
+  public Latency(Latency other) {
+    super(other);
+    this.quantityValue = other.getQuantityValue();
+  }
 
-	//@Override
-	public int compareTo(EventStreamQualityDefinition o) {
-		Latency other = (Latency) o;
-		if (other.getQuantityValue() == this.getQuantityValue()) {
-			return 0;
-			
-		} else if ((other).getQuantityValue() > this.getQuantityValue()) {
-			return -1;
-		} else {
-			return 1;
-		}
-	}
+  public Latency(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
 
-	
+  public float getQuantityValue() {
+    return quantityValue;
+  }
+
+  public void setQuantityValue(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
+
+
+  //@Override
+  public int compareTo(EventStreamQualityDefinition o) {
+    Latency other = (Latency) o;
+    if (other.getQuantityValue() == this.getQuantityValue()) {
+      return 0;
+
+    } else if ((other).getQuantityValue() > this.getQuantityValue()) {
+      return -1;
+    } else {
+      return 1;
+    }
+  }
+
+
 }

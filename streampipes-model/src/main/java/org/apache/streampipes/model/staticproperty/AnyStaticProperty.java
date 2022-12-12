@@ -40,7 +40,7 @@ public class AnyStaticProperty extends SelectionStaticProperty {
   }
 
   public AnyStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
-          description, boolean horizontalRendering) {
+      description, boolean horizontalRendering) {
     super(staticPropertyType, internalName, label, description, horizontalRendering);
   }
 

@@ -50,7 +50,9 @@ public class DataProcessorDescription extends ConsumableStreamPipesEntity {
     this.category = new ArrayList<>();
   }
 
-  public DataProcessorDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties, List<OutputStrategy> outputStrategies) {
+  public DataProcessorDescription(String uri, String name, String description, String iconUrl,
+                                  List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties,
+                                  List<OutputStrategy> outputStrategies) {
     super(uri, name, description, iconUrl);
     this.pathName = uri;
     this.spDataStreams = spDataStreams;
