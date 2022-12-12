@@ -37,7 +37,8 @@ public class PipelineTemplateBuilder {
     this.boundPipelineElements = new ArrayList<>();
   }
 
-  public static PipelineTemplateBuilder create(String internalId, String pipelineTemplateName, String pipelineTemplateDescription) {
+  public static PipelineTemplateBuilder create(String internalId, String pipelineTemplateName,
+                                               String pipelineTemplateDescription) {
     return new PipelineTemplateBuilder(internalId, pipelineTemplateName, pipelineTemplateDescription);
   }
 

@@ -29,9 +29,19 @@ public class PropertyRequirementsBuilder {
 
   private EventPropertyPrimitive propertyReq;
 
+  private PropertyRequirementsBuilder() {
+    this.propertyReq = new EventPropertyPrimitive();
+  }
+
+  private PropertyRequirementsBuilder(Datatypes propertyDatatype) {
+    this.propertyReq = new EventPropertyPrimitive();
+    this.propertyReq.setRuntimeType(propertyDatatype.toString());
+  }
+
   /**
    * Creates new requirements for a data processor or a data sink at a property level. A matching event property
    * needs to provide all requirements assigned by this class.
+   *
    * @return {@link PropertyRequirementsBuilder}
    */
   public static PropertyRequirementsBuilder create(Datatypes propertyDatatype) {
@@ -42,15 +52,6 @@ public class PropertyRequirementsBuilder {
     return new PropertyRequirementsBuilder();
   }
 
-  private PropertyRequirementsBuilder() {
-    this.propertyReq = new EventPropertyPrimitive();
-  }
-
-  private PropertyRequirementsBuilder(Datatypes propertyDatatype) {
-    this.propertyReq = new EventPropertyPrimitive();
-    this.propertyReq.setRuntimeType(propertyDatatype.toString());
-  }
-
   public PropertyRequirementsBuilder datatype(Datatypes propertyDatatype) {
     this.propertyReq.setRuntimeType(propertyDatatype.toString());
     return this;
@@ -58,9 +59,9 @@ public class PropertyRequirementsBuilder {
 
   public PropertyRequirementsBuilder domainPropertyReq(String... domainProperties) {
     this.propertyReq.setDomainProperties(Arrays
-            .stream(domainProperties)
-            .map(URI::create)
-            .collect(Collectors.toList()));
+        .stream(domainProperties)
+        .map(URI::create)
+        .collect(Collectors.toList()));
 
     return this;
   }

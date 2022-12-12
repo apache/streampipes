@@ -25,6 +25,7 @@ public class Formats {
 
   /**
    * Defines the transport format JSON used by a data stream at runtime.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.TransportFormat} of type JSON.
    */
   public static TransportFormat jsonFormat() {
@@ -33,6 +34,7 @@ public class Formats {
 
   /**
    * Defines the transport format CBOR used by a data stream at runtime.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.TransportFormat} of type CBOR.
    */
   public static TransportFormat cborFormat() {
@@ -41,6 +43,7 @@ public class Formats {
 
   /**
    * Defines the transport format Fast-Serializer used by a data stream at runtime.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.TransportFormat} of type FST.
    */
   public static TransportFormat fstFormat() {
@@ -49,6 +52,7 @@ public class Formats {
 
   /**
    * Defines the transport format SMILE used by a data stream at runtime.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.TransportFormat} of type SMILE.
    */
   public static TransportFormat smileFormat() {
@@ -57,6 +61,7 @@ public class Formats {
 
   /**
    * Defines the transport format Apache Thrift used by a data stream at runtime.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.TransportFormat} of type Thrift.
    */
   public static TransportFormat thriftFormat() {

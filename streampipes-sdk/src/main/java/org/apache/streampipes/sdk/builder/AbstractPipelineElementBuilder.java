@@ -28,7 +28,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipelineElementBuilder<BU, T>, T extends NamedStreamPipesEntity> {
+public abstract class AbstractPipelineElementBuilder<X extends AbstractPipelineElementBuilder<X, T>,
+    T extends NamedStreamPipesEntity> {
 
   protected T elementDescription;
 
@@ -48,7 +49,7 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
   /**
    * @deprecated: Use {@link #withAssets(String...)} instead
    */
-  public BU iconUrl(String iconUrl) {
+  public X iconUrl(String iconUrl) {
     elementDescription.setIconUrl(iconUrl);
     return me();
   }
@@ -57,27 +58,27 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
   /**
    * @deprecated: Use {@link #withAssets(String...)} instead
    */
-  public BU providesAssets(String... assets) {
+  public X providesAssets(String... assets) {
     return withAssets(assets);
   }
 
-  public BU withAssets(String... assets) {
+  public X withAssets(String... assets) {
     this.elementDescription.setIncludesAssets(true);
     this.elementDescription.setIncludedAssets(Arrays.asList(assets));
     return me();
   }
 
-  public BU withLocales(Locales... locales) {
+  public X withLocales(Locales... locales) {
     this.elementDescription.setIncludesLocales(true);
     this.elementDescription.setIncludedLocales(Stream
-            .of(locales)
-            .map(Locales::toFilename)
-            .collect(Collectors.toList()));
+        .of(locales)
+        .map(Locales::toFilename)
+        .collect(Collectors.toList()));
 
     return me();
   }
 
-  protected <SP extends StaticProperty> SP prepareStaticProperty(Label label, SP element) {
+  protected <K extends StaticProperty> K prepareStaticProperty(Label label, K element) {
     element.setInternalName(label.getInternalId());
     element.setDescription(label.getDescription());
     element.setLabel(label.getLabel());
@@ -85,7 +86,7 @@ public abstract class AbstractPipelineElementBuilder<BU extends AbstractPipeline
     return element;
   }
 
-  protected abstract BU me();
+  protected abstract X me();
 
   protected abstract void prepareBuild();
 

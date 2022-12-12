@@ -141,10 +141,10 @@ public class TestTrendProcessor {
   private void sendEvents(Trend trend) {
     List<Tuple2<Integer, Event>> events = makeEvents();
     for (Tuple2<Integer, Event> event : events) {
-      LOG.info("Sending event with value " + event.b.getFieldBySelector("s0::randomValue"));
-      trend.onEvent(event.b, null);
+      LOG.info("Sending event with value " + event.v.getFieldBySelector("s0::randomValue"));
+      trend.onEvent(event.v, null);
       try {
-        Thread.sleep(event.a);
+        Thread.sleep(event.k);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -154,7 +154,7 @@ public class TestTrendProcessor {
   private List<Tuple2<Integer, Event>> makeEvents() {
     List<Tuple2<Integer, Event>> events = new ArrayList<>();
     for (Tuple2<Integer, Integer> eventSetting : eventSettings) {
-      events.add(makeEvent(eventSetting.a, eventSetting.b));
+      events.add(makeEvent(eventSetting.k, eventSetting.v));
     }
     return events;
   }

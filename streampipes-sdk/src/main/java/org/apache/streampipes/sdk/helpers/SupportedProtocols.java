@@ -27,6 +27,7 @@ public class SupportedProtocols {
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a
    * Kafka broker.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.KafkaTransportProtocol}.
    */
   public static KafkaTransportProtocol kafka() {
@@ -36,6 +37,7 @@ public class SupportedProtocols {
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a
    * JMS broker.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.JmsTransportProtocol}.
    */
   public static JmsTransportProtocol jms() {
@@ -45,6 +47,7 @@ public class SupportedProtocols {
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messages arriving from a
    * Mqtt broker.
+   *
    * @return The {@link org.apache.streampipes.model.grounding.MqttTransportProtocol}.
    */
   public static MqttTransportProtocol mqtt() {

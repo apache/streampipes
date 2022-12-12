@@ -19,7 +19,6 @@ package org.apache.streampipes.sdk.helpers;
 
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
-import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 public class Alternatives {
 
@@ -31,20 +30,20 @@ public class Alternatives {
 
   public static StaticPropertyAlternative from(Label label, StaticProperty staticProperty, boolean selected) {
     StaticPropertyAlternative alternative = from(label, selected);
-    alternative.setStaticProperty(staticProperty);;
+    alternative.setStaticProperty(staticProperty);
     return alternative;
   }
 
   public static StaticPropertyAlternative from(Label label) {
     StaticPropertyAlternative alternative = new StaticPropertyAlternative(label.getInternalId(),
-            label.getLabel(), label.getInternalId());
+        label.getLabel(), label.getInternalId());
     alternative.setIndex(0);
     return alternative;
   }
 
   public static StaticPropertyAlternative from(Label label, boolean selected) {
     StaticPropertyAlternative alternative = new StaticPropertyAlternative(label.getInternalId(),
-            label.getLabel(), label.getInternalId());
+        label.getLabel(), label.getInternalId());
     alternative.setIndex(0);
     alternative.setSelected(selected);
     return alternative;

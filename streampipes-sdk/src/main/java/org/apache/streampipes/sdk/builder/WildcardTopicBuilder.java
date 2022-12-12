@@ -42,7 +42,7 @@ public class WildcardTopicBuilder {
 
   public WildcardTopicBuilder addSimpleMapping(TopicParameterType topicParameterType, String runtimeName) {
     this.wildcardTopicDefinition.getWildcardTopicMappings().add(new WildcardTopicMapping(topicParameterType.name(),
-            runtimeName, runtimeName));
+        runtimeName, runtimeName));
     return this;
   }
 

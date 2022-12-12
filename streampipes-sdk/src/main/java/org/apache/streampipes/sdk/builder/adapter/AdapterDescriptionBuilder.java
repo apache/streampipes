@@ -24,29 +24,29 @@ import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBui
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public abstract class AdapterDescriptionBuilder<BU extends
-        AdapterDescriptionBuilder<BU, T>, T extends AdapterDescription> extends
-        AbstractConfigurablePipelineElementBuilder<BU, T> {
+public abstract class AdapterDescriptionBuilder<V extends
+    AdapterDescriptionBuilder<V, T>, T extends AdapterDescription> extends
+    AbstractConfigurablePipelineElementBuilder<V, T> {
 
   protected AdapterDescriptionBuilder(String id, T element) {
     super(id, element);
   }
 
   protected AdapterDescriptionBuilder(String id, String label, String description,
-                                   T adapterTypeInstance) {
+                                      T adapterTypeInstance) {
     super(id, label, description, adapterTypeInstance);
   }
 
-  public BU category(AdapterType... categories) {
+  public V category(AdapterType... categories) {
     this.elementDescription
-            .setCategory(Arrays
-                    .stream(categories)
-                    .map(Enum::name)
-                    .collect(Collectors.toList()));
+        .setCategory(Arrays
+            .stream(categories)
+            .map(Enum::name)
+            .collect(Collectors.toList()));
     return me();
   }
 
-  public AdapterDescriptionBuilder<BU, T> elementId(String elementId) {
+  public AdapterDescriptionBuilder<V, T> elementId(String elementId) {
     this.elementDescription.setElementId(elementId);
     return me();
   }

@@ -56,9 +56,9 @@ public class CustomOutputSchemaGenerator extends OutputSchemaGenerator<CustomOut
             PropertySelector(stream1.getEventSchema(),
             stream2.getEventSchema()).createRenamedPropertyList(selectedPropertyKeys);
 
-    EventSchema outputSchema = new EventSchema(generatedOutputProperties.a);
+    EventSchema outputSchema = new EventSchema(generatedOutputProperties.k);
 
-    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.b));
+    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.v));
   }
 
   private CustomOutputStrategy getModifiedOutputStrategy(List<PropertyRenameRule> propertyRenameRules) {

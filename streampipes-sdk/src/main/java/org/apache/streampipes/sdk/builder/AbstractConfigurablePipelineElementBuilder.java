@@ -18,7 +18,22 @@
 package org.apache.streampipes.sdk.builder;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
+import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
+import org.apache.streampipes.model.staticproperty.FileStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.PropertyValueSpecification;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.SupportedProperty;
 import org.apache.streampipes.sdk.StaticProperties;
 import org.apache.streampipes.sdk.helpers.CodeLanguage;
 import org.apache.streampipes.sdk.helpers.Filetypes;
@@ -31,41 +46,43 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
-        AbstractConfigurablePipelineElementBuilder<BU, T>, T extends NamedStreamPipesEntity> extends
-        AbstractPipelineElementBuilder<BU, T> {
+public abstract class AbstractConfigurablePipelineElementBuilder<K extends
+    AbstractConfigurablePipelineElementBuilder<K, V>, V extends NamedStreamPipesEntity> extends
+    AbstractPipelineElementBuilder<K, V> {
 
   protected List<StaticProperty> staticProperties;
 
-  protected AbstractConfigurablePipelineElementBuilder(String appId, String label, String description, T element) {
+  protected AbstractConfigurablePipelineElementBuilder(String appId, String label, String description, V element) {
     super(appId, label, description, element);
     this.staticProperties = new ArrayList<>();
   }
 
-  protected AbstractConfigurablePipelineElementBuilder(String appId, T element) {
+  protected AbstractConfigurablePipelineElementBuilder(String appId, V element) {
     super(appId, element);
     this.staticProperties = new ArrayList<>();
   }
 
   /**
    *
-   * @param staticProperty: The required static property (e.g., user input as shown in the StreamPipes UI
+   * @param staticProperty The required static property (e.g., user input as shown in the StreamPipes UI
    * @return BU
    */
-  public BU requiredStaticProperty(StaticProperty staticProperty) {
+  public K requiredStaticProperty(StaticProperty staticProperty) {
     this.staticProperties.add(staticProperty);
     return me();
   }
 
   /**
    * Defines the requirement for an instance that is defined in the knowledge base.
-   * @param label: A human-readable label that describes the required static property.
-   * @param supportedOntologyProperties: All RDF properties any instance in the knowledge base must provide. Use
-   * {@link org.apache.streampipes.sdk.helpers.OntologyProperties} to assign supported properties.
-   * @return
+   *
+   * @param label                     A human-readable label that describes the required static property.
+   * @param supportedOntologyProperties All RDF properties any instance in the knowledge base must provide. Use
+   *                                     {@link org.apache.streampipes.sdk.helpers.OntologyProperties}
+   *                                      to assign supported properties.
+   *
    */
-  public BU requiredOntologyConcept(Label label, SupportedProperty...
-          supportedOntologyProperties) {
+  public K requiredOntologyConcept(Label label, SupportedProperty...
+      supportedOntologyProperties) {
     DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
     dsp.setSupportedProperties(Arrays.asList(supportedOntologyProperties));
     this.staticProperties.add(dsp);
@@ -74,16 +91,16 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
+   * @param label                        A human-readable label that describes the required static property.
+   * @param requiredConceptUri           Limits the search for matching instance
+   *                                     in the knowledge base to an instance of this concept.
+   * @param supportedOntologyProperties  All RDF properties any instance of the provided concept must provide. Use
+   *                                     {@link org.apache.streampipes.sdk.helpers.OntologyProperties}
+   *                                     to assign supported properties.
    *
-   * @param label: A human-readable label that describes the required static property.
-   * @param requiredConceptUri: Limits the search for matching instance in the knowledge base to an instance of this
-   *                          concept.
-   * @param supportedOntologyProperties: All RDF properties any instance of the provided concept must provide. Use
-   * {@link org.apache.streampipes.sdk.helpers.OntologyProperties} to assign supported properties.
-   * @return
    */
-  public BU requiredOntologyConcept(Label label, String requiredConceptUri, SupportedProperty...
-          supportedOntologyProperties) {
+  public K requiredOntologyConcept(Label label, String requiredConceptUri, SupportedProperty...
+      supportedOntologyProperties) {
     DomainStaticProperty dsp = prepareStaticProperty(label, new DomainStaticProperty());
     dsp.setSupportedProperties(Arrays.asList(supportedOntologyProperties));
     dsp.setRequiredClass(requiredConceptUri);
@@ -93,14 +110,13 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   *
-   * @param label: A human-readable label that describes the required static property.
+   * @param label         A human-readable label that describes the required static property.
    * @param staticProperty
    * @return
    */
-  public BU requiredParameterAsCollection(Label label, StaticProperty staticProperty) {
+  public K requiredParameterAsCollection(Label label, StaticProperty staticProperty) {
     CollectionStaticProperty collection = prepareStaticProperty(label, new
-            CollectionStaticProperty());
+        CollectionStaticProperty());
     collection.setStaticPropertyTemplate(staticProperty);
     this.staticProperties.add(collection);
 
@@ -114,11 +130,12 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * @param description
    * @return
    */
-  public BU requiredTextParameter(String internalId, String label, String description) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredTextParameter(String internalId, String label, String description) {
     this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._string.toString()));
+        label,
+        description,
+        XSD._string.toString()));
 
     return me();
   }
@@ -126,13 +143,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new secret text-based configuration parameter (e.g., a password) which is required
    * by the processing element.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
    * @return
    */
-  public BU requiredSecret(Label label) {
+  public K requiredSecret(Label label) {
     SecretStaticProperty secretStaticProperty = new SecretStaticProperty(label.getInternalId(),
-            label.getLabel(), label.getDescription());
+        label.getLabel(), label.getDescription());
     this.staticProperties.add(secretStaticProperty);
 
     return me();
@@ -141,12 +159,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new code block parameter which is required
    * by the processing element.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param codeLanguage The {@link org.apache.streampipes.sdk.helpers.CodeLanguage} code language the code block is built for.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in an user-friendly manner.
+   * @param codeLanguage The {@link org.apache.streampipes.sdk.helpers.CodeLanguage}
+   *                     code language the code block is built for.
    * @return this
    */
-  public BU requiredCodeblock(Label label, CodeLanguage codeLanguage) {
+  public K requiredCodeblock(Label label, CodeLanguage codeLanguage) {
     this.requiredCodeblock(label, codeLanguage, codeLanguage.getDefaultSkeleton());
 
     return me();
@@ -155,15 +175,17 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new code block parameter which is required
    * by the processing element.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param codeLanguage The {@link org.apache.streampipes.sdk.helpers.CodeLanguage} code language the code block is built for.
+   *
+   * @param label           The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                        that describes why this parameter is needed in an user-friendly manner.
+   * @param codeLanguage    The {@link org.apache.streampipes.sdk.helpers.CodeLanguage}
+   *                        code language the code block is built for.
    * @param defaultSkeleton The code skeleton that is used as a default value.
    * @return this
    */
-  public BU requiredCodeblock(Label label, CodeLanguage codeLanguage, String defaultSkeleton) {
+  public K requiredCodeblock(Label label, CodeLanguage codeLanguage, String defaultSkeleton) {
     CodeInputStaticProperty codeInputStaticProperty = new CodeInputStaticProperty(label.getInternalId(),
-            label.getLabel(), label.getDescription());
+        label.getLabel(), label.getDescription());
     codeInputStaticProperty.setLanguage(codeLanguage.name());
     codeInputStaticProperty.setCodeTemplate(defaultSkeleton);
     this.staticProperties.add(codeInputStaticProperty);
@@ -173,17 +195,18 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * Assigns a new required slide toggle for a true/false selection
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in an user-friendly manner.
    * @param defaultValue The toggle's default value
    * @return this
    */
-  public BU requiredSlideToggle(Label label, boolean defaultValue) {
+  public K requiredSlideToggle(Label label, boolean defaultValue) {
     SlideToggleStaticProperty slideToggle = new SlideToggleStaticProperty(
-            label.getInternalId(),
-            label.getLabel(),
-            label.getDescription(),
-            defaultValue);
+        label.getInternalId(),
+        label.getLabel(),
+        label.getDescription(),
+        defaultValue);
 
     slideToggle.setSelected(defaultValue);
 
@@ -195,34 +218,37 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new code block parameter (without a specific language) which is required
    * by the processing element.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   *
+   * @param label           The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                        that describes why this parameter is needed in a user-friendly manner.
    * @param defaultSkeleton The code skeleton that is used as a default value.
    * @return this
    */
-  public BU requiredCodeblock(Label label, String defaultSkeleton) {
+  public K requiredCodeblock(Label label, String defaultSkeleton) {
     return requiredCodeblock(label, CodeLanguage.None, defaultSkeleton);
   }
 
   /**
    * Assigns a new code block parameter (without a specific language) which is required
    * by the processing element.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
    * @return this
    */
-  public BU requiredCodeblock(Label label) {
+  public K requiredCodeblock(Label label) {
     return requiredCodeblock(label, CodeLanguage.None);
   }
 
   /**
    * Assigns a new text-based configuration parameter (a string) which is required by the pipeline
    * element.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
    * @return
    */
-  public BU requiredTextParameter(Label label) {
+  public K requiredTextParameter(Label label) {
     this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD._string.toString()));
 
     return me();
@@ -231,13 +257,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new color picker parameter which is required by the pipeline
    * element.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
-   *
    * @return
    */
-  public BU requiredColorParameter(Label label) {
-    ColorPickerStaticProperty csp = new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+  public K requiredColorParameter(Label label) {
+    ColorPickerStaticProperty csp =
+        new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
     this.staticProperties.add(csp);
 
     return me();
@@ -246,13 +273,15 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new color picker parameter which is required by the pipeline
    * element.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in a user-friendly manner.
    * @param defaultColor The default color, encoded as an HTML color code
    * @return
    */
-  public BU requiredColorParameter(Label label, String defaultColor) {
-    ColorPickerStaticProperty csp = new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+  public K requiredColorParameter(Label label, String defaultColor) {
+    ColorPickerStaticProperty csp =
+        new ColorPickerStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
     csp.setSelectedColor(defaultColor);
     this.staticProperties.add(csp);
 
@@ -261,18 +290,20 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * @deprecated Use {@link #requiredTextParameterWithLink(Label, String)}
+   *
    * @param internalId
    * @param label
    * @param description
    * @param linkedMappingPropertyInternalName
    * @return this
    */
-  public BU requiredTextParameter(String internalId, String label, String description, String
-          linkedMappingPropertyInternalName) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredTextParameter(String internalId, String label, String description, String
+      linkedMappingPropertyInternalName) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._string.toString());
+        label,
+        description,
+        XSD._string.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -282,13 +313,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in an user-friendly manner.
    * @param defaultValue The default value is displayed to the user in the input field
    * @return this
    */
-  public BU requiredTextParameter(Label label,
-                                  String defaultValue) {
+  public K requiredTextParameter(Label label,
+                                 String defaultValue) {
     FreeTextStaticProperty fsp = StaticProperties.stringFreeTextProperty(label, defaultValue);
 
     this.staticProperties.add(fsp);
@@ -299,13 +331,16 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param linkedMappingPropertyInternalName The inernalId of the {@link org.apache.streampipes.model.staticproperty.MappingProperty}
+   *
+   * @param label                             The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                                          that describes why this parameter is needed in a
+   *                                          user-friendly manner.
+   * @param linkedMappingPropertyInternalName The inernalId of the
+   *                                            {@link org.apache.streampipes.model.staticproperty.MappingProperty}
    * @return this
    */
-  public BU requiredTextParameterWithLink(Label label, String
-          linkedMappingPropertyInternalName) {
+  public K requiredTextParameterWithLink(Label label, String
+      linkedMappingPropertyInternalName) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
@@ -317,12 +352,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time. The
    * input field generated in the StreamPipes UI allows to enter HTML content (and an HTML Wysiwyg editor will be
    * rendered).
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
    * @return this
    */
-  public BU requiredHtmlInputParameter(Label label) {
-    FreeTextStaticProperty fsp = new FreeTextStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
+  public K requiredHtmlInputParameter(Label label) {
+    FreeTextStaticProperty fsp =
+        new FreeTextStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
     fsp.setMultiLine(true);
     fsp.setHtmlAllowed(true);
     fsp.setPlaceholdersSupported(true);
@@ -333,14 +370,15 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param multiLine Defines whether the input dialog allows multiple lines.
+   *
+   * @param label                 The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                              that describes why this parameter is needed in a user-friendly manner.
+   * @param multiLine             Defines whether the input dialog allows multiple lines.
    * @param placeholdersSupported Defines whether placeholders are supported, i.e., event property field names that
    *                              are replaced with the actual value at pipeline execution time.
    * @return this
    */
-  public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported) {
+  public K requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
     if (multiLine) {
       fsp.setMultiLine(true);
@@ -355,15 +393,17 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * Defines a text-based configuration parameter provided by pipeline developers at pipeline authoring time.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param multiLine Defines whether the input dialog allows multiple lines.
+   *
+   * @param label                 The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                              that describes why this parameter is needed in an user-friendly manner.
+   * @param multiLine             Defines whether the input dialog allows multiple lines.
    * @param placeholdersSupported Defines whether placeholders are supported, i.e., event property field names that
    *                              are replaced with the actual value at pipeline execution time.
-   * @param htmlFontFormat Defines to only use bold, italic, striked in dialog.
+   * @param htmlFontFormat        Defines to only use bold, italic, striked in dialog.
    * @return this
    */
-  public BU requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported, boolean htmlFontFormat) {
+  public K requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported,
+                                 boolean htmlFontFormat) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
     if (multiLine) {
       fsp.setMultiLine(true);
@@ -382,16 +422,18 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * @deprecated Use {@link #requiredIntegerParameter(Label)} instead
+   *
    * @param internalId
    * @param label
    * @param description
    * @return
    */
-  public BU requiredIntegerParameter(String internalId, String label, String description) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredIntegerParameter(String internalId, String label, String description) {
     this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._integer.toString()));
+        label,
+        description,
+        XSD._integer.toString()));
 
     return me();
   }
@@ -399,11 +441,12 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new number-based configuration parameter (an integer) which is required by the pipeline
    * element.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
    * @return
    */
-  public BU requiredIntegerParameter(Label label) {
+  public K requiredIntegerParameter(Label label) {
     this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD._integer.toString()));
 
     return me();
@@ -411,18 +454,20 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * @deprecated use {@link #requiredIntegerParameter(Label, String)} instead
+   *
    * @param internalId
    * @param label
    * @param description
    * @param linkedMappingPropertyInternalName
    * @return
    */
-  public BU requiredIntegerParameter(String internalId, String label, String description, String
-          linkedMappingPropertyInternalName) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredIntegerParameter(String internalId, String label, String description, String
+      linkedMappingPropertyInternalName) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._integer.toString());
+        label,
+        description,
+        XSD._integer.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -433,13 +478,15 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * Defines a number-based configuration parameter of type integer provided by pipeline developers at pipeline
    * authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param linkedMappingPropertyInternalName The inernalId of the {@link org.apache.streampipes.model.staticproperty.MappingProperty}
+   *
+   * @param label                             The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                                          that describes why this parameter is needed in a user-friendly manner.
+   * @param linkedMappingPropertyInternalName The inernalId of the
+   *                                            {@link org.apache.streampipes.model.staticproperty.MappingProperty}
    * @return this
    */
-  public BU requiredIntegerParameter(Label label, String
-          linkedMappingPropertyInternalName) {
+  public K requiredIntegerParameter(Label label, String
+      linkedMappingPropertyInternalName) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._integer.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
@@ -450,18 +497,20 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * @deprecated Use {@link #requiredIntegerParameter(Label, Integer)} instead
+   *
    * @param internalId
    * @param label
    * @param description
    * @param defaultValue
    * @return
    */
-  public BU requiredIntegerParameter(String internalId, String label, String description,
-                                     Integer defaultValue) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredIntegerParameter(String internalId, String label, String description,
+                                    Integer defaultValue) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._integer.toString());
+        label,
+        description,
+        XSD._integer.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
@@ -470,15 +519,16 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Defines a number-based configuration parameter of type integer provided by pipeline developers at pipeline
    * authoring time and initializes the parameter with a default value.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in a user-friendly manner.
    * @param defaultValue The default integer value.
    * @return this
    */
-  public BU requiredIntegerParameter(Label label,
-                                     Integer defaultValue) {
+  public K requiredIntegerParameter(Label label,
+                                    Integer defaultValue) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label,
-            XSD._integer.toString());
+        XSD._integer.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
@@ -490,12 +540,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * @param label
    * @param description
    * @return
+   *
    */
-  public BU requiredFloatParameter(String internalId, String label, String description) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredFloatParameter(String internalId, String label, String description) {
     this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._double.toString()));
+        label,
+        description,
+        XSD._double.toString()));
 
     return me();
   }
@@ -503,33 +555,39 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Assigns a new number-based configuration parameter (a float) which is required by the pipeline
    * element.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
    * @return
    */
-  public BU requiredFloatParameter(Label label) {
+  public K requiredFloatParameter(Label label) {
     this.staticProperties.add(prepareFreeTextStaticProperty(label,
-            XSD._double.toString()));
+        XSD._double.toString()));
 
     return me();
   }
 
   /**
+   * @deprecated use {@link #requiredFloatParameter(Label, String)}
+   *
    * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
    * authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
-   * @deprecated use {@link #requiredFloatParameter(Label, String)}
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param linkedMappingPropertyInternalName The inernalId of the {@link org.apache.streampipes.model.staticproperty.MappingProperty}
+   *
+   * @param label                             The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                                          that describes why this parameter is needed in a user-friendly manner.
+   * @param linkedMappingPropertyInternalName The inernalId of the
+   *                                            {@link org.apache.streampipes.model.staticproperty.MappingProperty}
    * @return this
+   *
    */
-  public BU requiredFloatParameter(String internalId, String label, String description, String
-          linkedMappingPropertyInternalName) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredFloatParameter(String internalId, String label, String description, String
+      linkedMappingPropertyInternalName) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._double.toString());
+        label,
+        description,
+        XSD._double.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -540,13 +598,15 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * Defines a number-based configuration parameter of type float provided by pipeline developers at pipeline
    * authoring time. The
    * value range of the parameter is restricted to the value specification of a selected input event property.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param linkedMappingPropertyInternalName The inernalId of the {@link org.apache.streampipes.model.staticproperty.MappingProperty}
+   *
+   * @param label                             The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                                          that describes why this parameter is needed in a user-friendly manner.
+   * @param linkedMappingPropertyInternalName The internalId of the
+   *                                            {@link org.apache.streampipes.model.staticproperty.MappingProperty}
    * @return this
    */
-  public BU requiredFloatParameter(Label label, String
-          linkedMappingPropertyInternalName) {
+  public K requiredFloatParameter(Label label, String
+      linkedMappingPropertyInternalName) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
@@ -556,18 +616,21 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * @deprecated Use {@link #requiredFloatParameter(Label, Float)} instead.
+   *
    * @param internalId
    * @param label
    * @param description
    * @param defaultValue
    * @return this
+   *
    */
-  public BU requiredFloatParameter(String internalId, String label, String description, Float
-          defaultValue) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredFloatParameter(String internalId, String label, String description, Float
+      defaultValue) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._double.toString());
+        label,
+        description,
+        XSD._double.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
@@ -576,13 +639,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time and initializes the parameter with a default value.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in a user-friendly manner.
    * @param defaultValue The default integer value.
    * @return this
    */
-  public BU requiredFloatParameter(Label label, Float
-          defaultValue) {
+  public K requiredFloatParameter(Label label, Float
+      defaultValue) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
@@ -593,18 +657,21 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
    * @deprecated Use {@link #requiredFloatParameter(Label, Float, Float, Float)} instead.
    * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
-   * @param min The minimum value of the allowed value range.
-   * @param max The maximum value of the allowed value range.
-   * @param step The granularity
+   * @param min   The minimum value of the allowed value range.
+   * @param max   The maximum value of the allowed value range.
+   * @param step  The granularity
    * @return this
    */
-  public BU requiredFloatParameter(String internalId, String label, String description, Float min, Float max, Float step) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredFloatParameter(String internalId, String label, String description, Float min, Float max,
+                                  Float step) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
-            label,
-            description,
-            XSD._double.toString());
+        label,
+        description,
+        XSD._double.toString());
 
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
     fsp.setValueSpecification(valueSpecification);
@@ -616,14 +683,15 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time. In addition, an allowed value range of the expected input can be assigned.
+   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
    *              user-friendly manner.
-   * @param min The minimum value of the allowed value range.
-   * @param max The maximum value of the allowed value range.
-   * @param step The granularity
+   * @param min   The minimum value of the allowed value range.
+   * @param max   The maximum value of the allowed value range.
+   * @param step  The granularity
    * @return this
    */
-  public BU requiredFloatParameter(Label label, Float min, Float max, Float step) {
+  public K requiredFloatParameter(Label label, Float min, Float max, Float step) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
     fsp.setValueSpecification(valueSpecification);
@@ -635,15 +703,16 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Defines a number-based configuration parameter of type float provided by preprocessing developers at preprocessing
    * authoring time. In addition, an allowed value range of the expected input can be assigned.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   *
+   * @param label        The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                     that describes why this parameter is needed in a user-friendly manner.
    * @param defaultValue The default float value.
-   * @param min The minimum value of the allowed value range.
-   * @param max The maximum value of the allowed value range.
-   * @param step The granularity
+   * @param min          The minimum value of the allowed value range.
+   * @param max          The maximum value of the allowed value range.
+   * @param step         The granularity
    * @return this
    */
-  public BU requiredFloatParameter(Label label, Float defaultValue, Float min, Float max, Float step) {
+  public K requiredFloatParameter(Label label, Float defaultValue, Float min, Float max, Float step) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
     fsp.setValue(String.valueOf(defaultValue));
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
@@ -655,40 +724,49 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * @deprecated Use {@link #requiredSingleValueSelection(Label, Option...)} instead.
+   *
    * @param options An arbitrary number of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
-   * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
+   *                {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
    * @return this
+   *
    */
-  public BU requiredSingleValueSelection(String internalId, String label, String description,
-                                         Option... options) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredSingleValueSelection(String internalId, String label, String description,
+                                        Option... options) {
     return requiredSingleValueSelection(internalId, label, description, Arrays.asList(options));
   }
 
 
   /**
-   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
-   * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   * Defines a configuration parameter that lets preprocessing developers
+   * select from a list of pre-defined configuration options.
+   * The parameter will be rendered as a RadioGroup in the StreamPipes UI.
+   *
+   * @param label   The {@link org.apache.streampipes.sdk.helpers.Label} that describes
+   *                why this parameter is needed in a user-friendly manner.
    * @param options An arbitrary number of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
-   * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
+   *                {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
    * @return this
    */
-  public BU requiredSingleValueSelection(Label label,
-                                         Option... options) {
-    return requiredSingleValueSelection(label.getInternalId(), label.getLabel(), label.getDescription(), Arrays.asList(options));
+  public K requiredSingleValueSelection(Label label,
+                                        Option... options) {
+    return requiredSingleValueSelection(label.getInternalId(), label.getLabel(), label.getDescription(),
+        Arrays.asList(options));
   }
 
   /**
    * @deprecated Use {@link #requiredSingleValueSelection(Label, List)} instead.
+   *
    * @param internalId
    * @param label
    * @param description
    * @param options
    * @return
+   *
    */
-  public BU requiredSingleValueSelection(String internalId, String label, String description,
-                                         List<Option> options) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredSingleValueSelection(String internalId, String label, String description,
+                                        List<Option> options) {
     OneOfStaticProperty osp = new OneOfStaticProperty(internalId, label, description);
     osp.setOptions(options);
 
@@ -698,16 +776,18 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
-   * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   * Defines a configuration parameter that lets preprocessing developers
+   * select from a list of pre-defined configuration options.
+   * The parameter will be rendered as a RadioGroup in the StreamPipes UI.
+   *
+   * @param label   The {@link org.apache.streampipes.sdk.helpers.Label} that describes
+   *                why this parameter is needed in a user-friendly manner.
    * @param options A list of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
-   * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
+   *                {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
    * @return this
    */
-  public BU requiredSingleValueSelection(Label label,
-                                         List<Option> options) {
+  public K requiredSingleValueSelection(Label label,
+                                        List<Option> options) {
     OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
     osp.setOptions(options);
 
@@ -716,19 +796,23 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
-   * options. The parameter will be rendered as a RadioGroup in the StreamPipes UI.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
-   * @param options A list of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
+   * Defines a configuration parameter that lets preprocessing developers
+   * select from a list of pre-defined configuration options.
+   * The parameter will be rendered as a RadioGroup in the StreamPipes UI.
+   *
+   * @param label               The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                            that describes why this parameter is needed in a user-friendly manner.
+   * @param options             A list of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
    * @param horizontalRendering when set to true
-   * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
+   *                            {@link org.apache.streampipes.sdk.helpers.Options}
+   *                            to create option elements from string values.
    * @return this
    */
-  public BU requiredSingleValueSelection(Label label,
-                                         List<Option> options,
-                                         boolean horizontalRendering) {
-    OneOfStaticProperty osp = new OneOfStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription(), horizontalRendering);
+  public K requiredSingleValueSelection(Label label,
+                                        List<Option> options,
+                                        boolean horizontalRendering) {
+    OneOfStaticProperty osp =
+        new OneOfStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription(), horizontalRendering);
     osp.setOptions(options);
 
     this.staticProperties.add(osp);
@@ -738,42 +822,50 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   /**
    * @deprecated Use {@link #requiredMultiValueSelection(Label, Option...)} instead.
+   *
    * @param internalId
    * @param label
    * @param description
    * @param options
    * @return
+   *
    */
-  public BU requiredMultiValueSelection(String internalId, String label, String description,
-                                        Option... options) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredMultiValueSelection(String internalId, String label, String description,
+                                       Option... options) {
     return requiredMultiValueSelection(internalId, label, description, Arrays.asList(options));
   }
 
   /**
-   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
-   * options, but multiple selections are allowed. The parameter will be rendered as a Checkbox group in the StreamPipes
-   * UI.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   * Defines a configuration parameter that lets preprocessing developers
+   * select from a list of pre-defined configuration options, but multiple selections are allowed.
+   * The parameter will be rendered as a Checkbox group in the StreamPipes UI.
+   *
+   * @param label   The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                that describes why this parameter is needed in a user-friendly manner.
    * @param options An arbitrary number of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
-   * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
+   *                {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
    * @return this
    */
-  public BU requiredMultiValueSelection(Label label,
-                                        Option... options) {
-    return requiredMultiValueSelection(label.getInternalId(), label.getLabel(), label.getDescription(), Arrays.asList(options));
+  public K requiredMultiValueSelection(Label label,
+                                       Option... options) {
+    return requiredMultiValueSelection(label.getInternalId(), label.getLabel(), label.getDescription(),
+        Arrays.asList(options));
   }
 
   /**
    * @deprecated Use {@link #requiredMultiValueSelection(Label, List)} instead.
+   *
    * @param internalId
    * @param label
    * @param description
    * @param options
    * @return
+   *
    */
-  public BU requiredMultiValueSelection(String internalId, String label, String description,
-                                        List<Option> options) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K requiredMultiValueSelection(String internalId, String label, String description,
+                                       List<Option> options) {
     AnyStaticProperty asp = new AnyStaticProperty(internalId, label, description);
     asp.setOptions(options);
 
@@ -782,17 +874,18 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   * Defines a configuration parameter that lets preprocessing developers select from a list of pre-defined configuration
-   * options, but multiple selections are allowed. The parameter will be rendered as a Checkbox group in the StreamPipes
-   * UI.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *              user-friendly manner.
+   * Defines a configuration parameter that lets preprocessing developers
+   * select from a list of pre-defined configuration options, but multiple selections are allowed.
+   * The parameter will be rendered as a Checkbox group in the StreamPipes UI.
+   *
+   * @param label   The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                that describes why this parameter is needed in a user-friendly manner.
    * @param options A list of {@link org.apache.streampipes.model.staticproperty.Option} elements. Use
-   * {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
+   *                {@link org.apache.streampipes.sdk.helpers.Options} to create option elements from string values.
    * @return this
    */
-  public BU requiredMultiValueSelection(Label label,
-                                        List<Option> options) {
+  public K requiredMultiValueSelection(Label label,
+                                       List<Option> options) {
     AnyStaticProperty asp = new AnyStaticProperty(label.getInternalId(), label.getLabel(), label.getDescription());
     asp.setOptions(options);
 
@@ -800,11 +893,11 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
-  public BU requiredIntegerParameter(Label label, Integer min, Integer max, Integer step) {
+  public K requiredIntegerParameter(Label label, Integer min, Integer max, Integer step) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label.getInternalId(),
-            label.getLabel(),
-            label.getDescription(),
-            XSD._integer.toString());
+        label.getLabel(),
+        label.getDescription(),
+        XSD._integer.toString());
 
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
     fsp.setValueSpecification(valueSpecification);
@@ -812,19 +905,19 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
-  public BU requiredIntegerParameter(String internalId, String label, String description, Integer min, Integer max, Integer step) {
+  public K requiredIntegerParameter(String internalId, String label, String description, Integer min, Integer max,
+                                    Integer step) {
     return requiredIntegerParameter(Labels.from(internalId, label, description), min, max, step);
   }
 
   /**
-   *
    * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *    user-friendly manner.
+   *              user-friendly manner.
    * @return this
    */
-  public BU requiredFile(Label label) {
-    FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
-            .getDescription());
+  public K requiredFile(Label label) {
+    FileStaticProperty fp = new FileStaticProperty(label.getInternalId(), label.getLabel(), label
+        .getDescription());
 
     this.staticProperties.add(fp);
 
@@ -833,13 +926,13 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   *
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *    user-friendly manner.
-   * @param requiredFiletypes A list of {@link org.apache.streampipes.sdk.helpers.Filetypes} required filetypes the element supports.
+   * @param label             The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                          that describes why this parameter is needed in a user-friendly manner.
+   * @param requiredFiletypes A list of {@link org.apache.streampipes.sdk.helpers.Filetypes}
+   *                          required filetypes the element supports.
    * @return this
    */
-  public BU requiredFile(Label label, Filetypes... requiredFiletypes) {
+  public K requiredFile(Label label, Filetypes... requiredFiletypes) {
     List<String> collectedFiletypes = new ArrayList<>();
     Arrays.stream(requiredFiletypes).forEach(rf -> collectedFiletypes.addAll(rf.getFileExtensions()));
 
@@ -847,15 +940,14 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   /**
-   *
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *    user-friendly manner.
+   * @param label             The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                          that describes why this parameter is needed in a user-friendly manner.
    * @param requiredFiletypes A list of required filetypes (a string marking the file extension) the element supports.
    * @return this
    */
-  public BU requiredFile(Label label, String... requiredFiletypes) {
-    FileStaticProperty fp =  new FileStaticProperty(label.getInternalId(), label.getLabel(), label
-            .getDescription());
+  public K requiredFile(Label label, String... requiredFiletypes) {
+    FileStaticProperty fp = new FileStaticProperty(label.getInternalId(), label.getLabel(), label
+        .getDescription());
 
     List<String> collectedFiletypes = Arrays.asList(requiredFiletypes);
     fp.setRequiredFiletypes(collectedFiletypes);
@@ -865,9 +957,9 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
 
   }
 
-  public BU requiredAlternatives(Label label, StaticPropertyAlternative... alternatives) {
+  public K requiredAlternatives(Label label, StaticPropertyAlternative... alternatives) {
     StaticPropertyAlternatives alternativesContainer =
-            new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
+        new StaticPropertyAlternatives(label.getInternalId(), label.getLabel(), label.getDescription());
 
     for (int i = 0; i < alternatives.length; i++) {
       alternatives[i].setIndex(i);
@@ -879,30 +971,30 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
     return me();
   }
 
-  public BU requiredSingleValueSelectionFromContainer(Label label) {
+  public K requiredSingleValueSelectionFromContainer(Label label) {
     this.staticProperties.add(StaticProperties.singleValueSelectionFromContainer(label));
     return me();
   }
 
-  public BU requiredSingleValueSelectionFromContainer(Label label,
-                                                      List<String> dependsOn) {
+  public K requiredSingleValueSelectionFromContainer(Label label,
+                                                     List<String> dependsOn) {
     this.staticProperties.add(StaticProperties.singleValueSelectionFromContainer(label, dependsOn));
     return me();
   }
 
-  public BU requiredMultiValueSelectionFromContainer(Label label) {
+  public K requiredMultiValueSelectionFromContainer(Label label) {
     this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label));
     return me();
   }
 
-  public BU requiredMultiValueSelectionFromContainer(Label label,
-                                                      List<String> dependsOn) {
+  public K requiredMultiValueSelectionFromContainer(Label label,
+                                                    List<String> dependsOn) {
     this.staticProperties.add(StaticProperties.multiValueSelectionFromContainer(label, dependsOn));
     return me();
   }
 
-  public BU requiredRuntimeResolvableTreeInput(Label label,
-                                               List<String> dependsOn) {
+  public K requiredRuntimeResolvableTreeInput(Label label,
+                                              List<String> dependsOn) {
     this.staticProperties.add(StaticProperties.runtimeResolvableTreeInput(label, dependsOn));
     return me();
   }
@@ -910,21 +1002,23 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   /**
    * Defines a collection of configuration parameters of the specified staticProperties.
    * The developer can fill the staticProperties multiply times.
-   * @param label The {@link org.apache.streampipes.sdk.helpers.Label} that describes why this parameter is needed in a
-   *    *              user-friendly manner.
+   *
+   * @param label            The {@link org.apache.streampipes.sdk.helpers.Label}
+   *                         that describes why this parameter is needed in a user-friendly manner.
    * @param staticProperties A list of {@link org.apache.streampipes.model.staticproperty} elements.
    * @return this
    */
-  public BU requiredCollection(Label label, StaticProperty... staticProperties) {
+  public K requiredCollection(Label label, StaticProperty... staticProperties) {
     this.staticProperties.add(StaticProperties.collection(label, staticProperties));
     return me();
   }
 
-  private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description, String type) {
+  private FreeTextStaticProperty prepareFreeTextStaticProperty(String internalId, String label, String description,
+                                                               String type) {
     return new FreeTextStaticProperty(internalId,
-            label,
-            description,
-            URI.create(type));
+        label,
+        description,
+        URI.create(type));
   }
 
   private FreeTextStaticProperty prepareFreeTextStaticProperty(Label label, String type) {
@@ -932,7 +1026,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<BU extends
   }
 
   private List<StaticProperty> sortStaticProperties(List<StaticProperty> staticProperties) {
-    for(int i = 0; i < staticProperties.size(); i++) {
+    for (int i = 0; i < staticProperties.size(); i++) {
       staticProperties.get(i).setIndex(i);
     }
     return staticProperties;

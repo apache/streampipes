@@ -61,8 +61,8 @@ public class ComputeOutputStep extends AbstractPipelineValidationStep {
                 .getOutputStrategies().get(0));
       }
 
-      pe.setOutputStrategies(Collections.singletonList(outputSettings.b));
-      ((DataProcessorInvocation) target).getOutputStream().setEventSchema(outputSettings.a);
+      pe.setOutputStrategies(Collections.singletonList(outputSettings.v));
+      ((DataProcessorInvocation) target).getOutputStream().setEventSchema(outputSettings.k);
     }
   }
 }
