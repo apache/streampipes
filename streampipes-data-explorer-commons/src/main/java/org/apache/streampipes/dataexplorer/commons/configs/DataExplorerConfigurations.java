@@ -24,18 +24,23 @@ import java.util.List;
 
 
 public class DataExplorerConfigurations {
-    public final static String DATA_LAKE_DATABASE_NAME = "sp";
+  public static final String DATA_LAKE_DATABASE_NAME = "sp";
 
-    public static List<ConfigItem> getDefaults() {
+  public static List<ConfigItem> getDefaults() {
 
-        return Arrays.asList(
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_HOST, "influxdb", "Hostname for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL, "http", "Protocol for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_USERNAME, "default", "Username for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PASSWORD, "default", "Password for the StreamPipes data lake database"),
-                ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME, DATA_LAKE_DATABASE_NAME, "Database name for the StreamPipes data lake database")
-        );
-    }
+    return Arrays.asList(
+        ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_HOST, "influxdb",
+            "Hostname for the StreamPipes data lake database"),
+        ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PROTOCOL, "http",
+            "Protocol for the StreamPipes data lake database"),
+        ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PORT, 8086, "Port for the StreamPipes data lake database"),
+        ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_USERNAME, "default",
+            "Username for the StreamPipes data lake database"),
+        ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_PASSWORD, "default",
+            "Password for the StreamPipes data lake database"),
+        ConfigItem.from(DataExplorerEnvKeys.DATA_LAKE_DATABASE_NAME, DATA_LAKE_DATABASE_NAME,
+            "Database name for the StreamPipes data lake database")
+    );
+  }
 
 }

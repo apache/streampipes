@@ -19,7 +19,7 @@
 package org.apache.streampipes.dataexplorer.commons.configs;
 
 public class CouchDbEnvKeys {
-    public final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    public final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    public final static String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
+  public static final String COUCHDB_HOST = "SP_COUCHDB_HOST";
+  public static final String COUCHDB_PORT = "SP_COUCHDB_PORT";
+  public static final String COUCHDB_PROTOCOL = "SP_COUCHDB_PROTOCOL";
 }
