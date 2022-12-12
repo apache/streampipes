@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.dataformat.fst;
 
-import org.nustaq.serialization.FSTConfiguration;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+
+import org.nustaq.serialization.FSTConfiguration;
 
 import java.util.Map;
 
