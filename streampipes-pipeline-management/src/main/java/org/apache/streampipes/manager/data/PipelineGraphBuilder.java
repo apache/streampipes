@@ -58,7 +58,7 @@ public class PipelineGraphBuilder {
         allPipelineElements.forEach(pipelineGraph::addVertex);
 
         for(NamedStreamPipesEntity source : allPipelineElements) {
-            List<InvocableStreamPipesEntity> targets = findTargets(source.getDOM());
+            List<InvocableStreamPipesEntity> targets = findTargets(source.getDom());
             targets.forEach(t -> pipelineGraph.addEdge(source, t, createEdge(source, t)));
         }
 
@@ -74,6 +74,6 @@ public class PipelineGraphBuilder {
 
     private String createEdge(NamedStreamPipesEntity sourceVertex,
                           NamedStreamPipesEntity targetVertex) {
-        return sourceVertex.getDOM() + "-" + targetVertex.getDOM();
+        return sourceVertex.getDom() + "-" + targetVertex.getDom();
     }
 }

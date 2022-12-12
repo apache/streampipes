@@ -27,31 +27,31 @@ public class SpLogEntry {
   private long timestamp;
   private StreamPipesErrorMessage errorMessage;
 
-  public static SpLogEntry from(long timestamp,
-                                StreamPipesErrorMessage errorMessage) {
-    return new SpLogEntry(timestamp, errorMessage);
-  }
-
   public SpLogEntry() {
 
   }
 
   private SpLogEntry(long timestamp,
-                    StreamPipesErrorMessage errorMessage) {
+                     StreamPipesErrorMessage errorMessage) {
     this.timestamp = timestamp;
     this.errorMessage = errorMessage;
+  }
+
+  public static SpLogEntry from(long timestamp,
+                                StreamPipesErrorMessage errorMessage) {
+    return new SpLogEntry(timestamp, errorMessage);
   }
 
   public long getTimestamp() {
     return timestamp;
   }
 
-  public StreamPipesErrorMessage getErrorMessage() {
-    return errorMessage;
-  }
-
   public void setTimestamp(long timestamp) {
     this.timestamp = timestamp;
+  }
+
+  public StreamPipesErrorMessage getErrorMessage() {
+    return errorMessage;
   }
 
   public void setErrorMessage(StreamPipesErrorMessage errorMessage) {

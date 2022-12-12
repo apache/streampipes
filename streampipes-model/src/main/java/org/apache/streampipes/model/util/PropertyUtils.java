@@ -54,10 +54,10 @@ public class PropertyUtils {
       Map<String, Object> result = new HashMap<>();
       if (listEp.getEventProperty() instanceof EventPropertyPrimitive) {
         result.put(listEp.getRuntimeName(), ModelUtils.getPrimitiveClassAsArray((
-                (EventPropertyPrimitive) listEp.getEventProperty()).getRuntimeType()));
+            (EventPropertyPrimitive) listEp.getEventProperty()).getRuntimeType()));
       } else {
         result.put(listEp.getRuntimeName(), ModelUtils.asList(PropertyUtils
-                .getUntypedRuntimeFormat(listEp.getEventProperty())));
+            .getUntypedRuntimeFormat(listEp.getEventProperty())));
       }
 
       return result;

@@ -30,9 +30,9 @@ import java.util.Optional;
 
 public class Event {
 
+  private final Map<String, AbstractField> fieldMap;
   private SourceInfo sourceInfo;
   private SchemaInfo schemaInfo;
-  private Map<String, AbstractField> fieldMap;
 
   public Event(Map<String, AbstractField> fieldMap, SourceInfo
       sourceInfo, SchemaInfo schemaInfo) {
@@ -181,7 +181,7 @@ public class Event {
   }
 
   public void addField(String runtimeName, Object value) {
-    if (AbstractField.class.isInstance(value)) {
+    if (value instanceof AbstractField) {
       ((AbstractField<?>) value).rename(runtimeName);
       addField((AbstractField) value);
     } else {
@@ -210,8 +210,13 @@ public class Event {
   }
 
   public void addFieldAtPosition(String baseSelector, AbstractField field) {
-    getFieldBySelector(baseSelector).getAsComposite().addField
-        (makeSelector(baseSelector, field.getFieldNameIn()), field);
+    getFieldBySelector(baseSelector)
+        .getAsComposite()
+        .addField(
+            makeSelector(baseSelector, field.getFieldNameIn()
+            ),
+            field
+        );
   }
 
   private String makeKey(AbstractField field) {

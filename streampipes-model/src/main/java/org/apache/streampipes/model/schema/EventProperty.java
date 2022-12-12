@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.model.schema;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import org.apache.commons.collections.ListUtils;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.quality.EventPropertyQualityDefinition;
 import org.apache.streampipes.model.quality.EventPropertyQualityRequirement;
 import org.apache.streampipes.model.util.Cloner;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import org.apache.commons.collections.ListUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -32,16 +33,14 @@ import java.util.Objects;
 import java.util.UUID;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(EventPropertyList.class),
-        @JsonSubTypes.Type(EventPropertyNested.class),
-        @JsonSubTypes.Type(EventPropertyPrimitive.class)
+    @JsonSubTypes.Type(EventPropertyList.class),
+    @JsonSubTypes.Type(EventPropertyNested.class),
+    @JsonSubTypes.Type(EventPropertyPrimitive.class)
 })
 public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
+  protected static final String PREFIX = "urn:streampipes.org:spi:";
   private static final long serialVersionUID = 7079045979946059387L;
-
-  protected static final String prefix = "urn:streampipes.org:spi:";
-
   private String label;
 
   private String description;
@@ -63,26 +62,8 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
   private String runtimeId;
 
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    EventProperty that = (EventProperty) o;
-
-    return required == that.required &&
-            index == that.index &&
-            Objects.equals(label, that.label) &&
-            Objects.equals(description, that.description) &&
-            Objects.equals(runtimeName, that.runtimeName) &&
-            Objects.equals(propertyScope, that.propertyScope) &&
-            Objects.equals(runtimeId, that.runtimeId) &&
-            ListUtils.isEqualList(this.domainProperties,that.domainProperties) &&
-            ListUtils.isEqualList(this.eventPropertyQualities,that.eventPropertyQualities)&&
-            ListUtils.isEqualList(this.requiresEventPropertyQualities,that.requiresEventPropertyQualities);
-  }
-
   public EventProperty() {
-    super(prefix + UUID.randomUUID().toString());
+    super(PREFIX + UUID.randomUUID().toString());
     this.requiresEventPropertyQualities = new ArrayList<>();
     this.eventPropertyQualities = new ArrayList<>();
     this.domainProperties = new ArrayList<>();
@@ -95,13 +76,13 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     this.required = other.isRequired();
     if (other.getRequiresEventPropertyQualities() != null) {
       this.requiresEventPropertyQualities = new Cloner()
-              .reqEpQualitities(other
-                      .getRequiresEventPropertyQualities());
+          .reqEpQualitities(other
+              .getRequiresEventPropertyQualities());
     }
     this.runtimeName = other.getRuntimeName();
     if (other.getEventPropertyQualities() != null) {
       this.eventPropertyQualities = new Cloner().provEpQualities(other
-              .getEventPropertyQualities());
+          .getEventPropertyQualities());
     }
     this.domainProperties = other.getDomainProperties();
     this.propertyScope = other.getPropertyScope();
@@ -120,7 +101,8 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     this.domainProperties = subClassOf;
   }
 
-  public EventProperty(String propertyName, List<URI> subClassOf, List<EventPropertyQualityDefinition> eventPropertyQualities) {
+  public EventProperty(String propertyName, List<URI> subClassOf,
+                       List<EventPropertyQualityDefinition> eventPropertyQualities) {
     this();
     this.runtimeName = propertyName;
     this.domainProperties = subClassOf;
@@ -132,13 +114,38 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
     this.runtimeName = propertyName;
   }
 
+  public static String getPrefix() {
+    return PREFIX;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    EventProperty that = (EventProperty) o;
+
+    return required == that.required
+        && index == that.index
+        && Objects.equals(label, that.label)
+        && Objects.equals(description, that.description)
+        && Objects.equals(runtimeName, that.runtimeName)
+        && Objects.equals(propertyScope, that.propertyScope)
+        && Objects.equals(runtimeId, that.runtimeId)
+        && ListUtils.isEqualList(this.domainProperties, that.domainProperties)
+        && ListUtils.isEqualList(this.eventPropertyQualities, that.eventPropertyQualities)
+        && ListUtils.isEqualList(this.requiresEventPropertyQualities, that.requiresEventPropertyQualities);
+  }
 
   public List<EventPropertyQualityRequirement> getRequiresEventPropertyQualities() {
     return requiresEventPropertyQualities;
   }
 
   public void setRequiresEventPropertyQualities(
-          List<EventPropertyQualityRequirement> requiresEventPropertyQualities) {
+      List<EventPropertyQualityRequirement> requiresEventPropertyQualities) {
     this.requiresEventPropertyQualities = requiresEventPropertyQualities;
   }
 
@@ -187,7 +194,7 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
   }
 
   public void setEventPropertyQualities(
-          List<EventPropertyQualityDefinition> eventPropertyQualities) {
+      List<EventPropertyQualityDefinition> eventPropertyQualities) {
     this.eventPropertyQualities = eventPropertyQualities;
   }
 
@@ -197,10 +204,6 @@ public abstract class EventProperty extends UnnamedStreamPipesEntity {
 
   public void setPropertyScope(String propertyScope) {
     this.propertyScope = propertyScope;
-  }
-
-  public static String getPrefix() {
-    return prefix;
   }
 
   public String getRuntimeId() {

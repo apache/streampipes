@@ -18,63 +18,64 @@
 
 package org.apache.streampipes.model.pipeline;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public class PipelineCategory {
 
-	private String categoryName;
-	private String categoryDescription;
+  private String categoryName;
+  private String categoryDescription;
 
-	@JsonProperty("_id")
-	private @SerializedName("_id") String categoryId;
+  @JsonProperty("_id")
+  private @SerializedName("_id") String categoryId;
 
-	@JsonProperty("_rev")
-	private @SerializedName("_rev") String rev;
-	
-	public PipelineCategory() {
-		
-	}
-	
-	public PipelineCategory(String categoryName, String categoryDescription) {
-		super();
-		this.categoryName = categoryName;
-		this.categoryDescription = categoryDescription;
-	}
+  @JsonProperty("_rev")
+  private @SerializedName("_rev") String rev;
 
-	public String getCategoryName() {
-		return categoryName;
-	}
+  public PipelineCategory() {
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
+  }
 
-	public String getCategoryDescription() {
-		return categoryDescription;
-	}
+  public PipelineCategory(String categoryName, String categoryDescription) {
+    super();
+    this.categoryName = categoryName;
+    this.categoryDescription = categoryDescription;
+  }
 
-	public void setCategoryDescription(String categoryDescription) {
-		this.categoryDescription = categoryDescription;
-	}
+  public String getCategoryName() {
+    return categoryName;
+  }
 
-	public String getCategoryId() {
-		return categoryId;
-	}
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
+  }
 
-	public void setCategoryId(String categoryId) {
-		this.categoryId = categoryId;
-	}
+  public String getCategoryDescription() {
+    return categoryDescription;
+  }
 
-	public String getRev() {
-		return rev;
-	}
+  public void setCategoryDescription(String categoryDescription) {
+    this.categoryDescription = categoryDescription;
+  }
 
-	public void setRev(String rev) {
-		this.rev = rev;
-	}
-	
-	
+  public String getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(String categoryId) {
+    this.categoryId = categoryId;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
+
+
 }

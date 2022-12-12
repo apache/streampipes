@@ -54,11 +54,11 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
       throw new SpValidationException(errorLog);
     } else {
       EventGrounding selectedGrounding;
-      if (!sourceGroundingVisitorMap.containsKey(source.getDOM())) {
+      if (!sourceGroundingVisitorMap.containsKey(source.getDom())) {
         selectedGrounding = new GroundingBuilder(source, allTargets).getEventGrounding();
-        sourceGroundingVisitorMap.put(source.getDOM(), selectedGrounding);
+        sourceGroundingVisitorMap.put(source.getDom(), selectedGrounding);
       } else {
-        selectedGrounding = new EventGrounding(sourceGroundingVisitorMap.get(source.getDOM()));
+        selectedGrounding = new EventGrounding(sourceGroundingVisitorMap.get(source.getDom()));
       }
 
       if (source instanceof DataProcessorInvocation) {
@@ -73,7 +73,7 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
               .setEventGrounding(selectedGrounding);
 
       if (target.getInputStreams().size() > 1) {
-        this.visitorHistory.put(target.getDOM(), 1);
+        this.visitorHistory.put(target.getDom(), 1);
       }
     }
   }

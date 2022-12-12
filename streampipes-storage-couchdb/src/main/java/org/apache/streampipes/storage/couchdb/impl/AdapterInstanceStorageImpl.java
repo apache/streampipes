@@ -47,7 +47,7 @@ public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> 
 
   @Override
   public String storeAdapter(AdapterDescription adapter) {
-    return persist(adapter).b;
+    return persist(adapter).v;
   }
 
   @Override

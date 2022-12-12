@@ -20,111 +20,111 @@ package org.apache.streampipes.model.client.deployment;
 
 public class DeploymentConfiguration {
 
-	private String groupId;
-	private String artifactId;
-	private String classNamePrefix;
-	
-	private String elementId;
-	private boolean draft;
-	
-	private int port;
-	
-	private DeploymentType deploymentType;
-	private ElementType elementType;
-	private OutputType outputType;
-	private RuntimeType runtimeType;
+  private String groupId;
+  private String artifactId;
+  private String classNamePrefix;
 
-	public DeploymentConfiguration() {
+  private String elementId;
+  private boolean draft;
 
-	}
+  private int port;
 
-	public DeploymentConfiguration(String groupId, String artifactId,
-			String classNamePrefix, int port) {
-		super();
-		this.groupId = groupId;
-		this.artifactId = artifactId;
-		this.classNamePrefix = classNamePrefix;
-		this.port = port;
-	}
+  private DeploymentType deploymentType;
+  private ElementType elementType;
+  private OutputType outputType;
+  private RuntimeType runtimeType;
 
-	public String getGroupId() {
-		return groupId;
-	}
+  public DeploymentConfiguration() {
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+  }
 
-	public String getArtifactId() {
-		return artifactId;
-	}
+  public DeploymentConfiguration(String groupId, String artifactId,
+                                 String classNamePrefix, int port) {
+    super();
+    this.groupId = groupId;
+    this.artifactId = artifactId;
+    this.classNamePrefix = classNamePrefix;
+    this.port = port;
+  }
 
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+  public String getGroupId() {
+    return groupId;
+  }
 
-	public String getClassNamePrefix() {
-		return classNamePrefix;
-	}
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
+  }
 
-	public void setClassNamePrefix(String classNamePrefix) {
-		this.classNamePrefix = classNamePrefix;
-	}
+  public String getArtifactId() {
+    return artifactId;
+  }
 
-	public int getPort() {
-		return port;
-	}
+  public void setArtifactId(String artifactId) {
+    this.artifactId = artifactId;
+  }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+  public String getClassNamePrefix() {
+    return classNamePrefix;
+  }
 
-	public String getElementId() {
-		return elementId;
-	}
+  public void setClassNamePrefix(String classNamePrefix) {
+    this.classNamePrefix = classNamePrefix;
+  }
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
+  public int getPort() {
+    return port;
+  }
 
-	public boolean isDraft() {
-		return draft;
-	}
+  public void setPort(int port) {
+    this.port = port;
+  }
 
-	public void setDraft(boolean draft) {
-		this.draft = draft;
-	}
+  public String getElementId() {
+    return elementId;
+  }
 
-	public DeploymentType getDeploymentType() {
-		return deploymentType;
-	}
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 
-	public void setDeploymentType(DeploymentType deploymentType) {
-		this.deploymentType = deploymentType;
-	}
+  public boolean isDraft() {
+    return draft;
+  }
 
-	public void setElementType(ElementType elementType) {
-		this.elementType = elementType;
-	}
+  public void setDraft(boolean draft) {
+    this.draft = draft;
+  }
 
-	public ElementType getElementType() {
-		return elementType;
-	}
+  public DeploymentType getDeploymentType() {
+    return deploymentType;
+  }
 
-	public RuntimeType getRuntimeType() {
-		return runtimeType;
-	}
+  public void setDeploymentType(DeploymentType deploymentType) {
+    this.deploymentType = deploymentType;
+  }
 
-	public void setRuntimeType(RuntimeType runtimeType) {
-		this.runtimeType = runtimeType;
-	}
+  public ElementType getElementType() {
+    return elementType;
+  }
 
-	public OutputType getOutputType() {
-		return outputType;
-	}
+  public void setElementType(ElementType elementType) {
+    this.elementType = elementType;
+  }
 
-	public void setOutputType(OutputType outputType) {
-		this.outputType = outputType;
-	}
-				
+  public RuntimeType getRuntimeType() {
+    return runtimeType;
+  }
+
+  public void setRuntimeType(RuntimeType runtimeType) {
+    this.runtimeType = runtimeType;
+  }
+
+  public OutputType getOutputType() {
+    return outputType;
+  }
+
+  public void setOutputType(OutputType outputType) {
+    this.outputType = outputType;
+  }
+
 }

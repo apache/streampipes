@@ -19,7 +19,7 @@ package org.apache.streampipes.model.output;
 
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
-public class TransformOperation extends UnnamedStreamPipesEntity{
+public class TransformOperation extends UnnamedStreamPipesEntity {
 
   /**
    * the internal name of the mapping property that linkes to an event property related to this transform operation

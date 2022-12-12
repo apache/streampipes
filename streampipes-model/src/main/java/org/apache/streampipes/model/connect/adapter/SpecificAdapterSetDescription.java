@@ -23,10 +23,10 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 @TsModel
 public class SpecificAdapterSetDescription extends AdapterSetDescription {
 
-    public SpecificAdapterSetDescription() {
-    }
+  public SpecificAdapterSetDescription() {
+  }
 
-    public SpecificAdapterSetDescription(AdapterSetDescription other) {
-        super(other);
-    }
+  public SpecificAdapterSetDescription(AdapterSetDescription other) {
+    super(other);
+  }
 }

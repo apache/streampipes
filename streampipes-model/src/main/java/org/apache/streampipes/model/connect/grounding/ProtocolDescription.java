@@ -29,63 +29,63 @@ import java.util.List;
 @TsModel
 public class ProtocolDescription extends NamedStreamPipesEntity {
 
-    @Deprecated
-    String sourceType;
+  @Deprecated
+  String sourceType;
 
-    List<StaticProperty> config;
+  List<StaticProperty> config;
 
-    private List<String> category;
+  private List<String> category;
 
-    public ProtocolDescription() {
-        this.config = new ArrayList<>();
+  public ProtocolDescription() {
+    this.config = new ArrayList<>();
+  }
+
+  public ProtocolDescription(String uri, String name, String description) {
+    super(uri, name, description);
+    this.config = new ArrayList<>();
+    this.category = new ArrayList<>();
+  }
+
+  public ProtocolDescription(String uri, String name, String description, List<StaticProperty> config) {
+    super(uri, name, description);
+    this.config = config;
+    this.category = new ArrayList<>();
+  }
+
+  public ProtocolDescription(ProtocolDescription other) {
+    super(other);
+
+    this.config = new Cloner().staticProperties(other.getConfig());
+    if (other.getCategory() != null) {
+      this.category = new Cloner().epaTypes(other.getCategory());
     }
+  }
 
-    public ProtocolDescription(String uri, String name, String description) {
-        super(uri, name, description);
-        this.config = new ArrayList<>();
-        this.category = new ArrayList<>();
-    }
+  public void addConfig(StaticProperty sp) {
+    this.config.add(sp);
+  }
 
-    public ProtocolDescription(String uri, String name, String description, List<StaticProperty> config) {
-        super(uri, name, description);
-        this.config = config;
-        this.category = new ArrayList<>();
-    }
+  public List<StaticProperty> getConfig() {
+    return config;
+  }
 
-    public ProtocolDescription(ProtocolDescription other) {
-        super(other);
+  public void setConfig(List<StaticProperty> config) {
+    this.config = config;
+  }
 
-        this.config = new Cloner().staticProperties(other.getConfig());
-        if (other.getCategory() != null) {
-            this.category = new Cloner().epaTypes(other.getCategory());
-        }
-    }
+  public String getSourceType() {
+    return sourceType;
+  }
 
-    public void addConfig(StaticProperty sp) {
-        this.config.add(sp);
-    }
+  public void setSourceType(String sourceType) {
+    this.sourceType = sourceType;
+  }
 
-    public List<StaticProperty> getConfig() {
-        return config;
-    }
+  public List<String> getCategory() {
+    return category;
+  }
 
-    public void setConfig(List<StaticProperty> config) {
-        this.config = config;
-    }
-
-    public String getSourceType() {
-        return sourceType;
-    }
-
-    public void setSourceType(String sourceType) {
-        this.sourceType = sourceType;
-    }
-
-    public List<String> getCategory() {
-        return category;
-    }
-
-    public void setCategory(List<String> category) {
-        this.category = category;
-    }
+  public void setCategory(List<String> category) {
+    this.category = category;
+  }
 }

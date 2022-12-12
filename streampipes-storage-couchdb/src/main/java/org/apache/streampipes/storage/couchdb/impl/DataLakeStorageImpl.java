@@ -33,7 +33,7 @@ public class DataLakeStorageImpl extends AbstractDao<DataLakeMeasure> implements
 
   @Override
   public boolean storeDataLakeMeasure(DataLakeMeasure measure) {
-    return persist(measure).a;
+    return persist(measure).k;
   }
 
   @Override

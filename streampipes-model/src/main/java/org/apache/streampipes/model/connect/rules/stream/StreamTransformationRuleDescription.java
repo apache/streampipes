@@ -18,20 +18,21 @@
 
 package org.apache.streampipes.model.connect.rules.stream;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-        @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
-        @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
+    @JsonSubTypes.Type(EventRateTransformationRuleDescription.class),
+    @JsonSubTypes.Type(RemoveDuplicatesTransformationRuleDescription.class),
 })
 public abstract class StreamTransformationRuleDescription extends TransformationRuleDescription {
 
-    public StreamTransformationRuleDescription() {
-        super();
-    }
+  public StreamTransformationRuleDescription() {
+    super();
+  }
 
-    public StreamTransformationRuleDescription(TransformationRuleDescription other) {
-        super();
-    }
+  public StreamTransformationRuleDescription(TransformationRuleDescription other) {
+    super();
+  }
 }

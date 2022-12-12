@@ -32,7 +32,8 @@ public class SetupStatusMessage {
 
   }
 
-  public SetupStatusMessage(Integer currentInstallationStep, Integer installationStepCount, List<Message> statusMessages, String nextTaskTitle) {
+  public SetupStatusMessage(Integer currentInstallationStep, Integer installationStepCount,
+                            List<Message> statusMessages, String nextTaskTitle) {
     this.currentInstallationStep = currentInstallationStep;
     this.installationStepCount = installationStepCount;
     this.statusMessages = statusMessages;
@@ -43,20 +44,20 @@ public class SetupStatusMessage {
     return currentInstallationStep;
   }
 
-  public Integer getInstallationStepCount() {
-    return installationStepCount;
-  }
-
-  public List<Message> getStatusMessages() {
-    return statusMessages;
-  }
-
   public void setCurrentInstallationStep(Integer currentInstallationStep) {
     this.currentInstallationStep = currentInstallationStep;
   }
 
+  public Integer getInstallationStepCount() {
+    return installationStepCount;
+  }
+
   public void setInstallationStepCount(Integer installationStepCount) {
     this.installationStepCount = installationStepCount;
+  }
+
+  public List<Message> getStatusMessages() {
+    return statusMessages;
   }
 
   public void setStatusMessages(List<Message> statusMessages) {

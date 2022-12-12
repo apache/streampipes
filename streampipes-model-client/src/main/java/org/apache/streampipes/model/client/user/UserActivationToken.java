@@ -22,7 +22,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UserActivationToken extends AbstractMailToken {
 
   @JsonIgnore
-  private String $type = "user-activation";
+  private String type = "user-activation";
+
+  public UserActivationToken() {
+  }
 
   public static UserActivationToken create(String token, String username) {
     UserActivationToken userActivationToken = new UserActivationToken();
@@ -32,14 +35,11 @@ public class UserActivationToken extends AbstractMailToken {
     return userActivationToken;
   }
 
-  public UserActivationToken() {
+  public String getType() {
+    return type;
   }
 
-  public String get$type() {
-    return $type;
-  }
-
-  public void set$type(String $type) {
-    this.$type = $type;
+  public void setType(String type) {
+    this.type = type;
   }
 }

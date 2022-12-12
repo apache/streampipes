@@ -22,43 +22,43 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
 public class EventStreamQualityRequirement extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 1484115035721357275L;
+  private static final long serialVersionUID = 1484115035721357275L;
 
-	private transient EventStreamQualityDefinition minimumStreamQuality;
+  private transient EventStreamQualityDefinition minimumStreamQuality;
 
-	private transient EventStreamQualityDefinition maximumStreamQuality;
+  private transient EventStreamQualityDefinition maximumStreamQuality;
 
-	public EventStreamQualityRequirement(EventStreamQualityDefinition minimumStreamQuality,
-			EventStreamQualityDefinition maximumStreamQuality) {
-		super();
-		//TODO check that minimum and maximum have the same type
-		this.minimumStreamQuality = minimumStreamQuality;
-		this.maximumStreamQuality = maximumStreamQuality;
-	}
-	
-	public EventStreamQualityRequirement(EventStreamQualityRequirement other) {
-		super(other);
-		//this.minimumStreamQuality = other.getMinimumStreamQuality();
-		//this.maximumStreamQuality = other.getMaximumStreamQuality();
-	}
-	
-	public EventStreamQualityRequirement() {
-		super();
-	}
+  public EventStreamQualityRequirement(EventStreamQualityDefinition minimumStreamQuality,
+                                       EventStreamQualityDefinition maximumStreamQuality) {
+    super();
+    //TODO check that minimum and maximum have the same type
+    this.minimumStreamQuality = minimumStreamQuality;
+    this.maximumStreamQuality = maximumStreamQuality;
+  }
 
-	public EventStreamQualityDefinition getMinimumStreamQuality() {
-		return minimumStreamQuality;
-	}
+  public EventStreamQualityRequirement(EventStreamQualityRequirement other) {
+    super(other);
+    //this.minimumStreamQuality = other.getMinimumStreamQuality();
+    //this.maximumStreamQuality = other.getMaximumStreamQuality();
+  }
 
-	public void setMinimumStreamQuality(EventStreamQualityDefinition minimumStreamQuality) {
-		this.minimumStreamQuality = minimumStreamQuality;
-	}
+  public EventStreamQualityRequirement() {
+    super();
+  }
 
-	public EventStreamQualityDefinition getMaximumStreamQuality() {
-		return maximumStreamQuality;
-	}
+  public EventStreamQualityDefinition getMinimumStreamQuality() {
+    return minimumStreamQuality;
+  }
 
-	public void setMaximumStreamQuality(EventStreamQualityDefinition maximumStreamQuality) {
-		this.maximumStreamQuality = maximumStreamQuality;
-	}
+  public void setMinimumStreamQuality(EventStreamQualityDefinition minimumStreamQuality) {
+    this.minimumStreamQuality = minimumStreamQuality;
+  }
+
+  public EventStreamQualityDefinition getMaximumStreamQuality() {
+    return maximumStreamQuality;
+  }
+
+  public void setMaximumStreamQuality(EventStreamQualityDefinition maximumStreamQuality) {
+    this.maximumStreamQuality = maximumStreamQuality;
+  }
 }

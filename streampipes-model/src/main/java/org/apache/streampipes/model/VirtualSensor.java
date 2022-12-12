@@ -22,31 +22,29 @@ import org.apache.streampipes.model.pipeline.ElementComposition;
 
 public class VirtualSensor extends ElementComposition {
 
-	protected String createdBy;
-	
-	protected int outputIndex;
-	
-	public VirtualSensor()
-	{
-		super();
-	}
+  protected String createdBy;
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
+  protected int outputIndex;
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+  public VirtualSensor() {
+    super();
+  }
 
-	public int getOutputIndex() {
-		return outputIndex;
-	}
+  public String getCreatedBy() {
+    return createdBy;
+  }
 
-	public void setOutputIndex(int outputIndex) {
-		this.outputIndex = outputIndex;
-	}
-	
-	
-	
+  public void setCreatedBy(String createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public int getOutputIndex() {
+    return outputIndex;
+  }
+
+  public void setOutputIndex(int outputIndex) {
+    this.outputIndex = outputIndex;
+  }
+
+
 }

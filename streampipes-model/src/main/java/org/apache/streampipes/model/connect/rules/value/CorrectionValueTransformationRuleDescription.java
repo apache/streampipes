@@ -1,4 +1,4 @@
-package org.apache.streampipes.model.connect.rules.value;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -16,52 +16,54 @@ package org.apache.streampipes.model.connect.rules.value;/*
  *
  */
 
+package org.apache.streampipes.model.connect.rules.value;
+
 public class CorrectionValueTransformationRuleDescription extends ValueTransformationRuleDescription {
 
-    private String runtimeKey;
+  private String runtimeKey;
 
-    private double correctionValue;
+  private double correctionValue;
 
-    private String operator;
+  private String operator;
 
-    public CorrectionValueTransformationRuleDescription() {
-        super();
-    }
+  public CorrectionValueTransformationRuleDescription() {
+    super();
+  }
 
-    public CorrectionValueTransformationRuleDescription(String runtimeKey, double correctionValue, String operator) {
-        this.runtimeKey = runtimeKey;
-        this.correctionValue = correctionValue;
-        this.operator = operator;
-    }
+  public CorrectionValueTransformationRuleDescription(String runtimeKey, double correctionValue, String operator) {
+    this.runtimeKey = runtimeKey;
+    this.correctionValue = correctionValue;
+    this.operator = operator;
+  }
 
-    public CorrectionValueTransformationRuleDescription(CorrectionValueTransformationRuleDescription other) {
-        super(other);
-        this.runtimeKey = other.getRuntimeKey();
-        this.correctionValue = other.getCorrectionValue();
-        this.operator = other.getOperator();
-    }
+  public CorrectionValueTransformationRuleDescription(CorrectionValueTransformationRuleDescription other) {
+    super(other);
+    this.runtimeKey = other.getRuntimeKey();
+    this.correctionValue = other.getCorrectionValue();
+    this.operator = other.getOperator();
+  }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
-    }
+  public String getRuntimeKey() {
+    return runtimeKey;
+  }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
-    }
+  public void setRuntimeKey(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 
-    public double getCorrectionValue() {
-        return correctionValue;
-    }
+  public double getCorrectionValue() {
+    return correctionValue;
+  }
 
-    public void setCorrectionValue(double correctionValue) {
-        this.correctionValue = correctionValue;
-    }
+  public void setCorrectionValue(double correctionValue) {
+    this.correctionValue = correctionValue;
+  }
 
-    public String getOperator() {
-        return operator;
-    }
+  public String getOperator() {
+    return operator;
+  }
 
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
+  public void setOperator(String operator) {
+    this.operator = operator;
+  }
 }

@@ -24,10 +24,8 @@ import java.util.UUID;
 
 public class RunningVisualization {
 
-  private @SerializedName("_id")
-  String id;
-  private @SerializedName("_rev")
-  String rev;
+  private @SerializedName("_id") String id;
+  private @SerializedName("_rev") String rev;
 
   private String pipelineId;
   private String pipelineName;

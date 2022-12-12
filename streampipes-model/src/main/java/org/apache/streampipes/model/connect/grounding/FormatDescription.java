@@ -28,57 +28,55 @@ import java.util.List;
 
 public class FormatDescription extends NamedStreamPipesEntity {
 
-    private List<StaticProperty> config;
+  private List<StaticProperty> config;
 
-    private String formatType = "";
+  private String formatType = "";
 
-    public FormatDescription() {
-        super();
-        this.config = new ArrayList<>();
-    }
+  public FormatDescription() {
+    super();
+    this.config = new ArrayList<>();
+  }
 
-    public FormatDescription(String uri, String name, String description) {
-        super(uri, name, description);
-        this.config = new ArrayList<>();
-    }
+  public FormatDescription(String uri, String name, String description) {
+    super(uri, name, description);
+    this.config = new ArrayList<>();
+  }
 
-    public FormatDescription(String uri, String name, String description, List<StaticProperty> config, String formatType) {
-        super(uri, name, description);
-        this.config = config;
-        this.formatType = formatType;
-    }
+  public FormatDescription(String uri, String name, String description, List<StaticProperty> config,
+                           String formatType) {
+    super(uri, name, description);
+    this.config = config;
+    this.formatType = formatType;
+  }
 
-    public FormatDescription(FormatDescription other) {
-        super(other);
-        this.config = new Cloner().staticProperties(other.getConfig());
-        this.formatType = other.getFormatType();
-    }
+  public FormatDescription(FormatDescription other) {
+    super(other);
+    this.config = new Cloner().staticProperties(other.getConfig());
+    this.formatType = other.getFormatType();
+  }
 
-    public void addConfig(StaticProperty sp) {
-        this.config.add(sp);
-    }
+  public void addConfig(StaticProperty sp) {
+    this.config.add(sp);
+  }
 
-    public List<StaticProperty> getConfig() {
-        return config;
-    }
+  public List<StaticProperty> getConfig() {
+    return config;
+  }
 
-    public void setConfig(List<StaticProperty> config) {
-        this.config = config;
-    }
+  public void setConfig(List<StaticProperty> config) {
+    this.config = config;
+  }
 
-    public String getFormatType() {
-        return formatType;
-    }
+  public String getFormatType() {
+    return formatType;
+  }
 
-    public void setFormatType(String formatType) {
-        this.formatType = formatType;
-    }
+  public void setFormatType(String formatType) {
+    this.formatType = formatType;
+  }
 
-    @Override
-    public String toString() {
-        return "FormatDescription{" +
-                "formatType=" + formatType +
-                "config=" + config +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return String.format("FormatDescription{formatType='%s', config='%s'}", formatType, config);
+  }
 }

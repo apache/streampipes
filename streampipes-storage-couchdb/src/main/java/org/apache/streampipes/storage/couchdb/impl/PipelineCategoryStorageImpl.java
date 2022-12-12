@@ -38,7 +38,7 @@ public class PipelineCategoryStorageImpl extends AbstractDao<PipelineCategory> i
 
   @Override
   public boolean addPipelineCategory(PipelineCategory pipelineCategory) {
-    return persist(pipelineCategory).a;
+    return persist(pipelineCategory).k;
   }
 
   @Override

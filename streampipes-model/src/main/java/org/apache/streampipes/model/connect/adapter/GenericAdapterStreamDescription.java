@@ -47,16 +47,20 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription im
   public GenericAdapterStreamDescription(GenericAdapterStreamDescription other) {
     super(other);
 
-      if (other.getFormatDescription() != null) {
-          this.formatDescription = new FormatDescription(other.getFormatDescription());
-      }
-      if (other.getProtocolDescription() != null) {
-          this.protocolDescription = new ProtocolStreamDescription(other.getProtocolDescription());
-      }
+    if (other.getFormatDescription() != null) {
+      this.formatDescription = new FormatDescription(other.getFormatDescription());
+    }
+    if (other.getProtocolDescription() != null) {
+      this.protocolDescription = new ProtocolStreamDescription(other.getProtocolDescription());
+    }
   }
 
   public FormatDescription getFormatDescription() {
     return formatDescription;
+  }
+
+  public void setFormatDescription(FormatDescription formatDescription) {
+    this.formatDescription = formatDescription;
   }
 
   @Override
@@ -65,10 +69,6 @@ public class GenericAdapterStreamDescription extends AdapterStreamDescription im
       return this.getDataStream().getEventSchema();
     }
     return null;
-  }
-
-  public void setFormatDescription(FormatDescription formatDescription) {
-    this.formatDescription = formatDescription;
   }
 
   public ProtocolDescription getProtocolDescription() {

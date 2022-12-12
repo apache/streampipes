@@ -24,6 +24,9 @@ public class FieldStatusInfo {
   private String additionalInfo;
   private boolean changesRequired;
 
+  public FieldStatusInfo() {
+  }
+
   public static FieldStatusInfo good() {
     var info = new FieldStatusInfo();
     info.setFieldStatus(FieldStatus.GOOD);
@@ -38,9 +41,6 @@ public class FieldStatusInfo {
     info.setChangesRequired(changesRequired);
 
     return info;
-  }
-
-  public FieldStatusInfo() {
   }
 
   public FieldStatus getFieldStatus() {

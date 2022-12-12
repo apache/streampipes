@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.model.runtime.field;
 
-public abstract class AbstractField<FV> {
+public abstract class AbstractField<V> {
 
   protected String fieldNameIn;
   protected String fieldNameOut;
-  protected FV value;
+  protected V value;
 
-  public AbstractField(String fieldNameIn, String fieldNameOut, FV value) {
+  public AbstractField(String fieldNameIn, String fieldNameOut, V value) {
     this(fieldNameIn);
     this.value = value;
     this.fieldNameOut = fieldNameOut;
@@ -79,15 +79,15 @@ public abstract class AbstractField<FV> {
     return (PrimitiveField) this;
   }
 
-  public FV getRawValue() {
+  public V getRawValue() {
     return value;
   }
 
-  public <T> T parse(FieldParser<FV, T> fieldParser) {
+  public <T> T parse(FieldParser<V, T> fieldParser) {
     return fieldParser.parseField(value);
   }
 
-  public void setValue(FV value) {
+  public void setValue(V value) {
     this.value = value;
   }
 

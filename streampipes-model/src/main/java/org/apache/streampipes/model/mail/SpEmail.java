@@ -25,21 +25,21 @@ public class SpEmail {
   private String subject;
   private String message;
 
-  public static SpEmail from(List<String> recipients,
-                             String subject,
-                             String message) {
-    return new SpEmail(recipients, subject, message);
-  }
-
   public SpEmail() {
   }
 
   public SpEmail(List<String> recipients,
-                  String subject,
-                  String message) {
+                 String subject,
+                 String message) {
     this.recipients = recipients;
     this.subject = subject;
     this.message = message;
+  }
+
+  public static SpEmail from(List<String> recipients,
+                             String subject,
+                             String message) {
+    return new SpEmail(recipients, subject, message);
   }
 
   public List<String> getRecipients() {

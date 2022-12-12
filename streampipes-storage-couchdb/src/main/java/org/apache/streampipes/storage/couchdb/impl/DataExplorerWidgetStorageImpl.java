@@ -39,7 +39,7 @@ public class DataExplorerWidgetStorageImpl extends AbstractDao<DataExplorerWidge
 
   @Override
   public String storeDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel) {
-    return persist(dataExplorerWidgetModel).b;
+    return persist(dataExplorerWidgetModel).v;
   }
 
   @Override

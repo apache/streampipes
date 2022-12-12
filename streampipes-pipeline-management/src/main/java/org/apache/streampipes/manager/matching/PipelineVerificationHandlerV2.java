@@ -48,7 +48,7 @@ public class PipelineVerificationHandlerV2 {
     List<NamedStreamPipesEntity> allElements = new AllElementsProvider(pipeline).getAllElements();
     List<NamedStreamPipesEntity> result = new ArrayList<>();
     allElements.forEach(pipelineElement -> {
-      Optional<PipelineModification> modificationOpt = getModification(pipelineElement.getDOM(), pipelineModifications);
+      Optional<PipelineModification> modificationOpt = getModification(pipelineElement.getDom(), pipelineModifications);
       if (modificationOpt.isPresent()) {
         PipelineModification modification = modificationOpt.get();
         if (pipelineElement instanceof InvocableStreamPipesEntity) {

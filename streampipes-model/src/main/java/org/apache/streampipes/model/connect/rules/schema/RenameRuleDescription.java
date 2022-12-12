@@ -20,39 +20,39 @@ package org.apache.streampipes.model.connect.rules.schema;
 
 public class RenameRuleDescription extends SchemaTransformationRuleDescription {
 
-    private String oldRuntimeKey;
+  private String oldRuntimeKey;
 
-    private String newRuntimeKey;
+  private String newRuntimeKey;
 
-    public RenameRuleDescription() {
-        super();
-    }
+  public RenameRuleDescription() {
+    super();
+  }
 
-    public RenameRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
-        super();
-        this.oldRuntimeKey = oldRuntimeKey;
-        this.newRuntimeKey = newRuntimeKey;
-    }
+  public RenameRuleDescription(String oldRuntimeKey, String newRuntimeKey) {
+    super();
+    this.oldRuntimeKey = oldRuntimeKey;
+    this.newRuntimeKey = newRuntimeKey;
+  }
 
-    public RenameRuleDescription(RenameRuleDescription other) {
-        super(other);
-        this.oldRuntimeKey = other.getOldRuntimeKey();
-        this.newRuntimeKey = other.getNewRuntimeKey();
-    }
+  public RenameRuleDescription(RenameRuleDescription other) {
+    super(other);
+    this.oldRuntimeKey = other.getOldRuntimeKey();
+    this.newRuntimeKey = other.getNewRuntimeKey();
+  }
 
-    public String getOldRuntimeKey() {
-        return oldRuntimeKey;
-    }
+  public String getOldRuntimeKey() {
+    return oldRuntimeKey;
+  }
 
-    public void setOldRuntimeKey(String oldRuntimeKey) {
-        this.oldRuntimeKey = oldRuntimeKey;
-    }
+  public void setOldRuntimeKey(String oldRuntimeKey) {
+    this.oldRuntimeKey = oldRuntimeKey;
+  }
 
-    public String getNewRuntimeKey() {
-        return newRuntimeKey;
-    }
+  public String getNewRuntimeKey() {
+    return newRuntimeKey;
+  }
 
-    public void setNewRuntimeKey(String newRuntimeKey) {
-        this.newRuntimeKey = newRuntimeKey;
-    }
+  public void setNewRuntimeKey(String newRuntimeKey) {
+    this.newRuntimeKey = newRuntimeKey;
+  }
 }

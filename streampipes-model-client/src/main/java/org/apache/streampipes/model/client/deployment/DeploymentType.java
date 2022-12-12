@@ -20,5 +20,5 @@ package org.apache.streampipes.model.client.deployment;
 
 
 public enum DeploymentType {
-    CONTAINER, STANDALONE, OSGI
+  CONTAINER, STANDALONE, OSGI
 }

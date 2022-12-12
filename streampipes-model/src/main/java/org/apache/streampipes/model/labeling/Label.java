@@ -18,55 +18,72 @@
 
 package org.apache.streampipes.model.labeling;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public class Label {
-    private String name;
-    private String color;
-    private String internalName;
-    private String categoryId;
+  private String name;
+  private String color;
+  private String internalName;
+  private String categoryId;
 
-    @JsonProperty("_id")
-    private @SerializedName("_id") String id;
+  @JsonProperty("_id")
+  private @SerializedName("_id") String id;
 
-    @JsonProperty("_rev")
-    private @SerializedName("_rev") String rev;
+  @JsonProperty("_rev")
+  private @SerializedName("_rev") String rev;
 
-    public Label() {
-    }
+  public Label() {
+  }
 
-    public String getName() { return name; }
-    public void setName(String name) {
-        this.name = name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getColor() { return color; }
-    public void setColor(String color) {
-        this.color = color;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getInternalName() {
-        return internalName;
-    }
-    public void setInternalName(String internalName) {
-        this.internalName = internalName;
-    }
+  public String getColor() {
+    return color;
+  }
 
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) { this.id = id; }
+  public void setColor(String color) {
+    this.color = color;
+  }
 
-    public String getRev() {
-        return rev;
-    }
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
+  public String getInternalName() {
+    return internalName;
+  }
 
-    public String getCategoryId() { return categoryId; };
-    public void setCategoryId(String categoryId) { this.categoryId = categoryId; }
+  public void setInternalName(String internalName) {
+    this.internalName = internalName;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getRev() {
+    return rev;
+  }
+
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
+
+  public String getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(String categoryId) {
+    this.categoryId = categoryId;
+  }
 }

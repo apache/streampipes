@@ -25,19 +25,20 @@ import java.util.List;
 @TsModel
 public class ErrorMessage extends Message {
 
-	public ErrorMessage() {
-		super();
+  public ErrorMessage() {
+    super();
 
-	}
-	public ErrorMessage(Notification...notifications) {
-		super(false, notifications);
-	}	
-	
-	public ErrorMessage(List<Notification> notifications) {
-		super(false, notifications.toArray(new Notification[0]));
-	}
-	
-	public ErrorMessage(String elementName, List<Notification> notifications) {
-		super(false, notifications, elementName);
-	}
+  }
+
+  public ErrorMessage(Notification... notifications) {
+    super(false, notifications);
+  }
+
+  public ErrorMessage(List<Notification> notifications) {
+    super(false, notifications.toArray(new Notification[0]));
+  }
+
+  public ErrorMessage(String elementName, List<Notification> notifications) {
+    super(false, notifications, elementName);
+  }
 }

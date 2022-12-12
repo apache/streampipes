@@ -39,7 +39,7 @@ public class LabelStorageImpl extends AbstractDao<Label> implements ILabelStorag
 
   @Override
   public String storeLabel(Label label) {
-    return persist(label).b;
+    return persist(label).v;
   }
 
   @Override

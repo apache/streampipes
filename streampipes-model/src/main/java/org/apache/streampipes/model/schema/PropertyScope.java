@@ -24,9 +24,9 @@ package org.apache.streampipes.model.schema;
  * are typically not be used for performing calculations (e.g., filter operations or sensor measurement value
  * transformations). In contrast, a property that describes an identifier (e.g., machineId) is often used for
  * partitioning a stream (e.g., calculating seperate temperature values per machine).
- *
+ * <p>
  * Use the SDK to assign property scopes to stream descriptions and stream (property) requirements.
- *
+ * <p>
  * For better understanding the meaning of property scopes, think of the meaning of variables in the data warehousing
  * domains:
  * Measurements are often numbers, while the dimension is what numbers are “sliced and diced” by.
@@ -34,8 +34,7 @@ package org.apache.streampipes.model.schema;
 public enum PropertyScope {
 
   /**
-   *  A property that defines meta-information about the event, for instance its occurrence time.
-   *
+   * A property that defines meta-information about the event, for instance its occurrence time.
    */
   HEADER_PROPERTY,
 

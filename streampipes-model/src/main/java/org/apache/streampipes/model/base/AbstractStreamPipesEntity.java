@@ -19,9 +19,10 @@
 package org.apache.streampipes.model.base;
 
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -31,36 +32,40 @@ import java.util.Objects;
  * top-level StreamPipes element
  */
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "@class")
 @TsModel
 public class AbstractStreamPipesEntity implements Serializable {
 
-	private static final long serialVersionUID = -8593749314663582071L;
+  private static final long serialVersionUID = -8593749314663582071L;
 
-	protected @SerializedName("_id") String elementId;
+  protected @SerializedName("_id") String elementId;
 
-	AbstractStreamPipesEntity() {
+  AbstractStreamPipesEntity() {
 
-	}
+  }
 
-	AbstractStreamPipesEntity(AbstractStreamPipesEntity other) {
-		this.elementId = other.getElementId();
-	}
+  AbstractStreamPipesEntity(AbstractStreamPipesEntity other) {
+    this.elementId = other.getElementId();
+  }
 
-	public String getElementId() {
-		return elementId;
-	}
+  public String getElementId() {
+    return elementId;
+  }
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		AbstractStreamPipesEntity that = (AbstractStreamPipesEntity) o;
-		return Objects.equals(elementId, that.elementId);
-	}
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AbstractStreamPipesEntity that = (AbstractStreamPipesEntity) o;
+    return Objects.equals(elementId, that.elementId);
+  }
 
 }

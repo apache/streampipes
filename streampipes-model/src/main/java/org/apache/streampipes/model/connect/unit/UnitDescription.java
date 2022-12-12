@@ -20,31 +20,31 @@ package org.apache.streampipes.model.connect.unit;
 
 public class UnitDescription {
 
-    private String resource;
-    private String label;
+  private String resource;
+  private String label;
 
-    public UnitDescription() {
-    }
+  public UnitDescription() {
+  }
 
-    public UnitDescription(String resource, String label) {
-        this.resource = resource;
-        this.label = label;
-    }
+  public UnitDescription(String resource, String label) {
+    this.resource = resource;
+    this.label = label;
+  }
 
-    public String getResource() {
-        return resource;
-    }
+  public String getResource() {
+    return resource;
+  }
 
-    public void setResource(String resource) {
-        this.resource = resource;
-    }
+  public void setResource(String resource) {
+    this.resource = resource;
+  }
 
-    public String getLabel() {
-        return label;
-    }
+  public String getLabel() {
+    return label;
+  }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+  public void setLabel(String label) {
+    this.label = label;
+  }
 
 }

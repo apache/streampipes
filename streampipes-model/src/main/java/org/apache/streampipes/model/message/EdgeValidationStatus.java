@@ -29,7 +29,7 @@ public class EdgeValidationStatus {
   }
 
   public EdgeValidationStatus(EdgeValidationStatusType validationStatusType,
-                       List<Notification> notifications) {
+                              List<Notification> notifications) {
     this.validationStatusType = validationStatusType;
     this.notifications = notifications;
   }

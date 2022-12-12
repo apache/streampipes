@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.model.client.user;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class Group {
   protected @SerializedName("_rev") String rev;
 
   @JsonIgnore
-  private String $type = "group";
+  private String type = "group";
 
   private String groupName;
 
@@ -73,11 +74,11 @@ public class Group {
     this.roles = roles;
   }
 
-  public String get$type() {
-    return $type;
+  public String getType() {
+    return type;
   }
 
-  public void set$type(String $type) {
-    this.$type = $type;
+  public void setType(String type) {
+    this.type = type;
   }
 }

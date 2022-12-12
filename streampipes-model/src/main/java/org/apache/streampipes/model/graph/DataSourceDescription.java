@@ -30,8 +30,13 @@ import java.util.List;
 /**
  * class that represents Semantic Event Producers.
  */
+
+
+/**
+ * @deprecated  As of release 0.90.0, replaced by {@link DataSourceDescription}
+ */
 @TsModel
-@Deprecated
+@Deprecated(since = "0.90.0", forRemoval = true)
 public class DataSourceDescription extends NamedStreamPipesEntity {
 
   private static final long serialVersionUID = 5607030219013954697L;
@@ -51,7 +56,8 @@ public class DataSourceDescription extends NamedStreamPipesEntity {
     this.spDataStreams.forEach(e -> e.setCategory(Arrays.asList(this.getElementId())));
   }
 
-  public DataSourceDescription(String uri, String name, String description, String iconUrl, List<SpDataStream> spDataStreams) {
+  public DataSourceDescription(String uri, String name, String description, String iconUrl,
+                               List<SpDataStream> spDataStreams) {
     super(uri, name, description, iconUrl);
     this.spDataStreams = spDataStreams;
     this.setAppId(uri);

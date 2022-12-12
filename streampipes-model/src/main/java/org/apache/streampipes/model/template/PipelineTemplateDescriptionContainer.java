@@ -22,7 +22,7 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PipelineTemplateDescriptionContainer extends UnnamedStreamPipesEntity  {
+public class PipelineTemplateDescriptionContainer extends UnnamedStreamPipesEntity {
 
   private List<PipelineTemplateDescription> list;
 

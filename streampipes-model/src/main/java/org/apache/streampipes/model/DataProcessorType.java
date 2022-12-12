@@ -18,55 +18,56 @@
 
 package org.apache.streampipes.model;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DataProcessorType {
 
-	FILTER("Filters and Thresholds", "b"),
-	BOOLEAN_OPERATOR("Boolean Operators", ""),
-	STRING_OPERATOR("Text/String Operators", ""),
-	COUNT_OPERATOR("Count Operators", ""),
-	AGGREGATE("Aggregation", ""),
-	ENRICH_TEXT("Text/NLP Operators", ""),
-	ENRICH("Enrichment", ""),
-	GEO("Geospatial Operations", ""),
-	IMAGE_PROCESSING("Image Processing", ""),
-	PATTERN_DETECT("Pattern Detection", ""),
-	ALGORITHM("Algorithm", ""),
-	VALUE_OBSERVER("Value Observation", ""),
-	STRUCTURE_ANALYTICS("Structure/Stream Analytics", ""),
-	TRANSFORM("Transformation", ""),
-	TIME("Time Operators", ""),
-	SCRIPTING("Scripting/Code", ""),
-	UNCATEGORIZED("Uncategorized", "");
-	
-	private String label;
-	private String description;
-	
-	DataProcessorType(String label, String description) {
-		this.label = label;
-		this.description = description;
-	}
+  FILTER("Filters and Thresholds", "b"),
+  BOOLEAN_OPERATOR("Boolean Operators", ""),
+  STRING_OPERATOR("Text/String Operators", ""),
+  COUNT_OPERATOR("Count Operators", ""),
+  AGGREGATE("Aggregation", ""),
+  ENRICH_TEXT("Text/NLP Operators", ""),
+  ENRICH("Enrichment", ""),
+  GEO("Geospatial Operations", ""),
+  IMAGE_PROCESSING("Image Processing", ""),
+  PATTERN_DETECT("Pattern Detection", ""),
+  ALGORITHM("Algorithm", ""),
+  VALUE_OBSERVER("Value Observation", ""),
+  STRUCTURE_ANALYTICS("Structure/Stream Analytics", ""),
+  TRANSFORM("Transformation", ""),
+  TIME("Time Operators", ""),
+  SCRIPTING("Scripting/Code", ""),
+  UNCATEGORIZED("Uncategorized", "");
 
-	public String getCode() {
-		return this.name();
-	}
+  private String label;
+  private String description;
 
-	public String getLabel() {
-		return label;
-	}
+  DataProcessorType(String label, String description) {
+    this.label = label;
+    this.description = description;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  @JsonCreator
+  public static AdapterType fromString(JsonNode json) {
+    return AdapterType.valueOf(json.get("code").asText());
+  }
 
-	@JsonCreator
-	public static AdapterType fromString(JsonNode json) {
-		return AdapterType.valueOf(json.get("code").asText());
-	}
+  public String getCode() {
+    return this.name();
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
@@ -34,6 +33,8 @@ import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,12 +144,12 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
     return config;
   }
 
-  public void addConfig(StaticProperty sp) {
-    this.config.add(sp);
-  }
-
   public void setConfig(List<StaticProperty> config) {
     this.config = config;
+  }
+
+  public void addConfig(StaticProperty sp) {
+    this.config.add(sp);
   }
 
   public String getAdapterType() {
@@ -207,10 +208,7 @@ public abstract class AdapterDescription extends NamedStreamPipesEntity {
 
   @Override
   public String toString() {
-    return "AdapterDescription{"
-        + ", elementId='" + elementId + '\''
-        + ", DOM='" + DOM + '\''
-        + '}';
+    return String.format("AdapterDescription{elementId= '%s', DOM= '%s'}", elementId, dom);
   }
 
   public long getCreatedAt() {

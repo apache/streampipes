@@ -21,7 +21,7 @@ package org.apache.streampipes.model.staticproperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
+    @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
 })
 public class OneOfStaticProperty extends SelectionStaticProperty {
 

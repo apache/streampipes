@@ -22,62 +22,62 @@ import org.apache.streampipes.commons.random.UUIDGenerator;
 
 public class InitialSettings {
 
-	private String adminEmail;
-	private String adminPassword;
-	private String initialServiceAccountName;
-	private String initialServiceAccountSecret;
-	private Boolean installPipelineElements;
-	private String initialAdminUserSid;
+  private String adminEmail;
+  private String adminPassword;
+  private String initialServiceAccountName;
+  private String initialServiceAccountSecret;
+  private Boolean installPipelineElements;
+  private String initialAdminUserSid;
 
-	public InitialSettings() {
-		this.initialAdminUserSid = UUIDGenerator.generateUuid();
-	}
+  public InitialSettings() {
+    this.initialAdminUserSid = UUIDGenerator.generateUuid();
+  }
 
-	public String getAdminPassword() {
-		return adminPassword;
-	}
+  public String getAdminPassword() {
+    return adminPassword;
+  }
 
-	public void setAdminPassword(String adminPassword) {
-		this.adminPassword = adminPassword;
-	}
+  public void setAdminPassword(String adminPassword) {
+    this.adminPassword = adminPassword;
+  }
 
-	public Boolean getInstallPipelineElements() {
-		return installPipelineElements;
-	}
+  public Boolean getInstallPipelineElements() {
+    return installPipelineElements;
+  }
 
-	public void setInstallPipelineElements(Boolean installPipelineElements) {
-		this.installPipelineElements = installPipelineElements;
-	}
+  public void setInstallPipelineElements(Boolean installPipelineElements) {
+    this.installPipelineElements = installPipelineElements;
+  }
 
-	public String getAdminEmail() {
-		return adminEmail;
-	}
+  public String getAdminEmail() {
+    return adminEmail;
+  }
 
-	public void setAdminEmail(String adminEmail) {
-		this.adminEmail = adminEmail;
-	}
+  public void setAdminEmail(String adminEmail) {
+    this.adminEmail = adminEmail;
+  }
 
-	public String getInitialServiceAccountName() {
-		return initialServiceAccountName;
-	}
+  public String getInitialServiceAccountName() {
+    return initialServiceAccountName;
+  }
 
-	public void setInitialServiceAccountName(String initialServiceAccountName) {
-		this.initialServiceAccountName = initialServiceAccountName;
-	}
+  public void setInitialServiceAccountName(String initialServiceAccountName) {
+    this.initialServiceAccountName = initialServiceAccountName;
+  }
 
-	public String getInitialServiceAccountSecret() {
-		return initialServiceAccountSecret;
-	}
+  public String getInitialServiceAccountSecret() {
+    return initialServiceAccountSecret;
+  }
 
-	public void setInitialServiceAccountSecret(String initialServiceAccountSecret) {
-		this.initialServiceAccountSecret = initialServiceAccountSecret;
-	}
+  public void setInitialServiceAccountSecret(String initialServiceAccountSecret) {
+    this.initialServiceAccountSecret = initialServiceAccountSecret;
+  }
 
-	public String getInitialAdminUserSid() {
-		return initialAdminUserSid;
-	}
+  public String getInitialAdminUserSid() {
+    return initialAdminUserSid;
+  }
 
-	public void setInitialAdminUserSid(String initialAdminUserSid) {
-		this.initialAdminUserSid = initialAdminUserSid;
-	}
+  public void setInitialAdminUserSid(String initialAdminUserSid) {
+    this.initialAdminUserSid = initialAdminUserSid;
+  }
 }

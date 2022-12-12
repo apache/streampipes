@@ -22,44 +22,44 @@ import java.io.InputStream;
 
 public class Context {
 
-	private InputStream inputStream;
-	private String baseUri;
-	
-	private String contextId;
-	
-	private RdfFormat rdfFormat;
+  private InputStream inputStream;
+  private String baseUri;
 
-	public InputStream getInputStream() {
-		return inputStream;
-	}
+  private String contextId;
 
-	public void setInputStream(InputStream inputStream) {
-		this.inputStream = inputStream;
-	}
+  private RdfFormat rdfFormat;
 
-	public String getBaseUri() {
-		return baseUri;
-	}
+  public InputStream getInputStream() {
+    return inputStream;
+  }
 
-	public void setBaseUri(String baseUri) {
-		this.baseUri = baseUri;
-	}
+  public void setInputStream(InputStream inputStream) {
+    this.inputStream = inputStream;
+  }
 
-	public String getContextId() {
-		return contextId;
-	}
+  public String getBaseUri() {
+    return baseUri;
+  }
 
-	public void setContextId(String contextId) {
-		this.contextId = contextId;
-	}
+  public void setBaseUri(String baseUri) {
+    this.baseUri = baseUri;
+  }
 
-	public RdfFormat getRdfFormat() {
-		return rdfFormat;
-	}
+  public String getContextId() {
+    return contextId;
+  }
 
-	public void setRdfFormat(RdfFormat rdfFormat) {
-		this.rdfFormat = rdfFormat;
-	}
+  public void setContextId(String contextId) {
+    this.contextId = contextId;
+  }
 
-	
+  public RdfFormat getRdfFormat() {
+    return rdfFormat;
+  }
+
+  public void setRdfFormat(RdfFormat rdfFormat) {
+    this.rdfFormat = rdfFormat;
+  }
+
+
 }

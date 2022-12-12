@@ -37,7 +37,7 @@ public class CategoryStorageImpl extends AbstractDao<Category> implements ICateg
 
   @Override
   public String storeCategory(Category category) {
-    return persist(category).b;
+    return persist(category).v;
   }
 
   @Override

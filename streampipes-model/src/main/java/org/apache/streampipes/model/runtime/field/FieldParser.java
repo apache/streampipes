@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.model.runtime.field;
 
-public interface FieldParser<FV, T> {
+public interface FieldParser<V, T> {
 
-  T parseField(FV value);
+  T parseField(V value);
 }

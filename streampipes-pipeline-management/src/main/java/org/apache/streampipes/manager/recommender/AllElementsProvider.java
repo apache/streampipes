@@ -47,7 +47,7 @@ public class AllElementsProvider {
   public NamedStreamPipesEntity findElement(String domId) {
     return this.allElements
             .stream()
-            .filter(p -> p.getDOM().equals(domId))
+            .filter(p -> p.getDom().equals(domId))
             .findFirst()
             .orElseThrow(IllegalArgumentException::new);
   }
