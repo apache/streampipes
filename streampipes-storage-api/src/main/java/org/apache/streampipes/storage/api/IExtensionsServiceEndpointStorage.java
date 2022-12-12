@@ -24,9 +24,9 @@ import java.util.List;
 
 public interface IExtensionsServiceEndpointStorage {
 
-    void addExtensionsServiceEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint);
+  void addExtensionsServiceEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint);
 
-    void removeExtensionsServiceEndpoint(String extensionServiceEndpointId);
+  void removeExtensionsServiceEndpoint(String extensionServiceEndpointId);
 
-    List<ExtensionsServiceEndpoint> getExtensionsServiceEndpoints();
+  List<ExtensionsServiceEndpoint> getExtensionsServiceEndpoints();
 }

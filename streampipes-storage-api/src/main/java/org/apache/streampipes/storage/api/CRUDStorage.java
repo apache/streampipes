@@ -19,15 +19,15 @@ package org.apache.streampipes.storage.api;
 
 import java.util.List;
 
-public interface CRUDStorage<ID, T> {
+public interface CRUDStorage<K, V> {
 
-  List<T> getAll();
+  List<V> getAll();
 
-  void createElement(T element);
+  void createElement(V element);
 
-  T getElementById(ID id);
+  V getElementById(K id);
 
-  T updateElement(T element);
+  V updateElement(V element);
 
-  void deleteElement(T element);
+  void deleteElement(V element);
 }

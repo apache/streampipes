@@ -24,13 +24,13 @@ import java.util.List;
 
 public interface IDataLakeStorage {
 
-    boolean storeDataLakeMeasure(DataLakeMeasure measure);
+  boolean storeDataLakeMeasure(DataLakeMeasure measure);
 
-    List<DataLakeMeasure> getAllDataLakeMeasures();
+  List<DataLakeMeasure> getAllDataLakeMeasures();
 
-    DataLakeMeasure findOne(String id);
+  DataLakeMeasure findOne(String id);
 
-    void updateDataLakeMeasure(DataLakeMeasure measure);
+  void updateDataLakeMeasure(DataLakeMeasure measure);
 
-    void deleteDataLakeMeasure(String id);
+  void deleteDataLakeMeasure(String id);
 }

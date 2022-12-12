@@ -18,15 +18,15 @@
 
 package org.apache.streampipes.storage.api;
 
-import java.util.List;
-
 import org.apache.streampipes.model.client.ontology.Context;
+
+import java.util.List;
 
 public interface IOntologyContextStorage {
 
-	List<String> getAvailableContexts();
-	
-	boolean addContext(Context context);
-	
-	boolean deleteContext(String contextId);
+  List<String> getAvailableContexts();
+
+  boolean addContext(Context context);
+
+  boolean deleteContext(String contextId);
 }
