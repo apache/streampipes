@@ -19,7 +19,6 @@
 # ⚡️ Quickstart
 
 As a quick example, we demonstrate how to set up and configure a StreamPipes client.
-In addition, we will get the available data lake measures out of StreamPipes.
 
 ```python
 >>> from streampipes_client.client import StreamPipesClient
@@ -37,19 +36,13 @@ In addition, we will get the available data lake measures out of StreamPipes.
 ...)
 
 >>> client = StreamPipesClient(client_config=config)
+>>> client.describe()
 
-# get all available datat lake measures
->>> measures = client.dataLakeMeasureApi.all()
-
-# get amount of retrieved measures
->>> len(measures)
-1
-
-# inspect the data lake measures as pandas dataframe
->>> measures.to_pandas()
-    measure_name timestamp_field  ... pipeline_is_running num_event_properties
-0           test   s0::timestamp  ...               False                    2
-[1 rows x 6 columns]
+Hi there!
+You are connected to a StreamPipes instance running at http://localhost:80.
+The following StreamPipes resources are available with this client:
+6x DataStreams
+1x DataLakeMeasures
 ```
 <br>
 Alternatively, you can provide your credentials via environment variables.

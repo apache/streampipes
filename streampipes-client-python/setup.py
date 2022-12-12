@@ -60,6 +60,7 @@ docs_packages = [
     "mkdocs-gen-files>=0.3.5",
     "mkdocs-literate-nav>=0.4.1",
     "numpydoc>=1.2",
+    "mkdocs-jupyter>=0.22.0 "
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))

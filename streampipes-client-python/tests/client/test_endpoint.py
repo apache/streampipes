@@ -17,8 +17,9 @@
 
 import json
 from copy import deepcopy
+from typing import Dict, List
 from unittest import TestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, call, patch
 
 from pydantic import ValidationError
 from requests import HTTPError
@@ -30,6 +31,7 @@ from streampipes_client.model.container.resource_container import (
     StreamPipesDataModelError,
     StreamPipesResourceContainerJSONError,
 )
+from streampipes_client.model.resource import DataStream
 
 
 class TestStreamPipesEndpoints(TestCase):
@@ -89,7 +91,7 @@ class TestStreamPipesEndpoints(TestCase):
             }
         ]
 
-        self.data_stream_all = [
+        self.data_stream_all: List[Dict] = [
             {
                 "elementId": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "name": "Test",
@@ -111,7 +113,8 @@ class TestStreamPipesEndpoints(TestCase):
                             "brokerHostname": "nats",
                             "topicDefinition": {
                                 "elementId": "urn:streampipes.apache.org:spi:simpletopicdefinition:QzCiFI",
-                                "actualTopicName": "org.apache.streampipes.connect.fc22b8f6-698a-4127-aa71-e11854dc57c5",
+                                "actualTopicName": "org.apache.streampipes.connect."
+                                "fc22b8f6-698a-4127-aa71-e11854dc57c5",
                             },
                             "port": 4222,
                         }
@@ -168,7 +171,8 @@ class TestStreamPipesEndpoints(TestCase):
                 "measurementCapability": None,
                 "measurementObject": None,
                 "index": 0,
-                "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect.iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
+                "correspondingAdapterId": "urn:streampipes.apache.org:spi:org.apache.streampipes.connect."
+                "iiot.adapters.simulator.machine:11934d37-135b-4ef6-b5f1-4f520cc81a43",
                 "category": None,
                 "uri": "urn:streampipes.apache.org:eventstream:uPDKLI",
                 "dom": None,
@@ -176,12 +180,40 @@ class TestStreamPipesEndpoints(TestCase):
         ]
 
         self.data_stream_all_json = json.dumps(self.data_stream_all)
+        self.data_stream_get = self.data_stream_all[0]
 
         self.data_lake_measure_all_json = json.dumps(self.data_lake_measure_all)
         self.data_lake_measure_all_json_error = json.dumps(self.data_lake_measure_all[0])
         self.dlm_all_manipulated = deepcopy(self.data_lake_measure_all)
         self.dlm_all_manipulated[0]["measureName"] = False
         self.data_lake_measure_all_json_validation = json.dumps(self.dlm_all_manipulated)
+
+    @patch("streampipes_client.client.client.Session", autospec=True)
+    def test_endpoint_get(self, http_session: MagicMock):
+        http_session_mock = MagicMock()
+        http_session_mock.get.return_value.json.return_value = self.data_stream_get
+        http_session.return_value = http_session_mock
+
+        client = StreamPipesClient(
+            client_config=StreamPipesClientConfig(
+                credential_provider=StreamPipesApiKeyCredentials(username="user", api_key="key"),
+                host_address="localhost",
+            )
+        )
+
+        result = client.dataStreamApi.get(identifier="urn:streampipes.apache.org:eventstream:uPDKLI")
+
+        http_session.assert_has_calls(
+            calls=[
+                call().get(
+                    url="https://localhost:80/streampipes-backend/api/v2/streams/urn:streampipes."
+                    "apache.org:eventstream:uPDKLI"
+                )
+            ],
+            any_order=True,
+        )
+        self.assertTrue(isinstance(result, DataStream))
+        self.assertEqual(result.dict(by_alias=True), self.data_stream_get)
 
     @patch("streampipes_client.client.client.Session", autospec=True)
     def test_endpoint_data_stream_happy_path(self, http_session: MagicMock):
@@ -205,7 +237,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
         self.assertEqual(
             "Test",
-            result[0].name,
+            result[0].name,  # type: ignore
         )
         self.assertEqual(
             self.data_stream_all_json,
@@ -268,7 +300,7 @@ class TestStreamPipesEndpoints(TestCase):
         )
         self.assertEqual(
             "test",
-            result[0].measure_name,
+            result[0].measure_name,  # type: ignore
         )
         self.assertEqual(
             self.data_lake_measure_all_json,
