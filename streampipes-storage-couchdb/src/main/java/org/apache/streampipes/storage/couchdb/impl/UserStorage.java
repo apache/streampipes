@@ -24,6 +24,7 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.dao.CrudViewDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,19 +52,19 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
   @Override
   public List<UserAccount> getAllUserAccounts() {
     return getAllUsers()
-            .stream()
-            .filter(u -> u instanceof UserAccount)
-            .map(u -> (UserAccount) u)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(u -> u instanceof UserAccount)
+        .map(u -> (UserAccount) u)
+        .collect(Collectors.toList());
   }
 
   @Override
   public List<ServiceAccount> getAllServiceAccounts() {
     return getAllUsers()
-            .stream()
-            .filter(u -> u instanceof ServiceAccount)
-            .map(u -> (ServiceAccount) u)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(u -> u instanceof ServiceAccount)
+        .map(u -> (ServiceAccount) u)
+        .collect(Collectors.toList());
   }
 
   @Override

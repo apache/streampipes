@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.storage.couchdb.utils;
 
+import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
+
 import org.apache.http.client.fluent.Request;
 import org.apache.http.entity.ContentType;
-import org.apache.streampipes.storage.couchdb.serializer.GsonSerializer;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 
@@ -188,13 +189,13 @@ public class Utils {
 
   private static CouchDbProperties props(String dbname) {
     return new CouchDbProperties(
-      dbname,
-      true,
-      CouchDbConfig.INSTANCE.getProtocol(),
-      CouchDbConfig.INSTANCE.getHost(),
-      CouchDbConfig.INSTANCE.getPort(),
-      null,
-      null);
+        dbname,
+        true,
+        CouchDbConfig.INSTANCE.getProtocol(),
+        CouchDbConfig.INSTANCE.getHost(),
+        CouchDbConfig.INSTANCE.getPort(),
+        null,
+        null);
   }
 
   public static String getDatabaseRoute(String databaseName) {
@@ -203,8 +204,8 @@ public class Utils {
 
   private static String toUrl() {
     return CouchDbConfig.INSTANCE.getProtocol()
-      + "://" + CouchDbConfig.INSTANCE.getHost()
-      + ":" + CouchDbConfig.INSTANCE.getPort();
+        + "://" + CouchDbConfig.INSTANCE.getHost()
+        + ":" + CouchDbConfig.INSTANCE.getPort();
   }
 
   public static Request getRequest(String route) {
@@ -227,7 +228,7 @@ public class Utils {
 
   private static Request append(Request req) {
     req.connectTimeout(1000)
-      .socketTimeout(100000);
+        .socketTimeout(100000);
 
     return req;
   }

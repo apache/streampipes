@@ -44,7 +44,7 @@ public class UserGroupStorageImpl extends CrudDao implements IUserGroupStorage {
 
   @Override
   public Group getElementById(String s) {
-   return findWithNullIfEmpty(s, Group.class);
+    return findWithNullIfEmpty(s, Group.class);
   }
 
   @Override

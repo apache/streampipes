@@ -38,8 +38,8 @@ public class FindAllCommand<T> extends DbCommand<List<T>, T> {
   @Override
   protected List<T> executeCommand(CouchDbClient couchDbClient) {
     View view = couchDbClient
-            .view(viewName)
-            .includeDocs(true);
+        .view(viewName)
+        .includeDocs(true);
 
     List<T> allResults = view.query(clazz);
 

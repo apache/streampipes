@@ -17,29 +17,16 @@
  */
 package org.apache.streampipes.serializers.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.test.generator.template.PipelineElementTemplateHelpers;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestJacksonSerializer {
-
-  @Test
-  public void testPipelineElementTemplateSerialization() {
-    PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
-
-    try {
-      String json = JacksonSerializer.getObjectMapper().writeValueAsString(template);
-      PipelineElementTemplate template2 = JacksonSerializer.getObjectMapper().readValue(json, PipelineElementTemplate.class);
-      assertions(template2);
-      assertEquals(2, template2.getTemplateConfigs().get("test-key-2").getValue());
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
-  }
 
   public static void assertions(PipelineElementTemplate template) {
     Assert.assertEquals("name", template.getTemplateName());
@@ -50,5 +37,20 @@ public class TestJacksonSerializer {
     Assert.assertTrue(template.getTemplateConfigs().get("test-key").isDisplayed());
     Assert.assertTrue(template.getTemplateConfigs().get("test-key-2").isEditable());
     Assert.assertFalse(template.getTemplateConfigs().get("test-key-2").isDisplayed());
+  }
+
+  @Test
+  public void testPipelineElementTemplateSerialization() {
+    PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
+
+    try {
+      String json = JacksonSerializer.getObjectMapper().writeValueAsString(template);
+      PipelineElementTemplate template2 =
+          JacksonSerializer.getObjectMapper().readValue(json, PipelineElementTemplate.class);
+      assertions(template2);
+      assertEquals(2, template2.getTemplateConfigs().get("test-key-2").getValue());
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    }
   }
 }

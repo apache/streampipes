@@ -25,7 +25,8 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElementTemplate> implements IPipelineElementTemplateStorage {
+public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElementTemplate>
+    implements IPipelineElementTemplateStorage {
 
   public PipelineElementTemplateStorageImpl() {
     super(Utils::getCouchDbPipelineElementTemplateClient, PipelineElementTemplate.class);
@@ -60,8 +61,8 @@ public class PipelineElementTemplateStorageImpl extends AbstractDao<PipelineElem
   @Override
   public List<PipelineElementTemplate> getPipelineElementTemplatesforAppId(String appId) {
     return getAll()
-            .stream()
-            .filter(template -> template.getBasePipelineElementAppId().equals(appId))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(template -> template.getBasePipelineElementAppId().equals(appId))
+        .collect(Collectors.toList());
   }
 }

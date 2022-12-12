@@ -18,6 +18,7 @@
 package org.apache.streampipes.storage.couchdb.dao;
 
 import org.apache.streampipes.model.Tuple2;
+
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.Response;
 

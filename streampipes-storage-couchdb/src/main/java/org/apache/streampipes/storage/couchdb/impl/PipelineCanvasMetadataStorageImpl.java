@@ -25,7 +25,7 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 import java.util.List;
 
 public class PipelineCanvasMetadataStorageImpl extends AbstractDao<PipelineCanvasMetadata>
-        implements IPipelineCanvasMetadataStorage {
+    implements IPipelineCanvasMetadataStorage {
 
   public PipelineCanvasMetadataStorageImpl() {
     super(Utils::getCouchDbPipelineCanvasMetadataClient, PipelineCanvasMetadata.class);
@@ -61,9 +61,9 @@ public class PipelineCanvasMetadataStorageImpl extends AbstractDao<PipelineCanva
   public PipelineCanvasMetadata getPipelineCanvasMetadataForPipeline(String pipelineId) {
     // TODO add CouchDB view
     return findAll()
-            .stream()
-            .filter(p -> p.getPipelineId().equals(pipelineId))
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+        .stream()
+        .filter(p -> p.getPipelineId().equals(pipelineId))
+        .findFirst()
+        .orElseThrow(IllegalArgumentException::new);
   }
 }

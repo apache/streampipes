@@ -19,22 +19,13 @@ package org.apache.streampipes.storage.couchdb.serializer;
 
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 import org.apache.streampipes.test.generator.template.PipelineElementTemplateHelpers;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestGsonSerializer {
-  @Test
-  public void testPipelineElementTemplateSerialization() {
-    PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
-
-    String json = GsonSerializer.getGsonWithIds().toJson(template);
-    PipelineElementTemplate template2 = GsonSerializer.getGsonWithIds().fromJson(json, PipelineElementTemplate.class);
-    assertions(template2);
-    assertEquals(2.0, template2.getTemplateConfigs().get("test-key-2").getValue());
-  }
-
   public static void assertions(PipelineElementTemplate template) {
     Assert.assertEquals("name", template.getTemplateName());
     Assert.assertEquals("description", template.getTemplateDescription());
@@ -44,5 +35,15 @@ public class TestGsonSerializer {
     Assert.assertTrue(template.getTemplateConfigs().get("test-key").isDisplayed());
     Assert.assertTrue(template.getTemplateConfigs().get("test-key-2").isEditable());
     Assert.assertFalse(template.getTemplateConfigs().get("test-key-2").isDisplayed());
+  }
+
+  @Test
+  public void testPipelineElementTemplateSerialization() {
+    PipelineElementTemplate template = PipelineElementTemplateHelpers.makePipelineElementTemplate();
+
+    String json = GsonSerializer.getGsonWithIds().toJson(template);
+    PipelineElementTemplate template2 = GsonSerializer.getGsonWithIds().fromJson(json, PipelineElementTemplate.class);
+    assertions(template2);
+    assertEquals(2.0, template2.getTemplateConfigs().get("test-key-2").getValue());
   }
 }

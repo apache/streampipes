@@ -18,13 +18,17 @@
 
 package org.apache.streampipes.storage.couchdb.serializer;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.apache.streampipes.model.*;
+import org.apache.streampipes.model.AdapterType;
+import org.apache.streampipes.model.DataProcessorType;
+import org.apache.streampipes.model.DataSinkType;
+import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.client.user.Principal;
-import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
@@ -32,7 +36,12 @@ import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.RenameRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.*;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ChangeDatatypeTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.CorrectionValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.TimestampTranfsformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.message.Message;
@@ -45,6 +54,11 @@ import org.apache.streampipes.model.schema.ValueSpecification;
 import org.apache.streampipes.model.staticproperty.MappingProperty;
 import org.apache.streampipes.model.staticproperty.StaticProperty;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.net.URI;
 
 public class GsonSerializer {
@@ -52,7 +66,8 @@ public class GsonSerializer {
   public static GsonBuilder getAdapterGsonBuilder() {
     GsonBuilder builder = getGsonBuilder();
     builder.registerTypeHierarchyAdapter(AdapterDescription.class, new AdapterSerializer());
-    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
+    builder.registerTypeAdapter(TransformationRuleDescription.class,
+        new JsonLdSerializer<TransformationRuleDescription>());
 //    builder.registerTypeHierarchyAdapter(TransformationRuleDescription.class, new AdapterSerializer());
 
     return builder;
@@ -87,35 +102,49 @@ public class GsonSerializer {
     builder.registerTypeAdapter(DataProcessorType.class, new EpaTypeAdapter());
     builder.registerTypeAdapter(URI.class, new UriSerializer());
     builder.registerTypeAdapter(Frequency.class, new JsonLdSerializer<Frequency>());
-    builder.registerTypeAdapter(EventPropertyQualityDefinition.class, new JsonLdSerializer<EventPropertyQualityDefinition>());
-    builder.registerTypeAdapter(EventStreamQualityDefinition.class, new JsonLdSerializer<EventStreamQualityDefinition>());
+    builder.registerTypeAdapter(EventPropertyQualityDefinition.class,
+        new JsonLdSerializer<EventPropertyQualityDefinition>());
+    builder.registerTypeAdapter(EventStreamQualityDefinition.class,
+        new JsonLdSerializer<EventStreamQualityDefinition>());
     builder.registerTypeAdapter(TopicDefinition.class, new JsonLdSerializer<TopicDefinition>());
-    builder.registerTypeAdapter(TransformationRuleDescription.class, new JsonLdSerializer<TransformationRuleDescription>());
+    builder.registerTypeAdapter(TransformationRuleDescription.class,
+        new JsonLdSerializer<TransformationRuleDescription>());
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataStream.class, "sourceType")
-            .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet")
-            .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
+        .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet")
+        .registerSubtype(SpDataStream.class, "org.apache.streampipes.model.SpDataStream"));
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(SpDataSet.class, "sourceType")
-                    .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet"));
+        .registerSubtype(SpDataSet.class, "org.apache.streampipes.model.SpDataSet"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(TransformationRuleDescription.class, "sourceType")
-            .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")
-            .registerSubtype(MoveRuleDescription.class, "org.apache.streampipes.model.MoveRuleDescription")
-            .registerSubtype(DeleteRuleDescription.class, "org.apache.streampipes.model.DeleteRuleDescription")
-            .registerSubtype(CreateNestedRuleDescription.class, "org.apache.streampipes.model.CreateNestedRuleDescription")
-            .registerSubtype(RemoveDuplicatesTransformationRuleDescription.class, "org.apache.streampipes.model.RemoveDuplicatesRuleDescription")
-            .registerSubtype(AddTimestampRuleDescription.class, "org.apache.streampipes.model.AddTimestampRuleDescription")
-            .registerSubtype(AddValueTransformationRuleDescription.class, "org.apache.streampipes.model.AddValueTransformationRuleDescription")
-            .registerSubtype(UnitTransformRuleDescription.class, "org.apache.streampipes.model.UnitTransformRuleDescription")
-            .registerSubtype(TimestampTranfsformationRuleDescription.class, "org.apache.streampipes.model.TimestampTranfsformationRuleDescription")
-            .registerSubtype(EventRateTransformationRuleDescription.class, "org.apache.streampipes.model.EventRateTransformationRuleDescription")
-            .registerSubtype(ChangeDatatypeTransformationRuleDescription.class, "org.apache.streampipes.model.ChangeDatatypeTransformationRuleDescription")
-            .registerSubtype(CorrectionValueTransformationRuleDescription.class, "org.apache.streampipes.model.CorrectionValueTransformationRuleDescription"));
+        .registerSubtype(RenameRuleDescription.class, "org.apache.streampipes.model.RenameRuleDescription")
+        .registerSubtype(MoveRuleDescription.class, "org.apache.streampipes.model.MoveRuleDescription")
+        .registerSubtype(DeleteRuleDescription.class, "org.apache.streampipes.model.DeleteRuleDescription")
+        .registerSubtype(CreateNestedRuleDescription.class, "org.apache.streampipes.model.CreateNestedRuleDescription")
+        .registerSubtype(RemoveDuplicatesTransformationRuleDescription.class,
+            "org.apache.streampipes.model.RemoveDuplicatesRuleDescription")
+        .registerSubtype(AddTimestampRuleDescription.class, "org.apache.streampipes.model.AddTimestampRuleDescription")
+        .registerSubtype(AddValueTransformationRuleDescription.class,
+            "org.apache.streampipes.model.AddValueTransformationRuleDescription")
+        .registerSubtype(UnitTransformRuleDescription.class,
+            "org.apache.streampipes.model.UnitTransformRuleDescription")
+        .registerSubtype(TimestampTranfsformationRuleDescription.class,
+            "org.apache.streampipes.model.TimestampTranfsformationRuleDescription")
+        .registerSubtype(EventRateTransformationRuleDescription.class,
+            "org.apache.streampipes.model.EventRateTransformationRuleDescription")
+        .registerSubtype(ChangeDatatypeTransformationRuleDescription.class,
+            "org.apache.streampipes.model.ChangeDatatypeTransformationRuleDescription")
+        .registerSubtype(CorrectionValueTransformationRuleDescription.class,
+            "org.apache.streampipes.model.CorrectionValueTransformationRuleDescription"));
 
     builder.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(AdapterDescription.class, "type")
-            .registerSubtype(SpecificAdapterSetDescription.class, "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription")
-            .registerSubtype(SpecificAdapterStreamDescription.class, "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
-            .registerSubtype(GenericAdapterSetDescription.class, "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription")
-            .registerSubtype(GenericAdapterStreamDescription.class, "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription"));
+        .registerSubtype(SpecificAdapterSetDescription.class,
+            "org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription")
+        .registerSubtype(SpecificAdapterStreamDescription.class,
+            "org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription")
+        .registerSubtype(GenericAdapterSetDescription.class,
+            "org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription")
+        .registerSubtype(GenericAdapterStreamDescription.class,
+            "org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription"));
 
     builder.setPrettyPrinting();
     return builder;

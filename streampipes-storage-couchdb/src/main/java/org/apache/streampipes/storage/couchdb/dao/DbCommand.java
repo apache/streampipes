@@ -21,22 +21,22 @@ import org.lightcouch.CouchDbClient;
 
 import java.util.function.Supplier;
 
-public abstract class DbCommand<T, S> {
+public abstract class DbCommand<K, V> {
 
+  protected Class<V> clazz;
   private Supplier<CouchDbClient> couchDbClientSupplier;
-  protected Class<S> clazz;
 
-  public DbCommand(Supplier<CouchDbClient> couchDbClientSupplier, Class<S> clazz) {
-   this.couchDbClientSupplier = couchDbClientSupplier;
+  public DbCommand(Supplier<CouchDbClient> couchDbClientSupplier, Class<V> clazz) {
+    this.couchDbClientSupplier = couchDbClientSupplier;
     this.clazz = clazz;
   }
 
-  protected abstract T executeCommand(CouchDbClient couchDbClient);
+  protected abstract K executeCommand(CouchDbClient couchDbClient);
 
 
-  public T execute() {
+  public K execute() {
     CouchDbClient couchDbClient = couchDbClientSupplier.get();
-    T result = executeCommand(couchDbClient);
+    K result = executeCommand(couchDbClient);
     couchDbClient.shutdown();
 
     return result;

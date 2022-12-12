@@ -24,9 +24,9 @@ import java.util.List;
 
 public interface IVisualizationStorage {
 
-    List<RunningVisualization> getRunningVisualizations();
+  List<RunningVisualization> getRunningVisualizations();
 
-    void storeVisualization(RunningVisualization vizualization);
+  void storeVisualization(RunningVisualization vizualization);
 
-    void deleteVisualization(String pipelineId);
+  void deleteVisualization(String pipelineId);
 }
