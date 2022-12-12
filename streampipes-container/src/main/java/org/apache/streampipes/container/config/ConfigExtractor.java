@@ -26,12 +26,12 @@ public class ConfigExtractor implements Serializable {
 
   private SpConfig config;
 
-  public static ConfigExtractor from(String serviceGroup) {
-    return new ConfigExtractor(serviceGroup);
-  }
-
   private ConfigExtractor(String serviceGroup) {
     this.config = new ConsulSpConfig(serviceGroup);
+  }
+
+  public static ConfigExtractor from(String serviceGroup) {
+    return new ConfigExtractor(serviceGroup);
   }
 
   public SpConfig getConfig() {

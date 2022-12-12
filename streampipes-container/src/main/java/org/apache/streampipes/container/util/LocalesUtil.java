@@ -23,7 +23,7 @@ public class LocalesUtil {
 
   public static String makePath(NamedStreamPipesEntity desc, String assetAppendix) {
     return desc.getAppId()
-            + "/"
-            + assetAppendix;
+        + "/"
+        + assetAppendix;
   }
 }

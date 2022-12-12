@@ -20,9 +20,12 @@ package org.apache.streampipes.container.model;
 
 public interface PeConfig {
 
-    String getId();
-    String getHost();
-    int getPort();
-    String getName();
+  String getId();
+
+  String getHost();
+
+  int getPort();
+
+  String getName();
 
 }

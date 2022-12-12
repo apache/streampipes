@@ -25,6 +25,7 @@ import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +39,6 @@ public class SpServiceDefinitionBuilder {
   private SpServiceDefinition serviceDefinition;
   //private SpConfig config;
 
-  public static SpServiceDefinitionBuilder create(String serviceGroup,
-                                                  String serviceName,
-                                                  String serviceDescription,
-                                                  Integer defaultPort) {
-    return new SpServiceDefinitionBuilder(serviceGroup, serviceName, serviceDescription, defaultPort);
-  }
-
   private SpServiceDefinitionBuilder(String serviceGroup,
                                      String serviceName,
                                      String serviceDescription,
@@ -55,6 +49,13 @@ public class SpServiceDefinitionBuilder {
     this.serviceDefinition.setServiceDescription(serviceDescription);
     this.serviceDefinition.setDefaultPort(defaultPort);
     //this.config = new ConsulSpConfig(serviceGroup);
+  }
+
+  public static SpServiceDefinitionBuilder create(String serviceGroup,
+                                                  String serviceName,
+                                                  String serviceDescription,
+                                                  Integer defaultPort) {
+    return new SpServiceDefinitionBuilder(serviceGroup, serviceName, serviceDescription, defaultPort);
   }
 
   public SpServiceDefinitionBuilder withHostname(String hostname) {
@@ -137,7 +138,8 @@ public class SpServiceDefinitionBuilder {
     this.serviceDefinition.addSpecificAdapters(other.getSpecificAdapters());
     other.getKvConfigs().values().forEach(value -> {
       if (this.serviceDefinition.getKvConfigs().containsKey(value.getKey())) {
-        LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.", value.getKey());
+        LOG.warn("Config key {} already exists and will be overridden by merge, which might lead to strange results.",
+            value.getKey());
       }
       this.serviceDefinition.addConfig(value);
     });

@@ -49,10 +49,10 @@ public class WelcomePage {
 
   private WelcomePageGenerator getWelcomePageGenerator() {
     return new WelcomePageGenerator(DeclarersSingleton
-            .getInstance()
-            .getBaseUri(), DeclarersSingleton
-            .getInstance()
-            .getDeclarers()
-            .values());
+        .getInstance()
+        .getBaseUri(), DeclarersSingleton
+        .getInstance()
+        .getDeclarers()
+        .values());
   }
 }

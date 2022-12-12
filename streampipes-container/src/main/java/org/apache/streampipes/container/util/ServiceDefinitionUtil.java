@@ -35,9 +35,9 @@ public class ServiceDefinitionUtil {
 
   public static List<SpServiceTag> extractAppIds(Collection<Declarer<?>> declarers) {
     return declarers
-            .stream()
-            .map(d -> SpServiceTag.create(getPrefix(d.declareModel()), d.declareModel().getAppId()))
-            .collect(Collectors.toList());
+        .stream()
+        .map(d -> SpServiceTag.create(getPrefix(d.declareModel()), d.declareModel().getAppId()))
+        .collect(Collectors.toList());
   }
 
   private static SpServiceTagPrefix getPrefix(NamedStreamPipesEntity entity) {
@@ -54,15 +54,15 @@ public class ServiceDefinitionUtil {
 
   public static List<SpServiceTag> extractAppIdsFromAdapters(Collection<IAdapter> adapters) {
     return adapters
-            .stream()
-            .map(d -> SpServiceTag.create(SpServiceTagPrefix.ADAPTER, d.declareModel().getAppId()))
-            .collect(Collectors.toList());
+        .stream()
+        .map(d -> SpServiceTag.create(SpServiceTagPrefix.ADAPTER, d.declareModel().getAppId()))
+        .collect(Collectors.toList());
   }
 
   public static List<SpServiceTag> extractAppIdsFromProtocols(Collection<IProtocol> protocols) {
     return protocols
-            .stream()
-            .map(p -> SpServiceTag.create(SpServiceTagPrefix.ADAPTER, p.declareModel().getAppId()))
-            .collect(Collectors.toList());
+        .stream()
+        .map(p -> SpServiceTag.create(SpServiceTagPrefix.ADAPTER, p.declareModel().getAppId()))
+        .collect(Collectors.toList());
   }
 }

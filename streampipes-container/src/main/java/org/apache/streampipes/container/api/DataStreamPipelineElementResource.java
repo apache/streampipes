@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.container.api;
 
-import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.declarer.DataSetDeclarer;
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
@@ -27,9 +26,17 @@ import org.apache.streampipes.container.init.RunningDatasetInstances;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -47,8 +54,8 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
   public javax.ws.rs.core.Response getAssets(@PathParam("streamId") String streamId) {
     try {
       return ok(new AssetZipGenerator(streamId,
-              getById(streamId)
-                      .getIncludedAssets()).makeZip());
+          getById(streamId)
+              .getIncludedAssets()).makeZip());
     } catch (IOException e) {
       e.printStackTrace();
       return javax.ws.rs.core.Response.status(500).build();
@@ -60,20 +67,21 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   public javax.ws.rs.core.Response invokeRuntime(@PathParam("streamId") String streamId, String
-          payload) {
+      payload) {
     DataStreamDeclarer streamDeclarer = getDeclarerById(streamId);
 
     try {
       SpDataSet dataSet = JacksonSerializer.getObjectMapper().readValue(payload, SpDataSet.class);
       String runningInstanceId = dataSet.getDatasetInvocationId();
-      RunningDatasetInstances.INSTANCE.add(runningInstanceId, dataSet, (DataSetDeclarer) streamDeclarer.getClass().newInstance());
+      RunningDatasetInstances.INSTANCE.add(runningInstanceId, dataSet,
+          (DataSetDeclarer) streamDeclarer.getClass().newInstance());
       RunningDatasetInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(dataSet, ()
-              -> {
+          -> {
         // TODO notify
       });
       return ok(new Response(runningInstanceId, true));
-    } catch (IOException | InstantiationException |
-            IllegalAccessException e) {
+    } catch (IOException | InstantiationException
+             | IllegalAccessException e) {
       e.printStackTrace();
       return ok(new Response("", false, e.getMessage()));
     }
@@ -99,6 +107,7 @@ public class DataStreamPipelineElementResource extends AbstractPipelineElementRe
       return ok(resp);
     }
 
-    return ok(new Response(runningInstanceId, false, "Could not find the running instance with id: " + runningInstanceId));
+    return ok(
+        new Response(runningInstanceId, false, "Could not find the running instance with id: " + runningInstanceId));
   }
 }
