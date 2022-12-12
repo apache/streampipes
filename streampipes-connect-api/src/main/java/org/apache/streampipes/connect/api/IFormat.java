@@ -26,24 +26,24 @@ import java.util.Map;
 
 public interface IFormat {
 
-    IFormat getInstance(FormatDescription formatDescription);
+  IFormat getInstance(FormatDescription formatDescription);
 
-    FormatDescription declareModel();
+  FormatDescription declareModel();
 
-    String getId();
+  String getId();
 
-    /**
-     * This method parses a byte[] and transforms the event object into a serialized version of the internal
-     * representation
-     */
-    Map<String, Object> parse(byte[] object) throws ParseException;
+  /**
+   * This method parses a byte[] and transforms the event object into a serialized version of the internal
+   * representation
+   */
+  Map<String, Object> parse(byte[] object) throws ParseException;
 
-    /**
-     * Needed for example for the CSV format in iterative protocols to ensure header is not send again
-     * When the reset is not required it can be ignored
-     */
-    default void reset() {
+  /**
+   * Needed for example for the CSV format in iterative protocols to ensure header is not send again
+   * When the reset is not required it can be ignored
+   */
+  default void reset() {
 
-    }
+  }
 
 }

@@ -19,14 +19,14 @@
 package org.apache.streampipes.connect.api.exception;
 
 public class AdapterException extends Exception {
-    public AdapterException() {}
+  public AdapterException() {
+  }
 
-    public AdapterException(String message)
-    {
-        super(message);
-    }
+  public AdapterException(String message) {
+    super(message);
+  }
 
-    public AdapterException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public AdapterException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

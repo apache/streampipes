@@ -19,5 +19,5 @@
 package org.apache.streampipes.connect.api;
 
 public interface EmitBinaryEvent {
-    Boolean emit(byte[] event);
+  Boolean emit(byte[] event);
 }
