@@ -19,22 +19,23 @@ package org.apache.streampipes.rest.core.base.impl;
 
 import org.apache.streampipes.model.client.user.Role;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class AbstractAuthGuardedRestResource extends AbstractRestResource {
 
+  private static final List<String> adminRoles = Arrays.asList(
+      Role.Constants.ROLE_ADMIN_VALUE,
+      Role.Constants.ROLE_SERVICE_ADMIN_VALUE);
   @Context
   protected SecurityContext securityContext;
-
-  private static final List<String> adminRoles = Arrays.asList(
-          Role.Constants.ROLE_ADMIN_VALUE,
-          Role.Constants.ROLE_SERVICE_ADMIN_VALUE);
 
   protected boolean isAuthenticated() {
     return this.securityContext.getUserPrincipal() != null;
@@ -63,13 +64,13 @@ public class AbstractAuthGuardedRestResource extends AbstractRestResource {
   }
 
   protected boolean hasAnyAuthority(List<String> authorities) {
-    return isAuthenticated() &&
-            SecurityContextHolder
-                    .getContext()
-                    .getAuthentication()
-                    .getAuthorities()
-                    .stream()
-                    .anyMatch(a -> authorities.contains(a.getAuthority()));
+    return isAuthenticated()
+        && SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getAuthorities()
+            .stream()
+            .anyMatch(a -> authorities.contains(a.getAuthority()));
   }
 
 }
