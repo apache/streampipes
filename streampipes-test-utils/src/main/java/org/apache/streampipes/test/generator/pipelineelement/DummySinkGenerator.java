@@ -22,11 +22,11 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 
 public class DummySinkGenerator {
-    public static DataSinkInvocation makeDummySink() {
+  public static DataSinkInvocation makeDummySink() {
 
-        DataSinkInvocation dataSinkInvocation = new DataSinkInvocation();
-        dataSinkInvocation.setElementId(ElementIdGenerator.makeElementId(DataSinkInvocation.class));
+    DataSinkInvocation dataSinkInvocation = new DataSinkInvocation();
+    dataSinkInvocation.setElementId(ElementIdGenerator.makeElementId(DataSinkInvocation.class));
 
-        return dataSinkInvocation;
-    }
+    return dataSinkInvocation;
+  }
 }
