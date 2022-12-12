@@ -20,7 +20,7 @@ import logging
 from typing import AsyncIterator, Dict, List
 
 from streampipes_client.client.client import StreamPipesClient
-from streampipes_client.functions.broker.broker import Broker
+from streampipes_client.functions.broker.broker import Broker, SupportedBroker
 from streampipes_client.functions.broker.nats_broker import NatsBroker
 from streampipes_client.functions.registration import Registration
 from streampipes_client.functions.utils.async_iter_handler import AsyncIterHandler
@@ -101,7 +101,7 @@ class FunctionHandler:
         -------
         The broker which belongs to the name.
         """
-        if broker_name == "nats":
+        if broker_name == SupportedBroker.NATS.value:
             return NatsBroker()
         else:
             raise UnsupportedBroker(f'The python client doesn\'t include the broker: "{broker_name}" yet')

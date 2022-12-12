@@ -18,8 +18,6 @@ import logging
 from typing import AsyncIterator
 
 from nats import connect
-from nats.aio.client import Client
-from nats.aio.subscription import Subscription
 from streampipes_client.functions.broker.broker import Broker
 
 logger = logging.getLogger(__name__)
@@ -27,9 +25,6 @@ logger = logging.getLogger(__name__)
 
 class NatsBroker(Broker):
     """Implementation of the NatsBroker"""
-
-    nats_client: Client
-    subscription: Subscription
 
     async def _makeConnection(self, host_address: str, port: int) -> None:
         """Helper function to connect to a server.

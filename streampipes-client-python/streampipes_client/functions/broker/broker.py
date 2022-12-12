@@ -15,9 +15,16 @@
 # limitations under the License.
 #
 from abc import ABC, abstractmethod
+from enum import Enum
 from typing import AsyncIterator
 
 from streampipes_client.model.resource.data_stream import DataStream
+
+
+class SupportedBroker(Enum):
+    """Enum for the supported brokers."""
+
+    NATS = "nats"
 
 
 class Broker(ABC):
