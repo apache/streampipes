@@ -18,6 +18,7 @@
 package org.apache.streampipes.storage.couchdb.dao;
 
 import org.apache.streampipes.model.Tuple2;
+
 import org.lightcouch.CouchDbClient;
 
 import java.util.List;
@@ -34,8 +35,8 @@ public class CrudDao {
 
   public <T> Tuple2<Boolean, String> persist(T objToPersist, Class<T> clazz) {
     DbCommand<Tuple2<Boolean, String>, T> cmd = new PersistCommand<>(couchDbClientSupplier,
-            objToPersist,
-            clazz);
+        objToPersist,
+        clazz);
     return cmd.execute();
   }
 

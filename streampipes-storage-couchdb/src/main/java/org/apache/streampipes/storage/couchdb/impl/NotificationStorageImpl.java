@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.apache.streampipes.model.Notification;
 import org.apache.streampipes.model.NotificationCount;
 import org.apache.streampipes.storage.api.INotificationStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,9 +34,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NotificationStorageImpl extends AbstractDao<Notification> implements
-        INotificationStorage {
+    INotificationStorage {
 
-  Logger LOG = LoggerFactory.getLogger(NotificationStorageImpl.class);
+  Logger logger = LoggerFactory.getLogger(NotificationStorageImpl.class);
 
   public NotificationStorageImpl() {
     super(Utils::getCouchDbNotificationClient, Notification.class);
@@ -51,16 +52,16 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
                                                 Integer offset,
                                                 Integer count) {
     List<JsonObject> notifications =
-            couchDbClientSupplier
-                    .get()
-                    .view("notificationtypes/notificationtypes")
-                    .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
-                    .endKey(Arrays.asList(notificationTypeId, 0))
-                    .descending(true)
-                    .includeDocs(true)
-                    .skip(offset)
-                    .limit(count)
-                    .query(JsonObject.class);
+        couchDbClientSupplier
+            .get()
+            .view("notificationtypes/notificationtypes")
+            .startKey(Arrays.asList(notificationTypeId, "\ufff0"))
+            .endKey(Arrays.asList(notificationTypeId, 0))
+            .descending(true)
+            .includeDocs(true)
+            .skip(offset)
+            .limit(count)
+            .query(JsonObject.class);
 
     return map(notifications);
   }
@@ -69,16 +70,16 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
   public List<Notification> getAllNotificationsFromTimestamp(long startTime) {
 
     return couchDbClientSupplier
-            .get()
-            .findDocs("{\"selector\": {\"createdAtTimestamp\": {\"$gt\": " +startTime + "}}}", Notification.class);
+        .get()
+        .findDocs("{\"selector\": {\"createdAtTimestamp\": {\"$gt\": " + startTime + "}}}", Notification.class);
   }
 
   private List<Notification> map(List<JsonObject> jsonObjects) {
     Gson gson = couchDbClientSupplier.get().getGson();
     return jsonObjects
-            .stream()
-            .map(notification -> gson.fromJson(notification, Notification.class))
-            .collect(Collectors.toList());
+        .stream()
+        .map(notification -> gson.fromJson(notification, Notification.class))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -105,20 +106,20 @@ public class NotificationStorageImpl extends AbstractDao<Notification> implement
     List<Notification> msgs = findAll();
 
     return msgs
-            .stream()
-            .filter(m -> !m.isRead())
-            .collect(Collectors.toList());
+        .stream()
+        .filter(m -> !m.isRead())
+        .collect(Collectors.toList());
   }
 
   @Override
   public NotificationCount getUnreadNotificationsCount(String username) {
     List<JsonObject> count =
-            couchDbClientSupplier
-                    .get()
-                    .view("unread/unread")
-                    .key(username)
-                    .group(true)
-                    .query(JsonObject.class);
+        couchDbClientSupplier
+            .get()
+            .view("unread/unread")
+            .key(username)
+            .group(true)
+            .query(JsonObject.class);
 
     if (count.size() > 0) {
       Integer countValue = count.get(0).get("value").getAsInt();

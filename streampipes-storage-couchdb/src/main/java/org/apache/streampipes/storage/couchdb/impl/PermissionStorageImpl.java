@@ -61,11 +61,11 @@ public class PermissionStorageImpl extends CrudDao implements IPermissionStorage
 
   public Set<String> getObjectPermissions(List<String> principalSids) {
     List<Permission> objectInstanceSids = couchDbClientSupplier
-            .get()
-            .view("users/userpermissions")
-            .keys(principalSids)
-            .includeDocs(true)
-            .query(Permission.class);
+        .get()
+        .view("users/userpermissions")
+        .keys(principalSids)
+        .includeDocs(true)
+        .query(Permission.class);
 
     return toPermissionSet(objectInstanceSids);
   }
@@ -73,11 +73,11 @@ public class PermissionStorageImpl extends CrudDao implements IPermissionStorage
   public List<Permission> getUserPermissionsForObject(String objectInstanceId) {
 
     return couchDbClientSupplier
-            .get()
-            .view("users/objectpermissions")
-            .key(objectInstanceId)
-            .includeDocs(true)
-            .query(Permission.class);
+        .get()
+        .view("users/objectpermissions")
+        .key(objectInstanceId)
+        .includeDocs(true)
+        .query(Permission.class);
   }
 
   private Set<String> toPermissionSet(List<Permission> permissions) {

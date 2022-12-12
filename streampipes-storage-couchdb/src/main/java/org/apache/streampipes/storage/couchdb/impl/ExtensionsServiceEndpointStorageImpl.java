@@ -25,7 +25,8 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
-public class ExtensionsServiceEndpointStorageImpl extends AbstractDao<ExtensionsServiceEndpoint> implements IExtensionsServiceEndpointStorage {
+public class ExtensionsServiceEndpointStorageImpl extends AbstractDao<ExtensionsServiceEndpoint>
+    implements IExtensionsServiceEndpointStorage {
 
   public ExtensionsServiceEndpointStorageImpl() {
     super(Utils::getCouchDbRdfEndpointClient, ExtensionsServiceEndpoint.class);

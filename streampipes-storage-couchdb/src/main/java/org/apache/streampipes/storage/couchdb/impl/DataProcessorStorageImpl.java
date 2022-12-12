@@ -62,10 +62,10 @@ public class DataProcessorStorageImpl extends AbstractDao<DataProcessorDescripti
   @Override
   public DataProcessorDescription getDataProcessorByAppId(String appId) {
     return getAll()
-            .stream()
-            .filter(p -> p.getAppId().equals(appId))
-            .findFirst()
-            .orElseThrow(NoSuchElementException::new);
+        .stream()
+        .filter(p -> p.getAppId().equals(appId))
+        .findFirst()
+        .orElseThrow(NoSuchElementException::new);
   }
 
   private String getCurrentRev(String elementId) {

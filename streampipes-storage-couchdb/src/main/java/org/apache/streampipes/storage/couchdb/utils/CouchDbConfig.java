@@ -23,33 +23,33 @@ import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
 public enum CouchDbConfig {
 
-    INSTANCE;
+  INSTANCE;
 
-    private SpConfig config;
-    private final static String COUCHDB_HOST = "SP_COUCHDB_HOST";
-    private final static String COUCHDB_PORT = "SP_COUCHDB_PORT";
-    private final static String PROTOCOL = "PROTOCOL";
+  private static final String COUCHDB_HOST = "SP_COUCHDB_HOST";
+  private static final String COUCHDB_PORT = "SP_COUCHDB_PORT";
+  private static final String PROTOCOL = "PROTOCOL";
+  private SpConfig config;
 
-    CouchDbConfig() {
-        config = SpServiceDiscovery.getSpConfig("storage/couchdb");
-        config.register(COUCHDB_HOST, "couchdb", "Hostname for the couch db service");
-        config.register(COUCHDB_PORT, 5984, "Port for the couch db service");
-        config.register(PROTOCOL, "http", "Protocol the couch db service");
-    }
+  CouchDbConfig() {
+    config = SpServiceDiscovery.getSpConfig("storage/couchdb");
+    config.register(COUCHDB_HOST, "couchdb", "Hostname for the couch db service");
+    config.register(COUCHDB_PORT, 5984, "Port for the couch db service");
+    config.register(PROTOCOL, "http", "Protocol the couch db service");
+  }
 
-    public String getHost() {
-        return config.getString(COUCHDB_HOST);
-    }
+  public String getHost() {
+    return config.getString(COUCHDB_HOST);
+  }
 
-    public int getPort() {
-        return config.getInteger(COUCHDB_PORT);
-    }
+  public void setHost(String host) {
+    config.setString(COUCHDB_HOST, host);
+  }
 
-    public String getProtocol() {
-        return config.getString(PROTOCOL);
-    }
+  public int getPort() {
+    return config.getInteger(COUCHDB_PORT);
+  }
 
-    public void setHost(String host) {
-        config.setString(COUCHDB_HOST, host);
-    }
+  public String getProtocol() {
+    return config.getString(PROTOCOL);
+  }
 }

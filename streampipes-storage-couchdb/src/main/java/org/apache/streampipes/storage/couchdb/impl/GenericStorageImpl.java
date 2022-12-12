@@ -18,6 +18,10 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
+import org.apache.streampipes.storage.api.IGenericStorage;
+import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -25,9 +29,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.net.UrlEscapers;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Request;
-import org.apache.streampipes.storage.api.IGenericStorage;
-import org.apache.streampipes.storage.couchdb.constants.GenericCouchDbConstants;
-import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -40,7 +41,8 @@ public class GenericStorageImpl implements IGenericStorage {
   private static final String ID = "id";
   private static final String SLASH = "/";
 
-  private final TypeReference<Map<String,Object>> typeRef = new TypeReference<>() {};
+  private final TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
+  };
   private final ObjectMapper mapper;
 
   public GenericStorageImpl() {
@@ -50,7 +52,8 @@ public class GenericStorageImpl implements IGenericStorage {
 
   @Override
   public List<Map<String, Object>> findAll(String type) throws IOException {
-    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType?" + UrlEscapers.urlPathSegmentEscaper().escape("startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true");
+    String query = getDatabaseRoute() + "/_design/appDocType/_view/appDocType?" + UrlEscapers.urlPathSegmentEscaper()
+        .escape("startkey=[\"" + type + "\"]&endkey=[\"" + type + "\",{}]&include_docs=true");
     Map<String, Object> queryResult = this.queryDocuments(query);
 
     List<Map<String, Object>> rows = (List<Map<String, Object>>) queryResult.get("rows");
