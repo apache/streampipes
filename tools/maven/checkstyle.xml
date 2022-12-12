@@ -79,11 +79,15 @@ page at http://checkstyle.sourceforge.net/config.html -->
                   value="^(package .*;\s*)|(import .*;\s*)|( *\* .*https?://.*)$"/>
     </module>
 
+    <module name="SuppressWarningsFilter"/>
+
     <!-- Check that every module has a package-info.java -->
     <!--<module name="JavadocPackage"/>-->
 
     <!-- All Java AST specific tests live under TreeWalker module. -->
     <module name="TreeWalker">
+
+        <module name="SuppressWarningsHolder" />
 
         <module name="TodoComment">
             <!-- Checks that disallowed strings are not used in comments.  -->

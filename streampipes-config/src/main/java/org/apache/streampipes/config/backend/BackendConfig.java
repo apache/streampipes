@@ -19,7 +19,6 @@
 package org.apache.streampipes.config.backend;
 
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.random.TokenGenerator;
 import org.apache.streampipes.config.backend.model.EmailConfig;
@@ -28,13 +27,17 @@ import org.apache.streampipes.config.backend.model.LocalAuthConfig;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.io.File;
 import java.security.SecureRandom;
 
 public enum BackendConfig {
   INSTANCE;
 
-  private final char[] possibleCharacters = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:\'\",<.>/?").toCharArray();
+  private final char[] possibleCharacters =
+      ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?")
+          .toCharArray();
   private SpConfig config;
 
   BackendConfig() {
@@ -58,48 +61,50 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.ELASTICSEARCH_HOST, "elasticsearch", "Hostname for elasticsearch service");
     config.register(BackendConfigKeys.ELASTICSEARCH_PORT, 9200, "Port for elasticsearch service");
     config.register(BackendConfigKeys.ELASTICSEARCH_PROTOCOL, "http", "Protocol the elasticsearch service");
-    config.register(BackendConfigKeys.IS_CONFIGURED, false, "Boolean that indicates whether streampipes is " +
-            "already configured or not");
-    config.register(BackendConfigKeys.IS_SETUP_RUNNING, false, "Boolean that indicates whether the initial setup " +
-            "is currently running");
-    config.register(BackendConfigKeys.ASSETS_DIR, makeAssetLocation(), "The directory where " +
-            "pipeline element assets are stored.");
-    config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(), "The directory where " +
-            "pipeline element files are stored.");
-    config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch", "The host of the data base used for the data lake");
+    config.register(BackendConfigKeys.IS_CONFIGURED, false,
+        "Boolean that indicates whether streampipes is " + "already configured or not");
+    config.register(BackendConfigKeys.IS_SETUP_RUNNING, false,
+        "Boolean that indicates whether the initial setup " + "is currently running");
+    config.register(BackendConfigKeys.ASSETS_DIR, makeAssetLocation(),
+        "The directory where " + "pipeline element assets are stored.");
+    config.register(BackendConfigKeys.FILES_DIR, makeFileLocation(),
+        "The directory where " + "pipeline element files are stored.");
+    config.register(BackendConfigKeys.DATA_LAKE_HOST, "elasticsearch",
+        "The host of the data base used for the data lake");
     config.register(BackendConfigKeys.DATA_LAKE_PORT, 9200, "The port of the data base used for the data lake");
 
     config.register(BackendConfigKeys.INFLUX_HOST, "influxdb", "The host of the influx data base");
     config.register(BackendConfigKeys.INFLUX_PORT, 8086, "The hist of the influx data base");
     config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
     config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
-            "Default Messaging Settings");
+        "Default Messaging Settings");
 
-    config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()), "Local authentication settings");
+    config.registerObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.fromDefaults(getJwtSecret()),
+        "Local authentication settings");
     config.registerObject(BackendConfigKeys.EMAIL_CONFIG, EmailConfig.fromDefaults(), "Email settings");
     config.registerObject(BackendConfigKeys.GENERAL_CONFIG, new GeneralConfig(), "General settings");
   }
 
   private String makeAssetLocation() {
     return makeStreamPipesHomeLocation()
-            + "assets";
+        + "assets";
   }
 
   private String makeFileLocation() {
     return makeStreamPipesHomeLocation()
-            + "files";
+        + "files";
   }
 
   private String makeStreamPipesHomeLocation() {
     return System.getProperty("user.home")
-            + File.separator
-            + ".streampipes"
-            + File.separator;
+        + File.separator
+        + ".streampipes"
+        + File.separator;
   }
 
   private String randomKey() {
-    return RandomStringUtils.random( 10, 0, possibleCharacters.length - 1,
-            false, false, possibleCharacters, new SecureRandom());
+    return RandomStringUtils.random(10, 0, possibleCharacters.length - 1,
+        false, false, possibleCharacters, new SecureRandom());
   }
 
   public String getBackendHost() {
@@ -164,7 +169,7 @@ public enum BackendConfig {
 
   public MessagingSettings getMessagingSettings() {
     return config.getObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.class,
-            new MessagingSettings());
+        new MessagingSettings());
   }
 
   public boolean isConfigured() {
@@ -244,7 +249,8 @@ public enum BackendConfig {
   }
 
   public LocalAuthConfig getLocalAuthConfig() {
-    return config.getObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.class, LocalAuthConfig.fromDefaults(getJwtSecret()));
+    return config.getObject(BackendConfigKeys.LOCAL_AUTH_CONFIG, LocalAuthConfig.class,
+        LocalAuthConfig.fromDefaults(getJwtSecret()));
   }
 
   public EmailConfig getEmailConfig() {
