@@ -20,63 +20,63 @@ package org.apache.streampipes.model.connect.rules.value;
 
 public class TimestampTranfsformationRuleDescription extends ValueTransformationRuleDescription {
 
-    private String runtimeKey;
+  private String runtimeKey;
 
-    private String mode;
+  private String mode;
 
-    private String formatString;
+  private String formatString;
 
-    private long multiplier;
+  private long multiplier;
 
-    public TimestampTranfsformationRuleDescription() {
-        super();
-    }
+  public TimestampTranfsformationRuleDescription() {
+    super();
+  }
 
-    public TimestampTranfsformationRuleDescription(String runtimeKey, String mode,
-                                                   String formatString, Long multiplier) {
-        this.runtimeKey = runtimeKey;
-        this.mode = mode;
-        this.formatString = formatString;
-        this.multiplier = multiplier;
-    }
+  public TimestampTranfsformationRuleDescription(String runtimeKey, String mode,
+                                                 String formatString, Long multiplier) {
+    this.runtimeKey = runtimeKey;
+    this.mode = mode;
+    this.formatString = formatString;
+    this.multiplier = multiplier;
+  }
 
-    public TimestampTranfsformationRuleDescription(TimestampTranfsformationRuleDescription other) {
-        super(other);
-        this.runtimeKey = other.getRuntimeKey();
-        this.mode = other.getMode();
-        this.formatString = other.getFormatString();
-        this.multiplier = other.getMultiplier();
-    }
+  public TimestampTranfsformationRuleDescription(TimestampTranfsformationRuleDescription other) {
+    super(other);
+    this.runtimeKey = other.getRuntimeKey();
+    this.mode = other.getMode();
+    this.formatString = other.getFormatString();
+    this.multiplier = other.getMultiplier();
+  }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
-    }
+  public String getRuntimeKey() {
+    return runtimeKey;
+  }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
-    }
+  public void setRuntimeKey(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 
-    public String getMode() {
-        return mode;
-    }
+  public String getMode() {
+    return mode;
+  }
 
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
+  public void setMode(String mode) {
+    this.mode = mode;
+  }
 
-    public String getFormatString() {
-        return formatString;
-    }
+  public String getFormatString() {
+    return formatString;
+  }
 
-    public void setFormatString(String formatString) {
-        this.formatString = formatString;
-    }
+  public void setFormatString(String formatString) {
+    this.formatString = formatString;
+  }
 
-    public long getMultiplier() {
-        return multiplier;
-    }
+  public long getMultiplier() {
+    return multiplier;
+  }
 
-    public void setMultiplier(long multiplier) {
-        this.multiplier = multiplier;
-    }
+  public void setMultiplier(long multiplier) {
+    this.multiplier = multiplier;
+  }
 }

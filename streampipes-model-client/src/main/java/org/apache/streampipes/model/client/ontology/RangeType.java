@@ -20,5 +20,5 @@ package org.apache.streampipes.model.client.ontology;
 
 public enum RangeType {
 
-	PRIMITIVE, QUANTITATIVE_VALUE, ENUMERATION, RDFS_CLASS
+  PRIMITIVE, QUANTITATIVE_VALUE, ENUMERATION, RDFS_CLASS
 }

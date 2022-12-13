@@ -26,7 +26,7 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String fieldName;
   private boolean measureTrue;
@@ -40,7 +40,7 @@ public class BooleanTimer implements EventProcessor<BooleanTimerParameters> {
   public void onInvocation(BooleanTimerParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanInverterParameters.getGraph().getLogger(BooleanTimer.class);
+    log = booleanInverterParameters.getGraph().getLogger(BooleanTimer.class);
     this.fieldName = booleanInverterParameters.getFieldName();
     this.measureTrue = booleanInverterParameters.isMeasureTrue();
     this.timestamp = Long.MIN_VALUE;

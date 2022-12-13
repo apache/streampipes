@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.processor.geo.flink.processor.gridenricher;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 public class SpatialGridEnricher implements FlatMapFunction<Event, Event> {
 
@@ -34,9 +35,9 @@ public class SpatialGridEnricher implements FlatMapFunction<Event, Event> {
 
   @Override
   public void flatMap(Event in, Collector<Event> out) throws
-          Exception {
+      Exception {
     Double latitude = in.getFieldBySelector(settings.getLatPropertyName()).getAsPrimitive()
-            .getAsDouble();
+        .getAsDouble();
     Double longitude = in.getFieldBySelector(settings.getLngPropertyName()).getAsPrimitive().getAsDouble();
 
     CellOption result = calculator.computeCells(latitude, longitude);

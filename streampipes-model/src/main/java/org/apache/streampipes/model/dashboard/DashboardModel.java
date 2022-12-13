@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.HashMap;
 import java.util.List;

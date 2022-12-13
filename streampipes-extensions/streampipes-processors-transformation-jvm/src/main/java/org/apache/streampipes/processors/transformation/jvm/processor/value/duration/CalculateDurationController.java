@@ -53,32 +53,35 @@ public class CalculateDurationController extends StandaloneEventProcessingDeclar
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.duration-value")
-            .category(DataProcessorType.TIME)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.withId(START_TS_FIELD_ID),
-                            PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
-                            Labels.withId(END_TS_FIELD_ID),
-                            PropertyScope.NONE)
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
-                    Options.from(MS, SECONDS, MINUTES, HOURS))
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
-                    SO.Number)))
-            .build();
+        .category(DataProcessorType.TIME)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                Labels.withId(START_TS_FIELD_ID),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
+                Labels.withId(END_TS_FIELD_ID),
+                PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(UNIT_FIELD_ID),
+            Options.from(MS, SECONDS, MINUTES, HOURS))
+        .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), DURATION_FIELD_NAME,
+            SO.Number)))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<CalculateDurationParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<CalculateDurationParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String startTs = extractor.mappingPropertyValue(START_TS_FIELD_ID);
     String endTs = extractor.mappingPropertyValue(END_TS_FIELD_ID);
     String unit = extractor.selectedSingleValue(UNIT_FIELD_ID, String.class);
 
-    CalculateDurationParameters params = new CalculateDurationParameters(graph, startTs, endTs, unit, DURATION_FIELD_NAME);
+    CalculateDurationParameters params =
+        new CalculateDurationParameters(graph, startTs, endTs, unit, DURATION_FIELD_NAME);
     return new ConfiguredEventProcessor<>(params, CalculateDuration::new);
   }
 }

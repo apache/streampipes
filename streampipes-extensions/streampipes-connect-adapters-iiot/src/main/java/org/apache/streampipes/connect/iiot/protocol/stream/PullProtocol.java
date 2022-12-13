@@ -23,76 +23,81 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public abstract class PullProtocol extends Protocol {
 
-    private ScheduledExecutorService scheduler;
+  private ScheduledExecutorService scheduler;
 
-    private Logger logger = LoggerFactory.getLogger(PullProtocol.class);
+  private Logger logger = LoggerFactory.getLogger(PullProtocol.class);
 
-    private long interval;
-
-
-    public PullProtocol() {
-    }
-
-    public PullProtocol(IParser parser, IFormat format, long interval) {
-        super(parser, format);
-        this.interval = interval;
-    }
-
-    @Override
-    public void run(IAdapterPipeline adapterPipeline) {
-        final Runnable errorThread = () -> {
-            executeProtocolLogic(adapterPipeline);
-        };
+  private long interval;
 
 
-        scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
+  public PullProtocol() {
+  }
 
-    }
+  public PullProtocol(IParser parser, IFormat format, long interval) {
+    super(parser, format);
+    this.interval = interval;
+  }
 
-
-    private void executeProtocolLogic(IAdapterPipeline adapterPipeline) {
-         final Runnable task = () -> {
-
-            format.reset();
-            SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
-            try {
-                InputStream data = getDataFromEndpoint();
-                if(data != null) {
-                    parser.parse(data, stk);
-                } else {
-                    logger.warn("Could not receive data from Endpoint. Try again in " + interval + " seconds.");
-                }
-            } catch (ParseException e) {
-                logger.error("Error while parsing: " + e.getMessage());
-            }
+  @Override
+  public void run(IAdapterPipeline adapterPipeline) {
+    final Runnable errorThread = () -> {
+      executeProtocolLogic(adapterPipeline);
+    };
 
 
-        };
+    scheduler = Executors.newScheduledThreadPool(1);
+    scheduler.schedule(errorThread, 0, TimeUnit.MILLISECONDS);
 
-        scheduler = Executors.newScheduledThreadPool(1);
-        ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1, interval, TimeUnit.SECONDS);
-        try {
-            handle.get();
-        } catch (ExecutionException e ) {
-            logger.error("Error", e);
-        } catch (InterruptedException e) {
-            logger.error("Error", e);
+  }
+
+
+  private void executeProtocolLogic(IAdapterPipeline adapterPipeline) {
+    final Runnable task = () -> {
+
+      format.reset();
+      SendToPipeline stk = new SendToPipeline(format, adapterPipeline);
+      try {
+        InputStream data = getDataFromEndpoint();
+        if (data != null) {
+          parser.parse(data, stk);
+        } else {
+          logger.warn("Could not receive data from Endpoint. Try again in " + interval + " seconds.");
         }
-    }
+      } catch (ParseException e) {
+        logger.error("Error while parsing: " + e.getMessage());
+      }
 
-    @Override
-    public void stop() {
-        scheduler.shutdownNow();
-    }
 
-    abstract InputStream getDataFromEndpoint() throws ParseException;
+    };
+
+    scheduler = Executors.newScheduledThreadPool(1);
+    ScheduledFuture<?> handle = scheduler.scheduleAtFixedRate(task, 1, interval, TimeUnit.SECONDS);
+    try {
+      handle.get();
+    } catch (ExecutionException e) {
+      logger.error("Error", e);
+    } catch (InterruptedException e) {
+      logger.error("Error", e);
+    }
+  }
+
+  @Override
+  public void stop() {
+    scheduler.shutdownNow();
+  }
+
+  abstract InputStream getDataFromEndpoint() throws ParseException;
 }

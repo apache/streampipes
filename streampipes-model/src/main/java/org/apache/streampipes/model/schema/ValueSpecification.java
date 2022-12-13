@@ -18,23 +18,24 @@
 
 package org.apache.streampipes.model.schema;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-				@JsonSubTypes.Type(QuantitativeValue.class),
-				@JsonSubTypes.Type(Enumeration.class),
+    @JsonSubTypes.Type(QuantitativeValue.class),
+    @JsonSubTypes.Type(Enumeration.class),
 })
 public abstract class ValueSpecification extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 1L;
-	
-	public ValueSpecification() {
-		super();
-	}
-	
-	public ValueSpecification(ValueSpecification other) {
-		super(other);
-	}
+  private static final long serialVersionUID = 1L;
+
+  public ValueSpecification() {
+    super();
+  }
+
+  public ValueSpecification(ValueSpecification other) {
+    super(other);
+  }
 
 }

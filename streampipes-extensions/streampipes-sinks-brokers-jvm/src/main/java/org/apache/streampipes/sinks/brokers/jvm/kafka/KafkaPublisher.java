@@ -21,7 +21,11 @@ package org.apache.streampipes.sinks.brokers.jvm.kafka;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
-import org.apache.streampipes.messaging.kafka.security.*;
+import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
+import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslPlainConfig;
+import org.apache.streampipes.messaging.kafka.security.KafkaSecuritySaslSSLConfig;
+import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedPlainConfig;
+import org.apache.streampipes.messaging.kafka.security.KafkaSecurityUnauthenticatedSSLConfig;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.runtime.EventSink;
@@ -39,7 +43,8 @@ public class KafkaPublisher implements EventSink<KafkaParameters> {
   }
 
   @Override
-  public void onInvocation(KafkaParameters parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(KafkaParameters parameters, EventSinkRuntimeContext runtimeContext)
+      throws SpRuntimeException {
     boolean useAuthentication = parameters.getAuthentication().equals(KafkaController.getSaslAccessKey());
 
     KafkaSecurityConfig securityConfig;
@@ -47,20 +52,20 @@ public class KafkaPublisher implements EventSink<KafkaParameters> {
 
     // check if a user for the authentication is defined
     if (useAuthentication) {
-      securityConfig = parameters.isUseSSL() ?
-              new KafkaSecuritySaslSSLConfig(parameters.getUsername(), parameters.getPassword()) :
-              new KafkaSecuritySaslPlainConfig(parameters.getUsername(), parameters.getPassword());
+      securityConfig = parameters.isUseSSL()
+          ? new KafkaSecuritySaslSSLConfig(parameters.getUsername(), parameters.getPassword()) :
+          new KafkaSecuritySaslPlainConfig(parameters.getUsername(), parameters.getPassword());
     } else {
-        // set security config for none authenticated access
-        securityConfig = parameters.isUseSSL() ?
-                new KafkaSecurityUnauthenticatedSSLConfig() :
-                new KafkaSecurityUnauthenticatedPlainConfig();
+      // set security config for none authenticated access
+      securityConfig = parameters.isUseSSL()
+          ? new KafkaSecurityUnauthenticatedSSLConfig() :
+          new KafkaSecurityUnauthenticatedPlainConfig();
     }
 
-      this.producer = new SpKafkaProducer(
-              parameters.getKafkaHost() + ":" + parameters.getKafkaPort(),
-              parameters.getTopic(),
-              Arrays.asList(securityConfig));
+    this.producer = new SpKafkaProducer(
+        parameters.getKafkaHost() + ":" + parameters.getKafkaPort(),
+        parameters.getTopic(),
+        Arrays.asList(securityConfig));
 
   }
 

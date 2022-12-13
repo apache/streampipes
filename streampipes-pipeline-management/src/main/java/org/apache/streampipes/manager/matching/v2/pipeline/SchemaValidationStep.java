@@ -48,7 +48,7 @@ public class SchemaValidationStep extends AbstractPipelineValidationStep {
     }
 
     if (target.getInputStreams().size() > 1) {
-      this.visitorHistory.put(target.getDOM(), 1);
+      this.visitorHistory.put(target.getDom(), 1);
     }
   }
 

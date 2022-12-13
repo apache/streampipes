@@ -17,16 +17,17 @@
  */
 package org.apache.streampipes.processors.geo.jvm.processor.geocoder;
 
-import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.GeocodingResult;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.GeocodingResult;
 
 import java.io.IOException;
 
@@ -36,18 +37,19 @@ public class GoogleMapsGeocoding implements EventProcessor<GoogleMapsGeocodingPa
   private String placeField;
 
   @Override
-  public void onInvocation(GoogleMapsGeocodingParameters parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(GoogleMapsGeocodingParameters parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.placeField = parameters.getPlaceField();
     String googleMapsApiKey = runtimeContext.getConfigStore().getConfig().getString(ConfigKeys.GOOGLE_API_KEY);
 
     if (googleMapsApiKey == null || googleMapsApiKey.equals("")) {
-      throw new SpRuntimeException("Could not start Geocoder. Did you forget to add a Google Maps" +
-              " API key?");
+      throw new SpRuntimeException("Could not start Geocoder. Did you forget to add a Google Maps"
+          + " API key?");
     }
 
     this.context = new GeoApiContext.Builder()
-            .apiKey(googleMapsApiKey)
-            .build();
+        .apiKey(googleMapsApiKey)
+        .build();
   }
 
   @Override
@@ -55,8 +57,8 @@ public class GoogleMapsGeocoding implements EventProcessor<GoogleMapsGeocodingPa
     String placename = event.getFieldBySelector(placeField).getAsPrimitive().getAsString();
 
     try {
-      GeocodingResult[] results =  GeocodingApi.geocode(context,
-              placename).await();
+      GeocodingResult[] results = GeocodingApi.geocode(context,
+          placename).await();
 
       Double latitude = results[0].geometry.location.lat;
       Double longitude = results[0].geometry.location.lng;
@@ -70,7 +72,6 @@ public class GoogleMapsGeocoding implements EventProcessor<GoogleMapsGeocodingPa
       e.printStackTrace();
       throw new SpRuntimeException("Could not fetch geocoding result");
     }
-
 
 
   }

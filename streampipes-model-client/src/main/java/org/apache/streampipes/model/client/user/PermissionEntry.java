@@ -50,8 +50,12 @@ public class PermissionEntry {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     PermissionEntry that = (PermissionEntry) o;
     return sid.equals(that.sid) && principalType == that.principalType;
   }

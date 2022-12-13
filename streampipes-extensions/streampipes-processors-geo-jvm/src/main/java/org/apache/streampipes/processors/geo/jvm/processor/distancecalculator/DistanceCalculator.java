@@ -29,8 +29,9 @@ public class DistanceCalculator implements EventProcessor<DistanceCalculatorPara
   private DistanceCalculatorParameters params;
 
   @Override
-  public void onInvocation(DistanceCalculatorParameters numericalFilterParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext
-          runtimeContext) {
+  public void onInvocation(DistanceCalculatorParameters numericalFilterParameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext
+                               runtimeContext) {
     this.params = numericalFilterParameters;
   }
 

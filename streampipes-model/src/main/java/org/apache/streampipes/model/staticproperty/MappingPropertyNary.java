@@ -38,7 +38,7 @@ public class MappingPropertyNary extends MappingProperty {
   }
 
   public MappingPropertyNary(String requirementSelector, String internalName, String label, String
-          description) {
+      description) {
     super(StaticPropertyType.MappingPropertyNary, requirementSelector, internalName, label, description);
     this.selectedProperties = new ArrayList<>();
   }

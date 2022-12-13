@@ -34,28 +34,28 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 
 public class JSEvalController extends StandaloneEventProcessingDeclarer<JSEvalParameters> {
 
-    private static final String JS_FUNCTION = "jsFunction";
+  private static final String JS_FUNCTION = "jsFunction";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.jseval")
-                .category(DataProcessorType.SCRIPTING)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .withLocales(Locales.EN)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
-                .requiredCodeblock(Labels.withId(JS_FUNCTION), CodeLanguage.Javascript)
-                .outputStrategy(OutputStrategies.userDefined())
-                .build();
-    }
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.jseval")
+        .category(DataProcessorType.SCRIPTING)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredCodeblock(Labels.withId(JS_FUNCTION), CodeLanguage.Javascript)
+        .outputStrategy(OutputStrategies.userDefined())
+        .build();
+  }
 
-    @Override
-    public ConfiguredEventProcessor<JSEvalParameters> onInvocation(DataProcessorInvocation graph,
-                                                                   ProcessingElementParameterExtractor extractor) {
-        String code = extractor.codeblockValue(JS_FUNCTION);
-        JSEvalParameters parameters = new JSEvalParameters(graph, code);
-        return new ConfiguredEventProcessor<>(parameters, JSEval::new);
-    }
+  @Override
+  public ConfiguredEventProcessor<JSEvalParameters> onInvocation(DataProcessorInvocation graph,
+                                                                 ProcessingElementParameterExtractor extractor) {
+    String code = extractor.codeblockValue(JS_FUNCTION);
+    JSEvalParameters parameters = new JSEvalParameters(graph, code);
+    return new ConfiguredEventProcessor<>(parameters, JSEval::new);
+  }
 }

@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.util.Collector;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
+
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.util.Collector;
 
 import java.io.Serializable;
 
@@ -36,10 +37,9 @@ public class FieldHasher implements Serializable, FlatMapFunction<Event, Event> 
   }
 
   @Override
-  public void flatMap(Event in,
-                      Collector<Event> out) throws Exception {
+  public void flatMap(Event in, Collector<Event> out) throws Exception {
     in.updateFieldBySelector(propertyName,
-            hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
+        hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
     out.collect(in);
   }
 

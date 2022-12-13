@@ -21,20 +21,20 @@ package org.apache.streampipes.model.quality;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 @JsonSubTypes({
-				@JsonSubTypes.Type(Frequency.class),
-				@JsonSubTypes.Type(Latency.class),
+    @JsonSubTypes.Type(Frequency.class),
+    @JsonSubTypes.Type(Latency.class),
 })
 public class EventStreamQualityDefinition extends MeasurementProperty {
 
-	private static final long serialVersionUID = 6310763356941481868L;
+  private static final long serialVersionUID = 6310763356941481868L;
 
-	public EventStreamQualityDefinition() {
-		super();
-	}
+  public EventStreamQualityDefinition() {
+    super();
+  }
 
-	public EventStreamQualityDefinition(EventStreamQualityDefinition o) {
-		super(o);
-	}
+  public EventStreamQualityDefinition(EventStreamQualityDefinition o) {
+    super(o);
+  }
 
 
 }

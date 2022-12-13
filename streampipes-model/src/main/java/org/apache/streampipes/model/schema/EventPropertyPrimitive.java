@@ -44,7 +44,7 @@ public class EventPropertyPrimitive extends EventProperty {
     this.measurementUnit = other.getMeasurementUnit();
     if (other.getValueSpecification() != null) {
       this.valueSpecification = new Cloner().valueSpecification(other
-              .getValueSpecification());
+          .getValueSpecification());
     }
   }
 
@@ -60,7 +60,8 @@ public class EventPropertyPrimitive extends EventProperty {
   }
 
   public EventPropertyPrimitive(String propertyType, String propertyName,
-                                String measurementUnit, List<URI> subClassOf, List<EventPropertyQualityDefinition> qualities) {
+                                String measurementUnit, List<URI> subClassOf,
+                                List<EventPropertyQualityDefinition> qualities) {
     super(propertyName, subClassOf, qualities);
     this.runtimeType = propertyType;
     //this.measurementUnit = measurementUnit;

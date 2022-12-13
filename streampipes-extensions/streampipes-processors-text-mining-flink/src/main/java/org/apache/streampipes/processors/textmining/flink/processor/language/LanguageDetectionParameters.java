@@ -24,8 +24,7 @@ public class LanguageDetectionParameters extends EventProcessorBindingParams {
 
   private String fieldName;
 
-  public LanguageDetectionParameters(DataProcessorInvocation graph, String fieldName)
-  {
+  public LanguageDetectionParameters(DataProcessorInvocation graph, String fieldName) {
     super(graph);
     this.fieldName = fieldName;
   }

@@ -24,14 +24,14 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 import java.util.List;
 
 public class TransformToBooleanParameters extends EventProcessorBindingParams {
-    private List<String> transformFields;
+  private List<String> transformFields;
 
-    public TransformToBooleanParameters(DataProcessorInvocation graph, List<String> transformFields) {
-        super(graph);
-        this.transformFields = transformFields;
-    }
+  public TransformToBooleanParameters(DataProcessorInvocation graph, List<String> transformFields) {
+    super(graph);
+    this.transformFields = transformFields;
+  }
 
-    public List<String> getTransformFields() {
-        return transformFields;
-    }
+  public List<String> getTransformFields() {
+    return transformFields;
+  }
 }

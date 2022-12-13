@@ -17,17 +17,16 @@
  */
 package org.apache.streampipes.model.file;
 
-import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import com.google.gson.annotations.SerializedName;
 
 @TsModel
 public class FileMetadata {
 
-  private @SerializedName("_id")
-  String fileId;
+  private @SerializedName("_id") String fileId;
 
-  private @SerializedName("_rev")
-  String rev;
+  private @SerializedName("_rev") String rev;
 
   private String internalFilename;
   private String originalFilename;

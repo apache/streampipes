@@ -38,23 +38,24 @@ public class ImageEnrichmentController extends StandaloneEventProcessingDeclarer
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processor.imageclassification.jvm.image-enricher")
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.IMAGE_PROCESSING)
-            .requiredStream(RequiredBoxStream.getBoxStream())
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
-            ))
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.IMAGE_PROCESSING)
+        .requiredStream(RequiredBoxStream.getBoxStream())
+        .outputStrategy(OutputStrategies.fixed(
+            EpProperties.stringEp(Labels.empty(), "image", "https://image.com")
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<ImageEnrichmentParameters> onInvocation(DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ImageEnrichmentParameters> onInvocation(
+      DataProcessorInvocation dataProcessorInvocation, ProcessingElementParameterExtractor extractor) {
     String imageProperty = extractor.mappingPropertyValue(IMAGE_PROPERTY);
     String boxArray = extractor.mappingPropertyValue(RequiredBoxStream.BOX_ARRAY_PROPERTY);
 
     ImageEnrichmentParameters params = new ImageEnrichmentParameters(dataProcessorInvocation, imageProperty,
-            boxArray, "box_width", "box_height", "box_x", "box_y", "score", "classesindex");
+        boxArray, "box_width", "box_height", "box_x", "box_y", "score", "classesindex");
 
     return new ConfiguredEventProcessor<>(params, ImageEnricher::new);
 

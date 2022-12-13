@@ -18,16 +18,15 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.apache.streampipes.model.dashboard.DashboardWidgetModel;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
-import org.apache.streampipes.storage.api.IDashboardWidgetStorage;
 import org.apache.streampipes.storage.api.IDataExplorerWidgetStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
 import java.util.List;
 
-public class DataExplorerWidgetStorageImpl extends AbstractDao<DataExplorerWidgetModel> implements IDataExplorerWidgetStorage {
+public class DataExplorerWidgetStorageImpl extends AbstractDao<DataExplorerWidgetModel>
+    implements IDataExplorerWidgetStorage {
 
   public DataExplorerWidgetStorageImpl() {
     super(Utils::getCouchDbDataExplorerWidgetClient, DataExplorerWidgetModel.class);
@@ -40,7 +39,7 @@ public class DataExplorerWidgetStorageImpl extends AbstractDao<DataExplorerWidge
 
   @Override
   public String storeDataExplorerWidget(DataExplorerWidgetModel dataExplorerWidgetModel) {
-    return persist(dataExplorerWidgetModel).b;
+    return persist(dataExplorerWidgetModel).v;
   }
 
   @Override

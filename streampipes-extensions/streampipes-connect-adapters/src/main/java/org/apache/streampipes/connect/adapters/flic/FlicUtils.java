@@ -31,43 +31,43 @@ import java.util.List;
 import java.util.Map;
 
 public class FlicUtils {
-    public static final String TIMESTAMP_KEY = "timestamp";
-    public static final String BUTTON_ID_KEY = "button_id";
-    public static final String CLICK_TYPE_KEY = "click_type";
+  public static final String TIMESTAMP_KEY = "timestamp";
+  public static final String BUTTON_ID_KEY = "button_id";
+  public static final String CLICK_TYPE_KEY = "click_type";
 
-    public static GuessSchema getFlicSchema() {
+  public static GuessSchema getFlicSchema() {
 
-        GuessSchema guessSchema = new GuessSchema();
+    GuessSchema guessSchema = new GuessSchema();
 
-        EventSchema eventSchema = new EventSchema();
-        List<EventProperty> allProperties = new ArrayList<>();
+    EventSchema eventSchema = new EventSchema();
+    List<EventProperty> allProperties = new ArrayList<>();
 
-        allProperties.add(EpProperties.timestampProperty(TIMESTAMP_KEY));
-        allProperties.add(
-                PrimitivePropertyBuilder
-                        .create(Datatypes.String, BUTTON_ID_KEY)
-                        .label("Button ID")
-                        .description("The ID of the button")
-                        .build());
-        allProperties.add(
-                PrimitivePropertyBuilder
-                        .create(Datatypes.String, CLICK_TYPE_KEY)
-                        .label("Click Type")
-                        .description("Type of the click")
-                        .build());
+    allProperties.add(EpProperties.timestampProperty(TIMESTAMP_KEY));
+    allProperties.add(
+        PrimitivePropertyBuilder
+            .create(Datatypes.String, BUTTON_ID_KEY)
+            .label("Button ID")
+            .description("The ID of the button")
+            .build());
+    allProperties.add(
+        PrimitivePropertyBuilder
+            .create(Datatypes.String, CLICK_TYPE_KEY)
+            .label("Click Type")
+            .description("Type of the click")
+            .build());
 
-        eventSchema.setEventProperties(allProperties);
-        guessSchema.setEventSchema(eventSchema);
-        return guessSchema;
-    }
+    eventSchema.setEventProperties(allProperties);
+    guessSchema.setEventSchema(eventSchema);
+    return guessSchema;
+  }
 
-    public static Map<String, Object> getEvent(FlicOutput output) {
-        Map<String, Object> event = new HashMap<>();
+  public static Map<String, Object> getEvent(FlicOutput output) {
+    Map<String, Object> event = new HashMap<>();
 
-        event.put(TIMESTAMP_KEY, output.getTimestamp());
-        event.put(BUTTON_ID_KEY, output.getButtonID());
-        event.put(CLICK_TYPE_KEY, output.getClickType());
-        return event;
-    }
+    event.put(TIMESTAMP_KEY, output.getTimestamp());
+    event.put(BUTTON_ID_KEY, output.getButtonID());
+    event.put(CLICK_TYPE_KEY, output.getClickType());
+    return event;
+  }
 
 }

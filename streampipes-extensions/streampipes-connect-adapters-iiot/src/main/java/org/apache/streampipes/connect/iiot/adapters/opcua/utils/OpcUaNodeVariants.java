@@ -23,30 +23,31 @@ import javax.annotation.Nullable;
 /**
  * Enum that maintains different variants of OPC UA nodes. <br>
  * Not yet completed. <br>
- *
  */
 public enum OpcUaNodeVariants {
-    Property(68),
-    EUInformation(887);
+  Property(68),
+  EUInformation(887);
 
-    // ID as specified in OPC UA standard
-    private final int id;
+  // ID as specified in OPC UA standard
+  private final int id;
 
-    private OpcUaNodeVariants(int id){
-        this.id = id;
+  private OpcUaNodeVariants(int id) {
+    this.id = id;
+  }
+
+  public int getId() {
+    return this.id;
+  }
+
+  @Nullable
+  public static OpcUaNodeVariants from(int id) {
+    switch (id) {
+      case 68:
+        return Property;
+      case 887:
+        return EUInformation;
+      default:
+        return null;
     }
-
-    public int getId() { return this.id;}
-
-    @Nullable
-    public static OpcUaNodeVariants from(int id){
-        switch (id){
-            case 68:
-                return Property;
-            case 887:
-                return EUInformation;
-            default:
-                return null;
-        }
-    }
+  }
 }

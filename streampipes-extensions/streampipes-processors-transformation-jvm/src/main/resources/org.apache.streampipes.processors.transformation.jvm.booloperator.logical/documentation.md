@@ -20,7 +20,7 @@
 
 ## Description
 
-This processor performs the logical boolean operation b/w the vales of set of properties. 
+This processor performs the logical boolean operation b/w the vales of set of properties.
 A user can select the type of operation and set of properties.
 
 ***

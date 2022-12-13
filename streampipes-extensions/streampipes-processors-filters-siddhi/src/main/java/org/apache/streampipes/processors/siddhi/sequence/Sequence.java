@@ -28,15 +28,11 @@ public class Sequence extends SiddhiEventEngine<SequenceParameters> {
 
   private String fromStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
 
-//    from every (e1=MaterialSupplyStream) -> e2=MaterialConsumptionStream within 10 min
-
-//      return "from every(e1=" + inputStreamNames.get(0) + ") -> not e2=" + inputStreamNames.get(0) + " for " + params.getDuration() + " sec";
-//    return "define stream Test(timestamp LONG,message STRING);\n" +
     return "from every not "
-            + siddhiParams.getInputStreamNames().get(0)
-            + " for "
-            + siddhiParams.getParams().getDuration()
-            + " sec";
+        + siddhiParams.getInputStreamNames().get(0)
+        + " for "
+        + siddhiParams.getParams().getDuration()
+        + " sec";
   }
 
   private String selectStatement(SiddhiProcessorParams<SequenceParameters> siddhiParams) {
@@ -51,11 +47,11 @@ public class Sequence extends SiddhiEventEngine<SequenceParameters> {
 
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
     return SiddhiAppConfigBuilder
-            .create()
-            .addQuery(SiddhiQueryBuilder
-                    .create(fromStatement(siddhiParams), insertIntoClause)
-                    .withSelectClause(selectStatement(siddhiParams))
-                    .build())
-            .build();
+        .create()
+        .addQuery(SiddhiQueryBuilder
+            .create(fromStatement(siddhiParams), insertIntoClause)
+            .withSelectClause(selectStatement(siddhiParams))
+            .build())
+        .build();
   }
 }

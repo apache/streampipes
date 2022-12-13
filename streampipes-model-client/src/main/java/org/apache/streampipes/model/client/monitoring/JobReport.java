@@ -23,43 +23,42 @@ import java.util.List;
 
 public class JobReport {
 
-	// contains report of a single job
-	// TODO needed?
-	
-	//TODO store in database and create queries
-	
-	private String elementId;
-	private Date generationDate;
-	private List<TaskReport> taskReports;
-	
-	public JobReport(String elementId, Date generationDate, List<TaskReport> taskResults)
-	{
-		this.generationDate = generationDate;
-		this.taskReports = taskResults;
-		this.elementId = elementId;
-	}
+  // contains report of a single job
+  // TODO needed?
 
-	public Date getGenerationDate() {
-		return generationDate;
-	}
+  //TODO store in database and create queries
 
-	public void setGenerationDate(Date generationDate) {
-		this.generationDate = generationDate;
-	}
+  private String elementId;
+  private Date generationDate;
+  private List<TaskReport> taskReports;
 
-	public List<TaskReport> getTaskReports() {
-		return taskReports;
-	}
+  public JobReport(String elementId, Date generationDate, List<TaskReport> taskResults) {
+    this.generationDate = generationDate;
+    this.taskReports = taskResults;
+    this.elementId = elementId;
+  }
 
-	public void setTaskReports(List<TaskReport> taskReports) {
-		this.taskReports = taskReports;
-	}
+  public Date getGenerationDate() {
+    return generationDate;
+  }
 
-	public String getElementId() {
-		return elementId;
-	}
+  public void setGenerationDate(Date generationDate) {
+    this.generationDate = generationDate;
+  }
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}	
+  public List<TaskReport> getTaskReports() {
+    return taskReports;
+  }
+
+  public void setTaskReports(List<TaskReport> taskReports) {
+    this.taskReports = taskReports;
+  }
+
+  public String getElementId() {
+    return elementId;
+  }
+
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 }

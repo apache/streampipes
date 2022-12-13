@@ -20,37 +20,34 @@ package org.apache.streampipes.model.grounding;
 
 public class JmsTransportProtocol extends TransportProtocol {
 
-	private static final long serialVersionUID = -5650426611208789835L;
+  private static final long serialVersionUID = -5650426611208789835L;
 
-	private int port;
-	
-	public JmsTransportProtocol(String uri, int port, String topicName)
-	{
-		super(uri, new SimpleTopicDefinition(topicName));
-		this.port = port;
-	}
-	
-	public JmsTransportProtocol(JmsTransportProtocol other)
-	{
-		super(other);
-		this.port = other.getPort();
-	}
-	
-	public JmsTransportProtocol() 
-	{
-		super();
-	}
-	
-	public int getPort() {
-		return port;
-	}
+  private int port;
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+  public JmsTransportProtocol(String uri, int port, String topicName) {
+    super(uri, new SimpleTopicDefinition(topicName));
+    this.port = port;
+  }
 
-	@Override
-	public String toString() {
-		return getBrokerHostname() + ":" + getPort();
-	}
+  public JmsTransportProtocol(JmsTransportProtocol other) {
+    super(other);
+    this.port = other.getPort();
+  }
+
+  public JmsTransportProtocol() {
+    super();
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
+  }
+
+  @Override
+  public String toString() {
+    return getBrokerHostname() + ":" + getPort();
+  }
 }

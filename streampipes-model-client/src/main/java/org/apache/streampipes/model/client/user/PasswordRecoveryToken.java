@@ -22,7 +22,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class PasswordRecoveryToken extends AbstractMailToken {
 
   @JsonIgnore
-  private String $type = "password-recovery";
+  private String type = "password-recovery";
+
+  public PasswordRecoveryToken() {
+
+  }
 
   public static PasswordRecoveryToken create(String token, String username) {
     PasswordRecoveryToken passwordRecoveryToken = new PasswordRecoveryToken();
@@ -32,15 +36,11 @@ public class PasswordRecoveryToken extends AbstractMailToken {
     return passwordRecoveryToken;
   }
 
-  public PasswordRecoveryToken() {
-
+  public String getType() {
+    return type;
   }
 
-  public String get$type() {
-    return $type;
-  }
-
-  public void set$type(String $type) {
-    this.$type = $type;
+  public void setType(String type) {
+    this.type = type;
   }
 }

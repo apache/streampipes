@@ -36,21 +36,21 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.boo
 
 public class BoolOperationFactory {
 
-    public static IBoolOperation<Boolean> getBoolOperation(BooleanOperatorType type) {
-        if (type == AND) {
-            return new ANDBoolOperation();
-        } else if (type == OR) {
-            return new ORBooleanOperation();
-        } else if (type == XOR) {
-            return new XORBooleanOperation();
-        } else if (type == NOT) {
-            return new NOTBooleanOperation();
-        } else if (type == X_NOR) {
-            return new XNORBoolOperation();
-        } else if (type == NOR) {
-            return new NORBoolOperation();
-        } else {
-            throw new UnsupportedOperationException("Operation " + type.operator() + " is not supported");
-        }
+  public static IBoolOperation<Boolean> getBoolOperation(BooleanOperatorType type) {
+    if (type == AND) {
+      return new ANDBoolOperation();
+    } else if (type == OR) {
+      return new ORBooleanOperation();
+    } else if (type == XOR) {
+      return new XORBooleanOperation();
+    } else if (type == NOT) {
+      return new NOTBooleanOperation();
+    } else if (type == X_NOR) {
+      return new XNORBoolOperation();
+    } else if (type == NOR) {
+      return new NORBoolOperation();
+    } else {
+      throw new UnsupportedOperationException("Operation " + type.operator() + " is not supported");
     }
+  }
 }

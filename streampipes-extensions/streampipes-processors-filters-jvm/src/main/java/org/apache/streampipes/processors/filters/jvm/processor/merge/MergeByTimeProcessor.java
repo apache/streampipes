@@ -57,30 +57,31 @@ public class MergeByTimeProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.merge")
-            .category(DataProcessorType.TRANSFORM)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON, "merge_description.png")
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-                    EpRequirements.timestampReq(),
-                    Labels.withId(TIMESTAMP_MAPPING_STREAM_1_KEY),
-                    PropertyScope.NONE).build())
-            .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
-                    EpRequirements.timestampReq(),
-                    Labels.withId(TIMESTAMP_MAPPING_STREAM_2_KEY),
-                    PropertyScope.NONE).build())
-            .requiredIntegerParameter(Labels.withId(TIME_INTERVAL), NUMBER_MAPPING)
-            .outputStrategy(OutputStrategies.custom(true))
-            .build();
+        .category(DataProcessorType.TRANSFORM)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON, "merge_description.png")
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+            EpRequirements.timestampReq(),
+            Labels.withId(TIMESTAMP_MAPPING_STREAM_1_KEY),
+            PropertyScope.NONE).build())
+        .requiredStream(StreamRequirementsBuilder.create().requiredPropertyWithUnaryMapping(
+            EpRequirements.timestampReq(),
+            Labels.withId(TIMESTAMP_MAPPING_STREAM_2_KEY),
+            PropertyScope.NONE).build())
+        .requiredIntegerParameter(Labels.withId(TIME_INTERVAL), NUMBER_MAPPING)
+        .outputStrategy(OutputStrategies.custom(true))
+        .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
     this.outputSchema = processorParams.getGraph().getOutputStream().getEventSchema();
     this.outputKeySelectors = processorParams.extractor().outputKeySelectors();
     this.timestampFieldStream0 = processorParams.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_1_KEY);
     this.timestampFieldStream1 = processorParams.extractor().mappingPropertyValue(TIMESTAMP_MAPPING_STREAM_2_KEY);
 
-    this.timeInterval = processorParams.extractor().singleValueParameter(TIME_INTERVAL,Integer.class);
+    this.timeInterval = processorParams.extractor().singleValueParameter(TIME_INTERVAL, Integer.class);
 
     this.streamBufferS0 = new StreamBuffer(this.timestampFieldStream0);
     this.streamBufferS1 = new StreamBuffer(this.timestampFieldStream1);

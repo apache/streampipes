@@ -26,7 +26,11 @@ import org.apache.streampipes.processors.transformation.jvm.processor.hasher.alg
 import org.apache.streampipes.processors.transformation.jvm.processor.hasher.algorithm.HashAlgorithmType;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
@@ -44,17 +48,17 @@ public class FieldHasherProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.fieldhasher")
-      .withLocales(Locales.EN)
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-      .requiredStream(StreamRequirementsBuilder
-        .create()
-        .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
-          (HASH_PROPERTIES), PropertyScope.NONE)
-        .build())
-      .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
-        Options.from("SHA1", "SHA2", "MD5"))
-      .outputStrategy(OutputStrategies.keep())
-      .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(), Labels.withId
+                (HASH_PROPERTIES), PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(HASH_ALGORITHM),
+            Options.from("SHA1", "SHA2", "MD5"))
+        .outputStrategy(OutputStrategies.keep())
+        .build();
   }
 
   @Override
@@ -64,13 +68,14 @@ public class FieldHasherProcessor extends StreamPipesDataProcessor {
     var extractor = parameters.extractor();
     this.propertyName = extractor.mappingPropertyValue(HASH_PROPERTIES);
 
-    this.hashAlgorithm = HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class)).hashAlgorithm();
+    this.hashAlgorithm =
+        HashAlgorithmType.valueOf(extractor.selectedSingleValue(HASH_ALGORITHM, String.class)).hashAlgorithm();
   }
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
     in.updateFieldBySelector(propertyName,
-      hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
+        hashAlgorithm.toHashValue(in.getFieldBySelector(propertyName).getAsPrimitive().getAsString()));
     out.collect(in);
   }
 

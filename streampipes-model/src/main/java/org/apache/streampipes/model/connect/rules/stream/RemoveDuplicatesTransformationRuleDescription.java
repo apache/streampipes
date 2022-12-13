@@ -20,22 +20,22 @@ package org.apache.streampipes.model.connect.rules.stream;
 
 public class RemoveDuplicatesTransformationRuleDescription extends StreamTransformationRuleDescription {
 
-    private String filterTimeWindow;
+  private String filterTimeWindow;
 
-    public RemoveDuplicatesTransformationRuleDescription() {
-        super();
-    }
+  public RemoveDuplicatesTransformationRuleDescription() {
+    super();
+  }
 
-    public RemoveDuplicatesTransformationRuleDescription(RemoveDuplicatesTransformationRuleDescription other) {
-        super(other);
-        this.filterTimeWindow = other.getFilterTimeWindow();
-    }
+  public RemoveDuplicatesTransformationRuleDescription(RemoveDuplicatesTransformationRuleDescription other) {
+    super(other);
+    this.filterTimeWindow = other.getFilterTimeWindow();
+  }
 
-    public String getFilterTimeWindow() {
-        return filterTimeWindow;
-    }
+  public String getFilterTimeWindow() {
+    return filterTimeWindow;
+  }
 
-    public void setFilterTimeWindow(String filterTimeWindow) {
-        this.filterTimeWindow = filterTimeWindow;
-    }
+  public void setFilterTimeWindow(String filterTimeWindow) {
+    this.filterTimeWindow = filterTimeWindow;
+  }
 }

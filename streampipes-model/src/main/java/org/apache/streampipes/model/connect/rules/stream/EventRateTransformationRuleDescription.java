@@ -20,35 +20,35 @@ package org.apache.streampipes.model.connect.rules.stream;
 
 public class EventRateTransformationRuleDescription extends StreamTransformationRuleDescription {
 
-    private long aggregationTimeWindow;
+  private long aggregationTimeWindow;
 
-    //None (Values from last event), max, min, mean, sum (of the values in the time window)
-    private String aggregationType;
+  //None (Values from last event), max, min, mean, sum (of the values in the time window)
+  private String aggregationType;
 
 
-    public EventRateTransformationRuleDescription() {
+  public EventRateTransformationRuleDescription() {
 
-    }
+  }
 
-    public EventRateTransformationRuleDescription(EventRateTransformationRuleDescription other) {
-        super(other);
-        this.aggregationTimeWindow = other.getAggregationTimeWindow();
-        this.aggregationType = other.getAggregationType();
-    }
+  public EventRateTransformationRuleDescription(EventRateTransformationRuleDescription other) {
+    super(other);
+    this.aggregationTimeWindow = other.getAggregationTimeWindow();
+    this.aggregationType = other.getAggregationType();
+  }
 
-    public long getAggregationTimeWindow() {
-        return aggregationTimeWindow;
-    }
+  public long getAggregationTimeWindow() {
+    return aggregationTimeWindow;
+  }
 
-    public void setAggregationTimeWindow(long aggregationTimeWindow) {
-        this.aggregationTimeWindow = aggregationTimeWindow;
-    }
+  public void setAggregationTimeWindow(long aggregationTimeWindow) {
+    this.aggregationTimeWindow = aggregationTimeWindow;
+  }
 
-    public String getAggregationType() {
-        return aggregationType;
-    }
+  public String getAggregationType() {
+    return aggregationType;
+  }
 
-    public void setAggregationType(String aggregationTypes) {
-        this.aggregationType = aggregationTypes;
-    }
+  public void setAggregationType(String aggregationTypes) {
+    this.aggregationType = aggregationTypes;
+  }
 }

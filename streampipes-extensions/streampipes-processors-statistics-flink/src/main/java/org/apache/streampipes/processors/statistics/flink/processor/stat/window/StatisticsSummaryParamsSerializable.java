@@ -31,7 +31,7 @@ public class StatisticsSummaryParamsSerializable implements Serializable {
 
   public StatisticsSummaryParamsSerializable(String valueToObserve, String timestampMapping,
                                              String groupBy, Long timeWindowSize, TimeUnit
-                                                     timeUnit) {
+                                                 timeUnit) {
     this.valueToObserve = valueToObserve;
     this.timestampMapping = timestampMapping;
     this.groupBy = groupBy;

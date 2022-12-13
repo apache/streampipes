@@ -34,16 +34,16 @@ public class IotDbParameters extends JdbcConnectionParameters {
                          boolean sslEnabled,
                          String timestampField) {
     super(
-            graph,
-            iotDbHost,
-            iotDbPort,
-            "",
-            user,
-            password,
-            "root." + dbStorageGroup,
-            sslEnabled,
-            null,
-            false
+        graph,
+        iotDbHost,
+        iotDbPort,
+        "",
+        user,
+        password,
+        "root." + dbStorageGroup,
+        sslEnabled,
+        null,
+        false
     );
 
     this.timestampField = timestampField;

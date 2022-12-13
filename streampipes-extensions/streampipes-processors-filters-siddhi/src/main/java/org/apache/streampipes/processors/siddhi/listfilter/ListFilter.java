@@ -50,16 +50,16 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.listfilter")
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.FILTER)
-            .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId
-                            (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .requiredTextParameter(Labels.withId(REQUIRED_VALUE_KEY))
-            .outputStrategy(OutputStrategies.keep())
-            .build();
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.FILTER)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(), Labels.withId
+                (LIST_KEY), PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .requiredTextParameter(Labels.withId(REQUIRED_VALUE_KEY))
+        .outputStrategy(OutputStrategies.keep())
+        .build();
   }
 
   private Object extractFilterValue(String selector, ProcessingElementParameterExtractor extractor) {
@@ -82,11 +82,11 @@ public class ListFilter extends StreamPipesSiddhiProcessor {
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
     return SiddhiAppConfigBuilder
-            .create()
-            .addQuery(SiddhiQueryBuilder
-                    .create(fromClause, insertIntoClause)
-                    .withSelectClause(selectClause)
-                    .build())
-            .build();
+        .create()
+        .addQuery(SiddhiQueryBuilder
+            .create(fromClause, insertIntoClause)
+            .withSelectClause(selectClause)
+            .build())
+        .build();
   }
 }

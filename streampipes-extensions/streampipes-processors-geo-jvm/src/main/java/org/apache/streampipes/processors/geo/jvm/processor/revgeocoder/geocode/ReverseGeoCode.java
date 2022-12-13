@@ -84,7 +84,7 @@ public class ReverseGeoCode {
   }
 
   private void createKdTree(InputStream placenames, boolean majorOnly)
-          throws IOException {
+      throws IOException {
     ArrayList<GeoName> arPlaceNames;
     arPlaceNames = new ArrayList<GeoName>();
     // Read the geonames file in the directory

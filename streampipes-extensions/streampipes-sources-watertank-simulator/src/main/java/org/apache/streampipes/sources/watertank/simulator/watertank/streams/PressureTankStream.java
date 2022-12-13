@@ -37,30 +37,30 @@ public class PressureTankStream extends AbstractAlreadyExistingStream {
   @Override
   public SpDataStream declareModel() {
     return DataStreamBuilder.create("org.apache.streampipes.sources.simulator.pressure")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .property(EpProperties.timestampProperty("timestamp"))
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.String, "sensorId")
-                    .label("Sensor ID")
-                    .description("The ID of the sensor")
-                    .domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
-                    .scope(PropertyScope.DIMENSION_PROPERTY)
-                    .build())
-            .property(PrimitivePropertyBuilder
-                    .create(Datatypes.Float, "pressure")
-                    .label("Pressure")
-                    .description("Denotes the current pressure in the pressure tank")
-                    .domainProperty(WaterTankVocabulary.HAS_PRESSURE)
-                    .valueSpecification(0.0f, 100.0f, 0.5f)
-                    .scope(PropertyScope.MEASUREMENT_PROPERTY)
-                    .build())
-            .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(
-                    configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
-                    configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
-                    "org.apache.streampipes.examples.pressuretank"))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .property(EpProperties.timestampProperty("timestamp"))
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.String, "sensorId")
+            .label("Sensor ID")
+            .description("The ID of the sensor")
+            .domainProperty(WaterTankVocabulary.HAS_SENSOR_ID)
+            .scope(PropertyScope.DIMENSION_PROPERTY)
+            .build())
+        .property(PrimitivePropertyBuilder
+            .create(Datatypes.Float, "pressure")
+            .label("Pressure")
+            .description("Denotes the current pressure in the pressure tank")
+            .domainProperty(WaterTankVocabulary.HAS_PRESSURE)
+            .valueSpecification(0.0f, 100.0f, 0.5f)
+            .scope(PropertyScope.MEASUREMENT_PROPERTY)
+            .build())
+        .format(Formats.jsonFormat())
+        .protocol(Protocols.kafka(
+            configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
+            configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
+            "org.apache.streampipes.examples.pressuretank"))
+        .build();
   }
 
 }

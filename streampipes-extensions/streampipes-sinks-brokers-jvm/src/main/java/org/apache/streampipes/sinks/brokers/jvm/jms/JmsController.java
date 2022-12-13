@@ -45,24 +45,25 @@ public class JmsController extends StandaloneEventSinkDeclarer<JmsParameters> {
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.jms")
-            .category(DataSinkType.MESSAGING)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
-            .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
-            .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
+        .category(DataSinkType.MESSAGING)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredTextParameter(Labels.withId(TOPIC_KEY), false, false)
+        .requiredTextParameter(Labels.withId(HOST_KEY), false, false)
+        .requiredIntegerParameter(Labels.withId(PORT_KEY), 61616)
 //            .requiredOntologyConcept(Labels.withId(JMS_BROKER_SETTINGS_KEY),
 //                    OntologyProperties.mandatory(JMS_HOST_URI),
 //                    OntologyProperties.mandatory(JMS_PORT_URI))
-            .build();
+        .build();
   }
 
   @Override
-  public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  public ConfiguredEventSink<JmsParameters> onInvocation(DataSinkInvocation graph,
+                                                         DataSinkParameterExtractor extractor) {
 
     String topic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 

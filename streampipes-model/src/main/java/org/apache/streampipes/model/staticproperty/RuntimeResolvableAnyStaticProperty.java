@@ -36,7 +36,8 @@ public class RuntimeResolvableAnyStaticProperty extends AnyStaticProperty {
     super(StaticPropertyType.RuntimeResolvableAnyStaticProperty, internalName, label, description);
   }
 
-  public RuntimeResolvableAnyStaticProperty(String internalName, String label, String description, boolean horizontalRendering) {
+  public RuntimeResolvableAnyStaticProperty(String internalName, String label, String description,
+                                            boolean horizontalRendering) {
     super(StaticPropertyType.RuntimeResolvableAnyStaticProperty, internalName, label, description, horizontalRendering);
   }
 

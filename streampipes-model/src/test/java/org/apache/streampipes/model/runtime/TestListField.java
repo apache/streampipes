@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestListField {
 
@@ -30,7 +30,7 @@ public class TestListField {
     Event event = RuntimeTestUtils.makeSimpleEvent(RuntimeTestUtils.listMap(), RuntimeTestUtils.getSourceInfo());
 
     List<Integer> integerList = event.getFieldByRuntimeName("list").getAsList().parseAsSimpleType
-            (Integer.class);
+        (Integer.class);
 
     assertEquals(3, integerList.size());
     assertEquals(Integer.valueOf(1), integerList.get(0));

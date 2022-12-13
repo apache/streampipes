@@ -59,7 +59,7 @@ public class DashboardItem {
   public void setComponent(String component) {
     this.component = component;
   }
-  
+
   public List<String> getSettings() {
     return settings;
   }

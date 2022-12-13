@@ -21,6 +21,6 @@ import com.github.drapostolos.typeparser.TypeParser;
 
 public class EventUtils {
 
-  public static final TypeParser typeParser = TypeParser.newBuilder().build();
+  public static final TypeParser TYPE_PARSER = TypeParser.newBuilder().build();
 
 }

@@ -25,7 +25,13 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -43,22 +49,22 @@ public class EventCountController extends FlinkDataProcessorDeclarer<EventCountP
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.aggregation.flink"
             + ".eventcount")
-            .category(DataProcessorType.AGGREGATE)
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
-                    EpProperties.integerEp(Labels.empty(), "count",
-                    "http://schema.org/Number")))
-            .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
-            .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
-                    Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
-                            new Tuple2<>("Minutes", MINUTES_INTERNAL_NAME),
-                            new Tuple2<>("Seconds", SECONDS_INTERNAL_NAME)))
-            .build();
+        .category(DataProcessorType.AGGREGATE)
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .outputStrategy(OutputStrategies.fixed(EpProperties.timestampProperty("timestamp"),
+            EpProperties.integerEp(Labels.empty(), "count",
+                "http://schema.org/Number")))
+        .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
+        .requiredSingleValueSelection(Labels.withId(SCALE_KEY),
+            Options.from(new Tuple2<>("Hours", HOURS_INTERNAL_NAME),
+                new Tuple2<>("Minutes", MINUTES_INTERNAL_NAME),
+                new Tuple2<>("Seconds", SECONDS_INTERNAL_NAME)))
+        .build();
   }
 
   @Override

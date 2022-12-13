@@ -27,7 +27,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -35,34 +39,35 @@ import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
 
 public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDereferencingParameter> {
 
-    private final String APPEND_HTML = "appendHtml";
-    private final String URL = "url";
+  private static final String APPEND_HTML = "appendHtml";
+  private static final String URL = "url";
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.flink.processor.urldereferencing")
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .withLocales(Locales.EN)
-                .category(DataProcessorType.ENRICH)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
-                                Labels.withId(URL),
-                                PropertyScope.NONE)
-                        .build())
-                .outputStrategy(
-                        OutputStrategies.append(
-                                EpProperties.stringEp(Labels.empty(), APPEND_HTML, SO.Text)))
-                .build();
-    }
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.enricher.flink.processor.urldereferencing")
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.ENRICH)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.stringReq(),
+                Labels.withId(URL),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(
+            OutputStrategies.append(
+                EpProperties.stringEp(Labels.empty(), APPEND_HTML, SO.Text)))
+        .build();
+  }
 
 
-    @Override
-    public FlinkDataProcessorRuntime<UrlDereferencingParameter> getRuntime(DataProcessorInvocation graph,
-                                                                           ProcessingElementParameterExtractor extractor,
-                                                                           ConfigExtractor configExtractor,
-                                                                           StreamPipesClient streamPipesClient) {
-        String urlString = extractor.mappingPropertyValue(URL);
+  @Override
+  public FlinkDataProcessorRuntime<UrlDereferencingParameter> getRuntime(DataProcessorInvocation graph,
+                                                                         ProcessingElementParameterExtractor extractor,
+                                                                         ConfigExtractor configExtractor,
+                                                                         StreamPipesClient streamPipesClient) {
+    String urlString = extractor.mappingPropertyValue(URL);
 
 //        java.net.URL url = null;
 /*        try {
@@ -72,8 +77,8 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
             throw new IllegalArgumentException("Malformed URL:" + urlString);
         }
 */
-        UrlDereferencingParameter staticParam = new UrlDereferencingParameter(graph, urlString, APPEND_HTML);
+    UrlDereferencingParameter staticParam = new UrlDereferencingParameter(graph, urlString, APPEND_HTML);
 
-        return  new UrlDereferencingProgram(staticParam, configExtractor, streamPipesClient);
-    }
+    return new UrlDereferencingProgram(staticParam, configExtractor, streamPipesClient);
+  }
 }

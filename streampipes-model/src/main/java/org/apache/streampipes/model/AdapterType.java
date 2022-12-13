@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.model;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
@@ -36,12 +37,17 @@ public enum AdapterType {
   Energy("Energy", ""),
   Debugging("Testing & Debugging", "");
 
-  private String label;
-  private String description;
+  private final String label;
+  private final String description;
 
   AdapterType(String label, String description) {
     this.label = label;
     this.description = description;
+  }
+
+  @JsonCreator
+  public static AdapterType fromString(JsonNode json) {
+    return AdapterType.valueOf(json.get("code").asText());
   }
 
   public String getCode() {
@@ -54,10 +60,5 @@ public enum AdapterType {
 
   public String getDescription() {
     return description;
-  }
-
-  @JsonCreator
-  public static AdapterType fromString(JsonNode json) {
-    return AdapterType.valueOf(json.get("code").asText());
   }
 }

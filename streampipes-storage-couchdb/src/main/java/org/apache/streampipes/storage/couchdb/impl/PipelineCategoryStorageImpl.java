@@ -27,23 +27,23 @@ import java.util.List;
 
 public class PipelineCategoryStorageImpl extends AbstractDao<PipelineCategory> implements IPipelineCategoryStorage {
 
-	public PipelineCategoryStorageImpl() {
-		super(Utils::getCouchDbPipelineCategoriesClient, PipelineCategory.class);
-	}
+  public PipelineCategoryStorageImpl() {
+    super(Utils::getCouchDbPipelineCategoriesClient, PipelineCategory.class);
+  }
 
-	@Override
-	public List<PipelineCategory> getPipelineCategories() {
-		return findAll();
-	}
+  @Override
+  public List<PipelineCategory> getPipelineCategories() {
+    return findAll();
+  }
 
-	@Override
-	public boolean addPipelineCategory(PipelineCategory pipelineCategory) {
-		return persist(pipelineCategory).a;
-	}
+  @Override
+  public boolean addPipelineCategory(PipelineCategory pipelineCategory) {
+    return persist(pipelineCategory).k;
+  }
 
-	@Override
-	public boolean deletePipelineCategory(String categoryId) {
-		return delete(categoryId);
-	}
+  @Override
+  public boolean deletePipelineCategory(String categoryId) {
+    return delete(categoryId);
+  }
 
 }

@@ -19,10 +19,11 @@
 package org.apache.streampipes.model.base;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 import org.apache.streampipes.model.ApplicationLink;
 import org.apache.streampipes.model.util.Cloner;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,29 +37,18 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
 
   @JsonProperty("_rev")
   protected @SerializedName("_rev") String rev;
-
-  private String name;
-
-  private String description;
-
-  private String iconUrl;
-
-  private String appId;
-
-  private boolean includesAssets;
-
-  private boolean includesLocales;
-
-  private List<String> includedAssets;
-
-  private List<String> includedLocales;
-
-  private List<ApplicationLink> applicationLinks;
-
-  private boolean internallyManaged;
-
-  protected String DOM;
+  protected String dom;
   protected List<String> connectedTo;
+  private String name;
+  private String description;
+  private String iconUrl;
+  private String appId;
+  private boolean includesAssets;
+  private boolean includesLocales;
+  private List<String> includedAssets;
+  private List<String> includedLocales;
+  private List<ApplicationLink> applicationLinks;
+  private boolean internallyManaged;
 
 
   public NamedStreamPipesEntity() {
@@ -95,7 +85,7 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.name = other.getName();
     this.iconUrl = other.getIconUrl();
     this.elementId = other.getElementId();
-    this.DOM = other.getDOM();
+    this.dom = other.getDom();
     this.internallyManaged = other.isInternallyManaged();
     this.connectedTo = other.getConnectedTo();
     if (other.getApplicationLinks() != null) {
@@ -146,12 +136,12 @@ public abstract class NamedStreamPipesEntity extends AbstractStreamPipesEntity {
     this.elementId = uri;
   }
 
-  public void setDOM(String DOM) {
-    this.DOM = DOM;
+  public String getDom() {
+    return dom;
   }
 
-  public String getDOM() {
-    return DOM;
+  public void setDom(String dom) {
+    this.dom = dom;
   }
 
   public List<String> getConnectedTo() {

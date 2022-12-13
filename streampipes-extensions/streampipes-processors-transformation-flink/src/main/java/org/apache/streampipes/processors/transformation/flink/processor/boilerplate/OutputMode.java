@@ -19,7 +19,7 @@
 package org.apache.streampipes.processors.transformation.flink.processor.boilerplate;
 
 public enum OutputMode {
-    PLAIN_TEXT,
-    HIGHLIGHTED_HTML,
-    HTML
+  PLAIN_TEXT,
+  HIGHLIGHTED_HTML,
+  HTML
 }

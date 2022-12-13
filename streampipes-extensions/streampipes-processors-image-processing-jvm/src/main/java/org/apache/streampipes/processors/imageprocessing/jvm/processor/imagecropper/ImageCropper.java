@@ -35,7 +35,8 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
   private ImageCropperParameters params;
 
   @Override
-  public void onInvocation(ImageCropperParameters imageCropperParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(ImageCropperParameters imageCropperParameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
     this.params = imageCropperParameters;
   }
 
@@ -52,7 +53,7 @@ public class ImageCropper implements EventProcessor<ImageCropperParameters> {
         BoxCoordinates boxCoordinates = imageTransformer.getBoxCoordinates(image, box);
 
         BufferedImage dest = image.getSubimage(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
-                boxCoordinates.getHeight());
+            boxCoordinates.getHeight());
 
         Optional<byte[]> finalImage = imageTransformer.makeImage(dest);
 

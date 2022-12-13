@@ -47,7 +47,7 @@ public class ElementStatusInfoSettings extends UnnamedStreamPipesEntity {
 
   public ElementStatusInfoSettings(String elementIdentifier, String kafkaHost, int kafkaPort,
                                    String errorTopic, String
-          statsTopic) {
+                                       statsTopic) {
     this.elementIdentifier = elementIdentifier;
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;

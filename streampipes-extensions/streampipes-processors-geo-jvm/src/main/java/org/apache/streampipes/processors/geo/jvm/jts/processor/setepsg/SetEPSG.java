@@ -16,26 +16,27 @@
  *
  */
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG;
+package org.apache.streampipes.processors.geo.jvm.jts.processor.setepsg;
 
 import org.apache.streampipes.logging.api.Logger;
+import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
-import org.apache.streampipes.model.runtime.Event;
 
 
 public class SetEPSG implements EventProcessor<SetEpsgParameter> {
 
-  public static Logger LOG;
+  public static Logger log;
   public SetEpsgParameter params;
   public Integer epsg;
 
 
   @Override
-  public void onInvocation(SetEpsgParameter params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(SetEpsgParameter params, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
 
-    LOG = params.getGraph().getLogger(SetEPSG.class);
+    log = params.getGraph().getLogger(SetEPSG.class);
     this.epsg = params.getEpsg();
   }
 

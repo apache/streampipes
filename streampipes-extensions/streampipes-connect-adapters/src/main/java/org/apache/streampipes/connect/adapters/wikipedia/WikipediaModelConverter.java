@@ -22,7 +22,22 @@ import org.apache.streampipes.connect.adapters.wikipedia.model.WikipediaModel;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.*;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.BOT;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.EVENT_ID;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.MINOR;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.NAMESPACE;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.NEWLENGTH;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.NEWREVISION;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.OLDLENGTH;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.OLDREVISION;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.SERVERNAME;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.SERVERURL;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.TIMESTAMP;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.TITLE;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.TYPE;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.URI;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.USER;
+import static org.apache.streampipes.connect.adapters.wikipedia.WikipediaAdapter.WIKI;
 
 public class WikipediaModelConverter {
 

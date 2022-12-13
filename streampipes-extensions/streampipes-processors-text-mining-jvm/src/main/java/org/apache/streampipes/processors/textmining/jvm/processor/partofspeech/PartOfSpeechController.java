@@ -26,14 +26,16 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
-
-import java.io.IOException;
 
 public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<PartOfSpeechParameters> {
 
@@ -45,31 +47,32 @@ public class PartOfSpeechController extends StandaloneEventProcessingDeclarer<Pa
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.partofspeech")
-            .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredFile(Labels.withId(BINARY_FILE_KEY))
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.listRequirement(Datatypes.String),
-                            Labels.withId(DETECTION_FIELD_KEY),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.listDoubleEp(
-                            Labels.withId(CONFIDENCE_KEY),
-                            CONFIDENCE_KEY,
-                            "http://schema.org/ItemList"),
-                    EpProperties.listStringEp(
-                            Labels.withId(TAG_KEY),
-                            TAG_KEY,
-                            "http://schema.org/ItemList")))
-            .build();
+        .category(DataProcessorType.ENRICH_TEXT)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredFile(Labels.withId(BINARY_FILE_KEY))
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.listRequirement(Datatypes.String),
+                Labels.withId(DETECTION_FIELD_KEY),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.listDoubleEp(
+                Labels.withId(CONFIDENCE_KEY),
+                CONFIDENCE_KEY,
+                "http://schema.org/ItemList"),
+            EpProperties.listStringEp(
+                Labels.withId(TAG_KEY),
+                TAG_KEY,
+                "http://schema.org/ItemList")))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<PartOfSpeechParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<PartOfSpeechParameters> onInvocation(DataProcessorInvocation graph,
+                                                                       ProcessingElementParameterExtractor extractor) {
 
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     String filename = extractor.selectedFilename(BINARY_FILE_KEY);

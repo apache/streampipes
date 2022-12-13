@@ -42,26 +42,27 @@ public class StreamStopController extends StandaloneEventProcessingDeclarer<Stre
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.siddhi.stop")
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.FILTER)
-            .withAssets(Assets.DOCUMENTATION)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .outputStrategy(OutputStrategies.fixed(
-                    Arrays.asList(
-                            EpProperties.timestampProperty("timestamp"),
-                            EpProperties.stringEp(Labels.withId(Message),
-                                    "message", "http://schema.org/text")
-                    )
-            ))
-            .requiredIntegerParameter(Labels.withId(Duration))
-            .build();
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.FILTER)
+        .withAssets(Assets.DOCUMENTATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .outputStrategy(OutputStrategies.fixed(
+            Arrays.asList(
+                EpProperties.timestampProperty("timestamp"),
+                EpProperties.stringEp(Labels.withId(Message),
+                    "message", "http://schema.org/text")
+            )
+        ))
+        .requiredIntegerParameter(Labels.withId(Duration))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<StreamStopParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<StreamStopParameters> onInvocation(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor) {
 
     int duration = extractor.singleValueParameter(Duration, Integer.class);
 

@@ -24,12 +24,11 @@ import java.util.stream.Collectors;
 
 public class TreeInputNode {
 
+  List<TreeInputNode> children;
   private boolean dataNode;
   private boolean selected;
   private String nodeName;
   private String internalNodeName;
-
-  List<TreeInputNode> children;
 
   public TreeInputNode() {
     this.children = new ArrayList<>();

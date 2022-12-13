@@ -17,50 +17,52 @@
  */
 
 package org.apache.streampipes.model.connect.adapter;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 import org.apache.streampipes.model.SpDataStream;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-        @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
-        @JsonSubTypes.Type(SpecificAdapterStreamDescription.class)
+    @JsonSubTypes.Type(SpecificAdapterStreamDescription.class),
+    @JsonSubTypes.Type(SpecificAdapterStreamDescription.class)
 })
 public abstract class AdapterStreamDescription extends AdapterDescription {
 
-    private SpDataStream dataStream;
+  private SpDataStream dataStream;
 
-    private boolean running;
+  private boolean running;
 
-    public AdapterStreamDescription() {
-        super();
-        this.dataStream = new SpDataStream();
+  public AdapterStreamDescription() {
+    super();
+    this.dataStream = new SpDataStream();
+  }
+
+  public AdapterStreamDescription(String elementId, String name, String description) {
+    super(elementId, name, description);
+    this.dataStream = new SpDataStream();
+  }
+
+  public AdapterStreamDescription(AdapterStreamDescription other) {
+    super(other);
+    this.running = other.isRunning();
+    if (other.getDataStream() != null) {
+      this.dataStream = new SpDataStream(other.getDataStream());
     }
+  }
 
-    public AdapterStreamDescription(String elementId, String name, String description) {
-        super(elementId, name, description);
-        this.dataStream = new SpDataStream();
-    }
+  public SpDataStream getDataStream() {
+    return dataStream;
+  }
 
-    public AdapterStreamDescription(AdapterStreamDescription other) {
-        super(other);
-        this.running = other.isRunning();
-        if (other.getDataStream() != null) {
-            this.dataStream = new SpDataStream(other.getDataStream());
-        }
-    }
+  public void setDataStream(SpDataStream dataStream) {
+    this.dataStream = dataStream;
+  }
 
-    public SpDataStream getDataStream() {
-        return dataStream;
-    }
+  public boolean isRunning() {
+    return running;
+  }
 
-    public void setDataStream(SpDataStream dataStream) {
-        this.dataStream = dataStream;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
+  public void setRunning(boolean running) {
+    this.running = running;
+  }
 }

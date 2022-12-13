@@ -22,13 +22,13 @@ import java.io.Serializable;
 
 public interface Logger extends Serializable {
 
-    void info(String s);
+  void info(String s);
 
-    void trace(String s);
+  void trace(String s);
 
-    void debug(String s);
+  void debug(String s);
 
-    void error(String s);
+  void error(String s);
 
-    void warn(String s);
+  void warn(String s);
 }

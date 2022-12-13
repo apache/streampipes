@@ -49,26 +49,27 @@ public class NumericalFilterProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.numericalfilter")
-            .category(DataProcessorType.FILTER)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.withId(NUMBER_MAPPING),
-                            PropertyScope.NONE).build())
-            .outputStrategy(OutputStrategies.keep())
-            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
-                    ">=", "==", "!="))
-            .requiredFloatParameter(Labels.withId(VALUE))
-            .build();
+        .category(DataProcessorType.FILTER)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(NUMBER_MAPPING),
+                PropertyScope.NONE).build())
+        .outputStrategy(OutputStrategies.keep())
+        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+            ">=", "==", "!="))
+        .requiredFloatParameter(Labels.withId(VALUE))
+        .build();
 
   }
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-    this.threshold = processorParams.extractor().singleValueParameter(VALUE,Double.class);
-    String stringOperation = processorParams.extractor().selectedSingleValue(OPERATION,String.class);
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.threshold = processorParams.extractor().singleValueParameter(VALUE, Double.class);
+    String stringOperation = processorParams.extractor().selectedSingleValue(OPERATION, String.class);
     String operation = "GT";
 
     if (stringOperation.equals("<=")) {
@@ -94,7 +95,7 @@ public class NumericalFilterProcessor extends StreamPipesDataProcessor {
     Boolean satisfiesFilter = false;
 
     Double value = event.getFieldBySelector(this.filterProperty).getAsPrimitive()
-            .getAsDouble();
+        .getAsDouble();
 
     Double threshold = this.threshold;
 

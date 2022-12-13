@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.adapters.generic;
 
 public class Mock {
-    public static int PORT = 8042;
+  public static final int PORT = 8042;
 
-    public static String HOST = "http://localhost:" + PORT;
+  public static final String HOST = "http://localhost:" + PORT;
 
 }

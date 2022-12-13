@@ -21,41 +21,40 @@ package org.apache.streampipes.processors.transformation.jvm.processor.state.buf
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-import java.util.List;
-
 public class StateBufferParameters extends EventProcessorBindingParams {
-    private String timeProperty;
-    private String stateProperty;
-    private String sensorValueProperty;
+  private String timeProperty;
+  private String stateProperty;
+  private String sensorValueProperty;
 
-    public StateBufferParameters(DataProcessorInvocation graph, String timeProperty, String stateProperty, String sensorValueProperty) {
-        super(graph);
-        this.timeProperty = timeProperty;
-        this.stateProperty = stateProperty;
-        this.sensorValueProperty = sensorValueProperty;
-    }
+  public StateBufferParameters(DataProcessorInvocation graph, String timeProperty, String stateProperty,
+                               String sensorValueProperty) {
+    super(graph);
+    this.timeProperty = timeProperty;
+    this.stateProperty = stateProperty;
+    this.sensorValueProperty = sensorValueProperty;
+  }
 
-    public String getTimeProperty() {
-        return timeProperty;
-    }
+  public String getTimeProperty() {
+    return timeProperty;
+  }
 
-    public void setTimeProperty(String timeProperty) {
-        this.timeProperty = timeProperty;
-    }
+  public void setTimeProperty(String timeProperty) {
+    this.timeProperty = timeProperty;
+  }
 
-    public String getStateProperty() {
-        return stateProperty;
-    }
+  public String getStateProperty() {
+    return stateProperty;
+  }
 
-    public void setStateProperty(String stateProperty) {
-        this.stateProperty = stateProperty;
-    }
+  public void setStateProperty(String stateProperty) {
+    this.stateProperty = stateProperty;
+  }
 
-    public String getSensorValueProperty() {
-        return sensorValueProperty;
-    }
+  public String getSensorValueProperty() {
+    return sensorValueProperty;
+  }
 
-    public void setSensorValueProperty(String sensorValueProperty) {
-        this.sensorValueProperty = sensorValueProperty;
-    }
+  public void setSensorValueProperty(String sensorValueProperty) {
+    this.sensorValueProperty = sensorValueProperty;
+  }
 }

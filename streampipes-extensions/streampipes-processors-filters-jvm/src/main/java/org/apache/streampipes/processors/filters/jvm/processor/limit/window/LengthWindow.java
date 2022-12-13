@@ -25,54 +25,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LengthWindow implements Window {
-    private Integer windowSize;
-    private EventSelection eventSelection;
-    private SpOutputCollector outputCollector;
-    private List<Event> events;
+  private Integer windowSize;
+  private EventSelection eventSelection;
+  private SpOutputCollector outputCollector;
+  private List<Event> events;
 
-    public LengthWindow(Integer windowSize,
-                        EventSelection eventSelection,
-                        SpOutputCollector outputCollector) {
-        this.windowSize = windowSize;
-        this.eventSelection = eventSelection;
-        this.outputCollector = outputCollector;
-        this.events = new ArrayList<>();
-    }
+  public LengthWindow(Integer windowSize,
+                      EventSelection eventSelection,
+                      SpOutputCollector outputCollector) {
+    this.windowSize = windowSize;
+    this.eventSelection = eventSelection;
+    this.outputCollector = outputCollector;
+    this.events = new ArrayList<>();
+  }
 
-    @Override
-    public void init() {
-        // do nothing.
-    }
+  @Override
+  public void init() {
+    // do nothing.
+  }
 
-    @Override
-    public void onEvent(Event event) {
-        events.add(event);
-        onTrigger();
-    }
+  @Override
+  public void onEvent(Event event) {
+    events.add(event);
+    onTrigger();
+  }
 
-    @Override
-    public void destroy() {
-        events.clear();
-    }
+  @Override
+  public void destroy() {
+    events.clear();
+  }
 
-    @Override
-    public void onTrigger() {
-        if (events.size() == 1) {
-            if (eventSelection == EventSelection.FIRST) {
-                emit(events.get(0));
-            }
-        } else if (events.size() == windowSize) {
-            if (eventSelection == EventSelection.LAST) {
-                emit(events.get(windowSize - 1));
-            } else if (eventSelection == EventSelection.ALL) {
-                events.forEach(this::emit);
-            }
-            events.clear();
-        }
+  @Override
+  public void onTrigger() {
+    if (events.size() == 1) {
+      if (eventSelection == EventSelection.FIRST) {
+        emit(events.get(0));
+      }
+    } else if (events.size() == windowSize) {
+      if (eventSelection == EventSelection.LAST) {
+        emit(events.get(windowSize - 1));
+      } else if (eventSelection == EventSelection.ALL) {
+        events.forEach(this::emit);
+      }
+      events.clear();
     }
+  }
 
-    private void emit(Event e) {
-        outputCollector.collect(e);
-    }
+  private void emit(Event e) {
+    outputCollector.collect(e);
+  }
 
 }

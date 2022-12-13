@@ -25,7 +25,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -46,30 +50,35 @@ public class SignalEdgeFilterController extends StandaloneEventProcessingDeclare
 
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge")
-            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.FILTER)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_SIGNAL_FIELD), PropertyScope.NONE)
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
-            .requiredIntegerParameter(Labels.withId(DELAY_ID), 0)
-            .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION_ID),
-                    Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
-            .outputStrategy(OutputStrategies.keep())
-            .build();
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.transformation.jvm.processor.booloperator.edge")
+        .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.FILTER)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.booleanReq(), Labels.withId(BOOLEAN_SIGNAL_FIELD),
+                PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(FLANK_ID), Options.from(BOTH, FLANK_UP, FLANK_DOWN))
+        .requiredIntegerParameter(Labels.withId(DELAY_ID), 0)
+        .requiredSingleValueSelection(Labels.withId(EVENT_SELECTION_ID),
+            Options.from(OPTION_FIRST, OPTION_LAST, OPTION_ALL))
+        .outputStrategy(OutputStrategies.keep())
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<SignalEdgeFilterParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<SignalEdgeFilterParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     String booleanSignalField = extractor.mappingPropertyValue(BOOLEAN_SIGNAL_FIELD);
     String flank = extractor.selectedSingleValue(FLANK_ID, String.class);
     Integer delay = extractor.singleValueParameter(DELAY_ID, Integer.class);
     String eventSelection = extractor.selectedSingleValue(EVENT_SELECTION_ID, String.class);
 
-    SignalEdgeFilterParameters params = new SignalEdgeFilterParameters(graph, booleanSignalField, flank, delay, eventSelection);
+    SignalEdgeFilterParameters params =
+        new SignalEdgeFilterParameters(graph, booleanSignalField, flank, delay, eventSelection);
 
     return new ConfiguredEventProcessor<>(params, SignalEdgeFilter::new);
   }

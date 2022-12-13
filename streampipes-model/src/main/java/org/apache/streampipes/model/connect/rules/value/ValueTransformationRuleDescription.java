@@ -18,23 +18,24 @@
 
 package org.apache.streampipes.model.connect.rules.value;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-        @JsonSubTypes.Type(AddTimestampRuleDescription.class),
-        @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
-        @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
-        @JsonSubTypes.Type(UnitTransformRuleDescription.class),
-        @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
+    @JsonSubTypes.Type(AddTimestampRuleDescription.class),
+    @JsonSubTypes.Type(AddValueTransformationRuleDescription.class),
+    @JsonSubTypes.Type(TimestampTranfsformationRuleDescription.class),
+    @JsonSubTypes.Type(UnitTransformRuleDescription.class),
+    @JsonSubTypes.Type(CorrectionValueTransformationRuleDescription.class),
 })
 public abstract class ValueTransformationRuleDescription extends TransformationRuleDescription {
 
-    public ValueTransformationRuleDescription() {
-        super();
-    }
+  public ValueTransformationRuleDescription() {
+    super();
+  }
 
-    public ValueTransformationRuleDescription(TransformationRuleDescription other) {
-        super();
-    }
+  public ValueTransformationRuleDescription(TransformationRuleDescription other) {
+    super();
+  }
 }

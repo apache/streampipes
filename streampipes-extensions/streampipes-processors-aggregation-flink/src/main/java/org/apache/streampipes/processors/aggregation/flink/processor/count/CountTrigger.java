@@ -24,7 +24,8 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 
 public class CountTrigger extends Trigger<Tuple3<String, String, Integer>, TimeWindow> {
   @Override
-  public TriggerResult onElement(Tuple3<String, String, Integer> stringStringIntegerTuple3, long l, TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
+  public TriggerResult onElement(Tuple3<String, String, Integer> stringStringIntegerTuple3, long l,
+                                 TimeWindow timeWindow, TriggerContext triggerContext) throws Exception {
     return TriggerResult.FIRE;
   }
 

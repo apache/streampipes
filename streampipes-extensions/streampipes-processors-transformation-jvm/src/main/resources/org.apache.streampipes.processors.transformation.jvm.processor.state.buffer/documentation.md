@@ -18,7 +18,7 @@
 
 ## State Buffer
 
-<p align="center"> 
+<p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 
@@ -27,7 +27,9 @@
 ## Description
 
 Buffers values of a sensor, while state does not change.
-Select a state field in the event. Events are buffered as long as state field does not change. When it changes result event is emitted.
+Select a state field in the event. Events are buffered as long as state field does not change.
+When it changes result
+event is emitted.
 
 ***
 
@@ -36,13 +38,17 @@ Select a state field in the event. Events are buffered as long as state field do
 Define the state and sensor value field
 
 ### Timestamp
-A mapping  property for a timestamp field
+
+A mapping property for a timestamp field
 
 ### State
-Select the field representing the state 
+
+Select the field representing the state
 
 ### Sensor value to cache
+
 Select the field with the numerical values to buffer
 
 ## Output
+
 Emits a new event on state change, with the fields `timestamp`, `state`, and a list containing all `sensor values`.

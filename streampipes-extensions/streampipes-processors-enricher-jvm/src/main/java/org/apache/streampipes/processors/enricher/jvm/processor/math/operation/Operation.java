@@ -22,5 +22,5 @@ import java.io.Serializable;
 
 public interface Operation extends Serializable {
 
-    Double operate(Double valLeft, Double valRight);
+  Double operate(Double valLeft, Double valRight);
 }

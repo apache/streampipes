@@ -19,10 +19,10 @@
 package org.apache.streampipes.processors.transformation.flink.processor.boilerplate;
 
 public enum ExtractorMode {
-    ARTICLE,
-    DEFAULT,
-    LARGEST_CONTENT,
-    CANOLA,
-    KEEP_EVERYTHING
+  ARTICLE,
+  DEFAULT,
+  LARGEST_CONTENT,
+  CANOLA,
+  KEEP_EVERYTHING
 
 }

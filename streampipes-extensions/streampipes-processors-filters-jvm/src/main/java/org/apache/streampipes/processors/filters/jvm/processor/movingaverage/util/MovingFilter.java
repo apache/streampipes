@@ -22,27 +22,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MovingFilter {
-    private int n;
-    private double filteredMeasurement;
-    private List<Double> measurements;
+  private int n;
+  private double filteredMeasurement;
+  private List<Double> measurements;
 
-    public MovingFilter(int n) {
-        this.n = n;
-        measurements = new ArrayList<Double>();
+  public MovingFilter(int n) {
+    this.n = n;
+    measurements = new ArrayList<Double>();
+  }
+
+  public double update(double newMeasurement) {
+    measurements.add(newMeasurement);
+    if (measurements.size() > n) {
+      measurements.remove(0);
     }
+    filteredMeasurement = filterMeasurement(measurements);
+    return filteredMeasurement;
+  }
 
-    public double update(double newMeasurement) {
-        measurements.add(newMeasurement);
-        if (measurements.size() > n) {
-            measurements.remove(0);
-        }
-        filteredMeasurement = filterMeasurement(measurements);
-        return filteredMeasurement;
-    }
+  public double getFilteredMeasurement() {
+    return filteredMeasurement;
+  }
 
-    public double getFilteredMeasurement() {
-        return filteredMeasurement;
-    }
-
-    protected abstract double filterMeasurement(List<Double> measurements);
+  protected abstract double filterMeasurement(List<Double> measurements);
 }

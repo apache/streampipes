@@ -1,6 +1,6 @@
 {
   "name": "apache-streampipes",
-  "version": "0.71.0-SNAPSHOT",
+  "version": "0.91.0-SNAPSHOT",
   "description": "Apache StreamPipes user interface",
   "homepage": "http://streampipes.apache.org",
   "repository": {
@@ -18,7 +18,6 @@
     "run-prebuild-script": "node ./deployment/prebuild.js",
     "build": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=8192 && npm run build-libraries && ng build --configuration production",
     "build-dev": "node ./deployment/prebuild.js && set NODE_OPTIONS=--max-old-space-size=8192 && npm run build-libraries && ng build",
-    "build-rc": "node ./deployment/prebuild.js rel && set NODE_OPTIONS=--max-old-space-size=8192 && npm run build-libraries && ng build --configuration production",
     "lint": "prettier --check . && ng lint",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "test-cypress-open": "cypress open",

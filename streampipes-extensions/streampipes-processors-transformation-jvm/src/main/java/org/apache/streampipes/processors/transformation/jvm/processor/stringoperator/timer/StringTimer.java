@@ -26,7 +26,7 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 public class StringTimer implements EventProcessor<StringTimerParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String selectedFieldName;
   private Long timestamp;
@@ -38,7 +38,7 @@ public class StringTimer implements EventProcessor<StringTimerParameters> {
   public void onInvocation(StringTimerParameters stringTimerParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = stringTimerParameters.getGraph().getLogger(StringTimer.class);
+    log = stringTimerParameters.getGraph().getLogger(StringTimer.class);
     this.selectedFieldName = stringTimerParameters.getSelectedFieldName();
     this.outputDivisor = stringTimerParameters.getOutputDivisor();
     this.useInputFrequencyForOutputFrequency = stringTimerParameters.isUseInputFrequencyForOutputFrequency();
@@ -48,29 +48,29 @@ public class StringTimer implements EventProcessor<StringTimerParameters> {
   @Override
   public void onEvent(Event inputEvent, SpOutputCollector out) {
 
-      String value = inputEvent.getFieldBySelector(selectedFieldName).getAsPrimitive().getAsString();
-      Long currentTime = System.currentTimeMillis();
+    String value = inputEvent.getFieldBySelector(selectedFieldName).getAsPrimitive().getAsString();
+    Long currentTime = System.currentTimeMillis();
 
-      if (this.fieldValueOfLastEvent == null) {
-          this.timestamp = currentTime;
-      } else {
-          // Define if result event should be emitted or not
-          if (this.useInputFrequencyForOutputFrequency || !this.fieldValueOfLastEvent.equals(value)) {
-              Long difference = currentTime - this.timestamp;
-              double result = difference / this.outputDivisor;
+    if (this.fieldValueOfLastEvent == null) {
+      this.timestamp = currentTime;
+    } else {
+      // Define if result event should be emitted or not
+      if (this.useInputFrequencyForOutputFrequency || !this.fieldValueOfLastEvent.equals(value)) {
+        Long difference = currentTime - this.timestamp;
+        double result = difference / this.outputDivisor;
 
-              inputEvent.addField(StringTimerController.MEASURED_TIME_FIELD_RUNTIME_NAME, result);
-              inputEvent.addField(StringTimerController.FIELD_VALUE_RUNTIME_NAME, this.fieldValueOfLastEvent);
-              out.collect(inputEvent);
-          }
-
-          // if state changes reset timestamp
-          if (!this.fieldValueOfLastEvent.equals(value)) {
-              timestamp = currentTime;
-          }
-
+        inputEvent.addField(StringTimerController.MEASURED_TIME_FIELD_RUNTIME_NAME, result);
+        inputEvent.addField(StringTimerController.FIELD_VALUE_RUNTIME_NAME, this.fieldValueOfLastEvent);
+        out.collect(inputEvent);
       }
-      this.fieldValueOfLastEvent = value;
+
+      // if state changes reset timestamp
+      if (!this.fieldValueOfLastEvent.equals(value)) {
+        timestamp = currentTime;
+      }
+
+    }
+    this.fieldValueOfLastEvent = value;
   }
 
   @Override

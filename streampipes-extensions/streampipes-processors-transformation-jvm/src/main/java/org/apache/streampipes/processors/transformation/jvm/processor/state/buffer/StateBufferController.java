@@ -24,14 +24,16 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.SPSensor;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
-
-import java.util.List;
 
 public class StateBufferController extends StandaloneEventProcessingDeclarer<StateBufferParameters> {
 
@@ -44,37 +46,38 @@ public class StateBufferController extends StandaloneEventProcessingDeclarer<Sta
   public static final String TIMESTAMP = "timestamp";
 
 
-
   @Override
   public DataProcessorDescription declareModel() {
-    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.processor.state.buffer")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.timestampReq(),
-                            Labels.withId(TIMESTAMP_FIELD_ID),
-                            PropertyScope.HEADER_PROPERTY)
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.domainPropertyReqList(SPSensor.STATE),
-                            Labels.withId(STATE_FIELD_ID),
-                            PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.numberReq(),
-                            Labels.withId(SENSOR_VALUE_FIELD_ID),
-                            PropertyScope.MEASUREMENT_PROPERTY)
-                    .build()
-            )
-            .outputStrategy(OutputStrategies.fixed(
-                    EpProperties.timestampProperty(TIMESTAMP),
-                    EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.Number),
-                    EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)
-            ))
-            .build();
+    return ProcessingElementBuilder.create(
+            "org.apache.streampipes.processors.transformation.jvm.processor.state.buffer")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.timestampReq(),
+                Labels.withId(TIMESTAMP_FIELD_ID),
+                PropertyScope.HEADER_PROPERTY)
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.domainPropertyReqList(SPSensor.STATE),
+                Labels.withId(STATE_FIELD_ID),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.numberReq(),
+                Labels.withId(SENSOR_VALUE_FIELD_ID),
+                PropertyScope.MEASUREMENT_PROPERTY)
+            .build()
+        )
+        .outputStrategy(OutputStrategies.fixed(
+            EpProperties.timestampProperty(TIMESTAMP),
+            EpProperties.listDoubleEp(Labels.withId(VALUES), VALUES, SO.Number),
+            EpProperties.listStringEp(Labels.withId(STATE), STATE, SPSensor.STATE)
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<StateBufferParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<StateBufferParameters> onInvocation(DataProcessorInvocation graph,
+                                                                      ProcessingElementParameterExtractor extractor) {
 
     String timeProperty = extractor.mappingPropertyValue(TIMESTAMP_FIELD_ID);
     String stateProperty = extractor.mappingPropertyValue(STATE_FIELD_ID);

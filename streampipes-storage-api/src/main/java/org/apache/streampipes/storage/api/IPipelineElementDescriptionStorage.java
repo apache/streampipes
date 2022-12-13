@@ -28,79 +28,79 @@ import java.net.URI;
 import java.util.List;
 
 public interface IPipelineElementDescriptionStorage {
-	
-	boolean storeInvocablePipelineElement(InvocableStreamPipesEntity element);
 
-	boolean storeDataStream(SpDataStream stream);
-	
-	boolean storeDataStream(String jsonld);
-	
-	boolean storeDataProcessor(DataProcessorDescription processorDescription);
-	
-	boolean storeDataProcessor(String jsonld);
-	
-	SpDataStream getDataStreamById(URI rdfId);
+  boolean storeInvocablePipelineElement(InvocableStreamPipesEntity element);
 
-	SpDataStream getDataStreamByAppId(String appId);
+  boolean storeDataStream(SpDataStream stream);
 
-	SpDataStream getDataStreamById(String rdfId);
-	
-	DataProcessorDescription getDataProcessorById(String rdfId);
-	
-	DataProcessorDescription getDataProcessorById(URI rdfId);
+  boolean storeDataStream(String jsonld);
 
-	DataProcessorDescription getDataProcessorByAppId(String appId);
-	
-	DataSinkDescription getDataSinkById(String rdfId);
-	
-	DataSinkDescription getDataSinkById(URI rdfId);
+  boolean storeDataProcessor(DataProcessorDescription processorDescription);
 
-	DataSinkDescription getDataSinkByAppId(String appId);
-	
-	List<SpDataStream> getAllDataStreams();
-	
-	List<DataProcessorDescription> getAllDataProcessors();
-	
-	boolean deleteDataStream(SpDataStream sep);
-	
-	boolean deleteDataStream(String rdfId);
-	
-	boolean deleteDataProcessor(DataProcessorDescription processorDescription);
-	
-	boolean deleteDataProcessor(String rdfId);
-	
-	boolean exists(SpDataStream stream);
-	
-	boolean exists(DataProcessorDescription processorDescription);
+  boolean storeDataProcessor(String jsonld);
 
-	boolean existsDataProcessorByAppId(String appId);
+  SpDataStream getDataStreamById(URI rdfId);
 
-	boolean existsDataSinkByAppId(String appId);
+  SpDataStream getDataStreamByAppId(String appId);
 
-	boolean existsDataProcessor(String elementId);
+  SpDataStream getDataStreamById(String rdfId);
 
-	boolean existsDataStream(String elementId);
+  DataProcessorDescription getDataProcessorById(String rdfId);
 
-	boolean existsDataSink(String elementId);
-	
-	boolean update(SpDataStream stream);
-	
-	boolean update(DataProcessorDescription processorDescription);
+  DataProcessorDescription getDataProcessorById(URI rdfId);
 
-	boolean exists(DataSinkDescription sec);
+  DataProcessorDescription getDataProcessorByAppId(String appId);
 
-	boolean update(DataSinkDescription sec);
+  DataSinkDescription getDataSinkById(String rdfId);
 
-	boolean deleteDataSink(DataSinkDescription sec);
+  DataSinkDescription getDataSinkById(URI rdfId);
 
-	boolean deleteDataSink(String rdfId);
-	
-	boolean storeDataSink(DataSinkDescription sec);
+  DataSinkDescription getDataSinkByAppId(String appId);
 
-	List<DataSinkDescription> getAllDataSinks();
-	
-	StaticProperty getStaticPropertyById(String rdfId);
-	
-	SpDataStream getEventStreamById(String rdfId);
-	
+  List<SpDataStream> getAllDataStreams();
+
+  List<DataProcessorDescription> getAllDataProcessors();
+
+  boolean deleteDataStream(SpDataStream sep);
+
+  boolean deleteDataStream(String rdfId);
+
+  boolean deleteDataProcessor(DataProcessorDescription processorDescription);
+
+  boolean deleteDataProcessor(String rdfId);
+
+  boolean exists(SpDataStream stream);
+
+  boolean exists(DataProcessorDescription processorDescription);
+
+  boolean existsDataProcessorByAppId(String appId);
+
+  boolean existsDataSinkByAppId(String appId);
+
+  boolean existsDataProcessor(String elementId);
+
+  boolean existsDataStream(String elementId);
+
+  boolean existsDataSink(String elementId);
+
+  boolean update(SpDataStream stream);
+
+  boolean update(DataProcessorDescription processorDescription);
+
+  boolean exists(DataSinkDescription sec);
+
+  boolean update(DataSinkDescription sec);
+
+  boolean deleteDataSink(DataSinkDescription sec);
+
+  boolean deleteDataSink(String rdfId);
+
+  boolean storeDataSink(DataSinkDescription sec);
+
+  List<DataSinkDescription> getAllDataSinks();
+
+  StaticProperty getStaticPropertyById(String rdfId);
+
+  SpDataStream getEventStreamById(String rdfId);
+
 }

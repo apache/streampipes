@@ -1,4 +1,4 @@
-package org.apache.streampipes.connect.iiot.adapters.simulator.machine;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.connect.iiot.adapters.simulator.machine;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -24,135 +25,129 @@ import java.util.Map;
 
 public class MachineDataSimulator implements Runnable {
 
-    private final AdapterPipeline adapterPipeline;
-    private final Integer waitTimeMs;
-    private final String selectedSimulatorOption;
+  private final AdapterPipeline adapterPipeline;
+  private final Integer waitTimeMs;
+  private final String selectedSimulatorOption;
 
-    private Boolean running;
+  private Boolean running;
 
-    public MachineDataSimulator(AdapterPipeline adapterPipeline, Integer waitTimeMs, String selectedSimulatorOption) {
-        this.adapterPipeline = adapterPipeline;
-        this.waitTimeMs = waitTimeMs;
-        this.selectedSimulatorOption = selectedSimulatorOption;
-        this.running = true;
+  public MachineDataSimulator(AdapterPipeline adapterPipeline, Integer waitTimeMs, String selectedSimulatorOption) {
+    this.adapterPipeline = adapterPipeline;
+    this.waitTimeMs = waitTimeMs;
+    this.selectedSimulatorOption = selectedSimulatorOption;
+    this.running = true;
+  }
+
+  @Override
+  public void run() {
+    this.running = true;
+    Map<String, Object> event = new HashMap<>();
+    long startTimeMs = System.currentTimeMillis();
+
+    while (running) {
+      long currentTimeMs = System.currentTimeMillis();
+      long timeDeltaMs = currentTimeMs - startTimeMs;
+
+      switch (this.selectedSimulatorOption) {
+        case "flowrate":
+          // 0 - 30s
+          if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
+            event = buildFlowrateEvent(0);
+          } else if (timeDeltaMs > 30000 && timeDeltaMs <= 60000) {
+            // 30s - 60s
+            event = buildFlowrateEvent(1);
+          } else {
+            // > 60s
+            // reset start time to start over again
+            startTimeMs = currentTimeMs;
+          }
+          break;
+        case "pressure":
+          // 0 - 30s
+          if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
+            event = buildPressureEvent(0);
+          } else if (timeDeltaMs > 30000 && timeDeltaMs <= 60000) {
+            // 30s - 60s
+            event = buildPressureEvent(1);
+          } else {
+            // > 60s
+            // reset start time to start over again
+            startTimeMs = currentTimeMs;
+          }
+          break;
+        case "waterlevel":
+          if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
+            // 0 - 30s
+            event = buildWaterlevelEvent(0);
+          } else if (timeDeltaMs > 30000 && timeDeltaMs <= 60000) {
+            // 30s - 60s
+            event = buildWaterlevelEvent(1);
+          } else {
+            // > 60s
+            // reset start time to start over again
+            startTimeMs = currentTimeMs;
+          }
+          break;
+        default:
+          try {
+            throw new AdapterException("resource not found");
+          } catch (AdapterException e) {
+            e.printStackTrace();
+          }
+      }
+
+      if (event.keySet().size() > 0) {
+        adapterPipeline.process(event);
+      }
+
+      try {
+        Thread.sleep(waitTimeMs);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
+  }
 
-    @Override
-    public void run() {
-        this.running = true;
-        Map<String, Object> event = new HashMap<>();
-        long startTimeMs = System.currentTimeMillis();
+  private Map<String, Object> buildFlowrateEvent(int simulationPhase) {
+    Map<String, Object> event = new HashMap<>();
 
-        while (running) {
-            long currentTimeMs = System.currentTimeMillis();
-            long timeDeltaMs = currentTimeMs - startTimeMs;
+    event.put("timestamp", System.currentTimeMillis());
+    event.put("sensorId", "flowrate02");
+    event.put("mass_flow", randomDoubleBetween(0, 10));
+    event.put("volume_flow", randomDoubleBetween(0, 10));
+    event.put("temperature", simulationPhase == 0 ? randomDoubleBetween(40, 50) : randomDoubleBetween(80, 100));
+    event.put("density", randomDoubleBetween(40, 50));
+    event.put("sensor_fault_flags", simulationPhase != 0);
 
-            switch(this.selectedSimulatorOption) {
-                case "flowrate":
-                    // 0 - 30s
-                    if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
-                        event = buildFlowrateEvent(0);
-                    }
-                    // 30s - 60s
-                    else if (timeDeltaMs > 30000 && timeDeltaMs <= 60000) {
-                        event = buildFlowrateEvent(1);
-                    }
-                    // > 60s
-                    else {
-                        // reset start time to start over again
-                        startTimeMs = currentTimeMs;
-                    }
-                    break;
-                case "pressure":
-                    // 0 - 30s
-                    if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
-                        event = buildPressureEvent(0);
-                    }
-                    // 30s - 60s
-                    else if (timeDeltaMs > 30000 && timeDeltaMs <= 60000) {
-                        event = buildPressureEvent(1);
-                    }
-                    // > 60s
-                    else {
-                        // reset start time to start over again
-                        startTimeMs = currentTimeMs;
-                    }
-                    break;
-                case "waterlevel":
-                    // 0 - 30s
-                    if (timeDeltaMs > 0 && timeDeltaMs <= 30000) {
-                        event = buildWaterlevelEvent(0);
-                    }
-                    // 30s - 60s
-                    else if (timeDeltaMs > 30000 && timeDeltaMs <= 60000) {
-                        event = buildWaterlevelEvent(1);
-                    }
-                    // > 60s
-                    else {
-                        // reset start time to start over again
-                        startTimeMs = currentTimeMs;
-                    }
-                    break;
-                default:
-                    try {
-                        throw new AdapterException("resource not found");
-                    } catch (AdapterException e) {
-                        e.printStackTrace();
-                    }
-            }
+    return event;
+  }
 
-            if (event.keySet().size() > 0) {
-                adapterPipeline.process(event);
-            }
+  private Map<String, Object> buildPressureEvent(int simulationPhase) {
+    Map<String, Object> event = new HashMap<>();
 
-            try {
-                Thread.sleep(waitTimeMs);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    event.put("timestamp", System.currentTimeMillis());
+    event.put("sensorId", "pressure01");
+    event.put("pressure", simulationPhase == 0 ? randomDoubleBetween(10, 40) : randomDoubleBetween(40, 70));
 
-    private Map<String, Object> buildFlowrateEvent(int simulationPhase) {
-        Map<String, Object> event = new HashMap<>();
+    return event;
+  }
 
-        event.put("timestamp", System.currentTimeMillis());
-        event.put("sensorId", "flowrate02");
-        event.put("mass_flow", randomDoubleBetween(0,10));
-        event.put("volume_flow", randomDoubleBetween(0,10));
-        event.put("temperature", simulationPhase == 0 ? randomDoubleBetween(40,50) : randomDoubleBetween(80,100));
-        event.put("density", randomDoubleBetween(40,50));
-        event.put("sensor_fault_flags", simulationPhase != 0);
+  private Map<String, Object> buildWaterlevelEvent(int simulationPhase) {
+    Map<String, Object> event = new HashMap<>();
 
-        return event;
-    }
+    event.put("timestamp", System.currentTimeMillis());
+    event.put("sensorId", "level01");
+    event.put("level", simulationPhase == 0 ? randomDoubleBetween(20, 30) : randomDoubleBetween(60, 80));
+    event.put("overflow", simulationPhase != 0);
 
-    private Map<String, Object> buildPressureEvent(int simulationPhase) {
-        Map<String, Object> event = new HashMap<>();
+    return event;
+  }
 
-        event.put("timestamp", System.currentTimeMillis());
-        event.put("sensorId", "pressure01");
-        event.put("pressure", simulationPhase == 0 ? randomDoubleBetween(10,40) : randomDoubleBetween(40,70));
+  private double randomDoubleBetween(int min, int max) {
+    return Math.random() * (max - min + 1) + min;
+  }
 
-        return event;
-    }
-
-    private Map<String, Object> buildWaterlevelEvent(int simulationPhase) {
-        Map<String, Object> event = new HashMap<>();
-
-        event.put("timestamp", System.currentTimeMillis());
-        event.put("sensorId", "level01");
-        event.put("level", simulationPhase == 0 ? randomDoubleBetween(20,30) : randomDoubleBetween(60,80));
-        event.put("overflow", simulationPhase != 0);
-
-        return event;
-    }
-
-    private double randomDoubleBetween(int min, int max) {
-        return Math.random() * (max - min + 1) + min;
-    }
-
-    public void setRunning(Boolean running) {
-        this.running = running;
-    }
+  public void setRunning(Boolean running) {
+    this.running = running;
+  }
 }

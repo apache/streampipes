@@ -23,21 +23,20 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class WordCountParameters extends EventProcessorBindingParams {
 
-	private String wordCountFieldName;
-	private Integer timeWindowValue;
+  private String wordCountFieldName;
+  private Integer timeWindowValue;
 
-	public WordCountParameters(DataProcessorInvocation graph, String wordCountFieldName, Integer timeWindowValue)
-	{
-		super(graph);
-		this.wordCountFieldName = wordCountFieldName;
-		this.timeWindowValue = timeWindowValue;
-	}
+  public WordCountParameters(DataProcessorInvocation graph, String wordCountFieldName, Integer timeWindowValue) {
+    super(graph);
+    this.wordCountFieldName = wordCountFieldName;
+    this.timeWindowValue = timeWindowValue;
+  }
 
-	public String getWordCountFieldName() {
-		return wordCountFieldName;
-	}
+  public String getWordCountFieldName() {
+    return wordCountFieldName;
+  }
 
-	public Integer getTimeWindowValue() {
-		return timeWindowValue;
-	}
+  public Integer getTimeWindowValue() {
+    return timeWindowValue;
+  }
 }

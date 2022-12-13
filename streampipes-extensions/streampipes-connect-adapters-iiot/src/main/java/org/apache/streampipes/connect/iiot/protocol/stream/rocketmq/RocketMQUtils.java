@@ -29,19 +29,20 @@ import java.util.Collections;
 
 public class RocketMQUtils {
 
-  public static PushConsumer createConsumer(String endpoint, String topic, String consumerGroup, MessageListener listener) throws ClientException {
+  public static PushConsumer createConsumer(String endpoint, String topic, String consumerGroup,
+                                            MessageListener listener) throws ClientException {
     ClientServiceProvider provider = ClientServiceProvider.loadService();
     ClientConfiguration clientConfiguration = ClientConfiguration.newBuilder()
-            .setEndpoints(endpoint)
-            .build();
+        .setEndpoints(endpoint)
+        .build();
 
     FilterExpression filterExpression = new FilterExpression("*", FilterExpressionType.TAG);
     PushConsumer consumer = provider.newPushConsumerBuilder()
-            .setClientConfiguration(clientConfiguration)
-            .setConsumerGroup(consumerGroup)
-            .setSubscriptionExpressions(Collections.singletonMap(topic, filterExpression))
-            .setMessageListener(listener)
-            .build();
+        .setClientConfiguration(clientConfiguration)
+        .setConsumerGroup(consumerGroup)
+        .setSubscriptionExpressions(Collections.singletonMap(topic, filterExpression))
+        .setMessageListener(listener)
+        .build();
     return consumer;
   }
 }

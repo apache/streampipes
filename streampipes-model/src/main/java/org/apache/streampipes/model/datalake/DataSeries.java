@@ -27,37 +27,37 @@ import java.util.Map;
 @TsModel
 public class DataSeries {
 
-    private int total;
-    private List<List<Object>> rows;
-    private Map<String, String> tags;
-    private List<String> headers;
+  private int total;
+  private List<List<Object>> rows;
+  private Map<String, String> tags;
+  private List<String> headers;
 
-    public DataSeries() {
-        this.total = 0;
-        this.tags = new HashMap<>();
-    }
+  public DataSeries() {
+    this.total = 0;
+    this.tags = new HashMap<>();
+  }
 
-    public DataSeries(int total, List<List<Object>> rows, List<String> headers, Map<String, String> tags) {
-        this.total = total;
-        this.rows = rows;
-        this.headers = headers;
-        this.tags = tags;
-    }
+  public DataSeries(int total, List<List<Object>> rows, List<String> headers, Map<String, String> tags) {
+    this.total = total;
+    this.rows = rows;
+    this.headers = headers;
+    this.tags = tags;
+  }
 
-    public int getTotal() {
-        return total;
-    }
+  public int getTotal() {
+    return total;
+  }
 
-    public Map<String, String> getTags() {
-        return tags;
-    }
+  public Map<String, String> getTags() {
+    return tags;
+  }
 
-    public List<String> getHeaders() {
-        return headers;
-    }
+  public List<String> getHeaders() {
+    return headers;
+  }
 
-    public List<List<Object>> getRows() {
-        return rows;
-    }
+  public List<List<Object>> getRows() {
+    return rows;
+  }
 
 }

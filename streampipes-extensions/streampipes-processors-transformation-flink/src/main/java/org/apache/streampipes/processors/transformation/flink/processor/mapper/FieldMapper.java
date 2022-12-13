@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.mapper;
 
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class FieldMapper implements FlatMapFunction<Event, Event> {
     }
 
     event.addField(newFieldName, HashAlgorithmType.MD5.hashAlgorithm().toHashValue(hashValue
-            .toString
+        .toString
             ()));
     out.collect(event);
   }

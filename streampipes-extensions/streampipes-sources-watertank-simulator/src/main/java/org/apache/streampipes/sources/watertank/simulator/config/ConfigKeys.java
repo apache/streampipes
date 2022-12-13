@@ -19,6 +19,6 @@
 package org.apache.streampipes.sources.watertank.simulator.config;
 
 public class ConfigKeys {
-    public final static String KAFKA_HOST = "SP_KAFKA_HOST";
-    public final static String KAFKA_PORT = "SP_KAFKA_PORT";
+  public static final String KAFKA_HOST = "SP_KAFKA_HOST";
+  public static final String KAFKA_PORT = "SP_KAFKA_PORT";
 }

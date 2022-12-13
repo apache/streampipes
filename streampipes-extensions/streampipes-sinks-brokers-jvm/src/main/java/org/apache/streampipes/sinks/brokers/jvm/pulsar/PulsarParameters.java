@@ -20,7 +20,9 @@ package org.apache.streampipes.sinks.brokers.jvm.pulsar;
 import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.wrapper.standalone.SinkParams;
 
-import static org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink.*;
+import static org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink.PULSAR_HOST_KEY;
+import static org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink.PULSAR_PORT_KEY;
+import static org.apache.streampipes.sinks.brokers.jvm.pulsar.PulsarPublisherSink.TOPIC_KEY;
 
 public class PulsarParameters {
   private String pulsarHost;

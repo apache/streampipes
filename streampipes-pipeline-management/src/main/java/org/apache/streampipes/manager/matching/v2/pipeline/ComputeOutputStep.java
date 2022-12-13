@@ -50,13 +50,13 @@ public class ComputeOutputStep extends AbstractPipelineValidationStep {
         outputSettings = schemaGenerator.buildFromOneStream(
                 pe.getInputStreams()
                 .get(0));
-      } else if (relatedPes.containsKey(pe.getDOM())) {
-        DataProcessorInvocation existingInvocation = relatedPes.get(pe.getDOM());
+      } else if (relatedPes.containsKey(pe.getDom())) {
+        DataProcessorInvocation existingInvocation = relatedPes.get(pe.getDom());
 
         outputSettings = schemaGenerator.buildFromTwoStreams(existingInvocation
                 .getInputStreams().get(0), pe.getInputStreams().get(1));
       } else {
-        relatedPes.put(target.getDOM(), pe);
+        relatedPes.put(target.getDom(), pe);
         outputSettings = new Tuple2<>(new EventSchema(), pe
                 .getOutputStrategies().get(0));
       }

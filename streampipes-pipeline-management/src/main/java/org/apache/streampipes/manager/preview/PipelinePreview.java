@@ -131,7 +131,7 @@ public class PipelinePreview {
   private List<String> collectDomIds(List<NamedStreamPipesEntity> graphs) {
     return graphs
             .stream()
-            .map(NamedStreamPipesEntity::getDOM)
+            .map(NamedStreamPipesEntity::getDom)
             .collect(Collectors.toList());
   }
 

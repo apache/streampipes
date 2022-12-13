@@ -18,16 +18,17 @@
 package org.apache.streampipes.processors.filters.jvm.processor.limit.util;
 
 import org.apache.streampipes.processors.filters.jvm.processor.limit.window.Window;
+
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 
 public class ProcessJob implements Job {
 
-    public void execute(JobExecutionContext context) {
-        JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-        Window window = (Window) dataMap.get(SchedulerUtil.WINDOW_KEY);
-        window.onTrigger();
-    }
+  public void execute(JobExecutionContext context) {
+    JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+    Window window = (Window) dataMap.get(SchedulerUtil.WINDOW_KEY);
+    window.onTrigger();
+  }
 
 }

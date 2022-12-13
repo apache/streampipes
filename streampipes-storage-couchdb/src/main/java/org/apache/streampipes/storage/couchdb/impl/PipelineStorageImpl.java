@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import com.google.gson.JsonObject;
 import org.apache.streampipes.model.VirtualSensor;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
+import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
 
 import java.util.ArrayList;
@@ -43,11 +44,11 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
   @Override
   public List<String> getPipelinesUsingAdapter(String adapterId) {
     List<JsonObject> pipelinesWithAdapter =
-            couchDbClientSupplier
-                    .get()
-                    .view(ADAPTER_VIEW)
-                    .key(adapterId)
-                    .query(JsonObject.class);
+        couchDbClientSupplier
+            .get()
+            .view(ADAPTER_VIEW)
+            .key(adapterId)
+            .query(JsonObject.class);
     return pipelinesWithAdapter.stream().map(p -> p.get("value").getAsString()).collect(Collectors.toList());
   }
 
@@ -56,8 +57,11 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
     List<Pipeline> pipelines = findAll(ALL_PIPELINES_VIEW);
 
     List<Pipeline> result = new ArrayList<>();
-    for (Pipeline p : pipelines)
-      if (p.getActions() != null) result.add(p);
+    for (Pipeline p : pipelines) {
+      if (p.getActions() != null) {
+        result.add(p);
+      }
+    }
     return result;
   }
 
@@ -65,9 +69,9 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
   public List<Pipeline> getSystemPipelines() {
     List<Pipeline> pipelines = getAllPipelines();
     return pipelines
-            .stream()
-            .filter(p -> p.getCreatedByUser().equals(SYSTEM_USER))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(p -> p.getCreatedByUser().equals(SYSTEM_USER))
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -106,8 +110,8 @@ public class PipelineStorageImpl extends AbstractDao<Pipeline> implements IPipel
   public List<VirtualSensor> getVirtualSensors(String username) {
     CouchDbClient couchDbClient = couchDbClientSupplier.get();
     List<VirtualSensor> virtualSensors = couchDbClient.view("_all_docs")
-            .includeDocs(true)
-            .query(VirtualSensor.class);
+        .includeDocs(true)
+        .query(VirtualSensor.class);
     couchDbClient.shutdown();
     return virtualSensors;
   }

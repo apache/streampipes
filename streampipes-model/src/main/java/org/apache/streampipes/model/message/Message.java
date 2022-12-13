@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.model.message;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,76 +28,70 @@ import java.util.List;
 
 @TsModel
 @JsonSubTypes({
-				@JsonSubTypes.Type(DataSetModificationMessage.class),
-				@JsonSubTypes.Type(ErrorMessage.class),
-				@JsonSubTypes.Type(SuccessMessage.class),
-				@JsonSubTypes.Type(PipelineModificationMessage.class),
+    @JsonSubTypes.Type(DataSetModificationMessage.class),
+    @JsonSubTypes.Type(ErrorMessage.class),
+    @JsonSubTypes.Type(SuccessMessage.class),
+    @JsonSubTypes.Type(PipelineModificationMessage.class),
 })
 public abstract class Message {
 
-	private boolean success;
-	private String elementName;
-	
-	private List<Notification> notifications;
-	
-	public Message(){
+  private boolean success;
+  private String elementName;
+
+  private List<Notification> notifications;
+
+  public Message() {
 
   }
 
-	public Message(boolean success){
-		this.success = success;
-		this.notifications = null;
-	}
-	
-	public Message(boolean success, List<Notification> notifications) {
-		super();
-		this.success = success;
-		this.notifications = notifications;
-	}
-	
-	public Message(boolean success, List<Notification> notifications, String elementName) {
-		this(success, notifications);
-		this.elementName = elementName;
-	}
-	
-	
-	public Message(boolean success, Notification...notifications)
-	{
-		this.success = success;
-		this.notifications = new ArrayList<>();
-		this.notifications.addAll(Arrays.asList(notifications));
-	}
+  public Message(boolean success) {
+    this.success = success;
+    this.notifications = null;
+  }
 
-	public boolean isSuccess() {
-		return success;
-	}
+  public Message(boolean success, List<Notification> notifications) {
+    super();
+    this.success = success;
+    this.notifications = notifications;
+  }
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
+  public Message(boolean success, List<Notification> notifications, String elementName) {
+    this(success, notifications);
+    this.elementName = elementName;
+  }
 
-	public List<Notification> getNotifications() {
-		return notifications;
-	}
 
-	public void setNotifications(List<Notification> notifications) {
-		this.notifications = notifications;
-	}
-	
-	public boolean addNotification(Notification notification)
-	{
-		return notifications.add(notification);
-	}
+  public Message(boolean success, Notification... notifications) {
+    this.success = success;
+    this.notifications = new ArrayList<>();
+    this.notifications.addAll(Arrays.asList(notifications));
+  }
 
-	public String getElementName() {
-		return elementName;
-	}
+  public boolean isSuccess() {
+    return success;
+  }
 
-	public void setElementName(String elementName) {
-		this.elementName = elementName;
-	}
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
 
-	
-	
-	
+  public List<Notification> getNotifications() {
+    return notifications;
+  }
+
+  public void setNotifications(List<Notification> notifications) {
+    this.notifications = notifications;
+  }
+
+  public boolean addNotification(Notification notification) {
+    return notifications.add(notification);
+  }
+
+  public String getElementName() {
+    return elementName;
+  }
+
+  public void setElementName(String elementName) {
+    this.elementName = elementName;
+  }
 }

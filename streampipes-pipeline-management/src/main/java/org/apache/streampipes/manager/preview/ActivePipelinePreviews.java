@@ -56,7 +56,7 @@ public enum ActivePipelinePreviews {
     } else {
       return graphs
               .stream()
-              .filter(g -> g.getDOM().equals(pipelineElementDomId))
+              .filter(g -> g.getDom().equals(pipelineElementDomId))
               .findFirst();
     }
   }

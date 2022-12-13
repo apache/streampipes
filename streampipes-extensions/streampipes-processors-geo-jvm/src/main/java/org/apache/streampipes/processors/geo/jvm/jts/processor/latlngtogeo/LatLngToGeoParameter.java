@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo;
+package org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;

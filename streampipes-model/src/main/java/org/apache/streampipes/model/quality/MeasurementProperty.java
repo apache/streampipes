@@ -18,23 +18,24 @@
 
 package org.apache.streampipes.model.quality;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-				@JsonSubTypes.Type(EventPropertyQualityDefinition.class),
-				@JsonSubTypes.Type(EventStreamQualityDefinition.class)
+    @JsonSubTypes.Type(EventPropertyQualityDefinition.class),
+    @JsonSubTypes.Type(EventStreamQualityDefinition.class)
 })
 public abstract class MeasurementProperty extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 8527800469513813552L;
+  private static final long serialVersionUID = 8527800469513813552L;
 
-	public MeasurementProperty() {
-		super();
-	}
-	
-	public MeasurementProperty(MeasurementProperty other) {
-		super(other);
-	}
+  public MeasurementProperty() {
+    super();
+  }
+
+  public MeasurementProperty(MeasurementProperty other) {
+    super(other);
+  }
 
 }

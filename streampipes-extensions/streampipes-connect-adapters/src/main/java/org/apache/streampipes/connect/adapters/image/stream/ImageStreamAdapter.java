@@ -19,11 +19,11 @@
 package org.apache.streampipes.connect.adapters.image.stream;
 
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.connect.adapters.image.ImageZipAdapter;
 import org.apache.streampipes.connect.adapters.image.ImageZipUtils;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.sdk.builder.adapter.GuessSchemaBuilder;
@@ -32,66 +32,69 @@ import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.utils.Assets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.apache.streampipes.sdk.helpers.EpProperties.*;
+import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
+import static org.apache.streampipes.sdk.helpers.EpProperties.timestampProperty;
 
 public class ImageStreamAdapter extends SpecificDataStreamAdapter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ImageStreamAdapter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ImageStreamAdapter.class);
 
-    public static final String ID = "org.apache.streampipes.connect.adapters.image.stream";
+  public static final String ID = "org.apache.streampipes.connect.adapters.image.stream";
 
-    private ImageZipAdapter imageZipAdapter;
+  private ImageZipAdapter imageZipAdapter;
 
-    public ImageStreamAdapter() {
+  public ImageStreamAdapter() {
 
-    }
+  }
 
-    public ImageStreamAdapter(SpecificAdapterStreamDescription adapterDescription) {
-        super(adapterDescription);
-    }
+  public ImageStreamAdapter(SpecificAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+  }
 
-    @Override
-    public SpecificAdapterStreamDescription declareModel() {
-        SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
-                .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY), Filetypes.ZIP)
-                .build();
-        description.setAppId(ID);
+  @Override
+  public SpecificAdapterStreamDescription declareModel() {
+    SpecificAdapterStreamDescription description = SpecificDataStreamAdapterBuilder.create(ID)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredIntegerParameter(Labels.withId(ImageZipUtils.INTERVAL_KEY))
+        .requiredFile(Labels.withId(ImageZipUtils.ZIP_FILE_KEY), Filetypes.ZIP)
+        .build();
+    description.setAppId(ID);
 
-        return description;
-    }
+    return description;
+  }
 
-    @Override
-    public void startAdapter() throws AdapterException {
-        imageZipAdapter = new ImageZipAdapter(adapterDescription);
-        imageZipAdapter.start(adapterPipeline, true);
-    }
+  @Override
+  public void startAdapter() throws AdapterException {
+    imageZipAdapter = new ImageZipAdapter(adapterDescription);
+    imageZipAdapter.start(adapterPipeline, true);
+  }
 
-    @Override
-    public void stopAdapter() throws AdapterException {
-        imageZipAdapter.stop();
-    }
+  @Override
+  public void stopAdapter() throws AdapterException {
+    imageZipAdapter.stop();
+  }
 
-    @Override
-    public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
-        return GuessSchemaBuilder.create()
-                .property(timestampProperty(ImageZipUtils.TIMESTAMP))
-                .property(imageProperty(ImageZipUtils.IMAGE))
-                .build();
-    }
+  @Override
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+      throws AdapterException, ParseException {
+    return GuessSchemaBuilder.create()
+        .property(timestampProperty(ImageZipUtils.TIMESTAMP))
+        .property(imageProperty(ImageZipUtils.IMAGE))
+        .build();
+  }
 
-    @Override
-    public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
-        return new ImageStreamAdapter(adapterDescription);
-    }
+  @Override
+  public Adapter getInstance(SpecificAdapterStreamDescription adapterDescription) {
+    return new ImageStreamAdapter(adapterDescription);
+  }
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+  @Override
+  public String getId() {
+    return ID;
+  }
 }

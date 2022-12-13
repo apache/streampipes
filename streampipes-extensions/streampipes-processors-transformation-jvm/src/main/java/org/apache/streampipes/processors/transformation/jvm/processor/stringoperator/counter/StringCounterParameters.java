@@ -22,15 +22,15 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class StringCounterParameters extends EventProcessorBindingParams {
-    private String selectedFieldName;
+  private String selectedFieldName;
 
-    public StringCounterParameters(DataProcessorInvocation graph, String selectedFieldName) {
-        super(graph);
-        this.selectedFieldName = selectedFieldName;
-    }
+  public StringCounterParameters(DataProcessorInvocation graph, String selectedFieldName) {
+    super(graph);
+    this.selectedFieldName = selectedFieldName;
+  }
 
-    public String getSelectedFieldName() {
-        return selectedFieldName;
-    }
+  public String getSelectedFieldName() {
+    return selectedFieldName;
+  }
 
 }

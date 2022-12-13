@@ -22,27 +22,26 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class ChunkerParameters extends EventProcessorBindingParams {
-    private String tags;
-    private String tokens;
-    private byte[] fileContent;
+  private String tags;
+  private String tokens;
+  private byte[] fileContent;
 
-    public ChunkerParameters(DataProcessorInvocation graph, String tags, String tokens, byte[] fileContent)
-    {
-        super(graph);
-        this.tags = tags;
-        this.tokens = tokens;
-        this.fileContent = fileContent;
-    }
+  public ChunkerParameters(DataProcessorInvocation graph, String tags, String tokens, byte[] fileContent) {
+    super(graph);
+    this.tags = tags;
+    this.tokens = tokens;
+    this.fileContent = fileContent;
+  }
 
-    public String getTags() {
-        return tags;
-    }
+  public String getTags() {
+    return tags;
+  }
 
-    public String getTokens() {
-        return tokens;
-    }
+  public String getTokens() {
+    return tokens;
+  }
 
-    public byte[] getFileContent() {
-        return fileContent;
-    }
+  public byte[] getFileContent() {
+    return fileContent;
+  }
 }

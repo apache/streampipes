@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.iiot.adapters.opcua;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfig;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaTypes;
 import org.apache.streampipes.model.staticproperty.TreeInputNode;
+
 import org.eclipse.milo.opcua.sdk.client.AddressSpace;
 import org.eclipse.milo.opcua.sdk.client.OpcUaClient;
 import org.eclipse.milo.opcua.sdk.client.nodes.UaNode;
@@ -55,7 +56,7 @@ public class OpcUaNodeBrowser {
 
   public List<OpcNode> findNodes() throws UaException {
     var opcNodes = new ArrayList<OpcNode>();
-    for(String selectedNodeName: this.spOpcConfig.getSelectedNodeNames()) {
+    for (String selectedNodeName : this.spOpcConfig.getSelectedNodeNames()) {
       opcNodes.add(toOpcNode(selectedNodeName));
     }
 
@@ -64,11 +65,11 @@ public class OpcUaNodeBrowser {
 
   public List<OpcNode> findNodes(List<String> runtimeNameFilters) throws UaException {
     return findNodes()
-      .stream()
-      .filter(node -> runtimeNameFilters
         .stream()
-        .noneMatch(f -> f.equals(node.getLabel())))
-      .collect(Collectors.toList());
+        .filter(node -> runtimeNameFilters
+            .stream()
+            .noneMatch(f -> f.equals(node.getLabel())))
+        .collect(Collectors.toList());
   }
 
   public List<TreeInputNode> buildNodeTreeFromOrigin() throws UaException, ExecutionException, InterruptedException {
@@ -91,7 +92,7 @@ public class OpcUaNodeBrowser {
     NodeId nodeId = NodeId.parse(nodeName);
     UaNode node = addressSpace.getNode(nodeId);
 
-    LOG.info("Using node of type {}", node.getNodeClass().toString() );
+    LOG.info("Using node of type {}", node.getNodeClass().toString());
 
     if (node instanceof UaVariableNode) {
       UInteger value = (UInteger) ((UaVariableNode) node).getDataType().getIdentifier();
@@ -116,7 +117,7 @@ public class OpcUaNodeBrowser {
       });
 
       Stream<CompletableFuture<Void>> futures =
-              tree.getChildren().stream().map(child -> buildTreeAsync(client, child));
+          tree.getChildren().stream().map(child -> buildTreeAsync(client, child));
 
       return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
     });
@@ -127,6 +128,7 @@ public class OpcUaNodeBrowser {
   }
 
   private boolean isDataNode(UaNode node) {
-    return (node.getNodeClass().equals(NodeClass.Variable) || (node.getNodeClass().equals(NodeClass.VariableType))) && node instanceof UaVariableNode;
+    return (node.getNodeClass().equals(NodeClass.Variable) || (node.getNodeClass().equals(NodeClass.VariableType)))
+        && node instanceof UaVariableNode;
   }
 }

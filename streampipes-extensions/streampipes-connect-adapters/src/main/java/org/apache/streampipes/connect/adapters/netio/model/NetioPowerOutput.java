@@ -25,102 +25,102 @@ import javax.annotation.Generated;
 @Generated("net.hexar.json2pojo")
 public class NetioPowerOutput {
 
-    @SerializedName("ID")
-    private int id;
+  @SerializedName("ID")
+  private int id;
 
-    @SerializedName("Name")
-    private String name;
+  @SerializedName("Name")
+  private String name;
 
-    @SerializedName("State")
-    private int state;
+  @SerializedName("State")
+  private int state;
 
-    @SerializedName("Action")
-    private int action;
+  @SerializedName("Action")
+  private int action;
 
-    @SerializedName("Delay")
-    private int delay;
+  @SerializedName("Delay")
+  private int delay;
 
-    @SerializedName("Current")
-    private float current;
+  @SerializedName("Current")
+  private float current;
 
-    @SerializedName("PowerFactor")
-    private float powerFactor;
+  @SerializedName("PowerFactor")
+  private float powerFactor;
 
-    @SerializedName("Load")
-    private float load;
+  @SerializedName("Load")
+  private float load;
 
-    @SerializedName("Energy")
-    private float energy;
+  @SerializedName("Energy")
+  private float energy;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public int getState() {
-        return state;
-    }
+  public int getState() {
+    return state;
+  }
 
-    public void setState(int state) {
-        this.state = state;
-    }
+  public void setState(int state) {
+    this.state = state;
+  }
 
-    public int getAction() {
-        return action;
-    }
+  public int getAction() {
+    return action;
+  }
 
-    public void setAction(int action) {
-        this.action = action;
-    }
+  public void setAction(int action) {
+    this.action = action;
+  }
 
-    public int getDelay() {
-        return delay;
-    }
+  public int getDelay() {
+    return delay;
+  }
 
-    public void setDelay(int delay) {
-        this.delay = delay;
-    }
+  public void setDelay(int delay) {
+    this.delay = delay;
+  }
 
-    public float getCurrent() {
-        return current;
-    }
+  public float getCurrent() {
+    return current;
+  }
 
-    public void setCurrent(float current) {
-        this.current = current;
-    }
+  public void setCurrent(float current) {
+    this.current = current;
+  }
 
-    public float getPowerFactor() {
-        return powerFactor;
-    }
+  public float getPowerFactor() {
+    return powerFactor;
+  }
 
-    public void setPowerFactor(float powerFactor) {
-        this.powerFactor = powerFactor;
-    }
+  public void setPowerFactor(float powerFactor) {
+    this.powerFactor = powerFactor;
+  }
 
-    public float getLoad() {
-        return load;
-    }
+  public float getLoad() {
+    return load;
+  }
 
-    public void setLoad(float load) {
-        this.load = load;
-    }
+  public void setLoad(float load) {
+    this.load = load;
+  }
 
-    public float getEnergy() {
-        return energy;
-    }
+  public float getEnergy() {
+    return energy;
+  }
 
-    public void setEnergy(float energy) {
-        this.energy = energy;
-    }
+  public void setEnergy(float energy) {
+    this.energy = energy;
+  }
 }

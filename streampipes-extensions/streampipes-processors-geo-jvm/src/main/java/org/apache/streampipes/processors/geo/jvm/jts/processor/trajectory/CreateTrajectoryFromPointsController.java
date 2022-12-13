@@ -25,25 +25,30 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 
-public class CreateTrajectoryFromPointsController extends StandaloneEventProcessingDeclarer<CreateTrajectoryFromPointsParameter> {
+public class CreateTrajectoryFromPointsController
+    extends StandaloneEventProcessingDeclarer<CreateTrajectoryFromPointsParameter> {
 
 
-  public final static String POINT_KEY = "point-key";
-  public final static String EPSG_KEY = "epsg-key";
-  public final static String M_KEY = "m-key";
-  public final static String DESCRIPTION_KEY = "description-key";
-  public final static String SUBPOINTS_KEY = "subpoints-key";
+  public static final String POINT_KEY = "point-key";
+  public static final String EPSG_KEY = "epsg-key";
+  public static final String M_KEY = "m-key";
+  public static final String DESCRIPTION_KEY = "description-key";
+  public static final String SUBPOINTS_KEY = "subpoints-key";
 
-  public final static String WKT_KEY = "trajectory-key";
-  public final static String WKT_RUNTIME = "trajectoryWKT";
+  public static final String WKT_KEY = "trajectory-key";
+  public static final String WKT_RUNTIME = "trajectoryWKT";
 
-  public final static String DESCRIPTION_RUNTIME = "trajectoryDescription";
+  public static final String DESCRIPTION_RUNTIME = "trajectoryDescription";
 
 
   @Override
@@ -79,15 +84,15 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
         )
 
         .outputStrategy(OutputStrategies.append(
-            EpProperties.stringEp(
-                Labels.withId(DESCRIPTION_KEY),
-                DESCRIPTION_RUNTIME,
-                SO.Text
-            ),
-            EpProperties.stringEp(
-                Labels.withId(WKT_KEY),
-                WKT_RUNTIME,
-                "http://www.opengis.net/ont/geosparql#Geometry")
+                EpProperties.stringEp(
+                    Labels.withId(DESCRIPTION_KEY),
+                    DESCRIPTION_RUNTIME,
+                    SO.Text
+                ),
+                EpProperties.stringEp(
+                    Labels.withId(WKT_KEY),
+                    WKT_RUNTIME,
+                    "http://www.opengis.net/ont/geosparql#Geometry")
             )
         )
         .build();
@@ -95,7 +100,9 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
 
 
   @Override
-  public ConfiguredEventProcessor<CreateTrajectoryFromPointsParameter> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<CreateTrajectoryFromPointsParameter> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
 
     String wkt = extractor.mappingPropertyValue(POINT_KEY);
@@ -106,7 +113,8 @@ public class CreateTrajectoryFromPointsController extends StandaloneEventProcess
     Integer subpoints = extractor.singleValueParameter(SUBPOINTS_KEY, Integer.class);
 
 
-    CreateTrajectoryFromPointsParameter params = new CreateTrajectoryFromPointsParameter(graph, wkt, epsg, description, subpoints, m);
+    CreateTrajectoryFromPointsParameter params =
+        new CreateTrajectoryFromPointsParameter(graph, wkt, epsg, description, subpoints, m);
 
     return new ConfiguredEventProcessor<>(params, CreateTrajectoryFromPoints::new);
   }

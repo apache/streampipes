@@ -31,11 +31,11 @@ public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
   }
 
   private String fromStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
-    return "define stream Test(timestamp LONG,message STRING);\n" +
-            "from every not "
-            + siddhiParams.getInputStreamNames().get(0)
-            + " for " + siddhiParams.getParams().getDuration()
-            + " sec";
+    return "define stream Test(timestamp LONG,message STRING);\n"
+        + "from every not "
+        + siddhiParams.getInputStreamNames().get(0)
+        + " for " + siddhiParams.getParams().getDuration()
+        + " sec";
   }
 
   private String selectStatement(SiddhiProcessorParams<StreamStopParameters> siddhiParams) {
@@ -50,11 +50,11 @@ public class StreamStop extends SiddhiEventEngine<StreamStopParameters> {
     InsertIntoClause insertIntoClause = InsertIntoClause.create(finalInsertIntoStreamName);
 
     return SiddhiAppConfigBuilder
-            .create()
-            .addQuery(SiddhiQueryBuilder
-                    .create(fromStatement(siddhiParams), insertIntoClause)
-                    .withSelectClause(selectStatement(siddhiParams))
-                    .build())
-            .build();
+        .create()
+        .addQuery(SiddhiQueryBuilder
+            .create(fromStatement(siddhiParams), insertIntoClause)
+            .withSelectClause(selectStatement(siddhiParams))
+            .build())
+        .build();
   }
 }

@@ -20,22 +20,22 @@ package org.apache.streampipes.model.connect.rules.value;
 
 public class AddTimestampRuleDescription extends ValueTransformationRuleDescription {
 
-    private String runtimeKey;
+  private String runtimeKey;
 
-    public AddTimestampRuleDescription() {
-        super();
-    }
+  public AddTimestampRuleDescription() {
+    super();
+  }
 
-    public AddTimestampRuleDescription(AddTimestampRuleDescription other) {
-        super(other);
-        this.runtimeKey = other.getRuntimeKey();
-    }
+  public AddTimestampRuleDescription(AddTimestampRuleDescription other) {
+    super(other);
+    this.runtimeKey = other.getRuntimeKey();
+  }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
-    }
+  public String getRuntimeKey() {
+    return runtimeKey;
+  }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
-    }
+  public void setRuntimeKey(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 }

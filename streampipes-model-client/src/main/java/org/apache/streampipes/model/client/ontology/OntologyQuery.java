@@ -22,33 +22,33 @@ import java.util.List;
 
 public class OntologyQuery {
 
-	private String requiredClass;
-	
-	private List<OntologyQueryItem> requiredProperties;
+  private String requiredClass;
 
-	
-	public OntologyQuery(String requiredClass,
-			List<OntologyQueryItem> requiredProperties) {
-		super();
-		this.requiredClass = requiredClass;
-		this.requiredProperties = requiredProperties;
-	}
+  private List<OntologyQueryItem> requiredProperties;
 
-	public String getRequiredClass() {
-		return requiredClass;
-	}
 
-	public void setRequiredClass(String requiredClass) {
-		this.requiredClass = requiredClass;
-	}
+  public OntologyQuery(String requiredClass,
+                       List<OntologyQueryItem> requiredProperties) {
+    super();
+    this.requiredClass = requiredClass;
+    this.requiredProperties = requiredProperties;
+  }
 
-	public List<OntologyQueryItem> getRequiredProperties() {
-		return requiredProperties;
-	}
+  public String getRequiredClass() {
+    return requiredClass;
+  }
 
-	public void setRequiredProperties(List<OntologyQueryItem> requiredProperties) {
-		this.requiredProperties = requiredProperties;
-	}
-	
-	
+  public void setRequiredClass(String requiredClass) {
+    this.requiredClass = requiredClass;
+  }
+
+  public List<OntologyQueryItem> getRequiredProperties() {
+    return requiredProperties;
+  }
+
+  public void setRequiredProperties(List<OntologyQueryItem> requiredProperties) {
+    this.requiredProperties = requiredProperties;
+  }
+
+
 }

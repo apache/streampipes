@@ -20,54 +20,54 @@ package org.apache.streampipes.model.schema;
 
 public class QuantitativeValue extends ValueSpecification {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private Float minValue;
+  private Float minValue;
 
-	private Float maxValue;
+  private Float maxValue;
 
-	private Float step;
+  private Float step;
 
-	public QuantitativeValue() {
-		super();
-	}
+  public QuantitativeValue() {
+    super();
+  }
 
-	public QuantitativeValue(Float minValue, Float maxValue, Float step) {
-		super();
-		this.minValue = minValue;
-		this.maxValue = maxValue;
-		this.step = step;
-	}
-	
-	public QuantitativeValue(QuantitativeValue other) {
-		super(other);
-		this.minValue = other.getMinValue();
-		this.maxValue = other.getMaxValue();
-		this.step = other.getStep();
-	}
+  public QuantitativeValue(Float minValue, Float maxValue, Float step) {
+    super();
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.step = step;
+  }
 
-	public Float getMinValue() {
-		return minValue;
-	}
+  public QuantitativeValue(QuantitativeValue other) {
+    super(other);
+    this.minValue = other.getMinValue();
+    this.maxValue = other.getMaxValue();
+    this.step = other.getStep();
+  }
 
-	public void setMinValue(Float minValue) {
-		this.minValue = minValue;
-	}
+  public Float getMinValue() {
+    return minValue;
+  }
 
-	public Float getMaxValue() {
-		return maxValue;
-	}
+  public void setMinValue(Float minValue) {
+    this.minValue = minValue;
+  }
 
-	public void setMaxValue(Float maxValue) {
-		this.maxValue = maxValue;
-	}
+  public Float getMaxValue() {
+    return maxValue;
+  }
 
-	public Float getStep() {
-		return step;
-	}
+  public void setMaxValue(Float maxValue) {
+    this.maxValue = maxValue;
+  }
 
-	public void setStep(Float step) {
-		this.step = step;
-	}
-		
+  public Float getStep() {
+    return step;
+  }
+
+  public void setStep(Float step) {
+    this.step = step;
+  }
+
 }

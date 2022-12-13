@@ -17,6 +17,8 @@
  */
 package org.apache.streampipes.processors.textmining.flink.processor.language;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import com.optimaize.langdetect.LanguageDetector;
 import com.optimaize.langdetect.LanguageDetectorBuilder;
 import com.optimaize.langdetect.i18n.LdLocale;
@@ -28,7 +30,6 @@ import com.optimaize.langdetect.text.TextObject;
 import com.optimaize.langdetect.text.TextObjectFactory;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,17 +52,17 @@ public class LanguageDetection implements FlatMapFunction<Event, Event> {
     }
 
     this.languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
-            .withProfiles(languageProfiles)
-            .build();
+        .withProfiles(languageProfiles)
+        .build();
 
     this.textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
   }
 
   @Override
-  public void flatMap(Event in, Collector<Event> out)  {
+  public void flatMap(Event in, Collector<Event> out) {
 
     TextObject textObject = textObjectFactory.forText(in.getFieldBySelector(fieldName)
-            .getAsPrimitive().getAsString());
+        .getAsPrimitive().getAsString());
     com.google.common.base.Optional<LdLocale> lang = languageDetector.detect(textObject);
 
     if (lang.isPresent()) {

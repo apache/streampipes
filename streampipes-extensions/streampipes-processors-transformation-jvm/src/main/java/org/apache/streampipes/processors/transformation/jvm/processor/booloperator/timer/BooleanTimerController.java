@@ -25,7 +25,12 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
@@ -48,25 +53,28 @@ public class BooleanTimerController extends StandaloneEventProcessingDeclarer<Bo
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.timer")
-            .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.booleanReq(),
-                            Labels.withId(FIELD_ID),
-                            PropertyScope.NONE)
-                    .build())
-            .requiredSingleValueSelection(Labels.withId(TIMER_FIELD_ID), Options.from(TRUE, FALSE))
-            .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID), "measured_time", "http://schema.org/Number")
-            ))
-            .build();
+        .category(DataProcessorType.BOOLEAN_OPERATOR, DataProcessorType.TIME)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.booleanReq(),
+                Labels.withId(FIELD_ID),
+                PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelection(Labels.withId(TIMER_FIELD_ID), Options.from(TRUE, FALSE))
+        .requiredSingleValueSelection(Labels.withId(OUTPUT_UNIT_ID), Options.from(MILLISECONDS, SECONDS, MINUTES))
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.numberEp(Labels.withId(MEASURED_TIME_ID),
+                "measured_time",
+                "http://schema.org/Number")
+        ))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<BooleanTimerParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<BooleanTimerParameters> onInvocation(
+      DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
 
     String invertFieldName = extractor.mappingPropertyValue(FIELD_ID);
     String measureTrueString = extractor.selectedSingleValue(TIMER_FIELD_ID, String.class);
@@ -78,7 +86,7 @@ public class BooleanTimerController extends StandaloneEventProcessingDeclarer<Bo
       measureTrue = true;
     }
 
-    double outputDivisor= 1.0;
+    double outputDivisor = 1.0;
     if (outputUnit.equals(SECONDS)) {
       outputDivisor = 1000.0;
     } else if (outputUnit.equals(MINUTES)) {

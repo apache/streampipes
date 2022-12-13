@@ -28,49 +28,49 @@ import java.util.List;
 
 public class LabelStorageImpl extends AbstractDao<Label> implements ILabelStorage {
 
-    public LabelStorageImpl() {
-        super(Utils::getCouchDbLabelClient, Label.class);
-    }
+  public LabelStorageImpl() {
+    super(Utils::getCouchDbLabelClient, Label.class);
+  }
 
-    @Override
-    public List<Label> getAllLabels() {
-        return findAll();
-    }
+  @Override
+  public List<Label> getAllLabels() {
+    return findAll();
+  }
 
-    @Override
-    public String storeLabel(Label label) {
-        return persist(label).b;
-    }
+  @Override
+  public String storeLabel(Label label) {
+    return persist(label).v;
+  }
 
-    @Override
-    public Label getLabel(String labelId) {
-        return find(labelId).orElse(new Label());
-    }
+  @Override
+  public Label getLabel(String labelId) {
+    return find(labelId).orElse(new Label());
+  }
 
-    @Override
-    public void deleteLabel(String labelId) {
-        delete(labelId);
-    }
+  @Override
+  public void deleteLabel(String labelId) {
+    delete(labelId);
+  }
 
-    @Override
-    public void updateLabel(Label label) {
-        update(label);
-    }
+  @Override
+  public void updateLabel(Label label) {
+    update(label);
+  }
 
-    @Override
-    public List<Label> getAllForCategory(String categoryId) {
-        return couchDbClientSupplier.get()
-                .view("categoryId/categoryId")
-                .key(categoryId)
-                .includeDocs(true)
-                .query(clazz);
-    }
+  @Override
+  public List<Label> getAllForCategory(String categoryId) {
+    return couchDbClientSupplier.get()
+        .view("categoryId/categoryId")
+        .key(categoryId)
+        .includeDocs(true)
+        .query(clazz);
+  }
 
-    @Override
-    public void deleteAllForCategory(String categoryId) {
-        List<Label> labelsForCategory = getAllForCategory(categoryId);
-        for (Label label: labelsForCategory) {
-            delete(label.getId());
-        }
+  @Override
+  public void deleteAllForCategory(String categoryId) {
+    List<Label> labelsForCategory = getAllForCategory(categoryId);
+    for (Label label : labelsForCategory) {
+      delete(label.getId());
     }
+  }
 }

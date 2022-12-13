@@ -26,17 +26,16 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 public class BooleanInverter implements EventProcessor<BooleanInverterParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String invertFieldName;
-
 
 
   @Override
   public void onInvocation(BooleanInverterParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanInverterParameters.getGraph().getLogger(BooleanInverter.class);
+    log = booleanInverterParameters.getGraph().getLogger(BooleanInverter.class);
     this.invertFieldName = booleanInverterParameters.getInvertFieldName();
   }
 

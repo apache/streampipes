@@ -24,7 +24,7 @@ import setuptools
 NAME = "streampipes_client"
 DESCRIPTION = "Python client for Apache StreamPipes"
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
-URL = "https://github.com/apache/incubator-streampipes/"
+URL = "https://github.com/apache/streampipes/"
 EMAIL = "dev@streampipes.apache.org"
 AUTHOR = "Apache Software Foundation"
 REQUIRES_PYTHON = ">=3.8.0"
@@ -61,6 +61,7 @@ docs_packages = [
     "mkdocs-gen-files>=0.3.5",
     "mkdocs-literate-nav>=0.4.1",
     "numpydoc>=1.2",
+    "mkdocs-jupyter>=0.22.0 "
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))

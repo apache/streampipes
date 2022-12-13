@@ -23,12 +23,13 @@
 
 ## Description
 
-Replaces the runtime name of an event property with a custom defined name. Useful for data ingestion purposes where a specific event schema is required.
+Replaces the runtime name of an event property with a custom defined name.
+Useful for data ingestion purposes where a specific event schema is required.
 
 
 ***
 
-### OldFieldName   
+### OldFieldName
 Specifies the field to rename.
 
 ### NewFieldName
@@ -40,13 +41,13 @@ Example:
 Old Output:
 ```
 {
-  'timestamp': 16003000, 
+  'timestamp': 16003000,
 }
 ```
 
 New Ouput:
 ```
 {
-  'time': 16003000, 
+  'time': 16003000,
 }
 ```

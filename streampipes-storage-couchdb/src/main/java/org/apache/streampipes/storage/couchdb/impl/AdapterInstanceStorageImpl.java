@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
@@ -27,45 +25,48 @@ import org.apache.streampipes.storage.couchdb.dao.DbCommand;
 import org.apache.streampipes.storage.couchdb.dao.FindCommand;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Optional;
 
 public class AdapterInstanceStorageImpl extends AbstractDao<AdapterDescription> implements IAdapterStorage {
 
-    Logger LOG = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class);
+  private static final String SYSTEM_USER = "system";
+  Logger logger = LoggerFactory.getLogger(AdapterInstanceStorageImpl.class);
 
-    private static final String SYSTEM_USER = "system";
+  public AdapterInstanceStorageImpl() {
+    super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
+  }
 
-    public AdapterInstanceStorageImpl() {
-        super(Utils::getCouchDbAdapterInstanceClient, AdapterDescription.class);
-    }
+  @Override
+  public List<AdapterDescription> getAllAdapters() {
+    return findAll();
+  }
 
-    @Override
-    public List<AdapterDescription> getAllAdapters() {
-        return findAll();
-    }
+  @Override
+  public String storeAdapter(AdapterDescription adapter) {
+    return persist(adapter).v;
+  }
 
-    @Override
-    public String storeAdapter(AdapterDescription adapter) {
-        return persist(adapter).b;
-    }
+  @Override
+  public void updateAdapter(AdapterDescription adapter) {
+    couchDbClientSupplier.get().update(adapter);
+  }
 
-    @Override
-    public void updateAdapter(AdapterDescription adapter) {
-        couchDbClientSupplier.get().update(adapter);
-    }
+  @Override
+  public AdapterDescription getAdapter(String adapterId) {
+    DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd =
+        new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
+    return cmd.execute().orElse(null);
+  }
 
-    @Override
-    public AdapterDescription getAdapter(String adapterId) {
-        DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
-        return cmd.execute().orElse(null);
-    }
+  @Override
+  public void deleteAdapter(String adapterId) {
 
-    @Override
-    public void deleteAdapter(String adapterId) {
+    AdapterDescription adapterDescription = getAdapter(adapterId);
+    couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
 
-        AdapterDescription adapterDescription = getAdapter(adapterId);
-        couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
-
-    }
+  }
 }

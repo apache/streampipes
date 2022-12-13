@@ -19,44 +19,44 @@
 package org.apache.streampipes.logging.impl;
 
 import org.apache.streampipes.logging.api.Logger;
+
 import org.slf4j.LoggerFactory;
 
 public class PeLogger implements Logger {
 
-    private org.slf4j.Logger LOG;
+  private org.slf4j.Logger logger;
 
-    private String prefix;
+  private String prefix;
 
 
+  //public PeLogger(Class clazz, String correspondingPipeline, String peUri, PeConfig peConfig){
+  public PeLogger(Class clazz, String correspondingPipeline, String peUri) {
+    this.prefix = "USERLOG" + " - "
+        // + "serviceName: " + peConfig.getName() + " - "
+        + "correspondingPipeline: " + correspondingPipeline + " - "
+        + "peURI: " + peUri + " - ";
 
-    //public PeLogger(Class clazz, String correspondingPipeline, String peUri, PeConfig peConfig){
-    public PeLogger(Class clazz, String correspondingPipeline, String peUri){
-        this.prefix =  "USERLOG" + " - "
-                      // + "serviceName: " + peConfig.getName() + " - "
-                       + "correspondingPipeline: " + correspondingPipeline + " - "
-                       + "peURI: " + peUri + " - ";
+    logger = LoggerFactory.getLogger(clazz);
+  }
 
-        LOG = LoggerFactory.getLogger(clazz);
-    }
+  public void info(String s) {
+    logger.info(prefix + s);
+  }
 
-    public void info(String s) {
-        LOG.info(prefix + s);
-    }
+  public void trace(String s) {
+    logger.trace(prefix + s);
+  }
 
-    public void trace(String s) {
-        LOG.trace(prefix + s);
-    }
+  public void debug(String s) {
+    logger.debug(prefix + s);
+  }
 
-    public void debug(String s) {
-        LOG.debug(prefix + s);
-    }
+  public void error(String s) {
+    logger.error(prefix + s);
+  }
 
-    public void error(String s) {
-        LOG.error(prefix + s);
-    }
-
-    public void warn(String s) {
-        LOG.warn(prefix + s);
-    }
+  public void warn(String s) {
+    logger.warn(prefix + s);
+  }
 
 }

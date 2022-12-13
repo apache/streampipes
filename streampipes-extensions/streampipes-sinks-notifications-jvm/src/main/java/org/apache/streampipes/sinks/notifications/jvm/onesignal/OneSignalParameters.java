@@ -23,23 +23,27 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class OneSignalParameters extends EventSinkBindingParams {
 
-    private String title;
-    private String content;
-    private String appId;
-    private String apiKey;
+  private String title;
+  private String content;
+  private String appId;
+  private String apiKey;
 
-    public OneSignalParameters(DataSinkInvocation graph, String content, String appId, String apiKey) {
-        super(graph);
-        this.content = content;
-        this.appId = appId;
-        this.apiKey = apiKey;
-    }
+  public OneSignalParameters(DataSinkInvocation graph, String content, String appId, String apiKey) {
+    super(graph);
+    this.content = content;
+    this.appId = appId;
+    this.apiKey = apiKey;
+  }
 
-    public String getContent() {
-        return content;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public String getAppId() { return appId; }
+  public String getAppId() {
+    return appId;
+  }
 
-    public String getApiKey() { return apiKey; }
+  public String getApiKey() {
+    return apiKey;
+  }
 }

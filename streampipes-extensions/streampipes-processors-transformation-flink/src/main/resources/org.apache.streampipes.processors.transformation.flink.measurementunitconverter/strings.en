@@ -1,3 +1,4 @@
+#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -12,18 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-login:
-  backgroundImage: 'deployment/rel/img/background.png'
-  logo: 'deployment/rel/img/logo.png'
-  logo-right: 'deployment/rel/img/sp-logo-right-white.png'
-modules:
-  - spEditor
-  - spPipelines
-  - spConnect
-  - spDashboard
-  - spDataExplorer
-  - spAppOverview
-  - spAdd
-  - spFiles
-  - spConfiguration
+org.apache.streampipes.processors.transformation.flink.measurementunitconverter.title=Measurement Unit Converter
+org.apache.streampipes.processors.transformation.flink.measurementunitconverter.description=Converts a unit of measurement to another one
+
+convert-property.title=Field
+convert-property.description=The field to convert
+
+output-unit.title=Output Unit
+output-unit.description=The output type unit of measurement

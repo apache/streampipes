@@ -27,7 +27,7 @@ public class DataSetModificationMessage extends Message {
   private String invocationId;
 
   public DataSetModificationMessage(
-          EventGrounding eventGrounding, String invocationId) {
+      EventGrounding eventGrounding, String invocationId) {
     super(true);
     this.eventGrounding = eventGrounding;
     this.invocationId = invocationId;

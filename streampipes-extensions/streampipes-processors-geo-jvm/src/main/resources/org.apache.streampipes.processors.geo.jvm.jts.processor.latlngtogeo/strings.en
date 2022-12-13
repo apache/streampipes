@@ -16,8 +16,9 @@
 #
 
 
-org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.title=EPSG Code
-org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.description=Adds a corresponding EPSG Code to the Geo-Event
+org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo.title=Creates JTS Point
+org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo.description=Creates a JTS Point from Latitude and Longitude values
 
-epsg-key.title=EPSG Code field
-epsg-key.description=EPSG Code
+latitude-key=Latitude value
+longitude-key=Longitude value
+epsg-key= EPSG Code

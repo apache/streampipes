@@ -45,8 +45,8 @@ public class StreamPipesSimulationRunner {
   private Integer kafkaPort;
 
   public StreamPipesSimulationRunner(SimulationConfig config, Map<String,
-          TopicAwareWorkflow>
-          simulationWorkflows, String kafkaHost, Integer kafkaPort) {
+      TopicAwareWorkflow>
+      simulationWorkflows, String kafkaHost, Integer kafkaPort) {
     this.config = config;
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;
@@ -77,8 +77,9 @@ public class StreamPipesSimulationRunner {
         KafkaLogger kafkaLogger = new KafkaLogger(makeProducerConfig(w.getTargetTopic()));
         eventLoggers.add(kafkaLogger);
         final EventGenerator gen = new EventGenerator(w, workflowConfig,
-                Collections.singletonList(kafkaLogger));
-        log.info("Adding EventGenerator for [ " + workflowConfig.getWorkflowName() + "," + workflowConfig.getWorkflowFilename() + " ]");
+            Collections.singletonList(kafkaLogger));
+        log.info("Adding EventGenerator for [ " + workflowConfig.getWorkflowName() + ","
+            + workflowConfig.getWorkflowFilename() + " ]");
         eventGenerators.add(gen);
         eventGenThreads.add(new Thread(gen));
       }

@@ -41,21 +41,21 @@ public class SinksInternalJvmInit extends StandaloneModelSubmitter {
             "StreamPipes Sinks Internal JVM",
             "",
             8090)
-            .registerPipelineElements(
-                    new DataLakeSink(),
-                    new NotificationProducer())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfigs(DataExplorerConfigurations.getDefaults())
-            .addConfigs(CouchDbConfigurations.getDefaults())
-            .build();
+        .registerPipelineElements(
+            new DataLakeSink(),
+            new NotificationProducer())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfigs(DataExplorerConfigurations.getDefaults())
+        .addConfigs(CouchDbConfigurations.getDefaults())
+        .build();
 
 
   }

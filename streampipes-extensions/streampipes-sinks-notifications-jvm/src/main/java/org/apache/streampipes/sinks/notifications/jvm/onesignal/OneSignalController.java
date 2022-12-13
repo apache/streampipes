@@ -33,36 +33,37 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDec
 
 public class OneSignalController extends StandaloneEventSinkDeclarer<OneSignalParameters> {
 
-    private static final String CONTENT_KEY = "content";
-    private static final String APP_ID = "app_id";
-    private static final String REST_API_KEY = "api_key";
+  private static final String CONTENT_KEY = "content";
+  private static final String APP_ID = "app_id";
+  private static final String REST_API_KEY = "api_key";
 
-    @Override
-    public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.onesignal")
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .category(DataSinkType.NOTIFICATION)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
-                .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
-                .requiredTextParameter(Labels.withId(APP_ID))
-                .requiredTextParameter(Labels.withId(REST_API_KEY))
-                .build();
-    }
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.onesignal")
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.NOTIFICATION)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredHtmlInputParameter(Labels.withId(CONTENT_KEY))
+        .requiredTextParameter(Labels.withId(APP_ID))
+        .requiredTextParameter(Labels.withId(REST_API_KEY))
+        .build();
+  }
 
-    @Override
-    public ConfiguredEventSink<OneSignalParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  @Override
+  public ConfiguredEventSink<OneSignalParameters> onInvocation(DataSinkInvocation graph,
+                                                               DataSinkParameterExtractor extractor) {
 
-        String content = extractor.singleValueParameter(CONTENT_KEY, String.class);
-        String appId = extractor.singleValueParameter(APP_ID, String.class);
-        String apiKey = extractor.singleValueParameter(REST_API_KEY, String.class);
+    String content = extractor.singleValueParameter(CONTENT_KEY, String.class);
+    String appId = extractor.singleValueParameter(APP_ID, String.class);
+    String apiKey = extractor.singleValueParameter(REST_API_KEY, String.class);
 
-        OneSignalParameters params = new OneSignalParameters(graph, content, appId, apiKey);
+    OneSignalParameters params = new OneSignalParameters(graph, content, appId, apiKey);
 
-        return new ConfiguredEventSink<>(params, OneSignalProducer::new);
-    }
+    return new ConfiguredEventSink<>(params, OneSignalProducer::new);
+  }
 
 }

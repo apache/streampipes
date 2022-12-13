@@ -25,59 +25,59 @@ import java.util.List;
 
 public class AggregationParameters extends EventProcessorBindingParams {
 
-	// timeWindow (true) or countWindow (false)
-	private boolean timeWindow;
-	private AggregationType aggregationType;
-	private int outputEvery;
-	private int windowSize;
-	private List<String> aggregateKeyList;
-	private List<String> groupBy;
-	private List<String> selectProperties;
-	
-	public AggregationParameters(
-			DataProcessorInvocation graph,
-			AggregationType aggregationType,
-			int outputEvery,
-			List<String> groupBy,
-			List<String> aggregateKeyList,
-			int windowSize,
-			List<String> selectProperties,
-			boolean timeWindow) {
-		super(graph);
-		this.aggregationType = aggregationType;
-		this.outputEvery = outputEvery;
-		this.groupBy = groupBy;
-		this.windowSize= windowSize;
-		this.aggregateKeyList = aggregateKeyList;
-		this.selectProperties = selectProperties;
-		this.timeWindow = timeWindow;
-	}
+  // timeWindow (true) or countWindow (false)
+  private boolean timeWindow;
+  private AggregationType aggregationType;
+  private int outputEvery;
+  private int windowSize;
+  private List<String> aggregateKeyList;
+  private List<String> groupBy;
+  private List<String> selectProperties;
 
-	public AggregationType getAggregationType() {
-		return aggregationType;
-	}
+  public AggregationParameters(
+      DataProcessorInvocation graph,
+      AggregationType aggregationType,
+      int outputEvery,
+      List<String> groupBy,
+      List<String> aggregateKeyList,
+      int windowSize,
+      List<String> selectProperties,
+      boolean timeWindow) {
+    super(graph);
+    this.aggregationType = aggregationType;
+    this.outputEvery = outputEvery;
+    this.groupBy = groupBy;
+    this.windowSize = windowSize;
+    this.aggregateKeyList = aggregateKeyList;
+    this.selectProperties = selectProperties;
+    this.timeWindow = timeWindow;
+  }
 
-	public int getOutputEvery() {
-		return outputEvery;
-	}
+  public AggregationType getAggregationType() {
+    return aggregationType;
+  }
 
-	public List<String> getGroupBy() {
-		return groupBy;
-	}
+  public int getOutputEvery() {
+    return outputEvery;
+  }
 
-	public int getWindowSize() {
-		return windowSize;
-	}
+  public List<String> getGroupBy() {
+    return groupBy;
+  }
 
-	public List<String> getAggregateKeyList() {
-		return aggregateKeyList;
-	}
+  public int getWindowSize() {
+    return windowSize;
+  }
 
-	public List<String> getSelectProperties() {
-		return selectProperties;
-	}
+  public List<String> getAggregateKeyList() {
+    return aggregateKeyList;
+  }
 
-	public boolean getTimeWindow() {
-		return timeWindow;
-	}
+  public List<String> getSelectProperties() {
+    return selectProperties;
+  }
+
+  public boolean getTimeWindow() {
+    return timeWindow;
+  }
 }
