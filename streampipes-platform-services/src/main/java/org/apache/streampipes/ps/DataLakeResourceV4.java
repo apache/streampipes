@@ -253,7 +253,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
 
     private boolean checkProvidedQueryParams(MultivaluedMap<String, String> providedParams) {
-        return supportedParams.containsAll(providedParams.keySet());
+        return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
     }
 
     private ProvidedQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {

@@ -20,12 +20,12 @@ package org.apache.streampipes.dataexplorer.v4.params;
 
 public class DeleteFromStatementParams extends QueryParamsV4 {
 
-    public static DeleteFromStatementParams from(String measurementID) {
-        return new DeleteFromStatementParams(measurementID);
-    }
+  public DeleteFromStatementParams(String measurementID) {
+    super(measurementID);
+  }
 
-    public DeleteFromStatementParams(String measurementID) {
-        super(measurementID);
-    }
+  public static DeleteFromStatementParams from(String measurementID) {
+    return new DeleteFromStatementParams(measurementID);
+  }
 
 }

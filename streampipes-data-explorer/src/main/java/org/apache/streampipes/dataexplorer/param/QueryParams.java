@@ -21,12 +21,12 @@ public class QueryParams {
 
   private final String index;
 
-  public static QueryParams from(String index) {
-    return new QueryParams(index);
-  }
-
   protected QueryParams(String index) {
     this.index = index;
+  }
+
+  public static QueryParams from(String index) {
+    return new QueryParams(index);
   }
 
   public String getIndex() {

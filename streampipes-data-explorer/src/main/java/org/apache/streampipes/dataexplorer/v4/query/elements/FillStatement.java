@@ -21,12 +21,12 @@ package org.apache.streampipes.dataexplorer.v4.query.elements;
 import org.apache.streampipes.dataexplorer.v4.params.FillParams;
 
 public class FillStatement extends QueryElement<FillParams> {
-    public FillStatement(FillParams fillParams) {
-        super(fillParams);
-    }
+  public FillStatement(FillParams fillParams) {
+    super(fillParams);
+  }
 
-    @Override
-    protected String buildStatement(FillParams fillParams) {
-        return fillParams.getFill();
-    }
+  @Override
+  protected String buildStatement(FillParams fillParams) {
+    return fillParams.getFill();
+  }
 }

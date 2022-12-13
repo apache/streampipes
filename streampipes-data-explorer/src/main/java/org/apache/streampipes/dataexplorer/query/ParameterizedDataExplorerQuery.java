@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.dataexplorer.query;
 
-public abstract class ParameterizedDataExplorerQuery<P, OUT> extends DataExplorerQuery<OUT> {
+public abstract class ParameterizedDataExplorerQuery<K, V> extends DataExplorerQuery<V> {
 
-  protected P params;
+  protected K params;
 
-  public ParameterizedDataExplorerQuery(P queryParams) {
+  public ParameterizedDataExplorerQuery(K queryParams) {
     this.params = queryParams;
   }
 

@@ -20,15 +20,23 @@ package org.apache.streampipes.dataexplorer.sdk;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.dataexplorer.v4.params.ColumnFunction;
+
 import org.influxdb.dto.Query;
 import org.influxdb.querybuilder.Ordering;
 import org.influxdb.querybuilder.SelectionQueryImpl;
-import org.influxdb.querybuilder.clauses.*;
+import org.influxdb.querybuilder.clauses.Clause;
+import org.influxdb.querybuilder.clauses.ConjunctionClause;
+import org.influxdb.querybuilder.clauses.NestedClause;
+import org.influxdb.querybuilder.clauses.OrConjunction;
+import org.influxdb.querybuilder.clauses.RawTextClause;
+import org.influxdb.querybuilder.clauses.SimpleClause;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.*;
+import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.asc;
+import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.desc;
+import static org.influxdb.querybuilder.BuiltQuery.QueryBuilder.select;
 
 public class DataLakeQueryBuilder {
 
@@ -40,15 +48,15 @@ public class DataLakeQueryBuilder {
   private int limit = Integer.MIN_VALUE;
   private int offset = Integer.MIN_VALUE;
 
-  public static DataLakeQueryBuilder create(String measurementId) {
-    return new DataLakeQueryBuilder(measurementId);
-  }
-
   private DataLakeQueryBuilder(String measurementId) {
     this.measurementId = measurementId;
     this.selectionQuery = select();
     this.whereClauses = new ArrayList<>();
     this.groupByClauses = new ArrayList<>();
+  }
+
+  public static DataLakeQueryBuilder create(String measurementId) {
+    return new DataLakeQueryBuilder(measurementId);
   }
 
   public DataLakeQueryBuilder withSimpleColumn(String columnName) {
@@ -153,9 +161,9 @@ public class DataLakeQueryBuilder {
 
   public DataLakeQueryBuilder withOrderBy(DataLakeQueryOrdering ordering) {
     if (DataLakeQueryOrdering.ASC.equals(ordering)) {
-      this.ordering =  asc();
+      this.ordering = asc();
     } else {
-      this.ordering =  desc();
+      this.ordering = desc();
     }
 
     return this;
@@ -174,7 +182,8 @@ public class DataLakeQueryBuilder {
   }
 
   public Query build() {
-    var selectQuery = this.selectionQuery.from(BackendConfig.INSTANCE.getInfluxDatabaseName(), "\"" +measurementId + "\"");
+    var selectQuery =
+        this.selectionQuery.from(BackendConfig.INSTANCE.getInfluxDatabaseName(), "\"" + measurementId + "\"");
     this.whereClauses.forEach(selectQuery::where);
 
     if (this.groupByClauses.size() > 0) {
@@ -182,7 +191,7 @@ public class DataLakeQueryBuilder {
     }
 
     if (this.ordering != null) {
-     selectQuery.orderBy(this.ordering);
+      selectQuery.orderBy(this.ordering);
     }
 
     if (this.limit != Integer.MIN_VALUE) {

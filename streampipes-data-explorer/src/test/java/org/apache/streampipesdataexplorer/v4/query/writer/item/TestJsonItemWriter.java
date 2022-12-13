@@ -18,8 +18,9 @@
 
 package org.apache.streampipesdataexplorer.v4.query.writer.item;
 
-import com.google.gson.Gson;
 import org.apache.streampipes.dataexplorer.v4.query.writer.item.JsonItemWriter;
+
+import com.google.gson.Gson;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 public class TestJsonItemWriter extends TestItemWriter {
 
   private static final String Expected = "{\"time\": 1668578077051,\"string\": \"test\",\"number\": 1}";
-  
+
   @Test
   public void testJsonWriter() {
     var writer = new JsonItemWriter(new Gson());

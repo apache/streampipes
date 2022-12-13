@@ -21,7 +21,6 @@ package org.apache.streampipes.dataexplorer.v4.query;
 import org.apache.streampipes.dataexplorer.v4.AutoAggregationHandler;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
-import org.apache.streampipes.dataexplorer.v4.query.DataExplorerQueryV4;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
 import org.apache.streampipes.model.datalake.SpQueryResult;
 
@@ -33,9 +32,8 @@ import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParam
 public class QueryResultProvider {
 
   public static final String FOR_ID_KEY = "forId";
-
-  protected ProvidedQueryParams queryParams;
   protected final boolean ignoreMissingData;
+  protected ProvidedQueryParams queryParams;
 
   public QueryResultProvider(ProvidedQueryParams queryParams,
                              boolean ignoreMissingData) {

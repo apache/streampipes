@@ -20,24 +20,24 @@ package org.apache.streampipes.dataexplorer.v4.params;
 
 public class TimeBoundaryParams extends QueryParamsV4 {
 
-    private final Long startDate;
-    private final Long endDate;
+  private final Long startDate;
+  private final Long endDate;
 
-    public static TimeBoundaryParams from(String measurementID, Long startDate, Long endDate) {
-        return new TimeBoundaryParams(measurementID, startDate, endDate);
-    }
+  protected TimeBoundaryParams(String measurementID, Long startDate, Long endDate) {
+    super(measurementID);
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
 
-    protected TimeBoundaryParams(String measurementID, Long startDate, Long endDate) {
-        super(measurementID);
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+  public static TimeBoundaryParams from(String measurementID, Long startDate, Long endDate) {
+    return new TimeBoundaryParams(measurementID, startDate, endDate);
+  }
 
-    public Long getStartDate() {
-        return startDate;
-    }
+  public Long getStartDate() {
+    return startDate;
+  }
 
-    public Long getEndDate() {
-        return endDate;
-    }
+  public Long getEndDate() {
+    return endDate;
+  }
 }

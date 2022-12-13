@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.dataexplorer.v4.params;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.streampipes.dataexplorer.v4.utils.DataLakeManagementUtils;
+
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,33 @@ public class WhereStatementParams extends QueryParamsV4 {
   private static final String LT = "<";
 
   private List<WhereCondition> whereConditions;
+
+  private WhereStatementParams(String index,
+                               Long startTime,
+                               Long endTime,
+                               String whereConditions) {
+    this(index, startTime, endTime);
+    if (whereConditions != null) {
+      buildConditions(whereConditions);
+    }
+  }
+
+  private WhereStatementParams(String index,
+                               Long startTime,
+                               Long endTime) {
+    super(index);
+    this.whereConditions = new ArrayList<>();
+    this.buildTimeConditions(startTime, endTime);
+  }
+
+  private WhereStatementParams(String index,
+                               String whereConditions) {
+    super(index);
+    this.whereConditions = new ArrayList<>();
+    if (whereConditions != null) {
+      buildConditions(whereConditions);
+    }
+  }
 
   public static WhereStatementParams from(String measurementId,
                                           Long startTime,
@@ -46,33 +74,6 @@ public class WhereStatementParams extends QueryParamsV4 {
                                           Long endTime,
                                           String whereConditions) {
     return new WhereStatementParams(measurementId, startTime, endTime, whereConditions);
-  }
-
-  private WhereStatementParams(String index,
-                              Long startTime,
-                              Long endTime,
-                              String whereConditions) {
-    this(index, startTime, endTime);
-    if (whereConditions != null) {
-      buildConditions(whereConditions);
-    }
-  }
-
-  private WhereStatementParams(String index,
-                              Long startTime,
-                              Long endTime) {
-    super(index);
-    this.whereConditions = new ArrayList<>();
-    this.buildTimeConditions(startTime, endTime);
-  }
-
-  private WhereStatementParams(String index,
-                               String whereConditions) {
-    super(index);
-    this.whereConditions = new ArrayList<>();
-    if (whereConditions != null) {
-      buildConditions(whereConditions);
-    }
   }
 
   private void buildTimeConditions(Long startTime,
@@ -96,7 +97,8 @@ public class WhereStatementParams extends QueryParamsV4 {
     // Add single quotes to strings except for true and false
     whereParts.forEach(singleCondition -> {
 
-      this.whereConditions.add(new WhereCondition(singleCondition[0], singleCondition[1], this.returnCondition(singleCondition[2])));
+      this.whereConditions.add(
+          new WhereCondition(singleCondition[0], singleCondition[1], this.returnCondition(singleCondition[2])));
     });
   }
 

@@ -23,18 +23,18 @@ import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
 public class TimeBoundary extends QueryElement<TimeBoundaryParams> {
 
-    public TimeBoundary(TimeBoundaryParams timeBoundaryParams) {
-        super(timeBoundaryParams);
-    }
+  public TimeBoundary(TimeBoundaryParams timeBoundaryParams) {
+    super(timeBoundaryParams);
+  }
 
-    @Override
-    protected String buildStatement(TimeBoundaryParams timeBoundaryParams) {
-        if (timeBoundaryParams.getStartDate() == null) {
-            return QueryTemplatesV4.whereTimeRightBound(timeBoundaryParams.getEndDate());
-        } else if (timeBoundaryParams.getEndDate() == null) {
-            return QueryTemplatesV4.whereTimeLeftBound(timeBoundaryParams.getStartDate());
-        } else {
-            return QueryTemplatesV4.whereTimeWithin(timeBoundaryParams.getStartDate(), timeBoundaryParams.getEndDate());
-        }
+  @Override
+  protected String buildStatement(TimeBoundaryParams timeBoundaryParams) {
+    if (timeBoundaryParams.getStartDate() == null) {
+      return QueryTemplatesV4.whereTimeRightBound(timeBoundaryParams.getEndDate());
+    } else if (timeBoundaryParams.getEndDate() == null) {
+      return QueryTemplatesV4.whereTimeLeftBound(timeBoundaryParams.getStartDate());
+    } else {
+      return QueryTemplatesV4.whereTimeWithin(timeBoundaryParams.getStartDate(), timeBoundaryParams.getEndDate());
     }
+  }
 }

@@ -19,14 +19,14 @@ package org.apache.streampipes.dataexplorer.v4.params;
 
 public abstract class QueryParamsV4 {
 
-    private final String index;
+  private final String index;
 
-    protected QueryParamsV4(String index) {
-        this.index = index;
-    }
+  protected QueryParamsV4(String index) {
+    this.index = index;
+  }
 
-    public String getIndex() {
-        return index;
-    }
+  public String getIndex() {
+    return index;
+  }
 
 }

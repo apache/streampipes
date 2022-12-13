@@ -21,6 +21,7 @@ import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.model.Order;
 import org.apache.streampipes.dataexplorer.v4.params.SelectColumn;
 import org.apache.streampipes.model.datalake.SpQueryResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_AGGREGATION_FUNCTION;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_AUTO_AGGREGATE;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_COLUMNS;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_COUNT_ONLY;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_LIMIT;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_ORDER;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_TIME_INTERVAL;
 
 public class AutoAggregationHandler {
 
@@ -73,15 +80,16 @@ public class AutoAggregationHandler {
       } else {
         return disableAutoAgg(this.queryParams);
       }
-      } catch(ParseException e){
-        e.printStackTrace();
-      }
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
     return null;
   }
 
   private void checkAllArgumentsPresent() throws IllegalArgumentException {
     if (!this.queryParams.has(QP_AGGREGATION_FUNCTION)) {
-      throw new IllegalArgumentException("Auto-Aggregate must provide one of the aggregationFunction parameters MEAN, FIRST, LAST.");
+      throw new IllegalArgumentException(
+          "Auto-Aggregate must provide one of the aggregationFunction parameters MEAN, FIRST, LAST.");
     }
   }
 
@@ -98,7 +106,7 @@ public class AutoAggregationHandler {
     countParams.update(QP_COLUMNS, fieldName);
 
     SpQueryResult result = new DataLakeManagementV4().getData(countParams, true);
-    
+
     return result.getTotal() > 0 ? ((Double) result.getAllDataSeries().get(0).getRows().get(0).get(1)).intValue() : 0;
   }
 
@@ -123,7 +131,8 @@ public class AutoAggregationHandler {
   }
 
   private String transformColumns(String rawQuery) {
-    List<SelectColumn> columns = Arrays.stream(rawQuery.split(COMMA)).map(SelectColumn::fromApiQueryString).collect(Collectors.toList());
+    List<SelectColumn> columns =
+        Arrays.stream(rawQuery.split(COMMA)).map(SelectColumn::fromApiQueryString).collect(Collectors.toList());
     return columns.stream().map(SelectColumn::getOriginalField).collect(Collectors.joining(COMMA));
   }
 

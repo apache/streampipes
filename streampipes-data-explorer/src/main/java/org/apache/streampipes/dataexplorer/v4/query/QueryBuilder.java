@@ -19,6 +19,7 @@
 package org.apache.streampipes.dataexplorer.v4.query;
 
 import org.apache.streampipes.dataexplorer.v4.query.elements.QueryElement;
+
 import org.influxdb.dto.Query;
 
 import java.util.List;
@@ -26,37 +27,37 @@ import java.util.StringJoiner;
 
 public class QueryBuilder {
 
-    private final StringJoiner queryParts;
-    private final String databaseName;
+  private final StringJoiner queryParts;
+  private final String databaseName;
 
-    public static QueryBuilder create(String databaseName) {
-        return new QueryBuilder(databaseName);
-    }
+  private QueryBuilder(String databaseName) {
+    this.queryParts = new StringJoiner(" ");
+    this.databaseName = databaseName;
+  }
 
-    private QueryBuilder(String databaseName) {
-        this.queryParts = new StringJoiner(" ");
-        this.databaseName = databaseName;
-    }
+  public static QueryBuilder create(String databaseName) {
+    return new QueryBuilder(databaseName);
+  }
 
-    public Query build(List<QueryElement<?>> queryElements, Boolean onlyCountResults) {
-        for (QueryElement<?> queryPart : queryElements) {
-            this.queryParts.add(queryPart.getStatement());
-        }
-        if (onlyCountResults) {
-            return toCountResultsQuery();
-        } else {
-            return toQuery();
-        }
+  public Query build(List<QueryElement<?>> queryElements, Boolean onlyCountResults) {
+    for (QueryElement<?> queryPart : queryElements) {
+      this.queryParts.add(queryPart.getStatement());
     }
+    if (onlyCountResults) {
+      return toCountResultsQuery();
+    } else {
+      return toQuery();
+    }
+  }
 
-    public Query toQuery() {
-        return new Query(this.queryParts.toString(), this.databaseName);
-    }
+  public Query toQuery() {
+    return new Query(this.queryParts.toString(), this.databaseName);
+  }
 
-    public Query toCountResultsQuery() {
-        String q = "SELECT COUNT(*) FROM (" + this.queryParts.toString() + ")";
-        return new Query(q, this.databaseName);
-    }
+  public Query toCountResultsQuery() {
+    String q = "SELECT COUNT(*) FROM (" + this.queryParts.toString() + ")";
+    return new Query(q, this.databaseName);
+  }
 }
 
 

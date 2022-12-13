@@ -24,12 +24,12 @@ import java.util.List;
 
 public class CouchDbConfigurations {
 
-    public static List<ConfigItem> getDefaults() {
-        return Arrays.asList(
-                ConfigItem.from(CouchDbEnvKeys.COUCHDB_HOST, "couchdb", "Hostname for CouchDB to store image blobs"),
-                ConfigItem.from(CouchDbEnvKeys.COUCHDB_PORT, 5984, ""),
-                ConfigItem.from(CouchDbEnvKeys.COUCHDB_PROTOCOL, "http", "")
-        );
-    }
+  public static List<ConfigItem> getDefaults() {
+    return Arrays.asList(
+        ConfigItem.from(CouchDbEnvKeys.COUCHDB_HOST, "couchdb", "Hostname for CouchDB to store image blobs"),
+        ConfigItem.from(CouchDbEnvKeys.COUCHDB_PORT, 5984, ""),
+        ConfigItem.from(CouchDbEnvKeys.COUCHDB_PROTOCOL, "http", "")
+    );
+  }
 
 }

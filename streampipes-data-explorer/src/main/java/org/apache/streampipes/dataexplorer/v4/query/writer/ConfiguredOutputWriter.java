@@ -27,8 +27,8 @@ import java.util.List;
 public abstract class ConfiguredOutputWriter {
 
   public static ConfiguredOutputWriter getConfiguredWriter(OutputFormat format,
-                                                 ProvidedQueryParams params,
-                                                 boolean ignoreMissingValues) {
+                                                           ProvidedQueryParams params,
+                                                           boolean ignoreMissingValues) {
     var writer = format.getWriter();
     writer.configure(params, ignoreMissingValues);
 

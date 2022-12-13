@@ -27,6 +27,7 @@ import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.vocabulary.XSD;
+
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
@@ -46,11 +47,9 @@ import java.util.concurrent.TimeUnit;
 public class InfluxStore {
 
   private static final Logger LOG = LoggerFactory.getLogger(InfluxStore.class);
-
-  private InfluxDB influxDb = null;
   DataLakeMeasure measure;
-
   Map<String, String> sanitizedRuntimeNames = new HashMap<>();
+  private InfluxDB influxDb = null;
 
   public InfluxStore(DataLakeMeasure measure,
                      InfluxConnectionSettings settings) {
@@ -172,7 +171,8 @@ public class InfluxStore {
               missingFields.add(runtimeName);
             }
           } catch (SpRuntimeException iae) {
-            LOG.warn("Runtime exception while extracting field value of field {} - this field will be ignored", runtimeName, iae);
+            LOG.warn("Runtime exception while extracting field value of field {} - this field will be ignored",
+                runtimeName, iae);
           }
         }
       }
