@@ -35,6 +35,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
 
   /**
    * Takes an {@link AdapterDescription}, encrypts the password properties and stores it to the database
+   *
    * @param adapterDescription input adapter description
    * @return the id of the created adapter
    */
@@ -46,6 +47,7 @@ public class AdapterResourceManager extends AbstractResourceManager<IAdapterStor
 
   /**
    * Takes an {@link AdapterDescription}, encrypts the password properties and updates the corresponding database entry
+   *
    * @param adapterDescription input adapter description
    */
   public void encryptAndUpdate(AdapterDescription adapterDescription) {
