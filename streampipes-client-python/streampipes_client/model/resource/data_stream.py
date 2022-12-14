@@ -40,7 +40,30 @@ class DataStream(Resource):
     """
 
     def convert_to_pandas_representation(self):
-        return self.dict()
+        return {
+            **self.dict(
+                exclude={
+                    "event_grounding",
+                    "measurement_capability",
+                    "application_links",
+                    "included_assets",
+                    "connected_to",
+                    "category",
+                    "event_schema",
+                    "included_locales",
+                }
+            ),
+            "num_transport_protocols": len(self.event_grounding.transport_protocols),
+            "num_measurement_capability": len(self.measurement_capability)
+            if self.measurement_capability is not None
+            else 0,
+            "num_application_links": len(self.application_links) if self.application_links is not None else 0,
+            "num_included_assets": len(self.included_assets) if self.included_assets is not None else 0,
+            "num_connected_to": len(self.connected_to) if self.connected_to is not None else 0,
+            "num_category": len(self.category) if self.category is not None else 0,
+            "num_event_properties": len(self.event_schema.event_properties) if self.event_schema is not None else 0,
+            "num_included_locales": len(self.included_locales) if self.included_locales is not None else 0,
+        }
 
     name: Optional[StrictStr]
     description: Optional[StrictStr]

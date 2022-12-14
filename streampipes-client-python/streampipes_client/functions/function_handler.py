@@ -181,8 +181,17 @@ class FunctionHandler:
                 "Don't stop the functions when the event loop is running. Use FunctionHandler().disconnect() instead"
             )
 
-    async def disconnect(self) -> None:
+    def disconnect(self) -> None:
         """Disconnects from the brokers and stops the functions.
+
+        Returns
+        -------
+        None
+        """
+        asyncio.get_event_loop().create_task(self._disconnect())
+
+    async def _disconnect(self) -> None:
+        """Helper function to disconnect from the brokers.
 
         Returns
         -------
