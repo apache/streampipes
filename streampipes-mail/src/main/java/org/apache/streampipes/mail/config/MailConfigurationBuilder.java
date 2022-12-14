@@ -18,6 +18,7 @@
 package org.apache.streampipes.mail.config;
 
 import org.apache.streampipes.config.backend.model.EmailConfig;
+
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.mailer.MailerBuilder;
@@ -27,14 +28,14 @@ public class MailConfigurationBuilder {
 
   public Mailer buildMailerFromConfig(EmailConfig config) {
     MailerRegularBuilderImpl builder = MailerBuilder
-            .withTransportStrategy(toTransportStrategy(config.getTransportStrategy()));
+        .withTransportStrategy(toTransportStrategy(config.getTransportStrategy()));
 
     if (config.isUsesAuthentication()) {
       builder.withSMTPServer(
-              config.getSmtpServerHost(),
-              config.getSmtpServerPort(),
-              config.getSmtpUsername(),
-              config.getSmtpPassword()
+          config.getSmtpServerHost(),
+          config.getSmtpServerPort(),
+          config.getSmtpUsername(),
+          config.getSmtpPassword()
       );
     } else {
       builder.withSMTPServer(config.getSmtpServerHost(), config.getSmtpServerPort());
@@ -43,10 +44,10 @@ public class MailConfigurationBuilder {
     if (config.isUsesProxy()) {
       if (config.isUsesProxyAuthentication()) {
         builder.withProxy(
-                config.getProxyHost(),
-                config.getProxyPort(),
-                config.getProxyUser(),
-                config.getProxyPassword()
+            config.getProxyHost(),
+            config.getProxyPort(),
+            config.getProxyUser(),
+            config.getProxyPassword()
         );
       } else {
         builder.withProxy(config.getProxyHost(), config.getProxyPort());
@@ -58,7 +59,8 @@ public class MailConfigurationBuilder {
 
   }
 
-  private TransportStrategy toTransportStrategy(org.apache.streampipes.config.backend.model.TransportStrategy strategy) {
+  private TransportStrategy toTransportStrategy(
+      org.apache.streampipes.config.backend.model.TransportStrategy strategy) {
     if (strategy == org.apache.streampipes.config.backend.model.TransportStrategy.SMTP) {
       return TransportStrategy.SMTP;
     } else if (strategy == org.apache.streampipes.config.backend.model.TransportStrategy.SMTPS) {

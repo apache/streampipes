@@ -33,6 +33,11 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
     this.activationCode = activationCode;
   }
 
+  public static void main(String[] args) throws IOException {
+    String template = new PasswordRecoveryMailTemplate("asd").generateTemplate();
+    System.out.println(template);
+  }
+
   @Override
   protected String getTitle() {
     return "Account Activation";
@@ -46,9 +51,12 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   @Override
   protected void addPlaceholders(Map<String, String> placeholders) {
     placeholders.put(DefaultPlaceholders.LINK.key(), makeLink());
-    placeholders.put(DefaultPlaceholders.MANUAL.key(), "Click on the button below to activate your account. If you didn't create an account, you can safely delete this message.");
+    placeholders.put(DefaultPlaceholders.MANUAL.key(),
+        "Click on the button below to activate your account. "
+            + "If you didn't create an account, you can safely delete this message.");
     placeholders.put(DefaultPlaceholders.BUTTON_TEXT.key(), "Activate your account");
-    placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(), "If that doesn't work, copy and paste the following link in your browser:");
+    placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(),
+        "If that doesn't work, copy and paste the following link in your browser:");
   }
 
   @Override
@@ -57,11 +65,6 @@ public class AccountActiviationMailTemplate extends AbstractMailTemplate {
   }
 
   private String makeLink() {
-    return new LinkPart("/#/activate-account?activationCode=" +this.activationCode).generate();
-  }
-
-  public static void main(String[] args) throws IOException {
-    String template = new PasswordRecoveryMailTemplate("asd").generateTemplate();
-    System.out.println(template);
+    return new LinkPart("/#/activate-account?activationCode=" + this.activationCode).generate();
   }
 }
