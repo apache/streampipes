@@ -19,6 +19,7 @@ package org.apache.streampipes.user.management.encryption;
 
 import org.apache.streampipes.commons.constants.DefaultEnvValues;
 import org.apache.streampipes.commons.constants.Envs;
+
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.iv.RandomIvGenerator;
