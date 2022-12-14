@@ -41,6 +41,6 @@ public class TestPropertyRenaming {
     Tuple2<List<EventProperty>, List<PropertyRenameRule>> properties = new PropertySelector
             (schema1, schema2).createRenamedPropertyList(propertySelectors);
 
-    assertEquals(properties.a.size(), 2);
+    assertEquals(properties.k.size(), 2);
   }
 }

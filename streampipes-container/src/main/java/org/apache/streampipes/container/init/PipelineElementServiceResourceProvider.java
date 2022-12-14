@@ -17,7 +17,11 @@
  */
 package org.apache.streampipes.container.init;
 
-import org.apache.streampipes.container.api.*;
+import org.apache.streampipes.container.api.DataProcessorPipelineElementResource;
+import org.apache.streampipes.container.api.DataSinkPipelineElementResource;
+import org.apache.streampipes.container.api.DataStreamPipelineElementResource;
+import org.apache.streampipes.container.api.PipelineTemplateResource;
+import org.apache.streampipes.container.api.WelcomePage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,10 +30,10 @@ public class PipelineElementServiceResourceProvider implements ExtensionsResourc
   @Override
   public List<Class<?>> getResourceClasses() {
     return Arrays.asList(
-            DataSinkPipelineElementResource.class,
-            DataProcessorPipelineElementResource.class,
-            DataStreamPipelineElementResource.class,
-            WelcomePage.class,
-            PipelineTemplateResource.class);
+        DataSinkPipelineElementResource.class,
+        DataProcessorPipelineElementResource.class,
+        DataStreamPipelineElementResource.class,
+        WelcomePage.class,
+        PipelineTemplateResource.class);
   }
 }

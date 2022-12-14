@@ -24,5 +24,5 @@ import java.util.List;
 
 @Deprecated
 public interface SemanticEventProducerDeclarer extends Declarer<DataSourceDescription> {
-	List<DataStreamDeclarer> getEventStreams();
+  List<DataStreamDeclarer> getEventStreams();
 }

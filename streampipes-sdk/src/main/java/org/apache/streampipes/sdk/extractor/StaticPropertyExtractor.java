@@ -31,7 +31,7 @@ public class StaticPropertyExtractor extends AbstractParameterExtractor<DataSink
   }
 
   public static StaticPropertyExtractor from(List<StaticProperty> staticProperties,
-                                                List<SpDataStream> inputStreams, String appId) {
+                                             List<SpDataStream> inputStreams, String appId) {
     DataSinkInvocation dataSinkInvocation = makeGraph(staticProperties, inputStreams);
     dataSinkInvocation.setAppId(appId);
     return new StaticPropertyExtractor(dataSinkInvocation);

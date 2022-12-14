@@ -17,31 +17,39 @@
  */
 package org.apache.streampipes.sdk.helpers;
 
-public class Tuple3<A, B, C> extends Tuple2<A, B> {
+public class Tuple3<V, W, X> extends Tuple2<V, W> {
 
-  public final C c;
+  public final X x;
 
-  public Tuple3(A a, B b, C c) {
-    super(a, b);
-    this.c = c;
+  public Tuple3(V v, W w, X x) {
+    super(v, w);
+    this.x = x;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
 
     Tuple3<?, ?, ?> tuple = (Tuple3<?, ?, ?>) o;
-    if (!a.equals(tuple.a)) return false;
-    if (!b.equals(tuple.b)) return false;
-    return c.equals(tuple.c);
+    if (!k.equals(tuple.k)) {
+      return false;
+    }
+    if (!v.equals(tuple.v)) {
+      return false;
+    }
+    return x.equals(tuple.x);
   }
 
   @Override
   public int hashCode() {
-    int result = a != null ? a.hashCode() : 0;
-    result = 31 * result + (b != null ? b.hashCode() : 0);
-    result = 31 * result + (c != null ? c.hashCode() : 0);
+    int result = k != null ? k.hashCode() : 0;
+    result = 31 * result + (v != null ? v.hashCode() : 0);
+    result = 31 * result + (x != null ? x.hashCode() : 0);
     return result;
   }
 }

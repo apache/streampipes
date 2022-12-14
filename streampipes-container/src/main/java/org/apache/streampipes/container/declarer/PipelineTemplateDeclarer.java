@@ -19,7 +19,7 @@ package org.apache.streampipes.container.declarer;
 
 import org.apache.streampipes.model.template.PipelineTemplateDescription;
 
-public interface PipelineTemplateDeclarer  extends Declarer<PipelineTemplateDescription> {
+public interface PipelineTemplateDeclarer extends Declarer<PipelineTemplateDescription> {
 
   PipelineTemplateDescription declareModel();
 }

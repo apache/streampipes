@@ -103,7 +103,7 @@ public class CsvMetadataEnrichment implements EventProcessor<CsvMetadataEnrichme
         event.getFieldBySelector(mappingFieldSelector).getAsPrimitive().getAsString();
     CSVRecord record = this.columnMap.get(lookupValue);
     for (Tuple2<String, PrimitiveTypeParser> columnToAppend : columnsToAppend) {
-      event.addField(columnToAppend.a, getRecordValueOrDefault(record, columnToAppend));
+      event.addField(columnToAppend.k, getRecordValueOrDefault(record, columnToAppend));
     }
     collector.collect(event);
   }
@@ -111,9 +111,9 @@ public class CsvMetadataEnrichment implements EventProcessor<CsvMetadataEnrichme
   private Object getRecordValueOrDefault(CSVRecord record, Tuple2<String,
       PrimitiveTypeParser> columnToAppend) {
     if (record != null) {
-      return columnToAppend.b.parse(record.get(columnToAppend.a));
+      return columnToAppend.v.parse(record.get(columnToAppend.k));
     } else {
-      return columnToAppend.b.parse("0");
+      return columnToAppend.v.parse("0");
     }
   }
 

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.core.base.impl;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.streampipes.manager.endpoint.HttpJsonParser;
 import org.apache.streampipes.manager.storage.UserService;
 import org.apache.streampipes.model.message.ErrorMessage;
@@ -27,14 +26,25 @@ import org.apache.streampipes.model.message.Notification;
 import org.apache.streampipes.model.message.SuccessMessage;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
-import org.apache.streampipes.storage.api.*;
+import org.apache.streampipes.storage.api.IDataLakeStorage;
+import org.apache.streampipes.storage.api.IFileMetadataStorage;
+import org.apache.streampipes.storage.api.INoSqlStorage;
+import org.apache.streampipes.storage.api.INotificationStorage;
+import org.apache.streampipes.storage.api.IPipelineElementDescriptionStorageCache;
+import org.apache.streampipes.storage.api.IPipelineElementTemplateStorage;
+import org.apache.streampipes.storage.api.IPipelineStorage;
+import org.apache.streampipes.storage.api.IUserStorage;
+import org.apache.streampipes.storage.api.IVisualizationStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.storage.management.StorageManager;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.ISpKvManagement;
 import org.apache.streampipes.svcdiscovery.api.ISpServiceDiscovery;
 
+import org.apache.http.client.ClientProtocolException;
+
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -87,12 +97,12 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
   }
 
   protected String parseURIContent(String payload) throws URISyntaxException,
-          ClientProtocolException, IOException {
+      ClientProtocolException, IOException {
     return parseURIContent(payload, null);
   }
 
   protected String parseURIContent(String payload, String mediaType) throws URISyntaxException,
-          ClientProtocolException, IOException {
+      ClientProtocolException, IOException {
     URI uri = new URI(payload);
     return HttpJsonParser.getContentFromUrl(uri, mediaType);
   }
@@ -125,15 +135,15 @@ public abstract class AbstractRestResource extends AbstractSharedRestInterface {
 
   protected Response statusMessage(Message message) {
     return Response
-            .ok()
-            .entity(message)
-            .build();
+        .ok()
+        .entity(message)
+        .build();
   }
 
   protected Response statusMessage(Message message, Response.ResponseBuilder builder) {
     return builder
-            .entity(message)
-            .build();
+        .entity(message)
+        .build();
   }
 
   protected Response unauthorized() {

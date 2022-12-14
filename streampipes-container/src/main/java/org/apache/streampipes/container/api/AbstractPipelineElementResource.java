@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.container.api;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.declarer.Declarer;
@@ -32,6 +30,9 @@ import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.util.SpMediaType;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,7 +50,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractPipelineElementResource<D extends Declarer<?>> extends AbstractExtensionsResource {
+public abstract class AbstractPipelineElementResource<T extends Declarer<?>> extends AbstractExtensionsResource {
 
   private static final String SLASH = "/";
 
@@ -109,7 +111,7 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> ext
     return rewrite(desc);
   }
 
-  protected D getDeclarerById(String appId) {
+  protected T getDeclarerById(String appId) {
     return getElementDeclarers().get(appId);
   }
 
@@ -133,14 +135,14 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> ext
 
       if (desc instanceof ConsumableStreamPipesEntity) {
         Collection<TransportProtocol> supportedProtocols =
-                DeclarersSingleton.getInstance().getSupportedProtocols();
+            DeclarersSingleton.getInstance().getSupportedProtocols();
         Collection<TransportFormat> supportedFormats =
-                DeclarersSingleton.getInstance().getSupportedFormats();
+            DeclarersSingleton.getInstance().getSupportedFormats();
 
         if (supportedProtocols.size() > 0 && supportedFormats.size() > 0) {
           // Overwrite existing grounding from default provided by declarers singleton
           ((ConsumableStreamPipesEntity) desc)
-                  .setSupportedGrounding(makeGrounding(supportedProtocols, supportedFormats));
+              .setSupportedGrounding(makeGrounding(supportedProtocols, supportedFormats));
         }
       }
     }
@@ -169,5 +171,5 @@ public abstract class AbstractPipelineElementResource<D extends Declarer<?>> ext
     return appId + SLASH + assetAppendix;
   }
 
-  protected abstract Map<String, D> getElementDeclarers();
+  protected abstract Map<String, T> getElementDeclarers();
 }

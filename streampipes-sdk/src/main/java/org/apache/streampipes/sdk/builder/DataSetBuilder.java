@@ -41,8 +41,10 @@ public class DataSetBuilder extends AbstractPipelineElementBuilder<DataSetBuilde
 
   /**
    * Creates a new data set using the builder pattern.
-   * @param id A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
-   * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   *
+   * @param id          A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
+   * @param label       A human-readable name of the element.
+   *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    * @return a new instance of {@link DataSetBuilder}
    */

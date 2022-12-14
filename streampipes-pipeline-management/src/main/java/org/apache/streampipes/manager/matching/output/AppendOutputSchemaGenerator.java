@@ -52,9 +52,9 @@ public class AppendOutputSchemaGenerator extends OutputSchemaGenerator<AppendOut
             PropertySelector(stream.getEventSchema())
             .createRenamedPropertyList(selectors, appendProperties);
 
-    EventSchema outputSchema = new EventSchema(generatedOutputProperties.a);
+    EventSchema outputSchema = new EventSchema(generatedOutputProperties.k);
 
-    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.b));
+    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.v));
   }
 
   @Override
@@ -68,9 +68,9 @@ public class AppendOutputSchemaGenerator extends OutputSchemaGenerator<AppendOut
             PropertySelector(stream1.getEventSchema(), stream2.getEventSchema())
             .createRenamedPropertyList(selectors, appendProperties);
 
-    EventSchema outputSchema = new EventSchema(generatedOutputProperties.a);
+    EventSchema outputSchema = new EventSchema(generatedOutputProperties.k);
 
-    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.b));
+    return new Tuple2<>(outputSchema, getModifiedOutputStrategy(generatedOutputProperties.v));
   }
 
   private AppendOutputStrategy getModifiedOutputStrategy(List<PropertyRenameRule> propertyRenameRules) {

@@ -31,27 +31,34 @@ import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import java.util.Map;
 
-public abstract class InvocablePipelineElementResource<I extends InvocableStreamPipesEntity, D extends Declarer<?>,
-        P extends AbstractParameterExtractor<I>> extends AbstractPipelineElementResource<D> {
+public abstract class InvocablePipelineElementResource<K extends InvocableStreamPipesEntity, T extends Declarer<?>,
+    W extends AbstractParameterExtractor<K>> extends AbstractPipelineElementResource<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
+  protected Class<K> clazz;
 
-  protected abstract Map<String, D> getElementDeclarers();
-
-  protected abstract String getInstanceId(String uri, String elementId);
-
-  protected Class<I> clazz;
-
-  public InvocablePipelineElementResource(Class<I> clazz) {
+  public InvocablePipelineElementResource(Class<K> clazz) {
     this.clazz = clazz;
   }
+
+  protected abstract Map<String, T> getElementDeclarers();
+
+  protected abstract String getInstanceId(String uri, String elementId);
 
   @POST
   @Path("{elementId}")
@@ -59,7 +66,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId,
-                                                 I graph) {
+                                                 K graph) {
 
     try {
       if (isDebug()) {
@@ -73,16 +80,18 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
         String runningInstanceId = getInstanceId(graph.getElementId(), elementId);
         if (!RunningInstances.INSTANCE.exists(runningInstanceId)) {
           RunningInstances.INSTANCE.add(runningInstanceId, graph, declarer.getClass().newInstance());
-          Response resp = RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceGroup());
+          Response resp =
+              RunningInstances.INSTANCE.getInvocation(runningInstanceId).invokeRuntime(graph, getServiceGroup());
           if (!resp.isSuccess()) {
             LOG.error("Could not invoke pipeline element {} due to the following error: {}",
-                    graph.getName(),
-                    resp.getOptionalMessage());
+                graph.getName(),
+                resp.getOptionalMessage());
             RunningInstances.INSTANCE.remove(runningInstanceId);
           }
           return ok(resp);
         } else {
-          LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.", graph.getName(), runningInstanceId);
+          LOG.info("Pipeline element {} with id {} seems to be already running, skipping invocation request.",
+              graph.getName(), runningInstanceId);
           Response resp = new Response(graph.getElementId(), true);
           return ok(resp);
         }
@@ -104,24 +113,27 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
                                                        RuntimeOptionsRequest req) {
 
-    D declarer = getDeclarerById(elementId);
+    T declarer = getDeclarerById(elementId);
     RuntimeOptionsResponse responseOptions;
 
     try {
       if (declarer instanceof ResolvesContainerProvidedOptions) {
-        responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((ResolvesContainerProvidedOptions) declarer, req);
+        responseOptions =
+            new RuntimeResolvableRequestHandler().handleRuntimeResponse((ResolvesContainerProvidedOptions) declarer,
+                req);
         return ok(responseOptions);
       } else if (declarer instanceof SupportsRuntimeConfig) {
-          responseOptions = new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
-          return ok(responseOptions);
+        responseOptions =
+            new RuntimeResolvableRequestHandler().handleRuntimeResponse((SupportsRuntimeConfig) declarer, req);
+        return ok(responseOptions);
       } else {
         return javax.ws.rs.core.Response.status(500).build();
       }
     } catch (SpConfigurationException e) {
       return javax.ws.rs.core.Response
-        .status(400)
-        .entity(e)
-        .build();
+          .status(400)
+          .entity(e)
+          .build();
     }
   }
 
@@ -130,15 +142,16 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
-  public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId, I runtimeOptionsRequest) {
+  public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId,
+                                                       K runtimeOptionsRequest) {
     try {
       //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
-      ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
-              (ResolvesContainerProvidedOutputStrategy<I, P>)
-                      getDeclarerById
-                              (elementId);
+      ResolvesContainerProvidedOutputStrategy<K, W> resolvesOutput =
+          (ResolvesContainerProvidedOutputStrategy<K, W>)
+              getDeclarerById
+                  (elementId);
       return ok(resolvesOutput.resolveOutputStrategy
-              (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
+          (runtimeOptionsRequest, getExtractor(runtimeOptionsRequest)));
     } catch (SpRuntimeException | SpConfigurationException e) {
       return ok(new Response(elementId, false));
     }
@@ -149,7 +162,8 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   @DELETE
   @Path("{elementId}/{runningInstanceId}")
   @Produces(MediaType.APPLICATION_JSON)
-  public javax.ws.rs.core.Response detach(@PathParam("elementId") String elementId, @PathParam("runningInstanceId") String runningInstanceId) {
+  public javax.ws.rs.core.Response detach(@PathParam("elementId") String elementId,
+                                          @PathParam("runningInstanceId") String runningInstanceId) {
 
     InvocableDeclarer runningInstance = RunningInstances.INSTANCE.getInvocation(runningInstanceId);
 
@@ -173,9 +187,9 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     return ok(RunningInstances.INSTANCE.getRunningInstanceIdsForElement(elementId));
   }
 
-  protected abstract P getExtractor(I graph);
+  protected abstract W getExtractor(K graph);
 
-  protected abstract I createGroundingDebugInformation(I graph);
+  protected abstract K createGroundingDebugInformation(K graph);
 
   private Boolean isDebug() {
     return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean();

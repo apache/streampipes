@@ -26,29 +26,29 @@ import java.util.Arrays;
 
 public enum Datatypes {
 
-    Integer(XSD._integer),
-    Long(XSD._long),
-    Float(XSD._float),
-    Boolean(XSD._boolean),
-    String(XSD._string),
-    Double(XSD._double),
-    Number(URI.create(SO.Number)),
-    Sequence(XSD._sequence);
+  Integer(XSD._integer),
+  Long(XSD._long),
+  Float(XSD._float),
+  Boolean(XSD._boolean),
+  String(XSD._string),
+  Double(XSD._double),
+  Number(URI.create(SO.Number)),
+  Sequence(XSD._sequence);
 
-    private URI uri;
+  private URI uri;
 
-    Datatypes(URI uri) {
-        this.uri = uri;
-    }
+  Datatypes(URI uri) {
+    this.uri = uri;
+  }
 
-    public String toString() {
-        return uri.toString();
-    }
+  public static Datatypes fromDatatypeString(String datatype) {
+    return Arrays.stream(Datatypes.values())
+        .filter(d -> d.uri.toString().equals(datatype))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Could not find datatype with URI " + datatype));
+  }
 
-    public static Datatypes fromDatatypeString(String datatype) {
-        return Arrays.stream(Datatypes.values())
-                .filter(d -> d.uri.toString().equals(datatype))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Could not find datatype with URI " +datatype));
-    }
+  public String toString() {
+    return uri.toString();
+  }
 }

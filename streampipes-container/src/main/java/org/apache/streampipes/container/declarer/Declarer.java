@@ -21,8 +21,8 @@ package org.apache.streampipes.container.declarer;
 
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 
-public interface Declarer<D extends NamedStreamPipesEntity> {
+public interface Declarer<T extends NamedStreamPipesEntity> {
 
-	D declareModel();
+  T declareModel();
 
 }

@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.container.declarer;
 
+import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.Response;
 
-public interface InvocableDeclarer<D extends NamedStreamPipesEntity,
-        I extends InvocableStreamPipesEntity> extends Declarer<D> {
+public interface InvocableDeclarer<T extends NamedStreamPipesEntity,
+    K extends InvocableStreamPipesEntity> extends Declarer<T> {
 
-    Response invokeRuntime(I invocationGraph, String serviceId);
+  Response invokeRuntime(K invocationGraph, String serviceId);
 
-    Response detachRuntime(String pipelineId, String serviceId);
+  Response detachRuntime(String pipelineId, String serviceId);
 }

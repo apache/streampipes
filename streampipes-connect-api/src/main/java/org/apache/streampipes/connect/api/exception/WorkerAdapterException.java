@@ -21,20 +21,21 @@ package org.apache.streampipes.connect.api.exception;
 import org.apache.streampipes.model.message.Message;
 
 public class WorkerAdapterException extends Exception {
-    private Message content;
-    public WorkerAdapterException() {}
+  private Message content;
 
-    public WorkerAdapterException(Message message)
-    {
-        super(message.getElementName());
-        this.content = message;
-    }
+  public WorkerAdapterException() {
+  }
 
-    public WorkerAdapterException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public WorkerAdapterException(Message message) {
+    super(message.getElementName());
+    this.content = message;
+  }
 
-    public Message getContent() {
-        return content;
-    }
+  public WorkerAdapterException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public Message getContent() {
+    return content;
+  }
 }

@@ -25,6 +25,7 @@ public class SupportedFormats {
 
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messaging arriving in JSON format
+   *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */
   public static TransportFormat jsonFormat() {
@@ -34,6 +35,7 @@ public class SupportedFormats {
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messaging arriving in Thrift
    * format
+   *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */
   public static TransportFormat thriftFormat() {
@@ -43,6 +45,7 @@ public class SupportedFormats {
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messaging
    * arriving in Cbor format
+   *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */
   public static TransportFormat cborFormat() {
@@ -52,6 +55,7 @@ public class SupportedFormats {
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messaging
    * arriving in fast-serialization format
+   *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */
   public static TransportFormat fstFormat() {
@@ -61,6 +65,7 @@ public class SupportedFormats {
   /**
    * Defines that a pipeline element (data processor or data sink) supports processing messaging
    * arriving in smile format
+   *
    * @return The resulting {@link org.apache.streampipes.model.grounding.TransportFormat}.
    */
   public static TransportFormat smileFormat() {

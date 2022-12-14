@@ -22,15 +22,15 @@ import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 
 public class AssetsUtil {
 
-    public static String makeIconPath(String elementId) {
-        return makePath(elementId, GlobalStreamPipesConstants.STD_ICON_NAME);
-    }
+  public static String makeIconPath(String elementId) {
+    return makePath(elementId, GlobalStreamPipesConstants.STD_ICON_NAME);
+  }
 
-    public static String makeDocumentationPath(String elementId) {
-        return makePath(elementId, GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME);
-    }
+  public static String makeDocumentationPath(String elementId) {
+    return makePath(elementId, GlobalStreamPipesConstants.STD_DOCUMENTATION_NAME);
+  }
 
-    public static String makePath(String elementId, String assetAppendix) {
-        return elementId + "/" + assetAppendix;
-    }
+  public static String makePath(String elementId, String assetAppendix) {
+    return elementId + "/" + assetAppendix;
+  }
 }

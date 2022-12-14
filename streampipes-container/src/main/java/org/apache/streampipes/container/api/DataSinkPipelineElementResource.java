@@ -27,38 +27,39 @@ import org.apache.streampipes.sdk.extractor.DataSinkParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
 import javax.ws.rs.Path;
+
 import java.util.Map;
 
 @Path(SpServicePathPrefix.DATA_SINK)
 public class DataSinkPipelineElementResource extends InvocablePipelineElementResource<DataSinkInvocation,
-        SemanticEventConsumerDeclarer, DataSinkParameterExtractor> {
+    SemanticEventConsumerDeclarer, DataSinkParameterExtractor> {
 
-    public DataSinkPipelineElementResource() {
-        super(DataSinkInvocation.class);
-    }
+  public DataSinkPipelineElementResource() {
+    super(DataSinkInvocation.class);
+  }
 
-    @Override
-    protected Map<String, SemanticEventConsumerDeclarer> getElementDeclarers() {
-        return DeclarersSingleton.getInstance().getConsumerDeclarers();
-    }
+  @Override
+  protected Map<String, SemanticEventConsumerDeclarer> getElementDeclarers() {
+    return DeclarersSingleton.getInstance().getConsumerDeclarers();
+  }
 
-    @Override
-    protected String getInstanceId(String uri, String elementId) {
-        //return Util.getInstanceId(uri, PipelineElementPrefix.DATA_SINK, elementId);
-        return InstanceIdExtractor.extractId(uri);
-    }
+  @Override
+  protected String getInstanceId(String uri, String elementId) {
+    //return Util.getInstanceId(uri, PipelineElementPrefix.DATA_SINK, elementId);
+    return InstanceIdExtractor.extractId(uri);
+  }
 
-    @Override
-    protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {
-        return new DataSinkParameterExtractor(graph);
-    }
+  @Override
+  protected DataSinkParameterExtractor getExtractor(DataSinkInvocation graph) {
+    return new DataSinkParameterExtractor(graph);
+  }
 
-    @Override
-    protected DataSinkInvocation createGroundingDebugInformation(DataSinkInvocation graph) {
-        graph.getInputStreams().forEach(is -> {
-            GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
-        });
+  @Override
+  protected DataSinkInvocation createGroundingDebugInformation(DataSinkInvocation graph) {
+    graph.getInputStreams().forEach(is -> {
+      GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
+    });
 
-        return graph;
-    }
+    return graph;
+  }
 }

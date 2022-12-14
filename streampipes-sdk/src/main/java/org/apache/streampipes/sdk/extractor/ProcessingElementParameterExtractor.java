@@ -26,32 +26,32 @@ import java.util.List;
 
 public class ProcessingElementParameterExtractor extends AbstractParameterExtractor<DataProcessorInvocation> {
 
-  public static ProcessingElementParameterExtractor from(DataProcessorInvocation sepaElement) {
-    return new ProcessingElementParameterExtractor(sepaElement);
-  }
-
   public ProcessingElementParameterExtractor(DataProcessorInvocation sepaElement) {
     super(sepaElement);
   }
 
+  public static ProcessingElementParameterExtractor from(DataProcessorInvocation sepaElement) {
+    return new ProcessingElementParameterExtractor(sepaElement);
+  }
+
   public String outputTopic() {
     return sepaElement
-            .getOutputStream()
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName();
+        .getOutputStream()
+        .getEventGrounding()
+        .getTransportProtocol()
+        .getTopicDefinition()
+        .getActualTopicName();
   }
 
   public List<String> outputKeySelectors() {
     return sepaElement
-            .getOutputStrategies()
-            .stream()
-            .filter(CustomOutputStrategy.class::isInstance)
-            .map(o -> (CustomOutputStrategy) o)
-            .findFirst()
-            .map(CustomOutputStrategy::getSelectedPropertyKeys)
-            .orElse(new ArrayList<>());
+        .getOutputStrategies()
+        .stream()
+        .filter(CustomOutputStrategy.class::isInstance)
+        .map(o -> (CustomOutputStrategy) o)
+        .findFirst()
+        .map(CustomOutputStrategy::getSelectedPropertyKeys)
+        .orElse(new ArrayList<>());
 
   }
 

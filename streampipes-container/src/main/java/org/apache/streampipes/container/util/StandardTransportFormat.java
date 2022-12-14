@@ -30,28 +30,25 @@ import java.util.List;
 
 public class StandardTransportFormat {
 
-	public static List<TransportFormat> standardFormat()
-	{
-		List<TransportFormat> formats = new ArrayList<>();
-		formats.add(new TransportFormat(MessageFormat.Json));
-		formats.add(new TransportFormat(MessageFormat.Thrift));
-		return formats;
-	}
-	
-	public static List<TransportProtocol> standardProtocols()
-	{
-		List<TransportProtocol> protocols = new ArrayList<>();
-		protocols.add(new JmsTransportProtocol());
-		protocols.add(new KafkaTransportProtocol());
-		return protocols;
-	}
-	
-	
-	public static EventGrounding getSupportedGrounding()
-	{
-		EventGrounding grounding = new EventGrounding();
-		grounding.setTransportFormats(standardFormat());
-		grounding.setTransportProtocols(standardProtocols());
-		return grounding;
-	}
+  public static List<TransportFormat> standardFormat() {
+    List<TransportFormat> formats = new ArrayList<>();
+    formats.add(new TransportFormat(MessageFormat.Json));
+    formats.add(new TransportFormat(MessageFormat.Thrift));
+    return formats;
+  }
+
+  public static List<TransportProtocol> standardProtocols() {
+    List<TransportProtocol> protocols = new ArrayList<>();
+    protocols.add(new JmsTransportProtocol());
+    protocols.add(new KafkaTransportProtocol());
+    return protocols;
+  }
+
+
+  public static EventGrounding getSupportedGrounding() {
+    EventGrounding grounding = new EventGrounding();
+    grounding.setTransportFormats(standardFormat());
+    grounding.setTransportProtocols(standardProtocols());
+    return grounding;
+  }
 }

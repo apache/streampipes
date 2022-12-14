@@ -28,6 +28,7 @@ public class Options {
 
   /**
    * Creates a new list of options by using the provided string values.
+   *
    * @param optionLabel An arbitrary number of option labels.
    * @return
    */
@@ -37,6 +38,6 @@ public class Options {
 
   @SafeVarargs
   public static List<Option> from(Tuple2<String, String>... options) {
-    return Arrays.stream(options).map(o -> new Option(o.a, o.b)).collect(Collectors.toList());
+    return Arrays.stream(options).map(o -> new Option(o.k, o.v)).collect(Collectors.toList());
   }
 }

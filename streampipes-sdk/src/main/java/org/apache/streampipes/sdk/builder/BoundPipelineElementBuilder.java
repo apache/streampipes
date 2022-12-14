@@ -39,13 +39,13 @@ public class BoundPipelineElementBuilder {
   private BoundPipelineElementBuilder(InvocableStreamPipesEntity streamPipesEntity) {
     this.streamPipesEntity = streamPipesEntity;
     // TODO fix this hack
-    this.streamPipesEntity.setElementId(this.streamPipesEntity.getBelongsTo() +":" + UUID.randomUUID().toString());
+    this.streamPipesEntity.setElementId(this.streamPipesEntity.getBelongsTo() + ":" + UUID.randomUUID().toString());
     this.boundPipelineElement = new BoundPipelineElement();
     this.connectedTo = new ArrayList<>();
   }
 
   public static BoundPipelineElementBuilder create(DataProcessorDescription dataProcessorDescription) {
-        return new BoundPipelineElementBuilder(new DataProcessorInvocation(dataProcessorDescription));
+    return new BoundPipelineElementBuilder(new DataProcessorInvocation(dataProcessorDescription));
   }
 
   public static BoundPipelineElementBuilder create(DataSinkDescription dataSinkDescription) {
@@ -58,27 +58,30 @@ public class BoundPipelineElementBuilder {
   }
 
   public BoundPipelineElementBuilder withPredefinedFreeTextValue(String internalStaticPropertyId, String value) {
-    this.streamPipesEntity.getStaticProperties().stream().filter(sp -> sp instanceof FreeTextStaticProperty).forEach(sp -> {
-      if (sp.getInternalName().equals(internalStaticPropertyId)) {
-        sp.setPredefined(true);
-        ((FreeTextStaticProperty) sp).setValue(value);
-      }
-    });
+    this.streamPipesEntity.getStaticProperties().stream().filter(sp -> sp instanceof FreeTextStaticProperty)
+        .forEach(sp -> {
+          if (sp.getInternalName().equals(internalStaticPropertyId)) {
+            sp.setPredefined(true);
+            ((FreeTextStaticProperty) sp).setValue(value);
+          }
+        });
 
     return this;
   }
 
-  public BoundPipelineElementBuilder withPredefinedSelection(String internalStaticPropertyId, List<String> selectedOptions) {
-    this.streamPipesEntity.getStaticProperties().stream().filter(sp -> sp instanceof SelectionStaticProperty).forEach(sp -> {
-      if (sp.getInternalName().equals(internalStaticPropertyId)) {
-        sp.setPredefined(true);
-        ((SelectionStaticProperty) sp).getOptions().forEach(o -> {
-          if (selectedOptions.stream().anyMatch(so -> so.equals(o.getName()))) {
-            o.setSelected(true);
+  public BoundPipelineElementBuilder withPredefinedSelection(String internalStaticPropertyId,
+                                                             List<String> selectedOptions) {
+    this.streamPipesEntity.getStaticProperties().stream().filter(sp -> sp instanceof SelectionStaticProperty)
+        .forEach(sp -> {
+          if (sp.getInternalName().equals(internalStaticPropertyId)) {
+            sp.setPredefined(true);
+            ((SelectionStaticProperty) sp).getOptions().forEach(o -> {
+              if (selectedOptions.stream().anyMatch(so -> so.equals(o.getName()))) {
+                o.setSelected(true);
+              }
+            });
           }
         });
-      }
-    });
     return this;
   }
 

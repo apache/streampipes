@@ -29,7 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<ProcessingElementBuilder, DataProcessorDescription> {
+public class ProcessingElementBuilder
+    extends AbstractProcessingElementBuilder<ProcessingElementBuilder, DataProcessorDescription> {
 
 
   private List<OutputStrategy> outputStrategies;
@@ -48,7 +49,8 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
    * Creates a new processing element using the builder pattern.
    *
    * @param id          A unique identifier of the new element, e.g., com.mycompany.processor.mynewdataprocessor
-   * @param label       A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   * @param label       A human-readable name of the element.
+   *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    */
   public static ProcessingElementBuilder create(String id, String label, String description) {
@@ -92,9 +94,9 @@ public class ProcessingElementBuilder extends AbstractProcessingElementBuilder<P
    */
   public ProcessingElementBuilder category(DataProcessorType... epaCategory) {
     this.elementDescription.setCategory(Arrays
-            .stream(epaCategory)
-            .map(Enum::name)
-            .collect(Collectors.toList()));
+        .stream(epaCategory)
+        .map(Enum::name)
+        .collect(Collectors.toList()));
     return me();
   }
 

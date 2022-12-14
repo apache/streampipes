@@ -29,9 +29,12 @@ public enum StreamIdentifier {
   }
 
   /**
-   * @deprecated Use {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder} to add stream requirements.
+   * @deprecated Use {@link org.apache.streampipes.sdk.builder.AbstractProcessingElementBuilder}
+   * to add stream requirements.
+   *
    * @return the stream ID
    */
+  @Deprecated(since = "0.90.0", forRemoval = true)
   public Integer getStreamId() {
     return streamId;
   }
