@@ -152,6 +152,18 @@ public class DataLakeQueryBuilder {
     return this;
   }
 
+  public DataLakeQueryBuilder withGroupByTime(String timeInterval,
+                                              String offsetInterval) {
+
+    this.groupByClauses.add(new RawTextClause("time("
+        + timeInterval
+        + ","
+        + offsetInterval
+        + ")"));
+
+    return this;
+  }
+
   public DataLakeQueryBuilder withGroupBy(String column) {
 
     this.groupByClauses.add(new RawTextClause(column));
