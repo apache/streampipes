@@ -93,7 +93,8 @@ public class WelcomePageGenerator {
       uri += "template/";
     }
     desc.setDescriptionUrl(uri + declarer.declareModel().getAppId());
-    //desc.setUri(URI.create(uri + declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
+    //desc.setUri(URI.create(uri + declarer.declareModel().getUri()
+    // .replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
     return desc;
   }
 

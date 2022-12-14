@@ -46,17 +46,17 @@ import javax.ws.rs.core.MediaType;
 
 import java.util.Map;
 
-public abstract class InvocablePipelineElementResource<I extends InvocableStreamPipesEntity, D extends Declarer<?>,
-    P extends AbstractParameterExtractor<I>> extends AbstractPipelineElementResource<D> {
+public abstract class InvocablePipelineElementResource<K extends InvocableStreamPipesEntity, T extends Declarer<?>,
+    W extends AbstractParameterExtractor<K>> extends AbstractPipelineElementResource<T> {
 
   private static final Logger LOG = LoggerFactory.getLogger(InvocablePipelineElementResource.class);
-  protected Class<I> clazz;
+  protected Class<K> clazz;
 
-  public InvocablePipelineElementResource(Class<I> clazz) {
+  public InvocablePipelineElementResource(Class<K> clazz) {
     this.clazz = clazz;
   }
 
-  protected abstract Map<String, D> getElementDeclarers();
+  protected abstract Map<String, T> getElementDeclarers();
 
   protected abstract String getInstanceId(String uri, String elementId);
 
@@ -66,7 +66,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public javax.ws.rs.core.Response invokeRuntime(@PathParam("elementId") String elementId,
-                                                 I graph) {
+                                                 K graph) {
 
     try {
       if (isDebug()) {
@@ -113,7 +113,7 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   public javax.ws.rs.core.Response fetchConfigurations(@PathParam("elementId") String elementId,
                                                        RuntimeOptionsRequest req) {
 
-    D declarer = getDeclarerById(elementId);
+    T declarer = getDeclarerById(elementId);
     RuntimeOptionsResponse responseOptions;
 
     try {
@@ -143,11 +143,11 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
   @Consumes(MediaType.APPLICATION_JSON)
   @JacksonSerialized
   public javax.ws.rs.core.Response fetchOutputStrategy(@PathParam("elementId") String elementId,
-                                                       I runtimeOptionsRequest) {
+                                                       K runtimeOptionsRequest) {
     try {
       //I runtimeOptionsRequest = JacksonSerializer.getObjectMapper().readValue(payload, clazz);
-      ResolvesContainerProvidedOutputStrategy<I, P> resolvesOutput =
-          (ResolvesContainerProvidedOutputStrategy<I, P>)
+      ResolvesContainerProvidedOutputStrategy<K, W> resolvesOutput =
+          (ResolvesContainerProvidedOutputStrategy<K, W>)
               getDeclarerById
                   (elementId);
       return ok(resolvesOutput.resolveOutputStrategy
@@ -187,9 +187,9 @@ public abstract class InvocablePipelineElementResource<I extends InvocableStream
     return ok(RunningInstances.INSTANCE.getRunningInstanceIdsForElement(elementId));
   }
 
-  protected abstract P getExtractor(I graph);
+  protected abstract W getExtractor(K graph);
 
-  protected abstract I createGroundingDebugInformation(I graph);
+  protected abstract K createGroundingDebugInformation(K graph);
 
   private Boolean isDebug() {
     return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean();
