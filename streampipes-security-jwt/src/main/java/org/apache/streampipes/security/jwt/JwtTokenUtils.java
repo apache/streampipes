@@ -44,14 +44,14 @@ public class JwtTokenUtils {
 
   public static JwtParser jwtParser(String tokenSecret) {
     return Jwts.parserBuilder()
-            .setSigningKey(tokenSecret.getBytes(StandardCharsets.UTF_8))
-            .build();
+        .setSigningKey(tokenSecret.getBytes(StandardCharsets.UTF_8))
+        .build();
   }
 
   public static JwtParser jwtParser(SigningKeyResolver resolver) {
     return Jwts.parserBuilder()
-            .setSigningKeyResolver(resolver)
-            .build();
+        .setSigningKeyResolver(resolver)
+        .build();
   }
 
 }
