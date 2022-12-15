@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.export.resolver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.export.ExportItem;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class MeasurementResolver extends AbstractResolver<DataLakeMeasure> {
 

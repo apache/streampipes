@@ -20,7 +20,11 @@ package org.apache.streampipes.export.generator;
 
 import org.apache.streampipes.export.constants.ExportConstants;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +90,7 @@ public class ZipFileBuilder {
       addZipEntry(documentKey + ".json", document, out, buffer);
     }
 
-    for(String binary : this.binaryEntries.keySet()) {
+    for (String binary : this.binaryEntries.keySet()) {
       addZipEntry(binary, this.binaryEntries.get(binary), out, buffer);
     }
 

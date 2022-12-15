@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.export.resolver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.export.utils.EventGroundingProcessor;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.export.ExportItem;
 import org.apache.streampipes.model.pipeline.Pipeline;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.util.stream.Collectors;
 
@@ -42,9 +43,9 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     doc.setSepas(doc.getSepas().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
     doc.setActions(doc.getActions().stream().peek(s -> s.setSelectedEndpointUrl(null)).collect(Collectors.toList()));
     doc.setStreams(doc.getStreams()
-      .stream()
-      .filter(s -> s instanceof SpDataSet).peek(s -> ((SpDataSet) s).setSelectedEndpointUrl(null))
-      .collect(Collectors.toList()));
+        .stream()
+        .filter(s -> s instanceof SpDataSet).peek(s -> ((SpDataSet) s).setSelectedEndpointUrl(null))
+        .collect(Collectors.toList()));
     return doc;
   }
 
@@ -68,7 +69,8 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
     var pipeline = deserializeDocument(document);
     if (overrideDocument) {
       pipeline.setSepas(pipeline.getSepas().stream().peek(processor -> {
-        processor.getInputStreams().forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
+        processor.getInputStreams()
+            .forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
         EventGroundingProcessor.applyOverride(processor.getOutputStream().getEventGrounding().getTransportProtocol());
       }).collect(Collectors.toList()));
 
@@ -77,7 +79,8 @@ public class PipelineResolver extends AbstractResolver<Pipeline> {
       }).collect(Collectors.toList()));
 
       pipeline.setActions(pipeline.getActions().stream().peek(sink -> {
-        sink.getInputStreams().forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
+        sink.getInputStreams()
+            .forEach(is -> EventGroundingProcessor.applyOverride(is.getEventGrounding().getTransportProtocol()));
       }).collect(Collectors.toList()));
 
     }
