@@ -54,7 +54,7 @@ public class DataExportResource extends AbstractAuthGuardedRestResource {
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
-  public Response getExportPreview(ExportConfiguration exportConfiguration) throws IOException {
+  public Response download(ExportConfiguration exportConfiguration) throws IOException {
     var applicationPackage = ExportManager.getExportPackage(exportConfiguration);
     return ok(applicationPackage);
   }
