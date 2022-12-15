@@ -23,6 +23,7 @@ import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.pipeline.PipelineElementStatus;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public class GraphSubmitter {
   private String pipelineId;
   private String pipelineName;
 
-  private final static Logger LOG = LoggerFactory.getLogger(GraphSubmitter.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GraphSubmitter.class);
 
   public GraphSubmitter(String pipelineId,
                         String pipelineName,
@@ -59,8 +60,8 @@ public class GraphSubmitter {
     graphs.forEach(g -> status.addPipelineElementStatus(performInvocation(g)));
     if (status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess)) {
       dataSets.forEach(dataSet ->
-              status.addPipelineElementStatus
-                      (performInvocation(dataSet)));
+          status.addPipelineElementStatus
+              (performInvocation(dataSet)));
     }
     status.setSuccess(status.getElementStatus().stream().allMatch(PipelineElementStatus::isSuccess));
 
@@ -124,7 +125,8 @@ public class GraphSubmitter {
   }
 
   private PipelineElementStatus performDetach(SpDataSet dataset) {
-    String endpointUrl = dataset.getSelectedEndpointUrl() + "/" + dataset.getCorrespondingAdapterId() + "/" + dataset.getDatasetInvocationId();
+    String endpointUrl = dataset.getSelectedEndpointUrl() + "/" + dataset.getCorrespondingAdapterId() + "/"
+        + dataset.getDatasetInvocationId();
     return new HttpRequestBuilder(dataset, endpointUrl, this.pipelineId).detach();
   }
 }

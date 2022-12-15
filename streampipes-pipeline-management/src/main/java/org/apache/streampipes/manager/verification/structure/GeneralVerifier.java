@@ -27,19 +27,22 @@ import java.util.List;
 
 public class GeneralVerifier<T extends NamedStreamPipesEntity> extends AbstractVerifier {
 
-	private T description;
-	
-	public GeneralVerifier(T description)
-	{
-		this.description = description;
-	}
-	
-	@Override
-	public List<VerificationResult> validate() {
-		if (!description.isIncludesAssets() || !description.getIncludedAssets().contains(Assets.ICON)) addWarning(NotificationType.WARNING_NO_ICON);
-		if (description.getName() == null) addWarning(NotificationType.WARNING_NO_NAME);
-		
-		return validationResults;
-	}
+  private final T description;
+
+  public GeneralVerifier(T description) {
+    this.description = description;
+  }
+
+  @Override
+  public List<VerificationResult> validate() {
+    if (!description.isIncludesAssets() || !description.getIncludedAssets().contains(Assets.ICON)) {
+      addWarning(NotificationType.WARNING_NO_ICON);
+    }
+    if (description.getName() == null) {
+      addWarning(NotificationType.WARNING_NO_NAME);
+    }
+
+    return validationResults;
+  }
 
 }

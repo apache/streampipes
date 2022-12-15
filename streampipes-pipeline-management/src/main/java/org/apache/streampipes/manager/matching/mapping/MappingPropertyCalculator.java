@@ -44,7 +44,7 @@ public class MappingPropertyCalculator {
 
   public List<String> matchedPropertySelectors() {
     List<String> matchedSelectors = new ArrayList<>();
-    for(String propertySelector : availablePropertySelectors) {
+    for (String propertySelector : availablePropertySelectors) {
       List<EventProperty> offeredProperties = getEventProperty(propertySelector);
       if (offeredProperties.size() == 1) {
         if (new PropertyMatch().match(offeredProperties.get(0), requirement, new ArrayList<>())) {

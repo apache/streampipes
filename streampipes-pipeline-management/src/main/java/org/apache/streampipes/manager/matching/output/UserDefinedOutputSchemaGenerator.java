@@ -1,4 +1,4 @@
-package org.apache.streampipes.manager.matching.output;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,7 @@ package org.apache.streampipes.manager.matching.output;/*
  * limitations under the License.
  *
  */
+package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.output.OutputStrategy;
@@ -44,7 +45,8 @@ public class UserDefinedOutputSchemaGenerator extends OutputSchemaGenerator<User
   }
 
   @Override
-  public Tuple2<EventSchema, UserDefinedOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
+  public Tuple2<EventSchema, UserDefinedOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
+                                                                            SpDataStream stream2) {
     return buildFromOneStream(stream1);
   }
 }

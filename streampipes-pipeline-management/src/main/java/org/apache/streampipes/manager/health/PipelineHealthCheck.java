@@ -29,13 +29,18 @@ import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineHealthStatus;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -81,16 +86,17 @@ public class PipelineHealthCheck implements Runnable {
                 addFailedAttemptNotification(pipelineNotifications, graph);
                 increaseFailedAttempt(instanceId);
                 LOG.info("Could not restore pipeline element {} of pipeline {} ({}/{})",
-                        graph.getName(),
-                        pipeline.getName(),
-                        failedRestartAttempts.get(instanceId),
-                        MAX_FAILED_ATTEMPTS);
+                    graph.getName(),
+                    pipeline.getName(),
+                    failedRestartAttempts.get(instanceId),
+                    MAX_FAILED_ATTEMPTS);
               } else {
                 recoveredInstances.add(instanceId);
                 addSuccessfulRestoreNotification(pipelineNotifications, graph);
                 resetFailedAttempts(instanceId);
                 graph.setSelectedEndpointUrl(endpointUrl);
-                LOG.info("Successfully restored pipeline element {} of pipeline {}", graph.getName(), pipeline.getName());
+                LOG.info("Successfully restored pipeline element {} of pipeline {}", graph.getName(),
+                    pipeline.getName());
               }
             }
           }
@@ -137,23 +143,23 @@ public class PipelineHealthCheck implements Runnable {
   private void addSuccessfulRestoreNotification(List<String> pipelineNotifications,
                                                 InvocableStreamPipesEntity graph) {
     pipelineNotifications.add(getCurrentDatetime()
-            + "Pipeline element '"
-            + graph.getName()
-            + "' was not available and was successfully restored.");
+        + "Pipeline element '"
+        + graph.getName()
+        + "' was not available and was successfully restored.");
   }
 
   private void addFailedAttemptNotification(List<String> pipelineNotifications,
                                             InvocableStreamPipesEntity graph) {
     pipelineNotifications.add(getCurrentDatetime()
-            + "Pipeline element '"
-            + graph.getName()
-            + "' was not available and could not be restored.");
+        + "Pipeline element '"
+        + graph.getName()
+        + "' was not available and could not be restored.");
   }
 
   private String getCurrentDatetime() {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();
-    return "[" +dtf.format(now) + "] ";
+    return "[" + dtf.format(now) + "] ";
   }
 
   private String extractInstanceId(InvocableStreamPipesEntity graph) {
@@ -177,7 +183,7 @@ public class PipelineHealthCheck implements Runnable {
   private Map<String, List<InvocableStreamPipesEntity>> generateEndpointMap() {
     Map<String, List<InvocableStreamPipesEntity>> endpointMap = new HashMap<>();
     TemporaryGraphStorage.graphStorage.forEach((pipelineId, graphs) ->
-            graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
+        graphs.forEach(graph -> addEndpoint(endpointMap, graph)));
 
     return endpointMap;
   }
@@ -200,12 +206,12 @@ public class PipelineHealthCheck implements Runnable {
 
   private List<Pipeline> getRunningPipelines() {
     return StorageDispatcher
-            .INSTANCE
-            .getNoSqlStore()
-            .getPipelineStorageAPI()
-            .getAllPipelines()
-            .stream()
-            .filter(Pipeline::isRunning)
-            .collect(Collectors.toList());
+        .INSTANCE
+        .getNoSqlStore()
+        .getPipelineStorageAPI()
+        .getAllPipelines()
+        .stream()
+        .filter(Pipeline::isRunning)
+        .collect(Collectors.toList());
   }
 }

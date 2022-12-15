@@ -18,24 +18,24 @@
 
 package org.apache.streampipes.manager.verification.runtime;
 
-import java.util.List;
-
 import org.apache.streampipes.manager.verification.messages.VerificationResult;
 import org.apache.streampipes.manager.verification.structure.Verifier;
 import org.apache.streampipes.model.graph.DataSourceDescription;
 
+import java.util.List;
+
 public class SourceSchemaVerifier implements Verifier {
 
-	private DataSourceDescription sep;
-	
-	public SourceSchemaVerifier(DataSourceDescription sep) {
-		this.sep = sep;
-	}
-	
-	@Override
-	public List<VerificationResult> validate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+  private DataSourceDescription sep;
+
+  public SourceSchemaVerifier(DataSourceDescription sep) {
+    this.sep = sep;
+  }
+
+  @Override
+  public List<VerificationResult> validate() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 }

@@ -22,18 +22,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PipelineCacheManager {
 
-    private static ConcurrentHashMap<String, String> cachedPipelines = new ConcurrentHashMap<>();
+  private static ConcurrentHashMap<String, String> cachedPipelines = new ConcurrentHashMap<>();
 
-    public static void updateCachedPipeline(String userName,
-                                            String rawPipelineModel) {
-        cachedPipelines.put(userName, rawPipelineModel);
-    }
+  public static void updateCachedPipeline(String userName,
+                                          String rawPipelineModel) {
+    cachedPipelines.put(userName, rawPipelineModel);
+  }
 
-    public static String getCachedPipeline(String userName) {
-        return cachedPipelines.get(userName);
-    }
+  public static String getCachedPipeline(String userName) {
+    return cachedPipelines.get(userName);
+  }
 
-    public static void removeCachedPipeline(String userName) {
-        cachedPipelines.remove(userName);
-    }
+  public static void removeCachedPipeline(String userName) {
+    cachedPipelines.remove(userName);
+  }
 }

@@ -18,8 +18,7 @@
 
 package org.apache.streampipes.manager.monitoring.pipeline;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.http.client.fluent.Request;
+
 import org.apache.streampipes.manager.util.AuthTokenUtils;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.model.monitoring.SpEndpointMonitoringInfo;
@@ -28,6 +27,9 @@ import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +62,7 @@ public class ExtensionsServiceLogExecutor implements Runnable {
 
   private Request makeRequest(String serviceEndpointUrl) {
     return Request.Get(makeLogUrl(serviceEndpointUrl))
-    .addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdmin()));
+        .addHeader("Authorization", AuthTokenUtils.getAuthTokenForUser(getServiceAdmin()));
   }
 
   private Principal getServiceAdmin() {

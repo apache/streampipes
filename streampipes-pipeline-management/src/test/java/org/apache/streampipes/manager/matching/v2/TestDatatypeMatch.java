@@ -18,55 +18,54 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
-
-import org.junit.Test;
-
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.vocabulary.XSD;
 
+import junit.framework.TestCase;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestDatatypeMatch extends TestCase {
 
-	@Test
-	public void testPositiveDatatypeMatch() {
+  @Test
+  public void testPositiveDatatypeMatch() {
 
-		String offer = XSD._integer.toString();
-		String requirement = XSD._integer.toString();
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
-		assertTrue(matches);
-	}
-	
-	@Test
-	public void testNegativeDatatypeMatch() {
+    String offer = XSD._integer.toString();
+    String requirement = XSD._integer.toString();
 
-		String offer = XSD._integer.toString();
-		String requirement = XSD._string.toString();
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
-		assertFalse(matches);
-	}
-	
-	@Test
-	public void testSubPropertyMatch() {
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
 
-		String offer = XSD._integer.toString();
-		String requirement = SO.Number;
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
-		assertTrue(matches);
-	}
-	
-	
+    boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
+    assertTrue(matches);
+  }
+
+  @Test
+  public void testNegativeDatatypeMatch() {
+
+    String offer = XSD._integer.toString();
+    String requirement = XSD._string.toString();
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
+    assertFalse(matches);
+  }
+
+  @Test
+  public void testSubPropertyMatch() {
+
+    String offer = XSD._integer.toString();
+    String requirement = SO.Number;
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new DatatypeMatch().match(offer, requirement, errorLog);
+    assertTrue(matches);
+  }
+
+
 }
 

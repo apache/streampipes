@@ -18,10 +18,11 @@
 package org.apache.streampipes.manager.setup;
 
 import org.apache.streampipes.commons.constants.CustomEnvs;
-import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.constants.DefaultEnvValues;
+import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.model.client.setup.InitialSettings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,29 +73,29 @@ public class AutoInstallation {
 
   private String findServiceAccountSecret() {
     return getStringOrDefault(
-            Envs.SP_INITIAL_SERVICE_USER_SECRET.getEnvVariableName(),
-            DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT
+        Envs.SP_INITIAL_SERVICE_USER_SECRET.getEnvVariableName(),
+        DefaultEnvValues.INITIAL_CLIENT_SECRET_DEFAULT
     );
   }
 
   private String findServiceAccountName() {
     return getStringOrDefault(
-            Envs.SP_INITIAL_SERVICE_USER.getEnvVariableName(),
-            DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT
-            );
+        Envs.SP_INITIAL_SERVICE_USER.getEnvVariableName(),
+        DefaultEnvValues.INITIAL_CLIENT_USER_DEFAULT
+    );
   }
 
   private String findAdminUser() {
     return getStringOrDefault(
-            Envs.SP_INITIAL_ADMIN_EMAIL.getEnvVariableName(),
-            DefaultEnvValues.INITIAL_ADMIN_EMAIL_DEFAULT
+        Envs.SP_INITIAL_ADMIN_EMAIL.getEnvVariableName(),
+        DefaultEnvValues.INITIAL_ADMIN_EMAIL_DEFAULT
     );
   }
 
   private String findAdminPassword() {
     return getStringOrDefault(
-            Envs.SP_INITIAL_ADMIN_PASSWORD.getEnvVariableName(),
-            DefaultEnvValues.INITIAL_ADMIN_PW_DEFAULT
+        Envs.SP_INITIAL_ADMIN_PASSWORD.getEnvVariableName(),
+        DefaultEnvValues.INITIAL_ADMIN_PW_DEFAULT
     );
   }
 

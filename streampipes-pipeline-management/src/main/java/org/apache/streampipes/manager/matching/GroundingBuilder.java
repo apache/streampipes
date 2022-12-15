@@ -29,26 +29,26 @@ import java.util.Set;
 
 public class GroundingBuilder {
 
-    private NamedStreamPipesEntity source;
-    private Set<InvocableStreamPipesEntity> targets;
+  private NamedStreamPipesEntity source;
+  private Set<InvocableStreamPipesEntity> targets;
 
-    public GroundingBuilder(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
-        this.source = source;
-        this.targets = targets;
-    }
+  public GroundingBuilder(NamedStreamPipesEntity source, Set<InvocableStreamPipesEntity> targets) {
+    this.source = source;
+    this.targets = targets;
+  }
 
-    public EventGrounding getEventGrounding() {
-        EventGrounding grounding = new EventGrounding();
-        grounding.setTransportFormats(Collections.singletonList(getFormat()));
-        grounding.setTransportProtocols(Collections.singletonList(getProtocol()));
-        return grounding;
-    }
+  public EventGrounding getEventGrounding() {
+    EventGrounding grounding = new EventGrounding();
+    grounding.setTransportFormats(Collections.singletonList(getFormat()));
+    grounding.setTransportProtocols(Collections.singletonList(getProtocol()));
+    return grounding;
+  }
 
-    private TransportFormat getFormat() {
-        return new FormatSelector(source, targets).getTransportFormat();
-    }
+  private TransportFormat getFormat() {
+    return new FormatSelector(source, targets).getTransportFormat();
+  }
 
-    private TransportProtocol getProtocol() {
-        return new ProtocolSelector(source, targets).getPreferredProtocol();
-    }
+  private TransportProtocol getProtocol() {
+    return new ProtocolSelector(source, targets).getPreferredProtocol();
+  }
 }

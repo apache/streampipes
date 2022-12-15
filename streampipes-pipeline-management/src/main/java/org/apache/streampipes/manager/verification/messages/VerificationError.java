@@ -20,11 +20,10 @@ package org.apache.streampipes.manager.verification.messages;
 
 import org.apache.streampipes.model.message.NotificationType;
 
-public class VerificationError extends VerificationResult{
-	
-	public VerificationError(NotificationType type)
-	{
-		super(type);
-	}
+public class VerificationError extends VerificationResult {
+
+  public VerificationError(NotificationType type) {
+    super(type);
+  }
 
 }

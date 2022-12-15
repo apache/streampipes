@@ -23,15 +23,14 @@ import org.apache.streampipes.model.message.NotificationType;
 
 public abstract class VerificationResult {
 
-	private NotificationType type;
-	
-	public VerificationResult(NotificationType type)
-	{
-		this.type = type;
-	}
-	
-	public Notification getNotification() {
-		return new Notification(type.title(), type.description());
-	}
-	
+  private NotificationType type;
+
+  public VerificationResult(NotificationType type) {
+    this.type = type;
+  }
+
+  public Notification getNotification() {
+    return new Notification(type.title(), type.description());
+  }
+
 }

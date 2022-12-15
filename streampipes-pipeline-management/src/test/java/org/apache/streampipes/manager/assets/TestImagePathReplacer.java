@@ -24,29 +24,29 @@ import static org.junit.Assert.assertEquals;
 
 public class TestImagePathReplacer {
 
-  private String TEST_CONTENT = "## Numerical Filter\n"
-          +"\n"
-          + "<img src=\"logo.png\"/>\n"
-          + "\n"
-          + "## Description\n"
-          + "\n"
-          + "Lorem ipsu";
+  private String testContent = "## Numerical Filter\n"
+      + "\n"
+      + "<img src=\"logo.png\"/>\n"
+      + "\n"
+      + "## Description\n"
+      + "\n"
+      + "Lorem ipsu";
 
-  private String TEST_CONTENT_REPLACED = "## Numerical Filter\n"
-          + "\n"
-          + "<img src=\"/streampipes-backend/api/v2/pe/app/assets/logo.png\"/>\n"
-          + "\n"
-          + "## Description\n"
-          + "\n"
-          + "Lorem ipsu";
+  private String testContentReplaced = "## Numerical Filter\n"
+      + "\n"
+      + "<img src=\"/streampipes-backend/api/v2/pe/app/assets/logo.png\"/>\n"
+      + "\n"
+      + "## Description\n"
+      + "\n"
+      + "Lorem ipsu";
 
   private String appId = "app";
 
 
   @Test
   public void testRegexReplacement() {
-    String newContent = new ImagePathReplacer(TEST_CONTENT, appId).replaceContent();
-    assertEquals(TEST_CONTENT_REPLACED, newContent);
+    String newContent = new ImagePathReplacer(testContent, appId).replaceContent();
+    assertEquals(testContentReplaced, newContent);
 
   }
 }

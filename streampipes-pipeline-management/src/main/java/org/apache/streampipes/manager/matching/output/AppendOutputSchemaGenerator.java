@@ -46,11 +46,11 @@ public class AppendOutputSchemaGenerator extends OutputSchemaGenerator<AppendOut
   @Override
   public Tuple2<EventSchema, AppendOutputStrategy> buildFromOneStream(SpDataStream stream) {
     List<String> selectors =
-            new PropertySelectorGenerator(stream.getEventSchema(), true).generateSelectors();
+        new PropertySelectorGenerator(stream.getEventSchema(), true).generateSelectors();
 
     Tuple2<List<EventProperty>, List<PropertyRenameRule>> generatedOutputProperties = new
-            PropertySelector(stream.getEventSchema())
-            .createRenamedPropertyList(selectors, appendProperties);
+        PropertySelector(stream.getEventSchema())
+        .createRenamedPropertyList(selectors, appendProperties);
 
     EventSchema outputSchema = new EventSchema(generatedOutputProperties.k);
 
@@ -59,14 +59,14 @@ public class AppendOutputSchemaGenerator extends OutputSchemaGenerator<AppendOut
 
   @Override
   public Tuple2<EventSchema, AppendOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                         SpDataStream stream2) {
+                                                                       SpDataStream stream2) {
     List<String> selectors =
-            new PropertySelectorGenerator(stream1.getEventSchema(), stream2.getEventSchema(),
-                    true).generateSelectors();
+        new PropertySelectorGenerator(stream1.getEventSchema(), stream2.getEventSchema(),
+            true).generateSelectors();
 
     Tuple2<List<EventProperty>, List<PropertyRenameRule>> generatedOutputProperties = new
-            PropertySelector(stream1.getEventSchema(), stream2.getEventSchema())
-            .createRenamedPropertyList(selectors, appendProperties);
+        PropertySelector(stream1.getEventSchema(), stream2.getEventSchema())
+        .createRenamedPropertyList(selectors, appendProperties);
 
     EventSchema outputSchema = new EventSchema(generatedOutputProperties.k);
 

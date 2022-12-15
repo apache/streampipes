@@ -24,19 +24,19 @@ package org.apache.streampipes.manager;
  */
 public class ThrowableCaptor {
 
-    public interface Actor {
-        void act() throws Throwable;
-    }
+  public interface Actor {
+    void act() throws Throwable;
+  }
 
-    public static Throwable captureThrowable( Actor actor ) {
-        Throwable result = null;
-        try {
-            actor.act();
-        } catch( Throwable throwable ) {
-            result = throwable;
-        }
-        return result;
+  public static Throwable captureThrowable(Actor actor) {
+    Throwable result = null;
+    try {
+      actor.act();
+    } catch (Throwable throwable) {
+      result = throwable;
     }
+    return result;
+  }
 
 
 }

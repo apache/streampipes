@@ -61,7 +61,6 @@ import java.util.List;
 public class Operations {
 
   /**
-   *
    * @param pipeline the pipeline to validate
    * @return PipelineModificationMessage a message containing desired pipeline modifications
    */
@@ -84,7 +83,8 @@ public class Operations {
   }
 
   public static PipelineElementRecommendationMessage findRecommendedElements(Pipeline partialPipeline,
-                                                                             String baseRecId) throws NoSuitableSepasAvailableException {
+                                                                             String baseRecId)
+      throws NoSuitableSepasAvailableException {
     return new ElementRecommender(partialPipeline, baseRecId).findRecommendedElements();
   }
 
@@ -97,24 +97,24 @@ public class Operations {
   }
 
   public static PipelineOperationStatus startPipeline(
-          Pipeline pipeline) {
+      Pipeline pipeline) {
     return startPipeline(pipeline, true);
   }
 
   public static PipelineOperationStatus startPipeline(
-          Pipeline pipeline, boolean storeStatus) {
+      Pipeline pipeline, boolean storeStatus) {
     return new PipelineExecutor(pipeline, storeStatus, false).startPipeline();
   }
 
   public static PipelineOperationStatus stopPipeline(
-          Pipeline pipeline, boolean forceStop) {
+      Pipeline pipeline, boolean forceStop) {
     return stopPipeline(pipeline, true, forceStop);
   }
 
   public static List<PipelineOperationStatus> stopAllPipelines(boolean forceStop) {
     List<PipelineOperationStatus> status = new ArrayList<>();
     List<Pipeline> pipelines =
-            StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getAllPipelines();
 
     pipelines.forEach(p -> {
       if (p.isRunning()) {
@@ -150,11 +150,15 @@ public class Operations {
     return new PipelineTemplateGenerator().getAllPipelineTemplates();
   }
 
-  public static PipelineOperationStatus handlePipelineTemplateInvocation(String userSid, PipelineTemplateInvocation pipelineTemplateInvocation) {
+  public static PipelineOperationStatus handlePipelineTemplateInvocation(
+      String userSid,
+      PipelineTemplateInvocation pipelineTemplateInvocation) {
     return new PipelineTemplateInvocationHandler(userSid, pipelineTemplateInvocation).handlePipelineInvocation();
   }
 
-  public static PipelineTemplateInvocation getPipelineInvocationTemplate(SpDataStream dataStream, PipelineTemplateDescription pipelineTemplateDescription) {
+  public static PipelineTemplateInvocation getPipelineInvocationTemplate(
+      SpDataStream dataStream,
+      PipelineTemplateDescription pipelineTemplateDescription) {
     return new PipelineTemplateInvocationGenerator(dataStream, pipelineTemplateDescription).generateInvocation();
   }
 }

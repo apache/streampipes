@@ -42,9 +42,9 @@ public class PipelineElementInstallationStep extends InstallationStep {
   public void install() {
     List<Message> statusMessages = new ArrayList<>();
     List<ExtensionsServiceEndpointItem> items = Operations.getEndpointUriContents(Collections.singletonList(endpoint));
-    for(ExtensionsServiceEndpointItem item : items) {
+    for (ExtensionsServiceEndpointItem item : items) {
       statusMessages.add(new EndpointItemParser().parseAndAddEndpointItem(item.getUri(),
-              principalSid, true));
+          principalSid, true));
     }
 
     if (statusMessages.stream().allMatch(Message::isSuccess)) {
@@ -57,6 +57,6 @@ public class PipelineElementInstallationStep extends InstallationStep {
 
   @Override
   public String getTitle() {
-    return "Installing pipeline elements from " +endpoint.getEndpointUrl();
+    return "Installing pipeline elements from " + endpoint.getEndpointUrl();
   }
 }

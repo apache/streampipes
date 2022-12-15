@@ -27,31 +27,30 @@ import java.util.List;
 
 public class DomainPropertyMatch extends AbstractMatcher<List<URI>, List<URI>> {
 
-	public DomainPropertyMatch() {
-		super(MatchingResultType.DOMAIN_PROPERTY_MATCH);
-	}
+  public DomainPropertyMatch() {
+    super(MatchingResultType.DOMAIN_PROPERTY_MATCH);
+  }
 
-	@Override
-	public boolean match(List<URI> offer, List<URI> requirement, List<MatchingResultMessage> errorLog) {
-		if (offer == null && ((requirement != null) && requirement.size() > 0)) {
-			return false;
-		}
-		boolean match = MatchingUtils.nullCheck(offer, requirement) ||
-				requirement
-				.stream()
-				.allMatch(req -> offer
-						.stream()
-						.anyMatch(of -> req
-								.toString()
-								.equals(of.toString())));
-		
-		if (!match) buildErrorMessage(errorLog, buildText(requirement));
-		return match;
-	}
+  @Override
+  public boolean match(List<URI> offer, List<URI> requirement, List<MatchingResultMessage> errorLog) {
+    if (offer == null && ((requirement != null) && requirement.size() > 0)) {
+      return false;
+    }
+    boolean match = MatchingUtils.nullCheck(offer, requirement)
+        || requirement.stream().allMatch(req -> offer.stream().anyMatch(of -> req.toString().equals(of.toString())));
 
-	private String buildText(List<URI> requirement) {
-		if (requirement == null || requirement.size() == 0) return "-";
-		else return requirement.get(0).toString();
-	}
+    if (!match) {
+      buildErrorMessage(errorLog, buildText(requirement));
+    }
+    return match;
+  }
+
+  private String buildText(List<URI> requirement) {
+    if (requirement == null || requirement.size() == 0) {
+      return "-";
+    } else {
+      return requirement.get(0).toString();
+    }
+  }
 
 }

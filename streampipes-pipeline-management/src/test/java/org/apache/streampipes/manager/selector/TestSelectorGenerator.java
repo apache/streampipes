@@ -17,11 +17,11 @@
  */
 package org.apache.streampipes.manager.selector;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class TestSelectorGenerator {
@@ -29,8 +29,8 @@ public class TestSelectorGenerator {
   @Test
   public void test() {
     List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema()
-            , false)
-            .generateSelectors();
+        , false)
+        .generateSelectors();
 
     assertEquals(10, propertySelectors.size());
   }
@@ -38,8 +38,8 @@ public class TestSelectorGenerator {
   @Test
   public void testTwoSchemas() {
     List<String> propertySelectors = new PropertySelectorGenerator(TestSelectorUtils.makeSchema()
-            , TestSelectorUtils.makeSchema(), false)
-            .generateSelectors();
+        , TestSelectorUtils.makeSchema(), false)
+        .generateSelectors();
 
     assertEquals(20, propertySelectors.size());
   }

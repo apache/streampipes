@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.pipeline;
 
-import com.google.common.collect.Streams;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.manager.permission.PermissionManager;
@@ -29,6 +28,8 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.storage.api.IPermissionStorage;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import com.google.common.collect.Streams;
 
 import java.util.Date;
 import java.util.List;
@@ -60,7 +61,7 @@ public class PipelineManager {
    * Adds a new pipeline for the user with the username to the storage
    *
    * @param principalSid the ID of the owner principal
-   * @param pipeline to be added
+   * @param pipeline     to be added
    * @return pipelineId of the stored pipeline
    */
   public static String addPipeline(String principalSid,
@@ -93,8 +94,8 @@ public class PipelineManager {
    * Stops all  processing elements of the pipeline
    *
    * @param pipelineId of pipeline to be stopped
-   * @param forceStop when it is true, the pipeline is stopped, even if not all processing element
-   *                  containers could be reached
+   * @param forceStop  when it is true, the pipeline is stopped, even if not all processing element
+   *                   containers could be reached
    * @return pipeline status of the start operation
    */
   public static PipelineOperationStatus stopPipeline(String pipelineId,
@@ -116,6 +117,7 @@ public class PipelineManager {
 
   /**
    * Checks for the pipelines that contain the processing element
+   *
    * @param elementId the id of the processing Element
    * @return all pipelines containing the element
    */

@@ -18,48 +18,52 @@
 
 package org.apache.streampipes.manager.endpoint;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.message.BasicHeader;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpointItem;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EndpointItemFetcher {
-    Logger logger = LoggerFactory.getLogger(EndpointItemFetcher.class);
+  Logger logger = LoggerFactory.getLogger(EndpointItemFetcher.class);
 
-    private List<ExtensionsServiceEndpoint> extensionsServiceEndpoints;
+  private List<ExtensionsServiceEndpoint> extensionsServiceEndpoints;
 
-    public EndpointItemFetcher(List<ExtensionsServiceEndpoint> extensionsServiceEndpoints) {
-        this.extensionsServiceEndpoints = extensionsServiceEndpoints;
+  public EndpointItemFetcher(List<ExtensionsServiceEndpoint> extensionsServiceEndpoints) {
+    this.extensionsServiceEndpoints = extensionsServiceEndpoints;
+  }
+
+  public List<ExtensionsServiceEndpointItem> getItems() {
+    List<ExtensionsServiceEndpointItem> endpointItems = new ArrayList<>();
+    extensionsServiceEndpoints.forEach(e -> endpointItems.addAll(getEndpointItems(e)));
+    return endpointItems;
+  }
+
+  private List<ExtensionsServiceEndpointItem> getEndpointItems(ExtensionsServiceEndpoint e) {
+    try {
+      String result = Request.Get(e.getEndpointUrl())
+          .addHeader(new BasicHeader("Accept", MediaType.APPLICATION_JSON))
+          .connectTimeout(1000)
+          .execute()
+          .returnContent()
+          .asString();
+
+      return JacksonSerializer.getObjectMapper()
+          .readValue(result, new TypeReference<List<ExtensionsServiceEndpointItem>>() {
+          });
+    } catch (IOException e1) {
+      logger.warn("Processing Element Descriptions could not be fetched from RDF endpoint: " + e.getEndpointUrl());
+      return new ArrayList<>();
     }
-
-    public List<ExtensionsServiceEndpointItem> getItems() {
-        List<ExtensionsServiceEndpointItem> endpointItems = new ArrayList<>();
-        extensionsServiceEndpoints.forEach(e -> endpointItems.addAll(getEndpointItems(e)));
-        return endpointItems;
-    }
-
-    private List<ExtensionsServiceEndpointItem> getEndpointItems(ExtensionsServiceEndpoint e) {
-        try {
-            String result = Request.Get(e.getEndpointUrl())
-                    .addHeader(new BasicHeader("Accept", MediaType.APPLICATION_JSON))
-                    .connectTimeout(1000)
-                    .execute()
-                    .returnContent()
-                    .asString();
-
-            return JacksonSerializer.getObjectMapper().readValue(result, new TypeReference<List<ExtensionsServiceEndpointItem>>() {});
-        } catch (IOException e1) {
-            logger.warn("Processing Element Descriptions could not be fetched from RDF endpoint: " + e.getEndpointUrl());
-            return new ArrayList<>();
-        }
-    }
+  }
 }

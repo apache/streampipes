@@ -18,10 +18,11 @@
 package org.apache.streampipes.manager.pipeline;
 
 import org.apache.streampipes.manager.operations.Operations;
-import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
+import org.apache.streampipes.resource.management.UserResourceManager;
 import org.apache.streampipes.test.generator.pipeline.DummyPipelineGenerator;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

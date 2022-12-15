@@ -17,13 +17,21 @@
  */
 package org.apache.streampipes.manager.matching;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataSet;
-import org.apache.streampipes.model.grounding.*;
+import org.apache.streampipes.model.grounding.EventGrounding;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
+import org.apache.streampipes.model.grounding.TopicDefinition;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.model.message.DataSetModificationMessage;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Collections;
 
@@ -42,42 +50,42 @@ public class DataSetGroundingSelector {
     TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
 
     SpProtocol prioritizedProtocol =
-            BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
 
     if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
       outputGrounding.setTransportProtocol(makeTransportProtocol(
-              BackendConfig.INSTANCE.getJmsHost(),
-              BackendConfig.INSTANCE.getJmsPort(),
-              topicDefinition,
-              JmsTransportProtocol.class
+          BackendConfig.INSTANCE.getJmsHost(),
+          BackendConfig.INSTANCE.getJmsPort(),
+          topicDefinition,
+          JmsTransportProtocol.class
       ));
-    } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
+    } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
       outputGrounding.setTransportProtocol(makeTransportProtocol(
-              BackendConfig.INSTANCE.getKafkaHost(),
-              BackendConfig.INSTANCE.getKafkaPort(),
-              topicDefinition,
-              KafkaTransportProtocol.class
+          BackendConfig.INSTANCE.getKafkaHost(),
+          BackendConfig.INSTANCE.getKafkaPort(),
+          topicDefinition,
+          KafkaTransportProtocol.class
       ));
     } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
       outputGrounding.setTransportProtocol(makeTransportProtocol(
-              BackendConfig.INSTANCE.getMqttHost(),
-              BackendConfig.INSTANCE.getMqttPort(),
-              topicDefinition,
-              MqttTransportProtocol.class
+          BackendConfig.INSTANCE.getMqttHost(),
+          BackendConfig.INSTANCE.getMqttPort(),
+          topicDefinition,
+          MqttTransportProtocol.class
       ));
     } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
-    outputGrounding.setTransportProtocol(makeTransportProtocol(
-        BackendConfig.INSTANCE.getNatsHost(),
-        BackendConfig.INSTANCE.getNatsPort(),
-        topicDefinition,
-        NatsTransportProtocol.class
-    ));
-  }
+      outputGrounding.setTransportProtocol(makeTransportProtocol(
+          BackendConfig.INSTANCE.getNatsHost(),
+          BackendConfig.INSTANCE.getNatsPort(),
+          topicDefinition,
+          NatsTransportProtocol.class
+      ));
+    }
 
     outputGrounding.setTransportFormats(Collections
-            .singletonList(spDataSet.getSupportedGrounding().getTransportFormats().get(0)));
+        .singletonList(spDataSet.getSupportedGrounding().getTransportFormats().get(0)));
 
-    return new DataSetModificationMessage(outputGrounding,RandomStringUtils.randomAlphanumeric(10));
+    return new DataSetModificationMessage(outputGrounding, RandomStringUtils.randomAlphanumeric(10));
   }
 
   public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
@@ -85,8 +93,8 @@ public class DataSetGroundingSelector {
     return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
   }
 
-  private static <T>T makeTransportProtocol(String hostname, int port, TopicDefinition topicDefinition,
-                                            Class<?> protocolClass) {
+  private static <T> T makeTransportProtocol(String hostname, int port, TopicDefinition topicDefinition,
+                                             Class<?> protocolClass) {
     T tpOut = null;
     if (protocolClass.equals(KafkaTransportProtocol.class)) {
       KafkaTransportProtocol tp = new KafkaTransportProtocol();

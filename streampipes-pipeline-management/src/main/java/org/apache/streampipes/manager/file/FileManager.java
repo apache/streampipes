@@ -17,11 +17,12 @@
  */
 package org.apache.streampipes.manager.file;
 
-import org.apache.commons.io.input.BOMInputStream;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.sdk.helpers.Filetypes;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+
+import org.apache.commons.io.input.BOMInputStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 public class FileManager {
 
   public static List<FileMetadata> getAllFiles() {
-      return getAllFiles(null);
+    return getAllFiles(null);
   }
 
   public static List<FileMetadata> getAllFiles(String filetypes) {
@@ -45,15 +46,15 @@ public class FileManager {
   /**
    * Store a file in the internal file storage.
    * For csv files the bom is removed
-   * @param user who created the file
+   *
+   * @param user            who created the file
    * @param filename
    * @param fileInputStream content of file
    * @return
-   * @throws IOException
    */
   public static FileMetadata storeFile(String user,
-                               String filename,
-                               InputStream fileInputStream) throws IOException {
+                                       String filename,
+                                       InputStream fileInputStream) throws IOException {
 
     String filetype = filename.substring(filename.lastIndexOf(".") + 1);
 
@@ -78,6 +79,7 @@ public class FileManager {
 
   /**
    * Remove Byte Order Mark (BOM) from csv files
+   *
    * @param fileInputStream
    * @param filetype
    * @return
@@ -96,9 +98,9 @@ public class FileManager {
 
   private static IFileMetadataStorage getFileMetadataStorage() {
     return StorageDispatcher
-            .INSTANCE
-            .getNoSqlStore()
-            .getFileMetadataStorage();
+        .INSTANCE
+        .getNoSqlStore()
+        .getFileMetadataStorage();
   }
 
   private static FileMetadata makeFileMetadata(String user,
@@ -122,10 +124,10 @@ public class FileManager {
 
   private static List<FileMetadata> filterFiletypes(List<FileMetadata> allFiles, String filetypes) {
     return allFiles
-            .stream()
-            .filter(fileMetadata -> Arrays
-                    .stream(filetypes.split(","))
-                    .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(fileMetadata -> Arrays
+            .stream(filetypes.split(","))
+            .anyMatch(ft -> ft.equals(fileMetadata.getFiletype())))
+        .collect(Collectors.toList());
   }
 }

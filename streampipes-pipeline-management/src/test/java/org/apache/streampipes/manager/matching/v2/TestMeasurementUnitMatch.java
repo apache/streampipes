@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
+import org.apache.streampipes.model.client.matching.MatchingResultMessage;
+
 import junit.framework.TestCase;
 import org.junit.Test;
-import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 
 import java.net.URI;
 import java.util.ArrayList;

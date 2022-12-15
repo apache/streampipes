@@ -28,52 +28,52 @@ import java.util.stream.Collectors;
 
 public class PipelineGraphBuilder {
 
-    private final Pipeline pipeline;
-    private final List<NamedStreamPipesEntity> allPipelineElements;
-    private final List<InvocableStreamPipesEntity> invocableElements;
+  private final Pipeline pipeline;
+  private final List<NamedStreamPipesEntity> allPipelineElements;
+  private final List<InvocableStreamPipesEntity> invocableElements;
 
-    public PipelineGraphBuilder(Pipeline pipeline) {
-        this.pipeline = pipeline;
-        this.allPipelineElements = addAll();
-        this.invocableElements = addInvocable();
+  public PipelineGraphBuilder(Pipeline pipeline) {
+    this.pipeline = pipeline;
+    this.allPipelineElements = addAll();
+    this.invocableElements = addInvocable();
+  }
+
+  private List<NamedStreamPipesEntity> addAll() {
+    List<NamedStreamPipesEntity> allElements = new ArrayList<>();
+    allElements.addAll(pipeline.getStreams());
+    allElements.addAll(addInvocable());
+    return allElements;
+  }
+
+  private List<InvocableStreamPipesEntity> addInvocable() {
+    List<InvocableStreamPipesEntity> allElements = new ArrayList<>();
+    allElements.addAll(pipeline.getSepas());
+    allElements.addAll(pipeline.getActions());
+    return allElements;
+  }
+
+
+  public PipelineGraph buildGraph() {
+    PipelineGraph pipelineGraph = new PipelineGraph();
+    allPipelineElements.forEach(pipelineGraph::addVertex);
+
+    for (NamedStreamPipesEntity source : allPipelineElements) {
+      List<InvocableStreamPipesEntity> targets = findTargets(source.getDom());
+      targets.forEach(t -> pipelineGraph.addEdge(source, t, createEdge(source, t)));
     }
 
-    private List<NamedStreamPipesEntity> addAll() {
-        List<NamedStreamPipesEntity> allElements = new ArrayList<>();
-        allElements.addAll(pipeline.getStreams());
-        allElements.addAll(addInvocable());
-        return allElements;
-    }
+    return pipelineGraph;
+  }
 
-    private List<InvocableStreamPipesEntity> addInvocable() {
-        List<InvocableStreamPipesEntity> allElements = new ArrayList<>();
-        allElements.addAll(pipeline.getSepas());
-        allElements.addAll(pipeline.getActions());
-        return allElements;
-    }
+  private List<InvocableStreamPipesEntity> findTargets(String domId) {
+    return invocableElements
+        .stream()
+        .filter(i -> i.getConnectedTo().contains(domId))
+        .collect(Collectors.toList());
+  }
 
-
-    public PipelineGraph buildGraph() {
-        PipelineGraph pipelineGraph = new PipelineGraph();
-        allPipelineElements.forEach(pipelineGraph::addVertex);
-
-        for(NamedStreamPipesEntity source : allPipelineElements) {
-            List<InvocableStreamPipesEntity> targets = findTargets(source.getDom());
-            targets.forEach(t -> pipelineGraph.addEdge(source, t, createEdge(source, t)));
-        }
-
-        return pipelineGraph;
-    }
-
-    private List<InvocableStreamPipesEntity> findTargets(String domId) {
-        return invocableElements
-                .stream()
-                .filter(i -> i.getConnectedTo().contains(domId))
-                .collect(Collectors.toList());
-    }
-
-    private String createEdge(NamedStreamPipesEntity sourceVertex,
-                          NamedStreamPipesEntity targetVertex) {
-        return sourceVertex.getDom() + "-" + targetVertex.getDom();
-    }
+  private String createEdge(NamedStreamPipesEntity sourceVertex,
+                            NamedStreamPipesEntity targetVertex) {
+    return sourceVertex.getDom() + "-" + targetVertex.getDom();
+  }
 }

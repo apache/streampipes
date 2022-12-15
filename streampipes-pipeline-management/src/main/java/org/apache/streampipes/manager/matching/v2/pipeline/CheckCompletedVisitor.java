@@ -19,7 +19,21 @@
 package org.apache.streampipes.manager.matching.v2.pipeline;
 
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
-import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
+import org.apache.streampipes.model.staticproperty.DefaultStaticPropertyVisitor;
+import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
+import org.apache.streampipes.model.staticproperty.FileStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
+import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,14 +79,14 @@ public class CheckCompletedVisitor extends DefaultStaticPropertyVisitor {
   @Override
   public void visit(MappingPropertyNary mappingPropertyNary) {
     if (existsSelection(mappingPropertyNary) && mappingPropertyNary
-            .getSelectedProperties()
-            .stream()
-            .noneMatch((p -> mappingPropertyNary.getMapsFromOptions().contains(p)))) {
+        .getSelectedProperties()
+        .stream()
+        .noneMatch((p -> mappingPropertyNary.getMapsFromOptions().contains(p)))) {
       mappingPropertyNary.setSelectedProperties(mappingPropertyNary
-              .getSelectedProperties()
-              .stream()
-              .filter(p -> mappingPropertyNary.getMapsFromOptions().contains(p))
-              .collect(Collectors.toList()));
+          .getSelectedProperties()
+          .stream()
+          .filter(p -> mappingPropertyNary.getMapsFromOptions().contains(p))
+          .collect(Collectors.toList()));
       validationInfos.add(PipelineElementValidationInfo.info("Auto-updated invalid field selection"));
     }
   }

@@ -17,10 +17,6 @@
  */
 package org.apache.streampipes.manager.matching.output;
 
-import com.google.gson.JsonSyntaxException;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
-import org.apache.http.entity.ContentType;
 import org.apache.streampipes.manager.execution.endpoint.ExtensionsServiceEndpointGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -30,6 +26,11 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
+
+import com.google.gson.JsonSyntaxException;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
+import org.apache.http.entity.ContentType;
 
 import java.io.IOException;
 
@@ -55,17 +56,19 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
   }
 
   @Override
-  public Tuple2<EventSchema, CustomTransformOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream stream2) {
+  public Tuple2<EventSchema, CustomTransformOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
+                                                                                SpDataStream stream2) {
     return makeTuple(makeRequest());
   }
 
   private EventSchema makeRequest() {
     try {
       String httpRequestBody = JacksonSerializer.getObjectMapper().writeValueAsString(dataProcessorInvocation);
-      String endpointUrl = new ExtensionsServiceEndpointGenerator(dataProcessorInvocation.getAppId(), SpServiceUrlProvider.DATA_PROCESSOR).getEndpointResourceUrl();
+      String endpointUrl = new ExtensionsServiceEndpointGenerator(dataProcessorInvocation.getAppId(),
+          SpServiceUrlProvider.DATA_PROCESSOR).getEndpointResourceUrl();
       Response httpResp = Request.Post(endpointUrl + "/output").bodyString(httpRequestBody,
-              ContentType
-                      .APPLICATION_JSON).execute();
+          ContentType
+              .APPLICATION_JSON).execute();
       return handleResponse(httpResp);
     } catch (Exception e) {
       e.printStackTrace();
@@ -77,7 +80,7 @@ public class CustomTransformOutputSchemaGenerator extends OutputSchemaGenerator<
     String resp = httpResp.returnContent().asString();
 
     return JacksonSerializer
-            .getObjectMapper()
-            .readValue(resp, EventSchema.class);
+        .getObjectMapper()
+        .readValue(resp, EventSchema.class);
   }
 }

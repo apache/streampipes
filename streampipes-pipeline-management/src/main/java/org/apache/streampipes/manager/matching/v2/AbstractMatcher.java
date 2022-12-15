@@ -24,29 +24,29 @@ import org.apache.streampipes.model.client.matching.MatchingResultType;
 
 import java.util.List;
 
-public abstract class AbstractMatcher<L, R> implements Matcher<L, R>{
+public abstract class AbstractMatcher<T, V> implements Matcher<T, V> {
 
-	protected MatchingResultType matchingResultType;
-	
-	public AbstractMatcher(MatchingResultType matchingResultType) {
-		this.matchingResultType = matchingResultType;
-	}
-	
-	protected void buildErrorMessage(List<MatchingResultMessage> errorLog, String rightSubject) {
-		MatchingResultMessage message = MatchingResultFactory.build(matchingResultType, false, rightSubject);
-		if (!containsMessage(errorLog, message)) {
-			errorLog.add(message);
-		}
-	}
-	
-	protected void buildErrorMessage(List<MatchingResultMessage> errorLog, MatchingResultType type, String rightSubject) {
-		errorLog.add(MatchingResultFactory.build(type, false, rightSubject));
-	}
-		
-	public abstract boolean match(L offer, R requirement, List<MatchingResultMessage> errorLog);
+  protected MatchingResultType matchingResultType;
 
-	private boolean containsMessage(List<MatchingResultMessage> errorLog,
-																	MatchingResultMessage message) {
-		return errorLog.contains(message);
-	}
+  public AbstractMatcher(MatchingResultType matchingResultType) {
+    this.matchingResultType = matchingResultType;
+  }
+
+  protected void buildErrorMessage(List<MatchingResultMessage> errorLog, String rightSubject) {
+    MatchingResultMessage message = MatchingResultFactory.build(matchingResultType, false, rightSubject);
+    if (!containsMessage(errorLog, message)) {
+      errorLog.add(message);
+    }
+  }
+
+  protected void buildErrorMessage(List<MatchingResultMessage> errorLog, MatchingResultType type, String rightSubject) {
+    errorLog.add(MatchingResultFactory.build(type, false, rightSubject));
+  }
+
+  public abstract boolean match(T offer, V requirement, List<MatchingResultMessage> errorLog);
+
+  private boolean containsMessage(List<MatchingResultMessage> errorLog,
+                                  MatchingResultMessage message) {
+    return errorLog.contains(message);
+  }
 }

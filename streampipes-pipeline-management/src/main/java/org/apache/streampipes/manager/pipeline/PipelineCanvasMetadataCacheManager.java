@@ -22,18 +22,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PipelineCanvasMetadataCacheManager {
 
-    private static ConcurrentHashMap<String, String> cachedCanvasMetadata = new ConcurrentHashMap<>();
+  private static ConcurrentHashMap<String, String> cachedCanvasMetadata = new ConcurrentHashMap<>();
 
-    public static void updateCachedCanvasMetadata(String userName,
-                                           String canvasMetadata) {
-        cachedCanvasMetadata.put(userName, canvasMetadata);
-    }
+  public static void updateCachedCanvasMetadata(String userName,
+                                                String canvasMetadata) {
+    cachedCanvasMetadata.put(userName, canvasMetadata);
+  }
 
-    public static String getCachedCanvasMetadata(String userName) {
-        return cachedCanvasMetadata.get(userName);
-    }
+  public static String getCachedCanvasMetadata(String userName) {
+    return cachedCanvasMetadata.get(userName);
+  }
 
-    public static void removeCanvasMetadataFromCache(String userName) {
-        cachedCanvasMetadata.remove(userName);
-    }
+  public static void removeCanvasMetadataFromCache(String userName) {
+    cachedCanvasMetadata.remove(userName);
+  }
 }
