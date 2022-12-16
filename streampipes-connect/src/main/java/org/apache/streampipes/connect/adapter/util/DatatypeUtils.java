@@ -30,20 +30,20 @@ public class DatatypeUtils {
   public static Object convertValue(Object value,
                                     String targetDatatypeXsd) {
     var stringValue = String.valueOf(value);
-    if (XSD._string.toString().equals(targetDatatypeXsd)) {
+    if (XSD.STRING.toString().equals(targetDatatypeXsd)) {
       return stringValue;
     } else {
       try {
-        if (XSD._double.toString().equals(targetDatatypeXsd)) {
+        if (XSD.DOUBLE.toString().equals(targetDatatypeXsd)) {
           return Double.parseDouble(stringValue);
-        } else if (XSD._float.toString().equals(targetDatatypeXsd)) {
+        } else if (XSD.FLOAT.toString().equals(targetDatatypeXsd)) {
           return Float.parseFloat(stringValue);
-        } else if (XSD._boolean.toString().equals(targetDatatypeXsd)) {
+        } else if (XSD.BOOLEAN.toString().equals(targetDatatypeXsd)) {
           return Boolean.parseBoolean(stringValue);
-        } else if (XSD._integer.toString().equals(targetDatatypeXsd)) {
+        } else if (XSD.INTEGER.toString().equals(targetDatatypeXsd)) {
           var floatingNumber = Float.parseFloat(stringValue);
           return Integer.parseInt(String.valueOf(Math.round(floatingNumber)));
-        } else if (XSD._long.toString().equals(targetDatatypeXsd)) {
+        } else if (XSD.LONG.toString().equals(targetDatatypeXsd)) {
           var floatingNumber = Double.parseDouble(stringValue);
           return Long.parseLong(String.valueOf(Math.round(floatingNumber)));
         }
@@ -65,17 +65,17 @@ public class DatatypeUtils {
                                       boolean preferFloat) {
     var clazz = getTypeClass(value, preferFloat);
     if (clazz.equals(Integer.class)) {
-      return XSD._integer.toString();
+      return XSD.INTEGER.toString();
     } else if (clazz.equals(Long.class)) {
-      return XSD._long.toString();
+      return XSD.LONG.toString();
     } else if (clazz.equals(Float.class)) {
-      return XSD._float.toString();
+      return XSD.FLOAT.toString();
     } else if (clazz.equals(Double.class)) {
-      return XSD._double.toString();
+      return XSD.DOUBLE.toString();
     } else if (clazz.equals(Boolean.class)) {
-      return XSD._boolean.toString();
+      return XSD.BOOLEAN.toString();
     } else {
-      return XSD._string.toString();
+      return XSD.STRING.toString();
     }
   }
 

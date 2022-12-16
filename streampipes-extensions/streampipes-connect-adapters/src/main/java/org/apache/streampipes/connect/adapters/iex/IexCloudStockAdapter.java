@@ -100,9 +100,9 @@ public class IexCloudStockAdapter extends IexCloudAdapter {
     return GuessSchemaBuilder.create()
         .property(EpProperties.timestampProperty(LatestUpdate))
         .property(EpProperties.stringEp(Labels.from("symbol", "Symbol",
-            "The stock symbol"), Symbol, SO.Text))
+            "The stock symbol"), Symbol, SO.TEXT))
         .property(EpProperties.doubleEp(Labels.from("latest-price", "Latest price",
-            "The latest stock price"), LatestPrice, SO.Number))
+            "The latest stock price"), LatestPrice, SO.NUMBER))
         .build();
   }
 

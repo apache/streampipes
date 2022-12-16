@@ -87,7 +87,7 @@ public class CreateTrajectoryFromPointsController
                 EpProperties.stringEp(
                     Labels.withId(DESCRIPTION_KEY),
                     DESCRIPTION_RUNTIME,
-                    SO.Text
+                    SO.TEXT
                 ),
                 EpProperties.stringEp(
                     Labels.withId(WKT_KEY),

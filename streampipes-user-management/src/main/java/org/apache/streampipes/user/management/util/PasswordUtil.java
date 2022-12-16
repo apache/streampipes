@@ -22,6 +22,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -39,7 +40,7 @@ public class PasswordUtil {
   }
 
   public static String encryptPassword(String property) throws NoSuchAlgorithmException,
-          InvalidKeySpecException {
+      InvalidKeySpecException {
     int iterations = 1000;
     char[] chars = property.toCharArray();
     byte[] salt = createSalt();
@@ -62,14 +63,14 @@ public class PasswordUtil {
   }
 
   public static boolean validatePassword(String originalProperty, String storedProperty) throws
-          NoSuchAlgorithmException, InvalidKeySpecException {
+      NoSuchAlgorithmException, InvalidKeySpecException {
     String[] parts = storedProperty.split(":");
     int iterations = Integer.parseInt(parts[0]);
     byte[] salt = fromHex(parts[1]);
     byte[] hash = fromHex(parts[2]);
 
     PBEKeySpec spec = new PBEKeySpec(originalProperty.toCharArray(), salt, iterations,
-            hash.length * 8);
+        hash.length * 8);
     SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
     byte[] testHash = skf.generateSecret(spec).getEncoded();
 

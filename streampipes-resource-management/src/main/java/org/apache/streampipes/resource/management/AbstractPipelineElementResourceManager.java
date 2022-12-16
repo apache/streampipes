@@ -25,13 +25,14 @@ import org.apache.streampipes.storage.api.CRUDStorage;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<String, D>, D extends NamedStreamPipesEntity, I> extends AbstractResourceManager<T> {
+public abstract class AbstractPipelineElementResourceManager<T extends CRUDStorage<String, W>,
+    W extends NamedStreamPipesEntity, X> extends AbstractResourceManager<T> {
 
   public AbstractPipelineElementResourceManager(T db) {
     super(db);
   }
 
-  public List<D> findAll() {
+  public List<W> findAll() {
     return db.getAll();
   }
 
@@ -39,34 +40,34 @@ public abstract class AbstractPipelineElementResourceManager<T extends CRUDStora
     return db.getAll().stream().map(AbstractStreamPipesEntity::getElementId).collect(Collectors.toList());
   }
 
-  public List<I> findAllAsInvocation() {
+  public List<X> findAllAsInvocation() {
     return findAll()
-            .stream()
-            .map(this::toInvocation)
-            .collect(Collectors.toList());
+        .stream()
+        .map(this::toInvocation)
+        .collect(Collectors.toList());
   }
 
-  public D find(String elementId) {
+  public W find(String elementId) {
     return db.getElementById(elementId);
   }
 
-  public I findAsInvocation(String elementId) {
+  public X findAsInvocation(String elementId) {
     return toInvocation(find(elementId));
   }
 
   public void delete(String elementId) {
-    D description = find(elementId);
+    W description = find(elementId);
     if (description != null) {
       deleteAssetsAndPermissions(description);
       db.deleteElement(description);
     }
   }
 
-  private void deleteAssetsAndPermissions(D description) {
+  private void deleteAssetsAndPermissions(W description) {
     SpResourceManager manager = new SpResourceManager();
     List<Permission> permissions = manager.managePermissions().findForObjectId(description.getElementId());
     permissions.forEach(permission -> manager.managePermissions().delete(permission));
   }
 
-  protected abstract I toInvocation(D description);
+  protected abstract X toInvocation(W description);
 }

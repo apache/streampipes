@@ -42,13 +42,13 @@ public class FieldConverter implements FlatMapFunction<Event, Event> {
   public void flatMap(Event in, Collector<Event> out) {
     String value = in.getFieldBySelector(convertProperty).getAsPrimitive().getAsString();
     try {
-      if (targetDatatype.equals(XSD._float.toString())) {
+      if (targetDatatype.equals(XSD.FLOAT.toString())) {
         in.updateFieldBySelector(convertProperty, Float.parseFloat(value.trim()));
-      } else if (targetDatatype.equals(XSD._integer.toString())) {
+      } else if (targetDatatype.equals(XSD.INTEGER.toString())) {
         in.updateFieldBySelector(convertProperty, Integer.parseInt(value.trim()));
-      } else if (targetDatatype.equals(XSD._boolean.toString())) {
+      } else if (targetDatatype.equals(XSD.BOOLEAN.toString())) {
         in.updateFieldBySelector(convertProperty, Boolean.parseBoolean(value.trim()));
-      } else if (targetDatatype.equals(XSD._string.toString())) {
+      } else if (targetDatatype.equals(XSD.STRING.toString())) {
         in.updateFieldBySelector(convertProperty, value.trim());
       }
 

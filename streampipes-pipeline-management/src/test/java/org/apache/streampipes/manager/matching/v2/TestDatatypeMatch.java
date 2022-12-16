@@ -34,8 +34,8 @@ public class TestDatatypeMatch extends TestCase {
 	@Test
 	public void testPositiveDatatypeMatch() {
 
-		String offer = XSD._integer.toString();
-		String requirement = XSD._integer.toString();
+		String offer = XSD.INTEGER.toString();
+		String requirement = XSD.INTEGER.toString();
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
 		
@@ -46,8 +46,8 @@ public class TestDatatypeMatch extends TestCase {
 	@Test
 	public void testNegativeDatatypeMatch() {
 
-		String offer = XSD._integer.toString();
-		String requirement = XSD._string.toString();
+		String offer = XSD.INTEGER.toString();
+		String requirement = XSD.STRING.toString();
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
 		
@@ -58,8 +58,8 @@ public class TestDatatypeMatch extends TestCase {
 	@Test
 	public void testSubPropertyMatch() {
 
-		String offer = XSD._integer.toString();
-		String requirement = SO.Number;
+		String offer = XSD.INTEGER.toString();
+		String requirement = SO.NUMBER;
 		
 		List<MatchingResultMessage> errorLog = new ArrayList<>();
 		

@@ -94,7 +94,7 @@ public class SQLStatementUtils {
               dbDescription.getEngine()));
         } else {
           // Must be an EventPropertyList then
-          stringBuilder.append(DbDataTypeFactory.getFromUri(XSD._string.toString(), dbDescription.getEngine()));
+          stringBuilder.append(DbDataTypeFactory.getFromUri(XSD.STRING.toString(), dbDescription.getEngine()));
         }
       }
       separator = ", ";

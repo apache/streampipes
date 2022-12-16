@@ -135,7 +135,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._string.toString()));
+        XSD.STRING.toString()));
 
     return me();
   }
@@ -249,7 +249,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    * @return
    */
   public K requiredTextParameter(Label label) {
-    this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD._string.toString()));
+    this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD.STRING.toString()));
 
     return me();
   }
@@ -303,7 +303,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._string.toString());
+        XSD.STRING.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -341,7 +341,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredTextParameterWithLink(Label label, String
       linkedMappingPropertyInternalName) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.STRING.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -379,7 +379,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    * @return this
    */
   public K requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.STRING.toString());
     if (multiLine) {
       fsp.setMultiLine(true);
     }
@@ -404,7 +404,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredTextParameter(Label label, boolean multiLine, boolean placeholdersSupported,
                                  boolean htmlFontFormat) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._string.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.STRING.toString());
     if (multiLine) {
       fsp.setMultiLine(true);
     }
@@ -433,7 +433,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._integer.toString()));
+        XSD.INTEGER.toString()));
 
     return me();
   }
@@ -447,7 +447,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    * @return
    */
   public K requiredIntegerParameter(Label label) {
-    this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD._integer.toString()));
+    this.staticProperties.add(prepareFreeTextStaticProperty(label, XSD.INTEGER.toString()));
 
     return me();
   }
@@ -467,7 +467,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._integer.toString());
+        XSD.INTEGER.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -487,7 +487,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredIntegerParameter(Label label, String
       linkedMappingPropertyInternalName) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._integer.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.INTEGER.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -510,7 +510,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._integer.toString());
+        XSD.INTEGER.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
@@ -528,7 +528,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
   public K requiredIntegerParameter(Label label,
                                     Integer defaultValue) {
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label,
-        XSD._integer.toString());
+        XSD.INTEGER.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
@@ -547,7 +547,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     this.staticProperties.add(prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._double.toString()));
+        XSD.DOUBLE.toString()));
 
     return me();
   }
@@ -562,7 +562,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredFloatParameter(Label label) {
     this.staticProperties.add(prepareFreeTextStaticProperty(label,
-        XSD._double.toString()));
+        XSD.DOUBLE.toString()));
 
     return me();
   }
@@ -587,7 +587,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._double.toString());
+        XSD.DOUBLE.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -607,7 +607,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredFloatParameter(Label label, String
       linkedMappingPropertyInternalName) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.DOUBLE.toString());
 
     fsp.setMapsTo(linkedMappingPropertyInternalName);
     this.staticProperties.add(fsp);
@@ -630,7 +630,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._double.toString());
+        XSD.DOUBLE.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
@@ -647,7 +647,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    */
   public K requiredFloatParameter(Label label, Float
       defaultValue) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.DOUBLE.toString());
     fsp.setValue(String.valueOf(defaultValue));
     this.staticProperties.add(fsp);
     return me();
@@ -671,7 +671,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(internalId,
         label,
         description,
-        XSD._double.toString());
+        XSD.DOUBLE.toString());
 
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
     fsp.setValueSpecification(valueSpecification);
@@ -692,7 +692,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    * @return this
    */
   public K requiredFloatParameter(Label label, Float min, Float max, Float step) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.DOUBLE.toString());
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
     fsp.setValueSpecification(valueSpecification);
     this.staticProperties.add(fsp);
@@ -713,7 +713,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
    * @return this
    */
   public K requiredFloatParameter(Label label, Float defaultValue, Float min, Float max, Float step) {
-    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD._double.toString());
+    FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label, XSD.DOUBLE.toString());
     fsp.setValue(String.valueOf(defaultValue));
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
     fsp.setValueSpecification(valueSpecification);
@@ -897,7 +897,7 @@ public abstract class AbstractConfigurablePipelineElementBuilder<K extends
     FreeTextStaticProperty fsp = prepareFreeTextStaticProperty(label.getInternalId(),
         label.getLabel(),
         label.getDescription(),
-        XSD._integer.toString());
+        XSD.INTEGER.toString());
 
     PropertyValueSpecification valueSpecification = new PropertyValueSpecification(min, max, step);
     fsp.setValueSpecification(valueSpecification);

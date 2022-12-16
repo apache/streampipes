@@ -25,7 +25,7 @@ public class CborDataFormatFactory extends SpDataFormatFactory {
 
   @Override
   public String getTransportFormatRdfUri() {
-    return MessageFormat.Cbor;
+    return MessageFormat.CBOR;
   }
 
   @Override

@@ -135,10 +135,10 @@ public class IssAdapter extends PullAdapter {
     return GuessSchemaBuilder.create()
         .property(timestampProperty(Timestamp))
         .property(doubleEp(Labels.from(Latitude, "Latitude", "The latitude value of the current ISS location"),
-            Latitude, Geo.lat))
+            Latitude, Geo.LAT))
         .property(doubleEp(Labels.from(Longitude, "Longitude",
                 "The longitude value of the current ISS location"),
-            Longitude, Geo.lng))
+            Longitude, Geo.LNG))
         .build();
   }
 

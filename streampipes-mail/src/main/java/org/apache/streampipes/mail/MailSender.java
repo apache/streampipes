@@ -22,6 +22,7 @@ import org.apache.streampipes.mail.template.InitialPasswordMailTemplate;
 import org.apache.streampipes.mail.template.PasswordRecoveryMailTemplate;
 import org.apache.streampipes.mail.utils.MailUtils;
 import org.apache.streampipes.model.mail.SpEmail;
+
 import org.simplejavamail.api.email.Email;
 
 import java.io.IOException;
@@ -30,32 +31,32 @@ public class MailSender extends AbstractMailer {
 
   public void sendEmail(SpEmail mail) {
     Email email = baseEmail()
-            .withRecipients(toSimpleRecipientList(mail.getRecipients()))
-            .withSubject(mail.getSubject())
-            .appendText(mail.getMessage())
-            .buildEmail();
+        .withRecipients(toSimpleRecipientList(mail.getRecipients()))
+        .withSubject(mail.getSubject())
+        .appendText(mail.getMessage())
+        .buildEmail();
 
     deliverMail(email);
   }
 
   public void sendAccountActivationMail(String recipientAddress,
-                                         String activationCode) throws IOException {
+                                        String activationCode) throws IOException {
     Email email = baseEmail()
-            .withSubject(MailUtils.extractAppName() + " - Account Activation")
-            .appendTextHTML(new AccountActiviationMailTemplate(activationCode).generateTemplate())
-            .to(recipientAddress)
-            .buildEmail();
+        .withSubject(MailUtils.extractAppName() + " - Account Activation")
+        .appendTextHTML(new AccountActiviationMailTemplate(activationCode).generateTemplate())
+        .to(recipientAddress)
+        .buildEmail();
 
     deliverMail(email);
   }
 
   public void sendPasswordRecoveryMail(String recipientAddress,
-                                        String recoveryCode) throws IOException {
+                                       String recoveryCode) throws IOException {
     Email email = baseEmail()
-            .withSubject(MailUtils.extractAppName() + " - Password Recovery")
-            .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode).generateTemplate())
-            .to(recipientAddress)
-            .buildEmail();
+        .withSubject(MailUtils.extractAppName() + " - Password Recovery")
+        .appendTextHTML(new PasswordRecoveryMailTemplate(recoveryCode).generateTemplate())
+        .to(recipientAddress)
+        .buildEmail();
 
     deliverMail(email);
   }
@@ -63,10 +64,10 @@ public class MailSender extends AbstractMailer {
   public void sendInitialPasswordMail(String recipientAddress,
                                       String generatedProperty) throws IOException {
     Email email = baseEmail()
-            .withSubject(MailUtils.extractAppName() + " - New Account")
-            .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty).generateTemplate())
-            .to(recipientAddress)
-            .buildEmail();
+        .withSubject(MailUtils.extractAppName() + " - New Account")
+        .appendTextHTML(new InitialPasswordMailTemplate(generatedProperty).generateTemplate())
+        .to(recipientAddress)
+        .buildEmail();
 
     deliverMail(email);
   }

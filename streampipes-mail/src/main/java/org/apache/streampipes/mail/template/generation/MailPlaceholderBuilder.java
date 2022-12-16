@@ -24,13 +24,13 @@ public class MailPlaceholderBuilder {
 
   private Map<String, String> placeholders;
 
-  public static MailPlaceholderBuilder create(String title) {
-    return new MailPlaceholderBuilder(title);
-  }
-
   private MailPlaceholderBuilder(String title) {
     this.placeholders = new HashMap<>();
     this.placeholders.put(DefaultPlaceholders.TITLE.key(), title);
+  }
+
+  public static MailPlaceholderBuilder create(String title) {
+    return new MailPlaceholderBuilder(title);
   }
 
   public MailPlaceholderBuilder add(String key, String value) {

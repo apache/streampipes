@@ -81,23 +81,23 @@ public class EpRequirements {
   }
 
   public static EventPropertyPrimitive booleanReq() {
-    return datatypeReq(XSD._boolean.toString());
+    return datatypeReq(XSD.BOOLEAN.toString());
   }
 
   public static EventPropertyPrimitive integerReq() {
-    return datatypeReq(XSD._integer.toString());
+    return datatypeReq(XSD.INTEGER.toString());
   }
 
   public static EventPropertyPrimitive doubleReq() {
-    return datatypeReq(XSD._double.toString());
+    return datatypeReq(XSD.DOUBLE.toString());
   }
 
   public static EventPropertyPrimitive stringReq() {
-    return datatypeReq(XSD._string.toString());
+    return datatypeReq(XSD.STRING.toString());
   }
 
   public static EventPropertyPrimitive numberReq() {
-    return datatypeReq(SO.Number);
+    return datatypeReq(SO.NUMBER);
   }
 
   public static EventPropertyPrimitive anyProperty() {
@@ -105,23 +105,23 @@ public class EpRequirements {
   }
 
   public static EventPropertyPrimitive booleanReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD._boolean.toString()), domainProperty);
+    return appendDomainProperty(datatypeReq(XSD.BOOLEAN.toString()), domainProperty);
   }
 
   public static EventPropertyPrimitive integerReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD._integer.toString()), domainProperty);
+    return appendDomainProperty(datatypeReq(XSD.INTEGER.toString()), domainProperty);
   }
 
   public static EventPropertyPrimitive doubleReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD._double.toString()), domainProperty);
+    return appendDomainProperty(datatypeReq(XSD.DOUBLE.toString()), domainProperty);
   }
 
   public static EventPropertyPrimitive stringReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(XSD._string.toString()), domainProperty);
+    return appendDomainProperty(datatypeReq(XSD.STRING.toString()), domainProperty);
   }
 
   public static EventPropertyPrimitive numberReq(String domainProperty) {
-    return appendDomainProperty(datatypeReq(SO.Number), domainProperty);
+    return appendDomainProperty(datatypeReq(SO.NUMBER), domainProperty);
   }
 
   private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty,

@@ -116,7 +116,7 @@ public class CoindeskBitcoinAdapter extends PullAdapter {
     return GuessSchemaBuilder.create()
         .property(EpProperties.timestampProperty("timestamp"))
         .property(EpProperties.doubleEp(Labels.from("rate-field", "Rate", "The current "
-            + "bitcoin rate"), "rate", SO.Price))
+            + "bitcoin rate"), "rate", SO.PRICE))
         .build();
   }
 

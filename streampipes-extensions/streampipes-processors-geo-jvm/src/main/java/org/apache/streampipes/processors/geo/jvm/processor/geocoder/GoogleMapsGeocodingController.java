@@ -51,8 +51,8 @@ public class GoogleMapsGeocodingController extends StandaloneEventProcessingDecl
                 PropertyScope.NONE)
             .build())
         .outputStrategy(OutputStrategies.append(
-            EpProperties.doubleEp(Labels.empty(), "latitude", Geo.lat),
-            EpProperties.stringEp(Labels.empty(), "longitude", Geo.lng)
+            EpProperties.doubleEp(Labels.empty(), "latitude", Geo.LAT),
+            EpProperties.stringEp(Labels.empty(), "longitude", Geo.LNG)
         ))
         .build();
   }

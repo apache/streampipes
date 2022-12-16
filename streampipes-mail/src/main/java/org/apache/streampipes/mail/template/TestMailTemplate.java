@@ -23,7 +23,7 @@ import org.apache.streampipes.mail.utils.MailUtils;
 
 import java.util.Map;
 
-public class TestMailTemplate extends AbstractMailTemplate{
+public class TestMailTemplate extends AbstractMailTemplate {
 
   @Override
   protected String getTitle() {

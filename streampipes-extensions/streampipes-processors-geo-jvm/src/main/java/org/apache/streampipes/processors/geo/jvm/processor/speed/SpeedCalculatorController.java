@@ -56,16 +56,16 @@ public class SpeedCalculatorController extends StandaloneEventProcessingDeclarer
             .create()
             .requiredPropertyWithUnaryMapping(EpRequirements.timestampReq(),
                 Labels.withId(TIMESTAMP_KEY), PropertyScope.HEADER_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT)
                 , Labels.withId(LATITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng)
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG)
                 , Labels.withId(LONGITUDE_KEY), PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .requiredIntegerParameter(Labels.withId(COUNT_WINDOW_KEY))
         .outputStrategy(
             OutputStrategies.append(PrimitivePropertyBuilder
                 .create(Datatypes.Float, "speed")
-                .domainProperty(SO.Number)
+                .domainProperty(SO.NUMBER)
                 .measurementUnit(URI.create("http://qudt.org/vocab/unit#KilometerPerHour"))
                 .build())
         )

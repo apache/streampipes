@@ -89,34 +89,34 @@ public class TimestampExtractorController extends StandaloneEventProcessingDecla
     for (String field : selectedOutputField) {
       if (field.equals(OutputFields.YEAR.toString())) {
         eventSchema.addEventProperty(
-            EpProperties.numberEp(Labels.from("timestampYear", "Timestamp Year", ""), "timestampYear", SO.Number));
+            EpProperties.numberEp(Labels.from("timestampYear", "Timestamp Year", ""), "timestampYear", SO.NUMBER));
       }
       if (field.equals(OutputFields.MONTH.toString())) {
         eventSchema.addEventProperty(
-            EpProperties.numberEp(Labels.from("timestampMonth", "Timestamp Month", ""), "timestampMonth", SO.Number));
+            EpProperties.numberEp(Labels.from("timestampMonth", "Timestamp Month", ""), "timestampMonth", SO.NUMBER));
       }
       if (field.equals(OutputFields.DAY.toString())) {
         eventSchema.addEventProperty(
-            EpProperties.numberEp(Labels.from("timestampDay", "Timestamp Day", ""), "timestampDay", SO.Number));
+            EpProperties.numberEp(Labels.from("timestampDay", "Timestamp Day", ""), "timestampDay", SO.NUMBER));
       }
       if (field.equals(OutputFields.HOUR.toString())) {
         eventSchema.addEventProperty(
-            EpProperties.numberEp(Labels.from("timestampHour", "Timestamp Hour", ""), "timestampHour", SO.Number));
+            EpProperties.numberEp(Labels.from("timestampHour", "Timestamp Hour", ""), "timestampHour", SO.NUMBER));
       }
       if (field.equals(OutputFields.MINUTE.toString())) {
         eventSchema.addEventProperty(
             EpProperties.numberEp(Labels.from("timestampMinute", "Timestamp Minute", ""), "timestampMinute",
-                SO.Number));
+                SO.NUMBER));
       }
       if (field.equals(OutputFields.SECOND.toString())) {
         eventSchema.addEventProperty(
             EpProperties.numberEp(Labels.from("timestampSecond", "Timestamp Second", ""), "timestampSecond",
-                SO.Number));
+                SO.NUMBER));
       }
       if (field.equals(OutputFields.WEEKDAY.toString())) {
         eventSchema.addEventProperty(
             EpProperties.stringEp(Labels.from("timestampWeekday", "Timestamp Weekday", ""), "timestampWeekday",
-                SO.Text));
+                SO.TEXT));
       }
     }
 

@@ -32,8 +32,8 @@ public class StandardTransportFormat {
 
   public static List<TransportFormat> standardFormat() {
     List<TransportFormat> formats = new ArrayList<>();
-    formats.add(new TransportFormat(MessageFormat.Json));
-    formats.add(new TransportFormat(MessageFormat.Thrift));
+    formats.add(new TransportFormat(MessageFormat.JSON));
+    formats.add(new TransportFormat(MessageFormat.THRIFT));
     return formats;
   }
 

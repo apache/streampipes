@@ -49,7 +49,7 @@ public class TimestampController extends FlinkDataProcessorDeclarer<TimestampPar
             .requiredProperty(EpRequirements.anyProperty())
             .build())
         .outputStrategy(OutputStrategies.append(
-            EpProperties.longEp(Labels.empty(), APPEND_PROPERTY, SO.DateTime)))
+            EpProperties.longEp(Labels.empty(), APPEND_PROPERTY, SO.DATE_TIME)))
         .build();
   }
 

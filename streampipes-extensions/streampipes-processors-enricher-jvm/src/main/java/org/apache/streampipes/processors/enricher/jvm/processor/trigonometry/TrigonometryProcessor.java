@@ -62,7 +62,7 @@ public class TrigonometryProcessor extends StreamPipesDataProcessor {
             .build())
         .outputStrategy(
             OutputStrategies.append(
-                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
+                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
         .requiredSingleValueSelection(Labels.withId(OPERATION),
             Options.from("sin", "cos", "tan"))
         .build();

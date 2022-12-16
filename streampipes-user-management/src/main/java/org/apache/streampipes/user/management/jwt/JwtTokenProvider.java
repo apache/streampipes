@@ -29,6 +29,7 @@ import org.apache.streampipes.security.jwt.JwtTokenValidator;
 import org.apache.streampipes.user.management.model.PrincipalUserDetails;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.UserInfoUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -47,87 +48,86 @@ import java.util.stream.Collectors;
 
 public class JwtTokenProvider {
 
-	private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
+  public static final String CLAIM_USER = "user";
+  private static final Logger LOG = LoggerFactory.getLogger(JwtTokenProvider.class);
+  private BackendConfig config;
 
-	public static final String CLAIM_USER = "user";
+  public JwtTokenProvider() {
+    this.config = BackendConfig.INSTANCE;
+  }
 
-	private BackendConfig config;
+  public String createToken(Authentication authentication) {
+    Principal userPrincipal = ((PrincipalUserDetails<?>) authentication.getPrincipal()).getDetails();
+    Set<String> roles = authentication
+        .getAuthorities()
+        .stream()
+        .map(GrantedAuthority::getAuthority)
+        .collect(Collectors.toSet());
 
-	public JwtTokenProvider() {
-		this.config = BackendConfig.INSTANCE;
-	}
+    return createToken(userPrincipal, roles);
 
-	public String createToken(Authentication authentication) {
-		Principal userPrincipal = ((PrincipalUserDetails<?>)authentication.getPrincipal()).getDetails();
-		Set<String> roles = authentication
-						.getAuthorities()
-						.stream()
-						.map(GrantedAuthority::getAuthority)
-						.collect(Collectors.toSet());
+  }
 
-		return createToken(userPrincipal, roles);
+  public String createToken(Principal userPrincipal) {
+    Set<String> roles = new GrantedAuthoritiesBuilder(userPrincipal).buildAllAuthorities();
+    return createToken(userPrincipal, roles);
+  }
 
-	}
+  public String createToken(Principal userPrincipal,
+                            Set<String> roles) {
+    Date tokenExpirationDate = makeExpirationDate();
+    Map<String, Object> claims = makeClaims(userPrincipal, roles);
 
-	public String createToken(Principal userPrincipal) {
-		Set<String> roles = new GrantedAuthoritiesBuilder(userPrincipal).buildAllAuthorities();
-		return createToken(userPrincipal, roles);
-	}
+    if (authConfig().getJwtSigningMode() == JwtSigningMode.HMAC) {
+      return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), tokenSecret(), claims, tokenExpirationDate);
+    } else {
+      try {
+        return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), getKeyFilePath(), claims,
+            tokenExpirationDate);
+      } catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException e) {
+        LOG.warn("Could not create JWT token from private key location..defaulting to HMAC");
+        return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), tokenSecret(), claims, tokenExpirationDate);
+      }
+    }
+  }
 
-	public String createToken(Principal userPrincipal,
-							  Set<String> roles) {
-		Date tokenExpirationDate = makeExpirationDate();
-		Map<String, Object> claims = makeClaims(userPrincipal, roles);
+  private Map<String, Object> makeClaims(Principal principal,
+                                         Set<String> roles) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put(CLAIM_USER, UserInfoUtil.toUserInfoObj(principal, roles));
 
-		if (authConfig().getJwtSigningMode() == JwtSigningMode.HMAC) {
-			return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), tokenSecret(), claims, tokenExpirationDate);
-		} else {
-			try {
-				return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), getKeyFilePath(), claims, tokenExpirationDate);
-			} catch (NoSuchAlgorithmException | IOException | InvalidKeySpecException e) {
-				LOG.warn("Could not create JWT token from private key location..defaulting to HMAC");
-				return JwtTokenGenerator.makeJwtToken(userPrincipal.getUsername(), tokenSecret(), claims, tokenExpirationDate);
-			}
-		}
-	}
+    return claims;
+  }
 
-	private Map<String, Object> makeClaims(Principal principal,
-																				 Set<String> roles) {
-		Map<String, Object> claims = new HashMap<>();
-		claims.put(CLAIM_USER, UserInfoUtil.toUserInfoObj(principal, roles));
+  public String getUserIdFromToken(String token) {
+    return JwtTokenUtils.getUserIdFromToken(token, new SpKeyResolver(tokenSecret()));
+  }
 
-		return claims;
-	}
+  public boolean validateJwtToken(String jwtToken) {
+    return JwtTokenValidator.validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret()));
+  }
 
-	public String getUserIdFromToken(String token) {
-		return JwtTokenUtils.getUserIdFromToken(token, new SpKeyResolver(tokenSecret()));
-	}
+  public boolean validateJwtToken(String tokenSecret,
+                                  String jwtToken) {
+    return JwtTokenValidator.validateJwtToken(tokenSecret, jwtToken);
+  }
 
-	public boolean validateJwtToken(String jwtToken) {
-		return JwtTokenValidator.validateJwtToken(jwtToken, new SpKeyResolver(tokenSecret()));
-	}
+  private String tokenSecret() {
+    return authConfig().getTokenSecret();
+  }
 
-	public boolean validateJwtToken(String tokenSecret,
-																	String jwtToken) {
-		return JwtTokenValidator.validateJwtToken(tokenSecret, jwtToken);
-	}
+  private Path getKeyFilePath() {
+    return Paths.get(Envs.SP_JWT_PRIVATE_KEY_LOC.getValue());
+  }
 
-	private String tokenSecret() {
-		return authConfig().getTokenSecret();
-	}
+  private LocalAuthConfig authConfig() {
+    return this.config.getLocalAuthConfig();
+  }
 
-	private Path getKeyFilePath() {
-		return Paths.get(Envs.SP_JWT_PRIVATE_KEY_LOC.getValue());
-	}
-
-	private LocalAuthConfig authConfig() {
-		return this.config.getLocalAuthConfig();
-	}
-
-	private Date makeExpirationDate() {
-		Date now = new Date();
-		return new Date(now.getTime() + authConfig().getTokenExpirationTimeMillis());
-	}
+  private Date makeExpirationDate() {
+    Date now = new Date();
+    return new Date(now.getTime() + authConfig().getTokenExpirationTimeMillis());
+  }
 
 
 }

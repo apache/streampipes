@@ -41,9 +41,9 @@ public class TokenService {
       return false;
     } else {
       return userAccount
-              .getUserApiTokens()
-              .stream()
-              .anyMatch(t -> t.getHashedToken().equals(hashedToken));
+          .getUserApiTokens()
+          .stream()
+          .anyMatch(t -> t.getHashedToken().equals(hashedToken));
     }
   }
 
@@ -54,7 +54,7 @@ public class TokenService {
 
   private IUserStorage getUserStorage() {
     return StorageDispatcher.INSTANCE
-            .getNoSqlStore()
-            .getUserStorageAPI();
+        .getNoSqlStore()
+        .getUserStorageAPI();
   }
 }

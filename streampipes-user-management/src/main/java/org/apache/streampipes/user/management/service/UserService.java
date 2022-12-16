@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.user.management.service;
 
-import com.google.gson.JsonObject;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
+import com.google.gson.JsonObject;
 import org.lightcouch.CouchDbClient;
 
 import java.util.List;
