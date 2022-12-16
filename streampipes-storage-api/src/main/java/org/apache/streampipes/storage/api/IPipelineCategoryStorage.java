@@ -18,16 +18,16 @@
 
 package org.apache.streampipes.storage.api;
 
-import java.util.List;
-
 import org.apache.streampipes.model.pipeline.PipelineCategory;
+
+import java.util.List;
 
 public interface IPipelineCategoryStorage {
 
-	List<PipelineCategory> getPipelineCategories();
-	
-	boolean addPipelineCategory(PipelineCategory pipelineCategory);
-	
-	boolean deletePipelineCategory(String categoryId);
-	
+  List<PipelineCategory> getPipelineCategories();
+
+  boolean addPipelineCategory(PipelineCategory pipelineCategory);
+
+  boolean deletePipelineCategory(String categoryId);
+
 }

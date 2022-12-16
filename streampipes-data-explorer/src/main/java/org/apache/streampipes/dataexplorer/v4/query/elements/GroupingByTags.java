@@ -23,21 +23,21 @@ import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
 public class GroupingByTags extends QueryElement<GroupingByTagsParams> {
 
-    public GroupingByTags(GroupingByTagsParams groupingByTagsParams) {
-        super(groupingByTagsParams);
+  public GroupingByTags(GroupingByTagsParams groupingByTagsParams) {
+    super(groupingByTagsParams);
+  }
+
+  @Override
+  protected String buildStatement(GroupingByTagsParams groupingByTagsParams) {
+    String tags = "";
+    for (String tag : groupingByTagsParams.getGroupingTags()) {
+      if (tags.equals("")) {
+        tags = tag;
+      } else {
+        tags = tags + ", " + tag;
+      }
     }
 
-    @Override
-    protected String buildStatement(GroupingByTagsParams groupingByTagsParams) {
-        String tags = "";
-        for (String tag : groupingByTagsParams.getGroupingTags()) {
-            if (tags.equals("")) {
-                tags = tag;
-            } else {
-                tags = tags + ", " + tag;
-            }
-        }
-
-        return QueryTemplatesV4.groupByTags(tags);
-    }
+    return QueryTemplatesV4.groupByTags(tags);
+  }
 }

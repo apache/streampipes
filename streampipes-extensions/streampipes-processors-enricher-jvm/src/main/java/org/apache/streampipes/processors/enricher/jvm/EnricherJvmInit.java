@@ -33,7 +33,7 @@ import org.apache.streampipes.processors.enricher.jvm.processor.math.MathOpProce
 import org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop.StaticMathOpProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
 import org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.TrigonometryProcessor;
-import org.apache.streampipes.processors.enricher.jvm.processor.valueChange.ValueChangeProcessor;
+import org.apache.streampipes.processors.enricher.jvm.processor.valuechange.ValueChangeProcessor;
 
 public class EnricherJvmInit extends StandaloneModelSubmitter {
 
@@ -47,21 +47,21 @@ public class EnricherJvmInit extends StandaloneModelSubmitter {
             "Processors Enricher JVM",
             "",
             8090)
-            .registerPipelineElements(new SizeMeasureController(),
-                    new JSEvalController(),
-                    new MathOpProcessor(),
-                    new StaticMathOpProcessor(),
-                    new TrigonometryProcessor(),
-                    new ValueChangeProcessor())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .build();
+        .registerPipelineElements(new SizeMeasureController(),
+            new JSEvalController(),
+            new MathOpProcessor(),
+            new StaticMathOpProcessor(),
+            new TrigonometryProcessor(),
+            new ValueChangeProcessor())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .build();
   }
 }

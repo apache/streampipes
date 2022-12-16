@@ -42,19 +42,19 @@ public class SinksNotificationsJvmInit extends StandaloneModelSubmitter {
             "Sinks Notifications JVM",
             "",
             8090)
-            .registerPipelineElements(
-                    new EmailController(),
-                    new OneSignalController(),
-                    new SlackNotificationController(),
-                    new TelegramController())
-            .registerMessagingFormats(new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.WEBSOCKET_PROTOCOL, "ws", "")
-            .build();
+        .registerPipelineElements(
+            new EmailController(),
+            new OneSignalController(),
+            new SlackNotificationController(),
+            new TelegramController())
+        .registerMessagingFormats(new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.WEBSOCKET_PROTOCOL, "ws", "")
+        .build();
   }
 }

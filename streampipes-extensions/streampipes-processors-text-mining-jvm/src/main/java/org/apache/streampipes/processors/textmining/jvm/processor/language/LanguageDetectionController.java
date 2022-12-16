@@ -26,13 +26,15 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
-
-import java.io.IOException;
 
 public class LanguageDetectionController extends StandaloneEventProcessingDeclarer<LanguageDetectionParameters> {
 
@@ -44,31 +46,33 @@ public class LanguageDetectionController extends StandaloneEventProcessingDeclar
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.languagedetection")
-            .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredFile(Labels.withId(BINARY_FILE_KEY))
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.stringReq(),
-                            Labels.withId(DETECTION_FIELD_KEY),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(
-                    EpProperties.stringEp(
-                            Labels.withId(LANGUAGE_KEY),
-                            LANGUAGE_KEY,
-                            "http://schema.org/language"),
-                    EpProperties.doubleEp(
-                            Labels.withId(CONFIDENCE_KEY),
-                            CONFIDENCE_KEY,
-                            "https://schema.org/Float")))
-            .build();
+        .category(DataProcessorType.ENRICH_TEXT)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredFile(Labels.withId(BINARY_FILE_KEY))
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.stringReq(),
+                Labels.withId(DETECTION_FIELD_KEY),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(
+            EpProperties.stringEp(
+                Labels.withId(LANGUAGE_KEY),
+                LANGUAGE_KEY,
+                "http://schema.org/language"),
+            EpProperties.doubleEp(
+                Labels.withId(CONFIDENCE_KEY),
+                CONFIDENCE_KEY,
+                "https://schema.org/Float")))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<LanguageDetectionParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<LanguageDetectionParameters> onInvocation(
+      DataProcessorInvocation graph,
+      ProcessingElementParameterExtractor extractor) {
 
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     String filename = extractor.selectedFilename(BINARY_FILE_KEY);

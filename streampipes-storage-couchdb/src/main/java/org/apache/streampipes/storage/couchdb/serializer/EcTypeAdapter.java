@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.storage.couchdb.serializer;
 
+import org.apache.streampipes.model.DataSinkType;
+
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import org.apache.streampipes.model.DataSinkType;
 
 import java.io.IOException;
 

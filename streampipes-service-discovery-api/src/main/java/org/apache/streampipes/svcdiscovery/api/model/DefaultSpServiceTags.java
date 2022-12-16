@@ -23,5 +23,6 @@ public class DefaultSpServiceTags {
   public static final SpServiceTag PE = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "pe");
   public static final SpServiceTag CONNECT_MASTER = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "connect-master");
   public static final SpServiceTag CONNECT_WORKER = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "connect-worker");
-  public static final SpServiceTag STREAMPIPES_CLIENT = SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "streampipes-client");
+  public static final SpServiceTag STREAMPIPES_CLIENT =
+      SpServiceTag.create(SpServiceTagPrefix.SYSTEM, "streampipes-client");
 }

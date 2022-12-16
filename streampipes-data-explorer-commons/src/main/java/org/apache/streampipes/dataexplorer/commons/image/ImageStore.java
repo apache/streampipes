@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.dataexplorer.commons.image;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataexplorer.commons.configs.CouchDbEnvKeys;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
+
+import org.apache.commons.codec.binary.Base64;
 import org.lightcouch.CouchDbClient;
 import org.lightcouch.CouchDbProperties;
 import org.slf4j.Logger;
@@ -48,7 +49,16 @@ public class ImageStore {
     this.imageProperties = ImageStoreUtils.getImageProperties(measure);
   }
 
-  public void onEvent(Event event) throws SpRuntimeException{
+  private static CouchDbProperties from(SpConfig config) {
+    String couchDbProtocol = config.getString(CouchDbEnvKeys.COUCHDB_PROTOCOL);
+    String couchDbHost = config.getString(CouchDbEnvKeys.COUCHDB_HOST);
+    int couchDbPort = config.getInteger(CouchDbEnvKeys.COUCHDB_PORT);
+
+    return new CouchDbProperties(DB_NAME, true, couchDbProtocol,
+        couchDbHost, couchDbPort, null, null);
+  }
+
+  public void onEvent(Event event) throws SpRuntimeException {
     this.imageProperties.forEach(eventProperty -> {
       String imageDocId = UUID.randomUUID().toString();
       String image = event.getFieldByRuntimeName(eventProperty.getRuntimeName()).getAsPrimitive().getAsString();
@@ -62,24 +72,15 @@ public class ImageStore {
   public void storeImage(byte[] imageBytes,
                          String imageDocId) {
     this.couchDbClient.saveAttachment(
-      new ByteArrayInputStream(imageBytes),
-      imageDocId,
-      "image/jpeg",
-      imageDocId,
-      null);
+        new ByteArrayInputStream(imageBytes),
+        imageDocId,
+        "image/jpeg",
+        imageDocId,
+        null);
 
   }
 
   public void close() throws IOException {
     this.couchDbClient.close();
-  }
-
-  private static CouchDbProperties from(SpConfig config) {
-    String couchDbProtocol = config.getString(CouchDbEnvKeys.COUCHDB_PROTOCOL);
-    String couchDbHost = config.getString(CouchDbEnvKeys.COUCHDB_HOST);
-    int couchDbPort = config.getInteger(CouchDbEnvKeys.COUCHDB_PORT);
-
-    return new CouchDbProperties(DB_NAME, true, couchDbProtocol,
-      couchDbHost, couchDbPort, null, null);
   }
 }

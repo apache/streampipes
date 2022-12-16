@@ -26,47 +26,45 @@ import java.util.List;
 @TsModel
 public class PipelineElementRecommendationMessage {
 
-	private List<PipelineElementRecommendation> possibleElements;
-	private List<PipelineElementRecommendation> recommendedElements;
-	
-	private boolean success;
-	
-	public PipelineElementRecommendationMessage()
-	{
-		this.possibleElements = new ArrayList<>();
-		this.recommendedElements = new ArrayList<>();
-		this.success = true;
-	}
+  private List<PipelineElementRecommendation> possibleElements;
+  private List<PipelineElementRecommendation> recommendedElements;
 
-	public List<PipelineElementRecommendation> getPossibleElements() {
-		return possibleElements;
-	}
+  private boolean success;
 
-	public void addPossibleElement(PipelineElementRecommendation recommendation)
-	{
-		possibleElements.add(recommendation);
-	}
+  public PipelineElementRecommendationMessage() {
+    this.possibleElements = new ArrayList<>();
+    this.recommendedElements = new ArrayList<>();
+    this.success = true;
+  }
 
-	public boolean isSuccess() {
-		return success;
-	}
+  public List<PipelineElementRecommendation> getPossibleElements() {
+    return possibleElements;
+  }
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
+  public void setPossibleElements(List<PipelineElementRecommendation> possibleElements) {
+    this.possibleElements = possibleElements;
+  }
 
-	public List<PipelineElementRecommendation> getRecommendedElements() {
-		return recommendedElements;
-	}
+  public void addPossibleElement(PipelineElementRecommendation recommendation) {
+    possibleElements.add(recommendation);
+  }
 
-	public void setRecommendedElements(
-			List<PipelineElementRecommendation> recommendedElements) {
-		this.recommendedElements = recommendedElements;
-	}
+  public boolean isSuccess() {
+    return success;
+  }
 
-	public void setPossibleElements(List<PipelineElementRecommendation> possibleElements) {
-		this.possibleElements = possibleElements;
-	}
-	
-	
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
+
+  public List<PipelineElementRecommendation> getRecommendedElements() {
+    return recommendedElements;
+  }
+
+  public void setRecommendedElements(
+      List<PipelineElementRecommendation> recommendedElements) {
+    this.recommendedElements = recommendedElements;
+  }
+
+
 }

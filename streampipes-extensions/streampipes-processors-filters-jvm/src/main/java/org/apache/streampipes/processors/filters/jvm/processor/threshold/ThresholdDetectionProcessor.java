@@ -25,7 +25,12 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
@@ -49,46 +54,47 @@ public class ThresholdDetectionProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.filters.jvm.threshold")
-            .category(DataProcessorType.FILTER)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-                            Labels.withId(NUMBER_MAPPING),
-                            PropertyScope.NONE).build())
-            .outputStrategy(
-                    OutputStrategies.append(
-                            EpProperties.booleanEp(Labels.empty(), RESULT_FIELD, SO.Boolean)))
-            .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
-                    ">=", "==", "!="))
-            .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
-            .build();
+        .category(DataProcessorType.FILTER)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(NUMBER_MAPPING),
+                PropertyScope.NONE).build())
+        .outputStrategy(
+            OutputStrategies.append(
+                EpProperties.booleanEp(Labels.empty(), RESULT_FIELD, SO.Boolean)))
+        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("<", "<=", ">",
+            ">=", "==", "!="))
+        .requiredFloatParameter(Labels.withId(VALUE), NUMBER_MAPPING)
+        .build();
 
   }
 
 
   @Override
-  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-        this.threshold = processorParams.extractor().singleValueParameter(VALUE, Double.class);
-        String stringOperation = processorParams.extractor().selectedSingleValue(OPERATION, String.class);
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    this.threshold = processorParams.extractor().singleValueParameter(VALUE, Double.class);
+    String stringOperation = processorParams.extractor().selectedSingleValue(OPERATION, String.class);
 
-        String operation = "GT";
+    String operation = "GT";
 
-        if (stringOperation.equals("<=")) {
-          operation = "LE";
-        } else if (stringOperation.equals("<")) {
-          operation = "LT";
-        } else if (stringOperation.equals(">=")) {
-          operation = "GE";
-        } else if (stringOperation.equals("==")) {
-          operation = "EQ";
-        } else if (stringOperation.equals("!=")) {
-          operation = "IE";
-        }
+    if (stringOperation.equals("<=")) {
+      operation = "LE";
+    } else if (stringOperation.equals("<")) {
+      operation = "LT";
+    } else if (stringOperation.equals(">=")) {
+      operation = "GE";
+    } else if (stringOperation.equals("==")) {
+      operation = "EQ";
+    } else if (stringOperation.equals("!=")) {
+      operation = "IE";
+    }
 
-        this.filterProperty = processorParams.extractor().mappingPropertyValue(NUMBER_MAPPING);
-        this.numericalOperator = ThresholdDetectionOperator.valueOf(operation);
+    this.filterProperty = processorParams.extractor().mappingPropertyValue(NUMBER_MAPPING);
+    this.numericalOperator = ThresholdDetectionOperator.valueOf(operation);
 
   }
 
@@ -97,7 +103,7 @@ public class ThresholdDetectionProcessor extends StreamPipesDataProcessor {
     Boolean satisfiesFilter = false;
 
     Double value = event.getFieldBySelector(this.filterProperty).getAsPrimitive()
-            .getAsDouble();
+        .getAsDouble();
 
     Double threshold = this.threshold;
 

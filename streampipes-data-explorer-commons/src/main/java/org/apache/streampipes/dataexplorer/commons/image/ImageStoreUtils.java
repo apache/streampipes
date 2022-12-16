@@ -27,11 +27,11 @@ import java.util.stream.Collectors;
 
 public class ImageStoreUtils {
 
-    public static List<EventProperty> getImageProperties(DataLakeMeasure measure) {
-        return  measure.getEventSchema().getEventProperties().stream()
-                .filter(eventProperty -> eventProperty.getDomainProperties() != null &&
-            eventProperty.getDomainProperties().size() > 0 &&
-            eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
-            .collect(Collectors.toList());
-    }
+  public static List<EventProperty> getImageProperties(DataLakeMeasure measure) {
+    return measure.getEventSchema().getEventProperties().stream()
+        .filter(eventProperty -> eventProperty.getDomainProperties() != null
+            && eventProperty.getDomainProperties().size() > 0
+            && eventProperty.getDomainProperties().get(0).toString().equals(SPSensor.IMAGE))
+        .collect(Collectors.toList());
+  }
 }

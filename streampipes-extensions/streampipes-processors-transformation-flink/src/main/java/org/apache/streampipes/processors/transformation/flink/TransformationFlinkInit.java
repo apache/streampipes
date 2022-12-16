@@ -33,41 +33,42 @@ import org.apache.streampipes.processors.transformation.flink.processor.boilerpl
 import org.apache.streampipes.processors.transformation.flink.processor.converter.FieldConverterController;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.FieldHasherController;
 import org.apache.streampipes.processors.transformation.flink.processor.mapper.FieldMapperController;
-import org.apache.streampipes.processors.transformation.flink.processor.measurementUnitConverter.MeasurementUnitConverterController;
+import org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter.MeasurementUnitConverterController;
 import org.apache.streampipes.processors.transformation.flink.processor.rename.FieldRenamerController;
 
 public class TransformationFlinkInit extends StandaloneModelSubmitter {
 
-  public static final String ServiceGroup = "org.apache.streampipes.processors.transformation.flink";
+  public static final String SERVICE_GROUP = "org.apache.streampipes.processors.transformation.flink";
+
   public static void main(String[] args) {
     new TransformationFlinkInit().init();
   }
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
-    return SpServiceDefinitionBuilder.create(ServiceGroup,
-                    "Processors Transformation Flink",
-                    "",
-                    8090)
-            .registerPipelineElements(new FieldConverterController(),
-                    new FieldHasherController(),
-                    new FieldMapperController(),
-                    new MeasurementUnitConverterController(),
-                    new FieldRenamerController(),
-                    new BoilerplateController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
-            .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
-            .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
-            .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
-            .build();
+    return SpServiceDefinitionBuilder.create(SERVICE_GROUP,
+            "Processors Transformation Flink",
+            "",
+            8090)
+        .registerPipelineElements(new FieldConverterController(),
+            new FieldHasherController(),
+            new FieldMapperController(),
+            new MeasurementUnitConverterController(),
+            new FieldRenamerController(),
+            new BoilerplateController())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.FLINK_HOST, "jobmanager", "Hostname of the Flink Jobmanager")
+        .addConfig(ConfigKeys.FLINK_PORT, 8081, "Port of the Flink Jobmanager")
+        .addConfig(ConfigKeys.DEBUG, false, "Debug/Mini cluster mode of Flink program")
+        .addConfig(ConfigKeys.FLINK_JAR_FILE_LOC, "./streampipes-processing-element-container.jar", "Jar file location")
+        .build();
   }
 }

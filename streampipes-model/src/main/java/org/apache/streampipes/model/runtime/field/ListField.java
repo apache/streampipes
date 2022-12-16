@@ -41,21 +41,21 @@ public class ListField extends AbstractField<List<AbstractField>> {
 
   public <T> List<T> parseAsCustomType(FieldParser<AbstractField, T> parser) {
     return value.stream()
-            .map(parser::parseField)
-            .collect(Collectors.toList());
+        .map(parser::parseField)
+        .collect(Collectors.toList());
   }
 
   public <T> List<T> castItems(Class<T> clazz) {
     return value.stream()
-            .map(v -> v.getAsPrimitive().getRawValue())
-            .map(clazz::cast)
-            .collect(Collectors.toList());
+        .map(v -> v.getAsPrimitive().getRawValue())
+        .map(clazz::cast)
+        .collect(Collectors.toList());
   }
 
   public <T> List<T> parseAsSimpleType(Class<T> type) {
     return value.stream()
-            .map(v -> v.getAsPrimitive().getRawValue())
-            .map(f -> EventUtils.typeParser.parse(asString(f), type))
-            .collect(Collectors.toList());
+        .map(v -> v.getAsPrimitive().getRawValue())
+        .map(f -> EventUtils.TYPE_PARSER.parse(asString(f), type))
+        .collect(Collectors.toList());
   }
 }

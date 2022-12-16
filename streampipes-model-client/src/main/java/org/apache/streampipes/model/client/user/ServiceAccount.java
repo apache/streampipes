@@ -27,9 +27,13 @@ public class ServiceAccount extends Principal {
   private String clientSecret;
   private boolean secretEncrypted;
 
+  public ServiceAccount() {
+    super(PrincipalType.SERVICE_ACCOUNT);
+  }
+
   public static ServiceAccount from(String serviceAccountName,
-                                 String clientSecret,
-                                 Set<Role> roles) {
+                                    String clientSecret,
+                                    Set<Role> roles) {
     ServiceAccount account = new ServiceAccount();
     account.setUsername(serviceAccountName);
     account.setClientSecret(clientSecret);
@@ -38,10 +42,6 @@ public class ServiceAccount extends Principal {
     account.setAccountLocked(false);
 
     return account;
-  }
-
-  public ServiceAccount() {
-    super(PrincipalType.SERVICE_ACCOUNT);
   }
 
   public String getClientSecret() {

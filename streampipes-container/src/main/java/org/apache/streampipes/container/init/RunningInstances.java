@@ -28,49 +28,49 @@ import java.util.List;
 import java.util.Map;
 
 public enum RunningInstances {
-    INSTANCE;
+  INSTANCE;
 
-    private final Map<String, ElementInfo<NamedStreamPipesEntity, InvocableDeclarer>> runningInstances = new HashMap<>();
+  private final Map<String, ElementInfo<NamedStreamPipesEntity, InvocableDeclarer>> runningInstances = new HashMap<>();
 
 
-    public void add(String id, NamedStreamPipesEntity description, InvocableDeclarer invocation) {
-        runningInstances.put(id, new ElementInfo<>(description, invocation));
+  public void add(String id, NamedStreamPipesEntity description, InvocableDeclarer invocation) {
+    runningInstances.put(id, new ElementInfo<>(description, invocation));
+  }
+
+  public boolean exists(String runningInstanceId) {
+    return runningInstances.containsKey(runningInstanceId);
+  }
+
+  public InvocableDeclarer getInvocation(String id) {
+    ElementInfo<NamedStreamPipesEntity, InvocableDeclarer> result = runningInstances.get(id);
+    if (result != null) {
+      return result.getInvocation();
+    } else {
+      return null;
     }
+  }
 
-    public boolean exists(String runningInstanceId) {
-        return runningInstances.containsKey(runningInstanceId);
-    }
+  public NamedStreamPipesEntity getDescription(String id) {
+    return runningInstances.get(id).getDescription();
+  }
 
-    public InvocableDeclarer getInvocation(String id) {
-        ElementInfo<NamedStreamPipesEntity, InvocableDeclarer> result = runningInstances.get(id);
-        if (result != null) {
-            return result.getInvocation();
-        } else {
-            return null;
-        }
-    }
+  public void remove(String id) {
+    runningInstances.remove(id);
+  }
 
-    public NamedStreamPipesEntity getDescription(String id) {
-        return runningInstances.get(id).getDescription();
-    }
+  public Integer getRunningInstancesCount() {
+    return runningInstances.size();
+  }
 
-    public void remove(String id) {
-        runningInstances.remove(id);
-    }
+  public List<String> getRunningInstanceIdsForElement(String appId) {
+    // TODO change this to appId for STREAMPIPES-319
+    List<String> instanceIds = new ArrayList<>();
+    this.runningInstances.forEach((key, elementInfo) -> {
+      if (elementInfo.getDescription().getAppId().equals(appId)) {
+        instanceIds.add(key);
+      }
+    });
 
-    public Integer getRunningInstancesCount() {
-        return runningInstances.size();
-    }
-
-    public List<String> getRunningInstanceIdsForElement(String appId) {
-        // TODO change this to appId for STREAMPIPES-319
-        List<String> instanceIds = new ArrayList<>();
-        this.runningInstances.forEach((key, elementInfo) -> {
-            if (elementInfo.getDescription().getAppId().equals(appId)) {
-                instanceIds.add(key);
-            }
-        });
-
-        return instanceIds;
-    }
+    return instanceIds;
+  }
 }

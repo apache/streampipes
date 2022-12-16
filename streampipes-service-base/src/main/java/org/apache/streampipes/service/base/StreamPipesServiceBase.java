@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.service.base;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceRegistrationRequest;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -31,9 +32,8 @@ import java.util.List;
 
 public abstract class StreamPipesServiceBase {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesServiceBase.class);
-
   public static final String AUTO_GENERATED_SERVICE_ID = RandomStringUtils.randomAlphanumeric(6);
+  private static final Logger LOG = LoggerFactory.getLogger(StreamPipesServiceBase.class);
 
   protected void startStreamPipesService(Class<?> serviceClass,
                                          String serviceGroup,
@@ -54,16 +54,16 @@ public abstract class StreamPipesServiceBase {
                                String serviceId,
                                BaseNetworkingConfig networkingConfig) {
     SpServiceRegistrationRequest req = SpServiceRegistrationRequest.from(
-            serviceGroup,
-            serviceId,
-            networkingConfig.getHost(),
-            networkingConfig.getPort(),
-            getServiceTags(),
-            getHealthCheckPath());
+        serviceGroup,
+        serviceId,
+        networkingConfig.getHost(),
+        networkingConfig.getPort(),
+        getServiceTags(),
+        getHealthCheckPath());
 
     SpServiceDiscovery
-            .getServiceDiscovery()
-            .registerService(req);
+        .getServiceDiscovery()
+        .registerService(req);
   }
 
   protected abstract List<SpServiceTag> getServiceTags();

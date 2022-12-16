@@ -17,15 +17,16 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -48,33 +49,34 @@ public class TestTimeAggregationProgram extends DataStreamTestBase {
   @Test
   public void testAggregationProgram() {
     AggregationParameters params = makeParams();
-    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.SERVICE_GROUP);
     AggregationProgram program = new AggregationProgram(params, configExtractor, null);
     AggregationTestData testData = new AggregationTestData();
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData
-            (testData)));
+        (testData)));
 
     ExpectedRecords<Event> expected =
-            new ExpectedRecords<Event>().expectAll(testData.getExpectedOutput());
+        new ExpectedRecords<Event>().expectAll(testData.getExpectedOutput());
 
     assertStream(stream, expected);
   }
 
   private AggregationParameters makeParams() {
-    return new AggregationParameters(InvocationGraphGenerator.makeEmptyInvocation(new AggregationController().declareModel()),
-            AggregationType.AVG,
-            1,
-            Arrays.asList("sensorId"),
-            Arrays.asList("value"),
-            10,
-            Arrays.asList("value"),
-            true);
+    return new AggregationParameters(
+        InvocationGraphGenerator.makeEmptyInvocation(new AggregationController().declareModel()),
+        AggregationType.AVG,
+        1,
+        Arrays.asList("sensorId"),
+        Arrays.asList("value"),
+        10,
+        Arrays.asList("value"),
+        true);
   }
 
   private EventTimeInput<Event> makeInputData(AggregationTestData testData) {
     return EventTimeInputBuilder.startWith(testData.getInput().get(0))
-            .emit(testData.getInput().get(1), after(1, seconds));
+        .emit(testData.getInput().get(1), after(1, seconds));
   }
 
 }

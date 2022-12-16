@@ -22,37 +22,37 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class SlackNotificationParameters extends EventSinkBindingParams {
-    private String authToken;
-    private String userChannel;
-    private String channelType;
-    private String message;
+  private String authToken;
+  private String userChannel;
+  private String channelType;
+  private String message;
 
-    public SlackNotificationParameters(DataSinkInvocation graph,
-                                       String authToken,
-                                       String channelType,
-                                       String userChannel,
-                                       String message) {
-        super(graph);
-        this.authToken = authToken;
-        this.userChannel = userChannel;
-        this.message = message;
-        this.channelType = channelType;
-    }
+  public SlackNotificationParameters(DataSinkInvocation graph,
+                                     String authToken,
+                                     String channelType,
+                                     String userChannel,
+                                     String message) {
+    super(graph);
+    this.authToken = authToken;
+    this.userChannel = userChannel;
+    this.message = message;
+    this.channelType = channelType;
+  }
 
-    public String getAuthToken() {
-        return authToken;
-    }
+  public String getAuthToken() {
+    return authToken;
+  }
 
-    public String getUserChannel() {
-        return userChannel;
-    }
+  public String getUserChannel() {
+    return userChannel;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public String getChannelType() {
-        return channelType;
-    }
+  public String getChannelType() {
+    return channelType;
+  }
 }
 

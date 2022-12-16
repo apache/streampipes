@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.processor.geo.flink.processor.gridenricher;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processor.geo.flink.AbstractGeoProgram;
+
+import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class SpatialGridEnrichmentProgram extends AbstractGeoProgram<SpatialGridEnrichmentParameters> {
 

@@ -1,0 +1,135 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+version: "3.4"
+
+# global logging
+x-logging:
+  &default-logging
+  options:
+    max-size: '12m'
+    max-file: '5'
+  driver: json-file
+
+services:
+
+  # StreamPipes services
+  backend:
+    image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
+    depends_on:
+      - consul
+      - couchdb
+    environment:
+      - SP_PRIORITIZED_PROTOCOL=nats
+    volumes:
+      - backend:/root/.streampipes
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  ui:
+    image: "${SP_DOCKER_REGISTRY}/ui:${SP_VERSION}"
+    ports:
+      - "80:80"
+    depends_on:
+      - couchdb
+      - consul
+      - backend
+    volumes:
+      - nginx:/etc/nginx/
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  consul:
+    image: fogsyio/consul:1.9.6
+    environment:
+      - "CONSUL_LOCAL_CONFIG={\"disable_update_check\": true}"
+      - "CONSUL_BIND_INTERFACE=eth0"
+      - "CONSUL_HTTP_ADDR=0.0.0.0"
+    entrypoint:
+      - consul
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -data-dir=/consul/data
+      - -node=consul-one
+      - -bind={{ GetInterfaceIP "eth0" }}
+      - -client=0.0.0.0
+      - -enable-script-checks=true
+      - -ui
+    volumes:
+      - consul:/consul/data
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+        ipv4_address: ${SP_CONSUL_CONTAINER_IP}
+
+  couchdb:
+    image: couchdb:2.3.1
+    volumes:
+      - couchdb:/opt/couchdb/data
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  influxdb:
+    image: fogsyio/influxdb:1.7
+    environment:
+      - INFLUXDB_DATA_ENGINE=tsm1
+      - INFLUXDB_REPORTING_DISABLED=false
+      - INFLUXDB_ADMIN_ENABLED=true
+    volumes:
+      - influxdb:/var/lib/influxdb
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  nats:
+    image: nats
+    restart: unless-stopped
+    networks:
+      spnet:
+
+  # Lite version pipeline elements
+  extensions-all-jvm:
+    image: "${SP_DOCKER_REGISTRY}/extensions-all-jvm:${SP_VERSION}"
+    depends_on:
+      - consul
+    logging: *default-logging
+    restart: unless-stopped
+    networks:
+      spnet:
+
+volumes:
+  backend:
+  consul:
+  connect:
+  couchdb:
+  influxdb:
+  nginx:
+
+
+networks:
+  spnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SP_SUBNET}
+

@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.manager.setup;
 
+import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
 import org.apache.streampipes.model.client.endpoint.ExtensionsServiceEndpoint;
@@ -28,6 +29,8 @@ import org.lightcouch.DesignDocument.MapReduce;
 import org.lightcouch.Response;
 
 import java.util.*;
+
+import static org.apache.streampipes.manager.setup.design.DesignDocumentUtils.prepareDocument;
 
 public class CouchDbInstallationStep extends InstallationStep {
 
@@ -173,48 +176,7 @@ public class CouchDbInstallationStep extends InstallationStep {
 
   private void addUserView() {
     try {
-      DesignDocument userDocument = prepareDocument("_design/users");
-      Map<String, MapReduce> views = new HashMap<>();
-
-      MapReduce passwordFunction = new MapReduce();
-      passwordFunction.setMap("function(doc) { if(doc.properties.username && doc.properties.principalType === 'USER_ACCOUNT' && doc.properties.password) { emit(doc.properties.username, doc.properties.password); } }");
-
-      MapReduce usernameFunction = new MapReduce();
-      usernameFunction.setMap("function(doc) { if(doc.properties.username) { emit(doc.properties.username, doc); } }");
-
-      MapReduce permissionFunction = new MapReduce();
-      permissionFunction.setMap("function(doc) { if(doc.$type === 'permission') { emit(doc._id, doc); } }");
-
-      MapReduce groupFunction = new MapReduce();
-      groupFunction.setMap("function(doc) { if(doc.$type === 'group') { emit(doc._id, doc); } }");
-
-      MapReduce tokenFunction = new MapReduce();
-      tokenFunction.setMap("function(doc) { if (doc.properties.userApiTokens) { doc.properties.userApiTokens.forEach(function(token) { emit(token.properties.hashedToken, doc.properties.email); });}}");
-
-      MapReduce userPermissionFunction = new MapReduce();
-      userPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; i < doc.grantedAuthorities.length; i++) {emit(doc.grantedAuthorities[i].sid,doc)}}}");
-
-      MapReduce objectPermissionFunction = new MapReduce();
-      objectPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.objectInstanceId, doc);}}");
-
-      MapReduce userActivationFunction = new MapReduce();
-      userActivationFunction.setMap("function(doc) { if (doc.$type === 'user-activation') {emit(doc._id, doc);}}");
-
-      MapReduce passwordRecoveryFunction = new MapReduce();
-      passwordRecoveryFunction.setMap("function(doc) { if (doc.$type === 'password-recovery') {emit(doc._id, doc);}}");
-
-
-      views.put("password", passwordFunction);
-      views.put("username", usernameFunction);
-      views.put("groups", groupFunction);
-      views.put("permissions", permissionFunction);
-      views.put("token", tokenFunction);
-      views.put("userpermissions", userPermissionFunction);
-      views.put("objectpermissions", objectPermissionFunction);
-      views.put("user-activation", userActivationFunction);
-      views.put("password-recovery", passwordRecoveryFunction);
-
-      userDocument.setViews(views);
+      var userDocument = new UserDesignDocument().make();
       Response resp = Utils.getCouchDbUserClient().design().synchronizeWithDb(userDocument);
 
       if (resp.getError() != null) {
@@ -274,10 +236,5 @@ public class CouchDbInstallationStep extends InstallationStep {
     }
   }
 
-  private DesignDocument prepareDocument(String id) {
-    DesignDocument doc = new DesignDocument();
-    doc.setLanguage("javascript");
-    doc.setId(id);
-    return doc;
-  }
+
 }

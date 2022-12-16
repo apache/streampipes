@@ -56,6 +56,7 @@ markdown_extensions:
 plugins:
   - awesome-pages
   - autorefs
+  - mkdocs-jupyter
   - gen-files:
       scripts:
         - docs/scripts/gen_ref_pages.py
@@ -78,4 +79,7 @@ nav:
     - Getting Started:
         - Installation: getting-started/installation.md
         - Quickstart: getting-started/quickstart.md
+    - Examples:
+        - Introduction to the StreamPipes Python Client: examples/1-introduction-to-streampipes-python-client.ipynb
+        - Extracting Data from the StreamPipes Data Lake: examples/2-extracting-data-from-the-streampipes-data-lake.ipynb
     - Reference: reference/*

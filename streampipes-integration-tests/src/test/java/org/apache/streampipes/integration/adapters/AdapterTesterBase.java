@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import java.util.List;
-import java.util.Map;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.preprocessing.elements.DebugAdapterSink;
 import org.apache.streampipes.connect.api.exception.AdapterException;
@@ -27,33 +25,36 @@ import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
+import java.util.List;
+import java.util.Map;
+
 public abstract class AdapterTesterBase implements AutoCloseable {
-    Adapter adapter;
+  Adapter adapter;
 
-    public Adapter startAdapter(AdapterDescription adapterDescription) throws AdapterException {
-        DeclarersSingleton.getInstance().add(new PulsarProtocol());
-        Adapter adapter = (Adapter) AdapterUtils.setAdapter(adapterDescription);
-        adapter.startAdapter();
-        this.adapter = adapter;
-        return adapter;
+  public Adapter startAdapter(AdapterDescription adapterDescription) throws AdapterException {
+    DeclarersSingleton.getInstance().add(new PulsarProtocol());
+    Adapter adapter = (Adapter) AdapterUtils.setAdapter(adapterDescription);
+    adapter.startAdapter();
+    this.adapter = adapter;
+    return adapter;
+  }
+
+  public abstract void startAdapterService() throws Exception;
+
+  public abstract AdapterDescription prepareAdapter() throws Exception;
+
+  public abstract List<Map<String, Object>> generateData() throws Exception;
+
+  public abstract void validateData(List<Map<String, Object>> data) throws Exception;
+
+  public Map<String, Object> takeEvent() throws InterruptedException {
+    return ((DebugAdapterSink) adapter.getAdapterPipeline().getPipelineSink()).takeEvent();
+  }
+
+  public void stopAdapter() throws AdapterException {
+    if (adapter != null) {
+      adapter.stopAdapter();
     }
-
-    public abstract void startAdapterService() throws Exception;
-
-    public abstract AdapterDescription prepareAdapter() throws Exception;
-
-    public abstract List<Map<String, Object>> generateData() throws Exception;
-
-    public abstract void validateData(List<Map<String, Object>> data) throws Exception;
-
-    public Map<String, Object> takeEvent() throws InterruptedException {
-        return ((DebugAdapterSink) adapter.getAdapterPipeline().getPipelineSink()).takeEvent();
-    }
-
-    public void stopAdapter() throws AdapterException {
-        if (adapter != null) {
-            adapter.stopAdapter();
-        }
-    }
+  }
 
 }

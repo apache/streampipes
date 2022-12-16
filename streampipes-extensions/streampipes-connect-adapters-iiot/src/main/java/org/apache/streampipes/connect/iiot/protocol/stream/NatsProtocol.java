@@ -46,7 +46,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.*;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.ACCESS_MODE;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.ANONYMOUS_ACCESS;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.CONNECTION_PROPERTIES;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.CONNECTION_PROPERTIES_GROUP;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.CUSTOM_PROPERTIES;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.NONE_PROPERTIES;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.PASSWORD_KEY;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.PROPERTIES_KEY;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.SUBJECT_KEY;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.URLS_KEY;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_ACCESS;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_GROUP;
+import static org.apache.streampipes.pe.shared.config.nats.NatsConfigUtils.USERNAME_KEY;
 
 public class NatsProtocol extends BrokerProtocol {
 
@@ -161,7 +173,7 @@ public class NatsProtocol extends BrokerProtocol {
     }
 
     int totalTimeout = 0;
-    while(!completed[0] && totalTimeout < MAX_TIMEOUT) {
+    while (!completed[0] && totalTimeout < MAX_TIMEOUT) {
       try {
         TimeUnit.MILLISECONDS.sleep(TIMEOUT);
         totalTimeout += TIMEOUT;
@@ -172,7 +184,8 @@ public class NatsProtocol extends BrokerProtocol {
     if (elements.size() > 0) {
       return elements;
     } else {
-      throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000 + " seconds, is this subjects currently providing data?");
+      throw new ParseException("Did not receive any data within " + MAX_TIMEOUT / 1000
+          + " seconds, is this subjects currently providing data?");
     }
   }
 }

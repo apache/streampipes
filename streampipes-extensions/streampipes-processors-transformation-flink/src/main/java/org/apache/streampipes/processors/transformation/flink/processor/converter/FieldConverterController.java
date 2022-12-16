@@ -33,7 +33,12 @@ import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
+import org.apache.streampipes.sdk.helpers.Tuple2;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.XSD;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
@@ -44,9 +49,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class FieldConverterController extends
-        FlinkDataProcessorDeclarer<FieldConverterParameters>
-        implements ResolvesContainerProvidedOptions,
-        ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+    FlinkDataProcessorDeclarer<FieldConverterParameters>
+    implements ResolvesContainerProvidedOptions,
+    ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String CONVERT_PROPERTY = "convert-property";
   public static final String TARGET_TYPE = "target-type";
@@ -54,17 +59,17 @@ public class FieldConverterController extends
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.flink.field-converter")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
-                            (CONVERT_PROPERTY), PropertyScope.NONE)
-                    .build())
-            .requiredSingleValueSelectionFromContainer(Labels.withId(TARGET_TYPE),
-                    Collections.singletonList(CONVERT_PROPERTY))
-            .outputStrategy(OutputStrategies.customTransformation())
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.anyProperty(), Labels.withId
+                (CONVERT_PROPERTY), PropertyScope.NONE)
+            .build())
+        .requiredSingleValueSelectionFromContainer(Labels.withId(TARGET_TYPE),
+            Collections.singletonList(CONVERT_PROPERTY))
+        .outputStrategy(OutputStrategies.customTransformation())
+        .build();
   }
 
   @Override
@@ -73,12 +78,12 @@ public class FieldConverterController extends
                                                                         ConfigExtractor configExtractor,
                                                                         StreamPipesClient streamPipesClient) {
     String convertProperty = extractor.mappingPropertyValue(CONVERT_PROPERTY);
-    String targetDatatype =  extractor.selectedSingleValueInternalName(TARGET_TYPE, String.class);
+    String targetDatatype = extractor.selectedSingleValueInternalName(TARGET_TYPE, String.class);
 
     FieldConverterParameters staticParams = new FieldConverterParameters(
-            graph,
-            convertProperty,
-            targetDatatype
+        graph,
+        convertProperty,
+        targetDatatype
     );
 
     return new FieldConverterProgram(staticParams, configExtractor, streamPipesClient);
@@ -113,11 +118,13 @@ public class FieldConverterController extends
   }
 
   @Override
-  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement, ProcessingElementParameterExtractor parameterExtractor) throws SpRuntimeException {
+  public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
+                                           ProcessingElementParameterExtractor parameterExtractor)
+      throws SpRuntimeException {
     EventSchema eventSchema = processingElement.getInputStreams().get(0).getEventSchema();
     String fieldSelector = parameterExtractor.mappingPropertyValue(CONVERT_PROPERTY);
     String convertedType = parameterExtractor.selectedSingleValueInternalName(TARGET_TYPE,
-            String.class);
+        String.class);
     EventProperty property = parameterExtractor.getEventPropertyBySelector(fieldSelector);
     List<EventProperty> outputProperties = new ArrayList<>();
     if (property instanceof EventPropertyPrimitive) {

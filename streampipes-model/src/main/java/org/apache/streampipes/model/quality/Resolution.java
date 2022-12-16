@@ -20,29 +20,29 @@ package org.apache.streampipes.model.quality;
 
 public class Resolution extends EventPropertyQualityDefinition {
 
-	private static final long serialVersionUID = -8794648771727880619L;
+  private static final long serialVersionUID = -8794648771727880619L;
 
-	private float quantityValue;
+  private float quantityValue;
 
-	public Resolution() {
-		super();
-	}
-	
-	public Resolution(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
-	
-	public Resolution(Resolution other) {
-		super(other);
-		this.quantityValue = other.getQuantityValue();
-	}
-	
-	public float getQuantityValue() {
-		return quantityValue;
-	}
+  public Resolution() {
+    super();
+  }
 
-	public void setQuantityValue(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
+  public Resolution(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
+
+  public Resolution(Resolution other) {
+    super(other);
+    this.quantityValue = other.getQuantityValue();
+  }
+
+  public float getQuantityValue() {
+    return quantityValue;
+  }
+
+  public void setQuantityValue(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
 
 }

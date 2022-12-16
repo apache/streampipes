@@ -20,35 +20,33 @@ package org.apache.streampipes.model.client.ontology;
 
 public class PrimitiveRange extends Range {
 
-	private static final String TITLE = "";
-	private static final String DESCRIPTION = "";
-	
-	private String rdfsDatatype;
+  private static final String TITLE = "";
+  private static final String DESCRIPTION = "";
 
-	private String value;
-	
-	public PrimitiveRange(String rdfsDatatype) {
-		super(RangeType.PRIMITIVE, TITLE, DESCRIPTION);
-		this.rdfsDatatype = rdfsDatatype;
-	}
+  private String rdfsDatatype;
 
-	public String getRdfsDatatype() {
-		return rdfsDatatype;
-	}
+  private String value;
 
-	public void setRdfsDatatype(String rdfsDatatype) {
-		this.rdfsDatatype = rdfsDatatype;
-	}
+  public PrimitiveRange(String rdfsDatatype) {
+    super(RangeType.PRIMITIVE, TITLE, DESCRIPTION);
+    this.rdfsDatatype = rdfsDatatype;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public String getRdfsDatatype() {
+    return rdfsDatatype;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	
-	
-	
+  public void setRdfsDatatype(String rdfsDatatype) {
+    this.rdfsDatatype = rdfsDatatype;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
+  }
+
+
 }

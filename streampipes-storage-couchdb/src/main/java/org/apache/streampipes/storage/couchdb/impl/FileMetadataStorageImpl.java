@@ -17,20 +17,21 @@
  */
 package org.apache.streampipes.storage.couchdb.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.file.FileMetadata;
 import org.apache.streampipes.storage.api.IFileMetadataStorage;
 import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FileMetadataStorageImpl extends AbstractDao<FileMetadata> implements
-        IFileMetadataStorage {
+    IFileMetadataStorage {
 
-  Logger LOG = LoggerFactory.getLogger(NotificationStorageImpl.class);
+  Logger logger = LoggerFactory.getLogger(NotificationStorageImpl.class);
 
   public FileMetadataStorageImpl() {
     super(Utils::getCouchDbFileMetadataClient, FileMetadata.class);
@@ -50,9 +51,9 @@ public class FileMetadataStorageImpl extends AbstractDao<FileMetadata> implement
   public List<FileMetadata> getFilteredFileMetadataDescriptions(String filetype) {
     List<FileMetadata> allFiles = getAllFileMetadataDescriptions();
     return allFiles
-            .stream()
-            .filter(f -> f.getFiletype().equals(filetype))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(f -> f.getFiletype().equals(filetype))
+        .collect(Collectors.toList());
   }
 
   @Override

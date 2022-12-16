@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.processors.transformation.flink.processor.rename;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.util.Collector;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.field.AbstractField;
+
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.util.Collector;
 
 public class FieldRenamer implements FlatMapFunction<Event, Event> {
 

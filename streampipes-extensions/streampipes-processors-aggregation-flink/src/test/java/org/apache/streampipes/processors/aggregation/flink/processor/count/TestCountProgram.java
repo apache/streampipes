@@ -17,15 +17,16 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.count;
 
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class TestCountProgram extends DataStreamTestBase {
     EventTimeInput input = makeInputData(makeTestData(), makeTestData().size());
 
     ExpectedRecords<Event> expected =
-            new ExpectedRecords<Event>().expectAll(getOutput());
+        new ExpectedRecords<Event>().expectAll(getOutput());
 
     runProgram(input, expected);
   }
@@ -53,16 +54,17 @@ public class TestCountProgram extends DataStreamTestBase {
     EventTimeInput input = makeInputData(makeTestData(), 2);
 
     ExpectedRecords<Event> expected =
-            new ExpectedRecords<Event>().expectAll(getOutOfWindowOutput());
+        new ExpectedRecords<Event>().expectAll(getOutOfWindowOutput());
 
     runProgram(input, expected);
   }
 
   private void runProgram(EventTimeInput<Event> input, ExpectedRecords<Event>
-          expected) {
+      expected) {
     CountParameters params =
-            new CountParameters(InvocationGraphGenerator.makeEmptyInvocation(new CountController().declareModel()), 10,"SECONDS", "field");
-    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.ServiceGroup);
+        new CountParameters(InvocationGraphGenerator.makeEmptyInvocation(new CountController().declareModel()), 10,
+            "SECONDS", "field");
+    ConfigExtractor configExtractor = ConfigExtractor.from(AggregationFlinkInit.SERVICE_GROUP);
     CountProgram program = new CountProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(input));
@@ -100,7 +102,7 @@ public class TestCountProgram extends DataStreamTestBase {
   }
 
   private EventTimeInput<Event> makeInputData(List<Event> testData, Integer
-          splitIndex) {
+      splitIndex) {
     EventTimeInputBuilder<Event> builder = EventTimeInputBuilder.startWith(testData.get(0));
 
     for (int i = 1; i < splitIndex; i++) {

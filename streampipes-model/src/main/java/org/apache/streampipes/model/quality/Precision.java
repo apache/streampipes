@@ -20,29 +20,29 @@ package org.apache.streampipes.model.quality;
 
 public class Precision extends EventPropertyQualityDefinition {
 
-	private static final long serialVersionUID = -1090184880089982077L;
+  private static final long serialVersionUID = -1090184880089982077L;
 
-	private float quantityValue;
+  private float quantityValue;
 
-	public Precision() {
-		super();
-	}
-	
-	public Precision(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
-	
-	public Precision(Precision other) {
-		super(other);
-		this.quantityValue = other.getQuantityValue();
-	}
-	
-	public float getQuantityValue() {
-		return quantityValue;
-	}
+  public Precision() {
+    super();
+  }
 
-	public void setQuantityValue(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
+  public Precision(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
+
+  public Precision(Precision other) {
+    super(other);
+    this.quantityValue = other.getQuantityValue();
+  }
+
+  public float getQuantityValue() {
+    return quantityValue;
+  }
+
+  public void setQuantityValue(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
 
 }

@@ -22,21 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupingByTagsParams extends QueryParamsV4 {
-    private final List<String> groupingTags;
+  private final List<String> groupingTags;
 
-    public static GroupingByTagsParams from(String measurementID, String groupingTagsSeparatedByComma) {
-        return new GroupingByTagsParams(measurementID, groupingTagsSeparatedByComma);
+  public GroupingByTagsParams(String measurementID, String groupingTagsSeparatedByComma) {
+    super(measurementID);
+    this.groupingTags = new ArrayList<>();
+    for (String tag : groupingTagsSeparatedByComma.split(",")) {
+      this.groupingTags.add(tag);
     }
+  }
 
-    public GroupingByTagsParams(String measurementID, String groupingTagsSeparatedByComma) {
-        super(measurementID);
-        this.groupingTags = new ArrayList<>();
-        for (String tag : groupingTagsSeparatedByComma.split(",")) {
-            this.groupingTags.add(tag);
-        }
-    }
+  public static GroupingByTagsParams from(String measurementID, String groupingTagsSeparatedByComma) {
+    return new GroupingByTagsParams(measurementID, groupingTagsSeparatedByComma);
+  }
 
-    public List<String> getGroupingTags() {
-        return groupingTags;
-    }
+  public List<String> getGroupingTags() {
+    return groupingTags;
+  }
 }

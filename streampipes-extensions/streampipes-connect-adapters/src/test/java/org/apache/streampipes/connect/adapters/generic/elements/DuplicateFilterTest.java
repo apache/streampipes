@@ -18,44 +18,46 @@
 
 package org.apache.streampipes.connect.adapters.generic.elements;
 
-import org.junit.Test;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
+
+import org.junit.Test;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class DuplicateFilterTest {
 
-    @Test
-    public void duplicateSimple() {
-        DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
-        List<Map> events = generateEvents();
+  @Test
+  public void duplicateSimple() {
+    DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
+    List<Map> events = generateEvents();
 
-        assertNotNull(duplicateFilter.process(events.get(0)));
-        assertNull(duplicateFilter.process(events.get(0)));
+    assertNotNull(duplicateFilter.process(events.get(0)));
+    assertNull(duplicateFilter.process(events.get(0)));
 
-    }
+  }
 
-    @Test
-    public void duplicateComplex() {
-        DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
-        List<Map> events = generateEvents();
+  @Test
+  public void duplicateComplex() {
+    DuplicateFilterPipelineElement duplicateFilter = new DuplicateFilterPipelineElement("0");
+    List<Map> events = generateEvents();
 
-        assertNotNull(duplicateFilter.process(events.get(0)));
-        assertNotNull(duplicateFilter.process(events.get(1)));
-        assertNotNull(duplicateFilter.process(events.get(2)));
-        assertNotNull(duplicateFilter.process(events.get(3)));
-        assertNotNull(duplicateFilter.process(events.get(4)));
-        assertNotNull(duplicateFilter.process(events.get(5)));
-        assertNotNull(duplicateFilter.process(events.get(6)));
-        assertNotNull(duplicateFilter.process(events.get(7)));
-        assertNull(duplicateFilter.process(events.get(0)));
+    assertNotNull(duplicateFilter.process(events.get(0)));
+    assertNotNull(duplicateFilter.process(events.get(1)));
+    assertNotNull(duplicateFilter.process(events.get(2)));
+    assertNotNull(duplicateFilter.process(events.get(3)));
+    assertNotNull(duplicateFilter.process(events.get(4)));
+    assertNotNull(duplicateFilter.process(events.get(5)));
+    assertNotNull(duplicateFilter.process(events.get(6)));
+    assertNotNull(duplicateFilter.process(events.get(7)));
+    assertNull(duplicateFilter.process(events.get(0)));
 
-    }
+  }
 
 
     /* TODO: To stir up the test, adjust the static parameters in the class
@@ -104,25 +106,25 @@ public class DuplicateFilterTest {
 */
 
 
-    private List<Map> generateEvents() {
-        List<Map> list = new LinkedList();
+  private List<Map> generateEvents() {
+    List<Map> list = new LinkedList();
 
-        list.add(makeMap("Test", 123));
-        list.add(makeMap("Test", 1234));
-        list.add(makeMap("Test", "Test"));
-        list.add(makeMap("Name", "Piet"));
-        list.add(makeMap("Test", "Test12"));
-        list.add(makeMap("Age", "Smith"));
-        list.add(makeMap("Street", "Heidenstreet"));
-        list.add(makeMap("Country", "DE"));
-        list.add(makeMap("City", "Blank City"));
+    list.add(makeMap("Test", 123));
+    list.add(makeMap("Test", 1234));
+    list.add(makeMap("Test", "Test"));
+    list.add(makeMap("Name", "Piet"));
+    list.add(makeMap("Test", "Test12"));
+    list.add(makeMap("Age", "Smith"));
+    list.add(makeMap("Street", "Heidenstreet"));
+    list.add(makeMap("Country", "DE"));
+    list.add(makeMap("City", "Blank City"));
 
-        return list;
-    }
+    return list;
+  }
 
-    private Map<String, Object> makeMap(String key, Object value) {
-        Map map = new LinkedHashMap();
-        map.put(key, value);
-        return map;
-    }
+  private Map<String, Object> makeMap(String key, Object value) {
+    Map map = new LinkedHashMap();
+    map.put(key, value);
+    return map;
+  }
 }

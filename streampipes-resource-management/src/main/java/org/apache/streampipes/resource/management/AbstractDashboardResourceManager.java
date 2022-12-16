@@ -18,7 +18,6 @@
 package org.apache.streampipes.resource.management;
 
 import org.apache.streampipes.model.client.user.Permission;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.dashboard.DashboardModel;
 import org.apache.streampipes.model.util.ElementIdGenerator;
 import org.apache.streampipes.storage.api.IDashboardStorage;
@@ -49,7 +48,7 @@ public abstract class AbstractDashboardResourceManager extends AbstractResourceM
       dashboardModel.setCouchDbId(ElementIdGenerator.makeElementId(DashboardModel.class));
     }
     db.storeDashboard(dashboardModel);
-    new PermissionResourceManager().createDefault(dashboardModel.getCouchDbId(), AdapterDescription.class, principalSid, true);
+    new PermissionResourceManager().createDefault(dashboardModel.getCouchDbId(), DashboardModel.class, principalSid, false);
   }
 
   public void update(DashboardModel dashboardModel) {

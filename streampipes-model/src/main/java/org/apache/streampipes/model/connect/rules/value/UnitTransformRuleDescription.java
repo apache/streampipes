@@ -20,51 +20,51 @@ package org.apache.streampipes.model.connect.rules.value;
 
 public class UnitTransformRuleDescription extends ValueTransformationRuleDescription {
 
-    private String runtimeKey;
+  private String runtimeKey;
 
-    private String fromUnitRessourceURL;
+  private String fromUnitRessourceURL;
 
-    private String toUnitRessourceURL;
+  private String toUnitRessourceURL;
 
-    public UnitTransformRuleDescription() {
-        super();
-    }
+  public UnitTransformRuleDescription() {
+    super();
+  }
 
-    public UnitTransformRuleDescription(String runtimeKey, String fromUnitRessourceURL, String toUnit) {
-        super();
-        this.runtimeKey = runtimeKey;
-        this.fromUnitRessourceURL = fromUnitRessourceURL;
-        this.toUnitRessourceURL = toUnit;
-    }
+  public UnitTransformRuleDescription(String runtimeKey, String fromUnitRessourceURL, String toUnit) {
+    super();
+    this.runtimeKey = runtimeKey;
+    this.fromUnitRessourceURL = fromUnitRessourceURL;
+    this.toUnitRessourceURL = toUnit;
+  }
 
-    public UnitTransformRuleDescription(UnitTransformRuleDescription other) {
-        super(other);
-        this.runtimeKey = other.getRuntimeKey();
-        this.fromUnitRessourceURL = other.getFromUnitRessourceURL();
-        this.toUnitRessourceURL = other.getToUnitRessourceURL();
-    }
+  public UnitTransformRuleDescription(UnitTransformRuleDescription other) {
+    super(other);
+    this.runtimeKey = other.getRuntimeKey();
+    this.fromUnitRessourceURL = other.getFromUnitRessourceURL();
+    this.toUnitRessourceURL = other.getToUnitRessourceURL();
+  }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
-    }
+  public String getRuntimeKey() {
+    return runtimeKey;
+  }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
-    }
+  public void setRuntimeKey(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 
-    public String getFromUnitRessourceURL() {
-        return fromUnitRessourceURL;
-    }
+  public String getFromUnitRessourceURL() {
+    return fromUnitRessourceURL;
+  }
 
-    public void setFromUnitRessourceURL(String fromUnitRessourceURL) {
-        this.fromUnitRessourceURL = fromUnitRessourceURL;
-    }
+  public void setFromUnitRessourceURL(String fromUnitRessourceURL) {
+    this.fromUnitRessourceURL = fromUnitRessourceURL;
+  }
 
-    public String getToUnitRessourceURL() {
-        return toUnitRessourceURL;
-    }
+  public String getToUnitRessourceURL() {
+    return toUnitRessourceURL;
+  }
 
-    public void setToUnitRessourceURL(String toUnitRessourceURL) {
-        this.toUnitRessourceURL = toUnitRessourceURL;
-    }
+  public void setToUnitRessourceURL(String toUnitRessourceURL) {
+    this.toUnitRessourceURL = toUnitRessourceURL;
+  }
 }

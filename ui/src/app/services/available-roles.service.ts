@@ -34,6 +34,8 @@ export class AvailableRolesService {
     {role: UserRole.ROLE_CONNECT_ADMIN, roleTitle: 'Connect Admin', roleDescription: ''},
     {role: UserRole.ROLE_PIPELINE_USER, roleTitle: 'Pipeline User', roleDescription: ''},
     {role: UserRole.ROLE_PIPELINE_ADMIN, roleTitle: 'Pipeline Admin', roleDescription: ''},
+    {role: UserRole.ROLE_ASSET_USER, roleTitle: 'Asset User', roleDescription: ''},
+    {role: UserRole.ROLE_ASSET_ADMIN, roleTitle: 'Asset Admin', roleDescription: ''},
   ];
 
 

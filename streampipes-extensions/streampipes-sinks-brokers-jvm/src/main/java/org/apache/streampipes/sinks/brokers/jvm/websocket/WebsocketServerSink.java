@@ -37,45 +37,45 @@ import java.io.IOException;
 
 public class WebsocketServerSink extends StreamPipesDataSink {
 
-    private String PORT_KEY = "port";
-    private Integer port;
+  private static final String PORT_KEY = "port";
+  private Integer port;
 
-    private SocketServer server;
+  private SocketServer server;
 
-    @Override
-    public DataSinkDescription declareModel() {
-        return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket")
-                .category(DataSinkType.MESSAGING)
-                .withLocales(Locales.EN)
-                .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-                .requiredStream(StreamRequirementsBuilder
-                        .create()
-                        .requiredProperty(EpRequirements.anyProperty())
-                        .build())
-                .requiredIntegerParameter(Labels.withId(PORT_KEY))
-                .build();
+  @Override
+  public DataSinkDescription declareModel() {
+    return DataSinkBuilder.create("org.apache.streampipes.sinks.brokers.jvm.websocket")
+        .category(DataSinkType.MESSAGING)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredIntegerParameter(Labels.withId(PORT_KEY))
+        .build();
+  }
+
+  @Override
+  public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
+    port = parameters.extractor().singleValueParameter(PORT_KEY, Integer.class);
+    server = new SocketServer(port);
+    server.setReuseAddr(true);
+    server.start();
+  }
+
+  @Override
+  public void onEvent(Event event) throws SpRuntimeException {
+    server.onEvent(event);
+  }
+
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    try {
+      server.stop();
+      server = null;
+    } catch (IOException | InterruptedException e) {
+      throw new SpRuntimeException(e.getMessage());
     }
-
-    @Override
-    public void onInvocation(SinkParams parameters, EventSinkRuntimeContext runtimeContext) throws SpRuntimeException {
-        port = parameters.extractor().singleValueParameter(PORT_KEY, Integer.class);
-        server = new SocketServer(port);
-        server.setReuseAddr(true);
-        server.start();
-    }
-
-    @Override
-    public void onEvent(Event event) throws SpRuntimeException {
-        server.onEvent(event);
-    }
-
-    @Override
-    public void onDetach() throws SpRuntimeException {
-        try {
-            server.stop();
-            server = null;
-        } catch (IOException | InterruptedException e) {
-            throw new SpRuntimeException(e.getMessage());
-        }
-    }
+  }
 }

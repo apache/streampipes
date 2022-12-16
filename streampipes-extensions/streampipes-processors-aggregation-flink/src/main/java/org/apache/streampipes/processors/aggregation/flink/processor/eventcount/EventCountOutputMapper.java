@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.eventcount;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.api.common.functions.MapFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.model.runtime.Event;
 
 public class EventCountOutputMapper implements MapFunction<Integer, Event> {
 

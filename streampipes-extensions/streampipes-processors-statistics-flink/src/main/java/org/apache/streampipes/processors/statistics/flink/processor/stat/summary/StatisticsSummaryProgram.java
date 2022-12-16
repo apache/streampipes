@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.processors.statistics.flink.processor.stat.summary;
 
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.statistics.flink.AbstractStatisticsProgram;
+
+import org.apache.flink.streaming.api.datastream.DataStream;
 
 public class StatisticsSummaryProgram extends AbstractStatisticsProgram<StatisticsSummaryParameters> {
 

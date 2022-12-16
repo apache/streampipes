@@ -17,8 +17,29 @@
  */
 package org.apache.streampipes.rest.security;
 
-import static org.apache.streampipes.model.client.user.Privilege.Constants.*;
-import static org.apache.streampipes.model.client.user.Role.Constants.*;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_DELETE_ADAPTER_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_DELETE_PIPELINE_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_ADAPTER_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_ASSETS_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_DASHBOARD_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_FILES_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_GENERIC_STORAGE_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_READ_PIPELINE_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_ADAPTER_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_ASSETS_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_DASHBOARD_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE;
+import static org.apache.streampipes.model.client.user.Privilege.Constants.PRIVILEGE_WRITE_PIPELINE_VALUE;
+import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_ADMIN_VALUE;
+import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_DASHBOARD_ADMIN_VALUE;
+import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_DASHBOARD_USER_VALUE;
+import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_PIPELINE_ADMIN_VALUE;
+import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_PIPELINE_USER_VALUE;
+import static org.apache.streampipes.model.client.user.Role.Constants.ROLE_SERVICE_ADMIN_VALUE;
 
 public class AuthConstants {
 
@@ -30,7 +51,8 @@ public class AuthConstants {
   private static final String BE2 = "))";
   private static final String OR = " or ";
 
-  public static final String IS_ADMIN_ROLE = HAS_ANY_AUTHORITY + ROLE_ADMIN_VALUE + Q + ", '" + ROLE_SERVICE_ADMIN_VALUE +Q + BE;
+  public static final String IS_ADMIN_ROLE =
+      HAS_ANY_AUTHORITY + ROLE_ADMIN_VALUE + Q + ", '" + ROLE_SERVICE_ADMIN_VALUE + Q + BE;
 
   public static final String IS_PIPELINE_ADMIN_ROLE = HAS_ANY_ROLE + ROLE_PIPELINE_ADMIN_VALUE + Q + BE;
   public static final String IS_PIPELINE_USER_ROLE = HAS_ANY_ROLE + ROLE_PIPELINE_USER_VALUE + Q + BE;
@@ -38,24 +60,47 @@ public class AuthConstants {
   public static final String IS_DASHBOARD_ADMIN_ROLE = HAS_ANY_ROLE + ROLE_DASHBOARD_ADMIN_VALUE + Q + BE;
   public static final String IS_DASHBOARD_USER_ROLE = HAS_ANY_ROLE + ROLE_DASHBOARD_USER_VALUE + Q + BE;
 
-  public static final String HAS_READ_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_VALUE + Q + BE2;
-  public static final String HAS_WRITE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_PIPELINE_VALUE + Q + BE2;
-  public static final String HAS_DELETE_PIPELINE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_VALUE + Q + BE2;
+  public static final String HAS_READ_PIPELINE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_VALUE + Q + BE2;
+  public static final String HAS_WRITE_PIPELINE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_PIPELINE_VALUE + Q + BE2;
+  public static final String HAS_DELETE_PIPELINE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_VALUE + Q + BE2;
 
-  public static final String HAS_READ_PIPELINE_ELEMENT_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE + Q + BE2;
-  public static final String HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE + Q + BE2;
+  public static final String HAS_READ_PIPELINE_ELEMENT_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_PIPELINE_ELEMENT_VALUE + Q + BE2;
+  public static final String HAS_DELETE_PIPELINE_ELEMENT_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_PIPELINE_ELEMENT_VALUE + Q + BE2;
 
-  public static final String HAS_WRITE_ADAPTER_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_ADAPTER_VALUE + Q + BE2;
-  public static final String HAS_READ_ADAPTER_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_ADAPTER_VALUE + Q + BE2;
-  public static final String HAS_DELETE_ADAPTER_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_ADAPTER_VALUE + Q + BE2;
+  public static final String HAS_WRITE_ADAPTER_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_ADAPTER_VALUE + Q + BE2;
+  public static final String HAS_READ_ADAPTER_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_ADAPTER_VALUE + Q + BE2;
+  public static final String HAS_DELETE_ADAPTER_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_DELETE_ADAPTER_VALUE + Q + BE2;
 
-  public static final String HAS_WRITE_DATA_EXPLORER_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE + Q + BE2;
-  public static final String HAS_READ_DATA_EXPLORER_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE + Q + BE2;
+  public static final String HAS_WRITE_DATA_EXPLORER_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DATA_EXPLORER_VIEW_VALUE + Q + BE2;
+  public static final String HAS_READ_DATA_EXPLORER_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_DATA_EXPLORER_VIEW_VALUE + Q + BE2;
 
-  public static final String HAS_WRITE_DASHBOARD_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DASHBOARD_VALUE + Q + BE2;
-  public static final String HAS_READ_DASHBOARD_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_DASHBOARD_VALUE + Q + BE2;
+  public static final String HAS_WRITE_DASHBOARD_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_DASHBOARD_VALUE + Q + BE2;
+  public static final String HAS_READ_DASHBOARD_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_DASHBOARD_VALUE + Q + BE2;
 
-  public static final String HAS_READ_FILE_PRIVILEGE = BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_FILES_VALUE + Q + BE2;
+  public static final String HAS_READ_FILE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_FILES_VALUE + Q + BE2;
+
+  public static final String HAS_READ_ASSETS_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_ASSETS_VALUE + Q + BE2;
+  public static final String HAS_WRITE_ASSETS_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_ASSETS_VALUE + Q + BE2;
+
+  public static final String HAS_READ_GENERIC_STORAGE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_READ_GENERIC_STORAGE_VALUE + Q + BE2;
+  public static final String HAS_WRITE_GENERIC_STORAGE_PRIVILEGE =
+      BS + IS_ADMIN_ROLE + OR + HAS_ANY_AUTHORITY + PRIVILEGE_WRITE_GENERIC_STORAGE_VALUE + Q + BE2;
 
   public static final String IS_AUTHENTICATED = "isAuthenticated()";
 

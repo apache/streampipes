@@ -22,14 +22,14 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class BooleanInverterParameters extends EventProcessorBindingParams {
-    private String invertFieldName;
+  private String invertFieldName;
 
-    public BooleanInverterParameters(DataProcessorInvocation graph, String invertFieldName) {
-        super(graph);
-        this.invertFieldName = invertFieldName;
-    }
+  public BooleanInverterParameters(DataProcessorInvocation graph, String invertFieldName) {
+    super(graph);
+    this.invertFieldName = invertFieldName;
+  }
 
-    public String getInvertFieldName() {
-        return invertFieldName;
-    }
+  public String getInvertFieldName() {
+    return invertFieldName;
+  }
 }

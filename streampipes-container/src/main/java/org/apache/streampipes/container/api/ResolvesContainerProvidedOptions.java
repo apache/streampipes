@@ -23,10 +23,10 @@ import org.apache.streampipes.sdk.extractor.StaticPropertyExtractor;
 
 import java.util.List;
 
+@Deprecated()
 /**
- * deprecated: use {@link SupportsRuntimeConfig} instead
+ * use {@link SupportsRuntimeConfig} instead
  */
-@Deprecated
 public interface ResolvesContainerProvidedOptions {
 
   List<Option> resolveOptions(String staticPropertyInternalName,

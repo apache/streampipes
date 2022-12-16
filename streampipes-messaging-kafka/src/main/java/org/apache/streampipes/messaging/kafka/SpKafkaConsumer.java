@@ -18,10 +18,6 @@
 
 package org.apache.streampipes.messaging.kafka;
 
-import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.TopicPartition;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
@@ -29,17 +25,26 @@ import org.apache.streampipes.messaging.kafka.config.ConsumerConfigFactory;
 import org.apache.streampipes.messaging.kafka.config.KafkaConfigAppender;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.WildcardTopicDefinition;
+
+import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, Runnable,
-        Serializable {
+    Serializable {
 
   private String topic;
   private InternalEventProcessor<byte[]> eventProcessor;
@@ -97,9 +102,7 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
     Duration duration = Duration.of(100, ChronoUnit.MILLIS);
     while (isRunning) {
       ConsumerRecords<byte[], byte[]> records = consumer.poll(duration);
-      records.forEach(record -> {
-        eventProcessor.onEvent(record.value());
-      });
+      records.forEach(record -> eventProcessor.onEvent(record.value()));
     }
     LOG.info("Closing Kafka Consumer.");
     consumer.close();
@@ -111,14 +114,14 @@ public class SpKafkaConsumer implements EventConsumer<KafkaTransportProtocol>, R
   }
 
   private Properties makeProperties(KafkaTransportProtocol protocol,
-            List<KafkaConfigAppender> appenders) {
+                                    List<KafkaConfigAppender> appenders) {
     return new ConsumerConfigFactory(protocol).buildProperties(appenders);
   }
 
   @Override
   public void connect(KafkaTransportProtocol protocol, InternalEventProcessor<byte[]>
-          eventProcessor)
-          throws SpRuntimeException {
+      eventProcessor)
+      throws SpRuntimeException {
     LOG.info("Kafka consumer: Connecting to " + protocol.getTopicDefinition().getActualTopicName());
     if (protocol.getTopicDefinition() instanceof WildcardTopicDefinition) {
       this.patternTopic = true;

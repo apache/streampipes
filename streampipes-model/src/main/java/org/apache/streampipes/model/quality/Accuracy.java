@@ -19,30 +19,29 @@
 package org.apache.streampipes.model.quality;
 
 public class Accuracy extends EventPropertyQualityDefinition {
-	
-	private static final long serialVersionUID = -4368302218285302897L;
 
-	public Accuracy() {
-		super();
-	}
-	
-	public Accuracy(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
-	
-	public Accuracy(Accuracy other) {
-		super(other);
-		this.quantityValue = other.getQuantityValue();
-	}
+  private static final long serialVersionUID = -4368302218285302897L;
+  private float quantityValue;
 
-	private float quantityValue;
+  public Accuracy() {
+    super();
+  }
 
-	public float getQuantityValue() {
-		return quantityValue;
-	}
+  public Accuracy(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
 
-	public void setQuantityValue(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
+  public Accuracy(Accuracy other) {
+    super(other);
+    this.quantityValue = other.getQuantityValue();
+  }
+
+  public float getQuantityValue() {
+    return quantityValue;
+  }
+
+  public void setQuantityValue(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
 
 }

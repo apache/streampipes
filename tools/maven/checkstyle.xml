@@ -27,13 +27,13 @@ page at http://checkstyle.sourceforge.net/config.html -->
 <module name="Checker">
     <property name="severity" value="error"/>
 
-    <module name="FileTabCharacter">
-        <!-- Checks that there are no tab characters in the file. -->
+    <module name="Header">
+        <property name="headerFile" value="tools/maven/checkstyle-header.txt"/>
+        <property name="fileExtensions" value="java"/>
     </module>
 
-    <module name="NewlineAtEndOfFile">
-        <!-- windows can use \n\r vs \n, so enforce the most used one ie UNIx style -->
-        <property name="lineSeparator" value="lf" />
+    <module name="FileTabCharacter">
+        <!-- Checks that there are no tab characters in the file. -->
     </module>
 
     <module name="RegexpSingleline">
@@ -79,11 +79,15 @@ page at http://checkstyle.sourceforge.net/config.html -->
                   value="^(package .*;\s*)|(import .*;\s*)|( *\* .*https?://.*)$"/>
     </module>
 
+    <module name="SuppressWarningsFilter"/>
+
     <!-- Check that every module has a package-info.java -->
     <!--<module name="JavadocPackage"/>-->
 
     <!-- All Java AST specific tests live under TreeWalker module. -->
     <module name="TreeWalker">
+
+        <module name="SuppressWarningsHolder" />
 
         <module name="TodoComment">
             <!-- Checks that disallowed strings are not used in comments.  -->
@@ -436,6 +440,13 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="severity" value="error"/>
         </module>
 
-
+        <module name="Indentation">
+            <property name="basicOffset" value="2"/>
+            <property name="braceAdjustment" value="2"/>
+            <property name="caseIndent" value="2"/>
+            <property name="throwsIndent" value="4"/>
+            <property name="lineWrappingIndentation" value="4"/>
+            <property name="arrayInitIndent" value="2"/>
+        </module>
     </module>
 </module>

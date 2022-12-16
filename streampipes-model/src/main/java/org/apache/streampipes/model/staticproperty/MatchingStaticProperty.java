@@ -20,54 +20,52 @@ package org.apache.streampipes.model.staticproperty;
 
 import java.net.URI;
 
-public class MatchingStaticProperty extends StaticProperty{
+public class MatchingStaticProperty extends StaticProperty {
 
-	private static final long serialVersionUID = -6033310221105761979L;
+  private static final long serialVersionUID = -6033310221105761979L;
 
-	private URI matchLeft;
+  private URI matchLeft;
 
-	private URI matchRight;
+  private URI matchRight;
 
-	public MatchingStaticProperty()
-	{
-		super(StaticPropertyType.MatchingStaticProperty);
-	}
-	
-	public MatchingStaticProperty(MatchingStaticProperty other) {
-		super(other);
-		this.matchLeft = other.getMatchLeft();
-		this.matchRight = other.getMatchRight();
-	}
-	
-	public MatchingStaticProperty(String internalName, String label, String description)
-	{
-		super(StaticPropertyType.MatchingStaticProperty, internalName, label, description);
-	}
-	
-	public MatchingStaticProperty(String internalName, String label, String description, URI matchLeft, URI matchRight) {
-		super(StaticPropertyType.MatchingStaticProperty, internalName, label, description);
-		this.matchLeft = matchLeft;
-		this.matchRight = matchRight;
-	}
+  public MatchingStaticProperty() {
+    super(StaticPropertyType.MatchingStaticProperty);
+  }
 
-	public URI getMatchLeft() {
-		return matchLeft;
-	}
+  public MatchingStaticProperty(MatchingStaticProperty other) {
+    super(other);
+    this.matchLeft = other.getMatchLeft();
+    this.matchRight = other.getMatchRight();
+  }
 
-	public void setMatchLeft(URI matchLeft) {
-		this.matchLeft = matchLeft;
-	}
+  public MatchingStaticProperty(String internalName, String label, String description) {
+    super(StaticPropertyType.MatchingStaticProperty, internalName, label, description);
+  }
 
-	public URI getMatchRight() {
-		return matchRight;
-	}
+  public MatchingStaticProperty(String internalName, String label, String description, URI matchLeft, URI matchRight) {
+    super(StaticPropertyType.MatchingStaticProperty, internalName, label, description);
+    this.matchLeft = matchLeft;
+    this.matchRight = matchRight;
+  }
 
-	public void setMatchRight(URI matchRight) {
-		this.matchRight = matchRight;
-	}
+  public URI getMatchLeft() {
+    return matchLeft;
+  }
 
-	@Override
-	public void accept(StaticPropertyVisitor visitor) {
-		visitor.visit(this);
-	}
+  public void setMatchLeft(URI matchLeft) {
+    this.matchLeft = matchLeft;
+  }
+
+  public URI getMatchRight() {
+    return matchRight;
+  }
+
+  public void setMatchRight(URI matchRight) {
+    this.matchRight = matchRight;
+  }
+
+  @Override
+  public void accept(StaticPropertyVisitor visitor) {
+    visitor.visit(this);
+  }
 }

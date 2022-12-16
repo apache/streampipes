@@ -16,15 +16,15 @@
   ~
   -->
 
-[![Github Actions](https://img.shields.io/github/workflow/status/apache/incubator-streampipes/build-and-deploy-docker-dev)](https://github.com/apache/incubator-streampipes/actions/)
+[![Github Actions](https://img.shields.io/github/workflow/status/apache/streampipes/build-and-deploy-docker-dev)](https://github.com/apache/streampipes/actions/)
 [![Docker pulls](https://img.shields.io/docker/pulls/apachestreampipes/backend.svg)](https://hub.docker.com/r/apachestreampipes/backend/)
 [![Maven central](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)](https://img.shields.io/maven-central/v/org.apache.streampipes/streampipes-backend.svg)
-[![License](https://img.shields.io/github/license/apache/incubator-streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Last commit](https://img.shields.io/github/last-commit/apache/incubator-streampipes.svg)]()
+[![License](https://img.shields.io/github/license/apache/streampipes.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Last commit](https://img.shields.io/github/last-commit/apache/streampipes.svg)]()
 [![Twitter](https://img.shields.io/twitter/follow/StreamPipes.svg?label=Follow&style=social)](https://twitter.com/StreamPipes)
 [![Apache StreamPipes](https://img.shields.io/endpoint?url=https://dashboard.cypress.io/badge/detailed/q1jdu2&style=flat&logo=cypress)](https://dashboard.cypress.io/projects/q1jdu2/runs)
-[![Contributors](https://img.shields.io/github/contributors/apache/incubator-streampipes)](https://github.com/apache/incubator-streampipes/graphs/contributors)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/y/apache/incubator-streampipes)
+[![Contributors](https://img.shields.io/github/contributors/apache/streampipes)](https://github.com/apache/streampipes/graphs/contributors)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/apache/streampipes)
 
 <h1 align="center">
   <br>
@@ -36,7 +36,7 @@
 <h4 align="center">StreamPipes is a self-service (Industrial) IoT toolbox to enable non-technical users to connect
 , analyze and explore IoT data streams. </h4>
 <p align="center">  
-    <img src="https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-overview.png" alt="StreamPipes Overview"/>
+    <img src="https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-overview.png" alt="StreamPipes Overview"/>
 </p>
 
 
@@ -91,15 +91,15 @@ Besides that, StreamPipes includes features for production deployments:
 
 * Connect data from an OPC-UA server following a three-step configuration process:
 
-![StreamPipes Connect](https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-connect.gif)
+![StreamPipes Connect](https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-connect.gif)
 
 * Create a pipeline to detect a continuous decrease using a trend detection data processor and a ``Notification``sink:
 
-![StreamPipes Pipeline Editor](https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-pipelines.gif)
+![StreamPipes Pipeline Editor](https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-pipelines.gif)
 
 * Visually analyze data using the data explorer:
 
-![StreamPipes Data Explorer](https://raw.githubusercontent.com/apache/incubator-streampipes/dev/images/streampipes-data-explorer.gif)
+![StreamPipes Data Explorer](https://raw.githubusercontent.com/apache/streampipes/dev/images/streampipes-data-explorer.gif)
 
 
 ## Installation
@@ -167,7 +167,7 @@ StreamPipes includes a repository of extensions for adapters and pipeline elemen
 * **Connect adapters** for a variety of IoT data sources as well as 
 * **Data Processors** and **Data Sinks** as ready-to-use pipeline elements. 
 
-The source code of all included pipeline elements and adapters can be found [here](https://github.com/apache/incubator-streampipes/tree/dev/streampipes-extensions).
+The source code of all included pipeline elements and adapters can be found [here](https://github.com/apache/streampipes/tree/dev/streampipes-extensions).
 
 ## Extending StreamPipes
 
@@ -178,9 +178,10 @@ Pipeline elements are packaged as Docker images and can be installed at runtime,
 
 ## Bugs and Feature Requests
 
-If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue on GitHub:
 
-👉 [https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+👉 [Bugs](https://github.com/apache/streampipes/issues)
+👉 [Feature requests](https://github.com/apache/streampipes/discussions/categories/ideas)
 
 ## Get help
 
@@ -201,8 +202,8 @@ We welcome all kinds of contributions to StreamPipes. If you are interested in c
 Here are some first steps in case you want to contribute:
 * Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
 * Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
-* Ask for a mentor who helps you understanding the code base and guides you through the first setup steps
-* Find an issue in our [Jira](https://issues.apache.org/jira/projects/STREAMPIPES) which is tagged with a _newbie_ tag
+* Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
+* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
 * Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
 
 Have fun!

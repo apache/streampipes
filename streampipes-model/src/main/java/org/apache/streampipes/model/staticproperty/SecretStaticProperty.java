@@ -19,13 +19,12 @@ package org.apache.streampipes.model.staticproperty;
 
 public class SecretStaticProperty extends StaticProperty {
 
+  private String value;
+  private Boolean encrypted;
+
   public SecretStaticProperty() {
     super(StaticPropertyType.SecretStaticProperty);
   }
-
-  private String value;
-
-  private Boolean encrypted;
 
   public SecretStaticProperty(SecretStaticProperty other) {
     super(other);

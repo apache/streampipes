@@ -20,7 +20,6 @@ package org.apache.streampipes.processors.transformation.jvm.processor.boolopera
 
 import org.apache.streampipes.logging.api.Logger;
 import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
@@ -30,7 +29,7 @@ import java.util.List;
 
 public class SignalEdgeFilter implements EventProcessor<SignalEdgeFilterParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String booleanSignalField;
   private String flank;
@@ -46,7 +45,7 @@ public class SignalEdgeFilter implements EventProcessor<SignalEdgeFilterParamete
   public void onInvocation(SignalEdgeFilterParameters booleanInverterParameters,
                            SpOutputCollector spOutputCollector,
                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = booleanInverterParameters.getGraph().getLogger(SignalEdgeFilter.class);
+    log = booleanInverterParameters.getGraph().getLogger(SignalEdgeFilter.class);
     this.booleanSignalField = booleanInverterParameters.getBooleanSignalField();
     this.flank = booleanInverterParameters.getFlank();
     this.delay = booleanInverterParameters.getDelay();
@@ -71,12 +70,12 @@ public class SignalEdgeFilter implements EventProcessor<SignalEdgeFilterParamete
     }
 
     if (edgeDetected) {
-        // Buffer event(s) according to user configuration
-        addResultEvent(inputEvent);
+      // Buffer event(s) according to user configuration
+      addResultEvent(inputEvent);
 
       // Detect if the delay has been waited for
       if (this.delay == delayCount) {
-        for (Event event : this.resultEvents){
+        for (Event event : this.resultEvents) {
           out.collect(event);
         }
 
@@ -96,11 +95,11 @@ public class SignalEdgeFilter implements EventProcessor<SignalEdgeFilterParamete
 
   private boolean detectEdge(boolean value, boolean lastValue) {
     if (this.flank.equals(SignalEdgeFilterController.FLANK_UP)) {
-      return lastValue == false && value == true;
+      return !lastValue && value;
     } else if (this.flank.equals(SignalEdgeFilterController.FLANK_DOWN)) {
-      return lastValue == true && value == false;
-    } else if (this.flank.equals(SignalEdgeFilterController.BOTH))  {
-        return value != lastValue;
+      return lastValue && !value;
+    } else if (this.flank.equals(SignalEdgeFilterController.BOTH)) {
+      return value != lastValue;
     }
 
     return false;
@@ -112,8 +111,8 @@ public class SignalEdgeFilter implements EventProcessor<SignalEdgeFilterParamete
         this.resultEvents.add(event);
       }
     } else if (this.eventSelection.equals(SignalEdgeFilterController.OPTION_LAST)) {
-        this.resultEvents = new ArrayList<>();
-        this.resultEvents.add(event);
+      this.resultEvents = new ArrayList<>();
+      this.resultEvents.add(event);
     } else if (this.eventSelection.equals(SignalEdgeFilterController.OPTION_ALL)) {
       this.resultEvents.add(event);
     }

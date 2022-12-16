@@ -27,13 +27,13 @@ import java.util.List;
 
 public interface GenericAdapterDescription {
 
-    ProtocolDescription getProtocolDescription();
+  ProtocolDescription getProtocolDescription();
 
-    FormatDescription getFormatDescription();
+  FormatDescription getFormatDescription();
 
-    List<TransformationRuleDescription> getRules();
+  List<TransformationRuleDescription> getRules();
 
-    EventSchema getEventSchema();
+  EventSchema getEventSchema();
 
 }
 

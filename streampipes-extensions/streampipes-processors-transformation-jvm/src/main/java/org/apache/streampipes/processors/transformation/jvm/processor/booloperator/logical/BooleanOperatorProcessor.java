@@ -47,83 +47,86 @@ import static org.apache.streampipes.processors.transformation.jvm.processor.boo
 
 public class BooleanOperatorProcessor extends StreamPipesDataProcessor {
 
-    private static final String BOOLEAN_PROCESSOR_OUT_KEY = "boolean-operations-result";
-    private static final String BOOLEAN_OPERATOR_TYPE = "operator-field";
-    private static final String PROPERTIES_LIST = "properties-field";
-    private BooleanOperationInputConfigs configs;
+  private static final String BOOLEAN_PROCESSOR_OUT_KEY = "boolean-operations-result";
+  private static final String BOOLEAN_OPERATOR_TYPE = "operator-field";
+  private static final String PROPERTIES_LIST = "properties-field";
+  private BooleanOperationInputConfigs configs;
 
-    @Override
-    public DataProcessorDescription declareModel() {
-        return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.logical")
-                .withAssets(Assets.DOCUMENTATION)
-                .withLocales(Locales.EN)
-                .category(DataProcessorType.BOOLEAN_OPERATOR)
-                .requiredStream(
-                        StreamRequirementsBuilder
-                                .create()
-                                .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(),
-                                        Labels.withId(PROPERTIES_LIST), PropertyScope.NONE)
-                                .build())
-                .requiredSingleValueSelection(Labels.withId(BOOLEAN_OPERATOR_TYPE), Options.from(
-                        BooleanOperatorType.AND.operator(),
-                        BooleanOperatorType.OR.operator(),
-                        BooleanOperatorType.NOT.operator(),
-                        BooleanOperatorType.XOR.operator(),
-                        BooleanOperatorType.X_NOR.operator(),
-                        BooleanOperatorType.NOR.operator()))
-                .outputStrategy(OutputStrategies.append(
-                        PrimitivePropertyBuilder.create(
-                                Datatypes.String, BOOLEAN_PROCESSOR_OUT_KEY)
-                                .build()))
-                .build();
+  @Override
+  public DataProcessorDescription declareModel() {
+    return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.booloperator.logical")
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.BOOLEAN_OPERATOR)
+        .requiredStream(
+            StreamRequirementsBuilder
+                .create()
+                .requiredPropertyWithNaryMapping(EpRequirements.booleanReq(),
+                    Labels.withId(PROPERTIES_LIST), PropertyScope.NONE)
+                .build())
+        .requiredSingleValueSelection(Labels.withId(BOOLEAN_OPERATOR_TYPE), Options.from(
+            BooleanOperatorType.AND.operator(),
+            BooleanOperatorType.OR.operator(),
+            BooleanOperatorType.NOT.operator(),
+            BooleanOperatorType.XOR.operator(),
+            BooleanOperatorType.X_NOR.operator(),
+            BooleanOperatorType.NOR.operator()))
+        .outputStrategy(OutputStrategies.append(
+            PrimitivePropertyBuilder.create(
+                    Datatypes.String, BOOLEAN_PROCESSOR_OUT_KEY)
+                .build()))
+        .build();
+  }
+
+  @Override
+  public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
+    List<String> properties = processorParams.extractor().mappingPropertyValues(PROPERTIES_LIST);
+    String operator = processorParams.extractor().selectedSingleValue(BOOLEAN_OPERATOR_TYPE, String.class);
+    BooleanOperationInputConfigs configs =
+        new BooleanOperationInputConfigs(properties, BooleanOperatorType.getBooleanOperatorType(operator));
+    preChecks(configs);
+    this.configs = configs;
+  }
+
+  @Override
+  public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
+    List<String> properties = configs.getProperties();
+    BooleanOperatorType operatorType = configs.getOperator();
+    Boolean firstProperty = event.getFieldBySelector(properties.get(0)).getAsPrimitive().getAsBoolean();
+    IBoolOperation<Boolean> boolOperation = BoolOperationFactory.getBoolOperation(operatorType);
+    Boolean result;
+    if (properties.size() == 1) {
+      // support for NOT operator
+      result = boolOperation.evaluate(firstProperty, firstProperty);
+
+    } else {
+      Boolean secondProperty = event.getFieldBySelector(properties.get(1)).getAsPrimitive().getAsBoolean();
+      result = boolOperation.evaluate(firstProperty, secondProperty);
+
+      //loop through rest of the properties to get final result
+      for (int i = 2; i < properties.size(); i++) {
+        result =
+            boolOperation.evaluate(result, event.getFieldBySelector(properties.get(i)).getAsPrimitive().getAsBoolean());
+      }
+
     }
+    event.addField(BOOLEAN_PROCESSOR_OUT_KEY, result);
+    spOutputCollector.collect(event);
+  }
 
-    @Override
-    public void onInvocation(ProcessorParams processorParams, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext eventProcessorRuntimeContext) throws SpRuntimeException {
-        List<String> properties = processorParams.extractor().mappingPropertyValues(PROPERTIES_LIST);
-        String operator = processorParams.extractor().selectedSingleValue(BOOLEAN_OPERATOR_TYPE, String.class);
-        BooleanOperationInputConfigs configs = new BooleanOperationInputConfigs(properties, BooleanOperatorType.getBooleanOperatorType(operator));
-        preChecks(configs);
-        this.configs = configs;
+  @Override
+  public void onDetach() throws SpRuntimeException {
+    configs = null;
+  }
+
+  private void preChecks(BooleanOperationInputConfigs configs) {
+    BooleanOperatorType operatorType = configs.getOperator();
+    List<String> properties = configs.getProperties();
+    if (operatorType == NOT && properties.size() != 1) {
+      throw new SpRuntimeException("NOT operator can operate only on single operand");
+    } else if (operatorType != NOT && properties.size() < 2) {
+      throw new SpRuntimeException("Number of operands are less that 2");
     }
-
-    @Override
-    public void onEvent(Event event, SpOutputCollector spOutputCollector) throws SpRuntimeException {
-        List<String> properties = configs.getProperties();
-        BooleanOperatorType operatorType = configs.getOperator();
-        Boolean firstProperty = event.getFieldBySelector(properties.get(0)).getAsPrimitive().getAsBoolean();
-        IBoolOperation<Boolean> boolOperation = BoolOperationFactory.getBoolOperation(operatorType);
-        Boolean result;
-        if (properties.size() == 1) {
-            // support for NOT operator
-            result = boolOperation.evaluate(firstProperty, firstProperty);
-
-        } else {
-            Boolean secondProperty = event.getFieldBySelector(properties.get(1)).getAsPrimitive().getAsBoolean();
-            result = boolOperation.evaluate(firstProperty, secondProperty);
-
-            //loop through rest of the properties to get final result
-            for (int i = 2; i < properties.size(); i++) {
-                result = boolOperation.evaluate(result, event.getFieldBySelector(properties.get(i)).getAsPrimitive().getAsBoolean());
-            }
-
-        }
-        event.addField(BOOLEAN_PROCESSOR_OUT_KEY, result);
-        spOutputCollector.collect(event);
-    }
-
-    @Override
-    public void onDetach() throws SpRuntimeException {
-        configs = null;
-    }
-
-    private void preChecks(BooleanOperationInputConfigs configs) {
-        BooleanOperatorType operatorType = configs.getOperator();
-        List<String> properties =  configs.getProperties();
-        if (operatorType == NOT && properties.size() != 1) {
-            throw new SpRuntimeException("NOT operator can operate only on single operand");
-        } else if (operatorType != NOT && properties.size() < 2) {
-            throw new SpRuntimeException("Number of operands are less that 2");
-        }
-    }
+  }
 }

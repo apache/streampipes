@@ -17,7 +17,9 @@
  */
 package org.apache.streampipes.storage.api;
 
-import org.apache.streampipes.model.client.user.*;
+import org.apache.streampipes.model.client.user.Principal;
+import org.apache.streampipes.model.client.user.ServiceAccount;
+import org.apache.streampipes.model.client.user.UserAccount;
 
 import java.util.List;
 

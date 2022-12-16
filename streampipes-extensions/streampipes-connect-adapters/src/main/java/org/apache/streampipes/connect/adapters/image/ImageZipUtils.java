@@ -20,15 +20,15 @@ package org.apache.streampipes.connect.adapters.image;
 
 public class ImageZipUtils {
 
-    /* Key for the static property defining the interval */
-    public static final String INTERVAL_KEY = "interval-key";
+  /* Key for the static property defining the interval */
+  public static final String INTERVAL_KEY = "interval-key";
 
-    /* Key for the file static property referencing the zip file */
-    public static final String ZIP_FILE_KEY = "zip-file-key";
+  /* Key for the file static property referencing the zip file */
+  public static final String ZIP_FILE_KEY = "zip-file-key";
 
-    /* Runtime name for the timestamp event property */
-    public static final String TIMESTAMP = "timestamp";
+  /* Runtime name for the timestamp event property */
+  public static final String TIMESTAMP = "timestamp";
 
-    /* Runtime name for the image event property */
-    public static final String IMAGE = "image";
+  /* Runtime name for the image event property */
+  public static final String IMAGE = "image";
 }

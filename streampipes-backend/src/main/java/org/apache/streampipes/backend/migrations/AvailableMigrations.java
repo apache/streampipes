@@ -22,6 +22,7 @@ package org.apache.streampipes.backend.migrations;
 import org.apache.streampipes.backend.migrations.v070.CreateAssetLinkTypeMigration;
 import org.apache.streampipes.backend.migrations.v070.CreateDefaultAssetMigration;
 import org.apache.streampipes.backend.migrations.v070.CreateFileAssetTypeMigration;
+import org.apache.streampipes.backend.migrations.v090.UpdateUsernameViewMigration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,8 @@ public class AvailableMigrations {
     return Arrays.asList(
       new CreateAssetLinkTypeMigration(),
       new CreateDefaultAssetMigration(),
-      new CreateFileAssetTypeMigration()
+      new CreateFileAssetTypeMigration(),
+      new UpdateUsernameViewMigration()
     );
   }
 }

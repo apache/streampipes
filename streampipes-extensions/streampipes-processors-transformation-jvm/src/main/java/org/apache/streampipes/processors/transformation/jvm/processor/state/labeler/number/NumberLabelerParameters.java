@@ -25,56 +25,56 @@ import java.util.List;
 
 public class NumberLabelerParameters extends EventProcessorBindingParams {
 
-    private String sensorListValueProperty;
-    private String labelName;
+  private String sensorListValueProperty;
+  private String labelName;
 
-    private List<Double> numberValues;
-    private List<String> labelStrings;
-    private List<String> comparators;
+  private List<Double> numberValues;
+  private List<String> labelStrings;
+  private List<String> comparators;
 
-    public NumberLabelerParameters(DataProcessorInvocation graph, String sensorListValueProperty, String labelName,
-                                   List<Double> numberValues, List<String> labelStrings, List<String> comparators) {
-        super(graph);
-        this.sensorListValueProperty = sensorListValueProperty;
-        this.labelName = labelName;
-        this.numberValues = numberValues;
-        this.labelStrings = labelStrings;
-        this.comparators = comparators;
-    }
+  public NumberLabelerParameters(DataProcessorInvocation graph, String sensorListValueProperty, String labelName,
+                                 List<Double> numberValues, List<String> labelStrings, List<String> comparators) {
+    super(graph);
+    this.sensorListValueProperty = sensorListValueProperty;
+    this.labelName = labelName;
+    this.numberValues = numberValues;
+    this.labelStrings = labelStrings;
+    this.comparators = comparators;
+  }
 
-    public String getSensorListValueProperty() {
-        return sensorListValueProperty;
-    }
+  public String getSensorListValueProperty() {
+    return sensorListValueProperty;
+  }
 
-    public void setSensorListValueProperty(String sensorListValueProperty) {
-        this.sensorListValueProperty = sensorListValueProperty;
-    }
+  public void setSensorListValueProperty(String sensorListValueProperty) {
+    this.sensorListValueProperty = sensorListValueProperty;
+  }
 
-    public List<Double> getNumberValues() {
-        return numberValues;
-    }
+  public List<Double> getNumberValues() {
+    return numberValues;
+  }
 
-    public void setNumberValues(List<Double> numberValues) {
-        this.numberValues = numberValues;
-    }
+  public void setNumberValues(List<Double> numberValues) {
+    this.numberValues = numberValues;
+  }
 
-    public List<String> getLabelStrings() {
-        return labelStrings;
-    }
+  public List<String> getLabelStrings() {
+    return labelStrings;
+  }
 
-    public void setLabelStrings(List<String> labelStrings) {
-        this.labelStrings = labelStrings;
-    }
+  public void setLabelStrings(List<String> labelStrings) {
+    this.labelStrings = labelStrings;
+  }
 
-    public List<String> getComparators() {
-        return comparators;
-    }
+  public List<String> getComparators() {
+    return comparators;
+  }
 
-    public void setComparators(List<String> comparators) {
-        this.comparators = comparators;
-    }
+  public void setComparators(List<String> comparators) {
+    this.comparators = comparators;
+  }
 
-    public String getLabelName() {
-        return labelName;
-    }
+  public String getLabelName() {
+    return labelName;
+  }
 }

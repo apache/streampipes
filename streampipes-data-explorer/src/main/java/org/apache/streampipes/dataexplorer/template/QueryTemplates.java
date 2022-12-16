@@ -33,8 +33,8 @@ public class QueryTemplates {
 
   public static String whereTimeWithin(long startDate, long endDate) {
     return "WHERE time > "
-            + startDate * 1000000
-            + " AND time < "
-            + endDate * 1000000;
+        + startDate * 1000000
+        + " AND time < "
+        + endDate * 1000000;
   }
 }

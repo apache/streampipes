@@ -18,23 +18,24 @@
 
 package org.apache.streampipes.connect.adapters.generic.elements;
 
+import org.apache.streampipes.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AddTimestampTest {
 
-    @Test
-    public void addTimestamp() {
+  @Test
+  public void addTimestamp() {
 
-        AddTimestampPipelineElement addTimestamp = new AddTimestampPipelineElement("timestamp");
-        Map event = new HashMap<>();
-        event = addTimestamp.process(event);
+    AddTimestampPipelineElement addTimestamp = new AddTimestampPipelineElement("timestamp");
+    Map event = new HashMap<>();
+    event = addTimestamp.process(event);
 
-        Assert.assertNotNull(event.get("timestamp"));
-    }
+    Assert.assertNotNull(event.get("timestamp"));
+  }
 
 }

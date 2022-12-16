@@ -20,36 +20,36 @@ package org.apache.streampipes.model.pipeline;
 
 public class PipelineElementValidationInfo {
 
-	private ValidationInfoLevel level;
-	private String message;
+  private ValidationInfoLevel level;
+  private String message;
 
-	public static PipelineElementValidationInfo info(String message) {
-		return new PipelineElementValidationInfo(ValidationInfoLevel.INFO, message);
-	}
+  public PipelineElementValidationInfo(ValidationInfoLevel level,
+                                       String message) {
+    this.level = level;
+    this.message = message;
+  }
 
-	public static PipelineElementValidationInfo error(String message) {
-		return new PipelineElementValidationInfo(ValidationInfoLevel.ERROR, message);
-	}
-	
-	public PipelineElementValidationInfo(ValidationInfoLevel level,
-																			 String message) {
-		this.level = level;
-		this.message = message;
-	}
+  public static PipelineElementValidationInfo info(String message) {
+    return new PipelineElementValidationInfo(ValidationInfoLevel.INFO, message);
+  }
 
-	public ValidationInfoLevel getLevel() {
-		return level;
-	}
+  public static PipelineElementValidationInfo error(String message) {
+    return new PipelineElementValidationInfo(ValidationInfoLevel.ERROR, message);
+  }
 
-	public void setLevel(ValidationInfoLevel level) {
-		this.level = level;
-	}
+  public ValidationInfoLevel getLevel() {
+    return level;
+  }
 
-	public String getMessage() {
-		return message;
-	}
+  public void setLevel(ValidationInfoLevel level) {
+    this.level = level;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

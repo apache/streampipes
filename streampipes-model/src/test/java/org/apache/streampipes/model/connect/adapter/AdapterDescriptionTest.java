@@ -18,53 +18,54 @@
 
 package org.apache.streampipes.model.connect.adapter;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.apache.streampipes.model.connect.rules.schema.CreateNestedRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.DeleteRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.MoveRuleDescription;
 import org.apache.streampipes.model.connect.rules.value.UnitTransformRuleDescription;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AdapterDescriptionTest {
 
-    AdapterDescription adapterDescription;
+  AdapterDescription adapterDescription;
 
-    @Before
-    public void init() {
-        adapterDescription = new AdapterDescription() {
-        };
+  @Before
+  public void init() {
+    adapterDescription = new AdapterDescription() {
+    };
 
-        List rules = new ArrayList<>();
-        rules.add(new CreateNestedRuleDescription());
-        rules.add(new CreateNestedRuleDescription());
-        rules.add(new DeleteRuleDescription());
-        rules.add(new UnitTransformRuleDescription());
-        rules.add(new CreateNestedRuleDescription());
-        rules.add(new CreateNestedRuleDescription());
-        rules.add(new UnitTransformRuleDescription());
-        rules.add(new MoveRuleDescription());
-        rules.add(new CreateNestedRuleDescription());
+    List rules = new ArrayList<>();
+    rules.add(new CreateNestedRuleDescription());
+    rules.add(new CreateNestedRuleDescription());
+    rules.add(new DeleteRuleDescription());
+    rules.add(new UnitTransformRuleDescription());
+    rules.add(new CreateNestedRuleDescription());
+    rules.add(new CreateNestedRuleDescription());
+    rules.add(new UnitTransformRuleDescription());
+    rules.add(new MoveRuleDescription());
+    rules.add(new CreateNestedRuleDescription());
 
-        adapterDescription.setRules(rules);
-    }
+    adapterDescription.setRules(rules);
+  }
 
-    @Test
-    public void getValueRules() {
-        assertEquals(2, adapterDescription.getValueRules().size());
-    }
+  @Test
+  public void getValueRules() {
+    assertEquals(2, adapterDescription.getValueRules().size());
+  }
 
-    @Test
-    public void getStreamRules() {
-        assertEquals(0, adapterDescription.getStreamRules().size());
-    }
+  @Test
+  public void getStreamRules() {
+    assertEquals(0, adapterDescription.getStreamRules().size());
+  }
 
-    @Test
-    public void getSchemaRules() {
-        assertEquals(7, adapterDescription.getSchemaRules().size());
-    }
+  @Test
+  public void getSchemaRules() {
+    assertEquals(7, adapterDescription.getSchemaRules().size());
+  }
 }

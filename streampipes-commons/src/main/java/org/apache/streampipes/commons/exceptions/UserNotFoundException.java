@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.commons.exceptions;
 
-public class UserNotFoundException extends SpException{
+public class UserNotFoundException extends SpException {
   public UserNotFoundException(String message) {
     super(message);
   }

@@ -51,7 +51,7 @@ public class AggregationTestData {
   }
 
   private Event buildEvent(Float value) {
-   Event event = new Event();
+    Event event = new Event();
     event.addField("sensorId", "a");
     event.addField("value", value);
     return event;

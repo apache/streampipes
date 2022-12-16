@@ -23,12 +23,12 @@ from typing import Tuple, Type
 
 from streampipes_client.endpoint.endpoint import APIEndpoint
 from streampipes_client.model.container import DataLakeMeasures
+from streampipes_client.model.container.resource_container import ResourceContainer
+from streampipes_client.model.resource.data_lake_series import DataLakeSeries
 
 __all__ = [
     "DataLakeMeasureEndpoint",
 ]
-
-from streampipes_client.model.container.resource_container import ResourceContainer
 
 
 class DataLakeMeasureEndpoint(APIEndpoint):
@@ -69,6 +69,17 @@ class DataLakeMeasureEndpoint(APIEndpoint):
     """
 
     @property
+    def _resource_cls(self) -> Type[DataLakeSeries]:
+        """
+        Additional reference to resource class.
+        This endpoint deviates from the desired relationship
+        that the resource class of the resource container is
+        the return type of the get endpoint.
+        Therefore, this is only a temporary implementation and will be removed soon.
+        """
+        return DataLakeSeries
+
+    @property
     def _container_cls(self) -> Type[ResourceContainer]:
         """Defines the model container class the endpoint refers to.
 
@@ -90,3 +101,21 @@ class DataLakeMeasureEndpoint(APIEndpoint):
         """
 
         return "api", "v4", "datalake", "measurements"
+
+    def get(self, identifier: str) -> DataLakeSeries:
+        """Queries the specified data lake measure from the API.
+
+        Parameters
+        ----------
+        identifier: str
+            The identifier of the data lake measure to be queried.
+
+        Returns
+        -------
+        The specified data lake measure as an instance of the corresponding model class (`model.DataLakeSeries`).
+        """
+
+        response = self._make_request(
+            request_method=self._parent_client.request_session.get, url=f"{self.build_url()}/{identifier}"
+        )
+        return self._resource_cls.from_json(json_string=response.text)

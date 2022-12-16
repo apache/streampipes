@@ -30,51 +30,51 @@ import java.util.List;
 
 public class TransformToBoolean implements EventProcessor<TransformToBooleanParameters> {
 
-    private static Logger LOG;
+  private static Logger log;
 
-    private List<String> transformFields;
+  private List<String> transformFields;
 
-    @Override
-    public void onInvocation(TransformToBooleanParameters transformToBooleanParameters,
-                             SpOutputCollector spOutputCollector,
-                             EventProcessorRuntimeContext runtimeContext) {
+  @Override
+  public void onInvocation(TransformToBooleanParameters transformToBooleanParameters,
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
 
-        LOG = transformToBooleanParameters.getGraph().getLogger(TransformToBoolean.class);
-        this.transformFields = transformToBooleanParameters.getTransformFields();
-    }
+    log = transformToBooleanParameters.getGraph().getLogger(TransformToBoolean.class);
+    this.transformFields = transformToBooleanParameters.getTransformFields();
+  }
 
-    @Override
-    public void onEvent(Event inputEvent, SpOutputCollector out) {
-        for (String transformField : transformFields) {
-            AbstractField field = inputEvent.getFieldBySelector(transformField);
-            // Is the field a primitive (and no list/nested field)?
-            if (field.isPrimitive()) {
-                // Yes. So remove the element and replace it with a boolean (if possible)
-                inputEvent.removeFieldBySelector(transformField);
-                try {
-                  inputEvent.addField(transformField, toBoolean(field.getRawValue()));
-                } catch (SpRuntimeException e) {
-                  LOG.info(e.getMessage());
-                  return;
-                }
-            }
+  @Override
+  public void onEvent(Event inputEvent, SpOutputCollector out) {
+    for (String transformField : transformFields) {
+      AbstractField field = inputEvent.getFieldBySelector(transformField);
+      // Is the field a primitive (and no list/nested field)?
+      if (field.isPrimitive()) {
+        // Yes. So remove the element and replace it with a boolean (if possible)
+        inputEvent.removeFieldBySelector(transformField);
+        try {
+          inputEvent.addField(transformField, toBoolean(field.getRawValue()));
+        } catch (SpRuntimeException e) {
+          log.info(e.getMessage());
+          return;
         }
-        out.collect(inputEvent);
-    }
-
-    @Override
-    public void onDetach() {
-    }
-
-    private Boolean toBoolean(Object value) throws SpRuntimeException {
-      String s = value.toString().toLowerCase();
-      // If it is a double, maybe add some delta here?
-      if (s.equals("true") || s.equals("1") || s.equals("1.0")) {
-        return true;
-      } else if (s.equals("false") || s.equals("0") || s.equals("0.0")) {
-        return false;
-      } else {
-        throw new SpRuntimeException("Value " + s + " not convertible to boolean");
       }
     }
+    out.collect(inputEvent);
+  }
+
+  @Override
+  public void onDetach() {
+  }
+
+  private Boolean toBoolean(Object value) throws SpRuntimeException {
+    String s = value.toString().toLowerCase();
+    // If it is a double, maybe add some delta here?
+    if (s.equals("true") || s.equals("1") || s.equals("1.0")) {
+      return true;
+    } else if (s.equals("false") || s.equals("0") || s.equals("0.0")) {
+      return false;
+    } else {
+      throw new SpRuntimeException("Value " + s + " not convertible to boolean");
+    }
+  }
 }

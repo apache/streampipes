@@ -19,18 +19,18 @@
 package org.apache.streampipes.dataexplorer.v4.params;
 
 public class OrderingByTimeParams extends QueryParamsV4 {
-    private final String ordering;
+  private final String ordering;
 
-    public static OrderingByTimeParams from(String measurementID, String ordering) {
-        return new OrderingByTimeParams(measurementID, ordering);
-    }
+  public OrderingByTimeParams(String measurementID, String ordering) {
+    super(measurementID);
+    this.ordering = ordering;
+  }
 
-    public OrderingByTimeParams(String measurementID, String ordering) {
-        super(measurementID);
-        this.ordering = ordering;
-    }
+  public static OrderingByTimeParams from(String measurementID, String ordering) {
+    return new OrderingByTimeParams(measurementID, ordering);
+  }
 
-    public String getOrdering() {
-        return this.ordering;
-    }
+  public String getOrdering() {
+    return this.ordering;
+  }
 }

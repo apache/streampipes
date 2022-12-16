@@ -71,7 +71,7 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
 
   public DataProcessorInvocation(DataProcessorDescription sepa, String domId) {
     this(sepa);
-    this.DOM = domId;
+    this.dom = domId;
   }
 
   public DataProcessorInvocation() {
@@ -79,7 +79,8 @@ public class DataProcessorInvocation extends InvocableStreamPipesEntity implemen
     inputStreams = new ArrayList<>();
   }
 
-  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName, List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties) {
+  public DataProcessorInvocation(String uri, String name, String description, String iconUrl, String pathName,
+                                 List<SpDataStream> spDataStreams, List<StaticProperty> staticProperties) {
     super(uri, name, description, iconUrl);
     this.pathName = pathName;
     this.inputStreams = spDataStreams;

@@ -18,20 +18,23 @@
 
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.streaming.api.functions.windowing.AllWindowFunction;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.GlobalWindow;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 import java.util.List;
 import java.util.Map;
 
-public class CountAggregation extends Aggregation implements WindowFunction<Event, Event, Map<String, String>, GlobalWindow>,
-        AllWindowFunction<Event, Event, GlobalWindow> {
+public class CountAggregation extends Aggregation
+    implements WindowFunction<Event, Event, Map<String, String>, GlobalWindow>,
+    AllWindowFunction<Event, Event, GlobalWindow> {
 
   // Keyed stream
-  public CountAggregation(AggregationType aggregationType, List<String> fieldsToAggregate, List<String> keyIdentifiers) {
+  public CountAggregation(AggregationType aggregationType, List<String> fieldsToAggregate,
+                          List<String> keyIdentifiers) {
     super(aggregationType, fieldsToAggregate, keyIdentifiers);
   }
 

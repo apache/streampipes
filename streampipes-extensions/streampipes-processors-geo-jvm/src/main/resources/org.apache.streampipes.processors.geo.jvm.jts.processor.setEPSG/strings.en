@@ -1,5 +1,0 @@
-org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.title=EPSG Code
-org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.description=Adds a corresponding EPSG Code to the Geo-Event
-
-epsg-key.title=EPSG Code field
-epsg-key.description=EPSG Code

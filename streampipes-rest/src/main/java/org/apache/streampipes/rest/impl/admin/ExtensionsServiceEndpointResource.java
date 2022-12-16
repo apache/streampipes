@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.rest.impl.admin;
 
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.manager.endpoint.EndpointFetcher;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.SpDataSet;
@@ -30,12 +29,21 @@ import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.storage.api.IExtensionsServiceEndpointStorage;
+
+import org.apache.http.client.fluent.Request;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +67,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   @JacksonSerialized
   public Response addRdfEndpoint(ExtensionsServiceEndpoint extensionsServiceEndpoint) {
     getRdfEndpointStorage()
-            .addExtensionsServiceEndpoint(extensionsServiceEndpoint);
+        .addExtensionsServiceEndpoint(extensionsServiceEndpoint);
 
     return Response.status(Response.Status.OK).build();
   }
@@ -72,7 +80,7 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   @JacksonSerialized
   public Response removeRdfEndpoint(@PathParam("rdfEndpointId") String rdfEndpointId) {
     getRdfEndpointStorage()
-            .removeExtensionsServiceEndpoint(rdfEndpointId);
+        .removeExtensionsServiceEndpoint(rdfEndpointId);
 
     return Response.status(Response.Status.OK).build();
   }
@@ -118,8 +126,8 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
 
   private boolean isInstalled(String elementId) {
     return getAllPipelineElements()
-            .stream()
-            .anyMatch(e -> e.equals(elementId));
+        .stream()
+        .anyMatch(e -> e.equals(elementId));
   }
 
   private List<String> getAllPipelineElements() {
@@ -131,32 +139,33 @@ public class ExtensionsServiceEndpointResource extends AbstractAuthGuardedRestRe
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataStreamEndpoints(String username,
-                                                                        List<ExtensionsServiceEndpointItem> existingItems) {
+                                              List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataStreamUris()
-            .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
-            .map(s -> getPipelineElementStorage().getDataStreamById(s))
-            .map(stream -> makeItem(stream, stream instanceof SpDataSet ? "set" : "stream"))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
+        .map(s -> getPipelineElementStorage().getDataStreamById(s))
+        .map(stream -> makeItem(stream, stream instanceof SpDataSet ? "set" : "stream"))
+        .collect(Collectors.toList());
   }
 
   private List<ExtensionsServiceEndpointItem> getAllDataProcessorEndpoints(String username,
-                                                                           List<ExtensionsServiceEndpointItem> existingItems) {
+                                              List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataProcessorUris()
-            .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
-            .map(s -> getPipelineElementStorage().getDataProcessorById(s))
-            .map(source -> makeItem(source, "sepa"))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
+        .map(s -> getPipelineElementStorage().getDataProcessorById(s))
+        .map(source -> makeItem(source, "sepa"))
+        .collect(Collectors.toList());
   }
 
-  private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(String username, List<ExtensionsServiceEndpointItem> existingItems) {
+  private List<ExtensionsServiceEndpointItem> getAllDataSinkEndpoints(String username,
+                                              List<ExtensionsServiceEndpointItem> existingItems) {
     return getAllDataSinkUris()
-            .stream()
-            .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
-            .map(s -> getPipelineElementStorage().getDataSinkById(s))
-            .map(source -> makeItem(source, "action"))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(s -> existingItems.stream().noneMatch(item -> s.equals(item.getElementId())))
+        .map(s -> getPipelineElementStorage().getDataSinkById(s))
+        .map(source -> makeItem(source, "action"))
+        .collect(Collectors.toList());
   }
 
   private ExtensionsServiceEndpointItem makeItem(NamedStreamPipesEntity entity, String type) {

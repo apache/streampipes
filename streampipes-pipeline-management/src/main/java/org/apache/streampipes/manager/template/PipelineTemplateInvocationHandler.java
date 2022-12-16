@@ -70,8 +70,8 @@ public class PipelineTemplateInvocationHandler {
   private void replace(InvocableStreamPipesEntity pe) {
     List<StaticProperty> newProperties = new ArrayList<>();
     pe.getStaticProperties().forEach(sp -> {
-      if (existsInCustomizedElements(pe.getDOM(), sp)) {
-        newProperties.add(getCustomizedElement(pe.getDOM(), pe.getDOM() + sp.getInternalName()));
+      if (existsInCustomizedElements(pe.getDom(), sp)) {
+        newProperties.add(getCustomizedElement(pe.getDom(), pe.getDom() + sp.getInternalName()));
       } else {
         newProperties.add(sp);
       }

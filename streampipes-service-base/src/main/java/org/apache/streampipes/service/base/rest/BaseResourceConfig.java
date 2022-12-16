@@ -27,7 +27,7 @@ public abstract class BaseResourceConfig extends ResourceConfig {
   public BaseResourceConfig() {
     property(ServletProperties.FILTER_FORWARD_ON_404, true);
     getClassesToRegister()
-            .forEach(set -> set.forEach(this::register));
+        .forEach(set -> set.forEach(this::register));
     register(ServiceHealthResource.class);
   }
 

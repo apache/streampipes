@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractProcessingElementBuilder<BU extends
-        AbstractProcessingElementBuilder<BU, T>, T extends ConsumableStreamPipesEntity> extends
-        AbstractConfigurablePipelineElementBuilder<BU, T> {
+public abstract class AbstractProcessingElementBuilder<K extends
+    AbstractProcessingElementBuilder<K, T>, T extends ConsumableStreamPipesEntity> extends
+    AbstractConfigurablePipelineElementBuilder<K, T> {
 
   protected List<SpDataStream> streamRequirements;
 
@@ -72,7 +72,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
    */
   @Deprecated
-  public BU requiredStream(SpDataStream stream) {
+  public K requiredStream(SpDataStream stream) {
     this.streamRequirements.add(stream);
     return me();
   }
@@ -81,55 +81,57 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    * Set a new stream requirement by adding restrictions on this stream. Use
    * {@link StreamRequirementsBuilder} to create requirements for a single stream.
    *
-   * @param streamRequirements: A bundle of collected {@link CollectedStreamRequirements}
+   * @param streamRequirements A bundle of collected {@link CollectedStreamRequirements}
    * @return this
    */
-  public BU requiredStream(CollectedStreamRequirements streamRequirements) {
+  public K requiredStream(CollectedStreamRequirements streamRequirements) {
 
     this.streamRequirements.add(streamRequirements.getStreamRequirements());
     this.staticProperties.addAll(rewrite(streamRequirements.getMappingProperties(), this
-            .streamRequirements.size()));
+        .streamRequirements.size()));
 
     return me();
   }
 
   private List<MappingProperty> rewrite(List<MappingProperty> mappingProperties, int index) {
     mappingProperties.forEach(mp -> mp.setRequirementSelector
-            (getIndex(index) + PropertySelectorConstants.PROPERTY_DELIMITER + mp
-                    .getRequirementSelector()));
+        (getIndex(index) + PropertySelectorConstants.PROPERTY_DELIMITER + mp
+            .getRequirementSelector()));
     return mappingProperties;
   }
 
   private String getIndex(int index) {
     return index == 1 ? PropertySelectorConstants.FIRST_REQUIREMENT_PREFIX :
-            PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX;
+        PropertySelectorConstants.SECOND_REQUIREMENT_PREFIX;
   }
 
   /**
+   * @deprecated Use {@link #naryMappingPropertyWithoutRequirement(Label, PropertyScope)} instead.
    * @param internalName
    * @param label
    * @param description
    * @return
-   * @deprecated Use {@link #naryMappingPropertyWithoutRequirement(Label, PropertyScope)} instead.
+   *
    */
-  public BU naryMappingPropertyWithoutRequirement(String internalName, String label, String
-          description) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K naryMappingPropertyWithoutRequirement(String internalName, String label, String
+      description) {
     this.staticProperties.add(new MappingPropertyNary(internalName, label, description));
     return me();
   }
 
   /**
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyNary} to the pipeline element definition
-   * which is not linked to a specific input property.
-   * Use this method if you want to present users a selection (in form of a Checkbox Group) of all available input
-   * event properties.
+   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyNary}
+   * to the pipeline element definition which is not linked to a specific input property.
+   * Use this method if you want to present users a selection (in form of a Checkbox Group)
+   * of all available input event properties.
    *
    * @param label         A human-readable label that is displayed to users in the StreamPipes UI.
    * @param propertyScope Only input event properties that match the
    *                      {@link org.apache.streampipes.model.schema.PropertyScope} are displayed.
    * @return
    */
-  public BU naryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
+  public K naryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
     MappingPropertyNary mp = new MappingPropertyNary(label.getInternalId(), label.getLabel(), label.getDescription());
     mp.setPropertyScope(propertyScope.name());
     this.staticProperties.add(mp);
@@ -137,38 +139,44 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   }
 
   /**
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
-   * which is not linked to a specific input property.
-   *
-   * @param label A human-readable label
-   * @return this
    * @deprecated Use {@link #unaryMappingPropertyWithoutRequirement(Label)} instead.
    * Use this method if you want to present users a single-value selection of all available input
    * event properties.
+   *
+   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary}
+   * to the pipeline element definition which is not linked to a specific input property.
+   *
+   * @param label A human-readable label
+   * @return this
    */
-  public BU unaryMappingPropertyWithoutRequirement(String internalName, String label, String
-          description) {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K unaryMappingPropertyWithoutRequirement(String internalName, String label, String
+      description) {
     this.staticProperties.add(new MappingPropertyUnary(internalName, label, description));
     return me();
   }
 
   /**
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
-   * which is not linked to a specific input property.
+   * @deprecated Use this method if you want to present users a single-value selection of all available input
+   * event properties.
+   *
+   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary}
+   * to the pipeline element definition which is not linked to a specific input property.
    *
    * @param label
    * @return this
-   * @deprecated Use this method if you want to present users a single-value selection of all available input
-   * event properties.
+   *
    */
-  public BU unaryMappingPropertyWithoutRequirement(Label label) {
-    this.staticProperties.add(new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription()));
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K unaryMappingPropertyWithoutRequirement(Label label) {
+    this.staticProperties.add(
+        new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription()));
     return me();
   }
 
   /**
-   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary} to the pipeline element definition
-   * which is not linked to a specific input property.
+   * Adds a new {@link org.apache.streampipes.model.staticproperty.MappingPropertyUnary}
+   * to the pipeline element definition which is not linked to a specific input property.
    *
    * @param label         A human-readable label that is displayed to users in the StreamPipes UI.
    * @param propertyScope Only input event properties that match the
@@ -177,7 +185,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    * Use this method if you want to present users a single-value selection of all available input
    * event properties.
    */
-  public BU unaryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
+  public K unaryMappingPropertyWithoutRequirement(Label label, PropertyScope propertyScope) {
     MappingPropertyUnary mp = new MappingPropertyUnary(label.getInternalId(), label.getLabel(), label.getDescription());
     mp.setPropertyScope(propertyScope.name());
     this.staticProperties.add(mp);
@@ -193,7 +201,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    *               ones or create your own by following the developer guide.
    * @return this
    */
-  public BU supportedFormats(TransportFormat... format) {
+  public K supportedFormats(TransportFormat... format) {
     return supportedFormats(Arrays.asList(format));
   }
 
@@ -206,7 +214,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    *                ones or create your own by following the developer guide.
    * @return this
    */
-  public BU supportedFormats(List<TransportFormat> formats) {
+  public K supportedFormats(List<TransportFormat> formats) {
     this.supportedGrounding.setTransportFormats(formats);
     return me();
   }
@@ -215,12 +223,13 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
    *
-   * @param protocol An arbitrary number of supported {@link org.apache.streampipes.model.grounding.TransportProtocol}s. Use
-   *                 {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
-   *                 ones or create your own by following the developer guide.
+   * @param protocol An arbitrary number of supported
+   *                 {@link org.apache.streampipes.model.grounding.TransportProtocol}s.
+   *                 Use {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols
+   *                 from some pre-defined ones or create your own by following the developer guide.
    * @return this
    */
-  public BU supportedProtocols(TransportProtocol... protocol) {
+  public K supportedProtocols(TransportProtocol... protocol) {
     return supportedProtocols(Arrays.asList(protocol));
   }
 
@@ -228,12 +237,12 @@ public abstract class AbstractProcessingElementBuilder<BU extends
    * Assigns supported communication/transport protocols to the pipeline elements that can be handled at runtime (e.g.,
    * Kafka or JMS).
    *
-   * @param protocols A list of supported {@link org.apache.streampipes.model.grounding.TransportProtocol}s. Use
-   *                  {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols from some pre-defined
-   *                  ones or create your own by following the developer guide.
+   * @param protocols A list of supported {@link org.apache.streampipes.model.grounding.TransportProtocol}s.
+   *                  Use {@link org.apache.streampipes.sdk.helpers.SupportedProtocols} to assign protocols
+   *                  from some pre-defined ones or create your own by following the developer guide.
    * @return this
    */
-  public BU supportedProtocols(List<TransportProtocol> protocols) {
+  public K supportedProtocols(List<TransportProtocol> protocols) {
     this.supportedGrounding.setTransportProtocols(protocols);
     return me();
   }
@@ -241,7 +250,8 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
    */
-  public BU setStream1() {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K setStream1() {
     stream1 = true;
     return me();
   }
@@ -249,7 +259,8 @@ public abstract class AbstractProcessingElementBuilder<BU extends
   /**
    * @deprecated Use {@link #requiredStream(CollectedStreamRequirements)} instead
    */
-  public BU setStream2() {
+  @Deprecated(since = "0.90.0", forRemoval = true)
+  public K setStream2() {
     stream2 = true;
     return me();
   }
@@ -269,7 +280,7 @@ public abstract class AbstractProcessingElementBuilder<BU extends
 
     this.elementDescription.setSupportedGrounding(supportedGrounding);
 
-    for(int i = 0; i < streamRequirements.size(); i++) {
+    for (int i = 0; i < streamRequirements.size(); i++) {
       streamRequirements.get(i).setIndex(i);
     }
 

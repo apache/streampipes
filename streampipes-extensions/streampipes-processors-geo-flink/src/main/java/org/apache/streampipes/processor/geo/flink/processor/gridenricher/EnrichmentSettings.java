@@ -33,7 +33,8 @@ public class EnrichmentSettings implements Serializable {
   public EnrichmentSettings() {
   }
 
-  public EnrichmentSettings(double latitudeStart, double longitudeStart, int cellSize, String latPropertyName, String lngPropertyName) {
+  public EnrichmentSettings(double latitudeStart, double longitudeStart, int cellSize, String latPropertyName,
+                            String lngPropertyName) {
     this.latitudeStart = latitudeStart;
     this.longitudeStart = longitudeStart;
     this.cellSize = cellSize;

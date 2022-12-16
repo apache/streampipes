@@ -17,15 +17,13 @@
  */
 package org.apache.streampipes.connect.adapters.coindesk;
 
-import com.google.gson.Gson;
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
 import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullAdapter;
 import org.apache.streampipes.connect.adapters.coindesk.model.CoindeskRawModel;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -37,6 +35,9 @@ import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.Options;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
+
+import com.google.gson.Gson;
+import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -97,11 +98,11 @@ public class CoindeskBitcoinAdapter extends PullAdapter {
   @Override
   public SpecificAdapterStreamDescription declareModel() {
     return SpecificDataStreamAdapterBuilder.create(ID)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .category(AdapterType.Finance)
-            .requiredSingleValueSelection(Labels.withId(CURRENCY_KEY), Options.from("USD", "EUR", "GBP"))
-            .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(AdapterType.Finance)
+        .requiredSingleValueSelection(Labels.withId(CURRENCY_KEY), Options.from("USD", "EUR", "GBP"))
+        .build();
   }
 
   @Override
@@ -110,12 +111,13 @@ public class CoindeskBitcoinAdapter extends PullAdapter {
   }
 
   @Override
-  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription) throws AdapterException, ParseException {
+  public GuessSchema getSchema(SpecificAdapterStreamDescription adapterDescription)
+      throws AdapterException, ParseException {
     return GuessSchemaBuilder.create()
-            .property(EpProperties.timestampProperty("timestamp"))
-            .property(EpProperties.doubleEp(Labels.from("rate-field", "Rate", "The current " +
-                    "bitcoin rate"), "rate", SO.Price))
-            .build();
+        .property(EpProperties.timestampProperty("timestamp"))
+        .property(EpProperties.doubleEp(Labels.from("rate-field", "Rate", "The current "
+            + "bitcoin rate"), "rate", SO.Price))
+        .build();
   }
 
   @Override

@@ -44,7 +44,7 @@ public class SpRuntimeException extends SpException {
    * Creates a new exception with the given message and cause
    *
    * @param message The exception message
-   * @param cause The exception that caused this exception
+   * @param cause   The exception that caused this exception
    */
   public SpRuntimeException(String message, Throwable cause) {
     super(message, cause);

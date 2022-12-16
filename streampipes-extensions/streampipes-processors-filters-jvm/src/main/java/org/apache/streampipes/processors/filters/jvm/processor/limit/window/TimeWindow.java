@@ -20,27 +20,28 @@ package org.apache.streampipes.processors.filters.jvm.processor.limit.window;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.EventSelection;
 import org.apache.streampipes.processors.filters.jvm.processor.limit.util.SchedulerUtil;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
+
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
 
 public class TimeWindow extends ScheduleWindow {
-    private Integer windowSize;
+  private Integer windowSize;
 
-    public TimeWindow(Integer windowSize,
-                      EventSelection eventSelection,
-                      SpOutputCollector outputCollector) {
-        super(eventSelection, outputCollector);
-        this.windowSize = windowSize;
-    }
+  public TimeWindow(Integer windowSize,
+                    EventSelection eventSelection,
+                    SpOutputCollector outputCollector) {
+    super(eventSelection, outputCollector);
+    this.windowSize = windowSize;
+  }
 
-    @Override
-    JobDetail getJob() {
-        return SchedulerUtil.createJob(this);
-    }
+  @Override
+  JobDetail getJob() {
+    return SchedulerUtil.createJob(this);
+  }
 
-    @Override
-    Trigger getTrigger() {
-        return SchedulerUtil.getFixedRateTrigger(windowSize);
-    }
+  @Override
+  Trigger getTrigger() {
+    return SchedulerUtil.getFixedRateTrigger(windowSize);
+  }
 
 }

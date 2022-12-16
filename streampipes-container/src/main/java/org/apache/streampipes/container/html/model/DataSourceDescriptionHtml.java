@@ -23,22 +23,22 @@ import java.util.List;
 
 public class DataSourceDescriptionHtml extends Description {
 
-    private List<Description> streams;
+  private List<Description> streams;
 
-    public DataSourceDescriptionHtml(String name, String description, String descriptionUrl, List<Description> streams) {
-        super(name, description, descriptionUrl);
-        this.streams = streams;
-    }
+  public DataSourceDescriptionHtml(String name, String description, String descriptionUrl, List<Description> streams) {
+    super(name, description, descriptionUrl);
+    this.streams = streams;
+  }
 
-    public DataSourceDescriptionHtml() {
-        streams = new ArrayList<>();
-    }
+  public DataSourceDescriptionHtml() {
+    streams = new ArrayList<>();
+  }
 
-    public List<Description> getStreams() {
-        return streams;
-    }
+  public List<Description> getStreams() {
+    return streams;
+  }
 
-    public void setStreams(List<Description> streams) {
-        this.streams = streams;
-    }
+  public void setStreams(List<Description> streams) {
+    this.streams = streams;
+  }
 }

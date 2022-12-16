@@ -21,11 +21,10 @@ import org.apache.streampipes.connect.container.worker.init.AdapterServiceResour
 import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
 import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
 import org.apache.streampipes.service.base.rest.BaseResourceConfig;
-import org.apache.streampipes.service.base.rest.ServiceHealthResource;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -34,8 +33,8 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
   @Override
   public List<List<Class<?>>> getClassesToRegister() {
     return Arrays.asList(
-            new BaseExtensionsServiceResourceProvider().getResourceClasses(),
-            new AdapterServiceResourceProvider().getResourceClasses(),
-            new PipelineElementServiceResourceProvider().getResourceClasses());
+        new BaseExtensionsServiceResourceProvider().getResourceClasses(),
+        new AdapterServiceResourceProvider().getResourceClasses(),
+        new PipelineElementServiceResourceProvider().getResourceClasses());
   }
 }

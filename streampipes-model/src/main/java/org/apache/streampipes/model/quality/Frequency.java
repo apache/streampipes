@@ -20,34 +20,33 @@ package org.apache.streampipes.model.quality;
 
 public class Frequency extends EventStreamQualityDefinition {
 
-	private static final long serialVersionUID = 8196363710990038633L;
+  private static final long serialVersionUID = 8196363710990038633L;
+  /**
+   * The unit of qualityValue is Hertz [Hz]
+   */
+  float quantityValue;
 
-	public Frequency() {
-		super();
-	}
+  public Frequency() {
+    super();
+  }
 
-	public Frequency(float quantityValue) {
-		super();
-		this.quantityValue = quantityValue;
-	}
-	
-	public Frequency(Frequency other) {
-		super(other);
-		this.quantityValue = other.getQuantityValue();
-	}
-	
-	/**
-	 * The unit of qualityValue is Hertz [Hz]
-	 */
-	float quantityValue;
+  public Frequency(float quantityValue) {
+    super();
+    this.quantityValue = quantityValue;
+  }
 
-	public float getQuantityValue() {
-		return quantityValue;
-	}
+  public Frequency(Frequency other) {
+    super(other);
+    this.quantityValue = other.getQuantityValue();
+  }
 
-	public void setQuantityValue(float quantityValue) {
-		this.quantityValue = quantityValue;
-	}
-	
-	
+  public float getQuantityValue() {
+    return quantityValue;
+  }
+
+  public void setQuantityValue(float quantityValue) {
+    this.quantityValue = quantityValue;
+  }
+
+
 }

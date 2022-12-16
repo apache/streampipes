@@ -17,12 +17,12 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestPropertyRenaming {
 
@@ -52,7 +52,7 @@ public class TestPropertyRenaming {
   public void testNestedRenaming() {
     Map<String, Object> runtimeMap = RuntimeTestUtils.nestedMap();
     Event event = RuntimeTestUtils.makeNestedEventWithRenameRule(runtimeMap, RuntimeTestUtils
-            .getSourceInfo());
+        .getSourceInfo());
 
     Map<String, Object> outMap = new EventConverter(event).toMap();
 

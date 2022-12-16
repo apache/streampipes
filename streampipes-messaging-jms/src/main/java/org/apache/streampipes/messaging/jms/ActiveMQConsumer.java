@@ -18,22 +18,24 @@
 
 package org.apache.streampipes.messaging.jms;
 
-import org.apache.activemq.command.ActiveMQBytesMessage;
-import org.apache.activemq.util.ByteSequence;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.messaging.EventConsumer;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
+import org.apache.activemq.command.ActiveMQBytesMessage;
+import org.apache.activemq.util.ByteSequence;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
+
 import java.io.Serializable;
 
 public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
-        EventConsumer<JmsTransportProtocol>,
-        AutoCloseable, Serializable {
+    EventConsumer<JmsTransportProtocol>,
+    AutoCloseable, Serializable {
 
   private Session session;
   private MessageConsumer consumer;
@@ -57,13 +59,15 @@ public class ActiveMQConsumer extends ActiveMQConnectionProvider implements
 
   @Override
   public void connect(JmsTransportProtocol protocolSettings, InternalEventProcessor<byte[]>
-          eventProcessor) throws SpRuntimeException {
+      eventProcessor) throws SpRuntimeException {
     String url = ActiveMQUtils.makeActiveMqUrl(protocolSettings);
 
     try {
       this.eventProcessor = eventProcessor;
       session = startJmsConnection(url).createSession(false, Session.AUTO_ACKNOWLEDGE);
-      consumer = session.createConsumer(session.createTopic(protocolSettings.getTopicDefinition().getActualTopicName()));
+      consumer = session.createConsumer(session.createTopic(
+          protocolSettings.getTopicDefinition().getActualTopicName())
+      );
       initListener();
       this.connected = true;
     } catch (JMSException e) {

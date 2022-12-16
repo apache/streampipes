@@ -23,10 +23,19 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.*;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.Operation;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationAddition;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationDivide;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationModulo;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationMultiply;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationSubtracting;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
@@ -35,10 +44,10 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class StaticMathOpProcessor extends StreamPipesDataProcessor {
 
-  private final String RESULT_FIELD = "calculationResultStatic";
-  private final String LEFT_OPERAND = "leftOperand";
-  private final String RIGHT_OPERAND_VALUE = "rightOperandValue";
-  private final String OPERATION = "operation";
+  private static final String RESULT_FIELD = "calculationResultStatic";
+  private static final String LEFT_OPERAND = "leftOperand";
+  private static final String RIGHT_OPERAND_VALUE = "rightOperandValue";
+  private static final String OPERATION = "operation";
 
   Operation arithmeticOperation;
   String leftOperand;
@@ -48,25 +57,26 @@ public class StaticMathOpProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.processor.math.staticmathop")
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-      .withLocales(Locales.EN)
-      .category(DataProcessorType.ALGORITHM)
-      .requiredStream(StreamRequirementsBuilder
-        .create()
-        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-          Labels.withId(LEFT_OPERAND),
-          PropertyScope.NONE)
-        .build())
-      .requiredFloatParameter(Labels.withId(RIGHT_OPERAND_VALUE))
-      .outputStrategy(
-        OutputStrategies.keep())
-      .requiredSingleValueSelection(Labels.withId(OPERATION),
-        Options.from("+", "-", "/", "*", "%"))
-      .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.ALGORITHM)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(LEFT_OPERAND),
+                PropertyScope.NONE)
+            .build())
+        .requiredFloatParameter(Labels.withId(RIGHT_OPERAND_VALUE))
+        .outputStrategy(
+            OutputStrategies.keep())
+        .requiredSingleValueSelection(Labels.withId(OPERATION),
+            Options.from("+", "-", "/", "*", "%"))
+        .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.leftOperand = parameters.extractor().mappingPropertyValue(LEFT_OPERAND);
     this.rightOperandValue = parameters.extractor().singleValueParameter(RIGHT_OPERAND_VALUE, Double.class);
     String operation = parameters.extractor().selectedSingleValue(OPERATION, String.class);
@@ -91,8 +101,8 @@ public class StaticMathOpProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
-    Double leftValue  = Double.parseDouble(String.valueOf(in.getFieldBySelector(leftOperand)
-      .getAsPrimitive().getAsDouble()));
+    Double leftValue = Double.parseDouble(String.valueOf(in.getFieldBySelector(leftOperand)
+        .getAsPrimitive().getAsDouble()));
 
     Double result = arithmeticOperation.operate(leftValue, rightOperandValue);
     in.updateFieldBySelector(leftOperand, result);

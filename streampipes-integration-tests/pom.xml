@@ -19,62 +19,70 @@
     under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <artifactId>streampipes-parent</artifactId>
-    <groupId>org.apache.streampipes</groupId>
-    <version>0.71.0-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>streampipes-parent</artifactId>
+        <groupId>org.apache.streampipes</groupId>
+        <version>0.91.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>integration</artifactId>
-  <name>StreamPipes Integration Tests</name>
+    <artifactId>streampipes-integration-tests</artifactId>
+    <name>StreamPipes Integration Tests</name>
 
-  <properties>
-    <owasp.check.skip>true</owasp.check.skip>
-    <maven.deploy.skip>false</maven.deploy.skip>
+    <properties>
+        <owasp.check.skip>true</owasp.check.skip>
+        <maven.deploy.skip>false</maven.deploy.skip>
 
-    <pulsar.version>2.10.1</pulsar.version>
-  </properties>
+        <pulsar.version>2.10.1</pulsar.version>
+    </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.streampipes</groupId>
-      <artifactId>streampipes-connect</artifactId>
-      <version>0.71.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.streampipes</groupId>
-      <artifactId>streampipes-container</artifactId>
-      <version>0.71.0-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.pulsar</groupId>
-      <artifactId>pulsar-client</artifactId>
-      <version>${pulsar.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.streampipes</groupId>
-      <artifactId>streampipes-connect-adapters-iiot</artifactId>
-      <version>0.71.0-SNAPSHOT</version>
-      <classifier>embed</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>testcontainers</artifactId>
-      <version>1.17.4</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-connect</artifactId>
+            <version>0.91.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-container</artifactId>
+            <version>0.91.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.pulsar</groupId>
+            <artifactId>pulsar-client</artifactId>
+            <version>${pulsar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-connect-adapters-iiot</artifactId>
+            <version>0.91.0-SNAPSHOT</version>
+            <classifier>embed</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.17.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

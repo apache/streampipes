@@ -22,7 +22,8 @@ import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenri
 
 public class ImageCropperParameters extends ImageEnrichmentParameters {
 
-  public ImageCropperParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth, String boxHeight, String boxX, String boxY) {
+  public ImageCropperParameters(DataProcessorInvocation graph, String imageProperty, String boxArray, String boxWidth,
+                                String boxHeight, String boxX, String boxY) {
     super(graph, imageProperty, boxArray, boxWidth, boxHeight, boxX, boxY);
   }
 }

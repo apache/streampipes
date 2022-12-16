@@ -31,44 +31,44 @@ import java.util.Collections;
 
 public class EmailPublisher implements EventSink<EmailParameters> {
 
-    private SpEmail preparedEmail;
-    private long silentPeriodInSeconds;
-    private long lastMailEpochSecond = -1;
+  private SpEmail preparedEmail;
+  private long silentPeriodInSeconds;
+  private long lastMailEpochSecond = -1;
 
-    private String originalContent;
+  private String originalContent;
 
-    private StreamPipesClient client;
+  private StreamPipesClient client;
 
-    @Override
-    public void onInvocation(EmailParameters parameters, EventSinkRuntimeContext runtimeContext) {
-        this.preparedEmail = new SpEmail();
-        this.preparedEmail.setRecipients(Collections.singletonList(parameters.getToEmailAddress()));
-        this.preparedEmail.setSubject(parameters.getSubject());
+  @Override
+  public void onInvocation(EmailParameters parameters, EventSinkRuntimeContext runtimeContext) {
+    this.preparedEmail = new SpEmail();
+    this.preparedEmail.setRecipients(Collections.singletonList(parameters.getToEmailAddress()));
+    this.preparedEmail.setSubject(parameters.getSubject());
 
-        this.silentPeriodInSeconds = parameters.getSilentPeriod() * 60;
-        this.client = runtimeContext.getStreamPipesClient();
-        this.originalContent = parameters.getContent();
+    this.silentPeriodInSeconds = parameters.getSilentPeriod() * 60;
+    this.client = runtimeContext.getStreamPipesClient();
+    this.originalContent = parameters.getContent();
+  }
+
+  @Override
+  public void onEvent(Event inputEvent) {
+    if (shouldSendMail()) {
+      String message = PlaceholderExtractor.replacePlaceholders(inputEvent, this.originalContent);
+      this.preparedEmail.setMessage(message);
+      this.client.deliverEmail(this.preparedEmail);
+      this.lastMailEpochSecond = Instant.now().getEpochSecond();
     }
+  }
 
-    @Override
-    public void onEvent(Event inputEvent) {
-        if (shouldSendMail()) {
-            String message = PlaceholderExtractor.replacePlaceholders(inputEvent, this.originalContent);
-            this.preparedEmail.setMessage(message);
-            this.client.deliverEmail(this.preparedEmail);
-            this.lastMailEpochSecond = Instant.now().getEpochSecond();
-        }
+  private boolean shouldSendMail() {
+    if (this.lastMailEpochSecond == -1) {
+      return true;
+    } else {
+      return Instant.now().getEpochSecond() >= (this.lastMailEpochSecond + this.silentPeriodInSeconds);
     }
+  }
 
-    private boolean shouldSendMail() {
-        if (this.lastMailEpochSecond == -1) {
-            return true;
-        } else {
-            return Instant.now().getEpochSecond() >= (this.lastMailEpochSecond + this.silentPeriodInSeconds);
-        }
-    }
-
-    @Override
-    public void onDetach() throws SpRuntimeException {
-    }
+  @Override
+  public void onDetach() throws SpRuntimeException {
+  }
 }

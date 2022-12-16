@@ -21,7 +21,12 @@ package org.apache.streampipes.container.init;
 import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
-import org.apache.streampipes.container.declarer.*;
+import org.apache.streampipes.container.declarer.DataStreamDeclarer;
+import org.apache.streampipes.container.declarer.Declarer;
+import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
@@ -34,23 +39,25 @@ import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 import org.apache.streampipes.svcdiscovery.api.model.ConfigItem;
 import org.apache.streampipes.vocabulary.StreamPipes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DeclarersSingleton {
 
   private static final Logger LOG = LoggerFactory.getLogger(DeclarersSingleton.class);
-
-  private static DeclarersSingleton instance;
-
   private static final String Http = "http://";
   private static final String Colon = ":";
   private static final String Slash = "/";
-
+  private static DeclarersSingleton instance;
   private SpServiceDefinition serviceDefinition;
 
   private Map<String, SemanticEventProcessingAgentDeclarer> epaDeclarers;
@@ -150,29 +157,29 @@ public class DeclarersSingleton {
 
   public void supportedProtocols(TransportProtocol... protocols) {
     Arrays.asList(protocols).forEach(protocol ->
-            this.supportedProtocols.put(protocol.getClass().getCanonicalName(), protocol));
+        this.supportedProtocols.put(protocol.getClass().getCanonicalName(), protocol));
   }
 
   public void supportedFormats(TransportFormat... formats) {
     Arrays.asList(formats).forEach(format ->
-            this.supportedFormats.put(getFormatUri(format), format));
+        this.supportedFormats.put(getFormatUri(format), format));
   }
 
   private String getFormatUri(TransportFormat format) {
     return format
-            .getRdfType()
-            .stream()
-            .map(URI::toString)
-            .filter(t -> !t.equals("http://www.w3.org/2000/01/rdf-schema#"))
-            .filter(t -> !t.equals(StreamPipes.TRANSPORT_FORMAT))
-            .findFirst()
-            .get();
+        .getRdfType()
+        .stream()
+        .map(URI::toString)
+        .filter(t -> !t.equals("http://www.w3.org/2000/01/rdf-schema#"))
+        .filter(t -> !t.equals(StreamPipes.TRANSPORT_FORMAT))
+        .findFirst()
+        .get();
   }
 
   public void registerProtocol(SpProtocolDefinitionFactory<?> protocol) {
     SpProtocolManager.INSTANCE.register(protocol);
     this.supportedProtocols.put(protocol.getTransportProtocolClass(),
-            protocol.getTransportProtocol());
+        protocol.getTransportProtocol());
   }
 
   public void registerProtocols(SpProtocolDefinitionFactory<?>... protocols) {
@@ -186,7 +193,7 @@ public class DeclarersSingleton {
   public void registerDataFormat(SpDataFormatFactory dataFormatDefinition) {
     SpDataFormatManager.INSTANCE.register(dataFormatDefinition);
     this.supportedFormats.put(dataFormatDefinition.getTransportFormatRdfUri(),
-            dataFormatDefinition.getTransportFormat());
+        dataFormatDefinition.getTransportFormat());
   }
 
   public void registerDataFormats(SpDataFormatFactory... dataFormatDefinitions) {
@@ -212,7 +219,7 @@ public class DeclarersSingleton {
 
   private void addPipelineTemplateDeclarer(PipelineTemplateDeclarer pipelineTemplateDeclarer) {
     pipelineTemplateDeclarers.put(pipelineTemplateDeclarer.declareModel().getAppId(),
-            pipelineTemplateDeclarer);
+        pipelineTemplateDeclarer);
   }
 
   public Map<String, SemanticEventProcessingAgentDeclarer> getEpaDeclarers() {
@@ -233,17 +240,17 @@ public class DeclarersSingleton {
 
   public Collection<TransportProtocol> getSupportedProtocols() {
     return this.supportedProtocols
-            .values()
-            .stream()
-            .map(p -> new Cloner().protocol(p))
-            .collect(Collectors.toList());
+        .values()
+        .stream()
+        .map(p -> new Cloner().protocol(p))
+        .collect(Collectors.toList());
   }
 
   public Collection<TransportFormat> getSupportedFormats() {
     return this.supportedFormats.values()
-            .stream()
-            .map(TransportFormat::new)
-            .collect(Collectors.toList());
+        .stream()
+        .map(TransportFormat::new)
+        .collect(Collectors.toList());
   }
 
   public DeclarersSingleton add(Connector c) {
@@ -275,24 +282,24 @@ public class DeclarersSingleton {
 
   public IProtocol getProtocol(String id) {
     return getAllProtocols().stream()
-            .filter(protocol -> protocol.getId().equals(id))
-            .findAny()
-            .orElse(null);
+        .filter(protocol -> protocol.getId().equals(id))
+        .findAny()
+        .orElse(null);
   }
 
   public IAdapter getAdapter(String id) {
     return getAllAdapters().stream()
-            .filter(adapter -> adapter.getId().equals(id))
-            .findAny()
-            .orElse(null);
-  }
-
-  public void setPort(int port) {
-    this.port = port;
+        .filter(adapter -> adapter.getId().equals(id))
+        .findAny()
+        .orElse(null);
   }
 
   public int getPort() {
     return this.port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
   }
 
   public String getHostName() {

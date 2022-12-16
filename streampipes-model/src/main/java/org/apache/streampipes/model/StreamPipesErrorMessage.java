@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.model;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.streampipes.model.shared.annotation.TsModel;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @TsModel
 public class StreamPipesErrorMessage {
@@ -30,16 +31,6 @@ public class StreamPipesErrorMessage {
 
   private String cause;
   private String fullStackTrace;
-
-  public static StreamPipesErrorMessage from(Exception exception) {
-    String cause = exception.getCause() != null ? exception.getCause().getMessage() : exception.getMessage();
-    return new StreamPipesErrorMessage(
-      "error",
-      exception.getMessage(),
-      "",
-      ExceptionUtils.getStackTrace(exception),
-      cause);
-  }
 
   public StreamPipesErrorMessage() {
 
@@ -63,6 +54,16 @@ public class StreamPipesErrorMessage {
     this.detail = detail;
     this.fullStackTrace = fullStackTrace;
     this.cause = cause;
+  }
+
+  public static StreamPipesErrorMessage from(Exception exception) {
+    String cause = exception.getCause() != null ? exception.getCause().getMessage() : exception.getMessage();
+    return new StreamPipesErrorMessage(
+        "error",
+        exception.getMessage(),
+        "",
+        ExceptionUtils.getStackTrace(exception),
+        cause);
   }
 
   public String getLevel() {

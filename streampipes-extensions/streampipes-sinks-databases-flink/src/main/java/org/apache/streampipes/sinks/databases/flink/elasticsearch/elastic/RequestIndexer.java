@@ -28,10 +28,10 @@ import org.elasticsearch.action.ActionRequest;
 @PublicEvolving
 public interface RequestIndexer {
 
-	/**
-	 * Add multiple {@link ActionRequest} to the indexer to prepare for sending requests to Elasticsearch.
-	 *
-	 * @param actionRequests The multiple {@link ActionRequest} to add.
-	 */
-	void add(ActionRequest... actionRequests);
+  /**
+   * Add multiple {@link ActionRequest} to the indexer to prepare for sending requests to Elasticsearch.
+   *
+   * @param actionRequests The multiple {@link ActionRequest} to add.
+   */
+  void add(ActionRequest... actionRequests);
 }

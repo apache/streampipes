@@ -24,35 +24,48 @@ import java.util.Map;
 
 public class ModelUtils {
 
-	public static Class<?> getPrimitiveClass(String propertyType)
-	{
-		String xmlBaseURI = "http://www.w3.org/2001/XMLSchema#";
-		if (propertyType.equals(xmlBaseURI+"string")) return String.class;
-		else if (propertyType.equals(xmlBaseURI+"double")) return Double.class;
-		else if (propertyType.equals(xmlBaseURI+"long")) return Long.class;
-		else if (propertyType.equals(xmlBaseURI+"integer") )return Integer.class;
-		else if (propertyType.equals(xmlBaseURI+"boolean") )return Boolean.class;
-		else if (propertyType.equals(xmlBaseURI+"float")) return Float.class;
-		else return null;
-	}
-	
-	public static Class<?> getPrimitiveClassAsArray(String propertyType)
-	{
-		String xmlBaseURI = "http://www.w3.org/2001/XMLSchema#";
-		if (propertyType.equals(xmlBaseURI+"string")) return String[].class;
-		else if (propertyType.equals(xmlBaseURI+"double")) return Double[].class;
-		else if (propertyType.equals(xmlBaseURI+"long")) return Long[].class;
-		else if (propertyType.equals(xmlBaseURI+"integer") )return Integer[].class;
-		else if (propertyType.equals(xmlBaseURI+"boolean") )return Boolean[].class;
-		else if (propertyType.equals(xmlBaseURI+"float")) return Float[].class;
-		else return null;
-	}
-	
-	public static List<Map<String, Object>> asList(Map<String, Object> map)
-	{
-		List<Map<String, Object>> result = new ArrayList<>();
-		result.add(map);
-		return result;
-	}
-		
+  public static Class<?> getPrimitiveClass(String propertyType) {
+    String xmlBaseURI = "http://www.w3.org/2001/XMLSchema#";
+    if (propertyType.equals(xmlBaseURI + "string")) {
+      return String.class;
+    } else if (propertyType.equals(xmlBaseURI + "double")) {
+      return Double.class;
+    } else if (propertyType.equals(xmlBaseURI + "long")) {
+      return Long.class;
+    } else if (propertyType.equals(xmlBaseURI + "integer")) {
+      return Integer.class;
+    } else if (propertyType.equals(xmlBaseURI + "boolean")) {
+      return Boolean.class;
+    } else if (propertyType.equals(xmlBaseURI + "float")) {
+      return Float.class;
+    } else {
+      return null;
+    }
+  }
+
+  public static Class<?> getPrimitiveClassAsArray(String propertyType) {
+    String xmlBaseURI = "http://www.w3.org/2001/XMLSchema#";
+    if (propertyType.equals(xmlBaseURI + "string")) {
+      return String[].class;
+    } else if (propertyType.equals(xmlBaseURI + "double")) {
+      return Double[].class;
+    } else if (propertyType.equals(xmlBaseURI + "long")) {
+      return Long[].class;
+    } else if (propertyType.equals(xmlBaseURI + "integer")) {
+      return Integer[].class;
+    } else if (propertyType.equals(xmlBaseURI + "boolean")) {
+      return Boolean[].class;
+    } else if (propertyType.equals(xmlBaseURI + "float")) {
+      return Float[].class;
+    } else {
+      return null;
+    }
+  }
+
+  public static List<Map<String, Object>> asList(Map<String, Object> map) {
+    List<Map<String, Object>> result = new ArrayList<>();
+    result.add(map);
+    return result;
+  }
+
 }

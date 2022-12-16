@@ -20,81 +20,81 @@ package org.apache.streampipes.model.client.monitoring.pipeline;
 
 public class BurrowConsumerGroupStatus {
 
-    private String cluster;
-    private String group;
-    private String status;
-    private boolean complete;
-    private String[] partitions;
+  private String cluster;
+  private String group;
+  private String status;
+  private boolean complete;
+  private String[] partitions;
 
-    private Integer partition_count;
-    private Integer maxlag;
-    private Integer totallag;
+  private Integer partitionCount;
+  private Integer maxlag;
+  private Integer totallag;
 
-    public BurrowConsumerGroupStatus() {
+  public BurrowConsumerGroupStatus() {
 
-    }
+  }
 
-    public String getCluster() {
-        return cluster;
-    }
+  public String getCluster() {
+    return cluster;
+  }
 
-    public void setCluster(String cluster) {
-        this.cluster = cluster;
-    }
+  public void setCluster(String cluster) {
+    this.cluster = cluster;
+  }
 
-    public String getGroup() {
-        return group;
-    }
+  public String getGroup() {
+    return group;
+  }
 
-    public void setGroup(String group) {
-        this.group = group;
-    }
+  public void setGroup(String group) {
+    this.group = group;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-    public boolean isComplete() {
-        return complete;
-    }
+  public boolean isComplete() {
+    return complete;
+  }
 
-    public void setComplete(boolean complete) {
-        this.complete = complete;
-    }
+  public void setComplete(boolean complete) {
+    this.complete = complete;
+  }
 
-    public String[] getPartitions() {
-        return partitions;
-    }
+  public String[] getPartitions() {
+    return partitions;
+  }
 
-    public void setPartitions(String[] partitions) {
-        this.partitions = partitions;
-    }
+  public void setPartitions(String[] partitions) {
+    this.partitions = partitions;
+  }
 
-    public Integer getPartition_count() {
-        return partition_count;
-    }
+  public Integer getPartitionCount() {
+    return partitionCount;
+  }
 
-    public void setPartition_count(Integer partition_count) {
-        this.partition_count = partition_count;
-    }
+  public void setPartitionCount(Integer partitionCount) {
+    this.partitionCount = partitionCount;
+  }
 
-    public Integer getMaxlag() {
-        return maxlag;
-    }
+  public Integer getMaxlag() {
+    return maxlag;
+  }
 
-    public void setMaxlag(Integer maxlag) {
-        this.maxlag = maxlag;
-    }
+  public void setMaxlag(Integer maxlag) {
+    this.maxlag = maxlag;
+  }
 
-    public Integer getTotallag() {
-        return totallag;
-    }
+  public Integer getTotallag() {
+    return totallag;
+  }
 
-    public void setTotallag(Integer totallag) {
-        this.totallag = totallag;
-    }
+  public void setTotallag(Integer totallag) {
+    this.totallag = totallag;
+  }
 }

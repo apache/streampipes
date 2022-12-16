@@ -30,11 +30,11 @@ public class TestFieldHasherUtils {
 
   public static List<Event> makeTestData(boolean originalValue, HashAlgorithm hashAlgorithm) {
     List<Event> data = new ArrayList<>();
-    for(int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       Event event = new Event();
       event.addField("timestamp", i);
       event.addField("field", originalValue ? testData.get(i) : hashAlgorithm.toHashValue
-              (testData
+          (testData
               .get(i)));
       data.add(event);
     }

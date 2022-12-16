@@ -23,12 +23,12 @@ import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
 public class OrderingByTime extends QueryElement<OrderingByTimeParams> {
 
-    public OrderingByTime(OrderingByTimeParams orderingByTimeParams) {
-        super(orderingByTimeParams);
-    }
+  public OrderingByTime(OrderingByTimeParams orderingByTimeParams) {
+    super(orderingByTimeParams);
+  }
 
-    @Override
-    protected String buildStatement(OrderingByTimeParams orderingByTimeParams) {
-        return QueryTemplatesV4.orderByTime(orderingByTimeParams.getOrdering());
-    }
+  @Override
+  protected String buildStatement(OrderingByTimeParams orderingByTimeParams) {
+    return QueryTemplatesV4.orderByTime(orderingByTimeParams.getOrdering());
+  }
 }

@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.model.assets;
 
+import org.apache.streampipes.commons.constants.GenericDocTypes;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.commons.constants.GenericDocTypes;
 
 public class SpAssetModel extends SpAsset {
 
-  public static final String appDocType = GenericDocTypes.DOC_ASSET_MANGEMENT;
+  public static final String APP_DOC_TYPE = GenericDocTypes.DOC_ASSET_MANGEMENT;
 
   @JsonProperty("_id")
   private @SerializedName("_id") String id;

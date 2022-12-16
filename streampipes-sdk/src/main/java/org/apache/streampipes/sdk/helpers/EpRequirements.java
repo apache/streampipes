@@ -124,7 +124,8 @@ public class EpRequirements {
     return appendDomainProperty(datatypeReq(SO.Number), domainProperty);
   }
 
-  private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty, Class<T> eventProperty) {
+  private static <T extends EventProperty> EventProperty domainPropertyReq(String domainProperty,
+                                                                           Class<T> eventProperty) {
     EventProperty ep = null;
     try {
       ep = eventProperty.newInstance();

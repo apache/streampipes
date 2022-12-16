@@ -23,6 +23,7 @@ import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
 
 import javax.ws.rs.core.Response;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,20 +37,20 @@ public abstract class AbstractPipelineExtractionResource<T> extends AbstractRest
     List<T> pipelines = extract(new ArrayList<>(), appId);
 
     Optional<T> matchedPipeline =
-            pipelines
-                    .stream()
-                    .filter(pipeline -> matches(pipeline, pipelineId, fieldValue)).findFirst();
+        pipelines
+            .stream()
+            .filter(pipeline -> matches(pipeline, pipelineId, fieldValue)).findFirst();
 
     return matchedPipeline.isPresent() ? ok(matchedPipeline.get()) : fail();
   }
 
   protected List<T> extract(List<T> target, String appId) {
     getPipelineStorage()
-            .getAllPipelines()
-            .forEach(pipeline -> {
-              List<DataSinkInvocation> sinks = extractSink(pipeline, appId);
-              sinks.forEach(sink -> target.add(convert(pipeline, sink)));
-            });
+        .getAllPipelines()
+        .forEach(pipeline -> {
+          List<DataSinkInvocation> sinks = extractSink(pipeline, appId);
+          sinks.forEach(sink -> target.add(convert(pipeline, sink)));
+        });
     return target;
   }
 
@@ -57,32 +58,32 @@ public abstract class AbstractPipelineExtractionResource<T> extends AbstractRest
                                DataSinkInvocation sink);
 
   protected abstract boolean matches(T resourceToExtract,
-                            String pipelineId,
-                            String fieldValue);
+                                     String pipelineId,
+                                     String fieldValue);
 
   protected List<DataSinkInvocation> extractSink(Pipeline pipeline, String appId) {
     return pipeline
-            .getActions()
-            .stream()
-            .filter(sink -> sink.getAppId().equals(appId))
-            .collect(Collectors.toList());
+        .getActions()
+        .stream()
+        .filter(sink -> sink.getAppId().equals(appId))
+        .collect(Collectors.toList());
   }
 
   protected String extractFieldValue(DataSinkInvocation sink, String fieldName) {
     return sink.getStaticProperties()
-            .stream()
-            .filter(sp -> sp.getInternalName().equals(fieldName))
-            .map(sp -> (FreeTextStaticProperty) sp)
-            .findFirst().get().getValue();
+        .stream()
+        .filter(sp -> sp.getInternalName().equals(fieldName))
+        .map(sp -> (FreeTextStaticProperty) sp)
+        .findFirst().get().getValue();
   }
 
   protected String extractInputTopic(DataSinkInvocation sink) {
     return sink
-            .getInputStreams()
-            .get(0)
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName();
+        .getInputStreams()
+        .get(0)
+        .getEventGrounding()
+        .getTransportProtocol()
+        .getTopicDefinition()
+        .getActualTopicName();
   }
 }

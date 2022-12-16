@@ -19,13 +19,14 @@
 
 package org.apache.streampipes.service.extensions.base.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.jsonwebtoken.Claims;
 import org.apache.streampipes.commons.constants.HttpConstants;
 import org.apache.streampipes.model.UserInfo;
 import org.apache.streampipes.security.jwt.JwtTokenUtils;
 import org.apache.streampipes.security.jwt.JwtTokenValidator;
 import org.apache.streampipes.security.jwt.PublicKeyResolver;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.jsonwebtoken.Claims;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -36,6 +37,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;

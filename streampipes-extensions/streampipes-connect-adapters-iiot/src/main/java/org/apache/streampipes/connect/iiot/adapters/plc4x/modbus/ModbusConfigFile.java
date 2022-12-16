@@ -19,43 +19,43 @@
 package org.apache.streampipes.connect.iiot.adapters.plc4x.modbus;
 
 public class ModbusConfigFile {
-	
-	private String name;
-	
-	private String dataType;
-	
-	private String logicalAddress;
-	
-	public ModbusConfigFile() {
-	}
-	
-	public ModbusConfigFile(String name, String dataType, String logicalAddress) {
-		this.name = name;
-		this.setDataType(dataType);
-		this.setLogicalAddress(logicalAddress);
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
 
-	public String getDataType() {
-		return dataType;
-	}
+  private String name;
 
-	public void setDataType(String dataType) {
-		this.dataType = dataType;
-	}
+  private String dataType;
 
-	public String getLogicalAddress() {
-		return logicalAddress;
-	}
+  private String logicalAddress;
 
-	public void setLogicalAddress(String logicalAddress) {
-		this.logicalAddress = logicalAddress;
-	}
+  public ModbusConfigFile() {
+  }
+
+  public ModbusConfigFile(String name, String dataType, String logicalAddress) {
+    this.name = name;
+    this.setDataType(dataType);
+    this.setLogicalAddress(logicalAddress);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDataType() {
+    return dataType;
+  }
+
+  public void setDataType(String dataType) {
+    this.dataType = dataType;
+  }
+
+  public String getLogicalAddress() {
+    return logicalAddress;
+  }
+
+  public void setLogicalAddress(String logicalAddress) {
+    this.logicalAddress = logicalAddress;
+  }
 }

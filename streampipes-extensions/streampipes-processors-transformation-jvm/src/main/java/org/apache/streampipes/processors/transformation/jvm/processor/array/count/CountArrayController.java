@@ -37,27 +37,28 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 
 public class CountArrayController extends StandaloneEventProcessingDeclarer<CountArrayParameters> {
 
-  public final static String COUNT_NAME = "countValue";
-  public final static String ARRAY_FIELD = "array-field";
+  public static final String COUNT_NAME = "countValue";
+  public static final String ARRAY_FIELD = "array-field";
 
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.count-array")
-            .category(DataProcessorType.COUNT_OPERATOR)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(
-                    StreamRequirementsBuilder.create()
-                            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                                    Labels.withId(ARRAY_FIELD), PropertyScope.NONE)
-                            .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
-                    SO.Number)))
-            .build();
+        .category(DataProcessorType.COUNT_OPERATOR)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(
+            StreamRequirementsBuilder.create()
+                .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
+                    Labels.withId(ARRAY_FIELD), PropertyScope.NONE)
+                .build())
+        .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
+            SO.Number)))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<CountArrayParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<CountArrayParameters> onInvocation(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor) {
     String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD);
 
     CountArrayParameters params = new CountArrayParameters(graph, arrayField);

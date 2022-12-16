@@ -18,31 +18,32 @@
 
 package org.apache.streampipes.container.util;
 
-import com.google.gson.Gson;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.Response;
 
+import com.google.gson.Gson;
+
 public class Util {
 
-    private static final String Slash = "/";
+  private static final String Slash = "/";
 
-    public static String getInstanceId(String url, String type, String elemntId) {
-        return url.replace(DeclarersSingleton.getInstance().getBaseUri()
-                + type
-                + Slash
-                + elemntId
-                + Slash, "");
+  public static String getInstanceId(String url, String type, String elemntId) {
+    return url.replace(DeclarersSingleton.getInstance().getBaseUri()
+        + type
+        + Slash
+        + elemntId
+        + Slash, "");
+  }
+
+  public static Response fromResponseString(String s) {
+    Gson gson = new Gson();
+    Response result = gson.fromJson(s, Response.class);
+
+    if (result.getElementId() == null) {
+      return null;
+    } else {
+      return result;
     }
 
-    public static Response fromResponseString(String s) {
-        Gson gson = new Gson();
-        Response result = gson.fromJson(s, Response.class);
-
-        if (result.getElementId() == null) {
-            return null;
-        } else {
-            return result;
-        }
-
-    }
+  }
 }

@@ -16,11 +16,10 @@
 [environment:lite]
 ui
 backend
-connect-adapters-iiot
 consul
 couchdb
 kafka
 zookeeper
 influxdb
 sources-watertank-simulator
-pipeline-elements-all-jvm
+extensions-all-jvm

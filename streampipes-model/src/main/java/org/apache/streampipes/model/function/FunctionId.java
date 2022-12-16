@@ -26,11 +26,6 @@ public class FunctionId {
   private String id;
   private int version;
 
-  public static FunctionId from(String id,
-                                int version) {
-    return new FunctionId(id, version);
-  }
-
   public FunctionId() {
   }
 
@@ -40,16 +35,21 @@ public class FunctionId {
     this.version = version;
   }
 
+  public static FunctionId from(String id,
+                                int version) {
+    return new FunctionId(id, version);
+  }
+
   public String getId() {
     return id;
   }
 
-  public int getVersion() {
-    return version;
-  }
-
   public void setId(String id) {
     this.id = id;
+  }
+
+  public int getVersion() {
+    return version;
   }
 
   public void setVersion(int version) {
@@ -58,9 +58,6 @@ public class FunctionId {
 
   @Override
   public String toString() {
-    return "FunctionId{" +
-        "id='" + id + '\'' +
-        ", version=" + version +
-        '}';
+    return String.format("FunctionId{id='%s', version=%d}", id, version);
   }
 }

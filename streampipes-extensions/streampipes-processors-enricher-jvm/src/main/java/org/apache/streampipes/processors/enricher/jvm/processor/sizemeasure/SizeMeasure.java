@@ -32,7 +32,8 @@ public class SizeMeasure implements EventProcessor<SizeMeasureParameters> {
   private SizeMeasureParameters sizeMeasureParameters;
 
   @Override
-  public void onInvocation(SizeMeasureParameters sizeMeasureParameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(SizeMeasureParameters sizeMeasureParameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
     this.sizeMeasureParameters = sizeMeasureParameters;
   }
 

@@ -23,16 +23,16 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class TimestampParameters extends EventProcessorBindingParams {
 
-	private String appendTimePropertyName;
-	
-	public TimestampParameters(DataProcessorInvocation graph,
-			String appendTimePropertyName) {
-		super(graph);
-		this.appendTimePropertyName = appendTimePropertyName;
-	}
+  private String appendTimePropertyName;
 
-	public String getAppendTimePropertyName() {
-		return appendTimePropertyName;
-	}
+  public TimestampParameters(DataProcessorInvocation graph,
+                             String appendTimePropertyName) {
+    super(graph);
+    this.appendTimePropertyName = appendTimePropertyName;
+  }
+
+  public String getAppendTimePropertyName() {
+    return appendTimePropertyName;
+  }
 
 }

@@ -24,6 +24,7 @@ import org.apache.streampipes.storage.couchdb.dao.AbstractDao;
 import org.apache.streampipes.storage.couchdb.dao.DbCommand;
 import org.apache.streampipes.storage.couchdb.dao.FindCommand;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,40 +33,40 @@ import java.util.Optional;
 
 public class AdapterDescriptionStorageImpl extends AbstractDao<AdapterDescription> implements IAdapterStorage {
 
-    Logger LOG = LoggerFactory.getLogger(AdapterDescriptionStorageImpl.class);
+  private static final String SYSTEM_USER = "system";
+  Logger logger = LoggerFactory.getLogger(AdapterDescriptionStorageImpl.class);
 
-    private static final String SYSTEM_USER = "system";
+  public AdapterDescriptionStorageImpl() {
+    super(Utils::getCouchDbAdapterDescriptionClient, AdapterDescription.class);
+  }
 
-    public AdapterDescriptionStorageImpl() {
-        super(Utils::getCouchDbAdapterDescriptionClient, AdapterDescription.class);
-    }
+  @Override
+  public List<AdapterDescription> getAllAdapters() {
+    return findAll();
+  }
 
-    @Override
-    public List<AdapterDescription> getAllAdapters() {
-        return findAll();
-    }
+  @Override
+  public String storeAdapter(AdapterDescription adapter) {
+    return persist(adapter).v;
+  }
 
-    @Override
-    public String storeAdapter(AdapterDescription adapter) {
-        return persist(adapter).b;
-    }
+  @Override
+  public void updateAdapter(AdapterDescription adapter) {
+    couchDbClientSupplier.get().update(adapter);
+  }
 
-    @Override
-    public void updateAdapter(AdapterDescription adapter) {
-        couchDbClientSupplier.get().update(adapter);
-    }
+  @Override
+  public AdapterDescription getAdapter(String adapterId) {
+    DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd =
+        new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
+    return cmd.execute().get();
+  }
 
-    @Override
-    public AdapterDescription getAdapter(String adapterId) {
-        DbCommand<Optional<AdapterDescription>, AdapterDescription> cmd = new FindCommand<>(couchDbClientSupplier, adapterId, AdapterDescription.class);
-        return cmd.execute().get();
-    }
+  @Override
+  public void deleteAdapter(String adapterId) {
 
-    @Override
-    public void deleteAdapter(String adapterId) {
+    AdapterDescription adapterDescription = getAdapter(adapterId);
+    couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
 
-        AdapterDescription adapterDescription = getAdapter(adapterId);
-        couchDbClientSupplier.get().remove(adapterDescription.getElementId(), adapterDescription.getRev());
-
-    }
+  }
 }

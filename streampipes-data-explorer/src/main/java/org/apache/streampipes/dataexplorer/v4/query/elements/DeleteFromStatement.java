@@ -22,12 +22,12 @@ import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
 import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
 public class DeleteFromStatement extends QueryElement<DeleteFromStatementParams> {
-    public DeleteFromStatement(DeleteFromStatementParams deleteFromStatementParams) {
-        super(deleteFromStatementParams);
-    }
+  public DeleteFromStatement(DeleteFromStatementParams deleteFromStatementParams) {
+    super(deleteFromStatementParams);
+  }
 
-    @Override
-    protected String buildStatement(DeleteFromStatementParams deleteFromStatementParams) {
-        return QueryTemplatesV4.deleteFrom(deleteFromStatementParams.getIndex());
-    }
+  @Override
+  protected String buildStatement(DeleteFromStatementParams deleteFromStatementParams) {
+    return QueryTemplatesV4.deleteFrom(deleteFromStatementParams.getIndex());
+  }
 }

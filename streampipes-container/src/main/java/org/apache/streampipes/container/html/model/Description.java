@@ -20,118 +20,125 @@ package org.apache.streampipes.container.html.model;
 
 public class Description {
 
-	private String name;
-	private String description;
-	private String elementId;
-	private String descriptionUrl;
-	private String type;
-	private String appId;
+  private String name;
+  private String description;
+  private String elementId;
+  private String descriptionUrl;
+  private String type;
+  private String appId;
 
-	private boolean editable;
-	private boolean includesIcon;
-	private boolean includesDocs;
+  private boolean editable;
+  private boolean includesIcon;
+  private boolean includesDocs;
 
-	public Description(String name, String description, String descriptionUrl)
-	{
-		this.name = name;
-		this.description = description;
-		this.descriptionUrl = descriptionUrl;
-	}
-	
-	public Description()
-	{
-		
-	}
-	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+  public Description(String name, String description, String descriptionUrl) {
+    this.name = name;
+    this.description = description;
+    this.descriptionUrl = descriptionUrl;
+  }
 
-	public String getDescriptionUrl() {
-		return descriptionUrl;
-	}
+  public Description() {
 
-	public void setDescriptionUrl(String descriptionUrl) {
-		this.descriptionUrl = descriptionUrl;
-	}
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getDescriptionUrl() {
+    return descriptionUrl;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setDescriptionUrl(String descriptionUrl) {
+    this.descriptionUrl = descriptionUrl;
+  }
 
-	public String getAppId() {
-		return appId;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public boolean isEditable() {
-		return editable;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setEditable(boolean editable) {
-		this.editable = editable;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getElementId() {
-		return elementId;
-	}
+  public String getAppId() {
+    return appId;
+  }
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
 
-	public boolean isIncludesIcon() {
-		return includesIcon;
-	}
+  public boolean isEditable() {
+    return editable;
+  }
 
-	public void setIncludesIcon(boolean includesIcon) {
-		this.includesIcon = includesIcon;
-	}
+  public void setEditable(boolean editable) {
+    this.editable = editable;
+  }
 
-	public boolean isIncludesDocs() {
-		return includesDocs;
-	}
+  public String getElementId() {
+    return elementId;
+  }
 
-	public void setIncludesDocs(boolean includesDocs) {
-		this.includesDocs = includesDocs;
-	}
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 
-	@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+  public boolean isIncludesIcon() {
+    return includesIcon;
+  }
 
-        Description that = (Description) o;
+  public void setIncludesIcon(boolean includesIcon) {
+    this.includesIcon = includesIcon;
+  }
 
-        if (!name.equals(that.name)) return false;
-        if (!description.equals(that.description)) return false;
-        return descriptionUrl.equals(that.descriptionUrl);
+  public boolean isIncludesDocs() {
+    return includesDocs;
+  }
 
+  public void setIncludesDocs(boolean includesDocs) {
+    this.includesDocs = includesDocs;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
 
-    @Override
-    public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + descriptionUrl.hashCode();
-        return result;
+    Description that = (Description) o;
+
+    if (!name.equals(that.name)) {
+      return false;
     }
+    if (!description.equals(that.description)) {
+      return false;
+    }
+    return descriptionUrl.equals(that.descriptionUrl);
+
+  }
+
+  @Override
+  public int hashCode() {
+    int result = name.hashCode();
+    result = 31 * result + description.hashCode();
+    result = 31 * result + descriptionUrl.hashCode();
+    return result;
+  }
 }

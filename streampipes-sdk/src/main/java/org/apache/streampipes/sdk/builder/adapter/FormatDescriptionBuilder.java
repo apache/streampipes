@@ -22,7 +22,7 @@ import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.sdk.builder.AbstractConfigurablePipelineElementBuilder;
 
 public class FormatDescriptionBuilder extends
-        AbstractConfigurablePipelineElementBuilder<FormatDescriptionBuilder, FormatDescription> {
+    AbstractConfigurablePipelineElementBuilder<FormatDescriptionBuilder, FormatDescription> {
 
   protected FormatDescriptionBuilder(String appId, String label, String description) {
     super(appId, label, description, new FormatDescription());
@@ -30,8 +30,10 @@ public class FormatDescriptionBuilder extends
 
   /**
    * Creates a new format description using the builder pattern.
-   * @param id A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
-   * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   *
+   * @param id          A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
+   * @param label       A human-readable name of the element.
+   *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    */
   public static FormatDescriptionBuilder create(String id, String label, String description) {
@@ -40,6 +42,7 @@ public class FormatDescriptionBuilder extends
 
   /**
    * Add a format type to the format description, e.g. json
+   *
    * @param formatType
    * @return
    */

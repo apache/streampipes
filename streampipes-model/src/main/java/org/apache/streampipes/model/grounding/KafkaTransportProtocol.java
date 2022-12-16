@@ -49,7 +49,8 @@ public class KafkaTransportProtocol extends TransportProtocol {
     this.kafkaPort = kafkaPort;
   }
 
-  public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic, String zookeeperHost, int zookeeperPort) {
+  public KafkaTransportProtocol(String kafkaHost, int kafkaPort, String topic, String zookeeperHost,
+                                int zookeeperPort) {
     super(kafkaHost, new SimpleTopicDefinition(topic));
     this.zookeeperHost = zookeeperHost;
     this.zookeeperPort = zookeeperPort;
@@ -81,6 +82,10 @@ public class KafkaTransportProtocol extends TransportProtocol {
     super();
   }
 
+  public static long getSerialVersionUID() {
+    return serialVersionUID;
+  }
+
   public String getZookeeperHost() {
     return zookeeperHost;
   }
@@ -103,10 +108,6 @@ public class KafkaTransportProtocol extends TransportProtocol {
 
   public void setKafkaPort(int kafkaPort) {
     this.kafkaPort = kafkaPort;
-  }
-
-  public static long getSerialVersionUID() {
-    return serialVersionUID;
   }
 
   public Integer getLingerMs() {

@@ -27,6 +27,7 @@ import org.apache.streampipes.commons.networking.Networking;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,11 +84,11 @@ public class StreamPipesClientRuntimeConnectionResolver implements ClientConnect
 
   private List<String> findClientServices() {
     return SpServiceDiscovery
-            .getServiceDiscovery()
-            .getServiceEndpoints(
-                    DefaultSpServiceGroups.CORE,
-                    true,
-                    Collections.singletonList(DefaultSpServiceTags.STREAMPIPES_CLIENT.asString())
-            );
+        .getServiceDiscovery()
+        .getServiceEndpoints(
+            DefaultSpServiceGroups.CORE,
+            true,
+            Collections.singletonList(DefaultSpServiceTags.STREAMPIPES_CLIENT.asString())
+        );
   }
 }

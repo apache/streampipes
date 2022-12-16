@@ -21,37 +21,37 @@ package org.apache.streampipes.model.client.monitoring;
 import java.util.Date;
 
 public class TaskReport {
-	//contains report of an individual task
-	private Date executionDate;
-	private boolean success;
-	private String taskName;
-	
-	private String optionalMessage;
+  //contains report of an individual task
+  private Date executionDate;
+  private boolean success;
+  private String taskName;
 
-	public TaskReport(String taskName, Date executionDate, boolean success,
-			String optinalMessage) {
-		super();
-		this.executionDate = executionDate;
-		this.success = success;
-		this.optionalMessage = optinalMessage;
-		this.taskName = taskName;
-	}
+  private String optionalMessage;
 
-	public Date getExecutionDate() {
-		return executionDate;
-	}
+  public TaskReport(String taskName, Date executionDate, boolean success,
+                    String optinalMessage) {
+    super();
+    this.executionDate = executionDate;
+    this.success = success;
+    this.optionalMessage = optinalMessage;
+    this.taskName = taskName;
+  }
 
-	public boolean isSuccess() {
-		return success;
-	}
+  public Date getExecutionDate() {
+    return executionDate;
+  }
 
-	public String getOptionalMessage() {
-		return optionalMessage;
-	}	
-	
-	@Override
-	public String toString()
-	{
-		return "{ \nTask Execution: " +taskName +"\nDate: " +executionDate.toString() +"\nSuccess: " +success + "\nMessage: " +optionalMessage +"}";
-	}
+  public boolean isSuccess() {
+    return success;
+  }
+
+  public String getOptionalMessage() {
+    return optionalMessage;
+  }
+
+  @Override
+  public String toString() {
+    return "{ \nTask Execution: " + taskName + "\nDate: " + executionDate.toString() + "\nSuccess: " + success
+         + "\nMessage: " + optionalMessage + "}";
+  }
 }

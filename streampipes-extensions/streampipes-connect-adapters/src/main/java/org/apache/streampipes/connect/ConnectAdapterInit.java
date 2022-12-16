@@ -47,25 +47,25 @@ public class ConnectAdapterInit extends ExtensionsModelSubmitter {
   @Override
   public SpServiceDefinition provideServiceDefinition() {
     return SpServiceDefinitionBuilder.create("connect-adapter",
-        "StreamPipes Connect Worker Main",
-        "", 8001)
-      .registerAdapter(new GdeltAdapter())
-      .registerAdapter(new CoindeskBitcoinAdapter())
-      .registerAdapter(new NetioRestAdapter())
-      .registerAdapter(new NetioMQTTAdapter())
-      .registerAdapter(new IexCloudNewsAdapter())
-      .registerAdapter(new IexCloudStockAdapter())
-      .registerAdapter(new RandomDataSetAdapter())
-      .registerAdapter(new RandomDataStreamAdapter())
-      .registerAdapter(new SlackAdapter())
-      .registerAdapter(new WikipediaEditedArticlesAdapter())
-      .registerAdapter(new WikipediaNewArticlesAdapter())
-      .registerAdapter(new ImageStreamAdapter())
-      .registerAdapter(new ImageSetAdapter())
-      .registerAdapter(new IssAdapter())
-      .registerAdapter(new FlicMQTTAdapter())
-      .registerAdapter(new TISensorTag())
-      .build();
+            "StreamPipes Connect Worker Main",
+            "", 8001)
+        .registerAdapter(new GdeltAdapter())
+        .registerAdapter(new CoindeskBitcoinAdapter())
+        .registerAdapter(new NetioRestAdapter())
+        .registerAdapter(new NetioMQTTAdapter())
+        .registerAdapter(new IexCloudNewsAdapter())
+        .registerAdapter(new IexCloudStockAdapter())
+        .registerAdapter(new RandomDataSetAdapter())
+        .registerAdapter(new RandomDataStreamAdapter())
+        .registerAdapter(new SlackAdapter())
+        .registerAdapter(new WikipediaEditedArticlesAdapter())
+        .registerAdapter(new WikipediaNewArticlesAdapter())
+        .registerAdapter(new ImageStreamAdapter())
+        .registerAdapter(new ImageSetAdapter())
+        .registerAdapter(new IssAdapter())
+        .registerAdapter(new FlicMQTTAdapter())
+        .registerAdapter(new TISensorTag())
+        .build();
   }
 
 }

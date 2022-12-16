@@ -22,8 +22,8 @@ import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 
-public interface ResolvesContainerProvidedOutputStrategy<T extends InvocableStreamPipesEntity, P
-        extends AbstractParameterExtractor<T>> {
+public interface ResolvesContainerProvidedOutputStrategy<T extends InvocableStreamPipesEntity, K
+    extends AbstractParameterExtractor<T>> {
 
-  EventSchema resolveOutputStrategy(T processingElement, P parameterExtractor) throws SpConfigurationException;
+  EventSchema resolveOutputStrategy(T processingElement, K parameterExtractor) throws SpConfigurationException;
 }

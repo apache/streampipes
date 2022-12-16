@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.rest.impl;
 
-import com.google.gson.JsonObject;
+
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.rest.core.base.impl.AbstractRestResource;
+
+import com.google.gson.JsonObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

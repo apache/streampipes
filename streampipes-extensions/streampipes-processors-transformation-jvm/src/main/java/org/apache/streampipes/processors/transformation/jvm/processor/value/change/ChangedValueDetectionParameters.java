@@ -22,20 +22,20 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
 public class ChangedValueDetectionParameters extends EventProcessorBindingParams {
-    private String compareField;
-    private String changeFieldName;
+  private String compareField;
+  private String changeFieldName;
 
-    public ChangedValueDetectionParameters(DataProcessorInvocation graph, String compareField, String changeFieldName) {
-        super(graph);
-        this.compareField = compareField;
-        this.changeFieldName = changeFieldName;
-    }
+  public ChangedValueDetectionParameters(DataProcessorInvocation graph, String compareField, String changeFieldName) {
+    super(graph);
+    this.compareField = compareField;
+    this.changeFieldName = changeFieldName;
+  }
 
-    public String getCompareField() {
-        return compareField;
-    }
+  public String getCompareField() {
+    return compareField;
+  }
 
-    public String getChangeFieldName() {
-        return changeFieldName;
-    }
+  public String getChangeFieldName() {
+    return changeFieldName;
+  }
 }

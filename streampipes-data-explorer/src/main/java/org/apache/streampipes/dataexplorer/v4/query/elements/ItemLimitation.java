@@ -23,12 +23,12 @@ import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
 public class ItemLimitation extends QueryElement<ItemLimitationParams> {
 
-    public ItemLimitation(ItemLimitationParams itemLimitationParams) {
-        super(itemLimitationParams);
-    }
+  public ItemLimitation(ItemLimitationParams itemLimitationParams) {
+    super(itemLimitationParams);
+  }
 
-    @Override
-    protected String buildStatement(ItemLimitationParams itemLimitationParams) {
-        return QueryTemplatesV4.limitItems(itemLimitationParams.getLimit());
-    }
+  @Override
+  protected String buildStatement(ItemLimitationParams itemLimitationParams) {
+    return QueryTemplatesV4.limitItems(itemLimitationParams.getLimit());
+  }
 }

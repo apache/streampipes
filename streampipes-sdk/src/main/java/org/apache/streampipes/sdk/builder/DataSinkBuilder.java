@@ -39,7 +39,8 @@ public class DataSinkBuilder extends AbstractProcessingElementBuilder<DataSinkBu
    * Creates a new data sink using the builder pattern.
    *
    * @param id          A unique identifier of the new element, e.g., com.mycompany.sink.mynewdatasink
-   * @param label       A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   * @param label       A human-readable name of the element.
+   *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    */
   public static DataSinkBuilder create(String id, String label, String description) {
@@ -60,10 +61,10 @@ public class DataSinkBuilder extends AbstractProcessingElementBuilder<DataSinkBu
 
   public DataSinkBuilder category(DataSinkType... categories) {
     this.elementDescription
-            .setCategory(Arrays
-                    .stream(categories)
-                    .map(Enum::name)
-                    .collect(Collectors.toList()));
+        .setCategory(Arrays
+            .stream(categories)
+            .map(Enum::name)
+            .collect(Collectors.toList()));
     return me();
   }
 

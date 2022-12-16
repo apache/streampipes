@@ -27,33 +27,33 @@ import java.util.List;
 
 public class DataLakeStorageImpl extends AbstractDao<DataLakeMeasure> implements IDataLakeStorage {
 
-    public DataLakeStorageImpl() {
-        super(Utils::getCouchDbDataLakeClient, DataLakeMeasure.class);
-    }
+  public DataLakeStorageImpl() {
+    super(Utils::getCouchDbDataLakeClient, DataLakeMeasure.class);
+  }
 
-    @Override
-    public boolean storeDataLakeMeasure(DataLakeMeasure measure) {
-        return persist(measure).a;
-    }
+  @Override
+  public boolean storeDataLakeMeasure(DataLakeMeasure measure) {
+    return persist(measure).k;
+  }
 
-    @Override
-    public List<DataLakeMeasure> getAllDataLakeMeasures() {
-        List<DataLakeMeasure> dataLakeMeasures = findAll();
-        return dataLakeMeasures;
-    }
+  @Override
+  public List<DataLakeMeasure> getAllDataLakeMeasures() {
+    List<DataLakeMeasure> dataLakeMeasures = findAll();
+    return dataLakeMeasures;
+  }
 
-    @Override
-    public DataLakeMeasure findOne(String id) {
-        return find(id).orElse(null);
-    }
+  @Override
+  public DataLakeMeasure findOne(String id) {
+    return find(id).orElse(null);
+  }
 
-    @Override
-    public void updateDataLakeMeasure(DataLakeMeasure measure) {
-        update(measure);
-    }
+  @Override
+  public void updateDataLakeMeasure(DataLakeMeasure measure) {
+    update(measure);
+  }
 
-    @Override
-    public void deleteDataLakeMeasure(String id) {
-        delete(id);
-    }
+  @Override
+  public void deleteDataLakeMeasure(String id) {
+    delete(id);
+  }
 }

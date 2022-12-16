@@ -26,19 +26,19 @@ public class MessageCounter {
   public MessageCounter() {
   }
 
-  public void setLastTimestamp(long lastTimestamp) {
-    this.lastTimestamp = lastTimestamp;
-  }
-
-  public void setCounter(long counter) {
-    this.counter = counter;
-  }
-
   public long getLastTimestamp() {
     return lastTimestamp;
   }
 
+  public void setLastTimestamp(long lastTimestamp) {
+    this.lastTimestamp = lastTimestamp;
+  }
+
   public long getCounter() {
     return counter;
+  }
+
+  public void setCounter(long counter) {
+    this.counter = counter;
   }
 }

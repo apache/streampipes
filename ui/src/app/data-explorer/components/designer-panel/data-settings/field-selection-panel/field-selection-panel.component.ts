@@ -60,7 +60,9 @@ export class FieldSelectionPanelComponent implements OnInit {
   }
 
   addAllFields(checkFields: FieldConfig[] = []) {
-    this.sourceConfig.measure.eventSchema.eventProperties.forEach(property => {
+    this.sourceConfig.measure.eventSchema.eventProperties
+      .sort((a, b) => a.runtimeName.localeCompare(b.runtimeName))
+      .forEach(property => {
       // this ensures that dimension properties are not aggregated, this is not possible with the influxdb, See [STREAMPIPES-524]
       if (this.sourceConfig.queryType === 'raw' || property.propertyScope !== 'DIMENSION_PROPERTY') {
         const fieldConfig = checkFields.find(field => field.runtimeName === property.runtimeName);

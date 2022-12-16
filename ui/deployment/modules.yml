@@ -107,7 +107,7 @@ spAppOverview:
   link: 'apps'
   url: '/apps'
   title: 'Apps'
-  description: 'The app overview allows you to view and open additional StreamPipes plugins.'
+  description: 'The app overview lets you access additional plugins.'
   icon: 'apps'
   homeImage: '/assets/img/home/configuration.png'
   admin: false

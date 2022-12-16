@@ -24,10 +24,20 @@ import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.schema.PropertyScope;
-import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.*;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.Operation;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationAddition;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationDivide;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationModulo;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationMultiply;
+import org.apache.streampipes.processors.enricher.jvm.processor.math.operation.OperationSubtracting;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.Options;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.vocabulary.SO;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
@@ -37,10 +47,10 @@ import org.apache.streampipes.wrapper.standalone.StreamPipesDataProcessor;
 
 public class MathOpProcessor extends StreamPipesDataProcessor {
 
-  private final String RESULT_FIELD = "calculationResult";
-  private final String LEFT_OPERAND = "leftOperand";
-  private final String RIGHT_OPERAND = "rightOperand";
-  private final String OPERATION = "operation";
+  private static final String RESULT_FIELD = "calculationResult";
+  private static final String LEFT_OPERAND = "leftOperand";
+  private static final String RIGHT_OPERAND = "rightOperand";
+  private static final String OPERATION = "operation";
 
   Operation arithmeticOperation = null;
   String leftOperand;
@@ -49,28 +59,29 @@ public class MathOpProcessor extends StreamPipesDataProcessor {
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.enricher.jvm.processor.math.mathop")
-      .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-      .withLocales(Locales.EN)
-      .category(DataProcessorType.ALGORITHM)
-      .requiredStream(StreamRequirementsBuilder
-        .create()
-        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-          Labels.withId(LEFT_OPERAND),
-          PropertyScope.NONE)
-        .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
-          Labels.withId(RIGHT_OPERAND),
-          PropertyScope.NONE)
-        .build())
-      .outputStrategy(
-        OutputStrategies.append(
-          EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
-      .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/",
-        "*", "%"))
-      .build();
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.ALGORITHM)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(LEFT_OPERAND),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(EpRequirements.numberReq(),
+                Labels.withId(RIGHT_OPERAND),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(
+            OutputStrategies.append(
+                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
+        .requiredSingleValueSelection(Labels.withId(OPERATION), Options.from("+", "-", "/",
+            "*", "%"))
+        .build();
   }
 
   @Override
-  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(ProcessorParams parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.leftOperand = parameters.extractor().mappingPropertyValue(LEFT_OPERAND);
     this.rightOperand = parameters.extractor().mappingPropertyValue(RIGHT_OPERAND);
     String operation = parameters.extractor().selectedSingleValue(OPERATION, String.class);
@@ -95,7 +106,7 @@ public class MathOpProcessor extends StreamPipesDataProcessor {
 
   @Override
   public void onEvent(Event in, SpOutputCollector out) throws SpRuntimeException {
-    Double leftValue  = in.getFieldBySelector(leftOperand).getAsPrimitive().getAsDouble();
+    Double leftValue = in.getFieldBySelector(leftOperand).getAsPrimitive().getAsDouble();
     Double rightValue = in.getFieldBySelector(rightOperand).getAsPrimitive().getAsDouble();
 
     Double result = arithmeticOperation.operate(leftValue, rightValue);

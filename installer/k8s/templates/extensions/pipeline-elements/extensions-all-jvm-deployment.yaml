@@ -27,16 +27,9 @@ spec:
       labels:
         app: extensions-all-jvm
     spec:
-      volumes:
-        - name: files-pv
-          persistentVolumeClaim:
-            claimName: files-pvc
       containers:
         - name: extensions-all-jvm
           image: {{ .Values.streampipes.registry }}/extensions-all-jvm:{{ .Values.streampipes.version }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           ports:
             - containerPort: 8090
-          volumeMounts:
-            - mountPath: "/spImages"
-              name: files-pv

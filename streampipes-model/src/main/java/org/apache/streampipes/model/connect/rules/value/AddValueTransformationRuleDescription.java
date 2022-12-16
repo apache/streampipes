@@ -20,33 +20,33 @@ package org.apache.streampipes.model.connect.rules.value;
 
 public class AddValueTransformationRuleDescription extends ValueTransformationRuleDescription {
 
-    private String runtimeKey;
+  private String runtimeKey;
 
-    private String staticValue;
+  private String staticValue;
 
-    public AddValueTransformationRuleDescription() {
-        super();
-    }
+  public AddValueTransformationRuleDescription() {
+    super();
+  }
 
-    public AddValueTransformationRuleDescription(AddValueTransformationRuleDescription other) {
-        super(other);
-        this.runtimeKey = other.getRuntimeKey();
-        this.staticValue = other.getStaticValue();
-    }
+  public AddValueTransformationRuleDescription(AddValueTransformationRuleDescription other) {
+    super(other);
+    this.runtimeKey = other.getRuntimeKey();
+    this.staticValue = other.getStaticValue();
+  }
 
-    public String getRuntimeKey() {
-        return runtimeKey;
-    }
+  public String getRuntimeKey() {
+    return runtimeKey;
+  }
 
-    public void setRuntimeKey(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
-    }
+  public void setRuntimeKey(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 
-    public String getStaticValue() {
-        return staticValue;
-    }
+  public String getStaticValue() {
+    return staticValue;
+  }
 
-    public void setStaticValue(String staticValue) {
-        this.staticValue = staticValue;
-    }
+  public void setStaticValue(String staticValue) {
+    this.staticValue = staticValue;
+  }
 }

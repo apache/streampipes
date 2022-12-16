@@ -19,5 +19,5 @@
 package org.apache.streampipes.model.client.deployment;
 
 public enum OutputType {
-	IMPLEMENTATION, DESCRIPTION, DIRECT_IMPORT
+  IMPLEMENTATION, DESCRIPTION, DIRECT_IMPORT
 }

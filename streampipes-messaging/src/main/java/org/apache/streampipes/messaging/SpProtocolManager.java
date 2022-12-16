@@ -28,7 +28,7 @@ public enum SpProtocolManager {
 
   INSTANCE;
 
-  private List<SpProtocolDefinitionFactory<? extends TransportProtocol>> availableProtocols;
+  private final List<SpProtocolDefinitionFactory<? extends TransportProtocol>> availableProtocols;
 
   SpProtocolManager() {
     this.availableProtocols = new ArrayList<>();
@@ -42,17 +42,16 @@ public enum SpProtocolManager {
     return availableProtocols;
   }
 
-  public <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> findDefinition(T
-                                                                         transportProtocol) {
+  public <T extends TransportProtocol> Optional<SpProtocolDefinition<T>> findDefinition(T transportProtocol) {
     // TODO add RDF URI for protocol in model
     return this.availableProtocols
-            .stream()
-            .filter
-                    (adf -> adf.getTransportProtocolClass().equals(transportProtocol.getClass()
-                            .getCanonicalName()))
-            .map(s -> (SpProtocolDefinitionFactory<T>) s)
-            .map(SpProtocolDefinitionFactory::createInstance)
-            .findFirst();
+        .stream()
+        .filter
+            (adf -> adf.getTransportProtocolClass().equals(transportProtocol.getClass()
+                .getCanonicalName()))
+        .map(s -> (SpProtocolDefinitionFactory<T>) s)
+        .map(SpProtocolDefinitionFactory::createInstance)
+        .findFirst();
 
   }
 }

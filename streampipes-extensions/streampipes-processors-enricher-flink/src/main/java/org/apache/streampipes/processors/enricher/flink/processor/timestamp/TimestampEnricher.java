@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.processors.enricher.flink.processor.timestamp;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
-import org.apache.streampipes.model.runtime.Event;
 
 public class TimestampEnricher implements FlatMapFunction<Event, Event> {
 

@@ -24,8 +24,8 @@ import org.apache.streampipes.logging.impl.PeLogger;
 public class LoggerFactory {
 
   //  public static Logger getPeLogger(Class clazz, String correspondingPipeline, String peUri, PeConfig peConfig) {
-    public static Logger getPeLogger(Class clazz, String correspondingPipeline, String peUri) {
+  public static Logger getPeLogger(Class clazz, String correspondingPipeline, String peUri) {
     //    return new PeLogger(clazz, correspondingPipeline, peUri, peConfig);
-        return new PeLogger(clazz, correspondingPipeline, peUri);
-    }
+    return new PeLogger(clazz, correspondingPipeline, peUri);
+  }
 }

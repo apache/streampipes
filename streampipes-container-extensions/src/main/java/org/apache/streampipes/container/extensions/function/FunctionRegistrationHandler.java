@@ -20,6 +20,7 @@ package org.apache.streampipes.container.extensions.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.function.FunctionDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -17,9 +17,6 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import com.google.common.collect.Maps;
-import org.apache.pulsar.client.api.Producer;
-import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.streampipes.connect.adapter.format.json.object.JsonObjectFormat;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
@@ -30,6 +27,10 @@ import org.apache.streampipes.model.connect.rules.DebugSinkRuleDescription;
 import org.apache.streampipes.sdk.builder.adapter.GenericDataStreamAdapterBuilder;
 import org.apache.streampipes.sdk.builder.adapter.ProtocolDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
+
+import com.google.common.collect.Maps;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.PulsarClient;
 import org.junit.Assert;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -41,7 +42,7 @@ import java.util.Objects;
 
 public class PulsarAdapterTester extends AdapterTesterBase {
   PulsarContainer pulsarContainer;
-  private final static String TOPIC = "test-topic";
+  private static final String TOPIC = "test-topic";
 
   @Override
   public void startAdapterService() {

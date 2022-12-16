@@ -20,18 +20,18 @@ package org.apache.streampipes.dataexplorer.v4.params;
 
 public class OffsetParams extends QueryParamsV4 {
 
-    private final Integer offset;
+  private final Integer offset;
 
-    public static OffsetParams from(String measurementID, Integer offset) {
-        return new OffsetParams(measurementID, offset);
-    }
+  public OffsetParams(String measurementID, Integer offset) {
+    super(measurementID);
+    this.offset = offset;
+  }
 
-    public OffsetParams(String measurementID, Integer offset) {
-        super(measurementID);
-        this.offset = offset;
-    }
+  public static OffsetParams from(String measurementID, Integer offset) {
+    return new OffsetParams(measurementID, offset);
+  }
 
-    public Integer getOffset() {
-        return offset;
-    }
+  public Integer getOffset() {
+    return offset;
+  }
 }

@@ -27,7 +27,11 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorDeclarer;
 import org.apache.streampipes.wrapper.flink.FlinkDataProcessorRuntime;
@@ -42,24 +46,24 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.flink.wordcount")
-            .withAssets(Assets.DOCUMENTATION)
-            .withLocales(Locales.EN)
-            .category(DataProcessorType.AGGREGATE)
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.stringReq(),
-                            Labels.withId(WORD_COUNT_FIELD_KEY),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(
-                    Labels.withId(WORD_KEY),
-                    "word",
-                    "http://schema.org/text"),
-                    EpProperties.integerEp(Labels.withId(COUNT_KEY),
-                    "count", "http://schema.org/number")))
-            .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
-            .build();
+        .withAssets(Assets.DOCUMENTATION)
+        .withLocales(Locales.EN)
+        .category(DataProcessorType.AGGREGATE)
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.stringReq(),
+                Labels.withId(WORD_COUNT_FIELD_KEY),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.fixed(EpProperties.stringEp(
+                Labels.withId(WORD_KEY),
+                "word",
+                "http://schema.org/text"),
+            EpProperties.integerEp(Labels.withId(COUNT_KEY),
+                "count", "http://schema.org/number")))
+        .requiredIntegerParameter(Labels.withId(TIME_WINDOW_KEY))
+        .build();
   }
 
   @Override
@@ -71,7 +75,8 @@ public class WordCountController extends FlinkDataProcessorDeclarer<WordCountPar
     String fieldName = extractor.mappingPropertyValue(WORD_COUNT_FIELD_KEY);
     Integer timeWindowValue = extractor.singleValueParameter(TIME_WINDOW_KEY, Integer.class);
 
-    return new WordCountProgram(new WordCountParameters(graph, fieldName, timeWindowValue), configExtractor, streamPipesClient);
+    return new WordCountProgram(new WordCountParameters(graph, fieldName, timeWindowValue), configExtractor,
+        streamPipesClient);
 
   }
 }

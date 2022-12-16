@@ -46,11 +46,11 @@ public class ProvidedQueryParams {
   }
 
   public Integer getAsInt(String key) {
-    return has(key) ? Integer.parseInt(providedParams.get(key)): null;
+    return has(key) ? Integer.parseInt(providedParams.get(key)) : null;
   }
 
   public String getAsString(String key) {
-    return has(key) ? providedParams.get(key): null;
+    return has(key) ? providedParams.get(key) : null;
   }
 
   public boolean getAsBoolean(String key) {

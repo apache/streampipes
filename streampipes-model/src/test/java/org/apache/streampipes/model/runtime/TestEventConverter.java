@@ -17,12 +17,12 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import java.util.Map;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class TestEventConverter {
 

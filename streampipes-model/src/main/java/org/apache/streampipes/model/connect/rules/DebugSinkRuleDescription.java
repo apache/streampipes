@@ -21,7 +21,7 @@ import org.apache.streampipes.model.shared.annotation.TsModel;
 
 @TsModel
 public class DebugSinkRuleDescription extends TransformationRuleDescription {
-    public DebugSinkRuleDescription() {
-        super();
-    }
+  public DebugSinkRuleDescription() {
+    super();
+  }
 }

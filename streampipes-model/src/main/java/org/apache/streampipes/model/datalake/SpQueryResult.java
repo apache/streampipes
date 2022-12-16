@@ -26,79 +26,79 @@ import java.util.List;
 @TsModel
 public class SpQueryResult {
 
-    private int total;
-    private List<String> headers;
-    private List<DataSeries> allDataSeries;
-    private int sourceIndex;
-    private SpQueryStatus spQueryStatus;
-    private String forId;
+  private int total;
+  private List<String> headers;
+  private List<DataSeries> allDataSeries;
+  private int sourceIndex;
+  private SpQueryStatus spQueryStatus;
+  private String forId;
 
-    public SpQueryResult() {
-        this.total = 0;
-        this.allDataSeries = new ArrayList<>();
-        this.spQueryStatus = SpQueryStatus.OK;
+  public SpQueryResult() {
+    this.total = 0;
+    this.allDataSeries = new ArrayList<>();
+    this.spQueryStatus = SpQueryStatus.OK;
+  }
+
+  public SpQueryResult(int total, List<String> headers, List<DataSeries> allDataSeries) {
+    this.total = total;
+    this.allDataSeries = allDataSeries;
+    this.headers = headers;
+    this.spQueryStatus = SpQueryStatus.OK;
+  }
+
+  public int getTotal() {
+    return total;
+  }
+
+  public void setTotal(int total) {
+    this.total = total;
+  }
+
+  public void addDataResult(DataSeries dataSeries) {
+    if (this.allDataSeries == null) {
+      this.allDataSeries = new ArrayList<>();
     }
 
-    public SpQueryResult(int total, List<String> headers, List<DataSeries> allDataSeries) {
-        this.total = total;
-        this.allDataSeries = allDataSeries;
-        this.headers = headers;
-        this.spQueryStatus = SpQueryStatus.OK;
-    }
+    this.allDataSeries.add(dataSeries);
+  }
 
-    public int getTotal() {
-        return total;
-    }
+  public List<DataSeries> getAllDataSeries() {
+    return allDataSeries;
+  }
 
-    public void addDataResult(DataSeries dataSeries) {
-        if (this.allDataSeries == null) {
-            this.allDataSeries = new ArrayList<>();
-        }
+  public void setAllDataSeries(List<DataSeries> allDataSeries) {
+    this.allDataSeries = allDataSeries;
+  }
 
-        this.allDataSeries.add(dataSeries);
-    }
+  public List<String> getHeaders() {
+    return headers;
+  }
 
-    public List<DataSeries> getAllDataSeries() {
-        return allDataSeries;
-    }
+  public void setHeaders(List<String> headers) {
+    this.headers = headers;
+  }
 
-    public List<String> getHeaders() {
-        return headers;
-    }
+  public int getSourceIndex() {
+    return sourceIndex;
+  }
 
-    public void setHeaders(List<String> headers) {
-        this.headers = headers;
-    }
+  public void setSourceIndex(int sourceIndex) {
+    this.sourceIndex = sourceIndex;
+  }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
+  public SpQueryStatus getSpQueryStatus() {
+    return spQueryStatus;
+  }
 
-    public int getSourceIndex() {
-        return sourceIndex;
-    }
+  public void setSpQueryStatus(SpQueryStatus spQueryStatus) {
+    this.spQueryStatus = spQueryStatus;
+  }
 
-    public void setSourceIndex(int sourceIndex) {
-        this.sourceIndex = sourceIndex;
-    }
+  public String getForId() {
+    return forId;
+  }
 
-    public void setAllDataSeries(List<DataSeries> allDataSeries) {
-        this.allDataSeries = allDataSeries;
-    }
-
-    public SpQueryStatus getSpQueryStatus() {
-        return spQueryStatus;
-    }
-
-    public void setSpQueryStatus(SpQueryStatus spQueryStatus) {
-        this.spQueryStatus = spQueryStatus;
-    }
-
-    public String getForId() {
-        return forId;
-    }
-
-    public void setForId(String forId) {
-        this.forId = forId;
-    }
+  public void setForId(String forId) {
+    this.forId = forId;
+  }
 }

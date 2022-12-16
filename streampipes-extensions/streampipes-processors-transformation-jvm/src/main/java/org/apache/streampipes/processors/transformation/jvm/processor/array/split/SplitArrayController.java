@@ -23,7 +23,10 @@ import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrat
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.schema.*;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventPropertyList;
+import org.apache.streampipes.model.schema.EventSchema;
+import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
@@ -39,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SplitArrayController extends StandaloneEventProcessingDeclarer<SplitArrayParameters>
-        implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
+    implements ResolvesContainerProvidedOutputStrategy<DataProcessorInvocation, ProcessingElementParameterExtractor> {
 
   public static final String KEEP_PROPERTIES_ID = "keep";
   public static final String ARRAY_FIELD_ID = "array-field";
@@ -48,23 +51,24 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.transformation.jvm.split-array")
-            .category(DataProcessorType.TRANSFORM)
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .requiredStream(StreamRequirementsBuilder.create()
-                    .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
-                            Labels.withId(KEEP_PROPERTIES_ID),
-                            PropertyScope.NONE)
-                    .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
-                            Labels.withId(ARRAY_FIELD_ID),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.customTransformation())
-            .build();
+        .category(DataProcessorType.TRANSFORM)
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .requiredStream(StreamRequirementsBuilder.create()
+            .requiredPropertyWithNaryMapping(EpRequirements.anyProperty(),
+                Labels.withId(KEEP_PROPERTIES_ID),
+                PropertyScope.NONE)
+            .requiredPropertyWithUnaryMapping(EpRequirements.listRequirement(),
+                Labels.withId(ARRAY_FIELD_ID),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.customTransformation())
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<SplitArrayParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<SplitArrayParameters> onInvocation(DataProcessorInvocation graph,
+                                                                     ProcessingElementParameterExtractor extractor) {
 
     String arrayField = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
     List<String> keepProperties = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
@@ -76,7 +80,7 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
   @Override
   public EventSchema resolveOutputStrategy(DataProcessorInvocation processingElement,
                                            ProcessingElementParameterExtractor extractor)
-          throws SpRuntimeException {
+      throws SpRuntimeException {
     String arrayFieldSelector = extractor.mappingPropertyValue(ARRAY_FIELD_ID);
     List<String> keepPropertySelectors = extractor.mappingPropertyValues(KEEP_PROPERTIES_ID);
 
@@ -88,9 +92,9 @@ public class SplitArrayController extends StandaloneEventProcessingDeclarer<Spli
     newProperty.setDescription("Contains values of the array. Created by Split Array processor.");
 
     List<EventProperty> keepProperties = extractor.getEventPropertiesBySelector
-            (keepPropertySelectors);
-   outProperties.add(newProperty);
-   outProperties.addAll(keepProperties);
+        (keepPropertySelectors);
+    outProperties.add(newProperty);
+    outProperties.addAll(keepProperties);
 
     return new EventSchema(outProperties);
   }

@@ -22,40 +22,40 @@ import com.google.gson.annotations.SerializedName;
 
 public class ExtensionsServiceEndpoint {
 
-    private @SerializedName("_id") String id;
-    private @SerializedName("_rev") String rev;
+  private @SerializedName("_id") String id;
+  private @SerializedName("_rev") String rev;
 
-    private String endpointUrl;
+  private String endpointUrl;
 
-    public ExtensionsServiceEndpoint() {
+  public ExtensionsServiceEndpoint() {
 
-    }
+  }
 
-    public ExtensionsServiceEndpoint(String endpointUrl) {
-        this.endpointUrl = endpointUrl;
-    }
+  public ExtensionsServiceEndpoint(String endpointUrl) {
+    this.endpointUrl = endpointUrl;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getRev() {
-        return rev;
-    }
+  public String getRev() {
+    return rev;
+  }
 
-    public void setRev(String rev) {
-        this.rev = rev;
-    }
+  public void setRev(String rev) {
+    this.rev = rev;
+  }
 
-    public String getEndpointUrl() {
-        return endpointUrl;
-    }
+  public String getEndpointUrl() {
+    return endpointUrl;
+  }
 
-    public void setEndpointUrl(String endpointUrl) {
-        this.endpointUrl = endpointUrl;
-    }
+  public void setEndpointUrl(String endpointUrl) {
+    this.endpointUrl = endpointUrl;
+  }
 }

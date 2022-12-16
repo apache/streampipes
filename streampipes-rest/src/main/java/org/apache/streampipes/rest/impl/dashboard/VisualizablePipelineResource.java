@@ -23,6 +23,7 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.rest.security.AuthConstants;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
+
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +59,8 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
   @Produces(MediaType.APPLICATION_JSON)
   @Path("{pipelineId}/{visualizationName}")
   public Response getVisualizablePipelineByPipelineIdAndVisualizationName(@PathParam("pipelineId") String pipelineId,
-                                                                          @PathParam("visualizationName") String visualizationName) {
+                                                                          @PathParam("visualizationName")
+                                                                          String visualizationName) {
     return getPipelineByIdAndFieldValue(DashboardAppId, pipelineId, visualizationName);
   }
 
@@ -70,7 +73,8 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
   }
 
   @Override
-  protected org.apache.streampipes.model.dashboard.VisualizablePipeline convert(Pipeline pipeline, DataSinkInvocation sink) {
+  protected org.apache.streampipes.model.dashboard.VisualizablePipeline convert(Pipeline pipeline,
+                                                                                DataSinkInvocation sink) {
     VisualizablePipeline visualizablePipeline = new org.apache.streampipes.model.dashboard.VisualizablePipeline();
     visualizablePipeline.setPipelineId(pipeline.getPipelineId());
     visualizablePipeline.setPipelineName(pipeline.getName());
@@ -85,6 +89,6 @@ public class VisualizablePipelineResource extends AbstractPipelineExtractionReso
                             String pipelineId,
                             String visualizationName) {
     return pipeline.getPipelineId().equals(pipelineId)
-            && pipeline.getVisualizationName().equals(visualizationName);
+        && pipeline.getVisualizationName().equals(visualizationName);
   }
 }

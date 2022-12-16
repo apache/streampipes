@@ -24,31 +24,31 @@ import java.net.URI;
 
 public class MeasurementObject extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 4391097898611686930L;
+  private static final long serialVersionUID = 4391097898611686930L;
 
-	private URI measuresObject;
-	
-	public MeasurementObject() {
-		super();
-	}
-	
-	public MeasurementObject(MeasurementObject other) {
-		super(other);
-		this.measuresObject = other.getMeasuresObject();
-	}
-	
-	public MeasurementObject(URI measurementObject) {
-		super();
-		this.measuresObject = measurementObject;
-	}
+  private URI measuresObject;
 
-	public URI getMeasuresObject() {
-		return measuresObject;
-	}
+  public MeasurementObject() {
+    super();
+  }
 
-	public void setMeasuresObject(URI measurementObject) {
-		this.measuresObject = measurementObject;
-	}
-	
-	
+  public MeasurementObject(MeasurementObject other) {
+    super(other);
+    this.measuresObject = other.getMeasuresObject();
+  }
+
+  public MeasurementObject(URI measurementObject) {
+    super();
+    this.measuresObject = measurementObject;
+  }
+
+  public URI getMeasuresObject() {
+    return measuresObject;
+  }
+
+  public void setMeasuresObject(URI measurementObject) {
+    this.measuresObject = measurementObject;
+  }
+
+
 }

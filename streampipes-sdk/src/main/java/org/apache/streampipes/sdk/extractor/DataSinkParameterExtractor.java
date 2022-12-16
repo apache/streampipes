@@ -22,11 +22,11 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 
 public class DataSinkParameterExtractor extends AbstractParameterExtractor<DataSinkInvocation> {
 
-  public static DataSinkParameterExtractor from(DataSinkInvocation pipelineElement) {
-    return new DataSinkParameterExtractor(pipelineElement);
-  }
-
   public DataSinkParameterExtractor(DataSinkInvocation pipelineElement) {
     super(pipelineElement);
+  }
+
+  public static DataSinkParameterExtractor from(DataSinkInvocation pipelineElement) {
+    return new DataSinkParameterExtractor(pipelineElement);
   }
 }

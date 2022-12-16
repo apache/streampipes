@@ -75,7 +75,8 @@ public class RabbitMqController extends StandaloneEventSinkDeclarer<RabbitMqPara
   }
 
   @Override
-  public ConfiguredEventSink<RabbitMqParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  public ConfiguredEventSink<RabbitMqParameters> onInvocation(DataSinkInvocation graph,
+                                                              DataSinkParameterExtractor extractor) {
     String publisherTopic = extractor.singleValueParameter(TOPIC_KEY, String.class);
 
 //    String rabbitMqHost = extractor.supportedOntologyPropertyValue(RABBITMQ_BROKER_SETTINGS_KEY, RABBITMQ_HOST_URI,

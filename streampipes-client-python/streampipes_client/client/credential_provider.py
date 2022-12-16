@@ -90,7 +90,7 @@ class StreamPipesApiKeyCredentials(CredentialProvider):
     References
     ----------
     [^1]: [StreamPipes Python Client README]
-    (https://github.com/apache/incubator-streampipes/blob/dev/streampipes-client-python/README.md#%EF%B8%8F-quickstart)
+    (https://github.com/apache/streampipes/blob/dev/streampipes-client-python/README.md#%EF%B8%8F-quickstart)
     """
 
     @classmethod

@@ -22,7 +22,11 @@ import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Base64;
@@ -35,7 +39,8 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
   private ImageEnrichmentParameters params;
 
   @Override
-  public void onInvocation(ImageEnrichmentParameters params, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onInvocation(ImageEnrichmentParameters params, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
     this.params = params;
   }
 
@@ -44,7 +49,7 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
     ImageTransformer imageTransformer = new ImageTransformer(in, params);
 
     Optional<BufferedImage> imageOpt =
-            imageTransformer.getImage();
+        imageTransformer.getImage();
 
 
     if (imageOpt.isPresent()) {
@@ -64,7 +69,7 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
         //Box
         graph.setStroke(new BasicStroke(5));
         graph.draw(new Rectangle(boxCoordinates.getX(), boxCoordinates.getY(), boxCoordinates.getWidth(),
-                boxCoordinates.getHeight()));
+            boxCoordinates.getHeight()));
 
         //Label
         String str = boxCoordinates.getClassesindex() + ": " + boxCoordinates.getScore();
@@ -73,9 +78,9 @@ public class ImageEnricher implements EventProcessor<ImageEnrichmentParameters> 
         Rectangle2D rect = fm.getStringBounds(str, graph);
 
         graph.fillRect(boxCoordinates.getX(),
-                boxCoordinates.getY() - fm.getAscent(),
-                (int) rect.getWidth(),
-                (int) rect.getHeight());
+            boxCoordinates.getY() - fm.getAscent(),
+            (int) rect.getWidth(),
+            (int) rect.getHeight());
 
         graph.setColor(Color.white);
         graph.drawString(str, boxCoordinates.getX(), boxCoordinates.getY());

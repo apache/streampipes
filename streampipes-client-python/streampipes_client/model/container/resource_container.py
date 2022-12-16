@@ -67,7 +67,7 @@ class StreamPipesDataModelError(Exception):
             f"\nOops, there seems to be a problem with our internal StreamPipes data model.\n"
             f"This should not occur, but unfortunately did.\n"
             f"Therefore, it would be great if you could report this problem as an issue at "
-            f"github.com/apache/incubator-streampipes.\n"
+            f"github.com/apache/streampipes.\n"
             f"Please don't forget to include the following information:\n\n"
             f"Affected Model class: {str(self.validation_error.model)}\n"
             f"Validation error log: {self.validation_error.json()}"
@@ -107,7 +107,7 @@ class StreamPipesResourceContainerJSONError(Exception):
             f"\nOops, there seems to be a problem when parsing the response of the StreamPipes API."
             f"This should not occur, but unfortunately did.\n"
             f"Therefore, it would be great if you could report this problem as an issue at "
-            f"github.com/apache/incubator-streampipes.\n"
+            f"github.com/apache/streampipes.\n"
             f"Please don't forget to include the following information:\n\n"
             f"Affected container class: {str(self.container_name)}\n"
             f"JSON string: {self.json_string}"
@@ -179,8 +179,8 @@ class ResourceContainer(ABC):
         # raise an exception if the response does not be a list
         if not type(parsed_json) == list:
             raise StreamPipesResourceContainerJSONError(container_name=str(cls), json_string=json_string)
-        try:
 
+        try:
             resource_container = cls(resources=[cls._resource_cls().parse_obj(item) for item in parsed_json])
         except ValidationError as ve:
             raise StreamPipesDataModelError(validation_error=ve)

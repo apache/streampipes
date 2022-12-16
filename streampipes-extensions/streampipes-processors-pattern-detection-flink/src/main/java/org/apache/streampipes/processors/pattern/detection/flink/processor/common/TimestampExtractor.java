@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.processors.pattern.detection.flink.processor.common;
 
-import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 import org.apache.streampipes.model.runtime.Event;
+
+import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 
 public class TimestampExtractor extends AscendingTimestampExtractor<Event> {
 

@@ -24,13 +24,13 @@ import java.util.List;
 
 public interface IAdapterStorage {
 
-    List<AdapterDescription> getAllAdapters();
+  List<AdapterDescription> getAllAdapters();
 
-    String storeAdapter(AdapterDescription adapter);
+  String storeAdapter(AdapterDescription adapter);
 
-    void updateAdapter(AdapterDescription adapter);
+  void updateAdapter(AdapterDescription adapter);
 
-    AdapterDescription getAdapter(String adapterId);
+  AdapterDescription getAdapter(String adapterId);
 
-    void deleteAdapter(String adapterId);
+  void deleteAdapter(String adapterId);
 }

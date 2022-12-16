@@ -26,32 +26,32 @@ import org.apache.streampipes.storage.couchdb.utils.Utils;
 import java.util.List;
 
 public class CategoryStorageImpl extends AbstractDao<Category> implements ICategoryStorage {
-    public CategoryStorageImpl() {
-        super(Utils::getCouchDbCategoryClient, Category.class);
-    }
+  public CategoryStorageImpl() {
+    super(Utils::getCouchDbCategoryClient, Category.class);
+  }
 
-    @Override
-    public List<Category> getAllCategories() {
-        return findAll();
-    }
+  @Override
+  public List<Category> getAllCategories() {
+    return findAll();
+  }
 
-    @Override
-    public String storeCategory(Category category) {
-        return persist(category).b;
-    }
+  @Override
+  public String storeCategory(Category category) {
+    return persist(category).v;
+  }
 
-    @Override
-    public void updateCategory(Category category) {
-        update(category);
-    }
+  @Override
+  public void updateCategory(Category category) {
+    update(category);
+  }
 
-    @Override
-    public void deleteCategory(String key) {
-        delete(key);
-    }
+  @Override
+  public void deleteCategory(String key) {
+    delete(key);
+  }
 
-    @Override
-    public Category getCategory(String key) {
-        return find(key).orElse(null);
-    }
+  @Override
+  public Category getCategory(String key) {
+    return find(key).orElse(null);
+  }
 }

@@ -25,19 +25,19 @@ import org.apache.streampipes.model.grounding.TransportFormat;
 @Deprecated
 public class Groundings {
 
-    public static KafkaTransportProtocol kafkaGrounding(String kafkaHost, Integer kafkaPort, String topic) {
-        return Protocols.kafka(kafkaHost, kafkaPort, topic);
-    }
+  public static KafkaTransportProtocol kafkaGrounding(String kafkaHost, Integer kafkaPort, String topic) {
+    return Protocols.kafka(kafkaHost, kafkaPort, topic);
+  }
 
-    public static JmsTransportProtocol jmsGrounding(String jmsHost, Integer jmsPort, String topic) {
-        return Protocols.jms(jmsHost, jmsPort, topic);
-    }
+  public static JmsTransportProtocol jmsGrounding(String jmsHost, Integer jmsPort, String topic) {
+    return Protocols.jms(jmsHost, jmsPort, topic);
+  }
 
-    public static TransportFormat jsonFormat() {
-        return Formats.jsonFormat();
-    }
+  public static TransportFormat jsonFormat() {
+    return Formats.jsonFormat();
+  }
 
-    public static TransportFormat thriftFormat() {
-        return Formats.thriftFormat();
-    }
+  public static TransportFormat thriftFormat() {
+    return Formats.thriftFormat();
+  }
 }

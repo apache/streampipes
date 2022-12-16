@@ -17,15 +17,16 @@
  */
 package org.apache.streampipes.model.staticproperty;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.util.Cloner;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(AnyStaticProperty.class),
-        @JsonSubTypes.Type(OneOfStaticProperty.class)
+    @JsonSubTypes.Type(AnyStaticProperty.class),
+    @JsonSubTypes.Type(OneOfStaticProperty.class)
 })
 public abstract class SelectionStaticProperty extends StaticProperty {
 
@@ -46,13 +47,13 @@ public abstract class SelectionStaticProperty extends StaticProperty {
   }
 
   public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
-          description) {
+      description) {
     super(staticPropertyType, internalName, label, description);
     this.options = new ArrayList<>();
   }
 
   public SelectionStaticProperty(StaticPropertyType staticPropertyType, String internalName, String label, String
-          description, boolean horizontalRendering) {
+      description, boolean horizontalRendering) {
     super(staticPropertyType, internalName, label, description);
     this.options = new ArrayList<>();
     this.horizontalRendering = horizontalRendering;
@@ -66,16 +67,15 @@ public abstract class SelectionStaticProperty extends StaticProperty {
     this.options = options;
   }
 
-  public boolean addOption(Option option)
-  {
+  public boolean addOption(Option option) {
     return options.add(option);
-  }
-
-  public void setHorizontalRendering(boolean horizontalRendering) {
-    this.horizontalRendering = horizontalRendering;
   }
 
   public boolean isHorizontalRendering() {
     return horizontalRendering;
+  }
+
+  public void setHorizontalRendering(boolean horizontalRendering) {
+    this.horizontalRendering = horizontalRendering;
   }
 }

@@ -56,7 +56,7 @@ public class AssetZipGenerator {
         while ((len = in.read(buffer)) > 0) {
           out.write(buffer, 0, len);
         }
-      } catch(Exception e) {
+      } catch (Exception e) {
         e.printStackTrace();
       } finally {
         in.close();

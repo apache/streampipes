@@ -40,11 +40,11 @@ public class EventStreamGenerator {
   public static SpDataStream makeStreamWithProperties(List<String> runtimeNames) {
     SpDataStream stream = makeEmptyStream();
     stream
-            .getEventSchema()
-            .setEventProperties(runtimeNames
-                    .stream()
-                    .map(r -> new EventPropertyPrimitive(XSD._integer.toString(), r, "", new ArrayList<>()))
-                    .collect(Collectors.toList()));
+        .getEventSchema()
+        .setEventProperties(runtimeNames
+            .stream()
+            .map(r -> new EventPropertyPrimitive(XSD._integer.toString(), r, "", new ArrayList<>()))
+            .collect(Collectors.toList()));
 
     return stream;
   }

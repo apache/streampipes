@@ -18,15 +18,16 @@
 
 package org.apache.streampipes.sources.vehicle.simulator.simulator;
 
-import net.acesinc.data.json.generator.config.JSONConfigReader;
-import net.acesinc.data.json.generator.config.SimulationConfig;
-import net.acesinc.data.json.generator.config.WorkflowConfig;
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.pe.simulator.StreamPipesSimulationRunner;
 import org.apache.streampipes.pe.simulator.TopicAwareWorkflow;
 import org.apache.streampipes.sources.vehicle.simulator.config.ConfigKeys;
+
+import net.acesinc.data.json.generator.config.JSONConfigReader;
+import net.acesinc.data.json.generator.config.SimulationConfig;
+import net.acesinc.data.json.generator.config.WorkflowConfig;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,7 +39,8 @@ public class VehicleDataSimulator implements Runnable {
 
   private void initSimulation() {
     try {
-      ConfigExtractor configExtractor = ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
+      ConfigExtractor configExtractor =
+          ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
       SimulationConfig config = buildSimulationConfig();
       Map<String, TopicAwareWorkflow> workflows = buildSimWorkflows(config);
       String kafkaHost = getKafkaHost(configExtractor);
@@ -51,29 +53,30 @@ public class VehicleDataSimulator implements Runnable {
   }
 
   private SimulationConfig buildSimulationConfig() throws IOException {
-    return JSONConfigReader.readConfig(VehicleDataSimulator.class.getClassLoader().getResourceAsStream(EXAMPLES_CONFIG_FILE),
-            SimulationConfig.class);
+    return JSONConfigReader.readConfig(
+        VehicleDataSimulator.class.getClassLoader().getResourceAsStream(EXAMPLES_CONFIG_FILE),
+        SimulationConfig.class);
   }
 
   private Map<String, TopicAwareWorkflow> buildSimWorkflows(SimulationConfig config) throws IOException {
     Map<String, TopicAwareWorkflow> workflows = new HashMap<>();
-    for(WorkflowConfig workflowConfig : config.getWorkflows()) {
+    for (WorkflowConfig workflowConfig : config.getWorkflows()) {
       workflows.put(workflowConfig.getWorkflowFilename(), JSONConfigReader.readConfig(VehicleDataSimulator.class
-                      .getClassLoader().getResourceAsStream(workflowConfig.getWorkflowFilename()),
-              TopicAwareWorkflow.class));
+              .getClassLoader().getResourceAsStream(workflowConfig.getWorkflowFilename()),
+          TopicAwareWorkflow.class));
     }
 
     return workflows;
   }
 
   private String getKafkaHost(ConfigExtractor configExtractor) {
-    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean() ?
-            "localhost" : configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
+    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()
+        ? "localhost" : configExtractor.getConfig().getString(ConfigKeys.KAFKA_HOST);
   }
 
   private Integer getKafkaPort(ConfigExtractor configExtractor) {
-    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean() ?
-            9094 : configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
+    return Envs.SP_DEBUG.exists() && Envs.SP_DEBUG.getValueAsBoolean()
+        ? 9094 : configExtractor.getConfig().getInteger(ConfigKeys.KAFKA_PORT);
   }
 
   @Override

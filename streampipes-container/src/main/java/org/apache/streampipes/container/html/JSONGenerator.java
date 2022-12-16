@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.container.html;
 
+import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
+import org.apache.streampipes.container.html.model.Description;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
 
 import java.util.List;
 

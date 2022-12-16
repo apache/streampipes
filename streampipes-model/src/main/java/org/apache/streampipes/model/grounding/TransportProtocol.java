@@ -18,57 +18,57 @@
 
 package org.apache.streampipes.model.grounding;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-				@JsonSubTypes.Type(JmsTransportProtocol.class),
-				@JsonSubTypes.Type(KafkaTransportProtocol.class),
-				@JsonSubTypes.Type(MqttTransportProtocol.class),
-				@JsonSubTypes.Type(NatsTransportProtocol.class)
+    @JsonSubTypes.Type(JmsTransportProtocol.class),
+    @JsonSubTypes.Type(KafkaTransportProtocol.class),
+    @JsonSubTypes.Type(MqttTransportProtocol.class),
+    @JsonSubTypes.Type(NatsTransportProtocol.class)
 })
 public abstract class TransportProtocol extends UnnamedStreamPipesEntity {
-	
-	private static final long serialVersionUID = 7625791395504335184L;
 
-	private String brokerHostname;
+  private static final long serialVersionUID = 7625791395504335184L;
 
-	private TopicDefinition topicDefinition;
-	
-	public TransportProtocol() {
-		super();
-	}
-	
-	public TransportProtocol(String hostname, TopicDefinition topicDefinition)
-	{
-		super();
-		this.brokerHostname = hostname;
-		this.topicDefinition = topicDefinition;
-	}
+  private String brokerHostname;
 
-	public TransportProtocol(TransportProtocol other) {
-		super(other);
-		this.brokerHostname = other.getBrokerHostname();
-		if (other.getTopicDefinition() != null) {
-			this.topicDefinition = new Cloner().topicDefinition(other.getTopicDefinition());
-		}
-	}
+  private TopicDefinition topicDefinition;
 
-	public String getBrokerHostname() {
-		return brokerHostname;
-	}
+  public TransportProtocol() {
+    super();
+  }
 
-	public void setBrokerHostname(String uri) {
-		this.brokerHostname = uri;
-	}
-	
-	public TopicDefinition getTopicDefinition() {
-		return topicDefinition;
-	}
+  public TransportProtocol(String hostname, TopicDefinition topicDefinition) {
+    super();
+    this.brokerHostname = hostname;
+    this.topicDefinition = topicDefinition;
+  }
 
-	public void setTopicDefinition(TopicDefinition topicDefinition) {
-		this.topicDefinition = topicDefinition;
-	}
+  public TransportProtocol(TransportProtocol other) {
+    super(other);
+    this.brokerHostname = other.getBrokerHostname();
+    if (other.getTopicDefinition() != null) {
+      this.topicDefinition = new Cloner().topicDefinition(other.getTopicDefinition());
+    }
+  }
+
+  public String getBrokerHostname() {
+    return brokerHostname;
+  }
+
+  public void setBrokerHostname(String uri) {
+    this.brokerHostname = uri;
+  }
+
+  public TopicDefinition getTopicDefinition() {
+    return topicDefinition;
+  }
+
+  public void setTopicDefinition(TopicDefinition topicDefinition) {
+    this.topicDefinition = topicDefinition;
+  }
 
 }

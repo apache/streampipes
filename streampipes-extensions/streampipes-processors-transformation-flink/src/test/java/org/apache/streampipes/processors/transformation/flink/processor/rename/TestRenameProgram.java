@@ -17,15 +17,17 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.rename;
 
+
+import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.model.runtime.Event;
+import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
+import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;
 import io.flinkspector.datastream.input.EventTimeInput;
 import io.flinkspector.datastream.input.EventTimeInputBuilder;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.model.runtime.Event;
-import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
-import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.Parameterized;
@@ -34,14 +36,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
 @Ignore
 public class TestRenameProgram extends DataStreamTestBase {
 
   @Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-            {"fieldA", "fieldC"},
-            {"fieldB", "fieldD"},
+        {"fieldA", "fieldC"},
+        {"fieldB", "fieldD"},
 
     });
   }
@@ -54,15 +57,17 @@ public class TestRenameProgram extends DataStreamTestBase {
 
   @Test
   public void testConverterProgram() {
-    FieldRenamerParameters params = new FieldRenamerParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldRenamerController().declareModel()), oldPropertyName, newPropertyName);
+    FieldRenamerParameters params = new FieldRenamerParameters(
+        InvocationGraphGenerator.makeEmptyInvocation(new FieldRenamerController().declareModel()), oldPropertyName,
+        newPropertyName);
 
-    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.SERVICE_GROUP);
     FieldRenamerProgram program = new FieldRenamerProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeInputData()));
 
     ExpectedRecords<Event> expected =
-            new ExpectedRecords<Event>().expectAll(getOutput(oldPropertyName, newPropertyName));
+        new ExpectedRecords<Event>().expectAll(getOutput(oldPropertyName, newPropertyName));
 
     assertStream(stream, expected);
   }

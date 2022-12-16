@@ -21,6 +21,7 @@ package org.apache.streampipes.container.declarer;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
-public interface SemanticEventProcessingAgentDeclarer extends InvocableDeclarer<DataProcessorDescription, DataProcessorInvocation>{
-	
+public interface SemanticEventProcessingAgentDeclarer
+    extends InvocableDeclarer<DataProcessorDescription, DataProcessorInvocation> {
+
 }

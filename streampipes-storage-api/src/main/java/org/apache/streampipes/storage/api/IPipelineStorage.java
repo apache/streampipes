@@ -25,23 +25,23 @@ import java.util.List;
 
 public interface IPipelineStorage {
 
-	List<String> getPipelinesUsingAdapter(String adapterId);
+  List<String> getPipelinesUsingAdapter(String adapterId);
 
-	List<Pipeline> getAllPipelines();
+  List<Pipeline> getAllPipelines();
 
-	List<Pipeline> getSystemPipelines();
+  List<Pipeline> getSystemPipelines();
 
-	void storePipeline(Pipeline pipeline);
+  void storePipeline(Pipeline pipeline);
 
-	void updatePipeline(Pipeline pipeline);
+  void updatePipeline(Pipeline pipeline);
 
-	Pipeline getPipeline(String pipelineId);
+  Pipeline getPipeline(String pipelineId);
 
-	void deletePipeline(String pipelineId);
+  void deletePipeline(String pipelineId);
 
-	void store(Pipeline object);
+  void store(Pipeline object);
 
-	void storeVirtualSensor(String username, VirtualSensor virtualSensor);
+  void storeVirtualSensor(String username, VirtualSensor virtualSensor);
 
-	List<VirtualSensor> getVirtualSensors(String username);
+  List<VirtualSensor> getVirtualSensors(String username);
 }

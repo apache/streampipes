@@ -29,8 +29,8 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
-import org.apache.streampipes.processors.geo.jvm.jts.processor.latLngToGeo.LatLngToGeoController;
-import org.apache.streampipes.processors.geo.jvm.jts.processor.setEPSG.SetEpsgController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo.LatLngToGeoController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.setepsg.SetEpsgController;
 import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.CreateTrajectoryFromPointsController;
 import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
 import org.apache.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
@@ -55,7 +55,9 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
                     new SetEpsgController(),
                     new LatLngToGeoController(),
                     new CreateTrajectoryFromPointsController(),
+
                     new SpeedCalculatorController(),
+
                     new StaticDistanceCalculatorController())
             .registerMessagingFormats(
                     new JsonDataFormatFactory(),
@@ -66,7 +68,7 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
                     new SpKafkaProtocolFactory(),
                     new SpJmsProtocolFactory(),
                     new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.GOOGLE_API_KEY, "","Google Maps API key")
+            .addConfig(ConfigKeys.GOOGLE_API_KEY, "", "Google Maps API key")
             .build();
   }
 }

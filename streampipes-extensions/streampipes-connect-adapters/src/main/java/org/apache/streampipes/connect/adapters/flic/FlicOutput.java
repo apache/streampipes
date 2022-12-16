@@ -19,34 +19,43 @@
 package org.apache.streampipes.connect.adapters.flic;
 
 import com.google.gson.annotations.SerializedName;
+
 import javax.annotation.Generated;
 
 @Generated("net.hexar.json2pojo")
 public class FlicOutput {
 
-    @SerializedName("timestamp")
-    private Long timestamp;
+  @SerializedName("timestamp")
+  private Long timestamp;
 
-    @SerializedName("button_id")
-    private String buttonID;
+  @SerializedName("button_id")
+  private String buttonID;
 
-    @SerializedName("click_type")
-    private String clickType;
+  @SerializedName("click_type")
+  private String clickType;
 
-    public Long getTimestamp() { return  timestamp; }
+  public Long getTimestamp() {
+    return timestamp;
+  }
 
-    public void setTimestamp(Long timestamp) { this.timestamp = timestamp; }
+  public void setTimestamp(Long timestamp) {
+    this.timestamp = timestamp;
+  }
 
-    public String getButtonID() { return buttonID; }
+  public String getButtonID() {
+    return buttonID;
+  }
 
-    public void setButtonID(String buttonID) { this.buttonID = buttonID; }
+  public void setButtonID(String buttonID) {
+    this.buttonID = buttonID;
+  }
 
-    public String getClickType() {
-        return clickType;
-    }
+  public String getClickType() {
+    return clickType;
+  }
 
-    public void setClickType(float voltage) {
-        this.clickType = clickType;
-    }
+  public void setClickType(float voltage) {
+    this.clickType = clickType;
+  }
 
 }

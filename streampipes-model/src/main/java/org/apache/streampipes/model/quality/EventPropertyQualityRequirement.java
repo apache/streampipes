@@ -24,55 +24,59 @@ import java.util.Objects;
 
 public class EventPropertyQualityRequirement extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = -8173312776233284351L;
+  private static final long serialVersionUID = -8173312776233284351L;
 
-	private transient EventPropertyQualityDefinition minimumPropertyQuality;
+  private transient EventPropertyQualityDefinition minimumPropertyQuality;
 
-	private transient EventPropertyQualityDefinition maximumPropertyQuality;
-	
-	public EventPropertyQualityRequirement() {
-		super();
-	}
+  private transient EventPropertyQualityDefinition maximumPropertyQuality;
 
-	public EventPropertyQualityRequirement(
-			EventPropertyQualityDefinition minimumPropertyQuality,
-			EventPropertyQualityDefinition  maximumPropertyQuality) {
-		
-		super();
-		this.minimumPropertyQuality = minimumPropertyQuality;
-		this.maximumPropertyQuality = maximumPropertyQuality;
-	}
-	
-	public EventPropertyQualityRequirement(EventPropertyQualityRequirement other) {
-		super(other);
-		//this.minimumPropertyQuality = other.getMinimumPropertyQuality();
-		//this.maximumPropertyQuality = other.getMaximumPropertyQuality();
-	}
+  public EventPropertyQualityRequirement() {
+    super();
+  }
 
-	public EventPropertyQualityDefinition getMinimumPropertyQuality() {
-		return minimumPropertyQuality;
-	}
+  public EventPropertyQualityRequirement(
+      EventPropertyQualityDefinition minimumPropertyQuality,
+      EventPropertyQualityDefinition maximumPropertyQuality) {
 
-	public void setMinimumPropertyQuality(
-			EventPropertyQualityDefinition minimumPropertyQuality) {
-		this.minimumPropertyQuality = minimumPropertyQuality;
-	}
+    super();
+    this.minimumPropertyQuality = minimumPropertyQuality;
+    this.maximumPropertyQuality = maximumPropertyQuality;
+  }
 
-	public EventPropertyQualityDefinition getMaximumPropertyQuality() {
-		return maximumPropertyQuality;
-	}
+  public EventPropertyQualityRequirement(EventPropertyQualityRequirement other) {
+    super(other);
+    //this.minimumPropertyQuality = other.getMinimumPropertyQuality();
+    //this.maximumPropertyQuality = other.getMaximumPropertyQuality();
+  }
 
-	public void setMaximumPropertyQuality(
-			EventPropertyQualityDefinition maximumPropertyQuality) {
-		this.maximumPropertyQuality = maximumPropertyQuality;
-	}
+  public EventPropertyQualityDefinition getMinimumPropertyQuality() {
+    return minimumPropertyQuality;
+  }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		EventPropertyQualityRequirement that = (EventPropertyQualityRequirement) o;
-		return Objects.equals(minimumPropertyQuality, that.minimumPropertyQuality) &&
-				Objects.equals(maximumPropertyQuality, that.maximumPropertyQuality);
-	}
+  public void setMinimumPropertyQuality(
+      EventPropertyQualityDefinition minimumPropertyQuality) {
+    this.minimumPropertyQuality = minimumPropertyQuality;
+  }
+
+  public EventPropertyQualityDefinition getMaximumPropertyQuality() {
+    return maximumPropertyQuality;
+  }
+
+  public void setMaximumPropertyQuality(
+      EventPropertyQualityDefinition maximumPropertyQuality) {
+    this.maximumPropertyQuality = maximumPropertyQuality;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    EventPropertyQualityRequirement that = (EventPropertyQualityRequirement) o;
+    return Objects.equals(minimumPropertyQuality, that.minimumPropertyQuality)
+        && Objects.equals(maximumPropertyQuality, that.maximumPropertyQuality);
+  }
 }

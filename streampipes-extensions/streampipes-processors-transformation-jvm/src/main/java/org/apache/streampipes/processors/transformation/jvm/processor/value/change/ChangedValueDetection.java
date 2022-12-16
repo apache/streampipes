@@ -26,7 +26,7 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 public class ChangedValueDetection implements EventProcessor<ChangedValueDetectionParameters> {
 
-  private static Logger LOG;
+  private static Logger log;
 
   private String compareParameter;
   private String changeFieldName;
@@ -34,9 +34,9 @@ public class ChangedValueDetection implements EventProcessor<ChangedValueDetecti
 
   @Override
   public void onInvocation(ChangedValueDetectionParameters changedValueDetectionParameters,
-                            SpOutputCollector spOutputCollector,
-                            EventProcessorRuntimeContext runtimeContext) {
-    LOG = changedValueDetectionParameters.getGraph().getLogger(ChangedValueDetection.class);
+                           SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) {
+    log = changedValueDetectionParameters.getGraph().getLogger(ChangedValueDetection.class);
     this.compareParameter = changedValueDetectionParameters.getCompareField();
     this.changeFieldName = changedValueDetectionParameters.getChangeFieldName();
   }

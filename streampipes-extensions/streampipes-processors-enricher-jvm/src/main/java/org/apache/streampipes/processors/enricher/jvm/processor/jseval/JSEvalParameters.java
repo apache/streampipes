@@ -22,14 +22,14 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class JSEvalParameters extends EventProcessorBindingParams {
 
-    private String code;
+  private String code;
 
-    public JSEvalParameters(DataProcessorInvocation graph, String code) {
-        super(graph);
-        this.code = code;
-    }
+  public JSEvalParameters(DataProcessorInvocation graph, String code) {
+    super(graph);
+    this.code = code;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 }

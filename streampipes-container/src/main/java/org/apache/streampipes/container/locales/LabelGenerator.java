@@ -17,8 +17,6 @@
  */
 package org.apache.streampipes.container.locales;
 
-import static org.apache.streampipes.container.util.LocalesUtil.makePath;
-
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -26,12 +24,18 @@ import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.output.AppendOutputStrategy;
 import org.apache.streampipes.model.output.FixedOutputStrategy;
-import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
+
+import static org.apache.streampipes.container.util.LocalesUtil.makePath;
 
 public class LabelGenerator {
 
@@ -52,23 +56,23 @@ public class LabelGenerator {
       desc.setDescription(getDescription(props, desc.getAppId()));
 
       if (isAdapter() || isProtocol()) {
-          List<StaticProperty> properties;
-          if (isAdapter()) {
-            properties = ((AdapterDescription) desc).getConfig();
-          } else {
-            properties = ((ProtocolDescription) desc).getConfig();
-          }
-          if (properties != null) {
-              properties.forEach(sp -> {
-                  generateLabels(props, sp);
-              });
-          }
+        List<StaticProperty> properties;
+        if (isAdapter()) {
+          properties = ((AdapterDescription) desc).getConfig();
+        } else {
+          properties = ((ProtocolDescription) desc).getConfig();
+        }
+        if (properties != null) {
+          properties.forEach(sp -> {
+            generateLabels(props, sp);
+          });
+        }
       }
 
 
       if (isConsumable()) {
         ((ConsumableStreamPipesEntity) desc).getStaticProperties().forEach(sp -> {
-            generateLabels(props, sp);
+          generateLabels(props, sp);
         });
       }
 
@@ -97,14 +101,15 @@ public class LabelGenerator {
     sp.setDescription(getDescription(props, sp.getInternalName()));
     if (sp instanceof CollectionStaticProperty) {
 
-      if  (((CollectionStaticProperty) sp).getMembers() != null) {
+      if (((CollectionStaticProperty) sp).getMembers() != null) {
         ((CollectionStaticProperty) sp).getMembers().forEach(a -> {
           generateLabels(props, a);
         });
       } else {
-        ((StaticPropertyGroup) ((CollectionStaticProperty) sp).getStaticPropertyTemplate()).getStaticProperties().forEach(a -> {
-          generateLabels(props, a);
-        });
+        ((StaticPropertyGroup) ((CollectionStaticProperty) sp).getStaticPropertyTemplate()).getStaticProperties()
+            .forEach(a -> {
+              generateLabels(props, a);
+            });
       }
 
     } else if (sp instanceof StaticPropertyGroup) {
@@ -144,7 +149,7 @@ public class LabelGenerator {
 
   private boolean existsLocalesFile() {
     return this.getClass().getClassLoader().getResourceAsStream(makePath(desc,
-            this.desc.getIncludedLocales().get(0))) != null;
+        this.desc.getIncludedLocales().get(0))) != null;
   }
 
   private boolean isConsumable() {

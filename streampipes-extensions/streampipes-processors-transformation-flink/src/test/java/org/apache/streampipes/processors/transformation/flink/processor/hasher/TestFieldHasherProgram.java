@@ -17,14 +17,20 @@
  */
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
-import io.flinkspector.core.collection.ExpectedRecords;
-import io.flinkspector.datastream.DataStreamTestBase;
-import org.apache.flink.streaming.api.datastream.DataStream;
+
 import org.apache.streampipes.container.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
-import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.*;
+import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;
+import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithmType;
+import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Md5HashAlgorithm;
+import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha1HashAlgorithm;
+import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.Sha2HashAlgorithm;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
+
+import io.flinkspector.core.collection.ExpectedRecords;
+import io.flinkspector.datastream.DataStreamTestBase;
+import org.apache.flink.streaming.api.datastream.DataStream;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,10 +46,10 @@ public class TestFieldHasherProgram extends DataStreamTestBase {
 
   @Parameterized.Parameters
   public static Iterable<Object[]> algorithm() {
-    return Arrays.asList(new Object[][] {
-            {new Md5HashAlgorithm(), HashAlgorithmType.MD5},
-            {new Sha1HashAlgorithm(), HashAlgorithmType.SHA1},
-            {new Sha2HashAlgorithm(), HashAlgorithmType.SHA2}
+    return Arrays.asList(new Object[][]{
+        {new Md5HashAlgorithm(), HashAlgorithmType.MD5},
+        {new Sha1HashAlgorithm(), HashAlgorithmType.SHA1},
+        {new Sha2HashAlgorithm(), HashAlgorithmType.SHA2}
     });
   }
 
@@ -57,21 +63,22 @@ public class TestFieldHasherProgram extends DataStreamTestBase {
   public void testFieldHasherProgram() {
 
     FieldHasherParameters params = makeParams();
-    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.ServiceGroup);
+    ConfigExtractor configExtractor = ConfigExtractor.from(TransformationFlinkInit.SERVICE_GROUP);
     FieldHasherProgram program = new FieldHasherProgram(params, configExtractor, null);
 
     DataStream<Event> stream = program.getApplicationLogic(createTestStream(makeTestData(true, hashAlgorithm)));
 
     ExpectedRecords<Event> expected =
-            new ExpectedRecords<Event>().expectAll(makeTestData(false, hashAlgorithm));
+        new ExpectedRecords<Event>().expectAll(makeTestData(false, hashAlgorithm));
 
     assertStream(stream, expected);
   }
 
   private FieldHasherParameters makeParams() {
-    return new FieldHasherParameters(InvocationGraphGenerator.makeEmptyInvocation(new FieldHasherController().declareModel()), "field", hashAlgorithmType);
+    return new FieldHasherParameters(
+        InvocationGraphGenerator.makeEmptyInvocation(new FieldHasherController().declareModel()), "field",
+        hashAlgorithmType);
   }
-
 
 
 }

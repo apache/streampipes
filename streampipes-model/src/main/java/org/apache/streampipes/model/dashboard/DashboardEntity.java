@@ -18,14 +18,15 @@
 
 package org.apache.streampipes.model.dashboard;
 
+import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(DashboardWidgetModel.class),
-        @JsonSubTypes.Type(DataExplorerWidgetModel.class)
+    @JsonSubTypes.Type(DashboardWidgetModel.class),
+    @JsonSubTypes.Type(DataExplorerWidgetModel.class)
 })
 public abstract class DashboardEntity {
 

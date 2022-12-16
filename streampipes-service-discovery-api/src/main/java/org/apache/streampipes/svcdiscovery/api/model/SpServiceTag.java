@@ -19,19 +19,18 @@ package org.apache.streampipes.svcdiscovery.api.model;
 
 public class SpServiceTag {
 
+  private static final String COLON = ":";
   private final SpServiceTagPrefix prefix;
   private final String value;
-
-  private static final String COLON = ":";
-
-  public static SpServiceTag create(SpServiceTagPrefix prefix,
-                                    String value) {
-    return new SpServiceTag(prefix, value);
-  }
 
   private SpServiceTag(SpServiceTagPrefix prefix, String value) {
     this.prefix = prefix;
     this.value = value;
+  }
+
+  public static SpServiceTag create(SpServiceTagPrefix prefix,
+                                    String value) {
+    return new SpServiceTag(prefix, value);
   }
 
   public String asString() {

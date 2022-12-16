@@ -22,53 +22,53 @@ import org.apache.streampipes.messaging.kafka.security.KafkaSecurityConfig;
 
 public class KafkaConfig {
 
-    private String kafkaHost;
-    private Integer kafkaPort;
-    private String topic;
+  private String kafkaHost;
+  private Integer kafkaPort;
+  private String topic;
 
-    KafkaSecurityConfig securityConfig;
+  KafkaSecurityConfig securityConfig;
 
 
-    public KafkaConfig(String kafkaHost,
-                       Integer kafkaPort,
-                       String topic,
-                       KafkaSecurityConfig securityConfig) {
-        this.kafkaHost = kafkaHost;
-        this.kafkaPort = kafkaPort;
-        this.topic = topic;
-        this.securityConfig = securityConfig;
-    }
+  public KafkaConfig(String kafkaHost,
+                     Integer kafkaPort,
+                     String topic,
+                     KafkaSecurityConfig securityConfig) {
+    this.kafkaHost = kafkaHost;
+    this.kafkaPort = kafkaPort;
+    this.topic = topic;
+    this.securityConfig = securityConfig;
+  }
 
-    public String getKafkaHost() {
-        return kafkaHost;
-    }
+  public String getKafkaHost() {
+    return kafkaHost;
+  }
 
-    public void setKafkaHost(String kafkaHost) {
-        this.kafkaHost = kafkaHost;
-    }
+  public void setKafkaHost(String kafkaHost) {
+    this.kafkaHost = kafkaHost;
+  }
 
-    public Integer getKafkaPort() {
-        return kafkaPort;
-    }
+  public Integer getKafkaPort() {
+    return kafkaPort;
+  }
 
-    public void setKafkaPort(Integer kafkaPort) {
-        this.kafkaPort = kafkaPort;
-    }
+  public void setKafkaPort(Integer kafkaPort) {
+    this.kafkaPort = kafkaPort;
+  }
 
-    public String getTopic() {
-        return topic;
-    }
+  public String getTopic() {
+    return topic;
+  }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
+  public void setTopic(String topic) {
+    this.topic = topic;
+  }
 
-    public KafkaSecurityConfig getSecurityConfig() {
-        return securityConfig;
-    }
+  public KafkaSecurityConfig getSecurityConfig() {
+    return securityConfig;
+  }
 
-    public void setSecurityConfig(KafkaSecurityConfig securityConfig) {
-        this.securityConfig = securityConfig;
-    }
+  public void setSecurityConfig(KafkaSecurityConfig securityConfig) {
+    this.securityConfig = securityConfig;
+  }
 
 }

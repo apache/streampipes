@@ -21,16 +21,6 @@ public class PermissionBuilder {
 
   private Permission permission;
 
-  public static PermissionBuilder create(String objectInstanceId,
-                                         Class<?> objectInstanceClass,
-                                         String ownerSid) {
-    return new PermissionBuilder(
-            objectInstanceId,
-            objectInstanceClass,
-            ownerSid
-    );
-  }
-
   private PermissionBuilder(String objectInstanceId,
                             Class<?> objectInstanceClass,
                             String ownerSid) {
@@ -38,6 +28,16 @@ public class PermissionBuilder {
     this.permission.setObjectInstanceId(objectInstanceId);
     this.permission.setObjectClassName(objectInstanceClass.getCanonicalName());
     this.permission.setOwnerSid(ownerSid);
+  }
+
+  public static PermissionBuilder create(String objectInstanceId,
+                                         Class<?> objectInstanceClass,
+                                         String ownerSid) {
+    return new PermissionBuilder(
+        objectInstanceId,
+        objectInstanceClass,
+        ownerSid
+    );
   }
 
   public PermissionBuilder with(PermissionEntry permissionEntry) {

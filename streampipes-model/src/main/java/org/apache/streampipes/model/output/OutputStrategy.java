@@ -18,22 +18,23 @@
 
 package org.apache.streampipes.model.output;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.util.Cloner;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(AppendOutputStrategy.class),
-        @JsonSubTypes.Type(CustomOutputStrategy.class),
-        @JsonSubTypes.Type(CustomTransformOutputStrategy.class),
-        @JsonSubTypes.Type(FixedOutputStrategy.class),
-        @JsonSubTypes.Type(KeepOutputStrategy.class),
-        @JsonSubTypes.Type(ListOutputStrategy.class),
-        @JsonSubTypes.Type(TransformOutputStrategy.class),
-        @JsonSubTypes.Type(UserDefinedOutputStrategy.class),
+    @JsonSubTypes.Type(AppendOutputStrategy.class),
+    @JsonSubTypes.Type(CustomOutputStrategy.class),
+    @JsonSubTypes.Type(CustomTransformOutputStrategy.class),
+    @JsonSubTypes.Type(FixedOutputStrategy.class),
+    @JsonSubTypes.Type(KeepOutputStrategy.class),
+    @JsonSubTypes.Type(ListOutputStrategy.class),
+    @JsonSubTypes.Type(TransformOutputStrategy.class),
+    @JsonSubTypes.Type(UserDefinedOutputStrategy.class),
 })
 public abstract class OutputStrategy extends UnnamedStreamPipesEntity {
 

@@ -17,11 +17,12 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.count;
 
+import org.apache.streampipes.model.runtime.Event;
+
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.model.runtime.Event;
 
 public class Tuple2MapMapper implements MapFunction<Tuple3<String, String, Integer>, Event> {
 

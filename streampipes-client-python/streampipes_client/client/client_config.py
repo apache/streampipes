@@ -27,6 +27,7 @@ __all__ = [
     "StreamPipesClientConfig",
 ]
 
+
 from streampipes_client.client.credential_provider import CredentialProvider
 
 
@@ -45,7 +46,7 @@ class StreamPipesClientConfig:
     https_disabled: Optional[bool]
         Determines whether https is used to connect to StreamPipes.
     port: Optional[int]
-        Specifies the port under which the StreamPipes API is available, e.g., 80.
+        Specifies the port under which the StreamPipes API is available, e.g., `80` (with http) or `443` (with https)
 
     Examples
     --------
@@ -55,4 +56,4 @@ class StreamPipesClientConfig:
     credential_provider: CredentialProvider
     host_address: str
     https_disabled: Optional[bool] = False
-    port: Optional[int] = 80 if https_disabled else 443
+    port: Optional[int] = 80

@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import com.google.gson.internal.LinkedTreeMap;
 import org.apache.streampipes.model.constants.PropertySelectorConstants;
 import org.apache.streampipes.model.output.PropertyRenameRule;
 import org.apache.streampipes.model.runtime.field.AbstractField;
@@ -25,6 +24,8 @@ import org.apache.streampipes.model.runtime.field.ListField;
 import org.apache.streampipes.model.runtime.field.NestedField;
 import org.apache.streampipes.model.runtime.field.PrimitiveField;
 import org.apache.streampipes.model.schema.EventSchema;
+
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public class EventFactory {
     fieldMap.putAll(secondEvent.getFields());
 
     return new Event(fieldMap, makeMergedSourceInfo(), makeMergedSchemaInfo(firstEvent, secondEvent,
-            outputSchema));
+        outputSchema));
   }
 
   private static SourceInfo makeMergedSourceInfo() {
@@ -47,7 +48,7 @@ public class EventFactory {
   }
 
   private static SchemaInfo makeMergedSchemaInfo(Event firstEvent, Event secondEvent, EventSchema
-                                                 outputSchema) {
+      outputSchema) {
     List<PropertyRenameRule> propertyRenameRules = new ArrayList<>();
     propertyRenameRules.addAll(firstEvent.getSchemaInfo().getRenameRules());
     propertyRenameRules.addAll(secondEvent.getSchemaInfo().getRenameRules());
@@ -82,7 +83,7 @@ public class EventFactory {
   }
 
   private static Map<String, Object> makeRuntimeMapSubset(Map<String, Object> event, List<String>
-          fieldSelectors, String currentPrefix) {
+      fieldSelectors, String currentPrefix) {
     Map<String, Object> outMap = new HashMap<>();
     for (String key : event.keySet()) {
       if (contains(makeSelector(key, currentPrefix), fieldSelectors)) {
@@ -108,7 +109,7 @@ public class EventFactory {
           outMap.put(key, field);
         } else {
           field.getAsComposite().setValue(makeFieldMap(field.getAsComposite().getRawValue(),
-                  fieldSelectors));
+              fieldSelectors));
           outMap.put(key, field);
         }
       }
@@ -131,29 +132,29 @@ public class EventFactory {
         fieldMap.put(selector, makeField(key, value, selector, schemaInfo));
       });
       return new NestedField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
-              schemaInfo.getRenameRules()),
-              fieldMap);
+          schemaInfo.getRenameRules()),
+          fieldMap);
     } else if (o instanceof List) {
       List<AbstractField> items = new ArrayList<>();
-      for(Integer i = 0; i < ((List) o).size(); i++) {
-        items.add(makeField("", ((List) o).get(i), currentSelector + "::" +i, schemaInfo));
+      for (Integer i = 0; i < ((List) o).size(); i++) {
+        items.add(makeField("", ((List) o).get(i), currentSelector + "::" + i, schemaInfo));
       }
       return new ListField(runtimeName, getNewRuntimeName(currentSelector, runtimeName, schemaInfo
-              .getRenameRules()), items);
+          .getRenameRules()), items);
     } else {
       return new PrimitiveField(runtimeName, getNewRuntimeName(currentSelector, runtimeName,
-              schemaInfo.getRenameRules()), o);
+          schemaInfo.getRenameRules()), o);
     }
   }
 
   private static String getNewRuntimeName(String currentSelector, String
-          runtimeName, List<PropertyRenameRule>
-                                                  renameRules) {
+      runtimeName, List<PropertyRenameRule>
+                                              renameRules) {
     return renameRules
-            .stream()
-            .filter(r -> r.getRuntimeId().equals(currentSelector))
-            .findFirst()
-            .map(PropertyRenameRule::getNewRuntimeName).orElse(runtimeName);
+        .stream()
+        .filter(r -> r.getRuntimeId().equals(currentSelector))
+        .findFirst()
+        .map(PropertyRenameRule::getNewRuntimeName).orElse(runtimeName);
   }
 
   private static String makeSelector(String key, String selectorPrefix) {

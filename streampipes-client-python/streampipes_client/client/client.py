@@ -29,7 +29,8 @@ from typing import Dict, Optional
 
 from requests import Session
 from streampipes_client.client.client_config import StreamPipesClientConfig
-from streampipes_client.endpoint import DataLakeMeasureEndpoint
+from streampipes_client.endpoint import DataLakeMeasureEndpoint, DataStreamEndpoint
+from streampipes_client.endpoint.endpoint import APIEndpoint
 
 logger = logging.getLogger(__name__)
 
@@ -102,6 +103,7 @@ class StreamPipesClient:
         # provide all available endpoints here
         # name of the endpoint needs to be consistent with the Java client
         self.dataLakeMeasureApi = DataLakeMeasureEndpoint(parent_client=self)
+        self.dataStreamApi = DataStreamEndpoint(parent_client=self)
 
     @staticmethod
     def _set_up_logging(logging_level: int) -> None:
@@ -175,3 +177,39 @@ class StreamPipesClient:
             f"{self.client_config.host_address}:"
             f"{self.client_config.port}/streampipes-backend/"
         )
+
+    def describe(self) -> None:
+        """Prints short description of the connected StreamPipes instance and the available resources to the console.
+
+        Returns
+        -------
+            None
+        """
+
+        # get all endpoints of this client
+        available_endpoints = [
+            attr_name for attr_name in dir(self) if isinstance(self.__getattribute__(attr_name), APIEndpoint)
+        ]
+
+        # collect the number of available resources per endpoint
+        endpoint_stats = {
+            (all_items := self.__getattribute__(endpoint_name).all()).__class__.__name__: len(all_items)
+            for endpoint_name in available_endpoints
+        }
+
+        # sort the endpoints descending based on the number of resources
+        sorted_endpoint_stats = {
+            key: val for key, val in sorted(endpoint_stats.items(), key=lambda item: item[1], reverse=True)
+        }
+
+        base_message = (
+            f"\nHi there!\n"
+            f"You are connected to a StreamPipes instance running at "
+            f"{'http://' if self.client_config.https_disabled else 'https://'}"
+            f"{self.client_config.host_address}:{self.client_config.port}.\n"
+            f"The following StreamPipes resources are available with this client:\n"
+        )
+
+        endpoint_stats_message = "\n".join(f"{count}x {name}" for name, count in sorted_endpoint_stats.items())
+
+        print(base_message + endpoint_stats_message)

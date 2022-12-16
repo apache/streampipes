@@ -63,10 +63,10 @@ public class TestUtils {
 		requirement.setElementId("http://www.schema.org/test3");
 		Pipeline pipeline = new Pipeline();
 		SpDataStream offeredClientModel = offer;
-		offeredClientModel.setDOM("A");
+		offeredClientModel.setDom("A");
 
 		DataProcessorInvocation requiredClientModel = new DataProcessorInvocation(requirement);
-		requiredClientModel.setDOM("B");
+		requiredClientModel.setDom("B");
 		requiredClientModel.setConnectedTo(Arrays.asList("A"));
 		
 		pipeline.setStreams(Arrays.asList(offeredClientModel));
@@ -87,14 +87,14 @@ public class TestUtils {
 
     public static DataProcessorInvocation makeSepa(SemanticEventProcessingAgentDeclarer declarer, String domId, String... connectedTo) {
         DataProcessorInvocation invocation = new DataProcessorInvocation(declarer.declareModel());
-        invocation.setDOM(domId);
+        invocation.setDom(domId);
         invocation.setConnectedTo(Arrays.asList(connectedTo));
         return invocation;
     }
 
     public static SpDataStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec, String domId) {
         SpDataStream stream = new SpDataStream(streamDec.declareModel());
-        stream.setDOM(domId);
+        stream.setDom(domId);
         return stream;
     }
 	

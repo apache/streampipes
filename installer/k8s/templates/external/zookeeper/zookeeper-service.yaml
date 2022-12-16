@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if eq .Values.preferredBroker "kafka" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,3 +26,4 @@ spec:
       protocol: TCP
       port: 2181
       targetPort: 2181
+{{- end }}

@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.model.client.user;
 
+import org.apache.streampipes.model.shared.annotation.TsModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.SerializedName;
-import org.apache.streampipes.model.shared.annotation.TsModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Permission {
   protected @SerializedName("_rev") String rev;
 
   @JsonIgnore
-  private String $type = "permission";
+  private String type = "permission";
 
   private String objectInstanceId;
   private String objectClassName;
@@ -97,12 +98,12 @@ public class Permission {
     this.grantedAuthorities = grantedAuthorities;
   }
 
-  public String get$type() {
-    return $type;
+  public String getType() {
+    return type;
   }
 
-  public void set$type(String $type) {
-    this.$type = $type;
+  public void setType(String type) {
+    this.type = type;
   }
 
   public boolean isPublicElement() {

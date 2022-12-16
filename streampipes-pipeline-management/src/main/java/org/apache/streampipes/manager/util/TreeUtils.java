@@ -42,7 +42,7 @@ public class TreeUtils {
     allElements.addAll(streams);
 
     for (NamedStreamPipesEntity element : allElements) {
-      if (id.equals(element.getDOM())) {
+      if (id.equals(element.getDom())) {
         return element;
       }
     }
@@ -57,7 +57,7 @@ public class TreeUtils {
    */
   public static InvocableStreamPipesEntity findByDomId(String id, List<InvocableStreamPipesEntity> graphs) {
     for (InvocableStreamPipesEntity graph : graphs) {
-      if (graph.getDOM().equals(id)) {
+      if (graph.getDom().equals(id)) {
         return graph;
       }
     }

@@ -18,7 +18,7 @@
 
 ## Measurement Unit Converter
 
-<p align="center"> 
+<p align="center">
     <img src="icon.png" width="150px;" class="pe-image-documentation"/>
 </p>
 

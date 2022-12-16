@@ -49,7 +49,9 @@ public class PipelineTemplateInvocation extends UnnamedStreamPipesEntity {
     this.dataSetId = other.getDataSetId();
     this.pipelineTemplateId = other.getPipelineTemplateId();
 
-    if (other.getStaticProperties() != null) this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
+    if (other.getStaticProperties() != null) {
+      this.staticProperties = new Cloner().staticProperties(other.getStaticProperties());
+    }
   }
 
   public String getKviName() {

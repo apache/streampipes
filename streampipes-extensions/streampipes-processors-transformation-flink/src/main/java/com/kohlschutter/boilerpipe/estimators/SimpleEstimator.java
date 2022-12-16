@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,15 +38,15 @@ public final class SimpleEstimator {
   /**
    * Given the statistics of the document before and after applying the {@link BoilerpipeExtractor},
    * can we regard the extraction quality (too) low?
-   * 
+   *
    * Works well with {@link DefaultExtractor}, {@link ArticleExtractor} and others.
-   * 
+   *
    * @param dsBefore
    * @param dsAfter
    * @return true if low quality is to be expected.
    */
   public boolean isLowQuality(final TextDocumentStatistics dsBefore,
-      final TextDocumentStatistics dsAfter) {
+                              final TextDocumentStatistics dsAfter) {
     if (dsBefore.getNumWords() < 90 || dsAfter.getNumWords() < 70) {
       return true;
     }

@@ -29,13 +29,13 @@ public class CrudViewDao extends CrudDao {
   }
 
   public <T> List<T> findByKey(String viewName,
-                              String key,
-                              Class<T> clazz) {
+                               String key,
+                               Class<T> clazz) {
     return couchDbClientSupplier
-            .get()
-            .view(viewName)
-            .key(key)
-            .includeDocs(true)
-            .query(clazz);
+        .get()
+        .view(viewName)
+        .key(key)
+        .includeDocs(true)
+        .query(clazz);
   }
 }

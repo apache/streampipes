@@ -28,28 +28,6 @@ public class SelectColumn {
   private boolean simpleField = true;
   private boolean rename = false;
 
-  public static SelectColumn fromApiQueryString(String queryString) {
-    if (queryString.contains(";")) {
-      String[] queryParts = DataLakeManagementUtils.buildSingleCondition(queryString);
-      if (queryParts.length < 2) {
-        throw new IllegalArgumentException("Wrong query format for query part " + queryString);
-      } else {
-        ColumnFunction columnFunction = ColumnFunction.valueOf(queryParts[1]);
-        String targetField = queryParts.length == 3 ? queryParts[2] : columnFunction.name().toLowerCase() + "_" +queryParts[0];
-        return new SelectColumn(queryParts[0], columnFunction, targetField);
-      }
-    } else {
-      return new SelectColumn(queryString);
-    }
-  }
-
-  public static SelectColumn fromApiQueryString(String queryString,
-                                                String globalAggregationFunction) {
-    ColumnFunction columnFunction = ColumnFunction.valueOf(globalAggregationFunction);
-    String targetField = columnFunction.name().toLowerCase() + "_" + queryString;
-    return new SelectColumn(queryString, ColumnFunction.valueOf(globalAggregationFunction), targetField);
-  }
-
   public SelectColumn(String originalField) {
     this.originalField = originalField;
   }
@@ -67,6 +45,29 @@ public class SelectColumn {
     this(originalField, columnFunction);
     this.targetField = targetField;
     this.rename = true;
+  }
+
+  public static SelectColumn fromApiQueryString(String queryString) {
+    if (queryString.contains(";")) {
+      String[] queryParts = DataLakeManagementUtils.buildSingleCondition(queryString);
+      if (queryParts.length < 2) {
+        throw new IllegalArgumentException("Wrong query format for query part " + queryString);
+      } else {
+        ColumnFunction columnFunction = ColumnFunction.valueOf(queryParts[1]);
+        String targetField =
+            queryParts.length == 3 ? queryParts[2] : columnFunction.name().toLowerCase() + "_" + queryParts[0];
+        return new SelectColumn(queryParts[0], columnFunction, targetField);
+      }
+    } else {
+      return new SelectColumn(queryString);
+    }
+  }
+
+  public static SelectColumn fromApiQueryString(String queryString,
+                                                String globalAggregationFunction) {
+    ColumnFunction columnFunction = ColumnFunction.valueOf(globalAggregationFunction);
+    String targetField = columnFunction.name().toLowerCase() + "_" + queryString;
+    return new SelectColumn(queryString, ColumnFunction.valueOf(globalAggregationFunction), targetField);
   }
 
   private String makeField() {

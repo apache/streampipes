@@ -20,6 +20,7 @@ package org.apache.streampipes.connect.iiot.adapters.opcua;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfig;
+
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfig;
 import org.eclipse.milo.opcua.sdk.client.api.config.OpcUaClientConfigBuilder;
 import org.eclipse.milo.opcua.sdk.client.api.identity.UsernameProvider;
@@ -36,24 +37,25 @@ import java.util.concurrent.ExecutionException;
 
 public class MiloOpcUaConfigurationProvider {
 
-  public OpcUaClientConfig makeClientConfig(SpOpcUaConfig spOpcConfig) throws ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
+  public OpcUaClientConfig makeClientConfig(SpOpcUaConfig spOpcConfig)
+      throws ExecutionException, InterruptedException, SpConfigurationException, URISyntaxException {
     String opcServerUrl = spOpcConfig.getOpcServerURL();
     List<EndpointDescription> endpoints = DiscoveryClient.getEndpoints(opcServerUrl).get();
     String host = opcServerUrl.split("://")[1].split(":")[0];
 
     EndpointDescription tmpEndpoint = endpoints
-            .stream()
-            .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
-            .findFirst()
-            .orElseThrow(() -> new SpConfigurationException("No endpoint with security policy none"));
+        .stream()
+        .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
+        .findFirst()
+        .orElseThrow(() -> new SpConfigurationException("No endpoint with security policy none"));
 
     tmpEndpoint = updateEndpointUrl(tmpEndpoint, host);
     endpoints = Collections.singletonList(tmpEndpoint);
 
     EndpointDescription endpoint = endpoints
-            .stream()
-            .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
-            .findFirst().orElseThrow(() -> new SpConfigurationException("no desired endpoints returned"));
+        .stream()
+        .filter(e -> e.getSecurityPolicyUri().equals(SecurityPolicy.None.getUri()))
+        .findFirst().orElseThrow(() -> new SpConfigurationException("no desired endpoints returned"));
 
     return buildConfig(endpoint, spOpcConfig);
   }
@@ -70,33 +72,33 @@ public class MiloOpcUaConfigurationProvider {
 
   private OpcUaClientConfigBuilder defaultBuilder(EndpointDescription endpoint) {
     return OpcUaClientConfig.builder()
-            .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
-            .setApplicationUri("urn:eclipse:milo:examples:client")
-            .setEndpoint(endpoint);
+        .setApplicationName(LocalizedText.english("eclipse milo opc-ua client"))
+        .setApplicationUri("urn:eclipse:milo:examples:client")
+        .setEndpoint(endpoint);
   }
 
   private EndpointDescription updateEndpointUrl(
-          EndpointDescription original, String hostname) throws URISyntaxException {
+      EndpointDescription original, String hostname) throws URISyntaxException {
 
     URI uri = new URI(original.getEndpointUrl()).parseServerAuthority();
 
     String endpointUrl = String.format(
-            "%s://%s:%s%s",
-            uri.getScheme(),
-            hostname,
-            uri.getPort(),
-            uri.getPath()
+        "%s://%s:%s%s",
+        uri.getScheme(),
+        hostname,
+        uri.getPort(),
+        uri.getPath()
     );
 
     return new EndpointDescription(
-            endpointUrl,
-            original.getServer(),
-            original.getServerCertificate(),
-            original.getSecurityMode(),
-            original.getSecurityPolicyUri(),
-            original.getUserIdentityTokens(),
-            original.getTransportProfileUri(),
-            original.getSecurityLevel()
+        endpointUrl,
+        original.getServer(),
+        original.getServerCertificate(),
+        original.getSecurityMode(),
+        original.getSecurityPolicyUri(),
+        original.getUserIdentityTokens(),
+        original.getTransportProfileUri(),
+        original.getSecurityLevel()
     );
   }
 }

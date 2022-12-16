@@ -21,7 +21,7 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescriptio
 import org.apache.streampipes.sdk.builder.DataSetBuilder;
 
 public class SpecificDataSetAdapterBuilder extends
-        AdapterDescriptionBuilder<SpecificDataSetAdapterBuilder, SpecificAdapterSetDescription> {
+    AdapterDescriptionBuilder<SpecificDataSetAdapterBuilder, SpecificAdapterSetDescription> {
 
 
   private SpecificDataSetAdapterBuilder(String id, String label, String description) {
@@ -34,18 +34,21 @@ public class SpecificDataSetAdapterBuilder extends
 
   /**
    * Creates a new specific data set adapter using the builder pattern.
-   * @param appId A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
-   * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   *
+   * @param appId       A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
+   * @param label       A human-readable name of the element.
+   *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    * @return a new instance of {@link DataSetBuilder}
    */
   public static SpecificDataSetAdapterBuilder create(String appId, String label, String
-          description) {
+      description) {
     return new SpecificDataSetAdapterBuilder(appId, label, description);
   }
 
   /**
    * Creates a new specific data set adapter using the builder pattern.
+   *
    * @param appId A unique identifier of the new element, e.g., com.mycompany.set.mynewdataset
    * @return a new instance of {@link DataSetBuilder}
    */

@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.quality.EventStreamQualityDefinition;
@@ -29,13 +27,16 @@ import org.apache.streampipes.model.quality.MeasurementObject;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.util.Cloner;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @JsonSubTypes({
-        @JsonSubTypes.Type(SpDataStream.class),
-        @JsonSubTypes.Type(SpDataSet.class)
+    @JsonSubTypes.Type(SpDataStream.class),
+    @JsonSubTypes.Type(SpDataSet.class)
 })
 public class SpDataStream extends NamedStreamPipesEntity {
 
@@ -54,14 +55,12 @@ public class SpDataStream extends NamedStreamPipesEntity {
   protected List<MeasurementCapability> measurementCapability;
 
   protected List<MeasurementObject> measurementObject;
-
+  protected List<String> category;
   private int index;
-
   private String correspondingAdapterId;
 
-  protected List<String> category;
-
-  public SpDataStream(String uri, String name, String description, String iconUrl, List<EventStreamQualityDefinition> hasEventStreamQualities,
+  public SpDataStream(String uri, String name, String description, String iconUrl,
+                      List<EventStreamQualityDefinition> hasEventStreamQualities,
                       EventGrounding eventGrounding,
                       EventSchema eventSchema) {
     super(uri, name, description, iconUrl);
@@ -92,10 +91,13 @@ public class SpDataStream extends NamedStreamPipesEntity {
       this.eventSchema = new EventSchema(other.getEventSchema());
     }
     if (other.getHasEventStreamQualities() != null) {
-      this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(EventStreamQualityDefinition::new).collect(Collectors.toCollection(ArrayList::new));
+      this.hasEventStreamQualities = other.getHasEventStreamQualities().stream().map(EventStreamQualityDefinition::new)
+          .collect(Collectors.toCollection(ArrayList::new));
     }
     if (other.getRequiresEventStreamQualities() != null) {
-      this.requiresEventStreamQualities = other.getRequiresEventStreamQualities().stream().map(EventStreamQualityRequirement::new).collect(Collectors.toCollection(ArrayList::new));
+      this.requiresEventStreamQualities =
+          other.getRequiresEventStreamQualities().stream().map(EventStreamQualityRequirement::new)
+              .collect(Collectors.toCollection(ArrayList::new));
     }
     if (other.getMeasurementCapability() != null) {
       this.measurementCapability = new Cloner().mc(other.getMeasurementCapability());
@@ -110,7 +112,7 @@ public class SpDataStream extends NamedStreamPipesEntity {
   }
 
   public void setHasEventStreamQualities(
-          List<EventStreamQualityDefinition> hasEventStreamQualities) {
+      List<EventStreamQualityDefinition> hasEventStreamQualities) {
     this.hasEventStreamQualities = hasEventStreamQualities;
   }
 
@@ -120,7 +122,7 @@ public class SpDataStream extends NamedStreamPipesEntity {
   }
 
   public void setRequiresEventStreamQualities(
-          List<EventStreamQualityRequirement> requiresEventStreamQualities) {
+      List<EventStreamQualityRequirement> requiresEventStreamQualities) {
     this.requiresEventStreamQualities = requiresEventStreamQualities;
   }
 
@@ -145,7 +147,7 @@ public class SpDataStream extends NamedStreamPipesEntity {
   }
 
   public void setMeasurementCapability(
-          List<MeasurementCapability> measurementCapability) {
+      List<MeasurementCapability> measurementCapability) {
     this.measurementCapability = measurementCapability;
   }
 

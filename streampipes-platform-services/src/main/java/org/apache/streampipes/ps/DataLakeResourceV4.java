@@ -27,6 +27,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.streampipes.dataexplorer.DataLakeManagementV4;
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
+import org.apache.streampipes.dataexplorer.v4.query.writer.OutputFormat;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.datalake.DataLakeConfiguration;
 import org.apache.streampipes.model.datalake.DataLakeMeasure;
@@ -217,7 +218,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
                 format = "csv";
             }
 
-            String outputFormat = format;
+            OutputFormat outputFormat = format.equals("csv") ? OutputFormat.CSV : OutputFormat.JSON;
             StreamingOutput streamingOutput = output -> dataLakeManagement.getDataAsStream(
                 sanitizedParams,
                 outputFormat,
@@ -252,7 +253,7 @@ public class DataLakeResourceV4 extends AbstractRestResource {
     }
 
     private boolean checkProvidedQueryParams(MultivaluedMap<String, String> providedParams) {
-        return supportedParams.containsAll(providedParams.keySet());
+        return SUPPORTED_PARAMS.containsAll(providedParams.keySet());
     }
 
     private ProvidedQueryParams populate(String measurementId, MultivaluedMap<String, String> rawParams) {

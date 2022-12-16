@@ -19,18 +19,18 @@
 package org.apache.streampipes.dataexplorer.v4.params;
 
 public class GroupingByTimeParams extends QueryParamsV4 {
-    private final String timeInterval;
+  private final String timeInterval;
 
-    public static GroupingByTimeParams from(String measurementID, String timeInterval) {
-        return new GroupingByTimeParams(measurementID, timeInterval);
-    }
+  public GroupingByTimeParams(String measurementID, String timeInterval) {
+    super(measurementID);
+    this.timeInterval = timeInterval;
+  }
 
-    public GroupingByTimeParams(String measurementID, String timeInterval) {
-        super(measurementID);
-        this.timeInterval = timeInterval;
-    }
+  public static GroupingByTimeParams from(String measurementID, String timeInterval) {
+    return new GroupingByTimeParams(measurementID, timeInterval);
+  }
 
-    public String getTimeInterval() {
-        return this.timeInterval;
-    }
+  public String getTimeInterval() {
+    return this.timeInterval;
+  }
 }

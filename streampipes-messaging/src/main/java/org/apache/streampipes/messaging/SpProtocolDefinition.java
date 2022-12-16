@@ -20,9 +20,9 @@ package org.apache.streampipes.messaging;
 
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
-public interface SpProtocolDefinition<TP extends TransportProtocol> {
+public interface SpProtocolDefinition<T extends TransportProtocol> {
 
-  EventConsumer<TP> getConsumer();
+  EventConsumer<T> getConsumer();
 
-  EventProducer<TP> getProducer();
+  EventProducer<T> getProducer();
 }

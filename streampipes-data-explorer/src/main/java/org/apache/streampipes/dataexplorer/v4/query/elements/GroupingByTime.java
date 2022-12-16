@@ -23,12 +23,12 @@ import org.apache.streampipes.dataexplorer.v4.template.QueryTemplatesV4;
 
 public class GroupingByTime extends QueryElement<GroupingByTimeParams> {
 
-    public GroupingByTime(GroupingByTimeParams groupingByTimeParams) {
-        super(groupingByTimeParams);
-    }
+  public GroupingByTime(GroupingByTimeParams groupingByTimeParams) {
+    super(groupingByTimeParams);
+  }
 
-    @Override
-    protected String buildStatement(GroupingByTimeParams groupingByTimeParams) {
-        return QueryTemplatesV4.groupByTime(groupingByTimeParams.getTimeInterval());
-    }
+  @Override
+  protected String buildStatement(GroupingByTimeParams groupingByTimeParams) {
+    return QueryTemplatesV4.groupByTime(groupingByTimeParams.getTimeInterval());
+  }
 }

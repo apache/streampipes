@@ -54,9 +54,9 @@ public class MessagingSettings {
     }
 
     return new MessagingSettings(
-            1638400, 5000012, 20, 2,
-            Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.FST, SpDataFormat.SMILE),
-            protocolList);
+        1638400, 5000012, 20, 2,
+        Arrays.asList(SpDataFormat.JSON, SpDataFormat.CBOR, SpDataFormat.FST, SpDataFormat.SMILE),
+        protocolList);
   }
 
   public MessagingSettings(Integer batchSize,

@@ -24,18 +24,18 @@ import java.util.List;
 
 public interface ILabelStorage {
 
-    List<Label> getAllLabels();
+  List<Label> getAllLabels();
 
-    List<Label> getAllForCategory(String categoryId);
+  List<Label> getAllForCategory(String categoryId);
 
-    void deleteAllForCategory(String categoryId);
+  void deleteAllForCategory(String categoryId);
 
-    String storeLabel(Label label);
+  String storeLabel(Label label);
 
-    Label getLabel(String labelId);
+  Label getLabel(String labelId);
 
-    void deleteLabel(String labelId);
+  void deleteLabel(String labelId);
 
-    void updateLabel(Label label);
+  void updateLabel(Label label);
 
 }

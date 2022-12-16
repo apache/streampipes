@@ -23,20 +23,20 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 
 public class UrlDereferencingParameter extends EventProcessorBindingParams {
 
-    private String urlString;
-    private String appendHtml;
+  private String urlString;
+  private String appendHtml;
 
-    public UrlDereferencingParameter(DataProcessorInvocation graph, String urlString, String appendHtml) {
-        super(graph);
-        this.urlString = urlString;
-        this.appendHtml = appendHtml;
-    }
+  public UrlDereferencingParameter(DataProcessorInvocation graph, String urlString, String appendHtml) {
+    super(graph);
+    this.urlString = urlString;
+    this.appendHtml = appendHtml;
+  }
 
-    public String getUrl() {
-        return urlString;
-    }
+  public String getUrl() {
+    return urlString;
+  }
 
-    public String getAppendHtml() {
-        return appendHtml;
-    }
+  public String getAppendHtml() {
+    return appendHtml;
+  }
 }

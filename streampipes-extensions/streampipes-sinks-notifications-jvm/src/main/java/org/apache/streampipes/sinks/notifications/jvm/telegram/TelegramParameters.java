@@ -22,31 +22,31 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
 public class TelegramParameters extends EventSinkBindingParams {
-    private String apiKey;
-    private String channelOrChatId;
-    private String message;
+  private String apiKey;
+  private String channelOrChatId;
+  private String message;
 
-    public TelegramParameters(DataSinkInvocation graph,
-                              String apiKey,
-                              String channelOrChatId,
-                              String message) {
-        super(graph);
-        this.apiKey = apiKey;
-        this.channelOrChatId = channelOrChatId;
-        this.message = message;
-    }
+  public TelegramParameters(DataSinkInvocation graph,
+                            String apiKey,
+                            String channelOrChatId,
+                            String message) {
+    super(graph);
+    this.apiKey = apiKey;
+    this.channelOrChatId = channelOrChatId;
+    this.message = message;
+  }
 
-    public String getApiKey() {
-        return apiKey;
-    }
+  public String getApiKey() {
+    return apiKey;
+  }
 
-    public String getChannelOrChatId() {
-        return channelOrChatId;
-    }
+  public String getChannelOrChatId() {
+    return channelOrChatId;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
 }
 

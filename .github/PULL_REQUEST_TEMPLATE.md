@@ -21,33 +21,29 @@ Thanks for contributing! Here are some tips you can follow to help us incorporat
 1. If this is your first time, please read our contributor guidelines:
     - https://streampipes.apache.org/getinvolved.html
     - https://cwiki.apache.org/confluence/display/STREAMPIPES/Getting+Started
-2. Make sure the PR title is formatted like: `[STREAMPIPES-<Jira issue #>] PR title ...`
-3. If the PR is unfinished, add '[WIP]' in your PR title, e.g., `[WIP][STREAMPIPES-<Jira issue #>] PR title ...`.
+2. Make sure the PR title is formatted like: `[#<GitHub issue id>] PR title ...`
+3. If the PR is unfinished, add '[WIP]' in your PR title, e.g., `[WIP][#<GitHub issue id>] PR title ...`.
 4. Please write your PR title to summarize what this PR proposes/fixes.
-5. Be sure to keep the PR description updated to reflect all changes.
-6. If possible, provide a concise example to reproduce the issue for a faster review.
-7. Make sure tests pass via `mvn clean install`.
-8. (Optional) If the contribution is large, please file an Apache ICLA
+5. Link the PR to the corresponding GitHub issue (if present) in the `Development` section in the right menu bar. 
+6. Be sure to keep the PR description updated to reflect all changes.
+7. If possible, provide a concise example to reproduce the issue for a faster review.
+8. Make sure tests pass via `mvn clean install`.
+9. (Optional) If the contribution is large, please file an Apache ICLA
     - http://apache.org/licenses/icla.pdf
 -->
 
 ### Purpose
 <!--
 Please clarify what changes you are proposing and describe how those changes will address the issue.
--->
-
-### Approach
-<!--
-Describe how you are implementing the solutions along with the design details.
--->
-
-### Samples
-<!--
-Provide high-level details about the samples related to this feature.
+Furthermore, describe potential consequences the changes might have.
 -->
 
 ### Remarks
 <!--
-List related issues/PRs, link to discussions in the mailing list, todo items, or any other notes related to the PR.
+Is there anything left we need to pay attention on?
+Are there some references that might be important? E.g. links to Confluence, or discussions
+on the mailing list or GitHub.
 -->
-Fixes: <Jira issue link>
+PR introduces (a) breaking change(s): <yes/no>
+
+PR introduces (a) deprecation(s): <yes/no>

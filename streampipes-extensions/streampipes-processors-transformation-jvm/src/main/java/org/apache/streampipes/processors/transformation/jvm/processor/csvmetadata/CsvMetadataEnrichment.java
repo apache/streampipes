@@ -17,10 +17,7 @@
  */
 package org.apache.streampipes.processors.transformation.jvm.processor.csvmetadata;
 
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.commons.parser.BooleanParser;
 import org.apache.streampipes.commons.parser.FloatParser;
@@ -33,6 +30,11 @@ import org.apache.streampipes.sdk.utils.Datatypes;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.runtime.EventProcessor;
+
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,7 +53,8 @@ public class CsvMetadataEnrichment implements EventProcessor<CsvMetadataEnrichme
   private Map<String, CSVRecord> columnMap;
 
   @Override
-  public void onInvocation(CsvMetadataEnrichmentParameters parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
+  public void onInvocation(CsvMetadataEnrichmentParameters parameters, SpOutputCollector spOutputCollector,
+                           EventProcessorRuntimeContext runtimeContext) throws SpRuntimeException {
     this.mappingFieldSelector = parameters.getMappingFieldSelector();
     this.matchingColumn = parameters.getLookupField();
     try {
@@ -61,10 +64,10 @@ public class CsvMetadataEnrichment implements EventProcessor<CsvMetadataEnrichme
     }
     if (this.columnMap.size() > 0) {
       this.columnsToAppend = parameters
-              .getFieldsToAppend()
-              .stream()
-              .map(c -> makeParser(c, this.columnMap.entrySet().stream().findFirst().get().getValue()))
-              .collect(Collectors.toList());
+          .getFieldsToAppend()
+          .stream()
+          .map(c -> makeParser(c, this.columnMap.entrySet().stream().findFirst().get().getValue()))
+          .collect(Collectors.toList());
     } else {
       LOG.warn("Could not find any rows, does the CSV file contain data?");
       this.columnsToAppend = new ArrayList<>();
@@ -97,20 +100,20 @@ public class CsvMetadataEnrichment implements EventProcessor<CsvMetadataEnrichme
   @Override
   public void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException {
     String lookupValue =
-            event.getFieldBySelector(mappingFieldSelector).getAsPrimitive().getAsString();
+        event.getFieldBySelector(mappingFieldSelector).getAsPrimitive().getAsString();
     CSVRecord record = this.columnMap.get(lookupValue);
     for (Tuple2<String, PrimitiveTypeParser> columnToAppend : columnsToAppend) {
-      event.addField(columnToAppend.a, getRecordValueOrDefault(record, columnToAppend));
+      event.addField(columnToAppend.k, getRecordValueOrDefault(record, columnToAppend));
     }
     collector.collect(event);
   }
 
   private Object getRecordValueOrDefault(CSVRecord record, Tuple2<String,
-                                         PrimitiveTypeParser> columnToAppend) {
+      PrimitiveTypeParser> columnToAppend) {
     if (record != null) {
-      return columnToAppend.b.parse(record.get(columnToAppend.a));
+      return columnToAppend.v.parse(record.get(columnToAppend.k));
     } else {
-      return columnToAppend.b.parse("0");
+      return columnToAppend.v.parse("0");
     }
   }
 

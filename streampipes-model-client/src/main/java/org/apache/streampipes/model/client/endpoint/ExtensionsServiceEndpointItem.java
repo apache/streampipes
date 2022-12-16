@@ -25,119 +25,119 @@ import java.util.List;
 @TsModel
 public class ExtensionsServiceEndpointItem {
 
-    private String name;
-    private String description;
-    private String elementId;
-    private String uri;
-    private String type;
-    private String appId;
+  private String name;
+  private String description;
+  private String elementId;
+  private String uri;
+  private String type;
+  private String appId;
 
-    private boolean includesIcon;
-    private boolean includesDocs;
+  private boolean includesIcon;
+  private boolean includesDocs;
 
-    private boolean installed;
-    private boolean editable;
-    private boolean available;
+  private boolean installed;
+  private boolean editable;
+  private boolean available;
 
-    private List<ExtensionsServiceEndpointItem> streams;
+  private List<ExtensionsServiceEndpointItem> streams;
 
-    public ExtensionsServiceEndpointItem() {
+  public ExtensionsServiceEndpointItem() {
 
-    }
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public String getUri() {
-        return uri;
-    }
+  public String getUri() {
+    return uri;
+  }
 
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
+  public void setUri(String uri) {
+    this.uri = uri;
+  }
 
-    public List<ExtensionsServiceEndpointItem> getStreams() {
-        return streams;
-    }
+  public List<ExtensionsServiceEndpointItem> getStreams() {
+    return streams;
+  }
 
-    public void setStreams(List<ExtensionsServiceEndpointItem> streams) {
-        this.streams = streams;
-    }
+  public void setStreams(List<ExtensionsServiceEndpointItem> streams) {
+    this.streams = streams;
+  }
 
-    public boolean isInstalled() {
-        return installed;
-    }
+  public boolean isInstalled() {
+    return installed;
+  }
 
-    public void setInstalled(boolean installed) {
-        this.installed = installed;
-    }
+  public void setInstalled(boolean installed) {
+    this.installed = installed;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public void setType(String type) {
+    this.type = type;
+  }
 
-    public String getAppId() {
-        return appId;
-    }
+  public String getAppId() {
+    return appId;
+  }
 
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
 
-    public boolean isEditable() {
-        return editable;
-    }
+  public boolean isEditable() {
+    return editable;
+  }
 
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
+  public void setEditable(boolean editable) {
+    this.editable = editable;
+  }
 
-    public String getElementId() {
-        return elementId;
-    }
+  public String getElementId() {
+    return elementId;
+  }
 
-    public void setElementId(String elementId) {
-        this.elementId = elementId;
-    }
+  public void setElementId(String elementId) {
+    this.elementId = elementId;
+  }
 
-    public boolean isIncludesIcon() {
-        return includesIcon;
-    }
+  public boolean isIncludesIcon() {
+    return includesIcon;
+  }
 
-    public void setIncludesIcon(boolean includesIcon) {
-        this.includesIcon = includesIcon;
-    }
+  public void setIncludesIcon(boolean includesIcon) {
+    this.includesIcon = includesIcon;
+  }
 
-    public boolean isIncludesDocs() {
-        return includesDocs;
-    }
+  public boolean isIncludesDocs() {
+    return includesDocs;
+  }
 
-    public void setIncludesDocs(boolean includesDocs) {
-        this.includesDocs = includesDocs;
-    }
+  public void setIncludesDocs(boolean includesDocs) {
+    this.includesDocs = includesDocs;
+  }
 
-    public boolean isAvailable() {
-        return available;
-    }
+  public boolean isAvailable() {
+    return available;
+  }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
+  public void setAvailable(boolean available) {
+    this.available = available;
+  }
 }

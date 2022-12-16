@@ -19,34 +19,34 @@
 package org.apache.streampipes.processors.transformation.jvm.processor.state.labeler.model;
 
 public class Statement {
-    private String operator;
-    private double value;
-    private String label;
+  private String operator;
+  private double value;
+  private String label;
 
-    public Statement() {
-    }
+  public Statement() {
+  }
 
-    public String getOperator() {
-        return operator;
-    }
+  public String getOperator() {
+    return operator;
+  }
 
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
+  public void setOperator(String operator) {
+    this.operator = operator;
+  }
 
-    public double getValue() {
-        return value;
-    }
+  public double getValue() {
+    return value;
+  }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+  public void setValue(double value) {
+    this.value = value;
+  }
 
-    public String getLabel() {
-        return label;
-    }
+  public String getLabel() {
+    return label;
+  }
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+  public void setLabel(String label) {
+    this.label = label;
+  }
 }

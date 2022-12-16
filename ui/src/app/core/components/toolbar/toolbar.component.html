@@ -60,7 +60,7 @@
             </div>
             <mat-menu #menu="matMenu" id="account">
                 <div class="current-user">
-                    {{userEmail}}
+                    <span class="user-email">{{userEmail}}</span>
                 </div>
                 <mat-divider></mat-divider>
                 <button mat-menu-item (click)="openProfile()" style="min-width:0px;">

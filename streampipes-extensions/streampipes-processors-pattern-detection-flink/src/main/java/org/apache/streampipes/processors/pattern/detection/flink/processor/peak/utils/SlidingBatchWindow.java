@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * Created by riemer on 21.04.2017.
  */
-public class SlidingBatchWindow<IN> extends AbstractStreamOperator<List<IN>> implements
-        OneInputStreamOperator<IN, List<IN>> {
+public class SlidingBatchWindow<T> extends AbstractStreamOperator<List<T>> implements
+    OneInputStreamOperator<T, List<T>> {
 
   private Integer windowSize;
-  private List<IN> currentEvents;
+  private List<T> currentEvents;
 
   public SlidingBatchWindow(Integer windowSize) {
     super();
@@ -41,7 +41,7 @@ public class SlidingBatchWindow<IN> extends AbstractStreamOperator<List<IN>> imp
   }
 
   @Override
-  public void processElement(StreamRecord<IN> in) throws Exception {
+  public void processElement(StreamRecord<T> in) throws Exception {
     currentEvents.add(in.getValue());
     if (currentEvents.size() > windowSize) {
       currentEvents.remove(0);

@@ -17,13 +17,13 @@
  */
 package org.apache.streampipes.model.runtime;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestSubset {
 
@@ -54,7 +54,7 @@ public class TestSubset {
     assertEquals(2, subset.getFields().size());
     assertEquals("timestamp", subset.getFieldBySelector("s0::timestamp").getFieldNameIn());
     assertEquals("timestamp2", subset.getFieldBySelector("s0::nested::timestamp2").getFieldNameIn
-            ());
+        ());
     assertEquals(1, subset.getFieldBySelector("s0::nested").getAsComposite().getRawValue().size());
 
   }

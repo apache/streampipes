@@ -60,10 +60,10 @@ public class DataStreamStorageImpl extends AbstractDao<SpDataStream> implements 
   @Override
   public SpDataStream getDataStreamByAppId(String appId) {
     return getAll()
-            .stream()
-            .filter(s -> s.getAppId().equals(appId))
-            .findFirst()
-            .orElseThrow(IllegalArgumentException::new);
+        .stream()
+        .filter(s -> s.getAppId().equals(appId))
+        .findFirst()
+        .orElseThrow(IllegalArgumentException::new);
   }
 
   private String getCurrentRev(String elementId) {

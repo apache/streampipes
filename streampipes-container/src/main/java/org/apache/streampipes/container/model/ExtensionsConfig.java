@@ -20,11 +20,16 @@ package org.apache.streampipes.container.model;
 
 public interface ExtensionsConfig {
 
-    String getId();
-    String getHost();
-    int getPort();
-    String getName();
-    String getBackendHost();
-    int getBackendPort();
+  String getId();
+
+  String getHost();
+
+  int getPort();
+
+  String getName();
+
+  String getBackendHost();
+
+  int getBackendPort();
 
 }

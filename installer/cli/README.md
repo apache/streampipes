@@ -23,7 +23,7 @@ The StreamPipes command-line interface (CLI) is focused on developers in order t
 * new core features for **backend** and **ui**.
 
 <!-- BEGIN do not edit: set via ../upgrade_versions.sh -->
-**Current version:** 0.71.0-SNAPSHOT
+**Current version:** 0.91.0-SNAPSHOT
 <!-- END do not edit -->
 
 ## TL;DR
@@ -109,7 +109,7 @@ Now you're good to go to write your new pipeline element :tada: :tada: :tada:
 
 > **HINT for extensions**: Use our [Maven archetypes](https://streampipes.apache.org/docs/docs/dev-guide-archetype/) to setup a project skeleton and use your IDE of choice for development. However, we do recommend using IntelliJ.
 
-> **HINT for core**: To work on `backend` or `ui` features you need to set the template to `backend` and clone the core repository [incubator-streampipes](https://github.com/apache/incubator-streampipes) - check the prerequisites there for more information.
+> **HINT for core**: To work on `backend` or `ui` features you need to set the template to `backend` and clone the core repository [streampipes](https://github.com/apache/streampipes) - check the prerequisites there for more information.
 
 **Stop** environment and remove docker container
 ```bash
@@ -246,7 +246,7 @@ Simply add the path to this cli directory to your `$PATH` (on macOS, Linux) vari
 For **macOS**, or **Linux**:
 
 ```bash
-export PATH="/path/to/incubator-streampipes-installer/cli:$PATH"
+export PATH="/path/to/streampipes-installer/cli:$PATH"
 ```
 
 For **Windows 10**, e.g. check this [documentation](https://helpdeskgeek.com/windows-10/add-windows-path-environment-variable/).
@@ -257,8 +257,7 @@ To upgrade to a new version, simply edit the version tag `SP_VERSION` in the `.e
 
 ## Bugs and Feature Requests
 
-If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
-[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue Find an issue on [GitHub](https://github.com/apache/streampipes/issues).
 
 ## Get help
 If you have any problems during the installation or questions around StreamPipes, you'll get help through one of our community channels:
@@ -275,8 +274,8 @@ We welcome contributions to StreamPipes. If you are interested in contributing t
 Here are some first steps in case you want to contribute:
 * Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
 * Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
-* Ask for a mentor who helps you understanding the code base and guides you through the first setup steps
-* Find an issue in our [Jira](https://issues.apache.org/jira/projects/STREAMPIPES) which is tagged with a _newbie_ tag
+* Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
+* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
 * Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES](https://cwiki.apache.org/confluence/display/STREAMPIPES) to learn more about StreamPipes development.
 
 Have fun!

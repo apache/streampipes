@@ -22,57 +22,55 @@ import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 
 public class PropertyValueSpecification extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private double minValue;
+  private double minValue;
 
-	private double maxValue;
+  private double maxValue;
 
-	private double step;
+  private double step;
 
-	public PropertyValueSpecification(double minValue, double maxValue,
-			double step) {
-		super();
-		this.minValue = minValue;
-		this.maxValue = maxValue;
-		this.step = step;
-	}
-	
-	public PropertyValueSpecification(PropertyValueSpecification other)
-	{
-		super();
-		this.minValue = other.getMinValue();
-		this.maxValue = other.getMaxValue();
-		this.step = other.getStep();
-	}
-	
-	public PropertyValueSpecification()
-	{
-		super();
-	}
+  public PropertyValueSpecification(double minValue, double maxValue,
+                                    double step) {
+    super();
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.step = step;
+  }
 
-	public double getMinValue() {
-		return minValue;
-	}
+  public PropertyValueSpecification(PropertyValueSpecification other) {
+    super();
+    this.minValue = other.getMinValue();
+    this.maxValue = other.getMaxValue();
+    this.step = other.getStep();
+  }
 
-	public void setMinValue(double minValue) {
-		this.minValue = minValue;
-	}
+  public PropertyValueSpecification() {
+    super();
+  }
 
-	public double getMaxValue() {
-		return maxValue;
-	}
+  public double getMinValue() {
+    return minValue;
+  }
 
-	public void setMaxValue(double maxValue) {
-		this.maxValue = maxValue;
-	}
+  public void setMinValue(double minValue) {
+    this.minValue = minValue;
+  }
 
-	public double getStep() {
-		return step;
-	}
+  public double getMaxValue() {
+    return maxValue;
+  }
 
-	public void setStep(double step) {
-		this.step = step;
-	}
-	
+  public void setMaxValue(double maxValue) {
+    this.maxValue = maxValue;
+  }
+
+  public double getStep() {
+    return step;
+  }
+
+  public void setStep(double step) {
+    this.step = step;
+  }
+
 }

@@ -24,6 +24,7 @@ import org.apache.streampipes.model.client.user.UserAccount;
 import org.apache.streampipes.storage.api.IUserStorage;
 import org.apache.streampipes.storage.couchdb.dao.CrudViewDao;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,24 +52,24 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
   @Override
   public List<UserAccount> getAllUserAccounts() {
     return getAllUsers()
-            .stream()
-            .filter(u -> u instanceof UserAccount)
-            .map(u -> (UserAccount) u)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(u -> u instanceof UserAccount)
+        .map(u -> (UserAccount) u)
+        .collect(Collectors.toList());
   }
 
   @Override
   public List<ServiceAccount> getAllServiceAccounts() {
     return getAllUsers()
-            .stream()
-            .filter(u -> u instanceof ServiceAccount)
-            .map(u -> (ServiceAccount) u)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(u -> u instanceof ServiceAccount)
+        .map(u -> (ServiceAccount) u)
+        .collect(Collectors.toList());
   }
 
   @Override
   public Principal getUser(String username) {
-    List<Principal> users = findByKey(viewName, username, Principal.class);
+    List<Principal> users = findByKey(viewName, username.toLowerCase(), Principal.class);
     if (users.size() != 1) {
       LOG.error("None or to many users with matching username");
     }
@@ -101,7 +102,7 @@ public class UserStorage extends CrudViewDao implements IUserStorage {
    */
   @Override
   public boolean checkUser(String username) {
-    List<Principal> users = findByKey(viewName, username, Principal.class);
+    List<Principal> users = findByKey(viewName, username.toLowerCase(), Principal.class);
 
     return users.size() == 1;
   }

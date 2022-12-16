@@ -1,14 +1,14 @@
 /**
  * boilerpipe
- *
+ * <p>
  * Copyright (c) 2009, 2014 Christian Kohlschütter
- *
+ * <p>
  * The author licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,7 @@ import java.util.HashMap;
 /**
  * Base class for definition a set of {@link TagAction}s that are to be used for the HTML parsing
  * process.
- * 
+ *
  * @see DefaultTagActionMap
  */
 public abstract class TagActionMap extends HashMap<String, TagAction> {
@@ -31,7 +31,7 @@ public abstract class TagActionMap extends HashMap<String, TagAction> {
   /**
    * Sets a particular {@link TagAction} for a given tag. Any existing TagAction for that tag will
    * be removed and overwritten.
-   * 
+   *
    * @param tag The tag (will be stored internally 1. as it is, 2. lower-case, 3. upper-case)
    * @param action The {@link TagAction}
    */
@@ -44,7 +44,7 @@ public abstract class TagActionMap extends HashMap<String, TagAction> {
   /**
    * Adds a particular {@link TagAction} for a given tag. If a TagAction already exists for that
    * tag, a chained action, consisting of the previous and the new {@link TagAction} is created.
-   * 
+   *
    * @param tag The tag (will be stored internally 1. as it is, 2. lower-case, 3. upper-case)
    * @param action The {@link TagAction}
    */

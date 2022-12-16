@@ -50,7 +50,7 @@ _error_code_to_message = {
         "\nOops, there seems to be an issue with the Python Client calling the API inappropriately.\n"
         "This should not happen, but unfortunately did.\n"
         "If you don't mind, it would be awesome to let us know by creating an issue"
-        " at github.com/apache/incubator-streampipes.\n"
+        " at github.com/apache/streampipes.\n"
         "Please paste the following information to the issue description:\n\n",
     ),
 }
@@ -189,9 +189,11 @@ class APIEndpoint(ABC):
 
         Returns
         -------
-        The specified resource as an instance of the corresponding model class (`model.Element`).
+        The specified resource as an instance of the corresponding model class (`model.Resource`).
         """
-        raise NotImplementedError(
-            "We're sorry! This functionality is not yet part of the StreamPipes Python client."
-            "Stay tuned, we will add this shortly."
-        )  # pragma: no cover
+
+        response = self._make_request(
+            request_method=self._parent_client.request_session.get, url=f"{self.build_url()}/{identifier}"
+        )
+
+        return self._container_cls._resource_cls()(**response.json())

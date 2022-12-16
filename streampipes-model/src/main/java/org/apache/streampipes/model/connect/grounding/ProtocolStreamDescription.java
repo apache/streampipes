@@ -24,18 +24,18 @@ import java.util.List;
 
 public class ProtocolStreamDescription extends ProtocolDescription {
 
-    public ProtocolStreamDescription() {
-    }
+  public ProtocolStreamDescription() {
+  }
 
-    public ProtocolStreamDescription(String uri, String name, String description) {
-        super(uri, name, description);
-    }
+  public ProtocolStreamDescription(String uri, String name, String description) {
+    super(uri, name, description);
+  }
 
-    public ProtocolStreamDescription(String uri, String name, String description, List<StaticProperty> config) {
-        super(uri, name, description, config);
-    }
+  public ProtocolStreamDescription(String uri, String name, String description, List<StaticProperty> config) {
+    super(uri, name, description, config);
+  }
 
-    public ProtocolStreamDescription(ProtocolDescription other) {
-        super(other);
-    }
+  public ProtocolStreamDescription(ProtocolDescription other) {
+    super(other);
+  }
 }

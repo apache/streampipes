@@ -34,22 +34,22 @@ public class VehicleStream extends AbstractAdapterIncludedStream {
 
   @Override
   public SpDataStream declareModel() {
-    return DataStreamBuilder.create("vehicle-position", "Vehicle Position", "An event stream " +
-            "that produces current vehicle positions")
-            .property(EpProperties.timestampProperty("timestamp"))
-            .property(EpProperties.stringEp(Labels.from("plate-number", "Plate Number", "Denotes the " +
-                    "plate number of the vehicle"), "plateNumber", "http://my.company/plateNumber"))
-            .property(EpProperties.doubleEp(Labels.from("latitude", "Latitude", "Denotes the latitude " +
-                    "value of the vehicle's position"), "latitude", Geo
-                    .lat))
-            .property(EpProperties.doubleEp(Labels.from("longitude", "Longitude", "Denotes the longitude " +
-                    "value of the vehicle's position"), "longitude", Geo.lng))
-            .format(Formats.jsonFormat())
-            .protocol(Protocols.kafka(
-                    configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
-                    configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
-                    "org.apache.streampipes.examples.sources.vehicle"))
-            .build();
+    return DataStreamBuilder.create("vehicle-position", "Vehicle Position", "An event stream "
+            + "that produces current vehicle positions")
+        .property(EpProperties.timestampProperty("timestamp"))
+        .property(EpProperties.stringEp(Labels.from("plate-number", "Plate Number", "Denotes the "
+            + "plate number of the vehicle"), "plateNumber", "http://my.company/plateNumber"))
+        .property(EpProperties.doubleEp(Labels.from("latitude", "Latitude", "Denotes the latitude "
+            + "value of the vehicle's position"), "latitude", Geo
+            .lat))
+        .property(EpProperties.doubleEp(Labels.from("longitude", "Longitude", "Denotes the longitude "
+            + "value of the vehicle's position"), "longitude", Geo.lng))
+        .format(Formats.jsonFormat())
+        .protocol(Protocols.kafka(
+            configExtractor().getConfig().getString(ConfigKeys.KAFKA_HOST),
+            configExtractor().getConfig().getInteger(ConfigKeys.KAFKA_PORT),
+            "org.apache.streampipes.examples.sources.vehicle"))
+        .build();
   }
 
   @Override

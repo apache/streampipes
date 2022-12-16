@@ -18,7 +18,12 @@
 
 package org.apache.streampipes.container.html.page;
 
-import org.apache.streampipes.container.declarer.*;
+import org.apache.streampipes.container.declarer.DataStreamDeclarer;
+import org.apache.streampipes.container.declarer.Declarer;
+import org.apache.streampipes.container.declarer.InvocableDeclarer;
+import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
+import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.html.model.Description;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.model.SpDataSet;
@@ -74,9 +79,9 @@ public class WelcomePageGenerator {
     desc.setAppId(entity.getAppId());
     desc.setEditable(!(entity.isInternallyManaged()));
     desc.setIncludesDocs(entity.isIncludesAssets()
-            && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
+        && entity.getIncludedAssets().contains(Assets.DOCUMENTATION));
     desc.setIncludesIcon(entity.isIncludesAssets()
-            && entity.getIncludedAssets().contains(Assets.ICON));
+        && entity.getIncludedAssets().contains(Assets.ICON));
     String uri = baseUri;
     if (declarer instanceof SemanticEventConsumerDeclarer) {
       uri += "sec/";
@@ -88,7 +93,8 @@ public class WelcomePageGenerator {
       uri += "template/";
     }
     desc.setDescriptionUrl(uri + declarer.declareModel().getAppId());
-    //desc.setUri(URI.create(uri + declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
+    //desc.setUri(URI.create(uri + declarer.declareModel().getUri()
+    // .replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));
     return desc;
   }
 

@@ -42,22 +42,23 @@ public class EmailController extends StandaloneEventSinkDeclarer<EmailParameters
   @Override
   public DataSinkDescription declareModel() {
     return DataSinkBuilder.create("org.apache.streampipes.sinks.notifications.jvm.email")
-            .withLocales(Locales.EN)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .category(DataSinkType.NOTIFICATION)
-            .requiredTextParameter(Labels.withId(TO_EMAIL_ADRESS))
-            .requiredTextParameter(Labels.withId(EMAIL_SUBJECT))
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredProperty(EpRequirements.anyProperty())
-                    .build())
-            .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT))
-            .requiredIntegerParameter(Labels.withId(SILENT_PERIOD))
-            .build();
+        .withLocales(Locales.EN)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .category(DataSinkType.NOTIFICATION)
+        .requiredTextParameter(Labels.withId(TO_EMAIL_ADRESS))
+        .requiredTextParameter(Labels.withId(EMAIL_SUBJECT))
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredProperty(EpRequirements.anyProperty())
+            .build())
+        .requiredHtmlInputParameter(Labels.withId(EMAIL_CONTENT))
+        .requiredIntegerParameter(Labels.withId(SILENT_PERIOD))
+        .build();
   }
 
   @Override
-  public ConfiguredEventSink<EmailParameters> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {
+  public ConfiguredEventSink<EmailParameters> onInvocation(DataSinkInvocation graph,
+                                                           DataSinkParameterExtractor extractor) {
 
     String toEmail = extractor.singleValueParameter(TO_EMAIL_ADRESS, String.class);
     String subject = extractor.singleValueParameter(EMAIL_SUBJECT, String.class);

@@ -24,31 +24,31 @@ import java.net.URI;
 
 public class MeasurementCapability extends UnnamedStreamPipesEntity {
 
-	private static final long serialVersionUID = -7561544835976781403L;
+  private static final long serialVersionUID = -7561544835976781403L;
 
-	private URI capability;
-	
-	public MeasurementCapability() {
-		super();
-	}
-	
-	public MeasurementCapability(MeasurementCapability other) {
-		super(other);
-		this.capability = other.getCapability();
-	}
-	
-	public MeasurementCapability(URI capability) {
-		super();
-		this.capability = capability;
-	}
+  private URI capability;
 
-	public URI getCapability() {
-		return capability;
-	}
+  public MeasurementCapability() {
+    super();
+  }
 
-	public void setCapability(URI capability) {
-		this.capability = capability;
-	}
-	
-	
+  public MeasurementCapability(MeasurementCapability other) {
+    super(other);
+    this.capability = other.getCapability();
+  }
+
+  public MeasurementCapability(URI capability) {
+    super();
+    this.capability = capability;
+  }
+
+  public URI getCapability() {
+    return capability;
+  }
+
+  public void setCapability(URI capability) {
+    this.capability = capability;
+  }
+
+
 }

@@ -26,25 +26,25 @@ import javax.annotation.Generated;
 @SuppressWarnings("unused")
 public class Length {
 
-    @SerializedName("new")
-    private Long mNew;
-    @SerializedName("old")
-    private Long mOld;
+  @SerializedName("new")
+  private Long mNew;
+  @SerializedName("old")
+  private Long mOld;
 
-    public Long getNew() {
-        return mNew;
-    }
+  public Long getNew() {
+    return mNew;
+  }
 
-    public void setNew(Long newLong) {
-        mNew = newLong;
-    }
+  public void setNew(Long newLong) {
+    mNew = newLong;
+  }
 
-    public Long getOld() {
-        return mOld;
-    }
+  public Long getOld() {
+    return mOld;
+  }
 
-    public void setOld(Long old) {
-        mOld = old;
-    }
+  public void setOld(Long old) {
+    mOld = old;
+  }
 
 }

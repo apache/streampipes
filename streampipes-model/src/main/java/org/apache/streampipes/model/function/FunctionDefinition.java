@@ -55,9 +55,9 @@ public class FunctionDefinition {
 
   @Override
   public String toString() {
-    return "FunctionDefinition{" +
-        "functionId=" + functionId.toString() +
-        ", consumedStreams=" + consumedStreams.toString() +
-        '}';
+    return String.format("FunctionDefinition{functionId='%s',consumedStreams='%s'}",
+        functionId.toString(),
+        consumedStreams.toString()
+    );
   }
 }

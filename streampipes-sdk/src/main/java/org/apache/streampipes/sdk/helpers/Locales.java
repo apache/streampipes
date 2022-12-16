@@ -22,7 +22,7 @@ public enum Locales {
   EN("en"),
   DE("de");
 
-  private final String Filename = "strings";
+  private final String filename = "strings";
 
   private String code;
 
@@ -31,6 +31,6 @@ public enum Locales {
   }
 
   public String toFilename() {
-    return this.Filename + "." + code;
+    return this.filename + "." + code;
   }
 }

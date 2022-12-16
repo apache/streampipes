@@ -26,10 +26,10 @@
 	<version>25</version>
 </parent>
 
-<groupId>org.apache.streampipes</groupId>
-<artifactId>streampipes-parent</artifactId>
-<version>0.71.0-SNAPSHOT</version>
-<packaging>pom</packaging>
+    <groupId>org.apache.streampipes</groupId>
+    <artifactId>streampipes-parent</artifactId>
+    <version>0.91.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
 <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -173,7 +173,7 @@
 	<netty-resolver.version>4.1.72.Final</netty-resolver.version>
 	<okhttp.version>3.13.1</okhttp.version>
 	<opennlp.version>1.9.0</opennlp.version>
-	<postgresql.version>42.4.1</postgresql.version>
+	<postgresql.version>42.4.3</postgresql.version>
 	<pulsar.version>2.10.1</pulsar.version>
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
@@ -876,7 +876,7 @@ IoT data streams.
 				<dependency>
 					<groupId>org.yaml</groupId>
 					<artifactId>snakeyaml</artifactId>
-					<version>1.31</version>
+					<version>1.32</version>
 				</dependency>
 				<dependency>
 					<groupId>io.fogsy</groupId>
@@ -1558,7 +1558,30 @@ IoT data streams.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>${maven-checkstyle-plugin.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>9.2.1</version>
+						</dependency>
+					</dependencies>
+					<executions>
+						<execution>
+							<id>validate</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<suppressionsLocation>tools/maven/suppressions.xml</suppressionsLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<configLocation>tools/maven/checkstyle.xml</configLocation>
+						<encoding>UTF-8</encoding>
+						<logViolationsToConsole>true</logViolationsToConsole>
+						<failOnViolation>true</failOnViolation>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -1701,7 +1724,10 @@ IoT data streams.
 						<!-- CSV also doesn't like comments -->
 						<exclude>**/*.csv</exclude>
 
-						<exclude>**/system</exclude>
+						<!-- Jupyter Notebooks as well -->
+						<exclude>**/*.ipynb</exclude>
+
+                        <exclude>**/system</exclude>
 
 						<!-- Test files -->
 						<exclude>streampipes-code-generation/src/main/resources/pom</exclude>
@@ -1709,9 +1735,6 @@ IoT data streams.
 						<exclude>streampipes-code-generation/src/test/resources/*_java</exclude>
 						<exclude>streampipes-code-generation/src/test/resources/expected_pom_xml</exclude>
 						<exclude>streampipes-code-generation/src/test/resources/expected_web_xml</exclude>
-
-						<!-- Language Files -->
-						<exclude>**/*.en</exclude>
 
 						<!-- Archetype resources should not have ASF license header -->
 						<exclude>archetypes/streampipes-archetype-pe-processors-flink/src/main/resources/**</exclude>
@@ -1751,6 +1774,13 @@ IoT data streams.
 						<exclude>licenses/EPL_1.0</exclude>
 						<exclude>licenses/BSD_2-Clause</exclude>
 
+						<!-- Exclude Python env -->
+						<exclude>**/venv/**</exclude>
+						<exclude>**/.pytest_cache/**</exclude>
+						<exclude>.ruff_cache/**</exclude>
+						<exclude>.mypy_cache/**</exclude>
+
+
 					</excludes>
 				</configuration>
 			</plugin>
@@ -1781,29 +1811,12 @@ IoT data streams.
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>com.puppycrawl.tools</groupId>
-						<artifactId>checkstyle</artifactId>
-						<version>9.2.1</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>validate</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
+				<version>${maven-checkstyle-plugin.version}</version>
 				<configuration>
-					<suppressionsLocation>/tools/maven/suppressions.xml</suppressionsLocation>
-					<includeTestSourceDirectory>false</includeTestSourceDirectory>
-					<configLocation>/tools/maven/checkstyle.xml</configLocation>
 					<logViolationsToConsole>false</logViolationsToConsole>
 					<failOnViolation>false</failOnViolation>
 				</configuration>
+				<inherited>false</inherited>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -1861,8 +1874,8 @@ IoT data streams.
 	</scm>
 
 	<issueManagement>
-		<system>Jira</system>
-		<url>https://issues.apache.org/jira/browse/STREAMPIPES</url>
+		<system>GitHub</system>
+		<url>https://github.com/apache/streampipes/issues</url>
 	</issueManagement>
 
 	<mailingLists>
@@ -1888,7 +1901,7 @@ IoT data streams.
 			<archive>http://mail-archives.apache.org/mod_mbox/streampipes-commits/</archive>
 		</mailingList>
 		<mailingList>
-			<name>Apache StreamPipes Jira Notifications List</name>
+			<name>Apache StreamPipes Issue Notifications List</name>
 			<subscribe>mailto:issues-subscribe@streampipes.apache.org</subscribe>
 			<unsubscribe>mailto:issues-unsubscribe@streampipes.apache.org</unsubscribe>
 			<post>mailto:issues@streampipes.apache.org</post>

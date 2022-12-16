@@ -27,39 +27,40 @@ import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 
 import javax.ws.rs.Path;
+
 import java.util.Map;
 
 @Path(SpServicePathPrefix.DATA_PROCESSOR)
 public class DataProcessorPipelineElementResource extends InvocablePipelineElementResource<DataProcessorInvocation,
-        SemanticEventProcessingAgentDeclarer, ProcessingElementParameterExtractor> {
+    SemanticEventProcessingAgentDeclarer, ProcessingElementParameterExtractor> {
 
-    public DataProcessorPipelineElementResource() {
+  public DataProcessorPipelineElementResource() {
 
-        super(DataProcessorInvocation.class);
-    }
+    super(DataProcessorInvocation.class);
+  }
 
-    @Override
-    protected Map<String, SemanticEventProcessingAgentDeclarer> getElementDeclarers() {
-        return DeclarersSingleton.getInstance().getEpaDeclarers();
-    }
+  @Override
+  protected Map<String, SemanticEventProcessingAgentDeclarer> getElementDeclarers() {
+    return DeclarersSingleton.getInstance().getEpaDeclarers();
+  }
 
-    @Override
-    protected String getInstanceId(String uri, String elementId) {
-        return InstanceIdExtractor.extractId(uri);
-    }
+  @Override
+  protected String getInstanceId(String uri, String elementId) {
+    return InstanceIdExtractor.extractId(uri);
+  }
 
-    @Override
-    protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
-        return new ProcessingElementParameterExtractor(graph);
-    }
+  @Override
+  protected ProcessingElementParameterExtractor getExtractor(DataProcessorInvocation graph) {
+    return new ProcessingElementParameterExtractor(graph);
+  }
 
-    @Override
-    protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
-        graph.getInputStreams().forEach(is -> {
-           GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
-        });
+  @Override
+  protected DataProcessorInvocation createGroundingDebugInformation(DataProcessorInvocation graph) {
+    graph.getInputStreams().forEach(is -> {
+      GroundingDebugUtils.modifyGrounding(is.getEventGrounding());
+    });
 
-        GroundingDebugUtils.modifyGrounding(graph.getOutputStream().getEventGrounding());
-        return graph;
-    }
+    GroundingDebugUtils.modifyGrounding(graph.getOutputStream().getEventGrounding());
+    return graph;
+  }
 }

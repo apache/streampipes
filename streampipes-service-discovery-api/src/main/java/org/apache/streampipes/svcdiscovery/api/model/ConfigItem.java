@@ -27,6 +27,10 @@ public class ConfigItem {
   private ConfigurationScope configurationScope;
   private boolean isPassword;
 
+  public ConfigItem() {
+    setPassword(false);
+  }
+
   public static <T> ConfigItem from(String key,
                                     T defaultValue,
                                     String description) {
@@ -45,7 +49,8 @@ public class ConfigItem {
                                     String description,
                                     ConfigurationScope configurationScope,
                                     boolean isPassword) {
-    return from(key, defaultValue, description, ConfigItemUtils.getValueType(defaultValue), configurationScope, isPassword);
+    return from(key, defaultValue, description, ConfigItemUtils.getValueType(defaultValue), configurationScope,
+        isPassword);
   }
 
   public static <T> ConfigItem from(String key,
@@ -63,10 +68,6 @@ public class ConfigItem {
     configItem.setPassword(isPassword);
 
     return configItem;
-  }
-
-  public ConfigItem() {
-    setPassword(false);
   }
 
   public String getKey() {

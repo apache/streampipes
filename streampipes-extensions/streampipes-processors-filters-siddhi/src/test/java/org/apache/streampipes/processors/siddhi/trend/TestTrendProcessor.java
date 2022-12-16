@@ -28,13 +28,19 @@ import org.apache.streampipes.test.generator.EventStreamGenerator;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
 import org.apache.streampipes.test.generator.grounding.EventGroundingGenerator;
 import org.apache.streampipes.wrapper.siddhi.engine.callback.SiddhiDebugCallback;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -46,32 +52,32 @@ public class TestTrendProcessor {
   @org.junit.runners.Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-            {1, 100, TrendOperator.INCREASE, Arrays.asList(new Tuple2<>(100, 1),
-                    new Tuple2<>(100,2)), 1},
-            {1, 100, TrendOperator.INCREASE, Arrays.asList(
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100,2))
-                    , 1},
-            {1, 100, TrendOperator.DECREASE, Arrays.asList(
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100,0))
-                    , 1},
-            {1, 100, TrendOperator.INCREASE, Arrays.asList(
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100,2),
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100,2))
-                    , 2},
-            {1, 200, TrendOperator.INCREASE, Arrays.asList(
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100,2),
-                    new Tuple2<>(100, 1),
-                    new Tuple2<>(100,2))
-                    , 0},
+        {1, 100, TrendOperator.INCREASE, Arrays.asList(new Tuple2<>(100, 1),
+            new Tuple2<>(100, 2)), 1},
+        {1, 100, TrendOperator.INCREASE, Arrays.asList(
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 2))
+            , 1},
+        {1, 100, TrendOperator.DECREASE, Arrays.asList(
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 0))
+            , 1},
+        {1, 100, TrendOperator.INCREASE, Arrays.asList(
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 2),
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 2))
+            , 2},
+        {1, 200, TrendOperator.INCREASE, Arrays.asList(
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 2),
+            new Tuple2<>(100, 1),
+            new Tuple2<>(100, 2))
+            , 0},
 
     });
   }
@@ -98,17 +104,18 @@ public class TestTrendProcessor {
     originalGraph.setSupportedGrounding(EventGroundingGenerator.makeDummyGrounding());
 
     DataProcessorInvocation graph =
-            InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
+        InvocationGraphGenerator.makeEmptyInvocation(originalGraph);
 
     graph.setInputStreams(Collections
-            .singletonList(EventStreamGenerator
-                    .makeStreamWithProperties(Collections.singletonList("randomValue"))));
+        .singletonList(EventStreamGenerator
+            .makeStreamWithProperties(Collections.singletonList("randomValue"))));
 
     graph.setOutputStream(EventStreamGenerator.makeStreamWithProperties(Collections.singletonList("randomValue")));
 
-    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition().setActualTopicName("output-topic");
-    TrendParameters params = new TrendParameters(graph, trendOperator, increase, timeWindow, "s0" +
-            "::randomValue", Arrays.asList("s0::randomValue"));
+    graph.getOutputStream().getEventGrounding().getTransportProtocol().getTopicDefinition()
+        .setActualTopicName("output-topic");
+    TrendParameters params = new TrendParameters(graph, trendOperator, increase, timeWindow, "s0"
+        + "::randomValue", Arrays.asList("s0::randomValue"));
 
     SiddhiDebugCallback callback = new SiddhiDebugCallback() {
       @Override
@@ -133,11 +140,11 @@ public class TestTrendProcessor {
 
   private void sendEvents(Trend trend) {
     List<Tuple2<Integer, Event>> events = makeEvents();
-    for(Tuple2<Integer, Event> event : events) {
-      LOG.info("Sending event with value " +event.b.getFieldBySelector("s0::randomValue"));
-      trend.onEvent(event.b, null);
+    for (Tuple2<Integer, Event> event : events) {
+      LOG.info("Sending event with value " + event.v.getFieldBySelector("s0::randomValue"));
+      trend.onEvent(event.v, null);
       try {
-        Thread.sleep(event.a);
+        Thread.sleep(event.k);
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -146,8 +153,8 @@ public class TestTrendProcessor {
 
   private List<Tuple2<Integer, Event>> makeEvents() {
     List<Tuple2<Integer, Event>> events = new ArrayList<>();
-    for(Tuple2<Integer, Integer> eventSetting : eventSettings) {
-      events.add(makeEvent(eventSetting.a, eventSetting.b));
+    for (Tuple2<Integer, Integer> eventSetting : eventSettings) {
+      events.add(makeEvent(eventSetting.k, eventSetting.v));
     }
     return events;
   }
@@ -155,9 +162,9 @@ public class TestTrendProcessor {
   private Tuple2<Integer, Event> makeEvent(Integer timeout, Integer value) {
     Map<String, Object> map = new HashMap<>();
     map.put("randomValue", value);
-    return new Tuple2<>(timeout, EventFactory.fromMap(map, new SourceInfo("test" +
-                    "-topic", "s0"),
-            new SchemaInfo(null,
-                    new ArrayList<>())));
+    return new Tuple2<>(timeout, EventFactory.fromMap(map, new SourceInfo("test"
+            + "-topic", "s0"),
+        new SchemaInfo(null,
+            new ArrayList<>())));
   }
 }

@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class ProtocolDescriptionBuilder extends
-        AbstractConfigurablePipelineElementBuilder<ProtocolDescriptionBuilder, ProtocolDescription> {
+    AbstractConfigurablePipelineElementBuilder<ProtocolDescriptionBuilder, ProtocolDescription> {
 
   protected ProtocolDescriptionBuilder(String appId, String label, String description) {
     super(appId, label, description, new ProtocolDescription());
@@ -38,8 +38,10 @@ public class ProtocolDescriptionBuilder extends
 
   /**
    * Creates a new protocol description using the builder pattern.
-   * @param id A unique identifier of the new element, e.g., com.mycompany.protocol.mynewprotocol
-   * @param label A human-readable name of the element. Will later be shown as the element name in the StreamPipes UI.
+   *
+   * @param id          A unique identifier of the new element, e.g., com.mycompany.protocol.mynewprotocol
+   * @param label       A human-readable name of the element.
+   *                    Will later be shown as the element name in the StreamPipes UI.
    * @param description A human-readable description of the element.
    */
   public static ProtocolDescriptionBuilder create(String id, String label, String description) {
@@ -48,6 +50,7 @@ public class ProtocolDescriptionBuilder extends
 
   /**
    * Creates a new protocol description using the builder pattern.
+   *
    * @param id A unique identifier of the new element, e.g., com.mycompany.protocol.mynewprotocol
    */
   public static ProtocolDescriptionBuilder create(String id) {
@@ -61,10 +64,10 @@ public class ProtocolDescriptionBuilder extends
 
   public ProtocolDescriptionBuilder category(AdapterType... categories) {
     this.elementDescription
-            .setCategory(Arrays
-                    .stream(categories)
-                    .map(Enum::name)
-                    .collect(Collectors.toList()));
+        .setCategory(Arrays
+            .stream(categories)
+            .map(Enum::name)
+            .collect(Collectors.toList()));
     return me();
   }
 

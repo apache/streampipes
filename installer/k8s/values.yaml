@@ -15,13 +15,13 @@
 
 # lite or full (default: lite)
 deployment: lite
-preferredBroker: "kafka"
+preferredBroker: "nats"
 pullPolicy: "IfNotPresent"
 persistentVolumeReclaimPolicy: "Delete"
 persistentVolumeAccessModes: "ReadWriteOnce"
 
 streampipes:
-  version: "0.71.0-SNAPSHOT"
+  version: "0.91.0-SNAPSHOT"
   registry: "apachestreampipes"
 
 external:

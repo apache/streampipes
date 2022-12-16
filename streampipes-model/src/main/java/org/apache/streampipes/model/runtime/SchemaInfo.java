@@ -44,8 +44,12 @@ public class SchemaInfo implements Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     SchemaInfo that = (SchemaInfo) o;
     return Objects.equals(eventSchema, that.eventSchema);
   }

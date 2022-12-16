@@ -82,19 +82,19 @@ public class PipelineModificationGenerator {
     targets.forEach(t -> {
       PipelineModification modification = new PipelineModification();
       List<PipelineElementValidationInfo> validationInfos = new ArrayList<>();
-      modification.setDomId(t.getDOM());
+      modification.setDomId(t.getDom());
       modification.setElementId(t.getElementId());
       try {
         pipelineValidator.apply(source, t, targets, validationInfos);
         buildModification(modification, t);
-        edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.complete(source.getDOM(), t.getDOM()));
+        edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.complete(source.getDom(), t.getDom()));
       } catch (SpValidationException e) {
         //e.getErrorLog().forEach(log -> validationInfos.add(PipelineElementValidationInfo.error(log.toString())));
-        edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.invalid(source.getDOM(), t.getDOM(), toNotifications(e.getErrorLog())));
+        edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.invalid(source.getDom(), t.getDom(), toNotifications(e.getErrorLog())));
         modification.setPipelineElementValid(false);
       }
       modification.setValidationInfos(validationInfos);
-      this.pipelineModifications.put(t.getDOM(), modification);
+      this.pipelineModifications.put(t.getDom(), modification);
 
       addModification(t, getConnections(t));
     });
@@ -102,7 +102,7 @@ public class PipelineModificationGenerator {
 
   private String makeKey(NamedStreamPipesEntity source,
                          InvocableStreamPipesEntity t) {
-    return source.getDOM() + "-" + t.getDOM();
+    return source.getDom() + "-" + t.getDom();
   }
 
   private <T> List<T> toList(Map<String,T> map) {

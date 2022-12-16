@@ -26,6 +26,17 @@ public class PipelineEdgeValidation {
 
   private EdgeValidationStatus status;
 
+  public PipelineEdgeValidation() {
+  }
+
+  public PipelineEdgeValidation(String sourceId,
+                                String targetId,
+                                EdgeValidationStatus edgeValidationStatus) {
+    this.sourceId = sourceId;
+    this.targetId = targetId;
+    this.status = edgeValidationStatus;
+  }
+
   public static PipelineEdgeValidation complete(String sourceId,
                                                 String targetId) {
     EdgeValidationStatus status = new EdgeValidationStatus(EdgeValidationStatusType.COMPLETE);
@@ -37,17 +48,6 @@ public class PipelineEdgeValidation {
                                                List<Notification> notifications) {
     EdgeValidationStatus status = new EdgeValidationStatus(EdgeValidationStatusType.INVALID, notifications);
     return new PipelineEdgeValidation(sourceId, targetId, status);
-  }
-
-  public PipelineEdgeValidation() {
-  }
-
-  public PipelineEdgeValidation(String sourceId,
-                                String targetId,
-                                EdgeValidationStatus edgeValidationStatus) {
-    this.sourceId = sourceId;
-    this.targetId = targetId;
-    this.status = edgeValidationStatus;
   }
 
   public String getSourceId() {

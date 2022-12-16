@@ -15,7 +15,7 @@
   ~ limitations under the License.
   ~
   -->
-[![Github Actions](https://img.shields.io/github/workflow/status/apache/incubator-streampipes-extensions/Build%20and%20Deploy%20Extensions)](https://github.com/apache/incubator-streampipes-extensions/actions/)
+[![Github Actions](https://img.shields.io/github/workflow/status/apache/streampipes-extensions/Build%20and%20Deploy%20Extensions)](https://github.com/apache/streampipes-extensions/actions/)
 # Apache StreamPipes
 
 Apache StreamPipes enables flexible modeling of stream processing pipelines by providing a graphical 
@@ -29,7 +29,7 @@ Pipeline elements in StreamPipes can be installed at runtime - the built-in SDK 
 pipeline elements according to your needs. Pipeline elements are standalone microservices that can run anywhere - 
 centrally on your server, in a large-scale cluster or close at the edge.
 
-* StreamPipes core repository: [https://github.com/apache/incubator-streampipes](https://github.com/apache/incubator-streampipes)
+* StreamPipes core repository: [https://github.com/apache/streampipes](https://github.com/apache/streampipes)
 * Website: [https://streampipes.apache.org/](https://streampipes.apache.org/)
 * Docs: [https://streampipes.apache.org/docs](https://streampipes.apache.org/docs)
 
@@ -44,11 +44,11 @@ Contact us if you are missing some pipeline elements!
 
 ### Installation
 
-The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](https://www.github.com/apache/incubator-streampipes-installer), namely: 
+The quickest way to run StreamPipes including the latest extensions (adapters, pipeline elements) is by using our Docker-based [installation & operation options](https://www.github.com/apache/streampipes-installer), namely: 
 
-* **[StreamPipes Compose](https://github.com/apache/incubator-streampipes-installer/compose)** - The User's Choice
-* **[StreamPipes CLI](https://github.com/apache/incubator-streampipes-installer/cli)** - The Developer's Favorite
-* **[StreamPipes k8s](https://github.com/apache/incubator-streampipes-installer/k8s)** - The Operator's Dream
+* **[StreamPipes Compose](https://github.com/apache/streampipes-installer/compose)** - The User's Choice
+* **[StreamPipes CLI](https://github.com/apache/streampipes-installer/cli)** - The Developer's Favorite
+* **[StreamPipes k8s](https://github.com/apache/streampipes-installer/k8s)** - The Operator's Dream
 
 > **NOTE**: StreamPipes CLI & k8s are highly recommended for developers or operators. Standard users should stick to StreamPipes Compose.
 
@@ -75,15 +75,15 @@ To build the extensions project, do the following:
 
 ### Starting
 
-To start StreamPipes Extensions, run ``docker-compose up -d`` from the root directory. Make sure the core (incubator-streampipes) is already started.
+To start StreamPipes Extensions, run ``docker-compose up -d`` from the root directory. Make sure the core (streampipes) is already started.
 
 You can also use the installer or CLI as described in the ``Getting Started`` section.
 
 
 ## Bugs and Feature Requests
 
-If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue in our Jira:
-[https://issues.apache.org/jira/projects/STREAMPIPES](https://issues.apache.org/jira/projects/STREAMPIPES)
+If you've found a bug or have a feature that you'd love to see in StreamPipes, feel free to create an issue on [GitHub](https://github.com/apache/streampipes/issues) 
+or start a [discussion](https://github.com/apache/streampipes/discussions).
 
 ## Get help
 
@@ -102,8 +102,8 @@ We welcome contributions to StreamPipes. If you are interested in contributing t
 Here are some first steps in case you want to contribute:
 * Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
 * Send an email, tell us about your interests and which parts of Streampipes you'd like to contribute (e.g., core or UI)!
-* Ask for a mentor who helps you understanding the code base and guides you through the first setup steps
-* Find an issue in our [Jira](https://issues.apache.org/jira/projects/STREAMPIPES) which is tagged with a _newbie_ tag
+* Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
+* Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
 * Have a look at our developer wiki at [https://cwiki.apache.org/confluence/display/STREAMPIPES/Home](https://cwiki.apache.org/confluence/display/STREAMPIPES/Home) to learn more about StreamPipes development.
 
 Have fun!

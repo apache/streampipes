@@ -20,18 +20,18 @@ package org.apache.streampipes.dataexplorer.v4.params;
 
 public class ItemLimitationParams extends QueryParamsV4 {
 
-    private final Integer limit;
+  private final Integer limit;
 
-    public static ItemLimitationParams from(String measurementID, Integer limit) {
-        return new ItemLimitationParams(measurementID, limit);
-    }
+  public ItemLimitationParams(String measurementID, Integer limit) {
+    super(measurementID);
+    this.limit = limit;
+  }
 
-    public ItemLimitationParams(String measurementID, Integer limit) {
-        super(measurementID);
-        this.limit = limit;
-    }
+  public static ItemLimitationParams from(String measurementID, Integer limit) {
+    return new ItemLimitationParams(measurementID, limit);
+  }
 
-    public Integer getLimit() {
-        return limit;
-    }
+  public Integer getLimit() {
+    return limit;
+  }
 }

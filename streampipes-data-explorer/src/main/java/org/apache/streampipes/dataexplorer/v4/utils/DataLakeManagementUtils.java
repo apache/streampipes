@@ -19,11 +19,36 @@
 package org.apache.streampipes.dataexplorer.v4.utils;
 
 import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
-import org.apache.streampipes.dataexplorer.v4.params.*;
+import org.apache.streampipes.dataexplorer.v4.params.DeleteFromStatementParams;
+import org.apache.streampipes.dataexplorer.v4.params.FillParams;
+import org.apache.streampipes.dataexplorer.v4.params.GroupingByTagsParams;
+import org.apache.streampipes.dataexplorer.v4.params.GroupingByTimeParams;
+import org.apache.streampipes.dataexplorer.v4.params.ItemLimitationParams;
+import org.apache.streampipes.dataexplorer.v4.params.OffsetParams;
+import org.apache.streampipes.dataexplorer.v4.params.OrderingByTimeParams;
+import org.apache.streampipes.dataexplorer.v4.params.QueryParamsV4;
+import org.apache.streampipes.dataexplorer.v4.params.SelectFromStatementParams;
+import org.apache.streampipes.dataexplorer.v4.params.TimeBoundaryParams;
+import org.apache.streampipes.dataexplorer.v4.params.WhereStatementParams;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.*;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_AGGREGATION_FUNCTION;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_COLUMNS;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_COUNT_ONLY;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_END_DATE;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_FILTER;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_GROUP_BY;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_LIMIT;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_OFFSET;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_ORDER;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_PAGE;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_START_DATE;
+import static org.apache.streampipes.dataexplorer.v4.SupportedDataLakeQueryParameters.QP_TIME_INTERVAL;
 
 
 public class DataLakeManagementUtils {
@@ -50,18 +75,19 @@ public class DataLakeManagementUtils {
     if (params.has(QP_COUNT_ONLY) && params.getAsBoolean(QP_COUNT_ONLY)) {
       queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), true));
     } else {
-      queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS), params.getAsString(QP_AGGREGATION_FUNCTION)));
+      queryParts.put(SELECT_FROM, SelectFromStatementParams.from(measurementId, params.getAsString(QP_COLUMNS),
+          params.getAsString(QP_AGGREGATION_FUNCTION)));
     }
 
     String filterConditions = params.getAsString(QP_FILTER);
 
     if (hasTimeParams(params)) {
-        queryParts.put(WHERE, WhereStatementParams.from(measurementId,
-                params.getAsLong(QP_START_DATE),
-                params.getAsLong(QP_END_DATE),
-                filterConditions));
+      queryParts.put(WHERE, WhereStatementParams.from(measurementId,
+          params.getAsLong(QP_START_DATE),
+          params.getAsLong(QP_END_DATE),
+          filterConditions));
     } else if (filterConditions != null) {
-        queryParts.put(WHERE, WhereStatementParams.from(measurementId, filterConditions));
+      queryParts.put(WHERE, WhereStatementParams.from(measurementId, filterConditions));
     }
 
     if (params.has(QP_TIME_INTERVAL)) {
@@ -95,7 +121,7 @@ public class DataLakeManagementUtils {
       queryParts.put(OFFSET, OffsetParams.from(measurementId, params.getAsInt(QP_OFFSET)));
     } else if (params.has(QP_LIMIT) && params.has(QP_PAGE)) {
       queryParts.put(OFFSET, OffsetParams.from(measurementId,
-              params.getAsInt(QP_PAGE) * params.getAsInt(QP_LIMIT)));
+          params.getAsInt(QP_PAGE) * params.getAsInt(QP_LIMIT)));
     }
 
     return queryParts;
@@ -113,8 +139,8 @@ public class DataLakeManagementUtils {
   }
 
   private static boolean hasTimeParams(ProvidedQueryParams params) {
-    return params.has(QP_START_DATE) ||
-            params.has(QP_END_DATE);
+    return params.has(QP_START_DATE)
+        || params.has(QP_END_DATE);
   }
 
   public static List<String[]> buildConditions(String queryPart) {
@@ -130,8 +156,8 @@ public class DataLakeManagementUtils {
 
   public static String[] buildSingleCondition(String queryPart) {
     return queryPart
-            .replaceAll(BRACKET_OPEN, "")
-            .replaceAll(BRACKET_CLOSE, "")
-            .split(";");
+        .replaceAll(BRACKET_OPEN, "")
+        .replaceAll(BRACKET_CLOSE, "")
+        .split(";");
   }
 }

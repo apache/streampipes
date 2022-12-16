@@ -25,8 +25,8 @@ import java.util.List;
 
 public interface IPipelineElementConnectionStorage {
 
-	void addConnection(Connection connection);
-	
-	List<PipelineElementRecommendation> getRecommendedElements(String from);
-	
+  void addConnection(Connection connection);
+
+  List<PipelineElementRecommendation> getRecommendedElements(String from);
+
 }

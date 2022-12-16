@@ -18,49 +18,43 @@
 
 package org.apache.streampipes.model.staticproperty;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import org.apache.streampipes.model.base.UnnamedStreamPipesEntity;
 import org.apache.streampipes.model.shared.annotation.TsModel;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+
 @JsonSubTypes({
-        @JsonSubTypes.Type(AnyStaticProperty.class),
-        @JsonSubTypes.Type(CodeInputStaticProperty.class),
-        @JsonSubTypes.Type(CollectionStaticProperty.class),
-        @JsonSubTypes.Type(ColorPickerStaticProperty.class),
-        @JsonSubTypes.Type(DomainStaticProperty.class),
-        @JsonSubTypes.Type(FileStaticProperty.class),
-        @JsonSubTypes.Type(FreeTextStaticProperty.class),
-        @JsonSubTypes.Type(MappingPropertyUnary.class),
-        @JsonSubTypes.Type(MappingPropertyNary.class),
-        @JsonSubTypes.Type(MatchingStaticProperty.class),
-        @JsonSubTypes.Type(OneOfStaticProperty.class),
-        @JsonSubTypes.Type(RuntimeResolvableAnyStaticProperty.class),
-        @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
-        @JsonSubTypes.Type(RuntimeResolvableTreeInputStaticProperty.class),
-        @JsonSubTypes.Type(SecretStaticProperty.class),
-        @JsonSubTypes.Type(StaticPropertyAlternative.class),
-        @JsonSubTypes.Type(StaticPropertyAlternatives.class),
-        @JsonSubTypes.Type(StaticPropertyGroup.class),
-        @JsonSubTypes.Type(SlideToggleStaticProperty.class)
+    @JsonSubTypes.Type(AnyStaticProperty.class),
+    @JsonSubTypes.Type(CodeInputStaticProperty.class),
+    @JsonSubTypes.Type(CollectionStaticProperty.class),
+    @JsonSubTypes.Type(ColorPickerStaticProperty.class),
+    @JsonSubTypes.Type(DomainStaticProperty.class),
+    @JsonSubTypes.Type(FileStaticProperty.class),
+    @JsonSubTypes.Type(FreeTextStaticProperty.class),
+    @JsonSubTypes.Type(MappingPropertyUnary.class),
+    @JsonSubTypes.Type(MappingPropertyNary.class),
+    @JsonSubTypes.Type(MatchingStaticProperty.class),
+    @JsonSubTypes.Type(OneOfStaticProperty.class),
+    @JsonSubTypes.Type(RuntimeResolvableAnyStaticProperty.class),
+    @JsonSubTypes.Type(RuntimeResolvableOneOfStaticProperty.class),
+    @JsonSubTypes.Type(RuntimeResolvableTreeInputStaticProperty.class),
+    @JsonSubTypes.Type(SecretStaticProperty.class),
+    @JsonSubTypes.Type(StaticPropertyAlternative.class),
+    @JsonSubTypes.Type(StaticPropertyAlternatives.class),
+    @JsonSubTypes.Type(StaticPropertyGroup.class),
+    @JsonSubTypes.Type(SlideToggleStaticProperty.class)
 })
 @TsModel
 public abstract class StaticProperty extends UnnamedStreamPipesEntity {
 
   private static final long serialVersionUID = 2509153122084646025L;
-
-  private int index;
-
-  private String label;
-
-  private String description;
-
-  private String internalName;
-
   protected boolean valueRequired;
-
-  private boolean predefined;
-
   protected StaticPropertyType staticPropertyType;
+  private int index;
+  private String label;
+  private String description;
+  private String internalName;
+  private boolean predefined;
 
 
   public StaticProperty() {

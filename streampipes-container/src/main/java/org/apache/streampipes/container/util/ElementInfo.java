@@ -18,28 +18,28 @@
 
 package org.apache.streampipes.container.util;
 
-public class ElementInfo<G, D> {
-    private G description;
-    private D invocation;
+public class ElementInfo<K, V> {
+  private K description;
+  private V invocation;
 
-    public ElementInfo(G description, D invocation) {
-        this.description = description;
-        this.invocation = invocation;
-    }
+  public ElementInfo(K description, V invocation) {
+    this.description = description;
+    this.invocation = invocation;
+  }
 
-    public G getDescription() {
-        return description;
-    }
+  public K getDescription() {
+    return description;
+  }
 
-    public void setDescription(G description) {
-        this.description = description;
-    }
+  public void setDescription(K description) {
+    this.description = description;
+  }
 
-    public D getInvocation() {
-        return invocation;
-    }
+  public V getInvocation() {
+    return invocation;
+  }
 
-    public void setInvocation(D invocation) {
-        this.invocation = invocation;
-    }
+  public void setInvocation(V invocation) {
+    this.invocation = invocation;
+  }
 }

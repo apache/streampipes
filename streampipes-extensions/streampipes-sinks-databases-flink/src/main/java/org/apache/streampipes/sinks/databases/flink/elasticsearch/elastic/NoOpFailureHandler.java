@@ -27,12 +27,13 @@ import org.elasticsearch.action.DocWriteRequest;
 @Internal
 public class NoOpFailureHandler implements ActionRequestFailureHandler {
 
-	private static final long serialVersionUID = 737941343410827885L;
+  private static final long serialVersionUID = 737941343410827885L;
 
-	@Override
-	public void onFailure(DocWriteRequest action, Throwable failure, int restStatusCode, RequestIndexer indexer) throws Throwable {
-		// simply fail the sink
-		throw failure;
-	}
+  @Override
+  public void onFailure(DocWriteRequest action, Throwable failure, int restStatusCode, RequestIndexer indexer)
+      throws Throwable {
+    // simply fail the sink
+    throw failure;
+  }
 
 }

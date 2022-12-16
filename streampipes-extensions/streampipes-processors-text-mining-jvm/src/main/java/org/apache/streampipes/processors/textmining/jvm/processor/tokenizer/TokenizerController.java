@@ -26,13 +26,15 @@ import org.apache.streampipes.model.schema.PropertyScope;
 import org.apache.streampipes.sdk.builder.ProcessingElementBuilder;
 import org.apache.streampipes.sdk.builder.StreamRequirementsBuilder;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;
-import org.apache.streampipes.sdk.helpers.*;
+import org.apache.streampipes.sdk.helpers.EpProperties;
+import org.apache.streampipes.sdk.helpers.EpRequirements;
+import org.apache.streampipes.sdk.helpers.Labels;
+import org.apache.streampipes.sdk.helpers.Locales;
+import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
 import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
-
-import java.io.IOException;
 
 public class TokenizerController extends StandaloneEventProcessingDeclarer<TokenizerParameters> {
 
@@ -44,25 +46,26 @@ public class TokenizerController extends StandaloneEventProcessingDeclarer<Token
   @Override
   public DataProcessorDescription declareModel() {
     return ProcessingElementBuilder.create("org.apache.streampipes.processors.textmining.jvm.tokenizer")
-            .category(DataProcessorType.ENRICH_TEXT)
-            .withAssets(Assets.DOCUMENTATION, Assets.ICON)
-            .withLocales(Locales.EN)
-            .requiredFile(Labels.withId(BINARY_FILE_KEY))
-            .requiredStream(StreamRequirementsBuilder
-                    .create()
-                    .requiredPropertyWithUnaryMapping(
-                            EpRequirements.stringReq(),
-                            Labels.withId(DETECTION_FIELD_KEY),
-                            PropertyScope.NONE)
-                    .build())
-            .outputStrategy(OutputStrategies.append(EpProperties.listStringEp(Labels.withId(TOKEN_LIST_FIELD_KEY),
-                    TOKEN_LIST_FIELD_KEY,
-                    "http://schema.org/ItemList")))
-            .build();
+        .category(DataProcessorType.ENRICH_TEXT)
+        .withAssets(Assets.DOCUMENTATION, Assets.ICON)
+        .withLocales(Locales.EN)
+        .requiredFile(Labels.withId(BINARY_FILE_KEY))
+        .requiredStream(StreamRequirementsBuilder
+            .create()
+            .requiredPropertyWithUnaryMapping(
+                EpRequirements.stringReq(),
+                Labels.withId(DETECTION_FIELD_KEY),
+                PropertyScope.NONE)
+            .build())
+        .outputStrategy(OutputStrategies.append(EpProperties.listStringEp(Labels.withId(TOKEN_LIST_FIELD_KEY),
+            TOKEN_LIST_FIELD_KEY,
+            "http://schema.org/ItemList")))
+        .build();
   }
 
   @Override
-  public ConfiguredEventProcessor<TokenizerParameters> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<TokenizerParameters> onInvocation(DataProcessorInvocation graph,
+                                                                    ProcessingElementParameterExtractor extractor) {
 
     StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
     String filename = extractor.selectedFilename(BINARY_FILE_KEY);

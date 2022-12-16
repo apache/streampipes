@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+{{- if eq .Values.preferredBroker "kafka" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -26,3 +27,4 @@ spec:
     - name: main
       protocol: TCP
       port: 9092
+{{- end }}

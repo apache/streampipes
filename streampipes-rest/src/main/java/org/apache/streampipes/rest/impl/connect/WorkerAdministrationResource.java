@@ -29,25 +29,26 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.List;
 
 @Path("v2/connect/master/administration")
 public class WorkerAdministrationResource extends AbstractSharedRestInterface {
 
-    private WorkerAdministrationManagement workerAdministrationManagement;
+  private WorkerAdministrationManagement workerAdministrationManagement;
 
-    public WorkerAdministrationResource() {
-        this.workerAdministrationManagement = new WorkerAdministrationManagement();
-    }
+  public WorkerAdministrationResource() {
+    this.workerAdministrationManagement = new WorkerAdministrationManagement();
+  }
 
-    @POST
-    @JacksonSerialized
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addWorkerContainer(List<AdapterDescription> availableAdapterDescription) {
+  @POST
+  @JacksonSerialized
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response addWorkerContainer(List<AdapterDescription> availableAdapterDescription) {
 
-        this.workerAdministrationManagement.register(availableAdapterDescription);
+    this.workerAdministrationManagement.register(availableAdapterDescription);
 
-        return ok(Notifications.success("Worker Container successfully added"));
-    }
+    return ok(Notifications.success("Worker Container successfully added"));
+  }
 
 }

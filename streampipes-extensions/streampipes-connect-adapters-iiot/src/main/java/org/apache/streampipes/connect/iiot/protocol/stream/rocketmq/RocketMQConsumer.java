@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.connect.iiot.protocol.stream.rocketmq;
 
+import org.apache.streampipes.messaging.InternalEventProcessor;
+
 import org.apache.rocketmq.client.apis.ClientException;
 import org.apache.rocketmq.client.apis.consumer.ConsumeResult;
 import org.apache.rocketmq.client.apis.consumer.PushConsumer;
-import org.apache.streampipes.messaging.InternalEventProcessor;
 
 import java.io.IOException;
 
@@ -35,7 +36,8 @@ public class RocketMQConsumer implements Runnable {
 
   private PushConsumer consumer;
 
-  public RocketMQConsumer(String brokerUrl, String topic, String consumerGroup, InternalEventProcessor<byte[]> eventProcessor) {
+  public RocketMQConsumer(String brokerUrl, String topic, String consumerGroup,
+                          InternalEventProcessor<byte[]> eventProcessor) {
     this.brokerUrl = brokerUrl;
     this.topic = topic;
     this.consumerGroup = consumerGroup;

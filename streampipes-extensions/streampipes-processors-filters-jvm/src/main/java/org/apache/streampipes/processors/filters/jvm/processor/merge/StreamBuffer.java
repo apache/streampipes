@@ -25,41 +25,41 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StreamBuffer {
-    private String timestampProperty;
-    private List<Event> buffer;
+  private String timestampProperty;
+  private List<Event> buffer;
 
-    public StreamBuffer(String timestampProperty) {
-        buffer = new LinkedList<>();
-        this.timestampProperty = timestampProperty;
-    }
+  public StreamBuffer(String timestampProperty) {
+    buffer = new LinkedList<>();
+    this.timestampProperty = timestampProperty;
+  }
 
-    public void add(Event event) {
-        buffer.add(event);
-    }
+  public void add(Event event) {
+    buffer.add(event);
+  }
 
-    public int getLength(){
-        return buffer.size();
-    }
+  public int getLength() {
+    return buffer.size();
+  }
 
-    public List<Event> getList() {
-        return this.buffer;
-    }
+  public List<Event> getList() {
+    return this.buffer;
+  }
 
-    public Event get(int i) {
-        return this.buffer.get(i);
-    }
+  public Event get(int i) {
+    return this.buffer.get(i);
+  }
 
-    public void removeOldEvents(long timestamp) {
-        Iterator itr = this.buffer.iterator();
-        while (itr.hasNext())
-        {
-            Event e = (Event) itr.next();
-            if (e.getFieldBySelector(timestampProperty).getAsPrimitive().getAsLong() <= timestamp)
-                itr.remove();
-        }
+  public void removeOldEvents(long timestamp) {
+    Iterator itr = this.buffer.iterator();
+    while (itr.hasNext()) {
+      Event e = (Event) itr.next();
+      if (e.getFieldBySelector(timestampProperty).getAsPrimitive().getAsLong() <= timestamp) {
+        itr.remove();
+      }
     }
+  }
 
-    public void reset() {
-        this.buffer = new LinkedList<>();
-    }
+  public void reset() {
+    this.buffer = new LinkedList<>();
+  }
 }

@@ -22,8 +22,8 @@ import java.io.Serializable;
 
 public class SpatialGridCalculator implements Serializable {
 
-  private double SOUTHDIFF = 0.004491556;
-  private double EASTDIFF = 0.005986;
+  private double southdiff = 0.004491556;
+  private double eastdiff = 0.005986;
 
   private Integer cellSize;
   private Double startLat;
@@ -36,8 +36,8 @@ public class SpatialGridCalculator implements Serializable {
     this.startLat = settings.getLatitudeStart();
     this.startLon = settings.getLongitudeStart();
     this.cellSize = settings.getCellSize();
-    this.SOUTHDIFF = (cellSize / 500.0) * SOUTHDIFF;
-    this.EASTDIFF = (cellSize / 500.0) * EASTDIFF;
+    this.southdiff = (cellSize / 500.0) * southdiff;
+    this.eastdiff = (cellSize / 500.0) * eastdiff;
   }
 
   public CellOption computeCells(double latitude, double longitude) {
@@ -45,20 +45,19 @@ public class SpatialGridCalculator implements Serializable {
     int cellX = calculateXCoordinate(longitude);
     int cellY = calculateYCoordinate(latitude);
 
-    return new CellOption(cellX, cellY, startLat - (cellY * SOUTHDIFF),
-            startLon + (cellX *
-            EASTDIFF), startLat - ((cellY + 1) * SOUTHDIFF), startLon + (
-                    (cellX + 1) * EASTDIFF),
-            cellSize);
+    return new CellOption(cellX, cellY, startLat - (cellY * southdiff),
+        startLon + (cellX * eastdiff), startLat - ((cellY + 1) * southdiff), startLon + (
+        (cellX + 1) * eastdiff),
+        cellSize);
   }
 
   private int calculateXCoordinate(double longitude) {
-    Double ret = (Math.abs(startLon - longitude) / EASTDIFF);
+    Double ret = (Math.abs(startLon - longitude) / eastdiff);
     return ret.intValue() + 1;
   }
 
   private int calculateYCoordinate(double latitude) {
-    Double ret = (Math.abs(startLat - latitude) / SOUTHDIFF);
+    Double ret = (Math.abs(startLat - latitude) / southdiff);
     return ret.intValue() + 1;
   }
 

@@ -27,68 +27,68 @@ import java.util.List;
 @TsModel
 public class PipelineModificationMessage extends Message {
 
-	/**
-	 * Class that represents PipelineModification messages. Modifications are used to update a pipeline element within an already created pipeline
-	 */
-	
-	private List<PipelineModification> pipelineModifications;
-	private boolean pipelineValid;
-	private List<PipelineEdgeValidation> edgeValidations;
-	
-	public PipelineModificationMessage(
-			List<PipelineModification> pipelineModifications) {
-		super(true);
-		this.pipelineModifications = pipelineModifications;
-		this.edgeValidations = new ArrayList<>();
-	}
+  /**
+   * Class that represents PipelineModification messages.
+   * Modifications are used to update a pipeline element within an already created pipeline
+   */
 
-	public PipelineModificationMessage() {
-		super(true);
-		pipelineModifications = new ArrayList<>();
-	}
+  private List<PipelineModification> pipelineModifications;
+  private boolean pipelineValid;
+  private List<PipelineEdgeValidation> edgeValidations;
 
-	public List<PipelineModification> getPipelineModifications() {
-		return pipelineModifications;
-	}
+  public PipelineModificationMessage(
+      List<PipelineModification> pipelineModifications) {
+    super(true);
+    this.pipelineModifications = pipelineModifications;
+    this.edgeValidations = new ArrayList<>();
+  }
 
-	public void setPipelineModifications(
-			List<PipelineModification> pipelineModifications) {
-		this.pipelineModifications = pipelineModifications;
-	}
+  public PipelineModificationMessage() {
+    super(true);
+    pipelineModifications = new ArrayList<>();
+  }
 
-	public boolean isPipelineValid() {
-		return pipelineValid;
-	}
+  public List<PipelineModification> getPipelineModifications() {
+    return pipelineModifications;
+  }
 
-	public void setPipelineValid(boolean pipelineValid) {
-		this.pipelineValid = pipelineValid;
-	}
+  public void setPipelineModifications(
+      List<PipelineModification> pipelineModifications) {
+    this.pipelineModifications = pipelineModifications;
+  }
 
-	public List<PipelineEdgeValidation> getEdgeValidations() {
-		return edgeValidations;
-	}
+  public boolean isPipelineValid() {
+    return pipelineValid;
+  }
 
-	public void setEdgeValidations(List<PipelineEdgeValidation> edgeValidations) {
-		this.edgeValidations = edgeValidations;
-	}
+  public void setPipelineValid(boolean pipelineValid) {
+    this.pipelineValid = pipelineValid;
+  }
 
-	public void addPipelineModification(PipelineModification pipelineModification) {
-		pipelineModifications.add(pipelineModification);
-	}
+  public List<PipelineEdgeValidation> getEdgeValidations() {
+    return edgeValidations;
+  }
 
-	public void addEdgeValidation(PipelineEdgeValidation pipelineEdgeValidation) {
-		edgeValidations.add(pipelineEdgeValidation);
-	}
-	
-	public boolean existsModification(String domId)
-	{
-		for(PipelineModification modification : pipelineModifications)
-		{
-			if (modification.getDomId().contains(domId))
-				return true;
-		}
-		return false;
-	}
-	
-	
+  public void setEdgeValidations(List<PipelineEdgeValidation> edgeValidations) {
+    this.edgeValidations = edgeValidations;
+  }
+
+  public void addPipelineModification(PipelineModification pipelineModification) {
+    pipelineModifications.add(pipelineModification);
+  }
+
+  public void addEdgeValidation(PipelineEdgeValidation pipelineEdgeValidation) {
+    edgeValidations.add(pipelineEdgeValidation);
+  }
+
+  public boolean existsModification(String domId) {
+    for (PipelineModification modification : pipelineModifications) {
+      if (modification.getDomId().contains(domId)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
 }
