@@ -22,38 +22,38 @@ import java.util.List;
 import java.util.Map;
 
 public class RenameTransformationRule implements SchemaTransformationRule {
-    private List<String> oldKey;
-    private  String newKey;
+  private List<String> oldKey;
+  private String newKey;
 
-    public RenameTransformationRule(List<String> oldKey, String newKey) {
-        this.oldKey = oldKey;
-        this.newKey = newKey;
+  public RenameTransformationRule(List<String> oldKey, String newKey) {
+    this.oldKey = oldKey;
+    this.newKey = newKey;
+  }
+
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+    Map<String, Object> nestedEvent = event;
+
+    return transform(event, oldKey);
+  }
+
+  private Map<String, Object> transform(Map<String, Object> event, List<String> keys) {
+    if (keys.size() == 1) {
+      Object o = event.get(keys.get(0));
+      event.remove(keys.get(0));
+      event.put(newKey, o);
+
+    } else {
+      String key = keys.get(0);
+      List<String> newKeysTmpList = keys.subList(1, keys.size());
+      Map<String, Object> newSubEvent =
+          transform((Map<String, Object>) event.get(key), newKeysTmpList);
+
+      event.remove(key);
+      event.put(key, newSubEvent);
     }
 
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-        Map<String, Object> nestedEvent = event;
-
-        return transform(event, oldKey);
-    }
-
-    private Map<String, Object> transform(Map<String, Object> event, List<String> keys) {
-        if (keys.size() == 1) {
-            Object o = event.get(keys.get(0));
-            event.remove(keys.get(0));
-            event.put(newKey, o);
-
-        } else {
-            String key = keys.get(0);
-            List<String> newKeysTmpList = keys.subList(1, keys.size());
-            Map<String, Object> newSubEvent =
-                    transform((Map<String, Object>) event.get(key), newKeysTmpList);
-
-            event.remove(key);
-            event.put(key, newSubEvent);
-        }
-
-        return event;
-    }
+    return event;
+  }
 }
 

@@ -30,7 +30,7 @@ public class TransportFormatGenerator {
 
   public static TransportFormat getTransportFormat() {
     List<SpDataFormat> supportedFormats =
-            BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedFormats();
+        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedFormats();
 
     if (supportedFormats.size() > 0) {
       return new TransportFormat(supportedFormats.get(0).getMessageFormat());
@@ -41,8 +41,8 @@ public class TransportFormatGenerator {
 
   public static List<TransportFormat> getAllFormats() {
     return Arrays.asList(SupportedFormats.cborFormat(),
-            SupportedFormats.jsonFormat(),
-            SupportedFormats.fstFormat(),
-            SupportedFormats.smileFormat());
+        SupportedFormats.jsonFormat(),
+        SupportedFormats.fstFormat(),
+        SupportedFormats.smileFormat());
   }
 }

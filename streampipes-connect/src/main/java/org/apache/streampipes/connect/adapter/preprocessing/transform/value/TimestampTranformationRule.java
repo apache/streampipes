@@ -28,72 +28,74 @@ import java.util.Map;
 
 public class TimestampTranformationRule implements ValueTransformationRule {
 
-    private List<String> eventKey;
-    private TimestampTranformationRuleMode mode;
-    private String formatString;
-    private long multiplier;
+  private List<String> eventKey;
+  private TimestampTranformationRuleMode mode;
+  private String formatString;
+  private long multiplier;
 
-    private SimpleDateFormat dateFormatter;
+  private SimpleDateFormat dateFormatter;
 
-    private static Logger logger = LoggerFactory.getLogger(TimestampTranformationRule.class) ;
+  private static Logger logger = LoggerFactory.getLogger(TimestampTranformationRule.class);
 
-    public TimestampTranformationRule(List<String> eventKey, TimestampTranformationRuleMode mode, String formatString, long multiplier) {
-        this.eventKey = eventKey;
-        this.mode = mode;
-        this.formatString = formatString;
-        this.multiplier = multiplier;
+  public TimestampTranformationRule(List<String> eventKey, TimestampTranformationRuleMode mode, String formatString,
+                                    long multiplier) {
+    this.eventKey = eventKey;
+    this.mode = mode;
+    this.formatString = formatString;
+    this.multiplier = multiplier;
 
-        if (mode == TimestampTranformationRuleMode.FORMAT_STRING)
-            dateFormatter = new SimpleDateFormat(formatString);
+    if (mode == TimestampTranformationRuleMode.FORMAT_STRING) {
+      dateFormatter = new SimpleDateFormat(formatString);
+    }
+  }
+
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+    return transform(event, eventKey);
+  }
+
+  private Map<String, Object> transform(Map<String, Object> event, List<String> eventKey) {
+
+    if (eventKey.size() == 1) {
+
+      switch (mode) {
+        case TIME_UNIT:
+          long timeLong = Long.valueOf(String.valueOf(event.get(eventKey.get(0))));
+          event.put(eventKey.get(0), this.performTimeUnitTransformation(timeLong));
+          break;
+        case FORMAT_STRING:
+          String dateString = String.valueOf(event.get(eventKey.get(0)));
+          event.put(eventKey.get(0), performFormatStringTransformation(dateString));
+      }
+
+      return event;
+
+    } else {
+      String key = eventKey.get(0);
+      List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
+
+      Map<String, Object> newSubEvent =
+          transform((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
+
+      event.remove(key);
+      event.put(key, newSubEvent);
+
+      return event;
     }
 
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-        return transform(event, eventKey);
+  }
+
+  private long performTimeUnitTransformation(long time) {
+    return time * multiplier;
+  }
+
+  private long performFormatStringTransformation(String date) {
+    //TODO how to handle exception?
+    try {
+      return dateFormatter.parse(date).getTime();
+    } catch (ParseException e) {
+      logger.error(e.toString());
     }
-
-    private Map<String, Object> transform(Map<String, Object> event, List<String> eventKey) {
-
-        if (eventKey.size() == 1) {
-
-            switch (mode) {
-                case TIME_UNIT:
-                    long timeLong = Long.valueOf(String.valueOf(event.get(eventKey.get(0))));
-                    event.put(eventKey.get(0), this.performTimeUnitTransformation(timeLong));
-                    break;
-                case FORMAT_STRING:
-                    String dateString = String.valueOf(event.get(eventKey.get(0)));
-                    event.put(eventKey.get(0), performFormatStringTransformation(dateString));
-            }
-
-            return event;
-
-        } else {
-            String key = eventKey.get(0);
-            List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
-
-            Map<String, Object> newSubEvent =
-                    transform((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
-
-            event.remove(key);
-            event.put(key, newSubEvent);
-
-            return event;
-        }
-
-    }
-
-    private long performTimeUnitTransformation(long time) {
-        return time * multiplier;
-    }
-
-    private long performFormatStringTransformation(String date) {
-        //TODO how to handle exception?
-        try {
-            return dateFormatter.parse(date).getTime();
-        } catch (ParseException e) {
-            logger.error(e.toString());
-        }
-        return 0;
-    }
+    return 0;
+  }
 }

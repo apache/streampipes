@@ -20,35 +20,37 @@ package org.apache.streampipes.connect.adapter.preprocessing.transform.schema;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DeleteTransformationRuleTest {
 
-    @Test
-    public void transformSimple() {
-        Map<String, Object> event = new HashMap<>();
-        event.put("key", "value");
+  @Test
+  public void transformSimple() {
+    Map<String, Object> event = new HashMap<>();
+    event.put("key", "value");
 
-        DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("key"));
+    DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("key"));
 
-        Map<String, Object> result = deleteRule.transform(event);
+    Map<String, Object> result = deleteRule.transform(event);
 
-        assertEquals(0, result.keySet().size());
-    }
+    assertEquals(0, result.keySet().size());
+  }
 
-    @Test
-    public void transformNested() {
-        Map<String, Object> child = new HashMap<>();
-        child.put("child", "value");
-        Map<String, Object> event = new HashMap<>();
-        event.put("parent", child);
+  @Test
+  public void transformNested() {
+    Map<String, Object> child = new HashMap<>();
+    child.put("child", "value");
+    Map<String, Object> event = new HashMap<>();
+    event.put("parent", child);
 
-        DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
+    DeleteTransformationRule deleteRule = new DeleteTransformationRule(Arrays.asList("parent", "child"));
 
-        Map<String, Object> result = deleteRule.transform(event);
+    Map<String, Object> result = deleteRule.transform(event);
 
-        assertEquals(1, result.keySet().size());
-    }
+    assertEquals(1, result.keySet().size());
+  }
 }

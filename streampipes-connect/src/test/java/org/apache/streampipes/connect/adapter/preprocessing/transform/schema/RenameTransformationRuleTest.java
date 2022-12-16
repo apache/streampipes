@@ -25,43 +25,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RenameTransformationRuleTest {
 
-    @Test
-    public void renameSimple() {
-        Map<String, Object> event = new HashMap<>();
-        event.put("old_key", "test");
+  @Test
+  public void renameSimple() {
+    Map<String, Object> event = new HashMap<>();
+    event.put("old_key", "test");
 
-        List<String> oldKey = new ArrayList<>();
-        oldKey.add("old_key");
-        RenameTransformationRule renameRule = new RenameTransformationRule(oldKey, "new_key");
+    List<String> oldKey = new ArrayList<>();
+    oldKey.add("old_key");
+    RenameTransformationRule renameRule = new RenameTransformationRule(oldKey, "new_key");
 
-        Map<String, Object> result = renameRule.transform(event);
+    Map<String, Object> result = renameRule.transform(event);
 
-        assertEquals(1, result.keySet().size());
-        assertEquals("test", result.get("new_key"));
-    }
+    assertEquals(1, result.keySet().size());
+    assertEquals("test", result.get("new_key"));
+  }
 
-    @Test
-    public void renameNested() {
-        Map<String, Object> nestedEvent = new HashMap<>();
-        nestedEvent.put("old_key", "test");
+  @Test
+  public void renameNested() {
+    Map<String, Object> nestedEvent = new HashMap<>();
+    nestedEvent.put("old_key", "test");
 
-        Map<String, Object> event = new HashMap<>();
-        event.put("key", nestedEvent);
+    Map<String, Object> event = new HashMap<>();
+    event.put("key", nestedEvent);
 
-        List<String> oldKey = new ArrayList<>();
-        oldKey.add("key");
-        oldKey.add("old_key");
-        RenameTransformationRule renameRule = new RenameTransformationRule(oldKey, "new_key");
+    List<String> oldKey = new ArrayList<>();
+    oldKey.add("key");
+    oldKey.add("old_key");
+    RenameTransformationRule renameRule = new RenameTransformationRule(oldKey, "new_key");
 
-        Map<String, Object> result = renameRule.transform(event);
+    Map<String, Object> result = renameRule.transform(event);
 
-        assertEquals(1, result.keySet().size());
-        Map<String, Object> resultNested = (Map<String, Object>) result.get("key");
-        assertEquals(1, resultNested.keySet().size());
-        assertEquals("test", resultNested.get("new_key"));
-    }
+    assertEquals(1, result.keySet().size());
+    Map<String, Object> resultNested = (Map<String, Object>) result.get("key");
+    assertEquals(1, resultNested.keySet().size());
+    assertEquals("test", resultNested.get("new_key"));
+  }
 }

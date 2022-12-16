@@ -18,90 +18,92 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.transform.schema;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MoveTransformationRule implements SchemaTransformationRule {
 
-    private List<String> oldKey;
-    private List<String> newKey;
+  private List<String> oldKey;
+  private List<String> newKey;
 
-    public MoveTransformationRule(List<String> oldKey, List<String> newKey) {
-        this.oldKey = oldKey;
+  public MoveTransformationRule(List<String> oldKey, List<String> newKey) {
+    this.oldKey = oldKey;
 
 //        List<String> tmp = new ArrayList<>();
 //        for (int i = 0; i < newKey.size() - 1; i++) {
 //            tmp.add(newKey.get(i));
 //        }
 
-        this.newKey = newKey;
+    this.newKey = newKey;
+  }
+
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+
+    Map<String, Object> objectToMove = (Map<String, Object>) ((HashMap<String, Object>) getItem(event, oldKey)).clone();
+
+
+    Map<String, Object> resultEvent = addItem(event, newKey, objectToMove);
+    resultEvent = deleteItem(resultEvent, oldKey);
+
+    return resultEvent;
+  }
+
+  private Map<String, Object> addItem(Map<String, Object> event, List<String> keys, Map<String, Object> movedObject) {
+    if (keys.size() == 0 || (keys.size() == 1 && keys.get(0).equals(""))) {
+      String key = (String) movedObject.keySet().toArray()[0];
+      event.put(key, movedObject.get(key));
+      return event;
+    } else if (keys.size() == 1) {
+      if (event.get(keys.get(0)) != null && event.get(keys.get(0)) instanceof HashMap) {
+        String movedObjectKey = movedObject.keySet().iterator().next();
+        ((Map<String, Object>) event.get(keys.get(0))).put(movedObjectKey, movedObject.get(movedObjectKey));
+      } else {
+        event.put(keys.get(0), movedObject);
+      }
+      return event;
+    } else {
+      String key = keys.get(0);
+      List<String> newKeysTmpList = keys.subList(1, keys.size());
+
+      Map<String, Object> newSubEvent =
+          addItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList, movedObject);
+
+      event.remove(key);
+      event.put(key, newSubEvent);
+      return event;
     }
-
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-
-        Map<String, Object> objectToMove = (Map<String, Object>) ((HashMap<String, Object>) getItem(event, oldKey)).clone();
+  }
 
 
-        Map<String, Object> resultEvent = addItem(event, newKey, objectToMove);
-        resultEvent = deleteItem(resultEvent, oldKey);
+  private Map<String, Object> getItem(Map<String, Object> event, List<String> keys) {
+    if (keys.size() == 1) {
+      Map<String, Object> res = new HashMap<>();
+      res.put(keys.get(0), event.get(keys.get(0)));
+      return res;
+    } else {
+      List<String> newKeysTmpList = keys.subList(1, keys.size());
 
-        return resultEvent;
+      return getItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
     }
+  }
 
-    private Map<String, Object> addItem(Map<String, Object> event, List<String> keys, Map<String, Object> movedObject) {
-        if (keys.size() == 0 || (keys.size() == 1 && keys.get(0).equals(""))) {
-            String key = (String) movedObject.keySet().toArray()[0];
-            event.put(key, movedObject.get(key));
-            return event;
-        } else if (keys.size() == 1) {
-            if (event.get(keys.get(0)) != null && event.get(keys.get(0)) instanceof HashMap) {
-                String movedObjectKey = movedObject.keySet().iterator().next();
-                ((Map<String, Object>) event.get(keys.get(0))).put(movedObjectKey, movedObject.get(movedObjectKey));
-            } else {
-                event.put(keys.get(0), movedObject);
-            }
-            return event;
-        } else {
-            String key = keys.get(0);
-            List<String> newKeysTmpList = keys.subList(1, keys.size());
+  private Map<String, Object> deleteItem(Map<String, Object> event, List<String> keys) {
+    if (keys.size() == 1) {
 
-            Map<String, Object> newSubEvent =
-                    addItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList, movedObject);
+      event.remove(keys.get(0));
+      return event;
+    } else {
+      String key = keys.get(0);
+      List<String> newKeysTmpList = keys.subList(1, keys.size());
 
-            event.remove(key);
-            event.put(key, newSubEvent);
-            return event;
-        }
+      Map<String, Object> newSubEvent =
+          deleteItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
+
+      event.remove(key);
+      event.put(key, newSubEvent);
+      return event;
     }
-
-
-    private Map<String, Object> getItem(Map<String, Object> event, List<String> keys) {
-        if (keys.size() == 1) {
-            Map<String, Object> res = new HashMap<>();
-            res.put(keys.get(0), event.get(keys.get(0)));
-            return res;
-        } else {
-            List<String> newKeysTmpList = keys.subList(1, keys.size());
-
-            return getItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
-        }
-    }
-
-    private Map<String, Object> deleteItem(Map<String, Object> event, List<String> keys) {
-        if (keys.size() == 1) {
-
-            event.remove(keys.get(0));
-            return event;
-        } else {
-            String key = keys.get(0);
-            List<String> newKeysTmpList = keys.subList(1, keys.size());
-
-            Map<String, Object> newSubEvent =
-                    deleteItem((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
-
-            event.remove(key);
-            event.put(key, newSubEvent);
-            return event;
-        }
-    }
+  }
 }

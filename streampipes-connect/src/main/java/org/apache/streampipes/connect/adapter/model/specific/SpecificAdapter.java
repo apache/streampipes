@@ -21,17 +21,17 @@ package org.apache.streampipes.connect.adapter.model.specific;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
-public abstract class SpecificAdapter <T extends AdapterDescription> extends Adapter<T> {
+public abstract class SpecificAdapter<T extends AdapterDescription> extends Adapter<T> {
 
-    public SpecificAdapter() {
-        super();
-    }
+  public SpecificAdapter() {
+    super();
+  }
 
-    public SpecificAdapter(T adapterDescription) {
-        super(adapterDescription);
-    }
+  public SpecificAdapter(T adapterDescription) {
+    super(adapterDescription);
+  }
 
-    public SpecificAdapter(T adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
+  public SpecificAdapter(T adapterDescription, boolean debug) {
+    super(adapterDescription, debug);
+  }
 }

@@ -18,39 +18,38 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.transform.stream;
 
-import java.util.LinkedList;
 import java.util.Map;
 
 public class EventRateTransformationRule implements StreamTransformationRule {
 
-    private long aggregationTimeWindow;
+  private long aggregationTimeWindow;
 
-    //none (Values from last event), max, min, mean, sum (of the values in the time window)
-    private String aggregationType;
+  //none (Values from last event), max, min, mean, sum (of the values in the time window)
+  private String aggregationType;
 
-    private long lastSentToPipelineTimestamp = System.currentTimeMillis();
+  private long lastSentToPipelineTimestamp = System.currentTimeMillis();
 
-    public EventRateTransformationRule(long aggregationTimeWindow, String aggregationType) {
-        this.aggregationTimeWindow = aggregationTimeWindow;
-        this.aggregationType = aggregationType;
-    }
+  public EventRateTransformationRule(long aggregationTimeWindow, String aggregationType) {
+    this.aggregationTimeWindow = aggregationTimeWindow;
+    this.aggregationType = aggregationType;
+  }
 
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-        if (System.currentTimeMillis() > lastSentToPipelineTimestamp + aggregationTimeWindow) {
-            switch (aggregationType) {
-                case "none":
-                    lastSentToPipelineTimestamp = System.currentTimeMillis();
-                    return event;
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+    if (System.currentTimeMillis() > lastSentToPipelineTimestamp + aggregationTimeWindow) {
+      switch (aggregationType) {
+        case "none":
+          lastSentToPipelineTimestamp = System.currentTimeMillis();
+          return event;
 //                case "max":
 //                case "min":
 //                case "mean":
 //                case "sum":
 
-            }
-        }
-        return null;
+      }
     }
+    return null;
+  }
 
 
 }

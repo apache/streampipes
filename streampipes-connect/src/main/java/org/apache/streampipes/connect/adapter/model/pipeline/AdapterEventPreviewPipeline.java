@@ -68,14 +68,15 @@ public class AdapterEventPreviewPipeline implements IAdapterPipeline {
 
   public Map<String, GuessTypeInfo> makePreview() {
     Map<String, Object> ev = this.event
-      .entrySet()
-      .stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getValue()));
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getValue()));
     this.process(ev);
 
     return ev
-      .entrySet()
-      .stream()
-      .collect(Collectors.toMap(Map.Entry::getKey, e-> new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(Map.Entry::getKey,
+            e -> new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
   }
 }

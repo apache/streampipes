@@ -26,24 +26,24 @@ import java.util.List;
 
 public class GetNEvents implements EmitBinaryEvent {
 
-    private int n;
-    private List<byte[]> events;
+  private int n;
+  private List<byte[]> events;
 
-    public GetNEvents(int n) {
-        this.n = n;
-        this.events = new ArrayList<>();
-    }
+  public GetNEvents(int n) {
+    this.n = n;
+    this.events = new ArrayList<>();
+  }
 
-    @Override
-    public Boolean emit(byte[] event) {
+  @Override
+  public Boolean emit(byte[] event) {
 
-        events.add(event);
-        this.n = n - 1;
+    events.add(event);
+    this.n = n - 1;
 
-        return n != 0;
-    }
+    return n != 0;
+  }
 
-    public List<byte[]> getEvents() {
-        return events;
-    }
+  public List<byte[]> getEvents() {
+    return events;
+  }
 }

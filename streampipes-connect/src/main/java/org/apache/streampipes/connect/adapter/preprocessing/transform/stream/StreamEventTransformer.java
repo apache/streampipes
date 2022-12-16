@@ -26,22 +26,22 @@ import java.util.Map;
 
 public class StreamEventTransformer implements StreamTransformationRule {
 
-    private List<EventRateTransformationRule> eventRateTransformationRules;
+  private List<EventRateTransformationRule> eventRateTransformationRules;
 
-    public StreamEventTransformer() {
-        this.eventRateTransformationRules = new ArrayList<>();
+  public StreamEventTransformer() {
+    this.eventRateTransformationRules = new ArrayList<>();
+  }
+
+
+  public StreamEventTransformer(List<TransformationRule> rules) {
+    this();
+
+    for (TransformationRule rule : rules) {
+      if (rule instanceof EventRateTransformationRule) {
+        this.eventRateTransformationRules.add((EventRateTransformationRule) rule);
+      }
     }
-
-
-    public StreamEventTransformer(List<TransformationRule> rules) {
-        this();
-
-        for (TransformationRule rule : rules) {
-            if (rule instanceof EventRateTransformationRule) {
-                this.eventRateTransformationRules.add((EventRateTransformationRule) rule);
-            }
-        }
-    }
+  }
 
 
     /*
@@ -50,17 +50,17 @@ public class StreamEventTransformer implements StreamTransformationRule {
     }
     */
 
-    public void addEventRateTransformationRule(EventRateTransformationRule rule) {
-        this.eventRateTransformationRules.add(rule);
+  public void addEventRateTransformationRule(EventRateTransformationRule rule) {
+    this.eventRateTransformationRules.add(rule);
+  }
+
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+
+    for (EventRateTransformationRule rateRule : eventRateTransformationRules) {
+      event = rateRule.transform(event);
     }
 
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-
-        for (EventRateTransformationRule rateRule : eventRateTransformationRules) {
-            event = rateRule.transform(event);
-        }
-
-        return event;
-    }
+    return event;
+  }
 }

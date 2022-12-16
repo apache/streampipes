@@ -26,26 +26,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum RunningAdapterInstances {
-    INSTANCE;
+  INSTANCE;
 
-    private final Map<String, IAdapter<?>> runningAdapterInstances = new HashMap<>();
-    private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new HashMap<>();
+  private final Map<String, IAdapter<?>> runningAdapterInstances = new HashMap<>();
+  private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new HashMap<>();
 
-    public void addAdapter(String elementId, IAdapter<?> adapter, AdapterDescription adapterDescription) {
-        runningAdapterInstances.put(elementId, adapter);
-        runningAdapterDescriptionInstances.put(elementId, adapterDescription);
-    }
+  public void addAdapter(String elementId, IAdapter<?> adapter, AdapterDescription adapterDescription) {
+    runningAdapterInstances.put(elementId, adapter);
+    runningAdapterDescriptionInstances.put(elementId, adapterDescription);
+  }
 
-    public IAdapter<?> removeAdapter(String elementId) {
-        IAdapter<?> result = runningAdapterInstances.get(elementId);
-        runningAdapterInstances.remove(elementId);
-        runningAdapterDescriptionInstances.remove(elementId);
-        return result;
-    }
+  public IAdapter<?> removeAdapter(String elementId) {
+    IAdapter<?> result = runningAdapterInstances.get(elementId);
+    runningAdapterInstances.remove(elementId);
+    runningAdapterDescriptionInstances.remove(elementId);
+    return result;
+  }
 
-    public Collection<AdapterDescription> getAllRunningAdapterDescriptions() {
-       return this.runningAdapterDescriptionInstances.values();
-    }
+  public Collection<AdapterDescription> getAllRunningAdapterDescriptions() {
+    return this.runningAdapterDescriptionInstances.values();
+  }
 
 
 }

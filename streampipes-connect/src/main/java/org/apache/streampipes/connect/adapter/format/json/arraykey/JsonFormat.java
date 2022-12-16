@@ -19,36 +19,37 @@
 package org.apache.streampipes.connect.adapter.format.json.arraykey;
 
 
-import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.adapter.format.json.AbstractJsonFormat;
+import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
 import org.apache.streampipes.sdk.helpers.Labels;
 
 public class JsonFormat extends AbstractJsonFormat {
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
+  public static final String ID = "https://streampipes.org/vocabulary/v1/format/json/arraykey";
 
-    @Override
-    public IFormat getInstance(FormatDescription formatDescription) {
-        return new JsonFormat();
-    }
+  @Override
+  public IFormat getInstance(FormatDescription formatDescription) {
+    return new JsonFormat();
+  }
 
 
-    @Override
-    public FormatDescription declareModel() {
+  @Override
+  public FormatDescription declareModel() {
 
-        return FormatDescriptionBuilder.create(ID, "Array Field", "Use one property of the json object that is an array, e.g. {'arrayKey': [{'value': 1}, {'value': 2}]}")
-                .addFormatType(JSON_FORMAT_TYPE)
-                .requiredTextParameter(Labels.from("key","Key",
-                        "Key of the array within the Json object"))
-                .build();
-    }
+    return FormatDescriptionBuilder.create(ID, "Array Field",
+            "Use one property of the json object that is an array, e.g. {'arrayKey': [{'value': 1}, {'value': 2}]}")
+        .addFormatType(JSON_FORMAT_TYPE)
+        .requiredTextParameter(Labels.from("key", "Key",
+            "Key of the array within the Json object"))
+        .build();
+  }
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+  @Override
+  public String getId() {
+    return ID;
+  }
 
 
 }

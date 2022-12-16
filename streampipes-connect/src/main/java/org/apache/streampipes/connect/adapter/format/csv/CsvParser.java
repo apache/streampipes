@@ -41,161 +41,161 @@ import java.util.List;
 
 public class CsvParser extends Parser {
 
-    private String delimiter;
-    private Boolean header;
+  private String delimiter;
+  private Boolean header;
 
-    public CsvParser() {
-    }
+  public CsvParser() {
+  }
 
-    public CsvParser(String delimiter, Boolean header) {
-        this.delimiter = delimiter;
-        this.header = header;
-    }
+  public CsvParser(String delimiter, Boolean header) {
+    this.delimiter = delimiter;
+    this.header = header;
+  }
 
-    @Override
-    public Parser getInstance(FormatDescription formatDescription) throws ParseException {
-        ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
+  @Override
+  public Parser getInstance(FormatDescription formatDescription) throws ParseException {
+    ParameterExtractor extractor = new ParameterExtractor(formatDescription.getConfig());
 
-        boolean header = extractor.selectedMultiValues(CsvFormat.HEADER_NAME).stream()
-                .anyMatch(option -> "Header".equals(option));
-        String delimiter = extractor.singleValue(CsvFormat.DELIMITER_NAME);
+    boolean header = extractor.selectedMultiValues(CsvFormat.HEADER_NAME).stream()
+        .anyMatch(option -> "Header".equals(option));
+    String delimiter = extractor.singleValue(CsvFormat.DELIMITER_NAME);
 
-        return new CsvParser(delimiter, header);
-    }
+    return new CsvParser(delimiter, header);
+  }
 
-    @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(data));
+  @Override
+  public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(data));
 
-        boolean result = true;
+    boolean result = true;
 
-        try {
-            while (reader.ready() && result) {
-                String s = reader.readLine();
-                byte[] parseResult = s.getBytes();
-                if (parseResult != null) {
-                    result = emitBinaryEvent.emit(parseResult);
-                }
-            }
-        } catch (IOException e) {
-            throw new ParseException(e.getMessage());
+    try {
+      while (reader.ready() && result) {
+        String s = reader.readLine();
+        byte[] parseResult = s.getBytes();
+        if (parseResult != null) {
+          result = emitBinaryEvent.emit(parseResult);
         }
-
+      }
+    } catch (IOException e) {
+      throw new ParseException(e.getMessage());
     }
 
-    @Override
-    public boolean supportsPreview() {
-        return true;
+  }
+
+  @Override
+  public boolean supportsPreview() {
+    return true;
+  }
+
+  @Override
+  public AdapterGuessInfo getSchemaAndSample(List<byte[]> oneEvent) {
+    var sample = new HashMap<String, GuessTypeInfo>();
+    String[] keys;
+    String[] data;
+
+    if (this.header) {
+      keys = parseLine(new String(oneEvent.get(0)), delimiter);
+      data = parseLine(new String(oneEvent.get(1)), delimiter);
+    } else {
+      data = parseLine(new String(oneEvent.get(0)), delimiter);
+      keys = new String[data.length];
+      for (int i = 0; i < data.length; i++) {
+        keys[i] = "key_" + i;
+      }
     }
 
-    @Override
-    public AdapterGuessInfo getSchemaAndSample(List<byte[]> oneEvent) {
-        var sample = new HashMap<String, GuessTypeInfo>();
-        String[] keys;
-        String[] data;
+    EventSchema resultSchema = new EventSchema();
+    for (int i = 0; i < keys.length; i++) {
+      EventPropertyPrimitive p = new EventPropertyPrimitive();
+      var runtimeType = DatatypeUtils.getXsdDatatype(data[i], true);
+      var convertedValue = DatatypeUtils.convertValue(data[i], runtimeType);
+      p.setRuntimeName(keys[i]);
+      p.setRuntimeType(runtimeType);
+      sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i], true), convertedValue));
+      resultSchema.addEventProperty(p);
+    }
 
-        if (this.header) {
-            keys = parseLine(new String(oneEvent.get(0)), delimiter);
-            data = parseLine(new String (oneEvent.get(1)), delimiter);
+    return new AdapterGuessInfo(resultSchema, sample);
+  }
+
+  @Override
+  public EventSchema getEventSchema(List<byte[]> oneEvent) {
+    return getSchemaAndSample(oneEvent).getEventSchema();
+  }
+
+
+  public static String[] parseLine(String cvsLine, String separatorString) {
+
+    char separators = separatorString.toCharArray()[0];
+
+    List<String> result = new ArrayList<>();
+
+    char customQuote = '"';
+
+    StringBuffer curVal = new StringBuffer();
+    boolean inQuotes = false;
+    boolean startCollectChar = false;
+    boolean doubleQuotesInColumn = false;
+
+    char[] chars = cvsLine.toCharArray();
+
+    for (char ch : chars) {
+
+      if (inQuotes) {
+        startCollectChar = true;
+        if (ch == customQuote) {
+          inQuotes = false;
+          doubleQuotesInColumn = false;
         } else {
-            data = parseLine(new String (oneEvent.get(0)), delimiter);
-            keys = new String[data.length];
-            for (int i = 0; i < data.length; i++) {
-                keys[i] = "key_" + i;
+
+          //Fixed : allow "" in custom quote enclosed
+          if (ch == '\"') {
+            if (!doubleQuotesInColumn) {
+              curVal.append(ch);
+              doubleQuotesInColumn = true;
             }
+          } else {
+            curVal.append(ch);
+          }
+
         }
+      } else {
+        if (ch == customQuote) {
 
-        EventSchema resultSchema = new EventSchema();
-        for (int i = 0; i < keys.length; i++) {
-            EventPropertyPrimitive p = new EventPropertyPrimitive();
-            var runtimeType = DatatypeUtils.getXsdDatatype(data[i], true);
-            var convertedValue = DatatypeUtils.convertValue(data[i], runtimeType);
-            p.setRuntimeName(keys[i]);
-            p.setRuntimeType(runtimeType);
-            sample.put(keys[i], new GuessTypeInfo(DatatypeUtils.getCanonicalTypeClassName(data[i], true), convertedValue));
-            resultSchema.addEventProperty(p);
-        }
+          inQuotes = true;
 
-        return new AdapterGuessInfo(resultSchema, sample);
-    }
-
-    @Override
-    public EventSchema getEventSchema(List<byte[]> oneEvent) {
-        return getSchemaAndSample(oneEvent).getEventSchema();
-    }
-
-
-    public static String[] parseLine(String cvsLine, String separatorString) {
-
-        char separators = separatorString.toCharArray()[0];
-
-        List<String> result = new ArrayList<>();
-
-        char customQuote = '"';
-
-        StringBuffer curVal = new StringBuffer();
-        boolean inQuotes = false;
-        boolean startCollectChar = false;
-        boolean doubleQuotesInColumn = false;
-
-        char[] chars = cvsLine.toCharArray();
-
-        for (char ch : chars) {
-
-            if (inQuotes) {
-                startCollectChar = true;
-                if (ch == customQuote) {
-                    inQuotes = false;
-                    doubleQuotesInColumn = false;
-                } else {
-
-                    //Fixed : allow "" in custom quote enclosed
-                    if (ch == '\"') {
-                        if (!doubleQuotesInColumn) {
-                            curVal.append(ch);
-                            doubleQuotesInColumn = true;
-                        }
-                    } else {
-                        curVal.append(ch);
-                    }
-
-                }
-            } else {
-                if (ch == customQuote) {
-
-                    inQuotes = true;
-
-                    //Fixed : allow "" in empty quote enclosed
+          //Fixed : allow "" in empty quote enclosed
 //                    if (chars[0] != '"' && customQuote == '\"') {
 //                        curVal.append('"');
 //                    }
 
-                    //double quotes in column will hit this!
-                    if (startCollectChar) {
-                        curVal.append('"');
-                    }
+          //double quotes in column will hit this!
+          if (startCollectChar) {
+            curVal.append('"');
+          }
 
-                } else if (ch == separators) {
+        } else if (ch == separators) {
 
-                    result.add(curVal.toString());
+          result.add(curVal.toString());
 
-                    curVal = new StringBuffer();
-                    startCollectChar = false;
+          curVal = new StringBuffer();
+          startCollectChar = false;
 
-                } else if (ch == '\r') {
-                    //ignore LF characters
-                    continue;
-                } else if (ch == '\n') {
-                    //the end, break!
-                    break;
-                } else {
-                    curVal.append(ch);
-                }
-            }
+        } else if (ch == '\r') {
+          //ignore LF characters
+          continue;
+        } else if (ch == '\n') {
+          //the end, break!
+          break;
+        } else {
+          curVal.append(ch);
         }
-
-        result.add(curVal.toString());
-
-        return result.toArray(new String[0]);
+      }
     }
+
+    result.add(curVal.toString());
+
+    return result.toArray(new String[0]);
+  }
 }

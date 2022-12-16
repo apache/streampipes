@@ -29,6 +29,7 @@ import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.SimpleTopicDefinition;
 import org.apache.streampipes.model.grounding.TopicDefinition;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,13 +40,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ BackendConfig.class, SpConfig.class})
+@PrepareForTest({BackendConfig.class, SpConfig.class})
 public class GroundingServiceTest {
 
-    @Before
-    public  void before() {
-        PowerMockito.mockStatic(SpConfig.class);
-    }
+  @Before
+  public void before() {
+    PowerMockito.mockStatic(SpConfig.class);
+  }
 
 //    @Test
 //    public void extractBrokerForGenericAdapterSetTest() {
@@ -57,14 +58,14 @@ public class GroundingServiceTest {
 //    }
 
 
-    @Test
-    public void extractTopicForGenericAdapterSetTest() {
-        AdapterDescription adapterDescription = getGenericAdapterSetDescription();
+  @Test
+  public void extractTopicForGenericAdapterSetTest() {
+    AdapterDescription adapterDescription = getGenericAdapterSetDescription();
 
-        String result = GroundingService.extractTopic(adapterDescription);
+    String result = GroundingService.extractTopic(adapterDescription);
 
-        assertEquals("test.topic", result);
-    }
+    assertEquals("test.topic", result);
+  }
 
 //    @Test
 //    public void extractBrokerForSpecificAdapterSetTest() {
@@ -95,14 +96,14 @@ public class GroundingServiceTest {
 //    }
 
 
-    @Test
-    public void extractTopicForStreamTest() {
-        AdapterDescription adapterDescription = getAdapterStreamDescription();
+  @Test
+  public void extractTopicForStreamTest() {
+    AdapterDescription adapterDescription = getAdapterStreamDescription();
 
-        String result = GroundingService.extractTopic(adapterDescription);
+    String result = GroundingService.extractTopic(adapterDescription);
 
-        assertEquals("test.topic", result);
-    }
+    assertEquals("test.topic", result);
+  }
 
 //    @Test
 //    public void createEventGroundingTest() {
@@ -116,48 +117,49 @@ public class GroundingServiceTest {
 //
 ////        assertEquals("localhost", eventGrounding.getTransportProtocol().getBrokerHostname());
 ////        assertEquals(0, ((KafkaTransportProtocol)eventGrounding.getTransportProtocol()).getKafkaPort());
-//        assertTrue(eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName().startsWith("org.apache.streampipes.connect"));
+//        assertTrue(eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName()
+//        .startsWith("org.apache.streampipes.connect"));
 //
 //    }
 
-    private AdapterDescription getAdapterStreamDescription() {
-        AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
+  private AdapterDescription getAdapterStreamDescription() {
+    AdapterDescription adapterDescription = new GenericAdapterStreamDescription();
 
-        adapterDescription.setEventGrounding(getEventGrounding());
+    adapterDescription.setEventGrounding(getEventGrounding());
 
-        return adapterDescription;
-    }
+    return adapterDescription;
+  }
 
-    private AdapterDescription getGenericAdapterSetDescription() {
-        GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
-        SpDataSet set = new SpDataSet();
-        adapterDescription.setDataSet(set);
+  private AdapterDescription getGenericAdapterSetDescription() {
+    GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
+    SpDataSet set = new SpDataSet();
+    adapterDescription.setDataSet(set);
 
-        set.setEventGrounding(getEventGrounding());
-        return adapterDescription;
-    }
+    set.setEventGrounding(getEventGrounding());
+    return adapterDescription;
+  }
 
-    private AdapterDescription getSpecificAdapterSetDescription() {
-        SpecificAdapterSetDescription adapterDescription = new SpecificAdapterSetDescription();
-        SpDataSet set = new SpDataSet();
-        adapterDescription.setDataSet(set);
+  private AdapterDescription getSpecificAdapterSetDescription() {
+    SpecificAdapterSetDescription adapterDescription = new SpecificAdapterSetDescription();
+    SpDataSet set = new SpDataSet();
+    adapterDescription.setDataSet(set);
 
-        set.setEventGrounding(getEventGrounding());
-        return adapterDescription;
-    }
+    set.setEventGrounding(getEventGrounding());
+    return adapterDescription;
+  }
 
-    private EventGrounding getEventGrounding() {
-        EventGrounding eventGrounding = new EventGrounding();
-        KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
-        transportProtocol.setBrokerHostname("localhost");
-        transportProtocol.setKafkaPort(1111);
-        eventGrounding.setTransportProtocol(transportProtocol);
+  private EventGrounding getEventGrounding() {
+    EventGrounding eventGrounding = new EventGrounding();
+    KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
+    transportProtocol.setBrokerHostname("localhost");
+    transportProtocol.setKafkaPort(1111);
+    eventGrounding.setTransportProtocol(transportProtocol);
 
-        TopicDefinition topicDefinition = new SimpleTopicDefinition("test.topic");
-        transportProtocol.setTopicDefinition(topicDefinition);
+    TopicDefinition topicDefinition = new SimpleTopicDefinition("test.topic");
+    transportProtocol.setTopicDefinition(topicDefinition);
 
-        return eventGrounding;
-    }
+    return eventGrounding;
+  }
 
 
 }

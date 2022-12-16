@@ -29,36 +29,36 @@ import java.util.Map;
 
 public class ImageFormat implements IFormat {
 
-    public static final String ID = "https://streampipes.org/vocabulary/v1/format/image";
+  public static final String ID = "https://streampipes.org/vocabulary/v1/format/image";
 
-    public ImageFormat() {
+  public ImageFormat() {
 
-    }
+  }
 
-    @Override
-    public IFormat getInstance(FormatDescription formatDescription) {
-        return new ImageFormat();
-    }
+  @Override
+  public IFormat getInstance(FormatDescription formatDescription) {
+    return new ImageFormat();
+  }
 
-    @Override
-    public FormatDescription declareModel() {
-       return FormatDescriptionBuilder.create(ID, "Image", "Processes images and transforms them into events")
-                .build();
-    }
+  @Override
+  public FormatDescription declareModel() {
+    return FormatDescriptionBuilder.create(ID, "Image", "Processes images and transforms them into events")
+        .build();
+  }
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+  @Override
+  public String getId() {
+    return ID;
+  }
 
-    @Override
-    public Map<String, Object> parse(byte[] object) throws ParseException {
-        Map<String, Object> result = new HashMap<>();
+  @Override
+  public Map<String, Object> parse(byte[] object) throws ParseException {
+    Map<String, Object> result = new HashMap<>();
 
-        String resultImage = Base64.getEncoder().encodeToString(object);
+    String resultImage = Base64.getEncoder().encodeToString(object);
 
-        result.put("image", resultImage);
+    result.put("image", resultImage);
 
-        return result;
-    }
+    return result;
+  }
 }

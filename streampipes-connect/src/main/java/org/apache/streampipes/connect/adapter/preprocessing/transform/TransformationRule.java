@@ -21,5 +21,5 @@ package org.apache.streampipes.connect.adapter.preprocessing.transform;
 import java.util.Map;
 
 public interface TransformationRule {
-    public Map<String, Object> transform(Map<String, Object> event);
+  Map<String, Object> transform(Map<String, Object> event);
 }

@@ -22,16 +22,16 @@ import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescrip
 
 public abstract class SpecificDataStreamAdapter extends SpecificAdapter<SpecificAdapterStreamDescription> {
 
-    public SpecificDataStreamAdapter() {
-        super();
-    }
+  public SpecificDataStreamAdapter() {
+    super();
+  }
 
-    public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription) {
-        super(adapterDescription);
-    }
+  public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+  }
 
-    public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
+  public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription, boolean debug) {
+    super(adapterDescription, debug);
+  }
 
 }

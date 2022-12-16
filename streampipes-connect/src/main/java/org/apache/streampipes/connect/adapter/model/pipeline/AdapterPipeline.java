@@ -26,54 +26,54 @@ import java.util.Map;
 
 public class AdapterPipeline implements IAdapterPipeline {
 
-    private List<IAdapterPipelineElement> pipelineElements;
-    private IAdapterPipelineElement pipelineSink;
+  private List<IAdapterPipelineElement> pipelineElements;
+  private IAdapterPipelineElement pipelineSink;
 
 
-    public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements) {
-        this.pipelineElements = pipelineElements;
+  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements) {
+    this.pipelineElements = pipelineElements;
+  }
+
+  public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink) {
+    this.pipelineElements = pipelineElements;
+    this.pipelineSink = pipelineSink;
+  }
+
+  @Override
+  public void process(Map<String, Object> event) {
+
+    // TODO remove, just for performance tests
+    if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
+      event.put("internal_t1", System.currentTimeMillis());
     }
 
-    public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink) {
-        this.pipelineElements = pipelineElements;
-        this.pipelineSink = pipelineSink;
+
+    for (IAdapterPipelineElement pipelineElement : pipelineElements) {
+      event = pipelineElement.process(event);
+    }
+    if (pipelineSink != null) {
+      pipelineSink.process(event);
     }
 
-    @Override
-    public void process(Map<String, Object> event) {
+  }
 
-        // TODO remove, just for performance tests
-        if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
-            event.put("internal_t1", System.currentTimeMillis());
-        }
+  @Override
+  public List<IAdapterPipelineElement> getPipelineElements() {
+    return pipelineElements;
+  }
 
+  @Override
+  public void setPipelineElements(List<IAdapterPipelineElement> pipelineElements) {
+    this.pipelineElements = pipelineElements;
+  }
 
-        for (IAdapterPipelineElement pipelineElement : pipelineElements) {
-            event = pipelineElement.process(event);
-        }
-        if (pipelineSink != null) {
-            pipelineSink.process(event);
-        }
+  @Override
+  public void changePipelineSink(IAdapterPipelineElement pipelineSink) {
+    this.pipelineSink = pipelineSink;
+  }
 
-    }
-
-    @Override
-    public List<IAdapterPipelineElement> getPipelineElements() {
-        return pipelineElements;
-    }
-
-    @Override
-    public void setPipelineElements(List<IAdapterPipelineElement> pipelineElements) {
-        this.pipelineElements = pipelineElements;
-    }
-
-    @Override
-    public void changePipelineSink(IAdapterPipelineElement pipelineSink) {
-        this.pipelineSink = pipelineSink;
-    }
-
-    @Override
-    public IAdapterPipelineElement getPipelineSink() {
-        return pipelineSink;
-    }
+  @Override
+  public IAdapterPipelineElement getPipelineSink() {
+    return pipelineSink;
+  }
 }

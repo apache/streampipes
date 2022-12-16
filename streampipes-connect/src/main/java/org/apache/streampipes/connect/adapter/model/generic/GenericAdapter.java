@@ -30,74 +30,79 @@ import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.schema.EventSchema;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class GenericAdapter<T extends AdapterDescription> extends Adapter<T> {
 
-    private static final Logger logger = LoggerFactory.getLogger(Adapter.class);
-    protected IProtocol protocol;
+  private static final Logger logger = LoggerFactory.getLogger(Adapter.class);
+  protected IProtocol protocol;
 
-    public GenericAdapter(T adapterDescription) {
-        super(adapterDescription);
+  public GenericAdapter(T adapterDescription) {
+    super(adapterDescription);
+  }
+
+  public GenericAdapter(T adapterDescription, boolean debug) {
+    super(adapterDescription, debug);
+  }
+
+  public GenericAdapter() {
+    super();
+  }
+
+  public abstract GenericAdapterDescription getAdapterDescription();
+
+  public abstract void setProtocol(IProtocol protocol);
+
+  @Override
+  public void startAdapter() throws AdapterException {
+
+    GenericAdapterDescription adapterDescription = getAdapterDescription();
+
+    IParser parser = getParser(adapterDescription);
+    IFormat format = getFormat(adapterDescription);
+
+    ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
+
+    IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
+    this.protocol = protocolInstance;
+
+    //TODO remove
+    EventSchema eventSchema = adapterDescription.getEventSchema();
+    this.protocol.setEventSchema(eventSchema);
+
+    logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
+
+    protocolInstance.run(adapterPipeline);
+  }
+
+
+  @Override
+  public GuessSchema getSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
+    IParser parser = getParser((GenericAdapterDescription) adapterDescription);
+    IFormat format = getFormat((GenericAdapterDescription) adapterDescription);
+
+    ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
+
+    IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
+
+    logger.debug("Extract schema with format: " + format.getId() + " and " + protocol.getId());
+
+    return protocolInstance.getGuessSchema();
+  }
+
+  private IParser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
+    if (adapterDescription.getFormatDescription() == null) {
+      throw new AdapterException("Format description of Adapter ist empty");
     }
+    return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getAppId())
+        .getInstance(adapterDescription.getFormatDescription());
+  }
 
-    public GenericAdapter(T adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
-
-    public GenericAdapter() {
-        super();
-    }
-
-    public abstract GenericAdapterDescription getAdapterDescription();
-
-    public abstract void setProtocol(IProtocol protocol);
-
-    @Override
-    public void startAdapter() throws AdapterException {
-
-        GenericAdapterDescription adapterDescription = getAdapterDescription();
-
-        IParser parser = getParser(adapterDescription);
-        IFormat format = getFormat(adapterDescription);
-
-        ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
-
-        IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
-        this.protocol = protocolInstance;
-
-        //TODO remove
-        EventSchema eventSchema = adapterDescription.getEventSchema();
-        this.protocol.setEventSchema(eventSchema);
-
-        logger.debug("Start adatper with format: " + format.getId() + " and " + protocol.getId());
-
-        protocolInstance.run(adapterPipeline);
-    }
-
-
-    @Override
-    public GuessSchema getSchema(AdapterDescription adapterDescription) throws AdapterException, ParseException {
-        IParser parser = getParser((GenericAdapterDescription) adapterDescription);
-        IFormat format = getFormat((GenericAdapterDescription) adapterDescription);
-
-        ProtocolDescription protocolDescription = ((GenericAdapterDescription) adapterDescription).getProtocolDescription();
-
-        IProtocol protocolInstance = this.protocol.getInstance(protocolDescription, parser, format);
-
-        logger.debug("Extract schema with format: " + format.getId() + " and " + protocol.getId());
-
-        return protocolInstance.getGuessSchema();
-    }
-
-    private IParser getParser(GenericAdapterDescription adapterDescription) throws AdapterException {
-         if (adapterDescription.getFormatDescription() == null) throw new AdapterException("Format description of Adapter ist empty");
-         return AdapterRegistry.getAllParsers().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
-    }
-
-    private IFormat getFormat(GenericAdapterDescription adapterDescription) {
-        return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getAppId()).getInstance(adapterDescription.getFormatDescription());
-    }
+  private IFormat getFormat(GenericAdapterDescription adapterDescription) {
+    return AdapterRegistry.getAllFormats().get(adapterDescription.getFormatDescription().getAppId())
+        .getInstance(adapterDescription.getFormatDescription());
+  }
 
 }

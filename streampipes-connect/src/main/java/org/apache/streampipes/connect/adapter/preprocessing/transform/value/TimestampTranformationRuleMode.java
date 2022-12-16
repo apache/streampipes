@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.transform.value;
 
-public enum  TimestampTranformationRuleMode {
+public enum TimestampTranformationRuleMode {
 
-    TIME_UNIT,
-    FORMAT_STRING,
+  TIME_UNIT,
+  FORMAT_STRING,
 
 }

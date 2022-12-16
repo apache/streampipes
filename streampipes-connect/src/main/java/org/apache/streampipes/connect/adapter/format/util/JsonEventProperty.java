@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.connect.adapter.format.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyNested;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.vocabulary.XSD;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -33,66 +34,68 @@ import java.util.Map;
 
 public class JsonEventProperty {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JsonEventProperty.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JsonEventProperty.class);
 
-    public static EventProperty getEventProperty(String key, Object o) {
-        EventProperty resultProperty = null;
+  public static EventProperty getEventProperty(String key, Object o) {
+    EventProperty resultProperty = null;
 
-        LOG.info("Key: " + key);
-        LOG.info("Class: " + o.getClass());
-        LOG.info("Primitive: " + o.getClass().isPrimitive());
-        LOG.info("Array: " + o.getClass().isArray());
-        LOG.info("TypeName: " + o.getClass().getTypeName());
+    LOG.info("Key: " + key);
+    LOG.info("Class: " + o.getClass());
+    LOG.info("Primitive: " + o.getClass().isPrimitive());
+    LOG.info("Array: " + o.getClass().isArray());
+    LOG.info("TypeName: " + o.getClass().getTypeName());
 
 
-        System.out.println("=======================");
+    System.out.println("=======================");
 
-        if (o.getClass().equals(Boolean.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._boolean.toString());
-        } else if (o.getClass().equals(String.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._string.toString());
-        } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class) || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)) {
-            resultProperty = new EventPropertyPrimitive();
-            resultProperty.setRuntimeName(key);
-            ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._float.toString());
-        } else if (o.getClass().equals(LinkedHashMap.class)) {
-            resultProperty = new EventPropertyNested();
-            resultProperty.setRuntimeName(key);
-            List<EventProperty> all = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet()) {
-                all.add(getEventProperty(entry.getKey(), entry.getValue()));
-            }
+    if (o.getClass().equals(Boolean.class)) {
+      resultProperty = new EventPropertyPrimitive();
+      resultProperty.setRuntimeName(key);
+      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._boolean.toString());
+    } else if (o.getClass().equals(String.class)) {
+      resultProperty = new EventPropertyPrimitive();
+      resultProperty.setRuntimeName(key);
+      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._string.toString());
+    } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)
+        || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)) {
+      resultProperty = new EventPropertyPrimitive();
+      resultProperty.setRuntimeName(key);
+      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._float.toString());
+    } else if (o.getClass().equals(LinkedHashMap.class)) {
+      resultProperty = new EventPropertyNested();
+      resultProperty.setRuntimeName(key);
+      List<EventProperty> all = new ArrayList<>();
+      for (Map.Entry<String, Object> entry : ((Map<String, Object>) o).entrySet()) {
+        all.add(getEventProperty(entry.getKey(), entry.getValue()));
+      }
 
-            ((EventPropertyNested) resultProperty).setEventProperties(all);
+      ((EventPropertyNested) resultProperty).setEventProperties(all);
 
-        } else if (o.getClass().equals(ArrayList.class)) {
-            resultProperty = new EventPropertyList();
-            ArrayList content = (ArrayList) o;
+    } else if (o.getClass().equals(ArrayList.class)) {
+      resultProperty = new EventPropertyList();
+      ArrayList content = (ArrayList) o;
 
-            EventPropertyPrimitive arrayContent = new EventPropertyPrimitive();
-            if (content.size() == 0) {
-                arrayContent.setRuntimeType(XSD._string.toString());
-            } else if (content.get(0) instanceof Integer || content.get(0) instanceof Double || content.get(0) instanceof Long) {
-                arrayContent.setRuntimeType(XSD._float.toString());
-            } else if (content.get(0) instanceof Boolean) {
-                arrayContent.setRuntimeType(XSD._boolean.toString());
-            } else {
-                arrayContent.setRuntimeType(XSD._string.toString());
-            }
+      EventPropertyPrimitive arrayContent = new EventPropertyPrimitive();
+      if (content.size() == 0) {
+        arrayContent.setRuntimeType(XSD._string.toString());
+      } else if (content.get(0) instanceof Integer || content.get(0) instanceof Double
+          || content.get(0) instanceof Long) {
+        arrayContent.setRuntimeType(XSD._float.toString());
+      } else if (content.get(0) instanceof Boolean) {
+        arrayContent.setRuntimeType(XSD._boolean.toString());
+      } else {
+        arrayContent.setRuntimeType(XSD._string.toString());
+      }
 
-            ((EventPropertyList) resultProperty).setEventProperty(arrayContent);
-            resultProperty.setRuntimeName(key);
-        }
-
-        if (resultProperty == null) {
-            LOG.error("Property Type was not detected in JsonParser for the schema detection. "
-                    + "This should never happen!");
-        }
-
-        return resultProperty;
+      ((EventPropertyList) resultProperty).setEventProperty(arrayContent);
+      resultProperty.setRuntimeName(key);
     }
+
+    if (resultProperty == null) {
+      LOG.error("Property Type was not detected in JsonParser for the schema detection. "
+          + "This should never happen!");
+    }
+
+    return resultProperty;
+  }
 }

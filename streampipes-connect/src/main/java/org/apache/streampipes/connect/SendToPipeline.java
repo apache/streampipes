@@ -26,23 +26,23 @@ import java.util.Map;
 
 public class SendToPipeline implements EmitBinaryEvent {
 
-    private IFormat format;
+  private IFormat format;
 
-    private IAdapterPipeline adapterPipeline;
+  private IAdapterPipeline adapterPipeline;
 
-    public SendToPipeline(IFormat format, IAdapterPipeline adapterPipeline) {
-       this.format = format;
-       this.adapterPipeline = adapterPipeline;
+  public SendToPipeline(IFormat format, IAdapterPipeline adapterPipeline) {
+    this.format = format;
+    this.adapterPipeline = adapterPipeline;
+  }
+
+  @Override
+  public Boolean emit(byte[] event) {
+
+    Map<String, Object> result = format.parse(event);
+
+    if (result != null) {
+      adapterPipeline.process(result);
     }
-
-    @Override
-    public Boolean emit(byte[] event) {
-
-        Map<String, Object> result = format.parse(event);
-
-        if (result != null) {
-            adapterPipeline.process(result);
-        }
-        return true;
-    }
+    return true;
+  }
 }

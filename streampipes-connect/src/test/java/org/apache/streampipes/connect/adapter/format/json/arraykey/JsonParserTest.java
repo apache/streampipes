@@ -18,16 +18,19 @@
 
 package org.apache.streampipes.connect.adapter.format.json.arraykey;
 
+import org.apache.streampipes.connect.api.exception.AdapterException;
+
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.junit.Test;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static org.apache.streampipes.connect.adapter.TestUtils.*;
+import static org.apache.streampipes.connect.adapter.TestUtils.getJsonArrayWithThreeElements;
+import static org.apache.streampipes.connect.adapter.TestUtils.makeJsonArray;
+import static org.apache.streampipes.connect.adapter.TestUtils.makeJsonObject;
 import static org.junit.Assert.assertEquals;
 
 public class JsonParserTest {
@@ -69,14 +72,12 @@ public class JsonParserTest {
   }
 
 
-
-
   @Test
   public void parseMoreThenExist() throws AdapterException {
 
     JsonObject jo = new JsonObject();
-            jo.add("key0", makeJsonArray(
-                    makeJsonObject("one", 1)));
+    jo.add("key0", makeJsonArray(
+        makeJsonObject("one", 1)));
     JsonParser parser = new JsonParser(true, "key0");
 
     List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo.toString()), 10);

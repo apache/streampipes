@@ -18,61 +18,62 @@
 
 package org.apache.streampipes.connect.adapter.model.generic;
 
-import org.apache.streampipes.connect.api.IProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStreamDescription> {
 
-    public static final String ID = GenericAdapterStreamDescription.ID;
+  public static final String ID = GenericAdapterStreamDescription.ID;
 
-    Logger logger = LoggerFactory.getLogger(Adapter.class);
+  Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-    public GenericDataStreamAdapter() {
-        super();
-    }
+  public GenericDataStreamAdapter() {
+    super();
+  }
 
-    public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
+  public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription, boolean debug) {
+    super(adapterDescription, debug);
+  }
 
-    public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription) {
-        super(adapterDescription);
-    }
+  public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription) {
+    super(adapterDescription);
+  }
 
-    @Override
-    public GenericAdapterStreamDescription declareModel() {
-        GenericAdapterStreamDescription adapterDescription = new GenericAdapterStreamDescription();
+  @Override
+  public GenericAdapterStreamDescription declareModel() {
+    GenericAdapterStreamDescription adapterDescription = new GenericAdapterStreamDescription();
 //        adapterDescription.setAdapterId(GenericAdapterStreamDescription.ID);
 //        adapterDescription.setUri(GenericAdapterStreamDescription.ID);
-        adapterDescription.setAppId(GenericAdapterStreamDescription.ID);
-        return adapterDescription;
-    }
+    adapterDescription.setAppId(GenericAdapterStreamDescription.ID);
+    return adapterDescription;
+  }
 
-    @Override
-    public Adapter getInstance(GenericAdapterStreamDescription adapterDescription) {
-        return new GenericDataStreamAdapter(adapterDescription);
-    }
+  @Override
+  public Adapter getInstance(GenericAdapterStreamDescription adapterDescription) {
+    return new GenericDataStreamAdapter(adapterDescription);
+  }
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+  @Override
+  public String getId() {
+    return ID;
+  }
 
-    public void stopAdapter() {
-        protocol.stop();
-    }
+  public void stopAdapter() {
+    protocol.stop();
+  }
 
-    @Override
-    public GenericAdapterDescription getAdapterDescription() {
-        return adapterDescription;
-    }
+  @Override
+  public GenericAdapterDescription getAdapterDescription() {
+    return adapterDescription;
+  }
 
-    @Override
-    public void setProtocol(IProtocol protocol) {
-       this.protocol = protocol;
-    }
+  @Override
+  public void setProtocol(IProtocol protocol) {
+    this.protocol = protocol;
+  }
 }

@@ -23,7 +23,8 @@ import org.apache.streampipes.messaging.nats.NatsPublisher;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.NatsTransportProtocol;
 
-public class SendToNatsAdapterSink extends SendToBrokerAdapterSink<NatsTransportProtocol> implements IAdapterPipelineElement {
+public class SendToNatsAdapterSink extends SendToBrokerAdapterSink<NatsTransportProtocol>
+    implements IAdapterPipelineElement {
 
   public SendToNatsAdapterSink(AdapterDescription adapterDescription) {
     super(adapterDescription, NatsPublisher::new, NatsTransportProtocol.class);

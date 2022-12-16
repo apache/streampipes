@@ -28,20 +28,20 @@ import java.util.List;
 
 public abstract class Parser implements IParser {
 
-    @Override
-    public List<byte[]> parseNEvents(InputStream data, int n) throws ParseException {
-        GetNEvents gne = new GetNEvents(n);
+  @Override
+  public List<byte[]> parseNEvents(InputStream data, int n) throws ParseException {
+    GetNEvents gne = new GetNEvents(n);
 
-        try {
-            parse(data, gne);
-        } catch (ParseException e) {
-            throw new ParseException(e.getMessage());
-        } catch (Exception e) {
-            throw new ParseException("Error while parse the data with the "
-                    + this.getClass().getSimpleName() + ": " + e.getMessage());
-        }
-
-        return gne.getEvents();
+    try {
+      parse(data, gne);
+    } catch (ParseException e) {
+      throw new ParseException(e.getMessage());
+    } catch (Exception e) {
+      throw new ParseException("Error while parse the data with the "
+          + this.getClass().getSimpleName() + ": " + e.getMessage());
     }
+
+    return gne.getEvents();
+  }
 
 }

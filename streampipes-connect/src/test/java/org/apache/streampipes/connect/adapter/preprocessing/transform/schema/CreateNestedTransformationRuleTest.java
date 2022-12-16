@@ -25,42 +25,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class CreateNestedTransformationRuleTest {
 
-    @Test
-    public void transformSimple() {
-        Map<String, Object> event = new HashMap<>();
+  @Test
+  public void transformSimple() {
+    Map<String, Object> event = new HashMap<>();
 
 
-        List<String> key = new ArrayList<>();
-        key.add("key");
-        CreateNestedTransformationRule createNested = new CreateNestedTransformationRule(key);
+    List<String> key = new ArrayList<>();
+    key.add("key");
+    CreateNestedTransformationRule createNested = new CreateNestedTransformationRule(key);
 
-        Map<String, Object> result = createNested.transform(event);
+    Map<String, Object> result = createNested.transform(event);
 
-        assertEquals(1, result.keySet().size());
-        assertEquals(0, ((Map<String, Object>) result.get("key")).keySet().size());
-    }
-
-
-    @Test
-    public void transformNested() {
-        Map<String, Object> event = new HashMap<>();
-        event.put("parent", new HashMap<>());
+    assertEquals(1, result.keySet().size());
+    assertEquals(0, ((Map<String, Object>) result.get("key")).keySet().size());
+  }
 
 
-        List<String> key = new ArrayList<>();
-        key.add("parent");
-        key.add("child");
+  @Test
+  public void transformNested() {
+    Map<String, Object> event = new HashMap<>();
+    event.put("parent", new HashMap<>());
 
-        CreateNestedTransformationRule createNested = new CreateNestedTransformationRule(key);
 
-        Map<String, Object> result = createNested.transform(event);
+    List<String> key = new ArrayList<>();
+    key.add("parent");
+    key.add("child");
 
-        assertEquals(1, result.keySet().size());
-        assertEquals(1, ((Map<String, Object>) result.get("parent")).keySet().size());
-        assertEquals(0, (((Map<String, Object>) ((Map<String, Object>) result.get("parent")).get("child")).keySet().size()));
-    }
+    CreateNestedTransformationRule createNested = new CreateNestedTransformationRule(key);
+
+    Map<String, Object> result = createNested.transform(event);
+
+    assertEquals(1, result.keySet().size());
+    assertEquals(1, ((Map<String, Object>) result.get("parent")).keySet().size());
+    assertEquals(0,
+        (((Map<String, Object>) ((Map<String, Object>) result.get("parent")).get("child")).keySet().size()));
+  }
 }

@@ -28,31 +28,31 @@ import java.util.List;
 
 public class Util {
 
-    public static String getLastKey(String s) {
-        String[] list = s.split("\\.");
-        if (list.length == 0) {
-            return s;
-        } else {
-            return list[list.length - 1];
-        }
+  public static String getLastKey(String s) {
+    String[] list = s.split("\\.");
+    if (list.length == 0) {
+      return s;
+    } else {
+      return list[list.length - 1];
     }
+  }
 
-    public static List<String> toKeyArray(String s) {
-        String[] split = s.split("\\.");
-        if (split.length == 0) {
-            return Arrays.asList(s);
-        } else {
-            return Arrays.asList(split);
-        }
+  public static List<String> toKeyArray(String s) {
+    String[] split = s.split("\\.");
+    if (split.length == 0) {
+      return Arrays.asList(s);
+    } else {
+      return Arrays.asList(split);
     }
+  }
 
-    public static EventSchema getEventSchema(GenericAdapterDescription adapterDescription) {
-        if(adapterDescription instanceof GenericAdapterStreamDescription) {
-            return ((GenericAdapterStreamDescription) adapterDescription).getDataStream().getEventSchema();
-        } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-            return ((GenericAdapterSetDescription) adapterDescription).getDataSet().getEventSchema();
+  public static EventSchema getEventSchema(GenericAdapterDescription adapterDescription) {
+    if (adapterDescription instanceof GenericAdapterStreamDescription) {
+      return ((GenericAdapterStreamDescription) adapterDescription).getDataStream().getEventSchema();
+    } else if (adapterDescription instanceof GenericAdapterSetDescription) {
+      return ((GenericAdapterSetDescription) adapterDescription).getDataSet().getEventSchema();
 
-        }
-        return null;
     }
+    return null;
+  }
 }

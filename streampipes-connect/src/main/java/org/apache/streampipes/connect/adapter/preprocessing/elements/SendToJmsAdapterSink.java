@@ -23,14 +23,14 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 
 public class SendToJmsAdapterSink extends SendToBrokerAdapterSink<JmsTransportProtocol>
-        implements IAdapterPipelineElement {
+    implements IAdapterPipelineElement {
 
-    public SendToJmsAdapterSink(AdapterDescription adapterDescription) {
-        super(adapterDescription, ActiveMQPublisher::new, JmsTransportProtocol.class);
-    }
+  public SendToJmsAdapterSink(AdapterDescription adapterDescription) {
+    super(adapterDescription, ActiveMQPublisher::new, JmsTransportProtocol.class);
+  }
 
-    @Override
-    public void modifyProtocolForDebugging() {
-        this.protocol.setBrokerHostname("localhost");
-    }
+  @Override
+  public void modifyProtocolForDebugging() {
+    this.protocol.setBrokerHostname("localhost");
+  }
 }
