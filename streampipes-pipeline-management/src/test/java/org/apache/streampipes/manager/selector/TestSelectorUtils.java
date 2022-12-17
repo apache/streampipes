@@ -35,12 +35,12 @@ public class TestSelectorUtils {
         .property(EpProperties.timestampProperty("timestamp"))
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Integer, "testMeasurement")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.MEASUREMENT_PROPERTY)
             .build())
         .property(PrimitivePropertyBuilder
             .create(Datatypes.Integer, "testDimension")
-            .domainProperty(SO.Number)
+            .domainProperty(SO.NUMBER)
             .scope(PropertyScope.DIMENSION_PROPERTY)
             .build())
         .property(EpProperties.stringEp(Labels.withTitle("string", "string description"), "testString",
@@ -48,13 +48,13 @@ public class TestSelectorUtils {
         .property(EpProperties.stringEp(Labels.withTitle("string2", "string description"), "testString2",
             "http://test.de", ValueSpecifications.from("A", "B", "C", "D")))
         .property(EpProperties.integerEp(Labels.withTitle("integer2", "integerDescription"), "testInteger2",
-            SO.Number, ValueSpecifications.from(0.0f, 1.0f, 1.f)))
+            SO.NUMBER, ValueSpecifications.from(0.0f, 1.0f, 1.f)))
         .property(EpProperties.integerEp(Labels.withTitle("integer", "integerDescription"), "testInteger",
-            SO.Number, ValueSpecifications.from(10.0f, 100.0f, 10.0f)))
+            SO.NUMBER, ValueSpecifications.from(10.0f, 100.0f, 10.0f)))
         .property(EpProperties.nestedEp(Labels.from("location", "", ""), "location",
             EpProperties.doubleEp(Labels.withId("latitude"), "latitude", Geo
-                .lat),
-            EpProperties.doubleEp(Labels.withId("longitude"), "longitude", Geo.lng)))
+                .LAT),
+            EpProperties.doubleEp(Labels.withId("longitude"), "longitude", Geo.LNG)))
         .build()
         .getEventSchema();
   }

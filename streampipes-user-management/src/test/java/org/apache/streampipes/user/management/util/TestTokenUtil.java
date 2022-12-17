@@ -19,9 +19,12 @@ package org.apache.streampipes.user.management.util;
 
 import org.apache.streampipes.model.client.user.RawUserApiToken;
 import org.apache.streampipes.model.client.user.UserApiToken;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class TestTokenUtil {
 

@@ -44,7 +44,7 @@ public class SecretService {
     }
 
     if (adapterDescription instanceof GenericAdapterDescription) {
-     applyConfig(((GenericAdapterDescription) adapterDescription).getProtocolDescription().getConfig());
+      applyConfig(((GenericAdapterDescription) adapterDescription).getProtocolDescription().getConfig());
     }
   }
 

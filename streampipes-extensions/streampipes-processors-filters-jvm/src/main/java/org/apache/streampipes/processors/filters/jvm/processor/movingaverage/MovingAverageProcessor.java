@@ -75,7 +75,7 @@ public class MovingAverageProcessor extends StreamPipesDataProcessor {
                 new Tuple2<>("median", MEDIAN_INTERNAL_NAME)))
         .outputStrategy(
             OutputStrategies.append(
-                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.Number)))
+                EpProperties.numberEp(Labels.empty(), RESULT_FIELD, SO.NUMBER)))
         .build();
   }
 

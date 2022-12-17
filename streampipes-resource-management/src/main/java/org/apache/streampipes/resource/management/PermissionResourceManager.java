@@ -47,9 +47,9 @@ public class PermissionResourceManager extends AbstractResourceManager<IPermissi
                             String ownerSid,
                             boolean publicElement) {
     Permission permission = PermissionBuilder
-            .create(objectInstanceId, objectInstanceClass, ownerSid)
-            .publicElement(publicElement)
-            .build();
+        .create(objectInstanceId, objectInstanceClass, ownerSid)
+        .publicElement(publicElement)
+        .build();
 
     create(permission);
   }

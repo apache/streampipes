@@ -36,9 +36,9 @@ public class DatatypeMatch extends AbstractMatcher<String, String> {
   public boolean match(String offer, String requirement, List<MatchingResultMessage> errorLog) {
 
     boolean match = MatchingUtils.nullCheckReqAllowed(offer, requirement)
-        || requirement.equals(offer)
-        || subClassOf(offer, requirement)
-        || MatchingUtils.nullCheck(offer, requirement);
+                    || requirement.equals(offer)
+                    || subClassOf(offer, requirement)
+                    || MatchingUtils.nullCheck(offer, requirement);
 
     if (!match) {
       buildErrorMessage(errorLog, requirement);
@@ -47,13 +47,13 @@ public class DatatypeMatch extends AbstractMatcher<String, String> {
   }
 
   private boolean subClassOf(String offer, String requirement) {
-    if (!requirement.equals(SO.Number)) {
+    if (!requirement.equals(SO.NUMBER)) {
       return false;
     } else {
-      if (offer.equals(XSD._integer.toString())
-          || offer.equals(XSD._long.toString())
-          || offer.equals(XSD._double.toString())
-          || offer.equals(XSD._float.toString())) {
+      if (offer.equals(XSD.INTEGER.toString())
+          || offer.equals(XSD.LONG.toString())
+          || offer.equals(XSD.DOUBLE.toString())
+          || offer.equals(XSD.FLOAT.toString())) {
         return true;
       }
     }

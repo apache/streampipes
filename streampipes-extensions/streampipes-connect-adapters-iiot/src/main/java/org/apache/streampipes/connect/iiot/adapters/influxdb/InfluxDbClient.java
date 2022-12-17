@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.streampipes.vocabulary.SO.DateTime;
+import static org.apache.streampipes.vocabulary.SO.DATE_TIME;
 
 public class InfluxDbClient {
 
@@ -176,7 +176,7 @@ public class InfluxDbClient {
           .label(column.getName());
       // Setting the timestamp field to the correct domainProperty
       if (column.getName().equals("time")) {
-        property.domainProperty(DateTime);
+        property.domainProperty(DATE_TIME);
       }
       allProperties.add(property.build());
     }

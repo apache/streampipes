@@ -59,12 +59,12 @@ public class OpcUa implements EventSink<OpcUaParameters> {
   private static final HashMap<String, Class> XSDMatchings = new HashMap<>();
 
   static {
-    XSDMatchings.put(XSD._double.toString(), Double.class);
-    XSDMatchings.put(XSD._integer.toString(), Integer.class);
-    XSDMatchings.put(XSD._int.toString(), Integer.class);
-    XSDMatchings.put(XSD._boolean.toString(), Boolean.class);
-    XSDMatchings.put(XSD._string.toString(), String.class);
-    XSDMatchings.put(XSD._float.toString(), Float.class);
+    XSDMatchings.put(XSD.DOUBLE.toString(), Double.class);
+    XSDMatchings.put(XSD.INTEGER.toString(), Integer.class);
+    XSDMatchings.put(XSD.INT.toString(), Integer.class);
+    XSDMatchings.put(XSD.BOOLEAN.toString(), Boolean.class);
+    XSDMatchings.put(XSD.STRING.toString(), String.class);
+    XSDMatchings.put(XSD.FLOAT.toString(), Float.class);
   }
 
   // define potential mappings, left can be mapped to right

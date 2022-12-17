@@ -92,7 +92,7 @@ public class TopK extends StreamPipesSiddhiProcessor {
                 new Tuple2<>("Descending", ORDER_DESCENDING_NAME)))
         .outputStrategy(OutputStrategies.fixed(EpProperties.listNestedEp(Labels.withId("top"), "top",
             Arrays.asList(EpProperties.integerEp(Labels.withId("count"), "count", "http://schema.org/count"),
-                EpProperties.stringEp(Labels.withId("value"), "value", SO.Text)))))
+                EpProperties.stringEp(Labels.withId("value"), "value", SO.TEXT)))))
         .build();
   }
 

@@ -34,8 +34,8 @@ public class TestDomainPropertyMatch extends TestCase {
   @Test
   public void testPositiveDomainPropertyMatch() {
 
-    List<URI> offeredDomainProperty = buildDomainProperties(Geo.lat);
-    List<URI> requiredDomainProperty = buildDomainProperties(Geo.lat);
+    List<URI> offeredDomainProperty = buildDomainProperties(Geo.LAT);
+    List<URI> requiredDomainProperty = buildDomainProperties(Geo.LAT);
 
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 
@@ -46,8 +46,8 @@ public class TestDomainPropertyMatch extends TestCase {
   @Test
   public void testNegativeDomainPropertyMatch() {
 
-    List<URI> offeredDomainProperty = buildDomainProperties(Geo.lat);
-    List<URI> requiredDomainProperty = buildDomainProperties(Geo.lng);
+    List<URI> offeredDomainProperty = buildDomainProperties(Geo.LAT);
+    List<URI> requiredDomainProperty = buildDomainProperties(Geo.LNG);
 
     List<MatchingResultMessage> resultMessage = new ArrayList<>();
 

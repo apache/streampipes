@@ -65,11 +65,11 @@ public class ThroughputMonitorProcessor extends StreamPipesDataProcessor {
             .requiredProperty(EpRequirements.anyProperty()).build())
         .outputStrategy(OutputStrategies.fixed(
             EpProperties.timestampProperty(TIMESTAMP_FIELD),
-            EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DateTime),
-            EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DateTime),
-            EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.Number),
-            EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.Number),
-            EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.Number)))
+            EpProperties.longEp(Labels.withId(START_TIME_FIELD), START_TIME_FIELD, SO.DATE_TIME),
+            EpProperties.longEp(Labels.withId(END_TIME_FIELD), END_TIME_FIELD, SO.DATE_TIME),
+            EpProperties.longEp(Labels.withId(DURATION_FIELD), DURATION_FIELD, SO.NUMBER),
+            EpProperties.longEp(Labels.withId(EVENT_COUNT_FIELD), EVENT_COUNT_FIELD, SO.NUMBER),
+            EpProperties.doubleEp(Labels.withId(THROUGHPUT_FIELD), THROUGHPUT_FIELD, SO.NUMBER)))
         .requiredIntegerParameter(Labels.withId(BATCH_WINDOW_KEY))
         .build();
   }

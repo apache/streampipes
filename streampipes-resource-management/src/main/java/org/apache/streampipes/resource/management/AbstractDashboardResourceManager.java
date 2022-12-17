@@ -48,7 +48,8 @@ public abstract class AbstractDashboardResourceManager extends AbstractResourceM
       dashboardModel.setCouchDbId(ElementIdGenerator.makeElementId(DashboardModel.class));
     }
     db.storeDashboard(dashboardModel);
-    new PermissionResourceManager().createDefault(dashboardModel.getCouchDbId(), DashboardModel.class, principalSid, false);
+    new PermissionResourceManager().createDefault(dashboardModel.getCouchDbId(), DashboardModel.class, principalSid,
+        false);
   }
 
   public void update(DashboardModel dashboardModel) {

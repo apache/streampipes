@@ -35,7 +35,7 @@ public class TransportFormatGenerator {
     if (supportedFormats.size() > 0) {
       return new TransportFormat(supportedFormats.get(0).getMessageFormat());
     } else {
-      return new TransportFormat(MessageFormat.Json);
+      return new TransportFormat(MessageFormat.JSON);
     }
   }
 

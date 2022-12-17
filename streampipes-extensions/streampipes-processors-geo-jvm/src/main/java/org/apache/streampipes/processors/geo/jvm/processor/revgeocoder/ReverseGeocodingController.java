@@ -47,10 +47,10 @@ public class ReverseGeocodingController extends StandaloneEventProcessingDeclare
         .withLocales(Locales.EN)
         .requiredStream(StreamRequirementsBuilder
             .create()
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lat),
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LAT),
                 Labels.withId(LATITUDE_MAPPING),
                 PropertyScope.NONE)
-            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.lng),
+            .requiredPropertyWithUnaryMapping(EpRequirements.domainPropertyReq(Geo.LNG),
                 Labels.withId(LONGITUDE_MAPPING),
                 PropertyScope.NONE)
             .build())

@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.user.management.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.user.management.util.GrantedAuthoritiesBuilder;
 import org.apache.streampipes.user.management.util.GrantedPermissionsBuilder;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

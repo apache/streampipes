@@ -198,19 +198,19 @@ public class InfluxStore {
     try {
       // Store property according to property type
       String runtimeType = ep.getRuntimeType();
-      if (XSD._integer.toString().equals(runtimeType)) {
+      if (XSD.INTEGER.toString().equals(runtimeType)) {
         try {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsInt());
         } catch (NumberFormatException ef) {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
         }
-      } else if (XSD._float.toString().equals(runtimeType)) {
+      } else if (XSD.FLOAT.toString().equals(runtimeType)) {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsFloat());
-      } else if (XSD._double.toString().equals(runtimeType)) {
+      } else if (XSD.DOUBLE.toString().equals(runtimeType)) {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsDouble());
-      } else if (XSD._boolean.toString().equals(runtimeType)) {
+      } else if (XSD.BOOLEAN.toString().equals(runtimeType)) {
         p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsBoolean());
-      } else if (XSD._long.toString().equals(runtimeType)) {
+      } else if (XSD.LONG.toString().equals(runtimeType)) {
         try {
           p.addField(preparedRuntimeName, eventPropertyPrimitiveField.getAsLong());
         } catch (NumberFormatException ef) {

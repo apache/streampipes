@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.security.jwt;
 
-import io.jsonwebtoken.security.Keys;
 import org.apache.streampipes.commons.constants.Envs;
+
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class KeyGenerator {
 
-  private static Logger LOG = LoggerFactory.getLogger(KeyGenerator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(KeyGenerator.class);
 
   public Key makeKeyForSecret(String tokenSecret) {
     return Keys.hmacShaKeyFor(tokenSecret.getBytes(StandardCharsets.UTF_8));
@@ -54,7 +55,9 @@ public class KeyGenerator {
       try {
         return makeKeyForRsa(pkContent);
       } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException e) {
-        LOG.error("Could not properly create the provided key, defaulting to an HMAC token, which will almost certainly lead to problems");
+        LOG.error(
+            "Could not properly create the provided key, defaulting to an HMAC token, "
+                + "which will almost certainly lead to problems");
         return makeKeyForSecret(tokenSecret);
       }
     } else {

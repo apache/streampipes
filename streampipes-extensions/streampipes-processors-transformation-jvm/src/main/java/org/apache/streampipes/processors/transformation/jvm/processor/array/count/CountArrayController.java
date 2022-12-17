@@ -52,7 +52,7 @@ public class CountArrayController extends StandaloneEventProcessingDeclarer<Coun
                     Labels.withId(ARRAY_FIELD), PropertyScope.NONE)
                 .build())
         .outputStrategy(OutputStrategies.append(EpProperties.doubleEp(Labels.empty(), COUNT_NAME,
-            SO.Number)))
+            SO.NUMBER)))
         .build();
   }
 

@@ -94,11 +94,11 @@ public class SlackAdapter extends SpecificDataStreamAdapter {
         .property(timestampProperty(Timestamp))
         .property(stringEp(Labels.from(Author, "Author", "The username of the sender of the "
                 + "Slack message"),
-            Author, SO.Text))
+            Author, SO.TEXT))
         .property(stringEp(Labels.from(Channel, "Channel", "The Slack channel"), Channel,
-            SO.Text))
+            SO.TEXT))
         .property(stringEp(Labels.from(Message, "Message", "The Slack message"),
-            Message, SO.Text))
+            Message, SO.TEXT))
         .build();
   }
 

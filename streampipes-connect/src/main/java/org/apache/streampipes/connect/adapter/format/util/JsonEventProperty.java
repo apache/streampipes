@@ -46,21 +46,20 @@ public class JsonEventProperty {
     LOG.info("TypeName: " + o.getClass().getTypeName());
 
 
-    System.out.println("=======================");
 
     if (o.getClass().equals(Boolean.class)) {
       resultProperty = new EventPropertyPrimitive();
       resultProperty.setRuntimeName(key);
-      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._boolean.toString());
+      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.BOOLEAN.toString());
     } else if (o.getClass().equals(String.class)) {
       resultProperty = new EventPropertyPrimitive();
       resultProperty.setRuntimeName(key);
-      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._string.toString());
+      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.STRING.toString());
     } else if (o.getClass().equals(Integer.class) || o.getClass().equals(Double.class)
         || o.getClass().equals(Float.class) || o.getClass().equals(Long.class)) {
       resultProperty = new EventPropertyPrimitive();
       resultProperty.setRuntimeName(key);
-      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD._float.toString());
+      ((EventPropertyPrimitive) resultProperty).setRuntimeType(XSD.FLOAT.toString());
     } else if (o.getClass().equals(LinkedHashMap.class)) {
       resultProperty = new EventPropertyNested();
       resultProperty.setRuntimeName(key);
@@ -77,14 +76,14 @@ public class JsonEventProperty {
 
       EventPropertyPrimitive arrayContent = new EventPropertyPrimitive();
       if (content.size() == 0) {
-        arrayContent.setRuntimeType(XSD._string.toString());
+        arrayContent.setRuntimeType(XSD.STRING.toString());
       } else if (content.get(0) instanceof Integer || content.get(0) instanceof Double
           || content.get(0) instanceof Long) {
-        arrayContent.setRuntimeType(XSD._float.toString());
+        arrayContent.setRuntimeType(XSD.FLOAT.toString());
       } else if (content.get(0) instanceof Boolean) {
-        arrayContent.setRuntimeType(XSD._boolean.toString());
+        arrayContent.setRuntimeType(XSD.BOOLEAN.toString());
       } else {
-        arrayContent.setRuntimeType(XSD._string.toString());
+        arrayContent.setRuntimeType(XSD.STRING.toString());
       }
 
       ((EventPropertyList) resultProperty).setEventProperty(arrayContent);

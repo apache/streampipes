@@ -57,7 +57,7 @@ public class UrlDereferencingController extends FlinkDataProcessorDeclarer<UrlDe
             .build())
         .outputStrategy(
             OutputStrategies.append(
-                EpProperties.stringEp(Labels.empty(), APPEND_HTML, SO.Text)))
+                EpProperties.stringEp(Labels.empty(), APPEND_HTML, SO.TEXT)))
         .build();
   }
 

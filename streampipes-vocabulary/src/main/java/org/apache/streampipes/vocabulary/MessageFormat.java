@@ -22,12 +22,12 @@ public class MessageFormat {
 
   private static final String SEPA_NAMESPACE = "http://sepa.event-processing.org/sepa#";
 
-  public static final String Json = SEPA_NAMESPACE + "json";
-  public static final String Avro = SEPA_NAMESPACE + "avro";
-  public static final String Fst = SEPA_NAMESPACE + "fst";
-  public static final String Smile = SEPA_NAMESPACE + "smile";
-  public static final String Cbor = SEPA_NAMESPACE + "cbor";
-  public static final String Xml = SEPA_NAMESPACE + "xml";
-  public static final String Thrift = SEPA_NAMESPACE + "thrift";
+  public static final String JSON = SEPA_NAMESPACE + "json";
+  public static final String AVRO = SEPA_NAMESPACE + "avro";
+  public static final String FST = SEPA_NAMESPACE + "fst";
+  public static final String SMILE = SEPA_NAMESPACE + "smile";
+  public static final String CBOR = SEPA_NAMESPACE + "cbor";
+  public static final String XML = SEPA_NAMESPACE + "xml";
+  public static final String THRIFT = SEPA_NAMESPACE + "thrift";
 
 }

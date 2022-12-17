@@ -18,7 +18,11 @@
 
 package org.apache.streampipes.security.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SigningKeyResolver;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.WeakKeyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

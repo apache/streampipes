@@ -44,13 +44,13 @@ public abstract class AbstractMailTemplate {
     addPlaceholders(placeholders);
 
     return MailTemplateBuilder.create(MailTemplatePart.MAIL_TEMPLATE_OUTER)
-            .addSubpart(DefaultPlaceholders.FOOTER, MailTemplatePart.MAIL_TEMPLATE_FOOTER)
-            .addSubparts(templateParts)
-            .withPlaceholder(DefaultPlaceholders.TITLE, getTitle())
-            .withPlaceholder(DefaultPlaceholders.PREHEADER, getPreHeader())
-            .withPlaceholder(DefaultPlaceholders.LOGO, new LogoPart().generate())
-            .withPlaceholder(DefaultPlaceholders.BASE_URL, new BaseUrlPart().generate())
-            .withPlaceholders(placeholders)
-            .generateHtmlTemplate();
+        .addSubpart(DefaultPlaceholders.FOOTER, MailTemplatePart.MAIL_TEMPLATE_FOOTER)
+        .addSubparts(templateParts)
+        .withPlaceholder(DefaultPlaceholders.TITLE, getTitle())
+        .withPlaceholder(DefaultPlaceholders.PREHEADER, getPreHeader())
+        .withPlaceholder(DefaultPlaceholders.LOGO, new LogoPart().generate())
+        .withPlaceholder(DefaultPlaceholders.BASE_URL, new BaseUrlPart().generate())
+        .withPlaceholders(placeholders)
+        .generateHtmlTemplate();
   }
 }

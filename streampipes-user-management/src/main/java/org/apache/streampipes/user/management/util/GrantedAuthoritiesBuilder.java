@@ -48,7 +48,8 @@ public class GrantedAuthoritiesBuilder {
   private Set<String> buildAllGroupRoles() {
     Set<String> allRoles = new HashSet<>();
     principal.getGroups().forEach(groupId -> {
-      Set<Role> groupRoles = StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage().getElementById(groupId).getRoles();
+      Set<Role> groupRoles =
+          StorageDispatcher.INSTANCE.getNoSqlStore().getUserGroupStorage().getElementById(groupId).getRoles();
       allRoles.addAll(buildAllRoles(groupRoles));
     });
 

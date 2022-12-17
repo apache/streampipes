@@ -26,7 +26,7 @@ public class JsonDataFormatFactory extends SpDataFormatFactory {
 
   @Override
   public String getTransportFormatRdfUri() {
-    return MessageFormat.Json;
+    return MessageFormat.JSON;
   }
 
   @Override

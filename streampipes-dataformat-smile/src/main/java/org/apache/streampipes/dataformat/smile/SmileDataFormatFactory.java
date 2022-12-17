@@ -24,7 +24,7 @@ import org.apache.streampipes.vocabulary.MessageFormat;
 public class SmileDataFormatFactory extends SpDataFormatFactory {
   @Override
   public String getTransportFormatRdfUri() {
-    return MessageFormat.Smile;
+    return MessageFormat.SMILE;
   }
 
   @Override

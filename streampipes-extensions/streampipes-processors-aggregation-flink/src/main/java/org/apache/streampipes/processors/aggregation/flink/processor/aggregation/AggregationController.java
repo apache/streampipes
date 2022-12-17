@@ -156,7 +156,7 @@ public class AggregationController extends FlinkDataProcessorDeclarer<Aggregatio
       String propertyPrefix = StringUtils.substringAfterLast(aggregate, ":");
       String runtimeName = propertyPrefix + "_" + operationKey.toLowerCase();
       EventPropertyPrimitive primitive = PrimitivePropertyBuilder.create(Datatypes.Double, runtimeName)
-          .domainProperty(SO.Number)
+          .domainProperty(SO.NUMBER)
           .scope(PropertyScope.MEASUREMENT_PROPERTY)
           .build();
       eventSchema.addEventProperty(primitive);

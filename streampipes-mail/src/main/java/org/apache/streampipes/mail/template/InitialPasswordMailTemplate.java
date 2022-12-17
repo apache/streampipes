@@ -24,7 +24,7 @@ import org.apache.streampipes.mail.utils.MailUtils;
 
 import java.util.Map;
 
-public class InitialPasswordMailTemplate extends AbstractMailTemplate{
+public class InitialPasswordMailTemplate extends AbstractMailTemplate {
 
   private String initialPassword;
 
@@ -45,9 +45,12 @@ public class InitialPasswordMailTemplate extends AbstractMailTemplate{
   @Override
   protected void addPlaceholders(Map<String, String> placeholders) {
     placeholders.put(DefaultPlaceholders.LINK.key(), makeLink());
-    placeholders.put(DefaultPlaceholders.MANUAL.key(), "<p>Your newly created password is <b>" + this.initialPassword + "</b></p><p>Click the button below to login.</p>");
+    placeholders.put(DefaultPlaceholders.MANUAL.key(), "<p>Your newly created password is <b>"
+        + this.initialPassword
+        + "</b></p><p>Click the button below to login.</p>");
     placeholders.put(DefaultPlaceholders.BUTTON_TEXT.key(), "Login");
-    placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(), "If that doesn't work, copy and paste the following link in your browser:");
+    placeholders.put(DefaultPlaceholders.LINK_DESCRIPTION.key(),
+        "If that doesn't work, copy and paste the following link in your browser:");
   }
 
   @Override

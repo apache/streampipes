@@ -30,14 +30,14 @@ public class MailTemplateBuilder {
   private final Map<String, MailTemplatePart> innerParts;
   private final Map<String, String> placeholders;
 
-  public static MailTemplateBuilder create(MailTemplatePart outerPart) {
-    return new MailTemplateBuilder(outerPart);
-  }
-
   private MailTemplateBuilder(MailTemplatePart outerPart) {
     this.outerPart = outerPart;
     this.innerParts = new HashMap<>();
     this.placeholders = new HashMap<>();
+  }
+
+  public static MailTemplateBuilder create(MailTemplatePart outerPart) {
+    return new MailTemplateBuilder(outerPart);
   }
 
   public MailTemplateBuilder addSubpart(String placeholder, MailTemplatePart templatePart) {
@@ -75,7 +75,7 @@ public class MailTemplateBuilder {
   public String generateHtmlTemplate() throws IOException {
     String fullTemplate = getAndApplyPlaceholders(outerPart);
 
-    for(String key: placeholders.keySet()) {
+    for (String key : placeholders.keySet()) {
       String placeholder = makeKey(key);
       fullTemplate = fullTemplate.replaceAll(placeholder, placeholders.get(key));
     }
@@ -89,10 +89,11 @@ public class MailTemplateBuilder {
 
   private String getAndApplyPlaceholders(MailTemplatePart partContent) throws IOException {
     String partContentAsString = readFileContentsToString(partContent);
-    for(String innerPartKey : innerParts.keySet()) {
+    for (String innerPartKey : innerParts.keySet()) {
       String templateKey = makeKey(innerPartKey);
       if (hasPlaceholder(partContentAsString, templateKey)) {
-        partContentAsString = partContentAsString.replaceAll(templateKey, getAndApplyPlaceholders(innerParts.get(innerPartKey)));
+        partContentAsString =
+            partContentAsString.replaceAll(templateKey, getAndApplyPlaceholders(innerParts.get(innerPartKey)));
       }
     }
 
