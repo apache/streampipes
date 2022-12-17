@@ -16,49 +16,59 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.apache.streampipes</groupId>
-		<artifactId>streampipes-parent</artifactId>
-		<version>0.91.0-SNAPSHOT</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.streampipes</groupId>
+        <artifactId>streampipes-parent</artifactId>
+        <version>0.91.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>streampipes-measurement-units</artifactId>
+    <artifactId>streampipes-measurement-units</artifactId>
 
-	<dependencies>
-		<!-- StreamPipes dependencies -->
-		<dependency>
-			<groupId>org.apache.streampipes</groupId>
-			<artifactId>streampipes-commons</artifactId>
-			<version>0.91.0-SNAPSHOT</version>
-		</dependency>
+    <dependencies>
+        <!-- StreamPipes dependencies -->
+        <dependency>
+            <groupId>org.apache.streampipes</groupId>
+            <artifactId>streampipes-commons</artifactId>
+            <version>0.91.0-SNAPSHOT</version>
+        </dependency>
 
-		<!-- External dependencies -->
-		<dependency>
-			<groupId>io.fogsy</groupId>
-			<artifactId>qudt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-rio-rdfxml</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>com.github.jsonld-java</groupId>
-					<artifactId>jsonld-java</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-rio-turtle</artifactId>
-		</dependency>
+        <!-- External dependencies -->
+        <dependency>
+            <groupId>io.fogsy</groupId>
+            <artifactId>qudt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-rdfxml</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-turtle</artifactId>
+        </dependency>
 
-		<!--Test dependencies-->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <!--Test dependencies-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

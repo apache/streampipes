@@ -28,7 +28,11 @@ import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ComputeOutputStep extends AbstractPipelineValidationStep {
 
@@ -44,21 +48,21 @@ public class ComputeOutputStep extends AbstractPipelineValidationStep {
       DataProcessorInvocation pe = (DataProcessorInvocation) target;
       Tuple2<EventSchema, ? extends OutputStrategy> outputSettings;
       OutputSchemaGenerator<?> schemaGenerator = new OutputSchemaFactory(pe)
-              .getOuputSchemaGenerator();
+          .getOuputSchemaGenerator();
 
       if (target.getInputStreams().size() == 1) {
         outputSettings = schemaGenerator.buildFromOneStream(
-                pe.getInputStreams()
+            pe.getInputStreams()
                 .get(0));
       } else if (relatedPes.containsKey(pe.getDom())) {
         DataProcessorInvocation existingInvocation = relatedPes.get(pe.getDom());
 
         outputSettings = schemaGenerator.buildFromTwoStreams(existingInvocation
-                .getInputStreams().get(0), pe.getInputStreams().get(1));
+            .getInputStreams().get(0), pe.getInputStreams().get(1));
       } else {
         relatedPes.put(target.getDom(), pe);
         outputSettings = new Tuple2<>(new EventSchema(), pe
-                .getOutputStrategies().get(0));
+            .getOutputStrategies().get(0));
       }
 
       pe.setOutputStrategies(Collections.singletonList(outputSettings.v));

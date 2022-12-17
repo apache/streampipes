@@ -18,15 +18,16 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.TransformationRule;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.EventRateTransformationRule;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.StreamEventTransformer;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.StreamTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,36 +35,37 @@ import java.util.Map;
 
 public class TransformStreamAdapterElement implements IAdapterPipelineElement {
 
-    private StreamEventTransformer eventTransformer;
-    Logger logger = LoggerFactory.getLogger(TransformStreamAdapterElement.class);
+  private StreamEventTransformer eventTransformer;
+  Logger logger = LoggerFactory.getLogger(TransformStreamAdapterElement.class);
 
-    public TransformStreamAdapterElement() {
-        eventTransformer = new StreamEventTransformer();
+  public TransformStreamAdapterElement() {
+    eventTransformer = new StreamEventTransformer();
+  }
+
+  public TransformStreamAdapterElement(List<StreamTransformationRuleDescription> transformationRuleDescriptions) {
+    List<TransformationRule> rules = new ArrayList<>();
+
+    // transforms description to actual rules
+    for (TransformationRuleDescription ruleDescription : transformationRuleDescriptions) {
+      if (ruleDescription instanceof EventRateTransformationRuleDescription) {
+        EventRateTransformationRuleDescription tmp = (EventRateTransformationRuleDescription) ruleDescription;
+        rules.add(new EventRateTransformationRule(tmp.getAggregationTimeWindow(), tmp.getAggregationType()));
+      }
     }
 
-    public TransformStreamAdapterElement(List<StreamTransformationRuleDescription> transformationRuleDescriptions) {
-        List<TransformationRule> rules = new ArrayList<>();
+    eventTransformer = new StreamEventTransformer(rules);
+  }
 
-        // transforms description to actual rules
-        for (TransformationRuleDescription ruleDescription : transformationRuleDescriptions) {
-            if (ruleDescription instanceof EventRateTransformationRuleDescription) {
-                EventRateTransformationRuleDescription tmp = (EventRateTransformationRuleDescription) ruleDescription;
-                rules.add(new EventRateTransformationRule(tmp.getAggregationTimeWindow(), tmp.getAggregationType()));
-            }
-        }
-
-        eventTransformer = new StreamEventTransformer(rules);
+  public void addStreamTransformationRuleDescription(StreamTransformationRuleDescription ruleDescription) {
+    if (ruleDescription instanceof EventRateTransformationRuleDescription) {
+      EventRateTransformationRuleDescription tmp = (EventRateTransformationRuleDescription) ruleDescription;
+      eventTransformer.addEventRateTransformationRule(
+          new EventRateTransformationRule(tmp.getAggregationTimeWindow(), tmp.getAggregationType()));
     }
+  }
 
-    public void addStreamTransformationRuleDescription(StreamTransformationRuleDescription ruleDescription) {
-        if (ruleDescription instanceof EventRateTransformationRuleDescription) {
-            EventRateTransformationRuleDescription tmp = (EventRateTransformationRuleDescription) ruleDescription;
-            eventTransformer.addEventRateTransformationRule(new EventRateTransformationRule(tmp.getAggregationTimeWindow(), tmp.getAggregationType()));
-        }
-    }
-
-    @Override
-    public Map<String, Object> process(Map<String, Object> event) {
-        return eventTransformer.transform(event);
-    }
+  @Override
+  public Map<String, Object> process(Map<String, Object> event) {
+    return eventTransformer.transform(event);
+  }
 }

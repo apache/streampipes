@@ -19,26 +19,27 @@
 package org.apache.streampipes.connect.adapter.format.json.arraynokey;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
+import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.json.Json;
+import javax.json.stream.JsonParserFactory;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.json.Json;
-import javax.json.stream.JsonParserFactory;
 
 public class JsonArrayParser extends Parser {
 

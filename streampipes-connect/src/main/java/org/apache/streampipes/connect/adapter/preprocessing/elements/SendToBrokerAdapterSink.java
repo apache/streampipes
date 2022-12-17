@@ -18,8 +18,8 @@
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.util.TransportFormatSelector;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.messaging.EventProducer;
@@ -45,20 +45,20 @@ public abstract class SendToBrokerAdapterSink<T extends TransportProtocol> imple
     this.adapterDescription = adapterDescription;
     this.producer = producerSupplier.get();
     this.protocol = protocolClass.cast(adapterDescription
-            .getEventGrounding()
-            .getTransportProtocol());
+        .getEventGrounding()
+        .getTransportProtocol());
 
     if ("true".equals(System.getenv("SP_DEBUG"))) {
       modifyProtocolForDebugging();
     }
 
     TransportFormat transportFormat = adapterDescription
-            .getEventGrounding()
-            .getTransportFormats()
-            .get(0);
+        .getEventGrounding()
+        .getTransportFormats()
+        .get(0);
 
     this.dataFormatDefinition =
-            new TransportFormatSelector(transportFormat).getDataFormatDefinition();
+        new TransportFormatSelector(transportFormat).getDataFormatDefinition();
 
     try {
       producer.connect(protocol);

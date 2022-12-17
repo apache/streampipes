@@ -24,18 +24,18 @@ import org.apache.streampipes.model.schema.EventSchema;
 
 public class SchemaGuesser {
 
-    public static GuessSchema guessSchema(EventSchema eventSchema) {
-        GuessSchema result = new GuessSchema();
+  public static GuessSchema guessSchema(EventSchema eventSchema) {
+    GuessSchema result = new GuessSchema();
 
-        result.setEventSchema(eventSchema);
+    result.setEventSchema(eventSchema);
 
-        return result;
-    }
+    return result;
+  }
 
-    public static GuessSchema guessSchema(AdapterGuessInfo guessInfo) {
-        var result = guessSchema(guessInfo.getEventSchema());
-        result.setEventPreview(guessInfo.getEventPreview());
+  public static GuessSchema guessSchema(AdapterGuessInfo guessInfo) {
+    var result = guessSchema(guessInfo.getEventSchema());
+    result.setEventPreview(guessInfo.getEventPreview());
 
-        return result;
-    }
+    return result;
+  }
 }

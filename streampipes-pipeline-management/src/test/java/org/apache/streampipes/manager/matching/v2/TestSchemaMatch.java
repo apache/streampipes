@@ -18,8 +18,7 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import junit.framework.TestCase;
-import org.junit.Test;
+
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
@@ -28,96 +27,84 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.Geo;
 
+import junit.framework.TestCase;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class TestSchemaMatch extends TestCase {
 
-	@Test
-	public void testPositiveSchemaMatch() {
+  @Test
+  public void testPositiveSchemaMatch() {
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
-		
-		EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
-		EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
-		
-		EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
-		EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-		assertTrue(matches);
-	}
-	
-	@Test
-	public void testNegativeSchemaMatch() {
+    EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+    EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
-		
-		EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
-		EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
-		
-		EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
-		EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-		assertFalse(matches);
-	}
-	
-	@Test
-	public void testNegativeSchemaMatchDomain() {
+    EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
+    EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
-		
-		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
-		EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
-		
-		EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
-		EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-		assertFalse(matches);
-	}
-	
-	@Test
-	public void testPositiveSchemaMatchDomain() {
+    EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
+    EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
 
-		EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-		EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
-		
-		EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
-		EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
-		
-		EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
-		EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-		assertTrue(matches);
-	}
-	
-//	@Test
-//	public void testPositiveSchemaMatchWithRealSchema() {
-//
-//		DataProcessorDescription requiredSepa = new AggregationController().declareModel();
-//		SpDataStream offeredStream = new RandomNumberStreamJson().declareModel(new RandomDataProducer().declareModel());
-//
-//		EventSchema offeredSchema =  offeredStream.getEventSchema();
-//		EventSchema requiredSchema = requiredSepa.getSpDataStreams().get(0).getEventSchema();
-//
-//		List<MatchingResultMessage> errorLog = new ArrayList<>();
-//
-//		boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
-//		assertTrue(matches);
-//	}
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
+    assertTrue(matches);
+  }
+
+  @Test
+  public void testNegativeSchemaMatch() {
+
+    EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+    EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
+
+    EventPropertyPrimitive requirement1 = EpRequirements.integerReq();
+    EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
+
+    EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
+    EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
+    assertFalse(matches);
+  }
+
+  @Test
+  public void testNegativeSchemaMatchDomain() {
+
+    EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+    EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
+
+    EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
+    EventPropertyPrimitive requirement2 = EpRequirements.stringReq();
+
+    EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
+    EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
+    assertFalse(matches);
+  }
+
+  @Test
+  public void testPositiveSchemaMatchDomain() {
+
+    EventPropertyPrimitive offer1 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+    EventPropertyPrimitive offer2 = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LNG);
+
+    EventPropertyPrimitive requirement1 = EpRequirements.domainPropertyReq(Geo.LAT);
+    EventPropertyPrimitive requirement2 = EpRequirements.integerReq();
+
+    EventSchema offeredSchema = new EventSchema(Arrays.asList(offer1, offer2));
+    EventSchema requiredSchema = new EventSchema(Arrays.asList(requirement1, requirement2));
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new SchemaMatch().match(offeredSchema, requiredSchema, errorLog);
+    assertTrue(matches);
+  }
 }

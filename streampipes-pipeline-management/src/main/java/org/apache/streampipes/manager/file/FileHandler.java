@@ -49,6 +49,6 @@ public class FileHandler {
 
   private String makeFileLocation() {
     return FileConstants.FILES_BASE_DIR
-            + File.separator;
+        + File.separator;
   }
 }

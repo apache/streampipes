@@ -46,7 +46,8 @@ public class TimestampTransformRuleTest {
 //        Map result = timestampTranformationRule.transform(event);
 //
 //        assertEquals(1, result.keySet().size());
-//        assertEquals( 1552333838138L, ((Map) result.get(eventPropertyList.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+//        assertEquals( 1552333838138L, ((Map) result.get(eventPropertyList.getRuntimeName())).
+//        get(eventPropertyValue.getRuntimeName()));
 //    }
 
 //    @Test
@@ -75,7 +76,8 @@ public class TimestampTransformRuleTest {
 //        Map result = timestampTranformationRule.transform(event);
 //
 //        assertEquals(1, result.keySet().size());
-//        assertEquals( 1552380411000L, ((Map) result.get(eventPropertyList.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+//        assertEquals( 1552380411000L, ((Map) result.get(eventPropertyList.getRuntimeName())).
+//        get(eventPropertyValue.getRuntimeName()));
 //
 //    }
 //
@@ -108,7 +110,8 @@ public class TimestampTransformRuleTest {
 //        Map result = timestampTranformationRule.transform(event);
 //
 //        assertEquals(1, result.keySet().size());
-//        assertEquals(1262214000000L, ((Map) result.get(eventPropertyMainKey.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+//        assertEquals(1262214000000L, ((Map) result.get(eventPropertyMainKey.getRuntimeName())).
+//        get(eventPropertyValue.getRuntimeName()));
 //
 //    }
 //
@@ -140,7 +143,8 @@ public class TimestampTransformRuleTest {
 //        Map result = timestampTranformationRule.transform(event);
 //
 //        assertEquals(1, result.keySet().size());
-//        assertEquals(1262214000000L, ((Map) result.get(eventPropertyMainKey.getRuntimeName())).get(eventPropertyValue.getRuntimeName()));
+//        assertEquals(1262214000000L, ((Map) result.get(eventPropertyMainKey.getRuntimeName())).
+//        get(eventPropertyValue.getRuntimeName()));
 //
 //    }
 //

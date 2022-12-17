@@ -35,14 +35,14 @@ public class WildcardTopicGenerator {
 
   public SpDataStream computeActualTopic() {
     TopicDefinition topicDefinition = stream
-            .getEventGrounding()
-            .getTransportProtocol()
-            .getTopicDefinition();
+        .getEventGrounding()
+        .getTransportProtocol()
+        .getTopicDefinition();
 
     if (topicDefinition instanceof WildcardTopicDefinition) {
       WildcardTopicDefinition wildcardTopicDefinition = (WildcardTopicDefinition) topicDefinition;
       String actualTopicName = buildActualTopicName(wildcardTopicDefinition.getWildcardTopicName(),
-              wildcardTopicDefinition
+          wildcardTopicDefinition
               .getWildcardTopicMappings());
 
       wildcardTopicDefinition.setActualTopicName(actualTopicName);
@@ -53,8 +53,8 @@ public class WildcardTopicGenerator {
 
   private String buildActualTopicName(String wildcardTopicName, List<WildcardTopicMapping> wildcardTopicMappings) {
     for (WildcardTopicMapping wm : wildcardTopicMappings) {
-      if (TopicParameterType.valueOf(wm.getTopicParameterType()) == TopicParameterType.SENSOR_TYPE ||
-              TopicParameterType.valueOf(wm.getTopicParameterType()) == TopicParameterType.PLATFORM_TYPE) {
+      if (TopicParameterType.valueOf(wm.getTopicParameterType()) == TopicParameterType.SENSOR_TYPE
+          || TopicParameterType.valueOf(wm.getTopicParameterType()) == TopicParameterType.PLATFORM_TYPE) {
         wm.setSelectedMapping(wm.getMappingId());
       }
       wildcardTopicName = wildcardTopicName.replace("$" + wm.getMappingId(), wm.getSelectedMapping());

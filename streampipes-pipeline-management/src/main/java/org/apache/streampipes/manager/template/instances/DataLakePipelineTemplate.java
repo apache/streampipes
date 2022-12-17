@@ -26,18 +26,19 @@ import org.apache.streampipes.sdk.builder.PipelineTemplateBuilder;
 
 public class DataLakePipelineTemplate extends PipelineTemplateGenerator implements PipelineTemplate {
 
-    private static String ID = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
+  private static final String ID = "org.apache.streampipes.manager.template.instances.DataLakePipelineTemplate";
 
-    @Override
-    public PipelineTemplateDescription declareModel() throws ElementNotFoundException {
-        return new PipelineTemplateDescription(PipelineTemplateBuilder.create("http://streampipes.org/DataLakePipelineTemplate","DataLake",
-            "")
+  @Override
+  public PipelineTemplateDescription declareModel() throws ElementNotFoundException {
+    return new PipelineTemplateDescription(
+        PipelineTemplateBuilder.create("http://streampipes.org/DataLakePipelineTemplate", "DataLake",
+                "")
             .setAppId(ID)
             .boundPipelineElementTemplate(
-                    BoundPipelineElementBuilder
-                            .create(getSink("org.apache.streampipes.sinks.internal.jvm.datalake"))
-                            .build())
+                BoundPipelineElementBuilder
+                    .create(getSink("org.apache.streampipes.sinks.internal.jvm.datalake"))
+                    .build())
             .build());
 
-    }
+  }
 }

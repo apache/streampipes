@@ -23,15 +23,15 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 
 public class SendToKafkaAdapterSink extends SendToBrokerAdapterSink<KafkaTransportProtocol>
-        implements IAdapterPipelineElement {
+    implements IAdapterPipelineElement {
 
-    public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
-        super(adapterDescription, SpKafkaProducer::new, KafkaTransportProtocol.class);
-    }
+  public SendToKafkaAdapterSink(AdapterDescription adapterDescription) {
+    super(adapterDescription, SpKafkaProducer::new, KafkaTransportProtocol.class);
+  }
 
-    @Override
-    public void modifyProtocolForDebugging() {
-        this.protocol.setBrokerHostname("localhost");
-        this.protocol.setKafkaPort(9094);
-    }
+  @Override
+  public void modifyProtocolForDebugging() {
+    this.protocol.setBrokerHostname("localhost");
+    this.protocol.setKafkaPort(9094);
+  }
 }

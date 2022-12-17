@@ -19,6 +19,7 @@
 package org.apache.streampipes.connect.adapter.preprocessing.transform.value;
 
 import org.apache.streampipes.connect.adapter.util.DatatypeUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.connect.adapter.util;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.streampipes.vocabulary.XSD;
+
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

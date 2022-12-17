@@ -23,33 +23,33 @@ import java.util.List;
 import java.util.Map;
 
 public class CreateNestedTransformationRule implements SchemaTransformationRule {
-    private List<String> key;
+  private List<String> key;
 
-    public CreateNestedTransformationRule(List<String> key) {
-        this.key = key;
+  public CreateNestedTransformationRule(List<String> key) {
+    this.key = key;
+  }
+
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+    return transform(event, key);
+  }
+
+  private Map<String, Object> transform(Map<String, Object> event, List<String> keys) {
+
+    if (keys.size() == 1) {
+      event.put(keys.get(0), new HashMap<>());
+      return event;
+    } else {
+      String key = keys.get(0);
+      List<String> newKeysTmpList = keys.subList(1, keys.size());
+
+      Map<String, Object> newSubEvent =
+          transform((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
+
+      event.remove(key);
+      event.put(key, newSubEvent);
+      return event;
     }
 
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-        return transform(event, key);
-    }
-
-    private Map<String, Object> transform(Map<String, Object> event, List<String> keys) {
-
-        if (keys.size() == 1) {
-            event.put(keys.get(0), new HashMap<>());
-            return event;
-        } else {
-            String key = keys.get(0);
-            List<String> newKeysTmpList = keys.subList(1, keys.size());
-
-            Map<String, Object> newSubEvent =
-                    transform((Map<String, Object>) event.get(keys.get(0)), newKeysTmpList);
-
-            event.remove(key);
-            event.put(key, newSubEvent);
-            return event;
-        }
-
-    }
+  }
 }

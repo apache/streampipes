@@ -26,68 +26,68 @@ import java.util.Map;
 
 public class CorrectionValueTransformationRule implements ValueTransformationRule {
 
-    private static Logger logger = LoggerFactory.getLogger(CorrectionValueTransformationRule.class);
+  private static Logger logger = LoggerFactory.getLogger(CorrectionValueTransformationRule.class);
 
-    private final List<String> eventKey;
-    private final double correctionValue;
-    private final String operator;
+  private final List<String> eventKey;
+  private final double correctionValue;
+  private final String operator;
 
-    public CorrectionValueTransformationRule(List<String> keys,
-                                             double correctionValue, String operator) {
-        this.correctionValue = correctionValue;
-        this.operator = operator;
-        this.eventKey = keys;
-    }
+  public CorrectionValueTransformationRule(List<String> keys,
+                                           double correctionValue, String operator) {
+    this.correctionValue = correctionValue;
+    this.operator = operator;
+    this.eventKey = keys;
+  }
 
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-        return transform(event, eventKey);
-    }
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+    return transform(event, eventKey);
+  }
 
-    private Map<String, Object> transform(Map<String, Object> event, List<String> eventKey) {
+  private Map<String, Object> transform(Map<String, Object> event, List<String> eventKey) {
 
-        if (eventKey.size() == 1) {
-            try {
-                Object obj = event.get(eventKey.get(0));
-                double old = 0d;
-                if (obj instanceof Number) {
-                    old = ((Number) obj).doubleValue();
-                }
-
-                double corrected = 0d;
-                switch (operator) {
-                    case "MULTIPLY":
-                        corrected = old * correctionValue;
-                        break;
-                    case "ADD":
-                        corrected = old + correctionValue;
-                        break;
-                    case "SUBSTRACT":
-                        corrected = old - correctionValue;
-                        break;
-                    default:
-                        corrected = old;
-                        break;
-                }
-
-                event.put(eventKey.get(0), corrected);
-            } catch (ClassCastException e) {
-                logger.error(e.toString());
-            }
-            return event;
-
-        } else {
-            String key = eventKey.get(0);
-            List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
-
-            Map<String, Object> newSubEvent =
-                    transform((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
-
-            event.remove(key);
-            event.put(key, newSubEvent);
-
-            return event;
+    if (eventKey.size() == 1) {
+      try {
+        Object obj = event.get(eventKey.get(0));
+        double old = 0d;
+        if (obj instanceof Number) {
+          old = ((Number) obj).doubleValue();
         }
 
+        double corrected = 0d;
+        switch (operator) {
+          case "MULTIPLY":
+            corrected = old * correctionValue;
+            break;
+          case "ADD":
+            corrected = old + correctionValue;
+            break;
+          case "SUBSTRACT":
+            corrected = old - correctionValue;
+            break;
+          default:
+            corrected = old;
+            break;
+        }
+
+        event.put(eventKey.get(0), corrected);
+      } catch (ClassCastException e) {
+        logger.error(e.toString());
+      }
+      return event;
+
+    } else {
+      String key = eventKey.get(0);
+      List<String> newKeysTmpList = eventKey.subList(1, eventKey.size());
+
+      Map<String, Object> newSubEvent =
+          transform((Map<String, Object>) event.get(eventKey.get(0)), newKeysTmpList);
+
+      event.remove(key);
+      event.put(key, newSubEvent);
+
+      return event;
     }
+
+  }
 }

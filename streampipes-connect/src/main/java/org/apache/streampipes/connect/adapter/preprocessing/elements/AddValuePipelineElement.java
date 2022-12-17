@@ -24,19 +24,19 @@ import java.util.Map;
 
 public class AddValuePipelineElement implements IAdapterPipelineElement {
 
-    private String runtimeKey;
-    private String value;
+  private String runtimeKey;
+  private String value;
 
 
-    public AddValuePipelineElement(String runtimeKey, String value) {
-        this.runtimeKey = runtimeKey;
-        this.value = value;
-    }
+  public AddValuePipelineElement(String runtimeKey, String value) {
+    this.runtimeKey = runtimeKey;
+    this.value = value;
+  }
 
-    @Override
-    public Map<String, Object> process(Map<String, Object> event) {
-        event.put(runtimeKey, value);
-        return event;
-    }
+  @Override
+  public Map<String, Object> process(Map<String, Object> event) {
+    event.put(runtimeKey, value);
+    return event;
+  }
 
 }

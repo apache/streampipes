@@ -43,7 +43,8 @@ public class PipelineTemplateInvocationHandler {
     this.pipelineTemplateDescription = getTemplateById(pipelineTemplateInvocation.getPipelineTemplateId());
   }
 
-  public PipelineTemplateInvocationHandler(String username, PipelineTemplateInvocation pipelineTemplateInvocation, PipelineTemplateDescription pipelineTemplateDescription) {
+  public PipelineTemplateInvocationHandler(String username, PipelineTemplateInvocation pipelineTemplateInvocation,
+                                           PipelineTemplateDescription pipelineTemplateDescription) {
     this.username = username;
     this.pipelineTemplateInvocation = pipelineTemplateInvocation;
     this.pipelineTemplateDescription = pipelineTemplateDescription;
@@ -51,14 +52,16 @@ public class PipelineTemplateInvocationHandler {
 
 
   public PipelineOperationStatus handlePipelineInvocation() {
-    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), pipelineTemplateDescription, pipelineTemplateInvocation.getKviName()).makePipeline();
+    Pipeline pipeline = new PipelineGenerator(pipelineTemplateInvocation.getDataSetId(), pipelineTemplateDescription,
+        pipelineTemplateInvocation.getKviName()).makePipeline();
     pipeline.setCreatedByUser(username);
     pipeline.setCreatedAt(System.currentTimeMillis());
     replaceStaticProperties(pipeline);
     Operations.storePipeline(pipeline);
     Permission permission = new PermissionManager().makePermission(pipeline, username);
     StorageDispatcher.INSTANCE.getNoSqlStore().getPermissionStorage().addPermission(permission);
-    Pipeline storedPipeline = StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipeline.getPipelineId());
+    Pipeline storedPipeline =
+        StorageDispatcher.INSTANCE.getNoSqlStore().getPipelineStorageAPI().getPipeline(pipeline.getPipelineId());
     return Operations.startPipeline(storedPipeline);
   }
 
@@ -80,12 +83,11 @@ public class PipelineTemplateInvocationHandler {
   }
 
 
-
   private StaticProperty getCustomizedElement(String dom, String internalName) {
     StaticProperty staticProperty = pipelineTemplateInvocation
-            .getStaticProperties()
-            .stream()
-            .filter(sp -> sp.getInternalName().equals(internalName)).findFirst().get();
+        .getStaticProperties()
+        .stream()
+        .filter(sp -> sp.getInternalName().equals(internalName)).findFirst().get();
 
     staticProperty.setInternalName(staticProperty.getInternalName().replace(dom, ""));
     return staticProperty;
@@ -93,13 +95,14 @@ public class PipelineTemplateInvocationHandler {
 
   private boolean existsInCustomizedElements(String dom, StaticProperty staticProperty) {
     return pipelineTemplateInvocation
-            .getStaticProperties()
-            .stream()
-            .anyMatch(sp -> sp.getInternalName().equals(dom +staticProperty.getInternalName()));
+        .getStaticProperties()
+        .stream()
+        .anyMatch(sp -> sp.getInternalName().equals(dom + staticProperty.getInternalName()));
   }
-  
+
 
   private PipelineTemplateDescription getTemplateById(String pipelineTemplateId) {
-    return new PipelineTemplateGenerator().getAllPipelineTemplates().stream().filter(template -> template.getAppId().equals(pipelineTemplateId)).findFirst().get();
+    return new PipelineTemplateGenerator().getAllPipelineTemplates().stream()
+        .filter(template -> template.getAppId().equals(pipelineTemplateId)).findFirst().get();
   }
 }

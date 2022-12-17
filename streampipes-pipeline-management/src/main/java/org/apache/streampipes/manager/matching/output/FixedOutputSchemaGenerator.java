@@ -47,7 +47,7 @@ public class FixedOutputSchemaGenerator extends OutputSchemaGenerator<FixedOutpu
 
   @Override
   public Tuple2<EventSchema, FixedOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                         SpDataStream stream2) {
+                                                                      SpDataStream stream2) {
     return buildFromOneStream(stream1);
   }
 }

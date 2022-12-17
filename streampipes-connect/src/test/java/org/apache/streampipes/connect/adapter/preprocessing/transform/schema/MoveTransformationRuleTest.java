@@ -20,67 +20,71 @@ package org.apache.streampipes.connect.adapter.preprocessing.transform.schema;
 
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MoveTransformationRuleTest {
 
-    @Test
-    public void transform() {
-        Map<String, Object> child = new HashMap<>();
-        child.put("key", new HashMap<>());
+  @Test
+  public void transform() {
+    Map<String, Object> child = new HashMap<>();
+    child.put("key", new HashMap<>());
 
 
-        Map<String, Object> event = new HashMap<>();
-        event.put("old_parent", child);
-        event.put("new_parent", new HashMap<>());
+    Map<String, Object> event = new HashMap<>();
+    event.put("old_parent", child);
+    event.put("new_parent", new HashMap<>());
 
-        List<String> oldKey = new ArrayList<>();
-        oldKey.add("old_parent");
-        oldKey.add("key");
+    List<String> oldKey = new ArrayList<>();
+    oldKey.add("old_parent");
+    oldKey.add("key");
 
-        List<String> newKey = new ArrayList<>();
-        newKey.add("new_parent");
+    List<String> newKey = new ArrayList<>();
+    newKey.add("new_parent");
 
 
-        MoveTransformationRule moveRule = new MoveTransformationRule(oldKey, newKey);
+    MoveTransformationRule moveRule = new MoveTransformationRule(oldKey, newKey);
 
-        Map<String, Object> result = moveRule.transform(event);
+    Map<String, Object> result = moveRule.transform(event);
 
-        assertEquals(2, result.keySet().size());
-        assertEquals(0, ((Map<String, Object>) result.get("old_parent")).keySet().size());
-        assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
-    }
+    assertEquals(2, result.keySet().size());
+    assertEquals(0, ((Map<String, Object>) result.get("old_parent")).keySet().size());
+    assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
+  }
 
-    @Test
-    public void transFormTopLevelProperty() {
-        Map<String, Object> event = new HashMap<>();
-        event.put("new_parent", new HashMap<>());
-        event.put("toMove", "x");
+  @Test
+  public void transFormTopLevelProperty() {
+    Map<String, Object> event = new HashMap<>();
+    event.put("new_parent", new HashMap<>());
+    event.put("toMove", "x");
 
-        MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("toMove"), Arrays.asList("new_parent"));
+    MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("toMove"), Arrays.asList("new_parent"));
 
-        Map<String, Object> result = moveRule.transform(event);
+    Map<String, Object> result = moveRule.transform(event);
 
-        assertEquals(1, result.keySet().size());
-        assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
-    }
+    assertEquals(1, result.keySet().size());
+    assertEquals(1, ((Map<String, Object>) result.get("new_parent")).keySet().size());
+  }
 
-    @Test
-    public void transToTopLevelProperty() {
-        Map<String, Object> child = new HashMap<>();
-        child.put("child", "value");
+  @Test
+  public void transToTopLevelProperty() {
+    Map<String, Object> child = new HashMap<>();
+    child.put("child", "value");
 
-        Map<String, Object> parent = new HashMap<>();
-        parent.put("parent", child);
+    Map<String, Object> parent = new HashMap<>();
+    parent.put("parent", child);
 
-        MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("parent", "child"), Arrays.asList(""));
+    MoveTransformationRule moveRule = new MoveTransformationRule(Arrays.asList("parent", "child"), Arrays.asList(""));
 
-        Map<String, Object> result = moveRule.transform(parent);
+    Map<String, Object> result = moveRule.transform(parent);
 
-        assertEquals(2, result.keySet().size());
-        assertEquals(0, ((Map<String, Object>) result.get("parent")).keySet().size());
-        assertEquals("value", result.get("child"));
-    }
+    assertEquals(2, result.keySet().size());
+    assertEquals(0, ((Map<String, Object>) result.get("parent")).keySet().size());
+    assertEquals("value", result.get("child"));
+  }
 }

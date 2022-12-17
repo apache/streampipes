@@ -18,6 +18,17 @@
 
 package org.apache.streampipes.connect.adapter.format.xml;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.connect.adapter.format.util.JsonEventProperty;
+import org.apache.streampipes.connect.adapter.model.generic.Parser;
+import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
+import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
+import org.apache.streampipes.model.connect.grounding.FormatDescription;
+import org.apache.streampipes.model.schema.EventProperty;
+import org.apache.streampipes.model.schema.EventSchema;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.underscore.lodash.U;
 import com.google.common.base.Charsets;
@@ -25,16 +36,6 @@ import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
-import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.connect.adapter.format.util.JsonEventProperty;
-import org.apache.streampipes.connect.adapter.model.generic.Parser;
-import org.apache.streampipes.connect.adapter.sdk.ParameterExtractor;
-import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
-import org.apache.streampipes.model.connect.grounding.FormatDescription;
-import org.apache.streampipes.model.schema.EventProperty;
-import org.apache.streampipes.model.schema.EventSchema;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +76,7 @@ public class XmlParser extends Parser {
       String dataString = CharStreams.toString(new InputStreamReader(data, Charsets.UTF_8));
 
       Map<String, Object> map =
-              (Map<String, Object>) U.fromXmlWithoutNamespaces(dataString);
+          (Map<String, Object>) U.fromXmlWithoutNamespaces(dataString);
       map.remove(ENCODING);
       Map<String, Object> convertedMap = new XmlMapConverter(map).convert();
       searchAndEmitEvents(convertedMap, tag, emitBinaryEvent);

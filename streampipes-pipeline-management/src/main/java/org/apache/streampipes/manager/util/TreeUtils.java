@@ -35,8 +35,9 @@ public class TreeUtils {
    * @return a SEPA-client element
    */
 
-  public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas, List<SpDataStream>
-          streams) {
+  public static NamedStreamPipesEntity findSEPAElement(String id, List<DataProcessorInvocation> sepas,
+                                                       List<SpDataStream>
+                                                           streams) {
     List<NamedStreamPipesEntity> allElements = new ArrayList<>();
     allElements.addAll(sepas);
     allElements.addAll(streams);

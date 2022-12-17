@@ -17,16 +17,17 @@
  */
 package org.apache.streampipes.manager.selector;
 
-import static org.junit.Assert.assertEquals;
-import static org.apache.streampipes.manager.selector.TestSelectorUtils.makeSchema;
+import org.apache.streampipes.model.schema.EventProperty;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.apache.streampipes.model.schema.EventProperty;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.apache.streampipes.manager.selector.TestSelectorUtils.makeSchema;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Parameterized.class)
 public class TestSelector {
@@ -34,9 +35,9 @@ public class TestSelector {
   @Parameterized.Parameters
   public static Iterable<Object[]> data() {
     return Arrays.asList(new Object[][]{
-            {Arrays.asList("s0::testDimension"), 1},
-            {Arrays.asList("s0::location", "s0::location::latitude"), 1},
-            {Arrays.asList("s0::testDimension", "s0::testMeasurement"), 2}
+        {Arrays.asList("s0::testDimension"), 1},
+        {Arrays.asList("s0::location", "s0::location::latitude"), 1},
+        {Arrays.asList("s0::testDimension", "s0::testMeasurement"), 2}
 
     });
   }
@@ -50,7 +51,7 @@ public class TestSelector {
   @Test
   public void test() {
     List<EventProperty> newProperties = new PropertySelector(makeSchema())
-            .createPropertyList(fieldSelectors);
+        .createPropertyList(fieldSelectors);
 
     assertEquals(expectedPropertyCount, newProperties.size());
 

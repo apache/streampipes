@@ -38,64 +38,67 @@ import java.util.stream.Collectors;
 
 public class TestUtils {
 
-	public static TransportProtocol kafkaProtocol() {
-		return new KafkaTransportProtocol("localhost", 9092, "abc", "localhost", 2181);
-	}
+  public static TransportProtocol kafkaProtocol() {
+    return new KafkaTransportProtocol("localhost", 9092, "abc", "localhost", 2181);
+  }
 
-	public static TransportProtocol jmsProtocol() {
-		return new JmsTransportProtocol("localhost", 61616, "abc");
-	}
+  public static TransportProtocol jmsProtocol() {
+    return new JmsTransportProtocol("localhost", 61616, "abc");
+  }
 
-	public static TransportFormat jsonFormat() {
-		return new TransportFormat(MessageFormat.JSON);
-	}
-	
-	public static TransportFormat thriftFormat() {
-		return new TransportFormat(MessageFormat.THRIFT);
-	}
-	
-	public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, EventStreamDeclarer stream, SemanticEventProcessingAgentDeclarer agent) {
-		DataSourceDescription dataSourceDescription = new DataSourceDescription(producer.declareModel());
-		dataSourceDescription.setElementId("http://www.schema.org/test1");
-		SpDataStream offer = stream.declareModel();
-		offer.setElementId("http://www.schema.org/test2");
-		DataProcessorDescription requirement = (agent.declareModel());
-		requirement.setElementId("http://www.schema.org/test3");
-		Pipeline pipeline = new Pipeline();
-		SpDataStream offeredClientModel = offer;
-		offeredClientModel.setDom("A");
+  public static TransportFormat jsonFormat() {
+    return new TransportFormat(MessageFormat.JSON);
+  }
 
-		DataProcessorInvocation requiredClientModel = new DataProcessorInvocation(requirement);
-		requiredClientModel.setDom("B");
-		requiredClientModel.setConnectedTo(Arrays.asList("A"));
-		
-		pipeline.setStreams(Arrays.asList(offeredClientModel));
-		pipeline.setSepas(Arrays.asList(requiredClientModel));
-		
-		
-		return pipeline;
-	}
+  public static TransportFormat thriftFormat() {
+    return new TransportFormat(MessageFormat.THRIFT);
+  }
 
-	public static Pipeline makePipeline(List<SpDataStream> streams, List<DataProcessorInvocation> epas) {
-		Pipeline pipeline = new Pipeline();
+  public static Pipeline makePipeline(SemanticEventProducerDeclarer producer, EventStreamDeclarer stream,
+                                      SemanticEventProcessingAgentDeclarer agent) {
+    DataSourceDescription dataSourceDescription = new DataSourceDescription(producer.declareModel());
+    dataSourceDescription.setElementId("http://www.schema.org/test1");
+    SpDataStream offer = stream.declareModel();
+    offer.setElementId("http://www.schema.org/test2");
+    DataProcessorDescription requirement = (agent.declareModel());
+    requirement.setElementId("http://www.schema.org/test3");
+    Pipeline pipeline = new Pipeline();
+    SpDataStream offeredClientModel = offer;
+    offeredClientModel.setDom("A");
 
-		pipeline.setStreams(streams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList()));
-		pipeline.setSepas(epas.stream().map(s -> new DataProcessorInvocation(s)).collect(Collectors.toList()));
+    DataProcessorInvocation requiredClientModel = new DataProcessorInvocation(requirement);
+    requiredClientModel.setDom("B");
+    requiredClientModel.setConnectedTo(Arrays.asList("A"));
 
-		return pipeline;
-	}
+    pipeline.setStreams(Arrays.asList(offeredClientModel));
+    pipeline.setSepas(Arrays.asList(requiredClientModel));
 
-    public static DataProcessorInvocation makeSepa(SemanticEventProcessingAgentDeclarer declarer, String domId, String... connectedTo) {
-        DataProcessorInvocation invocation = new DataProcessorInvocation(declarer.declareModel());
-        invocation.setDom(domId);
-        invocation.setConnectedTo(Arrays.asList(connectedTo));
-        return invocation;
-    }
 
-    public static SpDataStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec, String domId) {
-        SpDataStream stream = new SpDataStream(streamDec.declareModel());
-        stream.setDom(domId);
-        return stream;
-    }
-	
+    return pipeline;
+  }
+
+  public static Pipeline makePipeline(List<SpDataStream> streams, List<DataProcessorInvocation> epas) {
+    Pipeline pipeline = new Pipeline();
+
+    pipeline.setStreams(streams.stream().map(s -> new SpDataStream(s)).collect(Collectors.toList()));
+    pipeline.setSepas(epas.stream().map(s -> new DataProcessorInvocation(s)).collect(Collectors.toList()));
+
+    return pipeline;
+  }
+
+  public static DataProcessorInvocation makeSepa(SemanticEventProcessingAgentDeclarer declarer, String domId,
+                                                 String... connectedTo) {
+    DataProcessorInvocation invocation = new DataProcessorInvocation(declarer.declareModel());
+    invocation.setDom(domId);
+    invocation.setConnectedTo(Arrays.asList(connectedTo));
+    return invocation;
+  }
+
+  public static SpDataStream makeStream(SemanticEventProducerDeclarer declarer, EventStreamDeclarer streamDec,
+                                        String domId) {
+    SpDataStream stream = new SpDataStream(streamDec.declareModel());
+    stream.setDom(domId);
+    return stream;
+  }
+
 }

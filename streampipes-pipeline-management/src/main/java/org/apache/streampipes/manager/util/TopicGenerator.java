@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.manager.util;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 public class TopicGenerator {
 

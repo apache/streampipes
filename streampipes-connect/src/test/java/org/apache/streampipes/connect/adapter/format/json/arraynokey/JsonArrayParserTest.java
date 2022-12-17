@@ -18,9 +18,11 @@
 
 package org.apache.streampipes.connect.adapter.format.json.arraynokey;
 
+
+import org.apache.streampipes.connect.api.exception.AdapterException;
+
 import com.google.gson.JsonArray;
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.junit.Test;
 
 import java.io.InputStream;

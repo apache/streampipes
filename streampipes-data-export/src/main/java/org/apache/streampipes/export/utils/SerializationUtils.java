@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.export.utils;
 
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.streampipes.serializers.json.JacksonSerializer;
 
 public class SerializationUtils {
 

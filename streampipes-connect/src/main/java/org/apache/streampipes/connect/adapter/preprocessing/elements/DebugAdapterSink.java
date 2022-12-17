@@ -17,30 +17,31 @@
  */
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 
 public class DebugAdapterSink implements IAdapterPipelineElement {
-    private final BlockingQueue<Map<String, Object>> events;
+  private final BlockingQueue<Map<String, Object>> events;
 
-    public DebugAdapterSink() {
-        this.events = new LinkedBlockingDeque<>();
-    }
+  public DebugAdapterSink() {
+    this.events = new LinkedBlockingDeque<>();
+  }
 
-    @Override
-    public Map<String, Object> process(Map<String, Object> event) {
-        events.add(event);
-        return event;
-    }
+  @Override
+  public Map<String, Object> process(Map<String, Object> event) {
+    events.add(event);
+    return event;
+  }
 
-    public Map<String, Object> takeEvent() throws InterruptedException {
-        return takeEvent(5, TimeUnit.SECONDS);
-    }
+  public Map<String, Object> takeEvent() throws InterruptedException {
+    return takeEvent(5, TimeUnit.SECONDS);
+  }
 
-    public Map<String, Object> takeEvent(long timeout, TimeUnit unit) throws InterruptedException {
-        return events.poll(timeout, unit);
-    }
+  public Map<String, Object> takeEvent(long timeout, TimeUnit unit) throws InterruptedException {
+    return events.poll(timeout, unit);
+  }
 }

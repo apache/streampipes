@@ -19,7 +19,6 @@
 package org.apache.streampipes.connect.adapter.format.json.object;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.adapter.format.util.JsonEventProperty;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
@@ -31,6 +30,8 @@ import org.apache.streampipes.model.connect.guess.AdapterGuessInfo;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,74 +44,74 @@ import java.util.stream.Collectors;
 
 public class JsonObjectParser extends Parser {
 
-    private static final Logger logger = LoggerFactory.getLogger(JsonObjectParser.class);
+  private static final Logger logger = LoggerFactory.getLogger(JsonObjectParser.class);
 
-    private ObjectMapper mapper;
-    private JsonDataFormatDefinition jsonDefinition;
+  private ObjectMapper mapper;
+  private JsonDataFormatDefinition jsonDefinition;
 
-    @Override
-    public Parser getInstance(FormatDescription formatDescription) {
-        return new JsonObjectParser();
+  @Override
+  public Parser getInstance(FormatDescription formatDescription) {
+    return new JsonObjectParser();
+  }
+
+  /**
+   * Use this constructor when just a specific key of the object should be parsed
+   */
+  public JsonObjectParser() {
+    mapper = new ObjectMapper();
+    jsonDefinition = new JsonDataFormatDefinition();
+  }
+
+  @Override
+  public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
+
+    try {
+      Map<String, Object> map = mapper.readValue(data, HashMap.class);
+      emitBinaryEvent.emit(jsonDefinition.fromMap(map));
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (SpRuntimeException e) {
+      e.printStackTrace();
     }
 
-    /**
-     * Use this constructor when just a specific key of the object should be parsed
-     */
-    public JsonObjectParser() {
-        mapper = new ObjectMapper();
-        jsonDefinition = new JsonDataFormatDefinition();
+  }
+
+  @Override
+  public EventSchema getEventSchema(List<byte[]> oneEvent) {
+    return getSchemaAndSample(oneEvent).getEventSchema();
+  }
+
+  @Override
+  public boolean supportsPreview() {
+    return true;
+  }
+
+  @Override
+  public AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
+    EventSchema resultSchema = new EventSchema();
+
+    JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
+
+
+    Map<String, Object> exampleEvent = null;
+
+    try {
+      exampleEvent = jsonDefinition.toMap(eventSample.get(0));
+      var sample = exampleEvent
+          .entrySet()
+          .stream()
+          .collect(Collectors.toMap(Map.Entry::getKey, e ->
+              new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
+
+      for (Map.Entry<String, Object> entry : exampleEvent.entrySet()) {
+        EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
+
+        resultSchema.addEventProperty(p);
+      }
+
+      return new AdapterGuessInfo(resultSchema, sample);
+    } catch (SpRuntimeException e) {
+      throw new ParseException("Could not serialize event, did you choose the correct format?", e);
     }
-
-    @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
-
-        try {
-            Map<String, Object> map = mapper.readValue(data, HashMap.class);
-            emitBinaryEvent.emit(jsonDefinition.fromMap(map));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SpRuntimeException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public EventSchema getEventSchema(List<byte[]> oneEvent) {
-        return getSchemaAndSample(oneEvent).getEventSchema();
-    }
-
-    @Override
-    public boolean supportsPreview() {
-        return true;
-    }
-
-    @Override
-    public AdapterGuessInfo getSchemaAndSample(List<byte[]> eventSample) throws ParseException {
-        EventSchema resultSchema = new EventSchema();
-
-        JsonDataFormatDefinition jsonDefinition = new JsonDataFormatDefinition();
-
-
-        Map<String, Object> exampleEvent = null;
-
-        try {
-            exampleEvent = jsonDefinition.toMap(eventSample.get(0));
-            var sample = exampleEvent
-              .entrySet()
-              .stream()
-              .collect(Collectors.toMap(Map.Entry::getKey, e ->
-                new GuessTypeInfo(e.getValue().getClass().getCanonicalName(), e.getValue())));
-
-            for (Map.Entry<String, Object> entry : exampleEvent.entrySet()) {
-                EventProperty p = JsonEventProperty.getEventProperty(entry.getKey(), entry.getValue());
-
-                resultSchema.addEventProperty(p);
-            }
-
-            return new AdapterGuessInfo(resultSchema, sample);
-        } catch (SpRuntimeException e) {
-            throw new ParseException("Could not serialize event, did you choose the correct format?", e);
-        }
-    }
+  }
 }

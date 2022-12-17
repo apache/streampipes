@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.connect.adapter.format.json.object;
 
+import org.apache.streampipes.connect.api.exception.AdapterException;
+
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -32,37 +33,37 @@ import static org.junit.Assert.assertEquals;
 
 public class JsonObjectParserTest {
 
-    @Test
-    public void parseOneEvent() throws AdapterException {
+  @Test
+  public void parseOneEvent() throws AdapterException {
 
-        JsonObject jo = makeJsonObject("one", 1);
+    JsonObject jo = makeJsonObject("one", 1);
 
-        JsonObjectParser parser = new JsonObjectParser();
+    JsonObjectParser parser = new JsonObjectParser();
 
-        List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo.toString()), 1);
+    List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo.toString()), 1);
 
-        assertEquals(parsedEvent.size(), 1);
-        String parsedStringEvent = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
+    assertEquals(parsedEvent.size(), 1);
+    String parsedStringEvent = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
 
-        assertEquals(parsedStringEvent, "{\"one\":1}");
-    }
+    assertEquals(parsedStringEvent, "{\"one\":1}");
+  }
 
-    @Test
-    public void parseMoreThenExist() throws AdapterException {
+  @Test
+  public void parseMoreThenExist() throws AdapterException {
 
-        JsonObject jo = makeJsonObject("one", 1);
+    JsonObject jo = makeJsonObject("one", 1);
 
-        JsonObjectParser parser = new JsonObjectParser();
+    JsonObjectParser parser = new JsonObjectParser();
 
-        List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo.toString()), 10);
+    List<byte[]> parsedEvent = parser.parseNEvents(getInputStream(jo.toString()), 10);
 
-        assertEquals(1, parsedEvent.size());
-        String parsedStringEventOne = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
+    assertEquals(1, parsedEvent.size());
+    String parsedStringEventOne = new String(parsedEvent.get(0), StandardCharsets.UTF_8);
 
-        assertEquals( "{\"one\":1}", parsedStringEventOne);
-    }
+    assertEquals("{\"one\":1}", parsedStringEventOne);
+  }
 
-    private InputStream getInputStream(String s) {
-        return IOUtils.toInputStream(s, "UTF-8");
-    }
+  private InputStream getInputStream(String s) {
+    return IOUtils.toInputStream(s, "UTF-8");
+  }
 }

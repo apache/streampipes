@@ -26,7 +26,7 @@ public class PermissionManager {
   public Permission makePermission(Pipeline pipeline,
                                    String ownerSid) {
     return PermissionBuilder
-            .create(pipeline.getPipelineId(), pipeline.getClass(), ownerSid)
-            .build();
+        .create(pipeline.getPipelineId(), pipeline.getClass(), ownerSid)
+        .build();
   }
 }

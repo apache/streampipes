@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.export.resolver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.streampipes.export.utils.SerializationUtils;
 import org.apache.streampipes.model.datalake.DataExplorerWidgetModel;
 import org.apache.streampipes.model.export.ExportItem;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetModel> {
 
@@ -38,7 +39,7 @@ public class DataViewWidgetResolver extends AbstractResolver<DataExplorerWidgetM
 
   @Override
   public DataExplorerWidgetModel readDocument(String serializedDoc) throws JsonProcessingException {
-   return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
+    return SerializationUtils.getSpObjectMapper().readValue(serializedDoc, DataExplorerWidgetModel.class);
   }
 
   @Override

@@ -18,39 +18,38 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
-
-import org.junit.Test;
-
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 
+import junit.framework.TestCase;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestProtocolMatch extends TestCase {
-	
-	@Test
-	public void testPositiveProtocolMatch() {
-		
-		TransportProtocol offer = TestUtils.kafkaProtocol();
-		TransportProtocol requirement = TestUtils.kafkaProtocol();
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new ProtocolMatch().match(offer, requirement, errorLog);
-		assertTrue(matches);
-	}
-	
-	@Test
-	public void testNegativeProtocolMatch() {
-		
-		TransportProtocol offer = TestUtils.kafkaProtocol();
-		TransportProtocol requirement = TestUtils.jmsProtocol();
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new ProtocolMatch().match(offer, requirement, errorLog);
-		assertFalse(matches);
-	}
+
+  @Test
+  public void testPositiveProtocolMatch() {
+
+    TransportProtocol offer = TestUtils.kafkaProtocol();
+    TransportProtocol requirement = TestUtils.kafkaProtocol();
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new ProtocolMatch().match(offer, requirement, errorLog);
+    assertTrue(matches);
+  }
+
+  @Test
+  public void testNegativeProtocolMatch() {
+
+    TransportProtocol offer = TestUtils.kafkaProtocol();
+    TransportProtocol requirement = TestUtils.jmsProtocol();
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new ProtocolMatch().match(offer, requirement, errorLog);
+    assertFalse(matches);
+  }
 }

@@ -45,9 +45,9 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
 
     List<MatchingResultMessage> errorLog = getNewErrorLog();
     boolean match = new GroundingMatch().match(
-            getSourceGrounding(source),
-            target.getSupportedGrounding(),
-            errorLog
+        getSourceGrounding(source),
+        target.getSupportedGrounding(),
+        errorLog
     );
 
     if (!match) {
@@ -63,14 +63,14 @@ public class ApplyGroundingStep extends AbstractPipelineValidationStep {
 
       if (source instanceof DataProcessorInvocation) {
         ((DataProcessorInvocation) source)
-                .getOutputStream()
-                .setEventGrounding(selectedGrounding);
+            .getOutputStream()
+            .setEventGrounding(selectedGrounding);
       }
 
       target
-              .getInputStreams()
-              .get(getIndex(target))
-              .setEventGrounding(selectedGrounding);
+          .getInputStreams()
+          .get(getIndex(target))
+          .setEventGrounding(selectedGrounding);
 
       if (target.getInputStreams().size() > 1) {
         this.visitorHistory.put(target.getDom(), 1);

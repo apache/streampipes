@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.manager.verification.extractor;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
 import org.apache.streampipes.manager.verification.DataProcessorVerifier;
 import org.apache.streampipes.manager.verification.DataSinkVerifier;
@@ -30,53 +28,62 @@ import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataSinkDescription;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.util.logging.Logger;
 
 public class TypeExtractor {
 
-	private static final Logger logger = Logger.getAnonymousLogger();
+  private static final Logger logger = Logger.getAnonymousLogger();
 
-	private String pipelineElementDescription;
-	
-	public TypeExtractor(String pipelineElementDescription) {
-		this.pipelineElementDescription = pipelineElementDescription;
+  private String pipelineElementDescription;
 
-	}
-	
-	public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
-		try {
-			ObjectNode jsonNode = JacksonSerializer.getObjectMapper().readValue(this.pipelineElementDescription, ObjectNode.class);
-			String jsonClassName = jsonNode.get("@class").asText();
-			return getTypeDef(jsonClassName);
-		} catch (JsonProcessingException e) {
-			throw new SepaParseException();
-		}
-	}
+  public TypeExtractor(String pipelineElementDescription) {
+    this.pipelineElementDescription = pipelineElementDescription;
 
-	private ElementVerifier<?> getTypeDef(String jsonClassName) throws SepaParseException {
-		if (jsonClassName == null) {
-			throw new SepaParseException();
-		} else {
-			if (jsonClassName.equals(ep())) { logger.info("Detected type data stream"); return new DataStreamVerifier(pipelineElementDescription); }
-			else if (jsonClassName.equals(epa())) { logger.info("Detected type data processor"); return new DataProcessorVerifier(pipelineElementDescription); }
-			else if (jsonClassName.equals(ec())) { logger.info("Detected type data sink"); return new DataSinkVerifier(pipelineElementDescription); }
-			else throw new SepaParseException();
-		}
-	}
-	
-	private static final String ep()
-	{
-		return SpDataStream.class.getCanonicalName();
-	}
-	
-	private static final String epa()
-	{
-		return DataProcessorDescription.class.getCanonicalName();
-	}
-	
-	private static final String ec()
-	{
-		return DataSinkDescription.class.getCanonicalName();
-	}
-	
+  }
+
+  public ElementVerifier<?> getTypeVerifier() throws SepaParseException {
+    try {
+      ObjectNode jsonNode =
+          JacksonSerializer.getObjectMapper().readValue(this.pipelineElementDescription, ObjectNode.class);
+      String jsonClassName = jsonNode.get("@class").asText();
+      return getTypeDef(jsonClassName);
+    } catch (JsonProcessingException e) {
+      throw new SepaParseException();
+    }
+  }
+
+  private ElementVerifier<?> getTypeDef(String jsonClassName) throws SepaParseException {
+    if (jsonClassName == null) {
+      throw new SepaParseException();
+    } else {
+      if (jsonClassName.equals(ep())) {
+        logger.info("Detected type data stream");
+        return new DataStreamVerifier(pipelineElementDescription);
+      } else if (jsonClassName.equals(epa())) {
+        logger.info("Detected type data processor");
+        return new DataProcessorVerifier(pipelineElementDescription);
+      } else if (jsonClassName.equals(ec())) {
+        logger.info("Detected type data sink");
+        return new DataSinkVerifier(pipelineElementDescription);
+      } else {
+        throw new SepaParseException();
+      }
+    }
+  }
+
+  private static String ep() {
+    return SpDataStream.class.getCanonicalName();
+  }
+
+  private static String epa() {
+    return DataProcessorDescription.class.getCanonicalName();
+  }
+
+  private static String ec() {
+    return DataSinkDescription.class.getCanonicalName();
+  }
+
 }

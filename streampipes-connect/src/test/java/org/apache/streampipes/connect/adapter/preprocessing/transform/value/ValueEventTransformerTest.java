@@ -18,41 +18,45 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.transform.value;
 
-import org.junit.Test;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
 
-import java.util.*;
+import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class ValueEventTransformerTest {
 
-    @Test
-    public void transform() {
-        EventSchema eventSchema = new EventSchema();
-        EventProperty eventPropertyf = new EventPropertyPrimitive();
-        eventPropertyf.setLabel("a");
-        eventPropertyf.setRuntimeName("a");
-        eventSchema.addEventProperty(eventPropertyf);
+  @Test
+  public void transform() {
+    EventSchema eventSchema = new EventSchema();
+    EventProperty eventPropertyf = new EventPropertyPrimitive();
+    eventPropertyf.setLabel("a");
+    eventPropertyf.setRuntimeName("a");
+    eventSchema.addEventProperty(eventPropertyf);
 
-        Map<String, Object> event = new HashMap<>();
-        event.put("a", 273.15);
+    Map<String, Object> event = new HashMap<>();
+    event.put("a", 273.15);
 
-        List<String> keys = new ArrayList<>();
-        keys.add("a");
+    List<String> keys = new ArrayList<>();
+    keys.add("a");
 
-        List<ValueTransformationRule> rules = new ArrayList<>();
-        rules.add(new UnitTransformationRule(keys,
-               "http://qudt.org/vocab/unit#Kelvin","http://qudt.org/vocab/unit#DegreeCelsius"));
+    List<ValueTransformationRule> rules = new ArrayList<>();
+    rules.add(new UnitTransformationRule(keys,
+        "http://qudt.org/vocab/unit#Kelvin", "http://qudt.org/vocab/unit#DegreeCelsius"));
 
-        ValueEventTransformer eventTransformer = new ValueEventTransformer(rules);
-        Map<String, Object> result = eventTransformer.transform(event);
+    ValueEventTransformer eventTransformer = new ValueEventTransformer(rules);
+    Map<String, Object> result = eventTransformer.transform(event);
 
-        assertEquals(0.0, result.get(eventPropertyf.getRuntimeName()));
+    assertEquals(0.0, result.get(eventPropertyf.getRuntimeName()));
 
-    }
+  }
 
 }

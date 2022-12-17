@@ -18,80 +18,80 @@
 
 package org.apache.streampipes.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.Util;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 
 import java.util.List;
 import java.util.Map;
 
 public class SendToBrokerReplayAdapterSink implements IAdapterPipelineElement {
 
-    private final SendToBrokerAdapterSink sendToBrokerAdapterSink;
-    private long lastEventTimestamp;
-    private final List<String> timestampKeys;
-    private final boolean replaceTimestamp;
-    private final float speedUp;
+  private final SendToBrokerAdapterSink sendToBrokerAdapterSink;
+  private long lastEventTimestamp;
+  private final List<String> timestampKeys;
+  private final boolean replaceTimestamp;
+  private final float speedUp;
 
 
-    public SendToBrokerReplayAdapterSink(SendToBrokerAdapterSink sendToBrokerAdapterSink,
-                                         String timestampKey, boolean replaceTimestamp, float speedUp) {
-        this.sendToBrokerAdapterSink = sendToBrokerAdapterSink;
-        this.lastEventTimestamp = -1;
-        this.timestampKeys = Util.toKeyArray(timestampKey);
-        this.replaceTimestamp = replaceTimestamp;
-        this.speedUp = speedUp;
-    }
+  public SendToBrokerReplayAdapterSink(SendToBrokerAdapterSink sendToBrokerAdapterSink,
+                                       String timestampKey, boolean replaceTimestamp, float speedUp) {
+    this.sendToBrokerAdapterSink = sendToBrokerAdapterSink;
+    this.lastEventTimestamp = -1;
+    this.timestampKeys = Util.toKeyArray(timestampKey);
+    this.replaceTimestamp = replaceTimestamp;
+    this.speedUp = speedUp;
+  }
 
-    @Override
-    public Map<String, Object> process(Map<String, Object> event) {
-        if ((event != null) && (lastEventTimestamp != -1)) {
-            long actualEventTimestamp = getTimestampInEvent(event);
-            try {
-                if ((actualEventTimestamp - lastEventTimestamp) > 0) {
-                    Thread.sleep((long)((actualEventTimestamp - lastEventTimestamp) / speedUp));
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (replaceTimestamp) {
-                setTimestampInEvent(event, System.currentTimeMillis());
-            }
-            lastEventTimestamp = actualEventTimestamp;
-
-        } else if (lastEventTimestamp == -1) {
-            lastEventTimestamp = getTimestampInEvent(event);
-            if (replaceTimestamp) {
-                setTimestampInEvent(event, System.currentTimeMillis());
-            }
+  @Override
+  public Map<String, Object> process(Map<String, Object> event) {
+    if ((event != null) && (lastEventTimestamp != -1)) {
+      long actualEventTimestamp = getTimestampInEvent(event);
+      try {
+        if ((actualEventTimestamp - lastEventTimestamp) > 0) {
+          Thread.sleep((long) ((actualEventTimestamp - lastEventTimestamp) / speedUp));
         }
-        return sendToBrokerAdapterSink.process(event);
-    }
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      if (replaceTimestamp) {
+        setTimestampInEvent(event, System.currentTimeMillis());
+      }
+      lastEventTimestamp = actualEventTimestamp;
 
-    private long getTimestampInEvent(Map<String, Object> event) {
-        if (timestampKeys.size() == 1) {
-            try {
-                return (long) event.get(timestampKeys.get(0));
-            } catch (ClassCastException e) {
-                return lastEventTimestamp;
-            }
-        }
-        Map<String, Object> subEvent = event;
-        for (int i = 0; i < timestampKeys.size() - 1; i++) {
-            subEvent = (Map<String, Object>) subEvent.get(timestampKeys.get(i));
-        }
-        return (long) subEvent.get(timestampKeys.get(timestampKeys.size() - 1));
-
+    } else if (lastEventTimestamp == -1) {
+      lastEventTimestamp = getTimestampInEvent(event);
+      if (replaceTimestamp) {
+        setTimestampInEvent(event, System.currentTimeMillis());
+      }
     }
+    return sendToBrokerAdapterSink.process(event);
+  }
 
-    private void setTimestampInEvent(Map<String, Object> event, long timestamp) {
-        if (timestampKeys.size() == 1) {
-            event.put(timestampKeys.get(0), timestamp);
-        } else {
-            Map<String, Object> subEvent = event;
-            for (int i = 0; i < timestampKeys.size() - 1; i++) {
-                subEvent = (Map<String, Object>) subEvent.get(timestampKeys.get(i));
-            }
-            subEvent.put(timestampKeys.get(timestampKeys.size() - 1), timestamp);
-        }
+  private long getTimestampInEvent(Map<String, Object> event) {
+    if (timestampKeys.size() == 1) {
+      try {
+        return (long) event.get(timestampKeys.get(0));
+      } catch (ClassCastException e) {
+        return lastEventTimestamp;
+      }
     }
+    Map<String, Object> subEvent = event;
+    for (int i = 0; i < timestampKeys.size() - 1; i++) {
+      subEvent = (Map<String, Object>) subEvent.get(timestampKeys.get(i));
+    }
+    return (long) subEvent.get(timestampKeys.get(timestampKeys.size() - 1));
+
+  }
+
+  private void setTimestampInEvent(Map<String, Object> event, long timestamp) {
+    if (timestampKeys.size() == 1) {
+      event.put(timestampKeys.get(0), timestamp);
+    } else {
+      Map<String, Object> subEvent = event;
+      for (int i = 0; i < timestampKeys.size() - 1; i++) {
+        subEvent = (Map<String, Object>) subEvent.get(timestampKeys.get(i));
+      }
+      subEvent.put(timestampKeys.get(timestampKeys.size() - 1), timestamp);
+    }
+  }
 }

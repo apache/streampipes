@@ -17,7 +17,26 @@
  */
 package org.apache.streampipes.manager.template;
 
-import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.model.staticproperty.AnyStaticProperty;
+import org.apache.streampipes.model.staticproperty.CodeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.CollectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.ColorPickerStaticProperty;
+import org.apache.streampipes.model.staticproperty.DomainStaticProperty;
+import org.apache.streampipes.model.staticproperty.FileStaticProperty;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.MappingPropertyNary;
+import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.apache.streampipes.model.staticproperty.MatchingStaticProperty;
+import org.apache.streampipes.model.staticproperty.OneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RemoteOneOfStaticProperty;
+import org.apache.streampipes.model.staticproperty.RuntimeResolvableTreeInputStaticProperty;
+import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
+import org.apache.streampipes.model.staticproperty.SlideToggleStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternative;
+import org.apache.streampipes.model.staticproperty.StaticPropertyAlternatives;
+import org.apache.streampipes.model.staticproperty.StaticPropertyGroup;
+import org.apache.streampipes.model.staticproperty.StaticPropertyVisitor;
 import org.apache.streampipes.model.util.Cloner;
 
 import java.util.ArrayList;
@@ -109,7 +128,7 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     if (hasKey(oneOfStaticProperty)) {
       String value = getAsString(oneOfStaticProperty);
       oneOfStaticProperty.getOptions().forEach(option ->
-              option.setSelected(option.getName().equals(value)));
+          option.setSelected(option.getName().equals(value)));
     }
   }
 
@@ -150,7 +169,8 @@ public class PipelineElementTemplateVisitor implements StaticPropertyVisitor {
     if (hasKey(staticPropertyGroup)) {
       Map<String, Object> values = getAsMap(staticPropertyGroup);
       staticPropertyGroup.getStaticProperties().forEach((group) -> {
-        PipelineElementTemplateVisitor visitor = new PipelineElementTemplateVisitor(getAsMap(values, "staticProperties"));
+        PipelineElementTemplateVisitor visitor =
+            new PipelineElementTemplateVisitor(getAsMap(values, "staticProperties"));
         group.accept(visitor);
       });
     }

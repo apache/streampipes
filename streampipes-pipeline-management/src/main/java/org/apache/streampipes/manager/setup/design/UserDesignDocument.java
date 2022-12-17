@@ -13,6 +13,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package org.apache.streampipes.manager.setup.design;
@@ -35,7 +36,9 @@ public class UserDesignDocument {
     Map<String, DesignDocument.MapReduce> views = new HashMap<>();
 
     DesignDocument.MapReduce passwordFunction = new DesignDocument.MapReduce();
-    passwordFunction.setMap("function(doc) { if(doc.properties.username && doc.properties.principalType === 'USER_ACCOUNT' && doc.properties.password) { emit(doc.properties.username.toLowerCase(), doc.properties.password); } }");
+    passwordFunction.setMap(
+        "function(doc) { if(doc.properties.username && doc.properties.principalType === 'USER_ACCOUNT' && "
+            + "doc.properties.password) { emit(doc.properties.username.toLowerCase(), doc.properties.password); } }");
 
     DesignDocument.MapReduce usernameFunction = new DesignDocument.MapReduce();
     usernameFunction.setMap(USERNAME_MAP_FUNCTION);
@@ -47,13 +50,18 @@ public class UserDesignDocument {
     groupFunction.setMap("function(doc) { if(doc.$type === 'group') { emit(doc._id, doc); } }");
 
     DesignDocument.MapReduce tokenFunction = new DesignDocument.MapReduce();
-    tokenFunction.setMap("function(doc) { if (doc.properties.userApiTokens) { doc.properties.userApiTokens.forEach(function(token) { emit(token.properties.hashedToken, doc.properties.email); });}}");
+    tokenFunction.setMap(
+        "function(doc) { if (doc.properties.userApiTokens) { doc.properties.userApiTokens.forEach(function(token) "
+            + "{ emit(token.properties.hashedToken, doc.properties.email); });}}");
 
     DesignDocument.MapReduce userPermissionFunction = new DesignDocument.MapReduce();
-    userPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; i < doc.grantedAuthorities.length; i++) {emit(doc.grantedAuthorities[i].sid,doc)}}}");
+    userPermissionFunction.setMap(
+        "function(doc) { if (doc.$type === 'permission') {emit(doc.ownerSid, doc); for(var i = 0; "
+            + "i < doc.grantedAuthorities.length; i++) {emit(doc.grantedAuthorities[i].sid,doc)}}}");
 
     DesignDocument.MapReduce objectPermissionFunction = new DesignDocument.MapReduce();
-    objectPermissionFunction.setMap("function(doc) { if (doc.$type === 'permission') {emit(doc.objectInstanceId, doc);}}");
+    objectPermissionFunction.setMap(
+        "function(doc) { if (doc.$type === 'permission') {emit(doc.objectInstanceId, doc);}}");
 
     DesignDocument.MapReduce userActivationFunction = new DesignDocument.MapReduce();
     userActivationFunction.setMap("function(doc) { if (doc.$type === 'user-activation') {emit(doc._id, doc);}}");

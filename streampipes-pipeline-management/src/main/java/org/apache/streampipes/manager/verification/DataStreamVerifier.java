@@ -19,9 +19,9 @@
 package org.apache.streampipes.manager.verification;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 import org.apache.streampipes.manager.assets.AssetManager;
 import org.apache.streampipes.model.SpDataStream;
+import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 
 import java.io.IOException;
 

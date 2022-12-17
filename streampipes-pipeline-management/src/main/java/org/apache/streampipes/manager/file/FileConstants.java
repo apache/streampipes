@@ -20,7 +20,6 @@ package org.apache.streampipes.manager.file;
 import org.apache.streampipes.config.backend.BackendConfig;
 
 public class FileConstants {
-
   public static final String FILES_BASE_DIR = BackendConfig.INSTANCE.getFilesDir();
 
 }

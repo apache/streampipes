@@ -18,12 +18,13 @@
 
 package org.apache.streampipes.connect.adapter.format.image;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.adapter.model.generic.Parser;
+import org.apache.streampipes.connect.api.EmitBinaryEvent;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.schema.EventSchema;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,26 +35,26 @@ import static org.apache.streampipes.sdk.helpers.EpProperties.imageProperty;
 
 public class ImageParser extends Parser {
 
-    @Override
-    public Parser getInstance(FormatDescription formatDescription) {
-        return new ImageParser();
-    }
+  @Override
+  public Parser getInstance(FormatDescription formatDescription) {
+    return new ImageParser();
+  }
 
-    @Override
-    public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
+  @Override
+  public void parse(InputStream data, EmitBinaryEvent emitBinaryEvent) throws ParseException {
 
-        try {
-            byte[] result = IOUtils.toByteArray(data);
-            emitBinaryEvent.emit(result);
-        } catch (IOException e) {
-            throw new ParseException(e.getMessage());
-        }
+    try {
+      byte[] result = IOUtils.toByteArray(data);
+      emitBinaryEvent.emit(result);
+    } catch (IOException e) {
+      throw new ParseException(e.getMessage());
     }
+  }
 
-    @Override
-    public EventSchema getEventSchema(List<byte[]> oneEvent) {
-        EventSchema resultSchema = new EventSchema();
-        resultSchema.addEventProperty(imageProperty("image"));
-        return resultSchema;
-    }
+  @Override
+  public EventSchema getEventSchema(List<byte[]> oneEvent) {
+    EventSchema resultSchema = new EventSchema();
+    resultSchema.addEventProperty(imageProperty("image"));
+    return resultSchema;
+  }
 }

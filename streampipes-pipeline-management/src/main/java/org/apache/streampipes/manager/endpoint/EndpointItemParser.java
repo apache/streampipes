@@ -17,13 +17,15 @@
  */
 package org.apache.streampipes.manager.endpoint;
 
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.manager.operations.Operations;
 import org.apache.streampipes.model.message.Message;
 import org.apache.streampipes.model.message.NotificationType;
 import org.apache.streampipes.model.message.Notifications;
 
+import org.apache.http.client.fluent.Request;
+
 import javax.ws.rs.core.MediaType;
+
 import java.io.IOException;
 import java.net.URLDecoder;
 
@@ -45,10 +47,10 @@ public class EndpointItemParser {
 
   private String parseURIContent(String url) throws IOException {
     return Request
-            .Get(url)
-            .addHeader("Accept", MediaType.APPLICATION_JSON)
-            .execute()
-            .returnContent()
-            .asString();
+        .Get(url)
+        .addHeader("Accept", MediaType.APPLICATION_JSON)
+        .execute()
+        .returnContent()
+        .asString();
   }
 }

@@ -19,7 +19,15 @@
 package org.apache.streampipes.manager.matching.output;
 
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
-import org.apache.streampipes.model.output.*;
+import org.apache.streampipes.model.output.AppendOutputStrategy;
+import org.apache.streampipes.model.output.CustomOutputStrategy;
+import org.apache.streampipes.model.output.CustomTransformOutputStrategy;
+import org.apache.streampipes.model.output.FixedOutputStrategy;
+import org.apache.streampipes.model.output.KeepOutputStrategy;
+import org.apache.streampipes.model.output.ListOutputStrategy;
+import org.apache.streampipes.model.output.OutputStrategy;
+import org.apache.streampipes.model.output.TransformOutputStrategy;
+import org.apache.streampipes.model.output.UserDefinedOutputStrategy;
 
 public class OutputSchemaFactory {
 

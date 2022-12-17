@@ -28,7 +28,10 @@ import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.Pipeline;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public class PipelineVerificationHandlerV2 {
 
@@ -57,7 +60,8 @@ public class PipelineVerificationHandlerV2 {
           if (pipelineElement instanceof DataProcessorInvocation) {
             ((DataProcessorInvocation) pipelineElement).setOutputStream(modification.getOutputStream());
             if (((DataProcessorInvocation) pipelineElement).getOutputStream().getEventGrounding() == null) {
-              EventGrounding grounding = new GroundingBuilder(pipelineElement, Collections.emptySet()).getEventGrounding();
+              EventGrounding grounding =
+                  new GroundingBuilder(pipelineElement, Collections.emptySet()).getEventGrounding();
               ((DataProcessorInvocation) pipelineElement).getOutputStream().setEventGrounding(grounding);
             }
             if (modification.getOutputStrategies() != null) {

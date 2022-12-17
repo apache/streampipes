@@ -23,5 +23,6 @@
 <suppressions>
     <suppress checks="." files="[\\/]org.apache.streampipes.vocabulary[\\/].*\.java$"/>
     <suppress checks="." files="org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.geocode"/>
+    <suppress checks="." files="com.github.jqudt"/>
     <suppress checks="." files="com.kohlschutter.boilerpipe"/>
 </suppressions>

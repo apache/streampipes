@@ -18,8 +18,6 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import junit.framework.TestCase;
-import org.junit.Test;
 import org.apache.streampipes.model.client.matching.MatchingResultMessage;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.sdk.helpers.EpProperties;
@@ -27,44 +25,47 @@ import org.apache.streampipes.sdk.helpers.EpRequirements;
 import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.vocabulary.Geo;
 
+import junit.framework.TestCase;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestPrimitivePropertyMatch extends TestCase {
 
-	@Test
-	public void testPositivePrimitivePropertyMatch() {
+  @Test
+  public void testPositivePrimitivePropertyMatch() {
 
-		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-		EventPropertyPrimitive requirement = EpRequirements.integerReq();
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
-		assertTrue(matches);
-	}
-	
-	@Test
-	public void testNegativePrimitivePropertyMatch() {
+    EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+    EventPropertyPrimitive requirement = EpRequirements.integerReq();
 
-		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-		EventPropertyPrimitive requirement = EpRequirements.stringReq();
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
-		assertFalse(matches);
-	}
-	
-	@Test
-	public void testNegativePrimitivePropertyMatchDomain() {
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
 
-		EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
-		EventPropertyPrimitive requirement = EpRequirements.domainPropertyReq(Geo.LNG);
-		
-		List<MatchingResultMessage> errorLog = new ArrayList<>();
-		
-		boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
-		assertFalse(matches);
-	}
+    boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
+    assertTrue(matches);
+  }
+
+  @Test
+  public void testNegativePrimitivePropertyMatch() {
+
+    EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+    EventPropertyPrimitive requirement = EpRequirements.stringReq();
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
+    assertFalse(matches);
+  }
+
+  @Test
+  public void testNegativePrimitivePropertyMatchDomain() {
+
+    EventPropertyPrimitive offer = EpProperties.integerEp(Labels.empty(), "timestamp", Geo.LAT);
+    EventPropertyPrimitive requirement = EpRequirements.domainPropertyReq(Geo.LNG);
+
+    List<MatchingResultMessage> errorLog = new ArrayList<>();
+
+    boolean matches = new PropertyMatch().match(offer, requirement, errorLog);
+    assertFalse(matches);
+  }
 }

@@ -32,7 +32,7 @@ public class PropertyRequirementSelector {
   }
 
   public EventProperty findPropertyRequirement(List<SpDataStream> streamRequirements) throws
-          IllegalArgumentException {
+      IllegalArgumentException {
     SpDataStream affectedStream = getAffectedStream(streamRequirements);
     for (EventProperty property : affectedStream.getEventSchema().getEventProperties()) {
       if (makePropertySelector(property.getRuntimeName()).equals(requirementSelector)) {
@@ -44,7 +44,7 @@ public class PropertyRequirementSelector {
   }
 
   private String makePropertySelector(String runtimeName) {
-    return getAffectedRequirementPrefix() + PropertySelectorConstants.PROPERTY_DELIMITER +runtimeName;
+    return getAffectedRequirementPrefix() + PropertySelectorConstants.PROPERTY_DELIMITER + runtimeName;
   }
 
   public SpDataStream getAffectedStream(List<SpDataStream> streams) {

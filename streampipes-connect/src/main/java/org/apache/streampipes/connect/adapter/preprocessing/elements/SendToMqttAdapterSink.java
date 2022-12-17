@@ -23,14 +23,14 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 
 public class SendToMqttAdapterSink extends SendToBrokerAdapterSink<MqttTransportProtocol>
-        implements IAdapterPipelineElement {
+    implements IAdapterPipelineElement {
 
-    public SendToMqttAdapterSink(AdapterDescription adapterDescription) {
-        super(adapterDescription, MqttPublisher::new, MqttTransportProtocol.class);
-    }
+  public SendToMqttAdapterSink(AdapterDescription adapterDescription) {
+    super(adapterDescription, MqttPublisher::new, MqttTransportProtocol.class);
+  }
 
-    @Override
-    public void modifyProtocolForDebugging() {
-        this.protocol.setBrokerHostname("localhost");
-    }
+  @Override
+  public void modifyProtocolForDebugging() {
+    this.protocol.setBrokerHostname("localhost");
+  }
 }

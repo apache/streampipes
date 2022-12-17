@@ -17,16 +17,17 @@
  */
 package org.apache.streampipes.manager.selector;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
 import org.apache.streampipes.model.output.PropertyRenameRule;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestPropertyRenaming {
 
@@ -38,8 +39,8 @@ public class TestPropertyRenaming {
 
     List<String> propertySelectors = Arrays.asList("s0::timestamp", "s1::timestamp");
 
-    Tuple2<List<EventProperty>, List<PropertyRenameRule>> properties = new PropertySelector
-            (schema1, schema2).createRenamedPropertyList(propertySelectors);
+    Tuple2<List<EventProperty>, List<PropertyRenameRule>> properties =
+        new PropertySelector(schema1, schema2).createRenamedPropertyList(propertySelectors);
 
     assertEquals(properties.k.size(), 2);
   }

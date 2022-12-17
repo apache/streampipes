@@ -22,43 +22,43 @@ package org.apache.streampipes.manager.matching;
 
 public class TestPipelineValidationHandler {
 
-//	@Test
-//	public void testPositivePipelineValidation() {
+//  @Test
+//  public void testPositivePipelineValidation() {
 //
-//		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
-//				new RandomNumberStreamJson(),
-//				new AggregationController());
+//    Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
+//        new RandomNumberStreamJson(),
+//        new AggregationController());
 //
-//		PipelineVerificationHandler handler;
-//		try {
-//			handler = new PipelineVerificationHandler(pipeline);
-//			handler.validateConnection();
-//		} catch (Exception e2) {
-//			fail(e2.getMessage());
-//		}
+//    PipelineVerificationHandler handler;
+//    try {
+//      handler = new PipelineVerificationHandler(pipeline);
+//      handler.validateConnection();
+//    } catch (Exception e2) {
+//      fail(e2.getMessage());
+//    }
 //
-//		assertTrue(true);
-//	}
-
-//	@Test
-//	public void testNegativePipelineValidation() {
+//    assertTrue(true);
+//  }
 //
-//		Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
-//				new RandomNumberStreamJson(),
-//				new GeofencingController());
+//  @Test
+//  public void testNegativePipelineValidation() {
 //
-//		PipelineVerificationHandler handler = null;
+//    Pipeline pipeline = TestUtils.makePipeline(new RandomDataProducer(),
+//        new RandomNumberStreamJson(),
+//        new GeofencingController());
+//
+//    PipelineVerificationHandler handler = null;
 //
 //
-//		try {
-//			handler = new PipelineVerificationHandler(pipeline);
-//		} catch (Exception e) {
-//			assertTrue(false);
-//		}
+//    try {
+//      handler = new PipelineVerificationHandler(pipeline);
+//    } catch (Exception e) {
+//      assertTrue(false);
+//    }
 //
-//		Throwable actual = ThrowableCaptor.captureThrowable(handler::validateConnection);
+//    Throwable actual = ThrowableCaptor.captureThrowable(handler::validateConnection);
 //
-//		//assertThat(actual).isInstanceOf(InvalidConnectionException.class);
+//    //assertThat(actual).isInstanceOf(InvalidConnectionException.class);
 //
-//	}
+//  }
 }

@@ -33,7 +33,11 @@ import org.apache.streampipes.model.message.PipelineModificationMessage;
 import org.apache.streampipes.model.pipeline.PipelineElementValidationInfo;
 import org.apache.streampipes.model.pipeline.PipelineModification;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PipelineModificationGenerator {
@@ -90,7 +94,8 @@ public class PipelineModificationGenerator {
         edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.complete(source.getDom(), t.getDom()));
       } catch (SpValidationException e) {
         //e.getErrorLog().forEach(log -> validationInfos.add(PipelineElementValidationInfo.error(log.toString())));
-        edgeValidations.put(makeKey(source, t), PipelineEdgeValidation.invalid(source.getDom(), t.getDom(), toNotifications(e.getErrorLog())));
+        edgeValidations.put(makeKey(source, t),
+            PipelineEdgeValidation.invalid(source.getDom(), t.getDom(), toNotifications(e.getErrorLog())));
         modification.setPipelineElementValid(false);
       }
       modification.setValidationInfos(validationInfos);
@@ -105,7 +110,7 @@ public class PipelineModificationGenerator {
     return source.getDom() + "-" + t.getDom();
   }
 
-  private <T> List<T> toList(Map<String,T> map) {
+  private <T> List<T> toList(Map<String, T> map) {
     return new ArrayList<>(map.values());
   }
 
@@ -123,16 +128,16 @@ public class PipelineModificationGenerator {
   private Set<InvocableStreamPipesEntity> getConnections(NamedStreamPipesEntity source) {
     Set<String> outgoingEdges = pipelineGraph.outgoingEdgesOf(source);
     return outgoingEdges
-            .stream()
-            .map(pipelineGraph::getEdgeTarget)
-            .map(g -> (InvocableStreamPipesEntity) g)
-            .collect(Collectors.toSet());
+        .stream()
+        .map(pipelineGraph::getEdgeTarget)
+        .map(g -> (InvocableStreamPipesEntity) g)
+        .collect(Collectors.toSet());
   }
 
   private List<Notification> toNotifications(List<MatchingResultMessage> matchingResultMessages) {
     return matchingResultMessages
-            .stream()
-            .map(m -> new Notification(m.getTitle(), m.toString()))
-            .collect(Collectors.toList());
+        .stream()
+        .map(m -> new Notification(m.getTitle(), m.toString()))
+        .collect(Collectors.toList());
   }
 }

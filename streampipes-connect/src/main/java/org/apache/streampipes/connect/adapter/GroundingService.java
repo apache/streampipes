@@ -38,113 +38,113 @@ import java.util.UUID;
 
 public class GroundingService {
 
-    private static final String TOPIC_PREFIX = "org.apache.streampipes.connect.";
+  private static final String TOPIC_PREFIX = "org.apache.streampipes.connect.";
 
-    public static String extractTopic(AdapterDescription adapterDescription) {
-        EventGrounding eventGrounding = getEventGrounding(adapterDescription);
-        return eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
+  public static String extractTopic(AdapterDescription adapterDescription) {
+    EventGrounding eventGrounding = getEventGrounding(adapterDescription);
+    return eventGrounding.getTransportProtocol().getTopicDefinition().getActualTopicName();
+  }
+
+  private static EventGrounding getEventGrounding(AdapterDescription adapterDescription) {
+    EventGrounding eventGrounding;
+
+    if (adapterDescription instanceof SpecificAdapterSetDescription) {
+      eventGrounding = ((SpecificAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
+    } else if (adapterDescription instanceof GenericAdapterSetDescription) {
+      eventGrounding = ((GenericAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
+    } else {
+      eventGrounding = adapterDescription.getEventGrounding();
     }
 
-    private static EventGrounding getEventGrounding(AdapterDescription adapterDescription) {
-        EventGrounding eventGrounding;
+    return eventGrounding;
+  }
 
-        if (adapterDescription instanceof SpecificAdapterSetDescription) {
-            eventGrounding = ((SpecificAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
-        } else if (adapterDescription instanceof GenericAdapterSetDescription) {
-            eventGrounding = ((GenericAdapterSetDescription) adapterDescription).getDataSet().getEventGrounding();
-        } else {
-            eventGrounding = adapterDescription.getEventGrounding();
-        }
+  public static EventGrounding createEventGrounding() {
+    EventGrounding eventGrounding = new EventGrounding();
 
-        return eventGrounding;
+    String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
+    TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
+
+    SpProtocol prioritizedProtocol =
+        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+
+    if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
+      eventGrounding.setTransportProtocol(
+          makeJmsTransportProtocol(
+              BackendConfig.INSTANCE.getJmsHost(),
+              BackendConfig.INSTANCE.getJmsPort(),
+              topicDefinition));
+    } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
+      eventGrounding.setTransportProtocol(
+          makeKafkaTransportProtocol(
+              BackendConfig.INSTANCE.getKafkaHost(),
+              BackendConfig.INSTANCE.getKafkaPort(),
+              topicDefinition));
+    } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+      eventGrounding.setTransportProtocol(
+          makeMqttTransportProtocol(
+              BackendConfig.INSTANCE.getMqttHost(),
+              BackendConfig.INSTANCE.getMqttPort(),
+              topicDefinition));
+    } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
+      eventGrounding.setTransportProtocol(
+          makeNatsTransportProtocol(
+              BackendConfig.INSTANCE.getNatsHost(),
+              BackendConfig.INSTANCE.getNatsPort(),
+              topicDefinition));
     }
 
-    public static EventGrounding createEventGrounding() {
-        EventGrounding eventGrounding = new EventGrounding();
+    eventGrounding.setTransportFormats(Collections
+        .singletonList(TransportFormatGenerator.getTransportFormat()));
 
-        String topic = TOPIC_PREFIX + UUID.randomUUID().toString();
-        TopicDefinition topicDefinition = new SimpleTopicDefinition(topic);
+    return eventGrounding;
+  }
 
-        SpProtocol prioritizedProtocol =
-                BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+  public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
+                                      Class<?> protocolClass) {
+    return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
+  }
 
-        if (isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
-            eventGrounding.setTransportProtocol(
-                    makeJmsTransportProtocol(
-                            BackendConfig.INSTANCE.getJmsHost(),
-                            BackendConfig.INSTANCE.getJmsPort(),
-                            topicDefinition));
-        } else if (isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)){
-            eventGrounding.setTransportProtocol(
-                    makeKafkaTransportProtocol(
-                            BackendConfig.INSTANCE.getKafkaHost(),
-                            BackendConfig.INSTANCE.getKafkaPort(),
-                            topicDefinition));
-        } else if (isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
-            eventGrounding.setTransportProtocol(
-                    makeMqttTransportProtocol(
-                            BackendConfig.INSTANCE.getMqttHost(),
-                            BackendConfig.INSTANCE.getMqttPort(),
-                            topicDefinition));
-        } else if (isPrioritized(prioritizedProtocol, NatsTransportProtocol.class)) {
-            eventGrounding.setTransportProtocol(
-                makeNatsTransportProtocol(
-                BackendConfig.INSTANCE.getNatsHost(),
-                BackendConfig.INSTANCE.getNatsPort(),
-                topicDefinition));
-        }
+  private static JmsTransportProtocol makeJmsTransportProtocol(String hostname, Integer port,
+                                                               TopicDefinition topicDefinition) {
+    JmsTransportProtocol transportProtocol = new JmsTransportProtocol();
+    transportProtocol.setPort(port);
+    fillTransportProtocol(transportProtocol, hostname, topicDefinition);
 
-        eventGrounding.setTransportFormats(Collections
-                .singletonList(TransportFormatGenerator.getTransportFormat()));
+    return transportProtocol;
+  }
 
-        return eventGrounding;
-    }
-
-    public static Boolean isPrioritized(SpProtocol prioritizedProtocol,
-                                         Class<?> protocolClass) {
-        return prioritizedProtocol.getProtocolClass().equals(protocolClass.getCanonicalName());
-    }
-
-    private static JmsTransportProtocol makeJmsTransportProtocol(String hostname, Integer port,
-                                                          TopicDefinition topicDefinition) {
-        JmsTransportProtocol transportProtocol = new JmsTransportProtocol();
-        transportProtocol.setPort(port);
-        fillTransportProtocol(transportProtocol, hostname, topicDefinition);
-
-        return transportProtocol;
-    }
-
-    private static MqttTransportProtocol makeMqttTransportProtocol(String hostname, Integer port,
+  private static MqttTransportProtocol makeMqttTransportProtocol(String hostname, Integer port,
                                                                  TopicDefinition topicDefinition) {
-        MqttTransportProtocol transportProtocol = new MqttTransportProtocol();
-        transportProtocol.setPort(port);
-        fillTransportProtocol(transportProtocol, hostname, topicDefinition);
+    MqttTransportProtocol transportProtocol = new MqttTransportProtocol();
+    transportProtocol.setPort(port);
+    fillTransportProtocol(transportProtocol, hostname, topicDefinition);
 
-        return transportProtocol;
-    }
+    return transportProtocol;
+  }
 
-    private static NatsTransportProtocol makeNatsTransportProtocol(String hostname,
-                                                                   int port,
+  private static NatsTransportProtocol makeNatsTransportProtocol(String hostname,
+                                                                 int port,
+                                                                 TopicDefinition topicDefinition) {
+    var tp = new NatsTransportProtocol();
+    tp.setPort(port);
+    fillTransportProtocol(tp, hostname, topicDefinition);
+
+    return tp;
+  }
+
+  private static KafkaTransportProtocol makeKafkaTransportProtocol(String hostname, Integer port,
                                                                    TopicDefinition topicDefinition) {
-        var tp = new NatsTransportProtocol();
-        tp.setPort(port);
-        fillTransportProtocol(tp, hostname, topicDefinition);
+    KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
+    transportProtocol.setKafkaPort(port);
+    fillTransportProtocol(transportProtocol, hostname, topicDefinition);
 
-        return tp;
-    }
+    return transportProtocol;
+  }
 
-    private static KafkaTransportProtocol makeKafkaTransportProtocol(String hostname, Integer port,
-                                                              TopicDefinition topicDefinition) {
-        KafkaTransportProtocol transportProtocol = new KafkaTransportProtocol();
-        transportProtocol.setKafkaPort(port);
-        fillTransportProtocol(transportProtocol, hostname, topicDefinition);
-
-        return transportProtocol;
-    }
-
-    private static void fillTransportProtocol(TransportProtocol protocol, String hostname,
-                                       TopicDefinition topicDefinition) {
-        protocol.setBrokerHostname(hostname);
-        protocol.setTopicDefinition(topicDefinition);
-    }
+  private static void fillTransportProtocol(TransportProtocol protocol, String hostname,
+                                            TopicDefinition topicDefinition) {
+    protocol.setBrokerHostname(hostname);
+    protocol.setTopicDefinition(topicDefinition);
+  }
 }

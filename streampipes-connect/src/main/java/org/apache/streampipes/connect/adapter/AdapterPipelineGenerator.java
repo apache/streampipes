@@ -20,7 +20,17 @@ package org.apache.streampipes.connect.adapter;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.AddValuePipelineElement;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.DebugAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToBrokerAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToMqttAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.SendToNatsAdapterSink;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformSchemaAdapterPipelineElement;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformStreamAdapterElement;
+import org.apache.streampipes.connect.adapter.preprocessing.elements.TransformValueAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.transform.stream.DuplicateFilterPipelineElement;
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -29,7 +39,9 @@ import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.schema.SchemaTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.RemoveDuplicatesTransformationRuleDescription;
-import org.apache.streampipes.model.connect.rules.value.*;
+import org.apache.streampipes.model.connect.rules.value.AddTimestampRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.AddValueTransformationRuleDescription;
+import org.apache.streampipes.model.connect.rules.value.ValueTransformationRuleDescription;
 import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
@@ -44,9 +56,11 @@ public class AdapterPipelineGenerator {
 
     var pipelineElements = makeAdapterPipelineElements(adapterDescription.getRules());
 
-    var duplicatesTransformationRuleDescription = getRemoveDuplicateRule(adapterDescription.getRules());
+    var duplicatesTransformationRuleDescription =
+        getRemoveDuplicateRule(adapterDescription.getRules());
     if (duplicatesTransformationRuleDescription != null) {
-      pipelineElements.add(new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
+      pipelineElements.add(
+          new DuplicateFilterPipelineElement(duplicatesTransformationRuleDescription.getFilterTimeWindow()));
     }
 
     var transformStreamAdapterElement = new TransformStreamAdapterElement();
@@ -58,8 +72,9 @@ public class AdapterPipelineGenerator {
 
     // TODO decide what was meant with this comment
     // Needed when adapter is (
-    if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
-      && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
+    if (adapterDescription.getEventGrounding() != null
+        && adapterDescription.getEventGrounding().getTransportProtocol() != null
+        && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
       return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
     }
 
@@ -78,14 +93,14 @@ public class AdapterPipelineGenerator {
     var timestampTransformationRuleDescription = getTimestampRule(rules);
     if (timestampTransformationRuleDescription != null) {
       pipelineElements.add(new AddTimestampPipelineElement(
-        timestampTransformationRuleDescription.getRuntimeKey()));
+          timestampTransformationRuleDescription.getRuntimeKey()));
     }
 
     var valueTransformationRuleDescription = getAddValueRule(rules);
     if (valueTransformationRuleDescription != null) {
       pipelineElements.add(new AddValuePipelineElement(
-        valueTransformationRuleDescription.getRuntimeKey(),
-        valueTransformationRuleDescription.getStaticValue()));
+          valueTransformationRuleDescription.getRuntimeKey(),
+          valueTransformationRuleDescription.getStaticValue()));
     }
 
     // first transform schema before transforming vales
@@ -98,26 +113,26 @@ public class AdapterPipelineGenerator {
 
   private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {
     var prioritizedProtocol =
-      BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
+        BackendConfig.INSTANCE.getMessagingSettings().getPrioritizedProtocols().get(0);
 
     if (GroundingService.isPrioritized(prioritizedProtocol, JmsTransportProtocol.class)) {
       return new SendToJmsAdapterSink(adapterDescription);
-    }
-    else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
+    } else if (GroundingService.isPrioritized(prioritizedProtocol, KafkaTransportProtocol.class)) {
       return new SendToKafkaAdapterSink(adapterDescription);
-    }
-    else if (GroundingService.isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
+    } else if (GroundingService.isPrioritized(prioritizedProtocol, MqttTransportProtocol.class)) {
       return new SendToMqttAdapterSink(adapterDescription);
     } else {
       return new SendToNatsAdapterSink(adapterDescription);
     }
   }
 
-  private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(List<TransformationRuleDescription> rules) {
+  private RemoveDuplicatesTransformationRuleDescription getRemoveDuplicateRule(
+      List<TransformationRuleDescription> rules) {
     return getRule(rules, RemoveDuplicatesTransformationRuleDescription.class);
   }
 
-  private EventRateTransformationRuleDescription getEventRateTransformationRule(List<TransformationRuleDescription> rules) {
+  private EventRateTransformationRuleDescription getEventRateTransformationRule(
+      List<TransformationRuleDescription> rules) {
     return getRule(rules, EventRateTransformationRuleDescription.class);
   }
 
@@ -133,8 +148,8 @@ public class AdapterPipelineGenerator {
     return getRule(rules, DebugSinkRuleDescription.class);
   }
 
-  private <G extends TransformationRuleDescription> G getRule(List<TransformationRuleDescription> rules,
-                                                              Class<G> type) {
+  private <T extends TransformationRuleDescription> T getRule(List<TransformationRuleDescription> rules,
+                                                              Class<T> type) {
 
     if (rules != null) {
       for (TransformationRuleDescription tr : rules) {
@@ -149,15 +164,15 @@ public class AdapterPipelineGenerator {
 
   private List<TransformationRuleDescription> getValueRules(List<TransformationRuleDescription> rules) {
     return rules
-      .stream()
-      .filter(r -> r instanceof ValueTransformationRuleDescription && !(r instanceof AddTimestampRuleDescription))
-      .collect(Collectors.toList());
+        .stream()
+        .filter(r -> r instanceof ValueTransformationRuleDescription && !(r instanceof AddTimestampRuleDescription))
+        .collect(Collectors.toList());
   }
 
   private List<TransformationRuleDescription> getSchemaRules(List<TransformationRuleDescription> rules) {
     return rules
-      .stream()
-      .filter(r -> r instanceof SchemaTransformationRuleDescription)
-      .collect(Collectors.toList());
+        .stream()
+        .filter(r -> r instanceof SchemaTransformationRuleDescription)
+        .collect(Collectors.toList());
   }
 }

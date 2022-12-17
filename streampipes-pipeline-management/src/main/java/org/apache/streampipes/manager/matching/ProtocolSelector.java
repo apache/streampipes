@@ -24,7 +24,11 @@ import org.apache.streampipes.manager.util.TopicGenerator;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
-import org.apache.streampipes.model.grounding.*;
+import org.apache.streampipes.model.grounding.JmsTransportProtocol;
+import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
+import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+import org.apache.streampipes.model.grounding.NatsTransportProtocol;
+import org.apache.streampipes.model.grounding.TransportProtocol;
 
 import java.util.List;
 import java.util.Set;
@@ -48,17 +52,17 @@ public class ProtocolSelector extends GroundingSelector {
           .getTransportProtocol();
     } else {
       for (SpProtocol prioritizedProtocol : prioritizedProtocols) {
-        if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName()) &&
-            supportsProtocol(KafkaTransportProtocol.class)) {
+        if (prioritizedProtocol.getProtocolClass().equals(KafkaTransportProtocol.class.getCanonicalName())
+            && supportsProtocol(KafkaTransportProtocol.class)) {
           return kafkaTopic();
-        } else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName()) &&
-            supportsProtocol(JmsTransportProtocol.class)) {
+        } else if (prioritizedProtocol.getProtocolClass().equals(JmsTransportProtocol.class.getCanonicalName())
+            && supportsProtocol(JmsTransportProtocol.class)) {
           return jmsTopic();
-        } else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName()) &&
-            supportsProtocol(MqttTransportProtocol.class)) {
+        } else if (prioritizedProtocol.getProtocolClass().equals(MqttTransportProtocol.class.getCanonicalName())
+            && supportsProtocol(MqttTransportProtocol.class)) {
           return mqttTopic();
-        } else if (prioritizedProtocol.getProtocolClass().equals(NatsTransportProtocol.class.getCanonicalName()) &&
-            supportsProtocol(NatsTransportProtocol.class)) {
+        } else if (prioritizedProtocol.getProtocolClass().equals(NatsTransportProtocol.class.getCanonicalName())
+            && supportsProtocol(NatsTransportProtocol.class)) {
           return natsTopic();
         }
       }

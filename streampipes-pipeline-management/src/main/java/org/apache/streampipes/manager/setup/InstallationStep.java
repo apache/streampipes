@@ -24,30 +24,30 @@ import org.slf4j.LoggerFactory;
 
 public abstract class InstallationStep {
 
-	public static final Logger LOG = LoggerFactory.getLogger(InstallationStep.class);
+  public static final Logger LOG = LoggerFactory.getLogger(InstallationStep.class);
 
-	private int errorCount = 0;
+  private int errorCount = 0;
 
-	public abstract void install();
+  public abstract void install();
 
-	public abstract String getTitle();
+  public abstract String getTitle();
 
-	public void logSuccess(String info) {
-		LOG.info(info);
-	}
+  public void logSuccess(String info) {
+    LOG.info(info);
+  }
 
-	public void logFailure(String error) {
-		errorCount++;
-		LOG.error(error);
-	}
+  public void logFailure(String error) {
+    errorCount++;
+    LOG.error(error);
+  }
 
-	public void logFailure(String error, Exception e) {
-		errorCount++;
-		LOG.error(error, e);
-	}
+  public void logFailure(String error, Exception e) {
+    errorCount++;
+    LOG.error(error, e);
+  }
 
-	public int getErrorCount() {
-		return errorCount;
-	}
+  public int getErrorCount() {
+    return errorCount;
+  }
 
 }

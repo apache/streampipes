@@ -22,6 +22,7 @@ import org.apache.streampipes.model.client.user.Permission;
 import org.apache.streampipes.model.client.user.Principal;
 import org.apache.streampipes.resource.management.SpResourceManager;
 import org.apache.streampipes.user.management.jwt.JwtTokenProvider;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -42,8 +43,8 @@ public class AuthTokenUtils {
   }
 
   public static String getAuthTokenForUser(String ownerSid) {
-      Principal correspondingUser = new SpResourceManager().manageUsers().getPrincipalById(ownerSid);
-      return getAuthTokenForUser(correspondingUser);
+    Principal correspondingUser = new SpResourceManager().manageUsers().getPrincipalById(ownerSid);
+    return getAuthTokenForUser(correspondingUser);
   }
 
   public static String getAuthTokenForUser(Principal principal) {
@@ -60,6 +61,7 @@ public class AuthTokenUtils {
         .findForObjectId(resourceId)
         .stream()
         .findFirst()
-        .map(Permission::getOwnerSid).orElseThrow(() -> new IllegalArgumentException("Could not find owner for resource " + resourceId));
+        .map(Permission::getOwnerSid)
+        .orElseThrow(() -> new IllegalArgumentException("Could not find owner for resource " + resourceId));
   }
 }

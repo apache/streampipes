@@ -41,9 +41,9 @@ public class PipelineVerificationUtils {
     elements.addAll(pipeline.getActions());
 
     List<InvocableStreamPipesEntity> unconfiguredElements = elements
-            .stream()
-            .filter(e -> !e.isConfigured())
-            .collect(Collectors.toList());
+        .stream()
+        .filter(e -> !e.isConfigured())
+        .collect(Collectors.toList());
 
 
     if (unconfiguredElements.size() != 1) {

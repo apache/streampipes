@@ -26,17 +26,25 @@ import org.apache.streampipes.model.output.TransformOutputStrategy;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
 import org.apache.streampipes.model.schema.EventSchema;
-import org.apache.streampipes.model.staticproperty.*;
+import org.apache.streampipes.model.staticproperty.FreeTextStaticProperty;
+import org.apache.streampipes.model.staticproperty.MappingPropertyUnary;
+import org.apache.streampipes.model.staticproperty.Option;
+import org.apache.streampipes.model.staticproperty.SelectionStaticProperty;
+import org.apache.streampipes.model.staticproperty.StaticProperty;
 import org.apache.streampipes.model.util.Cloner;
 import org.apache.streampipes.sdk.helpers.Tuple2;
 
 import java.net.URI;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<TransformOutputStrategy> {
 
-  private  List<StaticProperty> staticProperties;
+  private List<StaticProperty> staticProperties;
 
   public static TransformOutputSchemaGenerator from(OutputStrategy strategy,
                                                     DataProcessorInvocation invocation) {
@@ -44,7 +52,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
   }
 
   public TransformOutputSchemaGenerator(TransformOutputStrategy strategy, DataProcessorInvocation
-   invocation) {
+      invocation) {
     super(strategy);
     this.staticProperties = invocation.getStaticProperties();
   }
@@ -57,7 +65,7 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
     EventSchema inSchema = stream.getEventSchema();
     outputStrategy.getTransformOperations().forEach(to -> {
       Optional<MappingPropertyUnary> mappingPropertyOpt = findMappingProperty(to.getMappingPropertyInternalName(),
-              staticProperties);
+          staticProperties);
 
       if (mappingPropertyOpt.isPresent()) {
         MappingPropertyUnary mappingProperty = mappingPropertyOpt.get();
@@ -65,39 +73,39 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
 
         if (selectedProperty != null) {
           Optional<EventProperty> eventPropertyOpt = findEventProperty(
-                  mappingPropertyOpt.get().getSelectedProperty(),
-                  inSchema.getEventProperties()
+              mappingPropertyOpt.get().getSelectedProperty(),
+              inSchema.getEventProperties()
           );
 
           if (eventPropertyOpt.isPresent()) {
             EventProperty eventProperty = eventPropertyOpt.get();
             modifiedEventProperties.put(eventProperty.getElementId(), modifyEventProperty(cloneEp(eventProperty), to,
-                    staticProperties));
+                staticProperties));
           }
         }
       }
     });
 
     List<EventProperty> newProperties = inSchema.getEventProperties()
-            .stream()
-            .map(ep -> modifiedEventProperties.getOrDefault(ep.getElementId(), ep))
-            .collect(Collectors.toList());
+        .stream()
+        .map(ep -> modifiedEventProperties.getOrDefault(ep.getElementId(), ep))
+        .collect(Collectors.toList());
 
     outSchema.setEventProperties(newProperties);
     return makeTuple(outSchema);
   }
 
   private EventProperty modifyEventProperty(EventProperty eventProperty, TransformOperation to, List<StaticProperty>
-          staticProperties) {
+      staticProperties) {
 
     if (to.getTargetValue() != null) {
       return modifyEventProperty(eventProperty, TransformOperationType.valueOf(to.getTransformationScope()), to
-              .getTargetValue());
+          .getTargetValue());
     } else {
       Optional<StaticProperty> sp = findStaticProperty(staticProperties, to.getSourceStaticProperty());
       if (sp.isPresent()) {
         return modifyEventProperty(eventProperty, sp.get(), TransformOperationType.valueOf(to.getTransformationScope
-                ()));
+            ()));
       }
     }
     return new Cloner().property(eventProperty);
@@ -105,14 +113,14 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
 
   private EventProperty modifyEventProperty(EventProperty eventProperty, StaticProperty staticProperty,
                                             TransformOperationType
-                                                    transformOperationType) {
+                                                transformOperationType) {
     if (staticProperty instanceof SelectionStaticProperty) {
       return modifyEventProperty(eventProperty, transformOperationType, findSelected(((SelectionStaticProperty)
-              staticProperty).getOptions()).getInternalName());
+          staticProperty).getOptions()).getInternalName());
     } else if (staticProperty instanceof FreeTextStaticProperty) {
       return modifyEventProperty(eventProperty, transformOperationType, ((FreeTextStaticProperty) staticProperty)
-              .getValue
-                      ());
+          .getValue
+              ());
     }
 
     return eventProperty;
@@ -120,23 +128,24 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
 
   private Option findSelected(List<Option> options) {
     return options
-            .stream()
-            .filter(Option::isSelected)
-            .findFirst()
-            .get();
+        .stream()
+        .filter(Option::isSelected)
+        .findFirst()
+        .get();
   }
 
-  private Optional<StaticProperty> findStaticProperty(List<StaticProperty> staticProperties, String sourceStaticProperty) {
+  private Optional<StaticProperty> findStaticProperty(List<StaticProperty> staticProperties,
+                                                      String sourceStaticProperty) {
 
     return staticProperties
-            .stream()
-            .filter(sp -> sp.getInternalName().equals(sourceStaticProperty))
-            .findFirst();
+        .stream()
+        .filter(sp -> sp.getInternalName().equals(sourceStaticProperty))
+        .findFirst();
   }
 
 
   private EventProperty modifyEventProperty(EventProperty eventProperty, TransformOperationType
-          transformOperationType, String value) {
+      transformOperationType, String value) {
 // TODO check support for lists and nested properties
     if (transformOperationType == TransformOperationType.DATATYPE_TRANSFORMATION) {
       if (eventProperty instanceof EventPropertyPrimitive) {
@@ -158,12 +167,12 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
   }
 
   private Optional<EventProperty> findEventProperty(String propertySelector, List<EventProperty>
-          eventProperties) {
+      eventProperties) {
 
     return eventProperties
-            .stream()
-            .filter(ep -> ep.getRuntimeName().equals(removePrefix(propertySelector)))
-            .findFirst();
+        .stream()
+        .filter(ep -> ep.getRuntimeName().equals(removePrefix(propertySelector)))
+        .findFirst();
   }
 
   private String removePrefix(String propertySelector) {
@@ -175,18 +184,18 @@ public class TransformOutputSchemaGenerator extends OutputSchemaGenerator<Transf
   }
 
   private Optional<MappingPropertyUnary> findMappingProperty(String mappingPropertyInternalName, List<StaticProperty>
-          staticProperties) {
+      staticProperties) {
 
     return staticProperties
-            .stream()
-            .filter(sp -> sp.getInternalName().equals(mappingPropertyInternalName))
-            .map(sp -> (MappingPropertyUnary) sp)
-            .findFirst();
+        .stream()
+        .filter(sp -> sp.getInternalName().equals(mappingPropertyInternalName))
+        .map(sp -> (MappingPropertyUnary) sp)
+        .findFirst();
   }
 
   @Override
   public Tuple2<EventSchema, TransformOutputStrategy> buildFromTwoStreams(SpDataStream stream1, SpDataStream
-          stream2) {
+      stream2) {
     // TODO
     return buildFromOneStream(stream1);
   }

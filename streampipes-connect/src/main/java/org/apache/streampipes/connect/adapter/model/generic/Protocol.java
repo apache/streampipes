@@ -23,27 +23,26 @@ import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.model.schema.EventSchema;
 
-
 public abstract class Protocol implements IProtocol {
 
-    protected IParser parser;
-    protected IFormat format;
+  protected IParser parser;
+  protected IFormat format;
 
-    //TODO remove
-    protected EventSchema eventSchema;
+  //TODO remove
+  protected EventSchema eventSchema;
 
-    public Protocol() {
+  public Protocol() {
 
-    }
+  }
 
-    public Protocol(IParser parser, IFormat format) {
-        this.parser = parser;
-        this.format = format;
-    }
+  public Protocol(IParser parser, IFormat format) {
+    this.parser = parser;
+    this.format = format;
+  }
 
-    //TODO remove
-    @Override
-    public void setEventSchema(EventSchema eventSchema) {
-        this.eventSchema = eventSchema;
-    }
+  //TODO remove
+  @Override
+  public void setEventSchema(EventSchema eventSchema) {
+    this.eventSchema = eventSchema;
+  }
 }

@@ -22,58 +22,59 @@ import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescription> {
 
-    public static final String ID = GenericAdapterSetDescription.ID;
+  public static final String ID = GenericAdapterSetDescription.ID;
 
-    Logger logger = LoggerFactory.getLogger(Adapter.class);
+  Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-    public GenericDataSetAdapter() {
-        super();
-    }
+  public GenericDataSetAdapter() {
+    super();
+  }
 
 
-    public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
+  public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription, boolean debug) {
+    super(adapterDescription, debug);
+  }
 
-    public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription) {
-        super(adapterDescription);
-    }
+  public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription) {
+    super(adapterDescription);
+  }
 
-    @Override
-    public GenericAdapterSetDescription declareModel() {
-        GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
+  @Override
+  public GenericAdapterSetDescription declareModel() {
+    GenericAdapterSetDescription adapterDescription = new GenericAdapterSetDescription();
 //        adapterDescription.setAdapterId(GenericAdapterSetDescription.ID);
 //        adapterDescription.setUri(GenericAdapterSetDescription.ID);
-        adapterDescription.setAppId(GenericAdapterSetDescription.ID);
-        return adapterDescription;
-    }
+    adapterDescription.setAppId(GenericAdapterSetDescription.ID);
+    return adapterDescription;
+  }
 
-    @Override
-    public Adapter<GenericAdapterSetDescription> getInstance(GenericAdapterSetDescription adapterDescription) {
-        return  new GenericDataSetAdapter(adapterDescription);
-    }
+  @Override
+  public Adapter<GenericAdapterSetDescription> getInstance(GenericAdapterSetDescription adapterDescription) {
+    return new GenericDataSetAdapter(adapterDescription);
+  }
 
-    @Override
-    public String getId() {
-        return ID;
-    }
+  @Override
+  public String getId() {
+    return ID;
+  }
 
-    public void stopAdapter() {
-        protocol.stop();
-    }
+  public void stopAdapter() {
+    protocol.stop();
+  }
 
-    @Override
-    public GenericAdapterDescription getAdapterDescription() {
-        return adapterDescription;
-    }
+  @Override
+  public GenericAdapterDescription getAdapterDescription() {
+    return adapterDescription;
+  }
 
-    @Override
-    public void setProtocol(IProtocol protocol) {
-       this.protocol = protocol;
-    }
+  @Override
+  public void setProtocol(IProtocol protocol) {
+    this.protocol = protocol;
+  }
 }

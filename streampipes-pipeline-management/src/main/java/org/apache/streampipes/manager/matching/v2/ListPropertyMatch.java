@@ -31,19 +31,19 @@ public class ListPropertyMatch implements Matcher<EventPropertyList, EventProper
       return true;
     } else {
       return domainPropertyMatch(offer, requirement, errorLog) && listItemMatch(offer, requirement,
-              errorLog);
+          errorLog);
     }
   }
 
   private boolean domainPropertyMatch(EventPropertyList offer, EventPropertyList requirement,
                                       List<MatchingResultMessage> errorLog) {
     return new DomainPropertyMatch().match(offer.getDomainProperties(), requirement.getDomainProperties(),
-            errorLog);
+        errorLog);
   }
 
   private boolean listItemMatch(EventPropertyList offer, EventPropertyList requirement,
                                 List<MatchingResultMessage> errorLog) {
     return new PropertyMatch().match(offer.getEventProperty(), requirement.getEventProperty(),
-            errorLog);
+        errorLog);
   }
 }

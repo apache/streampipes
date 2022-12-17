@@ -20,7 +20,8 @@ package org.apache.streampipes.manager.template;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.template.PipelineElementTemplate;
 
-public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPipesEntity> extends AbstractTemplateHandler<T> {
+public abstract class PipelineElementTemplateHandler<T extends InvocableStreamPipesEntity>
+    extends AbstractTemplateHandler<T> {
 
   public PipelineElementTemplateHandler(PipelineElementTemplate template,
                                         T pipelineElement,

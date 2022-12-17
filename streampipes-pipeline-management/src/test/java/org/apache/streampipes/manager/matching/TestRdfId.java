@@ -33,13 +33,15 @@ public class TestRdfId {
 //        CustomOutputStrategy strategy = (CustomOutputStrategy) invocation.getOutputStrategies().get(0);
 //        strategy.setEventProperties(clonedStream.getEventSchema().getEventProperties());
 //
-//        assertEquals(clonedStream.getEventSchema().getEventProperties().get(0).getElementId(), strategy.getEventProperties().get(0).getElementId());
+//        assertEquals(clonedStream.getEventSchema().getEventProperties().get(0).getElementId(),
+//        strategy.getEventProperties().get(0).getElementId());
 //
 //        DataProcessorInvocation invocation2 = new DataProcessorInvocation(invocation);
 //
 //        CustomOutputStrategy strategy2 = (CustomOutputStrategy) invocation2.getOutputStrategies().get(0);
 //
-//        assertEquals(clonedStream.getEventSchema().getEventProperties().get(0).getElementId(), strategy2.getEventProperties().get(0).getElementId());
+//        assertEquals(clonedStream.getEventSchema().getEventProperties().get(0).getElementId(),
+//        strategy2.getEventProperties().get(0).getElementId());
 //
 //
 //

@@ -28,9 +28,9 @@ public class TestUtils {
   public static String getJsonArrayWithThreeElements() {
     JsonObject jsonObject = new JsonObject();
     jsonObject.add("key0", makeJsonArray(
-            makeJsonObject("one", 1),
-            makeJsonObject("one", 2),
-            makeJsonObject("one", 3)));
+        makeJsonObject("one", 1),
+        makeJsonObject("one", 2),
+        makeJsonObject("one", 3)));
     return jsonObject.toString();
   }
 

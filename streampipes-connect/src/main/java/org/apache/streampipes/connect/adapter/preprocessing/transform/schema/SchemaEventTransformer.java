@@ -26,94 +26,94 @@ import java.util.Map;
 
 public class SchemaEventTransformer implements SchemaTransformationRule {
 
-    private List<RenameTransformationRule> renameTransformationRules;
-    private List<CreateNestedTransformationRule> createNestedTransformationRules;
-    private List<MoveTransformationRule> moveTransformationRules;
-    private List<DeleteTransformationRule> deleteTransformationRules;
+  private List<RenameTransformationRule> renameTransformationRules;
+  private List<CreateNestedTransformationRule> createNestedTransformationRules;
+  private List<MoveTransformationRule> moveTransformationRules;
+  private List<DeleteTransformationRule> deleteTransformationRules;
 
-    public SchemaEventTransformer(List<TransformationRule> rules) {
-        this.renameTransformationRules = new ArrayList<>();
-        this.createNestedTransformationRules = new ArrayList<>();
-        this.moveTransformationRules = new ArrayList<>();
-        this.deleteTransformationRules = new ArrayList<>();
+  public SchemaEventTransformer(List<TransformationRule> rules) {
+    this.renameTransformationRules = new ArrayList<>();
+    this.createNestedTransformationRules = new ArrayList<>();
+    this.moveTransformationRules = new ArrayList<>();
+    this.deleteTransformationRules = new ArrayList<>();
 
-        for (TransformationRule rule : rules) {
-            if (rule instanceof RenameTransformationRule) {
-                this.renameTransformationRules.add((RenameTransformationRule) rule);
-            } else if (rule instanceof CreateNestedTransformationRule) {
-                this.createNestedTransformationRules.add((CreateNestedTransformationRule) rule);
-            } else if (rule instanceof MoveTransformationRule) {
-                this.moveTransformationRules.add((MoveTransformationRule) rule);
-            } else if (rule instanceof DeleteTransformationRule) {
-                this.deleteTransformationRules.add((DeleteTransformationRule) rule);
-            }
-        }
+    for (TransformationRule rule : rules) {
+      if (rule instanceof RenameTransformationRule) {
+        this.renameTransformationRules.add((RenameTransformationRule) rule);
+      } else if (rule instanceof CreateNestedTransformationRule) {
+        this.createNestedTransformationRules.add((CreateNestedTransformationRule) rule);
+      } else if (rule instanceof MoveTransformationRule) {
+        this.moveTransformationRules.add((MoveTransformationRule) rule);
+      } else if (rule instanceof DeleteTransformationRule) {
+        this.deleteTransformationRules.add((DeleteTransformationRule) rule);
+      }
+    }
+  }
+
+
+  public SchemaEventTransformer(List<RenameTransformationRule> renameTransformationRules,
+                                List<CreateNestedTransformationRule> createNestedTransformationRules,
+                                List<MoveTransformationRule> moveTransformationRules,
+                                List<DeleteTransformationRule> deleteTransformationRules) {
+    this.renameTransformationRules = renameTransformationRules;
+    this.createNestedTransformationRules = createNestedTransformationRules;
+    this.moveTransformationRules = moveTransformationRules;
+    this.deleteTransformationRules = deleteTransformationRules;
+  }
+
+
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+
+    for (RenameTransformationRule renameRule : renameTransformationRules) {
+      event = renameRule.transform(event);
     }
 
-
-    public SchemaEventTransformer(List<RenameTransformationRule> renameTransformationRules,
-                                  List<CreateNestedTransformationRule> createNestedTransformationRules,
-                                  List<MoveTransformationRule> moveTransformationRules,
-                                  List<DeleteTransformationRule> deleteTransformationRules) {
-        this.renameTransformationRules = renameTransformationRules;
-        this.createNestedTransformationRules = createNestedTransformationRules;
-        this.moveTransformationRules = moveTransformationRules;
-        this.deleteTransformationRules = deleteTransformationRules;
+    for (CreateNestedTransformationRule createRule : createNestedTransformationRules) {
+      event = createRule.transform(event);
     }
 
-
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-
-        for (RenameTransformationRule renameRule :  renameTransformationRules) {
-            event = renameRule.transform(event);
-        }
-
-        for (CreateNestedTransformationRule createRule : createNestedTransformationRules) {
-            event = createRule.transform(event);
-        }
-
-        for (MoveTransformationRule moveRule : moveTransformationRules) {
-            event = moveRule.transform(event);
-        }
-
-        for (DeleteTransformationRule deleteRule : deleteTransformationRules) {
-            event = deleteRule.transform(event);
-        }
-
-        return event;
+    for (MoveTransformationRule moveRule : moveTransformationRules) {
+      event = moveRule.transform(event);
     }
 
-
-    public List<RenameTransformationRule> getRenameTransformationRules() {
-        return renameTransformationRules;
+    for (DeleteTransformationRule deleteRule : deleteTransformationRules) {
+      event = deleteRule.transform(event);
     }
 
-    public void setRenameTransformationRules(List<RenameTransformationRule> renameTransformationRules) {
-        this.renameTransformationRules = renameTransformationRules;
-    }
+    return event;
+  }
 
-    public List<CreateNestedTransformationRule> getCreateNestedTransformationRules() {
-        return createNestedTransformationRules;
-    }
 
-    public void setCreateNestedTransformationRules(List<CreateNestedTransformationRule> createNestedTransformationRules) {
-        this.createNestedTransformationRules = createNestedTransformationRules;
-    }
+  public List<RenameTransformationRule> getRenameTransformationRules() {
+    return renameTransformationRules;
+  }
 
-    public List<MoveTransformationRule> getMoveTransformationRules() {
-        return moveTransformationRules;
-    }
+  public void setRenameTransformationRules(List<RenameTransformationRule> renameTransformationRules) {
+    this.renameTransformationRules = renameTransformationRules;
+  }
 
-    public void setMoveTransformationRules(List<MoveTransformationRule> moveTransformationRules) {
-        this.moveTransformationRules = moveTransformationRules;
-    }
+  public List<CreateNestedTransformationRule> getCreateNestedTransformationRules() {
+    return createNestedTransformationRules;
+  }
 
-    public List<DeleteTransformationRule> getDeleteTransformationRules() {
-        return deleteTransformationRules;
-    }
+  public void setCreateNestedTransformationRules(List<CreateNestedTransformationRule> createNestedTransformationRules) {
+    this.createNestedTransformationRules = createNestedTransformationRules;
+  }
 
-    public void setDeleteTransformationRules(List<DeleteTransformationRule> deleteTransformationRules) {
-        this.deleteTransformationRules = deleteTransformationRules;
-    }
+  public List<MoveTransformationRule> getMoveTransformationRules() {
+    return moveTransformationRules;
+  }
+
+  public void setMoveTransformationRules(List<MoveTransformationRule> moveTransformationRules) {
+    this.moveTransformationRules = moveTransformationRules;
+  }
+
+  public List<DeleteTransformationRule> getDeleteTransformationRules() {
+    return deleteTransformationRules;
+  }
+
+  public void setDeleteTransformationRules(List<DeleteTransformationRule> deleteTransformationRules) {
+    this.deleteTransformationRules = deleteTransformationRules;
+  }
 }

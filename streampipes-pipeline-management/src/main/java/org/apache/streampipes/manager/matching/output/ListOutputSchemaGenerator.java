@@ -49,7 +49,7 @@ public class ListOutputSchemaGenerator extends OutputSchemaGenerator<ListOutputS
 
   @Override
   public Tuple2<EventSchema, ListOutputStrategy> buildFromTwoStreams(SpDataStream stream1,
-                                         SpDataStream stream2) {
+                                                                     SpDataStream stream2) {
     return buildFromOneStream(stream1);
   }
 

@@ -25,7 +25,7 @@ import org.apache.streampipes.dataformat.json.JsonDataFormatDefinition;
 import java.util.Map;
 
 public abstract class AbstractJsonFormat implements IFormat {
-  public static String JSON_FORMAT_TYPE = "json";
+  public static final String JSON_FORMAT_TYPE = "json";
 
   @Override
   public Map<String, Object> parse(byte[] object) throws ParseException {
@@ -39,7 +39,7 @@ public abstract class AbstractJsonFormat implements IFormat {
       throw new ParseException("Could not parse Data: " + e.toString());
     }
 
-    return  result;
+    return result;
   }
 
 }

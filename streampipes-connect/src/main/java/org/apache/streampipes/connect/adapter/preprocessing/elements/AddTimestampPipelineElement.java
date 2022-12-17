@@ -24,16 +24,16 @@ import java.util.Map;
 
 public class AddTimestampPipelineElement implements IAdapterPipelineElement {
 
-    private String runtimeKey;
+  private String runtimeKey;
 
-    public AddTimestampPipelineElement(String runtimeKey) {
-        this.runtimeKey = runtimeKey;
-    }
+  public AddTimestampPipelineElement(String runtimeKey) {
+    this.runtimeKey = runtimeKey;
+  }
 
-    @Override
-    public Map<String, Object> process(Map<String, Object> event) {
-        event.put(runtimeKey, System.currentTimeMillis());
-        return event;
-    }
+  @Override
+  public Map<String, Object> process(Map<String, Object> event) {
+    event.put(runtimeKey, System.currentTimeMillis());
+    return event;
+  }
 
 }

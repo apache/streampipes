@@ -26,49 +26,49 @@ import java.util.Map;
 
 public class ValueEventTransformer implements ValueTransformationRule {
 
-    private final List<UnitTransformationRule> unitTransformationRules;
-    private final List<TimestampTranformationRule> timestampTransformationRules;
-    private final List<CorrectionValueTransformationRule> correctionValueTransformationRules;
-    private final List<DatatypeTransformationRule> datatypeTransformationRules;
+  private final List<UnitTransformationRule> unitTransformationRules;
+  private final List<TimestampTranformationRule> timestampTransformationRules;
+  private final List<CorrectionValueTransformationRule> correctionValueTransformationRules;
+  private final List<DatatypeTransformationRule> datatypeTransformationRules;
 
-    public ValueEventTransformer(List<ValueTransformationRule> rules) {
-        this.unitTransformationRules = new ArrayList<>();
-        this.timestampTransformationRules = new ArrayList<>();
-        this.correctionValueTransformationRules = new ArrayList<>();
-        this.datatypeTransformationRules = new ArrayList<>();
+  public ValueEventTransformer(List<ValueTransformationRule> rules) {
+    this.unitTransformationRules = new ArrayList<>();
+    this.timestampTransformationRules = new ArrayList<>();
+    this.correctionValueTransformationRules = new ArrayList<>();
+    this.datatypeTransformationRules = new ArrayList<>();
 
-        for (TransformationRule rule : rules) {
-            if (rule instanceof UnitTransformationRule) {
-                this.unitTransformationRules.add((UnitTransformationRule) rule);
-            } else if (rule instanceof TimestampTranformationRule) {
-                this.timestampTransformationRules.add((TimestampTranformationRule) rule);
-            } else if (rule instanceof CorrectionValueTransformationRule) {
-                this.correctionValueTransformationRules.add((CorrectionValueTransformationRule) rule);
-            } else if (rule instanceof DatatypeTransformationRule) {
-                this.datatypeTransformationRules.add((DatatypeTransformationRule) rule);
-            }
-        }
+    for (TransformationRule rule : rules) {
+      if (rule instanceof UnitTransformationRule) {
+        this.unitTransformationRules.add((UnitTransformationRule) rule);
+      } else if (rule instanceof TimestampTranformationRule) {
+        this.timestampTransformationRules.add((TimestampTranformationRule) rule);
+      } else if (rule instanceof CorrectionValueTransformationRule) {
+        this.correctionValueTransformationRules.add((CorrectionValueTransformationRule) rule);
+      } else if (rule instanceof DatatypeTransformationRule) {
+        this.datatypeTransformationRules.add((DatatypeTransformationRule) rule);
+      }
+    }
+  }
+
+  @Override
+  public Map<String, Object> transform(Map<String, Object> event) {
+
+    for (UnitTransformationRule rule : unitTransformationRules) {
+      event = rule.transform(event);
     }
 
-    @Override
-    public Map<String, Object> transform(Map<String, Object> event) {
-
-        for (UnitTransformationRule rule : unitTransformationRules) {
-            event = rule.transform(event);
-        }
-
-        for (TimestampTranformationRule rule : timestampTransformationRules) {
-            event = rule.transform(event);
-        }
-
-        for (var rule: datatypeTransformationRules) {
-            event = rule.transform(event);
-        }
-
-        for (CorrectionValueTransformationRule rule : correctionValueTransformationRules) {
-            event = rule.transform(event);
-        }
-
-        return event;
+    for (TimestampTranformationRule rule : timestampTransformationRules) {
+      event = rule.transform(event);
     }
+
+    for (var rule : datatypeTransformationRules) {
+      event = rule.transform(event);
+    }
+
+    for (CorrectionValueTransformationRule rule : correctionValueTransformationRules) {
+      event = rule.transform(event);
+    }
+
+    return event;
+  }
 }

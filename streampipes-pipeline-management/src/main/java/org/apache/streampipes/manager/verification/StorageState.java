@@ -19,5 +19,5 @@
 package org.apache.streampipes.manager.verification;
 
 public enum StorageState {
-STORED, ALREADY_IN_SESAME
+  STORED, ALREADY_IN_SESAME
 }

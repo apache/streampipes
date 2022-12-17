@@ -120,11 +120,11 @@ public class PipelineGenerator {
 
   private PipelineModification getModification(PipelineModificationMessage message,
                                                String domId) {
-   return message.getPipelineModifications()
-           .stream()
-           .filter(pm -> pm.getDomId().equals(domId))
-           .findFirst()
-           .orElseThrow(IllegalArgumentException::new);
+    return message.getPipelineModifications()
+        .stream()
+        .filter(pm -> pm.getDomId().equals(domId))
+        .findFirst()
+        .orElseThrow(IllegalArgumentException::new);
   }
 
   private InvocableStreamPipesEntity clonePe(InvocableStreamPipesEntity pipelineElementTemplate) {
@@ -137,9 +137,9 @@ public class PipelineGenerator {
 
   private SpDataStream getStream(String datasetId) {
     return StorageManager
-            .INSTANCE
-            .getPipelineElementStorage()
-            .getEventStreamById(datasetId);
+        .INSTANCE
+        .getPipelineElementStorage()
+        .getEventStreamById(datasetId);
   }
 
 
