@@ -24,7 +24,8 @@ import org.apache.streampipes.svcdiscovery.api.model.SpServiceUrlProvider;
 public class WorkerUrlProvider {
 
 
-  public WorkerUrlProvider() {}
+  public WorkerUrlProvider() {
+  }
 
   public String getWorkerUrl(String appId) throws NoServiceEndpointsAvailableException {
     return getEndpointGenerator(appId).getEndpointResourceUrl();

@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,106 +31,111 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.doThrow;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ WorkerRestClient.class, WorkerPaths.class })
+@PrepareForTest({WorkerRestClient.class, WorkerPaths.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class WorkerRestClientTest {
 
-    /**
-     * Notes: In this class I tested how powermock could be used to mok static methods
-     * One problem is to mock static methods that return void
-     */
+  /**
+   * Notes: In this class I tested how powermock could be used to mok static methods
+   * One problem is to mock static methods that return void
+   */
 
-    @Before
-    public void before() {
-        PowerMockito.mockStatic(WorkerRestClient.class);
-        PowerMockito.mockStatic(WorkerPaths.class);
-    }
+  @Before
+  public void before() {
+    PowerMockito.mockStatic(WorkerRestClient.class);
+    PowerMockito.mockStatic(WorkerPaths.class);
+  }
 
-    @Test
-    public void stopStreamAdapterSuccess() throws Exception {
+  @Test
+  public void stopStreamAdapterSuccess() throws Exception {
 
-        String expectedUrl = "worker/stream/stop";
-        doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
-        when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
-        when(WorkerPaths.class, "getStreamStopPath").thenReturn(expectedUrl);
-        GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
-        description.setElementId("id1");
+    String expectedUrl = "worker/stream/stop";
+    doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
+    when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
+    when(WorkerPaths.class, "getStreamStopPath").thenReturn(expectedUrl);
+    GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
+    description.setElementId("id1");
 
-        WorkerRestClient.stopStreamAdapter("", description);
+    WorkerRestClient.stopStreamAdapter("", description);
 
-        verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(any(), eq(expectedUrl));
+    verifyStatic(WorkerRestClient.class, times(1));
+    WorkerRestClient.stopAdapter(any(), eq(expectedUrl));
 
-    }
+  }
 
-    @Test(expected = AdapterException.class)
-    public void stopStreamAdapterFail() throws Exception {
-        doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", any(), anyString());
-        when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
+  @Test(expected = AdapterException.class)
+  public void stopStreamAdapterFail() throws Exception {
+    doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", any(), anyString());
+    when(WorkerRestClient.class, "stopStreamAdapter", anyString(), any()).thenCallRealMethod();
 
-        GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
-        description.setElementId("id1");
+    GenericAdapterStreamDescription description = new GenericAdapterStreamDescription();
+    description.setElementId("id1");
 
-        WorkerRestClient.stopStreamAdapter("", description);
+    WorkerRestClient.stopStreamAdapter("", description);
 
-    }
+  }
 
-     @Test
-    public void invokeSetAdapterSuccess() throws Exception {
+  @Test
+  public void invokeSetAdapterSuccess() throws Exception {
 
-        String expectedUrl = "worker/set/invoke";
-        doNothing().when(WorkerRestClient.class, "startAdapter", anyString(), any());
-        when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any()).thenCallRealMethod();
-        when(WorkerPaths.class, "getSetInvokePath").thenReturn(expectedUrl);
+    String expectedUrl = "worker/set/invoke";
+    doNothing().when(WorkerRestClient.class, "startAdapter", anyString(), any());
+    when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any()).thenCallRealMethod();
+    when(WorkerPaths.class, "getSetInvokePath").thenReturn(expectedUrl);
 
-        GenericAdapterSetDescription description = new GenericAdapterSetDescription();
-        description.setElementId("id1");
-        WorkerRestClient.invokeSetAdapter("", description);
+    GenericAdapterSetDescription description = new GenericAdapterSetDescription();
+    description.setElementId("id1");
+    WorkerRestClient.invokeSetAdapter("", description);
 
-        verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.startAdapter(eq("worker/set/invoke"), any());
+    verifyStatic(WorkerRestClient.class, times(1));
+    WorkerRestClient.startAdapter(eq("worker/set/invoke"), any());
 
-    }
+  }
 
-    @Test(expected = AdapterException.class)
-    public void invokeSetAdapterFail() throws Exception {
-        doThrow(new AdapterException()).when(WorkerRestClient.class, "startAdapter", anyString(), any());
-        when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any()).thenCallRealMethod();
+  @Test(expected = AdapterException.class)
+  public void invokeSetAdapterFail() throws Exception {
+    doThrow(new AdapterException()).when(WorkerRestClient.class, "startAdapter", anyString(), any());
+    when(WorkerRestClient.class, "invokeSetAdapter", anyString(), any()).thenCallRealMethod();
 
-        WorkerRestClient.invokeSetAdapter("", null);
-    }
+    WorkerRestClient.invokeSetAdapter("", null);
+  }
 
-    @Test
-    public void stopSetAdapterSuccess() throws Exception {
+  @Test
+  public void stopSetAdapterSuccess() throws Exception {
 
-        String expectedUrl = "worker/set/stop";
-        doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
-        when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
-        when(WorkerPaths.class, "getSetStopPath").thenReturn(expectedUrl);
+    String expectedUrl = "worker/set/stop";
+    doNothing().when(WorkerRestClient.class, "stopAdapter", any(), anyString());
+    when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
+    when(WorkerPaths.class, "getSetStopPath").thenReturn(expectedUrl);
 
-        GenericAdapterSetDescription description = new GenericAdapterSetDescription();
-        description.setElementId("id1");
-        WorkerRestClient.stopSetAdapter("", description);
+    GenericAdapterSetDescription description = new GenericAdapterSetDescription();
+    description.setElementId("id1");
+    WorkerRestClient.stopSetAdapter("", description);
 
-        verifyStatic(WorkerRestClient.class, times(1));
-        WorkerRestClient.stopAdapter(any(), eq(expectedUrl));
+    verifyStatic(WorkerRestClient.class, times(1));
+    WorkerRestClient.stopAdapter(any(), eq(expectedUrl));
 
-    }
+  }
 
-    @Test(expected = AdapterException.class)
-    public void stopSetAdapterFail() throws Exception {
-        doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", any(), anyString());
-        when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
+  @Test(expected = AdapterException.class)
+  public void stopSetAdapterFail() throws Exception {
+    doThrow(new AdapterException()).when(WorkerRestClient.class, "stopAdapter", any(), anyString());
+    when(WorkerRestClient.class, "stopSetAdapter", anyString(), any()).thenCallRealMethod();
 
-        GenericAdapterSetDescription description = new GenericAdapterSetDescription();
-        description.setElementId("id1");
-        WorkerRestClient.stopSetAdapter("", description);
+    GenericAdapterSetDescription description = new GenericAdapterSetDescription();
+    description.setElementId("id1");
+    WorkerRestClient.stopSetAdapter("", description);
 
-    }
+  }
 
 }

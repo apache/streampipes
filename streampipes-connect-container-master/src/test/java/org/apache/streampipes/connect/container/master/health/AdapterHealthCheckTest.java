@@ -24,6 +24,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -40,81 +41,82 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 public class AdapterHealthCheckTest {
 
-    private final String testElementId = "testElementId";
+  private final String testElementId = "testElementId";
 
-    @Test
-    public void getAllRunningInstancesAdapterDescriptions() {
-        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
+  @Test
+  public void getAllRunningInstancesAdapterDescriptions() {
+    AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
+    when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
 
-        AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(adapterStorage, null);
-        Map<String, AdapterDescription> result = adapterHealthCheck.getAllRunningInstancesAdapterDescriptions();
+    AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(adapterStorage, null);
+    Map<String, AdapterDescription> result = adapterHealthCheck.getAllRunningInstancesAdapterDescriptions();
 
-        assertNotNull(result);
-        assertEquals(1, result.keySet().size());
-        assertEquals(getAdapterDescriptionList().get(0), result.get(testElementId));
-    }
+    assertNotNull(result);
+    assertEquals(1, result.keySet().size());
+    assertEquals(getAdapterDescriptionList().get(0), result.get(testElementId));
+  }
 
-    @Test
-    public void getAllWorkersWithAdapters() {
-        AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
-        when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
+  @Test
+  public void getAllWorkersWithAdapters() {
+    AdapterInstanceStorageImpl adapterStorage = mock(AdapterInstanceStorageImpl.class);
+    when(adapterStorage.getAllAdapters()).thenReturn(getAdapterDescriptionList());
 
-        AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, null);
-        Map<String, List<AdapterDescription>> result = adapterHealthCheck.getAllWorkersWithAdapters(getAdapterDescriptionMap());
+    AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, null);
+    Map<String, List<AdapterDescription>> result =
+        adapterHealthCheck.getAllWorkersWithAdapters(getAdapterDescriptionMap());
 
-        assertNotNull(result);
-        assertEquals(1, result.keySet().size());
-        String selectedEndpointUrl = "http://test.de";
-        assertEquals(1, result.get(selectedEndpointUrl).size());
-        assertEquals(getAdapterDescriptionList().get(0), result.get(selectedEndpointUrl).get(0));
-    }
+    assertNotNull(result);
+    assertEquals(1, result.keySet().size());
+    String selectedEndpointUrl = "http://test.de";
+    assertEquals(1, result.get(selectedEndpointUrl).size());
+    assertEquals(getAdapterDescriptionList().get(0), result.get(selectedEndpointUrl).get(0));
+  }
 
-    @Test
-    public void recoverRunningAdaptersTest() throws AdapterException {
-        AdapterMasterManagement adapterMasterManagementMock = mock(AdapterMasterManagement.class);
-        AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, adapterMasterManagementMock);
+  @Test
+  public void recoverRunningAdaptersTest() throws AdapterException {
+    AdapterMasterManagement adapterMasterManagementMock = mock(AdapterMasterManagement.class);
+    AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, adapterMasterManagementMock);
 
-        adapterHealthCheck.recoverAdapters(getAdaptersToRecoverData(true));
+    adapterHealthCheck.recoverAdapters(getAdaptersToRecoverData(true));
 
-        verify(adapterMasterManagementMock, times(1)).startStreamAdapter(any());
-    }
+    verify(adapterMasterManagementMock, times(1)).startStreamAdapter(any());
+  }
 
 
-    @Test
-    public void recoverStoppedAdaptersTest() throws AdapterException {
-        AdapterMasterManagement adapterMasterManagementMock = mock(AdapterMasterManagement.class);
-        AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, adapterMasterManagementMock);
+  @Test
+  public void recoverStoppedAdaptersTest() throws AdapterException {
+    AdapterMasterManagement adapterMasterManagementMock = mock(AdapterMasterManagement.class);
+    AdapterHealthCheck adapterHealthCheck = new AdapterHealthCheck(null, adapterMasterManagementMock);
 
-        adapterHealthCheck.recoverAdapters(getAdaptersToRecoverData(false));
+    adapterHealthCheck.recoverAdapters(getAdaptersToRecoverData(false));
 
-        verify(adapterMasterManagementMock, times(0)).startStreamAdapter(any());
-    }
+    verify(adapterMasterManagementMock, times(0)).startStreamAdapter(any());
+  }
 
-    private Map<String, AdapterDescription> getAdaptersToRecoverData(boolean isRunning) {
-        Map<String, AdapterDescription> adaptersToRecover = new HashMap<>();
-        AdapterStreamDescription ad = SpecificDataStreamAdapterBuilder.create("").build();
-        ad.setRunning(isRunning);
-        adaptersToRecover.put("", ad);
-        return adaptersToRecover;
-    }
+  private Map<String, AdapterDescription> getAdaptersToRecoverData(boolean isRunning) {
+    Map<String, AdapterDescription> adaptersToRecover = new HashMap<>();
+    AdapterStreamDescription ad = SpecificDataStreamAdapterBuilder.create("").build();
+    ad.setRunning(isRunning);
+    adaptersToRecover.put("", ad);
+    return adaptersToRecover;
+  }
 
-    private List<AdapterDescription> getAdapterDescriptionList() {
+  private List<AdapterDescription> getAdapterDescriptionList() {
 
-        SpecificAdapterStreamDescription adapterStreamDescription = SpecificDataStreamAdapterBuilder
-                .create("testAppId", "Test Adapter", "")
-                .elementId(testElementId)
-                .build();
-        adapterStreamDescription.setSelectedEndpointUrl("http://test.de");
+    SpecificAdapterStreamDescription adapterStreamDescription = SpecificDataStreamAdapterBuilder
+        .create("testAppId", "Test Adapter", "")
+        .elementId(testElementId)
+        .build();
+    adapterStreamDescription.setSelectedEndpointUrl("http://test.de");
 
-        return List.of(adapterStreamDescription);
-    }
+    return List.of(adapterStreamDescription);
+  }
 
-    private Map<String, AdapterDescription> getAdapterDescriptionMap() {
-        Map<String, AdapterDescription> result = new HashMap<>();
-        result.put(testElementId, getAdapterDescriptionList().get(0));
+  private Map<String, AdapterDescription> getAdapterDescriptionMap() {
+    Map<String, AdapterDescription> result = new HashMap<>();
+    result.put(testElementId, getAdapterDescriptionList().get(0));
 
-       return result;
-    }
+    return result;
+  }
 
 }
