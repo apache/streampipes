@@ -20,7 +20,13 @@ package org.apache.streampipes.client.http.header;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 
-import static org.apache.streampipes.commons.constants.HttpConstants.*;
+import static org.apache.streampipes.commons.constants.HttpConstants.ACCEPT;
+import static org.apache.streampipes.commons.constants.HttpConstants.APPLICATION_JSON_TYPE;
+import static org.apache.streampipes.commons.constants.HttpConstants.AUTHORIZATION;
+import static org.apache.streampipes.commons.constants.HttpConstants.BEARER;
+import static org.apache.streampipes.commons.constants.HttpConstants.CONTENT_TYPE;
+import static org.apache.streampipes.commons.constants.HttpConstants.X_API_KEY;
+import static org.apache.streampipes.commons.constants.HttpConstants.X_API_USER;
 
 public class Headers {
 

@@ -17,21 +17,22 @@
  */
 package org.apache.streampipes.client.http;
 
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
-public abstract class PostRequest<SO, DSO, DT> extends HttpRequest<SO, DSO, DT> {
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
 
-  private SO body;
+public abstract class PostRequest<K, V, T> extends HttpRequest<K, V, T> {
+
+  private K body;
   private boolean withBody;
 
   public PostRequest(StreamPipesClientConfig clientConfig,
                      StreamPipesApiPath apiPath,
-                     Serializer<SO, DSO, DT> serializer,
-                     SO body) {
+                     Serializer<K, V, T> serializer,
+                     K body) {
     super(clientConfig, apiPath, serializer);
     this.body = body;
     this.withBody = true;
@@ -39,16 +40,16 @@ public abstract class PostRequest<SO, DSO, DT> extends HttpRequest<SO, DSO, DT> 
 
   public PostRequest(StreamPipesClientConfig clientConfig,
                      StreamPipesApiPath apiPath,
-                     Serializer<SO, DSO, DT> serializer) {
+                     Serializer<K, V, T> serializer) {
     super(clientConfig, apiPath, serializer);
     this.withBody = false;
   }
 
   @Override
-  protected Request makeRequest(Serializer<SO, DSO, DT> serializer) {
+  protected Request makeRequest(Serializer<K, V, T> serializer) {
     Request request = Request
-            .Post(makeUrl())
-            .setHeaders(standardPostHeaders());
+        .Post(makeUrl())
+        .setHeaders(standardPostHeaders());
 
     if (withBody) {
       addBody(request, serializer);
@@ -57,7 +58,7 @@ public abstract class PostRequest<SO, DSO, DT> extends HttpRequest<SO, DSO, DT> 
     return request;
   }
 
-  protected void addBody(Request request, Serializer<SO, DSO, DT> serializer) {
+  protected void addBody(Request request, Serializer<K, V, T> serializer) {
     request.bodyString(serializer.serialize(body), ContentType.APPLICATION_JSON);
   }
 

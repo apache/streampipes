@@ -18,29 +18,30 @@
 
 package org.apache.streampipes.client.http;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.fluent.Request;
-import org.apache.http.entity.ContentType;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+
 import java.io.IOException;
 
-public class PutRequest<SO> extends HttpRequest<SO, Void, Void> {
+public class PutRequest<T> extends HttpRequest<T, Void, Void> {
 
-  private final SO body;
+  private final T body;
 
   public PutRequest(StreamPipesClientConfig clientConfig,
                     StreamPipesApiPath apiPath,
-                    Serializer<SO, Void, Void> serializer,
-                    SO body) {
+                    Serializer<T, Void, Void> serializer,
+                    T body) {
     super(clientConfig, apiPath, serializer);
     this.body = body;
   }
 
   @Override
-  protected Request makeRequest(Serializer<SO, Void, Void> serializer) {
+  protected Request makeRequest(Serializer<T, Void, Void> serializer) {
     Request request = Request
         .Put(makeUrl())
         .setHeaders(standardPostHeaders());
@@ -51,7 +52,7 @@ public class PutRequest<SO> extends HttpRequest<SO, Void, Void> {
   }
 
   @Override
-  protected Void afterRequest(Serializer<SO, Void, Void> serializer, HttpEntity entity) throws IOException {
+  protected Void afterRequest(Serializer<T, Void, Void> serializer, HttpEntity entity) throws IOException {
     return null;
   }
 }

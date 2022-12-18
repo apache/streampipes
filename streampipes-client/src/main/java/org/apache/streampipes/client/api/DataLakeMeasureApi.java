@@ -24,7 +24,8 @@ import org.apache.streampipes.model.datalake.DataLakeMeasure;
 
 import java.util.List;
 
-public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure> implements CRUDApi<String, DataLakeMeasure> {
+public class DataLakeMeasureApi extends AbstractTypedClientApi<DataLakeMeasure>
+    implements CRUDApi<String, DataLakeMeasure> {
 
   public DataLakeMeasureApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataLakeMeasure.class);

@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.client.credentials;
 
-import org.apache.http.Header;
 import org.apache.streampipes.client.http.header.Headers;
+
+import org.apache.http.Header;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +30,7 @@ public class StreamPipesApiKeyCredentials implements CredentialsProvider {
   private final String apiKey;
 
   public StreamPipesApiKeyCredentials(String username,
-                                       String apiKey) {
+                                      String apiKey) {
     this.username = username;
     this.apiKey = apiKey;
   }
@@ -45,8 +46,8 @@ public class StreamPipesApiKeyCredentials implements CredentialsProvider {
   @Override
   public List<Header> makeHeaders() {
     return Arrays.asList(
-            Headers.xApiUser(username),
-            Headers.xApiKey(apiKey)
+        Headers.xApiUser(username),
+        Headers.xApiKey(apiKey)
     );
   }
 }

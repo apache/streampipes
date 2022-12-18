@@ -22,13 +22,13 @@ public class KafkaConfig {
   private String kafkaHost;
   private Integer kafkaPort;
 
-  public static KafkaConfig create(String kafkaHost, Integer kafkaPort) {
-    return new KafkaConfig(kafkaHost, kafkaPort);
-  }
-
   private KafkaConfig(String kafkaHost, Integer kafkaPort) {
     this.kafkaHost = kafkaHost;
     this.kafkaPort = kafkaPort;
+  }
+
+  public static KafkaConfig create(String kafkaHost, Integer kafkaPort) {
+    return new KafkaConfig(kafkaHost, kafkaPort);
   }
 
   public String getKafkaHost() {

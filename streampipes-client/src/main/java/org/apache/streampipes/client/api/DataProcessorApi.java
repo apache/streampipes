@@ -29,7 +29,8 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 
 import java.util.List;
 
-public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvocation> implements CRUDApi<String, DataProcessorInvocation>{
+public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvocation>
+    implements CRUDApi<String, DataProcessorInvocation> {
 
   public DataProcessorApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, DataProcessorInvocation.class);
@@ -38,8 +39,8 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-            .addToPath("sepas")
-            .addToPath("own");
+        .addToPath("sepas")
+        .addToPath("own");
   }
 
   @Override
@@ -72,8 +73,9 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
 
   /**
    * Subscribe to the output stream of the processor
+   *
    * @param processor The data processor to subscribe to
-   * @param callback The callback where events will be received
+   * @param callback  The callback where events will be received
    */
   public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
                                    EventProcessor callback) {
@@ -82,43 +84,46 @@ public class DataProcessorApi extends AbstractTypedClientApi<DataProcessorInvoca
 
   /**
    * Subscribe to the output stream of the processor
-   * @param processor The data processor to subscribe to
+   *
+   * @param processor   The data processor to subscribe to
    * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
-   * @param callback The callback where events will be received
+   * @param callback    The callback where events will be received
    */
   public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
                                    KafkaConfig kafkaConfig,
                                    EventProcessor callback) {
     return new SubscriptionManager(clientConfig, kafkaConfig, processor.getOutputStream().getEventGrounding(), callback)
-            .subscribe();
+        .subscribe();
   }
 
   /**
    * Subscribe to the input stream of the processor
+   *
    * @param processor The data processor to subscribe to
-   * @param index The index of the input stream
-   * @param callback The callback where events will be received
+   * @param index     The index of the input stream
+   * @param callback  The callback where events will be received
    */
   public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
                                    InputStreamIndex index,
                                    EventProcessor callback) {
     return new SubscriptionManager(clientConfig,
-            processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback).subscribe();
+        processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback).subscribe();
   }
 
   /**
    * Subscribe to the input stream of the sink
-   * @param processor The data processor to subscribe to
-   * @param index The index of the input stream
+   *
+   * @param processor   The data processor to subscribe to
+   * @param index       The index of the input stream
    * @param kafkaConfig Additional kafka settings which will override the default value (see docs)
-   * @param callback The callback where events will be received
+   * @param callback    The callback where events will be received
    */
   public SpKafkaConsumer subscribe(DataProcessorInvocation processor,
                                    InputStreamIndex index,
                                    KafkaConfig kafkaConfig,
                                    EventProcessor callback) {
     return new SubscriptionManager(clientConfig, kafkaConfig,
-           processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
-            .subscribe();
+        processor.getInputStreams().get(index.toIndex()).getEventGrounding(), callback)
+        .subscribe();
   }
 }

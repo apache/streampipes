@@ -19,5 +19,6 @@ package org.apache.streampipes.client.paths;
 
 public class ApiPath {
 
-  public static String EMAIL_RESOURCE = "api/v2/mail";
+  public static final String EMAIL_RESOURCE = "api/v2/mail";
 }
+

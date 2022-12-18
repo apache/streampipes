@@ -24,7 +24,7 @@ import org.apache.streampipes.model.template.PipelineElementTemplate;
 import java.util.List;
 
 public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineElementTemplate>
-        implements CRUDApi<String, PipelineElementTemplate> {
+    implements CRUDApi<String, PipelineElementTemplate> {
 
   public PipelineElementTemplateApi(StreamPipesClientConfig clientConfig) {
     super(clientConfig, PipelineElementTemplate.class);
@@ -58,6 +58,6 @@ public class PipelineElementTemplateApi extends AbstractTypedClientApi<PipelineE
   @Override
   protected StreamPipesApiPath getBaseResourcePath() {
     return StreamPipesApiPath.fromBaseApiPath()
-            .addToPath("pipeline-element-templates");
+        .addToPath("pipeline-element-templates");
   }
 }

@@ -17,12 +17,13 @@
  */
 package org.apache.streampipes.client.serializer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 
-public abstract class Serializer<SO, DSO, DT> {
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public abstract class Serializer<K, V, T> {
 
   protected ObjectMapper objectMapper;
 
@@ -30,7 +31,7 @@ public abstract class Serializer<SO, DSO, DT> {
     this.objectMapper = JacksonSerializer.getObjectMapper();
   }
 
-  public String serialize(SO object) {
+  public String serialize(K object) {
     try {
       return objectMapper.writeValueAsString(object);
     } catch (JsonProcessingException e) {
@@ -38,5 +39,5 @@ public abstract class Serializer<SO, DSO, DT> {
     }
   }
 
-  public abstract DT deserialize(String response, Class<DSO> targetClass);
+  public abstract T deserialize(String response, Class<V> targetClass);
 }
