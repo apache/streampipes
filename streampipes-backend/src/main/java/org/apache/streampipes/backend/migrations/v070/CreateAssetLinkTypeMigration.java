@@ -31,7 +31,8 @@ public class CreateAssetLinkTypeMigration implements Migration {
   @Override
   public boolean shouldExecute() {
     try {
-      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE).size() == 0;
+      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
+          .size() == 0;
     } catch (IOException e) {
       return true;
     }

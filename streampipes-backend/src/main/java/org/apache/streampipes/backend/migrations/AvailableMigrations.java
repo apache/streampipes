@@ -31,10 +31,10 @@ public class AvailableMigrations {
 
   public List<Migration> getAvailableMigrations() {
     return Arrays.asList(
-      new CreateAssetLinkTypeMigration(),
-      new CreateDefaultAssetMigration(),
-      new CreateFileAssetTypeMigration(),
-      new UpdateUsernameViewMigration()
+        new CreateAssetLinkTypeMigration(),
+        new CreateDefaultAssetMigration(),
+        new CreateFileAssetTypeMigration(),
+        new UpdateUsernameViewMigration()
     );
   }
 }

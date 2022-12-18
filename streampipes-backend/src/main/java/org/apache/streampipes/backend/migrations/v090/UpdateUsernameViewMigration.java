@@ -21,6 +21,7 @@ package org.apache.streampipes.backend.migrations.v090;
 import org.apache.streampipes.backend.migrations.Migration;
 import org.apache.streampipes.manager.setup.design.UserDesignDocument;
 import org.apache.streampipes.storage.couchdb.utils.Utils;
+
 import org.lightcouch.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

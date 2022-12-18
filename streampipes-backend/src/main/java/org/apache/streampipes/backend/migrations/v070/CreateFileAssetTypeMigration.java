@@ -33,12 +33,12 @@ public class CreateFileAssetTypeMigration implements Migration {
   public boolean shouldExecute() {
     try {
       return StorageDispatcher
-        .INSTANCE
-        .getNoSqlStore()
-        .getGenericStorage()
-        .findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
-        .stream()
-        .noneMatch(al -> al.get("linkType").equals("file"));
+          .INSTANCE
+          .getNoSqlStore()
+          .getGenericStorage()
+          .findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
+          .stream()
+          .noneMatch(al -> al.get("linkType").equals("file"));
     } catch (IOException e) {
       return true;
     }
