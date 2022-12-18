@@ -29,7 +29,7 @@
 This processor creates a JTS LineString geometry from  JTS Points events, represent a trajectory. A trajectory is defined  as the path that a moving object follows through space as a function of time. Each sub-point of this LineString represents a single event. The latest sub-point represents the latest geo-event. For each Point event it is also possible to store an additional m-value representing for example actually speed, distance, duration or direction of this event. A trajectory consists of at least two sub-point and can't be infinitive, so a threshold of maximum allowed sub-points is required. When the sub-point threshold is exceeded, the oldest point is removed from the LineString.
 ***
 
-## Required input
+## Required inputs
 
 *  WKT String of a JTS Point Geometry
 *  Integer value representing EPSG code
