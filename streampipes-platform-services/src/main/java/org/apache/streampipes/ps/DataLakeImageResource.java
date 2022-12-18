@@ -1,4 +1,3 @@
-package org.apache.streampipes.ps;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,6 +15,8 @@ package org.apache.streampipes.ps;
  * limitations under the License.
  *
  */
+
+package org.apache.streampipes.ps;
 
 import org.apache.streampipes.rest.core.base.impl.AbstractAuthGuardedRestResource;
 import org.apache.streampipes.storage.management.StorageDispatcher;
