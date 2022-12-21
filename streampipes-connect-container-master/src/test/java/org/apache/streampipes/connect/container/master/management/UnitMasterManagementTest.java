@@ -48,7 +48,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class UnitMasterManagementTest {
 
   @Test(expected = AdapterException.class)
-  public void URLisNull() throws AdapterException {
+  public void urlIsNull() throws AdapterException {
     UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
     unitMasterManagement.getFittingUnits(getUnitDescription("", null));
   }
