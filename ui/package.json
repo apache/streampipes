@@ -21,7 +21,7 @@
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --fix .",
+    "format:fix": "prettier --write .",
     "lint-staged": "lint-staged",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "test-cypress-open": "cypress open",

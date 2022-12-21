@@ -16,6 +16,6 @@
  *
  */
 
-module.exports = (env) => {
-    return require(`./webpack.partial.${env}.js`)
-}
+module.exports = env => {
+    return require(`./webpack.partial.${env}.js`);
+};
