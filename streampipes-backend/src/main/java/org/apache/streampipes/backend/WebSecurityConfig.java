@@ -21,6 +21,7 @@ package org.apache.streampipes.backend;
 import org.apache.streampipes.rest.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
 import org.apache.streampipes.user.management.service.SpUserDetailsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,21 +58,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
 
     http
-            .cors()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .csrf().disable()
-            .formLogin().disable()
-            .httpBasic().disable()
-            .exceptionHandling()
-            .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
-            .and()
-            .authorizeRequests()
-            .antMatchers(UnauthenticatedInterfaces.get().toArray(new String[0])).permitAll()
-            .anyRequest()
-            .authenticated().and()
-            .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        .cors()
+        .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .csrf().disable()
+        .formLogin().disable()
+        .httpBasic().disable()
+        .exceptionHandling()
+        .authenticationEntryPoint(new UnauthorizedRequestEntryPoint())
+        .and()
+        .authorizeRequests()
+        .antMatchers(UnauthenticatedInterfaces.get().toArray(new String[0])).permitAll()
+        .anyRequest()
+        .authenticated().and()
+        .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
   }
 
   public TokenAuthenticationFilter tokenAuthenticationFilter() {

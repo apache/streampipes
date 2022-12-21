@@ -34,6 +34,7 @@ import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -43,6 +44,7 @@ import org.springframework.context.annotation.Import;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,10 +58,10 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableAutoConfiguration
 @Import({StreamPipesResourceConfig.class,
-        WelcomePageController.class,
-        StreamPipesPasswordEncoder.class,
-        WebSecurityConfig.class,
-        SpPermissionEvaluator.class
+    WelcomePageController.class,
+    StreamPipesPasswordEncoder.class,
+    WebSecurityConfig.class,
+    SpPermissionEvaluator.class
 })
 @ComponentScan({"org.apache.streampipes.rest.*"})
 public class StreamPipesBackendApplication extends StreamPipesServiceBase {
@@ -82,16 +84,18 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
   private Map<String, Integer> failedPipelines = new HashMap<>();
 
   public static void main(String[] args) {
-      StreamPipesBackendApplication application = new StreamPipesBackendApplication();
-      try {
-        BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
-        application.startStreamPipesService(StreamPipesBackendApplication.class,
-                DefaultSpServiceGroups.CORE,
-                application.serviceId(),
-                networkingConfig);
-      } catch (UnknownHostException e) {
-        LOG.error("Could not auto-resolve host address - please manually provide the hostname using the SP_HOST environment variable");
-      }
+    StreamPipesBackendApplication application = new StreamPipesBackendApplication();
+    try {
+      BaseNetworkingConfig networkingConfig = BaseNetworkingConfig.defaultResolution(8030);
+      application.startStreamPipesService(StreamPipesBackendApplication.class,
+          DefaultSpServiceGroups.CORE,
+          application.serviceId(),
+          networkingConfig);
+    } catch (UnknownHostException e) {
+      LOG.error(
+          "Could not auto-resolve host address - please manually provide the hostname"
+              + " using the `SP_HOST` environment variable");
+    }
   }
 
   private String serviceId() {
@@ -116,9 +120,9 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     executorService.schedule(this::startAllPreviouslyStoppedPipelines, 5, TimeUnit.SECONDS);
     LOG.info("Pipeline health check will run every {} seconds", HEALTH_CHECK_INTERVAL);
     healthCheckExecutorService.scheduleAtFixedRate(new PipelineHealthCheck(),
-            HEALTH_CHECK_INTERVAL,
-            HEALTH_CHECK_INTERVAL,
-            HEALTH_CHECK_UNIT);
+        HEALTH_CHECK_INTERVAL,
+        HEALTH_CHECK_INTERVAL,
+        HEALTH_CHECK_UNIT);
 
     LOG.info("Extensions logs will be fetched every {} seconds", LOG_FETCH_INTERVAL);
     logCheckExecutorService.scheduleAtFixedRate(new ExtensionsServiceLogExecutor(),
@@ -160,9 +164,9 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     LOG.info("Shutting down StreamPipes...");
     LOG.info("Flagging currently running pipelines for restart...");
     List<Pipeline> pipelinesToStop = getAllPipelines()
-            .stream()
-            .filter(Pipeline::isRunning)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(Pipeline::isRunning)
+        .collect(Collectors.toList());
 
     LOG.info("Found {} running pipelines which will be stopped...", pipelinesToStop.size());
 
@@ -189,9 +193,9 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
   private void startAllPreviouslyStoppedPipelines() {
     LOG.info("Checking for orphaned pipelines...");
     List<Pipeline> orphanedPipelines = getAllPipelines()
-            .stream()
-            .filter(Pipeline::isRunning)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(Pipeline::isRunning)
+        .collect(Collectors.toList());
 
     LOG.info("Found {} orphaned pipelines", orphanedPipelines.size());
 
@@ -203,10 +207,10 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
     LOG.info("Checking for gracefully shut down pipelines to be restarted...");
 
     List<Pipeline> pipelinesToRestart = getAllPipelines()
-            .stream()
-            .filter(p -> !(p.isRunning()))
-            .filter(Pipeline::isRestartOnSystemReboot)
-            .collect(Collectors.toList());
+        .stream()
+        .filter(p -> !(p.isRunning()))
+        .filter(Pipeline::isRestartOnSystemReboot)
+        .collect(Collectors.toList());
 
     LOG.info("Found {} pipelines that we are attempting to restart...", pipelinesToRestart.size());
 
@@ -229,15 +233,15 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
       int failedAttemptCount = failedPipelines.get(pipeline.getPipelineId());
       if (failedAttemptCount <= MAX_PIPELINE_START_RETRIES) {
         LOG.error("Pipeline {} could not be restarted - I'll try again in {} seconds ({}/{} failed attempts)",
-                pipeline.getName(),
-                WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
-                failedAttemptCount,
-                MAX_PIPELINE_START_RETRIES);
+            pipeline.getName(),
+            WAIT_TIME_AFTER_FAILURE_IN_SECONDS,
+            failedAttemptCount,
+            MAX_PIPELINE_START_RETRIES);
 
         schedulePipelineStart(pipeline, restartOnReboot);
       } else {
         LOG.error("Pipeline {} could not be restarted - are all pipeline element containers running?",
-                status.getPipelineName());
+            status.getPipelineName());
       }
     }
   }
@@ -254,23 +258,23 @@ public class StreamPipesBackendApplication extends StreamPipesServiceBase {
 
   private List<Pipeline> getAllPipelines() {
     return getPipelineStorage()
-            .getAllPipelines();
+        .getAllPipelines();
   }
 
   private IPipelineStorage getPipelineStorage() {
     return StorageDispatcher
-            .INSTANCE
-            .getNoSqlStore()
-            .getPipelineStorageAPI();
+        .INSTANCE
+        .getNoSqlStore()
+        .getPipelineStorageAPI();
   }
 
 
   @Override
   protected List<SpServiceTag> getServiceTags() {
     return Arrays.asList(
-            DefaultSpServiceTags.CORE,
-            DefaultSpServiceTags.CONNECT_MASTER,
-            DefaultSpServiceTags.STREAMPIPES_CLIENT
+        DefaultSpServiceTags.CORE,
+        DefaultSpServiceTags.CONNECT_MASTER,
+        DefaultSpServiceTags.STREAMPIPES_CLIENT
     );
   }
 

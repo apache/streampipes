@@ -19,6 +19,7 @@
 package org.apache.streampipes.backend;
 
 import org.apache.streampipes.user.management.authentication.StreamPipesCredentialsMatcher;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,8 +27,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class StreamPipesPasswordEncoder {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new StreamPipesCredentialsMatcher();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new StreamPipesCredentialsMatcher();
+  }
 }

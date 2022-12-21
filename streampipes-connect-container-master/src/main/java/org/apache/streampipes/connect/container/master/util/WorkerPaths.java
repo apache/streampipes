@@ -37,7 +37,7 @@ public class WorkerPaths {
   }
 
   public static String getSetInvokePath() {
-    return WorkerMainPath +  "/set/invoke";
+    return WorkerMainPath + "/set/invoke";
   }
 
   public static String getSetStopPath() {

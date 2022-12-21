@@ -17,18 +17,19 @@
  */
 package org.apache.streampipes.client.serializer;
 
+import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
 import java.util.List;
 
-public class ListSerializer<SO, DSO> extends Serializer<SO, DSO, List<DSO>> {
+public class ListSerializer<K, V> extends Serializer<K, V, List<V>> {
 
   @Override
-  public List<DSO> deserialize(String response, Class<DSO> targetClass) {
+  public List<V> deserialize(String response, Class<V> targetClass) {
     CollectionType listType = objectMapper.getTypeFactory()
-            .constructCollectionType(List.class, targetClass);
+        .constructCollectionType(List.class, targetClass);
     try {
       return objectMapper.readValue(response, listType);
     } catch (JsonProcessingException e) {

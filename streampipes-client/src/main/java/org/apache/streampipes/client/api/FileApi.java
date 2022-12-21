@@ -25,26 +25,26 @@ import org.apache.streampipes.client.util.StreamPipesApiPath;
 
 public class FileApi extends AbstractClientApi {
 
-    public FileApi(StreamPipesClientConfig clientConfig) {
-        super(clientConfig);
-    }
+  public FileApi(StreamPipesClientConfig clientConfig) {
+    super(clientConfig);
+  }
 
-    public byte[] getFileContent(String filename) {
-       return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename), null).executeRequest();
-    }
+  public byte[] getFileContent(String filename) {
+    return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename), null).executeRequest();
+  }
 
-    public String getFileContentAsString(String filename) {
-        return new String(getFileContent(filename));
-    }
+  public String getFileContentAsString(String filename) {
+    return new String(getFileContent(filename));
+  }
 
-    public void writeToFile(String file, String fileLocation) {
-        new BinaryGetRequest(clientConfig, getBaseResourcePath(file), null)
-                .writeToFile(fileLocation);
-    }
+  public void writeToFile(String file, String fileLocation) {
+    new BinaryGetRequest(clientConfig, getBaseResourcePath(file), null)
+        .writeToFile(fileLocation);
+  }
 
-    protected StreamPipesApiPath getBaseResourcePath(String fileName) {
-        return StreamPipesApiPath.fromBaseApiPath()
-                .addToPath("files")
-                .addToPath(fileName);
-    }
+  protected StreamPipesApiPath getBaseResourcePath(String fileName) {
+    return StreamPipesApiPath.fromBaseApiPath()
+        .addToPath("files")
+        .addToPath(fileName);
+  }
 }

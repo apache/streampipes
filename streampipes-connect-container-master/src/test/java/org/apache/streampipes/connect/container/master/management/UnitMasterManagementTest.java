@@ -18,11 +18,9 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.model.connect.unit.UnitDescription;
+import org.apache.streampipes.units.UnitProvider;
 
 import com.github.jqudt.Unit;
 import com.github.jqudt.onto.UnitFactory;
@@ -33,94 +31,98 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.model.connect.unit.UnitDescription;
-import org.apache.streampipes.units.UnitProvider;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ UnitProvider.class, UnitFactory.class })
+@PrepareForTest({UnitProvider.class, UnitFactory.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class UnitMasterManagementTest {
 
-    @Test(expected = AdapterException.class)
-    public void URLisNull() throws AdapterException {
-        UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
-        unitMasterManagement.getFittingUnits(getUnitDescription("",null));
-    }
+  @Test(expected = AdapterException.class)
+  public void urlIsNull() throws AdapterException {
+    UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
+    unitMasterManagement.getFittingUnits(getUnitDescription("", null));
+  }
 
-    @Test(expected = AdapterException.class)
-    @Ignore
-    public void invalidURL() throws AdapterException {
-        UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
-        when(unitProvider.getUnit(anyString())).thenThrow(new IllegalStateException());
+  @Test(expected = AdapterException.class)
+  @Ignore
+  public void invalidURL() throws AdapterException {
+    UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
+    when(unitProvider.getUnit(anyString())).thenThrow(new IllegalStateException());
 
-        UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
-        unitMasterManagement.getFittingUnits(getUnitDescription("","http://test"));
-    }
+    UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
+    unitMasterManagement.getFittingUnits(getUnitDescription("", "http://test"));
+  }
 
-    @Test
-    public void getFittingUnitsEmpty() throws Exception {
-        UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
-        when(unitProvider.getUnit(anyString())).thenReturn(new Unit());
-        when(unitProvider.getUnitsByType(any())).thenReturn((new ArrayList<>()));
-        Whitebox.setInternalState(UnitProvider.class, "INSTANCE", unitProvider);
+  @Test
+  public void getFittingUnitsEmpty() throws Exception {
+    UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
+    when(unitProvider.getUnit(anyString())).thenReturn(new Unit());
+    when(unitProvider.getUnitsByType(any())).thenReturn((new ArrayList<>()));
+    Whitebox.setInternalState(UnitProvider.class, "INSTANCE", unitProvider);
 
-        UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
-        String jsonResult = unitMasterManagement.getFittingUnits(getUnitDescription("",""));
-        assertEquals("[]", jsonResult);
-    }
+    UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
+    String jsonResult = unitMasterManagement.getFittingUnits(getUnitDescription("", ""));
+    assertEquals("[]", jsonResult);
+  }
 
-    @Test
-    public void getFittingUnitsUnitsEmpty() throws Exception {
-        UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
-        when(unitProvider.getUnit(anyString())).thenReturn(new Unit());
+  @Test
+  public void getFittingUnitsUnitsEmpty() throws Exception {
+    UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
+    when(unitProvider.getUnit(anyString())).thenReturn(new Unit());
 
-        List<Unit> unitList = new ArrayList<>(2);
-        unitList.add(new Unit());
-        unitList.add(new Unit());
+    List<Unit> unitList = new ArrayList<>(2);
+    unitList.add(new Unit());
+    unitList.add(new Unit());
 
-        when(unitProvider.getUnitsByType(any())).thenReturn((unitList));
-        Whitebox.setInternalState(UnitProvider.class, "INSTANCE", unitProvider);
+    when(unitProvider.getUnitsByType(any())).thenReturn((unitList));
+    Whitebox.setInternalState(UnitProvider.class, "INSTANCE", unitProvider);
 
-        UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
-        String jsonResult = unitMasterManagement.getFittingUnits(getUnitDescription("",""));
-        assertEquals("[]", jsonResult);
-    }
+    UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
+    String jsonResult = unitMasterManagement.getFittingUnits(getUnitDescription("", ""));
+    assertEquals("[]", jsonResult);
+  }
 
-    @Test
-    public void getFittingUnitsUnits() throws Exception {
-        UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
-        when(unitProvider.getUnit(anyString())).thenReturn(new Unit());
+  @Test
+  public void getFittingUnitsUnits() throws Exception {
+    UnitProvider unitProvider = mock(UnitProvider.INSTANCE.getClass());
+    when(unitProvider.getUnit(anyString())).thenReturn(new Unit());
 
-        List<Unit> unitList = new ArrayList<>(2);
-        Unit unit = new Unit();
-        unit.setLabel("A");
-        unit.setResource(new URI("http://A"));
-        unitList.add(unit);
-        unit = new Unit();
-        unit.setLabel("A");
-        unit.setResource(new URI("http://A"));
-        unitList.add(unit);
-        unitList.add(new Unit());
+    List<Unit> unitList = new ArrayList<>(2);
+    Unit unit = new Unit();
+    unit.setLabel("A");
+    unit.setResource(new URI("http://A"));
+    unitList.add(unit);
+    unit = new Unit();
+    unit.setLabel("A");
+    unit.setResource(new URI("http://A"));
+    unitList.add(unit);
+    unitList.add(new Unit());
 
-        when(unitProvider.getUnitsByType(any())).thenReturn((unitList));
-        Whitebox.setInternalState(UnitProvider.class, "INSTANCE", unitProvider);
+    when(unitProvider.getUnitsByType(any())).thenReturn((unitList));
+    Whitebox.setInternalState(UnitProvider.class, "INSTANCE", unitProvider);
 
-        UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
-        String jsonResult = unitMasterManagement.getFittingUnits(getUnitDescription("",""));
-        assertEquals("[{\"resource\":\"http://A\",\"label\":\"A\"},{\"resource\":\"http://A\",\"label\":\"A\"}]", jsonResult);
-    }
+    UnitMasterManagement unitMasterManagement = new UnitMasterManagement();
+    String jsonResult = unitMasterManagement.getFittingUnits(getUnitDescription("", ""));
+    assertEquals("[{\"resource\":\"http://A\",\"label\":\"A\"},{\"resource\":\"http://A\",\"label\":\"A\"}]",
+        jsonResult);
+  }
 
 
-    private UnitDescription getUnitDescription(String label, String ressource) {
-        UnitDescription unitDescription = new UnitDescription();
-        unitDescription.setLabel(label);
-        unitDescription.setResource(ressource);
-        return unitDescription;
-    }
+  private UnitDescription getUnitDescription(String label, String ressource) {
+    UnitDescription unitDescription = new UnitDescription();
+    unitDescription.setLabel(label);
+    unitDescription.setResource(ressource);
+    return unitDescription;
+  }
 
 }

@@ -1,4 +1,4 @@
-package org.apache.streampipes.client.annotation;/*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,6 +15,8 @@ package org.apache.streampipes.client.annotation;/*
  * limitations under the License.
  *
  */
+
+package org.apache.streampipes.client.annotation;
 
 public @interface NotYetImplemented {
 }

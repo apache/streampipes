@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -38,27 +39,27 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AdapterRegistry.class })
+@PrepareForTest({AdapterRegistry.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class DescriptionManagementTest {
 
 
-    @Test
-    public void getFormats() {
-        Map<String, IFormat> allFormats = new HashMap<>();
-        allFormats.put(JsonFormat.ID, new JsonFormat());
+  @Test
+  public void getFormats() {
+    Map<String, IFormat> allFormats = new HashMap<>();
+    allFormats.put(JsonFormat.ID, new JsonFormat());
 
-        PowerMockito.mockStatic(AdapterRegistry.class);
-        Mockito.when(AdapterRegistry.getAllFormats())
-                .thenReturn(allFormats);
+    PowerMockito.mockStatic(AdapterRegistry.class);
+    Mockito.when(AdapterRegistry.getAllFormats())
+        .thenReturn(allFormats);
 
-        DescriptionManagement descriptionManagement = new DescriptionManagement();
+    DescriptionManagement descriptionManagement = new DescriptionManagement();
 
-        List<FormatDescription> result = descriptionManagement.getFormats();
+    List<FormatDescription> result = descriptionManagement.getFormats();
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(JsonFormat.ID, result.get(0).getAppId());
-    }
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals(JsonFormat.ID, result.get(0).getAppId());
+  }
 
 }

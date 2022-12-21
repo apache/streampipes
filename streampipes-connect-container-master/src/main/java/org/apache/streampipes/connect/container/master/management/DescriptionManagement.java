@@ -35,55 +35,56 @@ import java.util.Optional;
 
 public class DescriptionManagement {
 
-    public List<FormatDescription> getFormats() {
-        Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
+  public List<FormatDescription> getFormats() {
+    Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
 
-        List<FormatDescription> result = new ArrayList<>();
-        for (IFormat f : allFormats.values()) {
-           result.add(f.declareModel());
-        }
-
-        return result;
+    List<FormatDescription> result = new ArrayList<>();
+    for (IFormat f : allFormats.values()) {
+      result.add(f.declareModel());
     }
 
-    public List<AdapterDescription> getAdapters() {
-        IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
-        return adapterStorage.getAllAdapters();
-    }
+    return result;
+  }
 
-    public Optional<AdapterDescription> getAdapter(String id) {
-        return getAdapters().stream()
-                .filter(desc -> desc.getAppId().equals(id))
-                .findFirst();
-    }
+  public List<AdapterDescription> getAdapters() {
+    IAdapterStorage adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    return adapterStorage.getAllAdapters();
+  }
 
-    public void deleteAdapterDescription(String id) throws SpRuntimeException {
-        var adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
-        var adapter = adapterStorage.getAdapter(id);
-        if (!isAdapterUsed(adapter)) {
-            adapterStorage.deleteAdapter(id);
-        } else {
-            throw new SpRuntimeException("This adapter is used by an existing instance and cannot be deleted");
-        }
-    }
-    public String getAssets(String baseUrl) throws AdapterException {
-        return WorkerRestClient.getAssets(baseUrl);
-    }
+  public Optional<AdapterDescription> getAdapter(String id) {
+    return getAdapters().stream()
+        .filter(desc -> desc.getAppId().equals(id))
+        .findFirst();
+  }
 
-    public byte[] getIconAsset(String baseUrl) throws AdapterException {
-        return WorkerRestClient.getIconAsset(baseUrl);
+  public void deleteAdapterDescription(String id) throws SpRuntimeException {
+    var adapterStorage = CouchDbStorageManager.INSTANCE.getAdapterDescriptionStorage();
+    var adapter = adapterStorage.getAdapter(id);
+    if (!isAdapterUsed(adapter)) {
+      adapterStorage.deleteAdapter(id);
+    } else {
+      throw new SpRuntimeException("This adapter is used by an existing instance and cannot be deleted");
     }
+  }
 
-    public String getDocumentationAsset(String baseUrl) throws AdapterException {
-        return WorkerRestClient.getDocumentationAsset(baseUrl);
-    }
+  public String getAssets(String baseUrl) throws AdapterException {
+    return WorkerRestClient.getAssets(baseUrl);
+  }
 
-    private boolean isAdapterUsed(AdapterDescription adapter) {
-        var allAdapters = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage().getAllAdapters();
+  public byte[] getIconAsset(String baseUrl) throws AdapterException {
+    return WorkerRestClient.getIconAsset(baseUrl);
+  }
 
-        return allAdapters
-          .stream()
-          .anyMatch(runningAdapter -> runningAdapter.getAppId().equals(adapter.getAppId()));
-    }
+  public String getDocumentationAsset(String baseUrl) throws AdapterException {
+    return WorkerRestClient.getDocumentationAsset(baseUrl);
+  }
+
+  private boolean isAdapterUsed(AdapterDescription adapter) {
+    var allAdapters = StorageDispatcher.INSTANCE.getNoSqlStore().getAdapterInstanceStorage().getAllAdapters();
+
+    return allAdapters
+        .stream()
+        .anyMatch(runningAdapter -> runningAdapter.getAppId().equals(adapter.getAppId()));
+  }
 
 }

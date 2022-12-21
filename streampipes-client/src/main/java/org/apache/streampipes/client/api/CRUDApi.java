@@ -19,15 +19,15 @@ package org.apache.streampipes.client.api;
 
 import java.util.List;
 
-public interface CRUDApi<ID, T> {
+public interface CRUDApi<K, V> {
 
-  T get(ID id);
+  V get(K id);
 
-  List<T> all();
+  List<V> all();
 
-  void create(T element);
+  void create(V element);
 
-  void delete(ID id);
+  void delete(K id);
 
-  void update(T element);
+  void update(V element);
 }

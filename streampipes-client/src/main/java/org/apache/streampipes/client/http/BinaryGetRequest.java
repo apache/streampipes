@@ -18,29 +18,31 @@
 
 package org.apache.streampipes.client.http;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.fluent.Request;
 import org.apache.streampipes.client.model.StreamPipesClientConfig;
 import org.apache.streampipes.client.serializer.Serializer;
 import org.apache.streampipes.client.util.StreamPipesApiPath;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.fluent.Request;
 
 import java.io.IOException;
 
 public class BinaryGetRequest extends HttpRequest<Void, byte[], byte[]> {
 
-    public BinaryGetRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath, Serializer<Void, byte[], byte[]> serializer) {
-        super(clientConfig, apiPath, serializer);
-    }
+  public BinaryGetRequest(StreamPipesClientConfig clientConfig, StreamPipesApiPath apiPath,
+                          Serializer<Void, byte[], byte[]> serializer) {
+    super(clientConfig, apiPath, serializer);
+  }
 
-    @Override
-    protected Request makeRequest(Serializer<Void, byte[], byte[]> serializer) {
-        return Request
-                .Get(makeUrl())
-                .setHeaders(standardHeaders());
-    }
+  @Override
+  protected Request makeRequest(Serializer<Void, byte[], byte[]> serializer) {
+    return Request
+        .Get(makeUrl())
+        .setHeaders(standardHeaders());
+  }
 
-    @Override
-    protected byte[] afterRequest(Serializer<Void, byte[], byte[]> serializer, HttpEntity entity) throws IOException {
-        return entityAsByteArray(entity);
-    }
+  @Override
+  protected byte[] afterRequest(Serializer<Void, byte[], byte[]> serializer, HttpEntity entity) throws IOException {
+    return entityAsByteArray(entity);
+  }
 }

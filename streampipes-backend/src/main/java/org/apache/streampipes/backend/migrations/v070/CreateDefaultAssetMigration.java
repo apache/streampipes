@@ -31,7 +31,8 @@ public class CreateDefaultAssetMigration implements Migration {
   @Override
   public boolean shouldExecute() {
     try {
-      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
+      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage()
+          .findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
     } catch (IOException e) {
       return true;
     }

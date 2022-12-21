@@ -32,6 +32,7 @@ import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.resource.management.secret.SecretProvider;
 import org.apache.streampipes.sdk.helpers.SupportedProtocols;
 import org.apache.streampipes.storage.couchdb.impl.AdapterInstanceStorageImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,23 @@ public class SourcesManagement {
 
   public SourcesManagement() {
     this(new AdapterInstanceStorageImpl());
+  }
+
+  public static SpDataStream updateDataStream(AdapterDescription adapterDescription,
+                                              SpDataStream oldDataStream) {
+
+    oldDataStream.setName(adapterDescription.getName());
+//
+//    // Update event schema
+    EventSchema newEventSchema;
+    if (adapterDescription instanceof AdapterStreamDescription) {
+      newEventSchema = ((AdapterStreamDescription) adapterDescription).getDataStream().getEventSchema();
+    } else {
+      newEventSchema = ((AdapterSetDescription) adapterDescription).getDataSet().getEventSchema();
+    }
+    oldDataStream.setEventSchema(newEventSchema);
+
+    return oldDataStream;
   }
 
   public void addSetAdapter(SpDataSet dataSet) throws AdapterException, NoServiceEndpointsAvailableException {
@@ -110,23 +128,6 @@ public class SourcesManagement {
     ds.setInternallyManaged(true);
 
     return ds;
-  }
-
-  public static SpDataStream updateDataStream(AdapterDescription adapterDescription,
-                                       SpDataStream oldDataStream) {
-
-    oldDataStream.setName(adapterDescription.getName());
-//
-//    // Update event schema
-    EventSchema newEventSchema;
-    if (adapterDescription instanceof AdapterStreamDescription) {
-      newEventSchema = ((AdapterStreamDescription) adapterDescription).getDataStream().getEventSchema();
-    } else {
-      newEventSchema = ((AdapterSetDescription) adapterDescription).getDataSet().getEventSchema();
-    }
-    oldDataStream.setEventSchema(newEventSchema);
-
-    return oldDataStream;
   }
 
   private AdapterDescription getAndDecryptAdapter(String adapterId) {

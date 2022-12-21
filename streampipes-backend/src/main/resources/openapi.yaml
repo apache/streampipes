@@ -32,4 +32,4 @@ openAPI:
           minimum: 0
         description: The username (currently the email address of the logged in user)
   security:
-    - bearerAuth: []
+    - bearerAuth: [ ]

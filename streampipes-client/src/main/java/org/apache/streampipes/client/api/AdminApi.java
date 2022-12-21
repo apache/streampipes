@@ -45,10 +45,10 @@ public class AdminApi extends AbstractClientApi {
 
   private StreamPipesApiPath getConnectPath() {
     return StreamPipesApiPath
-            .fromBaseApiPath()
-            .addToPath("connect")
-            .addToPath("master")
-            .addToPath("administration");
+        .fromBaseApiPath()
+        .addToPath("connect")
+        .addToPath("master")
+        .addToPath("administration");
   }
 
   private StreamPipesApiPath getFunctionsPath() {

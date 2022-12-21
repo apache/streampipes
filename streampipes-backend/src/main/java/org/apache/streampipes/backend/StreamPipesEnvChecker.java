@@ -22,6 +22,7 @@ import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.model.JwtSigningMode;
 import org.apache.streampipes.config.backend.model.LocalAuthConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,15 +62,21 @@ public class StreamPipesEnvChecker {
     }
 
     if (!Envs.SP_JWT_SIGNING_MODE.exists()) {
-      LOG.info("No JWT signing mode provided (using default settings), consult the docs to learn how to provide JWT settings");
+      LOG.info(
+          "No JWT signing mode provided (using default settings), "
+              + "consult the docs to learn how to provide JWT settings");
     } else if (localAuthConfig.getJwtSigningMode() == JwtSigningMode.HMAC && !Envs.SP_JWT_SECRET.exists()) {
-      LOG.warn("JWT signing mode set to HMAC but no secret provided (falling back to auto-generated secret), provide a {} variable",
-              Envs.SP_JWT_SECRET.getEnvVariableName());
-    } else if (localAuthConfig.getJwtSigningMode() == JwtSigningMode.RSA &&
-            ((!Envs.SP_JWT_PUBLIC_KEY_LOC.exists() || !Envs.SP_JWT_PRIVATE_KEY_LOC.exists()) || incompleteConfig)) {
-      LOG.warn("JWT signing mode set to RSA but no public or private key location provided, do you provide {} and {} variables?",
-              Envs.SP_JWT_PRIVATE_KEY_LOC.getEnvVariableName(),
-              Envs.SP_JWT_PUBLIC_KEY_LOC.getEnvVariableName());
+      LOG.warn(
+          "JWT signing mode set to HMAC but no secret provided (falling back to auto-generated secret), "
+              + "provide a {} variable",
+          Envs.SP_JWT_SECRET.getEnvVariableName());
+    } else if (localAuthConfig.getJwtSigningMode() == JwtSigningMode.RSA
+        && ((!Envs.SP_JWT_PUBLIC_KEY_LOC.exists() || !Envs.SP_JWT_PRIVATE_KEY_LOC.exists()) || incompleteConfig)) {
+      LOG.warn(
+          "JWT signing mode set to RSA but no public or private key location provided, "
+              + "do you provide {} and {} variables?",
+          Envs.SP_JWT_PRIVATE_KEY_LOC.getEnvVariableName(),
+          Envs.SP_JWT_PUBLIC_KEY_LOC.getEnvVariableName());
     }
     if (!incompleteConfig) {
       LOG.info("Updating local auth config with signing mode {}", localAuthConfig.getJwtSigningMode().name());

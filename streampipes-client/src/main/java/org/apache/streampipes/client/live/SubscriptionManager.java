@@ -57,21 +57,22 @@ public class SubscriptionManager {
 
   public SpKafkaConsumer subscribe() {
     Optional<SpDataFormatFactory> formatConverterOpt = this
-            .clientConfig
-            .getRegisteredDataFormats()
+        .clientConfig
+        .getRegisteredDataFormats()
+        .stream()
+        .filter(format -> this.grounding
+            .getTransportFormats()
+            .get(0)
+            .getRdfType()
             .stream()
-            .filter(format -> this.grounding
-                    .getTransportFormats()
-                    .get(0)
-                    .getRdfType()
-                    .stream()
-                    .anyMatch(tf -> tf.toString().equals(format.getTransportFormatRdfUri())))
-            .findFirst();
+            .anyMatch(tf -> tf.toString().equals(format.getTransportFormatRdfUri())))
+        .findFirst();
 
     if (formatConverterOpt.isPresent()) {
       final SpDataFormatDefinition converter = formatConverterOpt.get().createInstance();
 
-      KafkaTransportProtocol protocol = overrideKafkaSettings ? overrideHostname(getKafkaProtocol()) : getKafkaProtocol();
+      KafkaTransportProtocol protocol =
+          overrideKafkaSettings ? overrideHostname(getKafkaProtocol()) : getKafkaProtocol();
       SpKafkaConsumer kafkaConsumer = new SpKafkaConsumer(protocol, getOutputTopic(), event -> {
         try {
           Event spEvent = EventFactory.fromMap(converter.toMap(event));
@@ -84,7 +85,8 @@ public class SubscriptionManager {
       t.start();
       return kafkaConsumer;
     } else {
-      throw new SpRuntimeException("No converter found for data format - did you add a format factory (client.registerDataFormat)?");
+      throw new SpRuntimeException(
+          "No converter found for data format - did you add a format factory (client.registerDataFormat)?");
     }
   }
 
@@ -100,8 +102,8 @@ public class SubscriptionManager {
 
   private String getOutputTopic() {
     return this.grounding
-            .getTransportProtocol()
-            .getTopicDefinition()
-            .getActualTopicName();
+        .getTransportProtocol()
+        .getTopicDefinition()
+        .getActualTopicName();
   }
 }
