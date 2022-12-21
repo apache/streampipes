@@ -17,27 +17,51 @@
   -->
 
 <div fxFlex="100" fxLayout="row">
-    <div fxFlex="25" class="status-container pipelines mr-20" (click)="navigate('pipelines')">
+    <div
+        fxFlex="25"
+        class="status-container pipelines mr-20"
+        (click)="navigate('pipelines')"
+    >
         <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">{{pipelines}}</div>
+            <div class="status-container-number" fxLayoutAlign="start center">
+                {{ pipelines }}
+            </div>
             <div class="status-container-text">pipelines created</div>
         </div>
     </div>
-    <div fxFlex="25" class="status-container pipelines-running mr-20" (click)="navigate('pipelines')">
+    <div
+        fxFlex="25"
+        class="status-container pipelines-running mr-20"
+        (click)="navigate('pipelines')"
+    >
         <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">{{runningPipelines}}</div>
+            <div class="status-container-number" fxLayoutAlign="start center">
+                {{ runningPipelines }}
+            </div>
             <div class="status-container-text">pipelines running</div>
         </div>
     </div>
-    <div fxFlex="25" class="status-container notifications mr-20" (click)="navigate('notifications')">
+    <div
+        fxFlex="25"
+        class="status-container notifications mr-20"
+        (click)="navigate('notifications')"
+    >
         <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">{{unreadNotificationCount}}</div>
+            <div class="status-container-number" fxLayoutAlign="start center">
+                {{ unreadNotificationCount }}
+            </div>
             <div class="status-container-text">unread notifications</div>
         </div>
     </div>
-    <div fxFlex="25" class="status-container pipeline-elements-installed" (click)="navigate('add')">
+    <div
+        fxFlex="25"
+        class="status-container pipeline-elements-installed"
+        (click)="navigate('add')"
+    >
         <div fxFill="100" fxLayout="column" fxLayoutAlign="center center">
-            <div class="status-container-number" fxLayoutAlign="start center">{{installedPipelineElements}}</div>
+            <div class="status-container-number" fxLayoutAlign="start center">
+                {{ installedPipelineElements }}
+            </div>
             <div class="status-container-text">installed pipeline elements</div>
         </div>
     </div>

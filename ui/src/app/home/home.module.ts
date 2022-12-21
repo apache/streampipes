@@ -38,15 +38,9 @@ import { PlatformServicesModule } from '@streampipes/platform-services';
         MatIconModule,
         MatDividerModule,
         MatListModule,
-        PlatformServicesModule
+        PlatformServicesModule,
     ],
-    declarations: [
-        HomeComponent,
-        StatusComponent
-    ],
-    providers: [
-        HomeService
-    ]
+    declarations: [HomeComponent, StatusComponent],
+    providers: [HomeService],
 })
-export class HomeModule {
-}
+export class HomeModule {}

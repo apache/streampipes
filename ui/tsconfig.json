@@ -2,12 +2,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@streampipes/platform-services": [
-        "dist/streampipes/platform-services"
-      ],
-      "@streampipes/shared-ui": [
-        "dist/streampipes/shared-ui"
-      ]
+      "@streampipes/platform-services": ["dist/streampipes/platform-services"],
+      "@streampipes/shared-ui": ["dist/streampipes/shared-ui"]
     },
     "downlevelIteration": true,
     "importHelpers": true,
@@ -20,16 +16,9 @@
     "experimentalDecorators": true,
     "target": "es2020",
     "allowSyntheticDefaultImports": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "es2021",
-      "dom"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "types": ["node"],
+    "lib": ["es2021", "dom"],
     "baseUrl": "./"
   }
 }
