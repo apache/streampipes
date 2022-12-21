@@ -16,8 +16,8 @@
 dist
 .angular
 
-# Remove these in the future to lint additional modules
-# Please also see .prettierignore
+# Remove these in the future to format additional modules
+# Please also see .eslintignore
 cypress
 deployment
 projects
