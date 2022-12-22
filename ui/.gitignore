@@ -85,8 +85,6 @@ bundle.js.map
 
 .vscode/
 
-package-lock.json
-
 # Cypress
 cypress/screenshots/
 cypress/videos/
