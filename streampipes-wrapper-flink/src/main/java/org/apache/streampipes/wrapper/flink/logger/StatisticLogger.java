@@ -18,25 +18,26 @@
 
 package org.apache.streampipes.wrapper.flink.logger;
 
-import org.apache.flink.api.common.functions.FlatMapFunction;
-import org.apache.flink.util.Collector;
 import org.apache.streampipes.logging.impl.EventStatisticLogger;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.Event;
 
+import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.util.Collector;
+
 public class StatisticLogger implements FlatMapFunction<Event, Event> {
 
-    private InvocableStreamPipesEntity graph;
+  private InvocableStreamPipesEntity graph;
 
-    public StatisticLogger(InvocableStreamPipesEntity graph) {
-        this.graph = graph;
-    }
+  public StatisticLogger(InvocableStreamPipesEntity graph) {
+    this.graph = graph;
+  }
 
-    @Override
-    public void flatMap(Event in, Collector<Event> out) throws Exception {
-        EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
-        out.collect(in);
-    }
+  @Override
+  public void flatMap(Event in, Collector<Event> out) throws Exception {
+    EventStatisticLogger.log(graph.getName(), graph.getCorrespondingPipeline(), graph.getUri());
+    out.collect(in);
+  }
 }
 
 

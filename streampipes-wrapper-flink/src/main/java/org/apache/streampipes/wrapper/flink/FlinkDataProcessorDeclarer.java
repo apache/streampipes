@@ -21,8 +21,8 @@ package org.apache.streampipes.wrapper.flink;
 import org.apache.streampipes.wrapper.declarer.EventProcessorDeclarer;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public abstract class FlinkDataProcessorDeclarer<B extends EventProcessorBindingParams>
-        extends EventProcessorDeclarer<B, FlinkDataProcessorRuntime<B>> {
+public abstract class FlinkDataProcessorDeclarer<T extends EventProcessorBindingParams>
+    extends EventProcessorDeclarer<T, FlinkDataProcessorRuntime<T>> {
 
 
 }

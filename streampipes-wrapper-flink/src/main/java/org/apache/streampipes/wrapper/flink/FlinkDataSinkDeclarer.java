@@ -21,7 +21,7 @@ package org.apache.streampipes.wrapper.flink;
 import org.apache.streampipes.wrapper.declarer.EventSinkDeclarer;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public abstract class FlinkDataSinkDeclarer<B extends EventSinkBindingParams>
-        extends EventSinkDeclarer<B, FlinkDataSinkRuntime<B>> {
+public abstract class FlinkDataSinkDeclarer<T extends EventSinkBindingParams>
+    extends EventSinkDeclarer<T, FlinkDataSinkRuntime<T>> {
 
 }

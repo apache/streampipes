@@ -18,11 +18,12 @@
 
 package org.apache.streampipes.wrapper.flink.sink;
 
-import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.wrapper.flink.serializer.ByteArraySerializer;
+
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class MqttFlinkProducer extends RichSinkFunction<Map<String, Object>> {
   private MqttPublisher publisher;
 
   public MqttFlinkProducer(MqttTransportProtocol protocol, ByteArraySerializer
-          serializationSchema) {
+      serializationSchema) {
     this.protocol = protocol;
     this.serializationSchema = serializationSchema;
   }
