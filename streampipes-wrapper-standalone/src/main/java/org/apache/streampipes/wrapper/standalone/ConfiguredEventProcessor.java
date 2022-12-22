@@ -24,10 +24,10 @@ import org.apache.streampipes.wrapper.runtime.EventProcessor;
 
 import java.util.function.Supplier;
 
-public class ConfiguredEventProcessor<B extends EventProcessorBindingParams>
-        extends AbstractConfiguredPipelineElement<DataProcessorInvocation, B, EventProcessor<B>> {
+public class ConfiguredEventProcessor<T extends EventProcessorBindingParams>
+    extends AbstractConfiguredPipelineElement<DataProcessorInvocation, T, EventProcessor<T>> {
 
-  public ConfiguredEventProcessor(B bindingParams, Supplier<EventProcessor<B>> engineSupplier) {
+  public ConfiguredEventProcessor(T bindingParams, Supplier<EventProcessor<T>> engineSupplier) {
     super(bindingParams, engineSupplier);
   }
 }

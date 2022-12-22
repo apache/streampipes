@@ -24,9 +24,10 @@ import org.apache.streampipes.wrapper.runtime.EventSink;
 
 import java.util.function.Supplier;
 
-public class ConfiguredEventSink<B extends EventSinkBindingParams> extends AbstractConfiguredPipelineElement<DataSinkInvocation, B, EventSink<B>> {
+public class ConfiguredEventSink<T extends EventSinkBindingParams>
+    extends AbstractConfiguredPipelineElement<DataSinkInvocation, T, EventSink<T>> {
 
-  public ConfiguredEventSink(B bindingParams, Supplier<EventSink<B>> engineSupplier) {
+  public ConfiguredEventSink(T bindingParams, Supplier<EventSink<T>> engineSupplier) {
     super(bindingParams, engineSupplier);
   }
 }

@@ -27,23 +27,29 @@ import org.apache.streampipes.wrapper.params.runtime.EventProcessorRuntimeParams
 import org.apache.streampipes.wrapper.standalone.ConfiguredExternalEventProcessor;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneExternalEventProcessorRuntime;
 
-public abstract class StandaloneExternalEventProcessingDeclarer<B extends
-        EventProcessorBindingParams> extends EventProcessorDeclarer<B,
-        StandaloneExternalEventProcessorRuntime<B>> {
+public abstract class StandaloneExternalEventProcessingDeclarer<T extends
+    EventProcessorBindingParams> extends EventProcessorDeclarer<T,
+    StandaloneExternalEventProcessorRuntime<T>> {
 
-  public abstract ConfiguredExternalEventProcessor<B> onInvocation(DataProcessorInvocation graph,
-                                                            ProcessingElementParameterExtractor extractor);
+  public abstract ConfiguredExternalEventProcessor<T> onInvocation(DataProcessorInvocation graph,
+                                                                   ProcessingElementParameterExtractor extractor);
 
   @Override
-  public StandaloneExternalEventProcessorRuntime<B> getRuntime(DataProcessorInvocation graph,
+  public StandaloneExternalEventProcessorRuntime<T> getRuntime(DataProcessorInvocation graph,
                                                                ProcessingElementParameterExtractor extractor,
                                                                ConfigExtractor configExtractor,
                                                                StreamPipesClient streamPipesClient) {
-    ConfiguredExternalEventProcessor<B> configuredEngine = onInvocation(graph, extractor);
-    EventProcessorRuntimeParams<B> runtimeParams = new EventProcessorRuntimeParams<>
-            (configuredEngine.getBindingParams(), false, configExtractor, streamPipesClient);
+    ConfiguredExternalEventProcessor<T> configuredEngine = onInvocation(graph, extractor);
+    EventProcessorRuntimeParams<T> runtimeParams =
+        new EventProcessorRuntimeParams<>
+        (
+            configuredEngine.getBindingParams(),
+            false,
+            configExtractor,
+            streamPipesClient
+        );
 
     return new StandaloneExternalEventProcessorRuntime<>(configuredEngine.getEngineSupplier(),
-            runtimeParams);
+        runtimeParams);
   }
 }

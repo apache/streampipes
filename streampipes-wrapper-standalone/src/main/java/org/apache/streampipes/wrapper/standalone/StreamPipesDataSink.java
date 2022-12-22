@@ -24,7 +24,8 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventSinkDec
 
 import java.util.function.Supplier;
 
-public abstract class StreamPipesDataSink extends StandaloneEventSinkDeclarer<SinkParams> implements EventSink<SinkParams> {
+public abstract class StreamPipesDataSink extends StandaloneEventSinkDeclarer<SinkParams>
+    implements EventSink<SinkParams> {
 
   @Override
   public ConfiguredEventSink<SinkParams> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor) {

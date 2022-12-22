@@ -23,20 +23,20 @@ import org.apache.streampipes.wrapper.runtime.PipelineElement;
 
 import java.util.function.Supplier;
 
-public class AbstractConfiguredPipelineElement<I extends InvocableStreamPipesEntity,
-        B extends BindingParams<I>,
-        T extends PipelineElement<B, I>> {
+public class AbstractConfiguredPipelineElement<K extends InvocableStreamPipesEntity,
+    V extends BindingParams<K>,
+    T extends PipelineElement<V, K>> {
 
-  private B bindingParams;
+  private V bindingParams;
   private Supplier<T> engineSupplier;
 
-  public AbstractConfiguredPipelineElement(B bindingParams,
-                                          Supplier<T> engineSupplier) {
+  public AbstractConfiguredPipelineElement(V bindingParams,
+                                           Supplier<T> engineSupplier) {
     this.bindingParams = bindingParams;
     this.engineSupplier = engineSupplier;
   }
 
-  public B getBindingParams() {
+  public V getBindingParams() {
     return bindingParams;
   }
 

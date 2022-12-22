@@ -23,11 +23,11 @@ import org.apache.streampipes.wrapper.runtime.ExternalEventProcessor;
 
 import java.util.function.Supplier;
 
-public class ConfiguredExternalEventProcessor<B extends EventProcessorBindingParams>
-        extends AbstractConfiguredPipelineElement<DataProcessorInvocation, B,
-        ExternalEventProcessor<B>> {
+public class ConfiguredExternalEventProcessor<T extends EventProcessorBindingParams>
+    extends AbstractConfiguredPipelineElement<DataProcessorInvocation, T,
+    ExternalEventProcessor<T>> {
 
-  public ConfiguredExternalEventProcessor(B bindingParams, Supplier<ExternalEventProcessor<B>> engineSupplier) {
+  public ConfiguredExternalEventProcessor(T bindingParams, Supplier<ExternalEventProcessor<T>> engineSupplier) {
     super(bindingParams, engineSupplier);
   }
 }
