@@ -200,7 +200,7 @@ We welcome all kinds of contributions to StreamPipes. If you are interested in c
  get to know an open-minded and motivated team working together to build the next IIoT analytics toolbox.
 
 Here are some first steps in case you want to contribute:
-* Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](dev-subscribe@streampipes.apache.org)
+* Subscribe to our dev mailing list [dev-subscribe@streampipes.apache.org](mailto:dev-subscribe@streampipes.apache.org)
 * Send an email, tell us about your interests and which parts of StreamPipes you'd like to contribute (e.g., core or UI)!
 * Ask for a mentor who helps you to understand the code base and guides you through the first setup steps
 * Find an issue on [GitHub](https://github.com/apache/streampipes/issues) which is tagged with a _good first issue_ tag
