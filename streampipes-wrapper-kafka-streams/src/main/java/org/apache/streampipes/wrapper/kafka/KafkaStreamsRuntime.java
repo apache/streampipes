@@ -32,6 +32,7 @@ import org.apache.kafka.streams.kstream.KStream;
 import java.util.Map;
 import java.util.Properties;
 
+@SuppressWarnings("checkstyle:ClassTypeParameterName")
 public abstract class KafkaStreamsRuntime<RP extends RuntimeParams<B, I, RC>, B extends
     BindingParams<I>, I extends InvocableStreamPipesEntity, RC extends RuntimeContext> extends
     DistributedRuntime<RP, B, I, RC> {

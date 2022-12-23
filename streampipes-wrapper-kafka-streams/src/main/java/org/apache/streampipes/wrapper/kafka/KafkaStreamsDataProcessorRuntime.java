@@ -36,13 +36,13 @@ import org.apache.kafka.streams.kstream.ValueMapper;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public abstract class KafkaStreamsDataProcessorRuntime<B extends
+public abstract class KafkaStreamsDataProcessorRuntime<T extends
     EventProcessorBindingParams>
-    extends KafkaStreamsRuntime<EventProcessorRuntimeParams<B>, B,
+    extends KafkaStreamsRuntime<EventProcessorRuntimeParams<T>, T,
     DataProcessorInvocation, EventProcessorRuntimeContext> {
 
 
-  public KafkaStreamsDataProcessorRuntime(EventProcessorRuntimeParams<B> runtimeParams) {
+  public KafkaStreamsDataProcessorRuntime(EventProcessorRuntimeParams<T> runtimeParams) {
     super(runtimeParams);
   }
 
