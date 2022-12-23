@@ -27,9 +27,9 @@ import org.apache.streampipes.wrapper.routing.SpInputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
 
 public class StandaloneSpInputCollector<T extends TransportProtocol> extends
-        StandaloneSpCollector<T, RawDataProcessor>
-        implements
-        InternalEventProcessor<byte[]>, SpInputCollector {
+    StandaloneSpCollector<T, RawDataProcessor>
+    implements
+    InternalEventProcessor<byte[]>, SpInputCollector {
 
   private final Boolean singletonEngine;
 
@@ -42,20 +42,20 @@ public class StandaloneSpInputCollector<T extends TransportProtocol> extends
   @Override
   public void onEvent(byte[] event) {
     if (singletonEngine) {
-     send(consumers.get(consumers.keySet().toArray()[0]), event);
+      send(consumers.get(consumers.keySet().toArray()[0]), event);
     } else {
       consumers.forEach((key, value) -> send(value, event));
     }
   }
 
   private void send(RawDataProcessor rawDataProcessor, byte[] event) {
-      rawDataProcessor.process(dataFormatDefinition.toMap(event), topic);
+    rawDataProcessor.process(dataFormatDefinition.toMap(event), topic);
   }
 
   @Override
   public void connect() throws SpRuntimeException {
     if (!protocolDefinition.getConsumer().isConnected()) {
-      protocolDefinition.getConsumer().connect(transportProtocol,this);
+      protocolDefinition.getConsumer().connect(transportProtocol, this);
     }
   }
 

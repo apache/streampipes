@@ -20,9 +20,9 @@ package org.apache.streampipes.wrapper.routing;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 
-public interface PipelineElementCollector<C> {
+public interface PipelineElementCollector<T> {
 
-  void registerConsumer(String routeId, C consumer);
+  void registerConsumer(String routeId, T consumer);
 
   void unregisterConsumer(String routeId);
 

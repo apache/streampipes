@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class SpEventSinkRuntimeContext extends SpRuntimeContext implements
-        EventSinkRuntimeContext, Serializable {
+    EventSinkRuntimeContext, Serializable {
 
   public SpEventSinkRuntimeContext(List<SourceInfo> sourceInfo,
                                    List<SchemaInfo> inputSchemaInfo,

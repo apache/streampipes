@@ -27,12 +27,12 @@ import org.apache.streampipes.wrapper.runtime.ExternalEventProcessor;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class StandaloneExternalEventProcessorRuntime<B extends EventProcessorBindingParams> extends
-        StandalonePipelineElementRuntime<B, DataProcessorInvocation,
-                EventProcessorRuntimeParams<B>, EventProcessorRuntimeContext, ExternalEventProcessor<B>> {
+public class StandaloneExternalEventProcessorRuntime<T extends EventProcessorBindingParams> extends
+    StandalonePipelineElementRuntime<T, DataProcessorInvocation,
+        EventProcessorRuntimeParams<T>, EventProcessorRuntimeContext, ExternalEventProcessor<T>> {
 
-  public StandaloneExternalEventProcessorRuntime(Supplier<ExternalEventProcessor<B>> supplier,
-                                                 EventProcessorRuntimeParams<B> runtimeParams) {
+  public StandaloneExternalEventProcessorRuntime(Supplier<ExternalEventProcessor<T>> supplier,
+                                                 EventProcessorRuntimeParams<T> runtimeParams) {
     super(supplier, runtimeParams);
   }
 

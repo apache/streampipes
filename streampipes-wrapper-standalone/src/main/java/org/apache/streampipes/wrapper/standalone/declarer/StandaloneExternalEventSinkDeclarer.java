@@ -27,24 +27,35 @@ import org.apache.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 import org.apache.streampipes.wrapper.standalone.ConfiguredExternalEventSink;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneExternalEventSinkRuntime;
 
-public abstract class StandaloneExternalEventSinkDeclarer<B extends
-        EventSinkBindingParams> extends EventSinkDeclarer<B,
-                StandaloneExternalEventSinkRuntime<B>> {
+/**
+ * @deprecated since there is no usage
+ * @param <T>
+ */
+@Deprecated(since = "0.90.0", forRemoval = true)
+public abstract class StandaloneExternalEventSinkDeclarer<T extends
+    EventSinkBindingParams> extends EventSinkDeclarer<T,
+    StandaloneExternalEventSinkRuntime<T>> {
 
   @Override
-  public StandaloneExternalEventSinkRuntime<B> getRuntime(DataSinkInvocation graph,
+  public StandaloneExternalEventSinkRuntime<T> getRuntime(DataSinkInvocation graph,
                                                           DataSinkParameterExtractor extractor,
                                                           ConfigExtractor configExtractor,
                                                           StreamPipesClient streamPipesClient) {
 
-    ConfiguredExternalEventSink<B> configuredEngine = onInvocation(graph, extractor);
-    EventSinkRuntimeParams<B> runtimeParams = new EventSinkRuntimeParams<>
-            (configuredEngine.getBindingParams(), false, configExtractor, streamPipesClient);
+    ConfiguredExternalEventSink<T> configuredEngine = onInvocation(graph, extractor);
+    EventSinkRuntimeParams<T> runtimeParams =
+        new EventSinkRuntimeParams<>
+        (
+            configuredEngine.getBindingParams(),
+            false,
+            configExtractor,
+            streamPipesClient
+        );
 
     return new StandaloneExternalEventSinkRuntime<>(configuredEngine.getEngineSupplier(),
-            runtimeParams);
+        runtimeParams);
   }
 
-  public abstract ConfiguredExternalEventSink<B> onInvocation(DataSinkInvocation graph,
+  public abstract ConfiguredExternalEventSink<T> onInvocation(DataSinkInvocation graph,
                                                               DataSinkParameterExtractor extractor);
 }

@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.wrapper.flink.status;
 
-import com.google.gson.Gson;
 import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
+
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 

@@ -33,7 +33,7 @@ public class OutputStreamParams implements Serializable {
   private SchemaInfo schemaInfo;
 
   public OutputStreamParams(SpDataStream outputStream, List<PropertyRenameRule>
-          propertyRenameRules) {
+      propertyRenameRules) {
     this.schemaInfo = makeSchemaInfo(outputStream.getEventSchema(), propertyRenameRules);
     this.sourceInfo = makeSourceInfo(outputStream.getEventGrounding());
 
@@ -45,7 +45,7 @@ public class OutputStreamParams implements Serializable {
 
   private SourceInfo makeSourceInfo(EventGrounding eventGrounding) {
     return new SourceInfo(eventGrounding.getTransportProtocol().getTopicDefinition()
-            .getActualTopicName(), "o");
+        .getActualTopicName(), "o");
   }
 
   public SourceInfo getSourceInfo() {

@@ -24,19 +24,19 @@ import org.apache.streampipes.model.monitoring.ElementStatusInfoSettings;
 
 public class PipelineElementStatusSenderFactory {
 
-  public static <I extends InvocableStreamPipesEntity> PipelineElementStatusSender getStatusSender(I graph) {
+  public static <T extends InvocableStreamPipesEntity> PipelineElementStatusSender getStatusSender(T graph) {
 
     SpKafkaProducer kafkaProducer = new SpKafkaProducer();
     // TODO refactor
 
     return new PipelineElementStatusSender(kafkaProducer,
-            graph.getStatusInfoSettings().getErrorTopic(),
-            graph.getStatusInfoSettings().getStatsTopic());
+        graph.getStatusInfoSettings().getErrorTopic(),
+        graph.getStatusInfoSettings().getStatsTopic());
   }
 
-  private static <I extends InvocableStreamPipesEntity> String buildKafkaUrl(I graph) {
+  private static <T extends InvocableStreamPipesEntity> String buildKafkaUrl(T graph) {
 
     ElementStatusInfoSettings settings = graph.getStatusInfoSettings();
-    return settings.getKafkaHost() +":" +settings.getKafkaPort();
+    return settings.getKafkaHost() + ":" + settings.getKafkaPort();
   }
 }

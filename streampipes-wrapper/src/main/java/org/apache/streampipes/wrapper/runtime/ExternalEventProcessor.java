@@ -22,10 +22,10 @@ import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.wrapper.context.EventProcessorRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams;
 
-public interface ExternalEventProcessor<B extends EventProcessorBindingParams> extends
-        PipelineElement<B, DataProcessorInvocation>  {
+public interface ExternalEventProcessor<T extends EventProcessorBindingParams> extends
+    PipelineElement<T, DataProcessorInvocation> {
 
-  void onInvocation(B parameters, EventProcessorRuntimeContext runtimeContext) throws
-          SpRuntimeException;
+  void onInvocation(T parameters, EventProcessorRuntimeContext runtimeContext) throws
+      SpRuntimeException;
 
 }

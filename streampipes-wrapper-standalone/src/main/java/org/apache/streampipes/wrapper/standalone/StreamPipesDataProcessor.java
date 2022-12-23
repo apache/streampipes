@@ -24,10 +24,12 @@ import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcess
 
 import java.util.function.Supplier;
 
-public abstract class StreamPipesDataProcessor extends StandaloneEventProcessingDeclarer<ProcessorParams> implements EventProcessor<ProcessorParams> {
+public abstract class StreamPipesDataProcessor extends StandaloneEventProcessingDeclarer<ProcessorParams>
+    implements EventProcessor<ProcessorParams> {
 
   @Override
-  public ConfiguredEventProcessor<ProcessorParams> onInvocation(DataProcessorInvocation graph, ProcessingElementParameterExtractor extractor) {
+  public ConfiguredEventProcessor<ProcessorParams> onInvocation(DataProcessorInvocation graph,
+                                                                ProcessingElementParameterExtractor extractor) {
     Supplier<EventProcessor<ProcessorParams>> supplier = () -> this;
     return new ConfiguredEventProcessor<>(new ProcessorParams(graph), supplier);
   }

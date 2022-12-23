@@ -28,22 +28,28 @@ import org.apache.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventSink;
 import org.apache.streampipes.wrapper.standalone.runtime.StandaloneEventSinkRuntime;
 
-public abstract class StandaloneEventSinkDeclarer<B extends
-        EventSinkBindingParams> extends EventSinkDeclarer<B, StandaloneEventSinkRuntime<B>> {
+public abstract class StandaloneEventSinkDeclarer<T extends
+    EventSinkBindingParams> extends EventSinkDeclarer<T, StandaloneEventSinkRuntime<T>> {
 
   @Override
-  public StandaloneEventSinkRuntime<B> getRuntime(DataSinkInvocation graph,
+  public StandaloneEventSinkRuntime<T> getRuntime(DataSinkInvocation graph,
                                                   DataSinkParameterExtractor extractor,
                                                   ConfigExtractor configExtractor,
                                                   StreamPipesClient streamPipesClient) {
 
-    ConfiguredEventSink<B> configuredEngine = onInvocation(graph, extractor);
-    EventSinkRuntimeParams<B> runtimeParams = new EventSinkRuntimeParams<>
-            (configuredEngine.getBindingParams(), false, configExtractor, streamPipesClient);
+    ConfiguredEventSink<T> configuredEngine = onInvocation(graph, extractor);
+    EventSinkRuntimeParams<T> runtimeParams =
+        new EventSinkRuntimeParams<>
+        (
+            configuredEngine.getBindingParams(),
+            false,
+            configExtractor,
+            streamPipesClient
+        );
 
     return new StandaloneEventSinkRuntime<>(configuredEngine.getEngineSupplier(), runtimeParams);
   }
 
-  public abstract ConfiguredEventSink<B> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor);
+  public abstract ConfiguredEventSink<T> onInvocation(DataSinkInvocation graph, DataSinkParameterExtractor extractor);
 
 }

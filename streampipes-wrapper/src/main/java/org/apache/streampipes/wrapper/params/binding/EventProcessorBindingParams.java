@@ -31,19 +31,14 @@ import java.util.stream.Collectors;
 
 @Deprecated(since = "0.70.0", forRemoval = true)
 public abstract class EventProcessorBindingParams extends
-        BindingParams<DataProcessorInvocation> implements
-        Serializable {
+    BindingParams<DataProcessorInvocation> implements
+    Serializable {
 
   private static final long serialVersionUID = 7716492945641719007L;
-
+  private final Map<String, Object> outEventType;
   private SpDataStream outputStream;
   private String outName;
-
-  private final Map<String, Object> outEventType;
   private OutputStreamParams outputStreamParams;
-
-
-  private final static String topicPrefix = "topic://";
 
   public EventProcessorBindingParams(DataProcessorInvocation graph) {
     super(new DataProcessorInvocation(graph));
@@ -70,7 +65,7 @@ public abstract class EventProcessorBindingParams extends
   @Override
   public List<PropertyRenameRule> getRenameRules() {
     return graph.getOutputStrategies().stream().flatMap(o -> o.getRenameRules().stream()).collect
-            (Collectors.toList());
+        (Collectors.toList());
   }
 
   public OutputStreamParams getOutputStreamParams() {

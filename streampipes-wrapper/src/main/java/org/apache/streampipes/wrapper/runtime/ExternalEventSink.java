@@ -22,9 +22,9 @@ import org.apache.streampipes.model.graph.DataSinkInvocation;
 import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public interface ExternalEventSink<B extends EventSinkBindingParams> extends PipelineElement<B,
-        DataSinkInvocation> {
+public interface ExternalEventSink<T extends EventSinkBindingParams> extends PipelineElement<T,
+    DataSinkInvocation> {
 
-  void onInvocation(B parameters, EventSinkRuntimeContext runtimeContext) throws
-          SpRuntimeException;
+  void onInvocation(T parameters, EventSinkRuntimeContext runtimeContext) throws
+      SpRuntimeException;
 }

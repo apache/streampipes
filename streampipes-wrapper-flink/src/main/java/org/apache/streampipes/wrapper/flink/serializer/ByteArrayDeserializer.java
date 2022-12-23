@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.wrapper.flink.serializer;
 
-import org.apache.flink.api.common.serialization.AbstractDeserializationSchema;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
+
+import org.apache.flink.api.common.serialization.AbstractDeserializationSchema;
 
 import java.io.IOException;
 import java.util.Map;

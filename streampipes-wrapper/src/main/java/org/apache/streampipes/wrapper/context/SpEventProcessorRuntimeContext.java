@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class SpEventProcessorRuntimeContext extends SpRuntimeContext implements
-        EventProcessorRuntimeContext, Serializable {
+    EventProcessorRuntimeContext, Serializable {
 
   private SchemaInfo outputSchemaInfo;
   private SourceInfo outputSourceInfo;
