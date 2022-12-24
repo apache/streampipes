@@ -17,19 +17,19 @@
  */
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      resetStreamPipes: typeof resetStreamPipes;
+    namespace Cypress {
+        interface Chainable {
+            resetStreamPipes: typeof resetStreamPipes;
+        }
     }
-  }
 }
 
 export const resetStreamPipes = () => {
-  cy.request({
-    method: 'POST',
-    url: '/streampipes-backend/api/v2/reset',
-    auth: {
-      bearer: window.localStorage.getItem('auth-token')
-    }
-  });
+    cy.request({
+        method: 'POST',
+        url: '/streampipes-backend/api/v2/reset',
+        auth: {
+            bearer: window.localStorage.getItem('auth-token'),
+        },
+    });
 };

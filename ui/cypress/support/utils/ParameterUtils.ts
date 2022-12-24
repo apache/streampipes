@@ -16,10 +16,11 @@
  *
  */
 
-
 export class ParameterUtils {
-
-    public static get(localVariable: string, containerVariable: string): string {
+    public static get(
+        localVariable: string,
+        containerVariable: string,
+    ): string {
         if (Cypress.env('DEVELOPMENT')) {
             return localVariable;
         } else {

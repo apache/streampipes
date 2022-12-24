@@ -20,32 +20,33 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
 
-describe('Test File Stream Adapter', {
-  retries: {
-    runMode: 4,
-    openMode: 1,
-  }
-}, () => {
-  beforeEach('Setup Test', () => {
-    cy.initStreamPipesTest();
-    FileManagementUtils.addFile('fileTest/random.csv');
-  });
+describe(
+    'Test File Stream Adapter',
+    {
+        retries: {
+            runMode: 4,
+            openMode: 1,
+        },
+    },
+    () => {
+        beforeEach('Setup Test', () => {
+            cy.initStreamPipesTest();
+            FileManagementUtils.addFile('fileTest/random.csv');
+        });
 
-  it('Perform Test', () => {
-    const adapterInput = GenericAdapterBuilder
-      .create('File_Stream')
-      .setName('File Stream Adapter Test')
-      .setTimestampProperty('timestamp')
-      .addProtocolInput('input', 'speed', '1')
-      .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
-      .setFormat('csv')
-      .addFormatInput('input', 'delimiter', ';')
-      .addFormatInput('checkbox', 'header', 'check')
-      .build();
+        it('Perform Test', () => {
+            const adapterInput = GenericAdapterBuilder.create('File_Stream')
+                .setName('File Stream Adapter Test')
+                .setTimestampProperty('timestamp')
+                .addProtocolInput('input', 'speed', '1')
+                .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
+                .setFormat('csv')
+                .addFormatInput('input', 'delimiter', ';')
+                .addFormatInput('checkbox', 'header', 'check')
+                .build();
 
-    ConnectUtils.testGenericStreamAdapter(adapterInput);
-    ConnectUtils.deleteAdapter();
-  });
-
-});
-
+            ConnectUtils.testGenericStreamAdapter(adapterInput);
+            ConnectUtils.deleteAdapter();
+        });
+    },
+);

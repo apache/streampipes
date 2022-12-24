@@ -19,25 +19,24 @@
 import * as fs from 'fs';
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      /**
-       * Login into streampipes with standard test user
-       * @example cy.login();
-       */
-      readDir: typeof readDir;
+    namespace Cypress {
+        interface Chainable {
+            /**
+             * Login into streampipes with standard test user
+             * @example cy.login();
+             */
+            readDir: typeof readDir;
+        }
     }
-  }
 }
 
 export const readDir = (dir: string) => {
-  fs.readdir(dir, (err: any, files: any[]) => {
-    if (err) {
-      return console.log('Unable to scan directory: ' + err);
-    }
-    files.forEach((file) => {
-      console.log('file: ' + file);
+    fs.readdir(dir, (err: any, files: any[]) => {
+        if (err) {
+            return console.log('Unable to scan directory: ' + err);
+        }
+        files.forEach(file => {
+            console.log('file: ' + file);
+        });
     });
-  });
-
 };

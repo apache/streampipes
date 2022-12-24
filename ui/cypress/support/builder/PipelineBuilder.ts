@@ -58,5 +58,4 @@ export class PipelineBuilder {
     build() {
         return this.pipeline;
     }
-
 }

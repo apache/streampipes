@@ -1,7 +1,11 @@
 {
- "name": "field_hasher",
- "config": [
-   {"type":  "drop-down", "selector": "property-mapping", "value":  "sensorId"},
-   {"type":  "radio", "selector": "hash-algorithm", "value":  "SHA1"}
- ]
+  "name": "field_hasher",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "property-mapping",
+      "value": "sensorId"
+    },
+    { "type": "radio", "selector": "hash-algorithm", "value": "SHA1" }
+  ]
 }

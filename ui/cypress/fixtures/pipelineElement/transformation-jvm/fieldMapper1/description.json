@@ -1,8 +1,8 @@
 {
- "name": "field_mapper",
- "config": [
-   {"type":  "checkbox", "selector": "value1", "value":  "check"},
-   {"type":  "checkbox", "selector": "value2", "value":  "check"},
-   {"type":  "input", "selector": "fieldName", "value":  "hashedField"}
- ]
+  "name": "field_mapper",
+  "config": [
+    { "type": "checkbox", "selector": "value1", "value": "check" },
+    { "type": "checkbox", "selector": "value2", "value": "check" },
+    { "type": "input", "selector": "fieldName", "value": "hashedField" }
+  ]
 }

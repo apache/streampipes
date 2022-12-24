@@ -20,7 +20,6 @@ import { UserInput } from '../model/UserInput';
 import { PipelineElementInput } from '../model/PipelineElementInput';
 
 export class PipelineElementBuilder {
-
     pipelineElementInput: PipelineElementInput;
 
     constructor(name: string) {
@@ -34,7 +33,7 @@ export class PipelineElementBuilder {
     }
 
     public addInput(type: string, selector: string, value: string) {
-        const  userInput = new UserInput();
+        const userInput = new UserInput();
         userInput.type = type;
         userInput.selector = selector;
         userInput.value = value;

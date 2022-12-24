@@ -1,7 +1,11 @@
 {
- "name": "split_array",
- "config": [
-   {"type":  "drop-down", "selector": "array-field", "value":  "arrayProperty"},
-   {"type":  "checkbox", "selector": "timestamp", "value":  "check"}
- ]
+  "name": "split_array",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "array-field",
+      "value": "arrayProperty"
+    },
+    { "type": "checkbox", "selector": "timestamp", "value": "check" }
+  ]
 }

@@ -5,9 +5,9 @@
       "type": "code-input",
       "selector": "jsFunction",
       "value": "function process(event) {\n return event;"
-    }],
-  "output":
-    {
-      "type": "append"
     }
+  ],
+  "output": {
+    "type": "append"
+  }
 }

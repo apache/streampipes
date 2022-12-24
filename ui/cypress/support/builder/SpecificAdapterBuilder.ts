@@ -21,52 +21,50 @@ import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
 import { UserInputType } from '../model/UserInputType';
 
 export class SpecificAdapterBuilder {
+    specificAdapterInput: SpecificAdapterInput;
 
+    constructor(type: string) {
+        this.specificAdapterInput = new SpecificAdapterInput();
+        this.specificAdapterInput.adapterType = type;
+        this.specificAdapterInput.adapterConfiguration = [];
+    }
 
-  specificAdapterInput: SpecificAdapterInput;
+    public static create(name: string) {
+        return new SpecificAdapterBuilder(name);
+    }
 
-  constructor(type: string) {
-    this.specificAdapterInput = new SpecificAdapterInput();
-    this.specificAdapterInput.adapterType = type;
-    this.specificAdapterInput.adapterConfiguration = [];
-  }
+    public setName(name: string) {
+        this.specificAdapterInput.adapterName = name;
+        return this;
+    }
 
-  public static create(name: string) {
-    return new SpecificAdapterBuilder(name);
-  }
+    public setTimestampProperty(timestsmpProperty: string) {
+        this.specificAdapterInput.timestampProperty = timestsmpProperty;
+        return this;
+    }
 
-  public setName(name: string) {
-    this.specificAdapterInput.adapterName = name;
-    return this;
-  }
+    public setStoreInDataLake() {
+        this.specificAdapterInput.storeInDataLake = true;
+        return this;
+    }
 
-  public setTimestampProperty(timestsmpProperty: string) {
-    this.specificAdapterInput.timestampProperty = timestsmpProperty;
-    return this;
-  }
+    public withAutoAddedTimestamp() {
+        this.specificAdapterInput.autoAddTimestamp = true;
+        return this;
+    }
 
-  public setStoreInDataLake() {
-    this.specificAdapterInput.storeInDataLake = true;
-    return this;
-  }
+    public addInput(type: UserInputType, selector: string, value?: string) {
+        const userInput = new UserInput();
+        userInput.type = type;
+        userInput.selector = selector;
+        userInput.value = value;
 
-  public withAutoAddedTimestamp() {
-    this.specificAdapterInput.autoAddTimestamp = true;
-    return this;
-  }
+        this.specificAdapterInput.adapterConfiguration.push(userInput);
 
-  public addInput(type: UserInputType, selector: string, value?: string) {
-    const userInput = new UserInput();
-    userInput.type = type;
-    userInput.selector = selector;
-    userInput.value = value;
+        return this;
+    }
 
-    this.specificAdapterInput.adapterConfiguration.push(userInput);
-
-    return this;
-  }
-
-  build() {
-    return this.specificAdapterInput;
-  }
+    build() {
+        return this.specificAdapterInput;
+    }
 }

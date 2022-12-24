@@ -1,9 +1,13 @@
 {
- "name": "signal_edge_filter",
- "config": [
-   {"type":  "drop-down", "selector": "boolean_signal_field", "value":  "booleanEdge"},
-   {"type":  "radio", "selector": "flank", "value":  "BOTH"},
-   {"type":  "input", "selector": "delay", "value":  "0"},
-   {"type":  "radio", "selector": "event-selection-id", "value":  "Last"}
- ]
+  "name": "signal_edge_filter",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "boolean_signal_field",
+      "value": "booleanEdge"
+    },
+    { "type": "radio", "selector": "flank", "value": "BOTH" },
+    { "type": "input", "selector": "delay", "value": "0" },
+    { "type": "radio", "selector": "event-selection-id", "value": "Last" }
+  ]
 }

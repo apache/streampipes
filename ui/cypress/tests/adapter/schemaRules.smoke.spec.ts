@@ -27,7 +27,6 @@ describe('Connect schema rule transformations', () => {
     });
 
     it('Perform Test', () => {
-
         const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
 
         // Add static value to event
@@ -37,17 +36,20 @@ describe('Connect schema rule transformations', () => {
         ConnectEventSchemaUtils.deleteProperty('density');
 
         // Set data type to float
-        ConnectEventSchemaUtils.changePropertyDataType('temperature', 'Integer');
+        ConnectEventSchemaUtils.changePropertyDataType(
+            'temperature',
+            'Integer',
+        );
 
         // Add a timestamp property
         ConnectEventSchemaUtils.addTimestampProperty();
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
+        ConnectUtils.tearDownPreprocessingRuleTest(
+            adapterConfiguration,
             'cypress/fixtures/connect/schemaRules/expected.csv',
-            true);
-
+            true,
+        );
     });
-
 });

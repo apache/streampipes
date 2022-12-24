@@ -18,7 +18,6 @@ dist
 
 # Remove these in the future to lint additional modules
 # Please also see .prettierignore
-cypress
 deployment
 projects
 src/app/_enums
