@@ -30,14 +30,15 @@ import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.model.runtime.EventConverter;
 import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 import org.apache.streampipes.wrapper.standalone.manager.ProtocolManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
 public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
-        StandaloneSpCollector<T, InternalEventProcessor<Map<String,
-                Object>>> implements SpOutputCollector {
+    StandaloneSpCollector<T, InternalEventProcessor<Map<String,
+        Object>>> implements SpOutputCollector {
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneSpOutputCollector.class);
 
@@ -47,9 +48,9 @@ public class StandaloneSpOutputCollector<T extends TransportProtocol> extends
   public StandaloneSpOutputCollector(T protocol,
                                      TransportFormat format,
                                      String resourceId) throws SpRuntimeException {
-   super(protocol, format);
-   this.producer = protocolDefinition.getProducer();
-   this.resourceId = resourceId;
+    super(protocol, format);
+    this.producer = protocolDefinition.getProducer();
+    this.resourceId = resourceId;
   }
 
   public void collect(Event event) {

@@ -20,6 +20,6 @@ package org.apache.streampipes.wrapper.kafka;
 import org.apache.streampipes.wrapper.declarer.EventSinkDeclarer;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public abstract class KafkaStreamsDataSinkDeclarer <B extends
-        EventSinkBindingParams> extends EventSinkDeclarer<B, KafkaStreamsDataSinkRuntime> {
+public abstract class KafkaStreamsDataSinkDeclarer<T extends
+    EventSinkBindingParams> extends EventSinkDeclarer<T, KafkaStreamsDataSinkRuntime> {
 }

@@ -18,23 +18,23 @@
 
 package org.apache.streampipes.wrapper.standalone.manager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
 import org.apache.streampipes.wrapper.standalone.routing.StandaloneSpInputCollector;
 import org.apache.streampipes.wrapper.standalone.routing.StandaloneSpOutputCollector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProtocolManager {
 
+  private static final Logger LOG = LoggerFactory.getLogger(ProtocolManager.class);
   public static Map<String, StandaloneSpInputCollector> consumers = new HashMap<>();
   public static Map<String, StandaloneSpOutputCollector> producers = new HashMap<>();
-
-  private static final Logger LOG = LoggerFactory.getLogger(ProtocolManager.class);
 
   // TODO currently only the topic name is used as an identifier for a consumer/producer. Should
   // be changed by some hashCode implementation in streampipes-model, but this requires changes
@@ -42,7 +42,8 @@ public class ProtocolManager {
 
   public static <T extends TransportProtocol> StandaloneSpInputCollector findInputCollector(T protocol,
                                                                                             TransportFormat format,
-                                                                                            Boolean singletonEngine) throws SpRuntimeException {
+                                                                                            Boolean singletonEngine)
+      throws SpRuntimeException {
 
     if (consumers.containsKey(topicName(protocol))) {
       return consumers.get(topicName(protocol));
@@ -56,14 +57,15 @@ public class ProtocolManager {
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector findOutputCollector(T protocol,
                                                                                               TransportFormat format,
-                                                                                              String resourceId) throws SpRuntimeException {
+                                                                                              String resourceId)
+      throws SpRuntimeException {
 
     if (producers.containsKey(topicName(protocol))) {
       return producers.get(topicName(protocol));
     } else {
       producers.put(topicName(protocol), makeOutputCollector(protocol, format, resourceId));
       LOG.info("Adding new producer to producer map (size=" + producers.size() + "): " + topicName
-              (protocol));
+          (protocol));
       return producers.get(topicName(protocol));
     }
 
@@ -71,13 +73,15 @@ public class ProtocolManager {
 
   private static <T extends TransportProtocol> StandaloneSpInputCollector<T> makeInputCollector(T protocol,
                                                                                                 TransportFormat format,
-                                                                                                Boolean singletonEngine) throws SpRuntimeException {
+                                                                                                Boolean singletonEngine)
+      throws SpRuntimeException {
     return new StandaloneSpInputCollector<>(protocol, format, singletonEngine);
   }
 
   public static <T extends TransportProtocol> StandaloneSpOutputCollector<T> makeOutputCollector(T protocol,
                                                                                                  TransportFormat format,
-                                                                                                 String resourceId) throws SpRuntimeException {
+                                                                                                 String resourceId)
+      throws SpRuntimeException {
     return new StandaloneSpOutputCollector<>(protocol, format, resourceId);
   }
 
@@ -86,17 +90,17 @@ public class ProtocolManager {
   }
 
   public static <T extends TransportProtocol> void removeInputCollector(T protocol) throws
-          SpRuntimeException {
+      SpRuntimeException {
     consumers.remove(topicName(protocol));
     LOG.info("Removing consumer from consumer map (size=" + consumers.size() + "): " + topicName
-            (protocol));
+        (protocol));
   }
 
   public static <T extends TransportProtocol> void removeOutputCollector(T protocol) throws
-          SpRuntimeException {
+      SpRuntimeException {
     producers.remove(topicName(protocol));
     LOG.info("Removing producer from producer map (size=" + producers.size() + "): " + topicName
-            (protocol));
+        (protocol));
   }
 
 

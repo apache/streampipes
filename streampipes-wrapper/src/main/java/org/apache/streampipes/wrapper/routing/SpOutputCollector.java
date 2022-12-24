@@ -24,7 +24,7 @@ import org.apache.streampipes.model.runtime.Event;
 import java.util.Map;
 
 public interface SpOutputCollector extends PipelineElementCollector<InternalEventProcessor<Map<String,
-        Object>>> {
+    Object>>> {
 
   void collect(Event event);
 }

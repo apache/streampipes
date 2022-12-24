@@ -26,10 +26,10 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.context.SpEventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 
-public class EventSinkRuntimeParams<B extends EventSinkBindingParams> extends
-    RuntimeParams<B, DataSinkInvocation, EventSinkRuntimeContext> {
+public class EventSinkRuntimeParams<T extends EventSinkBindingParams> extends
+    RuntimeParams<T, DataSinkInvocation, EventSinkRuntimeContext> {
 
-  public EventSinkRuntimeParams(B bindingParams,
+  public EventSinkRuntimeParams(T bindingParams,
                                 Boolean singletonEngine,
                                 ConfigExtractor configExtractor,
                                 StreamPipesClient streamPipesClient) {

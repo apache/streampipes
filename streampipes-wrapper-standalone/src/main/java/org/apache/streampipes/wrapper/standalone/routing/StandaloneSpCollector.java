@@ -29,10 +29,10 @@ import org.apache.streampipes.wrapper.standalone.manager.PManager;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class StandaloneSpCollector<T extends TransportProtocol, C> implements
-        PipelineElementCollector<C> {
+public abstract class StandaloneSpCollector<T extends TransportProtocol, W> implements
+    PipelineElementCollector<W> {
 
-  protected Map<String, C> consumers;
+  protected Map<String, W> consumers;
 
   protected T transportProtocol;
   protected SpProtocolDefinition<T> protocolDefinition;
@@ -45,15 +45,15 @@ public abstract class StandaloneSpCollector<T extends TransportProtocol, C> impl
   public StandaloneSpCollector(T protocol, TransportFormat format) throws SpRuntimeException {
     this.transportProtocol = protocol;
     this.protocolDefinition = PManager.getProtocolDefinition(protocol).orElseThrow(() -> new
-            SpRuntimeException("Could not find protocol"));
+        SpRuntimeException("Could not find protocol"));
     this.transportFormat = format;
     this.dataFormatDefinition = PManager.getDataFormat(format).orElseThrow(() -> new
-            SpRuntimeException("Could not find format"));
+        SpRuntimeException("Could not find format"));
     this.consumers = new ConcurrentHashMap<>();
     this.topic = transportProtocol.getTopicDefinition().getActualTopicName();
   }
 
-  public void registerConsumer(String routeId, C consumer) {
+  public void registerConsumer(String routeId, W consumer) {
     consumers.put(routeId, consumer);
   }
 

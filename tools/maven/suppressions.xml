@@ -21,7 +21,6 @@
         "-//Puppy Crawl//DTD Suppressions 1.1//EN"
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
-    <suppress checks="." files="[\\/]org.apache.streampipes.vocabulary[\\/].*\.java$"/>
     <suppress checks="." files="org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname.geocode"/>
     <suppress checks="." files="com.github.jqudt"/>
     <suppress checks="." files="com.kohlschutter.boilerpipe"/>

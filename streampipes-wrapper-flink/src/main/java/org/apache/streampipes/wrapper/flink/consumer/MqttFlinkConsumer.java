@@ -17,12 +17,13 @@
  */
 package org.apache.streampipes.wrapper.flink.consumer;
 
-import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.dataformat.SpDataFormatDefinition;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.mqtt.MqttConsumer;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
+
+import org.apache.flink.streaming.api.functions.source.SourceFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +39,8 @@ public class MqttFlinkConsumer implements SourceFunction<Map<String, Object>>, S
   private final MqttTransportProtocol protocol;
   private final MqttConsumer mqttConsumer;
   private final SpDataFormatDefinition spDataFormatDefinition;
-  private Boolean isRunning;
   private final Queue<byte[]> queue;
+  private Boolean isRunning;
 
   public MqttFlinkConsumer(MqttTransportProtocol protocol, SpDataFormatDefinition spDataFormatDefinition) {
     this.protocol = protocol;

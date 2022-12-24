@@ -23,11 +23,11 @@ import org.apache.streampipes.wrapper.context.EventSinkRuntimeContext;
 import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 import org.apache.streampipes.wrapper.params.runtime.EventSinkRuntimeParams;
 
-public abstract class KafkaStreamsDataSinkRuntime<B extends EventSinkBindingParams>
-        extends KafkaStreamsRuntime<EventSinkRuntimeParams<B>, B, DataSinkInvocation, EventSinkRuntimeContext> {
+public abstract class KafkaStreamsDataSinkRuntime<T extends EventSinkBindingParams>
+    extends KafkaStreamsRuntime<EventSinkRuntimeParams<T>, T, DataSinkInvocation, EventSinkRuntimeContext> {
 
 
-  public KafkaStreamsDataSinkRuntime(EventSinkRuntimeParams<B> runtimeParams) {
+  public KafkaStreamsDataSinkRuntime(EventSinkRuntimeParams<T> runtimeParams) {
     super(runtimeParams);
   }
 

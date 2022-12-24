@@ -19,6 +19,6 @@
 package org.apache.streampipes.wrapper.routing;
 
 public interface SpInputCollector extends
-        PipelineElementCollector<RawDataProcessor> {
+    PipelineElementCollector<RawDataProcessor> {
 
 }
