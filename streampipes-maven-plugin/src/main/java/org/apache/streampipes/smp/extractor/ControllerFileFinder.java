@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.smp.extractor;
 
+import org.apache.streampipes.smp.model.AssetModel;
+
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
-import org.apache.streampipes.smp.model.AssetModel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,7 +51,8 @@ public class ControllerFileFinder extends ElementFinder {
     List<AssetModel> allAssetModels = new ArrayList<>();
     for (String file : findFiles()) {
       try {
-        allAssetModels.add(new ControllerExtractor(baseDir, sourceRoot + File.separator + file).extractControllerDetails());
+        allAssetModels.add(
+            new ControllerExtractor(baseDir, sourceRoot + File.separator + file).extractControllerDetails());
       } catch (Exception e) {
         log.error(e.getMessage());
         log.info("Could not parse file " + file + ", skipping...");

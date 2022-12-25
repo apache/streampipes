@@ -18,6 +18,18 @@
 
 package org.apache.streampipes.smp;
 
+import org.apache.streampipes.smp.extractor.ControllerFileFinder;
+import org.apache.streampipes.smp.extractor.ResourceDirectoryElementFinder;
+import org.apache.streampipes.smp.generator.DataJsonGenerator;
+import org.apache.streampipes.smp.generator.ImagePathReplacer;
+import org.apache.streampipes.smp.generator.MarkdownHeaderGenerator;
+import org.apache.streampipes.smp.generator.MarkdownTitleRemover;
+import org.apache.streampipes.smp.generator.PipelineElementOverviewGenerator;
+import org.apache.streampipes.smp.generator.SidebarConfigGenerator;
+import org.apache.streampipes.smp.model.AssetModel;
+import org.apache.streampipes.smp.util.DirectoryManager;
+import org.apache.streampipes.smp.util.Utils;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -27,12 +39,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.streampipes.smp.extractor.ControllerFileFinder;
-import org.apache.streampipes.smp.extractor.ResourceDirectoryElementFinder;
-import org.apache.streampipes.smp.generator.*;
-import org.apache.streampipes.smp.model.AssetModel;
-import org.apache.streampipes.smp.util.DirectoryManager;
-import org.apache.streampipes.smp.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +74,7 @@ public class ExtractDocumentationMojo extends AbstractMojo {
   public void execute() throws MojoExecutionException, MojoFailureException {
     String targetDir = this.session.getExecutionRootDirectory() + File.separator + "target";
     String spIgnoreFile =
-            this.session.getExecutionRootDirectory() + File.separator + SP_IGNORE_FILENAME;
+        this.session.getExecutionRootDirectory() + File.separator + SP_IGNORE_FILENAME;
     Path docsBasePath = Paths.get(targetDir, DOCS_ROOT_FOLDER);
 
     List<MavenProject> projects = session.getProjects();
@@ -95,12 +101,12 @@ public class ExtractDocumentationMojo extends AbstractMojo {
       if (currentModule.getName().equals("streampipes-connect-adapters")) {
         System.out.println("Opening adapters");
         allAssetModels = new ResourceDirectoryElementFinder(sourceRoots.get(0), getLog(), baseDir.getAbsolutePath())
-                .makeAssetModels();
+            .makeAssetModels();
         allAssetModels.forEach(am -> System.out.println(am.getAppId()));
       } else {
         allAssetModels = new ControllerFileFinder(getLog(),
-                baseDir.getAbsolutePath(), sourceRoots.get(0),
-                "**/*Controller.java").makeAssetModels();
+            baseDir.getAbsolutePath(), sourceRoots.get(0),
+            "**/*Controller.java").makeAssetModels();
       }
 
       allAssetModels.forEach(am -> {
@@ -111,32 +117,33 @@ public class ExtractDocumentationMojo extends AbstractMojo {
 
       List<String> finalPipelineElementsToExclude = pipelineElementsToExclude;
       documentedPipelineElements.addAll(
-              allAssetModels
-                      .stream()
-                      .filter(am -> finalPipelineElementsToExclude.stream().noneMatch(pe -> pe.equals(am.getAppId())))
-                      .collect(Collectors.toList()));
+          allAssetModels
+              .stream()
+              .filter(am -> finalPipelineElementsToExclude.stream().noneMatch(pe -> pe.equals(am.getAppId())))
+              .collect(Collectors.toList()));
     }
     try {
       Collections.sort(documentedPipelineElements);
-      documentedPipelineElements.forEach(am -> System.out.println(am.getAppId() + ", " + am.getPipelineElementName() + ", " + am.getPipelineElementDescription()));
+      documentedPipelineElements.forEach(am -> System.out.println(
+          am.getAppId() + ", " + am.getPipelineElementName() + ", " + am.getPipelineElementDescription()));
 
       for (AssetModel assetModel : documentedPipelineElements) {
         Path docsPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_FOLDER,
-                "pe");
+            "pe");
         Path docsWebsitePath = Paths.get(targetDir, DOCS_ROOT_FOLDER, DOCS_WEBSITE_FOLDER,
-                assetModel.getAppId());
+            assetModel.getAppId());
         Path imgPath = Paths.get(targetDir, DOCS_ROOT_FOLDER, IMG_FOLDER,
-                assetModel.getAppId());
+            assetModel.getAppId());
         DirectoryManager.createIfNotExists(docsPath);
         DirectoryManager.createIfNotExists(imgPath);
 
         Boolean iconExists = Files.exists(Utils.makeResourcePath(assetModel.getBaseDir(),
-                assetModel.getAppId()).resolve("icon.png"));
+            assetModel.getAppId()).resolve("icon.png"));
 
         if (iconExists) {
           Files.copy(Utils.makeResourcePath(assetModel.getBaseDir(),
                   assetModel.getAppId()).resolve("icon.png")
-                  , imgPath.resolve("icon.png"));
+              , imgPath.resolve("icon.png"));
         } else {
           ClassLoader classLoader = this.getClass().getClassLoader();
           InputStream inputStream = classLoader.getResourceAsStream("placeholder-icon.png");
@@ -144,21 +151,21 @@ public class ExtractDocumentationMojo extends AbstractMojo {
         }
 
         String originalDocumentationFileContents =
-                FileUtils.readFileToString(Utils.makeResourcePath(assetModel.getBaseDir(),
-                        assetModel.getAppId()).resolve("documentation.md").toFile());
+            FileUtils.readFileToString(Utils.makeResourcePath(assetModel.getBaseDir(),
+                assetModel.getAppId()).resolve("documentation.md").toFile());
 
         // modify docs for documentation page
         String documentationFileContents =
-                new MarkdownTitleRemover(originalDocumentationFileContents).removeTitle();
+            new MarkdownTitleRemover(originalDocumentationFileContents).removeTitle();
 
         documentationFileContents =
-                new MarkdownHeaderGenerator(assetModel, documentationFileContents).createHeaders();
+            new MarkdownHeaderGenerator(assetModel, documentationFileContents).createHeaders();
 
         documentationFileContents = new ImagePathReplacer(documentationFileContents,
-                assetModel.getAppId()).replaceContentForDocs();
+            assetModel.getAppId()).replaceContentForDocs();
 
-        FileUtils.writeStringToFile(docsPath.resolve(assetModel.getAppId() +".md").toFile(),
-                documentationFileContents);
+        FileUtils.writeStringToFile(docsPath.resolve(assetModel.getAppId() + ".md").toFile(),
+            documentationFileContents);
 
       }
 
@@ -169,16 +176,17 @@ public class ExtractDocumentationMojo extends AbstractMojo {
         FileUtils.writeStringToFile(docsBasePath.resolve("pipeline-elements.md").toFile(), header);
       }
 
-      String pipelineElementOverviewContent = new PipelineElementOverviewGenerator(documentedPipelineElements).generate();
+      String pipelineElementOverviewContent =
+          new PipelineElementOverviewGenerator(documentedPipelineElements).generate();
       FileUtils.writeStringToFile(docsBasePath.resolve("pipeline-elements.md").toFile(),
-              pipelineElementOverviewContent, true);
+          pipelineElementOverviewContent, true);
 
 
       FileUtils.writeStringToFile(docsBasePath.resolve("sidebars.json").toFile(),
-              new SidebarConfigGenerator(documentedPipelineElements).generate());
+          new SidebarConfigGenerator(documentedPipelineElements).generate());
 
       FileUtils.writeStringToFile(docsBasePath.resolve("_data.json").toFile(),
-              new DataJsonGenerator(documentedPipelineElements).generate());
+          new DataJsonGenerator(documentedPipelineElements).generate());
 
 
     } catch (IOException e) {

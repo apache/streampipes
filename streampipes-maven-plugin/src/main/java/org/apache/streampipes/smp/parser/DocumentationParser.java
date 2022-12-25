@@ -31,9 +31,9 @@ public class DocumentationParser {
   public String parseAndStoreDocumentation(String markdown) {
 
     markdown = new PipelineElementNameReplacer(assetModel.getPipelineElementName(),
-            markdown).replace();
+        markdown).replace();
     markdown = new PipelineElementDescriptionReplacer(assetModel.getPipelineElementDescription(),
-            markdown).replace();
+        markdown).replace();
 
     return markdown;
 

@@ -19,6 +19,11 @@
 package org.apache.streampipes.smp;
 
 
+import org.apache.streampipes.smp.extractor.ControllerFileFinder;
+import org.apache.streampipes.smp.generator.AssetGenerator;
+import org.apache.streampipes.smp.model.AssetModel;
+import org.apache.streampipes.smp.util.DuplicateRemover;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,10 +32,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.streampipes.smp.extractor.ControllerFileFinder;
-import org.apache.streampipes.smp.generator.AssetGenerator;
-import org.apache.streampipes.smp.model.AssetModel;
-import org.apache.streampipes.smp.util.DuplicateRemover;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import org.codehaus.plexus.components.interactivity.PrompterException;
 
@@ -42,19 +43,16 @@ import java.util.List;
  */
 @Mojo(name = "create-assets", defaultPhase = LifecyclePhase.NONE)
 public class CreateAssetMojo
-        extends AbstractMojo {
-
-  @Parameter(defaultValue = "${session}")
-  private MavenSession session;
-
-  @Parameter(defaultValue = "${project}", readonly = true)
-  private MavenProject project;
-
-  @Component
-  private Prompter prompter;
+    extends AbstractMojo {
 
   private static final String APP_ID_PROPERTY = "appId";
   private static final String GENERATE_ALL_PROPERTY = "all";
+  @Parameter(defaultValue = "${session}")
+  private MavenSession session;
+  @Parameter(defaultValue = "${project}", readonly = true)
+  private MavenProject project;
+  @Component
+  private Prompter prompter;
 
   public void execute() throws MojoExecutionException {
 
@@ -64,8 +62,8 @@ public class CreateAssetMojo
 
     if (appId != null) {
       getLog().info("Generating asset directory for element " + appId);
-      AssetModel assetModel = new AssetModel(appId, "Pipeline Element Name", "Pipeline Element " +
-              "Description");
+      AssetModel assetModel = new AssetModel(appId, "Pipeline Element Name", "Pipeline Element "
+          + "Description");
       new AssetGenerator(baseDir.getAbsolutePath(), assetModel);
     }
 
@@ -74,20 +72,20 @@ public class CreateAssetMojo
       getLog().info("Generating asset directories for source root " + sourceRoots.get(0));
 
       getLog().info("Finding controllers...");
-      List<AssetModel> allAssetModels =  new ControllerFileFinder(getLog(), baseDir.getAbsolutePath(),
-              sourceRoots.get(0),
-              "**/*Controller.java").makeAssetModels();
+      List<AssetModel> allAssetModels = new ControllerFileFinder(getLog(), baseDir.getAbsolutePath(),
+          sourceRoots.get(0),
+          "**/*Controller.java").makeAssetModels();
 
       getLog().info("Checking for already existing asset directories...");
 
       List<AssetModel> filteredModels =
-              new DuplicateRemover(baseDir.getAbsolutePath(), allAssetModels).removeAlreadyExisting();
+          new DuplicateRemover(baseDir.getAbsolutePath(), allAssetModels).removeAlreadyExisting();
 
       try {
         String proceed = prompter.prompt(makeProceedText(filteredModels));
         if (proceed.equals("Y")) {
           filteredModels.forEach(am -> new AssetGenerator(baseDir.getAbsolutePath(), am)
-           .genreateAssetDirectoryAndContents());
+              .genreateAssetDirectoryAndContents());
         }
       } catch (PrompterException e) {
         e.printStackTrace();

@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.smp.generator;
 
-import j2html.tags.ContainerTag;
-import j2html.tags.DomContent;
 import org.apache.streampipes.smp.constants.PeGridConst;
 import org.apache.streampipes.smp.model.AssetModel;
+
+import j2html.tags.ContainerTag;
+import j2html.tags.DomContent;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class PipelineElementOverviewGenerator extends OutputGenerator {
   public String generate() {
 
     ContainerTag gridContent = div().withClass(PeGridConst.PE_GRID_CONTAINER);
-    for(AssetModel am : assetModels) {
+    for (AssetModel am : assetModels) {
       gridContent.with(makeGrid(am));
     }
     String markdownContent = gridContent.render();

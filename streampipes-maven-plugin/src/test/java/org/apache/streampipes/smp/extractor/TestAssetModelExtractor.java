@@ -20,6 +20,7 @@ package org.apache.streampipes.smp.extractor;
 
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +28,8 @@ import static org.junit.Assert.assertNull;
 
 public class TestAssetModelExtractor {
 
-  private String declareModelContent = "return ProcessingElementBuilder.create(\"org.apache.streampipes.processors.filters.jvm.numericalfilter\", \"Numerical Filter\", \"Numerical Filter Description\")\n" +
+  private String declareModelContent =
+      "return ProcessingElementBuilder.create(\"org.apache.streampipes.processors.filters.jvm.numericalfilter\", \"Numerical Filter\", \"Numerical Filter Description\")\n" +
           "            .category(DataProcessorType.FILTER)\n" +
           "            .providesAssets(Assets.DOCUMENTATION, Assets.ICON)\n" +
           "            .requiredStream(StreamRequirementsBuilder\n" +
@@ -44,7 +46,8 @@ public class TestAssetModelExtractor {
           "            .supportedFormats(SupportedFormats.jsonFormat())\n" +
           "            .build();";
 
-  private String declareModelContent2 = "return ProcessingElementBuilder.create(\"org.apache.streampipes.processors.filters.jvm.processor.mergestartandend\",\n" +
+  private String declareModelContent2 =
+      "return ProcessingElementBuilder.create(\"org.apache.streampipes.processors.filters.jvm.processor.mergestartandend\",\n" +
           "            \"MergeStartAndEnd\", \"Merges two event streams if there is a start and an end\")\n" +
           "            .category(DataProcessorType.TRANSFORM)\n" +
           "            .iconUrl(FiltersJvmConfig.getIconUrl(\"projection\"))\n" +
@@ -61,7 +64,8 @@ public class TestAssetModelExtractor {
           "            .supportedProtocols(SupportedProtocols.jms(), SupportedProtocols.kafka())\n" +
           "            .build();";
 
-  private String getDeclareModelContent3 = "return DataSinkBuilder.create(\"org.apache.streampipes.sinks.brokers.jvm.jms\")\n" +
+  private String getDeclareModelContent3 =
+      "return DataSinkBuilder.create(\"org.apache.streampipes.sinks.brokers.jvm.jms\")\n" +
           "            .withLocales(Locales.EN)\n" +
           "            .withAssets(Assets.DOCUMENTATION, Assets.ICON)\n" +
           "            .requiredStream(StreamRequirementsBuilder\n" +
@@ -76,7 +80,8 @@ public class TestAssetModelExtractor {
           "            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())\n" +
           "            .build();";
 
-  private String getGetDeclareModelContent4 = "return ProcessingElementBuilder.create(\"org.apache.streampipes.processors.filters.jvm.numericalfilter\")\n" +
+  private String getGetDeclareModelContent4 =
+      "return ProcessingElementBuilder.create(\"org.apache.streampipes.processors.filters.jvm.numericalfilter\")\n" +
           "            .category(DataProcessorType.FILTER)\n" +
           "            .withAssets(Assets.DOCUMENTATION, Assets.ICON)\n" +
           "            .withLocales(Locales.EN)\n" +
@@ -92,7 +97,7 @@ public class TestAssetModelExtractor {
           "            .supportedProtocols(SupportedProtocols.kafka(), SupportedProtocols.jms())\n" +
           "            .supportedFormats(SupportedFormats.jsonFormat())\n" +
           "            .build();";
-  
+
 
   @Test
   public void testAssetExtraction4() {

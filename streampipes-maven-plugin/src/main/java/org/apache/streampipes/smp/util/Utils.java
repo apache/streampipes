@@ -26,14 +26,14 @@ public class Utils {
 
   public static String makePath(String sourceRoot, String appId) {
     return sourceRoot
-            + File.separator
-            + "src"
-            + File.separator
-            + "main"
-            + File.separator
-            + "resources"
-            + File.separator
-            + appId;
+        + File.separator
+        + "src"
+        + File.separator
+        + "main"
+        + File.separator
+        + "resources"
+        + File.separator
+        + appId;
   }
 
   public static Path makeResourcePath(String sourcePath) {

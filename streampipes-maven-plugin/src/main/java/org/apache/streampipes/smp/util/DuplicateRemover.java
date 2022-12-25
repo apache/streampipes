@@ -37,9 +37,9 @@ public class DuplicateRemover {
   public List<AssetModel> removeAlreadyExisting() {
 
     return assetModels
-            .stream()
-            .filter(am -> !(new File(Utils.makePath(sourceDir, am.getAppId() + File.separator +
-                    "documentation.md")).exists()))
-            .collect(Collectors.toList());
+        .stream()
+        .filter(am -> !(new File(Utils.makePath(sourceDir, am.getAppId() + File.separator
+            + "documentation.md")).exists()))
+        .collect(Collectors.toList());
   }
 }

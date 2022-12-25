@@ -18,12 +18,17 @@
 
 package org.apache.streampipes.smp.generator;
 
-import j2html.tags.DomContent;
 import org.apache.streampipes.smp.constants.PeGridConst;
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
 
-import static j2html.TagCreator.*;
+import j2html.tags.DomContent;
+
+import static j2html.TagCreator.a;
+import static j2html.TagCreator.div;
+import static j2html.TagCreator.i;
+import static j2html.TagCreator.img;
+import static j2html.TagCreator.text;
 
 public class PipelineElementGridGenerator {
 
@@ -34,8 +39,8 @@ public class PipelineElementGridGenerator {
   private static final String GITHUB = "Code on Github";
   private static final String DOCKER_HUB = "Docker Container";
 
-  private static final String STREAMPIPES_GITHUB_URL = "https://www.github" +
-          ".com/apache/incubator-streampipes-extensions/tree/dev/";
+  private static final String STREAMPIPES_GITHUB_URL = "https://www.github"
+      + ".com/apache/incubator-streampipes-extensions/tree/dev/";
 
   private static final String DOCKER_HUB_URL = "https://hub.docker.com/r/streampipes/";
 
@@ -51,9 +56,9 @@ public class PipelineElementGridGenerator {
 
   private DomContent makeContainerItem() {
     return div(makeContainerItemHeader(),
-            makeContainerItemBody(),
-            makeContainerItemFooter()).withClasses(PeGridConst.PE_CONTAINER_ITEM,
-            getContainerItemType());
+        makeContainerItemBody(),
+        makeContainerItemFooter()).withClasses(PeGridConst.PE_CONTAINER_ITEM,
+        getContainerItemType());
   }
 
   private DomContent makeContainerItemFooter() {
@@ -106,11 +111,12 @@ public class PipelineElementGridGenerator {
 
   private DomContent makeContainerItemHeader() {
     return div(makeContainerItemIconWrapper(),
-            makeContainerItemHeaderPe()).withClass(PeGridConst.PE_CONTAINER_ITEM_HEADER);
+        makeContainerItemHeaderPe()).withClass(PeGridConst.PE_CONTAINER_ITEM_HEADER);
   }
 
   private DomContent makeContainerItemHeaderPe() {
-    return div(makeContainerItemLabel(), makeContainerItemLabelName()).withClass(PeGridConst.PE_CONTAINER_ITEM_HEADER_PE);
+    return div(makeContainerItemLabel(), makeContainerItemLabelName()).withClass(
+        PeGridConst.PE_CONTAINER_ITEM_HEADER_PE);
   }
 
   private DomContent makeContainerItemLabelName() {
@@ -127,7 +133,7 @@ public class PipelineElementGridGenerator {
 
   private String makeLabelType() {
     return assetModel.getPeType().equals(PeType.PROCESSOR) ? PeGridConst.PE_CONTAINER_ITEM_LABEL_PROCESSOR :
-            PeGridConst.PE_CONTAINER_ITEM_LABEL_SINK;
+        PeGridConst.PE_CONTAINER_ITEM_LABEL_SINK;
   }
 
   private DomContent makeContainerItemIconWrapper() {
@@ -140,12 +146,12 @@ public class PipelineElementGridGenerator {
 
   private String makeIconType() {
     return assetModel.getPeType().equals(PeType.PROCESSOR) ? PeGridConst.PE_ITEM_ICON_PROCESSOR :
-            PeGridConst.PE_ITEM_ICON_SINK;
+        PeGridConst.PE_ITEM_ICON_SINK;
   }
 
   private String getContainerItemType() {
     return assetModel.getPeType().equals(PeType.PROCESSOR) ? PeGridConst.PE_CONTAINER_ITEM_PROCESSOR :
-            PeGridConst.PE_CONTAINER_ITEM_SINK;
+        PeGridConst.PE_CONTAINER_ITEM_SINK;
   }
 
 }

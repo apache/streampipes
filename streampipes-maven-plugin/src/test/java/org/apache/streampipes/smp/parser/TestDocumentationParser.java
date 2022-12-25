@@ -18,8 +18,9 @@
 
 package org.apache.streampipes.smp.parser;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.streampipes.smp.model.AssetModel;
+
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,13 +34,13 @@ public class TestDocumentationParser {
   public void testPipelineElementNameReplacement() throws IOException {
     ClassLoader classLoader = this.getClass().getClassLoader();
     AssetModel assetModel = new AssetModel("abc", "Numerical Filter", "Numerical Filter " +
-            "Description");
+        "Description");
 
     String originalContent = IOUtils.toString(classLoader.getResourceAsStream("documentation.md"));
     String expectedContent = IOUtils.toString(classLoader.getResourceAsStream("expected.documentation.md"));
     String content =
-            new DocumentationParser(assetModel)
-                    .parseAndStoreDocumentation(originalContent);
+        new DocumentationParser(assetModel)
+            .parseAndStoreDocumentation(originalContent);
 
     assertEquals(expectedContent, content);
   }

@@ -34,9 +34,9 @@ public class DockerImageExtractor {
   private static final String Image = "image";
   private static final String Services = "services";
   private static final String Colon = ":";
-  private static final String ImagePrefix = "${SP_PE_DOCKER_REGISTRY}/streampipes" +
-          "/streampipes" +
-          "-pipeline-elements/";
+  private static final String ImagePrefix = "${SP_PE_DOCKER_REGISTRY}/streampipes"
+      + "/streampipes"
+      + "-pipeline-elements/";
 
   private String baseDir;
 
@@ -50,7 +50,7 @@ public class DockerImageExtractor {
     Yaml yaml = new Yaml();
     try {
       Map<String, Object> fileContents =
-              yaml.load(new String(Files.readAllBytes(dockerComposePath)));
+          yaml.load(new String(Files.readAllBytes(dockerComposePath)));
 
       return extractNameFromYaml(fileContents);
 
@@ -65,7 +65,7 @@ public class DockerImageExtractor {
     AtomicReference<String> imageName = new AtomicReference<>("");
     if (services.size() > 0) {
       services.forEach((key, value) -> imageName.set(parseValue(((Map<String,
-              Object>) value).get(Image).toString())));
+          Object>) value).get(Image).toString())));
     }
 
     return imageName.get();

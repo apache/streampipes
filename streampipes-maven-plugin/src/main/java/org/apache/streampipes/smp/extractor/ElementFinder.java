@@ -17,8 +17,9 @@
  */
 package org.apache.streampipes.smp.extractor;
 
-import org.apache.maven.plugin.logging.Log;
 import org.apache.streampipes.smp.model.AssetModel;
+
+import org.apache.maven.plugin.logging.Log;
 
 import java.util.List;
 

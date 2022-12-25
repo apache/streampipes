@@ -50,7 +50,6 @@
         <!-- Test dependencies -->
     </dependencies>
     <build>
-        <finalName>streampipes-connect-container-master</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
