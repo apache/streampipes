@@ -18,6 +18,7 @@
 package org.apache.streampipes.container.standalone.init;
 
 import org.apache.streampipes.container.init.RunningInstances;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
