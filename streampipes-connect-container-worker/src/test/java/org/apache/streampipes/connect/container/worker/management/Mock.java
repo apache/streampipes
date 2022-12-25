@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.container.worker.management;
 
 public class Mock {
-    public static int PORT = 8042;
+  public static int PORT = 8042;
 
-    public static String HOST = "http://localhost:" + PORT;
+  public static String HOST = "http://localhost:" + PORT;
 
 }

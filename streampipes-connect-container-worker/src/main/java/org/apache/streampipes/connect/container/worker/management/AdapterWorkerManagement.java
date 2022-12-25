@@ -26,6 +26,7 @@ import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,62 +34,63 @@ import java.util.Collection;
 
 public class AdapterWorkerManagement {
 
-    private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
+  private static final Logger logger = LoggerFactory.getLogger(AdapterWorkerManagement.class);
 
-    public Collection<AdapterDescription> getAllRunningAdapterInstances() {
-        return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
-    }
+  public Collection<AdapterDescription> getAllRunningAdapterInstances() {
+    return RunningAdapterInstances.INSTANCE.getAllRunningAdapterDescriptions();
+  }
 
-    public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+  public void invokeStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
 
-       IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
+    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterStreamDescription);
 
-        RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter, adapterStreamDescription);
+    RunningAdapterInstances.INSTANCE.addAdapter(adapterStreamDescription.getElementId(), adapter,
+        adapterStreamDescription);
+    adapter.startAdapter();
+  }
+
+  public void stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
+    stopAdapter(adapterStreamDescription);
+  }
+
+  public void invokeSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
+
+    IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
+
+    RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getElementId(), adapter, adapterSetDescription);
+
+    adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
+
+    // Start a thread to start a set adapter
+    Runnable r = () -> {
+      try {
         adapter.startAdapter();
+      } catch (AdapterException e) {
+        e.printStackTrace();
+      }
+    };
+
+    new Thread(r).start();
+  }
+
+  public void stopSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
+    stopAdapter(adapterSetDescription);
+  }
+
+  private void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
+
+    String elementId = adapterDescription.getElementId();
+
+    IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
+
+    if (adapter != null) {
+      adapter.stopAdapter();
     }
+    resetMonitoring(elementId);
+  }
 
-    public void stopStreamAdapter(AdapterStreamDescription adapterStreamDescription) throws AdapterException {
-        stopAdapter(adapterStreamDescription);
-    }
-
-    public void invokeSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
-
-        IAdapter<?> adapter = AdapterUtils.setAdapter(adapterSetDescription);
-
-        RunningAdapterInstances.INSTANCE.addAdapter(adapterSetDescription.getElementId(), adapter, adapterSetDescription);
-
-        adapter.changeEventGrounding(adapterSetDescription.getDataSet().getEventGrounding().getTransportProtocol());
-
-        // Start a thread to start a set adapter
-        Runnable r = () -> {
-            try {
-                adapter.startAdapter();
-            } catch (AdapterException e) {
-                e.printStackTrace();
-            }
-        };
-
-        new Thread(r).start();
-    }
-
-    public void stopSetAdapter(AdapterSetDescription adapterSetDescription) throws AdapterException {
-        stopAdapter(adapterSetDescription);
-    }
-
-    private void stopAdapter(AdapterDescription adapterDescription) throws AdapterException {
-
-        String elementId = adapterDescription.getElementId();
-
-        IAdapter<?> adapter = RunningAdapterInstances.INSTANCE.removeAdapter(elementId);
-
-        if (adapter != null) {
-            adapter.stopAdapter();
-        }
-        resetMonitoring(elementId);
-    }
-
-    private void resetMonitoring(String elementId) {
-        SpMonitoringManager.INSTANCE.reset(elementId);
-    }
+  private void resetMonitoring(String elementId) {
+    SpMonitoringManager.INSTANCE.reset(elementId);
+  }
 
 }

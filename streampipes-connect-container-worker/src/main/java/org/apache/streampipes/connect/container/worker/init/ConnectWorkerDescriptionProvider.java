@@ -27,6 +27,7 @@ import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription
 import org.apache.streampipes.model.connect.adapter.GenericAdapterStreamDescription;
 import org.apache.streampipes.model.connect.grounding.ProtocolDescription;
 import org.apache.streampipes.sdk.helpers.AdapterSourceType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,9 +53,9 @@ public class ConnectWorkerDescriptionProvider {
   public Optional<AdapterDescription> getAdapterDescription(String appId) {
     List<AdapterDescription> allAdapterDescriptions = getContainerDescription("");
     return allAdapterDescriptions
-            .stream()
-            .filter(ad -> ad.getAppId().equals(appId))
-            .findFirst();
+        .stream()
+        .filter(ad -> ad.getAppId().equals(appId))
+        .findFirst();
   }
 
   private NamedStreamPipesEntity rewrite(NamedStreamPipesEntity entity) {

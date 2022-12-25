@@ -17,8 +17,13 @@
  */
 package org.apache.streampipes.connect.container.worker.init;
 
-import org.apache.streampipes.connect.container.worker.rest.*;
+import org.apache.streampipes.connect.container.worker.rest.AdapterAssetResource;
+import org.apache.streampipes.connect.container.worker.rest.AdapterWorkerResource;
+import org.apache.streampipes.connect.container.worker.rest.GuessResource;
+import org.apache.streampipes.connect.container.worker.rest.HttpServerAdapterResource;
+import org.apache.streampipes.connect.container.worker.rest.RuntimeResolvableResource;
 import org.apache.streampipes.container.init.ExtensionsResourceProvider;
+
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import java.util.Arrays;
@@ -29,11 +34,11 @@ public class AdapterServiceResourceProvider implements ExtensionsResourceProvide
   @Override
   public List<Class<?>> getResourceClasses() {
     return Arrays.asList(
-            GuessResource.class,
-            RuntimeResolvableResource.class,
-            AdapterWorkerResource.class,
-            MultiPartFeature.class,
-            AdapterAssetResource.class,
-            HttpServerAdapterResource.class);
+        GuessResource.class,
+        RuntimeResolvableResource.class,
+        AdapterWorkerResource.class,
+        MultiPartFeature.class,
+        AdapterAssetResource.class,
+        HttpServerAdapterResource.class);
   }
 }

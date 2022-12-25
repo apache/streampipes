@@ -29,31 +29,31 @@ import org.apache.streampipes.container.init.DeclarersSingleton;
 import java.util.Map;
 
 public class RuntimeResovable {
-    private static final String SP_NS =  "https://streampipes.org/vocabulary/v1/";
+  private static final String SP_NS = "https://streampipes.org/vocabulary/v1/";
 
 
-    public static ResolvesContainerProvidedOptions getRuntimeResolvableFormat(String id) throws IllegalArgumentException {
-        id = id.replaceAll("sp:", SP_NS);
-        Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
+  public static ResolvesContainerProvidedOptions getRuntimeResolvableFormat(String id) throws IllegalArgumentException {
+    id = id.replaceAll("sp:", SP_NS);
+    Map<String, IFormat> allFormats = AdapterRegistry.getAllFormats();
 
-        if (allFormats.containsKey(id)) {
-            return (ResolvesContainerProvidedOptions) allFormats.get(id);
-        } else {
-            return null;
-        }
+    if (allFormats.containsKey(id)) {
+      return (ResolvesContainerProvidedOptions) allFormats.get(id);
+    } else {
+      return null;
     }
+  }
 
-    public static Connector getAdapterOrProtocol(String id) {
-      id = id.replaceAll("sp:", SP_NS);
-      Map<String, IAdapter> allAdapters = DeclarersSingleton.getInstance().getAllAdaptersMap();
-      Map<String, IProtocol> allProtocols =  DeclarersSingleton.getInstance().getAllProtocolsMap();
+  public static Connector getAdapterOrProtocol(String id) {
+    id = id.replaceAll("sp:", SP_NS);
+    Map<String, IAdapter> allAdapters = DeclarersSingleton.getInstance().getAllAdaptersMap();
+    Map<String, IProtocol> allProtocols = DeclarersSingleton.getInstance().getAllProtocolsMap();
 
-      if (allAdapters.containsKey(id)) {
-        return allAdapters.get(id);
-      } else if (allProtocols.containsKey(id)) {
-        return allProtocols.get(id);
-      } else {
-        throw new IllegalArgumentException("Could not find adapter with id " + id);
-      }
+    if (allAdapters.containsKey(id)) {
+      return allAdapters.get(id);
+    } else if (allProtocols.containsKey(id)) {
+      return allProtocols.get(id);
+    } else {
+      throw new IllegalArgumentException("Could not find adapter with id " + id);
     }
+  }
 }

@@ -19,6 +19,7 @@ package org.apache.streampipes.connect.container.worker.init;
 
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
 import org.apache.streampipes.container.model.SpServiceDefinition;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
