@@ -25,17 +25,17 @@ import org.apache.streampipes.container.init.DeclarersSingleton;
 
 public abstract class AbstractAlreadyExistingStream implements DataStreamDeclarer {
 
-	@Override
-	public void executeStream() {		
-	
-	}
+  @Override
+  public void executeStream() {
 
-	@Override
-	public boolean isExecutable() {
-		return false;
-	}
+  }
 
-	public ConfigExtractor configExtractor() {
-		return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
-	}
+  @Override
+  public boolean isExecutable() {
+    return false;
+  }
+
+  public ConfigExtractor configExtractor() {
+    return ConfigExtractor.from(DeclarersSingleton.getInstance().getServiceDefinition().getServiceGroup());
+  }
 }
