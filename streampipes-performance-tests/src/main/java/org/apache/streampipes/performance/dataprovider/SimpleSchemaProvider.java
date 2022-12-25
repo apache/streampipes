@@ -18,10 +18,11 @@
 
 package org.apache.streampipes.performance.dataprovider;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class SimpleSchemaProvider {
   public EventSchema getSchema() {
     EventSchema schema = new EventSchema();
     List<EventProperty> properties = new ArrayList<>();
-    for(int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
       properties.add(makeRandomProperty());
     }
 

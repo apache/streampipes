@@ -35,9 +35,9 @@ public class PipelinePerformanceTest {
 
   public static void main(String[] args) {
     if (args.length < 6) {
-      System.out.println("Usage: java -jar streampipes-performance-tests.jar [NUMBER OF TIMESTAMP ENRICH EPAS] " +
-              "[PARALELLISM OF ENRICHMENT EPAS], [PARALELLISM OF ELASTIC EPAs], [TOTAL NUMBER OF EVENTS], [WAIT TIME " +
-              "BETWEEN EVENTS], [NUMBER OF PRODUCER THREADS]");
+      System.out.println("Usage: java -jar streampipes-performance-tests.jar [NUMBER OF TIMESTAMP ENRICH EPAS] "
+          + "[PARALELLISM OF ENRICHMENT EPAS], [PARALELLISM OF ELASTIC EPAs], [TOTAL NUMBER OF EVENTS], [WAIT TIME "
+          + "BETWEEN EVENTS], [NUMBER OF PRODUCER THREADS]");
     } else {
       PerformanceTestSettings settings = ParameterTool.fromArgs(args);
 
@@ -52,8 +52,6 @@ public class PipelinePerformanceTest {
 
   // SINK
   //Kafka Publisher
-
-
 
 
 }

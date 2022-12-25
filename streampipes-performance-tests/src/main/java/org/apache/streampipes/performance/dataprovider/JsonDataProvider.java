@@ -18,13 +18,14 @@
 
 package org.apache.streampipes.performance.dataprovider;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.streampipes.model.schema.EventSchema;
 import org.apache.streampipes.model.schema.EventProperty;
 import org.apache.streampipes.model.schema.EventPropertyList;
 import org.apache.streampipes.model.schema.EventPropertyPrimitive;
+import org.apache.streampipes.model.schema.EventSchema;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
