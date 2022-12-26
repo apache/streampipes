@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <!--
   ~ Licensed to the Apache Software Foundation (ASF) under one or more
   ~ contributor license agreements.  See the NOTICE file distributed with
@@ -17,11 +16,41 @@
   ~
   -->
 
-<!DOCTYPE suppressions PUBLIC
-        "-//Puppy Crawl//DTD Suppressions 1.1//EN"
-        "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
-<suppressions>
-    <suppress checks="." files="org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname.geocode"/>
-    <suppress checks="." files="com.github.jqudt"/>
-    <suppress checks="." files="com.kohlschutter.boilerpipe"/>
-</suppressions>
+## Google Maps Static Geocoding
+
+<p align="center">
+    <img src="icon.png" width="150px;" class="pe-image-documentation"/>
+</p>
+
+***
+
+## Description
+
+This processor computes the latitude and longitude values from a fixed location (a place name such as "Karlsruhe
+, Germany
+") and adds the result to the event.
+
+***
+
+## Required inputs
+
+Input event requires to have a field which contains the name of a place.
+
+***
+
+## Configuration
+
+### Place
+
+The place name that should be converted to a lat/lng combination
+
+## Output
+
+Outputs a similar event like below.
+
+```
+{
+  'latitude': 6.927079,
+  'longitude': 79.861244  
+}
+```

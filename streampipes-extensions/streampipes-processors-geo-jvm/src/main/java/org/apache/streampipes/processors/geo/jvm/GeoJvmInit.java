@@ -29,15 +29,15 @@ import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.geo.jvm.config.ConfigKeys;
-import org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtogeo.LatLngToGeoController;
-import org.apache.streampipes.processors.geo.jvm.jts.processor.setepsg.SetEpsgController;
-import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.CreateTrajectoryFromPointsController;
-import org.apache.streampipes.processors.geo.jvm.processor.distancecalculator.DistanceCalculatorController;
-import org.apache.streampipes.processors.geo.jvm.processor.geocoder.GoogleMapsGeocodingController;
-import org.apache.streampipes.processors.geo.jvm.processor.revgeocoder.ReverseGeocodingController;
-import org.apache.streampipes.processors.geo.jvm.processor.speed.SpeedCalculatorController;
-import org.apache.streampipes.processors.geo.jvm.processor.staticdistancecalculator.StaticDistanceCalculatorController;
-import org.apache.streampipes.processors.geo.jvm.processor.staticgeocoder.StaticGoogleMapsGeocodingController;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.epsg.EpsgProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.latlngtojtspoint.LatLngToJtsPointProcessor;
+import org.apache.streampipes.processors.geo.jvm.jts.processor.trajectory.TrajectoryFromPointsProcessor;
+import org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversine.HaversineDistanceCalculatorProcessor;
+import org.apache.streampipes.processors.geo.jvm.latlong.processor.distancecalculator.haversinestatic.HaversineStaticDistanceCalculatorProcessor;
+import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemaps.GoogleMapsGeocoderProcessor;
+import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemapsstatic.GoogleMapsStaticGeocoderProcessor;
+import org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname.GeoCityNameRevdecodeProcessor;
+import org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator.SpeedCalculatorProcessor;
 
 public class GeoJvmInit extends StandaloneModelSubmitter {
 
@@ -47,28 +47,26 @@ public class GeoJvmInit extends StandaloneModelSubmitter {
             "Processors Geo JVM",
             "",
             8090)
-            .registerPipelineElements(
-                    new DistanceCalculatorController(),
-                    new GoogleMapsGeocodingController(),
-                    new StaticGoogleMapsGeocodingController(),
-                    new ReverseGeocodingController(),
-                    new SetEpsgController(),
-                    new LatLngToGeoController(),
-                    new CreateTrajectoryFromPointsController(),
-
-                    new SpeedCalculatorController(),
-
-                    new StaticDistanceCalculatorController())
-            .registerMessagingFormats(
-                    new JsonDataFormatFactory(),
-                    new CborDataFormatFactory(),
-                    new SmileDataFormatFactory(),
-                    new FstDataFormatFactory())
-            .registerMessagingProtocols(
-                    new SpKafkaProtocolFactory(),
-                    new SpJmsProtocolFactory(),
-                    new SpMqttProtocolFactory())
-            .addConfig(ConfigKeys.GOOGLE_API_KEY, "", "Google Maps API key")
-            .build();
+        .registerPipelineElements(
+            new HaversineDistanceCalculatorProcessor(),
+            new HaversineStaticDistanceCalculatorProcessor(),
+            new GoogleMapsGeocoderProcessor(),
+            new GoogleMapsStaticGeocoderProcessor(),
+            new GeoCityNameRevdecodeProcessor(),
+            new EpsgProcessor(),
+            new LatLngToJtsPointProcessor(),
+            new TrajectoryFromPointsProcessor(),
+            new SpeedCalculatorProcessor())
+        .registerMessagingFormats(
+            new JsonDataFormatFactory(),
+            new CborDataFormatFactory(),
+            new SmileDataFormatFactory(),
+            new FstDataFormatFactory())
+        .registerMessagingProtocols(
+            new SpKafkaProtocolFactory(),
+            new SpJmsProtocolFactory(),
+            new SpMqttProtocolFactory())
+        .addConfig(ConfigKeys.GOOGLE_API_KEY, "", "Google Maps API key")
+        .build();
   }
 }
