@@ -37,3 +37,6 @@ changelog:
       labels:
         - documentation
         - website
+    - title: Dependency Updates 📦
+      labels:
+        - dependencies
