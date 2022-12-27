@@ -33,8 +33,8 @@ public class TestDocumentationParser {
   @Test
   public void testPipelineElementNameReplacement() throws IOException {
     ClassLoader classLoader = this.getClass().getClassLoader();
-    AssetModel assetModel = new AssetModel("abc", "Numerical Filter", "Numerical Filter " +
-        "Description");
+    AssetModel assetModel = new AssetModel("abc", "Numerical Filter",
+        "Numerical Filter Description");
 
     String originalContent = IOUtils.toString(classLoader.getResourceAsStream("documentation.md"));
     String expectedContent = IOUtils.toString(classLoader.getResourceAsStream("expected.documentation.md"));
