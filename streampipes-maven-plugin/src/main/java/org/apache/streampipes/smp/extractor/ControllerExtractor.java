@@ -19,6 +19,7 @@
 package org.apache.streampipes.smp.extractor;
 
 import org.apache.streampipes.smp.model.AssetModel;
+
 import org.jboss.forge.roaster.Roaster;
 import org.jboss.forge.roaster.model.source.JavaClassSource;
 
@@ -27,9 +28,9 @@ import java.nio.file.Paths;
 
 public class ControllerExtractor {
 
+  private static String declareModelMethod = "declareModel";
   private String filename;
   private String baseDir;
-  private static String DECLARE_MODEL_METHOD = "declareModel";
 
   public ControllerExtractor(String baseDir, String filename) {
     this.filename = filename;
@@ -39,10 +40,10 @@ public class ControllerExtractor {
   public AssetModel extractControllerDetails() throws Exception {
     String fileContents = new String(Files.readAllBytes(Paths.get(filename)));
     JavaClassSource clazz = Roaster.parse(JavaClassSource.class, fileContents);
-    if (clazz.hasMethodSignature(DECLARE_MODEL_METHOD)) {
-      String declareMethodContent = (clazz.getMethod(DECLARE_MODEL_METHOD).getBody());
+    if (clazz.hasMethodSignature(declareModelMethod)) {
+      String declareMethodContent = (clazz.getMethod(declareModelMethod).getBody());
       declareMethodContent =
-              new FieldReplacer(clazz, declareMethodContent).replaceDeclareModelContent();
+          new FieldReplacer(clazz, declareMethodContent).replaceDeclareModelContent();
       AssetModel assetModel = new AssetModelItemExtractor(declareMethodContent).extractAssetItem();
       if (assetModel.getPipelineElementName() == null) {
         assetModel = new LocalesExtractor(baseDir, assetModel).extract();

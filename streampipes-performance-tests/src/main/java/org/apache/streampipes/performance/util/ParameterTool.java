@@ -23,7 +23,7 @@ public class ParameterTool {
 
   public static PerformanceTestSettings fromArgs(String[] args) {
     return new PerformanceTestSettings(toInt(args[0]), toInt(args[1]), toInt(args[2]), toLong(args[3]), toLong
-            (args[4]), toInt(args[5]), args[6]);
+        (args[4]), toInt(args[5]), args[6]);
   }
 
   private static Long toLong(String arg) {

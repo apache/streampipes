@@ -20,6 +20,7 @@ package org.apache.streampipes.smp.generator;
 
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
+
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class TestPipelineElementOverviewGenerator {
   public void testHtmlGenerator() {
     am.setPeType(PeType.PROCESSOR);
     String html =
-            new PipelineElementOverviewGenerator(Arrays.asList(am)).generate();
+        new PipelineElementOverviewGenerator(Arrays.asList(am)).generate();
 
     System.out.println(html);
 

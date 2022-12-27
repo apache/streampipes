@@ -76,12 +76,12 @@ public class AssetModel implements Comparable<AssetModel> {
     return moduleName;
   }
 
-  public String getContainerName() {
-    return containerName;
-  }
-
   public void setModuleName(String moduleName) {
     this.moduleName = moduleName;
+  }
+
+  public String getContainerName() {
+    return containerName;
   }
 
   public void setContainerName(String containerName) {
@@ -98,8 +98,8 @@ public class AssetModel implements Comparable<AssetModel> {
 
   @Override
   public String toString() {
-    return pipelineElementName + " (" + peType.toString() + ", " + appId + "): " +
-            pipelineElementDescription + "\n";
+    return pipelineElementName + " (" + peType.toString() + ", " + appId + "): "
+        + pipelineElementDescription + "\n";
   }
 
   public int compareTo(AssetModel other) {

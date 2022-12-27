@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.container.standalone.init;
 
-import org.apache.streampipes.service.base.rest.BaseResourceConfig;
 import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
 import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
+import org.apache.streampipes.service.base.rest.BaseResourceConfig;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -31,8 +32,8 @@ public class PipelineElementContainerResourceConfig extends BaseResourceConfig {
   @Override
   public List<List<Class<?>>> getClassesToRegister() {
     return Arrays.asList(
-            new BaseExtensionsServiceResourceProvider().getResourceClasses(),
-            new PipelineElementServiceResourceProvider().getResourceClasses()
+        new BaseExtensionsServiceResourceProvider().getResourceClasses(),
+        new PipelineElementServiceResourceProvider().getResourceClasses()
     );
   }
 }

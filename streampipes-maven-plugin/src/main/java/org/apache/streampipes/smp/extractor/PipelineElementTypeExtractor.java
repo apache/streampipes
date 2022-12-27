@@ -37,7 +37,7 @@ public class PipelineElementTypeExtractor {
     } else if (typeString.equals(SinkString)) {
       return PeType.SINK;
     } else {
-      throw new IllegalArgumentException("Unknown pipeline element type " +typeString);
+      throw new IllegalArgumentException("Unknown pipeline element type " + typeString);
     }
   }
 }

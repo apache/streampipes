@@ -17,9 +17,10 @@
  */
 package org.apache.streampipes.performance.simulation;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.streampipes.performance.model.PerformanceTestSettings;
 import org.apache.streampipes.performance.producer.DataSimulator;
+
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,24 +46,24 @@ public class SimulationManager {
 
     List<Thread> threads = new ArrayList<>();
 
-    for(Integer i = 0; i < settings.getNumProducerThreads(); i++) {
+    for (Integer i = 0; i < settings.getNumProducerThreads(); i++) {
       String threadId = RandomStringUtils.randomAlphanumeric(6);
       statusMap.put(threadId, false);
       threads.add(new Thread(new DataSimulator(kafkaUrl, settings.getTotalNumberofEvents(), settings
-              .getWaitTimeBetweenEventsInMs(), threadId, threadId1 -> {
-                statusMap.put(threadId1, true);
-                checkFinished();
-              })));
+          .getWaitTimeBetweenEventsInMs(), threadId, threadId1 -> {
+        statusMap.put(threadId1, true);
+        checkFinished();
+      })));
     }
 
-    for(Thread thread : threads) {
+    for (Thread thread : threads) {
       thread.start();
     }
   }
 
   private void checkFinished() {
     if (statusMap.keySet().stream().allMatch(key -> statusMap.get(key))) {
-     notifier.onFinished();
+      notifier.onFinished();
     }
   }
 }

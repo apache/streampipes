@@ -1784,6 +1784,8 @@ IoT data streams.
 						<exclude>**/.pytest_cache/**</exclude>
 						<exclude>.ruff_cache/**</exclude>
 						<exclude>.mypy_cache/**</exclude>
+						<exclude>**/site/**</exclude>
+						<exclude>**/.mypy_cache/**</exclude>
 
 
 					</excludes>

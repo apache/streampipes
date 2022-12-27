@@ -26,12 +26,12 @@ import java.util.regex.Pattern;
 
 public class AssetModelItemExtractor {
 
-  private static final String REGEX = "(DataSinkBuilder|ProcessingElementBuilder)\\.create\\" +
-          "((\".*?\"),.*?(\".*?\"),.*?(\".*?\")\\)";
+  private static final String REGEX = "(DataSinkBuilder|ProcessingElementBuilder)\\.create\\"
+      + "((\".*?\"),.*?(\".*?\"),.*?(\".*?\")\\)";
 
-  private static final String ONLY_APP_ID_REGEX = "(DataSinkBuilder|ProcessingElementBuilder)\\" +
-          ".create\\" +
-          "((\".*?\")\\)";
+  private static final String ONLY_APP_ID_REGEX = "(DataSinkBuilder|ProcessingElementBuilder)\\"
+      + ".create\\"
+      + "((\".*?\")\\)";
 
   private static final Pattern pattern = Pattern.compile(REGEX);
   private static final Pattern onlyAppIdPattern = Pattern.compile(ONLY_APP_ID_REGEX);
@@ -40,7 +40,7 @@ public class AssetModelItemExtractor {
 
   public AssetModelItemExtractor(String declareModelContent) {
     this.declareModelContent = declareModelContent
-            .replaceAll("\n", "");
+        .replaceAll("\n", "");
 
   }
 
@@ -84,7 +84,7 @@ public class AssetModelItemExtractor {
 
   private String removeQuotes(String text) {
     return text
-            .replaceAll("\" \\+ \"", "")
-            .replaceAll("\"", "");
+        .replaceAll("\" \\+ \"", "")
+        .replaceAll("\"", "");
   }
 }

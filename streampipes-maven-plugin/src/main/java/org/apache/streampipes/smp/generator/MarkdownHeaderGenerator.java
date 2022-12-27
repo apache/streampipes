@@ -33,18 +33,18 @@ public class MarkdownHeaderGenerator {
   public String createHeaders() {
     StringBuilder builder = new StringBuilder();
     builder
-            .append("---\n")
-            .append("id: ")
-            .append(assetModel.getAppId())
-            .append("\n")
-            .append("title: ")
-            .append(assetModel.getPipelineElementName())
-            .append("\n")
-            .append("sidebar_label: ")
-            .append(assetModel.getPipelineElementName())
-            .append("\n")
-            .append("---\n\n")
-            .append(markdown);
+        .append("---\n")
+        .append("id: ")
+        .append(assetModel.getAppId())
+        .append("\n")
+        .append("title: ")
+        .append(assetModel.getPipelineElementName())
+        .append("\n")
+        .append("sidebar_label: ")
+        .append(assetModel.getPipelineElementName())
+        .append("\n")
+        .append("---\n\n")
+        .append(markdown);
 
     return builder.toString();
   }

@@ -25,13 +25,12 @@ import java.util.regex.Pattern;
 
 public class FieldReplacer {
 
+  private static final String CHECK_FIELD_REGEX = "(DataSinkBuilder|ProcessingElementBuilder)\\"
+      + ".create\\"
+      + "((.*?),(.*?)\\)";
+  private static final Pattern checkFieldPattern = Pattern.compile(CHECK_FIELD_REGEX);
   private String declareModelContent;
   private JavaClassSource source;
-
-  private static final String CHECK_FIELD_REGEX = "(DataSinkBuilder|ProcessingElementBuilder)\\" +
-          ".create\\" +
-          "((.*?),(.*?)\\)";
-  private static final Pattern checkFieldPattern = Pattern.compile(CHECK_FIELD_REGEX);
 
 
   public FieldReplacer(JavaClassSource source, String declareModelContent) {
@@ -41,11 +40,11 @@ public class FieldReplacer {
 
   public String replaceDeclareModelContent() {
     Matcher matcher = checkFieldPattern.matcher(this.declareModelContent);
-    while(matcher.find()) {
+    while (matcher.find()) {
       String match = matcher.group(2);
       if (!match.startsWith("\"")) {
         declareModelContent = declareModelContent.replaceFirst(match,
-                getFieldValue(match));
+            getFieldValue(match));
       }
     }
     return declareModelContent;
@@ -53,7 +52,7 @@ public class FieldReplacer {
 
   private String getFieldValue(String fieldName) {
     return "\""
-            + source.getField(fieldName).getStringInitializer()
-            + "\"";
+        + source.getField(fieldName).getStringInitializer()
+        + "\"";
   }
 }

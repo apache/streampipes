@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class PipelineElementNameReplacer extends PlaceholderReplacer {
 
   private static final String PLACEHOLDER = "pipelineElementName";
-  private static final String REGEX = "(\\$\\{" +PLACEHOLDER + ")(.*)(})";
+  private static final String REGEX = "(\\$\\{" + PLACEHOLDER + ")(.*)(})";
   private static final Pattern pattern = Pattern.compile(REGEX);
 
   public PipelineElementNameReplacer(String pipelineElementName, String markdown) {

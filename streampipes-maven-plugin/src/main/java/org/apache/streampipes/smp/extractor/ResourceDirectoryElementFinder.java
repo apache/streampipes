@@ -17,10 +17,11 @@
  */
 package org.apache.streampipes.smp.extractor;
 
-import org.apache.maven.plugin.logging.Log;
 import org.apache.streampipes.smp.constants.PeType;
 import org.apache.streampipes.smp.model.AssetModel;
 import org.apache.streampipes.smp.util.Utils;
+
+import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +47,8 @@ public class ResourceDirectoryElementFinder extends ElementFinder {
     File[] resourceDirs = resourceDirPath.toFile().listFiles(File::isDirectory);
     if (resourceDirs != null) {
       List<File> appDirs = Arrays.stream(resourceDirs)
-            .filter(rd -> rd.getName().startsWith("org.apache.streampipes"))
-              .collect(Collectors.toList());
+          .filter(rd -> rd.getName().startsWith("org.apache.streampipes"))
+          .collect(Collectors.toList());
 
       appDirs.forEach(ap -> {
         try {

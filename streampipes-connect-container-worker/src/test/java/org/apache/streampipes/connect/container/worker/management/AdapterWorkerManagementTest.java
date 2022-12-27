@@ -24,8 +24,9 @@ import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.container.worker.utils.Utils;
-import org.apache.streampipes.model.connect.adapter.*;
+import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -34,81 +35,81 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ AdapterRegistry.class })
+@PrepareForTest({AdapterRegistry.class})
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class AdapterWorkerManagementTest {
 
-    @Test
-    public void stopStreamAdapterSuccess() throws AdapterException {
-        TestAdapter testAdapter = getTestAdapterInstance();
-        RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
-        AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
-        adapterWorkerManagement.stopStreamAdapter(Utils.getMinimalStreamAdapter());
+  @Test
+  public void stopStreamAdapterSuccess() throws AdapterException {
+    TestAdapter testAdapter = getTestAdapterInstance();
+    RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
+    AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
+    adapterWorkerManagement.stopStreamAdapter(Utils.getMinimalStreamAdapter());
 
-        assertTrue(testAdapter.calledStop);
+    assertTrue(testAdapter.calledStop);
 
+  }
+
+  @Test
+  public void stopSetAdapterSuccess() throws AdapterException {
+    TestAdapter testAdapter = getTestAdapterInstance();
+
+    RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
+    AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
+    adapterWorkerManagement.stopSetAdapter(Utils.getMinimalSetAdapter());
+
+    assertTrue(testAdapter.calledStop);
+  }
+
+  private TestAdapter getTestAdapterInstance() {
+    SpecificAdapterSetDescription description = new SpecificAdapterSetDescription();
+    description.setRules(new ArrayList<>());
+    TestAdapter testAdapter = new TestAdapter(description);
+
+    return testAdapter;
+  }
+
+  private class TestAdapter extends SpecificDataSetAdapter {
+
+    public boolean calledStart = false;
+    public boolean calledStop = false;
+
+    public TestAdapter(SpecificAdapterSetDescription description) {
+      super(description);
     }
 
-    @Test
-    public void stopSetAdapterSuccess() throws AdapterException {
-        TestAdapter testAdapter = getTestAdapterInstance();
-
-        RunningAdapterInstances.INSTANCE.addAdapter("http://t.de/", testAdapter, null);
-        AdapterWorkerManagement adapterWorkerManagement = new AdapterWorkerManagement();
-        adapterWorkerManagement.stopSetAdapter(Utils.getMinimalSetAdapter());
-
-        assertTrue(testAdapter.calledStop);
+    @Override
+    public SpecificAdapterSetDescription declareModel() {
+      return null;
     }
 
-    private TestAdapter getTestAdapterInstance() {
-        SpecificAdapterSetDescription description = new SpecificAdapterSetDescription();
-        description.setRules(new ArrayList<>());
-        TestAdapter testAdapter = new TestAdapter(description);
-
-        return testAdapter;
+    @Override
+    public void startAdapter() throws AdapterException {
+      calledStart = true;
     }
 
-    private class TestAdapter extends SpecificDataSetAdapter {
-
-        public boolean calledStart = false;
-        public boolean calledStop = false;
-
-        public TestAdapter(SpecificAdapterSetDescription description) {
-            super(description);
-        }
-
-        @Override
-        public SpecificAdapterSetDescription declareModel() {
-            return null;
-        }
-
-        @Override
-        public void startAdapter() throws AdapterException {
-            calledStart = true;
-        }
-
-        @Override
-        public void stopAdapter() throws AdapterException {
-            calledStop = true;
-        }
-
-        @Override
-        public Adapter getInstance(SpecificAdapterSetDescription adapterDescription) {
-            return null;
-        }
-
-        @Override
-        public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) {
-            return null;
-        }
-
-        @Override
-        public String getId() {
-            return null;
-        }
-
+    @Override
+    public void stopAdapter() throws AdapterException {
+      calledStop = true;
     }
+
+    @Override
+    public Adapter getInstance(SpecificAdapterSetDescription adapterDescription) {
+      return null;
+    }
+
+    @Override
+    public GuessSchema getSchema(SpecificAdapterSetDescription adapterDescription) {
+      return null;
+    }
+
+    @Override
+    public String getId() {
+      return null;
+    }
+
+  }
 }

@@ -21,6 +21,7 @@ package org.apache.streampipes.connect.container.worker.management;
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,18 +29,18 @@ import java.util.List;
 
 public class MasterRestClient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MasterRestClient.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MasterRestClient.class);
 
-    public static boolean register(List<AdapterDescription> allAvailableAdapters) {
+  public static boolean register(List<AdapterDescription> allAvailableAdapters) {
 
-        try {
-            StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-            client.adminApi().registerAdapters(allAvailableAdapters);
-            return true;
-        } catch (Exception e) {
-            LOG.error("Could not register adapter at url - is a 'StreamPipes Core' service running?" , e);
-            return false;
-        }
+    try {
+      StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+      client.adminApi().registerAdapters(allAvailableAdapters);
+      return true;
+    } catch (Exception e) {
+      LOG.error("Could not register adapter at url - is a 'StreamPipes Core' service running?", e);
+      return false;
     }
+  }
 
 }

@@ -25,6 +25,7 @@ import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,17 +57,18 @@ public class GuessResource extends AbstractSharedRestInterface {
   @Produces(MediaType.APPLICATION_JSON)
   public Response guessSchema(AdapterDescription adapterDescription) {
 
-      try {
-          GuessSchema result = guessManagement.guessSchema(adapterDescription);
+    try {
+      GuessSchema result = guessManagement.guessSchema(adapterDescription);
 
-          return ok(result);
-      } catch (ParseException e) {
-          logger.error("Error while parsing events: ", e);
-          return serverError(e);
-      } catch (AdapterException e) {
-          logger.error("Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(), e.getMessage());
-          return serverError(e);
-      }
+      return ok(result);
+    } catch (ParseException e) {
+      logger.error("Error while parsing events: ", e);
+      return serverError(e);
+    } catch (AdapterException e) {
+      logger.error("Error while guessing schema for AdapterDescription: {}, {}", adapterDescription.getElementId(),
+          e.getMessage());
+      return serverError(e);
+    }
 
   }
 }

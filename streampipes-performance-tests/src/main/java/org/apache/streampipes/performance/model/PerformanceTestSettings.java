@@ -37,7 +37,9 @@ public class PerformanceTestSettings {
   private Integer numProducerThreads;
   private String elasticUrl;
 
-  public PerformanceTestSettings(Integer numberOfTimestampEnrichmentEpas, Integer parallelismOfEnrichmentEpas, Integer parallelismOfElasticEpas, Long totalNumberofEvents, Long waitTimeBetweenEventsInMs, Integer numProducerThreads, String elasticUrl) {
+  public PerformanceTestSettings(Integer numberOfTimestampEnrichmentEpas, Integer parallelismOfEnrichmentEpas,
+                                 Integer parallelismOfElasticEpas, Long totalNumberofEvents,
+                                 Long waitTimeBetweenEventsInMs, Integer numProducerThreads, String elasticUrl) {
     this.numberOfTimestampEnrichmentEpas = numberOfTimestampEnrichmentEpas;
     this.parallelismOfEnrichmentEpas = parallelismOfEnrichmentEpas;
     this.parallelismOfElasticEpas = parallelismOfElasticEpas;

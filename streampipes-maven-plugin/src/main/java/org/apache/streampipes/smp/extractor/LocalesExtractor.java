@@ -27,11 +27,10 @@ import java.util.Properties;
 
 public class LocalesExtractor {
 
-  private AssetModel assetModel;
-  private String baseDir;
-
   private static final String TITLE = ".title";
   private static final String DESCRIPTION = ".description";
+  private AssetModel assetModel;
+  private String baseDir;
 
   public LocalesExtractor(String baseDir, AssetModel assetModel) {
     this.baseDir = baseDir;
