@@ -15,6 +15,13 @@
 
 version: 2
 updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch" ]
   - package-ecosystem: "npm"
     directory: "/ui"
     schedule:
@@ -22,3 +29,10 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "pip"
+    directory: "/streampipes-client-python"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch" ]
