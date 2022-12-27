@@ -177,7 +177,7 @@
 	<pulsar.version>2.10.1</pulsar.version>
 	<rocketmq.version>5.0.2</rocketmq.version>
 	<quartz.version>2.3.2</quartz.version>
-	<scala-lang.version>2.11.12</scala-lang.version>
+	<scala-lang.version>2.13.10</scala-lang.version>
 	<scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
 	<slack-api.version>1.4.0</slack-api.version>
 	<snakeyaml.version>1.26</snakeyaml.version>
