@@ -189,7 +189,7 @@ public class Event {
     }
   }
 
-  public void addField(String runtimeName, double value) {
+  public void addField(String runtimeName, Float value) {
     addPrimitive(runtimeName, value);
   }
 
