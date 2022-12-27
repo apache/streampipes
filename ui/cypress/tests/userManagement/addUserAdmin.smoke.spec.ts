@@ -16,43 +16,51 @@
  *
  */
 
-
 import { UserBuilder } from '../../support/builder/UserBuilder';
 import { UserRole } from '../../../src/app/_enums/user-role.enum';
 import { UserUtils } from '../../support/utils/UserUtils';
 
 describe('Test User Management', () => {
-  beforeEach('Setup Test', () => {
-    cy.initStreamPipesTest();
-  });
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+    });
 
-  it('Perform Test', () => {
-    // Add new user
-    UserUtils.goToUserConfiguration();
+    it('Perform Test', () => {
+        // Add new user
+        UserUtils.goToUserConfiguration();
 
-    cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should('have.length', 1);
+        cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
 
-    const email = 'user@streampipes.apache.org';
-    const name = 'user';
-    const user = UserBuilder.create(email)
-        .setName(name)
-        .setPassword(name)
-        .addRole(UserRole.ROLE_ADMIN)
-        .build();
+        const email = 'user@streampipes.apache.org';
+        const name = 'user';
+        const user = UserBuilder.create(email)
+            .setName(name)
+            .setPassword(name)
+            .addRole(UserRole.ROLE_ADMIN)
+            .build();
 
-    UserUtils.addUser(user);
+        UserUtils.addUser(user);
 
-    cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should('have.length', 2);
+        cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
+            'have.length',
+            2,
+        );
 
-    // Login as user
-    cy.switchUser(user);
+        // Login as user
+        cy.switchUser(user);
 
-    UserUtils.goToUserConfiguration();
+        UserUtils.goToUserConfiguration();
 
-    cy.switchUser(UserUtils.adminUser);
-    UserUtils.goToUserConfiguration();
-    UserUtils.deleteUser(user);
-    // Validate that user is removed
-    cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should('have.length', 1);
-  });
+        cy.switchUser(UserUtils.adminUser);
+        UserUtils.goToUserConfiguration();
+        UserUtils.deleteUser(user);
+        // Validate that user is removed
+        cy.dataCy('user-accounts-table-row', { timeout: 10000 }).should(
+            'have.length',
+            1,
+        );
+    });
 });

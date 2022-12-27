@@ -18,7 +18,6 @@ dist
 
 # Remove these in the future to format additional modules
 # Please also see .eslintignore
-cypress
 deployment
 projects
 src/app/_enums

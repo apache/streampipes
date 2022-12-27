@@ -17,13 +17,13 @@
  */
 
 export class DataLakeFilterConfig {
-  field: string;
-  value: string;
-  operator: string | '<' | '>' | '=' | '!=';
+    field: string;
+    value: string;
+    operator: string | '<' | '>' | '=' | '!=';
 
-  constructor(field: string, value: string, operator: string) {
-    this.field = field;
-    this.value = value;
-    this.operator = operator;
-  }
+    constructor(field: string, value: string, operator: string) {
+        this.field = field;
+        this.value = value;
+        this.operator = operator;
+    }
 }

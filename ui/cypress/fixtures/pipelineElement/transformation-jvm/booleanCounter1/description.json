@@ -1,7 +1,7 @@
 {
- "name": "boolean_counter",
- "config": [
-   {"type":  "drop-down", "selector": "field", "value":  "booleanToCount"},
-   {"type":  "radio", "selector": "flank", "value":  "BOTH"}
- ]
+  "name": "boolean_counter",
+  "config": [
+    { "type": "drop-down", "selector": "field", "value": "booleanToCount" },
+    { "type": "radio", "selector": "flank", "value": "BOTH" }
+  ]
 }

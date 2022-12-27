@@ -12,36 +12,34 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-version: "3.4"
+version: '3.4'
 
 # global logging
-x-logging:
-  &default-logging
-  options:
-    max-size: '12m'
-    max-file: '5'
-  driver: json-file
+x-logging: &default-logging
+    options:
+        max-size: '12m'
+        max-file: '5'
+    driver: json-file
 
 services:
-
-  # StreamPipes services
-  backend:
-    image: "${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}"
-    volumes:
-      - backend:/root/.streampipes
-      - files:/spImages
-    logging: *default-logging
-    restart: unless-stopped
-    networks:
-      spnet:
+    # StreamPipes services
+    backend:
+        image: '${SP_DOCKER_REGISTRY}/backend:${SP_VERSION}'
+        volumes:
+            - backend:/root/.streampipes
+            - files:/spImages
+        logging: *default-logging
+        restart: unless-stopped
+        networks:
+            spnet:
 
 volumes:
-  backend:
-  files:
+    backend:
+    files:
 
 networks:
-  spnet:
-    driver: bridge
-    ipam:
-     config:
-       - subnet: ${SP_SUBNET}
+    spnet:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: ${SP_SUBNET}

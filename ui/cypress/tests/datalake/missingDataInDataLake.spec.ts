@@ -20,24 +20,27 @@ import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 import { PrepareTestDataUtils } from '../../support/utils/PrepareTestDataUtils';
 import { DataLakeWidgetTableUtils } from '../../support/utils/datalake/DataLakeWidgetTableUtils';
 
-
 describe('Test missing properties in data lake', () => {
+    const dataViewName = 'TestView';
 
-  const dataViewName = 'TestView';
+    before('Setup Test', () => {
+        cy.initStreamPipesTest();
+        PrepareTestDataUtils.loadDataIntoDataLake(
+            'datalake/missingData.json',
+            'json_array',
+        );
+    });
 
-  before('Setup Test', () => {
-    cy.initStreamPipesTest();
-    PrepareTestDataUtils.loadDataIntoDataLake('datalake/missingData.json', 'json_array');
-  });
+    it('Test table with missing properties', () => {
+        DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
 
-  it('Test table with missing properties', () => {
-    DataLakeUtils.addDataViewAndTableWidget(dataViewName, 'Persist');
+        DataLakeWidgetTableUtils.checkRows(5);
 
-    DataLakeWidgetTableUtils.checkRows(5);
+        DataLakeUtils.selectDataConfig();
+        cy.dataCy('data-explorer-ignore-missing-values-checkbox')
+            .children()
+            .click();
 
-    DataLakeUtils.selectDataConfig();
-    cy.dataCy('data-explorer-ignore-missing-values-checkbox').children().click();
-
-    DataLakeWidgetTableUtils.checkRows(3);
-  });
+        DataLakeWidgetTableUtils.checkRows(3);
+    });
 });

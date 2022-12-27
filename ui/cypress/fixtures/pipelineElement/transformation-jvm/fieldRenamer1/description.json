@@ -1,7 +1,7 @@
 {
- "name": "field_renamer",
- "config": [
-   {"type":  "drop-down", "selector": "convert-property", "value":  "count"},
-   {"type":  "input", "selector": "field-name", "value":  "newname"}
- ]
+  "name": "field_renamer",
+  "config": [
+    { "type": "drop-down", "selector": "convert-property", "value": "count" },
+    { "type": "input", "selector": "field-name", "value": "newname" }
+  ]
 }

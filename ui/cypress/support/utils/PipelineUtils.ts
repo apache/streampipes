@@ -21,89 +21,100 @@ import { StaticPropertyUtils } from './StaticPropertyUtils';
 import { OutputStrategyUtils } from './OutputStrategyUtils';
 
 export class PipelineUtils {
+    public static addPipeline(pipelineInput: PipelineInput) {
+        PipelineUtils.goToPipelineEditor();
 
-  public static addPipeline(pipelineInput: PipelineInput) {
+        // if data source type is data set, switch to this tab
+        if (pipelineInput.dataSourceType === 'set') {
+            cy.wait(5000);
+            cy.dataCy('sp-pipeline-element-' + pipelineInput.dataSource, {
+                timeout: 10000,
+            }).should('be.visible');
+        }
 
-    PipelineUtils.goToPipelineEditor();
+        PipelineUtils.selectDataStream(pipelineInput);
 
-    // if data source type is data set, switch to this tab
-    if (pipelineInput.dataSourceType === 'set') {
-      cy.wait(5000);
-      cy.dataCy('sp-pipeline-element-' + pipelineInput.dataSource, { timeout: 10000 }).should('be.visible');
+        PipelineUtils.configurePipeline(pipelineInput);
+
+        PipelineUtils.startPipeline(pipelineInput);
     }
 
-    PipelineUtils.selectDataStream(pipelineInput);
-
-    PipelineUtils.configurePipeline(pipelineInput);
-
-    PipelineUtils.startPipeline(pipelineInput);
-
-  }
-
-
-  private static goToPipelineEditor() {
-    // Go to StreamPipes editor
-    cy.visit('#/pipelines');
-    cy.dataCy('pipelines-navigate-to-editor').click();
-  }
-
-  private static selectDataStream(pipelineInput: PipelineInput) {
-    // Select a stream
-    cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 }).should('be.visible');
-    cy.dataCy('sp-editor-add-pipeline-element').click();
-    cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
-  }
-
-
-  private static configurePipeline(pipelineInput: PipelineInput) {
-
-    // Open possible elements menu
-    cy.dataCy('sp-possible-elements-' + pipelineInput.dataSource, { timeout: 10000 }).click();
-
-    // Select processor
-    if (pipelineInput.processingElement) {
-      cy.dataCy('sp-compatible-elements-' + pipelineInput.processingElement.name).click();
-      StaticPropertyUtils.input(pipelineInput.processingElement.config);
-      OutputStrategyUtils.input(pipelineInput.processingElement.output);
-      // Save configuration
-      cy.dataCy('sp-element-configuration-save').click();
-      // Select sink
-      cy.dataCy('sp-possible-elements-' + pipelineInput.processingElement.name, { timeout: 10000 }).click();
+    private static goToPipelineEditor() {
+        // Go to StreamPipes editor
+        cy.visit('#/pipelines');
+        cy.dataCy('pipelines-navigate-to-editor').click();
     }
 
-    // Configure sink
-    cy.dataCy('sp-compatible-elements-' + pipelineInput.dataSink.name).click();
-    StaticPropertyUtils.input(pipelineInput.dataSink.config);
+    private static selectDataStream(pipelineInput: PipelineInput) {
+        // Select a stream
+        cy.dataCy('sp-pipeline-element-selection', { timeout: 10000 }).should(
+            'be.visible',
+        );
+        cy.dataCy('sp-editor-add-pipeline-element').click();
+        cy.dataCy(pipelineInput.dataSource, { timeout: 10000 }).click();
+    }
 
-    // Save sink configuration
-    cy.dataCy('sp-element-configuration-save').click();
+    private static configurePipeline(pipelineInput: PipelineInput) {
+        // Open possible elements menu
+        cy.dataCy('sp-possible-elements-' + pipelineInput.dataSource, {
+            timeout: 10000,
+        }).click();
 
-  }
+        // Select processor
+        if (pipelineInput.processingElement) {
+            cy.dataCy(
+                'sp-compatible-elements-' +
+                    pipelineInput.processingElement.name,
+            ).click();
+            StaticPropertyUtils.input(pipelineInput.processingElement.config);
+            OutputStrategyUtils.input(pipelineInput.processingElement.output);
+            // Save configuration
+            cy.dataCy('sp-element-configuration-save').click();
+            // Select sink
+            cy.dataCy(
+                'sp-possible-elements-' + pipelineInput.processingElement.name,
+                { timeout: 10000 },
+            ).click();
+        }
 
-  private static startPipeline(pipelineInput: PipelineInput) {
-    // Save and start pipeline
-    cy.dataCy('sp-editor-save-pipeline').click();
-    cy.dataCy('sp-editor-pipeline-name').type(pipelineInput.pipelineName);
-    cy.dataCy('sp-editor-checkbox-start-immediately').children().click();
-    cy.dataCy('sp-editor-save').click();
-    cy.dataCy('sp-pipeline-started-dialog', { timeout: 15000 }).should('be.visible');
-    cy.dataCy('sp-pipeline-dialog-close', { timeout: 15000 }).click();
-  }
+        // Configure sink
+        cy.dataCy(
+            'sp-compatible-elements-' + pipelineInput.dataSink.name,
+        ).click();
+        StaticPropertyUtils.input(pipelineInput.dataSink.config);
 
+        // Save sink configuration
+        cy.dataCy('sp-element-configuration-save').click();
+    }
 
-  public static checkAmountOfPipelinesPipeline(amount: number) {
-    cy.visit('#/pipelines');
-    cy.dataCy('delete-pipeline').should('have.length', amount);
-  }
+    private static startPipeline(pipelineInput: PipelineInput) {
+        // Save and start pipeline
+        cy.dataCy('sp-editor-save-pipeline').click();
+        cy.dataCy('sp-editor-pipeline-name').type(pipelineInput.pipelineName);
+        cy.dataCy('sp-editor-checkbox-start-immediately').children().click();
+        cy.dataCy('sp-editor-save').click();
+        cy.dataCy('sp-pipeline-started-dialog', { timeout: 15000 }).should(
+            'be.visible',
+        );
+        cy.dataCy('sp-pipeline-dialog-close', { timeout: 15000 }).click();
+    }
 
-  public static deletePipeline() {
-    // Delete pipeline
-    cy.visit('#/pipelines');
-    cy.dataCy('delete-pipeline').should('have.length', 1);
-    cy.dataCy('delete-pipeline').click({ force: true });
+    public static checkAmountOfPipelinesPipeline(amount: number) {
+        cy.visit('#/pipelines');
+        cy.dataCy('delete-pipeline').should('have.length', amount);
+    }
 
-    cy.dataCy('sp-pipeline-stop-and-delete').click();
+    public static deletePipeline() {
+        // Delete pipeline
+        cy.visit('#/pipelines');
+        cy.dataCy('delete-pipeline').should('have.length', 1);
+        cy.dataCy('delete-pipeline').click({ force: true });
 
-    cy.dataCy('delete-pipeline', { timeout: 10000 }).should('have.length', 0);
-  }
+        cy.dataCy('sp-pipeline-stop-and-delete').click();
+
+        cy.dataCy('delete-pipeline', { timeout: 10000 }).should(
+            'have.length',
+            0,
+        );
+    }
 }

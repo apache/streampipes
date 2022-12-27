@@ -21,47 +21,50 @@ import { ConnectUtils } from './connect/ConnectUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 
 export class PrepareTestDataUtils {
+    public static dataName = 'prepared_data';
 
-  public static dataName = 'prepared_data';
+    public static loadDataIntoDataLake(
+        dataSet: string,
+        format: 'csv' | 'json_array' = 'csv',
+        storeInDataLake: boolean = true,
+    ) {
+        // Create adapter with dataset
+        FileManagementUtils.addFile(dataSet);
 
-  public static loadDataIntoDataLake(dataSet: string,
-                                     format: 'csv' | 'json_array' = 'csv',
-                                     storeInDataLake: boolean = true) {
-    // Create adapter with dataset
-    FileManagementUtils.addFile(dataSet);
+        const adapter = this.getDataLakeTestSetAdapter(
+            PrepareTestDataUtils.dataName,
+            format,
+            storeInDataLake,
+        );
+        ConnectUtils.addGenericSetAdapter(adapter);
 
-    const adapter = this.getDataLakeTestSetAdapter(PrepareTestDataUtils.dataName, format, storeInDataLake);
-    ConnectUtils.addGenericSetAdapter(adapter);
-
-    // Wait till data is stored
-    if (storeInDataLake) {
-      cy.wait(10000);
-    }
-  }
-
-  private static getDataLakeTestSetAdapter(name: string,
-                                           format: 'csv' | 'json_array',
-                                           storeInDataLake: boolean = true) {
-    const adapterBuilder = GenericAdapterBuilder
-      .create('File_Set')
-      .setName(name)
-      .setTimestampProperty('timestamp');
-
-    if (format === 'csv') {
-      adapterBuilder
-        .setFormat('csv')
-        .addFormatInput('input', 'delimiter', ';')
-        .addFormatInput('checkbox', 'header', 'check');
-    } else {
-      adapterBuilder
-        .setFormat('json_array');
+        // Wait till data is stored
+        if (storeInDataLake) {
+            cy.wait(10000);
+        }
     }
 
-    if (storeInDataLake) {
-      adapterBuilder.setStoreInDataLake();
+    private static getDataLakeTestSetAdapter(
+        name: string,
+        format: 'csv' | 'json_array',
+        storeInDataLake: boolean = true,
+    ) {
+        const adapterBuilder = GenericAdapterBuilder.create('File_Set')
+            .setName(name)
+            .setTimestampProperty('timestamp');
+
+        if (format === 'csv') {
+            adapterBuilder
+                .setFormat('csv')
+                .addFormatInput('input', 'delimiter', ';')
+                .addFormatInput('checkbox', 'header', 'check');
+        } else {
+            adapterBuilder.setFormat('json_array');
+        }
+
+        if (storeInDataLake) {
+            adapterBuilder.setStoreInDataLake();
+        }
+        return adapterBuilder.build();
     }
-    return adapterBuilder.build();
-  }
-
-
 }

@@ -16,7 +16,6 @@
  *
  */
 
-
 import { SpecificAdapterBuilder } from '../builder/SpecificAdapterBuilder';
 import { ConnectUtils } from './connect/ConnectUtils';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
@@ -27,29 +26,29 @@ import { SpecificAdapterInput } from '../model/SpecificAdapterInput';
 import { GenericAdapterInput } from '../model/GenericAdapterInput';
 
 export class ThirdPartyIntegrationUtils {
+    public static runTest(sink: PipelineElementInput, adapter: AdapterInput) {
+        const simulatorAdapterName = 'simulator';
 
-  public static runTest(sink: PipelineElementInput, adapter: AdapterInput) {
-    const simulatorAdapterName = 'simulator';
+        const machineAdapter = SpecificAdapterBuilder.create(
+            'Machine_Data_Simulator',
+        )
+            .setName(simulatorAdapterName)
+            .addInput('input', 'wait-time-ms', '1000')
+            .build();
 
-    const machineAdapter = SpecificAdapterBuilder
-      .create('Machine_Data_Simulator')
-      .setName(simulatorAdapterName)
-      .addInput('input', 'wait-time-ms', '1000')
-      .build();
+        ConnectUtils.testSpecificStreamAdapter(machineAdapter);
 
-    ConnectUtils.testSpecificStreamAdapter(machineAdapter);
+        const pipelineInput = PipelineBuilder.create('Pipeline Test')
+            .addSource(simulatorAdapterName)
+            .addSink(sink)
+            .build();
 
-    const pipelineInput = PipelineBuilder.create('Pipeline Test')
-      .addSource(simulatorAdapterName)
-      .addSink(sink)
-      .build();
+        PipelineUtils.addPipeline(pipelineInput);
 
-    PipelineUtils.addPipeline(pipelineInput);
-
-    if (adapter instanceof SpecificAdapterInput) {
-      ConnectUtils.testSpecificStreamAdapter(adapter);
-    } else if (adapter instanceof GenericAdapterInput) {
-      ConnectUtils.testGenericStreamAdapter(adapter);
+        if (adapter instanceof SpecificAdapterInput) {
+            ConnectUtils.testSpecificStreamAdapter(adapter);
+        } else if (adapter instanceof GenericAdapterInput) {
+            ConnectUtils.testGenericStreamAdapter(adapter);
+        }
     }
-  }
 }

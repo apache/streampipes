@@ -20,82 +20,82 @@ import { DataLakeFilterConfig } from '../../support/model/DataLakeFilterConfig';
 import { DataLakeUtils } from '../../support/utils/datalake/DataLakeUtils';
 import { DataLakeWidgetTableUtils } from '../../support/utils/datalake/DataLakeWidgetTableUtils';
 
-
 describe('Test Table View in Data Explorer', () => {
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+        DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
+        // cy.login();
+        // DataLakeUtils.goToDatalake();
+    });
 
-  beforeEach('Setup Test', () => {
-    cy.initStreamPipesTest();
-    DataLakeUtils.loadDataIntoDataLake('datalake/sample.csv');
-    // cy.login();
-    // DataLakeUtils.goToDatalake();
+    it('Perform Test', () => {
+        /**
+         * Prepare tests
+         */
+        DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
 
-  });
+        // Validate that X lines are available
+        DataLakeWidgetTableUtils.checkRows(10);
 
-  it('Perform Test', () => {
+        // Go back to data configuration
+        DataLakeUtils.selectDataConfig();
 
-    /**
-     * Prepare tests
-     */
-    DataLakeUtils.addDataViewAndTableWidget('TestView', 'Persist');
-
-    // Validate that X lines are available
-    DataLakeWidgetTableUtils.checkRows(10);
-
-    // Go back to data configuration
-    DataLakeUtils.selectDataConfig();
-
-    /**
-     * Test filter configuration
-     */
+        /**
+         * Test filter configuration
+         */
         // Test number
-    let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
-    DataLakeUtils.dataConfigAddFilter(filterConfig);
-    DataLakeWidgetTableUtils.checkRows(2);
-    DataLakeUtils.dataConfigRemoveFilter();
-    DataLakeWidgetTableUtils.checkRows(10);
+        let filterConfig = new DataLakeFilterConfig('randomnumber', '22', '=');
+        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataLakeWidgetTableUtils.checkRows(2);
+        DataLakeUtils.dataConfigRemoveFilter();
+        DataLakeWidgetTableUtils.checkRows(10);
 
-    // Test number greater then
-    filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
-    DataLakeUtils.dataConfigAddFilter(filterConfig);
-    DataLakeWidgetTableUtils.checkRows(5);
-    DataLakeUtils.dataConfigRemoveFilter();
+        // Test number greater then
+        filterConfig = new DataLakeFilterConfig('randomnumber', '50', '>');
+        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataLakeWidgetTableUtils.checkRows(5);
+        DataLakeUtils.dataConfigRemoveFilter();
 
-    // Test number smaller then
-    filterConfig = new DataLakeFilterConfig('randomnumber', '50', '<');
-    DataLakeUtils.dataConfigAddFilter(filterConfig);
-    DataLakeWidgetTableUtils.checkRows(5);
-    DataLakeUtils.dataConfigRemoveFilter();
+        // Test number smaller then
+        filterConfig = new DataLakeFilterConfig('randomnumber', '50', '<');
+        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataLakeWidgetTableUtils.checkRows(5);
+        DataLakeUtils.dataConfigRemoveFilter();
 
-    // Test boolean
-    filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
-    DataLakeUtils.dataConfigAddFilter(filterConfig);
-    DataLakeWidgetTableUtils.checkRows(6);
-    DataLakeUtils.dataConfigRemoveFilter();
+        // Test boolean
+        filterConfig = new DataLakeFilterConfig('randombool', 'true', '=');
+        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataLakeWidgetTableUtils.checkRows(6);
+        DataLakeUtils.dataConfigRemoveFilter();
 
-    // Test string & if filter is persisted correctly
-    filterConfig = new DataLakeFilterConfig('randomtext', 'a', '=');
-    DataLakeUtils.checkIfFilterIsSet(0);
-    DataLakeUtils.dataConfigAddFilter(filterConfig);
-    DataLakeUtils.checkIfFilterIsSet(1);
-    DataLakeWidgetTableUtils.checkRows(4);
-    DataLakeUtils.saveAndReEditWidget('TestView');
-    DataLakeUtils.checkIfFilterIsSet(1);
-    DataLakeWidgetTableUtils.checkRows(4);
-    DataLakeUtils.dataConfigRemoveFilter();
+        // Test string & if filter is persisted correctly
+        filterConfig = new DataLakeFilterConfig('randomtext', 'a', '=');
+        DataLakeUtils.checkIfFilterIsSet(0);
+        DataLakeUtils.dataConfigAddFilter(filterConfig);
+        DataLakeUtils.checkIfFilterIsSet(1);
+        DataLakeWidgetTableUtils.checkRows(4);
+        DataLakeUtils.saveAndReEditWidget('TestView');
+        DataLakeUtils.checkIfFilterIsSet(1);
+        DataLakeWidgetTableUtils.checkRows(4);
+        DataLakeUtils.dataConfigRemoveFilter();
 
-    /**
-     * Test groupBy configuration and if it is persisted correctly
-     */
-    cy.wait(1000);
-    DataLakeUtils.clickGroupBy('randomtext');
-    cy.wait(1000);
-    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).first({ timeout: 10000 }).contains('a', { timeout: 10000 });
-    cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 }).last({ timeout: 10000 }).contains('c', { timeout: 10000 });
-    DataLakeWidgetTableUtils.checkRows(10);
-    DataLakeUtils.saveAndReEditWidget('TestView');
-    cy.dataCy('data-explorer-group-by-randomtext').find('input').should('be.checked');
-    DataLakeUtils.clickGroupBy('randomtext');
-
-  });
-
+        /**
+         * Test groupBy configuration and if it is persisted correctly
+         */
+        cy.wait(1000);
+        DataLakeUtils.clickGroupBy('randomtext');
+        cy.wait(1000);
+        cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 })
+            .first({ timeout: 10000 })
+            .contains('a', { timeout: 10000 });
+        cy.dataCy('data-explorer-table-row-randomtext', { timeout: 10000 })
+            .last({ timeout: 10000 })
+            .contains('c', { timeout: 10000 });
+        DataLakeWidgetTableUtils.checkRows(10);
+        DataLakeUtils.saveAndReEditWidget('TestView');
+        cy.dataCy('data-explorer-group-by-randomtext')
+            .find('input')
+            .should('be.checked');
+        DataLakeUtils.clickGroupBy('randomtext');
+    });
 });

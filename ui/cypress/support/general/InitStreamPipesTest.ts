@@ -17,14 +17,14 @@
  */
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      initStreamPipesTest: typeof initStreamPipesTest;
+    namespace Cypress {
+        interface Chainable {
+            initStreamPipesTest: typeof initStreamPipesTest;
+        }
     }
-  }
 }
 
 export const initStreamPipesTest = () => {
-  cy.login();
-  cy.resetStreamPipes();
+    cy.login();
+    cy.resetStreamPipes();
 };

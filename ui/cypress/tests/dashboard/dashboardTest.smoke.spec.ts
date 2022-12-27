@@ -20,24 +20,21 @@ import { ConnectUtils } from '../../support/utils/connect/ConnectUtils';
 import { DashboardUtils } from '../../support/utils/DashboardUtils';
 
 describe('Test live dashboard', () => {
-  beforeEach('Setup Test', () => {
-    cy.initStreamPipesTest();
-    ConnectUtils.addMachineDataSimulator('simulator', true);
-  });
+    beforeEach('Setup Test', () => {
+        cy.initStreamPipesTest();
+        ConnectUtils.addMachineDataSimulator('simulator', true);
+    });
 
-  it('Perform Test', () => {
+    it('Perform Test', () => {
+        DashboardUtils.goToDashboard();
 
-    DashboardUtils.goToDashboard();
+        // Add new dashboard
+        const dashboardName = 'testDashboard';
+        DashboardUtils.addAndEditDashboard(dashboardName);
 
-    // Add new dashboard
-    const dashboardName = 'testDashboard';
-    DashboardUtils.addAndEditDashboard(dashboardName);
+        DashboardUtils.addWidget('Persist_simulator', 'raw');
 
-    DashboardUtils.addWidget('Persist_simulator', 'raw');
-
-    // Validate that data is coming (at least 3 events)
-    DashboardUtils.validateRawWidgetEvents(3);
-
-  });
+        // Validate that data is coming (at least 3 events)
+        DashboardUtils.validateRawWidgetEvents(3);
+    });
 });
-

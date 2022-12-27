@@ -17,15 +17,14 @@
  */
 
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      removeDownloadDirectory: typeof removeDownloadDirectory;
+    namespace Cypress {
+        interface Chainable {
+            removeDownloadDirectory: typeof removeDownloadDirectory;
+        }
     }
-  }
 }
 
 export const removeDownloadDirectory = () => {
-  const downloadsFolder = Cypress.config('downloadsFolder');
-  cy.task('deleteFolder', downloadsFolder);
+    const downloadsFolder = Cypress.config('downloadsFolder');
+    cy.task('deleteFolder', downloadsFolder);
 };
-

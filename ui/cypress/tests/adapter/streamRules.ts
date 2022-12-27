@@ -27,18 +27,18 @@ describe('Connect aggregation rule transformations', () => {
     });
 
     it('Perform Test', () => {
-
         const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
-
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
         cy.dataCy('connect-reduce-event-rate-box').children().click();
         cy.dataCy('connect-reduce-event-input').type('3000');
 
-        ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
+        ConnectUtils.tearDownPreprocessingRuleTest(
+            adapterConfiguration,
             'cypress/fixtures/connect/aggregationRules/expected.csv',
-            false);
+            false,
+        );
     });
 });
 
@@ -49,7 +49,6 @@ describe('Remove duplicates rule transformations', () => {
     });
 
     it('Perform Test', () => {
-
         const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
 
         ConnectEventSchemaUtils.markPropertyAsTimestamp('timestamp');
@@ -58,8 +57,10 @@ describe('Remove duplicates rule transformations', () => {
         cy.dataCy('connect-remove-duplicates-box').children().click();
         cy.dataCy('connect-remove-duplicates-input').type('10000');
 
-        ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
+        ConnectUtils.tearDownPreprocessingRuleTest(
+            adapterConfiguration,
             'cypress/fixtures/connect/removeDuplicateRules/expected.csv',
-            false);
+            false,
+        );
     });
 });

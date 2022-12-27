@@ -1,6 +1,10 @@
 {
- "name": "boolean_inverter",
- "config": [
-   {"type":  "drop-down", "selector": "invert-field", "value":  "booleanToInvert"}
- ]
+  "name": "boolean_inverter",
+  "config": [
+    {
+      "type": "drop-down",
+      "selector": "invert-field",
+      "value": "booleanToInvert"
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 {
- "name": "count_array",
- "config": [
-   {"type":  "drop-down", "selector": "array-field", "value":  "arrayProperty"}
- ]
+  "name": "count_array",
+  "config": [
+    { "type": "drop-down", "selector": "array-field", "value": "arrayProperty" }
+  ]
 }

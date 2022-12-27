@@ -16,28 +16,27 @@
  *
  */
 export class ConnectBtns {
-  public static infoAdapter() {
-    return cy.dataCy('info-adapter');
-  }
+    public static infoAdapter() {
+        return cy.dataCy('info-adapter');
+    }
 
-  public static editAdapter() {
-    return cy.dataCy('edit-adapter');
-  }
+    public static editAdapter() {
+        return cy.dataCy('edit-adapter');
+    }
 
-  public static stopAdapter() {
-    return cy.dataCy('stop-adapter');
-  }
+    public static stopAdapter() {
+        return cy.dataCy('stop-adapter');
+    }
 
-  public static startAdapter() {
-    return cy.dataCy('start-adapter');
-  }
+    public static startAdapter() {
+        return cy.dataCy('start-adapter');
+    }
 
-  public static refreshSchema() {
-    return cy.dataCy('refresh-schema');
-  }
+    public static refreshSchema() {
+        return cy.dataCy('refresh-schema');
+    }
 
-  public static storeEditAdapter() {
-    return cy.dataCy('store-edit-adapter');
-  }
-
+    public static storeEditAdapter() {
+        return cy.dataCy('store-edit-adapter');
+    }
 }

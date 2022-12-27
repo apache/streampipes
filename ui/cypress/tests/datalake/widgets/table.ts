@@ -18,43 +18,41 @@
 
 import { DataLakeUtils } from '../../../support/utils/datalake/DataLakeUtils';
 
-
 describe('Test Table View in Data Explorer', () => {
+    beforeEach('Setup Test', () => {
+        cy.login();
+        // cy.initStreamPipesTest();
+        // DataLakeUtils.loadRandomDataSetIntoDataLake();
+    });
 
-  beforeEach('Setup Test', () => {
-    cy.login();
-    // cy.initStreamPipesTest();
-    // DataLakeUtils.loadRandomDataSetIntoDataLake();
-  });
+    it('Perform Test', () => {
+        DataLakeUtils.goToDatalake();
 
-  it('Perform Test', () => {
+        // DataLakeUtils.createAndEditDataView();
+        // Click edit button
+        cy.dataCy('edit-data-view').click();
 
-    DataLakeUtils.goToDatalake();
+        DataLakeUtils.addNewWidget();
 
-    // DataLakeUtils.createAndEditDataView();
-    // Click edit button
-    cy.dataCy('edit-data-view')
-      .click();
+        DataLakeUtils.selectDataSet('Persist');
 
-    DataLakeUtils.addNewWidget();
+        DataLakeUtils.dataConfigSelectAllFields();
 
-    DataLakeUtils.selectDataSet('Persist');
+        DataLakeUtils.selectVisualizationConfig();
 
-    DataLakeUtils.dataConfigSelectAllFields();
+        DataLakeUtils.selectVisualizationType('Table');
 
-    DataLakeUtils.selectVisualizationConfig();
+        DataLakeUtils.clickCreateButton();
 
-    DataLakeUtils.selectVisualizationType('Table');
+        DataLakeUtils.selectTimeRange(
+            new Date(2020, 10, 20, 22, 44),
+            new Date(2021, 10, 20, 22, 44),
+        );
 
-    DataLakeUtils.clickCreateButton();
-
-    DataLakeUtils.selectTimeRange(
-      new Date(2020, 10, 20, 22, 44),
-      new Date(2021, 10, 20, 22, 44));
-
-    cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should('have.length', 10);
-    // Validate that X lines are available
-
-  });
-
+        cy.dataCy('data-explorer-table-row', { timeout: 10000 }).should(
+            'have.length',
+            10,
+        );
+        // Validate that X lines are available
+    });
 });

@@ -17,14 +17,13 @@
  */
 
 export type UserInputType =
-    'checkbox' |
-    'input' |
-    'file' |
-    'drop-down' |
-    'radio' |
-    'code-input' |
-    'click' |
-    'button' |
-    'slider' |
-    'select';
-
+    | 'checkbox'
+    | 'input'
+    | 'file'
+    | 'drop-down'
+    | 'radio'
+    | 'code-input'
+    | 'click'
+    | 'button'
+    | 'slider'
+    | 'select';

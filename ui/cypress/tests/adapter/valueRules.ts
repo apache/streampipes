@@ -27,26 +27,30 @@ describe('Connect value rule transformations', () => {
     });
 
     it('Perform Test', () => {
-
         const adapterConfiguration = ConnectUtils.setUpPreprocessingRuleTest();
 
         // Edit timestamp property
-        ConnectEventSchemaUtils.editTimestampProperty('timestamp',
-            'yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'');
+        ConnectEventSchemaUtils.editTimestampProperty(
+            'timestamp',
+            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        );
 
         // Number transformation
         ConnectEventSchemaUtils.numberTransformation('value', '10');
 
         // Unit transformation
-        ConnectEventSchemaUtils.unitTransformation('temperature',
+        ConnectEventSchemaUtils.unitTransformation(
+            'temperature',
             'Degree Celsius',
-            'Degree Fahrenheit');
+            'Degree Fahrenheit',
+        );
 
         ConnectEventSchemaUtils.finishEventSchemaConfiguration();
 
-        ConnectUtils.tearDownPreprocessingRuleTest(adapterConfiguration,
+        ConnectUtils.tearDownPreprocessingRuleTest(
+            adapterConfiguration,
             'cypress/fixtures/connect/valueRules/expected.csv',
-            false);
+            false,
+        );
     });
-
 });
