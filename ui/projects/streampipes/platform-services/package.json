@@ -11,7 +11,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "karma": "~6.3.4",
+    "karma": "~6.4.1",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-firefox-launcher": "^2.1.2",
