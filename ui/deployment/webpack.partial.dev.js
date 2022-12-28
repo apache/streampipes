@@ -54,7 +54,7 @@ module.exports = merge(baseConfig, {
             '/pipeline': {
                 target: 'http://localhost:5984',
                 secure: false,
-            }
+            },
         },
     },
 });
