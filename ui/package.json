@@ -126,7 +126,7 @@
     "eslint-config-prettier": "^8.5.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.2",
-    "jasmine-core": "^3.99.1",
+    "jasmine-core": "^4.5.0",
     "js-yaml": "^3.14.1",
     "karma": "~6.4.1",
     "karma-chrome-launcher": "~3.1.1",
