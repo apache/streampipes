@@ -40,6 +40,12 @@ class DataStream(Resource):
     """
 
     def convert_to_pandas_representation(self):
+        """Returns the dictionary representation of a data stream to be used when creating a pandas Dataframe.
+
+        Returns
+        -------
+        Dictionary
+        """
         return {
             **self.dict(
                 exclude={

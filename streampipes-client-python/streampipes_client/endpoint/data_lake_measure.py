@@ -24,7 +24,7 @@ from typing import Tuple, Type
 from streampipes_client.endpoint.endpoint import APIEndpoint
 from streampipes_client.model.container import DataLakeMeasures
 from streampipes_client.model.container.resource_container import ResourceContainer
-from streampipes_client.model.resource.data_lake_series import DataLakeSeries
+from streampipes_client.model.resource import DataLakeSeries
 
 __all__ = [
     "DataLakeMeasureEndpoint",
