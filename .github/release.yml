@@ -19,7 +19,7 @@
 changelog:
   exclude:
     labels:
-      - dependencies
+      - no release note
   categories:
     - title: New Features 🚀
       labels:
