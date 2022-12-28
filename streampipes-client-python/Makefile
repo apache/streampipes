@@ -47,6 +47,10 @@ reformat-all:
 	isort --profile black streampipes_client tests
 	black --line-length=120 streampipes_client tests
 
+.PHONY: pre-commit
+pre-commit:
+	pre-commit run --verbose --all-files
+
 .PHONY: unit-tests
 unit-tests:
 	pytest --cov=streampipes_client tests/ --cov-fail-under=90 --cov-report term-missing --no-cov-on-fail
