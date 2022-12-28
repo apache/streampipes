@@ -58,4 +58,3 @@ public class PulsarContainer extends GenericContainer<PulsarContainer> {
     return "http://" + getHost() + ":" + getMappedPort(BROKER_HTTP_PORT);
   }
 }
-
