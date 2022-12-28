@@ -77,7 +77,7 @@
     "leaflet": "1.9.3",
     "lodash": "4.17.21",
     "material-icons": "^1.13.1",
-    "ngx-color-picker": "^11.0.0",
+    "ngx-color-picker": "^13.0.0",
     "ngx-echarts": "^8.0.1",
     "ngx-quill": "^19.0.1",
     "ngx-showdown": "6.0.0",
