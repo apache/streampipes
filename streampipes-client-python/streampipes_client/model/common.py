@@ -24,6 +24,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
 __all__ = [
+    "BaseElement",
     "BasicModel",
     "EventSchema",
 ]
@@ -40,8 +41,6 @@ def _snake_to_camel_case(snake_case_string: str) -> str:
 class BasicModel(BaseModel):
     """Basic model class used for the whole Python StreamPipes data model."""
 
-    element_id: Optional[StrictStr]
-
     class Config:
         """Configuration class for Pydantic.
         Defines alias generator to convert field names from camelCase (API) to snake_case (Python codebase).
@@ -50,16 +49,22 @@ class BasicModel(BaseModel):
         alias_generator = _snake_to_camel_case
 
 
-class EventPropertyQualityRequirement(BasicModel):
+class BaseElement(BasicModel):
+    """Structure of a basic element in the StreamPipes backend"""
+
+    element_id: Optional[StrictStr]
+
+
+class EventPropertyQualityRequirement(BaseElement):
     """
     Data model of an `EventPropertyQualityRequirement` in compliance to the StreamPipes Backend.
     """
 
-    minimum_property_quality: Optional[BasicModel] = Field(alias="eventPropertyQualityDefinition")
-    maximum_property_quality: Optional[BasicModel] = Field(alias="eventPropertyQualityDefinition")
+    minimum_property_quality: Optional[BaseElement] = Field(alias="eventPropertyQualityDefinition")
+    maximum_property_quality: Optional[BaseElement] = Field(alias="eventPropertyQualityDefinition")
 
 
-class ValueSpecification(BasicModel):
+class ValueSpecification(BaseElement):
     """
     Data model of an `ValueSpecification` in compliance to the StreamPipes Backend.
     """
@@ -69,7 +74,7 @@ class ValueSpecification(BasicModel):
     step: Optional[float]
 
 
-class EventProperty(BasicModel):
+class EventProperty(BaseElement):
     """
     Data model of an `EventProperty` in compliance to the StreamPipes Backend.
     """
@@ -79,7 +84,7 @@ class EventProperty(BasicModel):
     runtime_name: StrictStr
     required: StrictBool
     domain_properties: List[StrictStr]
-    event_property_qualities: List[BasicModel] = Field(alias="eventPropertyQualities")
+    event_property_qualities: List[BaseElement] = Field(alias="eventPropertyQualities")
     requires_event_property_qualities: List[EventPropertyQualityRequirement]
     property_scope: Optional[StrictStr]
     index: StrictInt
@@ -89,7 +94,7 @@ class EventProperty(BasicModel):
     value_specification: Optional[ValueSpecification]
 
 
-class EventSchema(BasicModel):
+class EventSchema(BaseElement):
     """
     Data model of an `EventSchema` in compliance to the StreamPipes Backend.
     """
@@ -97,7 +102,7 @@ class EventSchema(BasicModel):
     event_properties: List[EventProperty]
 
 
-class ApplicationLink(BasicModel):
+class ApplicationLink(BaseElement):
     """
     Data model of an `ApplicationLink` in compliance to the StreamPipes Backend.
     """
@@ -109,7 +114,7 @@ class ApplicationLink(BasicModel):
     application_link_type: Optional[StrictStr]
 
 
-class TopicDefinition(BasicModel):
+class TopicDefinition(BaseElement):
     """
     Data model of a `TopicDefinition` in compliance to the StreamPipes Backend.
     """
@@ -117,7 +122,7 @@ class TopicDefinition(BasicModel):
     actual_topic_name: StrictStr
 
 
-class TransportProtocol(BasicModel):
+class TransportProtocol(BaseElement):
     """
     Data model of a `TransportProtocol` in compliance to the StreamPipes Backend.
     """
@@ -127,7 +132,7 @@ class TransportProtocol(BasicModel):
     port: StrictInt
 
 
-class TransportFormat(BasicModel):
+class TransportFormat(BaseElement):
     """
     Data model of a `TransportFormat` in compliance to the StreamPipes Backend.
     """
@@ -135,7 +140,7 @@ class TransportFormat(BasicModel):
     rdf_type: Optional[List[Optional[StrictStr]]]
 
 
-class EventGrounding(BasicModel):
+class EventGrounding(BaseElement):
     """
     Data model of an `EventGrounding` in compliance to the StreamPipes Backend.
     """
@@ -144,7 +149,7 @@ class EventGrounding(BasicModel):
     transport_formats: Optional[List[Optional[TransportFormat]]]
 
 
-class MeasurementCapability(BasicModel):
+class MeasurementCapability(BaseElement):
     """
     Data model of a `MeasurementCapability` in compliance to the StreamPipes Backend.
     """
@@ -152,7 +157,7 @@ class MeasurementCapability(BasicModel):
     capability: Optional[StrictStr]
 
 
-class MeasurementObject(BasicModel):
+class MeasurementObject(BaseElement):
     """
     Data model of a `MeasurementObject` in compliance to the StreamPipes Backend.
     """

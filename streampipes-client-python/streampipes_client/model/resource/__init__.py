@@ -16,9 +16,11 @@
 #
 
 from .data_lake_measure import DataLakeMeasure
+from .data_lake_series import DataLakeSeries
 from .data_stream import DataStream
 
 __all__ = [
     "DataLakeMeasure",
+    "DataLakeSeries",
     "DataStream",
 ]
