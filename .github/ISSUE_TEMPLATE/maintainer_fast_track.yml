@@ -22,10 +22,11 @@ body:
     attributes:
       label: Body
       description: Free text issue for committers of Apache StreamPipes to be able to add issues/tasks
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: StreamPipes Committer
       description: Committer acknowledgment.
       options:
-        - label: I acknowledge that I am a maintainer/committer of the Apache StreamPipes project.
-          required: true
+        - I acknowledge that I am a maintainer/committer of the Apache StreamPipes project.
+    validations:
+      required: true
