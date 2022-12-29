@@ -89,7 +89,7 @@
 	<jsr305.version>3.0.2</jsr305.version>
 	<kafka.version>2.7.0</kafka.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
-	<log4j.version>2.17.2</log4j.version>
+	<log4j.version>2.19.0</log4j.version>
 	<lz4.version>1.7.1</lz4.version>
 	<logback-classic.version>1.2.9</logback-classic.version>
 	<maven-invoker.version>2.2</maven-invoker.version>
