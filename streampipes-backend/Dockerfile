@@ -15,9 +15,6 @@
 
 FROM eclipse-temurin:11-jre-focal
 
-EXPOSE 8030
-ENV CONSUL_LOCATION consul
-
 COPY target/streampipes-backend.jar  /streampipes-backend.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]

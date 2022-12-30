@@ -15,10 +15,6 @@
 
 FROM eclipse-temurin:11-jre-focal
 
-ENV CONSUL_LOCATION consul
-
-EXPOSE 8090
-
 # needed pkgs processors-image-processing-jvm
 RUN apt-get update && apt-get install ttf-dejavu-core && apt-get install fontconfig
 
