@@ -1786,6 +1786,8 @@ IoT data streams.
 						<exclude>**/site/**</exclude>
 						<exclude>**/.mypy_cache/**</exclude>
 
+						<!-- Exclude Husky which defines its own gitignore and is not detected by rat -->
+						<exclude>ui/.husky/**</exclude>
 
 					</excludes>
 				</configuration>
