@@ -14,17 +14,17 @@
 # limitations under the License.
 
 login:
-  backgroundImage: 'deployment/dev/img/background.png'
-  logo: 'deployment/dev/img/logo.png'
-  logo-navigation: 'deployment/dev/img/logo-navigation.png'
-  favicon: 'deployment/dev/img/favicon.png'
+    backgroundImage: 'deployment/dev/img/background.png'
+    logo: 'deployment/dev/img/logo.png'
+    logo-navigation: 'deployment/dev/img/logo-navigation.png'
+    favicon: 'deployment/dev/img/favicon.png'
 modules:
-  - spPipelines
-  - spConnect
-  - spDashboard
-  - spDataExplorer
-  - spAppOverview
-  - spAdd
-  - spAssets
-  - spFiles
-  - spConfiguration
+    - spPipelines
+    - spConnect
+    - spDashboard
+    - spDataExplorer
+    - spAppOverview
+    - spAdd
+    - spAssets
+    - spFiles
+    - spConfiguration

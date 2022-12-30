@@ -18,7 +18,6 @@ dist
 
 # Remove these in the future to lint additional modules
 # Please also see .prettierignore
-deployment
 projects
 src/app/_enums
 src/app/_guards

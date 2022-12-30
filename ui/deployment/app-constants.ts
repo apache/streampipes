@@ -20,7 +20,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AppConstants {
-
     public readonly APP_NAME = 'Apache StreamPipes';
     public readonly APP_TITLE = 'Apache StreamPipes';
     public readonly EMAIL = 'dev@streampipes.apache.org';

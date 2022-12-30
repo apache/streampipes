@@ -29,6 +29,20 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "npm"
+    directory: "/ui/projects/streampipes/platform-services"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "npm"
+    directory: "/ui/projects/streampipes/shared-ui"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
   - package-ecosystem: "pip"
     directory: "/streampipes-client-python"
     schedule:

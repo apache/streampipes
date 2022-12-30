@@ -24,6 +24,10 @@ import pandas as pd
 from pydantic import StrictInt, StrictStr
 from streampipes_client.model.resource.resource import Resource
 
+__all__ = [
+    "DataLakeSeries",
+]
+
 
 class StreamPipesUnsupportedDataLakeSeries(Exception):
     """Exception to be raised when the returned data lake series
