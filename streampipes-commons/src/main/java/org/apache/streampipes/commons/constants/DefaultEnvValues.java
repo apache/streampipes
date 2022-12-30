@@ -23,6 +23,11 @@ public class DefaultEnvValues {
   public static final String INITIAL_ADMIN_PW_DEFAULT = "admin";
   public static final String INITIAL_CLIENT_USER_DEFAULT = "sp-service-client";
   public static final String INITIAL_CLIENT_SECRET_DEFAULT = "my-apache-streampipes-secret-key-change-me";
+
+  public static final String CONSUL_HOST_DEFAULT = "consul";
+  public static final String CONSUL_HOST_LOCAL = "localhost";
+  public static final int CONSUL_PORT_DEFAULT = 8500;
+
   public static final int MAX_WAIT_TIME_AT_SHUTDOWN_DEFAULT = 10000;
   public static final boolean INSTALL_PIPELINE_ELEMENTS = true;
 
