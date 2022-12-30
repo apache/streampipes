@@ -17,14 +17,23 @@
  */
 package org.apache.streampipes.container.extensions;
 
-import org.apache.streampipes.connect.container.worker.init.AdapterServiceResourceProvider;
-import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
-import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
+import org.apache.streampipes.connect.container.worker.rest.AdapterAssetResource;
+import org.apache.streampipes.connect.container.worker.rest.AdapterWorkerResource;
+import org.apache.streampipes.connect.container.worker.rest.GuessResource;
+import org.apache.streampipes.connect.container.worker.rest.HttpServerAdapterResource;
+import org.apache.streampipes.connect.container.worker.rest.RuntimeResolvableResource;
+import org.apache.streampipes.container.api.DataProcessorPipelineElementResource;
+import org.apache.streampipes.container.api.DataSinkPipelineElementResource;
+import org.apache.streampipes.container.api.DataStreamPipelineElementResource;
+import org.apache.streampipes.container.api.MonitoringResource;
+import org.apache.streampipes.container.api.PipelineTemplateResource;
+import org.apache.streampipes.container.api.WelcomePage;
+import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.apache.streampipes.service.base.rest.BaseResourceConfig;
 
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -32,9 +41,35 @@ public class ExtensionsResourceConfig extends BaseResourceConfig {
 
   @Override
   public List<List<Class<?>>> getClassesToRegister() {
-    return Arrays.asList(
-        new BaseExtensionsServiceResourceProvider().getResourceClasses(),
-        new AdapterServiceResourceProvider().getResourceClasses(),
-        new PipelineElementServiceResourceProvider().getResourceClasses());
+    return List.of(
+        getAdapterResourceClasses(),
+        getBaseResourceClasses(),
+        getPipelineElementResourceClasses()
+    );
+  }
+
+  private List<Class<?>> getAdapterResourceClasses() {
+    return List.of(
+        GuessResource.class,
+        RuntimeResolvableResource.class,
+        AdapterWorkerResource.class,
+        MultiPartFeature.class,
+        AdapterAssetResource.class,
+        HttpServerAdapterResource.class);
+  }
+
+  private List<Class<?>> getBaseResourceClasses() {
+    return List.of(
+        JacksonSerializationProvider.class,
+        MonitoringResource.class);
+  }
+
+  private List<Class<?>> getPipelineElementResourceClasses() {
+    return List.of(
+        DataSinkPipelineElementResource.class,
+        DataProcessorPipelineElementResource.class,
+        DataStreamPipelineElementResource.class,
+        WelcomePage.class,
+        PipelineTemplateResource.class);
   }
 }
