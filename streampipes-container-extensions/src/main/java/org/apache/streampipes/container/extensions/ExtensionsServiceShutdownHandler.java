@@ -28,7 +28,7 @@ public class ExtensionsServiceShutdownHandler {
 
 
   public void onShutdown() {
-    LOG.info("Shutting down StreamPipes pipeline element container...");
+    LOG.info("Shutting down StreamPipes extensions service...");
     int runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
 
     while (runningInstancesCount > 0) {
