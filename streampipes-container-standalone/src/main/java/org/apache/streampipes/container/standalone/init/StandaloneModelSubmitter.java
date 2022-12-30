@@ -27,8 +27,6 @@ import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServi
 import org.apache.streampipes.service.extensions.base.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -41,9 +39,6 @@ import java.util.List;
 @EnableAutoConfiguration
 @Import({PipelineElementContainerResourceConfig.class, WebSecurityConfig.class})
 public abstract class StandaloneModelSubmitter extends StreamPipesExtensionsServiceBase {
-
-  private static final Logger LOG =
-      LoggerFactory.getLogger(StandaloneModelSubmitter.class.getCanonicalName());
 
   @Deprecated
   public void init(PeConfig peConfig) {
