@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.processors.enricher.jvm;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -35,7 +35,7 @@ import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.Size
 import org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.TrigonometryProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.valuechange.ValueChangeProcessor;
 
-public class EnricherJvmInit extends StandaloneModelSubmitter {
+public class EnricherJvmInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new EnricherJvmInit().init();

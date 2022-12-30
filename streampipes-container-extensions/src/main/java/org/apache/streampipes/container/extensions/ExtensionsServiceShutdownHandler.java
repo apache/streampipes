@@ -15,20 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.standalone.init;
+package org.apache.streampipes.container.extensions;
 
 import org.apache.streampipes.container.init.RunningInstances;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PipelineElementServiceShutdownHandler {
+public class ExtensionsServiceShutdownHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PipelineElementServiceShutdownHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceShutdownHandler.class);
 
 
   public void onShutdown() {
-    LOG.info("Shutting down StreamPipes pipeline element container...");
+    LOG.info("Shutting down StreamPipes extensions service...");
     int runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
 
     while (runningInstancesCount > 0) {

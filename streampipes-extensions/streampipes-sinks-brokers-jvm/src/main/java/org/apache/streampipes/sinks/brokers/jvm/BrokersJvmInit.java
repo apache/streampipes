@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.sinks.brokers.jvm;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -39,7 +39,7 @@ import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
 import org.apache.streampipes.sinks.brokers.jvm.rocketmq.RocketMQPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
 
-public class BrokersJvmInit extends StandaloneModelSubmitter {
+public class BrokersJvmInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new BrokersJvmInit().init();
