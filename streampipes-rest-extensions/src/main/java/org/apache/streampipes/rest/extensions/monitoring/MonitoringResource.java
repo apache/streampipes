@@ -16,29 +16,28 @@
  *
  */
 
-package org.apache.streampipes.container.html.model;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.apache.streampipes.rest.extensions.monitoring;
 
-public class DataSourceDescriptionHtml extends Description {
+import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
-  private List<Description> streams;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-  public DataSourceDescriptionHtml(String name, String description, String descriptionUrl, List<Description> streams) {
-    super(name, description, descriptionUrl);
-    this.streams = streams;
-  }
+@Path("monitoring")
+public class MonitoringResource extends AbstractExtensionsResource {
 
-  public DataSourceDescriptionHtml() {
-    streams = new ArrayList<>();
-  }
-
-  public List<Description> getStreams() {
-    return streams;
-  }
-
-  public void setStreams(List<Description> streams) {
-    this.streams = streams;
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getMonitoringInfos() {
+    try {
+      return ok(SpMonitoringManager.INSTANCE.getMonitoringInfo());
+    } finally {
+      //SpLogManager.INSTANCE.clearAllLogs();
+    }
   }
 }

@@ -16,11 +16,15 @@
  *
  */
 
-package org.apache.streampipes.container.api;
+package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
+import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.api.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.container.api.RuntimeResolvableRequestHandler;
+import org.apache.streampipes.container.api.SupportsRuntimeConfig;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.declarer.InvocableDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
@@ -29,6 +33,7 @@ import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.base.InvocableStreamPipesEntity;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
+import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import org.apache.streampipes.sdk.extractor.AbstractParameterExtractor;
 

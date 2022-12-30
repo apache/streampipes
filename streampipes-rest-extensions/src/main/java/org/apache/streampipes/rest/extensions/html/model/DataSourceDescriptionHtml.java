@@ -16,43 +16,29 @@
  *
  */
 
-package org.apache.streampipes.container.api;
+package org.apache.streampipes.rest.extensions.html.model;
 
-import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AbstractExtensionsResource {
+public class DataSourceDescriptionHtml extends Description {
 
-  protected <T> Response ok(T entity) {
-    return Response
-        .ok()
-        .entity(entity)
-        .build();
+  private List<Description> streams;
+
+  public DataSourceDescriptionHtml(String name, String description, String descriptionUrl, List<Description> streams) {
+    super(name, description, descriptionUrl);
+    this.streams = streams;
   }
 
-  protected Response clientError() {
-    return Response
-        .status(400)
-        .build();
+  public DataSourceDescriptionHtml() {
+    streams = new ArrayList<>();
   }
 
-  protected Response serverError() {
-    return Response
-        .status(500)
-        .build();
+  public List<Description> getStreams() {
+    return streams;
   }
 
-  protected <T> Response notModified(T entity) {
-    return Response
-        .notModified()
-        .entity(entity)
-        .build();
+  public void setStreams(List<Description> streams) {
+    this.streams = streams;
   }
-
-  protected <T> Response noContent(T entity) {
-    return Response
-        .noContent()
-        .entity(entity)
-        .build();
-  }
-
 }

@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.container.api;
+package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.declarer.DataSetDeclarer;
@@ -25,6 +25,7 @@ import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.init.RunningDatasetInstances;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataSet;
+import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 import org.apache.streampipes.serializers.json.JacksonSerializer;
 import org.apache.streampipes.svcdiscovery.api.model.SpServicePathPrefix;
 

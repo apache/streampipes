@@ -16,10 +16,10 @@
  *
  */
 
-package org.apache.streampipes.container.html;
+package org.apache.streampipes.rest.extensions.html;
 
-import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.rest.extensions.html.model.DataSourceDescriptionHtml;
+import org.apache.streampipes.rest.extensions.html.model.Description;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

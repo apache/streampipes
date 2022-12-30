@@ -16,27 +16,43 @@
  *
  */
 
+package org.apache.streampipes.rest.extensions;
 
-package org.apache.streampipes.container.api;
-
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("monitoring")
-public class MonitoringResource extends AbstractExtensionsResource {
+public class AbstractExtensionsResource {
 
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public Response getMonitoringInfos() {
-    try {
-      return ok(SpMonitoringManager.INSTANCE.getMonitoringInfo());
-    } finally {
-      //SpLogManager.INSTANCE.clearAllLogs();
-    }
+  protected <T> Response ok(T entity) {
+    return Response
+        .ok()
+        .entity(entity)
+        .build();
   }
+
+  protected Response clientError() {
+    return Response
+        .status(400)
+        .build();
+  }
+
+  protected Response serverError() {
+    return Response
+        .status(500)
+        .build();
+  }
+
+  protected <T> Response notModified(T entity) {
+    return Response
+        .notModified()
+        .entity(entity)
+        .build();
+  }
+
+  protected <T> Response noContent(T entity) {
+    return Response
+        .noContent()
+        .entity(entity)
+        .build();
+  }
+
 }

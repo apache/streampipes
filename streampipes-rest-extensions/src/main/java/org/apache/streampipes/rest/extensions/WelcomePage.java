@@ -16,11 +16,11 @@
  *
  */
 
-package org.apache.streampipes.container.api;
+package org.apache.streampipes.rest.extensions;
 
-import org.apache.streampipes.container.html.HTMLGenerator;
-import org.apache.streampipes.container.html.JSONGenerator;
-import org.apache.streampipes.container.html.page.WelcomePageGenerator;
+import org.apache.streampipes.rest.extensions.html.HTMLGenerator;
+import org.apache.streampipes.rest.extensions.html.JSONGenerator;
+import org.apache.streampipes.rest.extensions.html.page.WelcomePageGenerator;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 
 import javax.ws.rs.GET;

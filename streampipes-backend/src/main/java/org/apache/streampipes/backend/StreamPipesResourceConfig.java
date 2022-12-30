@@ -72,7 +72,6 @@ import org.apache.streampipes.rest.impl.connect.GuessResource;
 import org.apache.streampipes.rest.impl.connect.RuntimeResolvableResource;
 import org.apache.streampipes.rest.impl.connect.SourcesResource;
 import org.apache.streampipes.rest.impl.connect.UnitResource;
-import org.apache.streampipes.rest.impl.connect.WelcomePageMaster;
 import org.apache.streampipes.rest.impl.connect.WorkerAdministrationResource;
 import org.apache.streampipes.rest.impl.dashboard.Dashboard;
 import org.apache.streampipes.rest.impl.dashboard.DashboardWidget;
@@ -174,7 +173,6 @@ public class StreamPipesResourceConfig extends ResourceConfig {
 
 
     // Connect Master
-    register(WelcomePageMaster.class);
     register(AdapterResource.class);
     register(DescriptionResource.class);
     register(SourcesResource.class);

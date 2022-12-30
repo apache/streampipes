@@ -15,29 +15,21 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.container.worker.rest;
+package org.apache.streampipes.rest.extensions.pe;
 
-import org.apache.streampipes.connect.container.worker.management.HttpServerAdapterManagement;
+import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
+import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;
 
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
 
-@Path("/api/v1/worker/live")
-public class HttpServerAdapterResource {
+import java.util.Map;
 
-  @POST
-  @Path("{endpointId}")
-  public Response receiveEvent(@PathParam("endpointId") String endpointId,
-                               byte[] body) {
+@Path("/template")
+public class PipelineTemplateResource extends AbstractPipelineElementResource<PipelineTemplateDeclarer> {
 
-    try {
-      HttpServerAdapterManagement.INSTANCE.notify(endpointId, body);
-      return Response.ok().build();
-    } catch (Exception e) {
-      return Response.status(400).entity(e.getMessage()).build();
-    }
-
+  @Override
+  protected Map<String, PipelineTemplateDeclarer> getElementDeclarers() {
+    return DeclarersSingleton.getInstance().getPipelineTemplateDeclarers();
   }
 }

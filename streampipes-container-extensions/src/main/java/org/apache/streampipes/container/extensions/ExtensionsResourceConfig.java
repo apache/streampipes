@@ -17,17 +17,18 @@
  */
 package org.apache.streampipes.container.extensions;
 
-import org.apache.streampipes.connect.container.worker.rest.AdapterAssetResource;
-import org.apache.streampipes.connect.container.worker.rest.AdapterWorkerResource;
-import org.apache.streampipes.connect.container.worker.rest.GuessResource;
-import org.apache.streampipes.connect.container.worker.rest.HttpServerAdapterResource;
-import org.apache.streampipes.connect.container.worker.rest.RuntimeResolvableResource;
-import org.apache.streampipes.container.api.DataProcessorPipelineElementResource;
-import org.apache.streampipes.container.api.DataSinkPipelineElementResource;
-import org.apache.streampipes.container.api.DataStreamPipelineElementResource;
-import org.apache.streampipes.container.api.MonitoringResource;
-import org.apache.streampipes.container.api.PipelineTemplateResource;
-import org.apache.streampipes.container.api.WelcomePage;
+
+import org.apache.streampipes.rest.extensions.WelcomePage;
+import org.apache.streampipes.rest.extensions.connect.AdapterAssetResource;
+import org.apache.streampipes.rest.extensions.connect.AdapterWorkerResource;
+import org.apache.streampipes.rest.extensions.connect.GuessResource;
+import org.apache.streampipes.rest.extensions.connect.HttpServerAdapterResource;
+import org.apache.streampipes.rest.extensions.connect.RuntimeResolvableResource;
+import org.apache.streampipes.rest.extensions.monitoring.MonitoringResource;
+import org.apache.streampipes.rest.extensions.pe.DataProcessorPipelineElementResource;
+import org.apache.streampipes.rest.extensions.pe.DataSinkPipelineElementResource;
+import org.apache.streampipes.rest.extensions.pe.DataStreamPipelineElementResource;
+import org.apache.streampipes.rest.extensions.pe.PipelineTemplateResource;
 import org.apache.streampipes.rest.shared.serializer.JacksonSerializationProvider;
 import org.apache.streampipes.service.base.rest.BaseResourceConfig;
 

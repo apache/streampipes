@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.container.api;
+package org.apache.streampipes.rest.extensions;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.container.assets.AssetZipGenerator;

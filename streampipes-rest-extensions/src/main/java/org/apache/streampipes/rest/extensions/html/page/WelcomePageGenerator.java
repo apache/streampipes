@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.container.html.page;
+package org.apache.streampipes.rest.extensions.html.page;
 
 import org.apache.streampipes.container.declarer.DataStreamDeclarer;
 import org.apache.streampipes.container.declarer.Declarer;
@@ -24,7 +24,7 @@ import org.apache.streampipes.container.declarer.InvocableDeclarer;
 import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.rest.extensions.html.model.Description;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;

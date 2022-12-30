@@ -1422,6 +1422,7 @@ IoT data streams.
 			<module>streampipes-data-export</module>
 			<module>streampipes-messaging-nats</module>
 			<module>streampipes-integration-tests</module>
+			<module>streampipes-rest-extensions</module>
 		</modules>
 
 	<profiles>
