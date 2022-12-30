@@ -1370,7 +1370,6 @@ IoT data streams.
 			<module>streampipes-connect-container-worker</module>
 			<module>streampipes-container</module>
 			<module>streampipes-container-extensions</module>
-			<module>streampipes-container-standalone</module>
 			<module>streampipes-data-explorer</module>
 			<module>streampipes-dataformat</module>
 			<module>streampipes-dataformat-cbor</module>

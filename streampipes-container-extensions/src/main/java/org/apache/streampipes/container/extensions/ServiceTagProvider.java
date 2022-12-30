@@ -15,24 +15,39 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.standalone.init;
 
+package org.apache.streampipes.container.extensions;
+
+import org.apache.streampipes.connect.container.worker.init.ConnectWorkerTagProvider;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.util.ServiceDefinitionUtil;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PipelineElementServiceTagProvider {
+public class ServiceTagProvider {
 
   public List<SpServiceTag> extractServiceTags() {
+    var tags = new ArrayList<SpServiceTag>();
+    tags.addAll(extractPipelineElementServiceTags());
+    tags.addAll(extractAdapterServiceTags());
+
+    return tags;
+  }
+
+  private List<SpServiceTag> extractPipelineElementServiceTags() {
     Collection<Declarer<?>> declarers = DeclarersSingleton.getInstance().getDeclarers().values();
     List<SpServiceTag> serviceTags = ServiceDefinitionUtil.extractAppIds(declarers);
     serviceTags.add(DefaultSpServiceTags.PE);
 
     return serviceTags;
+  }
+
+  private List<SpServiceTag> extractAdapterServiceTags() {
+    return new ConnectWorkerTagProvider().extractServiceTags();
   }
 }
