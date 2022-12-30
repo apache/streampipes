@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.processors.aggregation.flink;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -34,7 +34,7 @@ import org.apache.streampipes.processors.aggregation.flink.processor.count.Count
 import org.apache.streampipes.processors.aggregation.flink.processor.eventcount.EventCountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.rate.EventRateController;
 
-public class AggregationFlinkInit extends StandaloneModelSubmitter {
+public class AggregationFlinkInit extends ExtensionsModelSubmitter {
 
   public static final String SERVICE_GROUP = "org.apache.streampipes.processors.aggregation.flink";
 

@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.sinks.databases.jvm;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -36,7 +36,7 @@ import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
 
-public class DatabasesJvmInit extends StandaloneModelSubmitter {
+public class DatabasesJvmInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new DatabasesJvmInit().init();

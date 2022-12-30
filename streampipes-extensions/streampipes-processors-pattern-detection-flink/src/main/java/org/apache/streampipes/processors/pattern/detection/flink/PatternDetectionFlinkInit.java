@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -34,7 +34,7 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.and.A
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.sequence.SequenceController;
 
-public class PatternDetectionFlinkInit extends StandaloneModelSubmitter {
+public class PatternDetectionFlinkInit extends ExtensionsModelSubmitter {
 
   public static final String SERVICE_GROUP = "org.apache.streampipes.processors.patterndetection.flink";
 

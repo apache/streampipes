@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.processors.transformation.flink;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -36,7 +36,7 @@ import org.apache.streampipes.processors.transformation.flink.processor.mapper.F
 import org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter.MeasurementUnitConverterController;
 import org.apache.streampipes.processors.transformation.flink.processor.rename.FieldRenamerController;
 
-public class TransformationFlinkInit extends StandaloneModelSubmitter {
+public class TransformationFlinkInit extends ExtensionsModelSubmitter {
 
   public static final String SERVICE_GROUP = "org.apache.streampipes.processors.transformation.flink";
 

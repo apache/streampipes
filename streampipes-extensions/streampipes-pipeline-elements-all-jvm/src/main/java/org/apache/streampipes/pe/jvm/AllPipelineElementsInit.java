@@ -17,9 +17,9 @@
  */
 package org.apache.streampipes.pe.jvm;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -40,7 +40,7 @@ import org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit;
 import org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit;
 import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
 
-public class AllPipelineElementsInit extends StandaloneModelSubmitter {
+public class AllPipelineElementsInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new AllPipelineElementsInit().init();
