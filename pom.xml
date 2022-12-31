@@ -39,7 +39,7 @@
 
 	<!-- project dependencies -->
 	<activemq-client.version>5.16.3</activemq-client.version>
-	<asm.version>7.0</asm.version>
+	<asm.version>9.4</asm.version>
 	<byte-buddy.version>1.12.6</byte-buddy.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
