@@ -28,7 +28,7 @@ doc:
 lint:
 	flake8 streampipes_client --max-line-length 120
 
-.PHONY: doc
+.PHONY: livedoc
 livedoc: doc
 	mkdocs serve --dirtyreload
 
