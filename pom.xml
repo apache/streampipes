@@ -34,7 +34,7 @@
 <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<dependency.locations.enabled>false</dependency.locations.enabled>
-	<maven.version>3.3.9</maven.version>
+	<maven.version>3.8.7</maven.version>
 	<owasp.check.skip>false</owasp.check.skip>
 
 	<!-- project dependencies -->
