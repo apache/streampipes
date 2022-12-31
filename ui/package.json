@@ -118,7 +118,7 @@
     "ajv-keywords": "^5.1.0",
     "assert": "^2.0.0",
     "compression-webpack-plugin": "^10.0.0",
-    "copy-webpack-plugin": "^10.2.4",
+    "copy-webpack-plugin": "^11.0.0",
     "csv-string": "^4.1.1",
     "cypress": "^12.2.0",
     "cypress-file-upload": "^5.0.8",
