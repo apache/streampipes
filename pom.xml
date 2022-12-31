@@ -1011,7 +1011,7 @@ IoT data streams.
 				<dependency>
 					<groupId>com.google.inject</groupId>
 					<artifactId>guice</artifactId>
-					<version>4.1.0</version>
+					<version>5.1.0</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
