@@ -38,7 +38,7 @@
 	<owasp.check.skip>false</owasp.check.skip>
 
 	<!-- project dependencies -->
-	<activemq-client.version>5.16.3</activemq-client.version>
+	<activemq-client.version>5.17.3</activemq-client.version>
 	<asm.version>9.4</asm.version>
 	<byte-buddy.version>1.12.6</byte-buddy.version>
 	<cloning.version>1.9.12</cloning.version>
