@@ -51,7 +51,7 @@
 	<elasticsearch.version>6.8.17</elasticsearch.version>
 	<flink.version>1.13.5</flink.version>
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
-	<fst.version>3.0.4-jdk17</fst.version>
+	<fst.version>2.57</fst.version>
 	<geojson-jackson.version>1.8</geojson-jackson.version>
 	<guava.version>27.1-jre</guava.version>
 	<hibernate-validator.version>6.2.1.Final</hibernate-validator.version>
