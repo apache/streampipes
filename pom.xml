@@ -147,7 +147,7 @@
 	<bcprov.version>1.66</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
-	<checker-qual.version>2.5.2</checker-qual.version>
+	<checker-qual.version>3.28.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
 	<commons-compress.version>1.21</commons-compress.version>
 	<commons-text.version>1.4</commons-text.version>
