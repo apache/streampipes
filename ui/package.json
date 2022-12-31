@@ -136,7 +136,7 @@
     "karma-jasmine-html-reporter": "^2.0.0",
     "karma-verbose-reporter": "0.0.8",
     "lint-staged": "^13.1.0",
-    "mustache": "^2.3.2",
+    "mustache": "^4.2.0",
     "ng-lint-staged": "^12.0.4",
     "ng-packagr": "^14.2.2",
     "path": "^0.12.7",
