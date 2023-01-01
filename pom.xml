@@ -44,21 +44,25 @@
         <byte-buddy.version>1.12.6</byte-buddy.version>
         <cloning.version>1.9.12</cloning.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
-        <commons-collections.version>3.2.2</commons-collections.version>
+        <commons-codec.version>1.11</commons-codec.version>
+		<commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.11.0</commons-io.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-logging.version>1.2</commons-logging.version>
         <consul-client.version>1.5.2</consul-client.version>
         <elasticsearch.version>6.8.17</elasticsearch.version>
         <flink.version>1.13.5</flink.version>
+        <flinkspector.version>0.9.4</flinkspector.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
         <fst.version>2.57</fst.version>
         <geojson-jackson.version>1.14</geojson-jackson.version>
         <guava.version>27.1-jre</guava.version>
-        <hibernate-validator.version>6.2.1.Final</hibernate-validator.version>
+        <gson.version>2.10</gson.version>
+		<hibernate-validator.version>6.2.1.Final</hibernate-validator.version>
         <httpclient.version>4.5.13</httpclient.version>
         <httpcore.version>4.4.9</httpcore.version>
         <httpcore-osgi.version>4.4.9</httpcore-osgi.version>
+        <immutable-value.version>2.9.3</immutable-value.version>
         <influxdb.version>2.23</influxdb.version>
         <j2html.version>1.6.0</j2html.version>
         <jackson.version>2.14.1</jackson.version>
@@ -77,7 +81,7 @@
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <javassist.version>3.25.0-GA</javassist.version>
-        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <jaxb.version>2.3.2</jaxb.version>
         <jboss-logging.version>3.4.0.Final</jboss-logging.version>
         <jboss-logging-annotations.version>2.2.1.Final</jboss-logging-annotations.version>
         <jboss-logging-processor.version>2.2.1.Final</jboss-logging-processor.version>
@@ -86,9 +90,12 @@
         <jetty.version>10.0.10</jetty.version>
         <jgrapht.version>1.3.1</jgrapht.version>
         <jjwt.version>0.11.2</jjwt.version>
+        <jna.version>5.8.0</jna.version>
         <json-path.version>5.3.0</json-path.version>
-        <jsr305.version>3.0.2</jsr305.version>
+        <json-smart.version>2.4.8</json-smart.version>
+		<jsr305.version>3.0.2</jsr305.version>
         <kafka.version>3.3.1</kafka.version>
+        <kotlin-stdlib.version>1.4.30</kotlin-stdlib.version>
         <lightcouch.version>0.2.0</lightcouch.version>
         <log4j.version>2.19.0</log4j.version>
         <lz4.version>1.7.1</lz4.version>
@@ -103,12 +110,13 @@
         <plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
         <plexus-utils.version>3.5.0</plexus-utils.version>
         <rdf4j.version>3.5.0</rdf4j.version>
-        <rendersnake.version>1.9.0</rendersnake.version>
+        <reflections.version>0.9.10</reflections.version>
+		<rendersnake.version>1.9.0</rendersnake.version>
         <retrofit.version>2.5.0</retrofit.version>
         <siddhi.version>5.1.26</siddhi.version>
         <simple-java-mail.version>7.5.2</simple-java-mail.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <snakeyaml.version>1.26</snakeyaml.version>
+        <snakeyaml.version>1.32</snakeyaml.version>
         <snappy-java.version>1.1.7.7</snappy-java.version>
         <spring.version>5.3.20</spring.version>
         <spring-boot.version>2.6.7</spring-boot.version>
@@ -127,17 +135,6 @@
         <rest-assured.version>2.9.0</rest-assured.version>
         <wiremock.version>2.27.2</wiremock.version>
 
-        <!-- Maven Plugins -->
-        <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
-        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
-        <maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
-        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-        <maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -179,9 +176,9 @@
         <rocketmq.version>5.0.2</rocketmq.version>
         <quartz.version>2.3.2</quartz.version>
         <scala-lang.version>2.13.10</scala-lang.version>
+        <scala-lang-xml.version>1.0.5</scala-lang-xml.version>
         <scala-parser-combinators.version>1.1.1</scala-parser-combinators.version>
         <slack-api.version>1.4.0</slack-api.version>
-        <snakeyaml.version>1.26</snakeyaml.version>
         <xerces.version>2.12.2</xerces.version>
         <zstd-jni.version>1.4.3-1</zstd-jni.version>
 
@@ -190,11 +187,13 @@
 
         <!-- Connect Dependencies-->
         <animal-sniffer-annotations.version>1.17</animal-sniffer-annotations.version>
+        <antlr4-runtime.version>4.11.1</antlr4-runtime.version>
         <bcprov.version>1.68</bcprov.version>
         <checker-qual.version>2.5.2</checker-qual.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-text.version>1.8</commons-text.version>
         <errorprone-annotations.version>2.2.0</errorprone-annotations.version>
+        <guice.version>4.1.0</guice.version>
         <java-websocket.version>1.4.0</java-websocket.version>
         <javax-websocket-client-api.version>1.1</javax-websocket-client-api.version>
         <jcl-over-slf4j.version>1.7.30</jcl-over-slf4j.version>
@@ -208,6 +207,23 @@
         <opencsv.version>5.5.2</opencsv.version>
         <plc4x.version>0.9.1</plc4x.version>
         <protobuf.version>3.16.3</protobuf.version>
+        <proton-j.version>0.30.0</proton-j.version>
+
+        <!--  Plugins -->
+        <apache-rat-plugin.version>0.13</apache-rat-plugin.version>
+        <checksum-maven-plugin.version>1.11</checksum-maven-plugin.version>
+        <checkstyle.version>9.2.1</checkstyle.version>
+        <extra-enforcer-rules.version>1.6.1</extra-enforcer-rules.version>
+        <formatter-maven-plugin.version>2.21.0</formatter-maven-plugin.version>
+        <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven.dependency.check.plugin.version>6.5.1</maven.dependency.check.plugin.version>
+        <maven-dependency-plugin.version>3.2.0</maven-dependency-plugin.version>
+        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
+        <mave-release-plugin.version>3.0.0-M5</mave-release-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <maven-shade-plugin.version>3.4.1</maven-shade-plugin.version>
     </properties>
 
     <name>Apache StreamPipes</name>
@@ -291,7 +307,7 @@
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.10</version>
+                <version>${gson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -331,7 +347,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.11</version>
+                <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-collections</groupId>
@@ -441,11 +457,6 @@
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
                 <version>${javax-servlet-api.version}</version>
             </dependency>
             <dependency>
@@ -461,12 +472,12 @@
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
-                <version>2.3.1</version>
+                <version>${jaxb.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.minidev</groupId>
                 <artifactId>json-smart</artifactId>
-                <version>2.4.8</version>
+                <version>${json-smart.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -788,7 +799,7 @@
             <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
-                <version>0.9.10</version>
+                <version>${reflections.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.rendersnake</groupId>
@@ -883,7 +894,7 @@
             <dependency>
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
-                <version>1.32</version>
+                <version>${snakeyaml.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.fogsy</groupId>
@@ -978,7 +989,7 @@
             <dependency>
                 <groupId>io.flinkspector</groupId>
                 <artifactId>flinkspector-datastream_2.11</artifactId>
-                <version>0.9.4</version>
+                <version>${flinkspector.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1003,28 +1014,28 @@
             <dependency>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-runtime</artifactId>
-                <version>4.9</version>
+                <version>${antlr4-runtime.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-handler</artifactId>
-                <version>4.1.72.Final</version>
+                <version>${netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.qpid</groupId>
                 <artifactId>proton-j</artifactId>
-                <version>0.30.0</version>
+                <version>${proton-j.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>
-                <version>5.1.0</version>
+                <version>${guice.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.scala-lang.modules</groupId>
                 <artifactId>scala-xml_2.11</artifactId>
-                <version>1.0.5</version>
+                <version>${scala-lang-xml.version}</version>
                 <scope>test</scope>
             </dependency>
             <!-- External Connect dependencies -->
@@ -1348,22 +1359,22 @@
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
-                <version>2.3.2</version>
+                <version>${jaxb.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
                 <artifactId>jna</artifactId>
-                <version>5.8.0</version>
+                <version>${jna.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.immutables</groupId>
                 <artifactId>value</artifactId>
-                <version>2.9.3</version>
+                <version>${immutable-value.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib-jdk8</artifactId>
-                <version>1.4.30</version>
+                <version>${kotlin-stdlib.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1444,7 +1455,7 @@
                     <plugin>
                         <groupId>net.nicoulaj.maven.plugins</groupId>
                         <artifactId>checksum-maven-plugin</artifactId>
-                        <version>1.11</version>
+                        <version>${checksum-maven-plugin.version}</version>
                         <inherited>false</inherited>
                         <executions>
                             <execution>
@@ -1513,7 +1524,7 @@
                 <plugin>
                     <groupId>net.revelc.code.formatter</groupId>
                     <artifactId>formatter-maven-plugin</artifactId>
-                    <version>2.21.0</version>
+                    <version>${formatter-maven-plugin.version}</version>
                     <configuration>
                         <lineEnding>LF</lineEnding>
                     </configuration>
@@ -1545,7 +1556,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>${maven-release-plugin.version}</version>
                     <configuration>
                         <useReleaseProfile>true</useReleaseProfile>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
@@ -1575,7 +1586,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>9.2.1</version>
+                            <version>${checkstyle.version}</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -1660,7 +1671,7 @@
                     <dependency>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>extra-enforcer-rules</artifactId>
-                        <version>1.6.1</version>
+                        <version>${extra-enforcer-rules.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
