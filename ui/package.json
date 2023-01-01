@@ -78,7 +78,7 @@
     "lodash": "4.17.21",
     "material-icons": "^1.13.1",
     "ngx-color-picker": "^13.0.0",
-    "ngx-echarts": "^14.0.0",
+    "ngx-echarts": "^15.0.1",
     "ngx-quill": "^19.0.1",
     "ngx-showdown": "6.0.0",
     "plotly.js": "^2.17.0",
