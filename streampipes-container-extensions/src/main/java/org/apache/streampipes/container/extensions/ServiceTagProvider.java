@@ -57,6 +57,5 @@ public class ServiceTagProvider {
     tags.add(DefaultSpServiceTags.CONNECT_WORKER);
 
     return tags;
-
   }
 }

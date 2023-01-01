@@ -289,7 +289,7 @@ export class DataLakeUtils {
             auth: {
                 bearer: window.localStorage.getItem('auth-token'),
             },
-        }).should(response => {
+        }).then(response => {
             const actualResultString = response.body;
             cy.readFile(fileRoute).then(expectedResultString => {
                 DataSetUtils.csvEqual(

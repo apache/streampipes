@@ -15,10 +15,6 @@
 
 FROM eclipse-temurin:11-jre-focal
 
-ENV CONSUL_LOCATION consul
-
-EXPOSE 8090
-
 COPY target/streampipes-sinks-internal-jvm.jar  /streampipes-processing-element-container.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-processing-element-container.jar"]

@@ -19,7 +19,7 @@
 changelog:
   exclude:
     labels:
-      - dependencies
+      - no release note
   categories:
     - title: New Features 🚀
       labels:
@@ -37,3 +37,6 @@ changelog:
       labels:
         - documentation
         - website
+    - title: Dependency Updates 📦
+      labels:
+        - dependencies
