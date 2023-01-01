@@ -51,6 +51,7 @@
         <commons-logging.version>1.2</commons-logging.version>
         <consul-client.version>1.5.2</consul-client.version>
         <elasticsearch.version>6.8.17</elasticsearch.version>
+        <file-management.version>3.0.0</file-management.version>
         <flink.version>1.13.5</flink.version>
         <flinkspector.version>0.9.4</flinkspector.version>
         <fogsy-qudt.version>1.0</fogsy-qudt.version>
@@ -77,11 +78,11 @@
         <javax-annotation.version>1.3.2</javax-annotation.version>
         <javax-json.version>1.1.4</javax-json.version>
         <javax-persistence-api.version>1.0.2</javax-persistence-api.version>
-        <javax-servlet-api.version>4.0.1</javax-servlet-api.version>
         <javax-validation.version>2.0.1.Final</javax-validation.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <javassist.version>3.25.0-GA</javassist.version>
-        <jaxb.version>2.3.2</jaxb.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <jaxb-runtime.version>2.3.2</jaxb-runtime.version>
         <jboss-logging.version>3.4.0.Final</jboss-logging.version>
         <jboss-logging-annotations.version>2.2.1.Final</jboss-logging-annotations.version>
         <jboss-logging-processor.version>2.2.1.Final</jboss-logging-processor.version>
@@ -101,6 +102,8 @@
         <lz4.version>1.7.1</lz4.version>
         <logback-classic.version>1.2.9</logback-classic.version>
         <maven-invoker.version>2.2</maven-invoker.version>
+        <maven-plugin-annotations.version>3.6.2</maven-plugin-annotations.version>
+        <maven-plugin-testing-harness.version>3.3.0</maven-plugin-testing-harness.version>
         <mqtt-client.version>1.12</mqtt-client.version>
         <nats.version>2.16.1</nats.version>
         <objenesis.version>3.3</objenesis.version>
@@ -108,11 +111,13 @@
         <okhttp.version>3.12.2</okhttp.version>
         <osgi.version>6.0.0</osgi.version>
         <plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
+        <plexus-interactivity-api.version>1.1</plexus-interactivity-api.version>
         <plexus-utils.version>3.5.0</plexus-utils.version>
         <rdf4j.version>3.5.0</rdf4j.version>
         <reflections.version>0.9.10</reflections.version>
 		<rendersnake.version>1.9.0</rendersnake.version>
         <retrofit.version>2.5.0</retrofit.version>
+        <roaster.version>2.28.0.Final</roaster.version>
         <siddhi.version>5.1.26</siddhi.version>
         <simple-java-mail.version>7.5.2</simple-java-mail.version>
         <slf4j.version>1.7.30</slf4j.version>
@@ -455,11 +460,6 @@
                 <version>${javax-persistence-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
-                <version>${javax-servlet-api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>${javax-validation.version}</version>
@@ -472,7 +472,7 @@
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
-                <version>${jaxb.version}</version>
+                <version>${jaxb-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.minidev</groupId>
@@ -943,6 +943,12 @@
                 <artifactId>wiremock</artifactId>
                 <version>${wiremock.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -1008,6 +1014,46 @@
                 <artifactId>flink-runtime_2.11</artifactId>
                 <version>${flink.version}</version>
                 <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-aether-provider</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>${maven.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-tools</groupId>
+                <artifactId>maven-plugin-annotations</artifactId>
+                <version>${maven-plugin-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugin-testing</groupId>
+                <artifactId>maven-plugin-testing-harness</artifactId>
+                <version>${maven-plugin-testing-harness.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.shared</groupId>
+                <artifactId>file-management</artifactId>
+                <version>${file-management.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-interactivity-api</artifactId>
+                <version>${plexus-interactivity-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.forge.roaster</groupId>
+                <artifactId>roaster-api</artifactId>
+                <version>${roaster.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.forge.roaster</groupId>
+                <artifactId>roaster-jdt</artifactId>
+                <version>${roaster.version}</version>
             </dependency>
 
             <!-- Extensions dependencies -->
@@ -1283,6 +1329,12 @@
                 <groupId>org.apache.iotdb</groupId>
                 <artifactId>iotdb-jdbc</artifactId>
                 <version>${iotdb.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.opennlp</groupId>
@@ -1293,6 +1345,12 @@
                 <groupId>org.apache.pulsar</groupId>
                 <artifactId>pulsar-client</artifactId>
                 <version>${pulsar.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.rocketmq</groupId>
@@ -1359,7 +1417,7 @@
             <dependency>
                 <groupId>org.glassfish.jaxb</groupId>
                 <artifactId>jaxb-runtime</artifactId>
-                <version>${jaxb.version}</version>
+                <version>${jaxb-runtime.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.java.dev.jna</groupId>
