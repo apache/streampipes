@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.worker.utils;
+package org.apache.streampipes.container.connect;
 
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;

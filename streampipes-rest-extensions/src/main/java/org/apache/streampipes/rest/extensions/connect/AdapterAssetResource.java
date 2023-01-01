@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.streampipes.connect.container.worker.init.ConnectWorkerDescriptionProvider;
+import org.apache.streampipes.container.connect.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
 import org.apache.streampipes.container.util.AssetsUtil;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;

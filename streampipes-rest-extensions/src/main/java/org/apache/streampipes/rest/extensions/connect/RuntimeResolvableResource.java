@@ -21,7 +21,7 @@ package org.apache.streampipes.rest.extensions.connect;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.connect.api.Connector;
-import org.apache.streampipes.connect.container.worker.management.RuntimeResovable;
+import org.apache.streampipes.container.connect.RuntimeResovable;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.container.api.RuntimeResolvableRequestHandler;
 import org.apache.streampipes.container.api.SupportsRuntimeConfig;

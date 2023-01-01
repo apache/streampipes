@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.container.worker.init;
+package org.apache.streampipes.container.extensions.connect;
 
-import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
+import org.apache.streampipes.container.connect.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class ConnectWorkerRegistrationService {
 
     while (!connected) {
 
-      connected = MasterRestClient.register(
+      connected = ConnectRestClient.register(
           new ConnectWorkerDescriptionProvider().getContainerDescription(serviceDef.getServiceGroup()));
 
       if (connected) {

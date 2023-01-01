@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.worker.utils;
+package org.apache.streampipes.container.connect;
 
 import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
 import org.apache.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;

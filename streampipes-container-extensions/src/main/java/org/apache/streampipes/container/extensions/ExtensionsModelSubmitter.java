@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.container.extensions;
 
-import org.apache.streampipes.connect.container.worker.init.ConnectWorkerRegistrationService;
+import org.apache.streampipes.container.extensions.connect.ConnectWorkerRegistrationService;
 import org.apache.streampipes.container.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;

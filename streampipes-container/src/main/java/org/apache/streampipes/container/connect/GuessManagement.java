@@ -16,12 +16,11 @@
  *
  */
 
-package org.apache.streampipes.connect.container.worker.management;
+package org.apache.streampipes.container.connect;
 
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 

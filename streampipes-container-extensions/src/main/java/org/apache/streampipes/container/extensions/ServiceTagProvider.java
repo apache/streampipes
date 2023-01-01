@@ -18,7 +18,8 @@
 
 package org.apache.streampipes.container.extensions;
 
-import org.apache.streampipes.connect.container.worker.init.ConnectWorkerTagProvider;
+import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.declarer.Declarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.util.ServiceDefinitionUtil;
@@ -48,6 +49,14 @@ public class ServiceTagProvider {
   }
 
   private List<SpServiceTag> extractAdapterServiceTags() {
-    return new ConnectWorkerTagProvider().extractServiceTags();
+    var tags = new ArrayList<SpServiceTag>();
+    Collection<IAdapter> adapters = DeclarersSingleton.getInstance().getAllAdapters();
+    Collection<IProtocol> protocols = DeclarersSingleton.getInstance().getAllProtocols();
+    tags.addAll(ServiceDefinitionUtil.extractAppIdsFromAdapters(adapters));
+    tags.addAll(ServiceDefinitionUtil.extractAppIdsFromProtocols(protocols));
+    tags.add(DefaultSpServiceTags.CONNECT_WORKER);
+
+    return tags;
+
   }
 }

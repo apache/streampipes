@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.worker.management;
+package org.apache.streampipes.container.extensions.connect;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class MasterRestClient {
+public class ConnectRestClient {
 
-  private static final Logger LOG = LoggerFactory.getLogger(MasterRestClient.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ConnectRestClient.class);
 
   public static boolean register(List<AdapterDescription> allAvailableAdapters) {
 

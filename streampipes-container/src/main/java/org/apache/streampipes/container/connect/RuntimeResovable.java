@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.worker.management;
+package org.apache.streampipes.container.connect;
 
 import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.api.Connector;

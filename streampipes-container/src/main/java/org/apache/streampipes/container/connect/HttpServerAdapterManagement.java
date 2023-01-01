@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.connect.container.worker.management;
+package org.apache.streampipes.container.connect;
 
 import org.apache.streampipes.messaging.InternalEventProcessor;
 

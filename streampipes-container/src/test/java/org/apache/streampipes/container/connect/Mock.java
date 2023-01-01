@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.connect.container.worker.management;
+package org.apache.streampipes.container.connect;
 
 public class Mock {
   public static final int PORT = 8042;

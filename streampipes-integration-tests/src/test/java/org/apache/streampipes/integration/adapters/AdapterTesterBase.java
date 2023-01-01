@@ -20,7 +20,7 @@ package org.apache.streampipes.integration.adapters;
 import org.apache.streampipes.connect.adapter.Adapter;
 import org.apache.streampipes.connect.adapter.preprocessing.elements.DebugAdapterSink;
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.container.worker.utils.AdapterUtils;
+import org.apache.streampipes.container.connect.AdapterUtils;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
