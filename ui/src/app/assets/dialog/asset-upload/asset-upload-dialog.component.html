@@ -16,52 +16,96 @@
 ~
 -->
 
-
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
         <div fxFlex="100" fxLayout="column">
-            <div fxFlex style="margin:5px;width:100%" fxLayout="column">
-                <mat-form-field style="width: 95%" (click)="fileInput.click();" color="accent">
+            <div fxFlex style="margin: 5px; width: 100%" fxLayout="column">
+                <mat-form-field
+                    style="width: 95%"
+                    (click)="fileInput.click()"
+                    color="accent"
+                >
                     <mat-label>Upload JSON file</mat-label>
-                    <input matInput placeholder="File" disabled (value)="fileName">
-                    <input #fileInput type="file" style="display:none;"
-                           (change)="handleFileInput($event.target.files)"
-                           data-cy="sp-file-management-file-input">
+                    <input
+                        matInput
+                        placeholder="File"
+                        disabled
+                        (value)="(fileName)"
+                    />
+                    <input
+                        #fileInput
+                        type="file"
+                        style="display: none"
+                        (change)="handleFileInput($event.target.files)"
+                        data-cy="sp-file-management-file-input"
+                    />
                     <div>
-                        {{fileName}}
-                        <mat-progress-bar mode="determinate" value="{{uploadStatus}}" *ngIf="uploadStatus > 0" color="accent"></mat-progress-bar>
+                        {{ fileName }}
+                        <mat-progress-bar
+                            mode="determinate"
+                            value="{{ uploadStatus }}"
+                            *ngIf="uploadStatus > 0"
+                            color="accent"
+                        ></mat-progress-bar>
                     </div>
-                    <button color="accent" matSuffix
-                            mat-button style="min-width: 0px">
-                        <mat-icon *ngIf="uploadStatus < 99">insert_drive_file</mat-icon>
-                        <mat-icon *ngIf="uploadStatus == 100" class="green-icon">check_circle</mat-icon>
+                    <button
+                        color="accent"
+                        matSuffix
+                        mat-button
+                        style="min-width: 0px"
+                    >
+                        <mat-icon *ngIf="uploadStatus < 99"
+                            >insert_drive_file</mat-icon
+                        >
+                        <mat-icon
+                            *ngIf="uploadStatus === 100"
+                            class="green-icon"
+                            >check_circle</mat-icon
+                        >
                     </button>
                     <mat-error *ngIf="!hasInput">
-                        {{errorMessage}}
+                        {{ errorMessage }}
                     </mat-error>
                 </mat-form-field>
             </div>
             <div fxFlex="100">
-                <mat-form-field style="width: 100%;height: 100%;" color="accent">
+                <mat-form-field
+                    style="width: 100%; height: 100%"
+                    color="accent"
+                >
                     <mat-label>Insert model</mat-label>
-                    <textarea matInput [(ngModel)]="jsonModel" style="height: 100%;"
-                              cdkTextareaAutosize
-                              cdkAutosizeMinRows="30"
-                              cdkAutosizeMaxRows="30"></textarea>
+                    <textarea
+                        matInput
+                        [(ngModel)]="jsonModel"
+                        style="height: 100%"
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="30"
+                        cdkAutosizeMaxRows="30"
+                    ></textarea>
                 </mat-form-field>
             </div>
         </div>
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions">
-        <button mat-button
-                mat-raised-button
-                color="accent"
-                [disabled]="jsonModel === undefined"
-                (click)="store()" data-cy="sp-file-management-store-file" style="margin-right:10px;">
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            [disabled]="jsonModel === undefined"
+            (click)="store()"
+            data-cy="sp-file-management-store-file"
+            style="margin-right: 10px"
+        >
             Create asset
         </button>
-        <button mat-button mat-raised-button class="mat-basic" (click)="cancel()" style="margin-right:10px;">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="cancel()"
+            style="margin-right: 10px"
+        >
             Cancel
         </button>
     </div>

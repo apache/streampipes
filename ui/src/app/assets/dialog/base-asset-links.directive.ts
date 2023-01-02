@@ -18,81 +18,105 @@
 
 import { Directive } from '@angular/core';
 import {
-  AdapterDescriptionUnion, AdapterService,
-  Dashboard, DashboardService,
-  DataLakeMeasure, DatalakeRestService, DataViewDataExplorerService, FileMetadata, FilesService, GenericStorageService,
-  Pipeline, PipelineElementService, PipelineService,
-  SpDataStream
+    AdapterDescriptionUnion,
+    AdapterService,
+    Dashboard,
+    DashboardService,
+    DataLakeMeasure,
+    DatalakeRestService,
+    DataViewDataExplorerService,
+    FileMetadata,
+    FilesService,
+    GenericStorageService,
+    Pipeline,
+    PipelineElementService,
+    PipelineService,
+    SpDataStream,
 } from '@streampipes/platform-services';
 import { zip } from 'rxjs';
 
 @Directive()
 export abstract class BaseAssetLinksDirective {
+    // Resources
+    pipelines: Pipeline[];
+    dataViews: Dashboard[];
+    dashboards: Dashboard[];
+    dataLakeMeasures: DataLakeMeasure[];
+    dataSources: SpDataStream[];
+    adapters: AdapterDescriptionUnion[];
+    files: FileMetadata[];
 
-  // Resources
-  pipelines: Pipeline[];
-  dataViews: Dashboard[];
-  dashboards: Dashboard[];
-  dataLakeMeasures: DataLakeMeasure[];
-  dataSources: SpDataStream[];
-  adapters: AdapterDescriptionUnion[];
-  files: FileMetadata[];
+    allResources: any[] = [];
 
-  allResources: any[] = [];
+    constructor(
+        protected genericStorageService: GenericStorageService,
+        protected pipelineService: PipelineService,
+        protected dataViewService: DataViewDataExplorerService,
+        protected dashboardService: DashboardService,
+        protected dataLakeService: DatalakeRestService,
+        protected pipelineElementService: PipelineElementService,
+        protected adapterService: AdapterService,
+        protected filesService: FilesService,
+    ) {}
 
-  constructor(protected genericStorageService: GenericStorageService,
-              protected pipelineService: PipelineService,
-              protected dataViewService: DataViewDataExplorerService,
-              protected dashboardService: DashboardService,
-              protected dataLakeService: DatalakeRestService,
-              protected pipelineElementService: PipelineElementService,
-              protected adapterService: AdapterService,
-              protected filesService: FilesService) {
+    onInit() {
+        this.getAllResources();
+    }
 
-  }
+    getAllResources() {
+        zip(
+            this.pipelineService.getOwnPipelines(),
+            this.dataViewService.getDataViews(),
+            this.dashboardService.getDashboards(),
+            this.pipelineElementService.getDataStreams(),
+            this.dataLakeService.getAllMeasurementSeries(),
+            this.filesService.getFileMetadata(),
+            this.adapterService.getAdapters(),
+        ).subscribe(
+            ([
+                pipelines,
+                dataViews,
+                dashboards,
+                streams,
+                measurements,
+                files,
+                adapters,
+            ]) => {
+                this.pipelines = pipelines.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                this.dataViews = dataViews.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                this.dashboards = dashboards.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                this.dataSources = streams.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                this.dataLakeMeasures = measurements.sort((a, b) =>
+                    a.measureName.localeCompare(b.measureName),
+                );
+                this.files = files.sort((a, b) =>
+                    a.originalFilename.localeCompare(b.originalFilename),
+                );
+                this.adapters = adapters.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
 
-  onInit() {
-    this.getAllResources();
-  }
+                this.allResources = [
+                    ...this.pipelines,
+                    ...this.dataViews,
+                    ...this.dashboards,
+                    ...this.dataSources,
+                    ...this.dataLakeMeasures,
+                    ...this.files,
+                    ...this.adapters,
+                ];
+                this.afterResourcesLoaded();
+            },
+        );
+    }
 
-  getAllResources() {
-    zip(
-      this.pipelineService.getOwnPipelines(),
-        this.dataViewService.getDataViews(),
-        this.dashboardService.getDashboards(),
-        this.pipelineElementService.getDataStreams(),
-        this.dataLakeService.getAllMeasurementSeries(),
-        this.filesService.getFileMetadata(),
-        this.adapterService.getAdapters()).subscribe((
-      [pipelines,
-        dataViews,
-        dashboards,
-        streams,
-        measurements,
-        files,
-        adapters
-      ]) => {
-      this.pipelines = pipelines.sort((a, b) => a.name.localeCompare(b.name));
-      this.dataViews = dataViews.sort((a, b) => a.name.localeCompare(b.name));
-      this.dashboards = dashboards.sort((a, b) => a.name.localeCompare(b.name));
-      this.dataSources = streams.sort((a, b) => a.name.localeCompare(b.name));
-      this.dataLakeMeasures = measurements.sort((a, b) => a.measureName.localeCompare(b.measureName));
-      this.files = files.sort((a, b) => a.originalFilename.localeCompare(b.originalFilename));
-      this.adapters = adapters.sort((a, b) => a.name.localeCompare(b.name));
-
-      this.allResources = [
-        ...this.pipelines,
-        ...this.dataViews,
-        ...this.dashboards,
-        ...this.dataSources,
-        ...this.dataLakeMeasures,
-        ...this.files,
-        ...this.adapters
-      ];
-      this.afterResourcesLoaded();
-    });
-  }
-
-  abstract afterResourcesLoaded(): void;
+    abstract afterResourcesLoaded(): void;
 }
-

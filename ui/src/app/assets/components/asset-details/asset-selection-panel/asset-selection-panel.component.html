@@ -16,57 +16,113 @@
   ~
   -->
 
-<div fxFlex="100" fxLayout="column" class="designer-panel-content" *ngIf="assetModel">
+<div
+    fxFlex="100"
+    fxLayout="column"
+    class="designer-panel-content"
+    *ngIf="assetModel"
+>
     <div fxLayout="row" class="sp-tab-bg designer-panel-header">
-        <div fxLayoutAlign="start center" class="designer-panel-title"><h4>Asset Browser</h4></div>
-        <div fxFlex fxLayoutAlign="end end">
-
+        <div fxLayoutAlign="start center" class="designer-panel-title">
+            <h4>Asset Browser</h4>
         </div>
+        <div fxFlex fxLayoutAlign="end end"></div>
     </div>
     <div fxFlex="100" fxLayout="column">
         <div fxFlex fxLayout="column" class="designer-panel-config">
-            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="sp-tree" #tree>
+            <mat-tree
+                [dataSource]="dataSource"
+                [treeControl]="treeControl"
+                class="sp-tree"
+                #tree
+            >
                 <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-                    <div [ngClass]="node.assetId === selectedAsset.assetId ? 'asset-node selected-node' : 'asset-node'"
-                         fxLayout="row" fxFlex="100" (click)="selectNode(node)" >
-                        <span fxLayoutAlign="end center">{{node.assetName}}</span>
+                    <div
+                        [ngClass]="
+                            node.assetId === selectedAsset.assetId
+                                ? 'asset-node selected-node'
+                                : 'asset-node'
+                        "
+                        fxLayout="row"
+                        fxFlex="100"
+                        (click)="selectNode(node)"
+                    >
+                        <span fxLayoutAlign="end center">{{
+                            node.assetName
+                        }}</span>
                         <div fxLayoutAlign="end center" fxFlex *ngIf="editMode">
-                            <button mat-button
-                                    mat-icon-button
-                                    (click)="addAsset(node)"
-                                    color="accent">
-                                <i class="material-icons">add</i></button>
-                            <button mat-button
-                                    mat-icon-button
-                                    (click)="deleteAsset(node)"
-                                    color="accent">
-                                <i class="material-icons">delete</i></button>
+                            <button
+                                mat-button
+                                mat-icon-button
+                                (click)="addAsset(node)"
+                                color="accent"
+                            >
+                                <i class="material-icons">add</i>
+                            </button>
+                            <button
+                                mat-button
+                                mat-icon-button
+                                (click)="deleteAsset(node)"
+                                color="accent"
+                            >
+                                <i class="material-icons">delete</i>
+                            </button>
                         </div>
                     </div>
                 </mat-tree-node>
-                <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+                <mat-nested-tree-node
+                    *matTreeNodeDef="let node; when: hasChild"
+                >
                     <div class="mat-tree-node">
-                        <button mat-icon-button matTreeNodeToggle
-                                [attr.data-cy]="'button-' +node.nodeName"
-                                [attr.aria-label]="'Toggle ' + node.nodeName">
+                        <button
+                            mat-icon-button
+                            matTreeNodeToggle
+                            [attr.data-cy]="'button-' + node.nodeName"
+                            [attr.aria-label]="'Toggle ' + node.nodeName"
+                        >
                             <mat-icon class="mat-icon-rtl-mirror">
-                                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                {{
+                                    treeControl.isExpanded(node)
+                                        ? 'expand_more'
+                                        : 'chevron_right'
+                                }}
                             </mat-icon>
                         </button>
-                        <div [ngClass]="node.assetId === selectedAsset.assetId ? 'asset-node selected-node' : 'asset-node'"
-                             fxLayout="row" fxFlex="100" (click)="selectNode(node)" >
-                            <span fxLayoutAlign="start center">{{node.assetName}}</span>
-                            <div fxLayoutAlign="end center" fxFlex *ngIf="editMode">
-                                <button mat-button
-                                        mat-icon-button
-                                        (click)="addAsset(node)"
-                                        color="accent">
-                                    <i class="material-icons">add</i></button>
+                        <div
+                            [ngClass]="
+                                node.assetId === selectedAsset.assetId
+                                    ? 'asset-node selected-node'
+                                    : 'asset-node'
+                            "
+                            fxLayout="row"
+                            fxFlex="100"
+                            (click)="selectNode(node)"
+                        >
+                            <span fxLayoutAlign="start center">{{
+                                node.assetName
+                            }}</span>
+                            <div
+                                fxLayoutAlign="end center"
+                                fxFlex
+                                *ngIf="editMode"
+                            >
+                                <button
+                                    mat-button
+                                    mat-icon-button
+                                    (click)="addAsset(node)"
+                                    color="accent"
+                                >
+                                    <i class="material-icons">add</i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div [class.sp-tree-invisible]="!treeControl.isExpanded(node)"
-                         role="group">
+                    <div
+                        [class.sp-tree-invisible]="
+                            !treeControl.isExpanded(node)
+                        "
+                        role="group"
+                    >
                         <ng-container matTreeNodeOutlet></ng-container>
                     </div>
                 </mat-nested-tree-node>

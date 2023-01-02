@@ -18,17 +18,35 @@
 
 <sp-basic-view showBackLink="true" [backLinkTarget]="['apps']">
     <ng-container nav>
-        <mat-tab-group [selectedIndex]="selectedIndex" (selectedIndexChange)="selectedIndexChange($event)" color="accent">
-            <mat-tab label="Asset Dashboards">
-            </mat-tab>
-            <mat-tab id="all-adapters" label="New Asset Dashboard">
-            </mat-tab>
+        <mat-tab-group
+            [selectedIndex]="selectedIndex"
+            (selectedIndexChange)="selectedIndexChange($event)"
+            color="accent"
+        >
+            <mat-tab label="Asset Dashboards"> </mat-tab>
+            <mat-tab id="all-adapters" label="New Asset Dashboard"> </mat-tab>
         </mat-tab-group>
     </ng-container>
 
     <div fxLayout="column" fxFlex="100">
-        <sp-asset-dashboard-overview *ngIf="selectedIndex == 0 && !dashboardSelected" fxFlex="100" (selectedDashboard)="openDashboard($event)" (createDashboard)="selectedIndex = 1"></sp-asset-dashboard-overview>
-        <sp-view-asset fxFlex="100" *ngIf="selectedIndex == 0 && dashboardSelected" [dashboardConfig]="selectedDashboard" (dashboardClosed)="closeDashboard($event)" (editDashboardEmitter)="editDashboard($event)"></sp-view-asset>
-        <sp-create-asset *ngIf="selectedIndex == 1" fxFlex="100" (dashboardClosed)="closeDashboard($event)" [dashboardConfig]="selectedDashboard"></sp-create-asset>
+        <sp-asset-dashboard-overview
+            *ngIf="selectedIndex === 0 && !dashboardSelected"
+            fxFlex="100"
+            (selectedDashboard)="openDashboard($event)"
+            (createDashboard)="selectedIndex = 1"
+        ></sp-asset-dashboard-overview>
+        <sp-view-asset
+            fxFlex="100"
+            *ngIf="selectedIndex === 0 && dashboardSelected"
+            [dashboardConfig]="selectedDashboard"
+            (dashboardClosed)="closeDashboard($event)"
+            (editDashboardEmitter)="editDashboard($event)"
+        ></sp-view-asset>
+        <sp-create-asset
+            *ngIf="selectedIndex === 1"
+            fxFlex="100"
+            (dashboardClosed)="closeDashboard($event)"
+            [dashboardConfig]="selectedDashboard"
+        ></sp-create-asset>
     </div>
 </sp-basic-view>

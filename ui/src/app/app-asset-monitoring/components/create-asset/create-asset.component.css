@@ -21,10 +21,9 @@
 }
 
 .asset-configuration-board-canvas {
-    width:1400px;
-    height:900px;
+    width: 1400px;
+    height: 900px;
     border: 2px solid rgb(27, 20, 100);
     margin: 20px auto;
     background: white;
-
 }

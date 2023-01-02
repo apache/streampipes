@@ -18,11 +18,6 @@ dist
 
 # Remove these in the future to lint additional modules
 # Please also see .prettierignore
-src/app/add
-src/app/apidocs
-src/app/app-asset-monitoring
-src/app/app-overview
-src/app/assets
 src/app/configuration
 src/app/connect
 src/app/core
