@@ -30,17 +30,10 @@ import { ApidocsComponent } from './apidocs.component';
         CoreUiModule,
         CustomMaterialModule,
     ],
-    declarations: [
-        ApidocsComponent
-    ],
+    declarations: [ApidocsComponent],
     providers: [],
-    exports: [
-        ApidocsComponent
-    ]
+    exports: [ApidocsComponent],
 })
 export class ApidocsModule {
-
-  constructor() {
-  }
-
+    constructor() {}
 }
