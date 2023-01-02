@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.container.master.management.UnitMasterManagement;
+import org.apache.streampipes.connect.management.management.UnitMasterManagement;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
 
 import org.slf4j.Logger;
