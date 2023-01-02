@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.container.connect;
 
-import org.apache.streampipes.connect.RunningAdapterInstances;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.container.init.RunningAdapterInstances;
 import org.apache.streampipes.container.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;

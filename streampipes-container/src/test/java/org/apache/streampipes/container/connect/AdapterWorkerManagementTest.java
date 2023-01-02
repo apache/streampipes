@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.container.connect;
 
-import org.apache.streampipes.connect.RunningAdapterInstances;
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.container.connect.adapter.Adapter;
+import org.apache.streampipes.container.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.container.connect.adapter.model.specific.SpecificDataSetAdapter;
+import org.apache.streampipes.container.init.RunningAdapterInstances;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 

@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.connect.container.master.management;
 
-import org.apache.streampipes.connect.adapter.AdapterRegistry;
-import org.apache.streampipes.connect.adapter.format.json.arraykey.JsonFormat;
 import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.container.connect.adapter.AdapterRegistry;
+import org.apache.streampipes.container.connect.adapter.format.json.arraykey.JsonFormat;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 
 import org.junit.Test;

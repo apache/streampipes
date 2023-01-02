@@ -25,6 +25,7 @@ import org.apache.streampipes.connect.iiot.adapters.opcua.OpcNode;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaNodeBrowser;
 import org.apache.streampipes.connect.iiot.adapters.opcua.SpOpcUaClient;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
+import org.apache.streampipes.container.connect.adapter.Adapter;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
@@ -72,7 +73,7 @@ public class OpcUaUtil {
   }
 
   /***
-   * OPC UA specific implementation of {@link org.apache.streampipes.connect.adapter.Adapter}
+   * OPC UA specific implementation of {@link Adapter}
    * @param adapterStreamDescription
    * @return guess schema
    * @throws AdapterException

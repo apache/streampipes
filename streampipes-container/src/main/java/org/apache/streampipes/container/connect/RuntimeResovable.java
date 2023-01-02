@@ -18,12 +18,12 @@
 
 package org.apache.streampipes.container.connect;
 
-import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.api.Connector;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.container.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.container.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 
 import java.util.Map;

@@ -19,9 +19,9 @@
 package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.container.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.storage.api.IAdapterStorage;

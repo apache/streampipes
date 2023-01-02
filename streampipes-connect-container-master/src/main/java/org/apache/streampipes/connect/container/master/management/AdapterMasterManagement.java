@@ -20,8 +20,8 @@ package org.apache.streampipes.connect.container.master.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SepaParseException;
-import org.apache.streampipes.connect.adapter.GroundingService;
 import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.connect.container.master.util.GroundingUtils;
 import org.apache.streampipes.connect.container.master.util.WorkerPaths;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsLogProvider;
 import org.apache.streampipes.manager.verification.DataStreamVerifier;
@@ -82,7 +82,7 @@ public class AdapterMasterManagement {
     ad.setCorrespondingDataStreamElementId(dataStreamElementId);
 
     // Add EventGrounding to AdapterDescription
-    EventGrounding eventGrounding = GroundingService.createEventGrounding();
+    EventGrounding eventGrounding = GroundingUtils.createEventGrounding();
     ad.setEventGrounding(eventGrounding);
 
     String elementId = this.adapterResourceManager.encryptAndCreate(ad);

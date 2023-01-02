@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.container.connect;
 
-import org.apache.streampipes.connect.adapter.model.generic.GenericAdapter;
-import org.apache.streampipes.connect.adapter.model.generic.GenericDataSetAdapter;
-import org.apache.streampipes.connect.adapter.model.generic.GenericDataStreamAdapter;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.container.connect.adapter.model.generic.GenericAdapter;
+import org.apache.streampipes.container.connect.adapter.model.generic.GenericDataSetAdapter;
+import org.apache.streampipes.container.connect.adapter.model.generic.GenericDataStreamAdapter;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;
