@@ -20,7 +20,7 @@ package org.apache.streampipes.connect.adapters.netio;
 
 import org.apache.streampipes.connect.adapters.netio.model.NetioAllPowerOutputs;
 import org.apache.streampipes.connect.adapters.netio.model.NetioPowerOutput;
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;

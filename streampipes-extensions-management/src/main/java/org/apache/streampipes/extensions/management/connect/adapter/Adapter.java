@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter;
 
-import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToJmsAdapterSink;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.SendToKafkaAdapterSink;

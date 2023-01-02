@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter;
 
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.IParser;
+import org.apache.streampipes.extensions.api.connect.IFormat;
+import org.apache.streampipes.extensions.api.connect.IParser;
 import org.apache.streampipes.extensions.management.connect.adapter.format.csv.CsvFormat;
 import org.apache.streampipes.extensions.management.connect.adapter.format.csv.CsvParser;
 import org.apache.streampipes.extensions.management.connect.adapter.format.geojson.GeoJsonFormat;

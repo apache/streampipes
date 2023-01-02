@@ -20,10 +20,10 @@ package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.api.Connector;
-import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.api.connect.Connector;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.api.RuntimeResolvableRequestHandler;
-import org.apache.streampipes.extensions.management.api.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.connect.RuntimeResovable;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;

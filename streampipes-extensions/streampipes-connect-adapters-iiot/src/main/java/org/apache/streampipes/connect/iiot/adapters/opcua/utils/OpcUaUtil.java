@@ -19,13 +19,13 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua.utils;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcNode;
 import org.apache.streampipes.connect.iiot.adapters.opcua.OpcUaNodeBrowser;
 import org.apache.streampipes.connect.iiot.adapters.opcua.SpOpcUaClient;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
-import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.FieldStatusInfo;

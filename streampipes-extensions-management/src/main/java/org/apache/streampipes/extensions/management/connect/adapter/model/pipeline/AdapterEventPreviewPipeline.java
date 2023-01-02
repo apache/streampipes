@@ -19,8 +19,8 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.pipeline;
 
-import org.apache.streampipes.connect.api.IAdapterPipeline;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterPipelineGenerator;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessTypeInfo;

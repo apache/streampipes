@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.transform.stream;
 
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 
 import java.util.HashMap;
 import java.util.Map;

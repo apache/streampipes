@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
-import org.apache.streampipes.connect.api.IAdapterPipeline;
-import org.apache.streampipes.connect.api.IFormat;
+import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
+import org.apache.streampipes.extensions.api.connect.IFormat;
 
 import java.util.Map;
 

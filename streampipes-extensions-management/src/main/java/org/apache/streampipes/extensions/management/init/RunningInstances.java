@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.init;
 
-import org.apache.streampipes.extensions.management.declarer.InvocableDeclarer;
+import org.apache.streampipes.extensions.api.declarer.InvocableDeclarer;
 import org.apache.streampipes.extensions.management.util.ElementInfo;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 

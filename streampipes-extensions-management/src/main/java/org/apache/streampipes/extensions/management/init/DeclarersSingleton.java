@@ -18,17 +18,17 @@
 
 package org.apache.streampipes.extensions.management.init;
 
-import org.apache.streampipes.connect.api.Connector;
-import org.apache.streampipes.connect.api.IAdapter;
-import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.dataformat.SpDataFormatFactory;
 import org.apache.streampipes.dataformat.SpDataFormatManager;
-import org.apache.streampipes.extensions.management.declarer.DataStreamDeclarer;
-import org.apache.streampipes.extensions.management.declarer.Declarer;
-import org.apache.streampipes.extensions.management.declarer.IStreamPipesFunctionDeclarer;
-import org.apache.streampipes.extensions.management.declarer.PipelineTemplateDeclarer;
-import org.apache.streampipes.extensions.management.declarer.SemanticEventConsumerDeclarer;
-import org.apache.streampipes.extensions.management.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.api.connect.Connector;
+import org.apache.streampipes.extensions.api.connect.IAdapter;
+import org.apache.streampipes.extensions.api.connect.IProtocol;
+import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
+import org.apache.streampipes.extensions.api.declarer.Declarer;
+import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.declarer.PipelineTemplateDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.messaging.SpProtocolDefinitionFactory;
 import org.apache.streampipes.messaging.SpProtocolManager;

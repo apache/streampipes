@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.iiot.adapters.influxdb;
 
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataSetAdapter;
 import org.apache.streampipes.extensions.management.connect.adapter.sdk.ParameterExtractor;

@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.management.management;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.connect.unit.UnitDescription;
 import org.apache.streampipes.units.UnitProvider;
 

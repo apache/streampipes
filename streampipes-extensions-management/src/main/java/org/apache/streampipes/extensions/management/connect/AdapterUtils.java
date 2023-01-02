@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.connect.api.IAdapter;
-import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.extensions.api.connect.IAdapter;
+import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.GenericAdapter;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.GenericDataSetAdapter;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.GenericDataStreamAdapter;

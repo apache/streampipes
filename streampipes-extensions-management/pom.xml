@@ -33,7 +33,7 @@
         <!-- StreamPipes dependencies -->
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-connect-api</artifactId>
+            <artifactId>streampipes-extensions-api</artifactId>
             <version>0.91.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.connect.api.Connector;
-import org.apache.streampipes.connect.api.IAdapter;
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.IProtocol;
-import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.api.connect.Connector;
+import org.apache.streampipes.extensions.api.connect.IAdapter;
+import org.apache.streampipes.extensions.api.connect.IFormat;
+import org.apache.streampipes.extensions.api.connect.IProtocol;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 

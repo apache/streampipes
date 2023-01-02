@@ -20,7 +20,7 @@ package org.apache.streampipes.wrapper.standalone.function;
 
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.management.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.api.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.SpDataStream;

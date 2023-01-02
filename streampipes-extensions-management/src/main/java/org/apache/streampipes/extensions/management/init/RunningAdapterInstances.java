@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.init;
 
-import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.extensions.api.connect.IAdapter;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import java.util.Collection;

@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.image;
 
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Parser;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.model.schema.EventSchema;

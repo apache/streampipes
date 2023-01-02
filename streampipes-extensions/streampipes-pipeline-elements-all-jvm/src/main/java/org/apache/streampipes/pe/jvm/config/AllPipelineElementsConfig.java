@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.pe.jvm.config;
 
-import org.apache.streampipes.extensions.management.model.PeConfig;
+import org.apache.streampipes.extensions.api.PeConfig;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
 import org.apache.streampipes.svcdiscovery.api.SpConfig;
 

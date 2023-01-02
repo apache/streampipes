@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;

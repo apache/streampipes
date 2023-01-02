@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.generic;
 
-import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterDescription;
 import org.apache.streampipes.model.connect.adapter.GenericAdapterSetDescription;

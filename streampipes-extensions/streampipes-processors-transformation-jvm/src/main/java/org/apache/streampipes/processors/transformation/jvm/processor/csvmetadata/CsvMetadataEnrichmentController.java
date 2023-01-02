@@ -20,8 +20,8 @@ package org.apache.streampipes.processors.transformation.jvm.processor.csvmetada
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
-import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOptions;
-import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;

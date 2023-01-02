@@ -19,8 +19,8 @@
 package org.apache.streampipes.extensions.management.connect.adapter.model.generic;
 
 
-import org.apache.streampipes.connect.api.IParser;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.GetNEvents;
 
 import java.io.InputStream;

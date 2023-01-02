@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.object;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.io.IOUtils;

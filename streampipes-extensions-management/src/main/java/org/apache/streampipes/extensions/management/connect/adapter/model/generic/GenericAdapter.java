@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.generic;
 
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.IParser;
-import org.apache.streampipes.connect.api.IProtocol;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.IFormat;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.IProtocol;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;

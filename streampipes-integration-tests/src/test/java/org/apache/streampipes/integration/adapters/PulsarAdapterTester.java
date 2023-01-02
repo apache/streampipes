@@ -17,8 +17,8 @@
  */
 package org.apache.streampipes.integration.adapters;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.object.JsonObjectFormat;
 import org.apache.streampipes.integration.containers.PulsarContainer;
 import org.apache.streampipes.integration.containers.PulsarDevContainer;

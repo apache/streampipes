@@ -18,8 +18,8 @@
 package org.apache.streampipes.connect.adapters.wikipedia;
 
 import org.apache.streampipes.connect.adapters.wikipedia.model.WikipediaModel;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;

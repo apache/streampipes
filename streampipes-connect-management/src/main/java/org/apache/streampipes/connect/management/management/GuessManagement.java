@@ -20,9 +20,9 @@ package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.connect.api.exception.WorkerAdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterEventPreviewPipeline;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;

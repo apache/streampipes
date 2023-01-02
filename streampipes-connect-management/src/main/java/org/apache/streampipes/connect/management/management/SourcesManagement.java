@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.management.management;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;

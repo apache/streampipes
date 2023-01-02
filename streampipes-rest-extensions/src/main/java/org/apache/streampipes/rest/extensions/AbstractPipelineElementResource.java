@@ -19,8 +19,8 @@
 package org.apache.streampipes.rest.extensions;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
+import org.apache.streampipes.extensions.api.declarer.Declarer;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
-import org.apache.streampipes.extensions.management.declarer.Declarer;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;

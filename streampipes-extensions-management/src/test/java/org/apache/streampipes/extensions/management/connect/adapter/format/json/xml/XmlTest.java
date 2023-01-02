@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.json.xml;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.format.xml.XmlParser;
 import org.apache.streampipes.model.schema.EventSchema;
 

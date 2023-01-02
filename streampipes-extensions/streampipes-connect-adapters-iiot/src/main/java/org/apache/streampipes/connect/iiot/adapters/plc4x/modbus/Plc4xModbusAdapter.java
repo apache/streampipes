@@ -19,9 +19,9 @@
 package org.apache.streampipes.connect.iiot.adapters.plc4x.modbus;
 
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;

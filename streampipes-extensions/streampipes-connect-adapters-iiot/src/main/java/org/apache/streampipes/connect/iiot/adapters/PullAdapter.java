@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.connect.iiot.adapters;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;

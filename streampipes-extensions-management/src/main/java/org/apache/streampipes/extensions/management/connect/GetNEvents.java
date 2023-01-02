@@ -19,7 +19,7 @@
 package org.apache.streampipes.extensions.management.connect;
 
 
-import org.apache.streampipes.connect.api.EmitBinaryEvent;
+import org.apache.streampipes.extensions.api.connect.EmitBinaryEvent;
 
 import java.util.ArrayList;
 import java.util.List;

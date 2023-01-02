@@ -1369,7 +1369,7 @@ IoT data streams.
 			<module>streampipes-client</module>
 			<module>streampipes-commons</module>
 			<module>streampipes-config</module>
-			<module>streampipes-connect-api</module>
+			<module>streampipes-extensions-api</module>
 			<module>streampipes-connect-management</module>
 			<module>streampipes-extensions-management</module>
 			<module>streampipes-service-extensions</module>

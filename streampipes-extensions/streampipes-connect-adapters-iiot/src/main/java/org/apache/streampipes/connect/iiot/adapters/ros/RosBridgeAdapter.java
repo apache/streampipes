@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.iiot.adapters.ros;
 
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.format.json.object.JsonObjectParser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;

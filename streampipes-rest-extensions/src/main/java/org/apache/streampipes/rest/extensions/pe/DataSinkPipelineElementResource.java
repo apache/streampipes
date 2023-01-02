@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.extensions.pe;
 
 import org.apache.streampipes.commons.constants.InstanceIdExtractor;
-import org.apache.streampipes.extensions.management.declarer.SemanticEventConsumerDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.util.GroundingDebugUtils;
 import org.apache.streampipes.model.graph.DataSinkInvocation;

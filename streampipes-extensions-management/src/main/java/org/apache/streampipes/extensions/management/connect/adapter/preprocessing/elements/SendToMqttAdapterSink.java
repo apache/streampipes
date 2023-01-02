@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements;
 
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.messaging.mqtt.MqttPublisher;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;

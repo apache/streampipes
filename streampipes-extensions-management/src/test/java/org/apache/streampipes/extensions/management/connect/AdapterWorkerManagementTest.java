@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.AdapterRegistry;
 import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataSetAdapter;

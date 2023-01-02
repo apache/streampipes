@@ -19,13 +19,13 @@
 package org.apache.streampipes.connect.iiot.adapters.opcua;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.adapters.PullAdapter;
 import org.apache.streampipes.connect.iiot.adapters.opcua.configuration.SpOpcUaConfigBuilder;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil;
 import org.apache.streampipes.connect.iiot.adapters.opcua.utils.OpcUaUtil.OpcUaLabels;
-import org.apache.streampipes.extensions.management.api.SupportsRuntimeConfig;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;

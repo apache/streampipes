@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.generic;
 
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.IParser;
-import org.apache.streampipes.connect.api.IProtocol;
+import org.apache.streampipes.extensions.api.connect.IFormat;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.IProtocol;
 import org.apache.streampipes.model.schema.EventSchema;
 
 public abstract class Protocol implements IProtocol {

@@ -20,7 +20,7 @@ package org.apache.streampipes.extensions.management.connect.adapter;
 
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpProtocol;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddTimestampPipelineElement;
 import org.apache.streampipes.extensions.management.connect.adapter.preprocessing.elements.AddValuePipelineElement;

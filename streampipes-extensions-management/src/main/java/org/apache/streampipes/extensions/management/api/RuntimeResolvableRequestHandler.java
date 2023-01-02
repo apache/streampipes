@@ -19,6 +19,8 @@
 package org.apache.streampipes.extensions.management.api;
 
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
+import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
+import org.apache.streampipes.extensions.api.runtime.SupportsRuntimeConfig;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
 import org.apache.streampipes.model.staticproperty.Option;

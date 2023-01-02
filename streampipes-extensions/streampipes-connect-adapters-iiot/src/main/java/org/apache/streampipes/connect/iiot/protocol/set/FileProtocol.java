@@ -19,11 +19,11 @@
 package org.apache.streampipes.connect.iiot.protocol.set;
 
 
-import org.apache.streampipes.connect.api.IAdapterPipeline;
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.IParser;
-import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
+import org.apache.streampipes.extensions.api.connect.IFormat;
+import org.apache.streampipes.extensions.api.connect.IParser;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.connect.SendToPipeline;
 import org.apache.streampipes.extensions.management.connect.adapter.guess.SchemaGuesser;
 import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;

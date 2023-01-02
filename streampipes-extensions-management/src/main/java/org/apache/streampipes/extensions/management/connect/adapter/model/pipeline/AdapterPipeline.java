@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.model.pipeline;
 
-import org.apache.streampipes.connect.api.IAdapterPipeline;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipeline;
+import org.apache.streampipes.extensions.api.connect.IAdapterPipelineElement;
 
 import java.util.List;
 import java.util.Map;

@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
+import org.apache.streampipes.extensions.api.declarer.DataSetDeclarer;
+import org.apache.streampipes.extensions.api.declarer.DataStreamDeclarer;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
-import org.apache.streampipes.extensions.management.declarer.DataSetDeclarer;
-import org.apache.streampipes.extensions.management.declarer.DataStreamDeclarer;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.init.RunningDatasetInstances;
 import org.apache.streampipes.model.Response;

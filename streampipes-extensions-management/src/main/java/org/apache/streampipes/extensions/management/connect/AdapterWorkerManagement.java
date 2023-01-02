@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect;
 
-import org.apache.streampipes.connect.api.IAdapter;
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.IAdapter;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.extensions.management.init.RunningAdapterInstances;
 import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;

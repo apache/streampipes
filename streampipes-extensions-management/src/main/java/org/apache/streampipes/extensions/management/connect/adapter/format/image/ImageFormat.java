@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.extensions.management.connect.adapter.format.image;
 
-import org.apache.streampipes.connect.api.IFormat;
-import org.apache.streampipes.connect.api.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.IFormat;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.model.connect.grounding.FormatDescription;
 import org.apache.streampipes.sdk.builder.adapter.FormatDescriptionBuilder;
 
