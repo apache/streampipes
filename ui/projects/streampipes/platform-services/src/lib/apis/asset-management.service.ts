@@ -22,36 +22,35 @@ import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class AssetManagementService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    createAsset(asset: any): Observable<any> {
+        return this.http.post(this.assetBasePath, asset);
+    }
 
-  createAsset(asset: any): Observable<any> {
-    return this.http.post(this.assetBasePath, asset);
-  }
+    getAllAssets(): Observable<any> {
+        return this.http.get(this.assetBasePath);
+    }
 
-  getAllAssets(): Observable<any> {
-    return this.http.get(this.assetBasePath);
-  }
+    getAsset(assetId: string): Observable<any> {
+        return this.http.get(`${this.assetBasePath}/${assetId}`);
+    }
 
-  getAsset(assetId: string): Observable<any> {
-    return this.http.get(`${this.assetBasePath}/${assetId}`);
-  }
+    updateAsset(asset: any): Observable<any> {
+        return this.http.put(`${this.assetBasePath}/${asset._id}`, asset);
+    }
 
-  updateAsset(asset: any): Observable<any> {
-    return this.http.put(`${this.assetBasePath}/${asset._id}`, asset);
-  }
+    deleteAsset(assetId: string, rev: string): Observable<any> {
+        return this.http.delete(`${this.assetBasePath}/${assetId}/${rev}`);
+    }
 
-  deleteAsset(assetId: string, rev: string): Observable<any> {
-    return this.http.delete(`${this.assetBasePath}/${assetId}/${rev}`);
-  }
-
-  private get assetBasePath() {
-    return this.platformServicesCommons.apiBasePath + '/assets';
-  }
-
+    private get assetBasePath() {
+        return this.platformServicesCommons.apiBasePath + '/assets';
+    }
 }

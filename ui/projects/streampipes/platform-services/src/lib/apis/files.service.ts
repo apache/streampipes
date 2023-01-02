@@ -17,50 +17,68 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
+import {
+    HttpClient,
+    HttpEvent,
+    HttpParams,
+    HttpRequest,
+} from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FileMetadata } from '../model/gen/streampipes-model';
 
-
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class FilesService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
+    uploadFile(file: File): Observable<HttpEvent<any>> {
+        const data: FormData = new FormData();
+        data.append('file_upload', file, file.name);
 
-  }
+        const params = new HttpParams();
+        const options = {
+            params,
+            reportProgress: true,
+        };
 
-  uploadFile(file: File): Observable<HttpEvent<any>> {
-    const data: FormData = new FormData();
-    data.append('file_upload', file, file.name);
-
-    const params = new HttpParams();
-    const options = {
-      params,
-      reportProgress: true,
-    };
-
-    const req = new HttpRequest('POST', this.platformServicesCommons.apiBasePath + '/files', data, options);
-    return this.http.request(req);
-  }
-
-  getFileMetadata(requiredFiletypes?: string[]): Observable<FileMetadata[]> {
-    let requiredFiletypeAppendix = '';
-    if (requiredFiletypes && requiredFiletypes.length > 0) {
-      requiredFiletypeAppendix = '?filetypes=' + requiredFiletypes.join();
+        const req = new HttpRequest(
+            'POST',
+            this.platformServicesCommons.apiBasePath + '/files',
+            data,
+            options,
+        );
+        return this.http.request(req);
     }
-    return this.http
-        .get(this.platformServicesCommons.apiBasePath + '/files' + requiredFiletypeAppendix)
-        .pipe(map(response => {
-          return (response as any[]).map(fm => FileMetadata.fromData(fm));
-        }));
-  }
 
-  deleteFile(fileId: string) {
-    return this.http.delete(this.platformServicesCommons.apiBasePath + '/files/' + fileId);
-  }
+    getFileMetadata(requiredFiletypes?: string[]): Observable<FileMetadata[]> {
+        let requiredFiletypeAppendix = '';
+        if (requiredFiletypes && requiredFiletypes.length > 0) {
+            requiredFiletypeAppendix = '?filetypes=' + requiredFiletypes.join();
+        }
+        return this.http
+            .get(
+                this.platformServicesCommons.apiBasePath +
+                    '/files' +
+                    requiredFiletypeAppendix,
+            )
+            .pipe(
+                map(response => {
+                    return (response as any[]).map(fm =>
+                        FileMetadata.fromData(fm),
+                    );
+                }),
+            );
+    }
+
+    deleteFile(fileId: string) {
+        return this.http.delete(
+            this.platformServicesCommons.apiBasePath + '/files/' + fileId,
+        );
+    }
 }

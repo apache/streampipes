@@ -23,31 +23,40 @@ import { Observable } from 'rxjs';
 import { Dashboard } from '../model/dashboard/dashboard.model';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class SharedDatalakeRestService {
-
-    constructor(private http: HttpClient) {
-    }
+    constructor(private http: HttpClient) {}
 
     getDashboards(dashboardUrl: string): Observable<Dashboard[]> {
-        return this.http.get(dashboardUrl).pipe(map(data => {
-           return data as Dashboard[];
-        }));
+        return this.http.get(dashboardUrl).pipe(
+            map(data => {
+                return data as Dashboard[];
+            }),
+        );
     }
 
-    updateDashboard(dashboardUrl: string, dashboard: Dashboard): Observable<Dashboard> {
-        return this.http.put(dashboardUrl + '/' + dashboard._id, dashboard).pipe(map(data => {
-            return data as Dashboard;
-        }));
+    updateDashboard(
+        dashboardUrl: string,
+        dashboard: Dashboard,
+    ): Observable<Dashboard> {
+        return this.http
+            .put(dashboardUrl + '/' + dashboard._id, dashboard)
+            .pipe(
+                map(data => {
+                    return data as Dashboard;
+                }),
+            );
     }
 
-    deleteDashboard(dashboardUrl: string, dashboard: Dashboard): Observable<any> {
+    deleteDashboard(
+        dashboardUrl: string,
+        dashboard: Dashboard,
+    ): Observable<any> {
         return this.http.delete(dashboardUrl + '/' + dashboard._id);
     }
 
     saveDashboard(dashboardUrl: string, dashboard: Dashboard): Observable<any> {
         return this.http.post(dashboardUrl, dashboard);
     }
-
 }

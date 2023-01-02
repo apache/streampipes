@@ -23,16 +23,23 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class MeasurementUnitsService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) { }
-
-  getAllMeasurementUnits(): Observable<any> {
-    return this.http.get(this.platformServicesCommons.apiBasePath + '/measurement-units').pipe(map(response => {
-      return response;
-    }));
-  }
+    getAllMeasurementUnits(): Observable<any> {
+        return this.http
+            .get(
+                this.platformServicesCommons.apiBasePath + '/measurement-units',
+            )
+            .pipe(
+                map(response => {
+                    return response;
+                }),
+            );
+    }
 }

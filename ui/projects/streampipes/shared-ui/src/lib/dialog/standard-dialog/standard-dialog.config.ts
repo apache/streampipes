@@ -21,29 +21,28 @@ import { DialogPanelConfig } from '../base-dialog/base-dialog.model';
 import { Overlay } from '@angular/cdk/overlay';
 
 export class StandardDialogConfig implements BaseDialogConfig {
+    getConfig(): DialogPanelConfig {
+        const config: DialogPanelConfig = {} as DialogPanelConfig;
+        config.maxWidth = '90vw';
+        config.height = '50vh';
+        return config;
+    }
 
-  getConfig(): DialogPanelConfig {
-    const config: DialogPanelConfig = {} as DialogPanelConfig;
-    config.maxWidth = '90vw';
-    config.height = '50vh';
-    return config;
-  }
+    getPosition(overlay: Overlay) {
+        return overlay
+            .position()
+            .global()
+            .centerHorizontally()
+            .centerVertically();
+    }
 
-  getPosition(overlay: Overlay) {
-    return overlay
-        .position()
-        .global()
-        .centerHorizontally()
-        .centerVertically();
-  }
-
-  getOverlayConfig(config: any, positionStrategy: any) {
-    return {
-      hasBackdrop: true,
-      positionStrategy,
-      panelClass: 'dialog-container',
-      width: config.width,
-      maxWidth: '90vw',
-    };
-  }
+    getOverlayConfig(config: any, positionStrategy: any) {
+        return {
+            hasBackdrop: true,
+            positionStrategy,
+            panelClass: 'dialog-container',
+            width: config.width,
+            maxWidth: '90vw',
+        };
+    }
 }
