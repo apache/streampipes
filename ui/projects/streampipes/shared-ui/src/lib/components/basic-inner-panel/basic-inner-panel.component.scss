@@ -17,31 +17,31 @@
  */
 
 .panel-outer {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  border: 2px solid var(--color-bg-3);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border: 2px solid var(--color-bg-3);
 }
 
 .general-panel {
-  border: 0px solid var(--color-bg-3);
+    border: 0px solid var(--color-bg-3);
 }
 
 .general-panel-header {
-  margin-top: -1px;
-  background: var(--color-bg-2);
-  border: 0px solid var(--color-bg-3);
-  border-bottom: 2px solid var(--color-bg-3);
-  padding-left: 5px;
-  height: 50px;
-  min-height: 50px;
-  max-height: 50px;
+    margin-top: -1px;
+    background: var(--color-bg-2);
+    border: 0px solid var(--color-bg-3);
+    border-bottom: 2px solid var(--color-bg-3);
+    padding-left: 5px;
+    height: 50px;
+    min-height: 50px;
+    max-height: 50px;
 }
 
 .content-box-title {
-  margin-left: 5px;
-  padding-left: 5px;
-  border-left: 4px solid var(--color-accent);
-  font-weight: 600;
-  font-size: 13pt;
-  white-space: nowrap;
+    margin-left: 5px;
+    padding-left: 5px;
+    border-left: 4px solid var(--color-accent);
+    font-weight: 600;
+    font-size: 13pt;
+    white-space: nowrap;
 }

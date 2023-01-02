@@ -17,57 +17,76 @@
  */
 
 import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  HostListener,
-  OnInit,
-  Output,
-  ViewEncapsulation
+    Component,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    OnInit,
+    Output,
+    ViewEncapsulation,
 } from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {
+    animate,
+    state,
+    style,
+    transition,
+    trigger,
+} from '@angular/animations';
 import { BaseDialogComponent } from '../base-dialog/base-dialog.component';
 
 @Component({
-  selector: 'app-dialog-container',
-  templateUrl: './panel-dialog.component.html',
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: ['./panel-dialog.component.scss'],
-  animations: [trigger('flyInOut', [
-    state('void', style({
-      transform: 'translateX(80vw)',
-    })),
-    state('in', style({
-      transform: 'translateX(0)',
-    })),
-    state('out', style({
-      transform: 'translateX(80vw)'
-    })),
-    transition('* => *', animate(300))
-  ])]
+    selector: 'app-dialog-container',
+    templateUrl: './panel-dialog.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['./panel-dialog.component.scss'],
+    animations: [
+        trigger('flyInOut', [
+            state(
+                'void',
+                style({
+                    transform: 'translateX(80vw)',
+                }),
+            ),
+            state(
+                'in',
+                style({
+                    transform: 'translateX(0)',
+                }),
+            ),
+            state(
+                'out',
+                style({
+                    transform: 'translateX(80vw)',
+                }),
+            ),
+            transition('* => *', animate(300)),
+        ]),
+    ],
 })
-export class PanelDialogComponent<T> extends BaseDialogComponent<T> implements OnInit {
-
-  constructor() {
-    super();
-  }
-
-  @HostBinding('@flyInOut') slideDown = 'in';
-
-  @Output()
-  animationStateChanged = new EventEmitter<AnimationEvent>();
-
-  @HostListener('@flyInOut.done', ['$event']) startDrawerHandler(event: any): void {
-    if (event.toState === 'out') {
-      this.containerEvent.emit({key: 'CLOSE'});
+export class PanelDialogComponent<T>
+    extends BaseDialogComponent<T>
+    implements OnInit
+{
+    constructor() {
+        super();
     }
-  }
 
-  ngOnInit() {
-  }
+    @HostBinding('@flyInOut') slideDown = 'in';
 
-  closeDialog() {
-    this.slideDown = 'out';
-  }
+    @Output()
+    animationStateChanged = new EventEmitter<AnimationEvent>();
 
+    @HostListener('@flyInOut.done', ['$event']) startDrawerHandler(
+        event: any,
+    ): void {
+        if (event.toState === 'out') {
+            this.containerEvent.emit({ key: 'CLOSE' });
+        }
+    }
+
+    ngOnInit() {}
+
+    closeDialog() {
+        this.slideDown = 'out';
+    }
 }

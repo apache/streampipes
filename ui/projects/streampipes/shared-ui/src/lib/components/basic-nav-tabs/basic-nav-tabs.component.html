@@ -18,33 +18,50 @@
 
 <div fxLayout="column" class="page-container">
     <div fxLayout="row" class="p-0 sp-bg-lightgray page-container-nav">
-            <div fxFlex="100" class="page-container-nav pr-5" fxLayout="row">
-                <div fxLayout="row"
-                     fxLayoutAlign="start center"
-                     style="border-right: 2px solid var(--color-bg-2)" *ngIf="showBackLink">
-                    <button mat-button
-                            mat-icon-button
-                            color="accent"
-                            matTooltip="Back"
-                            (click)="navigateBack()"
-                            class="edit-menu-btn"
-                            data-cy="save-data-explorer-go-back-to-overview">
-                        <mat-icon>arrow_back</mat-icon>
-                    </button>
-                </div>
-                <nav mat-tab-nav-bar color="accent">
-                    <a mat-tab-link *ngFor="let item of spNavigationItems"
-                       (click)="navigateTo(item)"
-                       [active]="activeLink === item.itemId">
-                        <span class="upper-case">{{item.itemTitle}}</span>
-                    </a>
-                </nav>
-                <span fxFlex></span>
-                <ng-content select="[nav]" fxFlex="100" fxLayout="row" fxLayoutAlign="end center"></ng-content>
+        <div fxFlex="100" class="page-container-nav pr-5" fxLayout="row">
+            <div
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                style="border-right: 2px solid var(--color-bg-2)"
+                *ngIf="showBackLink"
+            >
+                <button
+                    mat-button
+                    mat-icon-button
+                    color="accent"
+                    matTooltip="Back"
+                    (click)="navigateBack()"
+                    class="edit-menu-btn"
+                    data-cy="save-data-explorer-go-back-to-overview"
+                >
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
             </div>
+            <nav mat-tab-nav-bar color="accent">
+                <a
+                    mat-tab-link
+                    *ngFor="let item of spNavigationItems"
+                    (click)="navigateTo(item)"
+                    [active]="activeLink === item.itemId"
+                >
+                    <span class="upper-case">{{ item.itemTitle }}</span>
+                </a>
+            </nav>
+            <span fxFlex></span>
+            <ng-content
+                select="[nav]"
+                fxFlex="100"
+                fxLayout="row"
+                fxLayoutAlign="end center"
+            ></ng-content>
+        </div>
     </div>
 
-    <div class="fixed-height page-container-padding-inner" fxLayout="column" fxFlex="100">
+    <div
+        class="fixed-height page-container-padding-inner"
+        fxLayout="column"
+        fxFlex="100"
+    >
         <ng-content fxFlex="100"></ng-content>
     </div>
 </div>

@@ -37,39 +37,38 @@ import { SpExceptionDetailsDialogComponent } from './components/sp-exception-mes
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [
-    ConfirmDialogComponent,
-    PanelDialogComponent,
-    StandardDialogComponent,
-    SpBasicInnerPanelComponent,
-    SpBasicHeaderTitleComponent,
-    SpBasicViewComponent,
-    SpBasicNavTabsComponent,
-    SpExceptionMessageComponent,
-    SpExceptionDetailsDialogComponent
-  ],
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatIconModule,
-    MatTabsModule,
-    MatTooltipModule,
-    PortalModule,
-    OverlayModule,
-  ],
-  exports: [
-    ConfirmDialogComponent,
-    PanelDialogComponent,
-    StandardDialogComponent,
-    SpBasicInnerPanelComponent,
-    SpBasicHeaderTitleComponent,
-    SpBasicViewComponent,
-    SpBasicNavTabsComponent,
-    SpExceptionMessageComponent,
-    SpExceptionDetailsDialogComponent
-  ]
+    declarations: [
+        ConfirmDialogComponent,
+        PanelDialogComponent,
+        StandardDialogComponent,
+        SpBasicInnerPanelComponent,
+        SpBasicHeaderTitleComponent,
+        SpBasicViewComponent,
+        SpBasicNavTabsComponent,
+        SpExceptionMessageComponent,
+        SpExceptionDetailsDialogComponent,
+    ],
+    imports: [
+        CommonModule,
+        FlexLayoutModule,
+        MatButtonModule,
+        MatDividerModule,
+        MatIconModule,
+        MatTabsModule,
+        MatTooltipModule,
+        PortalModule,
+        OverlayModule,
+    ],
+    exports: [
+        ConfirmDialogComponent,
+        PanelDialogComponent,
+        StandardDialogComponent,
+        SpBasicInnerPanelComponent,
+        SpBasicHeaderTitleComponent,
+        SpBasicViewComponent,
+        SpBasicNavTabsComponent,
+        SpExceptionMessageComponent,
+        SpExceptionDetailsDialogComponent,
+    ],
 })
-export class SharedUiModule {
-}
+export class SharedUiModule {}

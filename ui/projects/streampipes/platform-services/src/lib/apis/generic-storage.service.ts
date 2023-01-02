@@ -22,45 +22,48 @@ import { PlatformServicesCommons } from './commons.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class GenericStorageService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    createDocument(appDocName: string, document: any): Observable<any> {
+        return this.http.post(this.getAppDocPath(appDocName), document);
+    }
 
-  createDocument(appDocName: string,
-                 document: any): Observable<any> {
-    return this.http.post(this.getAppDocPath(appDocName), document);
-  }
+    getAllDocuments(appDocName: string): Observable<any> {
+        return this.http.get(this.getAppDocPath(appDocName));
+    }
 
-  getAllDocuments(appDocName: string): Observable<any> {
-    return this.http.get(this.getAppDocPath(appDocName));
-  }
+    getDocument(appDocName: string, documentId: string): Observable<any> {
+        return this.http.get(`${this.getAppDocPath(appDocName)}/${documentId}`);
+    }
 
-  getDocument(appDocName: string,
-              documentId: string): Observable<any> {
-    return this.http.get(`${this.getAppDocPath(appDocName)}/${documentId}`);
-  }
+    updateDocument(appDocName: string, document: any): Observable<any> {
+        return this.http.put(
+            `${this.getAppDocPath(appDocName)}/${document._id}`,
+            document,
+        );
+    }
 
-  updateDocument(appDocName: string,
-                 document: any): Observable<any> {
-    return this.http.put(`${this.getAppDocPath(appDocName)}/${document._id}`, document);
-  }
+    deleteDocument(
+        appDocName: string,
+        documentId: string,
+        rev: string,
+    ): Observable<any> {
+        return this.http.delete(
+            `${this.getAppDocPath(appDocName)}/${documentId}/${rev}`,
+        );
+    }
 
-  deleteDocument(appDocName: string,
-                 documentId: string,
-                 rev: string): Observable<any> {
-    return this.http.delete(`${this.getAppDocPath(appDocName)}/${documentId}/${rev}`);
-  }
+    private getAppDocPath(appDocName: string): string {
+        return this.genericStorageBasePath + '/' + appDocName;
+    }
 
-  private getAppDocPath(appDocName: string): string {
-    return this.genericStorageBasePath + '/' + appDocName;
-  }
-
-  private get genericStorageBasePath() {
-    return this.platformServicesCommons.apiBasePath + '/storage-generic';
-  }
-
+    private get genericStorageBasePath() {
+        return this.platformServicesCommons.apiBasePath + '/storage-generic';
+    }
 }

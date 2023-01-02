@@ -21,28 +21,30 @@ import { HttpClient } from '@angular/common/http';
 import { PlatformServicesCommons } from './commons.service';
 
 export abstract class AbstractMonitoringService {
+    constructor(
+        protected http: HttpClient,
+        protected platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(protected http: HttpClient,
-              protected platformServicesCommons: PlatformServicesCommons) {
-  }
+    triggerMonitoringUpdate(): Observable<any> {
+        return this.http.get(this.monitoringBasePath);
+    }
 
-  triggerMonitoringUpdate(): Observable<any> {
-    return this.http.get(this.monitoringBasePath);
-  }
+    protected logUrl(elementId: string): string {
+        return `${this.monitoringUrl(elementId)}/logs`;
+    }
 
-  protected logUrl(elementId: string): string {
-    return `${this.monitoringUrl(elementId)}/logs`;
-  }
+    protected metricsUrl(elementId: string): string {
+        return `${this.monitoringUrl(elementId)}/metrics`;
+    }
 
-  protected metricsUrl(elementId: string): string {
-    return`${this.monitoringUrl(elementId)}/metrics`;
-  }
+    protected monitoringUrl(elementId): string {
+        return `${this.monitoringBasePath}/${
+            this.monitoringPathAppendix
+        }/${encodeURIComponent(elementId)}`;
+    }
 
-  protected monitoringUrl(elementId): string {
-    return `${this.monitoringBasePath}/${this.monitoringPathAppendix}/${encodeURIComponent(elementId)}`;
-  }
+    protected abstract get monitoringBasePath();
 
-  protected abstract get monitoringBasePath();
-
-  protected abstract get monitoringPathAppendix();
+    protected abstract get monitoringPathAppendix();
 }
