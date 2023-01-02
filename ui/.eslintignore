@@ -19,7 +19,6 @@ dist
 # Remove these in the future to lint additional modules
 # Please also see .prettierignore
 projects
-src/app/_models
 src/app/add
 src/app/apidocs
 src/app/app-asset-monitoring
