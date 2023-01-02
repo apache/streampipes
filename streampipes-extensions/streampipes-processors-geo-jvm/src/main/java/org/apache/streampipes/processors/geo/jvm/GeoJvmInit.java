@@ -45,6 +45,7 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 public class GeoJvmInit extends ExtensionsModelSubmitter {
 
+
   @Override
   public SpServiceDefinition provideServiceDefinition() {
 
@@ -86,8 +87,10 @@ public class GeoJvmInit extends ExtensionsModelSubmitter {
   // https://sis.apache.org/apidocs/org/apache/sis/setup/Configuration.html#setDatabase(java.util.function.Supplier)
   protected static PGSimpleDataSource createDataSource() {
     PGSimpleDataSource ds = new PGSimpleDataSource();
-    String[] serverAddresses = {"epsg"};
+    String[] serverAddresses = {"localhost"};
     ds.setServerNames(serverAddresses);
+    int [] portNumbers = {54320};
+    ds.setPortNumbers(portNumbers);
     ds.setDatabaseName("EPSG");
     ds.setUser("streampipes");
     ds.setPassword("streampipes");
