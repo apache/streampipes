@@ -70,11 +70,6 @@
             <version>0.91.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- Dependency convergence -->
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
