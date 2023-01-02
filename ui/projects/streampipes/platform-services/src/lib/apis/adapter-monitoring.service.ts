@@ -19,37 +19,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { PipelineMonitoringInfo, SpLogEntry, SpMetricsEntry } from '../model/gen/streampipes-model';
+import {
+    PipelineMonitoringInfo,
+    SpLogEntry,
+    SpMetricsEntry,
+} from '../model/gen/streampipes-model';
 import { PlatformServicesCommons } from './commons.service';
 import { map } from 'rxjs/operators';
 import { AbstractMonitoringService } from './abstract-monitoring.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class AdapterMonitoringService extends AbstractMonitoringService {
+    constructor(
+        http: HttpClient,
+        platformServicesCommons: PlatformServicesCommons,
+    ) {
+        super(http, platformServicesCommons);
+    }
 
-  constructor(http: HttpClient,
-              platformServicesCommons: PlatformServicesCommons) {
-    super(http, platformServicesCommons);
-  }
+    getLogInfoForAdapter(elementId: string): Observable<SpLogEntry[]> {
+        return this.http
+            .get(this.logUrl(elementId))
+            .pipe(map(response => response as SpLogEntry[]));
+    }
 
-  getLogInfoForAdapter(elementId: string): Observable<SpLogEntry[]> {
-    return this.http.get(this.logUrl(elementId))
-      .pipe(map(response => response as SpLogEntry[]));
-  }
+    getMetricsInfoForAdapter(elementId: string): Observable<SpMetricsEntry> {
+        return this.http
+            .get(this.metricsUrl(elementId))
+            .pipe(map(response => response as SpMetricsEntry));
+    }
 
-  getMetricsInfoForAdapter(elementId: string): Observable<SpMetricsEntry> {
-    return this.http.get(this.metricsUrl(elementId))
-      .pipe(map(response => response as SpMetricsEntry));
-  }
+    protected get monitoringBasePath(): string {
+        return `${this.platformServicesCommons.apiBasePath}/adapter-monitoring`;
+    }
 
-  protected get monitoringBasePath(): string {
-    return `${this.platformServicesCommons.apiBasePath}/adapter-monitoring`;
-  }
-
-  protected get monitoringPathAppendix(): string {
-    return 'adapter';
-  }
-
+    protected get monitoringPathAppendix(): string {
+        return 'adapter';
+    }
 }

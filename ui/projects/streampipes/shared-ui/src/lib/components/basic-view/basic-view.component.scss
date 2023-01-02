@@ -17,42 +17,42 @@
  */
 
 .fixed-height {
-  flex-direction: row;
-  box-sizing: border-box;
-  display: flex;
-  flex: 1 1 100%;
-  max-height: 100%;
-  overflow-y: auto;
+    flex-direction: row;
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 100%;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 .page-container-nav {
-  line-height:24px;
-  height: 50px;
-  border-bottom:1px solid var(--color-bg-3);
+    line-height: 24px;
+    height: 50px;
+    border-bottom: 1px solid var(--color-bg-3);
 }
 
 .sp-bg-lightgray {
-  background-color: var(--color-bg-1);
+    background-color: var(--color-bg-1);
 }
 
 .sp-tab-bg {
-  background-color: var(--color-bg-1);
+    background-color: var(--color-bg-1);
 }
 
 .page-container {
-  margin: 10px;
-  border: 1px solid var(--color-bg-3);
-  min-height: calc(100% - 50px);
+    margin: 10px;
+    border: 1px solid var(--color-bg-3);
+    min-height: calc(100% - 50px);
 }
 
 .page-container-padding-inner {
-  margin: 20px;
+    margin: 20px;
 }
 
 .pl-5 {
-  padding-left: 5px;
+    padding-left: 5px;
 }
 
 .pr-5 {
-  padding-right: 5px;
+    padding-right: 5px;
 }

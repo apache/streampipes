@@ -17,39 +17,39 @@
  */
 
 .log-message {
-  background-color: black;
-  font: 9pt Inconsolata, monospace;
-  text-shadow: 0 0 5px #C8C8C8;
-  color: white;
-  padding: 10px;
-  max-width: 100%;
-  min-height: 50px;
-  max-height: 300px;
-  overflow-y: scroll;
-  white-space: pre-wrap;
+    background-color: black;
+    font: 9pt Inconsolata, monospace;
+    text-shadow: 0 0 5px #c8c8c8;
+    color: white;
+    padding: 10px;
+    max-width: 100%;
+    min-height: 50px;
+    max-height: 300px;
+    overflow-y: scroll;
+    white-space: pre-wrap;
 }
 
 .error-details-title {
-  font-size: 13pt;
-  font-weight: var(--color-default-text);
-  border-left: 3px solid var(--color-accent);
-  padding-left: 10px;
-  margin-bottom: 15px;
+    font-size: 13pt;
+    font-weight: var(--color-default-text);
+    border-left: 3px solid var(--color-accent);
+    padding-left: 10px;
+    margin-bottom: 15px;
 }
 
 .mt-10 {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .p-20 {
-  padding: 20px;
+    padding: 20px;
 }
 
 .color-warn {
-  color: var(--color-warn);
+    color: var(--color-warn);
 }
 
 .title-message {
-  font-size: 16pt;
-  margin-bottom: 15px;
+    font-size: 16pt;
+    margin-bottom: 15px;
 }

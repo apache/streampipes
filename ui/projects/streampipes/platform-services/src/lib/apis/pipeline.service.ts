@@ -80,9 +80,7 @@ export class PipelineService {
         const queryAppendix = forceStop ? '?forceStop=' + forceStop : '';
         return this.http
             .get(
-                `${
-                    this.apiBasePath
-                }/pipelines/${pipelineId}/stop${queryAppendix}`,
+                `${this.apiBasePath}/pipelines/${pipelineId}/stop${queryAppendix}`,
             )
             .pipe(
                 map(result =>

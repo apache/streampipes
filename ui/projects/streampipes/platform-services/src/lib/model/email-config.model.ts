@@ -16,32 +16,31 @@
  *
  */
 export interface EmailConfig {
+    emailConfigured: boolean;
+    transportStrategy: 'SMTP' | 'SMTPS' | 'SMTP_TLS';
+    smtpServerHost: string;
+    smtpServerPort: number;
 
-  emailConfigured: boolean;
-  transportStrategy: 'SMTP' | 'SMTPS' | 'SMTP_TLS';
-  smtpServerHost: string;
-  smtpServerPort: number;
+    usesAuthentication: boolean;
 
-  usesAuthentication: boolean;
+    smtpUsername: string;
+    smtpPassword: string;
 
-  smtpUsername: string;
-  smtpPassword: string;
+    senderAddress: string;
+    senderName: string;
 
-  senderAddress: string;
-  senderName: string;
+    usesProxy: boolean;
 
-  usesProxy: boolean;
+    proxyHost: string;
+    proxyPort: number;
 
-  proxyHost: string;
-  proxyPort: number;
+    usesProxyAuthentication: string;
 
-  usesProxyAuthentication: string;
+    proxyUser: string;
+    proxyPassword: string;
 
-  proxyUser: string;
-  proxyPassword: string;
+    testRecipientAddress: string;
 
-  testRecipientAddress: string;
-
-  smtpPassEncrypted: boolean;
-  proxyPassEncrypted: boolean;
+    smtpPassEncrypted: boolean;
+    proxyPassEncrypted: boolean;
 }

@@ -16,7 +16,6 @@
  *
  */
 
-
 export interface TimeSettings {
     startTime: number;
     endTime: number;
@@ -24,7 +23,6 @@ export interface TimeSettings {
 }
 
 export class DateRange {
-
     public startDate: Date;
     public endDate: Date;
 

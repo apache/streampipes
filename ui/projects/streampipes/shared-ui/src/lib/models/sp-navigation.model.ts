@@ -17,12 +17,12 @@
  */
 
 export interface SpNavigationItem {
-  itemId: string;
-  itemTitle: string;
-  itemLink: string[];
+    itemId: string;
+    itemTitle: string;
+    itemLink: string[];
 }
 
 export interface SpBreadcrumbItem {
-  label: string;
-  link?: string[];
+    label: string;
+    link?: string[];
 }

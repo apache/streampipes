@@ -19,28 +19,49 @@
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-20">
         <div fxFlex="100" fxLayout="column" class="mt-10">
-            <div *ngIf="title" fxLayoutAlign="start center" fxFlex="100" class="title-message color-warn">
-                <i class="material-icons color-warn" style="margin-right: 15px;">warning</i>
-                <span class="color-warn">{{title}}</span>
+            <div
+                *ngIf="title"
+                fxLayoutAlign="start center"
+                fxFlex="100"
+                class="title-message color-warn"
+            >
+                <i class="material-icons color-warn" style="margin-right: 15px"
+                    >warning</i
+                >
+                <span class="color-warn">{{ title }}</span>
             </div>
             <div class="error-details-title">Probable cause</div>
-            <div class="log-message" [innerText]="message.cause">
-            </div>
+            <div class="log-message" [innerText]="message.cause"></div>
             <div class="mt-10">
-            <button mat-button color="accent" (click)="showDetails = !showDetails">Full details</button>
+                <button
+                    mat-button
+                    color="accent"
+                    (click)="showDetails = !showDetails"
+                >
+                    Full details
+                </button>
             </div>
-            <div fxFlex="100" fxLayout="column" *ngIf="showDetails" class="mt-10">
+            <div
+                fxFlex="100"
+                fxLayout="column"
+                *ngIf="showDetails"
+                class="mt-10"
+            >
                 <div class="error-details-title">Full stack trace</div>
                 <div class="log-message">
                     <div [innerText]="message.fullStackTrace"></div>
                 </div>
             </div>
         </div>
-
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()">
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+        >
             Close
         </button>
     </div>
