@@ -38,7 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <version.roaster>2.20.8.Final</version.roaster>
+        <version.roaster>2.28.0.Final</version.roaster>
     </properties>
 
     <dependencyManagement>
@@ -135,7 +135,7 @@
         <dependency>
             <groupId>com.j2html</groupId>
             <artifactId>j2html</artifactId>
-            <version>1.4.0</version>
+            <version>1.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -164,7 +164,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
@@ -196,7 +196,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-invoker-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.4.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>

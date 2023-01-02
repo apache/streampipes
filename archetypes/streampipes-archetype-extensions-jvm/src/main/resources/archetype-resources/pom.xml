@@ -17,8 +17,7 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>${groupId}</groupId>
     <artifactId>${artifactId}</artifactId>
@@ -26,6 +25,7 @@
 
     <properties>
         <sp.version>0.91.0-SNAPSHOT</sp.version>
+        <junit-jupiter.version>5.9.1</junit-jupiter.version>
     </properties>
 
     <dependencies>
@@ -43,6 +43,12 @@
             <groupId>org.apache.streampipes</groupId>
             <artifactId>streampipes-sources</artifactId>
             <version>${sp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -77,6 +83,18 @@
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M7</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit-jupiter.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
         <finalName>${artifactId}</finalName>
