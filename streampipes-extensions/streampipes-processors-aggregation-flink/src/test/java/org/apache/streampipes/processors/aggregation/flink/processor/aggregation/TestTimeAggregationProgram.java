@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.processors.aggregation.flink.processor.aggregation;
 
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.aggregation.flink.AggregationFlinkInit;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;

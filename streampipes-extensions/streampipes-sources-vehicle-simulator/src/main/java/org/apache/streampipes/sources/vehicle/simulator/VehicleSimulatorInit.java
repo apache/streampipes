@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.sources.vehicle.simulator;
 
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.sources.vehicle.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.vehicle.simulator.vehicle.streams.VehicleStream;
 

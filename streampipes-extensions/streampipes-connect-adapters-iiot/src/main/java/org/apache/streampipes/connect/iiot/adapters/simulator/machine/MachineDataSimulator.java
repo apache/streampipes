@@ -18,7 +18,7 @@
 package org.apache.streampipes.connect.iiot.adapters.simulator.machine;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.container.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
 
 import java.util.HashMap;
 import java.util.Map;

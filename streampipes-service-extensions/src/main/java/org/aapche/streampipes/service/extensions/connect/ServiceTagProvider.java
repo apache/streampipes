@@ -20,9 +20,9 @@ package org.aapche.streampipes.service.extensions.connect;
 
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;
-import org.apache.streampipes.container.declarer.Declarer;
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.util.ServiceDefinitionUtil;
+import org.apache.streampipes.extensions.management.declarer.Declarer;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.util.ServiceDefinitionUtil;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceTags;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 

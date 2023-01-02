@@ -17,8 +17,8 @@
  */
 package org.aapche.streampipes.service.extensions.connect;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.service.extensions.base.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;

@@ -20,8 +20,8 @@ package org.apache.streampipes.connect.iiot.protocol.stream;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.container.connect.adapter.guess.SchemaGuesser;
-import org.apache.streampipes.container.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.extensions.management.connect.adapter.guess.SchemaGuesser;
+import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 
 import java.util.ArrayList;

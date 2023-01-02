@@ -18,8 +18,8 @@
 
 package org.aapche.streampipes.service.extensions.connect.function;
 
-import org.apache.streampipes.container.declarer.IStreamPipesFunctionDeclarer;
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.declarer.IStreamPipesFunctionDeclarer;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.model.function.FunctionDefinition;
 
 import java.util.Collection;

@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.streampipes.container.connect.HttpServerAdapterManagement;
+import org.apache.streampipes.extensions.management.connect.HttpServerAdapterManagement;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

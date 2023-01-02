@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.connect.adapters.wikipedia;
 
-import org.apache.streampipes.container.connect.adapter.util.AdapterOutputCollector;
+import org.apache.streampipes.extensions.management.connect.adapter.util.AdapterOutputCollector;
 
 import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.InboundEvent;

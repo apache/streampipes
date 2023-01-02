@@ -19,7 +19,7 @@
 
 package org.apache.streampipes.rest.extensions.monitoring;
 
-import org.apache.streampipes.container.monitoring.SpMonitoringManager;
+import org.apache.streampipes.extensions.management.monitoring.SpMonitoringManager;
 import org.apache.streampipes.rest.extensions.AbstractExtensionsResource;
 
 import javax.ws.rs.GET;

@@ -18,14 +18,14 @@
 
 package org.apache.streampipes.rest.extensions.html.page;
 
-import org.apache.streampipes.container.declarer.DataStreamDeclarer;
-import org.apache.streampipes.container.declarer.Declarer;
-import org.apache.streampipes.container.declarer.InvocableDeclarer;
-import org.apache.streampipes.container.declarer.PipelineTemplateDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.management.declarer.DataStreamDeclarer;
+import org.apache.streampipes.extensions.management.declarer.Declarer;
+import org.apache.streampipes.extensions.management.declarer.InvocableDeclarer;
+import org.apache.streampipes.extensions.management.declarer.PipelineTemplateDeclarer;
+import org.apache.streampipes.extensions.management.declarer.SemanticEventConsumerDeclarer;
+import org.apache.streampipes.extensions.management.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.rest.extensions.html.model.Description;
-import org.apache.streampipes.container.locales.LabelGenerator;
+import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;

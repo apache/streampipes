@@ -21,8 +21,8 @@ import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IFormat;
 import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.container.connect.SendToPipeline;
-import org.apache.streampipes.container.connect.adapter.model.generic.Protocol;
+import org.apache.streampipes.extensions.management.connect.SendToPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.model.generic.Protocol;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

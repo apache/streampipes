@@ -17,7 +17,7 @@
  */
 package org.aapche.streampipes.service.extensions.connect;
 
-import org.apache.streampipes.container.init.RunningInstances;
+import org.apache.streampipes.extensions.management.init.RunningInstances;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -19,10 +19,10 @@
 package org.apache.streampipes.rest.extensions;
 
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
-import org.apache.streampipes.container.assets.AssetZipGenerator;
-import org.apache.streampipes.container.declarer.Declarer;
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.locales.LabelGenerator;
+import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
+import org.apache.streampipes.extensions.management.declarer.Declarer;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.grounding.EventGrounding;

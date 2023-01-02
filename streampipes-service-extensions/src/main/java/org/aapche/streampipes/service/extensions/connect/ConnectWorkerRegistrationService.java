@@ -17,8 +17,8 @@
  */
 package org.aapche.streampipes.service.extensions.connect;
 
-import org.apache.streampipes.container.connect.ConnectWorkerDescriptionProvider;
-import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.connect.ConnectWorkerDescriptionProvider;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

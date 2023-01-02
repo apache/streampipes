@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.processors.pattern.detection.processor.absence;
 
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.PatternDetectionFlinkInit;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.absence.AbsenceController;

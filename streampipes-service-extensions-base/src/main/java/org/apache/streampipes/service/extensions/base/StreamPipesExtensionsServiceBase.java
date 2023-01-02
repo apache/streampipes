@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.service.extensions.base;
 
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
 import org.apache.streampipes.svcdiscovery.api.model.DefaultSpServiceGroups;

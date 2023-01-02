@@ -24,7 +24,7 @@ import org.apache.streampipes.connect.api.IParser;
 import org.apache.streampipes.connect.api.IProtocol;
 import org.apache.streampipes.connect.api.exception.AdapterException;
 import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.container.connect.SendToPipeline;
+import org.apache.streampipes.extensions.management.connect.SendToPipeline;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.messaging.nats.NatsConsumer;
 import org.apache.streampipes.model.AdapterType;

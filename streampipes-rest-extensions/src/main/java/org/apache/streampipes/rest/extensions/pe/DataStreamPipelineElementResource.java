@@ -18,11 +18,11 @@
 
 package org.apache.streampipes.rest.extensions.pe;
 
-import org.apache.streampipes.container.assets.AssetZipGenerator;
-import org.apache.streampipes.container.declarer.DataSetDeclarer;
-import org.apache.streampipes.container.declarer.DataStreamDeclarer;
-import org.apache.streampipes.container.init.DeclarersSingleton;
-import org.apache.streampipes.container.init.RunningDatasetInstances;
+import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
+import org.apache.streampipes.extensions.management.declarer.DataSetDeclarer;
+import org.apache.streampipes.extensions.management.declarer.DataStreamDeclarer;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.init.RunningDatasetInstances;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.rest.extensions.AbstractPipelineElementResource;

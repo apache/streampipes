@@ -19,7 +19,7 @@
 package org.apache.streampipes.rest.extensions.connect;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.container.connect.AdapterWorkerManagement;
+import org.apache.streampipes.extensions.management.connect.AdapterWorkerManagement;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterSetDescription;
 import org.apache.streampipes.model.connect.adapter.AdapterStreamDescription;

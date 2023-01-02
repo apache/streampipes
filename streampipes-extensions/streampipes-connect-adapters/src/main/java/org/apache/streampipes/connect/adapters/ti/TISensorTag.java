@@ -19,9 +19,9 @@
 package org.apache.streampipes.connect.adapters.ti;
 
 import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.container.connect.adapter.Adapter;
-import org.apache.streampipes.container.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.container.connect.adapter.model.specific.SpecificDataStreamAdapter;
+import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.model.specific.SpecificDataStreamAdapter;
 import org.apache.streampipes.messaging.InternalEventProcessor;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;

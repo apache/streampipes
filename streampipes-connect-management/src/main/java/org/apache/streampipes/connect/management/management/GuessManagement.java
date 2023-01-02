@@ -23,7 +23,7 @@ import org.apache.streampipes.commons.exceptions.SpConfigurationException;
 import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.connect.api.exception.WorkerAdapterException;
 import org.apache.streampipes.connect.management.util.WorkerPaths;
-import org.apache.streampipes.container.connect.adapter.model.pipeline.AdapterEventPreviewPipeline;
+import org.apache.streampipes.extensions.management.connect.adapter.model.pipeline.AdapterEventPreviewPipeline;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
