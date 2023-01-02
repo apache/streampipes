@@ -18,12 +18,9 @@
 package org.apache.streampipes.container.extensions;
 
 import org.apache.streampipes.connect.container.worker.init.ConnectWorkerRegistrationService;
-import org.apache.streampipes.connect.container.worker.init.ConnectWorkerTagProvider;
 import org.apache.streampipes.container.extensions.function.StreamPipesFunctionHandler;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.standalone.init.PipelineElementServiceShutdownHandler;
-import org.apache.streampipes.container.standalone.init.PipelineElementServiceTagProvider;
 import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
 import org.apache.streampipes.service.extensions.base.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
@@ -47,7 +44,7 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
 
   @PreDestroy
   public void onExit() {
-    new PipelineElementServiceShutdownHandler().onShutdown();
+    new ExtensionsServiceShutdownHandler().onShutdown();
     StreamPipesFunctionHandler.INSTANCE.cleanupFunctions();
     deregisterService(DeclarersSingleton.getInstance().getServiceId());
   }
@@ -60,9 +57,6 @@ public abstract class ExtensionsModelSubmitter extends StreamPipesExtensionsServ
 
   @Override
   protected List<SpServiceTag> getExtensionsServiceTags() {
-    List<SpServiceTag> serviceTags = new PipelineElementServiceTagProvider().extractServiceTags();
-    serviceTags.addAll(new ConnectWorkerTagProvider().extractServiceTags());
-
-    return serviceTags;
+    return new ServiceTagProvider().extractServiceTags();
   }
 }

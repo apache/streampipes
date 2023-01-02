@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.sinks.databases.flink;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -31,7 +31,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.sinks.databases.flink.config.ConfigKeys;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.ElasticSearchController;
 
-public class DatabasesFlinkInit extends StandaloneModelSubmitter {
+public class DatabasesFlinkInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new DatabasesFlinkInit().init();

@@ -15,10 +15,6 @@
 
 FROM eclipse-temurin:11-jre-focal
 
-ENV CONSUL_LOCATION consul
-
-EXPOSE 8090
-
 COPY target/streampipes-connect-adapters-iiot.jar  /streampipes-connect-adapters-iiot.jar
 
 ENTRYPOINT ["java", "-jar", "/streampipes-connect-adapters-iiot.jar"]

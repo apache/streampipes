@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.processors.transformation.jvm;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -52,7 +52,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.transformt
 import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
 
-public class TransformationJvmInit extends StandaloneModelSubmitter {
+public class TransformationJvmInit extends ExtensionsModelSubmitter {
 
   public static void main(String[] args) {
     new TransformationJvmInit().init();

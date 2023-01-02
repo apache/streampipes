@@ -15,25 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.standalone.init;
 
-import org.apache.streampipes.container.init.BaseExtensionsServiceResourceProvider;
-import org.apache.streampipes.container.init.PipelineElementServiceResourceProvider;
-import org.apache.streampipes.service.base.rest.BaseResourceConfig;
+package ${package};
 
-import org.springframework.stereotype.Component;
+import static org.junit.Assert.assertFalse;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
+public class InitTest {
 
-@Component
-public class PipelineElementContainerResourceConfig extends BaseResourceConfig {
+	@Test
+	public void checkIfServiceDescriptionExists() {
+		Init init = new Init();
 
-  @Override
-  public List<List<Class<?>>> getClassesToRegister() {
-    return Arrays.asList(
-        new BaseExtensionsServiceResourceProvider().getResourceClasses(),
-        new PipelineElementServiceResourceProvider().getResourceClasses()
-    );
-  }
+		// A human readable service description should exist
+		assertFalse(init.provideServiceDefinition().getServiceDescription().isEmpty());
+	}
+
 }

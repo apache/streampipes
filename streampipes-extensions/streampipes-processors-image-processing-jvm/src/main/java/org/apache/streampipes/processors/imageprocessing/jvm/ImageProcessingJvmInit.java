@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.processors.imageprocessing.jvm;
 
+import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
-import org.apache.streampipes.container.standalone.init.StandaloneModelSubmitter;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -33,7 +33,7 @@ import org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecrop
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderController;
 
-public class ImageProcessingJvmInit extends StandaloneModelSubmitter {
+public class ImageProcessingJvmInit extends ExtensionsModelSubmitter {
 
   @Override
   public SpServiceDefinition provideServiceDefinition() {
