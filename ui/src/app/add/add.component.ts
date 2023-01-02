@@ -18,7 +18,12 @@
 
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AddService } from './services/add.service';
-import { DialogRef, DialogService, PanelType, SpBreadcrumbService } from '@streampipes/shared-ui';
+import {
+    DialogRef,
+    DialogService,
+    PanelType,
+    SpBreadcrumbService,
+} from '@streampipes/shared-ui';
 import { AddEndpointComponent } from './dialogs/add-endpoint/add-endpoint.component';
 import { EndpointInstallationComponent } from './dialogs/endpoint-installation/endpoint-installation.component';
 import { ExtensionsServiceEndpointItem } from '@streampipes/platform-services';
@@ -28,10 +33,9 @@ import { SpAddRoutes } from './add.routes';
 @Component({
     selector: 'sp-add',
     templateUrl: './add.component.html',
-    styleUrls: ['./add.component.scss']
+    styleUrls: ['./add.component.scss'],
 })
 export class AddComponent implements OnInit {
-
     activeLink: string;
 
     results: any[];
@@ -49,11 +53,13 @@ export class AddComponent implements OnInit {
     _filterTerm = '';
     _selectedInstallationStatus = 'all';
 
-    constructor(private addService: AddService,
-                private dialogService: DialogService,
-                private changeDetectorRef: ChangeDetectorRef,
-                private router: Router,
-                private breadcrumbService: SpBreadcrumbService) {
+    constructor(
+        private addService: AddService,
+        private dialogService: DialogService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private router: Router,
+        private breadcrumbService: SpBreadcrumbService,
+    ) {
         this.results = [];
         this.loading = false;
         this.endpointItems = [];
@@ -61,15 +67,24 @@ export class AddComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.breadcrumbService.updateBreadcrumb(this.breadcrumbService.getRootLink(SpAddRoutes.BASE));
+        this.breadcrumbService.updateBreadcrumb(
+            this.breadcrumbService.getRootLink(SpAddRoutes.BASE),
+        );
         this.getEndpointItems();
         this.selectedTab = 'all';
     }
 
     toggleSelected(endpointItem) {
         if (endpointItem.editable) {
-            if (this.selectedEndpointItems.some(item => item === endpointItem.uri)) {
-                this.selectedEndpointItems.splice(this.selectedEndpointItems.indexOf(endpointItem.uri), 1);
+            if (
+                this.selectedEndpointItems.some(
+                    item => item === endpointItem.uri,
+                )
+            ) {
+                this.selectedEndpointItems.splice(
+                    this.selectedEndpointItems.indexOf(endpointItem.uri),
+                    1,
+                );
             } else {
                 this.selectedEndpointItems.push(endpointItem.uri);
             }
@@ -95,7 +110,10 @@ export class AddComponent implements OnInit {
         this.selectedEndpointItems = [];
         this.endpointItems.forEach(item => {
             if (item.editable) {
-                if (item.type === this.selectedTab || this.selectedTab === 'all') {
+                if (
+                    item.type === this.selectedTab ||
+                    this.selectedTab === 'all'
+                ) {
                     (item as any).selected = selected;
                     if (selected) {
                         this.selectedEndpointItems.push(item.uri);
@@ -105,17 +123,15 @@ export class AddComponent implements OnInit {
         });
         this.changeDetectorRef.detectChanges();
     }
-    
 
     showManageRdfEndpointsDialog() {
-        const dialogRef: DialogRef<AddEndpointComponent> = this.dialogService.open(AddEndpointComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Manage Endpoints',
-            width: '70vw',
-            data: {
-
-            }
-        });
+        const dialogRef: DialogRef<AddEndpointComponent> =
+            this.dialogService.open(AddEndpointComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Manage Endpoints',
+                width: '70vw',
+                data: {},
+            });
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 this.getEndpointItems();
@@ -125,11 +141,10 @@ export class AddComponent implements OnInit {
 
     getEndpointItems() {
         this.endpointItemsLoadingComplete = false;
-        this.addService.getRdfEndpointItems()
-            .subscribe(endpointItems => {
-                this.endpointItems = endpointItems;
-                this.endpointItemsLoadingComplete = true;
-            });
+        this.addService.getRdfEndpointItems().subscribe(endpointItems => {
+            this.endpointItems = endpointItems;
+            this.endpointItemsLoadingComplete = true;
+        });
     }
 
     installSelected() {
@@ -155,19 +170,23 @@ export class AddComponent implements OnInit {
     }
 
     triggerInstallation(installationInfo: any) {
-        this.installElements(installationInfo.endpointItems, installationInfo.install);
+        this.installElements(
+            installationInfo.endpointItems,
+            installationInfo.install,
+        );
     }
 
     installElements(endpointItems, install) {
-        const dialogRef: DialogRef<EndpointInstallationComponent> = this.dialogService.open(EndpointInstallationComponent, {
-            panelType: PanelType.STANDARD_PANEL,
-            title: 'Installation',
-            width: '70vw',
-            data: {
-                'install': install,
-                'endpointItemsToInstall': endpointItems
-            }
-        });
+        const dialogRef: DialogRef<EndpointInstallationComponent> =
+            this.dialogService.open(EndpointInstallationComponent, {
+                panelType: PanelType.STANDARD_PANEL,
+                title: 'Installation',
+                width: '70vw',
+                data: {
+                    install: install,
+                    endpointItemsToInstall: endpointItems,
+                },
+            });
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 this.getEndpointItems();
@@ -194,7 +213,7 @@ export class AddComponent implements OnInit {
     }
 
     navigateTo(routeId: string): void {
-      this.router.navigate(['add', routeId]);
-      this.activeLink = routeId;
+        this.router.navigate(['add', routeId]);
+        this.activeLink = routeId;
     }
 }

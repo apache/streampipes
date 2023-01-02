@@ -16,24 +16,43 @@
   ~
   -->
 
-
 <div class="sp-dialog-container">
     <div class="sp-dialog-content p-15">
-        <div fxFlex="100" class="md-dialog-content" style="padding:20px;" *ngIf="page == 'preview'">
-            <h4>You are about to {{install ? 'install' : 'uninstall'}} the following elements:</h4>
+        <div
+            fxFlex="100"
+            class="md-dialog-content"
+            style="padding: 20px"
+            *ngIf="page === 'preview'"
+        >
+            <h4>
+                You are about to {{ install ? 'install' : 'uninstall' }} the
+                following elements:
+            </h4>
             <div *ngFor="let endpointItem of endpointItemsToInstall">
-                <h5>{{endpointItem.name}}</h5>
+                <h5>{{ endpointItem.name }}</h5>
             </div>
             <h5><b>Press 'Next' to start the process.</b></h5>
         </div>
-        <div fxFlex="100" class="md-dialog-content" style="padding:20px;" *ngIf="page == 'installation'">
+        <div
+            fxFlex="100"
+            class="md-dialog-content"
+            style="padding: 20px"
+            *ngIf="page === 'installation'"
+        >
             <div *ngFor="let status of installationStatus">
-                <h4>{{install ? 'Installing' : 'Uninstalling'}} {{status.id + 1}} of {{endpointItemsToInstall.length}}
-                    ({{status.name}})...{{status.status}}</h4>
+                <h4>
+                    {{ install ? 'Installing' : 'Uninstalling' }}
+                    {{ status.id + 1 }} of
+                    {{ endpointItemsToInstall.length }} ({{ status.name }})...{{
+                        status.status
+                    }}
+                </h4>
                 <div>
                     <div fxFlex fxLayout="column" *ngIf="status.details">
                         <b>More Details:</b>
-                        <div class="md-padding"><i class="fa fa-terminal">{{status.details}}</i></div>
+                        <div class="md-padding">
+                            <i class="fa fa-terminal">{{ status.details }}</i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -41,12 +60,30 @@
     </div>
     <mat-divider></mat-divider>
     <div class="sp-dialog-actions actions-align-right">
-        <mat-checkbox class="mr-15" [(ngModel)]="installAsPublicElement" *ngIf="install">Make available to all users with appropriate role</mat-checkbox>
-        <button mat-button mat-raised-button class="mat-basic" (click)="close()" style="margin-right: 10px;" *ngIf="nextButton !== 'Close'">
+        <mat-checkbox
+            class="mr-15"
+            [(ngModel)]="installAsPublicElement"
+            *ngIf="install"
+            >Make available to all users with appropriate role</mat-checkbox
+        >
+        <button
+            mat-button
+            mat-raised-button
+            class="mat-basic"
+            (click)="close()"
+            style="margin-right: 10px"
+            *ngIf="nextButton !== 'Close'"
+        >
             Close
         </button>
-        <button mat-button mat-raised-button color="accent" (click)="next()" [disabled]="installationRunning">
-            {{nextButton}}
+        <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="next()"
+            [disabled]="installationRunning"
+        >
+            {{ nextButton }}
         </button>
     </div>
 </div>
