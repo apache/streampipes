@@ -48,7 +48,7 @@ declare const window: Window;
     templateUrl: './view-asset.component.html',
     styleUrls: ['./view-asset.component.css'],
 })
-export class ViewAssetComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ViewAssetComponent implements AfterViewInit, OnDestroy {
     @Input() dashboardConfig: DashboardConfiguration;
     @Output() dashboardClosed = new EventEmitter<boolean>();
     @Output() editDashboardEmitter = new EventEmitter<DashboardConfiguration>();

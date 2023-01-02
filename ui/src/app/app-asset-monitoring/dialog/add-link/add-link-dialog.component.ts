@@ -26,7 +26,7 @@ import { HyperlinkConfig } from '../../model/selected-visualization-data.model';
     templateUrl: 'add-link-dialog.component.html',
     styleUrls: ['./add-link-dialog.component.scss'],
 })
-export class AddLinkDialogComponent implements OnInit {
+export class AddLinkDialogComponent {
     linkLabel: string;
     linkHref: string;
     labelFontSize = 12;
