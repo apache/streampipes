@@ -38,8 +38,8 @@
 	<owasp.check.skip>false</owasp.check.skip>
 
 	<!-- project dependencies -->
-	<activemq-client.version>5.16.3</activemq-client.version>
-	<asm.version>7.0</asm.version>
+	<activemq-client.version>5.17.3</activemq-client.version>
+	<asm.version>9.4</asm.version>
 	<byte-buddy.version>1.12.6</byte-buddy.version>
 	<cloning.version>1.9.12</cloning.version>
 	<commons-beanutils.version>1.9.4</commons-beanutils.version>
@@ -51,20 +51,20 @@
 	<elasticsearch.version>6.8.17</elasticsearch.version>
 	<flink.version>1.13.5</flink.version>
 	<fogsy-qudt.version>1.0</fogsy-qudt.version>
-	<fst.version>2.56</fst.version>
+	<fst.version>2.57</fst.version>
 	<geojson-jackson.version>1.8</geojson-jackson.version>
 	<guava.version>27.1-jre</guava.version>
 	<hibernate-validator.version>6.2.1.Final</hibernate-validator.version>
 	<httpclient.version>4.5.13</httpclient.version>
 	<httpcore.version>4.4.9</httpcore.version>
 	<httpcore-osgi.version>4.4.9</httpcore-osgi.version>
-	<influxdb.version>2.22</influxdb.version>
-	<j2html.version>1.4.0</j2html.version>
+	<influxdb.version>2.23</influxdb.version>
+	<j2html.version>1.6.0</j2html.version>
 	<jackson.version>2.14.1</jackson.version>
         <jackson.databind.version>2.13.4.1</jackson.databind.version>
 	<jakarta-annotation.version>1.3.5</jakarta-annotation.version>
 	<jakarta-activation-api.version>1.2.2</jakarta-activation-api.version>
-	<jakarta-mail.version>1.6.7</jakarta-mail.version>
+	<jakarta-mail.version>2.0.1</jakarta-mail.version>
 	<jakarta-servlet-api.version>4.0.4</jakarta-servlet-api.version>
 	<jakarta-validation.version>2.0.2</jakarta-validation.version>
 	<jakarta-xml-bind-api.version>2.3.3</jakarta-xml-bind-api.version>
@@ -87,7 +87,7 @@
 	<jjwt.version>0.11.2</jjwt.version>
 	<json-path.version>5.3.0</json-path.version>
 	<jsr305.version>3.0.2</jsr305.version>
-	<kafka.version>2.7.0</kafka.version>
+	<kafka.version>3.3.1</kafka.version>
 	<lightcouch.version>0.2.0</lightcouch.version>
 	<log4j.version>2.19.0</log4j.version>
 	<lz4.version>1.7.1</lz4.version>
@@ -95,17 +95,17 @@
 	<maven-invoker.version>2.2</maven-invoker.version>
 	<mqtt-client.version>1.12</mqtt-client.version>
 	<nats.version>2.16.1</nats.version>
-	<objenesis.version>2.5.1</objenesis.version>
+	<objenesis.version>3.3</objenesis.version>
 	<okio.version>1.16.0</okio.version>
 	<okhttp.version>3.12.2</okhttp.version>
 	<osgi.version>6.0.0</osgi.version>
 	<plexus-component-annotations.version>2.1.1</plexus-component-annotations.version>
-	<plexus-utils.version>3.4.1</plexus-utils.version>
+	<plexus-utils.version>3.5.0</plexus-utils.version>
 	<rdf4j.version>3.5.0</rdf4j.version>
 	<rendersnake.version>1.9.0</rendersnake.version>
 	<retrofit.version>2.5.0</retrofit.version>
 	<siddhi.version>5.1.26</siddhi.version>
-	<simple-java-mail.version>6.7.5</simple-java-mail.version>
+	<simple-java-mail.version>7.5.2</simple-java-mail.version>
 	<slf4j.version>1.7.30</slf4j.version>
 	<snakeyaml.version>1.26</snakeyaml.version>
 	<snappy-java.version>1.1.7.7</snappy-java.version>
@@ -115,13 +115,13 @@
 	<swagger.version>2.1.12</swagger.version>
 	<type-parser.version>0.7.0</type-parser.version>
 	<underscore.version>1.47</underscore.version>
-	<wildfly-common.version>1.5.4.Final</wildfly-common.version>
+	<wildfly-common.version>1.6.0.Final</wildfly-common.version>
 	<hawtbuf.version>1.11</hawtbuf.version>
 	<netty-tc-native.version>2.0.52.Final</netty-tc-native.version>
 
 	<!-- Test dependencies -->
 	<junit.version>4.13.2</junit.version>
-	<mockito.version>3.12.4</mockito.version>
+	<mockito.version>4.11.0</mockito.version>
 	<powermock.version>2.0.9</powermock.version>
 	<rest-assured.version>2.9.0</rest-assured.version>
 	<wiremock.version>2.27.2</wiremock.version>
@@ -147,10 +147,10 @@
 	<bcprov.version>1.66</bcprov.version>
 	<bcpkix.version>1.69</bcpkix.version>
 	<classindex.version>3.9</classindex.version>
-	<checker-qual.version>2.5.2</checker-qual.version>
+	<checker-qual.version>3.28.0</checker-qual.version>
 	<commons-math3.version>3.6.1</commons-math3.version>
 	<commons-compress.version>1.21</commons-compress.version>
-	<commons-text.version>1.4</commons-text.version>
+	<commons-text.version>1.10.0</commons-text.version>
 	<commons-pool2.version>2.9.0</commons-pool2.version>
 	<ditto-client.version>1.0.0</ditto-client.version>
 	<data-generator.version>1.4.1</data-generator.version>
@@ -172,7 +172,7 @@
 	<nekohtml.version>1.9.13</nekohtml.version>
 	<netty-resolver.version>4.1.72.Final</netty-resolver.version>
 	<okhttp.version>3.13.1</okhttp.version>
-	<opennlp.version>1.9.0</opennlp.version>
+	<opennlp.version>2.1.0</opennlp.version>
 	<postgresql.version>42.4.3</postgresql.version>
 	<pulsar.version>2.10.1</pulsar.version>
 	<rocketmq.version>5.0.2</rocketmq.version>
@@ -200,7 +200,7 @@
 	<jsrosbridge.version>0.2.0</jsrosbridge.version>
 	<influxdb.java.version>2.14</influxdb.java.version>
 	<eclipse.milo.version>0.6.3</eclipse.milo.version>
-	<mysql-binlog-connector.version>0.18.1</mysql-binlog-connector.version>
+	<mysql-binlog-connector.version>0.21.0</mysql-binlog-connector.version>
 	<mysql-connector-java.version>8.0.28</mysql-connector-java.version>
 	<netty.version>4.1.72.Final</netty.version>
 	<nimbus-jose-jwt.version>7.9</nimbus-jose-jwt.version>
@@ -290,7 +290,7 @@ IoT data streams.
 				<dependency>
 					<groupId>com.google.code.gson</groupId>
 					<artifactId>gson</artifactId>
-					<version>2.8.9</version>
+					<version>2.10</version>
 				</dependency>
 				<dependency>
 					<groupId>com.google.guava</groupId>
@@ -1336,7 +1336,7 @@ IoT data streams.
 				<dependency>
 					<groupId>org.glassfish.jaxb</groupId>
 					<artifactId>jaxb-runtime</artifactId>
-					<version>2.3.3</version>
+					<version>2.3.2</version>
 				</dependency>
 				<dependency>
 					<groupId>net.java.dev.jna</groupId>
@@ -1521,7 +1521,7 @@ IoT data streams.
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

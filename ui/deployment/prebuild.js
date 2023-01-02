@@ -44,7 +44,7 @@ if (!fs.existsSync('deployment/' + branchName + '/config.yml')) {
 // Read Config-File and check if it is valid
 let config = {};
 try {
-    config = yaml.safeLoad(
+    config = yaml.load(
         fs.readFileSync('deployment/' + branchName + '/config.yml', 'utf8'),
     );
 } catch (error) {
@@ -55,7 +55,7 @@ try {
 // Read Modules-File and check if it is valid
 let modules = {};
 try {
-    modules = yaml.safeLoad(fs.readFileSync('deployment/modules.yml', 'utf8'));
+    modules = yaml.load(fs.readFileSync('deployment/modules.yml', 'utf8'));
 } catch (error) {
     console.log('Invalid Modules-File. Pre-Build failed.');
     process.exit(1);

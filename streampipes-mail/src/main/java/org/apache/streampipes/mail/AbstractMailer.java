@@ -22,13 +22,12 @@ import org.apache.streampipes.config.backend.model.EmailConfig;
 import org.apache.streampipes.mail.config.MailConfigurationBuilder;
 import org.apache.streampipes.user.management.encryption.SecretEncryptionManager;
 
+import jakarta.mail.Message;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.email.EmailPopulatingBuilder;
 import org.simplejavamail.api.email.Recipient;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.email.EmailBuilder;
-
-import javax.mail.Message;
 
 import java.util.List;
 import java.util.stream.Collectors;
