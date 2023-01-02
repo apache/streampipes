@@ -20,7 +20,7 @@ package org.apache.streampipes.sinks.databases.flink.elasticsearch;
 
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.sinks.databases.flink.config.ConfigKeys;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.elastic.ElasticsearchSink;

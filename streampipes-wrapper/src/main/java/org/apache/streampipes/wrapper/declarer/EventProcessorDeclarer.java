@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.wrapper.declarer;
 
-import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.model.Response;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
 import org.apache.streampipes.sdk.extractor.ProcessingElementParameterExtractor;

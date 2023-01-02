@@ -19,8 +19,8 @@
 package org.apache.streampipes.sources.vehicle.simulator.simulator;
 
 import org.apache.streampipes.commons.constants.Envs;
-import org.apache.streampipes.container.config.ConfigExtractor;
-import org.apache.streampipes.container.init.DeclarersSingleton;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.pe.simulator.StreamPipesSimulationRunner;
 import org.apache.streampipes.pe.simulator.TopicAwareWorkflow;
 import org.apache.streampipes.sources.vehicle.simulator.config.ConfigKeys;

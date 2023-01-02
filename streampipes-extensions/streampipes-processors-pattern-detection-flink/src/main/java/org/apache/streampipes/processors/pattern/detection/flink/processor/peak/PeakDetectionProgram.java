@@ -19,7 +19,7 @@
 package org.apache.streampipes.processors.pattern.detection.flink.processor.peak;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.AbstractPatternDetectionProgram;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.utils.SlidingBatchWindow;
@@ -28,7 +28,6 @@ import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-
 
 import java.util.List;
 

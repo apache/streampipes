@@ -31,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.streampipes</groupId>
-            <artifactId>streampipes-container-extensions</artifactId>
+            <artifactId>streampipes-service-extensions</artifactId>
             <version>0.91.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>

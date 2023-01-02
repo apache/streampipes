@@ -18,13 +18,13 @@
 
 package org.apache.streampipes.connect.adapters.sensemap;
 
-import org.apache.streampipes.connect.adapter.Adapter;
-import org.apache.streampipes.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.connect.adapters.PullRestAdapter;
 import org.apache.streampipes.connect.adapters.sensemap.model.CurrentLocation;
 import org.apache.streampipes.connect.adapters.sensemap.model.SenseBox;
 import org.apache.streampipes.connect.adapters.sensemap.model.Sensor;
-import org.apache.streampipes.connect.api.exception.AdapterException;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
+import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.adapter.util.PollingSettings;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;

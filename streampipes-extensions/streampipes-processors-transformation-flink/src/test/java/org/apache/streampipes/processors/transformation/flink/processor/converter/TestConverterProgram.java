@@ -18,11 +18,10 @@
 package org.apache.streampipes.processors.transformation.flink.processor.converter;
 
 
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
 import org.apache.streampipes.test.generator.InvocationGraphGenerator;
-
 
 import io.flinkspector.core.collection.ExpectedRecords;
 import io.flinkspector.datastream.DataStreamTestBase;

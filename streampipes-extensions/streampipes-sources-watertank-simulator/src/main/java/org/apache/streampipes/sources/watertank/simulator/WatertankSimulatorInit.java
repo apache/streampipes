@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.sources.watertank.simulator;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sources.watertank.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.watertank.simulator.watertank.streams.FlowRate1Stream;
 import org.apache.streampipes.sources.watertank.simulator.watertank.streams.FlowRate2Stream;

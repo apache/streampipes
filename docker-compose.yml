@@ -36,10 +36,8 @@ services:
   #### apache/incubator-streampipes
   backend:
     build:
-      context: ./streampipes-backend
+      context: ./streampipes-service-core
       dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_backend:release-validation
     depends_on:
       - consul
@@ -55,8 +53,6 @@ services:
     build:
       context: ./ui
       dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: nginx
     image: incubator-streampipes_ui:release-validation
     ports:
       - "80:80"
@@ -72,8 +68,6 @@ services:
     build:
       context: ./streampipes-extensions/streampipes-extensions-all-jvm
       dockerfile: Dockerfile
-      args:
-        BASE_IMAGE: adoptopenjdk/openjdk8-openj9:alpine
     image: incubator-streampipes_pipeline-elements-all-jvm:release-validation
     volumes:
       - files:/spImages

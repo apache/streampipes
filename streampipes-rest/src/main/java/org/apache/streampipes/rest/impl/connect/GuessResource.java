@@ -19,9 +19,9 @@
 package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
-import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.connect.api.exception.WorkerAdapterException;
-import org.apache.streampipes.connect.container.master.management.GuessManagement;
+import org.apache.streampipes.connect.management.management.GuessManagement;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.api.connect.exception.WorkerAdapterException;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.AdapterEventPreview;
