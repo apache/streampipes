@@ -29,8 +29,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 
 public class AllExtensionsInit extends ExtensionsModelSubmitter {

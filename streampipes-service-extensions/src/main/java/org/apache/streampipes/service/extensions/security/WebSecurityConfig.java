@@ -16,12 +16,10 @@
  *
  */
 
-package org.apache.streampipes.service.extensions.base;
+package org.apache.streampipes.service.extensions.security;
 
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;
-import org.apache.streampipes.service.extensions.base.security.TokenAuthenticationFilter;
-import org.apache.streampipes.service.extensions.base.security.UnauthenticatedInterfaces;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -16,11 +16,11 @@
  *
  */
 
-package org.aapche.streampipes.service.extensions.connect.function;
+package org.apache.streampipes.service.extensions.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.function.FunctionDefinition;
-import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

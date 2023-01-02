@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.brokers.jvm.bufferrest.BufferRestController;
 import org.apache.streampipes.sinks.brokers.jvm.jms.JmsController;
 import org.apache.streampipes.sinks.brokers.jvm.kafka.KafkaController;
@@ -37,8 +38,6 @@ import org.apache.streampipes.sinks.brokers.jvm.rabbitmq.RabbitMqController;
 import org.apache.streampipes.sinks.brokers.jvm.rest.RestController;
 import org.apache.streampipes.sinks.brokers.jvm.rocketmq.RocketMQPublisherSink;
 import org.apache.streampipes.sinks.brokers.jvm.websocket.WebsocketServerSink;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class BrokersJvmInit extends ExtensionsModelSubmitter {
 

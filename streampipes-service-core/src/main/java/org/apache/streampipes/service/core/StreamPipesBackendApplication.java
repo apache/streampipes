@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.service.core;
 
-import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;
@@ -28,6 +27,7 @@ import org.apache.streampipes.model.pipeline.PipelineOperationStatus;
 import org.apache.streampipes.rest.security.SpPermissionEvaluator;
 import org.apache.streampipes.service.base.BaseNetworkingConfig;
 import org.apache.streampipes.service.base.StreamPipesServiceBase;
+import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.couchdb.utils.CouchDbViewGenerator;
 import org.apache.streampipes.storage.management.StorageDispatcher;

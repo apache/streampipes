@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.service.extensions.base;
+package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;

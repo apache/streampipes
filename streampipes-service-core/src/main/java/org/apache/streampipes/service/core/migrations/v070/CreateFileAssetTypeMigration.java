@@ -18,10 +18,10 @@
 
 package org.apache.streampipes.service.core.migrations.v070;
 
-import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.commons.random.UUIDGenerator;
 import org.apache.streampipes.model.assets.AssetLinkType;
+import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;

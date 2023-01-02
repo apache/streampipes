@@ -40,8 +40,7 @@ import org.apache.streampipes.processors.filters.jvm.processor.schema.MergeBySch
 import org.apache.streampipes.processors.filters.jvm.processor.textfilter.TextFilterProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.threshold.ThresholdDetectionProcessor;
 import org.apache.streampipes.processors.filters.jvm.processor.throughputmon.ThroughputMonitorProcessor;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class FiltersJvmInit extends ExtensionsModelSubmitter {
 

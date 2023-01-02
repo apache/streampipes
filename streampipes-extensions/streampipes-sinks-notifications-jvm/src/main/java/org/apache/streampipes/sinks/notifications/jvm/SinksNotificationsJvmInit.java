@@ -27,13 +27,12 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.notifications.jvm.config.ConfigKeys;
 import org.apache.streampipes.sinks.notifications.jvm.email.EmailController;
 import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalController;
 import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationController;
 import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class SinksNotificationsJvmInit extends ExtensionsModelSubmitter {
 

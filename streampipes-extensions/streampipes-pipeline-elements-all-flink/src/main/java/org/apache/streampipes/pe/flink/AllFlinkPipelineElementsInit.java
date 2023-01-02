@@ -33,9 +33,8 @@ import org.apache.streampipes.processors.pattern.detection.flink.PatternDetectio
 import org.apache.streampipes.processors.statistics.flink.StatisticsFlinkInit;
 import org.apache.streampipes.processors.textmining.flink.TextMiningFlinkInit;
 import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.databases.flink.DatabasesFlinkInit;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 
 public class AllFlinkPipelineElementsInit extends ExtensionsModelSubmitter {

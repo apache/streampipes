@@ -50,8 +50,7 @@ import org.apache.streampipes.processors.transformation.jvm.processor.timestampe
 import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanController;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class TransformationJvmInit extends ExtensionsModelSubmitter {
 

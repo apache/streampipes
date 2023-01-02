@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-package org.aapche.streampipes.service.extensions.connect;
+package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
-import org.apache.streampipes.service.extensions.base.StreamPipesExtensionsServiceBase;
-import org.apache.streampipes.service.extensions.base.WebSecurityConfig;
+import org.apache.streampipes.service.extensions.connect.ConnectWorkerRegistrationService;
+import org.apache.streampipes.service.extensions.function.StreamPipesFunctionHandler;
+import org.apache.streampipes.service.extensions.security.WebSecurityConfig;
 import org.apache.streampipes.svcdiscovery.api.model.SpServiceTag;
 
-import org.aapche.streampipes.service.extensions.connect.function.StreamPipesFunctionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

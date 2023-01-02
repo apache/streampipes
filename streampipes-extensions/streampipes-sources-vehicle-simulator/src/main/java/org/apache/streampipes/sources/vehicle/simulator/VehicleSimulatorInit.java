@@ -20,10 +20,9 @@ package org.apache.streampipes.sources.vehicle.simulator;
 
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sources.vehicle.simulator.config.ConfigKeys;
 import org.apache.streampipes.sources.vehicle.simulator.vehicle.streams.VehicleStream;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class VehicleSimulatorInit extends ExtensionsModelSubmitter {
 

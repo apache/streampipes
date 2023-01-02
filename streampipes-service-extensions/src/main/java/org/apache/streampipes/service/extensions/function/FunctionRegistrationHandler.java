@@ -15,30 +15,32 @@
  * limitations under the License.
  *
  */
-package org.aapche.streampipes.service.extensions.connect;
 
-import org.apache.streampipes.extensions.management.init.RunningInstances;
+package org.apache.streampipes.service.extensions.function;
+
+import org.apache.streampipes.client.StreamPipesClient;
+import org.apache.streampipes.model.function.FunctionDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExtensionsServiceShutdownHandler {
+import java.util.List;
 
-  private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceShutdownHandler.class);
+public class FunctionRegistrationHandler extends RegistrationHandler {
 
+  private static final Logger LOG = LoggerFactory.getLogger(FunctionRegistrationHandler.class);
 
-  public void onShutdown() {
-    LOG.info("Shutting down StreamPipes extensions service...");
-    int runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
+  public FunctionRegistrationHandler(List<FunctionDefinition> functions) {
+    super(functions);
+  }
 
-    while (runningInstancesCount > 0) {
-      LOG.info("Waiting for {} running pipeline elements to be stopped...", runningInstancesCount);
-      try {
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-        LOG.error("Could not pause current thread...");
-      }
-      runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
-    }
+  @Override
+  protected void performRequest(StreamPipesClient client) {
+    client.adminApi().registerFunctions(functions);
+  }
+
+  @Override
+  protected void logSuccess() {
+    LOG.info("Successfully registered functions {}", functions.toString());
   }
 }

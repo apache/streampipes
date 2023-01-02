@@ -34,12 +34,11 @@ import org.apache.streampipes.processors.imageprocessing.jvm.ImageProcessingJvmI
 import org.apache.streampipes.processors.siddhi.FiltersSiddhiInit;
 import org.apache.streampipes.processors.textmining.jvm.TextMiningJvmInit;
 import org.apache.streampipes.processors.transformation.jvm.TransformationJvmInit;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.brokers.jvm.BrokersJvmInit;
 import org.apache.streampipes.sinks.databases.jvm.DatabasesJvmInit;
 import org.apache.streampipes.sinks.internal.jvm.SinksInternalJvmInit;
 import org.apache.streampipes.sinks.notifications.jvm.SinksNotificationsJvmInit;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class AllPipelineElementsInit extends ExtensionsModelSubmitter {
 

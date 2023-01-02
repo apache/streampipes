@@ -24,12 +24,12 @@ import org.apache.streampipes.extensions.management.declarer.InvocableDeclarer;
 import org.apache.streampipes.extensions.management.declarer.PipelineTemplateDeclarer;
 import org.apache.streampipes.extensions.management.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.extensions.management.declarer.SemanticEventProcessingAgentDeclarer;
-import org.apache.streampipes.rest.extensions.html.model.Description;
 import org.apache.streampipes.extensions.management.locales.LabelGenerator;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataSinkDescription;
+import org.apache.streampipes.rest.extensions.html.model.Description;
 import org.apache.streampipes.sdk.utils.Assets;
 
 import java.io.IOException;

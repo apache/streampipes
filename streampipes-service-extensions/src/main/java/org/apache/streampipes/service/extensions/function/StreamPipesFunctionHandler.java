@@ -16,7 +16,7 @@
  *
  */
 
-package org.aapche.streampipes.service.extensions.connect.function;
+package org.apache.streampipes.service.extensions.function;
 
 import org.apache.streampipes.extensions.management.declarer.IStreamPipesFunctionDeclarer;
 import org.apache.streampipes.extensions.management.init.DeclarersSingleton;

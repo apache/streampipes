@@ -33,8 +33,7 @@ import org.apache.streampipes.processors.siddhi.listcollector.ListCollector;
 import org.apache.streampipes.processors.siddhi.listfilter.ListFilter;
 import org.apache.streampipes.processors.siddhi.topk.TopK;
 import org.apache.streampipes.processors.siddhi.trend.TrendController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class FiltersSiddhiInit extends ExtensionsModelSubmitter {
 

@@ -31,8 +31,7 @@ import org.apache.streampipes.processors.imageprocessing.jvm.processor.genericcl
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imagecropper.ImageCropperController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.imageenrichment.ImageEnrichmentController;
 import org.apache.streampipes.processors.imageprocessing.jvm.processor.qrreader.QrCodeReaderController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class ImageProcessingJvmInit extends ExtensionsModelSubmitter {
 

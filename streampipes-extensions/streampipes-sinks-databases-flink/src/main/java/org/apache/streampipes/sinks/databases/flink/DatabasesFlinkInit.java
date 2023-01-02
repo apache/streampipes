@@ -27,10 +27,9 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.databases.flink.config.ConfigKeys;
 import org.apache.streampipes.sinks.databases.flink.elasticsearch.ElasticSearchController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class DatabasesFlinkInit extends ExtensionsModelSubmitter {
 

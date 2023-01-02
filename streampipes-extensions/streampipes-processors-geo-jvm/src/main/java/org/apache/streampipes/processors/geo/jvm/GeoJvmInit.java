@@ -37,8 +37,7 @@ import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.goog
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemapsstatic.GoogleMapsStaticGeocoderProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname.GeoCityNameRevdecodeProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator.SpeedCalculatorProcessor;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class GeoJvmInit extends ExtensionsModelSubmitter {
 

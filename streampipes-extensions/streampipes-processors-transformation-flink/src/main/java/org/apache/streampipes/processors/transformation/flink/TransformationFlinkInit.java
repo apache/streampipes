@@ -34,8 +34,7 @@ import org.apache.streampipes.processors.transformation.flink.processor.hasher.F
 import org.apache.streampipes.processors.transformation.flink.processor.mapper.FieldMapperController;
 import org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter.MeasurementUnitConverterController;
 import org.apache.streampipes.processors.transformation.flink.processor.rename.FieldRenamerController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class TransformationFlinkInit extends ExtensionsModelSubmitter {
 

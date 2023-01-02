@@ -27,6 +27,7 @@ import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBui
 import org.apache.streampipes.messaging.jms.SpJmsProtocolFactory;
 import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.sinks.databases.jvm.couchdb.CouchDbController;
 import org.apache.streampipes.sinks.databases.jvm.ditto.DittoController;
 import org.apache.streampipes.sinks.databases.jvm.influxdb.InfluxDbController;
@@ -34,8 +35,6 @@ import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
 import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class DatabasesJvmInit extends ExtensionsModelSubmitter {
 

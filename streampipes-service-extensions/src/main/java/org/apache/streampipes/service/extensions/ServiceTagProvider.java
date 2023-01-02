@@ -16,7 +16,7 @@
  *
  */
 
-package org.aapche.streampipes.service.extensions.connect;
+package org.apache.streampipes.service.extensions;
 
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.connect.api.IProtocol;

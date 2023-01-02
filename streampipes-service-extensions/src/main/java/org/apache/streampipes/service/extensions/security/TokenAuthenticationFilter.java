@@ -17,7 +17,7 @@
  */
 
 
-package org.apache.streampipes.service.extensions.base.security;
+package org.apache.streampipes.service.extensions.security;
 
 import org.apache.streampipes.commons.constants.HttpConstants;
 import org.apache.streampipes.model.UserInfo;

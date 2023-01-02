@@ -30,8 +30,7 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.changedetection.jvm.cusum.CusumController;
 import org.apache.streampipes.processors.changedetection.jvm.welford.WelfordChangeDetection;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class ChangeDetectionJvmInit extends ExtensionsModelSubmitter {
 

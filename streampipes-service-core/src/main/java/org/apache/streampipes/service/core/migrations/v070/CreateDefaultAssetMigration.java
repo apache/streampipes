@@ -19,9 +19,9 @@
 
 package org.apache.streampipes.service.core.migrations.v070;
 
-import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.commons.constants.GenericDocTypes;
 import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
+import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;

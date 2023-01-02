@@ -33,8 +33,7 @@ import org.apache.streampipes.processors.enricher.jvm.processor.math.staticmatho
 import org.apache.streampipes.processors.enricher.jvm.processor.sizemeasure.SizeMeasureController;
 import org.apache.streampipes.processors.enricher.jvm.processor.trigonometry.TrigonometryProcessor;
 import org.apache.streampipes.processors.enricher.jvm.processor.valuechange.ValueChangeProcessor;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class EnricherJvmInit extends ExtensionsModelSubmitter {
 

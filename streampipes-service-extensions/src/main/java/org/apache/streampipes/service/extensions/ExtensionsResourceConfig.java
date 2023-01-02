@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.aapche.streampipes.service.extensions.connect;
+package org.apache.streampipes.service.extensions;
 
 
 import org.apache.streampipes.rest.extensions.WelcomePage;

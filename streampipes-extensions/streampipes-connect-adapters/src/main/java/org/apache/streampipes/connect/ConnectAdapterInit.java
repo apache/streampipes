@@ -36,8 +36,7 @@ import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticles
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class ConnectAdapterInit extends ExtensionsModelSubmitter {
 

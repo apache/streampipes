@@ -22,6 +22,7 @@ import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.management.api.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -40,7 +41,6 @@ import org.apache.streampipes.sdk.helpers.Labels;
 import org.apache.streampipes.sdk.helpers.Locales;
 import org.apache.streampipes.sdk.helpers.OutputStrategies;
 import org.apache.streampipes.sdk.utils.Assets;
-import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 import org.apache.streampipes.wrapper.standalone.ConfiguredEventProcessor;
 import org.apache.streampipes.wrapper.standalone.declarer.StandaloneEventProcessingDeclarer;
 

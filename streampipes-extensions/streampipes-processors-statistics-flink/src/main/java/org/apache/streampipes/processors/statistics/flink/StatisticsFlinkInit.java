@@ -30,8 +30,7 @@ import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processors.statistics.flink.config.ConfigKeys;
 import org.apache.streampipes.processors.statistics.flink.processor.stat.summary.StatisticsSummaryController;
 import org.apache.streampipes.processors.statistics.flink.processor.stat.window.StatisticsSummaryControllerWindow;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class StatisticsFlinkInit extends ExtensionsModelSubmitter {
 

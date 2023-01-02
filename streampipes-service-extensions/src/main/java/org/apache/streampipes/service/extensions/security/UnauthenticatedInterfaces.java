@@ -17,7 +17,7 @@
  */
 
 
-package org.apache.streampipes.service.extensions.base.security;
+package org.apache.streampipes.service.extensions.security;
 
 import java.util.Arrays;
 import java.util.Collection;

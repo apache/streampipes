@@ -1404,7 +1404,6 @@ IoT data streams.
 			<module>streampipes-service-discovery</module>
 			<module>streampipes-service-discovery-consul</module>
 			<module>streampipes-service-discovery-api</module>
-			<module>streampipes-service-extensions-base</module>
 			<module>streampipes-storage-api</module>
 			<module>streampipes-storage-management</module>
 			<module>streampipes-storage-couchdb</module>

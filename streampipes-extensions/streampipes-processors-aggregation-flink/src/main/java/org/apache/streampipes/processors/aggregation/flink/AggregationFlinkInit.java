@@ -32,8 +32,7 @@ import org.apache.streampipes.processors.aggregation.flink.processor.aggregation
 import org.apache.streampipes.processors.aggregation.flink.processor.count.CountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.eventcount.EventCountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.rate.EventRateController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class AggregationFlinkInit extends ExtensionsModelSubmitter {
 

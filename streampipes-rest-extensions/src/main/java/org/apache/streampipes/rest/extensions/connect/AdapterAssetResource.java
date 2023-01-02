@@ -18,8 +18,8 @@
 
 package org.apache.streampipes.rest.extensions.connect;
 
-import org.apache.streampipes.extensions.management.connect.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.extensions.management.assets.AssetZipGenerator;
+import org.apache.streampipes.extensions.management.connect.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.extensions.management.util.AssetsUtil;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.rest.shared.impl.AbstractSharedRestInterface;

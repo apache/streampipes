@@ -32,8 +32,7 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.absen
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.sequence.SequenceController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class PatternDetectionFlinkInit extends ExtensionsModelSubmitter {
 

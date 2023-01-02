@@ -33,8 +33,7 @@ import org.apache.streampipes.processors.textmining.jvm.processor.namefinder.Nam
 import org.apache.streampipes.processors.textmining.jvm.processor.partofspeech.PartOfSpeechController;
 import org.apache.streampipes.processors.textmining.jvm.processor.sentencedetection.SentenceDetectionController;
 import org.apache.streampipes.processors.textmining.jvm.processor.tokenizer.TokenizerController;
-
-import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class TextMiningJvmInit extends ExtensionsModelSubmitter {
 
