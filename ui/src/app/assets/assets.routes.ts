@@ -16,11 +16,15 @@
  *
  */
 
-import { SpBreadcrumbItem, } from '@streampipes/shared-ui';
+import { SpBreadcrumbItem } from '@streampipes/shared-ui';
 
 export class SpAssetRoutes {
-
-  static BASE: SpBreadcrumbItem = {label: 'Asset Management', link: ['assets']};
-  static CREATE: SpBreadcrumbItem = {label: 'New Asset', link: ['assets', 'create']};
-
+    static BASE: SpBreadcrumbItem = {
+        label: 'Asset Management',
+        link: ['assets'],
+    };
+    static CREATE: SpBreadcrumbItem = {
+        label: 'New Asset',
+        link: ['assets', 'create'],
+    };
 }

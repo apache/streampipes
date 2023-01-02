@@ -16,44 +16,45 @@
  *
  */
 
-
-import { Component, Input, OnInit } from '@angular/core';
-import { AssetManagementService, DataViewDataExplorerService, SpAssetModel } from '@streampipes/platform-services';
+import { Component, Input } from '@angular/core';
+import {
+    AssetManagementService,
+    DataViewDataExplorerService,
+    SpAssetModel,
+} from '@streampipes/platform-services';
 import { DialogRef } from '@streampipes/shared-ui';
 
 @Component({
-  selector: 'sp-create-asset-dialog-component',
-  templateUrl: './create-asset-dialog.component.html',
-  styleUrls: ['./create-asset-dialog.component.scss']
+    selector: 'sp-create-asset-dialog-component',
+    templateUrl: './create-asset-dialog.component.html',
+    styleUrls: ['./create-asset-dialog.component.scss'],
 })
-export class SpCreateAssetDialogComponent implements OnInit {
+export class SpCreateAssetDialogComponent {
+    @Input() createMode: boolean;
+    @Input() assetModel: SpAssetModel;
 
-  @Input() createMode: boolean;
-  @Input() assetModel: SpAssetModel;
+    constructor(
+        private dialogRef: DialogRef<SpCreateAssetDialogComponent>,
+        private assetManagementService: AssetManagementService,
+    ) {}
 
-  constructor(
-    private dialogRef: DialogRef<SpCreateAssetDialogComponent>,
-    private assetManagementService: AssetManagementService) {
-  }
-
-  ngOnInit() {
-
-  }
-
-  onCancel(): void {
-    this.dialogRef.close();
-  }
-
-  onSave(): void {
-    if (this.createMode) {
-      this.assetManagementService.createAsset(this.assetModel).subscribe(() => {
+    onCancel(): void {
         this.dialogRef.close();
-      });
-    } else {
-      this.assetManagementService.updateAsset(this.assetModel).subscribe(() => {
-        this.dialogRef.close();
-      });
     }
-  }
 
+    onSave(): void {
+        if (this.createMode) {
+            this.assetManagementService
+                .createAsset(this.assetModel)
+                .subscribe(() => {
+                    this.dialogRef.close();
+                });
+        } else {
+            this.assetManagementService
+                .updateAsset(this.assetModel)
+                .subscribe(() => {
+                    this.dialogRef.close();
+                });
+        }
+    }
 }

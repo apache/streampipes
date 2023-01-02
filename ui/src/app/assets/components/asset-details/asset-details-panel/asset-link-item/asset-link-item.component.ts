@@ -16,55 +16,62 @@
  *
  */
 
-
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AssetLink, AssetLinkType } from '@streampipes/platform-services';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'sp-asset-link-item-component',
-  templateUrl: './asset-link-item.component.html',
-  styleUrls: ['./asset-link-item.component.scss']
+    selector: 'sp-asset-link-item-component',
+    templateUrl: './asset-link-item.component.html',
+    styleUrls: ['./asset-link-item.component.scss'],
 })
 export class SpAssetLinkItemComponent implements OnInit {
+    @Input()
+    assetLink: AssetLink;
 
-  @Input()
-  assetLink: AssetLink;
+    @Input()
+    assetLinkIndex: number;
 
-  @Input()
-  assetLinkIndex: number;
+    @Input()
+    assetLinkTypes: AssetLinkType[];
 
-  @Input()
-  assetLinkTypes: AssetLinkType[];
+    @Input()
+    editMode: boolean;
 
-  @Input()
-  editMode: boolean;
+    @Output()
+    openEditAssetLinkEmitter: EventEmitter<{
+        assetLink: AssetLink;
+        index: number;
+    }> = new EventEmitter<{ assetLink: AssetLink; index: number }>();
 
-  @Output()
-  openEditAssetLinkEmitter: EventEmitter<{assetLink: AssetLink, index: number}> = new EventEmitter<{assetLink: AssetLink, index: number}>();
+    @Output()
+    deleteAssetLinkEmitter: EventEmitter<number> = new EventEmitter<number>();
 
-  @Output()
-  deleteAssetLinkEmitter: EventEmitter<number> = new EventEmitter<number>();
+    currentAssetLinkType: AssetLinkType;
 
-  currentAssetLinkType: AssetLinkType;
+    constructor(private router: Router) {}
 
-  constructor(private router: Router) {
+    ngOnInit(): void {
+        this.currentAssetLinkType = this.assetLinkTypes.find(
+            t => t.linkType === this.assetLink.linkType,
+        );
+    }
 
-  }
+    openLink(): void {
+        this.router.navigate([
+            ...this.currentAssetLinkType.navPaths,
+            this.assetLink.resourceId,
+        ]);
+    }
 
-  ngOnInit(): void {
-    this.currentAssetLinkType = this.assetLinkTypes.find(t => t.linkType === this.assetLink.linkType);
-  }
+    editLink(): void {
+        this.openEditAssetLinkEmitter.emit({
+            assetLink: this.assetLink,
+            index: this.assetLinkIndex,
+        });
+    }
 
-  openLink(): void {
-    this.router.navigate([...this.currentAssetLinkType.navPaths, this.assetLink.resourceId]);
-  }
-
-  editLink(): void {
-    this.openEditAssetLinkEmitter.emit({assetLink: this.assetLink, index: this.assetLinkIndex});
-  }
-
-  deleteLink(): void {
-    this.deleteAssetLinkEmitter.emit(this.assetLinkIndex);
-  }
+    deleteLink(): void {
+        this.deleteAssetLinkEmitter.emit(this.assetLinkIndex);
+    }
 }
