@@ -1365,7 +1365,7 @@ IoT data streams.
 			<module>archetypes/streampipes-archetype-extensions-jvm</module>
 			<module>archetypes/streampipes-archetype-pe-sinks-flink</module>
 			<module>archetypes/streampipes-archetype-pe-processors-flink</module>
-			<module>streampipes-backend</module>
+			<module>streampipes-service-core</module>
 			<module>streampipes-client</module>
 			<module>streampipes-commons</module>
 			<module>streampipes-config</module>

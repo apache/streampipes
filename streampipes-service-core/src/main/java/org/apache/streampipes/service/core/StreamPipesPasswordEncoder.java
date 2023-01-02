@@ -15,16 +15,20 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.backend;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+package org.apache.streampipes.service.core;
 
-@Controller
-public class WelcomePageController {
+import org.apache.streampipes.user.management.authentication.StreamPipesCredentialsMatcher;
 
-  @RequestMapping(path = "/")
-  public String index() {
-    return "/index.html";
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StreamPipesPasswordEncoder {
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new StreamPipesCredentialsMatcher();
   }
 }

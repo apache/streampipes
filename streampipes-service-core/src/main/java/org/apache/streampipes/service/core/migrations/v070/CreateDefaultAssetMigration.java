@@ -17,22 +17,22 @@
  */
 
 
-package org.apache.streampipes.backend.migrations.v070;
+package org.apache.streampipes.service.core.migrations.v070;
 
-import org.apache.streampipes.backend.migrations.Migration;
+import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.commons.constants.GenericDocTypes;
-import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
+import org.apache.streampipes.manager.setup.tasks.CreateDefaultAssetTask;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
 
-public class CreateAssetLinkTypeMigration implements Migration {
+public class CreateDefaultAssetMigration implements Migration {
 
   @Override
   public boolean shouldExecute() {
     try {
-      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
-          .size() == 0;
+      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage()
+          .findOne(GenericDocTypes.DEFAULT_ASSET_DOC_ID) == null;
     } catch (IOException e) {
       return true;
     }
@@ -40,11 +40,11 @@ public class CreateAssetLinkTypeMigration implements Migration {
 
   @Override
   public void executeMigration() {
-    new CreateAssetLinkTypeTask().execute();
+    new CreateDefaultAssetTask().execute();
   }
 
   @Override
   public String getDescription() {
-    return "Populating database with default asset links";
+    return "Creating a default asset representation";
   }
 }

@@ -25,7 +25,7 @@
         <version>0.91.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>streampipes-backend</artifactId>
+    <artifactId>streampipes-service-core</artifactId>
     <packaging>jar</packaging>
     <name>StreamPipes Core</name>
 
@@ -119,7 +119,7 @@
                             <goal>repackage</goal>
                         </goals>
                         <configuration>
-                            <mainClass>org.apache.streampipes.backend.StreamPipesBackendApplication
+                            <mainClass>org.apache.streampipes.service.core.StreamPipesBackendApplication
                             </mainClass>
                         </configuration>
                     </execution>

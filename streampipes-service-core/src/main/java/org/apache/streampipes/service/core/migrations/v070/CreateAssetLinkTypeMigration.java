@@ -16,44 +16,35 @@
  *
  */
 
-package org.apache.streampipes.backend.migrations.v070;
 
-import org.apache.streampipes.backend.migrations.Migration;
+package org.apache.streampipes.service.core.migrations.v070;
+
+import org.apache.streampipes.service.core.migrations.Migration;
 import org.apache.streampipes.commons.constants.GenericDocTypes;
-import org.apache.streampipes.commons.random.UUIDGenerator;
-import org.apache.streampipes.model.assets.AssetLinkType;
+import org.apache.streampipes.manager.setup.tasks.CreateAssetLinkTypeTask;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 
 import java.io.IOException;
-import java.util.List;
 
-public class CreateFileAssetTypeMigration implements Migration {
+public class CreateAssetLinkTypeMigration implements Migration {
 
   @Override
   public boolean shouldExecute() {
     try {
-      return StorageDispatcher
-          .INSTANCE
-          .getNoSqlStore()
-          .getGenericStorage()
-          .findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
-          .stream()
-          .noneMatch(al -> al.get("linkType").equals("file"));
+      return StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().findAll(GenericDocTypes.DOC_ASSET_LINK_TYPE)
+          .size() == 0;
     } catch (IOException e) {
       return true;
     }
   }
 
   @Override
-  public void executeMigration() throws IOException {
-    var fileAsset = new AssetLinkType("file", "File", "var(--color-file)", "draft", "file", List.of(), false);
-    fileAsset.setId(UUIDGenerator.generateUuid());
-    StorageDispatcher.INSTANCE.getNoSqlStore().getGenericStorage().create(fileAsset, AssetLinkType.class);
-
+  public void executeMigration() {
+    new CreateAssetLinkTypeTask().execute();
   }
 
   @Override
   public String getDescription() {
-    return "Create asset type 'File'";
+    return "Populating database with default asset links";
   }
 }

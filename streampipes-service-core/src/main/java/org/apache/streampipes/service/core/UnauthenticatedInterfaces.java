@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.backend;
+package org.apache.streampipes.service.core;
 
 import java.util.Arrays;
 import java.util.Collection;

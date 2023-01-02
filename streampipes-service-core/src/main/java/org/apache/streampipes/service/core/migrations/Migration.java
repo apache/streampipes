@@ -17,7 +17,7 @@
  */
 
 
-package org.apache.streampipes.backend.migrations;
+package org.apache.streampipes.service.core.migrations;
 
 import java.io.IOException;
 

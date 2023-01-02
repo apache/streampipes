@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.backend;
+package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.rest.filter.TokenAuthenticationFilter;
 import org.apache.streampipes.service.base.security.UnauthorizedRequestEntryPoint;

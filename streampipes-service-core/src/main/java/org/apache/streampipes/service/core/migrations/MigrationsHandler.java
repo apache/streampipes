@@ -17,7 +17,7 @@
  */
 
 
-package org.apache.streampipes.backend.migrations;
+package org.apache.streampipes.service.core.migrations;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

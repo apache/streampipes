@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.backend;
+package org.apache.streampipes.service.core;
 
-import org.apache.streampipes.backend.migrations.MigrationsHandler;
+import org.apache.streampipes.service.core.migrations.MigrationsHandler;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.manager.health.PipelineHealthCheck;
 import org.apache.streampipes.manager.monitoring.pipeline.ExtensionsServiceLogExecutor;

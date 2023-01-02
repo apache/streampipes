@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.backend;
+package org.apache.streampipes.service.core;
 
 import org.apache.streampipes.commons.constants.Envs;
 import org.apache.streampipes.config.backend.BackendConfig;
