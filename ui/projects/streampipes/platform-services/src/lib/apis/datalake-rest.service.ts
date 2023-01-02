@@ -87,7 +87,7 @@ export class DatalakeRestService {
             const headers = ignoreLoadingBar ? { ignoreLoadingBar: '' } : {};
             // @ts-ignore
             return this.http.get<SpQueryResult>(url, {
-                params: queryParams,
+                params: queryParams as unknown as HttpParams,
                 headers,
             });
         }
