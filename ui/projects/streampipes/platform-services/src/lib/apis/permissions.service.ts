@@ -23,25 +23,31 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Permission } from '../model/gen/streampipes-model-client';
 
-
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class PermissionsService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) { }
+    public getPermissionsForObject(
+        objectInstanceId: string,
+    ): Observable<Permission[]> {
+        return this.http
+            .get(`${this.permissionsBasePath}/objects/${objectInstanceId}`)
+            .pipe(map(response => response as Permission[]));
+    }
 
+    public updatePermission(permission: Permission): Observable<any> {
+        return this.http.put(
+            `${this.permissionsBasePath}/${permission.permissionId}`,
+            permission,
+        );
+    }
 
-  public getPermissionsForObject(objectInstanceId: string): Observable<Permission[]> {
-      return this.http.get(`${this.permissionsBasePath}/objects/${objectInstanceId}`).pipe(map(response => response as Permission[]));
-  }
-
-  public updatePermission(permission: Permission): Observable<any> {
-    return this.http.put(`${this.permissionsBasePath}/${permission.permissionId}`, permission);
-  }
-
-  get permissionsBasePath() {
-    return `${this.platformServicesCommons.apiBasePath}/admin/permissions`;
-  }
+    get permissionsBasePath() {
+        return `${this.platformServicesCommons.apiBasePath}/admin/permissions`;
+    }
 }

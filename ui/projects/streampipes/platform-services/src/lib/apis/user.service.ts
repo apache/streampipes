@@ -22,75 +22,94 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlatformServicesCommons } from './commons.service';
 import {
-  ServiceAccount,
-  UserAccount
+    ServiceAccount,
+    UserAccount,
 } from '../model/gen/streampipes-model-client';
-import { ChangePasswordRequest } from "../model/user/user.model";
+import { ChangePasswordRequest } from '../model/user/user.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class UserService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    getAllUserAccounts(): Observable<UserAccount[]> {
+        return this.http.get(`${this.usersPath}?type=USER_ACCOUNT`).pipe(
+            map(response => {
+                return (response as any[]).map(p => UserAccount.fromData(p));
+            }),
+        );
+    }
 
-  getAllUserAccounts(): Observable<UserAccount[]> {
-    return this.http.get(`${this.usersPath}?type=USER_ACCOUNT`)
-        .pipe(map(response => {
-          return (response as any[]).map(p => UserAccount.fromData(p));
-        }));
-  }
+    getAllServiceAccounts(): Observable<ServiceAccount[]> {
+        return this.http.get(`${this.usersPath}?type=SERVICE_ACCOUNT`).pipe(
+            map(response => {
+                return (response as any[]).map(p => ServiceAccount.fromData(p));
+            }),
+        );
+    }
 
-  getAllServiceAccounts(): Observable<ServiceAccount[]> {
-    return this.http.get(`${this.usersPath}?type=SERVICE_ACCOUNT`)
-        .pipe(map(response => {
-          return (response as any[]).map(p => ServiceAccount.fromData(p));
-        }));
-  }
+    public updateUser(user: UserAccount): Observable<any> {
+        return this.http.put(
+            `${this.usersPath}/user/${user.principalId}`,
+            user,
+        );
+    }
 
-  public updateUser(user: (UserAccount)): Observable<any> {
-    return this.http.put(`${this.usersPath}/user/${user.principalId}`, user);
-  }
+    public updateUsername(user: UserAccount): Observable<any> {
+        return this.http.put(
+            `${this.usersPath}/user/${user.principalId}/username`,
+            user,
+        );
+    }
 
-  public updateUsername(user: UserAccount): Observable<any> {
-    return this.http.put(`${this.usersPath}/user/${user.principalId}/username`, user);
-  }
+    public updatePassword(
+        user: UserAccount,
+        req: ChangePasswordRequest,
+    ): Observable<any> {
+        return this.http.put(
+            `${this.usersPath}/user/${user.principalId}/password`,
+            req,
+        );
+    }
 
-  public updatePassword(user: UserAccount,
-                        req: ChangePasswordRequest): Observable<any> {
-    return this.http.put(`${this.usersPath}/user/${user.principalId}/password`, req);
-  }
+    public updateService(user: ServiceAccount): Observable<any> {
+        return this.http.put(
+            `${this.usersPath}/service/${user.principalId}`,
+            user,
+        );
+    }
 
-  public updateService(user: (ServiceAccount)): Observable<any> {
-    return this.http.put(`${this.usersPath}/service/${user.principalId}`, user);
-  }
+    public createUser(user: UserAccount): Observable<any> {
+        return this.http.post(`${this.usersPath}/user`, user);
+    }
 
-  public createUser(user: UserAccount): Observable<any> {
-    return this.http.post(`${this.usersPath}/user`, user);
-  }
+    public createServiceAccount(user: ServiceAccount): Observable<any> {
+        return this.http.post(`${this.usersPath}/service`, user);
+    }
 
-  public createServiceAccount(user: ServiceAccount): Observable<any> {
-    return this.http.post(`${this.usersPath}/service`, user);
-  }
+    public deleteUser(principalId: string): Observable<any> {
+        return this.http.delete(`${this.usersPath}/${principalId}`);
+    }
 
-  public deleteUser(principalId: string): Observable<any> {
-    return this.http.delete(`${this.usersPath}/${principalId}`);
-  }
+    public getUserById(
+        principalId: string,
+    ): Observable<UserAccount | ServiceAccount> {
+        return this.http.get(`${this.usersPath}/${principalId}`).pipe(
+            map(response => {
+                if ((response as any).principalType === 'USER_ACCOUNT') {
+                    return UserAccount.fromData(response as any);
+                } else {
+                    return ServiceAccount.fromData(response as any);
+                }
+            }),
+        );
+    }
 
-  public getUserById(principalId: string): Observable<UserAccount | ServiceAccount> {
-    return this.http.get(`${this.usersPath}/${principalId}`)
-        .pipe(map(response => {
-          if ((response as any).principalType === 'USER_ACCOUNT') {
-            return UserAccount.fromData(response as any);
-          } else {
-            return ServiceAccount.fromData(response as any);
-          }
-        }));
-  }
-
-  private get usersPath() {
-    return this.platformServicesCommons.apiBasePath + '/users';
-  }
+    private get usersPath() {
+        return this.platformServicesCommons.apiBasePath + '/users';
+    }
 }

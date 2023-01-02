@@ -24,30 +24,29 @@ import { PlatformServicesCommons } from './commons.service';
 import { EmailConfig } from '../model/email-config.model';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class MailConfigService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    getMailConfig(): Observable<EmailConfig> {
+        return this.http
+            .get(this.mailConfigPath)
+            .pipe(map(response => response as EmailConfig));
+    }
 
-  getMailConfig(): Observable<EmailConfig> {
-    return this.http
-        .get(this.mailConfigPath)
-        .pipe(map(response => response as EmailConfig));
-  }
+    updateMailConfig(config: EmailConfig): Observable<any> {
+        return this.http.put(this.mailConfigPath, config);
+    }
 
-  updateMailConfig(config: EmailConfig): Observable<any> {
-    return this.http.put(this.mailConfigPath, config);
-  }
+    sendTestMail(config: EmailConfig) {
+        return this.http.post(`${this.mailConfigPath}/test`, config);
+    }
 
-  sendTestMail(config: EmailConfig) {
-    return this.http.post(`${this.mailConfigPath}/test`, config);
-  }
-
-  private get mailConfigPath() {
-    return this.platformServicesCommons.apiBasePath + '/admin/mail-config';
-  }
-
+    private get mailConfigPath() {
+        return this.platformServicesCommons.apiBasePath + '/admin/mail-config';
+    }
 }

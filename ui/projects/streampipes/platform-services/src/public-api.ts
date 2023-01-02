@@ -16,7 +16,6 @@
  *
  */
 
-
 /*
  * Public API Surface of platform-services
  */

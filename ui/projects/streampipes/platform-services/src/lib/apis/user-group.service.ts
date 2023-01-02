@@ -24,39 +24,39 @@ import { PlatformServicesCommons } from './commons.service';
 import { Group } from '../model/gen/streampipes-model-client';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class UserGroupService {
+    constructor(
+        private http: HttpClient,
+        private platformServicesCommons: PlatformServicesCommons,
+    ) {}
 
-  constructor(private http: HttpClient,
-              private platformServicesCommons: PlatformServicesCommons) {
-  }
+    public getAllUserGroups(): Observable<Group[]> {
+        return this.http.get(`${this.userGroupPath}`).pipe(
+            map(response => {
+                return (response as any[]).map(p => Group.fromData(p));
+            }),
+        );
+    }
 
-  public getAllUserGroups(): Observable<Group[]> {
-    return this.http.get(`${this.userGroupPath}`)
-        .pipe(map(response => {
-          return (response as any[]).map(p => Group.fromData(p));
-        }));
-  }
+    public createGroup(group: Group) {
+        return this.http.post(this.userGroupPath, group);
+    }
 
-  public createGroup(group: Group) {
-    return this.http.post(this.userGroupPath, group);
-  }
+    public updateGroup(group: Group) {
+        return this.http.put(`${this.userGroupPath}/${group.groupId}`, group);
+    }
 
-  public updateGroup(group: Group) {
-    return this.http.put(`${this.userGroupPath}/${group.groupId}`, group);
-  }
+    public deleteGroup(group: Group) {
+        return this.http.delete(`${this.userGroupPath}/${group.groupId}`);
+    }
 
-  public deleteGroup(group: Group) {
-    return this.http.delete(`${this.userGroupPath}/${group.groupId}`);
-  }
+    public getGroup(groupId: string) {
+        return this.http.get(`${this.userGroupPath}/${groupId}`);
+    }
 
-  public getGroup(groupId: string) {
-    return this.http.get(`${this.userGroupPath}/${groupId}`);
-  }
-
-  private get userGroupPath() {
-    return this.platformServicesCommons.apiBasePath + '/usergroups';
-  }
-
+    private get userGroupPath() {
+        return this.platformServicesCommons.apiBasePath + '/usergroups';
+    }
 }

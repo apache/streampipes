@@ -18,10 +18,6 @@ dist
 
 # Remove these in the future to lint additional modules
 # Please also see .prettierignore
-projects
-src/app/_enums
-src/app/_guards
-src/app/_models
 src/app/configuration
 src/app/connect
 src/app/core
