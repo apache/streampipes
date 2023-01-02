@@ -22,7 +22,6 @@ projects
 src/app/_enums
 src/app/_guards
 src/app/_models
-src/app/app-overview
 src/app/assets
 src/app/configuration
 src/app/connect
