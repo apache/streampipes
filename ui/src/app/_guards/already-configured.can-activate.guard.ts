@@ -23,17 +23,15 @@ import { BaseConfiguredCanActivateGuard } from './base-configured.can-activate.g
 
 @Injectable()
 export class AlreadyConfiguredCanActivateGuard extends BaseConfiguredCanActivateGuard {
+    constructor(router: Router, authService: AuthService) {
+        super(router, authService);
+    }
 
-  constructor(router: Router,
-              authService: AuthService) {
-    super(router, authService);
-  }
+    onIsConfigured(): boolean | UrlTree {
+        return this.router.parseUrl('login');
+    }
 
-  onIsConfigured(): boolean | UrlTree {
-    return this.router.parseUrl('login');
-  }
-
-  onIsUnconfigured(): boolean | UrlTree {
-    return true;
-  }
+    onIsUnconfigured(): boolean | UrlTree {
+        return true;
+    }
 }

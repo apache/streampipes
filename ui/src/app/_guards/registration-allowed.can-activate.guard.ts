@@ -18,11 +18,11 @@
 
 import { Injectable } from '@angular/core';
 import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree
+    ActivatedRouteSnapshot,
+    CanActivate,
+    Router,
+    RouterStateSnapshot,
+    UrlTree,
 } from '@angular/router';
 import { LoginService } from '../login/services/login.service';
 import { Observable } from 'rxjs';
@@ -30,15 +30,22 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class RegistrationAllowedCanActivateGuard implements CanActivate {
+    constructor(private router: Router, private loginService: LoginService) {}
 
-  constructor(private router: Router,
-              private loginService: LoginService) {
-  }
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.loginService.fetchLoginSettings().pipe(map(config => {
-      return config.allowSelfRegistration ? true : this.router.parseUrl('register');
-    }));
-  }
-
+    canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot,
+    ):
+        | Observable<boolean | UrlTree>
+        | Promise<boolean | UrlTree>
+        | boolean
+        | UrlTree {
+        return this.loginService.fetchLoginSettings().pipe(
+            map(config => {
+                return config.allowSelfRegistration
+                    ? true
+                    : this.router.parseUrl('register');
+            }),
+        );
+    }
 }
