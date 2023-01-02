@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.flink;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -35,6 +34,8 @@ import org.apache.streampipes.processors.transformation.flink.processor.hasher.F
 import org.apache.streampipes.processors.transformation.flink.processor.mapper.FieldMapperController;
 import org.apache.streampipes.processors.transformation.flink.processor.measurementunitonverter.MeasurementUnitConverterController;
 import org.apache.streampipes.processors.transformation.flink.processor.rename.FieldRenamerController;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class TransformationFlinkInit extends ExtensionsModelSubmitter {
 

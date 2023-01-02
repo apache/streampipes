@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.sources.watertank.simulator;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.sources.watertank.simulator.config.ConfigKeys;
@@ -27,6 +26,8 @@ import org.apache.streampipes.sources.watertank.simulator.watertank.streams.Flow
 import org.apache.streampipes.sources.watertank.simulator.watertank.streams.PressureTankStream;
 import org.apache.streampipes.sources.watertank.simulator.watertank.streams.WaterLevel1Stream;
 import org.apache.streampipes.sources.watertank.simulator.watertank.streams.WaterLevel2Stream;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class WatertankSimulatorInit extends ExtensionsModelSubmitter {
 

@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processor.geo.flink;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -30,6 +29,8 @@ import org.apache.streampipes.messaging.kafka.SpKafkaProtocolFactory;
 import org.apache.streampipes.messaging.mqtt.SpMqttProtocolFactory;
 import org.apache.streampipes.processor.geo.flink.config.ConfigKeys;
 import org.apache.streampipes.processor.geo.flink.processor.gridenricher.SpatialGridEnrichmentController;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class GeoFlinkInit extends ExtensionsModelSubmitter {
 

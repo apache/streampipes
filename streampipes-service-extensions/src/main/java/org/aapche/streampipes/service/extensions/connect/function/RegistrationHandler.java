@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.streampipes.container.extensions.function;
+package org.aapche.streampipes.service.extensions.connect.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.model.function.FunctionDefinition;

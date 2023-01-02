@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.geo.jvm;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -38,6 +37,8 @@ import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.goog
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.geocoder.googlemapsstatic.GoogleMapsStaticGeocoderProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.revgeocoder.geocityname.GeoCityNameRevdecodeProcessor;
 import org.apache.streampipes.processors.geo.jvm.latlong.processor.speedcalculator.SpeedCalculatorProcessor;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class GeoJvmInit extends ExtensionsModelSubmitter {
 

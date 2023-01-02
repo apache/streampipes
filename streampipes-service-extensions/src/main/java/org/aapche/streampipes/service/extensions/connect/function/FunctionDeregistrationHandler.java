@@ -16,31 +16,33 @@
  *
  */
 
-package org.apache.streampipes.container.extensions.connect;
+package org.aapche.streampipes.service.extensions.connect.function;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.model.connect.adapter.AdapterDescription;
-import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
+import org.apache.streampipes.model.function.FunctionDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class ConnectRestClient {
+public class FunctionDeregistrationHandler extends RegistrationHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ConnectRestClient.class);
+  private static final Logger LOG = LoggerFactory.getLogger(FunctionDeregistrationHandler.class);
 
-  public static boolean register(List<AdapterDescription> allAvailableAdapters) {
-
-    try {
-      StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
-      client.adminApi().registerAdapters(allAvailableAdapters);
-      return true;
-    } catch (Exception e) {
-      LOG.error("Could not register adapter at url - is a 'StreamPipes Core' service running?", e);
-      return false;
-    }
+  public FunctionDeregistrationHandler(List<FunctionDefinition> functions) {
+    super(functions);
   }
 
+  @Override
+  protected void performRequest(StreamPipesClient client) {
+    functions.forEach(fn ->
+        client.adminApi().deregisterFunction(fn.getFunctionId().getId())
+    );
+  }
+
+  @Override
+  protected void logSuccess() {
+    LOG.info("Successfully deregistered functions {}", functions.toString());
+  }
 }

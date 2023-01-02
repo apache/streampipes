@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.pattern.detection.flink;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -33,6 +32,8 @@ import org.apache.streampipes.processors.pattern.detection.flink.processor.absen
 import org.apache.streampipes.processors.pattern.detection.flink.processor.and.AndController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.peak.PeakDetectionController;
 import org.apache.streampipes.processors.pattern.detection.flink.processor.sequence.SequenceController;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class PatternDetectionFlinkInit extends ExtensionsModelSubmitter {
 

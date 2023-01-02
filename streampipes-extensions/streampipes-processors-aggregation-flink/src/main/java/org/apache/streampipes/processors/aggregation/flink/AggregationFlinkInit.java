@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.aggregation.flink;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -33,6 +32,8 @@ import org.apache.streampipes.processors.aggregation.flink.processor.aggregation
 import org.apache.streampipes.processors.aggregation.flink.processor.count.CountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.eventcount.EventCountController;
 import org.apache.streampipes.processors.aggregation.flink.processor.rate.EventRateController;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class AggregationFlinkInit extends ExtensionsModelSubmitter {
 

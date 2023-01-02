@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.sinks.databases.jvm;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -35,6 +34,8 @@ import org.apache.streampipes.sinks.databases.jvm.iotdb.IotDbController;
 import org.apache.streampipes.sinks.databases.jvm.opcua.UpcUaController;
 import org.apache.streampipes.sinks.databases.jvm.postgresql.PostgreSqlController;
 import org.apache.streampipes.sinks.databases.jvm.redis.RedisController;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class DatabasesJvmInit extends ExtensionsModelSubmitter {
 

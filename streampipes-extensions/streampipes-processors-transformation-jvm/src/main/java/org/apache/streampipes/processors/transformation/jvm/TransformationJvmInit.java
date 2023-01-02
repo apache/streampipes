@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.processors.transformation.jvm;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -51,6 +50,8 @@ import org.apache.streampipes.processors.transformation.jvm.processor.timestampe
 import org.apache.streampipes.processors.transformation.jvm.processor.transformtoboolean.TransformToBooleanController;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.change.ChangedValueDetectionController;
 import org.apache.streampipes.processors.transformation.jvm.processor.value.duration.CalculateDurationController;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class TransformationJvmInit extends ExtensionsModelSubmitter {
 

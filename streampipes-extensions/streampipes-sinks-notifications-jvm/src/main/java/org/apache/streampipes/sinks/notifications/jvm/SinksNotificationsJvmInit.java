@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.sinks.notifications.jvm;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -33,6 +32,8 @@ import org.apache.streampipes.sinks.notifications.jvm.email.EmailController;
 import org.apache.streampipes.sinks.notifications.jvm.onesignal.OneSignalController;
 import org.apache.streampipes.sinks.notifications.jvm.slack.SlackNotificationController;
 import org.apache.streampipes.sinks.notifications.jvm.telegram.TelegramController;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class SinksNotificationsJvmInit extends ExtensionsModelSubmitter {
 

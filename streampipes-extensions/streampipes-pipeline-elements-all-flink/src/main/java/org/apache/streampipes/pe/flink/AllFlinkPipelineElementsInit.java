@@ -17,7 +17,6 @@
  */
 package org.apache.streampipes.pe.flink;
 
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
@@ -35,6 +34,8 @@ import org.apache.streampipes.processors.statistics.flink.StatisticsFlinkInit;
 import org.apache.streampipes.processors.textmining.flink.TextMiningFlinkInit;
 import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
 import org.apache.streampipes.sinks.databases.flink.DatabasesFlinkInit;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 
 public class AllFlinkPipelineElementsInit extends ExtensionsModelSubmitter {

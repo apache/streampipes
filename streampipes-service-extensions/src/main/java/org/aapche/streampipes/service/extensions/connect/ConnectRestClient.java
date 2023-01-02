@@ -16,31 +16,31 @@
  *
  */
 
-package org.apache.streampipes.container.extensions.function;
+package org.aapche.streampipes.service.extensions.connect;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class FunctionRegistrationHandler extends RegistrationHandler {
+public class ConnectRestClient {
 
-  private static final Logger LOG = LoggerFactory.getLogger(FunctionRegistrationHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ConnectRestClient.class);
 
-  public FunctionRegistrationHandler(List<FunctionDefinition> functions) {
-    super(functions);
+  public static boolean register(List<AdapterDescription> allAvailableAdapters) {
+
+    try {
+      StreamPipesClient client = new StreamPipesClientResolver().makeStreamPipesClientInstance();
+      client.adminApi().registerAdapters(allAvailableAdapters);
+      return true;
+    } catch (Exception e) {
+      LOG.error("Could not register adapter at url - is a 'StreamPipes Core' service running?", e);
+      return false;
+    }
   }
 
-  @Override
-  protected void performRequest(StreamPipesClient client) {
-    client.adminApi().registerFunctions(functions);
-  }
-
-  @Override
-  protected void logSuccess() {
-    LOG.info("Successfully registered functions {}", functions.toString());
-  }
 }

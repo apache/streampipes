@@ -15,34 +15,30 @@
  * limitations under the License.
  *
  */
+package org.aapche.streampipes.service.extensions.connect;
 
-package org.apache.streampipes.container.extensions.function;
-
-import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.model.function.FunctionDefinition;
+import org.apache.streampipes.container.init.RunningInstances;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+public class ExtensionsServiceShutdownHandler {
 
-public class FunctionDeregistrationHandler extends RegistrationHandler {
+  private static final Logger LOG = LoggerFactory.getLogger(ExtensionsServiceShutdownHandler.class);
 
-  private static final Logger LOG = LoggerFactory.getLogger(FunctionDeregistrationHandler.class);
 
-  public FunctionDeregistrationHandler(List<FunctionDefinition> functions) {
-    super(functions);
-  }
+  public void onShutdown() {
+    LOG.info("Shutting down StreamPipes extensions service...");
+    int runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
 
-  @Override
-  protected void performRequest(StreamPipesClient client) {
-    functions.forEach(fn ->
-        client.adminApi().deregisterFunction(fn.getFunctionId().getId())
-    );
-  }
-
-  @Override
-  protected void logSuccess() {
-    LOG.info("Successfully deregistered functions {}", functions.toString());
+    while (runningInstancesCount > 0) {
+      LOG.info("Waiting for {} running pipeline elements to be stopped...", runningInstancesCount);
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        LOG.error("Could not pause current thread...");
+      }
+      runningInstancesCount = RunningInstances.INSTANCE.getRunningInstancesCount();
+    }
   }
 }

@@ -35,9 +35,10 @@ import org.apache.streampipes.connect.iiot.protocol.stream.MqttProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.NatsProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.RocketMQProtocol;
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
+
+import org.aapche.streampipes.service.extensions.connect.ExtensionsModelSubmitter;
 
 public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
   public static void main(String[] args) {

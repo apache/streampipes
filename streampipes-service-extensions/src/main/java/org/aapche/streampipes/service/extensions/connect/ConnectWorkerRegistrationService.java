@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-package org.apache.streampipes.container.extensions.connect;
+package org.aapche.streampipes.service.extensions.connect;
 
 import org.apache.streampipes.container.connect.ConnectWorkerDescriptionProvider;
 import org.apache.streampipes.container.model.SpServiceDefinition;
