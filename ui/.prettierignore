@@ -19,7 +19,6 @@ dist
 # Remove these in the future to format additional modules
 # Please also see .eslintignore
 projects
-src/app/_enums
 src/app/_guards
 src/app/_models
 src/app/add
