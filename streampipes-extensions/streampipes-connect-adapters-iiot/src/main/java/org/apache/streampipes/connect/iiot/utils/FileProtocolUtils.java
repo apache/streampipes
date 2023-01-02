@@ -19,8 +19,8 @@
 package org.apache.streampipes.connect.iiot.utils;
 
 import org.apache.streampipes.client.StreamPipesClient;
-import org.apache.streampipes.connect.api.exception.ParseException;
-import org.apache.streampipes.service.extensions.base.client.StreamPipesClientResolver;
+import org.apache.streampipes.extensions.api.connect.exception.ParseException;
+import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 
 import java.io.File;
 import java.io.FileInputStream;

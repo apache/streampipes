@@ -996,7 +996,7 @@ IoT data streams.
 				<dependency>
 					<groupId>org.antlr</groupId>
 					<artifactId>antlr4-runtime</artifactId>
-					<version>4.11.1</version>
+					<version>4.9</version>
 				</dependency>
 				<dependency>
 					<groupId>io.netty</groupId>
@@ -1217,6 +1217,11 @@ IoT data streams.
 					<version>${metrics-core.version}</version>
 				</dependency>
 				<dependency>
+					<groupId>jakarta.json</groupId>
+					<artifactId>jakarta.json-api</artifactId>
+					<version>2.1.1</version>
+				</dependency>
+				<dependency>
 					<groupId>javax.mail</groupId>
 					<artifactId>mailapi</artifactId>
 					<version>${mailapi.version}</version>
@@ -1360,16 +1365,14 @@ IoT data streams.
 			<module>archetypes/streampipes-archetype-extensions-jvm</module>
 			<module>archetypes/streampipes-archetype-pe-sinks-flink</module>
 			<module>archetypes/streampipes-archetype-pe-processors-flink</module>
-			<module>streampipes-backend</module>
+			<module>streampipes-service-core</module>
 			<module>streampipes-client</module>
 			<module>streampipes-commons</module>
 			<module>streampipes-config</module>
-			<module>streampipes-connect</module>
-			<module>streampipes-connect-api</module>
-			<module>streampipes-connect-container-master</module>
-			<module>streampipes-connect-container-worker</module>
-			<module>streampipes-container</module>
-			<module>streampipes-container-extensions</module>
+			<module>streampipes-extensions-api</module>
+			<module>streampipes-connect-management</module>
+			<module>streampipes-extensions-management</module>
+			<module>streampipes-service-extensions</module>
 			<module>streampipes-data-explorer</module>
 			<module>streampipes-dataformat</module>
 			<module>streampipes-dataformat-cbor</module>
@@ -1401,7 +1404,6 @@ IoT data streams.
 			<module>streampipes-service-discovery</module>
 			<module>streampipes-service-discovery-consul</module>
 			<module>streampipes-service-discovery-api</module>
-			<module>streampipes-service-extensions-base</module>
 			<module>streampipes-storage-api</module>
 			<module>streampipes-storage-management</module>
 			<module>streampipes-storage-couchdb</module>
@@ -1422,6 +1424,7 @@ IoT data streams.
 			<module>streampipes-data-export</module>
 			<module>streampipes-messaging-nats</module>
 			<module>streampipes-integration-tests</module>
+			<module>streampipes-rest-extensions</module>
 		</modules>
 
 	<profiles>

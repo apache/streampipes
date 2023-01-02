@@ -16,7 +16,7 @@
  *
  */
 package org.apache.streampipes.processors.pattern.detection.processor.and;
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.pattern.detection.flink.PatternDetectionFlinkInit;

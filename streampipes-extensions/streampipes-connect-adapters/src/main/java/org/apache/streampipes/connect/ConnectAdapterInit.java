@@ -34,9 +34,9 @@ import org.apache.streampipes.connect.adapters.slack.SlackAdapter;
 import org.apache.streampipes.connect.adapters.ti.TISensorTag;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaEditedArticlesAdapter;
 import org.apache.streampipes.connect.adapters.wikipedia.WikipediaNewArticlesAdapter;
-import org.apache.streampipes.container.extensions.ExtensionsModelSubmitter;
-import org.apache.streampipes.container.model.SpServiceDefinition;
-import org.apache.streampipes.container.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
+import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
+import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
 public class ConnectAdapterInit extends ExtensionsModelSubmitter {
 

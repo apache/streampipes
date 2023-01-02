@@ -17,7 +17,7 @@
  */
 package org.apache.streampipes.connect.adapters.wikipedia;
 
-import org.apache.streampipes.connect.adapter.Adapter;
+import org.apache.streampipes.extensions.management.connect.adapter.Adapter;
 import org.apache.streampipes.model.AdapterType;
 import org.apache.streampipes.model.connect.adapter.SpecificAdapterStreamDescription;
 import org.apache.streampipes.sdk.builder.adapter.SpecificDataStreamAdapterBuilder;

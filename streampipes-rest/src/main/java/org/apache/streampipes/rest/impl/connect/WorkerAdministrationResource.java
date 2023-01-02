@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.rest.impl.connect;
 
-import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
+import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.message.Notifications;
 import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;

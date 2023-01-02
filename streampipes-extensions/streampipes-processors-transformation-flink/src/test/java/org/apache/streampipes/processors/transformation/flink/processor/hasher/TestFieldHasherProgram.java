@@ -18,7 +18,7 @@
 package org.apache.streampipes.processors.transformation.flink.processor.hasher;
 
 
-import org.apache.streampipes.container.config.ConfigExtractor;
+import org.apache.streampipes.extensions.management.config.ConfigExtractor;
 import org.apache.streampipes.model.runtime.Event;
 import org.apache.streampipes.processors.transformation.flink.TransformationFlinkInit;
 import org.apache.streampipes.processors.transformation.flink.processor.hasher.algorithm.HashAlgorithm;

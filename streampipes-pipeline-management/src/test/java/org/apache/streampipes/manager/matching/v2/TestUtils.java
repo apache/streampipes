@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.manager.matching.v2;
 
-import org.apache.streampipes.container.declarer.EventStreamDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
-import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
+import org.apache.streampipes.extensions.api.declarer.EventStreamDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventProcessingAgentDeclarer;
+import org.apache.streampipes.extensions.api.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;

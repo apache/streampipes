@@ -20,10 +20,10 @@ package org.apache.streampipes.rest.impl.connect;
 
 import org.apache.streampipes.commons.exceptions.NoServiceEndpointsAvailableException;
 import org.apache.streampipes.commons.exceptions.SpConfigurationException;
-import org.apache.streampipes.connect.api.exception.AdapterException;
-import org.apache.streampipes.connect.container.master.management.WorkerAdministrationManagement;
-import org.apache.streampipes.connect.container.master.management.WorkerRestClient;
-import org.apache.streampipes.connect.container.master.management.WorkerUrlProvider;
+import org.apache.streampipes.connect.management.management.WorkerAdministrationManagement;
+import org.apache.streampipes.connect.management.management.WorkerRestClient;
+import org.apache.streampipes.connect.management.management.WorkerUrlProvider;
+import org.apache.streampipes.extensions.api.connect.exception.AdapterException;
 import org.apache.streampipes.model.StreamPipesErrorMessage;
 import org.apache.streampipes.model.runtime.RuntimeOptionsRequest;
 import org.apache.streampipes.model.runtime.RuntimeOptionsResponse;
